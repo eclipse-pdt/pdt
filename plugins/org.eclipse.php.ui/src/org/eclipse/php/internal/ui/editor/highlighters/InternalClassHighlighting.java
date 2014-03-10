@@ -14,10 +14,12 @@ import java.util.List;
 
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.search.AbstractOccurrencesFinder;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighter.ModelUtils;
@@ -102,8 +104,19 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 		private void dealIdentifier(Identifier identifier) {
 			String fullName = AbstractOccurrencesFinder.getFullName(identifier,
 					fLastUseParts, fCurrentNamespace);
-			IModelElement[] elements = PhpModelAccess.getDefault().findTypes(
-					fullName, MatchRule.EXACT, 0, 0, createSearchScope(), null);
+			FileContext context = new FileContext(getSourceModule(),
+					SourceParserUtil.getModuleDeclaration(getSourceModule(),
+							null), identifier.getStart());
+
+			IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(
+					PHPClassType.fromTypeName(fullName, getSourceModule(),
+							identifier.getStart()), context, identifier
+							.getAST().getBindingResolver()
+							.getModelAccessCache());
+			/*
+			 * PhpModelAccess.getDefault().findTypes( fullName, MatchRule.EXACT,
+			 * 0, 0, createSearchScope(), null);
+			 */
 			if (elements != null && elements.length == 1 && elements[0] != null) {
 				if (ModelUtils.isExternalElement(elements[0])) {
 					highlight(identifier);

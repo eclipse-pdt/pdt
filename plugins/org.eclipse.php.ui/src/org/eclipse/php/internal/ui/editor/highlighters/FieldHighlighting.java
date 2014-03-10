@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
@@ -102,7 +101,9 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 								traitStatement.getStart());
 						IType[] modelElements = PHPTypeInferenceUtils
 								.getModelElements(type, context,
-										traitStatement.getStart());
+										traitStatement.getStart(), statement
+												.getAST().getBindingResolver()
+												.getModelAccessCache());
 						if (modelElements != null && modelElements.length > 0) {
 							for (IType iType : modelElements) {
 								boolean shouldBreak = false;
@@ -140,7 +141,10 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 									sourceModule, traitStatement.getStart());
 							IType[] modelElements = PHPTypeInferenceUtils
 									.getModelElements(type, context,
-											traitStatement.getStart());
+											traitStatement.getStart(),
+											statement.getAST()
+													.getBindingResolver()
+													.getModelAccessCache());
 							if (modelElements != null
 									&& modelElements.length > 0) {
 								for (IType iType : modelElements) {
@@ -181,7 +185,9 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 									traitStatement.getStart());
 					IType[] modelElements = PHPTypeInferenceUtils
 							.getModelElements(type, context,
-									traitStatement.getStart());
+									traitStatement.getStart(), statement
+											.getAST().getBindingResolver()
+											.getModelAccessCache());
 					if (modelElements != null && modelElements.length > 0) {
 						for (IType iType : modelElements) {
 							boolean shouldBreak = false;

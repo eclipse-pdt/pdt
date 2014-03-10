@@ -286,12 +286,6 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		return null;
 	}
 
-	public void aboutToBeReconciled() {
-		if (fIsScriptReconcilingListener) {
-			fJavaReconcilingListener.aboutToBeReconciled();
-		}
-	}
-
 	public void notifyListeners(boolean notify) {
 		fNotify = notify;
 	}

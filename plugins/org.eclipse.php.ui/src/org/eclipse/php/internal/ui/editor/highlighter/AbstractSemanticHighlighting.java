@@ -133,7 +133,7 @@ public abstract class AbstractSemanticHighlighting implements
 		if (sourceModule != null) {
 			try {
 				program = SharedASTProvider.getAST(sourceModule,
-						SharedASTProvider.WAIT_YES, null);
+						SharedASTProvider.WAIT_NO, null);
 			} catch (ModelException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

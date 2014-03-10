@@ -77,7 +77,9 @@ public class MethodHighlighting extends AbstractSemanticHighlighting {
 								traitStatement.getStart());
 						IType[] modelElements = PHPTypeInferenceUtils
 								.getModelElements(type, context,
-										traitStatement.getStart());
+										traitStatement.getStart(), statement
+												.getAST().getBindingResolver()
+												.getModelAccessCache());
 						if (modelElements != null && modelElements.length > 0) {
 							for (IType iType : modelElements) {
 								boolean shouldBreak = false;
@@ -115,7 +117,10 @@ public class MethodHighlighting extends AbstractSemanticHighlighting {
 									sourceModule, traitStatement.getStart());
 							IType[] modelElements = PHPTypeInferenceUtils
 									.getModelElements(type, context,
-											traitStatement.getStart());
+											traitStatement.getStart(),
+											statement.getAST()
+													.getBindingResolver()
+													.getModelAccessCache());
 							if (modelElements != null
 									&& modelElements.length > 0) {
 								for (IType iType : modelElements) {
@@ -156,7 +161,9 @@ public class MethodHighlighting extends AbstractSemanticHighlighting {
 									traitStatement.getStart());
 					IType[] modelElements = PHPTypeInferenceUtils
 							.getModelElements(type, context,
-									traitStatement.getStart());
+									traitStatement.getStart(), statement
+											.getAST().getBindingResolver()
+											.getModelAccessCache());
 					if (modelElements != null && modelElements.length > 0) {
 						for (IType iType : modelElements) {
 							boolean shouldBreak = false;
