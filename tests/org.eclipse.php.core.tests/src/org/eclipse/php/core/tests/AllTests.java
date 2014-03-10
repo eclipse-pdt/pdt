@@ -39,6 +39,7 @@ import org.eclipse.php.core.tests.markoccurrence.MarkOccurrenceTests;
 import org.eclipse.php.core.tests.model_structure.ModelStructureTests;
 import org.eclipse.php.core.tests.phar.PharFileTest;
 import org.eclipse.php.core.tests.selection.SelectionEngineTests;
+import org.eclipse.php.core.tests.text.PHPTextSequenceUtilitiesTests;
 import org.eclipse.php.core.tests.typeinference.TypeInferenceTests;
 
 public class AllTests {
@@ -93,6 +94,7 @@ public class AllTests {
 
 		// test language model functions
 		suite.addTest(org.eclipse.php.core.tests.searchEngine.AllTests.suite());
+		suite.addTestSuite(PHPTextSequenceUtilitiesTests.class);
 
 		// $JUnit-END$
 

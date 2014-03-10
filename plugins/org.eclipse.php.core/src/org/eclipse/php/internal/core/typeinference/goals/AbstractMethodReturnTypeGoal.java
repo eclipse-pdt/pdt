@@ -38,11 +38,17 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 	}
 
 	public AbstractMethodReturnTypeGoal(IContext context, IType[] types,
-			String methodName) {
+			String methodName, String[] argNames) {
 		super(context);
 		Assert.isNotNull(methodName);
 		this.methodName = methodName;
 		this.types = types;
+		this.argNames = argNames;
+	}
+
+	public AbstractMethodReturnTypeGoal(IContext context, IType[] types,
+			String methodName) {
+		this(context, types, methodName, null);
 	}
 
 	public AbstractMethodReturnTypeGoal(IContext context,

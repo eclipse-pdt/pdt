@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -25,6 +25,11 @@ public class MethodElementReturnTypeGoal extends AbstractMethodReturnTypeGoal {
 	public MethodElementReturnTypeGoal(IContext context, IType[] types,
 			String methodName) {
 		super(context, types, methodName);
+	}
+
+	public MethodElementReturnTypeGoal(IContext context, IType[] types,
+			String methodName, String[] argNames) {
+		super(context, types, methodName, argNames);
 	}
 
 	public boolean equals(Object obj) {

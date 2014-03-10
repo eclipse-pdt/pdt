@@ -248,6 +248,13 @@ public class CodeAssistUtils {
 				offset);
 	}
 
+	public static IType[] getFunctionReturnType(IType[] types, String method,
+			int mask, org.eclipse.dltk.core.ISourceModule sourceModule,
+			int offset) {
+		return getFunctionReturnType(types, method, mask, sourceModule, offset,
+				null);
+	}
+
 	/**
 	 * Determines the return type of the given method element.
 	 * 
@@ -258,7 +265,7 @@ public class CodeAssistUtils {
 	 */
 	public static IType[] getFunctionReturnType(IType[] types, String method,
 			int mask, org.eclipse.dltk.core.ISourceModule sourceModule,
-			int offset) {
+			int offset, String[] argNames) {
 		PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 		ModuleDeclaration moduleDeclaration = SourceParserUtil
 				.getModuleDeclaration(sourceModule, null);
@@ -275,13 +282,13 @@ public class CodeAssistUtils {
 
 			modelElements = PHPTypeInferenceUtils.getModelElements(
 					evaluatedType, (ISourceModuleContext) context, offset);
-			if (modelElements != null) {
+			if (modelElements != null && modelElements.length > 0) {
 				return modelElements;
 			}
 		}
 
 		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(
-				context, types, method);
+				context, types, method, argNames);
 		evaluatedType = typeInferencer.evaluateType(methodGoal);
 		if (evaluatedType instanceof PHPThisClassType
 				&& ((PHPThisClassType) evaluatedType).getType() != null) {
@@ -395,14 +402,17 @@ public class CodeAssistUtils {
 			}
 		}
 		String functionName = propertyName.substring(0, bracketIndex).trim();
+
+		String[] argNames = PHPTextSequenceUtilities.getArgNames(version,
+				propertyName.substring(bracketIndex));
 		Set<IType> result = new LinkedHashSet<IType>();
 		IType[] returnTypes = null;
 		if (arrayReference) {
 			returnTypes = getFunctionArrayReturnType(types, functionName,
-					sourceModule, offset);
+					USE_PHPDOC, sourceModule, offset, argNames);
 		} else {
 			returnTypes = getFunctionReturnType(types, functionName,
-					sourceModule, offset);
+					USE_PHPDOC, sourceModule, offset, argNames);
 		}
 		if (returnTypes != null) {
 			result.addAll(Arrays.asList(returnTypes));
@@ -488,6 +498,23 @@ public class CodeAssistUtils {
 	 */
 	private static IType[] getFunctionArrayReturnType(IType[] types,
 			String method, int mask, ISourceModule sourceModule, int offset) {
+		return getFunctionArrayReturnType(types, method, mask, sourceModule,
+				offset, null);
+	}
+
+	/**
+	 * example:(new class1())->avc2()[1][1]->avc1()
+	 * 
+	 * @param types
+	 * @param method
+	 * @param mask
+	 * @param sourceModule
+	 * @param offset
+	 * @return
+	 */
+	private static IType[] getFunctionArrayReturnType(IType[] types,
+			String method, int mask, ISourceModule sourceModule, int offset,
+			String[] argNames) {
 		PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 		ModuleDeclaration moduleDeclaration = SourceParserUtil
 				.getModuleDeclaration(sourceModule, null);
@@ -508,7 +535,7 @@ public class CodeAssistUtils {
 					IType[] tmpArray = PHPTypeInferenceUtils.getModelElements(
 							possibleType, (ISourceModuleContext) context,
 							offset, (IModelAccessCache) null);
-					if (tmpArray != null) {
+					if (tmpArray != null || tmpArray.length == 0) {
 						tmpList.addAll(Arrays.asList(tmpArray));
 					}
 				}
@@ -524,7 +551,7 @@ public class CodeAssistUtils {
 		}
 
 		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(
-				context, types, method);
+				context, types, method, argNames);
 		evaluatedType = typeInferencer.evaluateType(methodGoal);
 
 		if (evaluatedType instanceof MultiTypeType) {
@@ -708,16 +735,20 @@ public class CodeAssistUtils {
 				// }
 
 			} else {
+				String[] argNames = PHPTextSequenceUtilities.getArgNames(
+						phpVersion, statementText.subSequence(functionNameEnd,
+								propertyEndPosition - 1));
 				if (arrayReference) {
 
 					IType[] types = getFunctionArrayReturnType(null,
-							functionName, sourceModule, offset);
+							functionName, USE_PHPDOC, sourceModule, offset,
+							argNames);
 					if (types != null) {
 						returnTypes.addAll(Arrays.asList(types));
 					}
 				} else {
 					IType[] types = getFunctionReturnType(null, functionName,
-							sourceModule, offset);
+							USE_PHPDOC, sourceModule, offset, argNames);
 					if (types != null) {
 						returnTypes.addAll(Arrays.asList(types));
 					}

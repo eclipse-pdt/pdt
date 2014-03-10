@@ -11,6 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.util.text;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,7 +22,9 @@ import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.documentModel.parser.AbstractPhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.PhpLexerFactory;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -39,6 +45,14 @@ public class PHPTextSequenceUtilities {
 			"function\\s", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 	private static final Pattern CLASS_PATTERN = Pattern.compile(
 			"(class|interface)\\s", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+
+	private static final String LBRACE = "{"; //$NON-NLS-1$
+	private static final String RBRACE = "}"; //$NON-NLS-1$
+	private static final String LPAREN = "("; //$NON-NLS-1$
+	private static final String RPAREN = ")"; //$NON-NLS-1$
+	private static final String COMMA = ","; //$NON-NLS-1$
+	private static final String LBRACKET = "["; //$NON-NLS-1$
+	private static final String RBRACKET = "]"; //$NON-NLS-1$
 
 	private PHPTextSequenceUtilities() {
 	}
@@ -611,6 +625,80 @@ public class PHPTextSequenceUtilities {
 			startPosition--;
 		}
 		return listStartPosition;
+	}
+
+	/**
+	 * Read string argnames from CharSequence
+	 * 
+	 * TODO Nested parenthesis expression
+	 * 
+	 * @param phpVersion
+	 * @param textSequence
+	 * @return
+	 */
+	public static String[] getArgNames(PHPVersion phpVersion,
+			CharSequence textSequence) {
+		List<String> args = new ArrayList<String>();
+		if (textSequence != null && textSequence.length() > 2) {
+			if (textSequence.charAt(textSequence.length() - 1) == ')') {
+				textSequence = textSequence.subSequence(0,
+						textSequence.length() - 1);
+			}
+			if (textSequence.charAt(0) == '(') {
+				textSequence = textSequence.subSequence(1,
+						textSequence.length());
+			}
+			if (phpVersion == null) {
+				phpVersion = PHPVersion.getLatestVersion();
+			}
+
+			AbstractPhpLexer lexer = PhpLexerFactory.createLexer(
+					new StringReader(textSequence.toString()), phpVersion);
+			lexer.initialize(1);
+			String symbol = null;
+			int level = 0;
+			int argIndex = 0;
+			do {
+				try {
+					symbol = lexer.getNextToken();
+					if (symbol != null) {
+						CharSequence text = textSequence.subSequence(
+								lexer.getTokenStart(), lexer.getTokenStart()
+										+ lexer.getLength());
+						if (symbol.equals(PHPRegionTypes.PHP_TOKEN)) {
+							if (text.equals(LPAREN) || text.equals(LBRACE)
+									|| text.equals(LBRACKET)) {
+								level++;
+							} else if (text.equals(RPAREN)
+									|| text.equals(RBRACE)
+									|| text.equals(RBRACKET)) {
+								level--;
+							} else if (level == 0 && text.equals(COMMA)) {
+								argIndex++;
+							}
+						} else if (level == 0
+								&& symbol
+										.equals(PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING)) {
+							if (args.size() < argIndex + 1) {
+								args.add(text.toString());
+							}
+						} else if (level == 0
+								&& !symbol.equals(PHPRegionTypes.WHITESPACE)) {
+							if (args.size() < argIndex + 1) {
+								args.add(null);
+							} else {
+								args.set(argIndex, null);
+							}
+						}
+
+					}
+				} catch (IOException e) {
+					symbol = null;
+				}
+			} while (symbol != null);
+		}
+
+		return args.toArray(new String[args.size()]);
 	}
 
 }
