@@ -104,6 +104,10 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 		yypushback(i);
 	}
 
+	public int getScriptingState() {
+       return ST_PHP_IN_SCRIPTING;
+    }
+
 	// A pool of states. To avoid creation of a new state on each createMemento.
 	private static final IntHashtable lexerStates = new IntHashtable(100);
 

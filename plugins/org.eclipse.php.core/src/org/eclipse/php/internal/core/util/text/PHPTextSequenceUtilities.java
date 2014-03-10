@@ -654,7 +654,7 @@ public class PHPTextSequenceUtilities {
 
 			AbstractPhpLexer lexer = PhpLexerFactory.createLexer(
 					new StringReader(textSequence.toString()), phpVersion);
-			lexer.initialize(1);
+			lexer.initialize(lexer.getScriptingState());
 			String symbol = null;
 			int level = 0;
 			int argIndex = 0;

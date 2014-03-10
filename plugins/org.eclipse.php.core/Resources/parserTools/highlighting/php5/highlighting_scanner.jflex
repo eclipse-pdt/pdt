@@ -64,14 +64,14 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
     	this.zzCurrentPos = parameters[2];
     	this.zzStartRead = parameters[3];
     	this.zzEndRead = parameters[4];
-    	this.yyline = parameters[5];  
+    	this.yyline = parameters[5];
     	initialize(parameters[6]);
     }
 
     protected boolean isHeredocState(int state){
     	    	return state == ST_PHP_HEREDOC || state == ST_PHP_START_HEREDOC || state == ST_PHP_END_HEREDOC;
     }
-    
+
     public int[] getParamenters(){
     	return new int[]{zzMarkedPos, zzPushbackPos, zzCurrentPos, zzStartRead, zzEndRead, yyline, zzLexicalState};
     }
@@ -91,7 +91,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
     public char[] getZZBuffer() {
         return zzBuffer;
     }
-    
+
     protected int getZZStartRead() {
     	return this.zzStartRead;
     }
@@ -104,9 +104,13 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 		yypushback(i);
 	}
 
+	public int getScriptingState() {
+       return ST_PHP_IN_SCRIPTING;
+    }
+
 	// A pool of states. To avoid creation of a new state on each createMemento.
 	private static final IntHashtable lexerStates = new IntHashtable(100);
-	
+
 	protected IntHashtable getLexerStates() {
 		return lexerStates;
 	}
@@ -558,11 +562,11 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
 	return PHP_TOKEN;
 }
 
-<ST_PHP_VAR_OFFSET>"[" { 
+<ST_PHP_VAR_OFFSET>"[" {
 	return PHP_TOKEN;
 }
 
-<ST_PHP_VAR_OFFSET>{TOKENS}|[;{}\"`] {//the difference from the original rules comes from the fact that we took ';' out out of tokens 
+<ST_PHP_VAR_OFFSET>{TOKENS}|[;{}\"`] {//the difference from the original rules comes from the fact that we took ';' out out of tokens
 	return UNKNOWN_TOKEN;
 }
 
@@ -637,7 +641,7 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
     "@license"       {return PHPDOC_LICENSE;}
     "@link"          {return PHPDOC_LINK;}
     "@magic"         {return PHPDOC_MAGIC;}
-    "@method"        {return PHPDOC_METHOD;}    
+    "@method"        {return PHPDOC_METHOD;}
     "@name"          {return PHPDOC_NAME;}
     "@package"       {return PHPDOC_PACKAGE;}
     "@param"         {return PHPDOC_PARAM;}

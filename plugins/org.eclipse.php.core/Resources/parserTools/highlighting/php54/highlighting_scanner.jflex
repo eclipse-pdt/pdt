@@ -64,14 +64,14 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
     	this.zzCurrentPos = parameters[2];
     	this.zzStartRead = parameters[3];
     	this.zzEndRead = parameters[4];
-    	this.yyline = parameters[5];  
+    	this.yyline = parameters[5];
     	initialize(parameters[6]);
     }
 
     protected boolean isHeredocState(int state){
     	    	return state == ST_PHP_HEREDOC || state == ST_PHP_END_HEREDOC || state == ST_PHP_NOWDOC || state == ST_PHP_END_NOWDOC;
     }
-    
+
     public int[] getParamenters(){
     	return new int[]{zzMarkedPos, zzPushbackPos, zzCurrentPos, zzStartRead, zzEndRead, yyline, zzLexicalState};
     }
@@ -91,7 +91,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
     public char[] getZZBuffer() {
         return zzBuffer;
     }
-    
+
     protected int getZZStartRead() {
     	return this.zzStartRead;
     }
@@ -104,9 +104,13 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 		yypushback(i);
 	}
 
+	public int getScriptingState() {
+       return ST_PHP_IN_SCRIPTING;
+    }
+
 	// A pool of states. To avoid creation of a new state on each createMemento.
 	private static final IntHashtable lexerStates = new IntHashtable(100);
-	
+
 	protected IntHashtable getLexerStates() {
 		return lexerStates;
 	}
@@ -592,11 +596,11 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_TOKEN;
 }
 
-<ST_PHP_VAR_OFFSET>"[" { 
+<ST_PHP_VAR_OFFSET>"[" {
 	return PHP_TOKEN;
 }
 
-<ST_PHP_VAR_OFFSET>{TOKENS}|[;{}\"`] {//the difference from the original rules comes from the fact that we took ';' out out of tokens 
+<ST_PHP_VAR_OFFSET>{TOKENS}|[;{}\"`] {//the difference from the original rules comes from the fact that we took ';' out out of tokens
 	return UNKNOWN_TOKEN;
 }
 
@@ -671,7 +675,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     "@license"       {return PHPDOC_LICENSE;}
     "@link"          {return PHPDOC_LINK;}
     "@magic"         {return PHPDOC_MAGIC;}
-    "@method"        {return PHPDOC_METHOD;}    
+    "@method"        {return PHPDOC_METHOD;}
     "@namespace"     {return PHPDOC_NAMESPACE;}
     "@name"          {return PHPDOC_NAME;}
     "@package"       {return PHPDOC_PACKAGE;}
@@ -754,7 +758,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 <ST_PHP_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}({LABEL}|([']{LABEL}['])|([\"]{LABEL}[\"])){NEWLINE} {
     int bprefix = (yytext().charAt(0) != '<') ? 1 : 0;
     int startString=3+bprefix;
-    
+
     int hereOrNowDoc_len = yylength()-bprefix-3-1-(yytext().charAt(yylength()-2)=='\r'?1:0);
     while ((yytext().charAt(startString) == ' ') || (yytext().charAt(startString) == '\t')) {
         startString++;
@@ -807,14 +811,14 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	   label_len--;
     }
     if (label_len > heredoc_len && yytext().substring(label_len - heredoc_len,label_len).equals(heredoc)) {
-    	
+
     	if ((label_len - heredoc_len-2) >= 0 && yytext().charAt(label_len - heredoc_len-2)=='\r') {
         	label_len = label_len-2;
     	} else {
         	label_len--;
     	}
     	yypushback(heredoc_len + (yylength() - label_len));
-    	
+
         yybegin(ST_PHP_END_HEREDOC);
     }
     return PHP_CONSTANT_ENCAPSED_STRING;
@@ -883,14 +887,14 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     	//nowdoc_len = 0;
 		//yypushback(1);
 		//yybegin(ST_PHP_END_NOWDOC);
-		
+
     	if ((label_len - nowdoc_len-2) >= 0 && yytext().charAt(label_len - nowdoc_len-2)=='\r') {
         	label_len = label_len-2;
     	} else {
         	label_len--;
     	}
     	yypushback(nowdoc_len + (yylength() - label_len));
-    	
+
         yybegin(ST_PHP_END_NOWDOC);
 	}
 	return PHP_CONSTANT_ENCAPSED_STRING;
