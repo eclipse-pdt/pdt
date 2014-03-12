@@ -806,6 +806,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		if (node instanceof FieldAccess) {
 			return visit((FieldAccess) node);
 		}
+		if (node instanceof StaticConstantAccess) {
+			return visit((StaticConstantAccess) node);
+		}
 
 		for (PhpIndexingVisitorExtension visitor : extensions) {
 			visitor.visit(node);
@@ -874,6 +877,22 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			modifyReference(access, new ReferenceInfo(IModelElement.FIELD,
 					simpleReference.sourceStart(), simpleReference.sourceEnd()
 							- simpleReference.sourceStart(), name, null, null));
+		}
+
+		return visitGeneral(access);
+	}
+
+	public boolean visit(StaticConstantAccess access) throws Exception {
+		// This is constant field access:
+		if (access.getConstant() instanceof ConstantReference) {
+			SimpleReference constantReference = (ConstantReference) access
+					.getConstant();
+
+			String name = constantReference.getName();
+
+			modifyReference(access, new ReferenceInfo(IModelElement.FIELD,
+					constantReference.sourceStart(), constantReference.sourceEnd()
+							- constantReference.sourceStart(), name, null, null));
 		}
 
 		return visitGeneral(access);
