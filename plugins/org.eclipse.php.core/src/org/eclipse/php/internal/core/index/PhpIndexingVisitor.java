@@ -220,6 +220,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	public boolean visit(MethodDeclaration method) throws Exception {
 		fNodes.push(method);
 		methodGlobalVars.add(new HashSet<String>());
+		int modifiers = method.getModifiers();
 		PHPDocBlock doc = null;
 		if (method instanceof IPHPDocAwareDeclaration) {
 			IPHPDocAwareDeclaration declaration = (IPHPDocAwareDeclaration) method;
@@ -243,7 +244,6 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			method.setModifier(Modifiers.AccAbstract);
 		}
 
-		int modifiers = method.getModifiers();
 		String methodName = method.getName();
 
 		// Determine whether this method represents constructor:
@@ -262,6 +262,8 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 				&& !Flags.isPublic(modifiers)) {
 			modifiers |= Modifiers.AccPublic;
 		}
+
+		modifiers = markAsDeprecated(modifiers, method);
 
 		StringBuilder metadata = new StringBuilder();
 		List<Argument> arguments = method.getArguments();
@@ -319,6 +321,29 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		}
 
 		return visitGeneral(method);
+	}
+
+	/**
+	 * Update modifiers for "deprecated"
+	 * 
+	 * @param modifiers
+	 * @param phpDoc
+	 * @return
+	 */
+	private int markAsDeprecated(int modifiers, PHPDocBlock phpDoc) {
+		if (phpDoc != null && phpDoc.getTags(PHPDocTag.DEPRECATED).length > 0) {
+			return modifiers | IPHPModifiers.AccDeprecated;
+		}
+
+		return modifiers;
+	}
+
+	private int markAsDeprecated(int modifiers, ASTNode node) {
+		if (node instanceof IPHPDocAwareDeclaration) {
+			return markAsDeprecated(modifiers,
+					((IPHPDocAwareDeclaration) node).getPHPDoc());
+		}
+		return modifiers;
 	}
 
 	private String getParamType(PHPDocBlock docBlock, String paramName,
@@ -393,7 +418,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 				metadata.append(","); //$NON-NLS-1$
 			}
 		}
-
+		modifiers = markAsDeprecated(modifiers, type);
 		modifyDeclaration(
 				type,
 				new DeclarationInfo(IModelElement.TYPE, modifiers, type
@@ -558,6 +583,8 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	public boolean visit(FieldDeclaration decl) throws Exception {
 		// This is constant declaration:
 		int modifiers = decl.getModifiers();
+		modifiers = markAsDeprecated(modifiers, decl);
+
 		modifyDeclaration(
 				decl,
 				new DeclarationInfo(IModelElement.FIELD, modifiers, decl
@@ -576,7 +603,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 	public boolean visit(PHPFieldDeclaration decl) throws Exception {
 		// This is variable declaration:
-		int modifiers = decl.getModifiers();
+		int modifiers = markAsDeprecated(decl.getModifiers(), decl);
 
 		modifyDeclaration(
 				decl,
@@ -664,6 +691,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		if (fCurrentParent != null) {
 			modifiers = modifiers | PHPCoreConstants.AccClassField;
 		}
+		modifiers = markAsDeprecated(modifiers, declaration);
 		ConstantReference constantName = declaration.getConstantName();
 		int offset = constantName.sourceStart();
 		int length = constantName.sourceEnd();

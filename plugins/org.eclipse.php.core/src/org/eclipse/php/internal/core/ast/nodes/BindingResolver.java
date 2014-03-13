@@ -903,4 +903,16 @@ public class BindingResolver {
 	public IModelAccessCache getModelAccessCache() {
 		return null;
 	}
+
+	/**
+	 * This enables CachedTypeInferencer for binding resolver
+	 */
+	public void startBindingSession() {
+	}
+
+	/**
+	 * Clean most caches!
+	 */
+	public void stopBindingSession() {
+	}
 }

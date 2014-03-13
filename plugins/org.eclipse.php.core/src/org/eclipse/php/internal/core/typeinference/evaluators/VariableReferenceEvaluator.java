@@ -33,9 +33,11 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.ArrayDeclaration;
 import org.eclipse.php.internal.core.typeinference.Declaration;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
+import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.goals.ArrayDeclarationGoal;
 import org.eclipse.php.internal.core.typeinference.goals.ForeachStatementGoal;
@@ -58,7 +60,10 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		final VariableReference variableReference = (VariableReference) ((ExpressionTypeGoal) goal)
 				.getExpression();
 		IContext context = goal.getContext();
-
+		IModelAccessCache cache = null;
+		if (context instanceof IModelCacheContext) {
+			cache = ((IModelCacheContext) context).getCache();
+		}
 		// Handle $this variable reference
 		if (variableReference.getName().equals("$this")) { //$NON-NLS-1$
 			if (context instanceof MethodContext) {
