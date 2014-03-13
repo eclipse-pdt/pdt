@@ -19,7 +19,9 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.AbstractTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 
 public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
@@ -69,12 +71,15 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 		if (types == null) {
 			if (evaluatedType != null) {
 				final ISourceModuleContext cnt = (ISourceModuleContext) context;
-
+				IModelAccessCache cache = null;
+				if (context instanceof IModelCacheContext) {
+					cache = ((IModelCacheContext) context).getCache();
+				}
 				types = PHPTypeInferenceUtils.getModelElements(evaluatedType,
 						cnt,
 						cnt instanceof MethodContext ? ((MethodContext) cnt)
 								.getMethodNode().start() : cnt.getRootNode()
-								.end());
+								.end(), cache);
 			}
 		}
 		return types;

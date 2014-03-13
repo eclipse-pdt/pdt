@@ -62,6 +62,10 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 		ModuleDeclaration moduleDeclaration = SourceParserUtil
 				.getModuleDeclaration(sourceModule, null);
 
+		if (moduleDeclaration == null) {
+			return null;
+		}
+
 		ASTVisitor visitor = new ASTVisitor() {
 			boolean found = false;
 

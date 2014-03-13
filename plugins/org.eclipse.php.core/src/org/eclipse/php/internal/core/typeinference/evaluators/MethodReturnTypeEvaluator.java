@@ -32,6 +32,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.YieldExpression;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.*;
+import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
@@ -75,6 +76,12 @@ public class MethodReturnTypeEvaluator extends
 				if (innerContext instanceof MethodContext) {
 					MethodContext mc = (MethodContext) innerContext;
 					mc.setCurrentType(mat.types[i]);
+				}
+				if (goal.getContext() instanceof IModelCacheContext
+						&& innerContext instanceof IModelCacheContext) {
+					((IModelCacheContext) innerContext)
+							.setCache(((IModelCacheContext) goal.getContext())
+									.getCache());
 				}
 
 				ASTVisitor visitor = new ASTVisitor() {
