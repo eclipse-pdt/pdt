@@ -128,4 +128,8 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 		}
 		return ""; //$NON-NLS-1$
 	}
+
+	public static boolean isDeprecated(int flags) {
+		return (flags & AccDeprecated) != 0;
+	}
 }
