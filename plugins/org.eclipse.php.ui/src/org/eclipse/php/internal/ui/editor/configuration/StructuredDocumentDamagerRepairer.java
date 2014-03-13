@@ -39,7 +39,7 @@ public class StructuredDocumentDamagerRepairer extends DefaultDamagerRepairer {
 			ITextRegion textReg = structuredDocumentRegion
 					.getRegionAtCharacterOffset(region.getOffset());
 			if (textReg != null
-					&& textReg.getType() == PHPRegionContext.PHP_CONTENT
+					&& textReg.getType().equals(PHPRegionContext.PHP_CONTENT)
 					&& damageCoversWholeRegion(region, textReg, damage)) {
 				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textReg;
 				if (!phpScriptRegion.isFullReparsed()) {
@@ -51,6 +51,7 @@ public class StructuredDocumentDamagerRepairer extends DefaultDamagerRepairer {
 				}
 			}
 		}
+
 		return null;
 	}
 
