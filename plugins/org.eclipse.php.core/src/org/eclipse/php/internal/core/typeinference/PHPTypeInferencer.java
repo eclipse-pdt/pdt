@@ -24,7 +24,8 @@ import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVaria
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
 @SuppressWarnings("deprecation")
-public class PHPTypeInferencer extends DefaultTypeInferencer {
+public class PHPTypeInferencer extends DefaultTypeInferencer implements
+		IPHPTypeInferencer {
 
 	public PHPTypeInferencer() {
 		super(new PHPGoalEvaluatorFactory());

@@ -99,8 +99,7 @@ import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ST;
-import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.custom.*;
 import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -290,6 +289,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	 */
 	private boolean fMarkImplementors;
 
+	/**
+	 * Fix for outline synchronization while reconcile
+	 */
 	private boolean saveActionsEnabled = false;
 	private boolean saveActionsIgnoreEmptyLines = false;
 
@@ -421,6 +423,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	private IPreferenceChangeListener fPreferencesListener;
 
 	private void doSelectionChanged(ISelection selection) {
+
 		ISourceReference reference = null;
 		Iterator iter = ((IStructuredSelection) selection).iterator();
 		while (iter.hasNext()) {
@@ -2294,6 +2297,21 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		addEditorReconcilingListener(getSourceViewerConfiguration(),
 				getTextViewer());
 
+		StyledText styledText = getTextViewer().getTextWidget();
+		styledText.getContent().addTextChangeListener(new TextChangeListener() {
+
+			public void textChanging(TextChangingEvent event) {
+				PHPUiPlugin.getDefault().getASTProvider().markASTDirty();
+			}
+
+			public void textChanged(TextChangedEvent event) {
+
+			}
+
+			public void textSet(TextChangedEvent event) {
+			}
+		});
+
 		fEditorSelectionChangedListener = new EditorSelectionChangedListener();
 		fEditorSelectionChangedListener.install(getSelectionProvider());
 		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
@@ -2315,11 +2333,40 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 		public void aboutToBeReconciled() {
 			PHPStructuredEditor.this.aboutToBeReconciled();
-
 		}
 
 		public void reconciled(IDocument document, IAnnotationModel model,
 				boolean forced, IProgressMonitor progressMonitor) {
+			if (fPHPOutlinePage == null
+					|| !PHPUiPlugin.getDefault().getASTProvider()
+							.isActive((ISourceModule) getModelElement())) {
+				return;
+			}
+
+			final ISelection[] sel = new ISelection[1];
+
+			Display.getDefault().syncExec(new Runnable() {
+				public void run() {
+					sel[0] = getSelectionProvider().getSelection();
+				}
+			});
+
+			if (sel[0] != null && sel[0] instanceof ITextSelection) {
+				updateOccurrenceAnnotations((ITextSelection) sel[0],
+						getModelElement());
+			}
+
+			final ISourceReference sourceRef = computeHighlightRangeSourceReference();
+			if (sourceRef == null) {
+				return;
+			}
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					fPHPOutlinePage.setSelection(new StructuredSelection(
+							sourceRef));
+				}
+			});
+			setSelection(sourceRef, false);
 		}
 
 	}
@@ -2822,6 +2869,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	private ListenerList fReconcilingListeners = new ListenerList(
 			ListenerList.IDENTITY);
 
+	private volatile boolean fReconcileSelection = false;
+
 	public void addReconcileListener(
 			IPhpScriptReconcilingListener reconcileListener) {
 		synchronized (fReconcilingListeners) {
@@ -2837,8 +2886,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	}
 
 	public void aboutToBeReconciled() {
-
 		// Notify AST provider
+		fReconcileSelection = true;
 		PHPUiPlugin.getDefault().getASTProvider()
 				.aboutToBeReconciled((ISourceModule) getModelElement());
 
@@ -2866,21 +2915,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 		// Always notify AST provider
 		ISourceModule inputModelElement = (ISourceModule) getModelElement();
-		// TODO: notify AST provider
 		phpPlugin.getASTProvider().reconciled(ast, inputModelElement,
 				progressMonitor);
-
-		try {
-			// XXX Fix selection after reconcile
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					getSelectionProvider().setSelection(
-							getSelectionProvider().getSelection());
-				}
-			});
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		this.fReconcileSelection = false;
 
 		// Notify listeners
 		Object[] listeners = fReconcilingListeners.getListeners();
@@ -3018,15 +3055,15 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				try {
 					astRoot = SharedASTProvider.getAST(
 							(ISourceModule) sourceModule,
-							SharedASTProvider.WAIT_NO,
-							new NullProgressMonitor());
+							SharedASTProvider.WAIT_ACTIVE_ONLY, monitor);
 				} catch (ModelException e) {
 					Logger.logException(e);
 				} catch (IOException e) {
 					Logger.logException(e);
 				}
-
-				updateOccurencesAnnotationsRunJob(selection, astRoot);
+				if (!monitor.isCanceled() && astRoot != null) {
+					updateOccurencesAnnotationsRunJob(selection, astRoot);
+				}
 				return Status.OK_STATUS;
 			}
 
@@ -3056,7 +3093,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 		// TODO: see the method comment, need to be removed once
 		// PHPStructuredEditor#aboutToBeChangedEvent is used
-		if (document.getLength() != astRoot.getEnd()) {
+		if (document.getLength() != astRoot.getEnd()
+				|| this.fReconcileSelection) {
 			return;
 		}
 
@@ -3402,7 +3440,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			caret[0] = offset + styledText.getCaretOffset();
 		}
 		IModelElement element = getElementAt(caret[0], false);
-		// IModelElement element = getElementAt(caret[0], true);
 		if (!(element instanceof ISourceReference))
 			return null;
 		return (ISourceReference) element;
@@ -3417,6 +3454,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				selection[0] = getSelectionProvider().getSelection();
 			}
 		});
+		if (selection[0] == null) {
+			return;
+		}
 		if (selection[0] instanceof TextSelection) {
 			TextSelection textSelection = (TextSelection) selection[0];
 			if (textSelection instanceof IStructuredSelection) {
@@ -3454,11 +3494,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				int length = range.getLength();
 				if (offset < 0 || length < 0)
 					return;
-				// XXX hide bad locations (invalid sync)
-				if (offset + length > getDocument().getLength()) {
-					length = length - offset + length
-							- getDocument().getLength();
-				}
 				setHighlightRange(offset, length, moveCursor);
 				if (!moveCursor)
 					return;
@@ -3918,7 +3953,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		return result;
 	}
 
-	@Override
 	public void firePropertyChange(int property) {
 		super.firePropertyChange(property);
 	}

@@ -23,6 +23,7 @@ import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
 import org.eclipse.php.internal.core.compiler.ast.nodes.StaticFieldAccess;
+import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
@@ -97,8 +98,13 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 		// (using PHPDoc first):
 		if (state == STATE_GOT_RECEIVER) {
 			state = STATE_WAITING_FIELD_PHPDOC;
-			return new IGoal[] { new PHPDocClassVariableGoal(new TypeContext(
-					(ISourceModuleContext) goal.getContext(), receiverType),
+			TypeContext typeContext = new TypeContext(
+					(ISourceModuleContext) goal.getContext(), receiverType);
+			if (goal.getContext() instanceof IModelCacheContext) {
+				typeContext.setCache(((IModelCacheContext) goal.getContext())
+						.getCache());
+			}
+			return new IGoal[] { new PHPDocClassVariableGoal(typeContext,
 					variableName) };
 		}
 
@@ -109,9 +115,14 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 				return null;
 			}
 			state = STATE_WAITING_FIELD;
-			return new IGoal[] { new ClassVariableDeclarationGoal(
-					new TypeContext((ISourceModuleContext) goal.getContext(),
-							receiverType), variableName) };
+			TypeContext typeContext = new TypeContext(
+					(ISourceModuleContext) goal.getContext(), receiverType);
+			if (goal.getContext() instanceof IModelCacheContext) {
+				typeContext.setCache(((IModelCacheContext) goal.getContext())
+						.getCache());
+			}
+			return new IGoal[] { new ClassVariableDeclarationGoal(typeContext,
+					variableName) };
 		}
 
 		if (state == STATE_WAITING_FIELD) {

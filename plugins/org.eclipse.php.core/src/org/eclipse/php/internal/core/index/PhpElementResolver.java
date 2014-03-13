@@ -22,6 +22,7 @@ import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.dltk.core.index2.IElementResolver;
 import org.eclipse.dltk.internal.core.*;
 import org.eclipse.php.core.compiler.IPHPModifiers;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.model.IncludeField;
@@ -145,7 +146,7 @@ public class PhpElementResolver implements IElementResolver {
 		}
 
 		public boolean isDeprecated() {
-			return PhpElementResolver.isDeprecated(doc);
+			return PHPFlags.isDeprecated(flags);
 		}
 
 		public String[] getReturnTypes() {
@@ -230,7 +231,7 @@ public class PhpElementResolver implements IElementResolver {
 		}
 
 		public boolean isDeprecated() {
-			return PhpElementResolver.isDeprecated(doc);
+			return PHPFlags.isDeprecated(flags);
 		}
 
 		public String[] getReturnTypes() {
@@ -286,7 +287,7 @@ public class PhpElementResolver implements IElementResolver {
 		}
 
 		public boolean isDeprecated() {
-			return PhpElementResolver.isDeprecated(doc);
+			return PHPFlags.isDeprecated(flags);
 		}
 
 		public String[] getReturnTypes() {

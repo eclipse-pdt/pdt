@@ -17,8 +17,10 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.typeinference.GeneratorClassType;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 import org.eclipse.php.internal.core.typeinference.goals.IteratorTypeGoal;
@@ -44,7 +46,11 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
-
+		IModelAccessCache cache = null;
+		if (goal.getContext() instanceof IModelCacheContext) {
+			cache = (IModelAccessCache) ((IModelCacheContext) goal.getContext())
+					.getCache();
+		}
 		if (state != GoalState.RECURSIVE) {
 			if (result instanceof GeneratorClassType) {
 				MultiTypeType type = new MultiTypeType();
@@ -60,10 +66,13 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 					List<IGoal> subGoals = new LinkedList<IGoal>();
 					try {
 						IType[] types = PHPModelUtils.getTypes(
-								classType.getTypeName(), sourceModule, 0, null);
+								classType.getTypeName(), sourceModule, 0,
+								cache, null);
 						for (IType type : types) {
 							IType[] superTypes = PHPModelUtils.getSuperClasses(
-									type, null);
+									type,
+									cache == null ? null : cache
+											.getSuperTypeHierarchy(type, null));
 
 							if (subgoal.getContext() instanceof MethodContext) {
 
