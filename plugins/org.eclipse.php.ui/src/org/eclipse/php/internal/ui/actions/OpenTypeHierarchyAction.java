@@ -141,7 +141,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 		if (selection == null || selection.size() != 1) {
 			setEnabled(false);
 		} else if (selection instanceof ITextSelection) {
-			selectionChanged((ITextSelection) selection);
+			// selectionChanged((ITextSelection) selection);
+			super.selectionChanged(selection);
 		} else if (selection instanceof ITreeSelection) {
 			Object firstElement = selection.getFirstElement();
 			if (firstElement instanceof IMethod) {

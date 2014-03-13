@@ -442,7 +442,6 @@ public final class ASTProvider {
 
 		if (progressMonitor != null && progressMonitor.isCanceled())
 			return null;
-
 		boolean isActiveElement;
 		synchronized (this) {
 			isActiveElement = input.equals(fActiveJavaElement);
@@ -691,9 +690,6 @@ public final class ASTProvider {
 			return Thread.currentThread().toString();
 	}
 
-	/**
-	 * @deprecated
-	 */
 	public void markASTDirty() {
 		isASTDirty = true;
 	}

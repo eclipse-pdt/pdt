@@ -27,19 +27,25 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 		@Override
 		public boolean visit(Program program) {
 			try {
-				IModelElement[] children = getSourceModule().getChildren();
-				for (IModelElement child : children) {
-					if (ModelUtils.isDeprecated(child)) {
-						highlight(((IMember) child).getNameRange());
-					}
+				getSourceModule().accept(new IModelElementVisitor() {
 
-					IModelElement[] children1 = ((IParent) child).getChildren();
-					for (IModelElement child1 : children1) {
-						if (ModelUtils.isDeprecated(child1)) {
-							highlight(((IMember) child1).getNameRange());
+					@Override
+					public boolean visit(IModelElement element) {
+						if (element instanceof IMember) {
+
+							try {
+								if (ModelUtils.isDeprecated(element)) {
+									highlight(((IMember) element)
+											.getNameRange());
+								}
+							} catch (ModelException e) {
+								Logger.logException(e);
+							}
 						}
+						return true;
 					}
-				}
+				});
+
 			} catch (ModelException e) {
 				Logger.logException(e);
 			}
@@ -49,6 +55,7 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 		@Override
 		public boolean visit(ClassName classConst) {
 			if (classConst.getName() instanceof Identifier) {
+
 				String className = ((Identifier) classConst.getName())
 						.getName();
 				IModelAccessCache cache = classConst.getAST()

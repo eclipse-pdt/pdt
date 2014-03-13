@@ -254,6 +254,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			method.setModifier(Modifiers.AccAbstract);
 		}
 
+		method.setModifier(markAsDeprecated(method.getModifiers(), method));
+
 		declarations.push(method);
 
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
@@ -401,6 +403,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				return true;
 			}
 		}
+		type.setModifier(markAsDeprecated(type.getModifiers(), type));
 
 		// In case we are entering a nested element
 		if (!declarations.empty()
@@ -608,6 +611,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		info.nameSourceEnd = var.sourceEnd() - 1;
 		info.nameSourceStart = var.sourceStart();
 		info.declarationStart = declaration.getDeclarationStart();
+		info.modifiers = markAsDeprecated(info.modifiers, declaration);
 		PHPDocBlock doc = declaration.getPHPDoc();
 		if (doc != null) {
 			for (PHPDocTag tag : doc.getTags(PHPDocTag.VAR)) {
@@ -623,6 +627,29 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
+	/**
+	 * Update modifiers for "deprecated"
+	 * 
+	 * @param modifiers
+	 * @param phpDoc
+	 * @return
+	 */
+	private int markAsDeprecated(int modifiers, PHPDocBlock phpDoc) {
+		if (phpDoc != null && phpDoc.getTags(PHPDocTag.DEPRECATED).length > 0) {
+			return modifiers | IPHPModifiers.AccDeprecated;
+		}
+
+		return modifiers;
+	}
+
+	private int markAsDeprecated(int modifiers, ASTNode node) {
+		if (node instanceof IPHPDocAwareDeclaration) {
+			return markAsDeprecated(modifiers,
+					((IPHPDocAwareDeclaration) node).getPHPDoc());
+		}
+		return modifiers;
+	}
+
 	public boolean visit(CatchClause catchClause) throws Exception {
 		ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 		info.modifiers = Modifiers.AccPublic;
@@ -631,6 +658,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		info.nameSourceEnd = var.sourceEnd() - 1;
 		info.nameSourceStart = var.sourceStart();
 		info.declarationStart = catchClause.sourceStart();
+
 		fRequestor.enterField(info);
 		return true;
 	}
@@ -720,6 +748,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		info.nameSourceEnd = constantName.sourceEnd() - 1;
 		info.nameSourceStart = constantName.sourceStart();
 		info.declarationStart = declaration.sourceStart();
+		info.modifiers = markAsDeprecated(info.modifiers, declaration);
 		fRequestor.enterField(info);
 		return true;
 	}
