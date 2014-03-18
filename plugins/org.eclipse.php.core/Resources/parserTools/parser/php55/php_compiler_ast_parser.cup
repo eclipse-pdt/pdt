@@ -2512,7 +2512,7 @@ list_variable:vars T_EQUAL expr:expr
 {:
 	expr.setChainingInstanceCall(call);
 
-	if (call.getChainingMethodPropertyList() != null
+	if (call != null && call.getChainingMethodPropertyList() != null
 		&& !call.getChainingMethodPropertyList()
 			.getChilds().isEmpty()) {
 		// then get the aggregated list of properties (->...->...->...)
