@@ -183,9 +183,8 @@ public abstract class AbstractDebuggerConfiguration implements
 						exeItem.isLoadDefaultINI() ? "" : "-n", "-c", iniFile //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 								.getAbsolutePath(), "--re", extensionId); //$NON-NLS-1$
 			} else {
-				output = PHPexeItem
-						.exec(exeItem.getExecutable().getAbsolutePath(),
-								exeItem.isLoadDefaultINI() ? "" : "-n", "--re", extensionId); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				output = PHPexeItem.exec(exeItem.getExecutable()
+						.getAbsolutePath(), "--re", extensionId); //$NON-NLS-1$
 			}
 			return output != null && !output.trim().startsWith("Exception"); //$NON-NLS-1$
 		} catch (IOException e) {
