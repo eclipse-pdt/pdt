@@ -51,11 +51,7 @@ public class PHPExeLaunchConfigurationTabGroup extends
 			list.add(aTab);
 		}
 
-		// Add arguments, environment and common tabs to the tabs group.
-		PHPDebugArgumentsTab argumentsTab = new PHPDebugArgumentsTab();
-		argumentsTab.setLaunchConfigurationDialog(dialog);
-		list.add(argumentsTab);
-
+		// Add environment and common tabs to the tabs group.
 		EnvironmentTab environmentTab = new EnvironmentTab();
 		environmentTab.setLaunchConfigurationDialog(dialog);
 		list.add(environmentTab);
