@@ -48,10 +48,6 @@ public class PHPDebugUIMessages extends NLS {
 
 	public static String CreateStepFilterDialog_stepFilterAlreadyExists;
 	public static String DebugBrowserView_swtBrowserNotAvailable0;
-	public static String DebugPHPArgumentsTab_phpScriptArguments;
-	public static String DebugPHPArgumentsTab_scriptArguments;
-	public static String DebugPHPArgumentsTab_unknownError;
-	public static String DebugPHPArgumentsTab_variables;
 
 	public static String DefaultPHPBreakpointProvider_0;
 	public static String EnableSetCondition_1;
@@ -189,6 +185,10 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PHPExecutableLaunchTab_2;
 
 	public static String PHPExecutableLaunchTab_isNotPHPFile;
+
+	public static String PHPExecutableLaunchTab_scriptArguments;
+
+	public static String PHPExecutableLaunchTab_variables;
 
 	public static String PHPExeLaunchShortcut_0;
 

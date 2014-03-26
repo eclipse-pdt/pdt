@@ -24,6 +24,7 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
+import org.eclipse.debug.ui.StringVariableSelectionDialog;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -104,6 +105,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	private Button argumentVariablesButton;
 
 	protected Button breakOnFirstLine;
+
+	protected Text fPrgmArgumentsText;
 
 	private boolean enableDebugInfoOption;
 	protected boolean enableFileSelection;
@@ -244,15 +247,16 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 
 		createLocationComponent(mainComposite);
 
-		if (enableFileSelection)
+		if (enableFileSelection) {
 			createArgumentComponent(mainComposite);
+		}
 
-		// Create the debug info component anyway to avoid problems when
-		// applying the configuration.
-		createDebugInfoComponent(mainComposite);
-		runWithDebugInfo.setVisible(enableDebugInfoOption);
+		createArgumentsControl(mainComposite);
 
 		createBreakControl(mainComposite);
+
+		createDebugInfoComponent(mainComposite);
+
 		createVerticalSpacer(mainComposite, 1);
 
 		Dialog.applyDialogFont(parent);
@@ -276,16 +280,14 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	protected void createDebugInfoComponent(final Composite parent) {
 		runWithDebugInfo = new Button(parent, SWT.CHECK);
 		runWithDebugInfo.setText(PHPDebugUIMessages.PHPexe_Run_With_Debug_Info);
-		final GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 2;
-		runWithDebugInfo.setLayoutData(gd);
+		runWithDebugInfo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		runWithDebugInfo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent se) {
 				updateLaunchConfigurationDialog();
 			}
 		});
-
+		runWithDebugInfo.setVisible(enableDebugInfoOption);
 	}
 
 	/**
@@ -298,9 +300,56 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	protected void createLocationComponent(final Composite parent) {
 		phpsComboBlock.createControl(parent);
 		final Control control = phpsComboBlock.getControl();
+		if (control instanceof Composite) {
+			Layout layout = ((Composite) control).getLayout();
+			if (layout instanceof GridLayout) {
+				GridLayout gridLayout = (GridLayout) layout;
+				gridLayout.marginWidth = 0;
+				gridLayout.marginHeight = 0;
+			}
+		}
 		phpsComboBlock.addPropertyChangeListener(fPropertyChangeListener);
 		final GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		control.setLayoutData(gd);
+	}
+
+	/**
+	 * Creates script arguments group.
+	 * 
+	 * @param parent
+	 *            parent component
+	 */
+	protected void createArgumentsControl(final Composite parent) {
+		Group group = new Group(parent, SWT.NONE);
+		group.setLayout(new GridLayout());
+		group.setLayoutData(new GridData(GridData.FILL_BOTH));
+		group.setText(PHPDebugUIMessages.PHPExecutableLaunchTab_scriptArguments);
+
+		fPrgmArgumentsText = new Text(group, SWT.MULTI | SWT.WRAP | SWT.BORDER
+				| SWT.V_SCROLL);
+		fPrgmArgumentsText.setLayoutData(new GridData(GridData.FILL_BOTH));
+		fPrgmArgumentsText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent evt) {
+				updateLaunchConfigurationDialog();
+			}
+		});
+		addControlAccessibleListener(fPrgmArgumentsText, group.getText());
+
+		Button pgrmArgVariableButton = createPushButton(group,
+				PHPDebugUIMessages.PHPExecutableLaunchTab_variables, null);
+		pgrmArgVariableButton.setLayoutData(new GridData(
+				GridData.HORIZONTAL_ALIGN_END));
+		pgrmArgVariableButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				StringVariableSelectionDialog dialog = new StringVariableSelectionDialog(
+						getShell());
+				dialog.open();
+				String variable = dialog.getVariableExpression();
+				if (variable != null) {
+					fPrgmArgumentsText.insert(variable);
+				}
+			}
+		});
 	}
 
 	/*
@@ -398,6 +447,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 						IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 						PHPDebugPlugin.getStopAtFirstLine()));
 			}
+			fPrgmArgumentsText.setText(configuration.getAttribute(
+					IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, "")); //$NON-NLS-1$
 		} catch (final CoreException e) {
 			Logger.log(Logger.ERROR, "Error reading configuration", e); //$NON-NLS-1$
 		}
@@ -558,6 +609,10 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			configuration.setAttribute(
 					IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 					breakOnFirstLine.getSelection());
+		String scriptArguments = fPrgmArgumentsText.getText().trim();
+		configuration.setAttribute(
+				IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS,
+				scriptArguments.length() > 0 ? scriptArguments : null);
 		applyLaunchDelegateConfiguration(configuration);
 	}
 
@@ -629,6 +684,9 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 						PHPDebugPlugin.getStopAtFirstLine());
 				applyLaunchDelegateConfiguration(configuration);
 			}
+			configuration.setAttribute(
+					IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS,
+					(String) null);
 		} catch (final CoreException e) {
 			Logger.log(Logger.ERROR, "Error setting default configuration", e); //$NON-NLS-1$
 		}
