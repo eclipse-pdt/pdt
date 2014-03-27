@@ -13,10 +13,13 @@ package org.eclipse.php.internal.server.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.LinkedList;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.server.PHPServerUIMessages;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
@@ -39,9 +42,12 @@ public class ServerCompositeFragment extends CompositeFragment {
 	protected Text name;
 	protected Text url;
 	protected Combo combo;
+	protected Combo debuggerCombo;
 	private ValuesCache originalValuesCache = new ValuesCache();
 	private ValuesCache modifiedValuesCache;
 	private Text webroot;
+
+	private LinkedList<String> debuggersIds;
 
 	/**
 	 * ServerCompositeFragment
@@ -58,6 +64,8 @@ public class ServerCompositeFragment extends CompositeFragment {
 				.getString("ServerCompositeFragment.specifyInformation")); //$NON-NLS-1$
 		controlHandler.setDescription(getDescription());
 		controlHandler.setImageDescriptor(ServersPluginImages.DESC_WIZ_SERVER);
+		debuggersIds = new LinkedList<String>(
+				PHPDebuggersRegistry.getDebuggersIds());
 		setDisplayName(PHPServerUIMessages
 				.getString("ServerCompositeFragment.server")); //$NON-NLS-1$
 		createControl();
@@ -113,6 +121,36 @@ public class ServerCompositeFragment extends CompositeFragment {
 				validate();
 			}
 		});
+
+		Label debuggerLabel = new Label(nameGroup, SWT.NONE);
+		debuggerLabel.setText(PHPServerUIMessages
+				.getString("ServerCompositeFragment.debuggerLabel")); //$NON-NLS-1$
+		debuggerLabel.setLayoutData(new GridData());
+
+		debuggerCombo = new Combo(nameGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
+		data = new GridData(SWT.LEFT, SWT.FILL, true, false);
+		debuggerCombo.setLayoutData(data);
+
+		debuggerCombo.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				if (getServer() != null) {
+					int index = debuggerCombo.getSelectionIndex();
+					modifiedValuesCache.debuggerId = debuggersIds.get(index);
+				}
+				validate();
+			}
+		});
+
+		String defaultDebugger = PHPDebugPlugin.getCurrentDebuggerId();
+		for (int i = 0; i < debuggersIds.size(); ++i) {
+			String id = debuggersIds.get(i);
+			String debuggerName = PHPDebuggersRegistry.getDebuggerName(id);
+			debuggerCombo.add(debuggerName, i);
+			if (id.equals(defaultDebugger)) {
+				debuggerCombo.select(i);
+			}
+		}
+
 		createURLGroup(this);
 		init();
 		validate();
@@ -131,6 +169,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 		originalValuesCache.serverName = server.getName();
 		originalValuesCache.host = server.getHost();
 		originalValuesCache.webroot = server.getDocumentRoot();
+		originalValuesCache.debuggerId = server.getDebuggerId();
 		// Clone the cache
 		modifiedValuesCache = new ValuesCache(originalValuesCache);
 
@@ -163,6 +202,17 @@ public class ServerCompositeFragment extends CompositeFragment {
 		}
 		if (originalValuesCache.webroot != null) {
 			webroot.setText(originalValuesCache.webroot);
+		}
+		if (originalValuesCache.debuggerId != null) {
+			String name = PHPDebuggersRegistry
+					.getDebuggerName(originalValuesCache.debuggerId);
+			String[] values = debuggerCombo.getItems();
+			for (int i = 0; i < values.length; i++) {
+				if (values[i].equals(name)) {
+					debuggerCombo.select(i);
+					break;
+				}
+			}
 		}
 		String baseURL = originalValuesCache.url;
 		if (!baseURL.equals("")) { //$NON-NLS-1$
@@ -417,6 +467,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 			server.setHost(modifiedValuesCache.host);
 			server.setName(modifiedValuesCache.serverName);
 			server.setDocumentRoot(modifiedValuesCache.webroot);
+			server.setDebuggerId(modifiedValuesCache.debuggerId);
 			if (originalValuesCache.serverName != null
 					&& !originalValuesCache.serverName.equals("") && //$NON-NLS-1$
 					!originalValuesCache.serverName
@@ -466,6 +517,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 		String serverName;
 		String url;
 		String host;
+		String debuggerId;
 		int port;
 
 		public ValuesCache() {
@@ -477,6 +529,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 			this.port = cache.port;
 			this.host = cache.host;
 			this.webroot = cache.webroot;
+			this.debuggerId = cache.debuggerId;
 		}
 	}
 }

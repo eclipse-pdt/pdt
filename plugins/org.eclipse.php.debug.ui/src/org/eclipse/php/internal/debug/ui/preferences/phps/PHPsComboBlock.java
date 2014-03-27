@@ -295,8 +295,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 	protected void fillWithWorkspacePHPexes() {
 		// fill with PHPexes
 		final List<PHPexeItem> standins = new ArrayList<PHPexeItem>();
-		final PHPexeItem[] types = exes.getItems(PHPDebugPlugin
-				.getCurrentDebuggerId());
+		final PHPexeItem[] types = exes.getAllItems();
 		if (types != null) {
 			for (int i = 0; i < types.length; i++) {
 				final PHPexeItem type = types[i];
