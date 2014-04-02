@@ -519,15 +519,6 @@
 			id="org.eclipse.php.internal.debug.ui.preferences.phps.PHPExeCompositeFragmentFactory"
 			name="Basic Fragment">
 		</wizardAndCompositeFragment>
-	    <!-- Path Mapper for PHP exe is disabled
-	    <wizardAndCompositeFragment
-	          class="org.eclipse.php.internal.debug.ui.wizards.PathMapperFragmentFactory"
-	          fragmentsGroupID="org.eclipse.php.debug.ui.phpExeWizardCompositeFragment"
-	          id="org.eclipse.php.internal.debug.ui.preferences.phps.PathMapperFragmentFactory"
-	          name="Path Mapper Fragment"
-	          placeAfter="org.eclipse.php.internal.debug.ui.preferences.phps.PHPExeCompositeFragmentFactory">
-	    </wizardAndCompositeFragment>
-	    -->
 	</extension>
 	
 	<extension point="org.eclipse.php.debug.ui.phpConsoleListeners">
