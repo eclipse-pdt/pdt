@@ -18,6 +18,7 @@ import java_cup.runtime.Symbol;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
@@ -76,6 +77,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 	private static final char SPACE = ' ';
 	private static final char COMMA = ',';
 	private static final char QUESTION_MARK = '?';
+	private static final char PHPDOC_CLASS_SEPARATOR = '|';
 	private String lineSeparator;
 
 	private CodeFormatterPreferences preferences;
@@ -1843,7 +1845,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		SimpleReference[] reference = phpDocTag.getReferencesWithOrigOrder();
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < reference.length; i++) {
-			sb.append(" ").append(reference[i].getName()); //$NON-NLS-1$
+			if (i > 0 && reference[i - 1] instanceof TypeReference
+					&& reference[i] instanceof TypeReference) {
+				sb.append(PHPDOC_CLASS_SEPARATOR)
+						.append(reference[i].getName()); //$NON-NLS-1$
+			} else {
+				sb.append(" ").append(reference[i].getName()); //$NON-NLS-1$
+			}
 		}
 		return sb.toString();
 	}

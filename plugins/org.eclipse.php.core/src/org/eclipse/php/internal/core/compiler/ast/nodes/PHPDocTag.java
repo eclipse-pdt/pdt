@@ -82,7 +82,22 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	}
 
 	public String[] getDescTexts() {
-		int wordSize = referencesWithOrigOrder.length;
+		// For all unsupported tags
+		int wordSize = 0;
+		if (referencesWithOrigOrder.length == 0) {
+			// No references were found
+			wordSize = 0;
+		} else if (tagKind == RETURN || tagKind == VAR || tagKind == THROWS
+				|| tagKind == SEE) {
+			// The word following the tag name was splitted into several
+			// references
+			wordSize = 1;
+		} else if (tagKind == PARAM || tagKind == PROPERTY
+				|| tagKind == PROPERTY_READ || tagKind == PROPERTY_WRITE) {
+			// The two words following the tag name were splitted into two
+			// references
+			wordSize = 2;
+		}
 		List<String> result = new ArrayList<String>();
 		for (int i = 0; i < texts.size(); i++) {
 			String text = texts.get(i).getValue();
