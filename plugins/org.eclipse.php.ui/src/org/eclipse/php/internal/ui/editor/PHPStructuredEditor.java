@@ -3456,8 +3456,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 					return;
 				// XXX hide bad locations (invalid sync)
 				if (offset + length > getDocument().getLength()) {
-					length = length - offset + length
-							- getDocument().getLength();
+					length = length
+							- (offset + length - getDocument().getLength());
 				}
 				setHighlightRange(offset, length, moveCursor);
 				if (!moveCursor)
