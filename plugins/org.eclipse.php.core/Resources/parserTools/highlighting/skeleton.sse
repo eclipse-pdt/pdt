@@ -1,53 +1,54 @@
 
-  /** this character denotes the end of file */
-  final public static int YYEOF = -1;
+  /** This character denotes the end of file */
+  public static final int YYEOF = -1;
+
+  /** initial size of the lookahead buffer */
+--- private static final int ZZ_BUFFERSIZE = ...;
 
   /** lexical states */
 ---  lexical states, charmap
 
   /* error codes */
-  final private static int YY_UNKNOWN_ERROR = 0;
-  // final private static int YY_ILLEGAL_STATE = 1;
-  final private static int YY_NO_MATCH = 2;
-  final private static int YY_PUSHBACK_2BIG = 3;
+  final private static int ZZ_UNKNOWN_ERROR = 0;
+  final private static int ZZ_NO_MATCH = 1;
+  final private static int ZZ_PUSHBACK_2BIG = 2;
 
   /* error messages for the codes above */
-  final private static String YY_ERROR_MSG[] = {
+  final private static String ZZ_ERROR_MSG[] = {
     "Unkown internal scanner error",		//$NON-NLS-1$
-    "Internal error: unknown state",		//$NON-NLS-1$
     "Error: could not match input",		//$NON-NLS-1$
     "Error: pushback value was too large"	//$NON-NLS-1$
   };
 
 --- isFinal list
   /** the input device */
-  private java.io.Reader yy_reader;
+  private java.io.Reader zzReader;
 
   /** the current state of the DFA */
-  private int yy_state;
+  private int zzState;
 
   /** the current lexical state */
-  private int yy_lexical_state = YYINITIAL;
+  private int zzLexicalState = YYINITIAL;
 
   /** this buffer contains the current text to be matched and is
       the source of the yytext() string */
-  private char yy_buffer[] = new char[16384];
+  private char zzBuffer[] = new char[ZZ_BUFFERSIZE];
 
   /** the textposition at the last accepting state */
-  private int yy_markedPos;
+  private int zzMarkedPos;
 
   /** the textposition at the last state to be included in yytext */
-  private int yy_pushbackPos;
+  private int zzPushbackPos;
 
   /** the current text position in the buffer */
-  private int yy_currentPos;
+  private int zzCurrentPos;
 
   /** startRead marks the beginning of the yytext() string in the buffer */
-  private int yy_startRead;
+  private int zzStartRead;
 
   /** endRead marks the last character in the buffer, that has been read
       from input */
-  private int yy_endRead;
+  private int zzEndRead;
 
   /** number of newlines encountered up to the start of the matched text */
   private int yyline;
@@ -59,15 +60,15 @@
    * the number of characters from the last newline up to the start of the 
    * matched text
    */
-  // private int yycolumn; 
+  //private int yycolumn;
 
   /** 
-   * yy_atBOL == true <=> the scanner is currently at the beginning of a line
+   * zzAtBOL == true <=> the scanner is currently at the beginning of a line
    */
-  // private boolean yy_atBOL;
+  //private boolean zzAtBOL = true;
 
-  /** yy_atEOF == true <=> the scanner has returned a value for EOF */
-  private boolean yy_atEOF;
+  /** zzAtEOF == true <=> the scanner is at the EOF */
+  private boolean zzAtEOF;
 
 --- user class code
 
@@ -81,6 +82,50 @@
 
 
   /**
+   * Refills the input buffer.
+   *
+   * @return      <code>false</code>, iff there was new input.
+   * 
+   * @exception   java.io.IOException  if any I/O-Error occurs
+   */
+  private boolean zzRefill() throws java.io.IOException {
+
+    /* first: make room (if you can) */
+    if (zzStartRead > 0) {
+      System.arraycopy(zzBuffer, zzStartRead,
+                       zzBuffer, 0,
+                       zzEndRead-zzStartRead);
+
+      /* translate stored positions */
+      zzEndRead-= zzStartRead;
+      zzCurrentPos-= zzStartRead;
+      zzMarkedPos-= zzStartRead;
+      zzPushbackPos-= zzStartRead;
+      zzStartRead = 0;
+    }
+
+    /* is the buffer big enough? */
+    if (zzCurrentPos >= zzBuffer.length) {
+      /* if not: blow it up */
+      char newBuffer[] = new char[zzCurrentPos*2];
+      System.arraycopy(zzBuffer, 0, newBuffer, 0, zzBuffer.length);
+      zzBuffer = newBuffer;
+    }
+
+    /* finally: fill the buffer with new input */
+    int numRead = zzReader.read(zzBuffer, zzEndRead,
+                                            zzBuffer.length-zzEndRead);
+
+    if (numRead < 0) {
+      return true;
+    }
+    else {
+      zzEndRead+= numRead;
+      return false;
+    }
+  }
+  
+  /**
    * Gets the next input character.
    *
    * @return      the next character of the input stream, EOF if the
@@ -90,103 +135,134 @@
   private int yy_advance() throws java.io.IOException {
 
     /* standard case */
-    if (yy_currentPos < yy_endRead) return yy_buffer[yy_currentPos++];
+    if (zzCurrentPos < zzEndRead) return zzBuffer[zzCurrentPos++];
 
     /* if the eof is reached, we don't need to work hard */ 
-    if (yy_atEOF) return YYEOF;
+    if (zzAtEOF) return YYEOF;
 
     /* otherwise: need to refill the buffer */
 
     /* first: make room (if you can) */
-    if (yy_startRead > 0) {
-      System.arraycopy(yy_buffer, yy_startRead, 
-                       yy_buffer, 0, 
-                       yy_endRead-yy_startRead);
-
-      /* translate stored positions */
-      yy_endRead-= yy_startRead;
-      yy_currentPos-= yy_startRead;
-      yy_markedPos-= yy_startRead;
-      yy_pushbackPos-= yy_startRead;
-      yy_startRead = 0;
+    if (zzRefill()) {
+        return YYEOF;
     }
 
-    /* is the buffer big enough? */
-    if (yy_currentPos >= yy_buffer.length) {
-      /* if not: blow it up */
-      char newBuffer[] = new char[yy_currentPos*2];
-      System.arraycopy(yy_buffer, 0, newBuffer, 0, yy_buffer.length);
-      yy_buffer = newBuffer;
-    }
-
-    /* finally: fill the buffer with new input */
-    int numRead = yy_reader.read(yy_buffer, yy_endRead, 
-                                            yy_buffer.length-yy_endRead);
-
-    if ( numRead == -1 ) return YYEOF;
-
-    yy_endRead+= numRead;
-
-    return yy_buffer[yy_currentPos++];
+    return zzBuffer[zzCurrentPos++];
   }
 
     
   /**
    * Closes the input stream.
    */
-  final public void yyclose() throws java.io.IOException {
-    yy_atEOF = true;            /* indicate end of file */
-    yy_endRead = yy_startRead;  /* invalidate buffer    */
-    yy_reader.close();
+  public final void yyclose() throws java.io.IOException {
+    zzAtEOF = true;            /* indicate end of file */
+    zzEndRead = zzStartRead;  /* invalidate buffer    */
+
+    if (zzReader != null)
+      zzReader.close();
+  }
+
+
+  /**
+   * Resets the scanner to read from a new input stream.
+   * Does not close the old reader.
+   *
+   * All internal variables are reset, the old input stream 
+   * <b>cannot</b> be reused (internal buffer is discarded and lost).
+   * Lexical state is set to <tt>ZZ_INITIAL</tt>.
+   *
+   * @param reader   the new input stream 
+   */
+  public final void yyreset(java.io.Reader reader) {
+    zzReader = reader;
+    //zzAtBOL  = true;
+    zzAtEOF  = false;
+    zzEndRead = zzStartRead = 0;
+    zzCurrentPos = zzMarkedPos = zzPushbackPos = 0;
+    yyline = yychar = 0;
+    zzLexicalState = YYINITIAL;
   }
 
 
   /**
    * Returns the current lexical state.
    */
-  final public int yystate() {
-    return yy_lexical_state;
+  public final int yystate() {
+    return zzLexicalState;
   }
+
 
   /**
    * Enters a new lexical state
    *
    * @param newState the new lexical state
    */
-  final public void yybegin(int newState) {
-    yy_lexical_state = newState;
+  public final void yybegin(int newState) {
+    zzLexicalState = newState;
   }
 
 
   /**
    * Returns the text matched by the current regular expression.
    */
-  final public String yytext() {
-    return new String( yy_buffer, yy_startRead, yy_markedPos-yy_startRead );
+  public final String yytext() {
+    return new String( zzBuffer, zzStartRead, zzMarkedPos-zzStartRead );
   }
+
+
+  /**
+   * Returns the character at position <tt>pos</tt> from the 
+   * matched text. 
+   * 
+   * It is equivalent to yytext().charAt(pos), but faster
+   *
+   * @param pos the position of the character to fetch. 
+   *            A value from 0 to yylength()-1.
+   *
+   * @return the character at position pos
+   */
+  public final char yycharat(int pos) {
+    return zzBuffer[zzStartRead+pos];
+  }
+
 
   /**
    * Returns the length of the matched text region.
    */
-  final public int yylength() {
-    return yy_markedPos-yy_startRead;
+  public final int yylength() {
+    return zzMarkedPos-zzStartRead;
   }
 
 
   /**
-   * Reports an error that occured while scanning - from the SED JFlex skeleton
+   * Reports an error that occured while scanning.
+   *
+   * In a wellformed scanner (no or only correct usage of 
+   * yypushback(int) and a match-all fallback rule) this method 
+   * will only be called with things that "Can't Possibly Happen".
+   * If this method is called, something is seriously wrong
+   * (e.g. a JFlex bug producing a faulty scanner etc.).
+   *
+   * Usual syntax/scanner level error handling should be done
+   * in error fallback rules.
    *
    * @param   errorCode  the code of the errormessage to display
    */
-  private void yy_ScanError(int errorCode) {
+--- zzScanError declaration
+    String message;
     try {
-      Logger.log(Logger.ERROR, YY_ERROR_MSG[errorCode]);
+      message = ZZ_ERROR_MSG[errorCode];
     }
     catch (ArrayIndexOutOfBoundsException e) {
-      Logger.log(Logger.ERROR, YY_ERROR_MSG[YY_UNKNOWN_ERROR]);
+      message = ZZ_ERROR_MSG[ZZ_UNKNOWN_ERROR];
     }
-    // DO NOT EXIT the VM on an error
-    // System.exit(1);
+
+	Logger.log(Logger.ERROR, message);
+	try {
+--- throws clause
+    } catch(Error e) {
+        // BC
+    }
   } 
 
 
@@ -198,11 +274,11 @@
    * @param number  the number of characters to be read again.
    *                This number must not be greater than yylength()!
    */
-  void yypushback(int number) {
+--- yypushback decl (contains zzScanError exception)
     if ( number > yylength() )
-      yy_ScanError(YY_PUSHBACK_2BIG);
+      zzScanError(ZZ_PUSHBACK_2BIG);
 
-    yy_markedPos -= number;
+    zzMarkedPos -= number;
   }
 
 	/**
@@ -271,7 +347,7 @@
 	}
 	/* user method  - skeleton.sed */
 	public final boolean isEOF() {
-		return yy_atEOF;
+		return zzAtEOF;
 	}
 /* user method - skeleton.sed */
 protected final boolean containsTagName(String markerTagName) {
@@ -290,53 +366,57 @@ protected final boolean containsTagName(String markerTagName) {
 	return false;
 }
 
---- yy_doEof
+--- zzDoEOF
   /**
    * Resumes scanning until the next regular expression is matched,
    * the end of input is encountered or an I/O-Error occurs.
    *
    * @return      the next token
-   * @exception   IOException  if any I/O-Error occurs
+   * @exception   java.io.IOException  if any I/O-Error occurs
    */
 --- yylex declaration
-    int yy_input;
-    int yy_action;
+    int zzInput;
+    int zzAction;
+
+    // cached fields:
+    int zzCurrentPosL;
+    int zzMarkedPosL;
+    int zzEndReadL = zzEndRead;
+    char [] zzBufferL = zzBuffer;
+    char [] zzCMapL = ZZ_CMAP;
 
 --- local declarations
 
     while (true) {
+      zzMarkedPosL = zzMarkedPos;
 
 --- start admin (line, char, col count)
-      yy_action = -1;
+      zzAction = -1;
 
-      yy_currentPos = yy_startRead = yy_markedPos;
-
+      zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
+  
 --- start admin (lexstate etc)
 
-      yy_forAction: {
+      zzForAction: {
         while (true) {
     
-          yy_input = yy_advance();
-
-          if ( yy_input == YYEOF ) break yy_forAction;
-
---- line, col, char count, next transition, isFinal action
-            yy_action = yy_state; 
-            yy_markedPos = yy_currentPos; 
+--- next input, line, col, char count, next transition, isFinal action
+            zzAction = zzState;
+            zzMarkedPosL = zzCurrentPosL;
 --- line count update
           }
 
         }
       }
 
+      // store back cached position
+      zzMarkedPos = zzMarkedPosL;
 --- char count update
-
-      switch (yy_action) {    
 
 --- actions
         default: 
-          if (yy_input == YYEOF && yy_startRead == yy_currentPos) {
-            yy_atEOF = true;
+          if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
+            zzAtEOF = true;
 --- eofvalue
           } 
           else {
@@ -344,7 +424,7 @@ protected final boolean containsTagName(String markerTagName) {
           }
       }
     }
-  }    
+  }
 
 --- main
 

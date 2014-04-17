@@ -90,6 +90,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 	private String internalContext = null;
 	
 	private final XMLParserRegionFactory fRegionFactory = new XMLParserRegionFactory();
+	private PHPVersion phpVersion = ProjectOptions.getDefaultPhpVersion();
 /**
  * user method 
  */
@@ -220,8 +221,8 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 	while (stillSearching) {
 		n = 0;
 		// Ensure that enough data from the input exists to compare against the search String.
-		n = yy_advance();
-		while(n != YYEOF && yy_currentPos < searchStringLength)
+		n = yy_advance();  
+		while(n != YYEOF && zzCurrentPos < searchStringLength)
 			n = yy_advance();
 		// If the input was too short or we've exhausted the input, stop immediately.
 		if (n == YYEOF) {
@@ -235,14 +236,14 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 			// Look for a PHP beginning at the current position; this case wouldn't be handled by the preceding section
 			// since it relies upon *having* closeTagStringLength amount of input to work as designed.  Must be sure we don't
 			// spill over the end of the buffer while checking.
-			if(allowPHP && yy_startRead != fLastInternalBlockStart && yy_currentPos > 0 && yy_currentPos < yy_buffer.length - 1 &&
-					yy_buffer[yy_currentPos - 1] == '<' && 
-					(yy_buffer[yy_currentPos] == '?' || (yy_buffer[yy_currentPos] == '%' && ProjectOptions.isSupportingAspTags(project)))) {
-				fLastInternalBlockStart = yy_markedPos = yy_currentPos - 1;
-				yy_currentPos = yy_markedPos + 1;
+			if(allowPHP && zzStartRead != fLastInternalBlockStart && zzCurrentPos > 0 && zzCurrentPos < zzBuffer.length - 1 &&
+					zzBuffer[zzCurrentPos - 1] == '<' && 
+					(zzBuffer[zzCurrentPos] == '?' || (zzBuffer[zzCurrentPos] == '%' && ProjectOptions.isSupportingAspTags(project)))) {
+				fLastInternalBlockStart = zzMarkedPos = zzCurrentPos - 1;
+				zzCurrentPos = zzMarkedPos + 1;
 				int resumeState = yystate();
 				yybegin(ST_BLOCK_TAG_INTERNAL_SCAN);
-				if(yy_markedPos == yy_startRead) {
+				if(zzMarkedPos == zzStartRead) {
 					String jspContext = primGetNextToken();
 					yybegin(resumeState);
 					return jspContext;
@@ -250,35 +251,35 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 				return searchContext;
 			}
 			
-			// 2) yy_currentPos - jspstarter.length : There's not searchStringLength of input available; check for a JSP 2 spots back in what we could read
+			// 2) zzCurrentPos - jspstarter.length : There's not searchStringLength of input available; check for a JSP 2 spots back in what we could read
 			// ---
 			// Look for a JSP beginning at the current position; this case wouldn't be handled by the preceding section
 			// since it relies upon *having* closeTagStringLength amount of input to work as designed.  Must be sure we don't
 			// spill over the end of the buffer while checking.
-			else if(allowPHP && yy_startRead != fLastInternalBlockStart && yy_currentPos > 0 && yy_currentPos < yy_buffer.length - 1 &&
-					yy_buffer[yy_currentPos - 1] == '<' && yy_buffer[yy_currentPos] == '?') {
-				fLastInternalBlockStart = yy_markedPos = yy_currentPos - 1;
-				yy_currentPos = yy_markedPos + 1;
+			else if(allowPHP && zzStartRead != fLastInternalBlockStart && zzCurrentPos > 0 && zzCurrentPos < zzBuffer.length - 1 &&
+					zzBuffer[zzCurrentPos - 1] == '<' && zzBuffer[zzCurrentPos] == '?') {
+				fLastInternalBlockStart = zzMarkedPos = zzCurrentPos - 1;
+				zzCurrentPos = zzMarkedPos + 1;
 				int resumeState = yystate();
 				yybegin(ST_BLOCK_TAG_INTERNAL_SCAN);
-				if(yy_markedPos == yy_startRead) {
+				if(zzMarkedPos == zzStartRead) {
 					String jspContext = primGetNextToken();
 					yybegin(resumeState);
 					return jspContext;
 				}
 				return searchContext;
 			}
-			// 3) yy_currentPos..(yy_currentPos+jspStartlength-1) : Check at the start of the block one time
+			// 3) zzCurrentPos..(zzCurrentPos+jspStartlength-1) : Check at the start of the block one time
 			// ---
 			// Look for a JSP beginning immediately in the block area; this case wouldn't be handled by the preceding section
-			// since it relies upon yy_currentPos equaling exactly the previous end +1 to work as designed.
-			else if(allowPHP && yy_startRead != fLastInternalBlockStart && yy_startRead > 0 &&
-					yy_startRead < yy_buffer.length - 1 && yy_buffer[yy_startRead] == '<' && yy_buffer[yy_startRead + 1] == '?') {
-				fLastInternalBlockStart = yy_markedPos = yy_startRead;
-				yy_currentPos = yy_markedPos + 1;
+			// since it relies upon zzCurrentPos equaling exactly the previous end +1 to work as designed.
+			else if(allowPHP && zzStartRead != fLastInternalBlockStart && zzStartRead > 0 &&
+					zzStartRead < zzBuffer.length - 1 && zzBuffer[zzStartRead] == '<' && zzBuffer[zzStartRead + 1] == '?') {
+				fLastInternalBlockStart = zzMarkedPos = zzStartRead;
+				zzCurrentPos = zzMarkedPos + 1;
 				int resumeState = yystate();
 				yybegin(ST_BLOCK_TAG_INTERNAL_SCAN);
-				if(yy_markedPos == yy_startRead) {
+				if(zzMarkedPos == zzStartRead) {
 					String jspContext = primGetNextToken();
 					yybegin(resumeState);
 					return jspContext;
@@ -298,13 +299,13 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 				// Check the characters in the target versus the last targetLength characters read from the buffer
 				// and see if it matches
 				
-				// safety check for array accesses (yy_currentPos is the *last* character we can check against)
-				if(yy_currentPos >= searchStringLength && yy_currentPos <= yy_buffer.length) {
+				// safety check for array accesses (zzCurrentPos is the *last* character we can check against)
+				if(zzCurrentPos >= searchStringLength && zzCurrentPos <= zzBuffer.length) {
 					for(i = 0; i < searchStringLength; i++) {
 						if(same && fIsCaseSensitiveBlocking)
-							same = yy_buffer[i + yy_currentPos - searchStringLength] == searchString.charAt(i);
+							same = zzBuffer[i + zzCurrentPos - searchStringLength] == searchString.charAt(i);
 						else if(same && !fIsCaseSensitiveBlocking)
-							same = Character.toLowerCase(yy_buffer[i + yy_currentPos - searchStringLength]) == Character.toLowerCase(searchString.charAt(i));
+							same = Character.toLowerCase(zzBuffer[i + zzCurrentPos - searchStringLength]) == Character.toLowerCase(searchString.charAt(i));
 					}
 				}
 				// safety check failed; no match is possible right now
@@ -312,39 +313,39 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 					same = false;
 				}
 			}
-			if (same && requireTailSeparator && yy_currentPos < yy_buffer.length) {
+			if (same && requireTailSeparator && zzCurrentPos < zzBuffer.length) {
 				// Additional check for close tags to ensure that targetString="</script" doesn't match
 				// "</scriptS"
-				lastCheckChar = yy_buffer[yy_currentPos];
+				lastCheckChar = zzBuffer[zzCurrentPos];
 				// Succeed on "</script>" and "</script "
 				if(lastCheckChar == '>' || Character.isWhitespace(lastCheckChar))
 					stillSearching = false;
 			}
 			else {
-				stillSearching = !same || (yy_currentPos < yy_startRead + searchStringLength);
+				stillSearching = !same || (zzCurrentPos < zzStartRead + searchStringLength);
 			}
 		}
 	}
 	if (n != YYEOF || same) {
 		// We've stopped short of the end or definitely found a match
-		yy_markedPos = yy_currentPos - searchStringLength;
-		yy_currentPos = yy_markedPos + 1;
+		zzMarkedPos = zzCurrentPos - searchStringLength;
+		zzCurrentPos = zzMarkedPos + 1;
 		// If the searchString occurs at the very beginning of what would have
 		// been a Block, resume scanning normally immediately
-		if (yy_markedPos == yy_startRead) {
+		if (zzMarkedPos == zzStartRead) {
 			yybegin(immediateFallbackState);
 			return primGetNextToken();
 		}
 	}
 	else {
 		// We ran through the rest of the input
-		yy_markedPos = yy_currentPos;
-		yy_currentPos++;
+		zzMarkedPos = zzCurrentPos;
+		zzCurrentPos++;
 	}
 	yybegin(exitState);
 	// If the ending occurs at the very beginning of what would have
 	// been a Block, resume scanning normally immediately
-	if(yy_markedPos == yy_startRead)
+	if(zzMarkedPos == zzStartRead)
 		return primGetNextToken();
 	return searchContext;
 }
@@ -372,7 +373,7 @@ private final String doScanEndPhp(boolean isAsp, String searchContext, int exitS
 	bufferedTextRegion = new PhpScriptRegion(searchContext, yychar, project, phpLexer);
 
 	// restore the locations / states
-	reset(yy_reader, phpLexer.getZZBuffer(), phpLexer.getParamenters());
+	reset(zzReader, phpLexer.getZZBuffer(), phpLexer.getParamenters());
 	
 	yybegin(exitState);
 	return searchContext;
@@ -384,8 +385,7 @@ private final String doScanEndPhp(boolean isAsp, String searchContext, int exitS
  * @return a new lexer for the given project with the given stream initialized with current parameters
  */
 private AbstractPhpLexer getPhpLexer() {
-	final PHPVersion phpVersion = ProjectOptions.getPhpVersion(project);
-	final AbstractPhpLexer lexer = PhpLexerFactory.createLexer(yy_reader, phpVersion);
+	final AbstractPhpLexer lexer = PhpLexerFactory.createLexer(zzReader, phpVersion);
 	int[] currentParameters = getParamenters();
 	try {
 		// set initial lexer state - we use reflection here since we don't know the constant value of 
@@ -395,7 +395,7 @@ private AbstractPhpLexer getPhpLexer() {
 		Logger.logException(e);
 	}
 	lexer.initialize(currentParameters[6]);
-	lexer.reset(yy_reader, yy_buffer, currentParameters);
+	lexer.reset(zzReader, zzBuffer, currentParameters);
 	lexer.setPatterns(project);
 
 	lexer.setAspTags(ProjectOptions.isSupportingAspTags(project));
@@ -594,22 +594,24 @@ private IProject project;
 
 public void setProject(IProject project) {
 	this.project = project;
+	this.phpVersion = ProjectOptions.getPhpVersion(project);
 }
 
 public void reset(java.io.Reader  reader, char[] buffer, int[] parameters){
-	this.yy_reader = reader;
-	this.yy_buffer = buffer;
-	this.yy_markedPos = parameters[0];
-	this.yy_pushbackPos = parameters[1];
-	this.yy_currentPos = parameters[2];
-	this.yy_startRead = parameters[3];
-	this.yy_endRead = parameters[4];
+    this.phpVersion = ProjectOptions.getPhpVersion(project);
+	this.zzReader = reader;
+	this.zzBuffer = buffer;
+	this.zzMarkedPos = parameters[0];
+	this.zzPushbackPos = parameters[1];
+	this.zzCurrentPos = parameters[2];
+	this.zzStartRead = parameters[3];
+	this.zzEndRead = parameters[4];
 	this.yyline = parameters[5];  
-	this.yychar = this.yy_startRead - this.yy_pushbackPos;
+	this.yychar = this.zzStartRead - this.zzPushbackPos;
 }
 
 public int[] getParamenters(){
-	return new int[]{yy_markedPos, yy_pushbackPos, yy_currentPos, yy_startRead, yy_endRead, yyline, yy_lexical_state};
+	return new int[]{zzMarkedPos, zzPushbackPos, zzCurrentPos, zzStartRead, zzEndRead, yyline, zzLexicalState};
 }
 
 /**
@@ -652,7 +654,7 @@ public final ITextRegion getNextToken() throws IOException {
 		}
 		text = yytext();
 		if (context == XML_TAG_NAME) {
-			if(containsTagName(yy_buffer, yy_startRead, yy_markedPos-yy_startRead))
+			if(containsTagName(zzBuffer, zzStartRead, zzMarkedPos-zzStartRead))
 				fCurrentTagName = text;
 			else
 				fCurrentTagName = null;
@@ -665,7 +667,7 @@ public final ITextRegion getNextToken() throws IOException {
 		}
 		start = yychar;
 		textLength = length = yylength();
-		if (yy_atEOF) {
+		if (zzAtEOF) {
 			fTokenCount++;
 			return null;
 		}
@@ -677,7 +679,7 @@ public final ITextRegion getNextToken() throws IOException {
 		fBufferedEmbeddedContainer = fEmbeddedContainer;
 		fShouldLoadBuffered = true;
 	} else if (f_context == XML_TAG_NAME) {
-		if(containsTagName(yy_buffer, yy_startRead, yy_markedPos-yy_startRead))
+		if(containsTagName(zzBuffer, zzStartRead, zzMarkedPos-zzStartRead))
 			fCurrentTagName = yytext();
 		else
 			fCurrentTagName = null;
@@ -689,7 +691,7 @@ public final ITextRegion getNextToken() throws IOException {
 	fBufferedContext = f_context;
 	fBufferedText = yytext();
 	if (fBufferedContext == XML_TAG_NAME) {
-		if(containsTagName(yy_buffer, yy_startRead, yy_markedPos-yy_startRead))
+		if(containsTagName(zzBuffer, zzStartRead, zzMarkedPos-zzStartRead))
 			fCurrentTagName = fBufferedText;
 		else
 			fCurrentTagName = null;
@@ -767,38 +769,39 @@ public void reset(java.io.Reader in, int newOffset) {
 	if (Debug.debugTokenizer) {
 		System.out.println("resetting tokenizer");//$NON-NLS-1$
 	}
+	phpVersion = ProjectOptions.getPhpVersion(project);
 	fOffset = newOffset;
 
 	/* the input device */
-	yy_reader = in;
+	zzReader = in; 
 
 	/* the current state of the DFA */
-	yy_state = 0;
+	zzState = 0;
 
 	/* the current lexical state */
-	yy_lexical_state = YYINITIAL;
+	zzLexicalState = YYINITIAL;
 
 	/* this buffer contains the current text to be matched and is
 	the source of the yytext() string */
-	java.util.Arrays.fill(yy_buffer, (char)0);
+	java.util.Arrays.fill(zzBuffer, (char)0);
 
 	/* the textposition at the last accepting state */
-	yy_markedPos = 0;
+	zzMarkedPos = 0;
 
 	/* the textposition at the last state to be included in yytext */
-	yy_pushbackPos = 0;
+	zzPushbackPos = 0;
 
 	/* the current text position in the buffer */
-	yy_currentPos = 0;
+	zzCurrentPos = 0;
 
 	/* startRead marks the beginning of the yytext() string in the buffer */
-	yy_startRead = 0;
+	zzStartRead = 0;
 
 	/** 
 	 * endRead marks the last character in the buffer, that has been read
 	 * from input 
 	 */
-	yy_endRead = 0;
+	zzEndRead = 0;
 
 	/* number of newlines encountered up to the start of the matched text */
 	yyline = 0;
@@ -806,11 +809,11 @@ public void reset(java.io.Reader in, int newOffset) {
 	/* the number of characters up to the start of the matched text */
 	yychar = 0;
 
-	/* yy_atEOF == true <=> the scanner has returned a value for EOF */
-	yy_atEOF = false;
+	/* zzAtEOF == true <=> the scanner has returned a value for EOF */
+	zzAtEOF = false; 
 
 	/* denotes if the user-EOF-code has already been executed */
-	yy_eof_done = false;
+	//yy_eof_done = false;
 
 
 	/* user vars: */
@@ -930,6 +933,7 @@ genericTagClose      = >
 genericEndTagOpen    = <\/
 genericEmptyTagClose = \/>
 
+PIecho = <\?=
 PIstart = <\?
 PIend   = \?>
 
@@ -971,15 +975,15 @@ SystemLiteral = ((\" [^\"]* \") | (\' [^\']* \'))
 // [12] PubidLiteral ::= '"' PubidChar* '"' | "'" (PubidChar - "'")* "'"
 PubidLiteral = (\" {PubidChar}* \" | \' ({PubidChar}\')* "'")
 
-// [13] PubidChar ::= #x20 | #xD | #xA | [a-zA-Z0-9] | [-'()+,./:=?;!*#@$_%]
-PubidChar = ([\040\015\012] | [a-zA-Z0-9] | [\-\'()\+,.\/:=?;!\*#@\$_%])
+// [13] PubidChar ::= #x20 | #xD | #xA | [a-zA-Z0-9] | [-'()+,./:=?;\!*#@$_%]
+PubidChar = ([\040\015\012] | [a-zA-Z0-9] | [\-\'()\+,.\/:=?;\!\*#@\$_%])
 
 // [14] CharData ::= [^<&]* - ([^<&]* ']]>' [^<&]*)
 // implement lookahead behavior during action definition
 CharData = ([^<&(\]\]>)]*)
 
-// [15] Comment ::= '<!--' ((Char - '-') | ('-' (Char - '-')))* '-->'
-CommentStart = (<!\-\-)
+// [15] Comment ::= '<\!--' ((Char - '-') | ('-' (Char - '-')))* '-->'
+CommentStart = (<\!\-\-)
 CommentEnd   = (\-\->)
 Comment = ({CommentStart}.*{CommentEnd})
 
@@ -992,8 +996,8 @@ Comment = ({CommentStart}.*{CommentEnd})
 // [18] CDSect ::= CDStart CData CDEnd
 CDSect = ({CDStart}{CData}{CDEnd})
 
-// [19] CDStart ::= '<![CDATA['
-CDStart = <!\[CDATA\[
+// [19] CDStart ::= '<\![CDATA['
+CDStart = <\!\[CDATA\[
 
 // [20] CData ::= (Char* - (Char* ']]>' Char*)) 
 // implement lookahead behavior during action definition
@@ -1020,7 +1024,7 @@ VersionNum = (([a-zA-Z0-9_.:]|\-)+)
 // [27] Misc ::= Comment | S
 Misc = ({Comment} | {S})
 
-// [28] doctypedecl ::= '<!DOCTYPE' S Name (S ExternalID)?  S? ('[' (markupdecl | PEReference | S)* ']' S?)? '>'
+// [28] doctypedecl ::= '<\!DOCTYPE' S Name (S ExternalID)?  S? ('[' (markupdecl | PEReference | S)* ']' S?)? '>'
 doctypedecl = (<\!DOCTYPE{S}{Name} ({S}{ExternalID})? {S}? (\[ ({markupdecl}|{PEReference}|{S})* \]{S}?)?>)
 
 // [29] markupdecl ::= elementdecl | AttlistDecl | EntityDecl | NotationDecl | Comment
@@ -1071,7 +1075,7 @@ content = (({element} | {CharData} | {Reference} | {CDSect} | {Comment})*)
 // [44]  EmptyElemTag  ::= '<' Name (S Attribute)* S? '/>'
 EmptyElemTag = (<{Name}({S}{Attribute})*{S}?\/>)
 
-// [45] elementdecl ::= '<!ELEMENT' S Name S contentspec S? '>'
+// [45] elementdecl ::= '<\!ELEMENT' S Name S contentspec S? '>'
 elementdecl = (<\!ELEMENT{S}{Name}{S}{contentspec}{S}?>)
 
 // [46] contentspec ::= 'EMPTY' | 'ANY' | Mixed | children
@@ -1095,7 +1099,7 @@ seq = (\({S}?{Name}({S}?\,{S}?{Name})*{S}?\))
 // [51] Mixed ::= '(' S? '#PCDATA' (S? '|' S? Name)* S?  ')*' | '(' S? '#PCDATA' S? ')'
 Mixed = ({S}?\#PCDATA({S}?\|{S}?{Name})*{S}?)*\|({S}?\#PCDATA{S}?)
 
-// [52] AttlistDecl ::= '<!ATTLIST' S Name AttDef* S? '>'
+// [52] AttlistDecl ::= '<\!ATTLIST' S Name AttDef* S? '>'
 AttlistDecl = (<\!ATTLIST{S}{Name}{AttDef}*{S}?>)
 
 // [53] AttDef ::= S Name S AttType S DefaultDecl
@@ -1125,16 +1129,16 @@ DefaultDecl = (\#REQUIRED|\#IMPLIED|((\#FIXED{S})?{AttValue}))
 // [61] conditionalSect ::= includeSect | ignoreSect 
 conditionalSect = ({includeSect} | {ignoreSect})
 
-// [62] includeSect ::= '<![' S? 'INCLUDE' S? '[' extSubsetDecl ']]>' 
+// [62] includeSect ::= '<\![' S? 'INCLUDE' S? '[' extSubsetDecl ']]>' 
 includeSect = (<\!\[{S}?INCLUDE{S}?\[{extSubsetDecl}\]\]>)
 
-// [63] ignoreSect ::= '<![' S? 'IGNORE' S? '[' ignoreSectContents* ']]>'
+// [63] ignoreSect ::= '<\![' S? 'IGNORE' S? '[' ignoreSectContents* ']]>'
 ignoreSect = (<\!\[{S}?IGNORE{S}?\[{ignoreSectContents}*\]\]>)
 
-// [64] ignoreSectContents ::= Ignore ('<![' ignoreSectContents ']]>' Ignore)*
+// [64] ignoreSectContents ::= Ignore ('<\![' ignoreSectContents ']]>' Ignore)*
 ignoreSectContents = ({Ignore}(<\!\[{ignoreSectContents}\]\]>{Ignore})*)
 
-// [65] Ignore ::= Char* - (Char* ('<![' | ']]>') Char*)
+// [65] Ignore ::= Char* - (Char* ('<\![' | ']]>') Char*)
 Ignore =  ([^(\<\!\[|\]\]\>)]*)
 
 // [66] CharRef ::= '&#' [0-9]+ ';' | '&#x' [0-9a-fA-F]+ ';'
@@ -1152,10 +1156,10 @@ PEReference = (%{Name};)
 // [70] EntityDecl ::= GEDecl | PEDecl
 EntityDecl = ({GEDecl} | {PEDecl})
 
-// [71] GEDecl ::= '<!ENTITY' S Name S EntityDef S? '>'
+// [71] GEDecl ::= '<\!ENTITY' S Name S EntityDef S? '>'
 GEDecl = (<\!ENTITY{S}{Name}{S}{EntityDef}{S}?>)
 
-// [72] PEDecl ::= '<!ENTITY' S '%' S Name S PEDef S? '>'
+// [72] PEDecl ::= '<\!ENTITY' S '%' S Name S PEDef S? '>'
 PEDecl = (<\!ENTITY{S}\%{S}{Name}{S}{PEDef}{S}?>)
 
 // [73] EntityDef ::= EntityValue | (ExternalID NDataDecl?)
@@ -1185,7 +1189,7 @@ EncodingDecl = ({S}encoding{S}*{Eq}{S}*(\"{EncName}\"|\'{EncName}\'))
 // [81] EncName ::= [A-Za-z] ([A-Za-z0-9._] | '-')*
 EncName = ([A-Za-z]([A-Za-z0-9._]|\-)*)
 
-// [82] NotationDecl ::= '<!NOTATION' S Name S (ExternalID |  PublicID) S? '>'
+// [82] NotationDecl ::= '<\!NOTATION' S Name S (ExternalID |  PublicID) S? '>'
 NotationDecl = (<\!NOTATION{S}{Name}{S}({ExternalID}|{PublicID}){S}?>)
 
 // [83] PublicID ::= 'PUBLIC' S PubidLiteral
@@ -1532,20 +1536,23 @@ PHP_ASP_END=%>
 // END NESTED XML
 
 
-{PHP_START} | {PHP_ASP_START} | {PIstart} {
+{PHP_START} | {PHP_ASP_START} | {PIecho} | {PIstart} {
 	if(Debug.debugTokenizer)
 		dump("\nprocessing instruction start");//$NON-NLS-1$
-	if ("<?".equals(yytext())
+	if ("<?".equals(yytext()) //$NON-NLS-1$
 			&& !ProjectOptions.useShortTags(project)) {
 		yybegin(ST_PI);
 		return XML_PI_OPEN;
-
-	} else if ("<%".equals(yytext())
+	} else if ("<?=".equals(yytext()) //$NON-NLS-1$
+	        && !phpVersion.isGreaterThan(PHPVersion.PHP5_3)
+	        && !ProjectOptions.useShortTags(project) ) {
+	    yybegin(ST_PI);
+        return XML_PI_OPEN;
+	} else if ("<%".equals(yytext()) //$NON-NLS-1$ 
 			&& !ProjectOptions.isSupportingAspTags(project)) {
 		yypushback(1);
 		yybegin(ST_XML_TAG_NAME);
-		return XML_TAG_OPEN;
-
+		return XML_TAG_OPEN; 
 	} else {
 		// removeing trailing whitespaces for the php open
 		String phpStart = yytext();
