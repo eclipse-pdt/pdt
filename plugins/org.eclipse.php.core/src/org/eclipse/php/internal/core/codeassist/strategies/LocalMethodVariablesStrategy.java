@@ -86,7 +86,7 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 							.getAncestor(IModelElement.METHOD);
 					if (method != null) {
 						declaringType = method.getDeclaringType();
-						if (THIS.startsWith(prefix)) { //$NON-NLS-1$
+						if (declaringType != null && THIS.startsWith(prefix)) { //$NON-NLS-1$
 							reporter.reportField(new FakeField(
 									(ModelElement) declaringType, THIS, 0, 0),
 									suffix, replaceRange, false,

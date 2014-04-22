@@ -1005,6 +1005,7 @@ public class PHPModelUtils {
 		}
 
 		return current.getElementName().equals(field.getElementName())
+				&& current.getParent() != null
 				&& current.getParent().equals(field.getParent());
 
 	}
