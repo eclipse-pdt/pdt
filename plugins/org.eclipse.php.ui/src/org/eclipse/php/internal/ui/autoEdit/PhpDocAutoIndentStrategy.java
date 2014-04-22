@@ -301,6 +301,11 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 			case IModelElement.FIELD:
 				comment = creatFieldTags(document, command, indentation,
 						lineDelimiter, (IField) element);
+				// bug: 430784
+				if (comment == null) {
+					comment = prepareTemplateComment("", indentation, //$NON-NLS-1$
+							element.getScriptProject(), lineDelimiter);
+				}
 				break;
 			case IModelElement.METHOD:
 				comment = createMethodTags(document, command, indentation,
