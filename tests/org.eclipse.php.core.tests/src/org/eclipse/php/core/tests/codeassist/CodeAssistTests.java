@@ -50,14 +50,21 @@ public class CodeAssistTests extends AbstractPDTTTest {
 
 		TESTS.put(PHPVersion.PHP5, new String[] {
 				"/workspace/codeassist/php5/exclusive",
-				"/workspace/codeassist/php5" });
+				"/workspace/codeassist/php5",
+				"/workspace/codeassist/php5/classExclusive" });
 		TESTS.put(PHPVersion.PHP5_3, new String[] {
 				"/workspace/codeassist/php5",
+				"/workspace/codeassist/php5/classExclusive",
 				"/workspace/codeassist/php53/exclusive",
+				"/workspace/codeassist/php53/classExclusive",
 				"/workspace/codeassist/php53" });
 		TESTS.put(PHPVersion.PHP5_4, new String[] {
-				"/workspace/codeassist/php5", "/workspace/codeassist/php53",
-				"/workspace/codeassist/php54" });
+				"/workspace/codeassist/php5",
+				"/workspace/codeassist/php5/classExclusive",
+				"/workspace/codeassist/php53",
+				"/workspace/codeassist/php53/classExclusive",
+				"/workspace/codeassist/php54",
+				"/workspace/codeassist/php54/classExclusive" });
 		TESTS.put(PHPVersion.PHP5_5, new String[] {
 				"/workspace/codeassist/php5", "/workspace/codeassist/php53",
 				"/workspace/codeassist/php54", "/workspace/codeassist/php55" });

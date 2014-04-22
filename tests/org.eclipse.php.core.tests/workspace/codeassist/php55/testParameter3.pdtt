@@ -3,5 +3,6 @@ Test Method Parameter with self:CONST
 --FILE--
 <? class myClass { const BAZ = 'test'; function foo($a = SElf::|) {} } ?>
 --EXPECT--
+field(class)
 field(BAZ)
 

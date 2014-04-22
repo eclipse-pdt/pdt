@@ -1,0 +1,17 @@
+--TEST--
+Test Inherited Static Method
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=true
+--FILE--
+<? class A 
+{ 
+static function foo(){} 
+} 
+class B extends A {}    
+
+B::| 
+
+?>
+--EXPECT--
+field(class)
+method(foo)

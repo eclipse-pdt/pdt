@@ -1,0 +1,7 @@
+--TEST--
+Test class const
+--FILE--
+<? echo myClass::c| ?>
+--EXPECT--
+field(class)
+

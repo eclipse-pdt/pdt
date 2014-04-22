@@ -1,12 +1,12 @@
 --TEST--
-Show self static variables
+Show own class static members
 --PREFERENCES--
-org.eclipse.php.core/contentAssistShowStrictOptions=false
+org.eclipse.php.core/contentAssistShowStrictOptions=true
 --FILE--
-<?php
-class Abc {
+<?
+class A {
 
-	//static fields
+//static fields
 	static private $staticPrivateField = "staticPrivateField\n";
 	static protected $staticProtectedField = "staticProtectedField\n";
 	static public $staticPublicField = "staticPublicField\n";
@@ -29,74 +29,46 @@ class Abc {
 	protected function protectedNonStaticFunction() {echo "protectedNonStaticFunction\n";}
 	private function privateNonStaticFunction() {echo "privateNonStaticFunction\n";}
 	function defaultNonStaticFunction() {echo "defaultNonStaticFunction\n";}
-	
+      
 	const CONSTANT_FIELD = "CONSTANT_FIELD";
-
-
-	private static $a_Core = array();
-	
-	public function __destruct() {
-		unset(SElf::$|);
-	}
-	
-	function foo() {
+	function __construct() {
 		
-		self::privateNonStaticFunction();
-		self::protectedNonStaticFunction();
-		self::publicNonStaticFunction();
-		self::defaultNonStaticFunction();
-		
-		self::privateStaticFunction();
-		self::protectedStaticFunction();
-		self::publicStaticFunction();
-		self::defaultStaticFunction();
-		
-		echo self::$staticPrivateField;
-		echo self::$staticProtectedField;
-		echo self::$staticPublicField;
-		echo self::$staticDefaultField;
-
-		echo self::CONSTANT_FIELD;
-		
-		self::|;
 	}
 }
+	
+		
+echo A::publicStaticFunction();
+echo A::defaultStaticFunction();
 
-$abc = new Abc();
-$abc->foo();
+echo A::publicNonStaticFunction();
+echo A::defaultNonStaticFunction();
 
-//execution results
-//privateNonStaticFunction
-//protectedNonStaticFunction
-//publicNonStaticFunction
-//defaultNonStaticFunction
-//privateStaticFunction
-//protectedStaticFunction
+echo A::$staticPublicField;
+echo A::$staticDefaultField;
+
+echo A::CONSTANT_FIELD;
+
+A::|
+
+//execution results	
 //publicStaticFunction
 //defaultStaticFunction
-//staticPrivateField
-//staticProtectedField
+//publicNonStaticFunction
+//defaultNonStaticFunction
 //staticPublicField
 //staticDefaultField
 //CONSTANT_FIELD
 
 ?>
 --EXPECT--
-field(class)
-field($a_Core)
 field($staticDefaultField)
-field($staticPrivateField)
-field($staticProtectedField)
 field($staticPublicField)
 field(CONSTANT_FIELD)
-method(__destruct)
+field(class)
 method(defaultNonStaticFunction)
 method(defaultStaticFunction)
-method(foo)
-method(privateNonStaticFunction)
-method(privateStaticFunction)
-method(protectedNonStaticFunction)
-method(protectedStaticFunction)
 method(publicNonStaticFunction)
 method(publicStaticFunction)
+
+
 

@@ -12,7 +12,7 @@ trait HelloWorld {
 class MyClass {
     use HelloWorld { sayHello as public; }
     function foo(){
-		SELf::|
+		self::|
 	}
 }
 ?>

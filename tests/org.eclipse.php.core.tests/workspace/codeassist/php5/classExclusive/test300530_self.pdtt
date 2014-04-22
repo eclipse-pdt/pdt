@@ -4,7 +4,6 @@ Test global constant.
 org.eclipse.php.core/contentAssistShowStrictOptions=false
 --FILE--
 <?
-namespace NS;
 class bax
 {
     const BAZ = 'test';
@@ -18,7 +17,7 @@ class foo extends bax
     const SKIN = 'test';
     
     function bar(){
-    	SElf::|
+    	self::|
     }
     
 }
@@ -26,5 +25,5 @@ class foo extends bax
 --EXPECT--
 field(BAZ)
 field(SKIN)
-field(class)
 method(bar)
+?>

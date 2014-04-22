@@ -17,20 +17,28 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ITypeHierarchy;
+import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.dltk.internal.core.hierarchy.FakeType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassStaticMemberContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.typeinference.FakeField;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 /**
  * This strategy completes class constants and variables.
@@ -38,6 +46,9 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  * @author michael
  */
 public class ClassFieldsStrategy extends ClassMembersStrategy {
+
+	private static final String CLASS_KEYWORD = "class"; //$NON-NLS-1$
+	private static final String STD_CLASS = "stdClass"; //$NON-NLS-1$
 
 	public ClassFieldsStrategy(ICompletionContext context,
 			IElementFilter elementFilter) {
@@ -62,6 +73,7 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 		SourceRange replaceRange = getReplacementRange(concreteContext);
 
 		List<IField> result = new LinkedList<IField>();
+
 		for (IType type : concreteContext.getLhsTypes()) {
 			try {
 				ITypeHierarchy hierarchy = getCompanion()
@@ -79,8 +91,7 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 										requestor.isContextInformationMode())));
 					}
 
-					fields = new IField[superTypes.size()];
-					fields = superTypes.toArray(fields);
+					fields = superTypes.toArray(new IField[superTypes.size()]);
 				} else {
 					fields = PHPModelUtils.getTypeHierarchyField(type,
 							hierarchy, prefix,
@@ -99,10 +110,47 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 				PHPCorePlugin.log(e);
 			}
 		}
+		if (concreteContext instanceof ClassStaticMemberContext
+				&& concreteContext.getTriggerType() == Trigger.CLASS
+				&& !concreteContext.isInUseTraitStatement()
+				&& PHPVersion.PHP5_4
+						.isLessThan(concreteContext.getPhpVersion())
+				&& (CLASS_KEYWORD.startsWith(prefix.toLowerCase()) || CLASS_KEYWORD
+						.equals(prefix.toLowerCase()))) {
+			try {
+				ITextRegion phpToken = concreteContext.getPhpScriptRegion()
+						.getPhpToken(
+								concreteContext.getPHPToken().getStart() - 1);
+				if (phpToken != null
+						&& PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM
+								.equals(phpToken.getType())) {
+					phpToken = concreteContext
+							.getPHPToken(phpToken.getStart() - 1);
+				}
+
+				if (phpToken != null && isStaticCall(phpToken.getType())) {
+					// XXX: Const attr not work as expected
+					result.add(new FakeField(new FakeType(
+							(ModelElement) concreteContext.getSourceModule(),
+							STD_CLASS), CLASS_KEYWORD, Modifiers.AccConst
+							| Modifiers.AccPublic | Modifiers.AccFinal));
+				}
+			} catch (BadLocationException e) {
+				Logger.logException(e);
+			}
+		}
+
 		for (IField field : result) {
 			reporter.reportField(field, getSuffix(), replaceRange,
 					concreteContext.getTriggerType() == Trigger.OBJECT);
 		}
+	}
+
+	private boolean isStaticCall(String type) {
+		return PHPRegionTypes.PHP_STRING.equals(type)
+				|| PHPRegionTypes.PHP_PARENT.equals(type)
+				|| PHPRegionTypes.PHP_SELF.equals(type)
+				|| PHPRegionTypes.PHP_NS_SEPARATOR.equals(type);
 	}
 
 	protected boolean showNonStaticMembers(ClassMemberContext context) {

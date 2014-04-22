@@ -5,7 +5,11 @@ org.eclipse.php.core/contentAssistShowStrictOptions=false
 --FILE--
 <?
 namespace NS;
-class bax
+class aax
+{
+    const AAZ = 'test';
+}
+class bax extends aax
 {
     const BAZ = 'test';
     function __construct()
@@ -18,13 +22,12 @@ class foo extends bax
     const SKIN = 'test';
     
     function bar(){
-    	SElf::|
+    	parent::|
     }
     
 }
-
+?>
 --EXPECT--
+field(AAZ)
 field(BAZ)
-field(SKIN)
 field(class)
-method(bar)

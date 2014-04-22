@@ -82,6 +82,7 @@ $abc->foo();
 
 ?>
 --EXPECT--
+field(class)
 field($a_Core)
 field($staticDefaultField)
 field($staticPrivateField)

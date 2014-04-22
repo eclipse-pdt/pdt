@@ -21,11 +21,13 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
+import org.eclipse.dltk.ti.BasicContext;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayVariableReference;
@@ -520,6 +522,11 @@ public class CodeAssistUtils {
 				.getModuleDeclaration(sourceModule, null);
 		IContext context = ASTUtils.findContext(sourceModule,
 				moduleDeclaration, offset);
+		// XXX context cannot be null
+		if (context == null) {
+			context = new BasicContext(sourceModule, moduleDeclaration);
+			Logger.log(Logger.WARNING, "Context is null!"); //$NON-NLS-1$
+		}
 
 		IEvaluatedType evaluatedType;
 		boolean usePhpDoc = (mask & USE_PHPDOC) != 0;

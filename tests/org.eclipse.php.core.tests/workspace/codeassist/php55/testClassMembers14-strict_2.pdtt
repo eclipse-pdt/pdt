@@ -1,7 +1,7 @@
 --TEST--
 Show self static variables
 --PREFERENCES--
-org.eclipse.php.core/contentAssistShowStrictOptions=false
+org.eclipse.php.core/contentAssistShowStrictOptions=true
 --FILE--
 <?php
 class Abc {
@@ -36,7 +36,7 @@ class Abc {
 	private static $a_Core = array();
 	
 	public function __destruct() {
-		unset(SElf::$|);
+		unset(self::$|);
 	}
 	
 	function foo() {
@@ -82,13 +82,13 @@ $abc->foo();
 
 ?>
 --EXPECT--
-field(class)
 field($a_Core)
 field($staticDefaultField)
 field($staticPrivateField)
 field($staticProtectedField)
 field($staticPublicField)
 field(CONSTANT_FIELD)
+field(class)
 method(__destruct)
 method(defaultNonStaticFunction)
 method(defaultStaticFunction)

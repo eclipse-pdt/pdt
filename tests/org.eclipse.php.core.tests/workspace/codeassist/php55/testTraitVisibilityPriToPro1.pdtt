@@ -1,5 +1,5 @@
 --TEST--
-Test trait method visibility change private to public 1
+Test trait method visibility change private to protected 1
 --PREFERENCES--
 org.eclipse.php.core/contentAssistShowStrictOptions=false
 --FILE--
@@ -10,9 +10,9 @@ trait HelloWorld {
     }
 }
 class MyClass {
-    use HelloWorld { sayHello as public; }
+    use HelloWorld { sayHello as protected; }
     function foo(){
-		SELf::|
+		self::|
 	}
 }
 ?>
