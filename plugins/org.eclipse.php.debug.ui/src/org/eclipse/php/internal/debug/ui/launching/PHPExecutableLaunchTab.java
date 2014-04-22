@@ -347,6 +347,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 				String variable = dialog.getVariableExpression();
 				if (variable != null) {
 					fPrgmArgumentsText.insert(variable);
+					fPrgmArgumentsText.setFont(parent.getFont());
 				}
 			}
 		});
@@ -367,7 +368,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	}
 
 	public String getName() {
-		return PHPDebugUIMessages.PHPExecutableLaunchTab_2; 
+		return PHPDebugUIMessages.PHPExecutableLaunchTab_2;
 	}
 
 	protected PHPexeDescriptor getSpecificPHPexeDescriptor() {
