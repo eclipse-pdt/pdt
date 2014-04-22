@@ -15,8 +15,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -34,7 +32,6 @@ import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguratio
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
-import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.server.PHPServerUIMessages;
@@ -711,8 +708,8 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	protected void initializeDebuggerControl(ILaunchConfiguration configuration) {
 		try {
 			String debuggerID = configuration.getAttribute(
-					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, ""); //$NON-NLS-1$
-			if (debuggerID != null && !debuggerID.equals("")) { //$NON-NLS-1$
+					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, (String) null);
+			if (debuggerID != null) {
 				fDebuggersCombo.setText(PHPDebuggersRegistry
 						.getDebuggerName(debuggerID));
 			} else {
@@ -733,17 +730,11 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	private void selectDefaultDebugger(ILaunchConfiguration configuration)
 			throws CoreException {
 		if (fDebuggersCombo != null && fDebuggersCombo.getItemCount() > 0) {
-			String projectName = configuration.getAttribute(
-					IPHPDebugConstants.PHP_Project, (String) null);
-			IProject project = null;
-			if (projectName != null) {
-				project = ResourcesPlugin.getWorkspace().getRoot()
-						.getProject(projectName);
-			}
-			String defaultDebuggerID = PHPProjectPreferences
-					.getDefaultDebuggerID(project);
+			String serverName = launchConfiguration.getAttribute(Server.NAME,
+					(String) null);
+			String debuggerId = PHPDebugPlugin.getDebuggerId(serverName);
 			String debuggerName = PHPDebuggersRegistry
-					.getDebuggerName(defaultDebuggerID);
+					.getDebuggerName(debuggerId);
 			int nameIndex = fDebuggersCombo.indexOf(debuggerName);
 			if (nameIndex > -1) {
 				fDebuggersCombo.select(nameIndex);

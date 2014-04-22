@@ -275,7 +275,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 
 		// Set the debugger ID and the configuration delegate for this launch
 		// configuration
-		String debuggerID = PHPProjectPreferences.getDefaultDebuggerID(project);
+		String debuggerID = PHPDebugPlugin.getDebuggerId(server.getName());
 		wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerID);
 		AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
 				.getDebuggerConfiguration(debuggerID);

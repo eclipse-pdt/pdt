@@ -139,6 +139,12 @@ public class PHPDebugUIMessages extends NLS {
 
 	public static String PHPDebugPreferencesBlock_9;
 
+	public static String PHPDebugPreferencesBlock_CLIDebugger;
+
+	public static String PHPDebugPreferencesBlock_CLISettings;
+
+	public static String PHPDebugPreferencesBlock_ServerDebugger;
+
 	public static String PHPDebugStepFilterPreferencePage_addFilter;
 
 	public static String PHPDebugStepFilterPreferencePage_addResource;

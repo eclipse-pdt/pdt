@@ -852,6 +852,11 @@ public class NewPHPsComboBlock {
 		} else if (fEnvironmentsButton.getSelection()) {
 			return PHPDebugPlugin.getCurrentDebuggerId(PHPVersion
 					.byAlias(fEnvironmentsCombo.getText()));
+		} else {
+			PHPexeItem defaultItem = PHPDebugPlugin.getPHPexeItem(project);
+			if (defaultItem != null) {
+				return defaultItem.getDebuggerID();
+			}
 		}
 		return PHPDebugPlugin.getCurrentDebuggerId();
 	}
