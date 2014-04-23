@@ -597,8 +597,8 @@ public class CodeFormatterConfigurationBlock extends
 		Key tabSizeKey = PHPFormatterConfigurationBlock.PREF_FORMATTER_TAB_SIZE;
 		Key useTabKey = PHPFormatterConfigurationBlock.PREF_FORMATTER_USE_TABS;
 
-		setValue(indentKey, new Integer(preferences.indentationSize).toString());
-		setValue(tabSizeKey, new Integer(preferences.tabSize).toString());
+		setValue(indentKey, Integer.valueOf(preferences.indentationSize).toString());
+		setValue(tabSizeKey, Integer.valueOf(preferences.tabSize).toString());
 
 		if (preferences.indentationChar == CodeFormatterPreferences.TAB_CHAR) {
 			setValue(useTabKey, "true");

@@ -60,7 +60,7 @@ public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
 						Boolean.FALSE);
 				attributes.put(IPHPDebugConstants.Condition, ""); //$NON-NLS-1$
 				attributes.put(IBreakpoint.PERSISTED, Boolean.FALSE);
-				attributes.put(IMarker.LINE_NUMBER, new Integer(lineNumber));
+				attributes.put(IMarker.LINE_NUMBER, Integer.valueOf(lineNumber));
 				marker.setAttributes(attributes);
 				setMarker(marker);
 				setEnabled(true);

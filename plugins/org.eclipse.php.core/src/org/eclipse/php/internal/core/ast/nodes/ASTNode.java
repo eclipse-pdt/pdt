@@ -404,7 +404,7 @@ public abstract class ASTNode implements Visitable {
 			SimplePropertyDescriptor p = (SimplePropertyDescriptor) property;
 			if (p.getValueType() == Integer.class) {
 				int result = internalGetSetIntProperty(p, true, 0);
-				return new Integer(result);
+				return Integer.valueOf(result);
 			} else if (p.getValueType() == Boolean.class) {
 				boolean result = internalGetSetBooleanProperty(p, true, false);
 				return Boolean.valueOf(result);

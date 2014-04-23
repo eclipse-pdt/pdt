@@ -31,8 +31,8 @@ import org.eclipse.ui.actions.ActionGroup;
 public class ViewActionGroup extends
 		org.eclipse.dltk.internal.ui.workingsets.ViewActionGroup {
 
-	private static final Integer INT_SHOW_PROJECTS = new Integer(SHOW_PROJECTS);
-	private static final Integer INT_SHOW_WORKING_SETS = new Integer(
+	private static final Integer INT_SHOW_PROJECTS = Integer.valueOf(SHOW_PROJECTS);
+	private static final Integer INT_SHOW_WORKING_SETS = Integer.valueOf(
 			SHOW_WORKING_SETS);
 
 	private IPropertyChangeListener fChangeListener;

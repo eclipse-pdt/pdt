@@ -559,7 +559,7 @@ public class PHPEditorHoverConfigurationBlock implements
 		while (fStatus.isOK() && i < fHoverConfigs.length) {
 			if (fHoverConfigs[i].fIsEnabled) {
 				String label = getContributedHovers()[i].getLabel();
-				Integer stateMask = new Integer(fHoverConfigs[i].fStateMask);
+				Integer stateMask = Integer.valueOf(fHoverConfigs[i].fStateMask);
 				if (fHoverConfigs[i].fStateMask == -1)
 					fStatus = new StatusInfo(
 							IStatus.ERROR,

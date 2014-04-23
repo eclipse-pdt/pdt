@@ -147,7 +147,7 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 				IBreakpoint.LINE_BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
 		for (IMarker breakpoint : breakpoints) {
 			if (breakpoint.getAttribute(IMarker.LINE_NUMBER).equals(
-					new Integer(lineNumber))
+					Integer.valueOf(lineNumber))
 					&& (secondaryId == null || secondaryId
 							.equals(breakpoint
 									.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY)))) {

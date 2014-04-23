@@ -289,18 +289,18 @@ public class PHPFormatterConfigurationBlock extends
 		Text c = (Text) w;
 		String textFieldStr = c.getText();
 		if (c == indentSizeTxt) {
-			validateSettings(PREF_FORMATTER_INDENTATION_SIZE, new Integer(
+			validateSettings(PREF_FORMATTER_INDENTATION_SIZE, Integer.valueOf(
 					fIndentationSize).toString(), textFieldStr);
 		} else if (c == tabSizeTxt) {
 			validateSettings(PREF_FORMATTER_TAB_SIZE,
-					new Integer(fTabSize).toString(), textFieldStr);
+					Integer.valueOf(fTabSize).toString(), textFieldStr);
 		} else if (c == fDefaultIndentWrapLineSizeTxt) {
 			validateSettings(PREF_FORMATTER_INDENTATION_WRAPPED_LINE_SIZE,
-					new Integer(fIndentationWrappedLineSize).toString(),
+					Integer.valueOf(fIndentationWrappedLineSize).toString(),
 					textFieldStr);
 		} else if (c == fDefaultIndentArrayInitSizeTxt) {
 			validateSettings(PREF_FORMATTER_INDENTATION_ARRAY_INIT_SIZE,
-					new Integer(fIndentationArrayInitSize).toString(),
+					Integer.valueOf(fIndentationArrayInitSize).toString(),
 					textFieldStr);
 		}
 	}

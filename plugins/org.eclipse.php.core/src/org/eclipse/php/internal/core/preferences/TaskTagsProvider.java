@@ -274,11 +274,11 @@ public class TaskTagsProvider {
 		for (String element : priorities) {
 			Integer number = null;
 			if (PHPCoreConstants.TASK_PRIORITY_HIGH.equals(element)) {
-				number = new Integer(IMarker.PRIORITY_HIGH);
+				number = Integer.valueOf(IMarker.PRIORITY_HIGH);
 			} else if (PHPCoreConstants.TASK_PRIORITY_LOW.equals(element)) {
-				number = new Integer(IMarker.PRIORITY_LOW);
+				number = Integer.valueOf(IMarker.PRIORITY_LOW);
 			} else {
-				number = new Integer(IMarker.PRIORITY_NORMAL);
+				number = Integer.valueOf(IMarker.PRIORITY_NORMAL);
 			}
 			list.add(number);
 		}

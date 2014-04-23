@@ -408,7 +408,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	 */
 	protected void notifyObservers(int message) {
 		setChanged();
-		notifyObservers(new Integer(message));
+		notifyObservers(Integer.valueOf(message));
 	}
 
 	public static boolean hasProjectSpecificSettings(IScopeContext context) {

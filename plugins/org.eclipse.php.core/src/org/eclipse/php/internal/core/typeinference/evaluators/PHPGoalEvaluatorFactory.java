@@ -78,7 +78,7 @@ public class PHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		Arrays.sort(factoryInfos, new Comparator<FactoryInfo>() {
 
 			public int compare(FactoryInfo info1, FactoryInfo info2) {
-				return new Integer(info2.priority).compareTo(info1.priority);
+				return Integer.valueOf(info2.priority).compareTo(info1.priority);
 			}
 
 		});

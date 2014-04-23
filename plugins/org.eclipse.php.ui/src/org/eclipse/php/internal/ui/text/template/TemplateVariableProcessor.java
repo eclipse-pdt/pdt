@@ -23,17 +23,11 @@ import org.eclipse.jface.text.templates.TemplateVariableResolver;
 
 public class TemplateVariableProcessor implements IContentAssistProcessor {
 
-	private static Comparator fgTemplateVariableProposalComparator = new Comparator() {
-		public int compare(Object arg0, Object arg1) {
-			TemplateVariableProposal proposal0 = (TemplateVariableProposal) arg0;
-			TemplateVariableProposal proposal1 = (TemplateVariableProposal) arg1;
-
+	private static Comparator<ICompletionProposal> fgTemplateVariableProposalComparator = new Comparator<ICompletionProposal>() {
+		public int compare(ICompletionProposal proposal0,
+				ICompletionProposal proposal1) {
 			return proposal0.getDisplayString().compareTo(
 					proposal1.getDisplayString());
-		}
-
-		public boolean equals(Object arg0) {
-			return false;
 		}
 	};
 
@@ -68,7 +62,7 @@ public class TemplateVariableProcessor implements IContentAssistProcessor {
 		if (fContextType == null)
 			return null;
 
-		List proposals = new ArrayList();
+		List<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
 
 		String text = viewer.getDocument().get();
 		int start = getStart(text, documentOffset);
@@ -96,7 +90,8 @@ public class TemplateVariableProcessor implements IContentAssistProcessor {
 
 		int length = end - offset;
 
-		for (Iterator iterator = fContextType.resolvers(); iterator.hasNext();) {
+		for (@SuppressWarnings("rawtypes")
+		Iterator iterator = fContextType.resolvers(); iterator.hasNext();) {
 			TemplateVariableResolver variable = (TemplateVariableResolver) iterator
 					.next();
 
@@ -106,8 +101,7 @@ public class TemplateVariableProcessor implements IContentAssistProcessor {
 		}
 
 		Collections.sort(proposals, fgTemplateVariableProposalComparator);
-		return (ICompletionProposal[]) proposals
-				.toArray(new ICompletionProposal[proposals.size()]);
+		return proposals.toArray(new ICompletionProposal[proposals.size()]);
 	}
 
 	/* Guesses the start position of the completion */

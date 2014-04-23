@@ -190,7 +190,7 @@ public class DBGpSession {
 			// table so that the response handler can locate it.
 			int id = DBGpCommand.getNextId();
 			Event idev = new Event();
-			Integer idObj = new Integer(id);
+			Integer idObj = Integer.valueOf(id);
 			savedResponses.put(idObj, idev);
 
 			try {
@@ -331,9 +331,9 @@ public class DBGpSession {
 			// must protect if the response doesn't include a txn id
 			Integer idObj = null;
 			try {
-				idObj = new Integer(parsedResponse.getId());
+				idObj = Integer.valueOf(parsedResponse.getId());
 			} catch (NumberFormatException nfe) {
-				idObj = new Integer(DBGpCmd.getLastIdSent());
+				idObj = Integer.valueOf(DBGpCmd.getLastIdSent());
 				if (DBGpLogger.debugResp()) {
 					DBGpLogger.debug("no txn id, using last which was" //$NON-NLS-1$
 							+ idObj.toString());

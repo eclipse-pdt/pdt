@@ -12,12 +12,12 @@ import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.dltk.ast.Modifiers;
 
 parser code {:
-	protected final static Integer PUBLIC = new Integer(Modifiers.AccPublic);
-	protected final static Integer PRIVATE = new Integer(Modifiers.AccPrivate);
-	protected final static Integer PROTECTED = new Integer(Modifiers.AccProtected);
-	protected final static Integer ABSTRACT = new Integer(Modifiers.AccAbstract);
-	protected final static Integer FINAL = new Integer(Modifiers.AccFinal);
-	protected final static Integer STATIC = new Integer(Modifiers.AccStatic);
+	protected final static Integer PUBLIC = Integer.valueOf(Modifiers.AccPublic);
+	protected final static Integer PRIVATE = Integer.valueOf(Modifiers.AccPrivate);
+	protected final static Integer PROTECTED = Integer.valueOf(Modifiers.AccProtected);
+	protected final static Integer ABSTRACT = Integer.valueOf(Modifiers.AccAbstract);
+	protected final static Integer FINAL = Integer.valueOf(Modifiers.AccFinal);
+	protected final static Integer STATIC = Integer.valueOf(Modifiers.AccStatic);
 
 	AST ast;
 
@@ -903,22 +903,22 @@ T_CURLY_OPEN:blockStart class_statement_list:sList T_CURLY_CLOSE:blockEnd
 class_entry_type ::=
 T_CLASS
 {:
-	RESULT = new Integer(ClassDeclaration.MODIFIER_NONE);
+	RESULT = Integer.valueOf(ClassDeclaration.MODIFIER_NONE);
 :}
 
 | T_ABSTRACT T_CLASS
 {:
-	RESULT = new Integer(ClassDeclaration.MODIFIER_ABSTRACT);
+	RESULT = Integer.valueOf(ClassDeclaration.MODIFIER_ABSTRACT);
 :}
 
 | T_FINAL T_CLASS
 {:
-	RESULT = new Integer(ClassDeclaration.MODIFIER_FINAL);
+	RESULT = Integer.valueOf(ClassDeclaration.MODIFIER_FINAL);
 :}
 
 | T_TRAIT
 {:
-	RESULT = new Integer(ClassDeclaration.MODIFIER_TRAIT);
+	RESULT = Integer.valueOf(ClassDeclaration.MODIFIER_TRAIT);
 :}
 ;
 
@@ -1148,7 +1148,7 @@ elseif_list ::=
 {:
 	((LinkedList)elseifList[0]).addFirst(cond);
 	((LinkedList)elseifList[1]).addFirst(iftrue);
-	((LinkedList)elseifList[2]).addFirst(new Integer(tokenleft));
+	((LinkedList)elseifList[2]).addFirst(Integer.valueOf(tokenleft));
 	RESULT = elseifList;
 :}
 ;
@@ -1167,7 +1167,7 @@ new_elseif_list ::=
 	Block block = new Block(colonleft, sListright, parser.ast, sList, false);
 	((LinkedList)elseifList[0]).addFirst(cond);
 	((LinkedList)elseifList[1]).addFirst(block);
-	((LinkedList)elseifList[2]).addFirst(new Integer(tokenleft));
+	((LinkedList)elseifList[2]).addFirst(Integer.valueOf(tokenleft));
 	RESULT = elseifList;
 :}
 ;
@@ -1614,7 +1614,7 @@ non_empty_member_modifiers:list
 		Integer modifier = (Integer)it.next();
 		result |= modifier.intValue();
 	}
-	RESULT = new Integer(result);
+	RESULT = Integer.valueOf(result);
 :}
 
 | T_VAR
@@ -1636,7 +1636,7 @@ method_modifiers ::=
 		Integer modifier = (Integer)it.next();
 		result |= modifier.intValue();
 	}
-	RESULT = new Integer(result);
+	RESULT = Integer.valueOf(result);
 :}
 ;
 
@@ -3019,12 +3019,12 @@ string_st:varName
 simple_indirect_reference ::=
 T_DOLLAR
 {:
-	RESULT = new Integer(1);
+	RESULT = Integer.valueOf(1);
 :}
 
 | simple_indirect_reference:ref T_DOLLAR
 {:
-	RESULT = new Integer(1 + ref.intValue());
+	RESULT = Integer.valueOf(1 + ref.intValue());
 :}
 ;
 

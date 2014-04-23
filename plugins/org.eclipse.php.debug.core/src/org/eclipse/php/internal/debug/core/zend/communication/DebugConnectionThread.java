@@ -320,7 +320,7 @@ public class DebugConnectionThread implements Runnable {
 			int messageSize = byteArrayOutputStream.size();
 			synchronized (connectionOut) {
 				requestsTable.put(msgId, request);
-				responseHandlers.put(new Integer(msgId), responseHandler);
+				responseHandlers.put(Integer.valueOf(msgId), responseHandler);
 				connectionOut.writeInt(messageSize);
 				byteArrayOutputStream.writeTo(connectionOut);
 				connectionOut.flush();
@@ -329,7 +329,7 @@ public class DebugConnectionThread implements Runnable {
 			System.out
 					.println("Exception for request no." + theMsg.getType() + exc.toString()); //$NON-NLS-1$
 			responseHandler.handleResponse(request, null);
-			responseHandlers.remove(new Integer(msgId));
+			responseHandlers.remove(Integer.valueOf(msgId));
 		}
 	}
 
@@ -1008,7 +1008,7 @@ public class DebugConnectionThread implements Runnable {
 											.remove(requestId); // find the
 																// request.
 									ResponseHandler handler = responseHandlers
-											.remove(new Integer(requestId)); // find
+											.remove(Integer.valueOf(requestId)); // find
 																				// the
 																				// handler.
 									handler.handleResponse(req, r);
@@ -1334,7 +1334,7 @@ public class DebugConnectionThread implements Runnable {
 							// INSERT RESPONSE TO TABLE AND RELEASE THE THREAD
 							// WAITING FOR THE REQUEST
 							ResponseHandler handler = responseHandlers
-									.get(new Integer(idd)); // find the handler.
+									.get(Integer.valueOf(idd)); // find the handler.
 							if (handler == null) {
 								responseTable.put(/* requestId */idd, message);
 								IDebugRequestMessage req = (IDebugRequestMessage) requestsTable

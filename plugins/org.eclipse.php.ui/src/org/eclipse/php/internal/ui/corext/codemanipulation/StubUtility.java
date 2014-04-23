@@ -529,7 +529,7 @@ public class StubUtility {
 				int offset = lineInfo.getOffset();
 				String str = doc.get(offset, lineInfo.getLength());
 				if (Strings.containsOnlyWhitespaces(str) && nLines > line + 1
-						&& removedLines.add(new Integer(line))) {
+						&& removedLines.add(Integer.valueOf(line))) {
 					int nextStart = doc.getLineOffset(line + 1);
 					edit.addChild(new DeleteEdit(offset, nextStart - offset));
 				}

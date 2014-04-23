@@ -87,8 +87,8 @@ public class Breakpoint implements Cloneable {
 		if (this.id != id) {
 			int oldValue = this.id;
 			this.id = id;
-			fireBreakpointChanged(this, ID_CHANGED_PROPERTY, new Integer(
-					oldValue), new Integer(id));
+			fireBreakpointChanged(this, ID_CHANGED_PROPERTY, Integer.valueOf(
+					oldValue), Integer.valueOf(id));
 		}
 	}
 
@@ -125,8 +125,8 @@ public class Breakpoint implements Cloneable {
 		}
 		int oldLineNumber = lineNumber;
 		lineNumber = newLineNumber;
-		fireBreakpointChanged(this, LINE_CHANGED_PROPERTY, new Integer(
-				oldLineNumber), new Integer(newLineNumber));
+		fireBreakpointChanged(this, LINE_CHANGED_PROPERTY, Integer.valueOf(
+				oldLineNumber), Integer.valueOf(newLineNumber));
 	}
 
 	/**
@@ -156,8 +156,8 @@ public class Breakpoint implements Cloneable {
 				this.type = type;
 				conditionalFlag = (type >= 2) ? true : false;
 				staticFlag = (type == 1 || type == 3) ? true : false;
-				fireBreakpointChanged(this, TYPE_CHANGED_PROPERTY, new Integer(
-						oldValue), new Integer(id));
+				fireBreakpointChanged(this, TYPE_CHANGED_PROPERTY, Integer.valueOf(
+						oldValue), Integer.valueOf(id));
 			}
 		}
 	}
@@ -184,7 +184,7 @@ public class Breakpoint implements Cloneable {
 				int oldValue = lifetime;
 				this.lifetime = lifetime;
 				fireBreakpointChanged(this, LIFETIME_CHANGED_PROPERTY,
-						new Integer(oldValue), new Integer(id));
+						Integer.valueOf(oldValue), Integer.valueOf(id));
 			}
 		}
 	}

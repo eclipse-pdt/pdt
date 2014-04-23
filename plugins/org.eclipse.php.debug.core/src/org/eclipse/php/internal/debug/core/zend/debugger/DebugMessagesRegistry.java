@@ -85,7 +85,7 @@ public class DebugMessagesRegistry {
 					&& !this.messagesHash.containsKey(messages[0].getType())) {
 				messagesHash.put(messages[0].getType(), messages[0]);
 				messagesTypes.put(element.getAttribute(ID_ATTRIBUTE),
-						new Integer(messages[0].getType()));
+						Integer.valueOf(messages[0].getType()));
 
 				String handlerClass = element.getAttribute(HANDLER_ATTRIBUTE);
 				if (handlerClass != null

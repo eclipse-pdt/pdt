@@ -148,7 +148,7 @@ public class ZendDebuggerConfigurationDialog extends
 			boolean valid = true;
 			String value = ((Text) e.widget).getText();
 			try {
-				Integer iValue = new Integer(value);
+				Integer iValue = Integer.valueOf(value);
 				int i = iValue.intValue();
 				if (i < 0 || i > 65535) {
 					valid = false;
@@ -177,7 +177,7 @@ public class ZendDebuggerConfigurationDialog extends
 			boolean valid = true;
 			String value = ((Text) e.widget).getText();
 			try {
-				Integer iValue = new Integer(value);
+				Integer iValue = Integer.valueOf(value);
 				int i = iValue.intValue();
 				if (i < 5000) {
 					valid = false;

@@ -413,7 +413,7 @@ public class XDebugConfigurationDialog extends
 			boolean valid = true;
 			String value = ((Text) e.widget).getText();
 			try {
-				Integer iValue = new Integer(value);
+				Integer iValue = Integer.valueOf(value);
 				int i = iValue.intValue();
 				if (!timeoutField) {
 					if (i <= 0 || i > 65535) {

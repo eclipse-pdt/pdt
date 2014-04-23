@@ -122,8 +122,8 @@ public class SSHTunnel {
 						int.class };
 				try {
 					// session.setPortForwardingR(rport, host, lport)
-					Object[] values = new Object[] { new Integer(remotePort),
-							localHost, new Integer(localPort) };
+					Object[] values = new Object[] { Integer.valueOf(remotePort),
+							localHost, Integer.valueOf(localPort) };
 					java.lang.reflect.Method mSetPortForwarding = sessionClass
 							.getMethod("setPortForwardingR", //$NON-NLS-1$
 									parameterTypes);

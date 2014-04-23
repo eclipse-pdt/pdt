@@ -110,7 +110,7 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 			return null;
 		}
 		DLTKElementLine lineElement = null;
-		Integer key = new Integer(lineNumber);
+		Integer key = Integer.valueOf(lineNumber);
 		lineElement = (DLTKElementLine) lineToGroup.get(key);
 		if (lineElement == null) {
 			int lineStartOffset = astRoot.getPosition(lineNumber, 0);
@@ -137,7 +137,7 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 					fElement.getElementName() });
 		} else {
 			return Messages.format(fPluralLabel, new Object[] { fName,
-					new Integer(nMatches), fElement.getElementName() });
+					Integer.valueOf(nMatches), fElement.getElementName() });
 		}
 	}
 

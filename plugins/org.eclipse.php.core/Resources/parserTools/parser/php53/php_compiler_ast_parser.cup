@@ -1357,7 +1357,7 @@ elseif_list ::=
 {:	
 	((LinkedList)elseifList[0]).addFirst(condition);
 	((LinkedList)elseifList[1]).addFirst(iftrue);
-	((LinkedList)elseifList[2]).addFirst(new Integer(tokenleft));
+	((LinkedList)elseifList[2]).addFirst(Integer.valueOf(tokenleft));
 
 	RESULT = elseifList;
 :}
@@ -1380,7 +1380,7 @@ new_elseif_list ::=
 	Block block = new Block(colonleft, statementListright, statementList);
 	((LinkedList)elseifList[0]).addFirst(condition);
 	((LinkedList)elseifList[1]).addFirst(block);
-	((LinkedList)elseifList[2]).addFirst(new Integer(tokenleft));
+	((LinkedList)elseifList[2]).addFirst(Integer.valueOf(tokenleft));
 
 	RESULT = elseifList;
 :}
@@ -3105,12 +3105,12 @@ string_st:varName
 simple_indirect_reference ::=
 T_DOLLAR 
 {:
-	RESULT = new Integer(1);
+	RESULT = Integer.valueOf(1);
 :}
 
 | simple_indirect_reference:ref T_DOLLAR
 {:
-	RESULT = new Integer(1 + ref.intValue());
+	RESULT = Integer.valueOf(1 + ref.intValue());
 :}
 ;
 
