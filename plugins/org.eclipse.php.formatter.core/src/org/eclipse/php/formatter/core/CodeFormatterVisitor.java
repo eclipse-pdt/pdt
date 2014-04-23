@@ -4918,12 +4918,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 	public boolean visit(NamespaceDeclaration namespaceDeclaration) {
 		appendToBuffer("namespace"); //$NON-NLS-1$
 		insertSpace();
-		handleChars(namespaceDeclaration.getStart(), namespaceDeclaration
-				.getName().getStart());
+		int lastPosition = lastPosition = namespaceDeclaration.getStart();
+		if (namespaceDeclaration.getName() != null) {
+			handleChars(namespaceDeclaration.getStart(), namespaceDeclaration
+					.getName().getStart());
+			namespaceDeclaration.getName().accept(this);
 
-		namespaceDeclaration.getName().accept(this);
-		int lastPosition = namespaceDeclaration.getName().getEnd();
-
+			lastPosition = namespaceDeclaration.getName().getEnd();
+		}
 		if (namespaceDeclaration.isBracketed()) {
 			// handle class body
 			boolean isIndentationAdded = handleBlockOpenBrace(
