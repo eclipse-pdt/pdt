@@ -10,10 +10,8 @@
 package org.eclipse.php.internal.ui.refactor.processors;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.Map.Entry;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.Assert;
@@ -72,10 +70,10 @@ class DeleteChangeCreator {
 				.groupBySourceModule(getElementsSmallerThanCu(modelElements));
 		if (grouped.size() != 0) {
 			Assert.isNotNull(manager);
-			for (Iterator iter = grouped.keySet().iterator(); iter.hasNext();) {
-				ISourceModule cu = (ISourceModule) iter.next();
-				Change change = createDeleteChange(cu, (List) grouped.get(cu),
-						manager);
+			for (Entry entry : (Set<Entry>) grouped.entrySet()) {
+				Change change = createDeleteChange(
+						(ISourceModule) entry.getKey(),
+						(List) entry.getValue(), manager);
 				if (change != null) {
 					result.add(change);
 				}

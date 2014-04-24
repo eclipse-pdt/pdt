@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.core.zend.model;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
@@ -54,9 +55,10 @@ public class ResolveBlackList implements ILaunchesListener {
 			return false;
 		}
 		Map<VirtualPath, Type> map = getByLaunch(launch);
-		for (VirtualPath path : map.keySet()) {
+		for (Entry<VirtualPath, Type> entry : map.entrySet()) {
 			VirtualPath tmp = new VirtualPath(file);
-			Type type = map.get(path);
+			VirtualPath path = entry.getKey();
+			Type type = entry.getValue();
 			if (type == Type.FILE) {
 				if (path.equals(tmp)) {
 					return true;

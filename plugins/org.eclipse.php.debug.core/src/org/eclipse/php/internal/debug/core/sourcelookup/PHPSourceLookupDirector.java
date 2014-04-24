@@ -12,7 +12,8 @@
 package org.eclipse.php.internal.debug.core.sourcelookup;
 
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
@@ -87,11 +88,10 @@ public class PHPSourceLookupDirector extends AbstractSourceLookupDirector {
 						HashMap links = desc.getLinks();
 						if (links != null) {
 
-							for (Iterator<IPath> iterator = links.keySet()
-									.iterator(); iterator.hasNext();) {
-								IPath relativePath = iterator.next();
-								LinkDescription linkDescription = (LinkDescription) links
-										.get(relativePath);
+							for (Entry entry : (Set<Entry>) links.entrySet()) {
+								IPath relativePath = (IPath) entry.getKey();
+								LinkDescription linkDescription = (LinkDescription) entry
+										.getValue();
 								IPath linkPath = new Path(linkDescription
 										.getLocationURI().getPath());
 								IPath filePath = new Path(localFile

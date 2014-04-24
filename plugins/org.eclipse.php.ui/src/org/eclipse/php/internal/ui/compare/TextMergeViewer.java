@@ -520,7 +520,7 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable {
 						this.fViewer.addNewRange(fLeg, input, range);
 					}
 				} else if (parent instanceof IDocument) {
-					newDocument = ((IDocumentRange) fElement).getDocument();
+					newDocument = (IDocument) fElement;
 				}
 			}
 
@@ -1112,8 +1112,8 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable {
 				myEnd = Math.max(myStart, myEnd);
 
 				int yoursStart = fOffset;
-				int yoursEnd = fOffset + fReplaceLength - 1;
-				yoursEnd = Math.max(yoursStart, yoursEnd);
+				// int yoursEnd = fOffset + fReplaceLength - 1;
+				// yoursEnd = Math.max(yoursStart, yoursEnd);
 
 				if (myEnd < yoursStart)
 					return;
@@ -4067,7 +4067,7 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable {
 					// We've already wrapped once so break out
 					break;
 				wrapped = true;
-				diff = getWrappedDiff(diff, down);
+				diff = getWrappedDiff(null, down);
 			}
 			if (diff != null)
 				setCurrentDiff(diff, true, deep);

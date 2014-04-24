@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileInfo;
@@ -174,9 +175,8 @@ public class PHPexes {
 		for (String debuggerId : installedDebuggers) {
 			HashMap<String, PHPexeItem> installedExes = items.get(debuggerId);
 			if (installedExes != null) {
-				Set<String> exeNames = installedExes.keySet();
-				for (String name : exeNames) {
-					PHPexeItem exeItem = installedExes.get(name);
+				for (Entry<String, PHPexeItem> entry : installedExes.entrySet()) {
+					PHPexeItem exeItem = entry.getValue();
 					if (exeItem.isEditable()) {
 						list.add(exeItem);
 					}
@@ -272,9 +272,8 @@ public class PHPexes {
 		for (String debuggerId : installedDebuggers) {
 			HashMap<String, PHPexeItem> installedExes = items.get(debuggerId);
 			if (installedExes != null) {
-				Set<String> exeNames = installedExes.keySet();
-				for (String name : exeNames) {
-					PHPexeItem exeItem = installedExes.get(name);
+				for (Entry<String, PHPexeItem> entry : installedExes.entrySet()) {
+					PHPexeItem exeItem = entry.getValue();
 					// Check for ini equality
 					boolean iniEquals = true;
 					if (iniFilePath == null) {

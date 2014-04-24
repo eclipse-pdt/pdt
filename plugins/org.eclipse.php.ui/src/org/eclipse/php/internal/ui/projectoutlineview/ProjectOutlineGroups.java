@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.ui.projectoutlineview;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -120,12 +121,11 @@ public enum ProjectOutlineGroups {
 						nsList.add(namespace);
 					}
 				}
-				for (String namespaceName : nsByName.keySet()) {
-					List<IType> nsList = nsByName.get(namespaceName);
+				for (Entry<String, List<IType>> entry : nsByName.entrySet()) {
 					childrenList.add(new NamespaceNode(
-							ProjectOutlineContentProvider.scripProject,
-							namespaceName, nsList.toArray(new IType[nsList
-									.size()])));
+							ProjectOutlineContentProvider.scripProject, entry
+									.getKey(), entry.getValue().toArray(
+									new IType[entry.getValue().size()])));
 				}
 
 				break;

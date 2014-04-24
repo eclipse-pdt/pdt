@@ -6,8 +6,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import junit.extensions.TestSetup;
 import junit.framework.Assert;
@@ -55,8 +55,8 @@ public class PharFileTest extends AbstractPDTTTest {
 					if (pharFolder.getName().equalsIgnoreCase("CVS"))
 						continue;
 					if (pharFolder.isDirectory()) {
-						IPath stubLocation = new Path(pharFolder
-								.getAbsolutePath())
+						IPath stubLocation = new Path(
+								pharFolder.getAbsolutePath())
 								.append(PharConstants.STUB_PATH);
 						PharPackage pharPackage = new PharPackage();
 
@@ -90,16 +90,16 @@ public class PharFileTest extends AbstractPDTTTest {
 				}
 			} catch (final Exception e) {
 				suite.addTest(new TestCase(folder.getAbsolutePath()) { // dummy
-							// test
-							// indicating
-							// PDTT
-							// file
-							// parsing
-							// failure
-							protected void runTest() throws Throwable {
-								throw e;
-							}
-						});
+					// test
+					// indicating
+					// PDTT
+					// file
+					// parsing
+					// failure
+					protected void runTest() throws Throwable {
+						throw e;
+					}
+				});
 			}
 		}
 
@@ -137,17 +137,16 @@ public class PharFileTest extends AbstractPDTTTest {
 	public void compareContent(String pharFileFolder, PharFile pharFile)
 			throws Exception {
 		Map<String, PharEntry> pharEntryMap = pharFile.getPharEntryMap();
-		for (Iterator<String> iterator = pharEntryMap.keySet().iterator(); iterator
-				.hasNext();) {
-			String filename = iterator.next();
+		for (Entry<String, PharEntry> entry : pharEntryMap.entrySet()) {
+			String filename = entry.getKey();
 
 			if (PharConstants.SIGNATURE_PATH.endsWith(filename)
 					|| PharConstants.STUB_PATH.endsWith(filename))
 				continue;
 			File file = new File(pharFileFolder, filename);
 			Assert.assertTrue(inputStreamEquals(new BufferedInputStream(
-					new FileInputStream(file)), pharFile
-					.getInputStream(pharEntryMap.get(filename))));
+					new FileInputStream(file)), pharFile.getInputStream(entry
+					.getValue())));
 		}
 	}
 

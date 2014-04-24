@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.Modifiers;
@@ -104,16 +105,16 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		}
 
 		List<IGoal> subGoals = new LinkedList<IGoal>();
-		Iterator<ISourceModule> sourceModuleIt = offsets.keySet().iterator();
-		while (sourceModuleIt.hasNext()) {
-			ISourceModule sourceModule = sourceModuleIt.next();
+		for (Entry<ISourceModule, SortedSet<ISourceRange>> entry : offsets
+				.entrySet()) {
+			ISourceModule sourceModule = entry.getKey();
 			if (exploreOtherFiles
 					|| (sourceModuleContext != null && sourceModuleContext
 							.getSourceModule().equals(sourceModule))) {
 
 				ModuleDeclaration moduleDeclaration = SourceParserUtil
 						.getModuleDeclaration(sourceModule);
-				SortedSet<ISourceRange> fileOffsets = offsets.get(sourceModule);
+				SortedSet<ISourceRange> fileOffsets = entry.getValue();
 
 				if (!fileOffsets.isEmpty()) {
 					GlobalReferenceDeclSearcher varSearcher = new GlobalReferenceDeclSearcher(

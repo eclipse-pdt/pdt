@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -108,12 +109,12 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 		}
 
 		List<IGoal> subGoals = new LinkedList<IGoal>();
-		Iterator<ISourceModule> sourceModuleIt = offsets.keySet().iterator();
-		while (sourceModuleIt.hasNext()) {
-			ISourceModule sourceModule = sourceModuleIt.next();
+		for (Entry<ISourceModule, SortedSet<ISourceRange>> entry : offsets
+				.entrySet()) {
+			final ISourceModule sourceModule = entry.getKey();
 			ModuleDeclaration moduleDeclaration = SourceParserUtil
 					.getModuleDeclaration(sourceModule);
-			SortedSet<ISourceRange> fileOffsets = offsets.get(sourceModule);
+			SortedSet<ISourceRange> fileOffsets = entry.getValue();
 
 			if (!fileOffsets.isEmpty()) {
 				ConstantDeclarationSearcher searcher = new ConstantDeclarationSearcher(
@@ -251,8 +252,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 		int len = name.length();
 		if (len > 1
 				&& (name.charAt(0) == '\'' && name.charAt(len - 1) == '\'' || name
-						.charAt(0) == '"'
-						&& name.charAt(len - 1) == '"')) {
+						.charAt(0) == '"' && name.charAt(len - 1) == '"')) {
 			name = name.substring(1, len - 1);
 		}
 		return name;

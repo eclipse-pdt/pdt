@@ -12,8 +12,9 @@
 package org.eclipse.php.internal.ui.compare;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.compare.internal.CompareMessages;
 import org.eclipse.jface.text.WhitespaceCharacterPainter;
@@ -63,11 +64,10 @@ public class ShowWhitespaceAction extends TextEditorPropertyAction {
 
 	private void hideWhitespace() {
 		Map painters = getPainters();
-		for (Iterator iterator = painters.keySet().iterator(); iterator
-				.hasNext();) {
-			MergeSourceViewer viewer = (MergeSourceViewer) iterator.next();
-			WhitespaceCharacterPainter painter = (WhitespaceCharacterPainter) painters
-					.get(viewer);
+		for (Entry entry : (Set<Entry>) painters.entrySet()) {
+			MergeSourceViewer viewer = (MergeSourceViewer) entry.getKey();
+			WhitespaceCharacterPainter painter = (WhitespaceCharacterPainter) entry
+					.getValue();
 			if (painter != null) {
 				viewer.removePainter(painter);
 				painter.deactivate(true);

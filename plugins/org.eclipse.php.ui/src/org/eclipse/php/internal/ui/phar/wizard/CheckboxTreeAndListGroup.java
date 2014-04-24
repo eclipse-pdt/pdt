@@ -1,6 +1,7 @@
 package org.eclipse.php.internal.ui.phar.wizard;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.eclipse.dltk.internal.core.ScriptFolder;
 import org.eclipse.dltk.internal.core.SourceModule;
@@ -177,11 +178,11 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 				new Runnable() {
 					public void run() {
 						if (event.getCheckable().equals(fTreeViewer))
-							treeItemChecked(event.getElement(), event
-									.getChecked());
+							treeItemChecked(event.getElement(),
+									event.getChecked());
 						else
-							listItemChecked(event.getElement(), event
-									.getChecked(), true);
+							listItemChecked(event.getElement(),
+									event.getChecked(), true);
 
 						notifyCheckStateChangeListeners(event);
 					}
@@ -538,10 +539,10 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 	}
 
 	/**
-	 *Sets the contents of the list viewer based upon the specified selected
+	 * Sets the contents of the list viewer based upon the specified selected
 	 * tree element. This also includes checking the appropriate list items.
 	 * 
-	 *@param treeElement
+	 * @param treeElement
 	 *            java.lang.Object
 	 */
 	protected void populateListViewer(final Object treeElement) {
@@ -857,13 +858,13 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 	}
 
 	private Object[] getTreeChildren(Object element) {
-		return filter(fTreeViewer.getFilters(), fTreeContentProvider
-				.getChildren(element));
+		return filter(fTreeViewer.getFilters(),
+				fTreeContentProvider.getChildren(element));
 	}
 
 	private Object[] getListElements(Object element) {
-		return filter(fListViewer.getFilters(), fListContentProvider
-				.getElements(element));
+		return filter(fListViewer.getFilters(),
+				fListContentProvider.getElements(element));
 	}
 
 	public Set getWhiteCheckedTreeItems() {
@@ -871,19 +872,20 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 	}
 
 	private void handleUpdateSelection(Map items) {
-		Iterator keyIterator = items.keySet().iterator();
+		Iterator<Entry> iterator = items.entrySet().iterator();
 
 		// Update the store before the hierarchy to prevent updating parents
 		// before all of the children are done
-		while (keyIterator.hasNext()) {
-			Object key = keyIterator.next();
+		while (iterator.hasNext()) {
+			Entry entry = iterator.next();
+			Object key = entry.getKey();
 			// Replace the items in the checked state store with those from the
 			// supplied items
-			List selections = (List) items.get(key);
-			if (selections.size() == 0)
+			List selections = (List) entry.getValue();
+			if (selections.size() == 0) {
 				// If it is empty remove it from the list
 				fCheckedStateStore.remove(key);
-			else {
+			} else {
 				fCheckedStateStore.put(key, selections);
 				// proceed up the tree element hierarchy
 				Object parent = fTreeContentProvider.getParent(key);
@@ -894,15 +896,16 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 		}
 
 		// Now update hierarchies
-		keyIterator = items.keySet().iterator();
+		iterator = items.entrySet().iterator();
 
-		while (keyIterator.hasNext()) {
-			Object key = keyIterator.next();
+		while (iterator.hasNext()) {
+			Entry entry = iterator.next();
+			Object key = entry.getKey();
 			updateHierarchy(key);
 			if (fCurrentTreeSelection != null
 					&& fCurrentTreeSelection.equals(key)) {
 				fListViewer.setAllChecked(false);
-				fListViewer.setCheckedElements(((List) items.get(key))
+				fListViewer.setCheckedElements(((List) entry.getValue())
 						.toArray());
 			}
 		}

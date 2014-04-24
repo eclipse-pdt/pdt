@@ -13,10 +13,8 @@ package org.eclipse.php.internal.core.util;
 
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * A XML writer that can write Maps into an XML file. The values of the map are
@@ -74,11 +72,10 @@ public class MapXMLWriter extends XMLWriter {
 	 */
 	public void writeMap(Map map) {
 		HashMap tagsMap = new HashMap();
-		Iterator keys = map.keySet().iterator();
 		startTag(MAP_TAG, null);
-		while (keys.hasNext()) {
-			Object key = keys.next();
-			Object values = map.get(key);
+		for (Entry entry : (Set<Entry>) map.entrySet()) {
+			Object key = entry.getKey();
+			Object values = entry.getValue();
 			tagsMap.put(NAME_TAG, key.toString());
 			startTag(KEY_TAG, tagsMap);
 			if (key != null) {

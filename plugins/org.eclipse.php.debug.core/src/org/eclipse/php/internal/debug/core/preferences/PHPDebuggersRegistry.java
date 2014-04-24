@@ -11,10 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.preferences;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -208,13 +206,12 @@ public class PHPDebuggersRegistry {
 		}
 		// Override any PDT debugger settings with any extension of debugger
 		// configuration.
-		Set<String> keySet = nonPDTConfigurations.keySet();
-		for (String key : keySet) {
-			AbstractDebuggerConfiguration configuration = nonPDTConfigurations
-					.get(key);
-			configurations.put(key, configuration);
-			debuggers.put(configuration.getDebuggerId(), configuration
-					.getName());
+		for (Entry<String, AbstractDebuggerConfiguration> entry : nonPDTConfigurations
+				.entrySet()) {
+			AbstractDebuggerConfiguration configuration = entry.getValue();
+			configurations.put(entry.getKey(), configuration);
+			debuggers.put(configuration.getDebuggerId(),
+					configuration.getName());
 		}
 	}
 

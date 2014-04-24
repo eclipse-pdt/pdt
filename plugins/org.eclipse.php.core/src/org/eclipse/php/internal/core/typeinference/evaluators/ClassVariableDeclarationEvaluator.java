@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
@@ -129,12 +130,10 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 				}
 				fieldDeclaringTypeSet.remove(type);
 				if (subGoals.size() == 0 && !fieldDeclaringTypeSet.isEmpty()) {
-					for (Iterator iterator = fieldDeclaringTypeSet.keySet()
-							.iterator(); iterator.hasNext();) {
-						IType fieldDeclaringType = (IType) iterator.next();
+					for (Entry<IType, IType> entry : fieldDeclaringTypeSet
+							.entrySet()) {
 						getGoalFromStaticDeclaration(variableName, subGoals,
-								fieldDeclaringType,
-								fieldDeclaringTypeSet.get(fieldDeclaringType));
+								entry.getKey(), entry.getValue());
 					}
 				}
 			} catch (CoreException e) {
@@ -171,15 +170,14 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		}
 		try {
 			moduleDeclaration.traverse(searcher);
-			Map<ASTNode, IContext> staticDeclarations = searcher
-					.getStaticDeclarations();
-			for (ASTNode node : staticDeclarations.keySet()) {
-				IContext context = staticDeclarations.get(node);
+			for (Entry<ASTNode, IContext> entry : searcher
+					.getStaticDeclarations().entrySet()) {
+				final IContext context = entry.getValue();
 				if (context instanceof MethodContext) {
 					MethodContext methodContext = (MethodContext) context;
 					methodContext.setCurrentType(realType);
 				}
-				subGoals.add(new ExpressionTypeGoal(context, node));
+				subGoals.add(new ExpressionTypeGoal(context, entry.getKey()));
 			}
 		} catch (Exception e) {
 			if (DLTKCore.DEBUG) {

@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.ui.explorer;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
@@ -371,10 +372,9 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 			l.add(ns);
 		}
 		List<IType> result = new LinkedList<IType>();
-		for (String namespaceName : aggregated.keySet()) {
-			List<IType> list = aggregated.get(namespaceName);
-			result.add(new NamespaceNode(project, namespaceName, list
-					.toArray(new IType[list.size()])));
+		for (Entry<String, List<IType>> entry : aggregated.entrySet()) {
+			result.add(new NamespaceNode(project, entry.getKey(), entry
+					.getValue().toArray(new IType[entry.getValue().size()])));
 		}
 		return result.toArray();
 	}

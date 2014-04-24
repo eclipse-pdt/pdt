@@ -12,7 +12,7 @@
 package org.eclipse.php.internal.core.util.preferences;
 
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Plugin;
@@ -64,13 +64,12 @@ public class XMLPreferencesWriter {
 	}
 
 	protected static void write(StringBuffer sb, HashMap map) {
-		Set keys = map.keySet();
-		for (Iterator i = keys.iterator(); i.hasNext();) {
-			String key = (String) i.next();
+		for (Entry entry : (Set<Entry>) map.entrySet()) {
+			String key = (String) entry.getKey();
 			sb.append("<"); //$NON-NLS-1$
 			sb.append(key);
 			sb.append(">"); //$NON-NLS-1$
-			Object object = map.get(key);
+			Object object = entry.getValue();
 			if (object instanceof HashMap) {
 				write(sb, (HashMap) object);
 			} else {

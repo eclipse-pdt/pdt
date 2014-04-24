@@ -3,6 +3,7 @@ package org.eclipse.php.internal.ui.phar.wizard;
 import java.io.File;
 import java.util.*;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
@@ -64,7 +65,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 
 	private static final String SPLASH1 = "/"; //$NON-NLS-1$
 	private static final String SPLASH2 = "\\"; //$NON-NLS-1$
-	private static final String PAGE_NAME = PharPackagerMessages.JarPackageWizardPage_Title; 
+	private static final String PAGE_NAME = PharPackagerMessages.JarPackageWizardPage_Title;
 	private static final String STORE_EXPORT_TYPE = PAGE_NAME + ".EXPORT_TYPE"; //$NON-NLS-1$
 	private static final String STORE_COMPRESS_TYPE = PAGE_NAME
 			+ ".COMPRESS_TYPE"; //$NON-NLS-1$
@@ -162,8 +163,10 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		setErrorMessage(null); // should not initially have error message
 
 		setControl(composite);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite,
-				IPHPHelpContextIds.PHARPACKAGER_WIZARD_PAGE);
+		PlatformUI
+				.getWorkbench()
+				.getHelpSystem()
+				.setHelp(composite, IPHPHelpContextIds.PHARPACKAGER_WIZARD_PAGE);
 	}
 
 	private void createSignatureGroup(Composite parent) {
@@ -250,8 +253,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			pharData.setIncludeDirectoryEntries(settings
 					.getBoolean(STORE_INCLUDE_DIRECTORY_ENTRIES));
 			pharData.setOverwrite(settings.getBoolean(STORE_OVERWRITE));
-			pharData
-					.setStubGenerated(settings.getBoolean(STORE_STUB_GENERATED));
+			pharData.setStubGenerated(settings.getBoolean(STORE_STUB_GENERATED));
 			pharData.setStubLocation(Path.fromOSString(settings
 					.get(STORE_STUB_PATH)));
 			// pharData.setUseSignature(settings.getBoolean(USE_SIGNATURE));
@@ -325,8 +327,10 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 	}
 
 	private void setZipExportType() {
-		noneCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_no);
-		zlibCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_yes);
+		noneCompressTypePhar
+				.setText(PharPackagerMessages.JarPackageWizardPage_no);
+		zlibCompressTypePhar
+				.setText(PharPackagerMessages.JarPackageWizardPage_yes);
 		bzipCompressTypePhar.setVisible(false);
 	}
 
@@ -444,9 +448,9 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			if (resources.length != 1)
 				setErrorMessage(PharPackagerMessages.JarManifestWizardPage_error_onlyOneManifestMustBeSelected);
 			else {
-				//				setErrorMessage(""); 
-				if(resources[0] instanceof ISourceModule){
-					ISourceModule sm = (ISourceModule)resources[0];
+				// setErrorMessage("");
+				if (resources[0] instanceof ISourceModule) {
+					ISourceModule sm = (ISourceModule) resources[0];
 					resources[0] = sm.getResource();
 				}
 				pharData.setStubLocation(((IResource) resources[0])
@@ -483,10 +487,11 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			public IStatus validate(Object[] selection) {
 				StatusInfo res = new StatusInfo();
 				// only single selection
-				if (selection.length == 1 && (selection[0] instanceof IFile || selection[0] instanceof ISourceModule))
+				if (selection.length == 1
+						&& (selection[0] instanceof IFile || selection[0] instanceof ISourceModule))
 					res.setOK();
-//				else
-//					res.setError(""); 
+				// else
+				// res.setError("");
 				return res;
 			}
 		});
@@ -541,8 +546,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		final DecoratingLabelProvider provider = new DecoratingLabelProvider(
 				new PHPExplorerLabelProvider(treeContentProvider, store),
 				new ProblemsLabelDecorator(null));
-		fInputGroup = new CheckboxTreeAndListGroup(parent, DLTKCore
-				.create(ResourcesPlugin.getWorkspace().getRoot()),
+		fInputGroup = new CheckboxTreeAndListGroup(parent,
+				DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot()),
 				treeContentProvider, provider,
 				new StandardModelElementContentProvider(), provider, SWT.NONE,
 				SIZING_SELECTION_WIDGET_WIDTH, SIZING_SELECTION_WIDGET_HEIGHT) {
@@ -578,8 +583,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		fInputGroup.getTree().addListener(SWT.MouseUp, this);
 		fInputGroup.getTable().addListener(SWT.MouseUp, this);
 
-//		setAccessibilityText(fInputGroup.getTree(), "");
-//		setAccessibilityText(fInputGroup.getTable(), "");
+		// setAccessibilityText(fInputGroup.getTree(), "");
+		// setAccessibilityText(fInputGroup.getTable(), "");
 
 		ICheckStateListener listener = new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
@@ -620,16 +625,19 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 
 			pharCompressRadio = new Button(exportTypeGroup, SWT.RADIO
 					| SWT.LEFT);
-			pharCompressRadio.setText(PharPackagerMessages.JarPackageWizardPage_Export_Type_phar);
+			pharCompressRadio
+					.setText(PharPackagerMessages.JarPackageWizardPage_Export_Type_phar);
 			// pharCompressRadio.setSelection(true);
 			pharCompressRadio.addListener(SWT.Selection, this);
 
 			zipCompressRadio = new Button(exportTypeGroup, SWT.RADIO | SWT.LEFT);
-			zipCompressRadio.setText(PharPackagerMessages.JarPackageWizardPage_Export_Type_zip);
+			zipCompressRadio
+					.setText(PharPackagerMessages.JarPackageWizardPage_Export_Type_zip);
 			zipCompressRadio.addListener(SWT.Selection, this);
 
 			tarCompressRadio = new Button(exportTypeGroup, SWT.RADIO | SWT.LEFT);
-			tarCompressRadio.setText(PharPackagerMessages.JarPackageWizardPage_Export_Type_tar);
+			tarCompressRadio
+					.setText(PharPackagerMessages.JarPackageWizardPage_Export_Type_tar);
 			tarCompressRadio.addListener(SWT.Selection, this);
 
 		}
@@ -652,18 +660,21 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 
 			noneCompressTypePhar = new Button(compressTypeGroup, SWT.RADIO
 					| SWT.LEFT);
-			noneCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_none);
+			noneCompressTypePhar
+					.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_none);
 			// noneCompressTypePhar.setSelection(true);
 			noneCompressTypePhar.addListener(SWT.Selection, this);
 
 			bzipCompressTypePhar = new Button(compressTypeGroup, SWT.RADIO
 					| SWT.LEFT);
-			bzipCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_bz2);
+			bzipCompressTypePhar
+					.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_bz2);
 			bzipCompressTypePhar.addListener(SWT.Selection, this);
 
 			zlibCompressTypePhar = new Button(compressTypeGroup, SWT.RADIO
 					| SWT.LEFT);
-			zlibCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_yes);
+			zlibCompressTypePhar
+					.setText(PharPackagerMessages.JarPackageWizardPage_yes);
 			zlibCompressTypePhar.addListener(SWT.Selection, this);
 			zlibCompressTypePhar.setLayoutData(new GridData(
 					GridData.FILL_HORIZONTAL, GridData.CENTER, true, false, 1,
@@ -671,7 +682,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		}
 
 		fOverwriteCheckbox = new Button(optionsGroup, SWT.CHECK | SWT.LEFT);
-		fOverwriteCheckbox.setText(PharPackagerMessages.JarPackageWizardPage_overwrite_text);
+		fOverwriteCheckbox
+				.setText(PharPackagerMessages.JarPackageWizardPage_overwrite_text);
 		fOverwriteCheckbox.addListener(SWT.Selection, this);
 
 		// fIncludeDirectoryEntriesCheckbox = new Button(optionsGroup, SWT.CHECK
@@ -694,12 +706,12 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 				GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));
 
 		String label = PharPackagerMessages.JarPackageWizardPage_PHAR_file;
-//		if (label != null) {
-			new Label(destinationSelectionGroup, SWT.NONE).setText(label);
-//		} else {
-//			layout.marginWidth = 0;
-//			layout.marginHeight = 0;
-//		}
+		// if (label != null) {
+		new Label(destinationSelectionGroup, SWT.NONE).setText(label);
+		// } else {
+		// layout.marginWidth = 0;
+		// layout.marginHeight = 0;
+		// }
 
 		// destination name entry field
 		fDestinationNamesCombo = new Combo(destinationSelectionGroup,
@@ -710,12 +722,12 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
 				| GridData.GRAB_HORIZONTAL);
 		data.widthHint = SIZING_TEXT_FIELD_WIDTH;
-//		data.horizontalSpan = label == null ? 2 : 1;
+		// data.horizontalSpan = label == null ? 2 : 1;
 		fDestinationNamesCombo.setLayoutData(data);
 
-//		if (label == null) {
-//			setAccessibilityText(fDestinationNamesCombo, "");
-//		}
+		// if (label == null) {
+		// setAccessibilityText(fDestinationNamesCombo, "");
+		// }
 
 		// destination browse button
 		fDestinationBrowseButton = new Button(destinationSelectionGroup,
@@ -756,8 +768,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		String selectedFileName = dialog.open();
 		if (selectedFileName != null) {
 			IContainer[] findContainersForLocation = ResourcesPlugin
-					.getWorkspace().getRoot().findContainersForLocation(
-							new Path(selectedFileName));
+					.getWorkspace().getRoot()
+					.findContainersForLocation(new Path(selectedFileName));
 			if (findContainersForLocation.length > 0) {
 				selectedFileName = findContainersForLocation[0].getFullPath()
 						.makeRelative().toString();
@@ -773,26 +785,33 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		if (path.segmentCount() > 0 && ensureTargetFileIsValid(path.toFile())
 				&& path.getFileExtension() == null) {
 			if (pharCompressRadio.getSelection()) {
-				if (!PharConstants.PHAR_EXTENSION.equals(path.getFileExtension())) {
+				if (!PharConstants.PHAR_EXTENSION.equals(path
+						.getFileExtension())) {
 					path = path.addFileExtension(PharConstants.PHAR_EXTENSION);
 				}
 			} else if (zipCompressRadio.getSelection()) {
-				if (!PharConstants.PHAR_EXTENSION_ZIP.equals(path.getFileExtension())) {
-					path = path.addFileExtension(PharConstants.PHAR_EXTENSION_ZIP);
+				if (!PharConstants.PHAR_EXTENSION_ZIP.equals(path
+						.getFileExtension())) {
+					path = path
+							.addFileExtension(PharConstants.PHAR_EXTENSION_ZIP);
 				}
 			} else if (tarCompressRadio.getSelection()) {
 				String fileName = path.lastSegment();
 				if (noneCompressTypePhar.getSelection()) {
-					if (!PharConstants.PHAR_EXTENSION_TAR1.equals(path.getFileExtension())) {
-						path = path.addFileExtension(PharConstants.PHAR_EXTENSION_TAR1);
+					if (!PharConstants.PHAR_EXTENSION_TAR1.equals(path
+							.getFileExtension())) {
+						path = path
+								.addFileExtension(PharConstants.PHAR_EXTENSION_TAR1);
 					}
 				} else if (zlibCompressTypePhar.getSelection()) {
 					if (!fileName.endsWith(PharConstants.PHAR_EXTENSION_TAR2)) {
-						path = path.addFileExtension(PharConstants.PHAR_EXTENSION_TAR3);
+						path = path
+								.addFileExtension(PharConstants.PHAR_EXTENSION_TAR3);
 					}
 				} else if (bzipCompressTypePhar.getSelection()) {
 					if (!fileName.endsWith(PharConstants.PHAR_EXTENSION_TAR4)) {
-						path = path.addFileExtension(PharConstants.PHAR_EXTENSION_TAR5);
+						path = path
+								.addFileExtension(PharConstants.PHAR_EXTENSION_TAR5);
 					}
 				}
 
@@ -813,8 +832,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		PixelConverter converter = new PixelConverter(button);
 		int widthHint = converter
 				.convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
-		return Math.max(widthHint, button.computeSize(SWT.DEFAULT, SWT.DEFAULT,
-				true).x);
+		return Math.max(widthHint,
+				button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
 	}
 
 	/*
@@ -840,12 +859,11 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			// options
 			settings.put(STORE_EXPORT_TYPE, pharData.getExportType());
 			settings.put(STORE_COMPRESS_TYPE, pharData.getCompressType());
-			settings.put(STORE_INCLUDE_DIRECTORY_ENTRIES, pharData
-					.areDirectoryEntriesIncluded());
+			settings.put(STORE_INCLUDE_DIRECTORY_ENTRIES,
+					pharData.areDirectoryEntriesIncluded());
 			settings.put(STORE_OVERWRITE, pharData.allowOverwrite());
 			settings.put(STORE_STUB_GENERATED, pharData.isStubGenerated());
-			settings
-					.put(STORE_STUB_PATH, pharData.getStubLocation().toString());
+			settings.put(STORE_STUB_PATH, pharData.getStubLocation().toString());
 			settings.put(USE_SIGNATURE, pharData.isUseSignature());
 			settings.put(SIGNATURE_TYPE, pharData.getSignature());
 		}
@@ -878,7 +896,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			return false;
 		}
 		if (pharData.getAbsolutePharLocation().toString().endsWith(SPLASH1)
-				|| pharData.getAbsolutePharLocation().toString().endsWith(SPLASH2)) { 
+				|| pharData.getAbsolutePharLocation().toString()
+						.endsWith(SPLASH2)) {
 			setErrorMessage(PharPackagerMessages.JarPackageWizardPage_error_exportDestinationMustNotBeDirectory);
 			fDestinationNamesCombo.setFocus();
 			return false;
@@ -960,8 +979,10 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		}
 
 		if (pharCompressRadio.getSelection()) {
-			noneCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_none);
-			zlibCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_gz);
+			noneCompressTypePhar
+					.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_none);
+			zlibCompressTypePhar
+					.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_gz);
 			bzipCompressTypePhar.setVisible(true);
 
 			pharData.setExportType(PharConstants.PHAR);
@@ -977,8 +998,10 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			}
 
 		} else if (tarCompressRadio.getSelection()) {
-			noneCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_none);
-			zlibCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_gz);
+			noneCompressTypePhar
+					.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_none);
+			zlibCompressTypePhar
+					.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_gz);
 			bzipCompressTypePhar.setVisible(true);
 
 			pharData.setExportType(PharConstants.TAR);
@@ -1227,11 +1250,11 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			map.put(resource, element);
 		}
 
-		for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
-			Object element = (Object) iterator.next();
-			if (element instanceof IResource) {
-				if (isDescendent(map, (IResource) element)) {
-					elements.remove(map.get(element));
+		for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
+			Entry entry = (Entry) iterator.next();
+			if (entry.getKey() instanceof IResource) {
+				if (isDescendent(map, (IResource) entry.getKey())) {
+					elements.remove(entry.getValue());
 				}
 			}
 		}

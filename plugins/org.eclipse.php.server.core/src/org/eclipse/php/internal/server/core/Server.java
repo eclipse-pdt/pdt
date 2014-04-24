@@ -16,7 +16,8 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
@@ -284,10 +285,8 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 		HashMap properties = (HashMap) map.get(SERVER_ELEMENT);
 		// This will cause for property change events to be fired on every
 		// attribute set.
-		Iterator keys = properties.keySet().iterator();
-		while (keys.hasNext()) {
-			String key = (String) keys.next();
-			setAttribute(key, (String) properties.get(key));
+		for (Entry entry : (Set<Entry>) properties.entrySet()) {
+			setAttribute((String) entry.getKey(), (String) entry.getValue());
 		}
 	}
 

@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.env.IModuleSource;
@@ -194,9 +195,8 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 			throws BadLocationException {
 		SourceRange replacementRange = getReplacementRange(abstractContext);
 		IDLTKSearchScope scope = createSearchScope();
-		for (Iterator iterator = result.keySet().iterator(); iterator.hasNext();) {
-			String name = (String) iterator.next();
-			String fullName = result.get(name).getNamespace()
+		for (Entry<String, UsePart> entry : result.entrySet()) {
+			String fullName = entry.getValue().getNamespace()
 					.getFullyQualifiedName();
 			IType[] elements = PhpModelAccess.getDefault().findTypes(null,
 					fullName + NamespaceReference.NAMESPACE_SEPARATOR,
@@ -205,7 +205,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 				String elementName = elements[i].getElementName();
 				reportAlias(reporter, scope, module, replacementRange,
 						elements[i], elementName,
-						elementName.replace(fullName, name), suffix);
+						elementName.replace(fullName, entry.getKey()), suffix);
 			}
 		}
 	}
@@ -216,9 +216,9 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		SourceRange replacementRange = getReplacementRange(abstractContext);
 		String prefix = abstractContext.getPrefixWithoutProcessing();
 		IDLTKSearchScope scope = createSearchScope();
-		for (Iterator iterator = result.keySet().iterator(); iterator.hasNext();) {
-			String name = (String) iterator.next();
-			String fullName = result.get(name).getNamespace()
+		for (Entry<String, UsePart> entry : result.entrySet()) {
+			String name = entry.getKey();
+			String fullName = entry.getValue().getNamespace()
 					.getFullyQualifiedName();
 			if (fullName.startsWith("\\")) { //$NON-NLS-1$
 				fullName = fullName.substring(1);
@@ -385,7 +385,8 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 							ISourceRange sourceRange = selfClassData
 									.getSourceRange();
 							FakeMethod ctorMethod = new FakeMethod(
-									(ModelElement) selfClassData, "self", //$NON-NLS-1$
+									(ModelElement) selfClassData,
+									"self", //$NON-NLS-1$
 									sourceRange.getOffset(),
 									sourceRange.getLength(),
 									sourceRange.getOffset(),
