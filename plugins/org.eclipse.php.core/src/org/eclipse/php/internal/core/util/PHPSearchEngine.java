@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.internal.core.ArchiveProjectFragment;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
@@ -125,7 +126,17 @@ public class PHPSearchEngine implements IIncludepathListener {
 				if (searchInBuildpathEntry != null) {
 					return searchInBuildpathEntry;
 				}
-			} else {
+			} else if (includePath.getEntry() instanceof IFile) {
+				IFile resource = (IFile) includePath.getEntry();
+				Result result = new ResourceResult(resource);
+				if (exclusiveFiles == null
+						|| !exclusiveFiles.contains(resource.getLocation()
+								.toOSString())) {
+					return result;
+				} else {
+					list.add(result);
+				}
+			} else if (includePath.getEntry() instanceof IContainer) {
 				IContainer container = (IContainer) includePath.getEntry();
 				IResource resource = container.findMember(path);
 				if ((resource instanceof IFile)) {
@@ -139,6 +150,9 @@ public class PHPSearchEngine implements IIncludepathListener {
 					}
 
 				}
+			} else {
+				Logger.log(Logger.ERROR,
+						"Unknown IncludePath entry: " + includePath); //$NON-NLS-1$
 			}
 		}
 		if (!list.isEmpty()) {
