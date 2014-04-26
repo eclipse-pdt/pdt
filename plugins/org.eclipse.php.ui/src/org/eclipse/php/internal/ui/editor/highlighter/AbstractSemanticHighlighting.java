@@ -86,10 +86,12 @@ public abstract class AbstractSemanticHighlighting implements
 
 	public Position[] consumes(Program program) {
 		if (program != null) {
+			program.getAST().getBindingResolver().startBindingSession();
 			list = new ArrayList<Position>();
 			sourceModule = program.getSourceModule();
 			AbstractSemanticApply apply = getSemanticApply();
 			program.accept(apply);
+			program.getAST().getBindingResolver().stopBindingSession();
 			return list.toArray(new Position[list.size()]);
 		}
 		return new Position[0];
@@ -132,8 +134,10 @@ public abstract class AbstractSemanticHighlighting implements
 		Program program = null;
 		if (sourceModule != null) {
 			try {
+				// Wait active_only. Sometimes highliters are called without
+				// reconciling
 				program = SharedASTProvider.getAST(sourceModule,
-						SharedASTProvider.WAIT_NO, null);
+						SharedASTProvider.WAIT_ACTIVE_ONLY, null);
 			} catch (ModelException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
