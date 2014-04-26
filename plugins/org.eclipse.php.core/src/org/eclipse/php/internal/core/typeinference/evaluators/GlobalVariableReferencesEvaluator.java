@@ -37,6 +37,7 @@ import org.eclipse.php.internal.core.typeinference.Declaration;
 import org.eclipse.php.internal.core.typeinference.DeclarationScope;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher;
+import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.goals.GlobalVariableReferencesGoal;
 
 /**
@@ -126,8 +127,16 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 						for (DeclarationScope s : scopes) {
 							for (Declaration decl : s
 									.getDeclarations(variableName)) {
-								subGoals.add(new ExpressionTypeGoal(s
-										.getContext(), decl.getNode()));
+
+								IContext context2 = s.getContext();
+								if (context2 instanceof IModelCacheContext
+										&& this.goal.getContext() instanceof IModelCacheContext) {
+									((IModelCacheContext) context2)
+											.setCache(((IModelCacheContext) this.goal
+													.getContext()).getCache());
+								}
+								subGoals.add(new ExpressionTypeGoal(context2,
+										decl.getNode()));
 							}
 						}
 					} catch (Exception e) {

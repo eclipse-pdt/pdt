@@ -25,15 +25,14 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.ti.GoalState;
+import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.index.IPHPDocAwareElement;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
-import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.*;
+import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.AbstractMethodReturnTypeEvaluator;
 import org.eclipse.php.internal.core.typeinference.goals.AbstractMethodReturnTypeGoal;
 
@@ -80,8 +79,15 @@ public class PHPDocMethodReturnTypeEvaluator extends
 
 			if (type != null) {
 				try {
-					IType[] superClasses = PHPModelUtils.getSuperClasses(type,
-							null);
+					IContext context = goal.getContext();
+					IModelAccessCache cache = null;
+					if (context instanceof IModelCacheContext) {
+						cache = ((IModelCacheContext) context).getCache();
+					}
+					IType[] superClasses = PHPModelUtils.getSuperClasses(
+							type,
+							cache == null ? null : cache.getSuperTypeHierarchy(
+									type, null));
 
 					for (IType superClass : superClasses) {
 						IMethod superClassMethod = superClass.getMethod(method

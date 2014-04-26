@@ -177,6 +177,13 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 					MethodContext methodContext = (MethodContext) context;
 					methodContext.setCurrentType(realType);
 				}
+				if (context instanceof IModelCacheContext
+						&& ClassVariableDeclarationEvaluator.this.goal
+								.getContext() instanceof IModelCacheContext) {
+					((IModelCacheContext) context)
+							.setCache(((IModelCacheContext) ClassVariableDeclarationEvaluator.this.goal
+									.getContext()).getCache());
+				}
 				subGoals.add(new ExpressionTypeGoal(context, entry.getKey()));
 			}
 		} catch (Exception e) {
@@ -323,6 +330,12 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		}
 
 		public IContext getContext() {
+			if (context instanceof IModelCacheContext
+					&& ClassVariableDeclarationEvaluator.this.goal.getContext() instanceof IModelCacheContext) {
+				((IModelCacheContext) context)
+						.setCache(((IModelCacheContext) ClassVariableDeclarationEvaluator.this.goal
+								.getContext()).getCache());
+			}
 			return context;
 		}
 
