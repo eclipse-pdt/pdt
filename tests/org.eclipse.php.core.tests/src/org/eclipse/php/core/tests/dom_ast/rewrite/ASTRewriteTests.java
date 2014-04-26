@@ -77,6 +77,7 @@ import org.eclipse.php.internal.core.ast.nodes.StaticMethodInvocation;
 import org.eclipse.php.internal.core.ast.nodes.StaticStatement;
 import org.eclipse.php.internal.core.ast.nodes.SwitchCase;
 import org.eclipse.php.internal.core.ast.nodes.SwitchStatement;
+import org.eclipse.php.internal.core.ast.nodes.ThrowStatement;
 import org.eclipse.php.internal.core.ast.nodes.TryStatement;
 import org.eclipse.php.internal.core.ast.nodes.UnaryOperation;
 import org.eclipse.php.internal.core.ast.nodes.Variable;
@@ -1996,6 +1997,23 @@ public class ASTRewriteTests extends TestCase {
 		checkResult("<?php\n class A { \n	//mycomment\n	public function foo(int $a){}\n }?> ");
 	}
 
+	public void testException() throws Exception {
+		String str = "<?php\n function A() { throw new Exception(); }";
+		initialize(str);
+		List<ThrowStatement> allthrows = getAllOfType(program,
+				ThrowStatement.class);
+		ASTRewrite rewrite = ASTRewrite.create(program.getAST());
+
+		rewrite.replace(
+				allthrows.get(0),
+				rewrite.createGroupNode(new ASTNode[] { allthrows.get(0),
+						program.getAST().newBreakStatement() }), null);
+		rewrite.rewriteAST(document, null).apply(document);
+
+		checkResult("<?php\n function A() { throw new Exception(); break; }");
+
+	}
+
 	// //////////////////////// Utility methods //////////////////////////
 	/**
 	 * Set the content into the document and initialize the parser, the program
@@ -2065,4 +2083,5 @@ public class ASTRewriteTests extends TestCase {
 		});
 		return list;
 	}
+
 }
