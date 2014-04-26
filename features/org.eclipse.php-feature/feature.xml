@@ -5,7 +5,7 @@
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
     http://www.eclipse.org/legal/epl-v10.html
-    
+
     Contributors:
         IBM Corporation - initial API and implementation
         Zend Technologies
@@ -15,7 +15,9 @@
       label="%featureName"
       version="3.3.0.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.php">
+      plugin="org.eclipse.php"
+      license-feature="org.eclipse.license"
+      license-feature-version="0.0.0">
 
    <description>
       %description
@@ -24,6 +26,10 @@
    <license url="%licenseURL">
       %license
    </license>
+
+   <copyright>
+      %copyright
+   </copyright>
 
    <requires>
       <import feature="org.eclipse.dltk.core" version="3.0.0" match="greaterOrEqual"/>

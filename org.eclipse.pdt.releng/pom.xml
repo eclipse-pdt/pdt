@@ -93,6 +93,11 @@
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/eclipse/updates/4.2/R-4.2-201206081400</url>
 		</repository>
+		<repository>
+			<id>license-feature</id>
+			<url>http://download.eclipse.org/cbi/updates/license/</url>
+			<layout>p2</layout>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
