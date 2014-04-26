@@ -691,9 +691,6 @@ public final class ASTProvider {
 			return Thread.currentThread().toString();
 	}
 
-	/**
-	 * @deprecated
-	 */
 	public void markASTDirty() {
 		isASTDirty = true;
 	}
