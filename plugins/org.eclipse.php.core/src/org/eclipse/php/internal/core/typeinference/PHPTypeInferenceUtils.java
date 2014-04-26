@@ -27,6 +27,7 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPTraitType;
 
 public class PHPTypeInferenceUtils {
@@ -109,8 +110,13 @@ public class PHPTypeInferenceUtils {
 	 */
 	public static IType[] getModelElements(IEvaluatedType evaluatedType,
 			ISourceModuleContext context) {
-		return PHPTypeInferenceUtils.getModelElements(evaluatedType, context,
-				0, null);
+		return PHPTypeInferenceUtils
+				.getModelElements(
+						evaluatedType,
+						context,
+						0,
+						context instanceof IModelCacheContext ? ((IModelCacheContext) context)
+								.getCache() : null);
 	}
 
 	/**
@@ -143,7 +149,12 @@ public class PHPTypeInferenceUtils {
 	 */
 	public static IType[] getModelElements(IEvaluatedType evaluatedType,
 			ISourceModuleContext context, int offset) {
-		return internalGetModelElements(evaluatedType, context, offset, null);
+		return internalGetModelElements(
+				evaluatedType,
+				context,
+				offset,
+				context instanceof IModelCacheContext ? ((IModelCacheContext) context)
+						.getCache() : null);
 	}
 
 	/**
