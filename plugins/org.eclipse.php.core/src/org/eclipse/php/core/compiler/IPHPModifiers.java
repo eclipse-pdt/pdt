@@ -39,5 +39,7 @@ public interface IPHPModifiers extends Modifiers {
 	public static final int AccTrait = (1 << Modifiers.USER_MODIFIER + 3);
 	public static final int AccMagicProperty = (1 << Modifiers.USER_MODIFIER + 4);
 
-	public static final int USER_MODIFIER = Modifiers.USER_MODIFIER + 5;
+	public static final int AccDeprecated = (1 << Modifiers.USER_MODIFIER + 5);
+
+	public static final int USER_MODIFIER = Modifiers.USER_MODIFIER + 6;
 }

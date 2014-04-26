@@ -19,16 +19,17 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ExternalProjectFragment;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.index.IPHPDocAwareElement;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.ui.Logger;
 
 public abstract class ModelUtils {
 
@@ -127,7 +128,6 @@ public abstract class ModelUtils {
 	static public Collection<ISourceRange> getDeprecatedElements(
 			IModelElement element) {
 		Collection<ISourceRange> elements = new LinkedList<ISourceRange>();
-
 		try {
 			if (ModelUtils.isDeprecated(element)) {
 				elements.add(((IMember) element).getNameRange());
@@ -149,8 +149,14 @@ public abstract class ModelUtils {
 	static public boolean isDeprecated(IModelElement element) {
 		if (element instanceof IPHPDocAwareElement) {
 			return ((IPHPDocAwareElement) element).isDeprecated();
+		} else if (element instanceof IMember) {
+			try {
+				return PHPFlags.isDeprecated(((IMember) element).getFlags());
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
 		}
-		return isDeprecated(getPHPDoc(element));
+		return false;
 	}
 
 	static public PHPDocBlock getPHPDoc(IModelElement element) {
@@ -199,10 +205,6 @@ public abstract class ModelUtils {
 		return PHPTypeInferenceUtils.getModelElements(
 				new PHPClassType(typeName), (ISourceModuleContext) context,
 				offset);
-	}
-
-	static private boolean isDeprecated(PHPDocBlock doc) {
-		return doc != null && doc.getTags(PHPDocTag.DEPRECATED).length > 0;
 	}
 
 	static private String getFieldName(VariableBase variable) {
