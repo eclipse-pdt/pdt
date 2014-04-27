@@ -882,7 +882,7 @@ public class ASTMatcher {
 		}
 		ThrowStatement o = (ThrowStatement) other;
 
-		return false;
+		return safeSubtreeMatch(node.getExpression(), o.getExpression());
 	}
 
 	public boolean match(TryStatement node, Object other) {
