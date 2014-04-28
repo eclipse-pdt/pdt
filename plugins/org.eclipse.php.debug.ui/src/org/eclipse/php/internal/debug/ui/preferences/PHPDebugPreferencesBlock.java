@@ -429,9 +429,15 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 
 	private URL generateBaseURL(Server server, IPath basePath)
 			throws MalformedURLException {
-
-		IPath path = new Path(server.getRootURL().toString());
-		URL generatedBaseURL = new URL(path.append(basePath).toString());
+		URL serverUrl = server.getRootURL();
+		IPath file = new Path(serverUrl.getFile());
+		if (!file.isEmpty()) {
+			file = file.append(basePath);
+		} else {
+			file = basePath;
+		}
+		URL generatedBaseURL = new URL(serverUrl.getProtocol(),
+				serverUrl.getHost(), serverUrl.getPort(), file.toString());
 		return generatedBaseURL;
 	}
 
