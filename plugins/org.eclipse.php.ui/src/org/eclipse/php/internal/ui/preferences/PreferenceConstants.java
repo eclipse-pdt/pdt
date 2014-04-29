@@ -749,7 +749,7 @@ public class PreferenceConstants {
 	public static final String EDITOR_FOLDING_PHPDOC = "foldPHPDoc"; //$NON-NLS-1$
 	public static final String EDITOR_FOLDING_CLASSES = "foldClasses"; //$NON-NLS-1$
 	public static final String EDITOR_FOLDING_FUNCTIONS = "foldFunctions"; //$NON-NLS-1$
-	//	public static final String EDITOR_FOLDING_INCLUDES = "foldIncludes"; 
+	// public static final String EDITOR_FOLDING_INCLUDES = "foldIncludes";
 	public static final String EDITOR_FOLDING_HEADER_COMMENTS = "foldHeaderComment"; //$NON-NLS-1$
 
 	/**
@@ -774,7 +774,8 @@ public class PreferenceConstants {
 	 * @since 3.1
 	 * @see IStructuredTextFoldingProvider#FOLDING_ENABLED
 	 */
-	//	public static final String EDITOR_FOLDING_ENABLED= "editor_folding_enabled"; 
+	// public static final String EDITOR_FOLDING_ENABLED=
+	// "editor_folding_enabled";
 	public static final String EDITOR_FOLDING_ENABLED = AbstractStructuredFoldingStrategy.FOLDING_ENABLED;
 
 	/**
@@ -948,7 +949,8 @@ public class PreferenceConstants {
 	 * 
 	 * @see #SRCBIN_FOLDERS_IN_NEWPROJ
 	 */
-	//public static final String SRCBIN_SRCNAME = "org.eclipse.php.ui.wizards.srcBinFoldersSrcName"; 
+	// public static final String SRCBIN_SRCNAME =
+	// "org.eclipse.php.ui.wizards.srcBinFoldersSrcName";
 	public static final String SRCBIN_SRCNAME = "com.xore.dltk.ui.wizards.srcFoldersSrcName"; //$NON-NLS-1$
 
 	/**
@@ -1022,12 +1024,6 @@ public class PreferenceConstants {
 		editorStore
 				.setDefault(
 						AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE,
-						true);
-
-		// Show line numbers:
-		editorStore
-				.setDefault(
-						AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER,
 						true);
 
 		// disabling the spelling detection till we find a way to refine it the
@@ -1188,7 +1184,7 @@ public class PreferenceConstants {
 				"org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + mod1Name); //$NON-NLS-1$
 		store.setDefault(
 				EDITOR_TEXT_HOVER_MODIFIER_MASKS,
-				"org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + SWT.MOD1); 		 //$NON-NLS-1$
+				"org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + SWT.MOD1); //$NON-NLS-1$
 
 		store.setDefault(PHP_MANUAL_SITE, PHPManualConfigSerializer
 				.toString(new PHPManualConfig(
