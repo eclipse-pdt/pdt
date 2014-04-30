@@ -1,0 +1,59 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Dawid Pakula and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Dawid Pakula - initial API and implementation
+ *     Andreas Guarino - intial color schema definition 
+ *******************************************************************************/
+IEclipsePreferences#org-eclipse-php-ui {
+    preferences:
+        'codeStyleNormal=\#D9E8F7 | null | null | null | null | null'
+        'editorColorBoundarymaker=\#e79c92 | null | true | true | false | false'
+        'editorColorComment=\#626262 | null | null | null | null | null'
+        'editorColorHeredoc=\#626262 | null | null | true | null | null'
+        'editorColorKeyword=\#DD2867 | null | true | false | false | false'
+        'editorColorLineComment=\#626262 | null | null | null | null | null'
+        'editorColorNumber=\#6897BB | null | null | null | null | null'
+        'editorColorPHPDocComment=\#626262 | null | false | false | false | false'
+        'editorColorPhpdoc=\#9a8c7c | null | true | false | false | false'
+        'editorColorString=\#17C6A3 | null | null | true | null | null'
+        'editorColorTask=\#626262 | null | true | null | null | null'
+        'editorColorVariable=\#FFBF26 | null | null | null | null | null'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.ClassHighlighting.bold=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.ClassHighlighting.color=\#1290C3'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.ClassHighlighting.enabled=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.ConstantHighlighting.color=\#8DDAF8'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.ConstantHighlighting.enabled=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.DeprecatedHighlighting.color=\#AB1F36'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.DeprecatedHighlighting.enabled=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.DeprecatedHighlighting.strikethrough=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.DeprecatedHighlighting.underline=false'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.FieldHighlighting.color=\#66E1F8'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.FieldHighlighting.enabled=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.FunctionHighlighting.color=\#97dd13'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.FunctionHighlighting.enabled=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.InternalClassHighlighting.bold=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.InternalClassHighlighting.color=\#17abea'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.InternalClassHighlighting.enabled=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.InternalConstantHighlighting.bold=false'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.InternalConstantHighlighting.color=\#afe6fa'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.InternalConstantHighlighting.enabled=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.InternalFunctionHighlighting.color=\#A7EC21'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.InternalFunctionHighlighting.enabled=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.InternalFunctionHighlighting.italic=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.MethodHighlighting.color=\#1eb540'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.MethodHighlighting.enabled=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.ParameterVariableHighlighting.color=\#79abff'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.ParameterVariableHighlighting.enabled=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.ParameterVariableHighlighting.underline=false'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.StaticFieldHighlighting.color=\#8DDAF8'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.StaticFieldHighlighting.enabled=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.StaticMethodHighlighting.color=\#1eb540'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.StaticMethodHighlighting.enabled=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.SuperGlobalHighlighting.color=\#FFBF26'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.SuperGlobalHighlighting.enabled=true'
+}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.0"?>
+<?eclipse version="3.4"?>
 <!--
     Copyright (c) 2009 IBM Corporation and others.
     All rights reserved. This program and the accompanying materials
@@ -2300,5 +2300,13 @@
           </contentType>
        </lineCommentingStrategy>
     </extension> 
+    
+    <!-- dark theme defaults -->
+    <extension
+         point="org.eclipse.e4.ui.css.swt.theme">
+        <stylesheet uri="resources/css/dark/preferencestyle.css"> 
+            <themeid refid="org.eclipse.e4.ui.css.theme.e4_dark"></themeid>
+        </stylesheet>
+    </extension>
     
 </plugin>
