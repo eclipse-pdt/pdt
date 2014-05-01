@@ -127,7 +127,7 @@ public abstract class AbstractSemanticHighlighting implements
 				// Wait active_only. Sometimes highliters are called without
 				// reconciling
 				program = SharedASTProvider.getAST(sourceModule,
-						SharedASTProvider.WAIT_ACTIVE_ONLY, null);
+						SharedASTProvider.WAIT_YES, null);
 			} catch (ModelException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
