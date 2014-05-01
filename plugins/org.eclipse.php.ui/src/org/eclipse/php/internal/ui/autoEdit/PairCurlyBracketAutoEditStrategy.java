@@ -18,7 +18,6 @@ import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegi
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.format.CurlyCloseIndentationStrategy;
 import org.eclipse.php.internal.core.format.DefaultIndentationStrategy;
-import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.text.PHPDocumentRegionEdgeMatcher;
@@ -289,9 +288,10 @@ public class PairCurlyBracketAutoEditStrategy implements
 			// if there is a } then there is a problem with
 			// curlyCloseInsertionStrategy calc
 			// and we need to add manually another indentation.
-			int indentationSize = FormatPreferencesSupport.getInstance()
+			int indentationSize = FormatterUtils.getFormatterCommonPrferences()
 					.getIndentationSize(document);
-			char indentationChar = FormatPreferencesSupport.getInstance()
+			char indentationChar = FormatterUtils
+					.getFormatterCommonPrferences()
 					.getIndentationChar(document);
 			for (int i = 0; i < indentationSize; i++) {
 				buffer.append(indentationChar);

@@ -20,7 +20,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
+import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.Messages;
 import org.eclipse.php.internal.ui.util.ScrolledPageContent;
@@ -204,7 +204,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 	private void createAutoIndentMessage(final Composite composite) {
 		String linkTooltip = PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tooltip;
-		char indentChar = FormatPreferencesSupport.getInstance()
+		char indentChar = FormatterUtils.getFormatterCommonPrferences()
 				.getIndentationChar(null);
 
 		if (indentChar == '\t') {
@@ -213,7 +213,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 					.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text,
 							new String[] { Integer.toString(4) });
 		} else {
-			int indentSize = FormatPreferencesSupport.getInstance()
+			int indentSize = FormatterUtils.getFormatterCommonPrferences()
 					.getIndentationSize(null);
 			autoIndentDetails = Messages
 					.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text,
@@ -366,7 +366,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 	private final Map fTextFields = new HashMap();
 
 	public void refreshValues() {
-		char indentChar = FormatPreferencesSupport.getInstance()
+		char indentChar = FormatterUtils.getFormatterCommonPrferences()
 				.getIndentationChar(null);
 
 		if (indentChar == '\t') {
@@ -375,7 +375,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 					.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text,
 							new String[] { Integer.toString(4) });
 		} else {
-			int indentSize = FormatPreferencesSupport.getInstance()
+			int indentSize = FormatterUtils.getFormatterCommonPrferences()
 					.getIndentationSize(null);
 			autoIndentDetails = Messages
 					.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text,

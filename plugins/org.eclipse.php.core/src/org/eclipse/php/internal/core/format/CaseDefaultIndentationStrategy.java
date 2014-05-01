@@ -94,10 +94,12 @@ public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 					indentationBase);
 			result.append(blanks);
 			if (addIndentation) {
-				int indentationSize = FormatPreferencesSupport.getInstance()
-						.getIndentationSize(document);
-				char indentationChar = FormatPreferencesSupport.getInstance()
-						.getIndentationChar(document);
+				int indentationSize = FormatterUtils
+						.getFormatterCommonPrferences().getIndentationSize(
+								document);
+				char indentationChar = FormatterUtils
+						.getFormatterCommonPrferences().getIndentationChar(
+								document);
 				for (int i = 0; i < indentationSize; i++) {
 					result.append(indentationChar);
 				}

@@ -6,7 +6,6 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.format.DefaultIndentationStrategy;
-import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.text.PHPDocumentRegionEdgeMatcher;
@@ -70,6 +69,7 @@ public class PairParenthesesAutoEditStrategy implements
 			int offset = command.offset;
 
 			int rvPosition = offset + buffer.length();
+
 			if (!isClosingParen) {
 				rvPosition += copyRestOfLine(document, command, buffer);
 			}
@@ -83,6 +83,7 @@ public class PairParenthesesAutoEditStrategy implements
 			String text = sdRegion.getFullText();
 
 			ITextRegion tRegion = null;
+
 			int indexInText = text.length() - 1;
 			while (indexInText >= 0) {
 				char currChar = text.charAt(indexInText);
@@ -263,9 +264,10 @@ public class PairParenthesesAutoEditStrategy implements
 			// if there is a ) then there is a problem with
 			// parenCloseInsertionStrategy calc
 			// and we need to add manually another indentation.
-			int indentationSize = FormatPreferencesSupport.getInstance()
+			int indentationSize = FormatterUtils.getFormatterCommonPrferences()
 					.getIndentationSize(document);
-			char indentationChar = FormatPreferencesSupport.getInstance()
+			char indentationChar = FormatterUtils
+					.getFormatterCommonPrferences()
 					.getIndentationChar(document);
 			for (int i = 0; i < indentationSize; i++) {
 				buffer.append(indentationChar);

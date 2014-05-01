@@ -11,7 +11,8 @@ public class ParenthesesCloseAutoEditStrategy extends
 
 	public void customizeDocumentCommand(IDocument document,
 			DocumentCommand command) {
-		if (command.text != null && command.text.trim().endsWith(")")) { //$NON-NLS-1$
+		if (command.text != null
+				&& (command.text.trim().endsWith(")") || command.text.trim().endsWith("]"))) { //$NON-NLS-1$ //$NON-NLS-2$
 			autoIndentAfterParenClose((IStructuredDocument) document, command);
 		}
 	}

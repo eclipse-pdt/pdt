@@ -149,7 +149,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			if (peer != PHPHeuristicScanner.NOT_FOUND) {
 				return document.getLineOfOffset(scanner.getPosition());
 			}
-		} else if (token == PHPHeuristicScanner.TokenLBRACKET) {
+		} else if (token == PHPHeuristicScanner.TokenRBRACKET) {
 			int peer = scanner.findOpeningPeer(scanner.getPosition(),
 					PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LBRACKET,
 					PHPHeuristicScanner.RBRACKET);
@@ -814,7 +814,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 								if (peer != PHPHeuristicScanner.NOT_FOUND) {
 									shouldNotChangeIndent = true;
 								}
-							} else {
+							} else if (lineStartChar == PHPHeuristicScanner.RPAREN) {
 								int peer = scanner.findOpeningPeer(
 										nonEmptyOffset - 1,
 										PHPHeuristicScanner.UNBOUND,

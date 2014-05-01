@@ -23,9 +23,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.templates.*;
-import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
+import org.eclipse.php.internal.core.format.FormatterUtils;
+import org.eclipse.php.internal.core.format.IFormatterCommonPrferences;
 
 /**
  * The template's context
@@ -53,23 +52,14 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 	@Override
 	public TemplateBuffer evaluate(Template template)
 			throws BadLocationException, TemplateException {
-		boolean useTab = getPreferences().getBoolean(PHPCorePlugin.ID,
-				PHPCoreConstants.FORMATTER_USE_TABS);
+		IFormatterCommonPrferences prefs = FormatterUtils
+				.getFormatterCommonPrferences();
+		boolean useTab = prefs.useTab(getDocument());
 		if (!useTab) {
-			String lengthString = getPreferences().getString(PHPCorePlugin.ID,
-					PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
-			int length = FormatPreferencesSupport.getInstance()
-					.getIndentationSize(null);
-			if (lengthString != null && lengthString.trim().length() != 0) {
-				try {
-					length = Integer.parseInt(lengthString);
-				} catch (Exception e) {
-				}
-			}
-
+			int length = prefs.getIndentationSize(getDocument());
 			StringBuffer sb = new StringBuffer();
 			for (int i = 0; i < length; i++) {
-				sb.append(" "); //$NON-NLS-1$
+				sb.append(prefs.getIndentationChar(getDocument())); //$NON-NLS-1$
 			}
 			String newPattern = TextUtils.replace(template.getPattern(), TAB,
 					sb.toString());
