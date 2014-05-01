@@ -17,6 +17,7 @@ import java.util.EventObject;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.ui.dialogs.OptionalMessageDialog;
@@ -40,6 +41,7 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -52,6 +54,7 @@ import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
@@ -114,6 +117,28 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview,
 				styles);
 		this.fTextEditor = textEditor;
+		if (fTextEditor instanceof PHPStructuredEditor) {
+			PHPStructuredEditor phpEditor = (PHPStructuredEditor) fTextEditor;
+			phpEditor.addReconcileListener(new IPhpScriptReconcilingListener() {
+
+				@Override
+				public void reconciled(Program program, boolean forced,
+						IProgressMonitor progressMonitor) {
+					if (fPostSelectionLength != -1) {
+						Display.getDefault().asyncExec(new Runnable() {
+							public void run() {
+								firePostSelectionChanged(fPostSelectionOffset,
+										fPostSelectionLength);
+							}
+						});
+					}
+				}
+
+				@Override
+				public void aboutToBeReconciled() {
+				}
+			});
+		}
 	}
 
 	public ITextEditor getTextEditor() {
@@ -663,6 +688,10 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 	private InternalCommandStackListener fInternalCommandStackListener;
 
+	private int fPostSelectionLength;
+
+	private int fPostSelectionOffset;
+
 	/**
 	 * @return
 	 */
@@ -691,4 +720,16 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		return fContentAssistantFacade;
 	}
 
+	@Override
+	protected void firePostSelectionChanged(int offset, int length) {
+		if (fTextEditor instanceof PHPStructuredEditor
+				&& !((PHPStructuredEditor) fTextEditor).fReconcileSelection) {
+			super.firePostSelectionChanged(offset, length);
+			fPostSelectionOffset = -1;
+			fPostSelectionLength = -1;
+		} else {
+			fPostSelectionOffset = offset;
+			fPostSelectionLength = length;
+		}
+	}
 }

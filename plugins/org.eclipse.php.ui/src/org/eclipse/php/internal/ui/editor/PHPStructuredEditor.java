@@ -290,9 +290,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	private boolean fMarkImplementors;
 
 	/**
-	 * Fix for outline synchronization while reconcile 293
+	 * Fix for outline synchronization while reconcile
 	 */
-	private volatile boolean fReconcileSelection = false;
+	protected volatile boolean fReconcileSelection = false;
 
 	private boolean saveActionsEnabled = false;
 	private boolean saveActionsIgnoreEmptyLines = false;
@@ -2860,7 +2860,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		// Notify AST provider
 		PHPUiPlugin.getDefault().getASTProvider()
 				.aboutToBeReconciled((ISourceModule) getModelElement());
-
 		// Notify listeners
 		Object[] listeners = fReconcilingListeners.getListeners();
 		for (int i = 0, length = listeners.length; i < length; ++i)
@@ -2937,6 +2936,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		if (unit != null) {
 			try {
 				if (reconcile) {
+					fReconcileSelection = false;
 					ScriptModelUtil.reconcile(unit);
 					return unit.getElementAt(offset);
 				} else if (unit.isConsistent())
@@ -3414,7 +3414,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			int offset = sourceViewer.getVisibleRegion().getOffset();
 			caret[0] = offset + styledText.getCaretOffset();
 		}
-		IModelElement element = getElementAt(caret[0], this.fReconcileSelection);
+		IModelElement element = getElementAt(caret[0], false);
 		// IModelElement element = getElementAt(caret[0], true);
 		if (!(element instanceof ISourceReference))
 			return null;
