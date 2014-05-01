@@ -22,7 +22,6 @@ import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
@@ -127,13 +126,6 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 					}
 				}
 			}
-		}
-		try {
-			if (element instanceof IType
-					&& PHPFlags.isTrait(((IType) element).getFlags())) {
-				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_TRAIT);
-			}
-		} catch (ModelException e) {
 		}
 
 		if (element != null) {

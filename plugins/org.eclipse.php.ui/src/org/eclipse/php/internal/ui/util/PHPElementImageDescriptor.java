@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.ui.util;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -86,9 +87,8 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 	 * Sets the descriptors adornments. Valid values are: <code>ABSTRACT</code>,
 	 * <code>FINAL</code>, </code>STATIC<code>, </code>RUNNABLE<code>, </code>
 	 * WARNING<code>,
-	 * </code>ERROR<code>, </code>OVERRIDDES
-	 * <code>, <code>CONSTRUCTOR</code>, <code>DEPRECATED</code>, or any
-	 * combination of those.
+	 * </code>ERROR<code>, </code>OVERRIDDES <code>, <code>CONSTRUCTOR</code>,
+	 * <code>DEPRECATED</code>, or any combination of those.
 	 * 
 	 * @param adornments
 	 *            the image descriptors adornments
@@ -156,7 +156,7 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 
 		if ((fFlags & DEPRECATED) != 0) { // over the full image
 			Point size = getSize();
-			ImageData data = getImageData(PHPPluginImages.DESC_OVR_DEPRECATED);
+			ImageData data = getImageData(DLTKPluginImages.DESC_OVR_DEPRECATED);
 			drawImage(data, 0, size.y - data.height);
 		}
 		drawImage(bg, 0, 0);
@@ -186,6 +186,11 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 		}
 		if ((fFlags & CONSTANT) != 0) {
 			ImageData data = getImageData(PHPPluginImages.DESC_OVR_CONSTANT);
+			x -= data.width;
+			drawImage(data, x, 0);
+		}
+		if ((fFlags & CONSTRUCTOR) != 0) {
+			ImageData data = getImageData(DLTKPluginImages.DESC_OVR_CONSTRUCTOR);
 			x -= data.width;
 			drawImage(data, x, 0);
 		}
