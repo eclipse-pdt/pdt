@@ -1185,6 +1185,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 								lastLineIsBlank = false;
 							}
 						} else if (!this.preferences.comment_clear_blank_lines_in_javadoc_comment) {
+							// don't duplicate first blank line
+							if (isFirst
+									&& this.preferences.comment_new_lines_at_javadoc_boundaries
+									&& commentWords.isEmpty()) {
+								isFirst = false;
+								lastLineIsBlank = true;
+								continue;
+							}
 							isFirst = false;
 							initCommentWords();
 							formatPHPDocText(commentWords, null, false, false);
@@ -1202,14 +1210,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					if (tags != null && tags.length > 0) {
 						if (this.preferences.comment_insert_empty_line_before_root_tags
 								&& !lastLineIsBlank) {
-							insertNewLine();
-							indent();
-							appendToBuffer(" * "); //$NON-NLS-1$
+							insertNewLineForPHPDoc();
+							lastLineIsBlank = true;
 						}
 						for (int i = 0; i < tags.length; i++) {
 							PHPDocTag phpDocTag = tags[i];
 							boolean insertTag = true;
 							String[] words = phpDocTag.getDescTexts();
+							lastLineIsBlank = false;
 
 							if ((i == tags.length - 1)
 									&& !this.preferences.comment_new_lines_at_javadoc_boundaries) {
@@ -1218,10 +1226,16 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 							commentWords = new ArrayList<String>();
 
 							if (getNonblankWords(words).length == 0) {
-								// insert several lines
 								formatCommentWords(phpDocTag, insertTag, false);
-								for (int j = 0; j < words.length; j++) {
-									insertNewLineForPHPDoc();
+								if (this.preferences.join_lines_in_comments
+										&& !this.preferences.comment_clear_blank_lines_in_javadoc_comment) {
+									// insert words.length-1 blank lines
+									// (-1 because the first blank word is
+									// located on the same line as the tag name)
+									for (int j = 0; j < words.length - 1; j++) {
+										insertNewLineForPHPDoc();
+										lastLineIsBlank = true;
+									}
 								}
 							} else {
 								for (int j = 0; j < words.length; j++) {
@@ -1254,7 +1268,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 							}
 
 						}
-						lastLineIsBlank = false;
 					}
 					if (this.preferences.comment_new_lines_at_javadoc_boundaries
 							&& !lastLineIsBlank) {
