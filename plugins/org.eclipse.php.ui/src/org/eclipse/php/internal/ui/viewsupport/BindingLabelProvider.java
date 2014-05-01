@@ -22,6 +22,7 @@ import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.ui.corext.util.Strings;
 import org.eclipse.php.internal.ui.util.PHPElementImageDescriptor;
+import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 
@@ -40,8 +41,11 @@ public class BindingLabelProvider extends LabelProvider {
 		final int modifiers = binding.getModifiers();
 		if (PHPFlags.isAbstract(modifiers))
 			adornments |= PHPElementImageDescriptor.ABSTRACT;
-		if (PHPFlags.isFinal(modifiers))
+		if (PHPFlags.isConstant(modifiers)) {
+			adornments |= PHPElementImageDescriptor.CONSTANT;
+		} else if (PHPFlags.isFinal(modifiers)) {
 			adornments |= PHPElementImageDescriptor.FINAL;
+		}
 		// if (PHPFlags.isSynchronized(modifiers))
 		// adornments|= PHPElementImageDescriptor.SYNCHRONIZED;
 		if (PHPFlags.isStatic(modifiers))
@@ -280,8 +284,7 @@ public class BindingLabelProvider extends LabelProvider {
 		buffer.append('(');
 		if ((flags & ScriptElementLabels.M_PARAMETER_TYPES | ScriptElementLabels.M_PARAMETER_NAMES) != 0) {
 			ITypeBinding[] parameters = ((flags & ScriptElementLabels.M_PARAMETER_TYPES) != 0) ? binding
-					.getParameterTypes()
-					: null;
+					.getParameterTypes() : null;
 			if (parameters != null) {
 				for (int index = 0; index < parameters.length; index++) {
 					if (index > 0) {
@@ -375,6 +378,8 @@ public class BindingLabelProvider extends LabelProvider {
 			return getClassImageDescriptor(binding.getModifiers());
 			// } else if (binding.isTypeVariable()) {
 			// return DLTKPluginImages.DESC_OBJS_TYPEVARIABLE;
+		} else if (binding.isTrait()) {
+			return PHPPluginImages.DESC_OBJS_TRAIT;
 		}
 		// primitive type, wildcard
 		return null;
@@ -412,9 +417,9 @@ public class BindingLabelProvider extends LabelProvider {
 		// ITypeBinding bound= binding.getBound();
 		// if (bound != null) {
 		// if (binding.isUpperbound()) {
-		//					buffer.append(" extends "); 
+		// buffer.append(" extends ");
 		// } else {
-		//					buffer.append(" super "); 
+		// buffer.append(" super ");
 		// }
 		// getTypeLabel(bound, flags & ScriptElementLabels.T_TYPE_PARAMETERS,
 		// buffer);

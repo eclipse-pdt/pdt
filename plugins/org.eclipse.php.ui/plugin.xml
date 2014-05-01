@@ -2309,4 +2309,19 @@
         </stylesheet>
     </extension>
     
+    </extension>
+    <extension
+          point="org.eclipse.dltk.ui.modelLabelProvider">
+       <modelLabelProvider
+             class="org.eclipse.php.internal.ui.util.PHPModelLabelProvider"
+             id="org.eclipse.php.ui.modelLabelProvider"
+             language="org.eclipse.php.core.PHPNature">
+       </modelLabelProvider>
+    </extension>
+    <extension point="org.eclipse.dltk.ui.scriptElementLabelProviders">
+        <provider
+              class="org.eclipse.php.internal.ui.util.PHPScriptElementLabelProvider"
+              nature="org.eclipse.php.core.PHPNature">
+        </provider>
+    </extension>
 </plugin>
