@@ -16,14 +16,14 @@ import org.eclipse.dltk.internal.core.ArchiveProjectFragment;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
-import org.eclipse.php.internal.ui.util.PHPPluginImages;
+import org.eclipse.php.internal.ui.util.PHPModelLabelProvider;
 
 public class PHPCompletionProposalLabelProvider extends
 		CompletionProposalLabelProvider {
+	private static final PHPModelLabelProvider fLabelProvider = new PHPModelLabelProvider();
 
 	private static final String ENCLOSING_TYPE_SEPARATOR = new String(
 			new char[] { NamespaceReference.NAMESPACE_SEPARATOR }); //$NON-NLS-1$
@@ -137,17 +137,24 @@ public class PHPCompletionProposalLabelProvider extends
 		if (proposal.getModelElement() instanceof ArchiveProjectFragment) {
 			return DLTKPluginImages.DESC_OBJS_JAR;
 		}
+		ImageDescriptor imageDescriptor = fLabelProvider.getImageDescriptor(
+				proposal.getModelElement(),
+				PHPModelLabelProvider.DEFAULT_IMAGEFLAGS);
+		if (imageDescriptor != null) {
+			return imageDescriptor;
+		}
 		return super.createImageDescriptor(proposal);
 	}
 
 	@Override
 	public ImageDescriptor createTypeImageDescriptor(CompletionProposal proposal) {
-		if (PHPFlags.isTrait(proposal.getFlags())) {
-			return decorateImageDescriptor(PHPPluginImages.DESC_OBJS_TRAIT,
-					proposal);
-		} else {
-			return super.createTypeImageDescriptor(proposal);
+		ImageDescriptor imageDescriptor = fLabelProvider.getImageDescriptor(
+				proposal.getModelElement(),
+				PHPModelLabelProvider.DEFAULT_IMAGEFLAGS);
+		if (imageDescriptor != null) {
+			return imageDescriptor;
 		}
+		return super.createTypeImageDescriptor(proposal);
 	}
 
 	public String createFieldProposalLabel(CompletionProposal proposal) {
@@ -157,6 +164,24 @@ public class PHPCompletionProposalLabelProvider extends
 	@Override
 	public ImageDescriptor createFieldImageDescriptor(
 			CompletionProposal proposal) {
+		ImageDescriptor imageDescriptor = fLabelProvider.getImageDescriptor(
+				proposal.getModelElement(),
+				PHPModelLabelProvider.DEFAULT_IMAGEFLAGS);
+		if (imageDescriptor != null) {
+			return imageDescriptor;
+		}
 		return super.createFieldImageDescriptor(proposal);
+	}
+
+	@Override
+	public ImageDescriptor createMethodImageDescriptor(
+			CompletionProposal proposal) {
+		ImageDescriptor imageDescriptor = fLabelProvider.getImageDescriptor(
+				proposal.getModelElement(),
+				PHPModelLabelProvider.DEFAULT_IMAGEFLAGS);
+		if (imageDescriptor != null) {
+			return imageDescriptor;
+		}
+		return super.createMethodImageDescriptor(proposal);
 	}
 }
