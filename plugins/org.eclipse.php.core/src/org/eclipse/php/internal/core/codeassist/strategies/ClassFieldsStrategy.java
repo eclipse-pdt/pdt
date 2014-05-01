@@ -129,11 +129,10 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 				}
 
 				if (phpToken != null && isStaticCall(phpToken.getType())) {
-					// XXX: Const attr not work as expected
 					result.add(new FakeField(new FakeType(
 							(ModelElement) concreteContext.getSourceModule(),
-							STD_CLASS), CLASS_KEYWORD, Modifiers.AccConst
-							| Modifiers.AccPublic | Modifiers.AccFinal));
+							STD_CLASS), CLASS_KEYWORD, Modifiers.AccConstant
+							| Modifiers.AccPublic));
 				}
 			} catch (BadLocationException e) {
 				Logger.logException(e);
