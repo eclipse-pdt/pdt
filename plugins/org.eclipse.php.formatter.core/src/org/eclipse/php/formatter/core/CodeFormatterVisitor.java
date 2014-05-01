@@ -1185,6 +1185,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 								lastLineIsBlank = false;
 							}
 						} else if (!this.preferences.comment_clear_blank_lines_in_javadoc_comment) {
+							// don't duplicate first blank line
+							if (isFirst
+									&& this.preferences.comment_new_lines_at_javadoc_boundaries
+									&& commentWords.isEmpty()) {
+								isFirst = false;
+								lastLineIsBlank = true;
+								continue;
+							}
 							isFirst = false;
 							initCommentWords();
 							formatPHPDocText(commentWords, null, false, false);
