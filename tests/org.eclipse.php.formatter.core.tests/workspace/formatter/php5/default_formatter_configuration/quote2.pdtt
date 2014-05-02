@@ -1,0 +1,20 @@
+--TEST--
+Test formatting for herdoc, bug 411322
+--FILE--
+<?php
+    foo(<<< HEREDOC
+blah blah
+    blah
+blah blah
+HEREDOC
+    );
+?>
+--EXPECT--
+<?php
+foo ( <<< HEREDOC
+blah blah
+    blah
+blah blah
+HEREDOC
+ );
+?>

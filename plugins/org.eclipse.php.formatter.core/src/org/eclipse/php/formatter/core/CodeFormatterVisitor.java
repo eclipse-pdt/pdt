@@ -4570,6 +4570,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			int i = quote.getEnd();
 			if (isContainChar(i, i + 1, SEMICOLON)) {
 				isHeredocSemicolon = true;
+			} else {
+				insertNewLine();
 			}
 		}
 		return false;
