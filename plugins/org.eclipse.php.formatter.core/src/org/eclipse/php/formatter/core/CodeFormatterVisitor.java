@@ -1981,6 +1981,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		// check if the statement end with ; or ?>
 		if (isContainChar(start, end, SEMICOLON)) {
 			appendToBuffer(SEMICOLON);
+			if (isHeredocSemicolon && isPhpEqualTag) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=411322
+				// always insert a new line after the closing HEREDOC tag
+				isPhpEqualTag = false;
+				insertNewLine();
+				isPhpEqualTag = true;
+			}
 			isHeredocSemicolon = false;
 		} else if (isContainChar(start, end, QUESTION_MARK)) {
 			handlePhpEndTag(start, end, "?>"); //$NON-NLS-1$
@@ -4571,7 +4578,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			if (isContainChar(i, i + 1, SEMICOLON)) {
 				isHeredocSemicolon = true;
 			} else {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=411322
+				// always insert a new line after the closing HEREDOC tag
+				boolean isPhpEqualTagOld = isPhpEqualTag;
+				isPhpEqualTag = false;
 				insertNewLine();
+				isPhpEqualTag = isPhpEqualTagOld;
 			}
 		}
 		return false;
