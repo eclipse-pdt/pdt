@@ -583,7 +583,7 @@ function mb_list_encodings () {}
  * The encoding type being checked, for aliases.
  * </p>
  * @return array a numerically indexed array of encoding aliases on success,
- * &return.falseforfailure;
+ *  or false on failure
  */
 function mb_encoding_aliases ($encoding) {}
 

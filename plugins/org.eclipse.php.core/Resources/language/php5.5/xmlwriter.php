@@ -10,10 +10,10 @@ class XMLWriter  {
 	 * @param uri string <p>
 	 * The URI of the resource for the output.
 	 * </p>
-	 * @return bool &style.oop;: Returns true on success or false on failure.
+	 * @return bool Object oriented style: Returns true on success or false on failure.
 	 * </p>
 	 * <p>
-	 * &style.procedural;: Returns a new xmlwriter &resource; for later use with the
+	 * Procedural style: Returns a new xmlwriter resource for later use with the
 	 * xmlwriter functions on success, false on error.
 	 */
 	public function openUri ($uri) {}
@@ -21,10 +21,10 @@ class XMLWriter  {
 	/**
 	 * Create new xmlwriter using memory for string output
 	 * @link http://www.php.net/manual/en/function.xmlwriter-open-memory.php
-	 * @return bool &style.oop;: Returns true on success or false on failure.
+	 * @return bool Object oriented style: Returns true on success or false on failure.
 	 * </p>
 	 * <p>
-	 * &style.procedural;: Returns a new xmlwriter &resource; for later use with the
+	 * Procedural style: Returns a new xmlwriter resource for later use with the
 	 * xmlwriter functions on success, false on error.
 	 */
 	public function openMemory () {}

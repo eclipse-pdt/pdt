@@ -33,7 +33,7 @@ function opcache_invalidate ($script, $force = null) {}
  * The path to the PHP script to be compiled.
  * </p>
  * @return boolean true if file was compiled successfully
- * &return.falseforfailure;.
+ *  or false on failure.
  */
 function opcache_compile_file ($file) {}
 

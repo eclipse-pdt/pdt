@@ -1356,7 +1356,7 @@ function curl_reset ($ch) {}
  * @param str string <p>
  * The string to be encoded.
  * </p>
- * @return string escaped string&return.falseforfailure;.
+ * @return string escaped string or false on failure.
  */
 function curl_escape ($ch, $str) {}
 
@@ -1367,7 +1367,7 @@ function curl_escape ($ch, $str) {}
  * @param str string <p>
  * The URL encoded string to be decoded.
  * </p>
- * @return string decoded string &return.falseforfailure;.
+ * @return string decoded string  or false on failure.
  */
 function curl_unescape ($ch, $str) {}
 

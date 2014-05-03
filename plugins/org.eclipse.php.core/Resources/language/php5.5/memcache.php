@@ -98,7 +98,7 @@ class Memcache extends MemcachePool  {
 	 * twice before changing the default value of 1 second - you can lose all
 	 * the advantages of caching if your connection is too slow.
 	 * </p>
-	 * @return mixed a Memcache object&return.falseforfailure;.
+	 * @return mixed a Memcache object or false on failure.
 	 */
 	public function pconnect ($host, $port = null, $timeout = null) {}
 
@@ -221,7 +221,7 @@ class Memcache extends MemcachePool  {
 	/**
 	 * Return version of the server
 	 * @link http://www.php.net/manual/en/memcache.getversion.php
-	 * @return string a string of server version number&return.falseforfailure;.
+	 * @return string a string of server version number or false on failure.
 	 */
 	public function getversion () {}
 
@@ -352,7 +352,7 @@ class Memcache extends MemcachePool  {
 	 * Used in conjunction with type set to 
 	 * cachedump to limit the number of entries to dump.
 	 * </p>
-	 * @return array an associative array of server statistics&return.falseforfailure;.
+	 * @return array an associative array of server statistics or false on failure.
 	 */
 	public function getstats ($type = null, $slabid = null, $limit = null) {}
 
@@ -400,7 +400,7 @@ class Memcache extends MemcachePool  {
 	 * @param value int[optional] <p>
 	 * Increment the item by value.
 	 * </p>
-	 * @return int new items value on success &return.falseforfailure;.
+	 * @return int new items value on success  or false on failure.
 	 */
 	public function increment ($key, $value = null) {}
 
@@ -413,7 +413,7 @@ class Memcache extends MemcachePool  {
 	 * @param value int[optional] <p>
 	 * Decrement the item by value.
 	 * </p>
-	 * @return int item's new value on success&return.falseforfailure;.
+	 * @return int item's new value on success or false on failure.
 	 */
 	public function decrement ($key, $value = null) {}
 

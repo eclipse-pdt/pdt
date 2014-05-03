@@ -41,7 +41,7 @@ function shmop_open ($key, $flags, $mode, $size) {}
  * @param count int <p>
  * The number of bytes to read
  * </p>
- * @return string the data&return.falseforfailure;.
+ * @return string the data or false on failure.
  */
 function shmop_read ($shmid, $start, $count) {}
 

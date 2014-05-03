@@ -145,7 +145,7 @@ function openssl_get_publickey ($cert) {}
  * @link http://www.php.net/manual/en/function.openssl-x509-read.php
  * @param x509certdata mixed <p>
  * </p>
- * @return resource a resource identifier on success&return.falseforfailure;.
+ * @return resource a resource identifier on success or false on failure.
  */
 function openssl_x509_read ($x509certdata) {}
 
@@ -513,7 +513,7 @@ function openssl_csr_get_public_key ($csr, $use_shortnames = null) {}
  * Setting to true will return as raw output data, otherwise the return
  * value is binhex encoded.
  * </p>
- * @return string the digested hash value on success&return.falseforfailure;.
+ * @return string the digested hash value on success or false on failure.
  */
 function openssl_digest ($data, $method, $raw_output = null) {}
 
@@ -537,7 +537,7 @@ function openssl_digest ($data, $method, $raw_output = null) {}
  * @param iv string[optional] <p>
  * A non-NULL Initialization Vector.
  * </p>
- * @return string the encrypted string on success&return.falseforfailure;.
+ * @return string the encrypted string on success or false on failure.
  */
 function openssl_encrypt ($data, $method, $password, $options = null, $iv = null) {}
 
@@ -561,7 +561,7 @@ function openssl_encrypt ($data, $method, $password, $options = null, $iv = null
  * @param iv string[optional] <p>
  * A non-NULL Initialization Vector. 
  * </p>
- * @return string The decrypted string on success&return.falseforfailure;.
+ * @return string The decrypted string on success or false on failure.
  */
 function openssl_decrypt ($data, $method, $password, $options = null, $iv = null) {}
 
@@ -660,7 +660,7 @@ function openssl_open ($sealed_data, &$open_data, $env_key, $priv_key_id, $metho
  * </p>
  * @param digest_algorithm string[optional] <p>
  * </p>
- * @return string string&return.falseforfailure;.
+ * @return string string or false on failure.
  */
 function openssl_pbkdf2 ($password, $salt, $key_length, $iterations, $digest_algorithm = null) {}
 
@@ -891,7 +891,7 @@ function openssl_get_cipher_methods ($aliases = null) {}
  * @param dh_key resource <p>
  * DH key
  * </p>
- * @return string computed key on success&return.falseforfailure;.
+ * @return string computed key on success or false on failure.
  */
 function openssl_dh_compute_key ($pub_key, $dh_key) {}
 
@@ -907,7 +907,7 @@ function openssl_dh_compute_key ($pub_key, $dh_key) {}
  * if the algorithm used was "cryptographically strong", e.g., safe for usage with GPG, 
  * passwords, etc. true if it did, otherwise false
  * </p>
- * @return string the generated &string; of bytes on success, &return.falseforfailure;.
+ * @return string the generated &string; of bytes on success,  or false on failure.
  */
 function openssl_random_pseudo_bytes ($length, &$crypto_strong = null) {}
 

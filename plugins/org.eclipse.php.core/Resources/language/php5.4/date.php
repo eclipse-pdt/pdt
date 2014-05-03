@@ -264,7 +264,7 @@ class DatePeriod implements Traversable {
 /**
  * Parse about any English textual datetime description into a Unix timestamp
  * @link http://www.php.net/manual/en/function.strtotime.php
- * @param time string <p>&date.formats.parameter;</p>
+ * @param time string <p>A date/time string. &date.formats;</p>
  * @param now int[optional] <p>
  * The timestamp which is used as a base for the calculation of relative
  * dates.
@@ -1199,7 +1199,7 @@ function date_create_from_format ($format, $time, $object) {}
  * Date in format accepted by strtotime.
  * </p>
  * @return array array with information about the parsed date
- * on success&return.falseforfailure;.
+ * on success or false on failure.
  */
 function date_parse ($date) {}
 
@@ -1367,7 +1367,7 @@ function timezone_name_get ($object) {}
  * searched solely by the gmtOffset and
  * isdst.
  * </p>
- * @return string time zone name on success&return.falseforfailure;.
+ * @return string time zone name on success or false on failure.
  */
 function timezone_name_from_abbr ($abbr, $gmtOffset = null, $isdst = null) {}
 
@@ -1497,7 +1497,7 @@ function date_default_timezone_get () {}
  * </p>
  * @param gmt_offset float[optional] 
  * @return mixed the sunrise time in a specified format on
- * success&return.falseforfailure;.
+ * success or false on failure.
  */
 function date_sunrise ($timestamp, $format = null, $latitude = null, $longitude = null, $zenith = null, $gmt_offset = null) {}
 
@@ -1546,7 +1546,7 @@ function date_sunrise ($timestamp, $format = null, $latitude = null, $longitude 
  * </p>
  * @param gmt_offset float[optional] 
  * @return mixed the sunset time in a specified format on
- * success&return.falseforfailure;.
+ * success or false on failure.
  */
 function date_sunset ($timestamp, $format = null, $latitude = null, $longitude = null, $zenith = null, $gmt_offset = null) {}
 
@@ -1562,7 +1562,7 @@ function date_sunset ($timestamp, $format = null, $latitude = null, $longitude =
  * @param longitude float <p>
  * Longitude in degrees.
  * </p>
- * @return array array on success&return.falseforfailure;.
+ * @return array array on success or false on failure.
  */
 function date_sun_info ($time, $latitude, $longitude) {}
 

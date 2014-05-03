@@ -312,7 +312,7 @@ function sqlite_close ($dbhandle) {}
  * specially important because SQL syntax errors can't be fetched using
  * the sqlite_last_error function.
  * </p>
- * @return SQLiteResult This function will return a result handle&return.falseforfailure;.
+ * @return SQLiteResult This function will return a result handle or false on failure.
  * For queries that return rows, the result handle can then be used with
  * functions such as sqlite_fetch_array and
  * sqlite_seek.
@@ -639,7 +639,7 @@ function sqlite_error_string ($error_code) {}
  * specially important because SQL syntax errors can't be fetched using
  * the sqlite_last_error function.
  * </p>
- * @return SQLiteUnbuffered a result handle&return.falseforfailure;.
+ * @return SQLiteUnbuffered a result handle or false on failure.
  * </p>
  * <p>
  * sqlite_unbuffered_query returns a sequential

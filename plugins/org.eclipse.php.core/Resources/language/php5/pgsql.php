@@ -261,7 +261,7 @@ function pg_transaction_status ($connection) {}
  * <p>
  * Data inside the query should be properly escaped.
  * </p>
- * @return resource A query result resource on success&return.falseforfailure;.
+ * @return resource A query result resource on success or false on failure.
  */
 function pg_query ($connection = null, $query) {}
 
@@ -284,7 +284,7 @@ function pg_query ($connection = null, $query) {}
  * in the original prepared query string. The number of elements in the array
  * must match the number of placeholders.
  * </p>
- * @return resource A query result resource on success&return.falseforfailure;.
+ * @return resource A query result resource on success or false on failure.
  */
 function pg_query_params ($connection = null, $query, array $params) {}
 
@@ -308,7 +308,7 @@ function pg_query_params ($connection = null, $query, array $params) {}
  * (multiple statements separated by semi-colons are not allowed.) If any parameters 
  * are used, they are referred to as $1, $2, etc.
  * </p>
- * @return resource A query result resource on success&return.falseforfailure;.
+ * @return resource A query result resource on success or false on failure.
  */
 function pg_prepare ($connection = null, $stmtname, $query) {}
 
@@ -336,7 +336,7 @@ function pg_prepare ($connection = null, $stmtname, $query) {}
  * <p>
  * Elements are converted to strings by calling this function.
  * </p>
- * @return resource A query result resource on success&return.falseforfailure;.
+ * @return resource A query result resource on success or false on failure.
  */
 function pg_execute ($connection = null, $stmtname, array $params) {}
 

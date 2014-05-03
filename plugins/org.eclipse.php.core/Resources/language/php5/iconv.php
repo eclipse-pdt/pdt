@@ -24,7 +24,7 @@
  * @param str string <p>
  * The string to be converted.
  * </p>
- * @return string the converted string&return.falseforfailure;.
+ * @return string the converted string or false on failure.
  */
 function iconv ($in_charset, $out_charset, $str) {}
 
@@ -49,7 +49,7 @@ function ob_iconv_handler ($contents, $status) {}
  * internal_encoding
  * </p>
  * @return mixed the current value of the internal configuration variable if
- * successful&return.falseforfailure;.
+ * successful or false on failure.
  * </p>
  * <p>
  * If type is omitted or set to "all",

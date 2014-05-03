@@ -363,7 +363,7 @@ function tidy_parse_file () {}
  * Return a string representing the parsed tidy markup
  * @link http://www.php.net/manual/en/function.tidy-get-output.php
  * @param object tidy <p>
- * &tidy.object;
+ * The Tidy object.
  * </p>
  * @return string the parsed tidy markup.
  */
@@ -373,7 +373,7 @@ function tidy_get_output (tidy $object) {}
  * Return warnings and errors which occurred parsing the specified document
  * @link http://www.php.net/manual/en/function.tidy-get-error-buffer.php
  * @param object tidy <p>
- * &tidy.object;
+ * The Tidy object.
  * </p>
  * @return string the error buffer as a string.
  */
@@ -403,7 +403,7 @@ function tidy_is_xml () {}
  * Returns the Number of Tidy errors encountered for specified document
  * @link http://www.php.net/manual/en/function.tidy-error-count.php
  * @param object tidy <p>
- * &tidy.object;
+ * The Tidy object.
  * </p>
  * @return int the number of errors.
  */
@@ -413,7 +413,7 @@ function tidy_error_count (tidy $object) {}
  * Returns the Number of Tidy warnings encountered for specified document
  * @link http://www.php.net/manual/en/function.tidy-warning-count.php
  * @param object tidy <p>
- * &tidy.object;
+ * The Tidy object.
  * </p>
  * @return int the number of warnings.
  */
@@ -423,7 +423,7 @@ function tidy_warning_count (tidy $object) {}
  * Returns the Number of Tidy accessibility warnings encountered for specified document
  * @link http://www.php.net/manual/en/function.tidy-access-count.php
  * @param object tidy <p>
- * &tidy.object;
+ * The Tidy object.
  * </p>
  * @return int the number of warnings.
  */
@@ -433,7 +433,7 @@ function tidy_access_count (tidy $object) {}
  * Returns the Number of Tidy configuration errors encountered for specified document
  * @link http://www.php.net/manual/en/function.tidy-config-count.php
  * @param object tidy <p>
- * &tidy.object;
+ * The Tidy object.
  * </p>
  * @return int the number of errors.
  */

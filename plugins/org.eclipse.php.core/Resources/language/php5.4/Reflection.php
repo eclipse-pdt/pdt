@@ -52,7 +52,7 @@ class Reflection  {
 	 * Exports
 	 * @link http://www.php.net/manual/en/reflection.export.php
 	 * @param reflector Reflector <p>
-	 * &reflection.export.param.name;
+	 * The reflection to export.
 	 * </p>
 	 * @param return bool[optional] <p>
 	 * &reflection.export.param.return;
@@ -269,7 +269,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflector
 	 * Exports function
 	 * @link http://www.php.net/manual/en/reflectionfunction.export.php
 	 * @param name string <p>
-	 * &reflection.export.param.name;
+	 * The reflection to export.
 	 * </p>
 	 * @param return string[optional] <p>
 	 * &reflection.export.param.return;
@@ -941,7 +941,7 @@ class ReflectionClass implements Reflector {
 	 * Exports a class
 	 * @link http://www.php.net/manual/en/reflectionclass.export.php
 	 * @param argument mixed <p>
-	 * &reflection.export.param.name;
+	 * The reflection to export.
 	 * </p>
 	 * @param return bool[optional] <p>
 	 * &reflection.export.param.return;
@@ -1373,7 +1373,7 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	 * Export
 	 * @link http://www.php.net/manual/en/reflectionobject.export.php
 	 * @param argument string <p>
-	 * &reflection.export.param.name; 
+	 * The reflection to export. 
 	 * </p>
 	 * @param return bool[optional] <p>
 	 * &reflection.export.param.return; 
@@ -1965,7 +1965,7 @@ class ReflectionExtension implements Reflector {
 	 * Export
 	 * @link http://www.php.net/manual/en/reflectionextension.export.php
 	 * @param name string <p>
-	 * &reflection.export.param.name;
+	 * The reflection to export.
 	 * </p>
 	 * @param return string[optional] <p>
 	 * &reflection.export.param.return;

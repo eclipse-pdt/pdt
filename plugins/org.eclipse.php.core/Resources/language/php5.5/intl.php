@@ -1052,7 +1052,7 @@ class IntlDateFormatter  {
 	 * Get formatterʼs timezone
 	 * @link http://www.php.net/manual/en/intldateformatter.gettimezone.php
 	 * @return IntlTimeZone The associated IntlTimeZone
-	 * object&return.falseforfailure;.
+	 * object or false on failure.
 	 */
 	public function getTimeZone () {}
 
@@ -1159,7 +1159,7 @@ class IntlDateFormatter  {
 	 * @param locale string[optional] <p>
 	 * The locale to use, or &null; to use the default one.
 	 * </p>
-	 * @return string A string with result&return.falseforfailure;.
+	 * @return string A string with result or false on failure.
 	 */
 	public static function formatObject ($object, $format = null, $locale = null) {}
 
@@ -1342,7 +1342,7 @@ class Transliterator  {
 	 * Get transliterator IDs
 	 * @link http://www.php.net/manual/en/transliterator.listids.php
 	 * @return array An array of registered transliterator IDs on success,
-	 * &return.falseforfailure;.
+	 *  or false on failure.
 	 */
 	public static function listIDs () {}
 
@@ -1362,7 +1362,7 @@ class Transliterator  {
 	 * transformed, exclusive. Indexing starts at 0. The text after will be
 	 * left as is.
 	 * </p>
-	 * @return string The transfomed string on success, &return.falseforfailure;.
+	 * @return string The transfomed string on success,  or false on failure.
 	 */
 	public function transliterate ($subject, $start = null, $end = null) {}
 
@@ -1639,7 +1639,7 @@ class IntlCalendar  {
 	 * Whether to show only the values commonly used for the specified locale.
 	 * </p>
 	 * @return Iterator An iterator that yields strings with the locale keyword
-	 * values&return.falseforfailure;.
+	 * values or false on failure.
 	 */
 	public static function getKeywordValuesForLocale ($key, $locale, $commonlyUsed) {}
 
@@ -1695,7 +1695,7 @@ class IntlCalendar  {
 	 * moved into the past. The unit is implicit to the field type. For instance,
 	 * hours for IntlCalendar::FIELD_HOUR_OF_DAY.
 	 * </p>
-	 * @return bool true on success&return.falseforfailure;.
+	 * @return bool true on success or false on failure.
 	 */
 	public function add ($field, $amount) {}
 
@@ -1765,7 +1765,7 @@ class IntlCalendar  {
 	 * Clear a field or all fields
 	 * @link http://www.php.net/manual/en/intlcalendar.clear.php
 	 * @param field int[optional] &reference.intl.incfieldparam;
-	 * @return bool true on success&return.falseforfailure;. Failure can only occur is
+	 * @return bool true on success or false on failure. Failure can only occur is
 	 * invalid arguments are provided.
 	 */
 	public function clear ($field = null) {}
@@ -1784,7 +1784,7 @@ class IntlCalendar  {
 	 * </p>
 	 * &reference.intl.incfieldparam;
 	 * @return int a (signed) difference of time in the unit associated with the
-	 * specified field&return.falseforfailure;.
+	 * specified field or false on failure.
 	 */
 	public function fieldDifference ($when, $field) {}
 
@@ -1793,7 +1793,7 @@ class IntlCalendar  {
 	 * @link http://www.php.net/manual/en/intlcalendar.getactualmaximum.php
 	 * @param field int &reference.intl.incfieldparam;
 	 * @return int An int representing the maximum value in the units associated
-	 * with the given field&return.falseforfailure;.
+	 * with the given field or false on failure.
 	 */
 	public function getActualMaximum ($field) {}
 
@@ -1802,7 +1802,7 @@ class IntlCalendar  {
 	 * @link http://www.php.net/manual/en/intlcalendar.getactualminimum.php
 	 * @param field int &reference.intl.incfieldparam;
 	 * @return int An int representing the minimum value in the fieldʼs
-	 * unit&return.falseforfailure;.
+	 * unit or false on failure.
 	 */
 	public function getActualMinimum ($field) {}
 
@@ -1818,7 +1818,7 @@ class IntlCalendar  {
 	 * IntlCalendar::DOW_TYPE_WEEKDAY,
 	 * IntlCalendar::DOW_TYPE_WEEKEND,
 	 * IntlCalendar::DOW_TYPE_WEEKEND_OFFSET or
-	 * IntlCalendar::DOW_TYPE_WEEKEND_CEASE&return.falseforfailure;.
+	 * IntlCalendar::DOW_TYPE_WEEKEND_CEASE or false on failure.
 	 */
 	public function getDayOfWeekType ($dayOfWeek) {}
 
@@ -1827,7 +1827,7 @@ class IntlCalendar  {
 	 * @link http://www.php.net/manual/en/intlcalendar.getfirstdayofweek.php
 	 * @return int One of the constants IntlCalendar::DOW_SUNDAY,
 	 * IntlCalendar::DOW_MONDAY, …,
-	 * IntlCalendar::DOW_SATURDAY&return.falseforfailure;.
+	 * IntlCalendar::DOW_SATURDAY or false on failure.
 	 */
 	public function getFirstDayOfWeek () {}
 
@@ -1836,7 +1836,7 @@ class IntlCalendar  {
 	 * @link http://www.php.net/manual/en/intlcalendar.getgreatestminimum.php
 	 * @param field int &reference.intl.incfieldparam;
 	 * @return int An int representing a field value, in the fieldʼs
-	 * unit,&return.falseforfailure;.
+	 * unit, or false on failure.
 	 */
 	public function getGreatestMinimum ($field) {}
 
@@ -1845,7 +1845,7 @@ class IntlCalendar  {
 	 * @link http://www.php.net/manual/en/intlcalendar.getleastmaximum.php
 	 * @param field int &reference.intl.incfieldparam;
 	 * @return int An int representing a field value in the fieldʼs
-	 * unit&return.falseforfailure;.
+	 * unit or false on failure.
 	 */
 	public function getLeastMaximum ($field) {}
 
@@ -1860,7 +1860,7 @@ class IntlCalendar  {
 	 * From the most general to the most specific, the locales are ordered in
 	 * this fashion – actual locale, valid locale, requested locale.
 	 * </p>
-	 * @return string A locale string&return.falseforfailure;.
+	 * @return string A locale string or false on failure.
 	 */
 	public function getLocale ($localeType) {}
 
@@ -1869,14 +1869,14 @@ class IntlCalendar  {
 	 * @link http://www.php.net/manual/en/intlcalendar.getmaximum.php
 	 * @param field int &reference.intl.incfieldparam;
 	 * @return int An int representing a field value in the fieldʼs
-	 * unit&return.falseforfailure;.
+	 * unit or false on failure.
 	 */
 	public function getMaximum ($field) {}
 
 	/**
 	 * Get minimal number of days the first week in a year or month can have
 	 * @link http://www.php.net/manual/en/intlcalendar.getminimaldaysinfirstweek.php
-	 * @return int An int representing a number of days&return.falseforfailure;.
+	 * @return int An int representing a number of days or false on failure.
 	 */
 	public function getMinimalDaysInFirstWeek () {}
 
@@ -1885,7 +1885,7 @@ class IntlCalendar  {
 	 * @link http://www.php.net/manual/en/intlcalendar.getminimum.php
 	 * @param field int &reference.intl.incfieldparam;
 	 * @return int An int representing a value for the given
-	 * field in the fieldʼs unit&return.falseforfailure;.
+	 * field in the fieldʼs unit or false on failure.
 	 */
 	public function getMinimum ($field) {}
 
@@ -1914,7 +1914,7 @@ class IntlCalendar  {
 	 * IntlCalendar::DOW_SATURDAY.
 	 * </p>
 	 * @return int The number of milliseconds into the day at which the the weekend begins or
-	 * ends&return.falseforfailure;.
+	 * ends or false on failure.
 	 */
 	public function getWeekendTransition ($dayOfWeek) {}
 
@@ -2111,7 +2111,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * Whether to show only the values commonly used for the specified locale.
 	 * </p>
 	 * @return Iterator An iterator that yields strings with the locale keyword
-	 * values&return.falseforfailure;.
+	 * values or false on failure.
 	 */
 	public static function getKeywordValuesForLocale ($key, $locale, $commonlyUsed) {}
 
@@ -2167,7 +2167,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * moved into the past. The unit is implicit to the field type. For instance,
 	 * hours for IntlCalendar::FIELD_HOUR_OF_DAY.
 	 * </p>
-	 * @return bool true on success&return.falseforfailure;.
+	 * @return bool true on success or false on failure.
 	 */
 	public function add ($field, $amount) {}
 
@@ -2237,7 +2237,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * Clear a field or all fields
 	 * @link http://www.php.net/manual/en/intlcalendar.clear.php
 	 * @param field int[optional] &reference.intl.incfieldparam;
-	 * @return bool true on success&return.falseforfailure;. Failure can only occur is
+	 * @return bool true on success or false on failure. Failure can only occur is
 	 * invalid arguments are provided.
 	 */
 	public function clear ($field = null) {}
@@ -2256,7 +2256,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * </p>
 	 * &reference.intl.incfieldparam;
 	 * @return int a (signed) difference of time in the unit associated with the
-	 * specified field&return.falseforfailure;.
+	 * specified field or false on failure.
 	 */
 	public function fieldDifference ($when, $field) {}
 
@@ -2265,7 +2265,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * @link http://www.php.net/manual/en/intlcalendar.getactualmaximum.php
 	 * @param field int &reference.intl.incfieldparam;
 	 * @return int An int representing the maximum value in the units associated
-	 * with the given field&return.falseforfailure;.
+	 * with the given field or false on failure.
 	 */
 	public function getActualMaximum ($field) {}
 
@@ -2274,7 +2274,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * @link http://www.php.net/manual/en/intlcalendar.getactualminimum.php
 	 * @param field int &reference.intl.incfieldparam;
 	 * @return int An int representing the minimum value in the fieldʼs
-	 * unit&return.falseforfailure;.
+	 * unit or false on failure.
 	 */
 	public function getActualMinimum ($field) {}
 
@@ -2290,7 +2290,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * IntlCalendar::DOW_TYPE_WEEKDAY,
 	 * IntlCalendar::DOW_TYPE_WEEKEND,
 	 * IntlCalendar::DOW_TYPE_WEEKEND_OFFSET or
-	 * IntlCalendar::DOW_TYPE_WEEKEND_CEASE&return.falseforfailure;.
+	 * IntlCalendar::DOW_TYPE_WEEKEND_CEASE or false on failure.
 	 */
 	public function getDayOfWeekType ($dayOfWeek) {}
 
@@ -2299,7 +2299,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * @link http://www.php.net/manual/en/intlcalendar.getfirstdayofweek.php
 	 * @return int One of the constants IntlCalendar::DOW_SUNDAY,
 	 * IntlCalendar::DOW_MONDAY, …,
-	 * IntlCalendar::DOW_SATURDAY&return.falseforfailure;.
+	 * IntlCalendar::DOW_SATURDAY or false on failure.
 	 */
 	public function getFirstDayOfWeek () {}
 
@@ -2308,7 +2308,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * @link http://www.php.net/manual/en/intlcalendar.getgreatestminimum.php
 	 * @param field int &reference.intl.incfieldparam;
 	 * @return int An int representing a field value, in the fieldʼs
-	 * unit,&return.falseforfailure;.
+	 * unit, or false on failure.
 	 */
 	public function getGreatestMinimum ($field) {}
 
@@ -2317,7 +2317,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * @link http://www.php.net/manual/en/intlcalendar.getleastmaximum.php
 	 * @param field int &reference.intl.incfieldparam;
 	 * @return int An int representing a field value in the fieldʼs
-	 * unit&return.falseforfailure;.
+	 * unit or false on failure.
 	 */
 	public function getLeastMaximum ($field) {}
 
@@ -2332,7 +2332,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * From the most general to the most specific, the locales are ordered in
 	 * this fashion – actual locale, valid locale, requested locale.
 	 * </p>
-	 * @return string A locale string&return.falseforfailure;.
+	 * @return string A locale string or false on failure.
 	 */
 	public function getLocale ($localeType) {}
 
@@ -2341,14 +2341,14 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * @link http://www.php.net/manual/en/intlcalendar.getmaximum.php
 	 * @param field int &reference.intl.incfieldparam;
 	 * @return int An int representing a field value in the fieldʼs
-	 * unit&return.falseforfailure;.
+	 * unit or false on failure.
 	 */
 	public function getMaximum ($field) {}
 
 	/**
 	 * Get minimal number of days the first week in a year or month can have
 	 * @link http://www.php.net/manual/en/intlcalendar.getminimaldaysinfirstweek.php
-	 * @return int An int representing a number of days&return.falseforfailure;.
+	 * @return int An int representing a number of days or false on failure.
 	 */
 	public function getMinimalDaysInFirstWeek () {}
 
@@ -2357,7 +2357,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * @link http://www.php.net/manual/en/intlcalendar.getminimum.php
 	 * @param field int &reference.intl.incfieldparam;
 	 * @return int An int representing a value for the given
-	 * field in the fieldʼs unit&return.falseforfailure;.
+	 * field in the fieldʼs unit or false on failure.
 	 */
 	public function getMinimum ($field) {}
 
@@ -2386,7 +2386,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * IntlCalendar::DOW_SATURDAY.
 	 * </p>
 	 * @return int The number of milliseconds into the day at which the the weekend begins or
-	 * ends&return.falseforfailure;.
+	 * ends or false on failure.
 	 */
 	public function getWeekendTransition ($dayOfWeek) {}
 
@@ -4207,7 +4207,7 @@ function grapheme_extract ($haystack, $size, $extract_type = null, $start = null
  * which is an int representing a bitset of the error
  * constants IDNA_ERROR_*.
  * </p>
- * @return string Domain name encoded in ASCII-compatible form. &return.falseforfailure;
+ * @return string Domain name encoded in ASCII-compatible form.  or false on failure
  */
 function idn_to_ascii ($utf8_domain, &$errorcode = null, $domain, $options = null, $variant = null, array &$idna_info = null) {}
 
@@ -4243,7 +4243,7 @@ function idn_to_ascii ($utf8_domain, &$errorcode = null, $domain, $options = nul
  * which is an int representing a bitset of the error
  * constants IDNA_ERROR_*.
  * </p>
- * @return string Domain name in Unicode, encoded in UTF-8. &return.falseforfailure;
+ * @return string Domain name in Unicode, encoded in UTF-8.  or false on failure
  */
 function idn_to_utf8 ($ascii_domain, &$errorcode = null, $domain, $options = null, $variant = null, array &$idna_info = null) {}
 

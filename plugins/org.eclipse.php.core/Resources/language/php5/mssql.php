@@ -267,7 +267,7 @@ function mssql_fetch_object ($result) {}
  * @param offset int[optional] <p>
  * The field offset, starts at 0. If omitted, the current field is used.
  * </p>
- * @return int The length of the specified field index on success&return.falseforfailure;.
+ * @return int The length of the specified field index on success or false on failure.
  */
 function mssql_field_length ($result, $offset = null) {}
 
@@ -281,7 +281,7 @@ function mssql_field_length ($result, $offset = null) {}
  * @param offset int[optional] <p>
  * The field offset, starts at 0. If omitted, the current field is used.
  * </p>
- * @return string The name of the specified field index on success&return.falseforfailure;.
+ * @return string The name of the specified field index on success or false on failure.
  */
 function mssql_field_name ($result, $offset = null) {}
 
@@ -295,7 +295,7 @@ function mssql_field_name ($result, $offset = null) {}
  * @param offset int[optional] <p>
  * The field offset, starts at 0. If omitted, the current field is used.
  * </p>
- * @return string The type of the specified field index on success&return.falseforfailure;.
+ * @return string The type of the specified field index on success or false on failure.
  */
 function mssql_field_type ($result, $offset = null) {}
 

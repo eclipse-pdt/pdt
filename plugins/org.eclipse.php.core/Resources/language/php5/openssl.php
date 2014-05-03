@@ -138,7 +138,7 @@ function openssl_get_publickey () {}
  * @link http://www.php.net/manual/en/function.openssl-x509-read.php
  * @param x509certdata mixed <p>
  * </p>
- * @return resource a resource identifier on success&return.falseforfailure;.
+ * @return resource a resource identifier on success or false on failure.
  */
 function openssl_x509_read ($x509certdata) {}
 

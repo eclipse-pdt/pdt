@@ -73,7 +73,7 @@ function odbc_close_all () {}
  * @param column_name string[optional] <p>
  * The column name.
  * </p>
- * @return resource an ODBC result identifier&return.falseforfailure;.
+ * @return resource an ODBC result identifier or false on failure.
  * </p>
  * <p>
  * The result set has the following columns:
@@ -599,7 +599,7 @@ function odbc_specialcolumns ($connection_id, $type, $qualifier, $owner, $table,
  * @param accuracy int <p>
  * The accuracy.
  * </p>
- * @return resource an ODBC result identifier&return.falseforfailure;.
+ * @return resource an ODBC result identifier or false on failure.
  * </p>
  * <p>
  * The result set has the following columns:
@@ -644,7 +644,7 @@ function odbc_statistics ($connection_id, $qualifier, $owner, $table_name, $uniq
  * that type.
  * </p>
  * @return resource an ODBC result identifier containing the information 
- * &return.falseforfailure;.
+ *  or false on failure.
  * </p>
  * <p>
  * The result set has the following columns:
@@ -666,7 +666,7 @@ function odbc_tables ($connection_id, $qualifier = null, $owner = null, $name = 
  * </p>
  * @param table string <p>
  * </p>
- * @return resource an ODBC result identifier&return.falseforfailure;.
+ * @return resource an ODBC result identifier or false on failure.
  * </p>
  * <p>
  * The result set has the following columns:
@@ -697,7 +697,7 @@ function odbc_primarykeys ($connection_id, $qualifier, $owner, $table) {}
  * patterns ('%' to match zero or more characters and '_' to match a
  * single character).
  * </p>
- * @return resource an ODBC result identifier&return.falseforfailure;.
+ * @return resource an ODBC result identifier or false on failure.
  * This result identifier can be used to fetch a list of columns and
  * associated privileges.
  * </p>
@@ -732,7 +732,7 @@ function odbc_columnprivileges ($connection_id, $qualifier, $owner, $table_name,
  * The name. Accepts the following search patterns:
  * ('%' to match zero or more characters and '_' to match a single character)
  * </p>
- * @return resource An ODBC result identifier&return.falseforfailure;.
+ * @return resource An ODBC result identifier or false on failure.
  * </p>
  * <p>
  * The result set has the following columns:
@@ -768,7 +768,7 @@ function odbc_tableprivileges ($connection_id, $qualifier, $owner, $name) {}
  * @param fk_table string <p>
  * The foreign key table.
  * </p>
- * @return resource an ODBC result identifier&return.falseforfailure;.
+ * @return resource an ODBC result identifier or false on failure.
  * </p>
  * <p>
  * The result set has the following columns:
@@ -808,7 +808,7 @@ function odbc_foreignkeys ($connection_id, $pk_qualifier, $pk_owner, $pk_table, 
  * @link http://www.php.net/manual/en/function.odbc-procedures.php
  * @param connection_id resource &odbc.connection.id;
  * @return resource an ODBC
- * result identifier containing the information&return.falseforfailure;.
+ * result identifier containing the information or false on failure.
  * </p>
  * <p>
  * The result set has the following columns:
@@ -829,7 +829,7 @@ function odbc_procedures ($connection_id) {}
  * @param connection_id resource &odbc.connection.id;
  * @return resource the list of input and output parameters, as well as the
  * columns that make up the result set for the specified procedures. 
- * Returns an ODBC result identifier&return.falseforfailure;.
+ * Returns an ODBC result identifier or false on failure.
  * </p>
  * <p>
  * The result set has the following columns:

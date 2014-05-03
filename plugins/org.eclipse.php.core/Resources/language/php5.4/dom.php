@@ -340,7 +340,7 @@ class DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return string canonicalized nodes as a string&return.falseforfailure;
+	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -363,7 +363,7 @@ class DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return int Number of bytes written&return.falseforfailure;
+	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -581,7 +581,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return string canonicalized nodes as a string&return.falseforfailure;
+	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -604,7 +604,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return int Number of bytes written&return.falseforfailure;
+	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -816,7 +816,7 @@ class DOMDocument extends DOMNode  {
 	 * of the libxml option constants.
 	 * </p>
 	 * @return mixed Returns true on success or false on failure. If called statically, returns a
-	 * DOMDocument&return.falseforfailure;.
+	 * DOMDocument or false on failure.
 	 */
 	public function load ($filename, $options = null) {}
 
@@ -844,7 +844,7 @@ class DOMDocument extends DOMNode  {
 	 * of the libxml option constants.
 	 * </p>
 	 * @return mixed Returns true on success or false on failure. If called statically, returns a
-	 * DOMDocument&return.falseforfailure;.
+	 * DOMDocument or false on failure.
 	 */
 	public function loadXML ($source, $options = null) {}
 
@@ -897,7 +897,7 @@ class DOMDocument extends DOMNode  {
 	 * The HTML string.
 	 * </p>
 	 * @return bool Returns true on success or false on failure. If called statically, returns a
-	 * DOMDocument&return.falseforfailure;.
+	 * DOMDocument or false on failure.
 	 */
 	public function loadHTML ($source) {}
 
@@ -908,7 +908,7 @@ class DOMDocument extends DOMNode  {
 	 * The path to the HTML file.
 	 * </p>
 	 * @return bool Returns true on success or false on failure. If called statically, returns a
-	 * DOMDocument&return.falseforfailure;.
+	 * DOMDocument or false on failure.
 	 */
 	public function loadHTMLFile ($filename) {}
 
@@ -1183,7 +1183,7 @@ class DOMDocument extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return string canonicalized nodes as a string&return.falseforfailure;
+	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -1206,7 +1206,7 @@ class DOMDocument extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return int Number of bytes written&return.falseforfailure;
+	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -1558,7 +1558,7 @@ class DOMCharacterData extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return string canonicalized nodes as a string&return.falseforfailure;
+	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -1581,7 +1581,7 @@ class DOMCharacterData extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return int Number of bytes written&return.falseforfailure;
+	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -1799,7 +1799,7 @@ class DOMAttr extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return string canonicalized nodes as a string&return.falseforfailure;
+	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -1822,7 +1822,7 @@ class DOMAttr extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return int Number of bytes written&return.falseforfailure;
+	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -2261,7 +2261,7 @@ class DOMElement extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return string canonicalized nodes as a string&return.falseforfailure;
+	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -2284,7 +2284,7 @@ class DOMElement extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return int Number of bytes written&return.falseforfailure;
+	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -2590,7 +2590,7 @@ class DOMText extends DOMCharacterData  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return string canonicalized nodes as a string&return.falseforfailure;
+	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -2613,7 +2613,7 @@ class DOMText extends DOMCharacterData  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return int Number of bytes written&return.falseforfailure;
+	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -2894,7 +2894,7 @@ class DOMComment extends DOMCharacterData  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return string canonicalized nodes as a string&return.falseforfailure;
+	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -2917,7 +2917,7 @@ class DOMComment extends DOMCharacterData  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return int Number of bytes written&return.falseforfailure;
+	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -3268,7 +3268,7 @@ class DOMCdataSection extends DOMText  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return string canonicalized nodes as a string&return.falseforfailure;
+	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -3291,7 +3291,7 @@ class DOMCdataSection extends DOMText  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return int Number of bytes written&return.falseforfailure;
+	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -3494,7 +3494,7 @@ class DOMDocumentType extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return string canonicalized nodes as a string&return.falseforfailure;
+	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -3517,7 +3517,7 @@ class DOMDocumentType extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return int Number of bytes written&return.falseforfailure;
+	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -3720,7 +3720,7 @@ class DOMNotation extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return string canonicalized nodes as a string&return.falseforfailure;
+	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -3743,7 +3743,7 @@ class DOMNotation extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return int Number of bytes written&return.falseforfailure;
+	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -3946,7 +3946,7 @@ class DOMEntity extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return string canonicalized nodes as a string&return.falseforfailure;
+	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -3969,7 +3969,7 @@ class DOMEntity extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return int Number of bytes written&return.falseforfailure;
+	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -4179,7 +4179,7 @@ class DOMEntityReference extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return string canonicalized nodes as a string&return.falseforfailure;
+	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -4202,7 +4202,7 @@ class DOMEntityReference extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return int Number of bytes written&return.falseforfailure;
+	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -4413,7 +4413,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return string canonicalized nodes as a string&return.falseforfailure;
+	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
@@ -4436,7 +4436,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * @param ns_prefixes array[optional] <p>
 	 * An array of namespace prefixes to filter the nodes by.
 	 * </p>
-	 * @return int Number of bytes written&return.falseforfailure;
+	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 

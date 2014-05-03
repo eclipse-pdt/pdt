@@ -47,7 +47,7 @@ class DateTime  {
 	 * (e.g. 2010-01-28T15:00:00+02:00).
 	 * </p>
 	 * @return string a new DateTime instance.
-	 * &return.falseforfailure.style.procedural;
+	 * &style.procedural; returns false on failure.
 	 */
 	public function __construct ($time = null, DateTimeZone $timezone = null) {}
 
@@ -57,7 +57,7 @@ class DateTime  {
 	 * @param format string <p>
 	 * Format accepted by date.
 	 * </p>
-	 * @return string the formatted date string on success&return.falseforfailure;.
+	 * @return string the formatted date string on success or false on failure.
 	 */
 	public function format ($format) {}
 
@@ -67,7 +67,7 @@ class DateTime  {
 	 * @param modify string <p>
 	 * String in a relative format accepted by strtotime.
 	 * </p>
-	 * @return DateTime &date.datetime.return.modifiedobjectorfalseforfailure;
+	 * @return DateTime Returns the DateTime object for method chaining&return.falseforfailure;.
 	 */
 	public function modify ($modify) {}
 
@@ -75,7 +75,7 @@ class DateTime  {
 	 * Return time zone relative to given DateTime
 	 * @link http://www.php.net/manual/en/datetime.gettimezone.php
 	 * @return DateTimeZone a DateTimeZone object on success
-	 * &return.falseforfailure;.
+	 *  or false on failure.
 	 */
 	public function getTimezone () {}
 
@@ -86,7 +86,7 @@ class DateTime  {
 	 * A DateTimeZone object representing the
 	 * desired time zone.
 	 * </p>
-	 * @return DateTime &date.datetime.return.modifiedobjectorfalseforfailure;
+	 * @return DateTime Returns the DateTime object for method chaining&return.falseforfailure;.
 	 */
 	public function setTimezone (DateTimeZone $timezone) {}
 
@@ -94,7 +94,7 @@ class DateTime  {
 	 * Returns the timezone offset
 	 * @link http://www.php.net/manual/en/datetime.getoffset.php
 	 * @return int the timezone offset in seconds from UTC on success
-	 * &return.falseforfailure;.
+	 *  or false on failure.
 	 */
 	public function getOffset () {}
 
@@ -110,7 +110,7 @@ class DateTime  {
 	 * @param second int[optional] <p>
 	 * Second of the time.
 	 * </p>
-	 * @return DateTime &date.datetime.return.modifiedobjectorfalseforfailure;
+	 * @return DateTime Returns the DateTime object for method chaining&return.falseforfailure;.
 	 */
 	public function setTime ($hour, $minute, $second = null) {}
 
@@ -126,7 +126,7 @@ class DateTime  {
 	 * @param day int <p>
 	 * Day of the date.
 	 * </p>
-	 * @return DateTime &date.datetime.return.modifiedobjectorfalseforfailure;
+	 * @return DateTime Returns the DateTime object for method chaining&return.falseforfailure;.
 	 */
 	public function setDate ($year, $month, $day) {}
 
@@ -142,7 +142,7 @@ class DateTime  {
 	 * @param day int[optional] <p>
 	 * Offset from the first day of the week.
 	 * </p>
-	 * @return DateTime &date.datetime.return.modifiedobjectorfalseforfailure;
+	 * @return DateTime Returns the DateTime object for method chaining&return.falseforfailure;.
 	 */
 	public function setISODate ($year, $week, $day = null) {}
 
@@ -157,7 +157,7 @@ class DateTimeZone  {
 	 * One of timezones.
 	 * </p>
 	 * @return string DateTimeZone on success.
-	 * &return.falseforfailure.style.procedural;
+	 * &style.procedural; returns false on failure.
 	 */
 	public function __construct ($timezone) {}
 
@@ -174,7 +174,7 @@ class DateTimeZone  {
 	 * @param datetime DateTime <p>
 	 * DateTime that contains the date/time to compute the offset from. 
 	 * </p>
-	 * @return int time zone offset in seconds on success&return.falseforfailure;.
+	 * @return int time zone offset in seconds on success or false on failure.
 	 */
 	public function getOffset (DateTime $datetime) {}
 
@@ -188,14 +188,14 @@ class DateTimeZone  {
 	 * End timestamp.
 	 * </p>
 	 * @return array numerically indexed array containing associative array with all
-	 * transitions on success&return.falseforfailure;.
+	 * transitions on success or false on failure.
 	 */
 	public function getTransitions ($timestamp_begin = null, $timestamp_end = null) {}
 
 	/**
 	 * Returns associative array containing dst, offset and the timezone name
 	 * @link http://www.php.net/manual/en/datetimezone.listabbreviations.php
-	 * @return array array on success&return.falseforfailure;.
+	 * @return array array on success or false on failure.
 	 */
 	public static function listAbbreviations () {}
 
@@ -210,7 +210,7 @@ class DateTimeZone  {
 	 * </p>
 	 * This option is only used when what is set to
 	 * DateTimeZone::PER_COUNTRY.
-	 * @return array array on success&return.falseforfailure;.
+	 * @return array array on success or false on failure.
 	 */
 	public static function listIdentifiers ($what = null, $country = null) {}
 
@@ -1111,7 +1111,7 @@ function date_create () {}
  * Date in format accepted by strtotime.
  * </p>
  * @return array array with information about the parsed date
- * on success&return.falseforfailure;.
+ * on success or false on failure.
  */
 function date_parse ($date) {}
 
@@ -1192,7 +1192,7 @@ function timezone_name_get () {}
  * exist then the time zone is searched solely by
  * offset and isdst.
  * </p>
- * @return string time zone name on success&return.falseforfailure;.
+ * @return string time zone name on success or false on failure.
  */
 function timezone_name_from_abbr ($abbr, $gmtOffset = null, $isdst = null) {}
 
@@ -1286,7 +1286,7 @@ function date_default_timezone_get () {}
  * </p>
  * @param gmt_offset float[optional] 
  * @return mixed the sunrise time in a specified format on
- * success&return.falseforfailure;.
+ * success or false on failure.
  */
 function date_sunrise ($timestamp, $format = null, $latitude = null, $longitude = null, $zenith = null, $gmt_offset = null) {}
 
@@ -1335,7 +1335,7 @@ function date_sunrise ($timestamp, $format = null, $latitude = null, $longitude 
  * </p>
  * @param gmt_offset float[optional] 
  * @return mixed the sunset time in a specified format on
- * success&return.falseforfailure;.
+ * success or false on failure.
  */
 function date_sunset ($timestamp, $format = null, $latitude = null, $longitude = null, $zenith = null, $gmt_offset = null) {}
 
@@ -1351,7 +1351,7 @@ function date_sunset ($timestamp, $format = null, $latitude = null, $longitude =
  * @param longitude float <p>
  * Longitude in degrees.
  * </p>
- * @return array array on success&return.falseforfailure;.
+ * @return array array on success or false on failure.
  */
 function date_sun_info ($time, $latitude, $longitude) {}
 

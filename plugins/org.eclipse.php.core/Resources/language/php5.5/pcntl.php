@@ -280,7 +280,7 @@ function pcntl_errno () {}
  * @link http://www.php.net/manual/en/function.pcntl-strerror.php
  * @param errno int <p>
  * </p>
- * @return string error description on success&return.falseforfailure;.
+ * @return string error description on success or false on failure.
  */
 function pcntl_strerror ($errno) {}
 

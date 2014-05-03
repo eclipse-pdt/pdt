@@ -4574,7 +4574,7 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	 * The optional enclosure parameter sets the field
 	 * enclosure (one character only).
 	 * </p>
-	 * @return int the length of the written string&return.falseforfailure;.
+	 * @return int the length of the written string or false on failure.
 	 * </p>
 	 * <p>
 	 * Returns false, and does not write the CSV line to the file, if the
@@ -5128,7 +5128,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	 * The optional enclosure parameter sets the field
 	 * enclosure (one character only).
 	 * </p>
-	 * @return int the length of the written string&return.falseforfailure;.
+	 * @return int the length of the written string or false on failure.
 	 * </p>
 	 * <p>
 	 * Returns false, and does not write the CSV line to the file, if the

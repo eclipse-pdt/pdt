@@ -168,7 +168,7 @@ class XMLReader  {
 	 * constants.
 	 * </p>
 	 * @return bool Returns true on success or false on failure. If called statically, returns an
-	 * XMLReader&return.falseforfailure;.
+	 * XMLReader or false on failure.
 	 */
 	public function open ($URI, $encoding = null, $options = null) {}
 
@@ -270,7 +270,7 @@ class XMLReader  {
 	 * constants.
 	 * </p>
 	 * @return bool Returns true on success or false on failure. If called statically, returns an
-	 * XMLReader&return.falseforfailure;.
+	 * XMLReader or false on failure.
 	 */
 	public function XML ($source, $encoding = null, $options = null) {}
 

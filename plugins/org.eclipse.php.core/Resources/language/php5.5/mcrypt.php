@@ -56,16 +56,16 @@ function mcrypt_ofb ($cipher, $key, $data, $mode, $iv) {}
 /**
  * Gets the key size of the specified cipher
  * @link http://www.php.net/manual/en/function.mcrypt-get-key-size.php
- * @param cipher int &mcrypt.parameter.cipher;
+ * @param cipher int One of the MCRYPT_ciphername constants, or the name of the algorithm as string.</p>
  * @return int the maximum supported key size of the algorithm in bytes
- * &return.falseforfailure;.
+ *  or false on failure.
  */
 function mcrypt_get_key_size ($cipher) {}
 
 /**
  * Gets the block size of the specified cipher
  * @link http://www.php.net/manual/en/function.mcrypt-get-block-size.php
- * @param cipher int &mcrypt.parameter.cipher;
+ * @param cipher int One of the MCRYPT_ciphername constants, or the name of the algorithm as string.</p>
  * @return int Gets the block size, as an integer.
  */
 function mcrypt_get_block_size ($cipher) {}
@@ -73,7 +73,7 @@ function mcrypt_get_block_size ($cipher) {}
 /**
  * Gets the name of the specified cipher
  * @link http://www.php.net/manual/en/function.mcrypt-get-cipher-name.php
- * @param cipher int &mcrypt.parameter.cipher;
+ * @param cipher int One of the MCRYPT_ciphername constants, or the name of the algorithm as string.</p>
  * @return string This function returns the name of the cipher or false if the cipher does
  * not exist.
  */
@@ -125,8 +125,8 @@ function mcrypt_list_modes ($lib_dir = null) {}
 /**
  * Returns the size of the IV belonging to a specific cipher/mode combination
  * @link http://www.php.net/manual/en/function.mcrypt-get-iv-size.php
- * @param cipher string &mcrypt.parameter.cipher;
- * @param mode string &mcrypt.parameter.mode;
+ * @param cipher string One of the MCRYPT_ciphername constants, or the name of the algorithm as string.</p>
+ * @param mode string One of the MCRYPT_MODE_modename constants, or one of the following strings: "ecb", "cbc", "cfb", "ofb", "nofb" or "stream".</p>
  * <p>
  * The IV is ignored in ECB mode as this mode does not require it. You will
  * need to have the same IV (think: starting point) both at encryption and
@@ -141,7 +141,7 @@ function mcrypt_get_iv_size ($cipher, $mode) {}
 /**
  * Encrypts plaintext with given parameters
  * @link http://www.php.net/manual/en/function.mcrypt-encrypt.php
- * @param cipher string &mcrypt.parameter.cipher;
+ * @param cipher string One of the MCRYPT_ciphername constants, or the name of the algorithm as string.</p>
  * @param key string <p>
  * The key with which the data will be encrypted. If it's smaller than
  * the required keysize, it is padded with '\0'. It is
@@ -160,8 +160,8 @@ function mcrypt_get_iv_size ($cipher, $mode) {}
  * The returned crypttext can be larger than the size of the data that was
  * given by data.
  * </p>
- * @param mode string &mcrypt.parameter.mode;
- * @param iv string[optional] &mcrypt.parameter.iv;
+ * @param mode string One of the MCRYPT_MODE_modename constants, or one of the following strings: "ecb", "cbc", "cfb", "ofb", "nofb" or "stream".</p>
+ * @param iv string[optional] Used for the initialization in CBC, CFB, OFB modes, and in some algorithms in STREAM mode. If you do not supply an IV, while it is needed for an algorithm, the function issues a warning and uses an IV with all its bytes set to "\0".</p>
  * @return string the encrypted data, as a string.
  */
 function mcrypt_encrypt ($cipher, $key, $data, $mode, $iv = null) {}
@@ -169,7 +169,7 @@ function mcrypt_encrypt ($cipher, $key, $data, $mode, $iv = null) {}
 /**
  * Decrypts crypttext with given parameters
  * @link http://www.php.net/manual/en/function.mcrypt-decrypt.php
- * @param cipher string &mcrypt.parameter.cipher;
+ * @param cipher string One of the MCRYPT_ciphername constants, or the name of the algorithm as string.</p>
  * @param key string <p>
  * The key with which the data was encrypted. If it's smaller
  * than the required keysize, it is padded with
@@ -180,8 +180,8 @@ function mcrypt_encrypt ($cipher, $key, $data, $mode, $iv = null) {}
  * and mode. If the size of the data is not n * blocksize,
  * the data will be padded with '\0'.
  * </p>
- * @param mode string &mcrypt.parameter.mode;
- * @param iv string[optional] &mcrypt.parameter.iv;
+ * @param mode string One of the MCRYPT_MODE_modename constants, or one of the following strings: "ecb", "cbc", "cfb", "ofb", "nofb" or "stream".</p>
+ * @param iv string[optional] Used for the initialization in CBC, CFB, OFB modes, and in some algorithms in STREAM mode. If you do not supply an IV, while it is needed for an algorithm, the function issues a warning and uses an IV with all its bytes set to "\0".</p>
  * @return string the decrypted data as a string.
  */
 function mcrypt_decrypt ($cipher, $key, $data, $mode, $iv = null) {}
@@ -189,7 +189,7 @@ function mcrypt_decrypt ($cipher, $key, $data, $mode, $iv = null) {}
 /**
  * Opens the module of the algorithm and the mode to be used
  * @link http://www.php.net/manual/en/function.mcrypt-module-open.php
- * @param algorithm string &mcrypt.parameter.cipher;
+ * @param algorithm string One of the MCRYPT_ciphername constants, or the name of the algorithm as string.</p>
  * @param algorithm_directory string <p>
  * The algorithm_directory parameter is used to locate
  * the encryption module. When you supply a directory name, it is used. When
@@ -198,7 +198,7 @@ function mcrypt_decrypt ($cipher, $key, $data, $mode, $iv = null) {}
  * it is not set, the default directory that is used is the one that was compiled
  * into libmcrypt (usually /usr/local/lib/libmcrypt).
  * </p>
- * @param mode string &mcrypt.parameter.mode;
+ * @param mode string One of the MCRYPT_MODE_modename constants, or one of the following strings: "ecb", "cbc", "cfb", "ofb", "nofb" or "stream".</p>
  * @param mode_directory string <p>
  * The mode_directory parameter is used to locate
  * the encryption module. When you supply a directory name, it is used. When
@@ -403,7 +403,7 @@ function mcrypt_enc_get_modes_name ($td) {}
 /**
  * This function runs a self test on the specified module
  * @link http://www.php.net/manual/en/function.mcrypt-module-self-test.php
- * @param algorithm string &mcrypt.parameter.cipher;
+ * @param algorithm string One of the MCRYPT_ciphername constants, or the name of the algorithm as string.</p>
  * @param lib_dir string[optional] <p>
  * The optional lib_dir parameter can contain the
  * location where the algorithm module is on the system.
@@ -447,7 +447,7 @@ function mcrypt_module_is_block_algorithm ($algorithm, $lib_dir = null) {}
 /**
  * Returns if the specified mode outputs blocks or not
  * @link http://www.php.net/manual/en/function.mcrypt-module-is-block-mode.php
- * @param mode string &mcrypt.parameter.mode;
+ * @param mode string One of the MCRYPT_MODE_modename constants, or one of the following strings: "ecb", "cbc", "cfb", "ofb", "nofb" or "stream".</p>
  * @param lib_dir string[optional] <p>
  * The optional lib_dir parameter can contain the
  * location where the algorithm module is on the system.

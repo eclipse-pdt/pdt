@@ -41,7 +41,7 @@ interface JsonSerializable  {
  * @param depth int[optional] <p>
  * Set the maximum depth. Must be greater than zero.
  * </p>
- * @return string a JSON encoded string on success &return.falseforfailure;.
+ * @return string a JSON encoded string on success  or false on failure.
  */
 function json_encode ($value, $options = null, $depth = null) {}
 

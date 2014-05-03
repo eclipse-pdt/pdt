@@ -19,7 +19,7 @@
  * hexadecimal is assumed, otherwise if the first character is "0",
  * octal is assumed, otherwise decimal is assumed.
  * </p>
- * @return resource &gmp.return;
+ * @return resource A GMP number resource.
  */
 function gmp_init ($number, $base = null) {}
 
@@ -74,7 +74,7 @@ function gmp_add ($a, $b) {}
  * The number subtracted from a.
  * </p>
  * &gmp.parameter;
- * @return resource &gmp.return;
+ * @return resource A GMP number resource.
  */
 function gmp_sub ($a, $b) {}
 
@@ -89,7 +89,7 @@ function gmp_sub ($a, $b) {}
  * A number that will be multiplied by a.
  * </p>
  * &gmp.parameter;
- * @return resource &gmp.return;
+ * @return resource A GMP number resource.
  */
 function gmp_mul ($a, $b) {}
 
@@ -132,7 +132,7 @@ function gmp_div_qr ($n, $d, $round = null) {}
  * values:
  * GMP_ROUND_ZERO: The result is truncated
  * towards 0.
- * @return resource &gmp.return;
+ * @return resource A GMP number resource.
  */
 function gmp_div_q ($a, $b, $round = null) {}
 
@@ -172,7 +172,7 @@ function gmp_div ($a, $b, $round) {}
  * The modulo that is being evaluated.
  * </p>
  * &gmp.parameter;
- * @return resource &gmp.return;
+ * @return resource A GMP number resource.
  */
 function gmp_mod ($n, $d) {}
 
@@ -187,7 +187,7 @@ function gmp_mod ($n, $d) {}
  * The number that a is being divided by.
  * </p>
  * &gmp.parameter;
- * @return resource &gmp.return;
+ * @return resource A GMP number resource.
  */
 function gmp_divexact ($n, $d) {}
 
@@ -214,7 +214,7 @@ function gmp_abs ($a) {}
  * The factorial number.
  * </p>
  * &gmp.parameter;
- * @return resource &gmp.return;
+ * @return resource A GMP number resource.
  */
 function gmp_fact ($a) {}
 
@@ -343,7 +343,7 @@ function gmp_invert ($a, $b) {}
  * <p>
  * Should be odd and must be positive.
  * </p>
- * @return int &gmp.return;
+ * @return int A GMP number resource.
  */
 function gmp_jacobi ($a, $p) {}
 
@@ -355,7 +355,7 @@ function gmp_jacobi ($a, $p) {}
  * <p>
  * Should be odd and must be positive.
  * </p>
- * @return int &gmp.return;
+ * @return int A GMP number resource.
  */
 function gmp_legendre ($a, $p) {}
 
@@ -405,7 +405,7 @@ function gmp_and ($a, $b) {}
  * @link http://www.php.net/manual/en/function.gmp-or.php
  * @param a resource &gmp.parameter;
  * @param b resource &gmp.parameter;
- * @return resource &gmp.return;
+ * @return resource A GMP number resource.
  */
 function gmp_or ($a, $b) {}
 
@@ -422,7 +422,7 @@ function gmp_com ($a) {}
  * @link http://www.php.net/manual/en/function.gmp-xor.php
  * @param a resource &gmp.parameter;
  * @param b resource &gmp.parameter;
- * @return resource &gmp.return;
+ * @return resource A GMP number resource.
  */
 function gmp_xor ($a, $b) {}
 
@@ -440,7 +440,7 @@ function gmp_xor ($a, $b) {}
  * Defines if the bit is set to 0 or 1. By default the bit is set to
  * 1. Index starts at 0.
  * </p>
- * @return void &gmp.return;
+ * @return void A GMP number resource.
  */
 function gmp_setbit ($a, $index, $set_clear = null) {}
 
@@ -449,7 +449,7 @@ function gmp_setbit ($a, $index, $set_clear = null) {}
  * @link http://www.php.net/manual/en/function.gmp-clrbit.php
  * @param a resource &gmp.parameter;
  * @param index int &gmp.parameter;
- * @return void &gmp.return;
+ * @return void A GMP number resource.
  */
 function gmp_clrbit ($a, $index) {}
 
@@ -513,7 +513,7 @@ function gmp_popcount ($a) {}
  * <p>
  * It should be positive.
  * </p>
- * @return int &gmp.return;
+ * @return int A GMP number resource.
  */
 function gmp_hamdist ($a, $b) {}
 

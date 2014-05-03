@@ -195,9 +195,9 @@ function imagecolorat ($image, $x, $y) {}
  * Allocate a color for an image
  * @link http://www.php.net/manual/en/function.imagecolorallocate.php
  * @param image resource 
- * @param red int <p>&gd.value.red;</p>
- * @param green int <p>&gd.value.green;</p>
- * @param blue int <p>&gd.value.blue;</p>
+ * @param red int <p>Value of red component.</p>
+ * @param green int <p>Value of green component.</p>
+ * @param blue int <p>Value of blue component.</p>
  * @return int A color identifier or false if the allocation failed.
  */
 function imagecolorallocate ($image, $red, $green, $blue) {}
@@ -229,9 +229,9 @@ function imagecreatefromstring ($data) {}
  * Get the index of the closest color to the specified color
  * @link http://www.php.net/manual/en/function.imagecolorclosest.php
  * @param image resource 
- * @param red int <p>&gd.value.red;</p>
- * @param green int <p>&gd.value.green;</p>
- * @param blue int <p>&gd.value.blue;</p>
+ * @param red int <p>Value of red component.</p>
+ * @param green int <p>Value of green component.</p>
+ * @param blue int <p>Value of blue component.</p>
  * @return int the index of the closest color, in the palette of the image, to
  * the specified one
  */
@@ -241,9 +241,9 @@ function imagecolorclosest ($image, $red, $green, $blue) {}
  * Get the index of the color which has the hue, white and blackness
  * @link http://www.php.net/manual/en/function.imagecolorclosesthwb.php
  * @param image resource 
- * @param red int <p>&gd.value.red;</p>
- * @param green int <p>&gd.value.green;</p>
- * @param blue int <p>&gd.value.blue;</p>
+ * @param red int <p>Value of red component.</p>
+ * @param green int <p>Value of green component.</p>
+ * @param blue int <p>Value of blue component.</p>
  * @return int an integer with the index of the color which has 
  * the hue, white and blackness nearest the given color.
  */
@@ -264,9 +264,9 @@ function imagecolordeallocate ($image, $color) {}
  * Get the index of the specified color or its closest possible alternative
  * @link http://www.php.net/manual/en/function.imagecolorresolve.php
  * @param image resource 
- * @param red int <p>&gd.value.red;</p>
- * @param green int <p>&gd.value.green;</p>
- * @param blue int <p>&gd.value.blue;</p>
+ * @param red int <p>Value of red component.</p>
+ * @param green int <p>Value of green component.</p>
+ * @param blue int <p>Value of blue component.</p>
  * @return int a color index.
  */
 function imagecolorresolve ($image, $red, $green, $blue) {}
@@ -275,9 +275,9 @@ function imagecolorresolve ($image, $red, $green, $blue) {}
  * Get the index of the specified color
  * @link http://www.php.net/manual/en/function.imagecolorexact.php
  * @param image resource 
- * @param red int <p>&gd.value.red;</p>
- * @param green int <p>&gd.value.green;</p>
- * @param blue int <p>&gd.value.blue;</p>
+ * @param red int <p>Value of red component.</p>
+ * @param green int <p>Value of green component.</p>
+ * @param blue int <p>Value of blue component.</p>
  * @return int the index of the specified color in the palette, or -1 if the
  * color does not exist.
  */
@@ -290,9 +290,9 @@ function imagecolorexact ($image, $red, $green, $blue) {}
  * @param index int <p>
  * An index in the palette.
  * </p>
- * @param red int <p>&gd.value.red;</p>
- * @param green int <p>&gd.value.green;</p>
- * @param blue int <p>&gd.value.blue;</p>
+ * @param red int <p>Value of red component.</p>
+ * @param green int <p>Value of green component.</p>
+ * @param blue int <p>Value of blue component.</p>
  * @param alpha int[optional] <p>
  * Value of alpha component.
  * </p>
@@ -340,8 +340,8 @@ function imagecolorsforindex ($image, $index) {}
 /**
  * Copy part of an image
  * @link http://www.php.net/manual/en/function.imagecopy.php
- * @param dst_im resource <p>&gd.image.destination;</p>
- * @param src_im resource <p>&gd.image.source;</p>
+ * @param dst_im resource <p>Destination image link resource.</p>
+ * @param src_im resource <p>Source image link resource.</p>
  * @param dst_x int <p>
  * x-coordinate of destination point.
  * </p>
@@ -354,8 +354,8 @@ function imagecolorsforindex ($image, $index) {}
  * @param src_y int <p>
  * y-coordinate of source point.
  * </p>
- * @param src_w int <p>&gd.source.width;</p>
- * @param src_h int <p>&gd.source.height;</p>
+ * @param src_w int <p>Source width.</p>
+ * @param src_h int <p>Source height.</p>
  * @return bool Returns true on success or false on failure.
  */
 function imagecopy ($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h) {}
@@ -363,8 +363,8 @@ function imagecopy ($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $s
 /**
  * Copy and merge part of an image
  * @link http://www.php.net/manual/en/function.imagecopymerge.php
- * @param dst_im resource <p>&gd.image.destination;</p>
- * @param src_im resource <p>&gd.image.source;</p>
+ * @param dst_im resource <p>Destination image link resource.</p>
+ * @param src_im resource <p>Source image link resource.</p>
  * @param dst_x int <p>
  * x-coordinate of destination point.
  * </p>
@@ -377,8 +377,8 @@ function imagecopy ($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $s
  * @param src_y int <p>
  * y-coordinate of source point.
  * </p>
- * @param src_w int <p>&gd.source.width;</p>
- * @param src_h int <p>&gd.source.height;</p>
+ * @param src_w int <p>Source width.</p>
+ * @param src_h int <p>Source height.</p>
  * @param pct int <p>
  * The two images will be merged according to pct
  * which can range from 0 to 100. When pct = 0,
@@ -393,8 +393,8 @@ function imagecopymerge ($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_
 /**
  * Copy and merge part of an image with gray scale
  * @link http://www.php.net/manual/en/function.imagecopymergegray.php
- * @param dst_im resource <p>&gd.image.destination;</p>
- * @param src_im resource <p>&gd.image.source;</p>
+ * @param dst_im resource <p>Destination image link resource.</p>
+ * @param src_im resource <p>Source image link resource.</p>
  * @param dst_x int <p>
  * x-coordinate of destination point.
  * </p>
@@ -407,8 +407,8 @@ function imagecopymerge ($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_
  * @param src_y int <p>
  * y-coordinate of source point.
  * </p>
- * @param src_w int <p>&gd.source.width;</p>
- * @param src_h int <p>&gd.source.height;</p>
+ * @param src_w int <p>Source width.</p>
+ * @param src_h int <p>Source height.</p>
  * @param pct int <p>
  * The src_im will be changed to grayscale according 
  * to pct where 0 is fully grayscale and 100 is 
@@ -423,8 +423,8 @@ function imagecopymergegray ($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $
 /**
  * Copy and resize part of an image
  * @link http://www.php.net/manual/en/function.imagecopyresized.php
- * @param dst_image resource <p>&gd.image.destination;</p>
- * @param src_image resource <p>&gd.image.source;</p>
+ * @param dst_image resource <p>Destination image link resource.</p>
+ * @param src_image resource <p>Source image link resource.</p>
  * @param dst_x int <p>
  * x-coordinate of destination point.
  * </p>
@@ -443,8 +443,8 @@ function imagecopymergegray ($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $
  * @param dst_h int <p>
  * Destination height.
  * </p>
- * @param src_w int <p>&gd.source.width;</p>
- * @param src_h int <p>&gd.source.height;</p>
+ * @param src_w int <p>Source width.</p>
+ * @param src_h int <p>Source height.</p>
  * @return bool Returns true on success or false on failure.
  */
 function imagecopyresized ($dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) {}
@@ -458,7 +458,7 @@ function imagecopyresized ($dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_
  * @param height int <p>
  * The image height.
  * </p>
- * @return resource &gd.return.identifier;
+ * @return resource Returns an image resource identifier on success, false on errors.
  */
 function imagecreate ($width, $height) {}
 
@@ -471,7 +471,7 @@ function imagecreate ($width, $height) {}
  * @param height int <p>
  * Image height.
  * </p>
- * @return resource &gd.return.identifier;
+ * @return resource Returns an image resource identifier on success, false on errors.
  */
 function imagecreatetruecolor ($width, $height) {}
 
@@ -597,9 +597,9 @@ function imagesavealpha ($image, $saveflag) {}
  * Allocate a color for an image
  * @link http://www.php.net/manual/en/function.imagecolorallocatealpha.php
  * @param image resource 
- * @param red int <p>&gd.value.red;</p>
- * @param green int <p>&gd.value.green;</p>
- * @param blue int <p>&gd.value.blue;</p>
+ * @param red int <p>Value of red component.</p>
+ * @param green int <p>Value of green component.</p>
+ * @param blue int <p>Value of blue component.</p>
  * @param alpha int <p>
  * A value between 0 and 127.
  * 0 indicates completely opaque while 
@@ -613,9 +613,9 @@ function imagecolorallocatealpha ($image, $red, $green, $blue, $alpha) {}
  * Get the index of the specified color + alpha or its closest possible alternative
  * @link http://www.php.net/manual/en/function.imagecolorresolvealpha.php
  * @param image resource 
- * @param red int <p>&gd.value.red;</p>
- * @param green int <p>&gd.value.green;</p>
- * @param blue int <p>&gd.value.blue;</p>
+ * @param red int <p>Value of red component.</p>
+ * @param green int <p>Value of green component.</p>
+ * @param blue int <p>Value of blue component.</p>
  * @param alpha int <p>
  * A value between 0 and 127.
  * 0 indicates completely opaque while 
@@ -629,9 +629,9 @@ function imagecolorresolvealpha ($image, $red, $green, $blue, $alpha) {}
  * Get the index of the closest color to the specified color + alpha
  * @link http://www.php.net/manual/en/function.imagecolorclosestalpha.php
  * @param image resource 
- * @param red int <p>&gd.value.red;</p>
- * @param green int <p>&gd.value.green;</p>
- * @param blue int <p>&gd.value.blue;</p>
+ * @param red int <p>Value of red component.</p>
+ * @param green int <p>Value of green component.</p>
+ * @param blue int <p>Value of blue component.</p>
  * @param alpha int <p>
  * A value between 0 and 127.
  * 0 indicates completely opaque while 
@@ -645,9 +645,9 @@ function imagecolorclosestalpha ($image, $red, $green, $blue, $alpha) {}
  * Get the index of the specified color + alpha
  * @link http://www.php.net/manual/en/function.imagecolorexactalpha.php
  * @param image resource 
- * @param red int <p>&gd.value.red;</p>
- * @param green int <p>&gd.value.green;</p>
- * @param blue int <p>&gd.value.blue;</p>
+ * @param red int <p>Value of red component.</p>
+ * @param green int <p>Value of green component.</p>
+ * @param blue int <p>Value of blue component.</p>
  * @param alpha int <p>
  * A value between 0 and 127.
  * 0 indicates completely opaque while 
@@ -661,8 +661,8 @@ function imagecolorexactalpha ($image, $red, $green, $blue, $alpha) {}
 /**
  * Copy and resize part of an image with resampling
  * @link http://www.php.net/manual/en/function.imagecopyresampled.php
- * @param dst_image resource <p>&gd.image.destination;</p>
- * @param src_image resource <p>&gd.image.source;</p>
+ * @param dst_image resource <p>Destination image link resource.</p>
+ * @param src_image resource <p>Source image link resource.</p>
  * @param dst_x int <p>
  * x-coordinate of destination point.
  * </p>
@@ -681,8 +681,8 @@ function imagecolorexactalpha ($image, $red, $green, $blue, $alpha) {}
  * @param dst_h int <p>
  * Destination height.
  * </p>
- * @param src_w int <p>&gd.source.width;</p>
- * @param src_h int <p>&gd.source.height;</p>
+ * @param src_w int <p>Source width.</p>
+ * @param src_h int <p>Source height.</p>
  * @return bool Returns true on success or false on failure.
  */
 function imagecopyresampled ($dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) {}
@@ -701,7 +701,7 @@ function imagecopyresampled ($dst_image, $src_image, $dst_x, $dst_y, $src_x, $sr
  * @param ignore_transparent int[optional] <p>
  * If set and non-zero, transparent colors are ignored (otherwise kept).
  * </p>
- * @return resource an image resource for the rotated image, &return.falseforfailure;.
+ * @return resource an image resource for the rotated image,  or false on failure.
  */
 function imagerotate ($image, $angle, $bgd_color, $ignore_transparent = null) {}
 
@@ -752,52 +752,52 @@ function imagesetbrush ($image, $brush) {}
 function imagesetstyle ($image, array $style) {}
 
 /**
- * &gd.image.new;
+ * Create a new image from file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefrompng.php
  * @param filename string <p>
  * Path to the PNG image.
  * </p>
- * @return resource &gd.return.identifier;
+ * @return resource Returns an image resource identifier on success, false on errors.
  */
 function imagecreatefrompng ($filename) {}
 
 /**
- * &gd.image.new;
+ * Create a new image from file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefromgif.php
  * @param filename string <p>
  * Path to the GIF image.
  * </p>
- * @return resource &gd.return.identifier;
+ * @return resource Returns an image resource identifier on success, false on errors.
  */
 function imagecreatefromgif ($filename) {}
 
 /**
- * &gd.image.new;
+ * Create a new image from file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefromjpeg.php
  * @param filename string <p>
  * Path to the JPEG image.
  * </p>
- * @return resource &gd.return.identifier;
+ * @return resource Returns an image resource identifier on success, false on errors.
  */
 function imagecreatefromjpeg ($filename) {}
 
 /**
- * &gd.image.new;
+ * Create a new image from file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefromwbmp.php
  * @param filename string <p>
  * Path to the WBMP image.
  * </p>
- * @return resource &gd.return.identifier;
+ * @return resource Returns an image resource identifier on success, false on errors.
  */
 function imagecreatefromwbmp ($filename) {}
 
 /**
- * &gd.image.new;
+ * Create a new image from file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefromxbm.php
  * @param filename string <p>
  * Path to the XBM image.
  * </p>
- * @return resource &gd.return.identifier;
+ * @return resource Returns an image resource identifier on success, false on errors.
  */
 function imagecreatefromxbm ($filename) {}
 
@@ -807,7 +807,7 @@ function imagecreatefromxbm ($filename) {}
  * @param filename string <p>
  * Path to the GD file.
  * </p>
- * @return resource &gd.return.identifier;
+ * @return resource Returns an image resource identifier on success, false on errors.
  */
 function imagecreatefromgd ($filename) {}
 
@@ -817,7 +817,7 @@ function imagecreatefromgd ($filename) {}
  * @param filename string <p>
  * Path to the GD2 image.
  * </p>
- * @return resource &gd.return.identifier;
+ * @return resource Returns an image resource identifier on success, false on errors.
  */
 function imagecreatefromgd2 ($filename) {}
 
@@ -833,9 +833,9 @@ function imagecreatefromgd2 ($filename) {}
  * @param srcY int <p>
  * y-coordinate of source point.
  * </p>
- * @param width int <p>&gd.source.width;</p>
- * @param height int <p>&gd.source.height;</p>
- * @return resource &gd.return.identifier;
+ * @param width int <p>Source width.</p>
+ * @param height int <p>Source height.</p>
+ * @return resource Returns an image resource identifier on success, false on errors.
  */
 function imagecreatefromgd2part ($filename, $srcX, $srcY, $width, $height) {}
 
@@ -843,7 +843,7 @@ function imagecreatefromgd2part ($filename, $srcX, $srcY, $width, $height) {}
  * Output a PNG image to either the browser or a file
  * @link http://www.php.net/manual/en/function.imagepng.php
  * @param image resource 
- * @param filename string[optional] <p>&gd.image.path;</p>
+ * @param filename string[optional] <p>The path to save the file to. If not set or &null;, the raw image stream will be outputted directly.</p>
  * <p>
  * &null; is invalid if the quality and
  * filters arguments are not used.
@@ -863,19 +863,19 @@ function imagecreatefromgd2part ($filename, $srcX, $srcY, $width, $height) {}
 function imagepng ($image, $filename = null, $quality = null, $filters = null) {}
 
 /**
- * &gd.image.output;
+ * Output image to browser or file
  * @link http://www.php.net/manual/en/function.imagegif.php
  * @param image resource 
- * @param filename string[optional] <p>&gd.image.path;</p>
+ * @param filename string[optional] <p>The path to save the file to. If not set or &null;, the raw image stream will be outputted directly.</p>
  * @return bool Returns true on success or false on failure.
  */
 function imagegif ($image, $filename = null) {}
 
 /**
- * &gd.image.output;
+ * Output image to browser or file
  * @link http://www.php.net/manual/en/function.imagejpeg.php
  * @param image resource 
- * @param filename string[optional] <p>&gd.image.path;</p>
+ * @param filename string[optional] <p>The path to save the file to. If not set or &null;, the raw image stream will be outputted directly.</p>
  * <p>
  * To skip this argument in order to provide the 
  * quality parameter, use &null;.
@@ -890,10 +890,10 @@ function imagegif ($image, $filename = null) {}
 function imagejpeg ($image, $filename = null, $quality = null) {}
 
 /**
- * &gd.image.output;
+ * Output image to browser or file
  * @link http://www.php.net/manual/en/function.imagewbmp.php
  * @param image resource 
- * @param filename string[optional] <p>&gd.image.path;</p>
+ * @param filename string[optional] <p>The path to save the file to. If not set or &null;, the raw image stream will be outputted directly.</p>
  * @param foreground int[optional] <p>
  * You can set the foreground color with this parameter by setting an
  * identifier obtained from imagecolorallocate.
@@ -907,7 +907,7 @@ function imagewbmp ($image, $filename = null, $foreground = null) {}
  * Output GD image to browser or file
  * @link http://www.php.net/manual/en/function.imagegd.php
  * @param image resource 
- * @param filename string[optional] <p>&gd.image.path;</p>
+ * @param filename string[optional] <p>The path to save the file to. If not set or &null;, the raw image stream will be outputted directly.</p>
  * @return bool Returns true on success or false on failure.
  */
 function imagegd ($image, $filename = null) {}
@@ -916,7 +916,7 @@ function imagegd ($image, $filename = null) {}
  * Output GD2 image to browser or file
  * @link http://www.php.net/manual/en/function.imagegd2.php
  * @param image resource 
- * @param filename string[optional] <p>&gd.image.path;</p>
+ * @param filename string[optional] <p>The path to save the file to. If not set or &null;, the raw image stream will be outputted directly.</p>
  * @param chunk_size int[optional] <p>
  * Chunk size.
  * </p>
@@ -1373,7 +1373,7 @@ function imagettfbbox ($size, $angle, $fontfile, $text) {}
  * Write text to the image using TrueType fonts
  * @link http://www.php.net/manual/en/function.imagettftext.php
  * @param image resource 
- * @param size float <p>&gd.font.size;</p>
+ * @param size float <p>The font size. Depending on your version of GD, this should be specified as the pixel size (GD1) or point size (GD2).</p>
  * @param angle float <p>
  * The angle in degrees, with 0 degrees being left-to-right reading text.
  * Higher values represent a counter-clockwise rotation. For example, a 
@@ -1449,7 +1449,7 @@ function imagettftext ($image, $size, $angle, $x, $y, $color, $fontfile, $text) 
 /**
  * Give the bounding box of a text using fonts via freetype2
  * @link http://www.php.net/manual/en/function.imageftbbox.php
- * @param size float <p>&gd.font.size;</p>
+ * @param size float <p>The font size. Depending on your version of GD, this should be specified as the pixel size (GD1) or point size (GD2).</p>
  * @param angle float <p>
  * Angle in degrees in which text will be 
  * measured.
@@ -1682,7 +1682,7 @@ function jpeg2wbmp ($jpegname, $wbmpname, $dest_height, $dest_width, $threshold)
 function png2wbmp ($pngname, $wbmpname, $dest_height, $dest_width, $threshold) {}
 
 /**
- * &gd.image.output;
+ * Output image to browser or file
  * @link http://www.php.net/manual/en/function.image2wbmp.php
  * @param image resource 
  * @param filename string[optional] <p>
@@ -1713,7 +1713,7 @@ function imagelayereffect ($image, $effect) {}
  * Output XBM image to browser or file
  * @link http://www.php.net/manual/en/function.imagexbm.php
  * @param image resource 
- * @param filename string <p>&gd.image.path;</p>
+ * @param filename string <p>The path to save the file to. If not set or &null;, the raw image stream will be outputted directly.</p>
  * @param foreground int[optional] <p>
  * You can set the foreground color with this parameter by setting an
  * identifier obtained from imagecolorallocate.
@@ -1748,9 +1748,9 @@ function imagecolormatch ($image1, $image2) {}
  * @param arg1 int[optional] <p>
  * IMG_FILTER_BRIGHTNESS: Brightness level.
  * @param arg2 int[optional] <p>
- * IMG_FILTER_COLORIZE: &gd.value.green;
+ * IMG_FILTER_COLORIZE: Value of green component.
  * @param arg3 int[optional] <p>
- * IMG_FILTER_COLORIZE: &gd.value.blue;
+ * IMG_FILTER_COLORIZE: Value of blue component.
  * @param arg4 int[optional] <p>
  * IMG_FILTER_COLORIZE: Alpha channel, A value 
  * between 0 and 127. 0 indicates completely opaque while 127 indicates 

@@ -23,7 +23,7 @@
  * details.
  * </p>
  * @return mixed the value encoded in input in appropriate
- * PHP type&return.falseforfailure;. If pos is -1 an
+ * PHP type or false on failure. If pos is -1 an
  * array will be returned with one entry for each document found
  * in the stream.
  */
@@ -50,7 +50,7 @@ function yaml_parse ($input, $pos = null, &$ndocs = null, array $callbacks = nul
  * details.
  * </p>
  * @return mixed the value encoded in input in appropriate
- * PHP type&return.falseforfailure;. If pos is -1 an
+ * PHP type or false on failure. If pos is -1 an
  * array will be returned with one entry for each document found
  * in the stream.
  */
@@ -80,7 +80,7 @@ function yaml_parse_file ($filename, $pos = null, &$ndocs = null, array $callbac
  * parse callbacks for more
  * </p>
  * @return mixed the value encoded in input in appropriate
- * PHP type&return.falseforfailure;. If pos is -1 an
+ * PHP type or false on failure. If pos is -1 an
  * array will be returned with one entry for each document found
  * in the stream.
  */

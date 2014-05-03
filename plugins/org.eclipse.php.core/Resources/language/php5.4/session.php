@@ -13,14 +13,14 @@ interface SessionHandlerInterface  {
 	 * @param sessionid string <p>
 	 * The session id.
 	 * </p>
-	 * @return void &returns.session.storage.retval;
+	 * @return void The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	abstract public function open ($save_path, $sessionid) {}
 
 	/**
 	 * Close the session
 	 * @link http://www.php.net/manual/en/sessionhandlerinterface.close.php
-	 * @return void &returns.session.storage.retval;
+	 * @return void The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	abstract public function close () {}
 
@@ -43,7 +43,7 @@ interface SessionHandlerInterface  {
 	 * @param sessiondata string <p>
 	 * The (session_encoded) session data.
 	 * </p>
-	 * @return void &returns.session.storage.retval;
+	 * @return void The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	abstract public function write ($sessionid, $sessiondata) {}
 
@@ -53,7 +53,7 @@ interface SessionHandlerInterface  {
 	 * @param sessionid string <p>
 	 * The session ID being destroyed.
 	 * </p>
-	 * @return void &returns.session.storage.retval;
+	 * @return void The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	abstract public function destroy ($sessionid) {}
 
@@ -63,7 +63,7 @@ interface SessionHandlerInterface  {
 	 * @param maxlifetime string <p>
 	 * Sessions that have not updated for the last maxlifetime seconds will be removed.
 	 * </p>
-	 * @return void &returns.session.storage.retval;
+	 * @return void The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	abstract public function gc ($maxlifetime) {}
 
@@ -80,14 +80,14 @@ class SessionHandler implements SessionHandlerInterface {
 	 * @param sessionid string <p>
 	 * The session id.
 	 * </p>
-	 * @return int &returns.session.storage.retval;
+	 * @return int The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	public function open ($save_path, $sessionid) {}
 
 	/**
 	 * Close the session
 	 * @link http://www.php.net/manual/en/sessionhandler.close.php
-	 * @return int &returns.session.storage.retval;
+	 * @return int The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	public function close () {}
 
@@ -110,7 +110,7 @@ class SessionHandler implements SessionHandlerInterface {
 	 * @param sessiondata string <p>
 	 * The (session_encoded) session data.
 	 * </p>
-	 * @return int &returns.session.storage.retval;
+	 * @return int The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	public function write ($sessionid, $sessiondata) {}
 
@@ -120,7 +120,7 @@ class SessionHandler implements SessionHandlerInterface {
 	 * @param sessionid string <p>
 	 * The session ID being destroyed.
 	 * </p>
-	 * @return int &returns.session.storage.retval;
+	 * @return int The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	public function destroy ($sessionid) {}
 
@@ -130,7 +130,7 @@ class SessionHandler implements SessionHandlerInterface {
 	 * @param maxlifetime int <p>
 	 * Sessions that have not updated for the last maxlifetime seconds will be removed.
 	 * </p>
-	 * @return int &returns.session.storage.retval;
+	 * @return int The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	public function gc ($maxlifetime) {}
 

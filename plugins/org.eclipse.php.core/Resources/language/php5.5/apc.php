@@ -24,7 +24,7 @@
  * return value will exclude the individual list of cache entries. This
  * is useful when trying to optimize calls for statistics gathering.
  * </p>
- * @return array Array of cached data (and meta-data)&return.falseforfailure;
+ * @return array Array of cached data (and meta-data) or false on failure
  */
 function apc_cache_info ($cache_type = null, $limited = null) {}
 
@@ -146,7 +146,7 @@ function apc_add ($key, $var, $ttl = null) {}
  * this referenced variable.
  * </p>
  * @return int the current value of key's value on success,
- * &return.falseforfailure;
+ *  or false on failure
  */
 function apc_inc ($key, $step = null, &$success = null) {}
 
@@ -164,7 +164,7 @@ function apc_inc ($key, $step = null, &$success = null) {}
  * this referenced variable.
  * </p>
  * @return int the current value of key's value on success,
- * &return.falseforfailure;
+ *  or false on failure
  */
 function apc_dec ($key, $step = null, &$success = null) {}
 

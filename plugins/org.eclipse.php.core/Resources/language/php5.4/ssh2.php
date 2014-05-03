@@ -345,7 +345,7 @@ function ssh2_shell ($session, $term_type = null, array $env = null, $width = nu
  * SSH2_TERM_UNIT_CHARS or
  * SSH2_TERM_UNIT_PIXELS.
  * </p>
- * @return resource a stream on success&return.falseforfailure;.
+ * @return resource a stream on success or false on failure.
  */
 function ssh2_exec ($session, $command, $pty = null, array $env = null, $width = null, $height = null, $width_height_type = null) {}
 
@@ -564,7 +564,7 @@ function ssh2_sftp_realpath ($sftp, $filename) {}
  * @param session resource <p>
  * </p>
  * @return resource an SSH2 Publickey Subsystem resource for use
- * with all other ssh2_publickey_*() methods&return.falseforfailure;.
+ * with all other ssh2_publickey_*() methods or false on failure.
  */
 function ssh2_publickey_init ($session) {}
 

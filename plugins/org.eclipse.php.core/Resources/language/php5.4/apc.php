@@ -105,7 +105,7 @@ function apc_delete ($key) {}
  * return value will exclude the individual list of cache entries. This
  * is useful when trying to optimize calls for statistics gathering.
  * </p>
- * @return array Array of cached data (and meta-data)&return.falseforfailure;
+ * @return array Array of cached data (and meta-data) or false on failure
  */
 function apc_cache_info ($cache_type = null, $limited = null) {}
 

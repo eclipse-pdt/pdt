@@ -487,7 +487,7 @@ class SolrInputDocument  {
 	/**
 	 * Returns the number of fields in the document
 	 * @link http://www.php.net/manual/en/solrinputdocument.getfieldcount.php
-	 * @return int an integer on success&return.falseforfailure;.
+	 * @return int an integer on success or false on failure.
 	 */
 	public function getFieldCount () {}
 
@@ -3179,7 +3179,7 @@ class SolrUtils  {
 	 * @param str string <p>
 	 * This is the query string to be escaped.
 	 * </p>
-	 * @return string the escaped string&return.falseforfailure;.
+	 * @return string the escaped string or false on failure.
 	 */
 	public static function escapeQueryChars ($str) {}
 

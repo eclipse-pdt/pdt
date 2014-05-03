@@ -239,7 +239,7 @@ function simplexml_load_string ($data, $class_name = null, $options = null, $ns 
  * the specified class. That class should extend the 
  * SimpleXMLElement class.
  * </p>
- * @return SimpleXMLElement a SimpleXMLElement&return.falseforfailure;.
+ * @return SimpleXMLElement a SimpleXMLElement or false on failure.
  */
 function simplexml_import_dom (DOMNode $node, $class_name = null) {}
 

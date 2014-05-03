@@ -789,7 +789,7 @@ function imagecopyresampled ($dst_image, $src_image, $dst_x, $dst_y, $src_x, $sr
  * @param ignore_transparent int[optional] <p>
  * If set and non-zero, transparent colors are ignored (otherwise kept).
  * </p>
- * @return resource an image resource for the rotated image, &return.falseforfailure;.
+ * @return resource an image resource for the rotated image,  or false on failure.
  */
 function imagerotate ($image, $angle, $bgd_color, $ignore_transparent = null) {}
 

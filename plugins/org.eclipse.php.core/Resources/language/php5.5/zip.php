@@ -136,7 +136,7 @@ class ZipArchive  {
 	/**
 	 * Returns the status error message, system and/or zip messages
 	 * @link http://www.php.net/manual/en/ziparchive.getstatusstring.php
-	 * @return string a string with the status message on success&return.falseforfailure;.
+	 * @return string a string with the status message on success or false on failure.
 	 */
 	public function getStatusString () {}
 
@@ -244,7 +244,7 @@ class ZipArchive  {
 	 * If flags is set to ZipArchive::FL_UNCHANGED, the original unchanged
 	 * comment is returned.
 	 * </p>
-	 * @return string the Zip archive comment&return.falseforfailure;.
+	 * @return string the Zip archive comment or false on failure.
 	 */
 	public function getArchiveComment ($flags = null) {}
 
@@ -284,7 +284,7 @@ class ZipArchive  {
 	 * If flags is set to ZipArchive::FL_UNCHANGED, the original unchanged
 	 * comment is returned.
 	 * </p>
-	 * @return string the comment on success&return.falseforfailure;.
+	 * @return string the comment on success or false on failure.
 	 */
 	public function getCommentIndex ($index, $flags = null) {}
 
@@ -298,7 +298,7 @@ class ZipArchive  {
 	 * If flags is set to ZipArchive::FL_UNCHANGED, the original unchanged
 	 * comment is returned.
 	 * </p>
-	 * @return string the comment on success&return.falseforfailure;.
+	 * @return string the comment on success or false on failure.
 	 */
 	public function getCommentName ($name, $flags = null) {}
 
@@ -336,7 +336,7 @@ class ZipArchive  {
 	 * <p>
 	 * ZipArchive::FL_NOCASE
 	 * </p>
-	 * @return array an array containing the entry details &return.falseforfailure;.
+	 * @return array an array containing the entry details  or false on failure.
 	 */
 	public function statName ($name, $flags = null) {}
 
@@ -351,7 +351,7 @@ class ZipArchive  {
 	 * information about the original file in the archive,
 	 * ignoring any changes made.
 	 * </p>
-	 * @return array an array containing the entry details&return.falseforfailure;.
+	 * @return array an array containing the entry details or false on failure.
 	 */
 	public function statIndex ($index, $flags = null) {}
 
@@ -367,7 +367,7 @@ class ZipArchive  {
 	 * <p>
 	 * ZipArchive::FL_NOCASE
 	 * </p>
-	 * @return int the index of the entry on success&return.falseforfailure;.
+	 * @return int the index of the entry on success or false on failure.
 	 */
 	public function locateName ($name, $flags = null) {}
 
@@ -381,7 +381,7 @@ class ZipArchive  {
 	 * If flags is set to ZipArchive::FL_UNCHANGED, the original unchanged
 	 * name is returned.
 	 * </p>
-	 * @return string the name on success&return.falseforfailure;.
+	 * @return string the name on success or false on failure.
 	 */
 	public function getNameIndex ($index, $flags = null) {}
 
@@ -449,7 +449,7 @@ class ZipArchive  {
 	 * <p>
 	 * ZipArchive::FL_UNCHANGED
 	 * </p>
-	 * @return string the contents of the entry on success&return.falseforfailure;.
+	 * @return string the contents of the entry on success or false on failure.
 	 */
 	public function getFromName ($name, $length = null, $flags = null) {}
 
@@ -469,7 +469,7 @@ class ZipArchive  {
 	 * <p>
 	 * ZipArchive::FL_UNCHANGED
 	 * </p>
-	 * @return string the contents of the entry on success&return.falseforfailure;.
+	 * @return string the contents of the entry on success or false on failure.
 	 */
 	public function getFromIndex ($index, $length = null, $flags = null) {}
 
@@ -479,7 +479,7 @@ class ZipArchive  {
 	 * @param name string <p>
 	 * The name of the entry to use.
 	 * </p>
-	 * @return resource a file pointer (resource) on success&return.falseforfailure;.
+	 * @return resource a file pointer (resource) on success or false on failure.
 	 */
 	public function getStream ($name) {}
 

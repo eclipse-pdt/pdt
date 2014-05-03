@@ -40,7 +40,7 @@
  * ^, $ or
  * (?&lt;=x). Compare:
  * ]]>
- * &example.outputs;
+ * The above example will output:</p>
  * <p>
  * while this example
  * </p>
@@ -101,7 +101,7 @@ function preg_match ($pattern, $subject, array &$matches = null, $flags = null, 
  * </p>
  * <p>
  * ]]>
- * &example.outputs;
+ * The above example will output:</p>
  * example: , this is a test
  * example: , this is a test
  * ]]>

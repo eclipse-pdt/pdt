@@ -56,7 +56,7 @@ if (!$splitFiles) {
 	begin_file_output();
 }
 $extensions = get_loaded_extensions();
-foreach ($extensions as $extName) {	
+foreach ($extensions as $extName) {
 	if ($splitFiles) {
 		begin_file_output();
 	}
@@ -162,7 +162,7 @@ function parse_phpdoc_functions ($phpdocDir) {
   );
   $functionsDoc = array();
 	foreach ($xml_files as $xml_file) {
-		$xml = file_get_contents ($xml_file);
+		$xml = load_xml ($xml_file);
 
 		if (preg_match ('@<refentry.*?xml:id=["\'](.*?)["\'].*?>.*?<refname>(.*?)</refname>.*?<refpurpose>(.*?)</refpurpose>@s', $xml, $match)) {
 
@@ -189,7 +189,7 @@ function parse_phpdoc_functions ($phpdocDir) {
 					$parameters = $match[4];
 					$description = $match[1].$match[5];
 					$has_object_style = true;
-				}				
+				}
 				if (preg_match ('@<methodsynopsis>.*?<type>(.*?)</type>.*?<methodname>(.*?)</methodname>(.*?)</methodsynopsis>@s', $description, $match)) {
 					if ($has_object_style) {
 						$function_alias = trim($match[2]);
@@ -247,7 +247,7 @@ function parse_phpdoc_functions ($phpdocDir) {
 					$functionsDoc[$refname]['returndoc'] = xml_to_phpdoc ($match[2]);
 				}
 			}
-			
+
 			if (preg_match ('@&warn\.deprecated.func-(.*?);@s', $xml, $match)) {
 				$deprecatedSince = $match[1];
 				$functionsDoc[$refname]['deprecated'] = 'Since ' . str_replace('-', '.',$deprecatedSince);
@@ -275,11 +275,11 @@ function parse_phpdoc_classes ($phpdocDir) {
 		glob ("{$phpdocDir}/language/*/*.xml"),
 		glob ("{$phpdocDir}/language/*.xml")
 	);
-	
+
 	global $fields_doc;
-	
+
 	foreach ($xml_files as $xml_file) {
-		$xml = file_get_contents ($xml_file);
+		$xml = load_xml ($xml_file);
 		if (preg_match ('@xml:id=["\'](.*?)["\']@', $xml, $match)) {
 			$id = $match[1];
 			if (preg_match_all ('@<title><classname>(.*?)</classname></title>@', $xml, $match)) {
@@ -292,7 +292,7 @@ function parse_phpdoc_classes ($phpdocDir) {
 					if (preg_match ("@<title><classname>{$class}</classname></title>\s*<para>(.*?)</para>@s", $xml, $match2)) {
 						$classesDoc[$refname]['doc'] = xml_to_phpdoc($match2[1]);
 					}
-					
+
 					//pass over class fields here
 					$fields_xml_file = array_merge (
 						glob ("{$phpdocDir}/reference/*/" . $refname . ".xml")
@@ -302,18 +302,18 @@ function parse_phpdoc_classes ($phpdocDir) {
                         continue;
                     }
 					if($fields_xml_file[0] != null) {
-						$xml_field_data = file_get_contents ($fields_xml_file[0]);
+						$xml_field_data = load_xml ($fields_xml_file[0]);
 						if($xml_field_data != null) {
-							
+
 							if(preg_match_all ('@<fieldsynopsis>((\w|\W|\s)*?)</fieldsynopsis>@', $xml_field_data, $fieldsynopsis_list)) {
 								foreach ($fieldsynopsis_list[1] as $fieldsynopsis) {
-									
+
 									if(preg_match_all("@<varname\s*linkend=\"{$refname}.props.(.*?)\">(.*?)</varname>@", $fieldsynopsis, $varname)) {
 										$field_name = $varname[2][0];
 										$fields_doc[$refname][$field_name]['name'] = $field_name;
 									}
-									
-									
+
+
 //									    <varlistentry xml:id="domdocument.props.formatoutput">
 //									     <term><varname>formatOutput</varname></term>
 //									     <listitem>
@@ -328,7 +328,7 @@ function parse_phpdoc_classes ($phpdocDir) {
 										}
 										$fields_doc[$refname][$field_name]['doc'] = xml_to_phpdoc($doc[1]);
 									}
-									
+
 									if(preg_match_all("@<modifier>(.*?)</modifier>@", $fieldsynopsis, $modifier_list)) {
 										foreach ($modifier_list[1] as $current_modifier) {
 											if($current_modifier == "readonly") {
@@ -338,23 +338,23 @@ function parse_phpdoc_classes ($phpdocDir) {
 												break;
 											}
 										}
-										
+
 										//go to the next field if not public ???
 										if($modifier == "private") {
 											continue;
-										}	
+										}
 										$fields_doc[$refname][$field_name]['modifier'] = $modifier;
 									}
-									
+
 									if(preg_match_all("@<type>(.*?)</type>@", $fieldsynopsis, $type)) {
-										$field_type = $type[1][0]; 
+										$field_type = $type[1][0];
 										$fields_doc[$refname][$field_name]['type'] = $field_type;
 									}
 								}
 							}
 						}
 					}
-					
+
 				}
 			}
 		}
@@ -371,7 +371,7 @@ function parse_phpdoc_constants ($phpdocDir) {
   $constantsDoc = array();
 	exec ("find ".addslashes($phpdocDir)." -name \"*constants.xml\"", $xml_files);
 	foreach ($xml_files as $xml_file) {
-		$xml = file_get_contents ($xml_file);
+		$xml = load_xml ($xml_file);
 		if (preg_match ('@xml:id=["\'](.*?)["\']@', $xml, $match)) {
 			$id = $match[1];
 			if (preg_match_all ('@<term>\s*<constant>([a-zA-Z_][a-zA-Z0-9_]*)</constant>.*?</term>.*?<listitem>(.*?)</listitem>@s', $xml, $match)) {
@@ -382,7 +382,7 @@ function parse_phpdoc_constants ($phpdocDir) {
 				}
 			}
 			if (preg_match_all (
-				                   '@<entry>\s*<constant>([a-zA-Z_][a-zA-Z0-9_]*)</constant>.*?</entry>\s*<entry>\d+</entry>\s*<entry>(.*?)</entry>@s', $xml, $match) 
+				                   '@<entry>\s*<constant>([a-zA-Z_][a-zA-Z0-9_]*)</constant>.*?</entry>\s*<entry>\d+</entry>\s*<entry>(.*?)</entry>@s', $xml, $match)
 				|| preg_match_all ('@<entry>\s*<constant>([a-zA-Z_][a-zA-Z0-9_]*)</constant>.*?</entry>\s*<entry>(.*?)</entry>@s', $xml, $match)) {
 
 				for ($i = 0; $i < count($match[0]); ++$i) {
@@ -402,7 +402,7 @@ function parse_phpdoc_constants ($phpdocDir) {
  */
 function print_extension ($extRef) {
 	print "\n// Start of {$extRef->getName()} v.{$extRef->getVersion()}\n";
-	
+
 	// process classes:
 	$classesRef = $extRef->getClasses();
 	if (count ($classesRef) > 0) {
@@ -446,7 +446,7 @@ function print_class ($classRef, $tabs = 0) {
 
 	print $classRef->isInterface() ? "interface " : "class ";
 	print clean_php_identifier($classRef->getName())." ";
-	
+
 	// print out parent class
 	$parentClassRef = $classRef->getParentClass();
 	if ($parentClassRef) {
@@ -475,8 +475,8 @@ function print_class ($classRef, $tabs = 0) {
 	}
 
 	global $classesDoc;
-	
-	
+
+
 	// process properties
 	$propertiesRef = $classRef->getProperties();
 	if (count ($propertiesRef) > 0) {
@@ -486,19 +486,19 @@ function print_class ($classRef, $tabs = 0) {
 		}
 		print "\n";
 	}
-	
-		
+
+
 	$className = strtolower($classRef->getName());
 	if($className == "DomDocument") {
 		echo "DomDocument";
 	}
-	
+
 	global $fields_doc;
 	if (@$fields_doc[$className]) {
 		$fields = @$fields_doc[$className];
 		foreach ($fields as $field) {
 			if(!$printedFields[$field['name']]) {
-				
+
 				//print doc here
 				print("\n");
 				$doc = $field['doc'];
@@ -513,8 +513,8 @@ function print_class ($classRef, $tabs = 0) {
 						print_tabs ($tabs + 1);
 						print " * @deprecated "."\n";
 					}
-					
-					
+
+
 					print_Tabs ($tabs + 1);
 					// http://www.php.net/manual/en/class.domdocument.php#domdocument.props.actualencoding
 					$refname = strtolower($classRef->getName());
@@ -522,11 +522,11 @@ function print_class ($classRef, $tabs = 0) {
 					$field_name = strtolower($field['name']);
 					$field_url = $class_url . '#' . $className . ".props." . $field_name;
 					print " * @link {$field_url}\n";
-					
+
 					print_tabs ($tabs + 1);
 					print " */\n";
 				}
-				
+
 				print_tabs ($tabs + 1);
 				print implode(' ', array($field['modifier']));
 				print " ";
@@ -946,6 +946,59 @@ function strip_tags_special ($str) {
     return $str;
 }
 
+function load_entities()
+{
+    global $phpdocDir;
+    $result = array();
+    $needExpand = [];
+    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($phpdocDir));
+    foreach ($iterator as $file) {
+        if (! $file->isFile() || !in_array($file->getExtension(), array("xml", "ent"))) {
+            continue;
+        }
+        preg_match_all("/<!ENTITY\s+([a-z0-9.]+)\s+'(.*?)'>/i", load_xml($file->getPathname()), $matches);
+        if ($matches) {
+            foreach ($matches[1] as $k => $v) {
+                $result[$v] = $matches[2][$k];
+            }
+        }
+    }
+    $result['false'] = 'false';
+    $result['true'] = 'true';
+    $result['return.void'] = '';
+    $result['return.success'] = 'Returns true on success or false on failure';
+
+
+    $names = array();
+    foreach (array_keys($result) as $v) {
+        $names[] = '&' . $v . ';';
+    }
+
+    // XXX: fill nested values
+    for ($i = 0; $i < 40; $i++) {
+        array_map(function ($val) use($names, $result)
+        {
+            return str_replace($names, array_values($result), $val);
+        }, $result);
+    }
+
+    return $result;
+}
+
+function load_xml($str) {
+	static $entities_names = null, $entities_values = null;
+	if (null === $entities_names) {
+	    $entities = load_entities();
+	    $entities_values = array_values($entities);
+	    $entities_names = array();
+	    foreach (array_keys($entities) as $v) {
+	    	$entities_names[] = '&' . $v . ';';
+	    }
+	}
+
+	return str_replace($entities_names, $entities_values, file_get_contents($str));
+}
+
 /**
  * Prints usage help to the screen, and exits from program
  */
@@ -963,5 +1016,3 @@ Where options are:
 EOF
 	);
 }
-
-?>

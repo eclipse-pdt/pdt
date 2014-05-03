@@ -1239,7 +1239,7 @@ class Transliterator  {
 	 * Get transliterator IDs
 	 * @link http://www.php.net/manual/en/transliterator.listids.php
 	 * @return array An array of registered transliterator IDs on success,
-	 * &return.falseforfailure;.
+	 *  or false on failure.
 	 */
 	public static function listIDs () {}
 
@@ -1259,7 +1259,7 @@ class Transliterator  {
 	 * transformed, exclusive. Indexing starts at 0. The text after will be
 	 * left as is.
 	 * </p>
-	 * @return string The transfomed string on success, &return.falseforfailure;.
+	 * @return string The transfomed string on success,  or false on failure.
 	 */
 	public function transliterate ($subject, $start = null, $end = null) {}
 
@@ -1957,7 +1957,7 @@ function grapheme_extract ($haystack, $size, $extract_type = null, $start = null
  * which is an int representing a bitset of the error
  * constants IDNA_ERROR_*.
  * </p>
- * @return string Domain name encoded in ASCII-compatible form. &return.falseforfailure;
+ * @return string Domain name encoded in ASCII-compatible form.  or false on failure
  */
 function idn_to_ascii ($utf8_domain, &$errorcode = null, $domain, $options = null, $variant = null, array &$idna_info = null) {}
 
@@ -1993,7 +1993,7 @@ function idn_to_ascii ($utf8_domain, &$errorcode = null, $domain, $options = nul
  * which is an int representing a bitset of the error
  * constants IDNA_ERROR_*.
  * </p>
- * @return string Domain name in Unicode, encoded in UTF-8. &return.falseforfailure;
+ * @return string Domain name in Unicode, encoded in UTF-8.  or false on failure
  */
 function idn_to_utf8 ($ascii_domain, &$errorcode = null, $domain, $options = null, $variant = null, array &$idna_info = null) {}
 

@@ -51,7 +51,7 @@ function bbcode_destroy ($bbcode_container) {}
  * @param to_parse string <p>
  * The string we need to parse.
  * </p>
- * @return string the parsed string, &return.falseforfailure;.
+ * @return string the parsed string,  or false on failure.
  */
 function bbcode_parse ($bbcode_container, $to_parse) {}
 

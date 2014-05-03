@@ -329,7 +329,7 @@ function socket_close ($socket) {}
  * greater then the buffer length, it is silently truncated to the length
  * of the buffer.
  * </p>
- * @return int the number of bytes successfully written to the socket&return.falseforfailure;.
+ * @return int the number of bytes successfully written to the socket or false on failure.
  * The error code can be retrieved with
  * socket_last_error. This code may be passed to
  * socket_strerror to get a textual explanation of the

@@ -13,14 +13,14 @@ interface SessionHandlerInterface  {
 	 * @param name string <p>
 	 * The session name.
 	 * </p>
-	 * @return bool &returns.session.storage.retval;
+	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	abstract public function open ($save_path, $name) {}
 
 	/**
 	 * Close the session
 	 * @link http://www.php.net/manual/en/sessionhandlerinterface.close.php
-	 * @return bool &returns.session.storage.retval;
+	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	abstract public function close () {}
 
@@ -44,7 +44,7 @@ interface SessionHandlerInterface  {
 	 * The encoded session data. This data is the result of the PHP internally encoding the $_SESSION superglobal to a serialized
 	 * string and passing it as this parameter. Please note sessions use an alternative serialization method.
 	 * </p>
-	 * @return bool &returns.session.storage.retval;
+	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	abstract public function write ($session_id, $session_data) {}
 
@@ -54,7 +54,7 @@ interface SessionHandlerInterface  {
 	 * @param session_id string <p>
 	 * The session ID being destroyed.
 	 * </p>
-	 * @return bool &returns.session.storage.retval;
+	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	abstract public function destroy ($session_id) {}
 
@@ -64,7 +64,7 @@ interface SessionHandlerInterface  {
 	 * @param maxlifetime string <p>
 	 * Sessions that have not updated for the last maxlifetime seconds will be removed.
 	 * </p>
-	 * @return bool &returns.session.storage.retval;
+	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	abstract public function gc ($maxlifetime) {}
 
@@ -87,14 +87,14 @@ class SessionHandler implements SessionHandlerInterface, SessionIdInterface {
 	 * @param session_id string <p>
 	 * The session id.
 	 * </p>
-	 * @return bool &returns.session.storage.retval;
+	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	public function open ($save_path, $session_id) {}
 
 	/**
 	 * Close the session
 	 * @link http://www.php.net/manual/en/sessionhandler.close.php
-	 * @return bool &returns.session.storage.retval;
+	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	public function close () {}
 
@@ -118,7 +118,7 @@ class SessionHandler implements SessionHandlerInterface, SessionIdInterface {
 	 * The encoded session data. This data is the result of the PHP internally encoding the $_SESSION superglobal to a serialized
 	 * string and passing it as this parameter. Please note sessions use an alternative serialization method.
 	 * </p>
-	 * @return bool &returns.session.storage.retval;
+	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	public function write ($session_id, $session_data) {}
 
@@ -128,7 +128,7 @@ class SessionHandler implements SessionHandlerInterface, SessionIdInterface {
 	 * @param session_id string <p>
 	 * The session ID being destroyed.
 	 * </p>
-	 * @return bool &returns.session.storage.retval;
+	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	public function destroy ($session_id) {}
 
@@ -138,7 +138,7 @@ class SessionHandler implements SessionHandlerInterface, SessionIdInterface {
 	 * @param maxlifetime int <p>
 	 * Sessions that have not updated for the last maxlifetime seconds will be removed.
 	 * </p>
-	 * @return bool &returns.session.storage.retval;
+	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	public function gc ($maxlifetime) {}
 

@@ -434,7 +434,7 @@ function class_exists ($class_name, $autoload = null) {}
 function interface_exists ($interface_name, $autoload = null) {}
 
 /**
- * Return &true; if the given function has been defined
+ * Return true if the given function has been defined
  * @link http://www.php.net/manual/en/function.function-exists.php
  * @param function_name string <p>
  * The function name, as a string.

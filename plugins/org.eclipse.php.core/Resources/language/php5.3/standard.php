@@ -123,7 +123,7 @@ function time_sleep_until ($timestamp) {}
  * For more information about the format options, read the
  * strftime page.
  * </p>
- * @return array an array&return.falseforfailure;.
+ * @return array an array or false on failure.
  * </p>
  * <p>
  * <table>
@@ -1501,7 +1501,7 @@ function money_format ($format, $number) {}
  * </p>
  * Using a negative length
  * ]]>
- * @return string the extracted part of string&return.falseforfailure;.
+ * @return string the extracted part of string or false on failure.
  */
 function substr ($string, $start, $length = null) {}
 
@@ -3070,7 +3070,7 @@ function getlastmod () {}
  * Returns false if input contains character from outside the base64
  * alphabet.
  * </p>
- * @return string the original data&return.falseforfailure;. The returned data may be
+ * @return string the original data or false on failure. The returned data may be
  * binary.
  */
 function base64_decode ($data, $strict = null) {}
@@ -3675,7 +3675,7 @@ function fmod ($x, $y) {}
  * @param in_addr string <p>
  * A 32bit IPv4, or 128bit IPv6 address.
  * </p>
- * @return string a string representation of the address&return.falseforfailure;.
+ * @return string a string representation of the address or false on failure.
  */
 function inet_ntop ($in_addr) {}
 
@@ -4061,7 +4061,7 @@ function error_get_last () {}
  * not passed by reference.
  * call_user_func example and references
  * ]]>
- * &example.outputs;
+ * The above example will output:</p>
  * </p>
  * @param _ mixed[optional] 
  * @return mixed the function result, or false on error.
@@ -4491,7 +4491,7 @@ function get_include_path () {}
  * The new value for the include_path
  * </p>
  * @return string the old include_path on
- * success&return.falseforfailure;.
+ * success or false on failure.
  */
 function set_include_path ($new_include_path) {}
 
@@ -5502,7 +5502,7 @@ function fgetss ($handle, $length = null, $allowable_tags = null) {}
  * @param length int <p>
  * Up to length number of bytes read.
  * </p>
- * @return string the read string &return.falseforfailure;.
+ * @return string the read string  or false on failure.
  */
 function fread ($handle, $length) {}
 
@@ -5522,7 +5522,7 @@ function fread ($handle, $length) {}
  * a local file, then it will try to open a stream on that file.
  * The file must be accessible to PHP, so you need to ensure that
  * the file access permissions allow this access.
- * If you have enabled &safemode;,
+ * If you have enabled safe mode,
  * or open_basedir further
  * restrictions may apply.
  * </p>
@@ -5898,7 +5898,7 @@ function tempnam ($dir, $prefix) {}
  * Creates a temporary file
  * @link http://www.php.net/manual/en/function.tmpfile.php
  * @return resource a file handle, similar to the one returned by
- * fopen, for the new file&return.falseforfailure;.
+ * fopen, for the new file or false on failure.
  */
 function tmpfile () {}
 
@@ -5957,7 +5957,7 @@ function file ($filename, $flags = null, $context = null) {}
  * of file is reached. Note that this parameter is applied to the 
  * stream processed by the filters.
  * </p>
- * @return string The function returns the read data&return.falseforfailure;.
+ * @return string The function returns the read data or false on failure.
  */
 function file_get_contents ($filename, $use_include_path = null, $context = null, $offset = null, $maxlen = null) {}
 
@@ -6586,7 +6586,7 @@ function stream_copy_to_stream ($source, $dest, $maxlength = null, $offset = nul
  * @param offset int[optional] <p>
  * Seek to the specified offset before reading.
  * </p>
- * @return string a string&return.falseforfailure;.
+ * @return string a string or false on failure.
  */
 function stream_get_contents ($handle, $maxlength = null, $offset = null) {}
 
@@ -6654,7 +6654,7 @@ function fgetcsv ($handle, $length = null, $delimiter = null, $enclosure = null,
  * The optional enclosure parameter sets the field
  * enclosure (one character only).
  * </p>
- * @return int the length of the written string&return.falseforfailure;.
+ * @return int the length of the written string or false on failure.
  */
 function fputcsv ($handle, array $fields, $delimiter = null, $enclosure = null) {}
 
@@ -7374,7 +7374,7 @@ function rewinddir ($dir_handle = null) {}
  * not specified, the last link opened by opendir 
  * is assumed.
  * </p>
- * @return string the filename on success&return.falseforfailure;.
+ * @return string the filename on success or false on failure.
  */
 function readdir ($dir_handle = null) {}
 
@@ -7434,7 +7434,7 @@ function glob ($pattern, $flags = null) {}
  * @param filename string <p>
  * Path to the file.
  * </p>
- * @return int the time the file was last accessed, &return.falseforfailure;.
+ * @return int the time the file was last accessed,  or false on failure.
  * The time is returned as a Unix timestamp.
  */
 function fileatime ($filename) {}
@@ -7445,7 +7445,7 @@ function fileatime ($filename) {}
  * @param filename string <p>
  * Path to the file.
  * </p>
- * @return int the time the file was last changed, &return.falseforfailure;.
+ * @return int the time the file was last changed,  or false on failure.
  * The time is returned as a Unix timestamp.
  */
 function filectime ($filename) {}
@@ -7469,7 +7469,7 @@ function filegroup ($filename) {}
  * @param filename string <p>
  * Path to the file.
  * </p>
- * @return int the inode number of the file, &return.falseforfailure;.
+ * @return int the inode number of the file,  or false on failure.
  */
 function fileinode ($filename) {}
 
@@ -7479,7 +7479,7 @@ function fileinode ($filename) {}
  * @param filename string <p>
  * Path to the file.
  * </p>
- * @return int the time the file was last modified, &return.falseforfailure;.
+ * @return int the time the file was last modified,  or false on failure.
  * The time is returned as a Unix timestamp, which is
  * suitable for the date function.
  */
@@ -7491,7 +7491,7 @@ function filemtime ($filename) {}
  * @param filename string <p>
  * Path to the file.
  * </p>
- * @return int the user ID of the owner of the file, &return.falseforfailure;.
+ * @return int the user ID of the owner of the file,  or false on failure.
  * The user ID is returned in numerical format, use
  * posix_getpwuid to resolve it to a username.
  */
@@ -7503,7 +7503,7 @@ function fileowner ($filename) {}
  * @param filename string <p>
  * Path to the file.
  * </p>
- * @return int the permissions on the file, &return.falseforfailure;.
+ * @return int the permissions on the file,  or false on failure.
  */
 function fileperms ($filename) {}
 
@@ -7620,7 +7620,7 @@ function is_file ($filename) {}
  * Path to the file. If filename is a relative
  * filename, it will be checked relative to the current working
  * directory. If filename is a symbolic or hard link 
- * then the link will be resolved and checked. If you have enabled &safemode;,
+ * then the link will be resolved and checked. If you have enabled safe mode,
  * or open_basedir further
  * restrictions may apply.
  * </p>
@@ -7870,7 +7870,7 @@ function clearstatcache ($clear_realpath_cache = null, $filename = null) {}
  * A directory of the filesystem or disk partition.
  * </p>
  * @return float the total number of bytes as a float
- * &return.falseforfailure;.
+ *  or false on failure.
  */
 function disk_total_space ($directory) {}
 
@@ -7886,7 +7886,7 @@ function disk_total_space ($directory) {}
  * PHP versions.
  * </p>
  * @return float the number of available bytes as a float
- * &return.falseforfailure;.
+ *  or false on failure.
  */
 function disk_free_space ($directory) {}
 
@@ -8216,7 +8216,7 @@ function lcg_value () {}
  * phonemes characters in length.
  * The default value of 0 means no restriction.
  * </p>
- * @return string the metaphone key as a string, &return.falseforfailure;.
+ * @return string the metaphone key as a string,  or false on failure.
  */
 function metaphone ($str, $phonemes = null) {}
 
@@ -9783,7 +9783,7 @@ function sizeof ($var, $mode) {}
 function key_exists ($key, $search) {}
 
 /**
- * Checks if assertion is &false;
+ * Checks if assertion is false
  * @link http://www.php.net/manual/en/function.assert.php
  * @param assertion mixed <p>
  * The assertion.

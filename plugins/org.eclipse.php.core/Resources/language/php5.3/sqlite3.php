@@ -122,7 +122,7 @@ class SQLite3  {
 	 * @param query string <p>
 	 * The SQL query to prepare.
 	 * </p>
-	 * @return SQLite3Stmt an SQLite3Stmt object on success&return.falseforfailure;.
+	 * @return SQLite3Stmt an SQLite3Stmt object on success or false on failure.
 	 */
 	public function prepare ($query) {}
 

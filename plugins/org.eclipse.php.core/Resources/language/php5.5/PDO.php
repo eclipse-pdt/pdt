@@ -609,7 +609,7 @@ class PDOStatement implements Traversable {
 	 * Elements of this array are passed to the constructor.
 	 * </p>
 	 * @return mixed an instance of the required class with property names that
-	 * correspond to the column names &return.falseforfailure;.
+	 * correspond to the column names  or false on failure.
 	 */
 	public function fetchObject ($class_name = null, array $ctor_args = null) {}
 

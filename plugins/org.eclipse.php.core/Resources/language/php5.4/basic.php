@@ -27,7 +27,7 @@
  * or not
  * @return bool Returns true on success or false on failure. If the functionality of loading modules is not available
  * or has been disabled (either by setting
- * enable_dl off or by enabling &safemode;
+ * enable_dl off or by enabling safe mode
  * in &php.ini;) an E_ERROR is emitted
  * and execution is stopped. If dl fails because the
  * specified library couldn't be loaded, in addition to false an

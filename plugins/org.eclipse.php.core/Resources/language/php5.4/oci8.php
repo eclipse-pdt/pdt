@@ -38,7 +38,7 @@ class OCI_Lob  {
 	 * </p>
 	 * @param length int[optional] <p>
 	 * </p>
-	 * @return int the actual number of characters/bytes erased &return.falseforfailure;.
+	 * @return int the actual number of characters/bytes erased  or false on failure.
 	 */
 	public function erase ($offset = null, $length = null) {}
 
@@ -93,7 +93,7 @@ class OCI_Lob  {
 	 * @param length int <p>
 	 * The length of data to read, in bytes.
 	 * </p>
-	 * @return string the contents as a string, &return.falseforfailure;.
+	 * @return string the contents as a string,  or false on failure.
 	 */
 	public function read ($length) {}
 
@@ -137,7 +137,7 @@ class OCI_Lob  {
 	 * length bytes have been written or the end of
 	 * data is reached, whichever comes first.
 	 * </p>
-	 * @return int the number of bytes written &return.falseforfailure;.
+	 * @return int the number of bytes written  or false on failure.
 	 */
 	public function write ($data, $length = null) {}
 
@@ -154,7 +154,7 @@ class OCI_Lob  {
 	/**
 	 * Returns size of large object
 	 * @link http://www.php.net/manual/en/oci-lob.size.php
-	 * @return int length of large object value &return.falseforfailure;.
+	 * @return int length of large object value  or false on failure.
 	 * Empty objects have zero length.
 	 */
 	public function size () {}
@@ -835,7 +835,7 @@ function ocifetchinto ($statement, array &$result, $mode = null) {}
  * will appear in an associative array.
  * </p>
  * @return int the number of rows in output, which
- * may be 0 or more, &return.falseforfailure;.
+ * may be 0 or more,  or false on failure.
  */
 function oci_fetch_all ($statement, array &$output, $skip = null, $maxrows = null, $flags = null) {}
 

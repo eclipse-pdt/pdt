@@ -529,7 +529,7 @@ class Imagick implements Iterator, Traversable {
 	/**
 	 * Removes repeated portions of images to optimize
 	 * @link http://www.php.net/manual/en/imagick.optimizeimagelayers.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function optimizeimagelayers () {}
 
@@ -539,7 +539,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param method int <p>
 	 * One of the layer method constants.
 	 * </p>
-	 * @return Imagick &imagick.return.success;
+	 * @return Imagick Returns true on success.
 	 */
 	public function compareimagelayers ($method) {}
 
@@ -549,7 +549,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param image string <p>
 	 * A string containing the image.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function pingimageblob ($image) {}
 
@@ -562,21 +562,21 @@ class Imagick implements Iterator, Traversable {
 	 * @param fileName string[optional] <p>
 	 * Optional filename for this image.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function pingimagefile ($filehandle, $fileName = null) {}
 
 	/**
 	 * Creates a vertical mirror image
 	 * @link http://www.php.net/manual/en/imagick.transposeimage.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function transposeimage () {}
 
 	/**
 	 * Creates a horizontal mirror image
 	 * @link http://www.php.net/manual/en/imagick.transverseimage.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function transverseimage () {}
 
@@ -590,7 +590,7 @@ class Imagick implements Iterator, Traversable {
 	 * to consider two colors as the same. This parameter represents the variation
 	 * on the quantum range.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function trimimage ($fuzz) {}
 
@@ -603,7 +603,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param length float <p>
 	 * The length of the wave.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function waveimage ($amplitude, $length) {}
 
@@ -622,14 +622,14 @@ class Imagick implements Iterator, Traversable {
 	 * @param y int <p>
 	 * Y offset of the ellipse
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function vignetteimage ($blackPoint, $whitePoint, $x, $y) {}
 
 	/**
 	 * Discards all but one of any pixel color
 	 * @link http://www.php.net/manual/en/imagick.uniqueimagecolors.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function uniqueimagecolors () {}
 
@@ -646,7 +646,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param matte bool <p>
 	 * True activates the matte channel and false disables it.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagematte ($matte) {}
 
@@ -662,7 +662,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param bestfit bool[optional] <p>
 	 * Whether to fit the image inside a bounding box.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function adaptiveresizeimage ($columns, $rows, $bestfit = null) {}
 
@@ -678,7 +678,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param angle float <p>
 	 * Apply the effect along this angle.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function sketchimage ($radius, $sigma, $angle) {}
 
@@ -694,7 +694,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param elevation float <p>
 	 * Defines the light source direction.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function shadeimage ($gray, $azimuth, $elevation) {}
 
@@ -717,7 +717,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param offset int <p>
 	 * The image offset.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setsizeoffset ($columns, $rows, $offset) {}
 
@@ -732,9 +732,9 @@ class Imagick implements Iterator, Traversable {
 	 * The standard deviation of the Gaussian, in pixels.
 	 * </p>
 	 * @param channel int[optional] <p>
-	 * &imagick.parameter.channel;
+	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. &imagick.default.channel.info;
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function adaptiveblurimage ($radius, $sigma, $channel = null) {}
 
@@ -753,7 +753,7 @@ class Imagick implements Iterator, Traversable {
 	 * bitwise operators. Imagick::CHANNEL_ALL. Refer to this
 	 * list of channel constants.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function contraststretchimage ($black_point, $white_point, $channel = null) {}
 
@@ -767,9 +767,9 @@ class Imagick implements Iterator, Traversable {
 	 * The standard deviation of the Gaussian, in pixels.
 	 * </p>
 	 * @param channel int[optional] <p>
-	 * &imagick.parameter.channel;
+	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. &imagick.default.channel.info;
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function adaptivesharpenimage ($radius, $sigma, $channel = null) {}
 
@@ -788,7 +788,7 @@ class Imagick implements Iterator, Traversable {
 	 * bitwise operators. Refer to this
 	 * list of channel constants.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function randomthresholdimage ($low, $high, $channel = null) {}
 
@@ -819,7 +819,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param size_correction float[optional] <p>
 	 * size correction
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function roundcorners ($x_rounding, $y_rounding, $stroke_width = null, $displace = null, $size_correction = null) {}
 
@@ -829,7 +829,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param index int <p>
 	 * The position to set the iterator to
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setiteratorindex ($index) {}
 
@@ -849,7 +849,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param geometry string <p>
 	 * An image geometry string. This geometry defines the final size of the image.
 	 * </p>
-	 * @return Imagick &imagick.return.success;
+	 * @return Imagick Returns true on success.
 	 */
 	public function transformimage ($crop, $geometry) {}
 
@@ -860,7 +860,7 @@ class Imagick implements Iterator, Traversable {
 	 * The level of transparency: 1.0 is fully opaque and 0.0 is fully
 	 * transparent.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimageopacity ($opacity) {}
 
@@ -876,7 +876,7 @@ class Imagick implements Iterator, Traversable {
 	 * bitwise operators. Refer to this
 	 * list of channel constants.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function orderedposterizeimage ($threshold_map, $channel = null) {}
 
@@ -889,7 +889,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param angle float <p>
 	 * The polaroid angle
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function polaroidimage (ImagickDraw $properties, $angle) {}
 
@@ -911,7 +911,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param value string <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimageproperty ($name, $value) {}
 
@@ -921,7 +921,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param method int <p>
 	 * The method is one of the Imagick::INTERPOLATE_* constants
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimageinterpolatemethod ($method) {}
 
@@ -941,7 +941,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param whitePoint float <p>
 	 * The image white point
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function linearstretchimage ($blackPoint, $whitePoint) {}
 
@@ -967,7 +967,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param y int <p>
 	 * Y position for the new size
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function extentimage ($width, $height, $x, $y) {}
 
@@ -984,7 +984,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param orientation int <p>
 	 * One of the orientation constants
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimageorientation ($orientation) {}
 
@@ -1009,9 +1009,9 @@ class Imagick implements Iterator, Traversable {
 	 * Y start position of the floodfill
 	 * </p>
 	 * @param channel int[optional] <p>
-	 * &imagick.parameter.channel;
+	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. &imagick.default.channel.info;
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function paintfloodfillimage ($fill, $fuzz, $bordercolor, $x, $y, $channel = null) {}
 
@@ -1025,7 +1025,7 @@ class Imagick implements Iterator, Traversable {
 	 * The Channeltype
 	 * constant. When not supplied, default channels are replaced.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function clutimage (Imagick $lookup_table, $channel = null) {}
 
@@ -1067,7 +1067,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param bestfit bool <p>
 	 * Attempt to resize destination to fit distorted source
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function distortimage ($method, array $arguments, $bestfit) {}
 
@@ -1077,7 +1077,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param filehandle resource <p>
 	 * Filehandle where to write the image
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function writeimagefile ($filehandle) {}
 
@@ -1087,7 +1087,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param filehandle resource <p>
 	 * Filehandle where to write the images
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function writeimagesfile ($filehandle) {}
 
@@ -1097,7 +1097,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param page string <p>
 	 * The page definition. For example 7168x5147+0+0
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function resetimagepage ($page) {}
 
@@ -1107,7 +1107,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param clip_mask Imagick <p>
 	 * The Imagick object containing the clip mask
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimageclipmask (Imagick $clip_mask) {}
 
@@ -1124,7 +1124,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param x_server string <p>
 	 * X server address
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function animateimages ($x_server) {}
 
@@ -1134,7 +1134,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param matrix array <p>
 	 * The matrix containing the color values
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function recolorimage (array $matrix) {}
 
@@ -1144,7 +1144,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param font string <p>
 	 * Font name or a filename
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setfont ($font) {}
 
@@ -1161,7 +1161,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param point_size float <p>
 	 * Point size
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setpointsize ($point_size) {}
 
@@ -1178,7 +1178,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param layer_method int <p>
 	 * One of the Imagick::LAYERMETHOD_* constants
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function mergeimagelayers ($layer_method) {}
 
@@ -1188,7 +1188,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param mode int <p>
 	 * One of the Imagick::ALPHACHANNEL_* constants
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagealphachannel ($mode) {}
 
@@ -1199,7 +1199,7 @@ class Imagick implements Iterator, Traversable {
 	 * ImagickPixel object or a string containing the fill color
 	 * </p>
 	 * @param fuzz float <p>
-	 * &imagick.parameter.fuzz;
+	 * The amount of fuzz. For example, set fuzz to 10 and the color red at intensities of 100 and 102 respectively are now interpreted as the same color.
 	 * </p>
 	 * @param target mixed <p>
 	 * ImagickPixel object or a string containing the target color to paint
@@ -1214,9 +1214,9 @@ class Imagick implements Iterator, Traversable {
 	 * If true paints any pixel that does not match the target color.
 	 * </p>
 	 * @param channel int[optional] <p>
-	 * &imagick.parameter.channel;
+	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. &imagick.default.channel.info;
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function floodfillpaintimage ($fill, $fuzz, $target, $x, $y, $invert, $channel = null) {}
 
@@ -1230,15 +1230,15 @@ class Imagick implements Iterator, Traversable {
 	 * The replacement color
 	 * </p>
 	 * @param fuzz float <p>
-	 * &imagick.parameter.fuzz;
+	 * The amount of fuzz. For example, set fuzz to 10 and the color red at intensities of 100 and 102 respectively are now interpreted as the same color.
 	 * </p>
 	 * @param invert bool <p>
 	 * If true paints any pixel that does not match the target color.
 	 * </p>
 	 * @param channel int[optional] <p>
-	 * &imagick.parameter.channel;
+	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. &imagick.default.channel.info;
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function opaquepaintimage ($target, $fill, $fuzz, $invert, $channel = null) {}
 
@@ -1249,15 +1249,15 @@ class Imagick implements Iterator, Traversable {
 	 * The target color to paint
 	 * </p>
 	 * @param alpha float <p>
-	 * &imagick.parameter.alpha;
+	 * The level of transparency: 1.0 is fully opaque and 0.0 is fully transparent.
 	 * </p>
 	 * @param fuzz float <p>
-	 * &imagick.parameter.fuzz;
+	 * The amount of fuzz. For example, set fuzz to 10 and the color red at intensities of 100 and 102 respectively are now interpreted as the same color.
 	 * </p>
 	 * @param invert bool <p>
 	 * If true paints any pixel that does not match the target color.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function transparentpaintimage ($target, $alpha, $fuzz, $invert) {}
 
@@ -1278,7 +1278,7 @@ class Imagick implements Iterator, Traversable {
 	 * Introduces a bias for non-straight seams. This parameter is 
 	 * typically 0.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function liquidrescaleimage ($width, $height, $delta_x, $rigidity) {}
 
@@ -1288,7 +1288,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param passphrase string <p>
 	 * The passphrase
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function encipherimage ($passphrase) {}
 
@@ -1298,7 +1298,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param passphrase string <p>
 	 * The passphrase
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function decipherimage ($passphrase) {}
 
@@ -1325,7 +1325,7 @@ class Imagick implements Iterator, Traversable {
 	 * Gets channel range
 	 * @link http://www.php.net/manual/en/imagick.getimagechannelrange.php
 	 * @param channel int <p>
-	 * &imagick.parameter.channel;
+	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. &imagick.default.channel.info;
 	 * </p>
 	 * @return array an array containing minima and maxima values of the channel(s).
 	 */
@@ -1349,7 +1349,7 @@ class Imagick implements Iterator, Traversable {
 	 * Refer to this list of metric type constants.
 	 * </p>
 	 * @param channel int[optional] <p>
-	 * &imagick.parameter.channel;
+	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. &imagick.default.channel.info;
 	 * </p>
 	 * @return float a double describing the channel distortion.
 	 */
@@ -1401,7 +1401,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param pixels array <p>
 	 * The array of pixels
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function importimagepixels ($x, $y, $width, $height, $map, $storage, array $pixels) {}
 
@@ -1446,7 +1446,7 @@ class Imagick implements Iterator, Traversable {
 	 * The array is in format array(1,1, 2,45)
 	 * </p>
 	 * @param channel int[optional] 
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function sparsecolorimage ($SPARSE_METHOD, array $arguments, $channel = null) {}
 
@@ -1459,7 +1459,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param DITHER int <p>
 	 * Refer to this list of dither method constants
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function remapimage (Imagick $replacement, $DITHER) {}
 
@@ -1493,7 +1493,7 @@ class Imagick implements Iterator, Traversable {
 	 * The getImageChannelKurtosis purpose
 	 * @link http://www.php.net/manual/en/imagick.getimagechannelkurtosis.php
 	 * @param channel int[optional] <p>
-	 * &imagick.parameter.channel;
+	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. &imagick.default.channel.info;
 	 * </p>
 	 * @return array an array with kurtosis and skewness
 	 * members.
@@ -1510,7 +1510,7 @@ class Imagick implements Iterator, Traversable {
 	 * Array of arguments to pass to this function.
 	 * </p>
 	 * @param channel int[optional] 
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function functionimage ($function, array $arguments, $channel = null) {}
 
@@ -1526,9 +1526,9 @@ class Imagick implements Iterator, Traversable {
 	 * Imagick object containing the Hald lookup image.
 	 * </p>
 	 * @param channel int[optional] <p>
-	 * &imagick.parameter.channel;
+	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. &imagick.default.channel.info;
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function haldclutimage (Imagick $clut, $channel = null) {}
 
@@ -1551,7 +1551,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param value string <p>
 	 * The value of the artifact
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimageartifact ($artifact, $value) {}
 
@@ -1561,7 +1561,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param artifact string <p>
 	 * The name of the artifact to delete
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function deleteimageartifact ($artifact) {}
 
@@ -1578,7 +1578,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param COLORSPACE int <p>
 	 * One of the COLORSPACE constants
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setcolorspace ($COLORSPACE) {}
 
@@ -1622,7 +1622,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.readimage.php
 	 * @param filename string <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function readimage ($filename) {}
 
@@ -1637,7 +1637,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param image string <p>
 	 * </p>
 	 * @param filename string[optional] 
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function readimageblob ($image, $filename = null) {}
 
@@ -1648,7 +1648,7 @@ class Imagick implements Iterator, Traversable {
 	 * String presentation of the image format. Format support
 	 * depends on the ImageMagick installation.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimageformat ($format) {}
 
@@ -1661,7 +1661,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param bestfit bool[optional] <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function scaleimage ($cols, $rows, $bestfit = null) {}
 
@@ -1674,7 +1674,7 @@ class Imagick implements Iterator, Traversable {
 	 * Format can be forced regardless of file extension using format: prefix,
 	 * for example "jpg:test.png".
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function writeimage ($filename = null) {}
 
@@ -1685,7 +1685,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param adjoin bool <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function writeimages ($filename, $adjoin) {}
 
@@ -1702,7 +1702,7 @@ class Imagick implements Iterator, Traversable {
 	 * The Channeltype
 	 * constant. When not supplied, all channels are blurred.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function blurimage ($radius, $sigma, $channel = null) {}
 
@@ -1719,7 +1719,7 @@ class Imagick implements Iterator, Traversable {
 	 * Whether to force maximum values
 	 * </p>
 	 * @param fill bool[optional] 
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function thumbnailimage ($columns, $rows, $bestfit = null, $fill = null) {}
 
@@ -1732,7 +1732,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param height int <p>
 	 * The Height of the thumbnail
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function cropthumbnailimage ($width, $height) {}
 
@@ -1748,7 +1748,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setimagefilename.php
 	 * @param filename string <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagefilename ($filename) {}
 
@@ -1764,21 +1764,21 @@ class Imagick implements Iterator, Traversable {
 	/**
 	 * Removes an image from the image list
 	 * @link http://www.php.net/manual/en/imagick.removeimage.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function removeimage () {}
 
 	/**
 	 * Destroys the Imagick object
 	 * @link http://www.php.net/manual/en/imagick.destroy.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function destroy () {}
 
 	/**
 	 * Clears all resources associated to Imagick object
 	 * @link http://www.php.net/manual/en/imagick.clear.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function clear () {}
 
@@ -1814,14 +1814,14 @@ class Imagick implements Iterator, Traversable {
 	/**
 	 * Sets the Imagick iterator to the first image
 	 * @link http://www.php.net/manual/en/imagick.setfirstiterator.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setfirstiterator () {}
 
 	/**
 	 * Sets the Imagick iterator to the last image
 	 * @link http://www.php.net/manual/en/imagick.setlastiterator.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setlastiterator () {}
 
@@ -1830,14 +1830,14 @@ class Imagick implements Iterator, Traversable {
 	/**
 	 * Move to the previous image in the object
 	 * @link http://www.php.net/manual/en/imagick.previousimage.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function previousimage () {}
 
 	/**
 	 * Moves to the next image
 	 * @link http://www.php.net/manual/en/imagick.nextimage.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function nextimage () {}
 
@@ -1863,7 +1863,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param index int <p>
 	 * The position to set the iterator to
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimageindex ($index) {}
 
@@ -1880,7 +1880,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param comment string <p>
 	 * The comment to add
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function commentimage ($comment) {}
 
@@ -1899,7 +1899,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param y int <p>
 	 * The Y coordinate of the cropped region's top left corner
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function cropimage ($width, $height, $x, $y) {}
 
@@ -1909,7 +1909,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param label string <p>
 	 * The label to add
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function labelimage ($label) {}
 
@@ -1926,7 +1926,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param draw ImagickDraw <p>
 	 * The drawing operations to render on the image.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function drawimage (ImagickDraw $draw) {}
 
@@ -1936,7 +1936,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param quality int <p>
 	 * The image compression quality as an integer
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagecompressionquality ($quality) {}
 
@@ -1965,7 +1965,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param text string <p>
 	 * The string to draw
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function annotateimage (ImagickDraw $draw_settings, $x, $y, $angle, $text) {}
 
@@ -1987,7 +1987,7 @@ class Imagick implements Iterator, Traversable {
 	 * apply to more than one channel, combine channeltype constants using
 	 * bitwise operators. Refer to this list of channel constants.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function compositeimage (Imagick $composite_object, $composite, $x, $y, $channel = null) {}
 
@@ -2000,14 +2000,14 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param hue float <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function modulateimage ($brightness, $saturation, $hue) {}
 
 	/**
 	 * Gets the number of unique colors in the image
 	 * @link http://www.php.net/manual/en/imagick.getimagecolors.php
-	 * @return int &imagick.return.success;
+	 * @return int Returns true on success.
 	 */
 	public function getimagecolors () {}
 
@@ -2031,7 +2031,7 @@ class Imagick implements Iterator, Traversable {
 	 * Surround the image with an ornamental border (e.g. 15x15+3+3). The
 	 * frame color is that of the thumbnail's matte color.
 	 * </p>
-	 * @return Imagick &imagick.return.success;
+	 * @return Imagick Returns true on success.
 	 */
 	public function montageimage (ImagickDraw $draw, $tile_geometry, $thumbnail_geometry, $mode, $frame) {}
 
@@ -2052,7 +2052,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param channel int[optional] <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function thresholdimage ($threshold, $channel = null) {}
 
@@ -2068,7 +2068,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param offset int <p>
 	 * The mean offset
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function adaptivethresholdimage ($width, $height, $offset) {}
 
@@ -2078,7 +2078,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param threshold mixed <p>
 	 * The threshold below which everything turns black
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function blackthresholdimage ($threshold) {}
 
@@ -2087,7 +2087,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.whitethresholdimage.php
 	 * @param threshold mixed <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function whitethresholdimage ($threshold) {}
 
@@ -2112,7 +2112,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param sigma float <p>
 	 * The standard deviation of the Gaussian, in pixels
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function charcoalimage ($radius, $sigma) {}
 
@@ -2125,7 +2125,7 @@ class Imagick implements Iterator, Traversable {
 	 * bitwise operators. Refer to this
 	 * list of channel constants.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function normalizeimage ($channel = null) {}
 
@@ -2135,7 +2135,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param radius float <p>
 	 * The radius of the circular neighborhood.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function oilpaintimage ($radius) {}
 
@@ -2146,7 +2146,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param dither bool <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function posterizeimage ($levels, $dither) {}
 
@@ -2157,7 +2157,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param channel int[optional] <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function radialblurimage ($angle, $channel = null) {}
 
@@ -2174,7 +2174,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param raise bool <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function raiseimage ($width, $height, $x, $y, $raise) {}
 
@@ -2189,7 +2189,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param blur float <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function resampleimage ($x_resolution, $y_resolution, $filter, $blur) {}
 
@@ -2211,7 +2211,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param bestfit bool[optional] <p>
 	 * Optional fit parameter.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function resizeimage ($columns, $rows, $filter, $blur, $bestfit = null) {}
 
@@ -2224,7 +2224,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param y int <p>
 	 * The Y offset.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function rollimage ($x, $y) {}
 
@@ -2237,7 +2237,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param degrees float <p>
 	 * The number of degrees to rotate the image
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function rotateimage ($background, $degrees) {}
 
@@ -2248,7 +2248,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param rows int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function sampleimage ($columns, $rows) {}
 
@@ -2257,7 +2257,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.solarizeimage.php
 	 * @param threshold int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function solarizeimage ($threshold) {}
 
@@ -2272,7 +2272,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param y int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function shadowimage ($opacity, $sigma, $x, $y) {}
 
@@ -2287,7 +2287,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setimagebackgroundcolor.php
 	 * @param background mixed <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagebackgroundcolor ($background) {}
 
@@ -2296,7 +2296,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setimagecompose.php
 	 * @param compose int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagecompose ($compose) {}
 
@@ -2306,7 +2306,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param compression int <p>
 	 * One of the COMPRESSION constants
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagecompression ($compression) {}
 
@@ -2318,7 +2318,7 @@ class Imagick implements Iterator, Traversable {
 	 * displayed for. For animated GIFs there are 100 ticks per second, so a
 	 * value of 20 would be 20/100 of a second aka 1/5th of a second.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagedelay ($delay) {}
 
@@ -2327,7 +2327,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setimagedepth.php
 	 * @param depth int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagedepth ($depth) {}
 
@@ -2336,7 +2336,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setimagegamma.php
 	 * @param gamma float <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagegamma ($gamma) {}
 
@@ -2347,7 +2347,7 @@ class Imagick implements Iterator, Traversable {
 	 * The number of iterations the image should loop over. Set to '0' to loop
 	 * continuously.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimageiterations ($iterations) {}
 
@@ -2356,7 +2356,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setimagemattecolor.php
 	 * @param matte mixed <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagemattecolor ($matte) {}
 
@@ -2371,7 +2371,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param y int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagepage ($width, $height, $x, $y) {}
 
@@ -2387,7 +2387,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param y_resolution float <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimageresolution ($x_resolution, $y_resolution) {}
 
@@ -2396,7 +2396,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setimagescene.php
 	 * @param scene int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagescene ($scene) {}
 
@@ -2407,7 +2407,7 @@ class Imagick implements Iterator, Traversable {
 	 * The duration for which an image should be displayed expressed in ticks
 	 * per second.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagetickspersecond ($ticks_per_second) {}
 
@@ -2416,7 +2416,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setimagetype.php
 	 * @param image_type int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagetype ($image_type) {}
 
@@ -2425,7 +2425,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setimageunits.php
 	 * @param units int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimageunits ($units) {}
 
@@ -2438,7 +2438,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param channel int[optional] <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function sharpenimage ($radius, $sigma, $channel = null) {}
 
@@ -2449,7 +2449,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param rows int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function shaveimage ($columns, $rows) {}
 
@@ -2465,7 +2465,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param y_shear float <p>
 	 * The number of degrees to shear on the y axis
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function shearimage ($background, $x_shear, $y_shear) {}
 
@@ -2480,7 +2480,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param y int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function spliceimage ($width, $height, $x, $y) {}
 
@@ -2490,7 +2490,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param filename string <p>
 	 * The filename to read the information from.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function pingimage ($filename) {}
 
@@ -2501,7 +2501,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param fileName string[optional] <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function readimagefile ($filehandle, $fileName = null) {}
 
@@ -2511,7 +2511,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param servername string <p>
 	 * The X server name
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function displayimage ($servername) {}
 
@@ -2521,7 +2521,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param servername string <p>
 	 * The X server name
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function displayimages ($servername) {}
 
@@ -2530,7 +2530,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.spreadimage.php
 	 * @param radius float <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function spreadimage ($radius) {}
 
@@ -2539,14 +2539,14 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.swirlimage.php
 	 * @param degrees float <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function swirlimage ($degrees) {}
 
 	/**
 	 * Strips an image of all profiles and comments
 	 * @link http://www.php.net/manual/en/imagick.stripimage.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function stripimage () {}
 
@@ -2592,7 +2592,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param offset int <p>
 	 * </p>
-	 * @return Imagick &imagick.return.success;
+	 * @return Imagick Returns true on success.
 	 */
 	public function steganoimage (Imagick $watermark_wand, $offset) {}
 
@@ -2604,9 +2604,9 @@ class Imagick implements Iterator, Traversable {
 	 * noise constants.
 	 * </p>
 	 * @param channel int[optional] <p>
-	 * &imagick.parameter.channel;
+	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. &imagick.default.channel.info;
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function addnoiseimage ($noise_type, $channel = null) {}
 
@@ -2630,14 +2630,14 @@ class Imagick implements Iterator, Traversable {
 	 * The channel argument affects only if Imagick is compiled against ImageMagick version
 	 * 6.4.4 or greater.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function motionblurimage ($radius, $sigma, $angle, $channel = null) {}
 
 	/**
 	 * Forms a mosaic from images
 	 * @link http://www.php.net/manual/en/imagick.mosaicimages.php
-	 * @return Imagick &imagick.return.success;
+	 * @return Imagick Returns true on success.
 	 */
 	public function mosaicimages () {}
 
@@ -2655,7 +2655,7 @@ class Imagick implements Iterator, Traversable {
 	/**
 	 * Scales an image proportionally to half its size
 	 * @link http://www.php.net/manual/en/imagick.minifyimage.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function minifyimage () {}
 
@@ -2665,7 +2665,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param matrix ImagickDraw <p>
 	 * The affine matrix
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function affinetransformimage (ImagickDraw $matrix) {}
 
@@ -2688,7 +2688,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param height int <p>
 	 * Border height
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function borderimage ($bordercolor, $width, $height) {}
 
@@ -2707,14 +2707,14 @@ class Imagick implements Iterator, Traversable {
 	 * @param y int <p>
 	 * Y origo of the chopped area
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function chopimage ($width, $height, $x, $y) {}
 
 	/**
 	 * Clips along the first path from the 8BIM profile
 	 * @link http://www.php.net/manual/en/imagick.clipimage.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function clipimage () {}
 
@@ -2728,7 +2728,7 @@ class Imagick implements Iterator, Traversable {
 	 * If true later operations take effect inside clipping path.
 	 * Otherwise later operations take effect outside clipping path.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function clippathimage ($pathname, $inside) {}
 
@@ -2765,7 +2765,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param y int <p>
 	 * Y start position of the floodfill
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function colorfloodfillimage ($fill, $fuzz, $bordercolor, $x, $y) {}
 
@@ -2779,7 +2779,7 @@ class Imagick implements Iterator, Traversable {
 	 * ImagickPixel object or an float containing the opacity value. 
 	 * 1.0 is fully opaque and 0.0 is fully transparent.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function colorizeimage ($colorize, $opacity) {}
 
@@ -2813,7 +2813,7 @@ class Imagick implements Iterator, Traversable {
 	 * Provide a valid metric type constant. Refer to this
 	 * list of metric constants.
 	 * </p>
-	 * @return array &imagick.return.success;
+	 * @return array Returns true on success.
 	 */
 	public function compareimages (Imagick $compare, $metric) {}
 
@@ -2823,7 +2823,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param sharpen bool <p>
 	 * The sharpen value
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function contrastimage ($sharpen) {}
 
@@ -2836,7 +2836,7 @@ class Imagick implements Iterator, Traversable {
 	 * bitwise operators. Refer to this
 	 * list of channel constants.
 	 * </p>
-	 * @return Imagick &imagick.return.success;
+	 * @return Imagick Returns true on success.
 	 */
 	public function combineimages ($channelType) {}
 
@@ -2852,7 +2852,7 @@ class Imagick implements Iterator, Traversable {
 	 * bitwise operators. Refer to this
 	 * list of channel constants.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function convolveimage (array $kernel, $channel = null) {}
 
@@ -2862,7 +2862,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param displace int <p>
 	 * The amount to displace the colormap.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function cyclecolormapimage ($displace) {}
 
@@ -2876,7 +2876,7 @@ class Imagick implements Iterator, Traversable {
 	/**
 	 * Reduces the speckle noise in an image
 	 * @link http://www.php.net/manual/en/imagick.despeckleimage.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function despeckleimage () {}
 
@@ -2886,7 +2886,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param radius float <p>
 	 * The radius of the operation.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function edgeimage ($radius) {}
 
@@ -2899,21 +2899,21 @@ class Imagick implements Iterator, Traversable {
 	 * @param sigma float <p>
 	 * The sigma of the effect
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function embossimage ($radius, $sigma) {}
 
 	/**
 	 * Improves the quality of a noisy image
 	 * @link http://www.php.net/manual/en/imagick.enhanceimage.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function enhanceimage () {}
 
 	/**
 	 * Equalizes the image histogram
 	 * @link http://www.php.net/manual/en/imagick.equalizeimage.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function equalizeimage () {}
 
@@ -2932,28 +2932,28 @@ class Imagick implements Iterator, Traversable {
 	 * bitwise operators. Refer to this
 	 * list of channel constants.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function evaluateimage ($op, $constant, $channel = null) {}
 
 	/**
 	 * Merges a sequence of images
 	 * @link http://www.php.net/manual/en/imagick.flattenimages.php
-	 * @return Imagick &imagick.return.success;
+	 * @return Imagick Returns true on success.
 	 */
 	public function flattenimages () {}
 
 	/**
 	 * Creates a vertical mirror image
 	 * @link http://www.php.net/manual/en/imagick.flipimage.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function flipimage () {}
 
 	/**
 	 * Creates a horizontal mirror image
 	 * @link http://www.php.net/manual/en/imagick.flopimage.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function flopimage () {}
 
@@ -2975,7 +2975,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param outer_bevel int <p>
 	 * The outer bevel width
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function frameimage ($matte_color, $width, $height, $inner_bevel, $outer_bevel) {}
 
@@ -2991,7 +2991,7 @@ class Imagick implements Iterator, Traversable {
 	 * bitwise operators. Refer to this
 	 * list of channel constants.
 	 * </p>
-	 * @return Imagick &imagick.return.success;
+	 * @return Imagick Returns true on success.
 	 */
 	public function fximage ($expression, $channel = null) {}
 
@@ -3007,7 +3007,7 @@ class Imagick implements Iterator, Traversable {
 	 * bitwise operators. Refer to this
 	 * list of channel constants.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function gammaimage ($gamma, $channel = null) {}
 
@@ -3026,7 +3026,7 @@ class Imagick implements Iterator, Traversable {
 	 * bitwise operators. Refer to this
 	 * list of channel constants.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function gaussianblurimage ($radius, $sigma, $channel = null) {}
 
@@ -3052,7 +3052,7 @@ class Imagick implements Iterator, Traversable {
 	/**
 	 * Returns the image border color
 	 * @link http://www.php.net/manual/en/imagick.getimagebordercolor.php
-	 * @return ImagickPixel &imagick.return.success;
+	 * @return ImagickPixel Returns true on success.
 	 */
 	public function getimagebordercolor () {}
 
@@ -3060,9 +3060,9 @@ class Imagick implements Iterator, Traversable {
 	 * Gets the depth for a particular image channel
 	 * @link http://www.php.net/manual/en/imagick.getimagechanneldepth.php
 	 * @param channel int <p>
-	 * &imagick.parameter.channel;
+	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. &imagick.default.channel.info;
 	 * </p>
-	 * @return int &imagick.return.success;
+	 * @return int Returns true on success.
 	 */
 	public function getimagechanneldepth ($channel) {}
 
@@ -3081,7 +3081,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param metric int <p>
 	 * One of the metric type constants.
 	 * </p>
-	 * @return float &imagick.return.success;
+	 * @return float Returns true on success.
 	 */
 	public function getimagechanneldistortion (Imagick $reference, $channel, $metric) {}
 
@@ -3094,7 +3094,7 @@ class Imagick implements Iterator, Traversable {
 	 * bitwise operators. Refer to this
 	 * list of channel constants.
 	 * </p>
-	 * @return array &imagick.return.success;
+	 * @return array Returns true on success.
 	 */
 	public function getimagechannelextrema ($channel) {}
 
@@ -3107,14 +3107,14 @@ class Imagick implements Iterator, Traversable {
 	 * bitwise operators. Refer to this
 	 * list of channel constants.
 	 * </p>
-	 * @return array &imagick.return.success;
+	 * @return array Returns true on success.
 	 */
 	public function getimagechannelmean ($channel) {}
 
 	/**
 	 * Returns statistics for each channel in the image
 	 * @link http://www.php.net/manual/en/imagick.getimagechannelstatistics.php
-	 * @return array &imagick.return.success;
+	 * @return array Returns true on success.
 	 */
 	public function getimagechannelstatistics () {}
 
@@ -3124,21 +3124,21 @@ class Imagick implements Iterator, Traversable {
 	 * @param index int <p>
 	 * The offset into the image colormap.
 	 * </p>
-	 * @return ImagickPixel &imagick.return.success;
+	 * @return ImagickPixel Returns true on success.
 	 */
 	public function getimagecolormapcolor ($index) {}
 
 	/**
 	 * Gets the image colorspace
 	 * @link http://www.php.net/manual/en/imagick.getimagecolorspace.php
-	 * @return int &imagick.return.success;
+	 * @return int Returns true on success.
 	 */
 	public function getimagecolorspace () {}
 
 	/**
 	 * Returns the composite operator associated with the image
 	 * @link http://www.php.net/manual/en/imagick.getimagecompose.php
-	 * @return int &imagick.return.success;
+	 * @return int Returns true on success.
 	 */
 	public function getimagecompose () {}
 
@@ -3397,7 +3397,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param radius float <p>
 	 * The radius of the implode
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function implodeimage ($radius) {}
 
@@ -3419,14 +3419,14 @@ class Imagick implements Iterator, Traversable {
 	 * bitwise operators. Refer to this
 	 * list of channel constants.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function levelimage ($blackPoint, $gamma, $whitePoint, $channel = null) {}
 
 	/**
 	 * Scales an image proportionally 2x
 	 * @link http://www.php.net/manual/en/imagick.magnifyimage.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function magnifyimage () {}
 
@@ -3437,7 +3437,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param dither bool <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function mapimage (Imagick $map, $dither) {}
 
@@ -3461,7 +3461,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param y int <p>
 	 * The starting y coordinate of the operation.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function mattefloodfillimage ($alpha, $fuzz, $bordercolor, $x, $y) {}
 
@@ -3471,7 +3471,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param radius float <p>
 	 * The radius of the pixel neighborhood.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function medianfilterimage ($radius) {}
 
@@ -3487,7 +3487,7 @@ class Imagick implements Iterator, Traversable {
 	 * bitwise operators. Refer to this
 	 * list of channel constants.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function negateimage ($gray, $channel = null) {}
 
@@ -3511,7 +3511,7 @@ class Imagick implements Iterator, Traversable {
 	 * bitwise operators. Refer to this
 	 * list of channel constants.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function paintopaqueimage ($target, $fill, $fuzz, $channel = null) {}
 
@@ -3529,7 +3529,7 @@ class Imagick implements Iterator, Traversable {
 	 * The fuzz member of image defines how much tolerance is acceptable to
 	 * consider two colors as the same.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function painttransparentimage ($target, $alpha, $fuzz) {}
 
@@ -3539,7 +3539,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param preview int <p>
 	 * Preview type. See Preview type constants
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function previewimages ($preview) {}
 
@@ -3550,7 +3550,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param profile string <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function profileimage ($name, $profile) {}
 
@@ -3567,7 +3567,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param measureError bool <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function quantizeimage ($numberColors, $colorspace, $treedepth, $dither, $measureError) {}
 
@@ -3584,7 +3584,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param measureError bool <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function quantizeimages ($numberColors, $colorspace, $treedepth, $dither, $measureError) {}
 
@@ -3593,7 +3593,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.reducenoiseimage.php
 	 * @param radius float <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function reducenoiseimage ($radius) {}
 
@@ -3611,7 +3611,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.separateimagechannel.php
 	 * @param channel int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function separateimagechannel ($channel) {}
 
@@ -3620,7 +3620,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.sepiatoneimage.php
 	 * @param threshold float <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function sepiatoneimage ($threshold) {}
 
@@ -3629,7 +3629,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setimagebias.php
 	 * @param bias float <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagebias ($bias) {}
 
@@ -3640,7 +3640,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param y float <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimageblueprimary ($x, $y) {}
 
@@ -3650,7 +3650,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param border mixed <p>
 	 * The border color
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagebordercolor ($border) {}
 
@@ -3661,7 +3661,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param depth int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagechanneldepth ($channel, $depth) {}
 
@@ -3672,7 +3672,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param color ImagickPixel <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagecolormapcolor ($index, ImagickPixel $color) {}
 
@@ -3682,7 +3682,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param colorspace int <p>
 	 * One of the COLORSPACE constants
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagecolorspace ($colorspace) {}
 
@@ -3691,7 +3691,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setimagedispose.php
 	 * @param dispose int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagedispose ($dispose) {}
 
@@ -3702,7 +3702,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param rows int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimageextent ($columns, $rows) {}
 
@@ -3713,7 +3713,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param y float <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagegreenprimary ($x, $y) {}
 
@@ -3722,7 +3722,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setimageinterlacescheme.php
 	 * @param interlace_scheme int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimageinterlacescheme ($interlace_scheme) {}
 
@@ -3733,7 +3733,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param profile string <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimageprofile ($name, $profile) {}
 
@@ -3744,7 +3744,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param y float <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimageredprimary ($x, $y) {}
 
@@ -3753,7 +3753,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setimagerenderingintent.php
 	 * @param rendering_intent int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagerenderingintent ($rendering_intent) {}
 
@@ -3762,7 +3762,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setimagevirtualpixelmethod.php
 	 * @param method int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagevirtualpixelmethod ($method) {}
 
@@ -3773,7 +3773,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param y float <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimagewhitepoint ($x, $y) {}
 
@@ -3788,7 +3788,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param channel int[optional] <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function sigmoidalcontrastimage ($sharpen, $alpha, $beta, $channel = null) {}
 
@@ -3797,7 +3797,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.stereoimage.php
 	 * @param offset_wand Imagick <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function stereoimage (Imagick $offset_wand) {}
 
@@ -3806,7 +3806,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.textureimage.php
 	 * @param texture_wand Imagick <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function textureimage (Imagick $texture_wand) {}
 
@@ -3817,7 +3817,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param opacity mixed <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function tintimage ($tint, $opacity) {}
 
@@ -3834,7 +3834,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param channel int[optional] <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function unsharpmaskimage ($radius, $sigma, $amount, $threshold, $channel = null) {}
 
@@ -3851,7 +3851,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param source Imagick <p>
 	 * The source Imagick object
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function addimage (Imagick $source) {}
 
@@ -3861,7 +3861,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param replace Imagick <p>
 	 * The replace Imagick object
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setimage (Imagick $replace) {}
 
@@ -3880,7 +3880,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param format string[optional] <p>
 	 * Image format. This parameter was added in Imagick version 2.0.1.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function newimage ($cols, $rows, $background, $format = null) {}
 
@@ -3896,7 +3896,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param pseudoString string <p>
 	 * string containing pseudo image definition.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function newpseudoimage ($columns, $rows, $pseudoString) {}
 
@@ -4046,7 +4046,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setbackgroundcolor.php
 	 * @param background mixed <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setbackgroundcolor ($background) {}
 
@@ -4055,7 +4055,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setcompression.php
 	 * @param compression int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setcompression ($compression) {}
 
@@ -4064,7 +4064,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setcompressionquality.php
 	 * @param quality int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setcompressionquality ($quality) {}
 
@@ -4073,7 +4073,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setfilename.php
 	 * @param filename string <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setfilename ($filename) {}
 
@@ -4082,7 +4082,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setformat.php
 	 * @param format string <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setformat ($format) {}
 
@@ -4091,7 +4091,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setinterlacescheme.php
 	 * @param interlace_scheme int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setinterlacescheme ($interlace_scheme) {}
 
@@ -4102,7 +4102,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param value string <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setoption ($key, $value) {}
 
@@ -4117,7 +4117,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param y int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setpage ($width, $height, $x, $y) {}
 
@@ -4130,7 +4130,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param limit int <p>
 	 * The resource limit. The unit depends on the type of the resource being limited.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setresourcelimit ($type, $limit) {}
 
@@ -4143,7 +4143,7 @@ class Imagick implements Iterator, Traversable {
 	 * @param y_resolution float <p>
 	 * The vertical resolution.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setresolution ($x_resolution, $y_resolution) {}
 
@@ -4152,7 +4152,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.setsamplingfactors.php
 	 * @param factors array <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setsamplingfactors (array $factors) {}
 
@@ -4163,7 +4163,7 @@ class Imagick implements Iterator, Traversable {
 	 * </p>
 	 * @param rows int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setsize ($columns, $rows) {}
 
@@ -4172,7 +4172,7 @@ class Imagick implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagick.settype.php
 	 * @param image_type int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function settype ($image_type) {}
 
@@ -4185,7 +4185,7 @@ class Imagick implements Iterator, Traversable {
 	/**
 	 * Checks if the current item is valid
 	 * @link http://www.php.net/manual/en/imagick.valid.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function valid () {}
 
@@ -4351,7 +4351,7 @@ class ImagickDraw  {
 	 * @link http://www.php.net/manual/en/imagickdraw.setfont.php
 	 * @param font_name string <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setfont ($font_name) {}
 
@@ -4361,7 +4361,7 @@ class ImagickDraw  {
 	 * @param font_family string <p>
 	 * the font family
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setfontfamily ($font_family) {}
 
@@ -4599,7 +4599,7 @@ class ImagickDraw  {
 	 * @param coordinates array <p>
 	 * multidimensional array like array( array( 'x' => 3, 'y' => 4 ), array( 'x' => 2, 'y' => 6 ) );
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function polygon (array $coordinates) {}
 
@@ -4753,7 +4753,7 @@ class ImagickDraw  {
 	 * @param compositeWand Imagick <p>
 	 * the Imagick object where composition image is taken from
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function composite ($compose, $x, $y, $width, $height, Imagick $compositeWand) {}
 
@@ -5251,7 +5251,7 @@ class ImagickDraw  {
 	 * @param coordinates array <p>
 	 * array of x and y coordinates: array( array( 'x' => 4, 'y' => 6 ), array( 'x' => 8, 'y' => 10 ) ) 
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function polyline (array $coordinates) {}
 
@@ -5505,7 +5505,7 @@ class ImagickDraw  {
 	 * @param dashArray array <p>
 	 * array of floats
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setstrokedasharray (array $dashArray) {}
 
@@ -5524,7 +5524,7 @@ class ImagickPixelIterator implements Iterator, Traversable {
 	 * Returns a new pixel iterator
 	 * @link http://www.php.net/manual/en/imagickpixeliterator.newpixeliterator.php
 	 * @param wand Imagick 
-	 * @return bool &imagick.return.success; Throwing ImagickPixelIteratorException.
+	 * @return bool Returns true on success. Throwing ImagickPixelIteratorException.
 	 */
 	public function newpixeliterator (Imagick $wand) {}
 
@@ -5559,21 +5559,21 @@ class ImagickPixelIterator implements Iterator, Traversable {
 	 * @link http://www.php.net/manual/en/imagickpixeliterator.setiteratorrow.php
 	 * @param row int <p>
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setiteratorrow ($row) {}
 
 	/**
 	 * Sets the pixel iterator to the first pixel row
 	 * @link http://www.php.net/manual/en/imagickpixeliterator.setiteratorfirstrow.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setiteratorfirstrow () {}
 
 	/**
 	 * Sets the pixel iterator to the last pixel row
 	 * @link http://www.php.net/manual/en/imagickpixeliterator.setiteratorlastrow.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setiteratorlastrow () {}
 
@@ -5603,28 +5603,28 @@ class ImagickPixelIterator implements Iterator, Traversable {
 	/**
 	 * Resets the pixel iterator
 	 * @link http://www.php.net/manual/en/imagickpixeliterator.resetiterator.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function resetiterator () {}
 
 	/**
 	 * Syncs the pixel iterator
 	 * @link http://www.php.net/manual/en/imagickpixeliterator.synciterator.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function synciterator () {}
 
 	/**
 	 * Deallocates resources associated with a PixelIterator
 	 * @link http://www.php.net/manual/en/imagickpixeliterator.destroy.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function destroy () {}
 
 	/**
 	 * Clear resources associated with a PixelIterator
 	 * @link http://www.php.net/manual/en/imagickpixeliterator.clear.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function clear () {}
 
@@ -5665,7 +5665,7 @@ class ImagickPixel  {
 	 * The normalized value for luminosity, on a scale from black at
 	 * 0 to white at 1, with the full HS value at 0.5 luminosity.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function sethsl ($hue, $saturation, $luminosity) {}
 
@@ -5710,7 +5710,7 @@ class ImagickPixel  {
 	 * @param value float <p>
 	 * The value to set this channel to, ranging from 0 to 1.
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function setcolorvalue ($color, $value) {}
 
@@ -5730,14 +5730,14 @@ class ImagickPixel  {
 	/**
 	 * Clears resources associated with this object
 	 * @link http://www.php.net/manual/en/imagickpixel.clear.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function clear () {}
 
 	/**
 	 * Deallocates resources associated with this object
 	 * @link http://www.php.net/manual/en/imagickpixel.destroy.php
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function destroy () {}
 
@@ -5752,7 +5752,7 @@ class ImagickPixel  {
 	 * The theoretical maximum for this value is the square root of three
 	 * (1.732).
 	 * </p>
-	 * @return bool &imagick.return.success;
+	 * @return bool Returns true on success.
 	 */
 	public function issimilar (ImagickPixel $color, $fuzz) {}
 

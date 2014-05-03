@@ -1333,7 +1333,7 @@ class mysqli_stmt  {
 	 * Gets a result set from a prepared statement
 	 * @link http://www.php.net/manual/en/mysqli-stmt.get-result.php
 	 * @param stmt mysqli_stmt 
-	 * @return mysqli_result a resultset &return.falseforfailure;.
+	 * @return mysqli_result a resultset  or false on failure.
 	 */
 	public function get_result (mysqli_stmt $stmt) {}
 
