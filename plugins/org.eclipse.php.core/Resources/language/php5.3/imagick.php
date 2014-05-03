@@ -679,7 +679,7 @@ class Imagick implements Iterator, Traversable {
 	 * The standard deviation of the Gaussian, in pixels.
 	 * </p>
 	 * @param channel int[optional] <p>
-	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. &imagick.default.channel.info;
+	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. Defaults to Imagick::CHANNEL_DEFAULT. Refer to this list of channel constants
 	 * </p>
 	 * @return bool Returns true on success.
 	 */
@@ -714,7 +714,7 @@ class Imagick implements Iterator, Traversable {
 	 * The standard deviation of the Gaussian, in pixels.
 	 * </p>
 	 * @param channel int[optional] <p>
-	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. &imagick.default.channel.info;
+	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. Defaults to Imagick::CHANNEL_DEFAULT. Refer to this list of channel constants
 	 * </p>
 	 * @return bool Returns true on success.
 	 */
@@ -950,7 +950,7 @@ class Imagick implements Iterator, Traversable {
 	 * Y start position of the floodfill
 	 * </p>
 	 * @param channel int[optional] <p>
-	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. &imagick.default.channel.info;
+	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. Defaults to Imagick::CHANNEL_DEFAULT. Refer to this list of channel constants
 	 * </p>
 	 * @return bool Returns true on success.
 	 */
@@ -2147,7 +2147,7 @@ class Imagick implements Iterator, Traversable {
 	 * noise constants.
 	 * </p>
 	 * @param channel int[optional] <p>
-	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. &imagick.default.channel.info;
+	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. Defaults to Imagick::CHANNEL_DEFAULT. Refer to this list of channel constants
 	 * </p>
 	 * @return bool Returns true on success.
 	 */
@@ -2613,7 +2613,7 @@ class Imagick implements Iterator, Traversable {
 	 * Gets the depth for a particular image channel
 	 * @link http://www.php.net/manual/en/function.imagick-getimagechanneldepth.php
 	 * @param channel int <p>
-	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. &imagick.default.channel.info;
+	 * Provide any channel constant that is valid for your channel mode. To apply to more than one channel, combine channel constants using bitwise operators. Defaults to Imagick::CHANNEL_DEFAULT. Refer to this list of channel constants
 	 * </p>
 	 * @return int Returns true on success.
 	 */

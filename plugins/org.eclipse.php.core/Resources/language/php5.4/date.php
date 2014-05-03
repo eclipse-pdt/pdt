@@ -264,7 +264,7 @@ class DatePeriod implements Traversable {
 /**
  * Parse about any English textual datetime description into a Unix timestamp
  * @link http://www.php.net/manual/en/function.strtotime.php
- * @param time string <p>A date/time string. &date.formats;</p>
+ * @param time string <p>A date/time string. Valid formats are explained in Date and Time Formats.</p>
  * @param now int[optional] <p>
  * The timestamp which is used as a base for the calculation of relative
  * dates.

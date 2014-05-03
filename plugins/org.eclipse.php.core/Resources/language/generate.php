@@ -975,7 +975,7 @@ function load_entities()
     }
 
     // XXX: fill nested values
-    for ($i = 0; $i < 40; $i++) {
+    for ($i = 0; $i < 80; $i++) {
         array_map(function ($val) use($names, $result)
         {
             return str_replace($names, array_values($result), $val);

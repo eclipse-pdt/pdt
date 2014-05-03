@@ -9,7 +9,7 @@
  * The short-name of the service, as registered by
  * win32_create_service.
  * </p>
- * @return mixed Returns true on success&win32service.false.error;
+ * @return mixed Returns true on success, false if there is a problem with the parameters or a Win32 Error Code on failure.
  */
 function win32_start_service_ctrl_dispatcher ($name) {}
 
@@ -40,7 +40,7 @@ function win32_start_service_ctrl_dispatcher ($name) {}
  * WIN32_SERVICE_CONTINUE_PENDING or
  * WIN32_SERVICE_PAUSE_PENDING.
  * </p>
- * @return bool Returns true on success&win32service.false.error;
+ * @return bool Returns true on success, false if there is a problem with the parameters or a Win32 Error Code on failure.
  */
 function win32_set_service_status ($status, $checkpoint = null) {}
 
@@ -60,7 +60,7 @@ function win32_set_service_status ($status, $checkpoint = null) {}
  * The optional machine name on which you want to create a service.
  * If omitted, it will use the local machine.
  * </p>
- * @return mixed Returns WIN32_NO_ERROR on success&win32service.false.error;
+ * @return mixed Returns WIN32_NO_ERROR on success, false if there is a problem with the parameters or a Win32 Error Code on failure.
  */
 function win32_create_service (array $details, $machine = null) {}
 
@@ -73,7 +73,7 @@ function win32_create_service (array $details, $machine = null) {}
  * @param machine string[optional] <p>
  * The optional machine name. If omitted, the local machine will be used.
  * </p>
- * @return mixed Returns WIN32_NO_ERROR on success&win32service.false.error;
+ * @return mixed Returns WIN32_NO_ERROR on success, false if there is a problem with the parameters or a Win32 Error Code on failure.
  */
 function win32_delete_service ($servicename, $machine = null) {}
 
@@ -157,7 +157,7 @@ function win32_query_service_status ($servicename, $machine = null) {}
  * @param machine string[optional] <p>
  * Optional machine name. If omitted, the local machine is used.
  * </p>
- * @return int Returns WIN32_NO_ERROR on success&win32service.false.error;
+ * @return int Returns WIN32_NO_ERROR on success, false if there is a problem with the parameters or a Win32 Error Code on failure.
  */
 function win32_start_service ($servicename, $machine = null) {}
 
@@ -170,7 +170,7 @@ function win32_start_service ($servicename, $machine = null) {}
  * @param machine string[optional] <p>
  * Optional machine name. If omitted, the local machine is used.
  * </p>
- * @return int Returns WIN32_NO_ERROR on success&win32service.false.error;
+ * @return int Returns WIN32_NO_ERROR on success, false if there is a problem with the parameters or a Win32 Error Code on failure.
  */
 function win32_stop_service ($servicename, $machine = null) {}
 

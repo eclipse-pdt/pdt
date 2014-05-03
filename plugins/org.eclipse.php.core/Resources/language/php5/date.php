@@ -47,7 +47,7 @@ class DateTime  {
 	 * (e.g. 2010-01-28T15:00:00+02:00).
 	 * </p>
 	 * @return string a new DateTime instance.
-	 * &style.procedural; returns false on failure.
+	 * Procedural style returns false on failure.
 	 */
 	public function __construct ($time = null, DateTimeZone $timezone = null) {}
 
@@ -67,7 +67,7 @@ class DateTime  {
 	 * @param modify string <p>
 	 * String in a relative format accepted by strtotime.
 	 * </p>
-	 * @return DateTime Returns the DateTime object for method chaining&return.falseforfailure;.
+	 * @return DateTime Returns the DateTime object for method chaining or false on failure.
 	 */
 	public function modify ($modify) {}
 
@@ -86,7 +86,7 @@ class DateTime  {
 	 * A DateTimeZone object representing the
 	 * desired time zone.
 	 * </p>
-	 * @return DateTime Returns the DateTime object for method chaining&return.falseforfailure;.
+	 * @return DateTime Returns the DateTime object for method chaining or false on failure.
 	 */
 	public function setTimezone (DateTimeZone $timezone) {}
 
@@ -110,7 +110,7 @@ class DateTime  {
 	 * @param second int[optional] <p>
 	 * Second of the time.
 	 * </p>
-	 * @return DateTime Returns the DateTime object for method chaining&return.falseforfailure;.
+	 * @return DateTime Returns the DateTime object for method chaining or false on failure.
 	 */
 	public function setTime ($hour, $minute, $second = null) {}
 
@@ -126,7 +126,7 @@ class DateTime  {
 	 * @param day int <p>
 	 * Day of the date.
 	 * </p>
-	 * @return DateTime Returns the DateTime object for method chaining&return.falseforfailure;.
+	 * @return DateTime Returns the DateTime object for method chaining or false on failure.
 	 */
 	public function setDate ($year, $month, $day) {}
 
@@ -142,7 +142,7 @@ class DateTime  {
 	 * @param day int[optional] <p>
 	 * Offset from the first day of the week.
 	 * </p>
-	 * @return DateTime Returns the DateTime object for method chaining&return.falseforfailure;.
+	 * @return DateTime Returns the DateTime object for method chaining or false on failure.
 	 */
 	public function setISODate ($year, $week, $day = null) {}
 
@@ -157,7 +157,7 @@ class DateTimeZone  {
 	 * One of timezones.
 	 * </p>
 	 * @return string DateTimeZone on success.
-	 * &style.procedural; returns false on failure.
+	 * Procedural style returns false on failure.
 	 */
 	public function __construct ($timezone) {}
 
