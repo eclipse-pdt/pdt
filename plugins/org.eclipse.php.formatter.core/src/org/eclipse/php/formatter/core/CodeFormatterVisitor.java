@@ -1242,9 +1242,16 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 							commentWords = new ArrayList<String>();
 
 							if (getNonblankWords(words).length == 0) {
+								boolean hasRefs = phpDocTag
+										.getReferencesWithOrigOrder().length != 0;
+								int nbLines = words.length;
+								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=433938
+								if (!hasRefs && nbLines > 1) {
+									nbLines--;
+								}
 								// insert several lines
 								formatCommentWords(phpDocTag, insertTag, false);
-								for (int j = 0; j < words.length; j++) {
+								for (int j = 0; j < nbLines; j++) {
 									insertNewLineForPHPDoc();
 								}
 							} else {
