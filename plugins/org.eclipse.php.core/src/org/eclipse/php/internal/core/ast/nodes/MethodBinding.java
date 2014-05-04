@@ -15,7 +15,10 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ModelException;
 
 /**
  * PHP method binding implementation.
@@ -45,10 +48,9 @@ public class MethodBinding extends FunctionBinding implements IMethodBinding {
 	 */
 	public ITypeBinding getDeclaringClass() {
 		if (declaringClassTypeBinding == null) {
-			IModelElement parent = modelElement.getDeclaringType();
-			if (parent instanceof IType) {
-				declaringClassTypeBinding = resolver
-						.getTypeBinding((IType) parent);
+			IType parent = modelElement.getDeclaringType();
+			if (parent != null) {
+				declaringClassTypeBinding = resolver.getTypeBinding(parent);
 			}
 		}
 		return declaringClassTypeBinding;

@@ -495,10 +495,10 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 		ITextRegionList regions = blockedRegion.getRegions();
 		int nRegions = regions.size();
 		StyleRange styleRange = null;
+		TextAttribute previousAttr = null;
 		for (int i = 0; i < nRegions; i++) {
 			region = regions.get(i);
 			TextAttribute attr = null;
-			TextAttribute previousAttr = null;
 			final int startOffset = blockedRegion.getStartOffset(region);
 			if (startOffset > partitionEndOffset)
 				break;
@@ -673,7 +673,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 				phpTokens = region.getUpdatedPhpTokens();
 				from = region.getUpdatedTokensStart();
 				partitionStartOffset = from + regionStart;
-				length = partitionLength = region.getUpdatedTokensLength();
+				partitionLength = region.getUpdatedTokensLength();
 
 			} else {
 				phpTokens = region.getPhpTokens(from,

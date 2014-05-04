@@ -23,7 +23,6 @@ import org.eclipse.core.filebuffers.manipulation.RemoveTrailingWhitespaceOperati
 import org.eclipse.core.internal.filebuffers.Progress;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
@@ -2368,7 +2367,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 	@Override
 	protected void doSetInput(IEditorInput input) throws CoreException {
-		IResource resource = null;
+		IFile resource = null;
 		isExternal = false;
 
 		if (input instanceof IFileEditorInput) {
@@ -2389,7 +2388,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 		}
 
-		if (resource instanceof IFile) {
+		if (resource != null) {
 			if (PHPToolkitUtil.isPhpFile((IFile) resource)) {
 
 				PhpSourceParser.editFile.set(resource);

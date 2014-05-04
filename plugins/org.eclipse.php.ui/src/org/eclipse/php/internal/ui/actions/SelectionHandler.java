@@ -15,8 +15,8 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -47,29 +47,29 @@ public abstract class SelectionHandler extends AbstractHandler {
 			throws ExecutionException {
 		IEditorPart editorPart = HandlerUtil.getActiveEditor(event);
 		PHPStructuredEditor textEditor = null;
-		if (editorPart instanceof PHPStructuredEditor)
+		IModelElement modelElement = null;
+		if (editorPart instanceof PHPStructuredEditor) {
 			textEditor = (PHPStructuredEditor) editorPart;
-		else {
+			modelElement = textEditor.getModelElement();
+		} else {
 			Object o = editorPart.getAdapter(ITextEditor.class);
-			if (o != null)
+			if (o != null) {
 				textEditor = (PHPStructuredEditor) o;
+				modelElement = textEditor.getModelElement();
+			}
 		}
-		final IModelElement modelElement = textEditor.getModelElement();
-		if (textEditor != null && modelElement != null) {
+
+		if (textEditor != null && modelElement instanceof ISourceModule) {
 			final ISelectionProvider selectionProvider = textEditor
 					.getSelectionProvider();
 			final ISelection selection = selectionProvider.getSelection();
 			if (selection instanceof TextSelection) {
-				TextSelection textSelection = (TextSelection) selection;
-				final int offset = textSelection.getOffset();
-				if (modelElement instanceof SourceModule) {
-					SourceModule module = (SourceModule) modelElement;
-					try {
-						return module.getElementAt(offset);
-					} catch (ModelException e) {
-						throw new ExecutionException(
-								Messages.SelectionHandler_0, e); //$NON-NLS-1 
-					}
+				final TextSelection textSelection = (TextSelection) selection;
+				try {
+					return ((ISourceModule) modelElement)
+							.getElementAt(textSelection.getOffset());
+				} catch (ModelException e) {
+					throw new ExecutionException(Messages.SelectionHandler_0, e); //$NON-NLS-1 
 				}
 			}
 		}

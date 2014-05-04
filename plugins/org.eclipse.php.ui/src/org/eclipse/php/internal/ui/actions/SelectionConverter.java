@@ -228,8 +228,7 @@ public class SelectionConverter {
 			boolean primaryOnly) {
 		if (editor == null)
 			return null;
-		return (ISourceModule) EditorUtility.getEditorInputModelElement(editor,
-				primaryOnly);
+		return EditorUtility.getEditorInputModelElement(editor, primaryOnly);
 	}
 
 	public static ISourceModule getInputAsTypeRoot(PHPStructuredEditor editor) {
@@ -238,10 +237,7 @@ public class SelectionConverter {
 
 	public static ISourceModule getInputAsCompilationUnit(
 			PHPStructuredEditor editor) {
-		Object editorInput = SelectionConverter.getInput(editor);
-		if (editorInput instanceof ISourceModule)
-			return (ISourceModule) editorInput;
-		return null;
+		return SelectionConverter.getInput(editor);
 	}
 
 	private static IModelElement[] performForkedCodeResolve(
@@ -282,13 +278,15 @@ public class SelectionConverter {
 
 	public static IModelElement getElementAtOffset(ISourceModule input,
 			ITextSelection selection) throws ModelException {
-		if (input instanceof ISourceModule) {
-			ScriptModelUtil.reconcile((ISourceModule) input);
+		if (input != null) {
+			ScriptModelUtil.reconcile(input);
+			IModelElement ref = input.getElementAt(selection.getOffset());
+			if (ref == null) {
+				return input;
+			}
+			return ref;
 		}
-		IModelElement ref = input.getElementAt(selection.getOffset());
-		if (ref == null)
-			return input;
-		return ref;
+		return null;
 	}
 
 	// public static IModelElement[] resolveSelectedElements(IModelElement

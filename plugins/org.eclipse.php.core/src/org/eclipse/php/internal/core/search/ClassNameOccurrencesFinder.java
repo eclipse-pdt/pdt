@@ -118,8 +118,8 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 				|| originalDeclarationNode == classDeclaration) {
 			dealIdentifier(classDeclaration.getName());
 		}
-		checkSuper(classDeclaration.getSuperClass(), classDeclaration
-				.interfaces());
+		checkSuper(classDeclaration.getSuperClass(),
+				classDeclaration.interfaces());
 		return true;
 	}
 
@@ -171,7 +171,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	public boolean visit(UseStatementPart part) {
 		NamespaceName namespace = part.getName();
-		if (namespace instanceof Identifier) {
+		if (namespace != null) {
 			dealIdentifier(namespace);
 		}
 		return false;
@@ -212,7 +212,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 			while (parent != null && !(parent instanceof ClassDeclaration)) {
 				parent = parent.getParent();
 			}
-			if (parent instanceof ClassDeclaration) {
+			if (parent != null) {
 				ClassDeclaration cd = (ClassDeclaration) parent;
 				if (cd.getName() != null) {
 					newIdentifier = cd.getName();

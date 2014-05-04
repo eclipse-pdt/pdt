@@ -166,14 +166,15 @@ public class PHPModelUtils {
 		}
 
 		boolean isGlobal = false;
-		if (elementName != null
-				&& elementName.length() > 0
-				&& elementName.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
-			isGlobal = true;
+		int nsIndex = -1;
+		if (elementName != null) {
+			nsIndex = elementName
+					.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+			if (elementName.length() > 0
+					&& elementName.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+				isGlobal = true;
+			}
 		}
-
-		int nsIndex = elementName
-				.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 		if (nsIndex != -1) {
 			String namespace = elementName.substring(0, nsIndex);
 			if (isGlobal && namespace.length() > 0) {
@@ -878,7 +879,7 @@ public class PHPModelUtils {
 				functionName, MatchRule.EXACT, Modifiers.AccGlobal, 0, scope,
 				null);
 		Collection<IMethod> filteredElements = filterElements(sourceModule,
-				Arrays.asList(functions), cache, monitor);
+				Arrays.asList(functions), null, monitor);
 		return (IMethod[]) filteredElements
 				.toArray(new IMethod[filteredElements.size()]);
 	}

@@ -56,8 +56,9 @@ public class Resources {
 				result = addOutOfSync(result, resource);
 			}
 		}
-		if (result != null)
+		if (result != null) {
 			return result;
+		}
 		return new Status(IStatus.OK, PHPUiPlugin.getPluginId(), IStatus.OK,
 				"", null); //$NON-NLS-1$
 	}
@@ -100,11 +101,11 @@ public class Resources {
 	 *      java.lang.Object)
 	 */
 	public static IStatus makeCommittable(IResource[] resources, Object context) {
-		List readOnlyFiles = new ArrayList();
+		List<IFile> readOnlyFiles = new ArrayList<IFile>();
 		for (int i = 0; i < resources.length; i++) {
 			IResource resource = resources[i];
 			if (resource.getType() == IResource.FILE && isReadOnly(resource)) {
-				readOnlyFiles.add(resource);
+				readOnlyFiles.add((IFile) resource);
 			}
 		}
 		if (readOnlyFiles.size() == 0) {
@@ -112,19 +113,19 @@ public class Resources {
 					IStatus.OK, "", null); //$NON-NLS-1$
 		}
 
-		Map oldTimeStamps = createModificationStampMap(readOnlyFiles);
+		Map<IFile, Long> oldTimeStamps = createModificationStampMap(readOnlyFiles);
 		IStatus status = ResourcesPlugin.getWorkspace()
 				.validateEdit(
-						(IFile[]) readOnlyFiles.toArray(new IFile[readOnlyFiles
-								.size()]), context);
+						readOnlyFiles.toArray(new IFile[readOnlyFiles.size()]),
+						context);
 		if (!status.isOK()) {
 			return status;
 		}
 
 		IStatus modified = null;
-		Map newTimeStamps = createModificationStampMap(readOnlyFiles);
-		for (Entry entry : (Set<Entry>) oldTimeStamps.entrySet()) {
-			final IFile file = (IFile) entry.getKey();
+		Map<IFile, Long> newTimeStamps = createModificationStampMap(readOnlyFiles);
+		for (Entry<IFile, Long> entry : oldTimeStamps.entrySet()) {
+			final IFile file = entry.getKey();
 			if (!entry.getValue().equals(newTimeStamps.get(file))) {
 				modified = addModified(modified, file);
 			}
@@ -137,11 +138,11 @@ public class Resources {
 				"", null); //$NON-NLS-1$
 	}
 
-	private static Map createModificationStampMap(List files) {
-		Map map = new HashMap();
-		for (Iterator iter = files.iterator(); iter.hasNext();) {
-			IFile file = (IFile) iter.next();
-			map.put(file, new Long(file.getModificationStamp()));
+	private static Map<IFile, Long> createModificationStampMap(List<IFile> files) {
+		Map<IFile, Long> map = new HashMap<IFile, Long>();
+		for (Iterator<IFile> iter = files.iterator(); iter.hasNext();) {
+			IFile file = iter.next();
+			map.put(file, Long.valueOf(file.getModificationStamp()));
 		}
 		return map;
 	}
@@ -192,13 +193,14 @@ public class Resources {
 	 * @return the local locations
 	 */
 	public static String[] getLocationOSStrings(IResource[] resources) {
-		List result = new ArrayList(resources.length);
+		List<String> result = new ArrayList<String>(resources.length);
 		for (int i = 0; i < resources.length; i++) {
 			IPath location = resources[i].getLocation();
-			if (location != null)
+			if (location != null) {
 				result.add(location.toOSString());
+			}
 		}
-		return (String[]) result.toArray(new String[result.size()]);
+		return result.toArray(new String[result.size()]);
 	}
 
 	/**
@@ -213,8 +215,9 @@ public class Resources {
 	 */
 	public static String getLocationString(IResource resource) {
 		URI uri = resource.getLocationURI();
-		if (uri == null)
+		if (uri == null) {
 			return null;
+		}
 		return EFS.SCHEME_FILE.equalsIgnoreCase(uri.getScheme()) ? new File(uri)
 				.getAbsolutePath() : uri.toString();
 	}
@@ -222,19 +225,22 @@ public class Resources {
 	public static boolean isReadOnly(IResource resource) {
 		ResourceAttributes resourceAttributes = resource
 				.getResourceAttributes();
-		if (resourceAttributes == null) // not supported on this platform for
-										// this resource
+		if (resourceAttributes == null) {
+			// not supported on this platform for
+			// this resource
 			return false;
+		}
 		return resourceAttributes.isReadOnly();
 	}
 
 	static void setReadOnly(IResource resource, boolean readOnly) {
 		ResourceAttributes resourceAttributes = resource
 				.getResourceAttributes();
-		if (resourceAttributes == null) // not supported on this platform for
-										// this resource
+		if (resourceAttributes == null) {
+			// not supported on this platform for
+			// this resource
 			return;
-
+		}
 		resourceAttributes.setReadOnly(readOnly);
 		try {
 			resource.setResourceAttributes(resourceAttributes);

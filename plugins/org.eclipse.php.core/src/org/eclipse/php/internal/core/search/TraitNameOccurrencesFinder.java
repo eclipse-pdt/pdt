@@ -158,7 +158,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		if (type == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
 			FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) tas
 					.getAlias().getTraitMethod();
-			if (reference.getClassName() instanceof Identifier) {
+			if (reference.getClassName() != null) {
 				dealIdentifier(reference.getClassName());
 			}
 		}
@@ -182,7 +182,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 			while (parent != null && !(parent instanceof ClassDeclaration)) {
 				parent = parent.getParent();
 			}
-			if (parent instanceof ClassDeclaration) {
+			if (parent != null) {
 				ClassDeclaration cd = (ClassDeclaration) parent;
 				if (cd.getName() != null) {
 					newIdentifier = cd.getName();

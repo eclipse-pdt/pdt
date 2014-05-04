@@ -91,7 +91,8 @@ public class FormatterUtils {
 			}
 			// in case the cursor on the beginning of '?>' tag
 			// we decrease the offset to get the PhpScriptRegion
-			if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
+			if (tRegion != null
+					&& tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
 				tRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
 			}
 

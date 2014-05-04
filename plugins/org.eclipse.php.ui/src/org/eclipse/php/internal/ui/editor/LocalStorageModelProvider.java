@@ -61,14 +61,18 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 
 		public void elementContentReplaced(Object element) {
 			StorageInfo info = (StorageInfo) getElementInfo(element);
-
+			if (info == null) {
+				fireElementContentReplaced(element);
+				fireElementDirtyStateChanged(element, false);
+				return;
+			}
 			/**
 			 * Force a reload of the markers into annotations since their
 			 * previous Positions have been deleted. Disconnecting and
 			 * reconnecting forces a call to the private catchupWithMarkers
 			 * method.
 			 */
-			if (info != null && info.fModel != null) {
+			if (info.fModel != null) {
 				info.fModel.disconnect(info.fDocument);
 			}
 
@@ -125,7 +129,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 			fireElementContentReplaced(element);
 			fireElementDirtyStateChanged(element, false);
 
-			if (info != null && info.fModel != null) {
+			if (info.fModel != null) {
 				info.fModel.connect(info.fDocument);
 			}
 		}
@@ -363,8 +367,8 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 						// ignore read-only settings if reverting whole
 						// document
 						innerdocument.replaceText(this, 0,
-								originalLengthToReplace, stringBuffer
-										.toString(), true);
+								originalLengthToReplace,
+								stringBuffer.toString(), true);
 						model.setDirtyState(false);
 
 					} catch (CoreException e) {

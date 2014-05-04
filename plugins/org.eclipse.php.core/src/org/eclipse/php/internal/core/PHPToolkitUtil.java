@@ -228,10 +228,10 @@ public class PHPToolkitUtil {
 	 * @return source module
 	 */
 	public static ISourceModule getSourceModule(String element) {
-		IResource resource = ResourcesPlugin.getWorkspace().getRoot()
+		IFile file = ResourcesPlugin.getWorkspace().getRoot()
 				.getFileForLocation(new Path(element));
-		if (resource != null && resource instanceof IFile) {
-			return (ISourceModule) DLTKCore.create((IFile) resource);
+		if (file != null) {
+			return (ISourceModule) DLTKCore.create(file);
 		}
 		return null;
 	}

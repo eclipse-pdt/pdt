@@ -115,6 +115,9 @@ public class PHPStructuredPresentationReconciler extends
 					}
 
 				}
+				if (partitions == null) {
+					return null;
+				}
 
 				List<StyleRange> fRangeSet = new LinkedList<StyleRange>();
 

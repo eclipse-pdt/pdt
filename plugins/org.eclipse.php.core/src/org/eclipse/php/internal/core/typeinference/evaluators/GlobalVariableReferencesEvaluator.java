@@ -57,8 +57,11 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 
 		IContext context = goal.getContext();
 		ISourceModuleContext sourceModuleContext = null;
+		IScriptProject scriptProject = null;
 		if (context instanceof ISourceModuleContext) {
 			sourceModuleContext = (ISourceModuleContext) context;
+			scriptProject = sourceModuleContext.getSourceModule()
+					.getScriptProject();
 		}
 
 		String variableName = typedGoal.getVariableName();
@@ -66,8 +69,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		boolean exploreOtherFiles = true;
 
 		// Find all global variables from mixin
-		IScriptProject scriptProject = sourceModuleContext.getSourceModule()
-				.getScriptProject();
+
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 
 		IField[] elements = PhpModelAccess.getDefault().findFields(

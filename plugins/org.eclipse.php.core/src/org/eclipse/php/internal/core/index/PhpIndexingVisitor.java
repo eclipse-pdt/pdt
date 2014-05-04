@@ -912,14 +912,14 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 	public boolean visit(StaticConstantAccess access) throws Exception {
 		// This is constant field access:
-		if (access.getConstant() instanceof ConstantReference) {
-			SimpleReference constantReference = (ConstantReference) access
-					.getConstant();
+		if (access.getConstant() != null) {
+			final ConstantReference constantReference = access.getConstant();
+			final String name = constantReference.getName();
 
-			String name = constantReference.getName();
-
-			modifyReference(access, new ReferenceInfo(IModelElement.FIELD,
-					constantReference.sourceStart(), constantReference.sourceEnd()
+			modifyReference(
+					access,
+					new ReferenceInfo(IModelElement.FIELD, constantReference
+							.sourceStart(), constantReference.sourceEnd()
 							- constantReference.sourceStart(), name, null, null));
 		}
 

@@ -115,8 +115,8 @@ abstract public class AbstractASTParser extends lr_parser {
 
 		if (message != null && problemReporter != null && fileName != null) {
 			int lineNumber = ((AstLexer) getScanner()).getCurrentLine();
-			reportError(problemReporter, fileName, error.sourceStart(), error
-					.sourceEnd(), lineNumber, message);
+			reportError(problemReporter, fileName, error.sourceStart(),
+					error.sourceEnd(), lineNumber, message);
 		}
 	}
 
@@ -211,7 +211,8 @@ abstract public class AbstractASTParser extends lr_parser {
 		int endPosition = cur_token.right;
 		int lineNumber = ((AstLexer) getScanner()).getCurrentLine();
 
-		StringBuilder errorMessage = new StringBuilder(Messages.AbstractASTParser_1);
+		StringBuilder errorMessage = new StringBuilder(
+				Messages.AbstractASTParser_1);
 
 		// current token can be either null, string or phpdoc - according to
 		// this resolve:
@@ -227,8 +228,8 @@ abstract public class AbstractASTParser extends lr_parser {
 				currentText = "EOF"; //$NON-NLS-1$
 			}
 			endPosition = startPosition + currentText.length();
-			errorMessage.append(Messages.AbstractASTParser_4).append(currentText).append(
-					'\'');
+			errorMessage.append(Messages.AbstractASTParser_4)
+					.append(currentText).append('\'');
 		}
 
 		if (rowOfProbe.length <= 6) {
@@ -294,6 +295,9 @@ abstract public class AbstractASTParser extends lr_parser {
 			block = ((MethodDeclaration) node).getBody();
 		} else if (node instanceof Block) {
 			block = (Block) node;
+		}
+		if (block == null) {
+			return;
 		}
 		block.addStatement(s);
 		block.setEnd(s.sourceEnd());

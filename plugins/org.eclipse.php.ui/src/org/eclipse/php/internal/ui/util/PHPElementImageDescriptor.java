@@ -86,9 +86,8 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 	 * Sets the descriptors adornments. Valid values are: <code>ABSTRACT</code>,
 	 * <code>FINAL</code>, </code>STATIC<code>, </code>RUNNABLE<code>, </code>
 	 * WARNING<code>,
-	 * </code>ERROR<code>, </code>OVERRIDDES
-	 * <code>, <code>CONSTRUCTOR</code>, <code>DEPRECATED</code>, or any
-	 * combination of those.
+	 * </code>ERROR<code>, </code>OVERRIDDES <code>, <code>CONSTRUCTOR</code>,
+	 * <code>DEPRECATED</code>, or any combination of those.
 	 * 
 	 * @param adornments
 	 *            the image descriptors adornments
@@ -229,7 +228,7 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 		if ((fFlags & WARNING) != 0) {
 			ImageData data = getImageData(PHPPluginImages.DESC_OVR_WARNING);
 			drawImage(data, x, size.y - data.height);
-			x += data.width;
+			// x += data.width;
 		}
 
 	}

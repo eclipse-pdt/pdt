@@ -147,7 +147,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
-	class ConstantDeclarationSearcher extends ASTVisitor {
+	static class ConstantDeclarationSearcher extends ASTVisitor {
 
 		private String constantName;
 		private Iterator<ISourceRange> offsetsIt;
@@ -182,17 +182,16 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 					&& node.sourceEnd() >= currentEnd;
 		}
 
-		@SuppressWarnings("unchecked")
 		public boolean visit(CallExpression node) throws Exception {
 			if (!interesting(node)) {
 				return false;
 			}
 			if ("define".equalsIgnoreCase(node.getName())) { //$NON-NLS-1$
 				// report global constant:
-				List args = node.getArgs().getChilds();
+				List<ASTNode> args = node.getArgs().getChilds();
 				if (args.size() == 2) {
-					ASTNode firstArg = (ASTNode) args.get(0);
-					ASTNode secondArg = (ASTNode) args.get(0);
+					ASTNode firstArg = args.get(0);
+					ASTNode secondArg = args.get(0);
 					if (firstArg instanceof Scalar
 							&& secondArg instanceof Scalar) {
 						Scalar constantName = (Scalar) firstArg;

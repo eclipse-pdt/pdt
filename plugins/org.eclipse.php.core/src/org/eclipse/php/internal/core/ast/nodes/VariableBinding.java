@@ -94,10 +94,9 @@ public class VariableBinding implements IVariableBinding {
 	 */
 	public ITypeBinding getDeclaringClass() {
 		if (declaringClassTypeBinding == null) {
-			IModelElement parent = modelElement.getDeclaringType();
-			if (parent instanceof IType) {
-				declaringClassTypeBinding = resolver
-						.getTypeBinding((IType) parent);
+			IType parent = modelElement.getDeclaringType();
+			if (parent != null) {
+				declaringClassTypeBinding = resolver.getTypeBinding(parent);
 			}
 		}
 		return declaringClassTypeBinding;

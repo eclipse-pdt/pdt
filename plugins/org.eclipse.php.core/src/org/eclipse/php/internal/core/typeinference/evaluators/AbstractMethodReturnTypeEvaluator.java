@@ -27,7 +27,7 @@ import org.eclipse.php.internal.core.typeinference.goals.AbstractMethodReturnTyp
 
 public abstract class AbstractMethodReturnTypeEvaluator extends
 		AbstractPHPGoalEvaluator {
-	protected class MethodsAndTypes {
+	protected static class MethodsAndTypes {
 		public IMethod[] methods;
 		public IType[] types;
 	}

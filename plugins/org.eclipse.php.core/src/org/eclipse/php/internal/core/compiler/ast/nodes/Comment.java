@@ -18,7 +18,11 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents a PHP comment
- * <pre>e.g.<pre> // this is a single line comment
+ * 
+ * <pre>e.g.
+ * 
+ * <pre>
+ * // this is a single line comment
  * # this is a single line comment
  * /** this is php doc block (end php docblock here)
  */
@@ -37,22 +41,20 @@ public class Comment extends ASTNode {
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
-		}
+		visitor.visit(this);
 		visitor.endvisit(this);
 	}
 
 	public static String getCommentType(int type) {
 		switch (type) {
-			case TYPE_SINGLE_LINE:
-				return "singleLine"; //$NON-NLS-1$
-			case TYPE_MULTILINE:
-				return "multiLine"; //$NON-NLS-1$
-			case TYPE_PHPDOC:
-				return "phpDoc"; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case TYPE_SINGLE_LINE:
+			return "singleLine"; //$NON-NLS-1$
+		case TYPE_MULTILINE:
+			return "multiLine"; //$NON-NLS-1$
+		case TYPE_PHPDOC:
+			return "phpDoc"; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 

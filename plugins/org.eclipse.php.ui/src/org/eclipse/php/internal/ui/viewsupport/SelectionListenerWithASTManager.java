@@ -17,7 +17,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
@@ -138,12 +137,11 @@ public class SelectionListenerWithASTManager {
 			if (fCurrentJob != null) {
 				fCurrentJob.cancel();
 			}
-			IModelElement input = EditorUtility.getEditorInputModelElement(
-					fPart, false);
-			if (!(input instanceof ISourceModule)) {
+			final ISourceModule typeRoot = EditorUtility
+					.getEditorInputModelElement(fPart, false);
+			if (typeRoot == null) {
 				return;
 			}
-			final ISourceModule typeRoot = (ISourceModule) input;
 
 			fCurrentJob = new Job("Selection Job titile") { //$NON-NLS-1$
 				public IStatus run(IProgressMonitor monitor) {

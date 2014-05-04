@@ -544,7 +544,7 @@ public class CodeAssistUtils {
 					IType[] tmpArray = PHPTypeInferenceUtils.getModelElements(
 							possibleType, (ISourceModuleContext) context,
 							offset, (IModelAccessCache) null);
-					if (tmpArray != null || tmpArray.length == 0) {
+					if (tmpArray != null && tmpArray.length > 0) {
 						tmpList.addAll(Arrays.asList(tmpArray));
 					}
 				}

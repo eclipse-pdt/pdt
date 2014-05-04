@@ -12,7 +12,6 @@
 package org.eclipse.php.internal.ui.editor.validation;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.IModelElement;
@@ -250,13 +249,12 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 	 * @return the IFile
 	 */
 	public IFile getFile(String delta) {
-		IResource res = null;
 		try {
-			res = ResourcesPlugin.getWorkspace().getRoot()
+			return ResourcesPlugin.getWorkspace().getRoot()
 					.getFile(new Path(delta));
 		} catch (Exception e) {
 		}
-		return res instanceof IFile ? (IFile) res : null;
+		return null;
 	}
 
 	/**

@@ -460,6 +460,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 					actualCompletionPosition);
 		}
 
+		if (proposal == null) {
+			return;
+		}
+
 		proposal.setName(relative.toString());
 		proposal.setCompletion((relative.toString() + suffix));
 		proposal.setRelevance(relevanceKeyword);

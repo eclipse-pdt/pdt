@@ -539,7 +539,7 @@ public class CodeGeneration {
 		}
 
 		if (program == null) {
-			program = generageProgram(method, program);
+			program = generageProgram(method, null);
 			if (program == null) {
 				return null;
 			}

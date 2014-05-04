@@ -200,11 +200,8 @@ public class QuickAssistLightBulbUpdater {
 
 	private ISourceModule getCompilationUnit() {
 		if (fEditor != null) {
-			ISourceModule elem = DLTKUIPlugin
-					.getEditorInputModelElement(fEditor.getEditorInput());
-			if (elem instanceof ISourceModule) {
-				return (ISourceModule) elem;
-			}
+			return DLTKUIPlugin.getEditorInputModelElement(fEditor
+					.getEditorInput());
 		}
 		return null;
 	}
@@ -244,8 +241,8 @@ public class QuickAssistLightBulbUpdater {
 		final AssistContext context = new AssistContext(cu, offset, length);
 		context.setASTRoot(astRoot);
 
-		boolean hasQuickFix = hasQuickFixLightBulb(model, context
-				.getSelectionOffset());
+		boolean hasQuickFix = hasQuickFixLightBulb(model,
+				context.getSelectionOffset());
 		if (hasQuickFix) {
 			removeLightBulb(model);
 			return; // there is already a quick fix light bulb at the new
@@ -265,8 +262,10 @@ public class QuickAssistLightBulbUpdater {
 			model.removeAnnotation(fAnnotation);
 		}
 		if (needsAnnotation) {
-			model.addAnnotation(fAnnotation, new Position(context
-					.getSelectionOffset(), context.getSelectionLength()));
+			model.addAnnotation(
+					fAnnotation,
+					new Position(context.getSelectionOffset(), context
+							.getSelectionLength()));
 		}
 		fIsAnnotationShown = needsAnnotation;
 	}
