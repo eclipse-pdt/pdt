@@ -1,0 +1,70 @@
+--TEST--
+Test formatting NamespaceDeclaration, NamespaceName
+Bug 326384 - [Internal]Review the parser code for the name space start/end value
+Bug 423843 - Formatter ignores "after comma in method arguments setting" when method parameters have type hints
+--FILE--
+<?php
+class MyClass extends   \PathTo\MySuperClass implements   \PathTo\MyInterface {
+	public function sample1( \stdclass $param1, \stdclass $param2) {
+	}
+	public function sample2(\stdclass $param1,    \stdclass $param2) {
+	}
+	public function sample3( \PathTo\stdclass $param1, \PathTo\stdclass $param2) {
+	}
+	public function sample4(\PathTo\stdclass $param1,    \PathTo\stdclass $param2) {
+	}
+	public function sample5(\stdclass $param1,\stdclass $param2) {
+		try {
+		} catch ( \PathTo\Exception $ex ) {
+		}
+		try {
+		} catch ( \Exception $ex ) {
+		}
+		try {
+		} catch ( Exception $ex ) {
+		}
+		try {
+		} catch (\PathTo\Exception $ex) {
+		}
+		try {
+		} catch (\Exception $ex) {
+		}
+		try {
+		} catch (Exception $ex) {
+		}
+	}
+}
+?>
+--EXPECT--
+<?php
+class MyClass extends \PathTo\MySuperClass implements \PathTo\MyInterface {
+	public function sample1(\stdclass $param1, \stdclass $param2) {
+	}
+	public function sample2(\stdclass $param1, \stdclass $param2) {
+	}
+	public function sample3(\PathTo\stdclass $param1, \PathTo\stdclass $param2) {
+	}
+	public function sample4(\PathTo\stdclass $param1, \PathTo\stdclass $param2) {
+	}
+	public function sample5(\stdclass $param1, \stdclass $param2) {
+		try {
+		} catch ( \PathTo\Exception $ex ) {
+		}
+		try {
+		} catch ( \Exception $ex ) {
+		}
+		try {
+		} catch ( Exception $ex ) {
+		}
+		try {
+		} catch ( \PathTo\Exception $ex ) {
+		}
+		try {
+		} catch ( \Exception $ex ) {
+		}
+		try {
+		} catch ( Exception $ex ) {
+		}
+	}
+}
+?>
