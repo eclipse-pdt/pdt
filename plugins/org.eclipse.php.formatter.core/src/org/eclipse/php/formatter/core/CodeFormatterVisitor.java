@@ -26,6 +26,7 @@ import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.internal.core.compiler.ast.nodes.VarComment;
 import org.eclipse.php.internal.core.compiler.ast.parser.php5.CompilerAstLexer;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -1301,7 +1302,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			case org.eclipse.php.internal.core.compiler.ast.nodes.Comment.TYPE_MULTILINE:
 				previousCommentIsSingleLine = false;
 				IRegion startLinereg = document.getLineInformation(startLine);
-				// ignore multi line comment in the middle of code in one line
+				// ignore multi line comment in the middle of code in one
+				// line
 				// example while /* kuku */ ( /* kuku */$a > 0 )
 				if (getBufferFirstChar() == '\0'
 						&& (startLine == endLine
@@ -1361,7 +1363,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 						}
 						if (indentationLevelDesending || blockEnd) {
 							// add single indentationChar * indentationSize
-							// Because the comment is the previous indentation
+							// Because the comment is the previous
+							// indentation
 							// level
 							for (int i = 0; i < preferences.indentationSize; i++) {
 								appendToBuffer(preferences.indentationChar);
@@ -1393,7 +1396,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 							+ offset,
 							comment.sourceEnd() - comment.sourceStart()));
 					if (this.editsEnabled
-							&& this.preferences.comment_format_block_comment) {
+							&& this.preferences.comment_format_block_comment
+							&& !(comment instanceof VarComment)) {
 						if (startLine == commentStartLine) {
 							initCommentIndentVariables(offset, startLine,
 									comment, endWithNewLineIndent);
