@@ -782,13 +782,29 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			// workaround; remove this after fixing of
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=326384
 			int start = array[i].getStart();
-			if (array[i] instanceof NamespaceName
-					&& ((NamespaceName) array[i]).isGlobal()) {
-				start -= 1;
-			} else if (i == 0 && array[i] instanceof UseStatementPart
-					&& ((UseStatementPart) array[i]).getName() != null
-					&& ((UseStatementPart) array[i]).getName().isGlobal()) {
-				start -= 1;
+			try {
+				// a NamespaceName object can be wrapped in
+				// a FormalParameter object
+				Object obj = array[i] instanceof FormalParameter ? ((FormalParameter) array[i])
+						.getParameterType() : array[i];
+
+				// obj may be null
+				if (obj instanceof NamespaceName
+						&& ((NamespaceName) obj).isGlobal()) {
+					if (Character.isWhitespace(document.getChar(start - 1))
+							|| document.getChar(start - 1) == '\\') {
+						start -= 1;
+					}
+				} else if (i == 0 && array[i] instanceof UseStatementPart
+						&& ((UseStatementPart) array[i]).getName() != null
+						&& ((UseStatementPart) array[i]).getName().isGlobal()) {
+					if (Character.isWhitespace(document.getChar(start - 1))
+							|| document.getChar(start - 1) == '\\') {
+						start -= 1;
+					}
+				}
+			} catch (BadLocationException e) {
+				// should not be here
 			}
 			// workaround end
 			handleChars1(lastPosition, start,
@@ -2896,9 +2912,16 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			// workaround
 			// remove this after fixing of
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=326384
-			if (superClass instanceof NamespaceName
-					&& ((NamespaceName) superClass).isGlobal()) {
-				start -= 1;
+			try {
+				if (superClass instanceof NamespaceName
+						&& ((NamespaceName) superClass).isGlobal()) {
+					if (Character.isWhitespace(document.getChar(start - 1))
+							|| document.getChar(start - 1) == '\\') {
+						start -= 1;
+					}
+				}
+			} catch (BadLocationException e) {
+				// should not be here
 			}
 			// end
 
