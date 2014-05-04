@@ -1,0 +1,11 @@
+--TEST--
+Test Array Access
+--FILE--
+<?php /**
+ * @var $begin    \DateTime
+ * @var $end      \DateTime
+ */
+ testPHPDocVarComment($end);
+?> 
+--EXPECT--
+\DateTime

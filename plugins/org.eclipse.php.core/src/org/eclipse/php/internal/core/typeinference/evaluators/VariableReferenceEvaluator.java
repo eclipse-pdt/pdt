@@ -121,12 +121,12 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 						typedContext.getSourceModule(), variableReference,
 						localScopeNode);
 				rootNode.traverse(varDecSearcher);
-
+				PHPModuleDeclaration phpModule = (PHPModuleDeclaration) rootNode;
 				List<IGoal> subGoals = new LinkedList<IGoal>();
 
-				List<VarComment> varComments = ((PHPModuleDeclaration) rootNode)
-						.getVarComments();
-				List<VarComment> newList = new ArrayList<VarComment>();
+				List<VarComment> varComments = phpModule.getVarComments();
+				List<VarComment> newList = new ArrayList<VarComment>(phpModule
+						.getVarComments().size());
 				newList.addAll(varComments);
 				Collections.sort(newList, new Comparator<VarComment>() {
 
@@ -146,6 +146,47 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 							goals.add(new ExpressionTypeGoal(context, ref));
 						}
 						return (IGoal[]) goals.toArray(new IGoal[goals.size()]);
+					}
+				}
+
+				List<PHPDocBlock> docBlocks = new ArrayList<PHPDocBlock>(
+						phpModule.getPhpDocBlocks().size());
+				docBlocks.addAll(phpModule.getPhpDocBlocks());
+				Collections.sort(docBlocks, new Comparator<PHPDocBlock>() {
+
+					@Override
+					public int compare(PHPDocBlock o1, PHPDocBlock o2) {
+						return o1.sourceStart() - o1.sourceStart();
+					}
+				});
+				for (PHPDocBlock block : docBlocks) {
+					if (block.sourceStart() > variableReference.sourceStart()
+							|| localScopeNode.sourceStart() > block
+									.sourceStart()) {
+						continue;
+					}
+
+					for (PHPDocTag tag : block.getTags(PHPDocTagKinds.VAR)) {
+						String value = tag.getValue().trim();
+						if (value.length() < 5 || value.charAt(0) != '$') {
+							continue;
+						}
+						String[] split = value.split("\\s+"); //$NON-NLS-1$
+						if (split.length > 1
+								&& split[0].equals(variableReference.getName())) {
+							List<IGoal> goals = new LinkedList<IGoal>();
+							for (String name : split[1].split("\\|")) { //$NON-NLS-1$
+								if (name.trim().length() > 0) {
+									goals.add(new ExpressionTypeGoal(context,
+											new TypeReference(
+													tag.sourceStart(), tag
+															.sourceEnd(), name
+															.trim())));
+								}
+							}
+							return (IGoal[]) goals.toArray(new IGoal[goals
+									.size()]);
+						}
 					}
 				}
 
