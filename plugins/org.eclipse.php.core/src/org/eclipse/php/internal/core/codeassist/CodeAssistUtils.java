@@ -365,12 +365,14 @@ public class CodeAssistUtils {
 
 		int propertyEndPosition = PHPTextSequenceUtilities.readBackwardSpaces(
 				statementText, endPosition - triggerText.length());
+
 		int lastObjectOperator = PHPTextSequenceUtilities
 				.getPrivousTriggerIndex(statementText, propertyEndPosition);
 		String text = statementText.subSequence(0, propertyEndPosition)
 				.toString();
 		if (lastObjectOperator == -1
-				|| (text.indexOf('>') >= 0 && text.indexOf("->") < 0)) { //$NON-NLS-1$
+				|| (text.indexOf('>') >= 0
+						&& text.indexOf("=>") != text.indexOf('>') - 1 && text.indexOf("->") < 0)) { //$NON-NLS-1$ //$NON-NLS-2$
 			// if there is no "->" or "::" in the left sequence then we need to
 			// calc the object type
 			return innerGetClassName(sourceModule, statementText,

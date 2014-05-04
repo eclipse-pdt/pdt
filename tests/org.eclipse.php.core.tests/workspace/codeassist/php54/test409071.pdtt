@@ -1,0 +1,19 @@
+--TEST--
+Test bbug
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+class someClass {
+	/**
+	 * @var someClass
+	 */
+	public $here;
+	public static function inst() {
+		return new someClass();
+	}
+}
+someClass::inst(['k' => 'v'])->|;
+--EXPECT--
+field($here)
+method(inst)

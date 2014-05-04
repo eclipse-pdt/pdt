@@ -26,6 +26,7 @@ import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClass
 import org.eclipse.php.internal.core.typeinference.goals.IteratorTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
+import org.eclipse.wst.sse.core.internal.Logger;
 
 public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 
@@ -153,10 +154,14 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 			}
 
 		} catch (CoreException e) {
+			Logger.logException(e);
 		}
 
 		if (docBlocks.length > 0) {
 			for (int i = 0; i < docBlocks.length; i++) {
+				if (docBlocks[i] == null) {
+					continue;
+				}
 				PHPDocTag[] tags = docBlocks[i].getTags();
 				for (int j = 0; j < tags.length; j++) {
 					PHPDocTag tag = tags[j];
