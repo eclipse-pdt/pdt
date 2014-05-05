@@ -40,13 +40,11 @@ public class ForeachStatementEvaluator extends GoalEvaluator {
 				typedGoal.getExpression()) };
 	}
 
-	@SuppressWarnings("unchecked")
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (result instanceof MultiTypeType) {
-			List types = ((MultiTypeType) result).getTypes();
+			List<IEvaluatedType> types = ((MultiTypeType) result).getTypes();
 			this.result = new AmbiguousType(
-					(IEvaluatedType[]) types.toArray(new IEvaluatedType[types
-							.size()]));
+					types.toArray(new IEvaluatedType[types.size()]));
 		} else if (result instanceof AmbiguousType) {
 			this.result = (AmbiguousType) result;
 		}

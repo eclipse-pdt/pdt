@@ -20,6 +20,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.IGoal;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
@@ -59,13 +60,11 @@ public abstract class AbstractMethodReturnTypeEvaluator extends
 			try {
 				methods.addAll(Arrays.asList(PHPModelUtils.getFunctions(
 						methodName, sourceModule, 0, cache, null)));
-				for (IMethod method : methods) {
+				for (int i = 0, size = methods.size(); i < size; i++) {
 					methodTypes.add(null);
 				}
 			} catch (ModelException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
+				Logger.logException(e);
 			}
 		} else {
 			try {
@@ -87,9 +86,7 @@ public abstract class AbstractMethodReturnTypeEvaluator extends
 					}
 				}
 			} catch (CoreException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
+				Logger.logException(e);
 			}
 		}
 		MethodsAndTypes mat = new MethodsAndTypes();

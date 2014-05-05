@@ -1,0 +1,22 @@
+--TEST--
+Test array dereferencing 7
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+class myClass{
+	function foo(){
+		return 0;
+	}
+} 
+/**
+ * @return multitype:myClass
+ */
+function foo() {
+      return [new Exception()];
+}
+
+foo()[0]->|
+?>
+--EXPECT--
+method(foo)

@@ -1,0 +1,19 @@
+--TEST--
+Test Nested Code With This
+--FILE--
+<?php
+class Test {
+	function test() {
+		;
+	}
+}
+/**
+ * @return multitype:Test
+ */
+function fn() {return new Exception();}
+$arr = fn();
+foreach ($arr as $object) {
+	$object->|
+}
+--EXPECT--
+method(test)
