@@ -84,6 +84,7 @@ public class CompilerAstLexer extends
 		case ParserConstants.T_PRIVATE:
 		case ParserConstants.T_PROTECTED:
 		case ParserConstants.T_PUBLIC:
+		case ParserConstants.T_TRAIT:
 			symbol.value = latestDocBlock;
 			break;
 		}

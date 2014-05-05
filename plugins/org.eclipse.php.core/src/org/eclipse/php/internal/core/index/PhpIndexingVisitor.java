@@ -436,17 +436,16 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		return visitGeneral(type);
 	}
 
-	@SuppressWarnings("unchecked")
 	protected String[] processSuperClasses(TypeDeclaration type) {
 		ASTListNode superClasses = type.getSuperClasses();
 		if (superClasses == null) {
 			return new String[] {};
 		}
-		List superClassNames = superClasses.getChilds();
+		List<ASTNode> superClassNames = superClasses.getChilds();
 		List<String> result = new ArrayList<String>(superClassNames.size());
-		Iterator iterator = superClassNames.iterator();
+		Iterator<ASTNode> iterator = superClassNames.iterator();
 		while (iterator.hasNext()) {
-			Object nameNode = iterator.next();
+			ASTNode nameNode = iterator.next();
 			String name;
 			if (nameNode instanceof FullyQualifiedReference) {
 				FullyQualifiedReference fullyQualifiedName = (FullyQualifiedReference) nameNode;

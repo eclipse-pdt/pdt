@@ -127,8 +127,14 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 					if (fPostSelectionLength != -1) {
 						Display.getDefault().asyncExec(new Runnable() {
 							public void run() {
-								firePostSelectionChanged(fPostSelectionOffset,
-										fPostSelectionLength);
+								synchronized (PHPStructuredTextViewer.this) {
+									if (fPostSelectionOffset >= 0
+											&& fPostSelectionLength >= 0) {
+										firePostSelectionChanged(
+												fPostSelectionOffset,
+												fPostSelectionLength);
+									}
+								}
 							}
 						});
 					}

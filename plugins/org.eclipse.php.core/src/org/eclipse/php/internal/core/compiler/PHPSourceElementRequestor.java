@@ -254,7 +254,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			method.setModifier(Modifiers.AccAbstract);
 		}
 
-		method.setModifier(markAsDeprecated(method.getModifiers(), method));
+		method.setModifiers(markAsDeprecated(method.getModifiers(), method));
 
 		declarations.push(method);
 
@@ -403,7 +403,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				return true;
 			}
 		}
-		type.setModifier(markAsDeprecated(type.getModifiers(), type));
+		type.setModifiers(markAsDeprecated(type.getModifiers(), type));
 
 		// In case we are entering a nested element
 		if (!declarations.empty()
