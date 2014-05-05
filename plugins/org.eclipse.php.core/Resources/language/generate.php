@@ -538,7 +538,15 @@ function print_class ($classRef, $tabs = 0) {
 	// process methods
 	$methodsRef = $classRef->getMethods();
 	if (count ($methodsRef) > 0) {
+		$printedMethods = array();
+		$cleanName = clean_php_identifier($classRef->getName());
 		foreach ($methodsRef as $methodRef) {
+			$cleanMName = clean_php_identifier($methodRef->getName());
+			// bug 415896
+			if ($cleanMName == '__construct' && isset($printedMethods[$cleanName])) {
+				continue;
+			}
+			$printedMethods[$cleanMName] = $methodRef;
 			print_function ($methodRef, $tabs + 1);
 		}
 		print "\n";
@@ -647,9 +655,12 @@ function print_parameters_ref ($paramsRef) {
 			print "\${$name}";
 			if ($paramRef->allowsNull()) {
 				print " = null";
-			} else if ($paramRef->isDefaultValueAvailable()) {
-				$value = $paramRef->getDefaultValue();
-				if (!is_numeric ($value)) {
+			} else if ($paramRef->isDefaultValueAvailable() || $paramRef->isOptional()) {
+			    $value = "null";
+				if ($paramRef->isDefaultValueAvailable() ) {
+					$value = $paramRef->getDefaultValue();
+				}
+				if (!is_numeric ($value) && $value != "null") {
 					$value = "'{$value}'";
 				}
 				print " = {$value}";
@@ -956,7 +967,7 @@ function load_entities()
         if (! $file->isFile() || !in_array($file->getExtension(), array("xml", "ent"))) {
             continue;
         }
-        preg_match_all("/<!ENTITY\s+([a-z0-9.]+)\s+'(.*?)'>/i", load_xml($file->getPathname()), $matches);
+        preg_match_all("/<!ENTITY\s+([a-z0-9.]+)\s+'(.*?)'>/i", file_get_contents($file->getPathname()), $matches);
         if ($matches) {
             foreach ($matches[1] as $k => $v) {
                 $result[$v] = $matches[2][$k];
