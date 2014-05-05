@@ -536,20 +536,34 @@ public class CodeAssistUtils {
 			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(
 					context, types, method);
 			evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal);
-			if (evaluatedType instanceof MultiTypeType) {
-				List<IType> tmpList = new LinkedList<IType>();
-				List<IEvaluatedType> possibleTypes = ((MultiTypeType) evaluatedType)
-						.getTypes();
-				for (IEvaluatedType possibleType : possibleTypes) {
-					IType[] tmpArray = PHPTypeInferenceUtils.getModelElements(
-							possibleType, (ISourceModuleContext) context,
-							offset, (IModelAccessCache) null);
-					if (tmpArray != null && tmpArray.length > 0) {
-						tmpList.addAll(Arrays.asList(tmpArray));
+			List<IEvaluatedType> possibleTypes = null;
+			if (!PHPTypeInferenceUtils.isSimple(evaluatedType)) {
+				if (evaluatedType instanceof MultiTypeType) {
+					possibleTypes = ((MultiTypeType) evaluatedType).getTypes();
+				} else if (evaluatedType instanceof AmbiguousType) {
+					possibleTypes = new ArrayList<IEvaluatedType>();
+					for (IEvaluatedType pType : ((AmbiguousType) evaluatedType)
+							.getPossibleTypes()) {
+						if (pType instanceof MultiTypeType) {
+							possibleTypes.addAll(((MultiTypeType) pType)
+									.getTypes());
+						}
 					}
 				}
-				// the elements are filtered already
-				return tmpList.toArray(new IType[tmpList.size()]);
+				if (possibleTypes != null && possibleTypes.size() > 0) {
+					List<IType> tmpList = new LinkedList<IType>();
+					for (IEvaluatedType possibleType : possibleTypes) {
+						IType[] tmpArray = PHPTypeInferenceUtils
+								.getModelElements(possibleType,
+										(ISourceModuleContext) context, offset,
+										(IModelAccessCache) null);
+						if (tmpArray != null && tmpArray.length > 0) {
+							tmpList.addAll(Arrays.asList(tmpArray));
+						}
+					}
+					// the elements are filtered already
+					return tmpList.toArray(new IType[tmpList.size()]);
+				}
 			}
 
 			// modelElements = PHPTypeInferenceUtils.getModelElements(

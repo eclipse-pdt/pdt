@@ -16,10 +16,7 @@ import java.util.*;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.evaluation.types.AmbiguousType;
-import org.eclipse.dltk.evaluation.types.ModelClassType;
-import org.eclipse.dltk.evaluation.types.MultiTypeType;
-import org.eclipse.dltk.evaluation.types.UnknownType;
+import org.eclipse.dltk.evaluation.types.*;
 import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
@@ -243,5 +240,40 @@ public class PHPTypeInferenceUtils {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Check if IEvaluatedType is Simpletype
+	 * 
+	 * array, mixed, object[] etc...
+	 * 
+	 * @param object
+	 * @return
+	 * @since 3.3
+	 */
+	public static boolean isSimple(Object object) {
+		if (object == null || object instanceof SimpleType) {
+			return true;
+		} else if (PHPSimpleTypes.RESOURCE == object
+				|| PHPSimpleTypes.OBJECT == object) {
+			return true;
+		} else if (object instanceof MultiTypeType) {
+			for (IEvaluatedType type : ((MultiTypeType) object).getTypes()) {
+				if (!isSimple(type)) {
+					return false;
+				}
+			}
+			return true;
+		} else if (object instanceof AmbiguousType) {
+			for (IEvaluatedType type : ((AmbiguousType) object)
+					.getPossibleTypes()) {
+				if (!isSimple(type)) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		return false;
 	}
 }

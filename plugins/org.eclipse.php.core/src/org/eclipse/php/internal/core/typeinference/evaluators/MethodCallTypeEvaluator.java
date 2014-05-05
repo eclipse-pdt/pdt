@@ -86,15 +86,19 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 					&& previousResult != UnknownType.INSTANCE) {
 				result = previousResult;
 				previousResult = null;
+				// BUG 404031, stop read if found not simple element
+				if (!PHPTypeInferenceUtils.isSimple(result)) {
+					return null;
+				}
 			}
 			state = STATE_WAITING_METHOD;
 			CallArgumentsList args = expression.getArgs();
 			String[] argNames = null;
 			if (args != null && args.getChilds() != null) {
-				List childs = args.getChilds();
+				List<ASTNode> childs = args.getChilds();
 				int i = 0;
 				argNames = new String[childs.size()];
-				for (Object o : childs) {
+				for (ASTNode o : childs) {
 					if (o instanceof Scalar) {
 						Scalar arg = (Scalar) o;
 						argNames[i] = ASTUtils.stripQuotes(arg.getValue());

@@ -13,6 +13,7 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
@@ -26,7 +27,6 @@ import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClass
 import org.eclipse.php.internal.core.typeinference.goals.IteratorTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
-import org.eclipse.wst.sse.core.internal.Logger;
 
 public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 
