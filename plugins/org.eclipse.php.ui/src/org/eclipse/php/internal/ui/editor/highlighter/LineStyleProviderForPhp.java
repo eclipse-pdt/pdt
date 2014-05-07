@@ -607,8 +607,11 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 							// TODO: this needs to be improved to handle
 							// readonly
 							// regions correctly
-							if ((styleRange != null) && (previousAttr != null)
-									&& (previousAttr.equals(attr))) {
+							if ((styleRange != null)
+									&& (previousAttr != null)
+									&& (previousAttr.equals(attr))
+									&& styleRange.start + styleRange.length == region
+											.getStart()) {
 								styleRange.length += region.getLength();
 							} else {
 								styleRange = createStyleRange(
