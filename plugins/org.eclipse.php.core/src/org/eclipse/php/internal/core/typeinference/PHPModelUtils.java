@@ -44,6 +44,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.NamespaceName;
+import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
@@ -2151,9 +2152,9 @@ public class PHPModelUtils {
 						for (UsePart usePart : useStatement.getParts()) {
 							if (usePart.getAlias() != null
 									&& usePart.getAlias().getName() != null) {
-								// TODO case non-sensitive
 								String name = usePart.getAlias().getName();
-								if (name.startsWith(prefix)) {
+								if (CodeAssistUtils.startsWithIgnoreCase(name,
+										prefix)) {
 									result.put(name, usePart);
 								}
 							} else {
