@@ -332,6 +332,11 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		public Object getElementInfo() throws ModelException {
 			return null;
 		}
+
+		@Override
+		public int getElementType() {
+			return IModelElement.IMPORT_CONTAINER;
+		}
 	}
 
 	private IModelElement[] getUseStatements() {

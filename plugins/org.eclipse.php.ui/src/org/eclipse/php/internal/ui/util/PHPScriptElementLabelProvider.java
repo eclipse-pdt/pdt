@@ -13,9 +13,11 @@ package org.eclipse.php.internal.ui.util;
 
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.typeinference.UseStatementElement;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -29,6 +31,8 @@ public class PHPScriptElementLabelProvider extends LabelProvider implements
 		try {
 			if (o instanceof IType && PHPFlags.isTrait(((IType) o).getFlags())) {
 				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_TRAIT);
+			} else if (o instanceof UseStatementElement) {
+				return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_IMPDECL);
 			}
 		} catch (ModelException e) {
 		}
