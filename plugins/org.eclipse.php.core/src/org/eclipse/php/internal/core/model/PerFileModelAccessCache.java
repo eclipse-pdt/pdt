@@ -41,6 +41,10 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 */
 	public PerFileModelAccessCache(ISourceModule sourceModule) {
 		this.sourceModule = sourceModule;
+		allTraitsCache = Collections
+				.synchronizedMap(new HashMap<String, Collection<IType>>());
+		allTypesCache = Collections
+				.synchronizedMap(new HashMap<String, Collection<IType>>());
 	}
 
 	public ISourceModule getSourceModule() {
@@ -214,31 +218,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 		} else {
 			typeName = typeName.toLowerCase();
 
-			if (allTypesCache == null) {
-				allTypesCache = Collections
-						.synchronizedMap(new HashMap<String, Collection<IType>>());
-
-				IScriptProject scriptProject = sourceModule.getScriptProject();
-				IDLTKSearchScope scope = SearchEngine
-						.createSearchScope(scriptProject);
-
-				IType[] allTypes = PhpModelAccess.getDefault().findTypes(null,
-						MatchRule.PREFIX, 0, 0, scope, null);
-				for (IType type : allTypes) {
-					String elementName = type.getTypeQualifiedName()
-							.toLowerCase();
-					Collection<IType> typesList;
-					typesList = allTypesCache.get(elementName);
-					if (typesList == null) {
-						typesList = new LinkedList<IType>();
-						allTypesCache.put(elementName, typesList);
-					}
-					typesList.add(type);
-				}
-			}
-
 			// if the namespace is not blank, append it to the key.
-			StringBuffer key = new StringBuffer();
+			final StringBuffer key = new StringBuffer();
 			if (namespaceName != null && !"".equals(namespaceName.trim())) { //$NON-NLS-1$
 				String nameSpace = namespaceName;
 				if (namespaceName.startsWith("\\") //$NON-NLS-1$
@@ -250,8 +231,20 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 				}
 			}
 			key.append(typeName);
+			final String searchFor = key.toString();
+			if (!allTypesCache.containsKey(searchFor)) {
+				IScriptProject scriptProject = sourceModule.getScriptProject();
+				IDLTKSearchScope scope = SearchEngine
+						.createSearchScope(scriptProject);
 
-			types = allTypesCache.get(key.toString());
+				allTypesCache.put(
+						searchFor,
+						Arrays.asList(PhpModelAccess.getDefault().findTypes(
+								namespaceName, typeName, MatchRule.EXACT, 0, 0,
+								scope, null)));
+			}
+
+			types = allTypesCache.get(searchFor);
 		}
 		return filterElements(sourceModule, types, monitor);
 	}
@@ -285,31 +278,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 		} else {
 			typeName = typeName.toLowerCase();
 
-			if (allTraitsCache == null) {
-				allTraitsCache = Collections
-						.synchronizedMap(new HashMap<String, Collection<IType>>());
-
-				IScriptProject scriptProject = sourceModule.getScriptProject();
-				IDLTKSearchScope scope = SearchEngine
-						.createSearchScope(scriptProject);
-
-				IType[] allTypes = PhpModelAccess.getDefault().findTraits(null,
-						MatchRule.PREFIX, 0, 0, scope, null);
-				for (IType type : allTypes) {
-					String elementName = type.getTypeQualifiedName()
-							.toLowerCase();
-					Collection<IType> typesList = allTraitsCache
-							.get(elementName);
-					if (typesList == null) {
-						typesList = new LinkedList<IType>();
-						allTraitsCache.put(elementName, typesList);
-					}
-					typesList.add(type);
-				}
-			}
-
 			// if the namespace is not blank, append it to the key.
-			StringBuffer key = new StringBuffer();
+			final StringBuffer key = new StringBuffer();
 			if (namespaceName != null && !"".equals(namespaceName.trim())) { //$NON-NLS-1$
 				String nameSpace = namespaceName;
 				if (namespaceName.startsWith("\\") //$NON-NLS-1$
@@ -322,7 +292,20 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			}
 			key.append(typeName);
 
-			types = allTraitsCache.get(key.toString());
+			final String searchFor = key.toString();
+			if (!allTraitsCache.containsKey(searchFor)) {
+				IScriptProject scriptProject = sourceModule.getScriptProject();
+				IDLTKSearchScope scope = SearchEngine
+						.createSearchScope(scriptProject);
+
+				allTraitsCache.put(
+						searchFor,
+						Arrays.asList(PhpModelAccess.getDefault().findTraits(
+								namespaceName, typeName, MatchRule.PREFIX, 0,
+								0, scope, null)));
+			}
+
+			types = allTraitsCache.get(searchFor);
 		}
 		return filterElements(sourceModule, types, monitor);
 	}
