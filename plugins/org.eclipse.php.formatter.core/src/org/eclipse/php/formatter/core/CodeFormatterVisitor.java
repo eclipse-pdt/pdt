@@ -4974,7 +4974,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 	public boolean visit(NamespaceDeclaration namespaceDeclaration) {
 		appendToBuffer("namespace"); //$NON-NLS-1$
 		insertSpace();
-		int lastPosition = lastPosition = namespaceDeclaration.getStart();
+		int lastPosition = namespaceDeclaration.getStart();
 		if (namespaceDeclaration.getName() != null) {
 			handleChars(namespaceDeclaration.getStart(), namespaceDeclaration
 					.getName().getStart());
