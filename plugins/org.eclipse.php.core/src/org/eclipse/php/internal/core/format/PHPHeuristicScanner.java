@@ -673,19 +673,22 @@ public final class PHPHeuristicScanner implements Symbols {
 		try {
 			int depth = 1;
 			start += 1;
+			final CharacterMatch match = new CharacterMatch(new char[] {
+					openingPeer, closingPeer });
 			while (true) {
-				start = scanBackward(start - 1, bound, new CharacterMatch(
-						new char[] { openingPeer, closingPeer }));
+				start = scanBackward(start - 1, bound, match);
 				if (start == NOT_FOUND)
 					return NOT_FOUND;
 
-				if (fDocument.getChar(start) == closingPeer)
+				if (fDocument.getChar(start) == closingPeer) {
 					depth++;
-				else
+				} else {
 					depth--;
+				}
 
-				if (depth == 0)
+				if (depth == 0) {
 					return start;
+				}
 			}
 
 		} catch (BadLocationException e) {
