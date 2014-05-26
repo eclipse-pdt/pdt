@@ -390,7 +390,6 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				}
 			}
 		}
-
 		return lineShouldInedent(checkedLineBeginState, checkedLineEndState)
 				|| forLineEndState == checkedLineBeginState;
 	}
@@ -528,18 +527,20 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 						document, textSequence.getOriginalOffset(0)))) {
 			int statementStart = textSequence.getOriginalOffset(0);
 			// we only search for opening pear in textSequence
-			int openParenPeer = scanner.findOpeningPeer(checkedOffset,
+			int openParenPeer = scanner.findOpeningPeer(checkedOffset - 1,
 					statementStart, PHPHeuristicScanner.LPAREN,
 					PHPHeuristicScanner.RPAREN);
-			int openBracePeer = scanner.findOpeningPeer(checkedOffset,
+			int openBracePeer = scanner.findOpeningPeer(checkedOffset - 1,
 					statementStart, PHPHeuristicScanner.LBRACE,
 					PHPHeuristicScanner.RBRACE);
-			int openBracketPeer = scanner.findOpeningPeer(checkedOffset,
+			int openBracketPeer = scanner.findOpeningPeer(checkedOffset - 1,
 					statementStart, PHPHeuristicScanner.LBRACKET,
 					PHPHeuristicScanner.RBRACKET);
+
 			int biggest = Math.max(openParenPeer, openBracePeer);
 			biggest = Math.max(biggest, openBracketPeer);
-			if (biggest != PHPHeuristicScanner.NOT_FOUND && biggest > lineStart) {
+			if (biggest != PHPHeuristicScanner.NOT_FOUND
+					&& biggest >= lineStart) {
 				// the whole document
 				final IStructuredDocumentRegion sdRegion = document
 						.getRegionAtCharacterOffset(lineStart);
@@ -558,8 +559,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 				if (phpScriptRegion instanceof IPhpScriptRegion) {
 					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) phpScriptRegion;
-					ITextRegion[] tokens = scriptRegion.getPhpTokens(lineStart,
-							biggest - lineStart);
+					ITextRegion[] tokens = scriptRegion.getPhpTokens(
+							lineStart - 1, biggest - lineStart + 1);
+
 					if (tokens != null && tokens.length > 0) {
 						Set<String> tokenTypeSet = new HashSet<String>();
 						for (int i = 0; i < tokens.length; i++) {
@@ -579,6 +581,10 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 											.contains(PHPRegionTypes.PHP_FUNCTION)) {
 								return true;
 							}
+						} else if (biggest == openBracketPeer
+								&& scanner.previousToken(biggest - 1,
+										PHPHeuristicScanner.UNBOUND) < PHPHeuristicScanner.TokenIDENT) {
+							return true;
 						} else {
 							if (tokenTypeSet.contains(PHPRegionTypes.PHP_ARRAY)) {
 								return true;
@@ -914,9 +920,15 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 			} else if (inMultiLine(scanner, document, lineNumber, offset)) {
 				// lineState.inBracelessBlock = true;
-				int peer = scanner.findOpeningPeer(offset - 1,
-						PHPHeuristicScanner.UNBOUND,
-						PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
+				int peer = Math.max(
+						scanner.findOpeningPeer(offset - 1,
+								PHPHeuristicScanner.UNBOUND,
+								PHPHeuristicScanner.LPAREN,
+								PHPHeuristicScanner.RPAREN), scanner
+								.findOpeningPeer(offset - 1,
+										PHPHeuristicScanner.UNBOUND,
+										PHPHeuristicScanner.LBRACKET,
+										PHPHeuristicScanner.RBRACKET));
 				if (peer != PHPHeuristicScanner.NOT_FOUND) {
 
 					// search for assignment (i.e. "=>")
@@ -1060,9 +1072,13 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		if (textSequence != null && isRegionTypeAllowedMultiline(regionType)) {
 			int statementStart = textSequence.getOriginalOffset(0);
 			// we only search for opening pear in textSequence
-			int peer = scanner.findOpeningPeer(offset - 1,
+			int peer = Math.max(scanner.findOpeningPeer(offset - 1,
 					textSequence.getOriginalOffset(0),
-					PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
+					PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN),
+					scanner.findOpeningPeer(offset - 1,
+							textSequence.getOriginalOffset(0),
+							PHPHeuristicScanner.LBRACKET,
+							PHPHeuristicScanner.RBRACKET));
 			if (peer == PHPHeuristicScanner.NOT_FOUND) {
 				return false;
 			}

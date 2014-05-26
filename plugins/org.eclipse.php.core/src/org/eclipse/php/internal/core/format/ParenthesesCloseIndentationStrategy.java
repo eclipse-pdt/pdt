@@ -70,7 +70,7 @@ public class ParenthesesCloseIndentationStrategy implements
 		do {
 			if (tRegion instanceof IPhpScriptRegion) {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-				tRegion = scriptRegion.getPhpToken(offset - regionStart - 1);
+				tRegion = scriptRegion.getPhpToken(offset - regionStart);
 
 				// go backward over the region to find a 'case' or 'default'
 				// region
@@ -78,12 +78,24 @@ public class ParenthesesCloseIndentationStrategy implements
 				// other case if look for the '(' of the 'switch' region
 				while (tRegion != null) {
 					String token = tRegion.getType();
+
 					if (token == PHPRegionTypes.PHP_ARRAY) {
 						parenCount--;
 						if (parenCount < 0) {
 							return document.getLineInformationOfOffset(tRegion
 									.getStart() + regionStart);
 						}
+					} else if (token == PHPRegionTypes.PHP_TOKEN
+							&& document
+									.get(sdRegion.getStartOffset()
+											+ scriptRegion.getStart()
+											+ tRegion.getStart(),
+											tRegion.getLength())
+									.contains(
+											Character
+													.toString(PHPHeuristicScanner.LBRACKET))) {
+						return document.getLineInformationOfOffset(tRegion
+								.getStart() + regionStart);
 					}
 					if (tRegion.getStart() > 0) {
 						tRegion = scriptRegion

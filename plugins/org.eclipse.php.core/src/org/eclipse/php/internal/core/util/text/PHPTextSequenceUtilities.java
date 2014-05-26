@@ -145,7 +145,6 @@ public class PHPTextSequenceUtilities {
 				textSequence = textSequence.subTextSequence(
 						readForwardSpaces(textSequence, 0),
 						textSequence.length());
-
 				return textSequence;
 
 			} catch (BadLocationException e) {
