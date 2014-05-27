@@ -1,0 +1,14 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+$x = ['name' => 'Gonzalo', 'surname' => 'Ayuso' // test comment
+    ];
+?>
+--EXPECT--
+<?php
+$x = [ 
+		'name' => 'Gonzalo',
+		'surname' => 'Ayuso'  // test comment
+];
+?>
