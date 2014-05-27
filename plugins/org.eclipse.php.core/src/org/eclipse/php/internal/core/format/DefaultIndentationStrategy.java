@@ -556,7 +556,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					phpContentStartOffset += phpScriptRegion.getStart();
 				}
 
-				if (phpScriptRegion instanceof IPhpScriptRegion) {
+				if (phpScriptRegion instanceof IPhpScriptRegion
+						&& lineStart <= phpScriptRegion.getEnd()) {
 					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) phpScriptRegion;
 					ITextRegion[] tokens = scriptRegion.getPhpTokens(lineStart,
 							biggest - lineStart);
