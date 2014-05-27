@@ -93,7 +93,8 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		if (abstractContext.getPrefixWithoutProcessing().trim().length() == 0) {
 			return;
 		}
-		boolean isUseContext = context instanceof UseNameContext;
+		boolean isUseContext = context instanceof UseNameContext
+				&& !((UseNameContext) context).isUseTrait();
 		SourceRange replacementRange = getReplacementRange(abstractContext);
 
 		IType[] types = getTypes(abstractContext);
