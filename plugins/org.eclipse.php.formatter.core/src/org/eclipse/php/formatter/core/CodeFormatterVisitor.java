@@ -994,6 +994,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 						switch (document.getChar(endLineInformation.getOffset()
 								+ i)) {
 						case CLOSE_PARN:
+						case CLOSE_BRACKET:
 							secondReplaceBufferNeeded = true;
 							break search;
 						case ' ':
