@@ -12,10 +12,12 @@ package org.eclipse.php.internal.ui.editor.highlighters;
 
 import java.util.Collection;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.*;
-import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighter.ModelUtils;
@@ -60,9 +62,10 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 						.getName();
 				IModelAccessCache cache = classConst.getAST()
 						.getBindingResolver().getModelAccessCache();
-				if (cache != null) {
-					Collection<IType> types = cache.getTypes(getSourceModule(),
-							className, null, null);
+				try {
+					IType[] types = PHPModelUtils.getTypes(className,
+							getSourceModule(), classConst.getStart(), cache,
+							new NullProgressMonitor());
 					if (types != null) {
 						for (IType type : types) {
 							if (ModelUtils.isDeprecated(type)) {
@@ -71,7 +74,10 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 							}
 						}
 					}
+				} catch (ModelException e) {
+					Logger.logException(e);
 				}
+
 			}
 			return true;
 		}
