@@ -1,0 +1,8 @@
+--TEST--
+Test trait with interfaces error reporting
+--FILE--
+<?php
+trait A implements Y {}
+?>
+--EXPECT--
+[line=2, start=25, end=26] Cannot use 'Y' as interface on 'A' since it is a Trait

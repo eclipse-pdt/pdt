@@ -310,6 +310,7 @@ non terminal Expression trait_method_reference;
 non terminal FullyQualifiedTraitMethodReference trait_method_reference_fully_qualified;
 non terminal TraitAlias trait_alias;
 non terminal CompilerAstParser.ModifierDocPair trait_modifiers;
+non terminal CompilerAstParser.ModifierDocPair non_empty_trait_modifiers;
 
 non terminal ChainingMethodPropertyList chaining_method_or_property;
 non terminal PHPArrayDereferenceList chaining_dereference;
@@ -1092,8 +1093,13 @@ extends_from:superClass errorOrNot implements_list:interfaces
 		classDeclaration.setSuperClass(superClass);
 	}
 	if (interfaces != null) {
-		classDeclaration.setInterfaceList(interfaces);
-	}
+        if (classDeclaration.getModifiers() == org.eclipse.php.core.compiler.IPHPModifiers.AccTrait && interfaces.size() > 0) {
+        SimpleReference node = (SimpleReference) interfaces.get(0);
+           parser.reportError(new ASTError(node.sourceStart(), node.sourceEnd()), String.format("Cannot use '%s' as interface on '%s' since it is a Trait", node.getName(), classDeclaration.getName()));
+        } else {
+          classDeclaration.setInterfaceList(interfaces);
+        }
+    }
 	classDeclaration.setEnd(interfacesright);
 	classDeclaration.getBody().setStart(interfacesright);
 	classDeclaration.getBody().setEnd(interfacesright);
@@ -1932,7 +1938,7 @@ trait_alias ::=
 		new SimpleReference(functionNameleft, functionNameright, functionName));
 	RESULT = alias;
 :}
-|	trait_method_reference:reference T_AS member_modifier:modifier
+|	trait_method_reference:reference T_AS non_empty_trait_modifiers:modifier
 {:
 	int modifierValue = modifier == null ? Modifiers.AccPublic : modifier.modifier;
 	TraitAlias alias = new TraitAlias(reference,modifierValue,null);
@@ -1940,14 +1946,31 @@ trait_alias ::=
 :}
 ;
 
-trait_modifiers ::=
-		/* empty */
+non_empty_trait_modifiers ::=
+T_PUBLIC:value
 {:
-	RESULT = null;
+    RESULT = parser.new ModifierDocPair(Modifiers.AccPublic, value);
 :}
-| member_modifier:modifier
+
+| T_PROTECTED:value
 {:
-	RESULT = modifier;
+    RESULT = parser.new ModifierDocPair(Modifiers.AccProtected, value);
+:}
+
+| T_PRIVATE:value
+{:
+    RESULT = parser.new ModifierDocPair(Modifiers.AccPrivate, value);
+:}
+;
+
+trait_modifiers ::=
+        /* empty */
+{:
+    RESULT = null;
+:}
+| non_empty_trait_modifiers:modifier
+{:
+    RESULT = modifier;
 :}
 ;
 

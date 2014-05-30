@@ -1,0 +1,18 @@
+--TEST--
+Test invalid trait alias modifier error reporting
+--FILE--
+<?php
+trait A {
+    use X {
+        Q as static;
+    }
+}
+trait B {
+    use X {
+        Q as static name;
+    }
+}
+?>
+--EXPECT--
+[line=4, start=41, end=47] syntax error, unexpected 'static', expecting 'identifier'
+[line=9, start=92, end=98] syntax error, unexpected 'static', expecting 'identifier'
