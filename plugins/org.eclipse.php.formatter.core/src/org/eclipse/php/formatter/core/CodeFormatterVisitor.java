@@ -1497,12 +1497,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 						} else {
 
 						}
+						newLineOfComment = false;
 						if (this.preferences.comment_new_lines_at_block_boundaries) {
 							insertNewLineForPHPBlockComment(
 									indentLengthForComment,
 									indentStringForComment);
+							newLineOfComment = true;
 						}
-
+						boolean isFirst = true;
 						for (int j = 0; j < lines.size(); j++) {
 							String word = lines.get(j).trim();
 							if (word.startsWith("*")) { //$NON-NLS-1$
@@ -1511,24 +1513,48 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 							if (word.length() > 0) {
 								commentWords.add(word);
 								if (this.preferences.join_lines_in_comments) {
-
+									if (!isFirst) {
+										insertNewLineForPHPBlockComment(
+												indentLengthForComment,
+												indentStringForComment);
+										newLineOfComment = true;
+									}
+									isFirst = false;
 									formatCommentBlockWords(
 											indentLengthForComment,
 											indentStringForComment);
 								}
 							} else if (!this.preferences.comment_clear_blank_lines_in_block_comment) {
-
 								if (j != 0 && j != lines.size() - 1) {
 									formatCommentBlockWords(
 											indentLengthForComment,
 											indentStringForComment);
+									// don't duplicate first blank line
+									if (isFirst
+											&& this.preferences.comment_new_lines_at_block_boundaries) {
+										newLineOfComment = true;
+										isFirst = false;
+										continue;
+									}
+									insertNewLineForPHPBlockComment(
+											indentLengthForComment,
+											indentStringForComment);
+									newLineOfComment = true;
+									isFirst = false;
 								}
 							}
 
 						}
-						formatCommentBlockWords(indentLengthForComment,
-								indentStringForComment);
-						if (this.preferences.comment_new_lines_at_block_boundaries) {
+						if (!commentWords.isEmpty()) {
+							formatCommentBlockWords(indentLengthForComment,
+									indentStringForComment);
+							isFirst = false;
+						}
+						if (isFirst
+								&& this.preferences.comment_new_lines_at_block_boundaries) {
+							appendToBuffer("/"); //$NON-NLS-1$
+						} else if (newLineOfComment
+								|| this.preferences.comment_new_lines_at_block_boundaries) {
 							insertNewLine();
 							if (indentLengthForComment >= 0) {
 								appendToBuffer(indentStringForComment);
@@ -1540,6 +1566,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 						} else {
 							indertWordToComment("*/"); //$NON-NLS-1$
 						}
+						newLineOfComment = false;
 						handleCharsWithoutComments(comment.sourceStart()
 								+ offset, comment.sourceEnd() + offset, true);
 
