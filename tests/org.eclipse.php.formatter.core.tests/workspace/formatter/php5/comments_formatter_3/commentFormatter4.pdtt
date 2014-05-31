@@ -58,8 +58,9 @@ interface Example
     //	}
 /* block comment on first column */
     function bar ();
-    /* These possibilities include: <ul><li>Formatting of
-     * header comments.</li><li>Formatting of Javadoc
+    /* These possibilities include:
+     * <ul><li>Formatting of header
+     * comments.</li><li>Formatting of Javadoc
      * tags</li></ul> */
     function bar2 (); // This is a long comment that should be split in multiple line comments in case the line comment formatting is enabled
     /** The following is some sample code
