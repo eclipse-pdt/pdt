@@ -1223,6 +1223,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					if (!commentWords.isEmpty()) {
 						initCommentWords();
 						formatPHPDocText(commentWords, null, false, false);
+						lastLineIsBlank = false;
 					}
 
 					if (tags != null && tags.length > 0) {
