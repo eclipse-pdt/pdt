@@ -14,11 +14,9 @@ import java.util.*;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.libfolders.AutoDetectLibraryFolderListener;
 import org.eclipse.wst.validation.ValidationFramework;
@@ -118,11 +116,6 @@ public class LibraryFolderManager {
 	 * Marks the given source folders as library folders.
 	 * 
 	 * <p>
-	 * The given array of model elements should contain {@link IScriptFolder} or
-	 * {@link IProjectFragment} objects.
-	 * </p>
-	 * 
-	 * <p>
 	 * This method executes the following steps:
 	 * <ol>
 	 * <li>Disables the given folders in the WTP Validation Framework.</li>
@@ -143,9 +136,9 @@ public class LibraryFolderManager {
 	 * build jobs.
 	 * </p>
 	 * 
-	 * @param elements
-	 *            an array of model elements that represents the source folders
-	 *            to be marked as library folders
+	 * @param folders
+	 *            an array of {@link IFolder} objects that represents the source
+	 *            folders to be marked as library folders
 	 * @param monitor
 	 *            a progress monitor, or null if progress reporting is not
 	 *            desired
@@ -157,28 +150,23 @@ public class LibraryFolderManager {
 	 * @throws CoreException
 	 *             if this method fails for some other reason
 	 * 
-	 * @see {@link #useAsSourceFolder(IModelElement[], IProgressMonitor)}
+	 * @see {@link #useAsSourceFolder(IFolder[], IProgressMonitor)}
 	 */
-	public void useAsLibraryFolder(IModelElement[] elements,
-			IProgressMonitor monitor) throws OperationCanceledException,
-			InterruptedException, CoreException {
-		disableValidation(elements);
+	public void useAsLibraryFolder(IFolder[] folders, IProgressMonitor monitor)
+			throws OperationCanceledException, InterruptedException,
+			CoreException {
+		disableValidation(folders);
 
-		elements = removeNonExisting(elements);
-		if (elements.length > 0) {
-			notifyListeners(elements);
+		folders = removeNonExisting(folders);
+		if (folders.length > 0) {
+			notifyListeners(folders);
 			waitValidationJobs(monitor);
-			deleteMarkers(elements);
+			deleteMarkers(folders);
 		}
 	}
 
 	/**
 	 * Marks the given library folders as source folders.
-	 * 
-	 * <p>
-	 * The given array of model elements should contain {@link IScriptFolder} or
-	 * {@link IProjectFragment} objects.
-	 * </p>
 	 * 
 	 * <p>
 	 * This method executes the following steps:
@@ -202,9 +190,9 @@ public class LibraryFolderManager {
 	 * build jobs.
 	 * </p>
 	 * 
-	 * @param elements
-	 *            an array of model elements that represents the library folders
-	 *            to be marked as source folders
+	 * @param folders
+	 *            an array of {@link IFolder} objects that represents the
+	 *            library folders to be marked as source folders
 	 * @param monitor
 	 *            a progress monitor, or null if progress reporting is not
 	 *            desired
@@ -216,105 +204,101 @@ public class LibraryFolderManager {
 	 * @throws CoreException
 	 *             if this method fails for some other reason
 	 * 
-	 * @see {@link #useAsLibraryFolder(IModelElement[], IProgressMonitor)}
+	 * @see {@link #useAsLibraryFolder(IFolder[], IProgressMonitor)}
 	 */
-	public void useAsSourceFolder(IModelElement[] elements,
-			IProgressMonitor monitor) throws OperationCanceledException,
-			InterruptedException, CoreException {
-		enableValidation(elements);
+	public void useAsSourceFolder(IFolder[] folders, IProgressMonitor monitor)
+			throws OperationCanceledException, InterruptedException,
+			CoreException {
+		enableValidation(folders);
 
-		elements = removeNonExisting(elements);
-		if (elements.length > 0) {
-			notifyListeners(elements);
+		folders = removeNonExisting(folders);
+		if (folders.length > 0) {
+			notifyListeners(folders);
 			waitValidationJobs(monitor);
-			revalidate(elements, monitor);
+			revalidate(folders, monitor);
 		}
 	}
 
 	/**
-	 * Enables validation for the given model element in the WTP Validation
-	 * Framework.
+	 * Enables validation for the given folder in the WTP Validation Framework.
 	 * 
-	 * @param element
-	 *            a model elements to enable validation for
+	 * @param folder
+	 *            a folder to enable validation for
 	 */
-	public void enableValidation(IModelElement element) {
+	public void enableValidation(IFolder folder) {
 		ValidationFramework vf = ValidationFramework.getDefault();
-		vf.enableValidation(element.getResource());
+		vf.enableValidation(folder);
 	}
 
 	/**
-	 * Disables validation for the given model element in the WTP Validation
-	 * Framework.
+	 * Disables validation for the given folder in the WTP Validation Framework.
 	 * 
 	 * <p>
 	 * This method cleans up the disabled state for all subfolders of the given
-	 * model element (i.e. source folder). This is necessary to avoid nested
-	 * declarations of library folders. Otherwise, if the user marks a library
-	 * folder as a source folder and there are nested library folders then there
-	 * will be still subfolders which remain library folders.
+	 * folder. This is necessary to avoid nested declarations of library
+	 * folders. Otherwise, if the user marks a library folder as a source folder
+	 * and there are nested library folders then there will be still subfolders
+	 * which remain library folders.
 	 * </p>
 	 * 
-	 * @param elements
-	 *            a model element to disable validation for
+	 * @param folder
+	 *            a folder to disable validation for
 	 * 
-	 * @throws ModelException
-	 *             if the given element does not exist or if an exception occurs
-	 *             while accessing its corresponding resource
+	 * @throws CoreException
+	 *             if any of the folders does not exist or is in a closed
+	 *             project
 	 */
-	public void disableValidation(IModelElement element) throws ModelException {
+	public void disableValidation(IFolder folder) throws CoreException {
 		ValidationFramework vf = ValidationFramework.getDefault();
 
 		// clean up the state of all subfolders
-		for (IModelElement subfolder : getAllSubfolders(element)) {
-			vf.enableValidation(subfolder.getResource());
+		for (IFolder subfolder : getAllSubfolders(folder)) {
+			vf.enableValidation(subfolder);
 		}
 
-		if (!isInLibraryFolder(element)) {
+		if (!isInLibraryFolder(folder)) {
 			// disable the given folder only if no parent folder is a library
 			// folder yet
-			vf.disableValidation(element.getResource());
+			vf.disableValidation(folder);
 		}
 	}
 
 	/**
-	 * Enables validation for the given model elements in the WTP Validation
-	 * Framework.
+	 * Enables validation for the given folders in the WTP Validation Framework.
 	 * 
 	 * <p>
-	 * This method invokes {@link #enableValidation(IModelElement)} for each of
-	 * the model elements in the given array.
+	 * This method invokes {@link #enableValidation(IFolder)} for each of the
+	 * folders in the given array.
 	 * </p>
 	 * 
-	 * @param elements
-	 *            an array of model elements to enable validation for
+	 * @param folders
+	 *            an array of folders to enable validation for
 	 */
-	public void enableValidation(IModelElement[] elements) {
-		for (IModelElement element : elements) {
-			enableValidation(element);
+	public void enableValidation(IFolder[] folders) {
+		for (IFolder folder : folders) {
+			enableValidation(folder);
 		}
 	}
 
 	/**
-	 * Disables validation for the given model elements in the WTP Validation
+	 * Disables validation for the given folders in the WTP Validation
 	 * Framework.
 	 * 
 	 * <p>
-	 * This method invokes {@link #disableValidation(IModelElement)} for each of
-	 * the model elements in the given array.
+	 * This method invokes {@link #disableValidation(IFolder)} for each of the
+	 * folders in the given array.
 	 * </p>
 	 * 
-	 * @param elements
-	 *            an array of model elements to disable validation for
+	 * @param folders
+	 *            an array of folders to disable validation for
 	 * 
-	 * @throws ModelException
-	 *             if any of the given element does not exist or if an exception
-	 *             occurs while accessing its corresponding resource
+	 * @throws CoreException
+	 *             if any of the folders does not exist or is in a closed
+	 *             project
 	 */
-	public void disableValidation(IModelElement[] elements)
-			throws ModelException {
-		for (IModelElement element : elements) {
-			disableValidation(element);
+	public void disableValidation(IFolder[] folders) throws CoreException {
+		for (IFolder folder : folders) {
+			disableValidation(folder);
 		}
 	}
 
@@ -324,226 +308,182 @@ public class LibraryFolderManager {
 	 * <p>
 	 * A library folder is a source folder that is disabled for validation in
 	 * the WTP Validation Framework. So, this method checks if a parent folder
-	 * of the given model element is disabled for validation.
+	 * of the given resource is disabled for validation.
 	 * </p>
 	 * 
 	 * @param resource
 	 *            a resource to check if inside a library folder
 	 * 
-	 * @return <code>true</code> if the given model element is inside a library
+	 * @return <code>true</code> if the given resource is inside a library
 	 *         folder, and <code>false</code> otherwise
 	 * 
 	 * @see ValidationFramework#disableValidation(IResource)
 	 */
 	public boolean isInLibraryFolder(IResource resource) {
 		if (resource == null)
-			// the model element has no corresponding resource, so it is not
-			// part of any source file and hence cannot be in a library folder
 			return false;
 
 		if (resource.getType() == IResource.FILE) {
-			// the model element is a source file, so take its parent folder
+			// the resource is a source file, so take its parent folder
 			resource = resource.getParent();
 		}
 
 		while (resource.getType() == IResource.FOLDER) {
 			// check if the folder is disabled in the WTP Validation Framework
-			if (isTopmostLibraryFolder(resource)) {
+			if (isExplicitlyDisabled((IFolder) resource)) {
 				return true;
 			}
 			// the folder is not disabled, so check its parent folder
 			resource = resource.getParent();
 		}
 
-		// none of the element's parent folders is disabled in the WTP
-		// Validation Framework, so the element is not inside a library folder
+		// none of the resource's parent folders is disabled in the WTP
+		// Validation Framework, so the resource is not inside a library folder
 		return false;
 	}
 
 	/**
-	 * Returns whether the given model element is inside a library folder.
+	 * Returns whether the the given folder is a library folder that is
+	 * explicitly disabled in the WTP Validation Framework.
 	 * 
 	 * <p>
-	 * A library folder is a source folder that is disabled for validation in
-	 * the WTP Validation Framework. So, this method checks if a parent folder
-	 * of the given model element is disabled for validation.
+	 * This is a folder that was passed as parameter to the
+	 * {@link #disableValidation(IFolder)} method.
 	 * </p>
 	 * 
-	 * @param element
-	 *            a model element to check if inside a library folder
+	 * @param folder
+	 *            a folder to check
 	 * 
-	 * @return <code>true</code> if the given model element is inside a library
-	 *         folder, and <code>false</code> otherwise
-	 * 
-	 * @see ValidationFramework#disableValidation(IResource)
+	 * @return <code>true</code> if the folder is a explicitly disabled, and
+	 *         <code>false</code> otherwise
 	 */
-	public boolean isInLibraryFolder(IModelElement element) {
-		if (element == null)
+	@SuppressWarnings("restriction")
+	public boolean isExplicitlyDisabled(IFolder folder) {
+		if (folder == null)
 			return false;
 
-		IResource resource = element.getResource();
-
-		return isInLibraryFolder(resource);
+		return DisabledResourceManager.getDefault().isDisabled(folder);
 	}
 
 	/**
-	 * Returns whether the the given resource is a topmost library folder.
+	 * Returns the explicitly disabled parent library folder of the given
+	 * resource.
 	 * 
 	 * <p>
-	 * A topmost library folder is such folder that is explicitly disable in the
-	 * WTP Validation Framework. The subfolders of a topmost library folder are
-	 * library folders, but the parent of the topmost library folder is not a
-	 * library folder.
+	 * This is a parent folder that was passed as parameter to the
+	 * {@link #disableValidation(IFolder)} method.
 	 * </p>
 	 * 
 	 * @param resource
 	 *            a resource
 	 * 
-	 * @return <code>true</code> if the resource is a topmost library folder,
-	 *         and <code>false</code> otherwise
+	 * @return the explicitly disabled parent library folder of the given
+	 *         resource
 	 */
-	@SuppressWarnings("restriction")
-	public boolean isTopmostLibraryFolder(IResource resource) {
-		return DisabledResourceManager.getDefault().isDisabled(resource);
-	}
-
-	/**
-	 * Returns whether the the given model element is a topmost library folder.
-	 * 
-	 * <p>
-	 * A topmost library folder is such folder that is explicitly disable in the
-	 * WTP Validation Framework. The subfolders of a topmost library folder are
-	 * library folders, but the parent of the topmost library folder is not a
-	 * library folder.
-	 * </p>
-	 * 
-	 * @param element
-	 *            a model element
-	 * 
-	 * @return <code>true</code> if the model element is a topmost library
-	 *         folder, and <code>false</code> otherwise
-	 */
-	public boolean isTopmostLibraryFolder(IModelElement element) {
-		return isTopmostLibraryFolder(element.getResource());
-	}
-
-	/**
-	 * Returns the topmost library folder of the given model element.
-	 * 
-	 * <p>
-	 * A topmost library folder is such folder that is explicitly disable in the
-	 * WTP Validation Framework. The subfolders of a topmost library folder are
-	 * library folders, but the parent of the topmost library folder is not a
-	 * library folder.
-	 * </p>
-	 * 
-	 * @param element
-	 *            a model element
-	 * 
-	 * @return the topmost library folder of the given model element
-	 */
-	public IModelElement getTopmostLibraryFolder(IModelElement element) {
-		IResource resource = element.getResource();
+	public IFolder getExplicitlyDisabledParent(IResource resource) {
 		if (resource == null)
-			// the model element has no corresponding resource, so it is not
-			// part of any source file and hence cannot be in a library folder
 			return null;
 
 		if (resource.getType() == IResource.FILE) {
-			// the model element is a source file, so take its parent folder
+			// the resource is a source file, so take its parent folder
 			resource = resource.getParent();
 		}
 
 		while (resource.getType() == IResource.FOLDER) {
+			IFolder folder = (IFolder) resource;
 			// check if the folder is disabled in the WTP Validation Framework
-			if (isTopmostLibraryFolder(resource)) {
-				// the folder is disabled, so it is the topmost library folder
-				return DLTKCore.create(resource);
+			if (isExplicitlyDisabled(folder)) {
+				return folder;
 			}
 			// the folder is not disabled, so check its parent folder
 			resource = resource.getParent();
 		}
 
-		// none of the element's parent folders is disabled in the WTP
-		// Validation Framework, so the element is not inside a library folder
-		// and therefore has no topmost library folder
+		// none of the resource's parent folders is disabled in the WTP
+		// Validation Framework, so the resource is not inside a library folder
+		// and therefore has no explicitly disabled parent library folder
 		return null;
 	}
 
 	/**
-	 * Returns all subfolders of the given model elements.
+	 * Returns all subfolders (recursively) of the given folders.
 	 * 
 	 * <p>
-	 * This method invokes {@link #getAllSubfolders(IModelElement)} for each of
-	 * the model elements in the given array and merges the result.
+	 * This method invokes {@link #getAllSubfolders(IFolder)} for each of the
+	 * folders in the given array and merges the result.
 	 * </p>
 	 * 
-	 * @param elements
-	 *            an array of model elements
+	 * @param folders
+	 *            an array of folders
 	 * 
-	 * @return an array of model elements containing the elements of the given
-	 *         array and all their children
+	 * @return an array of folders containing the folders of the given array and
+	 *         all their subfolders
 	 * 
-	 * @throws ModelException
-	 *             if any of the given element does not exist or if an exception
-	 *             occurs while accessing its corresponding resource
+	 * @throws CoreException
+	 *             if any of the folders does not exist or is in a closed
+	 *             project
 	 */
-	public IModelElement[] getAllSubfolders(IModelElement[] elements)
-			throws ModelException {
-		Collection<IModelElement> allSubfolders = new HashSet<IModelElement>();
+	public IFolder[] getAllSubfolders(IFolder[] folders) throws CoreException {
+		Collection<IFolder> allSubfolders = new HashSet<IFolder>();
 
-		for (IModelElement element : elements) {
-			allSubfolders.addAll(Arrays.asList(getAllSubfolders(element)));
+		for (IFolder folder : folders) {
+			allSubfolders.addAll(Arrays.asList(getAllSubfolders(folder)));
 		}
 
-		return allSubfolders.toArray(new IModelElement[allSubfolders.size()]);
+		return allSubfolders.toArray(new IFolder[allSubfolders.size()]);
 	}
 
 	/**
-	 * Returns all subfolders of the given model element.
+	 * Returns all subfolders (recursively) of the given folder.
 	 * 
 	 * <p>
-	 * This method traverses the complete element's subtree to find the
+	 * This method traverses the complete folder's subtree to find the
 	 * subfolders on all levels.
 	 * </p>
 	 * 
-	 * @param element
-	 *            a model element
+	 * @param folder
+	 *            a folder
 	 * 
-	 * @return an array of model elements containing the given element and all
-	 *         its children
+	 * @return an array of folders containing the given folder and all its
+	 *         subfolders
 	 * 
-	 * @throws ModelException
-	 *             if any of the given element does not exist or if an exception
-	 *             occurs while accessing its corresponding resource
+	 * @throws CoreException
+	 *             if the folder does not exist or is in a closed project
 	 */
-	public IModelElement[] getAllSubfolders(IModelElement element)
-			throws ModelException {
-		List<IModelElement> children = new ArrayList<IModelElement>();
+	public IFolder[] getAllSubfolders(IFolder folder) throws CoreException {
+		List<IFolder> result = new ArrayList<IFolder>();
 
-		IPath path = element.getPath();
+		collectAllSubfolders((IFolder) folder, result);
 
-		// check all project fragments in the project
-		IProjectFragment[] fragments = element.getScriptProject()
-				.getProjectFragments();
+		return result.toArray(new IFolder[result.size()]);
+	}
 
-		for (IProjectFragment fragment : fragments) {
-			if (pathContainsModelElement(path, fragment)) {
-				// the project fragment is in the path
-				children.add(fragment);
-			}
+	/**
+	 * Add the given folder and all its subfolders (recursively) to the given
+	 * result collection.
+	 * 
+	 * <p>
+	 * This method traverses the complete folder's subtree to find the
+	 * subfolders on all levels.
+	 * </p>
+	 * 
+	 * @param folder
+	 *            a folder
+	 * @param result
+	 *            a collection of folder to hold the result
+	 * 
+	 * @throws CoreException
+	 *             if the folder does not exist or is in a closed project
+	 */
+	private void collectAllSubfolders(IFolder folder, Collection<IFolder> result)
+			throws CoreException {
+		result.add(folder);
 
-			// check all script folders in the project fragment
-			for (IModelElement child : fragment.getChildren()) {
-				if (child.getElementType() == IModelElement.SCRIPT_FOLDER
-						&& pathContainsModelElement(path, child)) {
-					// the script folder is in the path
-					children.add(child);
-				}
+		for (IResource child : folder.members()) {
+			if (child.getType() == IResource.FOLDER) {
+				collectAllSubfolders((IFolder) child, result);
 			}
 		}
-
-		return children.toArray(new IModelElement[children.size()]);
 	}
 
 	/**
@@ -551,14 +491,14 @@ public class LibraryFolderManager {
 	 * folders have changed from source folders to library folders or vice
 	 * versa.
 	 * 
-	 * @param elements
-	 *            the model elements representing the changed folders
+	 * @param folders
+	 *            the changed folders
 	 */
-	private void notifyListeners(IModelElement[] elements) {
+	private void notifyListeners(IFolder[] folders) {
 		synchronized (listeners) {
 			for (ILibraryFolderChangeListener listener : listeners) {
 				try {
-					listener.folderChanged(elements);
+					listener.foldersChanged(folders);
 				} catch (Exception e) {
 					PHPCorePlugin.log(e);
 				}
@@ -567,58 +507,33 @@ public class LibraryFolderManager {
 	}
 
 	/**
-	 * Removes the non-existing model elements from the given array.
+	 * Removes the non-existing folders from the given array.
 	 * 
 	 * <p>
 	 * The result is returned as new array. The given array remains untouched.
 	 * </p>
 	 * 
-	 * @param elements
-	 *            an array of model elements
+	 * @param folders
+	 *            an array of folders
 	 * 
-	 * @return a new array that contains only the existing elements of the given
+	 * @return a new array that contains only the existing folders of the given
 	 *         array
 	 */
-	private IModelElement[] removeNonExisting(IModelElement[] elements) {
-		Collection<IModelElement> existing = new HashSet<IModelElement>();
+	private IFolder[] removeNonExisting(IFolder[] folders) {
+		Collection<IFolder> existing = new HashSet<IFolder>();
 
-		for (IModelElement element : elements) {
-			if (element.exists()) {
-				existing.add(element);
+		for (IFolder folder : folders) {
+			if (folder.exists()) {
+				existing.add(folder);
 			}
 		}
 
-		return existing.toArray(new IModelElement[existing.size()]);
+		return existing.toArray(new IFolder[existing.size()]);
 	}
 
 	/**
-	 * Returns whether the given path contains the given model element.
-	 * 
-	 * <p>
-	 * This method compares if the path of the given model element is a subpath
-	 * of the given path.
-	 * </p>
-	 * 
-	 * @param path
-	 *            a path
-	 * @param element
-	 *            a model element
-	 * 
-	 * @return <code>true</code> if the given model element is in the given
-	 *         path, and <code>false</code> otherwise
-	 */
-	private boolean pathContainsModelElement(IPath path, IModelElement element) {
-		// get the first segments from the elements path
-		IPath elementPathPrefix = element.getPath().uptoSegment(
-				path.segmentCount());
-
-		// compare the prefix with the given path
-		return path.equals(elementPathPrefix);
-	}
-
-	/**
-	 * Delete all problem and tasks markers on all the given model elements and
-	 * all their children.
+	 * Delete all problem and tasks markers on all the given resources and all
+	 * their children.
 	 * 
 	 * <p>
 	 * Only markers of types {@link IMarker#PROBLEM} and {@link IMarker#TASK}
@@ -626,28 +541,25 @@ public class LibraryFolderManager {
 	 * breakpoints, etc.) are not affected.
 	 * </p>
 	 * 
-	 * @param elements
-	 *            an array of model elements
+	 * @param resources
+	 *            an array of resources
 	 * 
 	 * @throws CoreException
 	 *             if deleting the markers on any resource fails
 	 */
-	private void deleteMarkers(IModelElement[] elements) throws CoreException {
-
-		for (IModelElement element : elements) {
-			element.getResource().deleteMarkers(IMarker.PROBLEM, true,
+	private void deleteMarkers(IResource[] resources) throws CoreException {
+		for (IResource resource : resources) {
+			resource.deleteMarkers(IMarker.PROBLEM, true,
 					IResource.DEPTH_INFINITE);
-			element.getResource().deleteMarkers(IMarker.TASK, true,
-					IResource.DEPTH_INFINITE);
+			resource.deleteMarkers(IMarker.TASK, true, IResource.DEPTH_INFINITE);
 		}
 	}
 
 	/**
-	 * Triggers validation jobs for the given model elements and all their
-	 * children.
+	 * Triggers validation jobs for the given resources and all their children.
 	 * 
-	 * @param elements
-	 *            an array of model elements
+	 * @param resources
+	 *            an array of resources
 	 * @param monitor
 	 *            a progress monitor, or null if progress reporting is not
 	 *            desired
@@ -655,10 +567,10 @@ public class LibraryFolderManager {
 	 * @throws CoreException
 	 *             if touching of any of the resources fails
 	 */
-	private void revalidate(IModelElement[] elements, IProgressMonitor monitor)
+	private void revalidate(IResource[] resources, IProgressMonitor monitor)
 			throws CoreException {
-		for (IModelElement element : elements) {
-			deepTouch(element.getResource(), monitor);
+		for (IResource resource : resources) {
+			deepTouch(resource, monitor);
 		}
 	}
 

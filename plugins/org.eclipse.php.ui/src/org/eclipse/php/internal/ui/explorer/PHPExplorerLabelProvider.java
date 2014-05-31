@@ -117,7 +117,7 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 						|| element instanceof IFolder) {
 					LibraryFolderManager lfm = LibraryFolderManager
 							.getInstance();
-					if (lfm.isInLibraryFolder(modelElement)) {
+					if (lfm.isInLibraryFolder(modelElement.getResource())) {
 						return PHPPluginImages
 								.get(PHPPluginImages.IMG_OBJS_PHP_LIBFOLDER);
 					} else {

@@ -10,8 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.explorer;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.core.libfolders.ILibraryFolderChangeListener;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -28,38 +31,43 @@ import org.eclipse.ui.*;
 public class LibraryFolderChangeListener implements
 		ILibraryFolderChangeListener {
 
-	public void folderChanged(IModelElement[] elements) {
+	public void foldersChanged(IFolder[] folders) {
 		try {
-			updatePhpExplorer(elements);
-		} catch (ModelException e) {
+			updatePhpExplorer(folders);
+		} catch (CoreException e) {
 			PHPUiPlugin.log(e);
 		}
 	}
 
 	/**
-	 * Updates the visual state of the given model elements and all their
-	 * children in the PHP Explorer view.
+	 * Updates the visual state of the given folders and all their subfolders
+	 * (recursively) in the PHP Explorer view.
 	 * 
-	 * @param elements
-	 *            an array of model elements to update
+	 * @param folders
+	 *            an array of folders to update
 	 * 
-	 * @throws ModelException
-	 *             if any of the given element does not exist or if an exception
-	 *             occurs while accessing its corresponding resource
+	 * @throws CoreException
+	 *             if any of the folders does not exist or is in a closed
+	 *             project
 	 */
-	private void updatePhpExplorer(IModelElement[] elements)
-			throws ModelException {
+	private void updatePhpExplorer(IFolder[] folders) throws CoreException {
 		LibraryFolderManager lfm = LibraryFolderManager.getInstance();
-		final IModelElement[] subfolders = lfm.getAllSubfolders(elements);
+		final IFolder[] subfolders = lfm.getAllSubfolders(folders);
 
 		// make sure the actual update in the PHP Explorer is executed in the UI
 		// thread
 		Display.getDefault().asyncExec(new Runnable() {
 			@SuppressWarnings("restriction")
 			public void run() {
-				final PHPExplorerPart phpExplorer = getPhpExplorer();
+				PHPExplorerPart phpExplorer = getPhpExplorer();
 				if (phpExplorer != null) {
-					phpExplorer.getTreeViewer().update(subfolders, null);
+					TreeViewer tree = phpExplorer.getTreeViewer();
+					for (IFolder subfolder : subfolders) {
+						IModelElement element = DLTKCore.create(subfolder);
+						if (element != null) {
+							tree.update(element, null);
+						}
+					}
 				}
 			}
 		});

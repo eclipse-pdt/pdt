@@ -12,9 +12,9 @@ package org.eclipse.php.internal.ui.actions;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.jface.action.Action;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -27,7 +27,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
  * 
  * <p>
  * This action executes the
- * {@link LibraryFolderManager#useAsLibraryFolder(IModelElement[], IProgressMonitor)}
+ * {@link LibraryFolderManager#useAsLibraryFolder(IFolder[], IProgressMonitor)}
  * method in a {@link WorkspaceModifyOperation}.
  * </p>
  * 
@@ -36,23 +36,22 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 public class UseAsLibraryFolderAction extends Action {
 
 	/**
-	 * The array of model elements (i.e. source folders) to mark as library
-	 * folders.
+	 * The array of source folders to mark as library folders.
 	 */
-	private IModelElement[] fElements;
+	private IFolder[] fFolders;
 
 	/**
 	 * Constructor a new "Use As Library Folder" action to mark the given source
 	 * folders as library folders.
 	 * 
-	 * @param elements
-	 *            an array of model elements to mark as library folders
+	 * @param folders
+	 *            an array of source folders to mark as library folders
 	 */
-	public UseAsLibraryFolderAction(IModelElement[] elements) {
-		if (elements.length == 0)
-			throw new IllegalArgumentException("empty elements array");
+	public UseAsLibraryFolderAction(IFolder[] folders) {
+		if (folders.length == 0)
+			throw new IllegalArgumentException("empty folders array");
 
-		fElements = elements;
+		fFolders = folders;
 
 		setText(Messages.LibraryFolderAction_UseAsLibraryFolder_label);
 		setImageDescriptor(PHPPluginImages.DESC_OBJS_PHP_LIBFOLDER);
@@ -68,7 +67,7 @@ public class UseAsLibraryFolderAction extends Action {
 					throws CoreException, InvocationTargetException,
 					InterruptedException {
 				LibraryFolderManager lfm = LibraryFolderManager.getInstance();
-				lfm.useAsLibraryFolder(fElements, monitor);
+				lfm.useAsLibraryFolder(fFolders, monitor);
 			}
 		};
 

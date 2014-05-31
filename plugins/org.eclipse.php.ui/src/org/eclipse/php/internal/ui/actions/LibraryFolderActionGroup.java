@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.ui.IContextMenuConstants;
@@ -72,7 +73,7 @@ public class LibraryFolderActionGroup extends ActionGroup {
 		IStructuredSelection selection = (IStructuredSelection) sel;
 		Iterator<?> iterator = selection.iterator();
 
-		Collection<IModelElement> selected = new HashSet<IModelElement>();
+		Collection<IFolder> selected = new HashSet<IFolder>();
 
 		// collect all folders from the current selection
 		while (iterator.hasNext()) {
@@ -94,58 +95,52 @@ public class LibraryFolderActionGroup extends ActionGroup {
 				// the selection contains a model element that is not a folder
 				return null;
 
-			selected.add(element);
+			selected.add((IFolder) resource);
 		}
 
-		IModelElement[] elements = selected.toArray(new IModelElement[selected
-				.size()]);
+		IFolder[] folders = selected.toArray(new IFolder[selected.size()]);
 
-		if (elements.length == 0)
+		if (folders.length == 0)
 			// no folders in the selection
 			return null;
 
-		if (!allOfSameKind(elements))
+		if (!allOfSameKind(folders))
 			// a mixture of source folders and library folders in the selection
 			return null;
 
-		if (LibraryFolderManager.getInstance().isInLibraryFolder(elements[0])) {
+		if (LibraryFolderManager.getInstance().isInLibraryFolder(folders[0])) {
 			// the selection contains only library folders
-			return new UseAsSourceFolderAction(fSite, elements);
+			return new UseAsSourceFolderAction(fSite, folders);
 		} else {
 			// the selection contains only source folders
-			return new UseAsLibraryFolderAction(elements);
+			return new UseAsLibraryFolderAction(folders);
 		}
 	}
 
 	/**
-	 * Returns whether the given model elements are either all library folders
-	 * or all source folders.
+	 * Returns whether the given folders are either all library folders or all
+	 * source folders.
 	 * 
-	 * <p>
-	 * It is assumed that all given model elements are folders.
-	 * </p>
+	 * @param folders
+	 *            an array of folders
 	 * 
-	 * @param elements
-	 *            an array of model elements
-	 * 
-	 * @return <code>true</code> if the given model elements are either all
-	 *         library folders or source folder, and <code>false</code>
-	 *         otherwise
+	 * @return <code>true</code> if the given folders are either all library
+	 *         folders or source folder, and <code>false</code> otherwise
 	 */
-	private boolean allOfSameKind(IModelElement[] elements) {
+	private boolean allOfSameKind(IFolder[] folders) {
 		int libraryFolderCount = 0;
 
 		// count the library folders in the array
-		for (IModelElement element : elements) {
-			if (LibraryFolderManager.getInstance().isInLibraryFolder(element)) {
+		for (IResource folder : folders) {
+			if (LibraryFolderManager.getInstance().isInLibraryFolder(folder)) {
 				libraryFolderCount++;
 			}
 		}
 
-		// If the number of library folders is 0, then all elements are source
+		// If the number of library folders is 0, then all folders are source
 		// folders. If the number of library folders equals the number of given
-		// elements, then all elements are library folders. In any other case,
+		// folders, then all folders are library folders. In any other case,
 		// there is a mixture of library folders and source folders.
-		return libraryFolderCount == 0 || libraryFolderCount == elements.length;
+		return libraryFolderCount == 0 || libraryFolderCount == folders.length;
 	}
 }
