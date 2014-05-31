@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.core.libfolders;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.osgi.util.NLS;
@@ -26,32 +26,31 @@ import org.eclipse.osgi.util.NLS;
  */
 public class RenameLibraryFolderChange extends Change {
 
-	private IModelElement fElement;
-	private IModelElement fNewElement;
+	private IFolder fFolder;
+	private IFolder fNewFolder;
 
 	/**
 	 * Creates the change.
 	 * 
-	 * @param element
-	 *            the model element of the library folder to be renamed or moved
-	 * @param newElement
-	 *            the model element of the renamed/moved library folder
+	 * @param folder
+	 *            the library folder to be renamed or moved
+	 * @param newFolder
+	 *            the renamed/moved library folder
 	 */
-	public RenameLibraryFolderChange(IModelElement element,
-			IModelElement newElement) {
-		fElement = element;
-		fNewElement = newElement;
+	public RenameLibraryFolderChange(IFolder folder, IFolder newFolder) {
+		fFolder = folder;
+		fNewFolder = newFolder;
 	}
 
 	@Override
 	public Object getModifiedElement() {
-		return fElement;
+		return fFolder;
 	}
 
 	@Override
 	public String getName() {
 		return NLS.bind(Messages.RenameLibraryFolderChange_name,
-				fNewElement.getElementName());
+				fNewFolder.getFullPath());
 	}
 
 	@Override
@@ -68,10 +67,10 @@ public class RenameLibraryFolderChange extends Change {
 	public Change perform(IProgressMonitor monitor) throws CoreException {
 		// update the WTP Validation Framework for the renamed folder
 		LibraryFolderManager lfm = LibraryFolderManager.getInstance();
-		lfm.enableValidation(fElement);
-		lfm.disableValidation(fNewElement);
+		lfm.enableValidation(fFolder);
+		lfm.disableValidation(fNewFolder);
 
-		return new RenameLibraryFolderChange(fNewElement, fElement);
+		return new RenameLibraryFolderChange(fNewFolder, fFolder);
 	}
 
 }

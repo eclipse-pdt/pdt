@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.libfolders;
 
-import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.core.resources.IFolder;
 
 /**
  * A library folder change listeners whenever a source folder is turned to
@@ -36,7 +36,7 @@ public interface ILibraryFolderChangeListener {
 	 * 
 	 * <p>
 	 * This method is called after the WTP Validation Framework is updated with
-	 * the changed folder, but before the re-validation has been started.
+	 * the changed folders, but before the re-validation has been started.
 	 * </p>
 	 * 
 	 * <p>
@@ -45,9 +45,9 @@ public interface ILibraryFolderChangeListener {
 	 * job.
 	 * </p>
 	 * 
-	 * @param elements
-	 *            the model elements representing the changed folders
+	 * @param folders
+	 *            the changed folders
 	 */
-	public void folderChanged(IModelElement[] elements);
+	public void foldersChanged(IFolder[] folders);
 
 }

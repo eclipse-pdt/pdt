@@ -413,6 +413,7 @@
                <or>
                   <instanceof value="org.eclipse.dltk.core.IProjectFragment"/>
                   <instanceof value="org.eclipse.dltk.core.IScriptFolder"/>
+                  <instanceof value="org.eclipse.core.resources.IFolder"/>
                </or>
             </with>
          </enablement>

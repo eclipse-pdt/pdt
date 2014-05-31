@@ -96,7 +96,7 @@ public class PHPIPListLabelProvider extends BPListLabelProvider {
 		if (null != modelElement) {
 			if (modelElement instanceof IScriptFolder) {
 				LibraryFolderManager lfm = LibraryFolderManager.getInstance();
-				if (lfm.isInLibraryFolder(modelElement))
+				if (lfm.isInLibraryFolder(modelElement.getResource()))
 					return PHPPluginImages.DESC_OBJS_PHP_LIBFOLDER;
 				else
 					return PHPPluginImages.DESC_OBJS_PHPFOLDER_ROOT;

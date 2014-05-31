@@ -16,9 +16,10 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
@@ -34,7 +35,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
  * 
  * <p>
  * This action executes the
- * {@link LibraryFolderManager#useAsSourceFolder(IModelElement[], IProgressMonitor)}
+ * {@link LibraryFolderManager#useAsSourceFolder(IFolder[], IProgressMonitor)}
  * method in a {@link WorkspaceModifyOperation}.
  * </p>
  * 
@@ -48,10 +49,9 @@ public class UseAsSourceFolderAction extends Action {
 	private IWorkbenchSite fSite;
 
 	/**
-	 * The array of model elements (i.e. library folders) to mark as source
-	 * folders.
+	 * The array of library folders to mark as source folders.
 	 */
-	private IModelElement[] fElements;
+	private IFolder[] fFolders;
 
 	/**
 	 * Constructor a new "Use As Source Folder" action to mark the given library
@@ -59,15 +59,15 @@ public class UseAsSourceFolderAction extends Action {
 	 * 
 	 * @param site
 	 *            a reference to the workbench site
-	 * @param elements
-	 *            an array of model elements to mark as source folders
+	 * @param folders
+	 *            an array of library folders to mark as source folders
 	 */
-	public UseAsSourceFolderAction(IWorkbenchSite site, IModelElement[] elements) {
-		if (elements.length == 0)
-			throw new IllegalArgumentException("empty elements array");
+	public UseAsSourceFolderAction(IWorkbenchSite site, IFolder[] folders) {
+		if (folders.length == 0)
+			throw new IllegalArgumentException("empty folders array"); //$NON-NLS-1$
 
 		fSite = site;
-		fElements = elements;
+		fFolders = folders;
 
 		setText(Messages.LibraryFolderAction_UseAsSourceFolder_label);
 		setImageDescriptor(PHPPluginImages.DESC_OBJS_PHPFOLDER_ROOT);
@@ -76,33 +76,34 @@ public class UseAsSourceFolderAction extends Action {
 	@Override
 	public void run() {
 		boolean askForConfirmation = false;
-		Collection<IModelElement> topmostElements = new HashSet<IModelElement>();
+		Collection<IResource> explicitlyDisabledFolders = new HashSet<IResource>();
 		LibraryFolderManager lfm = LibraryFolderManager.getInstance();
 
-		// check if any of the selected library folders is not a topmost library
-		// folder
-		for (IModelElement element : fElements) {
-			IModelElement topmostLibraryFolder = lfm
-					.getTopmostLibraryFolder(element);
-			topmostElements.add(topmostLibraryFolder);
+		// check if any of the selected library folders is an explicitly
+		// disabled library folder
+		for (IFolder folder : fFolders) {
+			IFolder explicitlyDisabledParent = lfm
+					.getExplicitlyDisabledParent(folder);
+			explicitlyDisabledFolders.add(explicitlyDisabledParent);
 
-			if (!element.equals(topmostLibraryFolder)) {
-				// there is a selected folder which is not a topmost library
-				// folder, so ask the user for confirmation to mark the topmost
-				// library folder as source folder
+			if (!folder.equals(explicitlyDisabledParent)) {
+				// there is a selected folder which is not an explicitly
+				// disabled library folder, so ask the user for confirmation to
+				// mark the explicitly disabled parent library folder as source
+				// folder
 				askForConfirmation = true;
 			}
 		}
 
-		final IModelElement[] elements = topmostElements
-				.toArray(new IModelElement[topmostElements.size()]);
+		final IFolder[] folders = explicitlyDisabledFolders
+				.toArray(new IFolder[explicitlyDisabledFolders.size()]);
 
 		if (askForConfirmation) {
 			// show the confirmation dialog
 			String title = Messages.LibraryFolderAction_Dialog_title;
 			String message = NLS.bind(
 					Messages.LibraryFolderAction_Dialog_description,
-					StringUtils.join(getSortedElementNames(elements), ",\n\t"));
+					StringUtils.join(getSortedPaths(folders), ",\n\t"));
 
 			if (!MessageDialog.openConfirm(fSite.getShell(), title, message))
 				// the user clicked the Cancel button - abort the action
@@ -116,7 +117,7 @@ public class UseAsSourceFolderAction extends Action {
 			protected void execute(IProgressMonitor monitor)
 					throws CoreException, InvocationTargetException,
 					InterruptedException {
-				LibraryFolderManager.getInstance().useAsSourceFolder(elements,
+				LibraryFolderManager.getInstance().useAsSourceFolder(folders,
 						monitor);
 			}
 		};
@@ -130,24 +131,23 @@ public class UseAsSourceFolderAction extends Action {
 	}
 
 	/**
-	 * Returns the names of the given model elements in sorted order.
+	 * Returns the paths of the given resources in sorted order.
 	 * 
-	 * @param elements
-	 *            an array of model elements
+	 * @param resources
+	 *            an array of resources
 	 * 
-	 * @return a sorted array of strings with the names of the given model
-	 *         elements
+	 * @return a sorted array of strings with the paths of the given resources
 	 */
-	private String[] getSortedElementNames(IModelElement[] elements) {
-		String[] names = new String[elements.length];
+	private String[] getSortedPaths(IResource[] resources) {
+		String[] paths = new String[resources.length];
 
-		for (int i = 0; i < elements.length; i++) {
-			names[i] = elements[i].getElementName();
+		for (int i = 0; i < resources.length; i++) {
+			paths[i] = resources[i].getFullPath().toString();
 		}
 
-		Arrays.sort(names);
+		Arrays.sort(paths);
 
-		return names;
+		return paths;
 	}
 
 }

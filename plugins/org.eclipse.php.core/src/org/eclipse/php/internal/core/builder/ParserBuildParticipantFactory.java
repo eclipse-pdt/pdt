@@ -62,7 +62,8 @@ public class ParserBuildParticipantFactory extends AbstractBuildParticipantType
 
 		public void build(IBuildContext context) throws CoreException {
 			IModelElement element = context.getModelElement();
-			if (LibraryFolderManager.getInstance().isInLibraryFolder(element)) {
+			if (LibraryFolderManager.getInstance().isInLibraryFolder(
+					element.getResource())) {
 				// skip syntax check for code inside library folders
 				return;
 			}

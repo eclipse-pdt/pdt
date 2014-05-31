@@ -14,11 +14,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.*;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.php.core.libfolders.ILibraryFolderNameProvider;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -69,7 +68,7 @@ public class AutoDetectLibraryFolderJob extends WorkspaceJob {
 				String[] names = getCommonLibraryFolderNames(project);
 
 				// find these folders in the project
-				IModelElement[] folders = getFoldersFromNames(project, names);
+				IFolder[] folders = getFoldersFromNames(project, names);
 
 				// mark the folders as library folders
 				try {
@@ -150,18 +149,17 @@ public class AutoDetectLibraryFolderJob extends WorkspaceJob {
 	 * 
 	 * @return an array of model elements
 	 */
-	private IModelElement[] getFoldersFromNames(IProject project,
-			String[] folderNames) {
-		Collection<IModelElement> result = new HashSet<IModelElement>();
+	private IFolder[] getFoldersFromNames(IProject project, String[] folderNames) {
+		Collection<IFolder> result = new HashSet<IFolder>();
 
 		for (String name : folderNames) {
-			IModelElement folder = DLTKCore.create(project.getFolder(name));
+			IFolder folder = project.getFolder(name);
 			if (folder != null && folder.exists()) {
 				result.add(folder);
 			}
 		}
 
-		return result.toArray(new IModelElement[result.size()]);
+		return result.toArray(new IFolder[result.size()]);
 	}
 
 }
