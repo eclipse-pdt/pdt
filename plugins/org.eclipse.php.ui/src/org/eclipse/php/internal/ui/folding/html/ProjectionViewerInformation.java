@@ -11,19 +11,16 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.folding.html;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.text.DocumentEvent;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentExtension;
-import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.php.internal.core.Logger;
@@ -96,6 +93,17 @@ class ProjectionViewerInformation {
 		}
 	}
 
+	void applyChangesJOB() {
+		IJobManager jobManager = Job.getJobManager();
+		if (jobManager.find("Applying annotation model changes").length == 0) { //$NON-NLS-1$
+			ApplyAnnotationModelChangesJob job = new ApplyAnnotationModelChangesJob(
+					"Applying annotation model changes", this); //$NON-NLS-1$
+			job.setPriority(Job.DECORATE);
+			job.setSystem(true);
+			job.schedule();
+		}
+	}
+
 	/**
 	 * Projection annotation model current associated with this projection
 	 * viewer
@@ -160,15 +168,72 @@ class ProjectionViewerInformation {
 		// go through all the pending annotation changes and apply
 		// them to
 		// the projection annotation model
-		while (!changesToApply.isEmpty()) {
-			ProjectionAnnotationModelChanges changes = changesToApply.remove(0);
+
+		if (changesToApply.size() > 1) {
+			Set<Annotation> deletions = new HashSet<Annotation>();
+			Map<Annotation, Position> additions = new HashMap<Annotation, Position>();
+			Set<Annotation> modifications = new HashSet<Annotation>();
+			while (!changesToApply.isEmpty()) {
+				ProjectionAnnotationModelChanges changes = changesToApply
+						.remove(0);
+				if (changes.getDeletions() != null) {
+					for (Annotation el : changes.getDeletions()) {
+						if (additions.containsKey(el)) {
+							additions.remove(el);
+						} else {
+							deletions.add(el);
+						}
+
+						if (modifications.contains(el)) {
+							modifications.remove(el);
+						}
+					}
+				}
+				if (changes.getAdditions() != null) {
+					Iterator iterator = changes.getAdditions().entrySet()
+							.iterator();
+					while (iterator.hasNext()) {
+						Entry entry = (Entry) iterator.next();
+						Annotation key = (Annotation) entry.getKey();
+						Position pos = (Position) entry.getValue();
+						if (deletions.contains(key)) {
+							deletions.remove(key);
+						}
+						additions.put(key, pos);
+					}
+				}
+				if (changes.getModifications() != null) {
+					for (Annotation el : changes.getModifications()) {
+						if (deletions.contains(el)) {
+							deletions.remove(el);
+						}
+						if (!additions.containsKey(el)) {
+							modifications.add(el);
+						}
+					}
+				}
+			}
 			try {
-				fProjectionAnnotationModel.modifyAnnotations(
-						changes.getDeletions(), changes.getAdditions(),
-						changes.getModifications());
+				fProjectionAnnotationModel.modifyAnnotations(deletions
+						.toArray(new Annotation[deletions.size()]), additions,
+						modifications.toArray(new Annotation[modifications
+								.size()]));
 			} catch (Exception e) {
 				// if anything goes wrong, log it and continue
 				Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+			}
+		} else {
+			while (!changesToApply.isEmpty()) {
+				ProjectionAnnotationModelChanges changes = changesToApply
+						.remove(0);
+				try {
+					fProjectionAnnotationModel.modifyAnnotations(
+							changes.getDeletions(), changes.getAdditions(),
+							changes.getModifications());
+				} catch (Exception e) {
+					// if anything goes wrong, log it and continue
+					Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+				}
 			}
 		}
 	}
