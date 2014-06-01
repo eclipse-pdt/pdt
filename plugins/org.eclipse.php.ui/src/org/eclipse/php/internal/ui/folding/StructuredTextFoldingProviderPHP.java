@@ -1029,9 +1029,12 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 				final ProjectionModelNodeAdapterFactoryHTML factory2 = getAdapterFactoryHTML(true);
 				if (factory2 != null) {
 					factory2.addProjectionViewer(viewer);
+					factory2.suspendProjectionViewer(viewer);
 				}
-
 				addAllAdapters();
+				if (factory2 != null) {
+					factory2.activateProjectionViewer(viewer);
+				}
 			}
 		}
 

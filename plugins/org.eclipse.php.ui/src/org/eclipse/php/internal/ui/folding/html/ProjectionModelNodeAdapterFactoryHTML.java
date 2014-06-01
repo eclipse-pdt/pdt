@@ -205,6 +205,25 @@ public class ProjectionModelNodeAdapterFactoryHTML extends
 		info.initialize();
 	}
 
+	public void suspendProjectionViewer(ProjectionViewer viewer) {
+		if (fProjectionViewers == null
+				|| !fProjectionViewers.containsKey(viewer)) {
+			return;
+		}
+		((ProjectionViewerInformation) fProjectionViewers.get(viewer))
+				.setIsDocumentChanging(true);
+	}
+
+	public void activateProjectionViewer(ProjectionViewer viewer) {
+		if (fProjectionViewers == null
+				|| !fProjectionViewers.containsKey(viewer)) {
+			return;
+		}
+		ProjectionViewerInformation pv = ((ProjectionViewerInformation) fProjectionViewers
+				.get(viewer));
+		pv.applyChangesJOB();
+	}
+
 	/**
 	 * Removes the given viewer from the list of projection viewers this factor
 	 * is associated with
