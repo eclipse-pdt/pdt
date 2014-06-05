@@ -125,7 +125,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 				public void reconciled(Program program, boolean forced,
 						IProgressMonitor progressMonitor) {
 					if (fPostSelectionLength != -1) {
-						Display.getDefault().asyncExec(new Runnable() {
+						Display.getDefault().syncExec(new Runnable() {
 							public void run() {
 								synchronized (PHPStructuredTextViewer.this) {
 									if (fPostSelectionOffset >= 0
