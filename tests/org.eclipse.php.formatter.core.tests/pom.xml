@@ -23,13 +23,13 @@
 					<useUIHarness>true</useUIHarness>
 					<useUIThread>false</useUIThread>
 					<argLine>-Xmx512m -XX:MaxPermSize=256m ${test.vmargs}</argLine>
-					<bundleStartLevel>
-						<bundle>
-							<id>org.eclipse.equinox.ds</id>
-							<level>1</level>
-							<autoStart>true</autoStart>
-						</bundle>
-					</bundleStartLevel>
+					<dependencies>
+					   <dependency>
+                            <type>eclipse-feature</type>
+                            <artifactId>org.eclipse.e4.rcp</artifactId>
+                            <version>0.0.0</version>
+                        </dependency>
+					</dependencies>
 					<testSuite>org.eclipse.php.formatter.core.tests</testSuite>
 					<testClass>org.eclipse.php.formatter.core.tests.AllTests</testClass>
 					<testFailureIgnore>false</testFailureIgnore>
