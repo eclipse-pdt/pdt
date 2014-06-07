@@ -50,11 +50,14 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.model.PerFileModelAccessCache;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPTraitType;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
@@ -99,9 +102,10 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				.getScriptProject().getProject());
 
 		// First, try to resolve using AST (if we have parsed it well):
+		IModelAccessCache cache = new PerFileModelAccessCache(sourceModule);
 		try {
-			IModelElement[] elements = internalASTResolve(sourceModule, offset,
-					end);
+			IModelElement[] elements = internalASTResolve(sourceModule, cache,
+					offset, end);
 			if (elements != null) {
 				Collection<IModelElement> filtered = PHPModelUtils
 						.filterElements(sourceModule, Arrays.asList(elements),
@@ -144,11 +148,11 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 		if (document != null) {
 			IModelElement[] elements = internalResolve(document, sourceModule,
-					offset, end);
+					cache, offset, end);
 			if (elements != null) {
 				Collection<IModelElement> filtered = PHPModelUtils
 						.filterElements(sourceModule, Arrays.asList(elements),
-								null, null);
+								cache, null);
 
 				if (filtered.size() == 0) {
 					return EMPTY;
@@ -229,7 +233,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	private IModelElement[] internalASTResolve(ISourceModule sourceModule,
-			int offset, int end) throws ModelException {
+			IModelAccessCache cache, int offset, int end) throws ModelException {
 		String source;
 
 		try {
@@ -285,7 +289,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 														.getTypes(typeReference
 																.getName(),
 																sourceModule,
-																offset, null));
+																offset, cache,
+																null));
 												return types;
 
 											}
@@ -305,7 +310,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			IContext context = ASTUtils.findContext(sourceModule, parsedUnit,
 					node);
 			if (context != null) {
-
+				if (context instanceof IModelCacheContext) {
+					((IModelCacheContext) context).setCache(cache);
+				}
 				// Function call:
 				if (node instanceof PHPCallExpression) {
 					PHPCallExpression callExpression = (PHPCallExpression) node;
@@ -373,7 +380,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 										try {
 											IMethod[] method = PHPModelUtils
 													.getFirstTypeHierarchyMethod(
-															type, null,
+															type,
+															cache.getSuperTypeHierarchy(
+																	type, null),
 															callExpression
 																	.getName(),
 															true, null);
@@ -393,7 +402,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						String methodName = callName instanceof FullyQualifiedReference ? ((FullyQualifiedReference) callName)
 								.getFullyQualifiedName() : callName.getName();
 						IMethod[] functions = PHPModelUtils.getFunctions(
-								methodName, sourceModule, offset, null, null);
+								methodName, sourceModule, offset, cache, null);
 						return functions == null ? EMPTY : functions;
 					}
 				}
@@ -426,12 +435,13 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 									if (element instanceof IType) {
 										IType type = (IType) element;
 										try {
-											fields.addAll(Arrays.asList(PHPModelUtils
-													.getTypeHierarchyField(
+											fields.addAll(Arrays.asList(PHPModelUtils.getTypeHierarchyField(
+													type,
+													cache.getSuperTypeHierarchy(
 															type,
-															fieldName,
-															true,
-															new NullProgressMonitor())));
+															new NullProgressMonitor()),
+													fieldName, true,
+													new NullProgressMonitor())));
 										} catch (Exception e) {
 											PHPCorePlugin.log(e);
 										}
@@ -486,7 +496,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					String name = ((NamespaceReference) node).getName();
 					IType[] namespace = PHPModelUtils.getNamespaceOf(name
 							+ NamespaceReference.NAMESPACE_SEPARATOR,
-							sourceModule, offset, null, null);
+							sourceModule, offset, cache, null);
 					return namespace == null ? EMPTY : namespace;
 				}
 				// Class/Interface reference:
@@ -498,7 +508,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					}
 					String name = evaluatedType.getTypeName();
 					IType[] types = PHPModelUtils.getTypes(name, sourceModule,
-							offset, null, null,
+							offset, cache, null,
 							!(evaluatedType instanceof PHPTraitType));
 					if (types == null || types.length == 0) {
 						// This can be a constant or namespace in PHP 5.3:
@@ -522,7 +532,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							name = NamespaceReference.NAMESPACE_SEPARATOR
 									+ name;
 							return PHPModelUtils.getFields(name, sourceModule,
-									offset, null, null);
+									offset, cache, null);
 						}
 					}
 					return types;
@@ -538,7 +548,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								.resolveExpression(sourceModule, node);
 						return getConstructorsIfAny(extractClasses(PHPModelUtils
 								.getTypes(evaluatedType.getTypeName(),
-										sourceModule, offset, null, null)));
+										sourceModule, offset, cache, null)));
 					} else if ((className instanceof StaticFieldAccess)) {
 						StaticFieldAccess staticFieldAccess = (StaticFieldAccess) className;
 						if ((offset >= staticFieldAccess.getDispatcher()
@@ -550,7 +560,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 									.resolveExpression(sourceModule, className);
 							return extractClasses(PHPModelUtils.getTypes(
 									evaluatedType.getTypeName(), sourceModule,
-									offset, null, null));
+									offset, cache, null));
 						} else if ((offset >= staticFieldAccess.getField()
 								.sourceStart())
 								&& (offset <= staticFieldAccess.getField()
@@ -629,7 +639,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 									.getTraitList()) {
 								IType[] types = PHPModelUtils.getTypes(
 										typeReference.getName(), sourceModule,
-										offset, null, null, false);
+										offset, cache, null, false);
 								for (IType t : types) {
 									IModelElement[] children = t.getChildren();
 									for (IModelElement modelElement : children) {
@@ -684,7 +694,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	private IModelElement[] internalResolve(IStructuredDocument sDoc,
-			ISourceModule sourceModule, int offset, int end) {
+			ISourceModule sourceModule, IModelAccessCache cache, int offset,
+			int end) {
 		try {
 			IStructuredDocumentRegion sRegion = sDoc
 					.getRegionAtCharacterOffset(offset);
@@ -790,7 +801,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						if (NEW.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$
 							return getConstructorsIfAny(extractClasses(PHPModelUtils
 									.getTypes(elementName, sourceModule,
-											offset, null, null)));
+											offset, cache, null)));
 						}
 
 						// Handle extends and implements:
@@ -891,7 +902,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						// We are at class trigger:
 						if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) { //$NON-NLS-1$
 							return PHPModelUtils.getTypes(elementName,
-									sourceModule, offset, null, null);
+									sourceModule, offset, cache, null);
 						}
 						if (NS_SEPARATOR.equals(nextWord)) { //$NON-NLS-1$
 							IDLTKSearchScope scope = SearchEngine
@@ -913,14 +924,16 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								List<IMethod> methods = new LinkedList<IMethod>();
 								for (IType t : types) {
 									methods.addAll(Arrays.asList(PHPModelUtils
-											.getTypeHierarchyMethod(t,
-													elementName, true, null)));
+											.getTypeHierarchyMethod(t, cache
+													.getSuperTypeHierarchy(t,
+															null), elementName,
+													true, null)));
 								}
 								return methods.toArray(new IMethod[methods
 										.size()]);
 							}
 							return PHPModelUtils.getFunctions(elementName,
-									sourceModule, offset, null, null);
+									sourceModule, offset, cache, null);
 						}
 						if ("insteadof".equals(nextWord) //$NON-NLS-1$
 								|| "as".equals(nextWord)) { //$NON-NLS-1$
@@ -928,8 +941,10 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								List<IMethod> methods = new LinkedList<IMethod>();
 								for (IType t : types) {
 									methods.addAll(Arrays.asList(PHPModelUtils
-											.getTypeHierarchyMethod(t,
-													elementName, true, null)));
+											.getTypeHierarchyMethod(t, cache
+													.getSuperTypeHierarchy(t,
+															null), elementName,
+													true, null)));
 								}
 								return methods.toArray(new IMethod[methods
 										.size()]);
@@ -962,8 +977,10 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							final List<IField> fields = new ArrayList<IField>();
 							for (IType t : types) {
 								fields.addAll(Arrays
-										.asList(getTypeHierarchyField(t, null,
-												elementName, true, null)));
+										.asList(getTypeHierarchyField(t,
+												cache.getSuperTypeHierarchy(t,
+														null), elementName,
+												true, null)));
 							}
 							return fields.toArray(new IModelElement[fields
 									.size()]);
@@ -972,14 +989,14 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						// This can be only global constant, if we've reached
 						// here:
 						IField[] fields = PHPModelUtils.getFields(elementName,
-								sourceModule, offset, null, null);
+								sourceModule, offset, cache, null);
 						if (fields != null && fields.length > 0) {
 							return fields;
 						}
 
 						// Return class if nothing else found.
 						return PHPModelUtils.getTypes(elementName,
-								sourceModule, offset, null, null);
+								sourceModule, offset, cache, null);
 					}
 				}
 			}
