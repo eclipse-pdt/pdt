@@ -164,23 +164,22 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 				globalFunctionsCache = Collections
 						.synchronizedMap(new HashMap<String, Collection<IMethod>>());
 
-				IScriptProject scriptProject = sourceModule.getScriptProject();
-				IDLTKSearchScope scope = SearchEngine
-						.createSearchScope(scriptProject);
+				functionName = functionName.toLowerCase();
+				if (!globalFunctionsCache.containsKey(functionName)) {
+					IScriptProject scriptProject = sourceModule
+							.getScriptProject();
+					IDLTKSearchScope scope = SearchEngine
+							.createSearchScope(scriptProject);
 
-				IMethod[] allFunctions = PhpModelAccess.getDefault()
-						.findMethods(null, MatchRule.PREFIX,
-								Modifiers.AccGlobal, 0, scope, monitor);
-				for (IMethod function : allFunctions) {
-					String elementName = function.getElementName()
-							.toLowerCase();
-					Collection<IMethod> funcList = globalFunctionsCache
-							.get(elementName);
-					if (funcList == null) {
-						funcList = new LinkedList<IMethod>();
-						globalFunctionsCache.put(elementName, funcList);
+					IMethod[] allFunctions = PhpModelAccess.getDefault()
+							.findMethods(functionName, MatchRule.EXACT,
+									Modifiers.AccGlobal, 0, scope, monitor);
+					Collection<IMethod> funcList = new ArrayList<IMethod>(
+							allFunctions.length);
+					for (IMethod function : allFunctions) {
+						funcList.add(function);
 					}
-					funcList.add(function);
+					globalFunctionsCache.put(functionName, funcList);
 				}
 			}
 			functions = globalFunctionsCache.get(functionName);
