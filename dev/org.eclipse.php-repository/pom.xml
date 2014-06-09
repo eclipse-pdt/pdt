@@ -17,14 +17,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-packaging-plugin</artifactId>
-        <version>${tycho-version}</version>
-				<configuration>
-					<archiveSite>true</archiveSite>
-        </configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.jboss.tools.tycho-plugins</groupId>
 				<artifactId>repository-utils</artifactId>
 				<version>0.19.0-SNAPSHOT</version>
@@ -38,7 +30,7 @@
 						<configuration>
 							<!-- Symbols are used while expanding index.html template -->
 							<symbols>
-								<update.site.name>PHP Development Tools Repository</update.site.name>								
+								<update.site.name>PHP Development Tools Repository</update.site.name>
 							</symbols>
 							<siteTemplateFolder>${basedir}/siteTemplate</siteTemplateFolder>
 							<p2StatsUrl>http://download.eclipse.org/stats</p2StatsUrl>
