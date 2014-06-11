@@ -57,11 +57,17 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 					if (element instanceof IMethod) {
 						IMethod method = (IMethod) element;
 						if (method.getDeclaringType() != null) {
-							// XXX Use model access cache
 							docBlocks = PHPModelUtils
 									.getTypeHierarchyMethodDoc(
 											method.getDeclaringType(),
-											method.getElementName(), true, null);
+											methodContext.getCache() != null ? methodContext
+													.getCache()
+													.getSuperTypeHierarchy(
+															method.getDeclaringType(),
+															null)
+													: null, method
+													.getElementName(), true,
+											null);
 						} else {
 							docBlocks = new PHPDocBlock[] { methodDeclaration
 									.getPHPDoc() };

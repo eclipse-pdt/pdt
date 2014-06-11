@@ -1664,6 +1664,12 @@ public class PHPModelUtils {
 		return getTypeHierarchyMethod(type, null, prefix, exactName, monitor);
 	}
 
+	public static PHPDocBlock[] getTypeHierarchyMethodDoc(IType type,
+			String prefix, boolean exactName, IProgressMonitor monitor)
+			throws CoreException {
+		return getTypeHierarchyMethodDoc(type, null, prefix, exactName, monitor);
+	}
+
 	/**
 	 * Finds method documentation by method name in the class hierarchy
 	 * 
@@ -1678,15 +1684,15 @@ public class PHPModelUtils {
 	 * @throws CoreException
 	 */
 	public static PHPDocBlock[] getTypeHierarchyMethodDoc(IType type,
-			String prefix, boolean exactName, IProgressMonitor monitor)
-			throws CoreException {
+			ITypeHierarchy hierarchy, String prefix, boolean exactName,
+			IProgressMonitor monitor) throws CoreException {
 
 		if (prefix == null) {
 			throw new NullPointerException();
 		}
 		final List<PHPDocBlock> docs = new LinkedList<PHPDocBlock>();
-		for (IMethod method : getTypeHierarchyMethod(type, prefix, exactName,
-				monitor)) {
+		for (IMethod method : getTypeHierarchyMethod(type, hierarchy, prefix,
+				exactName, monitor)) {
 			PHPDocBlock docBlock = getDocBlock(method);
 			if (docBlock != null) {
 				docs.add(docBlock);
