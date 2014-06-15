@@ -1195,7 +1195,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 				String projectName = localPath.segment(0);
 				container = ResourcesPlugin.getWorkspace().getRoot()
 						.getProject(projectName);
-				if (container == null) {
+				if (container == null || !container.exists()) {
 					return;
 				}
 			}
@@ -1244,7 +1244,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 				String projectName = localPath.segment(0);
 				container = ResourcesPlugin.getWorkspace().getRoot()
 						.getProject(projectName);
-				if (container == null) {
+				if (container == null || !container.exists()) {
 					return;
 				}
 			}

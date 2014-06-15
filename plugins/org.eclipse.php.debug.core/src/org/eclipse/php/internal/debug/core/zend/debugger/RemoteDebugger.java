@@ -331,14 +331,18 @@ public class RemoteDebugger implements IRemoteDebugger {
 				}
 				IPath projectLocation = project.getLocation();
 				if (projectLocation != null
-						&& projectLocation.isPrefixOf(location)) {
-					int segmentsToRemove = projectLocation.segmentCount();
-					wsFile = workspace
-							.getRoot()
-							.getFile(
-									project.getFullPath()
-											.append(location
-													.removeFirstSegments(segmentsToRemove)));
+						&& projectLocation.isPrefixOf(location)
+						&& !projectLocation.equals(location)) {
+					try {
+						wsFile = workspace
+								.getRoot()
+								.getFile(
+										project.getFullPath()
+												.append(location
+														.makeRelativeTo(projectLocation)));
+					} catch (Exception ex) {
+						Logger.logException(ex);
+					}
 					break;
 				}
 			}
