@@ -49,7 +49,7 @@ public class BindingUtility {
 	private Map<SourceRange, IEvaluatedType> evaluatedTypesCache = new HashMap<SourceRange, IEvaluatedType>();
 	private int timeLimit = TIME_LIMIT;
 	private IModelAccessCache modelAccessCache;
-	private IPHPTypeInferencer cachedInferencer;
+	private IPHPTypeInferencer cachedInferencer = new PHPTypeInferencer();
 
 	/**
 	 * Creates new instance of binding utility.
@@ -562,7 +562,7 @@ public class BindingUtility {
 				ContextFinder contextFinder = getContext(sourceRange);
 				IContext context = contextFinder.getContext();
 				IEvaluatedType resolvedExpression = PHPTypeInferenceUtils
-						.resolveExpression(sourceModule,
+						.resolveExpression(cachedInferencer, sourceModule,
 								sourceModuleDeclaration, context, expr);
 				if (resolvedExpression != null) {
 					evaluated.add(resolvedExpression);
@@ -585,8 +585,9 @@ public class BindingUtility {
 						ContextFinder contextFinder = getContext(sourceRange);
 						IContext context = contextFinder.getContext();
 						IEvaluatedType resolvedExpression = PHPTypeInferenceUtils
-								.resolveExpression(sourceModule,
-										sourceModuleDeclaration, context, expr);
+								.resolveExpression(cachedInferencer,
+										sourceModule, sourceModuleDeclaration,
+										context, expr);
 						if (resolvedExpression != null) {
 							generator.getTypes().add(resolvedExpression);
 						}

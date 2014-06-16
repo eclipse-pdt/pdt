@@ -311,7 +311,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 	 */
 	protected boolean isConditional(ASTNode node) {
 		if (node instanceof Statement) {
-			int kind = ((Statement) node).getKind();
+			final int kind = ((Statement) node).getKind();
 			return kind == ASTNodeKinds.CATCH_CLAUSE
 					|| kind == ASTNodeKinds.IF_STATEMENT
 					|| kind == ASTNodeKinds.FOR_STATEMENT

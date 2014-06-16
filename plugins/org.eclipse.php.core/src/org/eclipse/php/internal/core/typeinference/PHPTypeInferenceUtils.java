@@ -87,9 +87,16 @@ public class PHPTypeInferenceUtils {
 	public static IEvaluatedType resolveExpression(ISourceModule sourceModule,
 			ModuleDeclaration moduleDeclaration, IContext context,
 			ASTNode expression) {
+		return resolveExpression(new PHPTypeInferencer(), sourceModule,
+				moduleDeclaration, context, expression);
+	}
+
+	public static IEvaluatedType resolveExpression(
+			IPHPTypeInferencer inferencer, ISourceModule sourceModule,
+			ModuleDeclaration moduleDeclaration, IContext context,
+			ASTNode expression) {
 		if (context != null) {
-			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
-			return typeInferencer.evaluateType(new ExpressionTypeGoal(context,
+			return inferencer.evaluateType(new ExpressionTypeGoal(context,
 					expression));
 		}
 		return UnknownType.INSTANCE;
