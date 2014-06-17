@@ -331,14 +331,18 @@ public class RemoteDebugger implements IRemoteDebugger {
 				}
 				IPath projectLocation = project.getLocation();
 				if (projectLocation != null
-						&& projectLocation.isPrefixOf(location)) {
-					int segmentsToRemove = projectLocation.segmentCount();
-					wsFile = workspace
-							.getRoot()
-							.getFile(
-									project.getFullPath()
-											.append(location
-													.removeFirstSegments(segmentsToRemove)));
+						&& projectLocation.isPrefixOf(location)
+						&& !projectLocation.equals(location)) {
+					try {
+						wsFile = workspace
+								.getRoot()
+								.getFile(
+										project.getFullPath()
+												.append(location
+														.makeRelativeTo(projectLocation)));
+					} catch (Exception ex) {
+						System.out.println(ex.getMessage());
+					}
 					break;
 				}
 			}
@@ -1263,9 +1267,11 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (project == null) {
 			String orginalURL = debugTarget.getLaunch().getAttribute(
 					IDebugParametersKeys.ORIGINAL_URL);
-			String projectName = new Path(orginalURL).segment(0);
-			IWorkspace workspace = ResourcesPlugin.getWorkspace();
-			project = workspace.getRoot().getProject(projectName);
+			if (orginalURL != null) {
+				String projectName = new Path(orginalURL).segment(0);
+				IWorkspace workspace = ResourcesPlugin.getWorkspace();
+				project = workspace.getRoot().getProject(projectName);
+			}
 		}
 		if (project != null) {
 			String projectName = project.getName();
