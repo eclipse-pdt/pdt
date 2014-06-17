@@ -12,9 +12,7 @@
 package org.eclipse.php.internal.core.preferences;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
@@ -40,7 +38,7 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	private HashMap projectToPropagator;
 	private HashMap projectToScope;
 	private HashMap projectToNodeListener;
-	private HashMap preferenceChangeListeners; // Inside the node listeners
+	private Map preferenceChangeListeners; // Inside the node listeners
 	private String nodeQualifier;
 
 	private IPropertyChangeListener propertyChangeListener;
@@ -120,7 +118,7 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 		projectToPropagator = new HashMap();
 		projectToScope = new HashMap();
 		projectToNodeListener = new HashMap();
-		preferenceChangeListeners = new HashMap();
+		preferenceChangeListeners = Collections.synchronizedMap(new HashMap());
 		propertyChangeListener = new InnerPropertyChangeListener();
 		preferenceStore.addPropertyChangeListener(propertyChangeListener);
 		super.install();
@@ -314,15 +312,18 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 
 			Object childNode = event.getChild();
 			if (preferenceChangeListeners.containsValue(childNode)) {
-				// search for the listener to be removed
-				Iterator keys = preferenceChangeListeners.keySet().iterator();
-				while (keys.hasNext()) {
-					Object key = keys.next();
-					IEclipsePreferences aNode = (IEclipsePreferences) preferenceChangeListeners
-							.get(key);
-					if (aNode == childNode) {
-						preferenceChangeListeners.remove(key);
-						return;
+				synchronized (preferenceChangeListeners) {
+					// search for the listener to be removed
+					Iterator keys = preferenceChangeListeners.keySet()
+							.iterator();
+					while (keys.hasNext()) {
+						Object key = keys.next();
+						IEclipsePreferences aNode = (IEclipsePreferences) preferenceChangeListeners
+								.get(key);
+						if (aNode == childNode) {
+							preferenceChangeListeners.remove(key);
+							return;
+						}
 					}
 				}
 			}
