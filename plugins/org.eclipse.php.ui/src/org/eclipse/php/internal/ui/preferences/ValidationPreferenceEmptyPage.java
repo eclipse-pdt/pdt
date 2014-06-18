@@ -13,23 +13,23 @@ package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 
-public class CodeStylePreferencePage extends AbstractEmptyPreferencePage {
+public class ValidationPreferenceEmptyPage extends AbstractEmptyPreferencePage {
 
-	public CodeStylePreferencePage() {
+	public ValidationPreferenceEmptyPage() {
 		super();
 	}
 
-	public CodeStylePreferencePage(String title) {
+	public ValidationPreferenceEmptyPage(String title) {
 		super();
 	}
 
-	public CodeStylePreferencePage(String title, ImageDescriptor image) {
+	public ValidationPreferenceEmptyPage(String title, ImageDescriptor image) {
 		super();
 	}
 
 	@Override
 	public String getBodyText() {
-		return PreferencesMessages.CodeStylePreferencePage_0;
+		return PreferencesMessages.ValidationPreferencePage_body_text;
 	}
 
 }
