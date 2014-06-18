@@ -451,6 +451,7 @@
 	<extension point="org.eclipse.ui.propertyPages">
 		<page
 			class="org.eclipse.php.internal.debug.ui.preferences.PHPDebugPropertyPreferencePage"
+			category="org.eclipse.php.ui.propertyPages.PHPBasePreferencePage"
 			id="org.eclipse.php.debug.ui.property.PhpDebugPreferencePage" name="%ProjectPage.name">
 			<enabledWhen>
 				<adapt type="org.eclipse.core.resources.IProject">

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,26 +10,26 @@
  *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
-
 import org.eclipse.jface.resource.ImageDescriptor;
 
-public class CodeStylePreferencePage extends AbstractEmptyPreferencePage {
 
-	public CodeStylePreferencePage() {
+public class PHPBasePreferenceEmptyPage extends AbstractEmptyPreferencePage {
+
+	public PHPBasePreferenceEmptyPage() {
 		super();
 	}
 
-	public CodeStylePreferencePage(String title) {
+	public PHPBasePreferenceEmptyPage(String title) {
 		super();
 	}
 
-	public CodeStylePreferencePage(String title, ImageDescriptor image) {
+	public PHPBasePreferenceEmptyPage(String title, ImageDescriptor image) {
 		super();
 	}
 
 	@Override
 	public String getBodyText() {
-		return PreferencesMessages.CodeStylePreferencePage_0;
+		return PreferencesMessages.PHPBasePreferencePage_body_text;
 	}
 
 }
