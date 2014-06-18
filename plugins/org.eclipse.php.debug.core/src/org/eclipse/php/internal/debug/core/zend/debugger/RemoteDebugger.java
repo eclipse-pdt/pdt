@@ -1267,9 +1267,11 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (project == null) {
 			String orginalURL = debugTarget.getLaunch().getAttribute(
 					IDebugParametersKeys.ORIGINAL_URL);
-			String projectName = new Path(orginalURL).segment(0);
-			IWorkspace workspace = ResourcesPlugin.getWorkspace();
-			project = workspace.getRoot().getProject(projectName);
+			if (orginalURL != null) {
+				String projectName = new Path(orginalURL).segment(0);
+				IWorkspace workspace = ResourcesPlugin.getWorkspace();
+				project = workspace.getRoot().getProject(projectName);
+			}
 		}
 		if (project != null) {
 			String projectName = project.getName();
@@ -1319,6 +1321,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	public List<IPath> getIncludePaths(IProject project) throws ModelException {
+		if (project == null)
+			return new ArrayList<IPath>();
 		List<IPath> includePaths = resolvedIncludePaths.get(project.getName());
 		if (includePaths != null) {
 			return includePaths;
