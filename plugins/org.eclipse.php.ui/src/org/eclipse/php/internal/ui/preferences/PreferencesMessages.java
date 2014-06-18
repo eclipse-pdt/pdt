@@ -806,4 +806,8 @@ public final class PreferencesMessages extends NLS {
 	public static String PHPCodeTemplateBlock_2;
 	public static String PHPCoreOptionsConfigurationBlock_SettingVersionFailed_Title;
 
+	public static String PHPBasePreferencePage_body_text;
+	public static String PHPEditorPreferencePage_body_text;
+	public static String ValidationPreferencePage_body_text;
+
 }
