@@ -13,23 +13,23 @@ package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 
-public class CodeStylePreferencePage extends AbstractEmptyPreferencePage {
+public class PHPEditorPreferenceEmptyPage extends AbstractEmptyPreferencePage {
 
-	public CodeStylePreferencePage() {
+	public PHPEditorPreferenceEmptyPage() {
 		super();
 	}
 
-	public CodeStylePreferencePage(String title) {
+	public PHPEditorPreferenceEmptyPage(String title) {
 		super();
 	}
 
-	public CodeStylePreferencePage(String title, ImageDescriptor image) {
+	public PHPEditorPreferenceEmptyPage(String title, ImageDescriptor image) {
 		super();
 	}
 
 	@Override
 	public String getBodyText() {
-		return PreferencesMessages.CodeStylePreferencePage_0;
+		return PreferencesMessages.PHPEditorPreferencePage_body_text;
 	}
 
 }
