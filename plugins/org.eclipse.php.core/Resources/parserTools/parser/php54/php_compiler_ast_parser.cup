@@ -1064,7 +1064,11 @@ extends_from:superClass errorOrNot implements_list:interfaces
 {:
 	ClassDeclaration classDeclaration = (ClassDeclaration)parser.declarations.peek();
 	if (superClass != null) {
-		classDeclaration.setSuperClass(superClass);
+	    if (classDeclaration.getModifiers() == org.eclipse.php.core.compiler.IPHPModifiers.AccTrait) {
+	       parser.reportError(new ASTError(classDeclaration.getNameStart(), classDeclaration.getNameEnd()), String.format("A trait (%s) cannot extend a class. Traits can only be composed from other traits with the 'use' keyword", classDeclaration.getName()));
+	    } else {
+		  classDeclaration.setSuperClass(superClass);
+		}
 	}
 	if (interfaces != null) {
         if (classDeclaration.getModifiers() == org.eclipse.php.core.compiler.IPHPModifiers.AccTrait && interfaces.size() > 0) {
