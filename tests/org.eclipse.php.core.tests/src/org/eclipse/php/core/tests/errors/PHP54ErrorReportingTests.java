@@ -12,6 +12,7 @@
 package org.eclipse.php.core.tests.errors;
 
 import java.io.ByteArrayInputStream;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -102,6 +103,7 @@ public class PHP54ErrorReportingTests extends AbstractPDTTTest {
 							IMarker[] markers = file.findMarkers(
 									DefaultProblem.MARKER_TYPE_PROBLEM, true,
 									IResource.DEPTH_ZERO);
+							Arrays.sort(markers, new MarkerComparator());
 							for (IMarker marker : markers) {
 								buf.append("\n[line=");
 								buf.append(marker
