@@ -1070,7 +1070,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		}
 		String regionType = FormatterUtils.getRegionType(document,
 				textSequence.getOriginalOffset(0));
-		if (textSequence != null && isRegionTypeAllowedMultiline(regionType)) {
+		if (isRegionTypeAllowedMultiline(regionType)) {
 			int statementStart = textSequence.getOriginalOffset(0);
 			// we only search for opening pear in textSequence
 			int peer = Math.max(scanner.findOpeningPeer(offset - 1,

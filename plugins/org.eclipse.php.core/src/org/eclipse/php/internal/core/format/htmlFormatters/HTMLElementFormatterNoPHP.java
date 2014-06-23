@@ -135,13 +135,16 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter {
 	 */
 	protected void insertBreakBefore(IDOMNode node,
 			HTMLFormatContraints contraints) {
-		if (node == null)
+		if (node == null) {
 			return;
-		if (node.getNodeType() == Node.TEXT_NODE)
+		}
+		if (node.getNodeType() == Node.TEXT_NODE) {
 			return;
+		}
 		Node parent = node.getParentNode();
-		if (parent == null)
+		if (parent == null) {
 			return;
+		}
 		Node prev = node.getPreviousSibling();
 
 		String spaces = null;
@@ -155,9 +158,6 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter {
 					HTMLTextFormatterNoPHP textFormatter = (HTMLTextFormatterNoPHP) formatter;
 					textFormatter.formatText(text, contraints,
 							HTMLTextFormatter.FORMAT_TAIL);
-
-					if (node == null)
-						return;
 
 					if (node.hasChildNodes()) { // container
 						formatChildNodes(node, contraints);
@@ -178,8 +178,9 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter {
 		} else {
 			spaces = getBreakSpaces(node);
 		}
-		if (spaces == null || spaces.length() == 0)
+		if (spaces == null || spaces.length() == 0) {
 			return;
+		}
 
 		replaceSource(node.getModel(), node.getStartOffset(), 0, spaces);
 		setWidth(contraints, spaces);
@@ -214,10 +215,10 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter {
 			}
 
 			if (container != null
-					&& container.getFirstRegion().getType().equals(
-							PHPRegionContext.PHP_OPEN)) {
-				PhpFormatter phpFormatter = new PhpFormatter(attribute
-						.getStartOffset(), attribute.getEndOffset());
+					&& container.getFirstRegion().getType()
+							.equals(PHPRegionContext.PHP_OPEN)) {
+				PhpFormatter phpFormatter = new PhpFormatter(
+						attribute.getStartOffset(), attribute.getEndOffset());
 				phpFormatter.format(attribute, contraints);
 			}
 		}

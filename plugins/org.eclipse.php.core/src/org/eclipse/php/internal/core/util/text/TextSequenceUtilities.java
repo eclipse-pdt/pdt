@@ -71,10 +71,7 @@ public final class TextSequenceUtilities {
 				return null;
 			}
 		}
-		if (tRegion != null) {
-			return tRegion.getType();
-		}
-		return null;
+		return tRegion.getType();
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////

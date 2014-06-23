@@ -36,10 +36,12 @@ public class HTMLFormatterNoPHP extends HTMLFormatter {
 	 */
 	protected void formatChildNodes(IDOMNode node,
 			HTMLFormatContraints contraints) {
-		if (node == null)
+		if (node == null) {
 			return;
-		if (!node.hasChildNodes())
+		}
+		if (!node.hasChildNodes()) {
 			return;
+		}
 
 		// concat adjacent texts
 		node.normalize();
@@ -54,8 +56,9 @@ public class HTMLFormatterNoPHP extends HTMLFormatter {
 		boolean insertBreak = true;
 		IDOMNode child = (IDOMNode) node.getFirstChild();
 		while (child != null) {
-			if (child.getParentNode() != node)
+			if (child.getParentNode() != node) {
 				break;
+			}
 			IDOMNode next = (IDOMNode) child.getNextSibling();
 
 			if (insertBreak && canInsertBreakBefore(child)) {
@@ -84,21 +87,25 @@ public class HTMLFormatterNoPHP extends HTMLFormatter {
 			child = next;
 		}
 
-		if (contraints != null)
+		if (contraints != null) {
 			contraints.setFormatWithSiblingIndent(indent);
+		}
 	}
 
 	/**
 	 */
 	protected void insertBreakAfter(IDOMNode node,
 			HTMLFormatContraints contraints) {
-		if (node == null)
+		if (node == null) {
 			return;
-		if (node.getNodeType() == Node.TEXT_NODE)
+		}
+		if (node.getNodeType() == Node.TEXT_NODE) {
 			return;
+		}
 		Node parent = node.getParentNode();
-		if (parent == null)
+		if (parent == null) {
 			return;
+		}
 		Node next = node.getNextSibling();
 
 		String spaces = null;
@@ -121,8 +128,9 @@ public class HTMLFormatterNoPHP extends HTMLFormatter {
 		} else {
 			spaces = getBreakSpaces(node);
 		}
-		if (spaces == null || spaces.length() == 0)
+		if (spaces == null || spaces.length() == 0) {
 			return;
+		}
 
 		replaceSource(node.getModel(), node.getEndOffset(), 0, spaces);
 		setWidth(contraints, spaces);
@@ -132,13 +140,16 @@ public class HTMLFormatterNoPHP extends HTMLFormatter {
 	 */
 	protected void insertBreakBefore(IDOMNode node,
 			HTMLFormatContraints contraints) {
-		if (node == null)
+		if (node == null) {
 			return;
-		if (node.getNodeType() == Node.TEXT_NODE)
+		}
+		if (node.getNodeType() == Node.TEXT_NODE) {
 			return;
+		}
 		Node parent = node.getParentNode();
-		if (parent == null)
+		if (parent == null) {
 			return;
+		}
 		Node prev = node.getPreviousSibling();
 
 		String spaces = null;
@@ -152,9 +163,6 @@ public class HTMLFormatterNoPHP extends HTMLFormatter {
 					HTMLTextFormatterNoPHP textFormatter = (HTMLTextFormatterNoPHP) formatter;
 					textFormatter.formatText(text, contraints,
 							HTMLTextFormatter.FORMAT_TAIL);
-
-					if (node == null)
-						return;
 
 					if (node.hasChildNodes()) { // container
 						formatChildNodes(node, contraints);
@@ -175,8 +183,9 @@ public class HTMLFormatterNoPHP extends HTMLFormatter {
 		} else {
 			spaces = getBreakSpaces(node);
 		}
-		if (spaces == null || spaces.length() == 0)
+		if (spaces == null || spaces.length() == 0) {
 			return;
+		}
 
 		replaceSource(node.getModel(), node.getStartOffset(), 0, spaces);
 		setWidth(contraints, spaces);

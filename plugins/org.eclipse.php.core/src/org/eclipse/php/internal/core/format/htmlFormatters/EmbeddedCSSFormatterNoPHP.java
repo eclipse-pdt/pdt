@@ -32,10 +32,12 @@ public class EmbeddedCSSFormatterNoPHP extends EmbeddedCSSFormatter {
 	 */
 	protected void formatChildNodes(IDOMNode node,
 			HTMLFormatContraints contraints) {
-		if (node == null)
+		if (node == null) {
 			return;
-		if (!node.hasChildNodes())
+		}
+		if (!node.hasChildNodes()) {
 			return;
+		}
 
 		// concat adjacent texts
 		node.normalize();
@@ -50,8 +52,9 @@ public class EmbeddedCSSFormatterNoPHP extends EmbeddedCSSFormatter {
 		boolean insertBreak = true;
 		IDOMNode child = (IDOMNode) node.getFirstChild();
 		while (child != null) {
-			if (child.getParentNode() != node)
+			if (child.getParentNode() != node) {
 				break;
+			}
 			IDOMNode next = (IDOMNode) child.getNextSibling();
 
 			if (insertBreak && canInsertBreakBefore(child)) {
@@ -80,8 +83,9 @@ public class EmbeddedCSSFormatterNoPHP extends EmbeddedCSSFormatter {
 			child = next;
 		}
 
-		if (contraints != null)
+		if (contraints != null) {
 			contraints.setFormatWithSiblingIndent(indent);
+		}
 	}
 
 	/**
@@ -148,9 +152,6 @@ public class EmbeddedCSSFormatterNoPHP extends EmbeddedCSSFormatter {
 					HTMLTextFormatterNoPHP textFormatter = (HTMLTextFormatterNoPHP) formatter;
 					textFormatter.formatText(text, contraints,
 							HTMLTextFormatter.FORMAT_TAIL);
-
-					if (node == null)
-						return;
 
 					if (node.hasChildNodes()) { // container
 						formatChildNodes(node, contraints);

@@ -616,8 +616,8 @@ public class DefaultCommentMapper {
 				// Found one previous sibling, so compute its trailing comments
 				// using current node start position
 				try {
-					previousEnd = storeTrailingComments(sibling, node
-							.getStart(), false,
+					previousEnd = storeTrailingComments(sibling,
+							node.getStart(), false,
 							this.parentLineRange[this.siblingPtr]);
 				} catch (Exception ex) {
 					// Give up extended ranges at this level if unexpected
@@ -663,8 +663,9 @@ public class DefaultCommentMapper {
 					int parentStart = parent.getStart();
 					int firstLine = getLineNumber(parentStart,
 							previousLineRange);
-					int lastLine = getLineNumber(parentStart
-							+ parent.getLength() - 1, previousLineRange);
+					int lastLine = getLineNumber(
+							parentStart + parent.getLength() - 1,
+							previousLineRange);
 					if (this.parentLineRange[this.siblingPtr] == null) {
 						this.parentLineRange[this.siblingPtr] = new int[] {
 								firstLine, lastLine };
@@ -689,8 +690,8 @@ public class DefaultCommentMapper {
 					: null;
 			if (sibling != null) {
 				try {
-					storeTrailingComments(sibling, node.getStart()
-							+ node.getLength() - 1, true,
+					storeTrailingComments(sibling,
+							node.getStart() + node.getLength() - 1, true,
 							this.parentLineRange[this.siblingPtr]);
 				} catch (Exception ex) {
 					// Give up extended ranges at this level if unexpected
@@ -770,9 +771,7 @@ public class DefaultCommentMapper {
 				if (c == -1) {
 					break;
 				}
-				if (b != null) {
-					b[off + i] = (char) c;
-				}
+				b[off + i] = (char) c;
 			}
 			return i;
 		}
