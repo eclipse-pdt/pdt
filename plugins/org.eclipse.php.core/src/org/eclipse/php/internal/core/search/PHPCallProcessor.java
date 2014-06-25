@@ -28,6 +28,11 @@ public class PHPCallProcessor implements ICallProcessor {
 	private class Requestor extends SearchRequestor {
 
 		public Map<Object, Object> result = new HashMap<Object, Object>();
+		private IModelElement search;
+
+		public Requestor(IModelElement member) {
+			this.search = member;
+		}
 
 		@Override
 		public void acceptSearchMatch(SearchMatch match) throws CoreException {
@@ -42,12 +47,12 @@ public class PHPCallProcessor implements ICallProcessor {
 			if (match.getElement() != null
 					&& match.getElement() instanceof IModelElement) {
 				IModelElement member = (IModelElement) match.getElement();
+
 				SimpleReference ref = new SimpleReference(match.getOffset(),
 						match.getOffset() + match.getLength(), EMPTY_STRING);
 				result.put(ref, member);
 			}
 		}
-
 	}
 
 	@Override
@@ -55,9 +60,10 @@ public class PHPCallProcessor implements ICallProcessor {
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
 
 		SearchPattern pattern = SearchPattern.createPattern(member,
-				IDLTKSearchConstants.METHOD, IDLTKSearchConstants.REFERENCES,
+				IDLTKSearchConstants.REFERENCES, SearchPattern.R_EXACT_MATCH
+						| SearchPattern.R_ERASURE_MATCH,
 				scope.getLanguageToolkit());
-		Requestor req = new Requestor();
+		Requestor req = new Requestor(member);
 		try {
 			engine.search(pattern, new SearchParticipant[] { SearchEngine
 					.getDefaultSearchParticipant() }, scope, req, monitor);
