@@ -859,12 +859,19 @@ public class PHPLaunchUtilities {
 	private static String getLibrarySearchEnvValue(String variable,
 			File phpExeDir, boolean quoted) {
 		StringBuilder buf = new StringBuilder();
+
+		// opening quote
+		if (quoted) {
+			buf.append('"');
+		}
+
 		File libDirectory = new File(phpExeDir.getParentFile(), "lib"); //$NON-NLS-1$
 		if (libDirectory.exists()) {
-			buf.append(createPath(libDirectory, quoted));
+			buf.append(libDirectory.getAbsolutePath());
 		} else {
-			buf.append(createPath(phpExeDir, quoted));
+			buf.append(phpExeDir.getAbsolutePath());
 		}
+
 		try {
 			String env = System.getenv(variable);
 			if (env != null) {
@@ -872,12 +879,13 @@ public class PHPLaunchUtilities {
 			}
 		} catch (Throwable e) {
 		}
-		return buf.toString();
-	}
 
-	private static String createPath(File path, boolean quoted) {
-		return quoted ? '"' + path.getAbsolutePath() + '"' : path
-				.getAbsolutePath();
+		// closing quote
+		if (quoted) {
+			buf.append('"');
+		}
+
+		return buf.toString();
 	}
 
 	private static String getLibrarySearchEnvVariable() {
