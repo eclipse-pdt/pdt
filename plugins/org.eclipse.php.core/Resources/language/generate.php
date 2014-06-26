@@ -15,10 +15,9 @@ if (version_compare(phpversion(), "5.0.0") < 0) {
 $splitFiles = true;
 $phpdocDir = null;
 
-$phpDir = "php5";
-if (strstr(phpversion(), "5.3")) {
-	$phpDir = "php5.3";
-}
+preg_match('/^[^.]+\.[^.]+/', phpversion(), $matches);
+echo "PHP version: {$matches[0]}\n";
+$phpDir = "php".$matches[0];
 
 // Parse arguments:
 $argv = $_SERVER["argv"];
