@@ -18,7 +18,6 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ModelElement;
@@ -27,8 +26,9 @@ import org.eclipse.dltk.internal.core.SourceType;
 public class NamespaceNode extends SourceType {
 	private IType[] namespaces;
 
-	public NamespaceNode(IScriptProject project, String name, IType[] namespaces) {
-		super((ModelElement) project, name);
+	public NamespaceNode(IModelElement modelElement, String name,
+			IType[] namespaces) {
+		super((ModelElement) modelElement, name);
 		this.namespaces = namespaces;
 	}
 
