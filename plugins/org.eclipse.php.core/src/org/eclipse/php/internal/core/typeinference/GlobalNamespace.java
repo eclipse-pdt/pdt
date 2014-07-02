@@ -33,7 +33,7 @@ public class GlobalNamespace extends SourceType {
 
 	public static final String NAME = "<global>"; //$NON-NLS-1$
 
-	public GlobalNamespace(IScriptProject project) {
+	public GlobalNamespace(IModelElement project) {
 		super((ModelElement) project, NAME);
 	}
 

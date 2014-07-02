@@ -198,13 +198,15 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 							.getBoolean(
 									PreferenceConstants.EXPLORER_GROUP_BY_NAMESPACES);
 					if (groupByNamespace
-							&& parentElement instanceof IScriptProject
-							&& supportsNamespaces((IScriptProject) parentElement)) {
+							&& parentElement instanceof IModelElement
+							&& isSourceFolder(DLTKCore.create(resource))
+							&& supportsNamespaces(((IOpenable) parentElement)
+									.getScriptProject())) {
 						returnChildren.add(new GlobalNamespace(
-								(IScriptProject) parentElement));
-						returnChildren
-								.addAll(Arrays
-										.asList(getAllNamespaces((IScriptProject) parentElement)));
+								(IModelElement) parentElement));
+
+						returnChildren.addAll(collectNamespaces(DLTKCore
+								.create(resource)));
 
 						IResource[] resChildren = ((IContainer) resource)
 								.members();
@@ -314,26 +316,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	}
 
 	private boolean isInSourceFolder(IModelElement modelElement) {
-		ScriptProject project = (ScriptProject) modelElement.getScriptProject();
-		IBuildpathEntry[] buildpath = null;
-		try {
-			buildpath = project.getResolvedBuildpath();
-		} catch (ModelException e) {
-
-		}
-		if (buildpath == null) {
-			return false;
-		}
-		for (int j = 0, buildpathLength = buildpath.length; j < buildpathLength; j++) {
-			IBuildpathEntry entry = buildpath[j];
-			// root path
-			IPath path = entry.getPath();
-			if (isInPath(path, modelElement.getResource())) {
-				return true;
-			}
-		}
-
-		return false;
+		return modelElement.getScriptProject().isOnBuildpath(modelElement);
 	}
 
 	/*
@@ -377,6 +360,32 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 					.getValue().toArray(new IType[entry.getValue().size()])));
 		}
 		return result.toArray();
+	}
+
+	protected List<IType> collectNamespaces(IModelElement create)
+			throws ModelException {
+
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(create,
+				IDLTKSearchScope.SOURCES);
+		IType[] namespaces = PhpModelAccess.getDefault().findTypes(null,
+				MatchRule.PREFIX, Modifiers.AccNameSpace, 0, scope, null);
+		Map<String, List<IType>> aggregated = new HashMap<String, List<IType>>();
+		for (IType ns : namespaces) {
+			String elementName = ns.getElementName();
+			List<IType> l = aggregated.get(elementName);
+			if (l == null) {
+				l = new LinkedList<IType>();
+				aggregated.put(elementName, l);
+			}
+			l.add(ns);
+		}
+		List<IType> result = new LinkedList<IType>();
+		for (Entry<String, List<IType>> entry : aggregated.entrySet()) {
+			result.add(new NamespaceNode(create, entry.getKey(), entry
+					.getValue().toArray(new IType[entry.getValue().size()])));
+		}
+
+		return result;
 	}
 
 	private Object[] getContainerPackageFragmentRoots(
