@@ -275,18 +275,21 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		int nextElementOffset = getEndOfWhiteSpacesOffset(document,
 				command.caretOffset, document.getLength());
 
-		IModelElement element = unit.getElementAt(nextElementOffset);
-		if (element == null)
+		IModelElement element = getElementAt(unit, nextElementOffset);
+		if (element == null) {
 			return null;
+		}
 
 		// Checking the element we got is not the element within the "/**" was
 		// typed
 		if (getCodeDataOffset(element) <= command.caretOffset) {
 			return null;
 		}
+
 		int type = element != null ? element.getElementType() : -1;
 		if (type != IModelElement.METHOD && type != IModelElement.TYPE
-				&& type != IModelElement.FIELD) {
+				&& type != IModelElement.FIELD
+				&& type != IModelElement.IMPORT_CONTAINER) {
 			assert false;
 			return null;
 		}
@@ -294,9 +297,19 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		String comment = null;
 		try {
 			switch (type) {
+			case IModelElement.IMPORT_CONTAINER:
+				comment = createFileComment(unit, indentation, lineDelimiter);
+				break;
 			case IModelElement.TYPE:
-				comment = createTypeTags(document, command, indentation,
-						lineDelimiter, (IType) element);
+				IType sourceType = (IType) element;
+				// coudn't find better way to distinguish class from namespace
+				if (sourceType.getSource().startsWith("namespace")) {
+					comment = createFileComment(unit, indentation,
+							lineDelimiter);
+				} else {
+					comment = createTypeTags(document, command, indentation,
+							lineDelimiter, (IType) element);
+				}
 				break;
 			case IModelElement.FIELD:
 				comment = creatFieldTags(document, command, indentation,
@@ -331,6 +344,19 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 			offset++;
 		}
 		return -1;
+	}
+
+	private IModelElement getElementAt(ISourceModule unit, int nextElementOffset)
+			throws ModelException {
+		IModelElement modelElement = unit.getElementAt(nextElementOffset);
+		if (modelElement == null) {
+			// look for first in file use statement also
+			if (unit.getChildren().length != 0
+					&& unit.getChildren()[0].getElementType() == IModelElement.IMPORT_CONTAINER) {
+				return unit.getChildren()[0];
+			}
+		}
+		return modelElement;
 	}
 
 	/**
@@ -373,6 +399,18 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		// TODO : should fix the formatter step
 		// return Strings.changeIndent(comment, 0, project, indentation,
 		// lineDelimiter);
+	}
+
+	private String createFileComment(ISourceModule sourceModule,
+			String indentation, String lineDelimiter) throws CoreException {
+		String comment = CodeGeneration.getFileComment(sourceModule,
+				lineDelimiter);
+		if (comment != null) {
+			comment = comment.trim();
+			return prepareTemplateComment(comment.trim(), indentation,
+					sourceModule.getScriptProject(), lineDelimiter);
+		}
+		return comment;
 	}
 
 	private String createTypeTags(IDocument document, DocumentCommand command,
