@@ -1447,9 +1447,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 						if (lines.size() == 1) {
 
 							String word = lines.get(0).trim();
-							if (word.startsWith("*")) { //$NON-NLS-1$
-								word = word.substring(1);
-							}
 							commentWords.add(word);
 							initCommentWords();
 							StringBuffer sb = new StringBuffer();
@@ -1469,7 +1466,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 								handleCharsWithoutComments(
 										comment.sourceStart() + offset,
 										comment.sourceEnd() + offset, true);
-								startLine = endLine;
 								if (needInsertNewLine) {
 									insertNewLine();
 								} else {
