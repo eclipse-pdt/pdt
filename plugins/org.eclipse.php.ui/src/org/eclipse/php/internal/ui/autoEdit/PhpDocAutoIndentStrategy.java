@@ -18,6 +18,7 @@ import org.eclipse.dltk.internal.core.util.MethodOverrideTester;
 import org.eclipse.dltk.ui.IWorkingCopyManager;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -302,8 +303,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 				break;
 			case IModelElement.TYPE:
 				IType sourceType = (IType) element;
-				// coudn't find better way to distinguish class from namespace
-				if (sourceType.getSource().startsWith("namespace")) {
+				if (PHPFlags.isNamespace(sourceType.getFlags())) {
 					comment = createFileComment(unit, indentation,
 							lineDelimiter);
 				} else {
