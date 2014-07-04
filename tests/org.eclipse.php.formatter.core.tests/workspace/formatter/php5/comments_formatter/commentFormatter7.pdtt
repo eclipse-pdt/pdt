@@ -1,0 +1,45 @@
+--TEST--
+Test formatting multiline comments (bug 438909)
+--FILE--
+<?php
+namespace Some\Space;
+
+class User extends RequestHandler {
+    
+    /* **************************************************************/
+    /* **************************************************************/
+    
+    /**
+     * (non-PHPdoc)
+     *
+     * @see \Resttest\RequestHandler\RequestHandlerAbstract::handleRequest()
+     */
+    public function handleRequest(RequestInterface $request) {
+            $response = $this->getResponse();
+        $user = $request->getUsersTable()->getRowById($request->getId());
+        $response->setUser($user);
+        		return $response;
+    }
+}
+--EXPECT--
+<?php
+
+namespace Some\Space;
+
+class User extends RequestHandler
+{
+    /* ************************************************************* */
+    /* ************************************************************* */
+    /**
+     * (non-PHPdoc)
+     *
+     * @see \Resttest\RequestHandler\RequestHandlerAbstract::handleRequest()
+     */
+    public function handleRequest (RequestInterface $request)
+    {
+        $response = $this->getResponse();
+        $user = $request->getUsersTable()->getRowById($request->getId());
+        $response->setUser($user);
+        return $response;
+    }
+}
