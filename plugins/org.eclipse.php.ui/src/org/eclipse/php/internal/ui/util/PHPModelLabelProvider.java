@@ -109,6 +109,9 @@ public class PHPModelLabelProvider extends LabelProvider implements
 			try {
 				modifiers = ((IMember) element).getFlags();
 			} catch (ModelException e) {
+				if (e.isDoesNotExist()) {
+					return modifiers;
+				}
 				Logger.logException(e);
 			}
 		}
@@ -117,6 +120,9 @@ public class PHPModelLabelProvider extends LabelProvider implements
 					&& ((IMethod) element).isConstructor())
 				adornments |= PHPElementImageDescriptor.CONSTRUCTOR;
 		} catch (ModelException e) {
+			if (e.isDoesNotExist()) {
+				return modifiers;
+			}
 			Logger.logException(e);
 		}
 		if (PHPFlags.isAbstract(modifiers))
