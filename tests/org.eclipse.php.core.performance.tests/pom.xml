@@ -17,13 +17,6 @@
 	   <skipPdtPerformanceTests>${skipTests}</skipPdtPerformanceTests>
 	</properties>
 	
-	<repositories>
-	   <repository>
-	       <id>luna-all</id>
-	       <name>luna</name>
-	       <url>http://download.eclipse.org/eclipse/downloads/drops4/S-4.4RC4-201406061215/</url>
-	   </repository>
-	</repositories>
 	<build>
 	  <plugins>
 	  	<plugin>

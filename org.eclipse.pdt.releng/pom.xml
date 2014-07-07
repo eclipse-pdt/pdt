@@ -83,8 +83,8 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
-        <version>2.3.1</version>
-      </plugin>
+				<version>2.3.1</version>
+			</plugin>
 			<!-- extras -->
 			<plugin>
 				<groupId>org.eclipse.tycho.extras</groupId>
@@ -136,7 +136,7 @@
 								<goals>
 									<goal>normalize</goal>
 								</goals>
-								<phase>package</phase>
+								<phase>verify</phase>
 							</execution>
 						</executions>
 					</plugin>
@@ -152,7 +152,7 @@
 								<configuration>
 									<skip>${skipSign}</skip>
 								</configuration>
-								<phase>package</phase>
+								<phase>verify</phase>
 							</execution>
 						</executions>
 					</plugin>
@@ -165,7 +165,7 @@
 								<goals>
 									<goal>pack</goal>
 								</goals>
-								<phase>package</phase>
+								<phase>verify</phase>
 							</execution>
 						</executions>
 					</plugin>
@@ -179,7 +179,7 @@
 								<goals>
 									<goal>p2-metadata</goal>
 								</goals>
-								<phase>package</phase>
+								<phase>verify</phase>
 							</execution>
 						</executions>
 						<configuration>
