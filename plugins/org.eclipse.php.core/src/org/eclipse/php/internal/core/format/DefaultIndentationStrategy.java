@@ -607,11 +607,13 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		TextSequence textSequence = PHPTextSequenceUtilities
 				.getStatement(lineStart,
 						document.getRegionAtCharacterOffset(lineStart), true);
+		int textOriginalOffset = textSequence.getOriginalOffset(0);
+		int textSequenceLine = document.getLineOfOffset(textOriginalOffset);
 		if (textSequence != null
+				&& textSequenceLine < currLineIndex
 				&& isRegionTypeAllowedMultiline(FormatterUtils.getRegionType(
-						document, textSequence.getOriginalOffset(0)))
-				&& document.getLineOfOffset(textSequence.getOriginalOffset(0)) < currLineIndex) {
-			return document.getLineOfOffset(textSequence.getOriginalOffset(0));
+						document, textOriginalOffset))) {
+			return textSequenceLine;
 		}
 
 		return -1;
@@ -629,6 +631,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		// TODO maybe there are other type need to be added
 		return regionType != null
 				&& !PHPRegionTypes.PHPDOC_COMMENT_START.equals(regionType)
+				&& !PHPRegionTypes.PHP_COMMENT_START.equals(regionType)
 				&& !PHPRegionTypes.PHP_LINE_COMMENT.equals(regionType)
 				&& !PHPRegionTypes.PHP_STRING.equals(regionType)
 				&& !PHPRegionTypes.PHP_CASE.equals(regionType)

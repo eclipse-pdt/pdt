@@ -1,0 +1,31 @@
+--TEST--
+Tests pasting multiline PHPDoc.
+--FILE--
+<?php
+class class_name {
+|
+}
+?>
+--OTHER--
+			/**
+					 * This file is part of something.
+			 * some text01
+			 *
+				 * some text02
+				 * For the full copyright and license information, please view the LICENSE
+				 * file that was distributed with this source code.
+				 */
+--EXPECT--
+<?php
+class class_name {
+	/**
+	 * This file is part of something.
+	 * some text01
+	 *
+	 * some text02
+	 * For the full copyright and license information, please view the LICENSE
+	 * file that was distributed with this source code.
+	 */
+	
+}
+?>
