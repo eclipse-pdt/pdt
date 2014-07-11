@@ -948,7 +948,7 @@ public class PHPDocumentationContentAccess {
 				sb.append(fBuf.toString()
 						.replace(
 								m.group(),
-								handleLink(Arrays.asList(new TypeReference(0,
+								handleLinks(Arrays.asList(new TypeReference(0,
 										0, url)))));
 				// try {
 				// m.appendReplacement(
@@ -1204,6 +1204,7 @@ public class PHPDocumentationContentAccess {
 			} else {
 				handleContentElements(tag);
 			}
+			doWorkAround();
 			fBuf.append(BlOCK_TAG_ENTRY_END);
 		}
 	}
@@ -1261,10 +1262,6 @@ public class PHPDocumentationContentAccess {
 		fBuf.append("<dt>"); //$NON-NLS-1$
 		fBuf.append(title);
 		fBuf.append("</dt>"); //$NON-NLS-1$
-	}
-
-	private void handleSeeTag(PHPDocTag tag) {
-		fBuf.append(handleLink(Arrays.asList(tag.getReferences())));
 	}
 
 	private void handleExceptionTags(List tags, List exceptionNames,
@@ -1379,123 +1376,93 @@ public class PHPDocumentationContentAccess {
 		fBuf.append(">").append(tag.getValue()).append("</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	private StringBuffer handleLink(List fragments) {
+	private void handleSeeTag(PHPDocTag tag) {
+		fBuf.append(handleLinks(Arrays.asList(tag.getReferences())));
+	}
+
+	private StringBuffer handleLinks(List<? extends SimpleReference> fragments) {
 		StringBuffer sb = new StringBuffer();
-		int fs = fragments.size();
-		if (fs > 0) {
-			Object first = fragments.get(0);
-			String refTypeName = null;
-			String refMemberName = null;
-			String[] refMethodParamTypes = null;
-			String[] refMethodParamNames = null;
-			if (first instanceof TypeReference) {
-				TypeReference type = (TypeReference) first;
-				String name = type.getName();
-
-				int typeNameEnd = name.indexOf("::"); //$NON-NLS-1$
-				if (typeNameEnd == -1) {
-					refTypeName = name;
-				} else {
-					refTypeName = name.substring(0, typeNameEnd);
-
-					int argsListStart = name.indexOf('(', typeNameEnd);
-					if (argsListStart == -1) {
-						refMemberName = name.substring(typeNameEnd
-								+ "::".length()); //$NON-NLS-1$
-					} else {
-						refMemberName = name.substring(
-								typeNameEnd + "::".length(), argsListStart); //$NON-NLS-1$
-
-						int argsListEnd = name.indexOf(argsListStart, ')');
-						if (argsListEnd == -1) {
-							refMethodParamTypes = new String[0];
-						} else {
-							String argsList = name.substring(argsListStart
-									+ ")".length(), argsListEnd); //$NON-NLS-1$
-							String[] args = argsList.split(","); //$NON-NLS-1$
-							for (int i = 0; i < args.length; i++) {
-								args[i] = args[i].trim();
-							}
-							refMethodParamTypes = args;
-						}
-					}
-				}
-
-			} // else if (first instanceof MemberRef) {
-				// MemberRef memberRef = (MemberRef) first;
-				// Name qualifier = memberRef.getQualifier();
-				// refTypeName = qualifier == null ? "" :
-				// qualifier.getFullyQualifiedName();
-				// refMemberName = memberRef.getName().getIdentifier();
-				// } else if (first instanceof MethodRef) {
-				// MethodRef methodRef = (MethodRef) first;
-				// Name qualifier = methodRef.getQualifier();
-				// refTypeName = qualifier == null ? "" :
-				// qualifier.getFullyQualifiedName();
-				// refMemberName = methodRef.getName().getIdentifier();
-				// List params = methodRef.parameters();
-				// int ps = params.size();
-				// refMethodParamTypes = new String[ps];
-				// refMethodParamNames = new String[ps];
-				// for (int i = 0; i < ps; i++) {
-				// MethodRefParameter param = (MethodRefParameter) params
-				// .get(i);
-				// refMethodParamTypes[i] = ASTNodes.asString(param.getType());
-				// SimpleName paramName = param.getName();
-				// if (paramName != null)
-				// refMethodParamNames[i] = paramName.getIdentifier();
-				// }
-				// }
-
-			if (refTypeName != null) {
-				sb.append("<a href='"); //$NON-NLS-1$
-				try {
-					String scheme = PHPElementLinks.PHPDOC_SCHEME;
-					String uri = PHPElementLinks.createURI(scheme, fMember,
-							refTypeName, refMemberName, refMethodParamTypes);
-					sb.append(uri);
-				} catch (URISyntaxException e) {
-					PHPUiPlugin.log(e);
-				}
-				sb.append("'>"); //$NON-NLS-1$
-				if (fs > 1) {
-					// if (fs == 2 && fragments.get(1) instanceof TextElement) {
-					// String text= removeLeadingWhitespace(((TextElement)
-					// fragments.get(1)).getText());
-					// if (text.length() != 0)
-					// handleText(text);
-					// else
-					// //throws
-					// }
-					// handleContentElements(fragments.subList(1, fs));
-				} else {
-					sb.append(refTypeName);
-					if (refMemberName != null) {
-						if (refTypeName.length() > 0) {
-							sb.append("::"); //$NON-NLS-1$
-						}
-						sb.append(refMemberName);
-						if (refMethodParamTypes != null) {
-							sb.append('(');
-							for (int i = 0; i < refMethodParamTypes.length; i++) {
-								String pType = refMethodParamTypes[i];
-								sb.append(pType);
-								String pName = refMethodParamNames[i];
-								if (pName != null) {
-									sb.append(' ').append(pName);
-								}
-								if (i < refMethodParamTypes.length - 1) {
-									sb.append(", "); //$NON-NLS-1$
-								}
-							}
-							sb.append(')');
-						}
-					}
-				}
-				sb.append("</a>"); //$NON-NLS-1$
-			} else {
-				// handleContentElements(fragments);
+		for (int i = 0; i < fragments.size(); i++) {
+			SimpleReference reference = fragments.get(i);
+			sb.append(handleLink(reference));
+			if (i < (fragments.size() - 1)) {
+				sb.append(", ");
 			}
+		}
+		return sb;
+	}
+
+	private StringBuffer handleLink(SimpleReference fragment) {
+		StringBuffer sb = new StringBuffer();
+
+		String refTypeName = null;
+		String refMemberName = null;
+		String[] refMethodParamTypes = null;
+		if (fragment instanceof TypeReference) {
+			TypeReference type = (TypeReference) fragment;
+			String name = type.getName();
+
+			int typeNameEnd = name.indexOf("::"); //$NON-NLS-1$
+			if (typeNameEnd == -1) {
+				refTypeName = name;
+			} else {
+				refTypeName = name.substring(0, typeNameEnd);
+
+				int argsListStart = name.indexOf('(', typeNameEnd);
+				if (argsListStart == -1) {
+					refMemberName = name.substring(typeNameEnd + "::".length()); //$NON-NLS-1$
+				} else {
+					refMemberName = name.substring(
+							typeNameEnd + "::".length(), argsListStart); //$NON-NLS-1$
+
+					int argsListEnd = name.indexOf(')', argsListStart);
+					if (argsListEnd == -1) {
+						refMethodParamTypes = new String[0];
+					} else {
+						String argsList = name.substring(
+								argsListStart + ")".length(), argsListEnd); //$NON-NLS-1$
+						List<String> args = new ArrayList<String>();
+						StringTokenizer tokenizer = new StringTokenizer(
+								argsList, ","); //$NON-NLS-1$
+						while (tokenizer.hasMoreElements()) {
+							args.add(tokenizer.nextToken().trim());
+						}
+						refMethodParamTypes = args.toArray(new String[0]);
+					}
+				}
+			}
+
+		}
+		if (refTypeName != null) {
+			sb.append("<a href='"); //$NON-NLS-1$
+			try {
+				String scheme = PHPElementLinks.PHPDOC_SCHEME;
+				String uri = PHPElementLinks.createURI(scheme, fMember,
+						refTypeName, refMemberName, refMethodParamTypes);
+				sb.append(uri);
+			} catch (URISyntaxException e) {
+				PHPUiPlugin.log(e);
+			}
+			sb.append("'>"); //$NON-NLS-1$
+			sb.append(refTypeName);
+			if (refMemberName != null) {
+				if (refTypeName.length() > 0) {
+					sb.append("::"); //$NON-NLS-1$
+				}
+				sb.append(refMemberName);
+				if (refMethodParamTypes != null) {
+					sb.append('(');
+					for (int i = 0; i < refMethodParamTypes.length; i++) {
+						String pType = refMethodParamTypes[i];
+						sb.append(pType);
+						if (i < refMethodParamTypes.length - 1) {
+							sb.append(", "); //$NON-NLS-1$
+						}
+					}
+					sb.append(')');
+				}
+			}
+			sb.append("</a>"); //$NON-NLS-1$
 		}
 		return sb;
 	}
