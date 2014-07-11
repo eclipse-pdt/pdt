@@ -853,11 +853,12 @@ public class PHPDocumentationContentAccess {
 			fBuf.append(shortDescription);
 		if (longDescription != null && longDescription.length() > 0) {
 			fBuf.append("<p>"); //$NON-NLS-1$
-			longDescription = longDescription.replaceAll("\r\n", "<p>"); //$NON-NLS-1$ //$NON-NLS-2$
-			longDescription = longDescription.replaceAll("\n\r", "<p>"); //$NON-NLS-1$ //$NON-NLS-2$
-			longDescription = longDescription.replaceAll("\n", "<p>"); //$NON-NLS-1$ //$NON-NLS-2$
-			longDescription = longDescription.replaceAll("\r", "<p>"); //$NON-NLS-1$ //$NON-NLS-2$
+			longDescription = longDescription.replaceAll("\r\n", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
+			longDescription = longDescription.replaceAll("\n\r", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
+			longDescription = longDescription.replaceAll("\n", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
+			longDescription = longDescription.replaceAll("\r", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
 			fBuf.append(longDescription);
+			fBuf.append("</p>"); //$NON-NLS-1$
 		} else if (fMethod != null) {
 			CharSequence inherited = fJavadocLookup
 					.getInheritedMainDescription(fMethod);
@@ -1213,7 +1214,6 @@ public class PHPDocumentationContentAccess {
 
 		handleBlockTagTitle(PHPDocumentationMessages.JavaDoc2HTMLTextReader_returns_section);
 		fBuf.append(BlOCK_TAG_ENTRY_START);
-		doWorkAround();
 
 		if (tag != null)
 			handleContentElements(tag);
@@ -1228,7 +1228,6 @@ public class PHPDocumentationContentAccess {
 
 		handleBlockTagTitle(PHPDocumentationMessages.JavaDoc2HTMLTextReader_namespace_section);
 		fBuf.append(BlOCK_TAG_ENTRY_START);
-		doWorkAround();
 
 		if (tag != null)
 			handleContentElements(tag);
@@ -1246,7 +1245,6 @@ public class PHPDocumentationContentAccess {
 				handleBlockTagTitle(PHPDocTag.getTagKind(tag.getTagKind()));
 			}
 			fBuf.append(BlOCK_TAG_ENTRY_START);
-			doWorkAround();
 			if (tag.getTagKind() == PHPDocTag.LINK) {
 				handleLinkTag(tag);
 			} else {
@@ -1276,7 +1274,6 @@ public class PHPDocumentationContentAccess {
 		for (Iterator iter = tags.iterator(); iter.hasNext();) {
 			PHPDocTag tag = (PHPDocTag) iter.next();
 			fBuf.append(BlOCK_TAG_ENTRY_START);
-			doWorkAround();
 			handleThrowsTag(tag);
 			fBuf.append(BlOCK_TAG_ENTRY_END);
 		}
@@ -1322,7 +1319,6 @@ public class PHPDocumentationContentAccess {
 		for (Iterator iter = tags.iterator(); iter.hasNext();) {
 			PHPDocTag tag = (PHPDocTag) iter.next();
 			fBuf.append(BlOCK_TAG_ENTRY_START);
-			doWorkAround();
 			handleParamTag(tag);
 			fBuf.append(BlOCK_TAG_ENTRY_END);
 		}
@@ -1331,7 +1327,6 @@ public class PHPDocumentationContentAccess {
 			String name = (String) parameterNames.get(i);
 			if (name != null) {
 				fBuf.append(BlOCK_TAG_ENTRY_START);
-				doWorkAround();
 				if (parameterTypes[i] != null) {
 					fBuf.append(PARAM_NAME_START);
 					fBuf.append(parameterTypes[i]);
@@ -1556,13 +1551,6 @@ public class PHPDocumentationContentAccess {
 			return true;
 		}
 		return false;
-	}
-
-	// Work aorund for Bug 320709
-	// PHPDoc tooltips are not sized according to their contents
-	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=320709
-	private void doWorkAround() {
-		fBuf.append("&nbsp"); //$NON-NLS-1$
 	}
 
 }
