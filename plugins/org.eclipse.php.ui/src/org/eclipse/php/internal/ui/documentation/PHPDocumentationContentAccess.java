@@ -853,11 +853,12 @@ public class PHPDocumentationContentAccess {
 			fBuf.append(shortDescription);
 		if (longDescription != null && longDescription.length() > 0) {
 			fBuf.append("<p>"); //$NON-NLS-1$
-			longDescription = longDescription.replaceAll("\r\n", "<p>"); //$NON-NLS-1$ //$NON-NLS-2$
-			longDescription = longDescription.replaceAll("\n\r", "<p>"); //$NON-NLS-1$ //$NON-NLS-2$
-			longDescription = longDescription.replaceAll("\n", "<p>"); //$NON-NLS-1$ //$NON-NLS-2$
-			longDescription = longDescription.replaceAll("\r", "<p>"); //$NON-NLS-1$ //$NON-NLS-2$
+			longDescription = longDescription.replaceAll("\r\n", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
+			longDescription = longDescription.replaceAll("\n\r", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
+			longDescription = longDescription.replaceAll("\n", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
+			longDescription = longDescription.replaceAll("\r", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
 			fBuf.append(longDescription);
+			fBuf.append("</p>"); //$NON-NLS-1$
 		} else if (fMethod != null) {
 			CharSequence inherited = fJavadocLookup
 					.getInheritedMainDescription(fMethod);
@@ -1213,12 +1214,12 @@ public class PHPDocumentationContentAccess {
 
 		handleBlockTagTitle(PHPDocumentationMessages.JavaDoc2HTMLTextReader_returns_section);
 		fBuf.append(BlOCK_TAG_ENTRY_START);
-		doWorkAround();
-
-		if (tag != null)
+		if (tag != null) {
 			handleContentElements(tag);
-		else
+		} else {
 			fBuf.append(returnDescription);
+		}
+		doWorkAround();
 		fBuf.append(BlOCK_TAG_ENTRY_END);
 	}
 
@@ -1228,10 +1229,10 @@ public class PHPDocumentationContentAccess {
 
 		handleBlockTagTitle(PHPDocumentationMessages.JavaDoc2HTMLTextReader_namespace_section);
 		fBuf.append(BlOCK_TAG_ENTRY_START);
-		doWorkAround();
-
-		if (tag != null)
+		if (tag != null) {
 			handleContentElements(tag);
+		}
+		doWorkAround();
 		fBuf.append(BlOCK_TAG_ENTRY_END);
 	}
 
@@ -1246,12 +1247,12 @@ public class PHPDocumentationContentAccess {
 				handleBlockTagTitle(PHPDocTag.getTagKind(tag.getTagKind()));
 			}
 			fBuf.append(BlOCK_TAG_ENTRY_START);
-			doWorkAround();
 			if (tag.getTagKind() == PHPDocTag.LINK) {
 				handleLinkTag(tag);
 			} else {
 				handleContentElements(tag);
 			}
+			doWorkAround();
 			fBuf.append(BlOCK_TAG_ENTRY_END);
 		}
 	}
@@ -1276,8 +1277,8 @@ public class PHPDocumentationContentAccess {
 		for (Iterator iter = tags.iterator(); iter.hasNext();) {
 			PHPDocTag tag = (PHPDocTag) iter.next();
 			fBuf.append(BlOCK_TAG_ENTRY_START);
-			doWorkAround();
 			handleThrowsTag(tag);
+			doWorkAround();
 			fBuf.append(BlOCK_TAG_ENTRY_END);
 		}
 		for (int i = 0; i < exceptionDescriptions.length; i++) {
@@ -1321,17 +1322,13 @@ public class PHPDocumentationContentAccess {
 
 		for (Iterator iter = tags.iterator(); iter.hasNext();) {
 			PHPDocTag tag = (PHPDocTag) iter.next();
-			fBuf.append(BlOCK_TAG_ENTRY_START);
-			doWorkAround();
 			handleParamTag(tag);
-			fBuf.append(BlOCK_TAG_ENTRY_END);
 		}
 		for (int i = 0; i < parameterDescriptions.length; i++) {
 			CharSequence description = parameterDescriptions[i];
 			String name = (String) parameterNames.get(i);
 			if (name != null) {
 				fBuf.append(BlOCK_TAG_ENTRY_START);
-				doWorkAround();
 				if (parameterTypes[i] != null) {
 					fBuf.append(PARAM_NAME_START);
 					fBuf.append(parameterTypes[i]);
@@ -1341,8 +1338,10 @@ public class PHPDocumentationContentAccess {
 				fBuf.append(PARAM_NAME_START);
 				fBuf.append(name);
 				fBuf.append(PARAM_NAME_END);
-				if (description != null)
+				if (description != null) {
 					fBuf.append(description);
+				}
+				doWorkAround();
 				fBuf.append(BlOCK_TAG_ENTRY_END);
 			}
 		}
@@ -1350,7 +1349,9 @@ public class PHPDocumentationContentAccess {
 
 	private void handleParamTag(PHPDocTag tag) {
 		if (tag.getReferences().length == 0) {
+			fBuf.append(BlOCK_TAG_ENTRY_START);
 			fBuf.append(tag.getValue());
+			fBuf.append(BlOCK_TAG_ENTRY_END);
 			return;
 		}
 		String parameterName = getParameterInfo(tag, PARAMETER_NAME_TYPE);
@@ -1365,8 +1366,10 @@ public class PHPDocumentationContentAccess {
 		fBuf.append(PARAM_NAME_START);
 		fBuf.append(parameterName);
 		fBuf.append(PARAM_NAME_END);
-		if (description != null)
+		if (description != null) {
 			fBuf.append(description);
+		}
+		doWorkAround();
 		fBuf.append(BlOCK_TAG_ENTRY_END);
 	}
 
