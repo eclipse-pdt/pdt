@@ -866,7 +866,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		boolean previousCommentIsSingleLine = false;
 		justCommentLine = false;
 
-		for (Iterator<org.eclipse.php.internal.core.compiler.ast.nodes.Comment> iter = commentList
+		comments: for (Iterator<org.eclipse.php.internal.core.compiler.ast.nodes.Comment> iter = commentList
 				.iterator(); iter.hasNext();) {
 			org.eclipse.php.internal.core.compiler.ast.nodes.Comment comment = iter
 					.next();
@@ -1139,7 +1139,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 				}
 
 				start = comment.sourceEnd() + offset;
-				startLine = commentStartLine;
 				break;
 			case org.eclipse.php.internal.core.compiler.ast.nodes.Comment.TYPE_PHPDOC:
 				previousCommentIsSingleLine = false;
@@ -1310,19 +1309,16 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 				break;
 			case org.eclipse.php.internal.core.compiler.ast.nodes.Comment.TYPE_MULTILINE:
 				previousCommentIsSingleLine = false;
-				IRegion startLinereg = document.getLineInformation(startLine);
-				// ignore multi line comment in the middle of code in one
-				// line
+				// ignore multi line comments in the middle of code
 				// example while /* kuku */ ( /* kuku */$a > 0 )
-				if (getBufferFirstChar() == '\0'
-						&& (startLine == endLine
-								&& document
-										.get(comment.sourceEnd() + offset,
-												startLinereg.getOffset()
-														+ startLinereg
-																.getLength()
-														- (comment.sourceEnd() + offset))
-										.trim().length() == 0 || startLine != endLine)) {
+				if (getBufferFirstChar() != '\0') {
+					replaceBuffer.setLength(0);
+					resetEnableStatus(document.get(comment.sourceStart()
+							+ offset,
+							comment.sourceEnd() - comment.sourceStart()));
+					start = end;
+					break comments;
+				} else {
 					// buffer contains only whitespace chars
 					indentOnFirstColumn = !startAtFirstColumn
 							|| !this.preferences.never_indent_block_comments_on_first_column;
@@ -1333,6 +1329,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 									replaceBuffer.length());
 							replaceBuffer.replace(position,
 									replaceBuffer.length(), " "); //$NON-NLS-1$
+							IRegion startLinereg = document
+									.getLineInformation(startLine);
 							lineWidth = comment.sourceStart() + offset
 									- startLinereg.getOffset() + 1;
 							indentOnFirstColumn = false;
@@ -1386,20 +1384,18 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					if (startLine != commentStartLine && blockEnd) {
 						recordCommentIndentVariables = true;
 					}
-					if (start <= comment.sourceStart() + offset) {
-						doNotIndent = true;
-						if (indentOnFirstColumn) {
-							indent();
-							doNotIndent = false;
-							if (lineWidth > 0) {
-								startAtFirstColumn = false;
-							}
-						}
-
-						handleCharsWithoutComments(start, comment.sourceStart()
-								+ offset);
+					doNotIndent = true;
+					if (indentOnFirstColumn) {
+						indent();
 						doNotIndent = false;
+						if (lineWidth > 0) {
+							startAtFirstColumn = false;
+						}
 					}
+
+					handleCharsWithoutComments(start, comment.sourceStart()
+							+ offset);
+					doNotIndent = false;
 					start = comment.sourceEnd() + offset;
 					resetEnableStatus(document.get(comment.sourceStart()
 							+ offset,
@@ -1568,14 +1564,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 
 					}
 					insertNewLine();
-					startLine = endLine;
-				} else {
-					// don't handle multiline
-					start = end;
-					replaceBuffer.setLength(0);
-					resetEnableStatus(document.get(comment.sourceStart()
-							+ offset,
-							comment.sourceEnd() - comment.sourceStart()));
 				}
 				break;
 			}

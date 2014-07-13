@@ -1,0 +1,58 @@
+--TEST--
+Test formatting multiline comments (bug 438909)
+--FILE--
+<?php
+/* **************************************************************/
+/* **************************************************************/
+
+/* **************************************************************/
+/*               Test
+ *      me
+ */
+/* **************************************************************/
+
+function foo() {
+
+    /*
+     *    comment
+     *          comment
+     */
+    //     comment         comment
+		while /*         comment   */ (
+				/*                         comment   */
+				/*                         comment 
+				 *      comment
+				 */
+		//   comment         comment
+				/*                         comment   */
+		//   comment         comment
+				$a > 0 ) {
+				}       /*   comment   */ //   comment
+}
+--EXPECT--
+<?php
+/* ************************************************************* */
+/* ************************************************************* */
+/* ************************************************************* */
+/*
+ * Test
+ * me
+ */
+/* ************************************************************* */
+function foo ()
+{
+    /*
+     * comment
+     * comment
+     */
+    // comment comment
+    while /*         comment   */ (
+				/*                         comment   */
+				/*                         comment 
+				 *      comment
+				 */
+		//   comment         comment
+				/*                         comment   */
+		//   comment         comment
+				$a > 0) {} /* comment */ // comment
+}
