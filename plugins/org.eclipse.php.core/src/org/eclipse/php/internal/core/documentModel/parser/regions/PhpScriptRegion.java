@@ -219,7 +219,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				final LexerState startState = tokensContaier
 						.getState(newTokenOffset);
 				final LexerState endState = tokensContaier.getState(tokenEnd
-						.getEnd() + 1);
+						.getEnd());
 
 				final PhpTokenContainer newContainer = new PhpTokenContainer();
 				final AbstractPhpLexer phpLexer = getPhpLexer(
