@@ -1,0 +1,21 @@
+--TEST--
+Bug 438982 - Formatter adds unexpectedly "(" and ")" into the php code
+--FILE--
+<?php
+return array(
+	//this is a comment
+	);
+
+$x[
+//this is a comment
+] = 0;
+?>
+--EXPECT--
+<?php
+return array()
+// this is a comment
+;
+$x[
+// this is a comment
+] = 0;
+?>
