@@ -21,6 +21,8 @@ import java.util.regex.Pattern;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.Region;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.AbstractPhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
@@ -135,9 +137,7 @@ public class PHPTextSequenceUtilities {
 								- startOffset);
 
 				// remove comments
-				// TODO if the text sequence is large just ignore it, should be
-				// fixed.
-				if (removeComments && textSequence.length() < 1000) {
+				if (removeComments) {
 					textSequence = removeComments(textSequence);
 				}
 
@@ -155,9 +155,27 @@ public class PHPTextSequenceUtilities {
 	}
 
 	private static TextSequence removeComments(TextSequence textSequence) {
-		FIND_COMMENT_START: while (true) {
-			int commentStartPosition = getCommentStartIndex(textSequence);
-			if (commentStartPosition > -1) {
+		List<IRegion> comments = collectComments(textSequence);
+		for (int i = comments.size() - 1; i >= 0; i--) {
+			IRegion commentStartRegion = comments.get(i);
+			textSequence = textSequence.cutTextSequence(
+					commentStartRegion.getOffset(),
+					commentStartRegion.getLength());
+		}
+		return textSequence;
+	}
+
+	private static List<IRegion> collectComments(TextSequence textSequence) {
+		Matcher commentStartMatcher = COMMENT_START_PATTERN
+				.matcher(textSequence);
+		List<IRegion> commentRegions = new ArrayList<IRegion>();
+		int start = 0;
+		while (commentStartMatcher.find(start)) {
+			String currentType = TextSequenceUtilities.getType(textSequence,
+					commentStartMatcher.start());
+			if (PHPPartitionTypes.isPHPCommentState(currentType)
+					&& !PHPPartitionTypes.isPHPQuotesState(currentType)) {
+				int commentStartPosition = commentStartMatcher.start();
 				String startCommentString = textSequence.subSequence(
 						commentStartPosition, commentStartPosition + 2)
 						.toString();
@@ -169,40 +187,32 @@ public class PHPTextSequenceUtilities {
 							.find(commentStartPosition);
 					if (foundEnd) {
 						int commentEndPosition = commentEndMatcher.end();
-						textSequence = textSequence.cutTextSequence(
-								commentStartPosition, commentEndPosition);
-						continue;
+						IRegion range = new Region(commentStartPosition,
+								commentEndPosition - commentStartPosition);
+						commentRegions.add(range);
+						start = commentEndPosition;
+					} else {
+						start = commentStartMatcher.start() + 2;
 					}
 				} else {
 					// we are inside line comment.
-					int commentEndPosition = commentStartPosition + 2;
-					for (; commentEndPosition < textSequence.length(); commentEndPosition++) {
+					for (int commentEndPosition = commentStartPosition + 2; commentEndPosition < textSequence
+							.length(); commentEndPosition++) {
 						if (textSequence.charAt(commentEndPosition) == END_LINE) {
-							textSequence = textSequence.cutTextSequence(
-									commentStartPosition, commentEndPosition);
-							continue FIND_COMMENT_START;
+							IRegion range = new Region(commentStartPosition,
+									commentEndPosition - commentStartPosition);
+							commentRegions.add(range);
+							start = commentEndPosition;
+							break;
 						}
 					}
+					start = commentStartMatcher.start() + 2;
 				}
+			} else {
+				start = commentStartMatcher.start() + 2;
 			}
-			return textSequence;
 		}
-	}
-
-	private static int getCommentStartIndex(TextSequence textSequence) {
-		Matcher commentStartMatcher = COMMENT_START_PATTERN
-				.matcher(textSequence);
-		int start = 0;
-		while (commentStartMatcher.find(start)) {
-			String currentType = TextSequenceUtilities.getType(textSequence,
-					commentStartMatcher.start());
-			if (PHPPartitionTypes.isPHPCommentState(currentType)
-					&& !PHPPartitionTypes.isPHPQuotesState(currentType)) {
-				return commentStartMatcher.start();
-			}
-			start = commentStartMatcher.start() + 2;
-		}
-		return -1;
+		return commentRegions;
 	}
 
 	public static int getMethodEndIndex(CharSequence textSequence, int offset) {
