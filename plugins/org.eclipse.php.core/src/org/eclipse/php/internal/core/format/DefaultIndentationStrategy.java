@@ -41,15 +41,6 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 	private static boolean pairArrayParen;
 	private static int pairArrayOffset;
 
-	static class LineState {
-		boolean inBracelessBlock;
-		boolean inMultiLine;
-		// IRegion baseRegion;
-		// int baseRegionOffset;
-		// boolean shouldIndent;
-		StringBuffer indent = new StringBuffer();
-	}
-
 	/**
 	 * Check if the line contains any non blank chars.
 	 */
@@ -331,21 +322,21 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			// braceless block end go up
 			return false;
 		}
-		if (!lineContainIncompleteBlock(document, checkedOffset, lineStart,
-				currLineIndex)
-				&& (shouldNotConsiderAsIndentationBase(checkedLineBeginState,
-						forLineEndState))) {
+		boolean lineContainIncompleteBlock = lineContainIncompleteBlock(
+				document, checkedOffset, lineStart, currLineIndex);
+		boolean shouldNotConsiderAsIndentationBase = shouldNotConsiderAsIndentationBase(
+				checkedLineBeginState, forLineEndState);
+		if (!lineContainIncompleteBlock && shouldNotConsiderAsIndentationBase) {
 			return false;
 		}
-		if (!lineContainIncompleteBlock(document, checkedOffset, lineStart,
-				currLineIndex)
-				&& (shouldNotConsiderAsIndentationBase(checkedLineBeginState,
-						forLineEndState) || (checkMultiLine
+		if (!lineContainIncompleteBlock
+				&& (shouldNotConsiderAsIndentationBase || (checkMultiLine
 						&& isInMultiLineStatement(document,
 								checkedLineBeginState, checkedLineEndState,
 								checkedOffset, lineStart, currLineIndex) && !isMultilineContentInsideBraceless(
-							document, checkedOffset))))
+							document, checkedOffset)))) {
 			return false;
+		}
 
 		// Fix bug #201688
 		if (((checkedLineBeginState == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) || (checkedLineBeginState == PHPPartitionTypes.PHP_DOC))
@@ -530,11 +521,17 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			int openParenPeer = scanner.findOpeningPeer(checkedOffset - 1,
 					statementStart, PHPHeuristicScanner.LPAREN,
 					PHPHeuristicScanner.RPAREN);
+
+			int bound = openParenPeer != -1 ? Math.max(statementStart,
+					openParenPeer) : statementStart;
 			int openBracePeer = scanner.findOpeningPeer(checkedOffset - 1,
-					statementStart, PHPHeuristicScanner.LBRACE,
+					bound, PHPHeuristicScanner.LBRACE,
 					PHPHeuristicScanner.RBRACE);
+
+			bound = openBracePeer != -1 ? Math.max(statementStart,
+					Math.max(openParenPeer, openBracePeer)) : statementStart;
 			int openBracketPeer = scanner.findOpeningPeer(checkedOffset - 1,
-					statementStart, PHPHeuristicScanner.LBRACKET,
+					bound, PHPHeuristicScanner.LBRACKET,
 					PHPHeuristicScanner.RBRACKET);
 
 			int biggest = Math.max(openParenPeer, openBracePeer);
@@ -924,15 +921,14 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 			} else if (inMultiLine(scanner, document, lineNumber, offset)) {
 				// lineState.inBracelessBlock = true;
-				int peer = Math.max(
-						scanner.findOpeningPeer(offset - 1,
-								PHPHeuristicScanner.UNBOUND,
-								PHPHeuristicScanner.LPAREN,
-								PHPHeuristicScanner.RPAREN), scanner
-								.findOpeningPeer(offset - 1,
-										PHPHeuristicScanner.UNBOUND,
-										PHPHeuristicScanner.LBRACKET,
-										PHPHeuristicScanner.RBRACKET));
+				int parenPeer = scanner.findOpeningPeer(offset - 1,
+						PHPHeuristicScanner.UNBOUND,
+						PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
+				int bound = parenPeer != -1 ? parenPeer
+						: PHPHeuristicScanner.UNBOUND;
+				int peer = Math.max(parenPeer, scanner.findOpeningPeer(
+						offset - 1, bound, PHPHeuristicScanner.LBRACKET,
+						PHPHeuristicScanner.RBRACKET));
 				if (peer != PHPHeuristicScanner.NOT_FOUND) {
 
 					// search for assignment (i.e. "=>")
@@ -1076,13 +1072,13 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		if (isRegionTypeAllowedMultiline(regionType)) {
 			int statementStart = textSequence.getOriginalOffset(0);
 			// we only search for opening pear in textSequence
-			int peer = Math.max(scanner.findOpeningPeer(offset - 1,
-					textSequence.getOriginalOffset(0),
-					PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN),
-					scanner.findOpeningPeer(offset - 1,
-							textSequence.getOriginalOffset(0),
-							PHPHeuristicScanner.LBRACKET,
-							PHPHeuristicScanner.RBRACKET));
+			int bound = statementStart;
+			int parenPeer = scanner.findOpeningPeer(offset - 1, bound,
+					PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
+			bound = parenPeer != -1 ? Math.max(parenPeer, bound) : bound;
+			int bracketPeer = scanner.findOpeningPeer(offset - 1, bound,
+					PHPHeuristicScanner.LBRACKET, PHPHeuristicScanner.RBRACKET);
+			int peer = Math.max(parenPeer, bracketPeer);
 			if (peer == PHPHeuristicScanner.NOT_FOUND) {
 				return false;
 			}

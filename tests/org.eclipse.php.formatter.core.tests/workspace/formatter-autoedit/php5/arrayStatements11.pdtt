@@ -1,0 +1,83 @@
+--TEST--
+Tests indenting array statements longer than 1000 characters.
+--FILE--
+<?php
+/*
+ * For the full copyright and license information, please view the LICENSE
+ * For the full copyright and license information, please view the LICENSE
+ * For the full copyright and license information, please view the LICENSE
+ * For the full copyright and license information, please view the LICENSE
+ * For the full copyright and license information, please view the LICENSE
+ */
+return array (
+		'router' => array (
+				'routes' => array (
+						'home' => array (
+								'type' => 'Zend\Mvc\Router\Http\Literal',
+								'options' => array (
+										'route' => '/',
+										'defaults' => array (
+												'controller' => 'Application\Controller\Index',
+												'action' => 'index' 
+										) 
+								) 
+						),
+						// The following is a route to simplify getting started creating
+						// new controllers and actions without needing to create a new
+						// module. Simply drop new controllers in, and you can access them
+						// using the path /application/:controller/:action
+						'application' => array (
+								'type' => 'Literal',
+								'options' => array (
+										'route' => '/application',
+										'defaults' => array (
+												'__NAMESPACE__' => 'Application\Controller',
+												'controller' => 'Index',
+												'action' => 'index' |
+										) 
+								) 
+						) 
+				) 
+		) 
+);
+--EXPECT--
+<?php
+/*
+ * For the full copyright and license information, please view the LICENSE
+ * For the full copyright and license information, please view the LICENSE
+ * For the full copyright and license information, please view the LICENSE
+ * For the full copyright and license information, please view the LICENSE
+ * For the full copyright and license information, please view the LICENSE
+ */
+return array (
+		'router' => array (
+				'routes' => array (
+						'home' => array (
+								'type' => 'Zend\Mvc\Router\Http\Literal',
+								'options' => array (
+										'route' => '/',
+										'defaults' => array (
+												'controller' => 'Application\Controller\Index',
+												'action' => 'index' 
+										) 
+								) 
+						),
+						// The following is a route to simplify getting started creating
+						// new controllers and actions without needing to create a new
+						// module. Simply drop new controllers in, and you can access them
+						// using the path /application/:controller/:action
+						'application' => array (
+								'type' => 'Literal',
+								'options' => array (
+										'route' => '/application',
+										'defaults' => array (
+												'__NAMESPACE__' => 'Application\Controller',
+												'controller' => 'Index',
+												'action' => 'index' 
+												
+										) 
+								) 
+						) 
+				) 
+		) 
+);
