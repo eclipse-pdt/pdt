@@ -1,0 +1,13 @@
+--TEST--
+Tests block on end document
+--FILE--
+<?php
+class MyClass
+{|
+}
+--EXPECT--
+<?php
+class MyClass
+{
+	
+}

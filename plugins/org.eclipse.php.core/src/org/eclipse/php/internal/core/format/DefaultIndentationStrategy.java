@@ -560,8 +560,15 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				if (phpScriptRegion instanceof IPhpScriptRegion
 						&& lineStart <= phpScriptRegion.getEnd()) {
 					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) phpScriptRegion;
-					ITextRegion[] tokens = scriptRegion.getPhpTokens(
-							lineStart - 1, biggest - lineStart + 1);
+					ITextRegion[] tokens = null;
+					try {
+						tokens = scriptRegion.getPhpTokens(
+								Math.min(lineStart - 1, scriptRegion.getEnd()),
+								biggest - lineStart + 1);
+					} catch (BadLocationException e) {
+						// ignore it, scriptRegion.getEnd() is greater than last
+						// phpToken
+					}
 
 					if (tokens != null && tokens.length > 0) {
 						Set<String> tokenTypeSet = new HashSet<String>();
