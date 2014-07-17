@@ -4,37 +4,37 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>org.eclipse.pdt.releng</artifactId>
+		<artifactId>tests</artifactId>
 		<groupId>org.eclipse.php</groupId>
 		<version>3.3.0-SNAPSHOT</version>
-		<relativePath>../../org.eclipse.pdt.releng/pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<groupId>org.eclipse.php</groupId>
 	<artifactId>org.eclipse.php.core.performance.tests</artifactId>
 	<version>3.3.0-SNAPSHOT</version>
 	<packaging>eclipse-test-plugin</packaging>
 	<properties>
-	   <skipPdtPerformanceTests>${skipTests}</skipPdtPerformanceTests>
+		<skipPdtPerformanceTests>${skipTests}</skipPdtPerformanceTests>
 	</properties>
-	
+
 	<build>
-	  <plugins>
-	  	<plugin>
-    		<groupId>org.eclipse.tycho</groupId>
-    		<artifactId>tycho-surefire-plugin</artifactId>
-    		<version>${tycho-version}</version>
-    		<configuration>
-      			<testSuite>org.eclipse.php.core.performance.tests</testSuite>
-      			<testClass>org.eclipse.php.core.tests.performance.AllTests</testClass>
-      			<dependencies>
-					<dependency>
-						<type>p2-installable-unit</type>
-						<artifactId>org.eclipse.dltk.core.index.sql.h2</artifactId>
-					</dependency>
-				</dependencies>
-				<skipTests>${skipPdtPerformanceTests}</skipTests>
-    		</configuration>
-  		</plugin>
-	  </plugins>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<testSuite>org.eclipse.php.core.performance.tests</testSuite>
+					<testClass>org.eclipse.php.core.tests.performance.AllTests</testClass>
+					<dependencies>
+						<dependency>
+							<type>p2-installable-unit</type>
+							<artifactId>org.eclipse.dltk.core.index.sql.h2</artifactId>
+						</dependency>
+					</dependencies>
+					<skipTests>${skipPdtPerformanceTests}</skipTests>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 </project>

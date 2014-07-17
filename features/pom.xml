@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.eclipse.php</groupId>
+	<artifactId>features</artifactId>
+	<version>3.3.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<parent>
+		<artifactId>org.eclipse.pdt.releng</artifactId>
+		<groupId>org.eclipse.php</groupId>
+		<version>3.3.0-SNAPSHOT</version>
+		<relativePath>../org.eclipse.pdt.releng/pom.xml</relativePath>
+	</parent>
+	<modules>
+		<module>org.eclipse.php-feature</module>
+		<module>org.eclipse.php.mylyn-feature</module>
+		<module>org.eclipse.php.source-feature</module>
+		<module>org.eclipse.php.test-feature</module>
+	</modules>
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.cbi.maven.plugins</groupId>
+						<artifactId>eclipse-jarsigner-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign</id>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<skip>${skipSign}</skip>
+						</configuration>
+					</plugin>
+					<!-- Pull in "attach-p2-metadata" execution (see above). -->
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>tycho-p2-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+</project>
