@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -20,9 +22,12 @@ import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.corext.ASTNodes;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.validation.PhpReconcilingStrategy;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.editor.SharedASTProvider.WAIT_FLAG;
 import org.eclipse.ui.*;
+import org.eclipse.wst.validation.ValidationFramework;
+import org.eclipse.wst.validation.Validator;
 
 /**
  * Provides a shared AST for clients. The shared AST is the AST of the active
@@ -550,8 +555,23 @@ public final class ASTProvider {
 		synchronized (fReconcileLock) {
 			return javaElement != null
 					&& javaElement.equals(fReconcilingJavaElement)
-					&& fIsReconciling;
+					&& fIsReconciling && isValidatorDisabled(javaElement);
 		}
+	}
+
+	private boolean isValidatorDisabled(ISourceModule javaElement) {
+		if (ValidationFramework.getDefault().isSuspended()) {
+			return true;
+		} else if (ValidationFramework.getDefault().isSuspended(
+				javaElement.getResource().getProject())) {
+			return true;
+		}
+		Set<Validator> validators = ValidationFramework.getDefault()
+				.getDisabledValidatorsFor(javaElement.getResource());
+		if (validators.contains(PhpReconcilingStrategy.ID)) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

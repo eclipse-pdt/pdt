@@ -54,6 +54,10 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
  */
 public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 
+	/**
+	 * @since 3.3.1
+	 */
+	public static final String ID = "org.eclipse.php.ui.internal.validation.phpreconciler"; //$NON-NLS-1$
 	private IEditorPart fEditor;
 	private IDocumentProvider fDocumentProvider;
 	private IProgressMonitor fProgressMonitor;
