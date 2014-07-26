@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.ui.autoEdit;
 
 import org.eclipse.jface.text.*;
+import org.eclipse.php.internal.core.format.IndentationUtils;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
@@ -52,7 +53,7 @@ public class CurlyOpenAutoEditStrategy extends IndentLineAutoEditStrategy
 			}
 			int lineNumber = document.getLineOfOffset(startOffset);
 
-			if (isBlanks(document, startlineInfo.getOffset(),
+			if (IndentationUtils.isBlanks(document, startlineInfo.getOffset(),
 					endlineInfo.getOffset() + endlineInfo.getLength(),
 					startOffset)) {
 				placeMatchingBlanks(document, helpBuffer, lineNumber,

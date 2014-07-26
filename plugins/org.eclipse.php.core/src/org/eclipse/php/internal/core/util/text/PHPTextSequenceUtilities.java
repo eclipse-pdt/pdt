@@ -37,11 +37,10 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class PHPTextSequenceUtilities {
 
-	private static final Pattern COMMENT_START_PATTERN = Pattern
-			.compile("(/[*])|(//)"); //$NON-NLS-1$
 	private static final Pattern COMMENT_END_PATTERN = Pattern.compile("[*]/"); //$NON-NLS-1$
-	private static final String START_COMMENT = "/*"; //$NON-NLS-1$
-	// private static final String END_COMMENT = "*/";
+	private static final String START_LINE_COMMENT = "//"; //$NON-NLS-1$
+	private static final String START_BLOCK_COMMENT = "/*"; //$NON-NLS-1$
+
 	private static final char END_LINE = '\n';
 	private static final Pattern FUNCTION_PATTERN = Pattern.compile(
 			"function\\s", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
@@ -160,26 +159,28 @@ public class PHPTextSequenceUtilities {
 			IRegion commentStartRegion = comments.get(i);
 			textSequence = textSequence.cutTextSequence(
 					commentStartRegion.getOffset(),
-					commentStartRegion.getLength());
+					commentStartRegion.getOffset()
+							+ commentStartRegion.getLength());
 		}
 		return textSequence;
 	}
 
 	private static List<IRegion> collectComments(TextSequence textSequence) {
-		Matcher commentStartMatcher = COMMENT_START_PATTERN
-				.matcher(textSequence);
+		StringBuffer buffer = new StringBuffer(textSequence);
 		List<IRegion> commentRegions = new ArrayList<IRegion>();
 		int start = 0;
-		while (commentStartMatcher.find(start)) {
+		int foundIndex = 0;
+		while ((foundIndex = buffer.indexOf("/", start)) != -1) { //$NON-NLS-1$
+			int commentStartPosition = foundIndex;
 			String currentType = TextSequenceUtilities.getType(textSequence,
-					commentStartMatcher.start());
+					commentStartPosition);
 			if (PHPPartitionTypes.isPHPCommentState(currentType)
-					&& !PHPPartitionTypes.isPHPQuotesState(currentType)) {
-				int commentStartPosition = commentStartMatcher.start();
+					&& !PHPPartitionTypes.isPHPQuotesState(currentType)
+					&& commentStartPosition + 2 < textSequence.length()) {
 				String startCommentString = textSequence.subSequence(
 						commentStartPosition, commentStartPosition + 2)
 						.toString();
-				if (startCommentString.equals(START_COMMENT)) {
+				if (startCommentString.equals(START_BLOCK_COMMENT)) {
 					// we are inside comment.
 					Matcher commentEndMatcher = COMMENT_END_PATTERN
 							.matcher(textSequence);
@@ -192,9 +193,9 @@ public class PHPTextSequenceUtilities {
 						commentRegions.add(range);
 						start = commentEndPosition;
 					} else {
-						start = commentStartMatcher.start() + 2;
+						start = commentStartPosition + 2;
 					}
-				} else {
+				} else if (startCommentString.equals(START_LINE_COMMENT)) {
 					// we are inside line comment.
 					for (int commentEndPosition = commentStartPosition + 2; commentEndPosition < textSequence
 							.length(); commentEndPosition++) {
@@ -206,10 +207,12 @@ public class PHPTextSequenceUtilities {
 							break;
 						}
 					}
-					start = commentStartMatcher.start() + 2;
+					start = commentStartPosition + 2;
+				} else {
+					start = commentStartPosition + 1;
 				}
 			} else {
-				start = commentStartMatcher.start() + 2;
+				start = commentStartPosition + 2;
 			}
 		}
 		return commentRegions;
