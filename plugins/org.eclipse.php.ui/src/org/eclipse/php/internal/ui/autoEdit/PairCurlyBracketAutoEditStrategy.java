@@ -17,8 +17,8 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.format.CurlyCloseIndentationStrategy;
-import org.eclipse.php.internal.core.format.DefaultIndentationStrategy;
 import org.eclipse.php.internal.core.format.FormatterUtils;
+import org.eclipse.php.internal.core.format.IndentationBaseDetector;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.text.PHPDocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
@@ -298,8 +298,10 @@ public class PairCurlyBracketAutoEditStrategy implements
 				whiteSpacesAdded++;
 			}
 			buffer.append(document.getLineDelimiter());
-			int baseline = DefaultIndentationStrategy.getIndentationBaseLine(
-					document, document.getLineOfOffset(offset), offset, true);
+			IndentationBaseDetector indentationDetector = new IndentationBaseDetector(
+					document);
+			int baseline = indentationDetector.getIndentationBaseLine(
+					document.getLineOfOffset(offset), offset, true);
 			lineInfo = document.getLineInformation(baseline);
 			String blanks = FormatterUtils.getLineBlanks(document, lineInfo);
 			buffer.append(blanks);
