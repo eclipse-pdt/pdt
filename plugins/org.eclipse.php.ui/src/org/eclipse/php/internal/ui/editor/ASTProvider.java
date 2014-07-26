@@ -555,7 +555,7 @@ public final class ASTProvider {
 		synchronized (fReconcileLock) {
 			return javaElement != null
 					&& javaElement.equals(fReconcilingJavaElement)
-					&& fIsReconciling && isValidatorDisabled(javaElement);
+					&& fIsReconciling && !isValidatorDisabled(javaElement);
 		}
 	}
 
@@ -565,11 +565,18 @@ public final class ASTProvider {
 		} else if (ValidationFramework.getDefault().isSuspended(
 				javaElement.getResource().getProject())) {
 			return true;
+		} else if (ValidationFramework.getDefault()
+				.getProjectSettings(javaElement.getResource().getProject())
+				.getSuspend()) {
+			return true;
 		}
 		Set<Validator> validators = ValidationFramework.getDefault()
 				.getDisabledValidatorsFor(javaElement.getResource());
-		if (validators.contains(PhpReconcilingStrategy.ID)) {
-			return true;
+		for (Validator v : validators) {
+			if (v.getId().equals(PhpReconcilingStrategy.ID)) {
+				return true;
+			}
+
 		}
 		return false;
 	}
