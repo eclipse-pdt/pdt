@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.editor;
 
 import java.util.Set;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -562,21 +563,23 @@ public final class ASTProvider {
 	private boolean isValidatorDisabled(ISourceModule javaElement) {
 		if (ValidationFramework.getDefault().isSuspended()) {
 			return true;
-		} else if (ValidationFramework.getDefault().isSuspended(
-				javaElement.getResource().getProject())) {
-			return true;
-		} else if (ValidationFramework.getDefault()
-				.getProjectSettings(javaElement.getResource().getProject())
-				.getSuspend()) {
-			return true;
-		}
-		Set<Validator> validators = ValidationFramework.getDefault()
-				.getDisabledValidatorsFor(javaElement.getResource());
-		for (Validator v : validators) {
-			if (v.getId().equals(PhpReconcilingStrategy.ID)) {
+		} else if (javaElement.getResource() != null) {
+			final IResource resource = javaElement.getResource();
+			if (ValidationFramework.getDefault().isSuspended(
+					resource.getProject())) {
+				return true;
+			} else if (ValidationFramework.getDefault()
+					.getProjectSettings(resource.getProject()).getSuspend()) {
 				return true;
 			}
+			Set<Validator> validators = ValidationFramework.getDefault()
+					.getDisabledValidatorsFor(resource);
+			for (Validator v : validators) {
+				if (v.getId().equals(PhpReconcilingStrategy.ID)) {
+					return true;
+				}
 
+			}
 		}
 		return false;
 	}
