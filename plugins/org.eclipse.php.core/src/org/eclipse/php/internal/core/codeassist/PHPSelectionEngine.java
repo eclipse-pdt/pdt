@@ -678,14 +678,13 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	private IType[] filterNS(IType[] types) throws ModelException {
-		// TODO Auto-generated method stub
 		if (types == null) {
 			return types;
 		} else {
 			Set<? super IType> result = new HashSet<IType>();
-			// List<IType> result = new LinkedList<IType>();
 			for (IType type : types) {
-				if (PHPFlags.isClass(type.getFlags())) {
+				if (PHPFlags.isClass(type.getFlags())
+						|| PHPFlags.isInterface(type.getFlags())) {
 					result.add(type);
 				}
 			}
