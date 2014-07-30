@@ -1,0 +1,46 @@
+--TEST--
+Test CA for PHPDoc tag
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+
+class ContentAssistTest
+{
+}
+
+class ExampleClass
+{
+
+    /**
+     *           
+     * @param \ContentA| $value2            
+     * @return \ContentAssistTest Returned value
+     * @throws Exception Thrown exception
+     *        
+     */
+    public function caTest($value1)
+    {}
+}
+?>
+--EXPECT--
+<?php
+
+class ContentAssistTest
+{
+}
+
+class ExampleClass
+{
+
+    /**
+     *           
+     * @param \ContentAssistTest $value2            
+     * @return \ContentAssistTest Returned value
+     * @throws Exception Thrown exception
+     *        
+     */
+    public function caTest($value1)
+    {}
+}
+?>
