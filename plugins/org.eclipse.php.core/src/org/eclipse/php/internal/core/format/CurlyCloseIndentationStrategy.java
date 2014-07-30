@@ -31,10 +31,12 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 		if (curlyOpenLine == null) {
 			return;
 		}
-		int indentationBaseLineIndex = DefaultIndentationStrategy
-				.getIndentationBaseLine(document, document
-						.getLineOfOffset(curlyOpenLine.getOffset()), forOffset,
-						true);
+		IndentationBaseDetector indentationDetector = new IndentationBaseDetector(
+				document);
+		int indentationBaseLineIndex = indentationDetector
+				.getIndentationBaseLine(
+						document.getLineOfOffset(curlyOpenLine.getOffset()),
+						forOffset, true);
 		final IRegion indentationBaseLine = document
 				.getLineInformation(indentationBaseLineIndex);
 		String blanks = ""; //$NON-NLS-1$

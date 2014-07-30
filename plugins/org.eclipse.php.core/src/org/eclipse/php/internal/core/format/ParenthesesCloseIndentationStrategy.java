@@ -21,8 +21,10 @@ public class ParenthesesCloseIndentationStrategy implements
 		if (parenOpenLine == null) {
 			return;
 		}
-		int indentationBaseLineIndex = DefaultIndentationStrategy
-				.getIndentationBaseLine(document,
+		IndentationBaseDetector indentationDetector = new IndentationBaseDetector(
+				document);
+		int indentationBaseLineIndex = indentationDetector
+				.getIndentationBaseLine(
 						document.getLineOfOffset(parenOpenLine.getOffset()),
 						forOffset, true);
 		final IRegion indentationBaseLine = document
