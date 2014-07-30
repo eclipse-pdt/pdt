@@ -18,6 +18,8 @@ import java.util.regex.Pattern;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
@@ -113,6 +115,15 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 		} while (!found && tagStart > 0);
 
 		return found;
+	}
+
+	public String getPrefix() throws BadLocationException {
+		String prefix = super.getPrefix();
+		if (prefix.length() > 0
+				&& prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			return prefix.substring(1);
+		}
+		return prefix;
 	}
 
 	/**
