@@ -1,0 +1,29 @@
+--TEST--
+Bug 440820 - PSR-2 formatter can damage dereferenced calls with comments (bis)
+--FILE--
+<?php
+function foo() {
+	$a->	// comment
+$b () // comment
+		-> /* comment */ $c  () // comment
+		-> /* comment */ $d  () // comment
+		-> /* comment */ $e  (); // comment
+}
+?>
+--EXPECT--
+<?php
+function foo ()
+{
+    $a->    // comment
+$b()
+        -> // comment
+    /* comment */
+    $c()
+        -> // comment
+    /* comment */
+    $d()
+        -> // comment
+    /* comment */
+    $e(); // comment
+}
+?>
