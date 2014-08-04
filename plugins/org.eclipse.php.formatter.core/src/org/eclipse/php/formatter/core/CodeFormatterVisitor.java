@@ -201,7 +201,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 				lineSeparator, phpVersion, useShortTags, region, 0);
 	}
 
-	// insert chars to the buffer except space
+	// insert chars to the buffer
 	private void appendToBuffer(Object obj) {
 		isPrevSpace = false;
 		if (obj == null)
@@ -234,8 +234,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		return count;
 	}
 
-	private char getBufferFirstChar() throws BadLocationException {
-		for (int offset = 0; offset < replaceBuffer.length(); offset++) {
+	private char getBufferFirstChar(int position) throws BadLocationException {
+		for (int offset = position; offset < replaceBuffer.length(); offset++) {
 			char currChar = replaceBuffer.charAt(offset);
 			if (currChar != ' ' && currChar != '\t' && currChar != '\r'
 					&& currChar != '\n') {
@@ -613,13 +613,18 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			if (recordCommentIndentVariables) {
 				recordCommentIndentVariables = false;
 				indentLengthForComment = lineWidth;
-				String afterNewLine;
+				String afterNewLine = EMPTY_STRING;
 				int position = replaceBuffer.lastIndexOf(lineSeparator);
 				if (position >= 0) {
-					afterNewLine = replaceBuffer.substring(position
-							+ lineSeparator.length(), replaceBuffer.length());
+					if (getBufferFirstChar(position + lineSeparator.length()) == '\0') {
+						afterNewLine = replaceBuffer.substring(position
+								+ lineSeparator.length(),
+								replaceBuffer.length());
+					}
 				} else {
-					afterNewLine = replaceBuffer.toString();
+					if (getBufferFirstChar(0) == '\0') {
+						afterNewLine = replaceBuffer.toString();
+					}
 				}
 				indentStringForComment = afterNewLine;
 			}
@@ -849,46 +854,57 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		ignoreEmptyLineSetting = false;
 
 		int startLine = document.getLineOfOffset(offset);
-		int commentStartLine = -1;
 		int start = offset;
-		String afterNewLine = EMPTY_STRING;
 		boolean needIndentNewLine = false;
 		boolean indentationLevelDesending = this.indentationLevelDesending;
 		inComment = true;
 		boolean previousCommentIsSingleLine = false;
-		boolean justCommentLine = false;
 
 		comments: for (Iterator<org.eclipse.php.internal.core.compiler.ast.nodes.Comment> iter = commentList
 				.iterator(); iter.hasNext();) {
 			org.eclipse.php.internal.core.compiler.ast.nodes.Comment comment = iter
 					.next();
-			commentStartLine = document.getLineOfOffset(comment.sourceStart()
-					+ offset);
+			int commentStartLine = document.getLineOfOffset(comment
+					.sourceStart() + offset);
 			int position = replaceBuffer.indexOf(lineSeparator);
 			boolean startAtFirstColumn = (document
 					.getLineOffset(commentStartLine) == comment.sourceStart()
 					+ offset);
-			boolean indentOnFirstColumn;
 			boolean endWithNewLineIndent = endWithNewLineIndent(replaceBuffer
 					.toString());
+			String afterNewLine = EMPTY_STRING;
+			boolean indentOnFirstColumn;
 			switch (comment.getCommentType()) {
 			case org.eclipse.php.internal.core.compiler.ast.nodes.Comment.TYPE_SINGLE_LINE:
 				indentOnFirstColumn = !startAtFirstColumn
 						|| !this.preferences.never_indent_line_comments_on_first_column;
 				if (startLine == commentStartLine) {
+					indentOnFirstColumn = false;
+					IRegion startLinereg = document
+							.getLineInformation(startLine);
+					lineWidth = comment.sourceStart() + offset
+							- startLinereg.getOffset();
 					if (position >= 0) {
-						afterNewLine = replaceBuffer.substring(position
-								+ lineSeparator.length(),
-								replaceBuffer.length());
-						replaceBuffer.replace(position, replaceBuffer.length(),
-								" "); //$NON-NLS-1$
-						IRegion reg = document.getLineInformation(startLine);
-						lineWidth = comment.sourceStart() + offset
-								- reg.getOffset() + 1;
-						indentOnFirstColumn = false;
+						if (getBufferFirstChar(position
+								+ lineSeparator.length()) == '\0') {
+							afterNewLine = replaceBuffer.substring(position
+									+ lineSeparator.length(),
+									replaceBuffer.length());
+							replaceBuffer.replace(position,
+									replaceBuffer.length(), ""); //$NON-NLS-1$
+							insertSpaces(1);
+						} else {
+							insertSpace();
+						}
+					} else {
+						if (getBufferFirstChar(0) == '\0') {
+							replaceBuffer.setLength(0);
+							insertSpaces(1);
+						} else {
+							insertSpace();
+						}
 					}
 				} else {
-					afterNewLine = EMPTY_STRING;
 					if (indentationLevelDesending) {
 						IRegion reg = document
 								.getLineInformation(commentStartLine - 1);
@@ -916,8 +932,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 						}
 					}
 
-					if (replaceBuffer.toString().trim().length() == 0) {
-						if (replaceBuffer.toString().contains(lineSeparator)) {
+					if (getBufferFirstChar(0) == '\0') {
+						if (position >= 0) {
 							replaceBuffer.setLength(0);
 							lineWidth = 0;
 							insertNewLine();
@@ -1015,8 +1031,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					commentContent = join(commentWords, " "); //$NON-NLS-1$
 					commentContent = commentContent.trim();
 
-					justCommentLine = true;
-
 					boolean newLineStart = true;
 					appendToBuffer("//"); //$NON-NLS-1$
 
@@ -1025,9 +1039,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 								&& !newLineStart
 								&& (lineWidth + 1 + word.length() > this.preferences.comment_line_length)) {
 							insertNewLine();
-							if (!justCommentLine && indentLengthForComment == 0)
-								indentBaseOnPrevLine(commentStartLine);
-							// start at first column,and more than
+							// start at first column, and more than
 							// comment_line_length
 							if (!startAtFirstColumn
 									|| (startAtFirstColumn && indentOnFirstColumn)) {
@@ -1038,9 +1050,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 									indent();
 								}
 							}
-							// if (indentOnFirstColumn) {
-							// indent();
-							// }
 							appendToBuffer("//"); //$NON-NLS-1$
 							insertSpaces(1);
 							appendToBuffer(word);
@@ -1077,6 +1086,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 						&& this.preferences.comment_format_javadoc_comment) {
 					PHPDocBlock block = (PHPDocBlock) comment;
 
+					newLineOfComment = false;
 					appendToBuffer("/**"); //$NON-NLS-1$
 
 					commentWords = new ArrayList<String>();
@@ -1219,13 +1229,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 				start = comment.sourceEnd() + offset;
 				insertNewLine();
 				indent();
-				afterNewLine = EMPTY_STRING;
 				break;
 			case org.eclipse.php.internal.core.compiler.ast.nodes.Comment.TYPE_MULTILINE:
 				previousCommentIsSingleLine = false;
 				// ignore multi line comments in the middle of code
 				// example while /* kuku */ ( /* kuku */$a > 0 )
-				if (getBufferFirstChar() != '\0') {
+				if (getBufferFirstChar(0) != '\0') {
 					replaceBuffer.setLength(0);
 					resetEnableStatus(document.get(comment.sourceStart()
 							+ offset,
@@ -1246,49 +1255,49 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 				indentOnFirstColumn = !startAtFirstColumn
 						|| !this.preferences.never_indent_block_comments_on_first_column;
 				if (startLine == commentStartLine) {
+					indentOnFirstColumn = false;
+					IRegion startLinereg = document
+							.getLineInformation(startLine);
+					lineWidth = comment.sourceStart() + offset
+							- startLinereg.getOffset();
 					if (position >= 0) {
+						// if (getBufferFirstChar(position
+						// + lineSeparator.length()) == '\0') {
 						afterNewLine = replaceBuffer.substring(position
 								+ lineSeparator.length(),
 								replaceBuffer.length());
 						replaceBuffer.replace(position, replaceBuffer.length(),
-								" "); //$NON-NLS-1$
-						IRegion startLinereg = document
-								.getLineInformation(startLine);
-						lineWidth = comment.sourceStart() + offset
-								- startLinereg.getOffset() + 1;
-						indentOnFirstColumn = false;
+								""); //$NON-NLS-1$
+						insertSpaces(1);
+						// } else {
+						// insertSpace();
+						// }
+					} else {
+						// if (getBufferFirstChar(0) == '\0') {
+						replaceBuffer.setLength(0);
+						insertSpaces(1);
+						// } else {
+						// insertSpace();
+						// }
 					}
 				} else {
-					afterNewLine = EMPTY_STRING;
-					needIndentNewLine = true;
-					if ((this.preferences.never_indent_block_comments_on_first_column)
-							&& indentOnFirstColumn) {
-						if (position >= 0) {
-							replaceBuffer.replace(
-									position + lineSeparator.length(),
-									replaceBuffer.length(), ""); //$NON-NLS-1$
-							lineWidth = 0;
-						} else {
-							if (replaceBuffer.toString().trim().length() == 0) {
-								replaceBuffer.setLength(0);
-								lineWidth = 0;
-							} else {
-								insertNewLine();
-							}
-						}
-					}
 					if (position >= 0) {
+						// if (getBufferFirstChar(position
+						// + lineSeparator.length()) == '\0') {
 						replaceBuffer.replace(
 								position + lineSeparator.length(),
 								replaceBuffer.length(), ""); //$NON-NLS-1$
 						lineWidth = 0;
+						// } else {
+						// insertNewLine();
+						// }
 					} else {
-						if (replaceBuffer.toString().trim().length() == 0) {
-							replaceBuffer.setLength(0);
-							lineWidth = 0;
-						} else {
-							insertNewLine();
-						}
+						// if (getBufferFirstChar(0) == '\0') {
+						replaceBuffer.setLength(0);
+						lineWidth = 0;
+						// } else {
+						// insertNewLine();
+						// }
 					}
 					if (indentationLevelDesending || blockEnd) {
 						// add single indentationChar * indentationSize
@@ -1301,6 +1310,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 									: 3;
 						}
 					}
+					needIndentNewLine = true;
 				}
 				resetCommentIndentVariables();
 				if (startLine != commentStartLine && blockEnd) {
@@ -1566,8 +1576,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		indentLengthForComment = 0;
 		indentStringForComment = ""; //$NON-NLS-1$
 		IRegion startRegion = document.getLineInformation(startLine);
-		String startLineContent;
-		startLineContent = document.get(startRegion.getOffset(),
+		String startLineContent = document.get(startRegion.getOffset(),
 				comment.sourceStart() + offset - startRegion.getOffset())
 				.trim();
 		// indentStringForComment = FormatterUtils.getLineBlanks(document,
