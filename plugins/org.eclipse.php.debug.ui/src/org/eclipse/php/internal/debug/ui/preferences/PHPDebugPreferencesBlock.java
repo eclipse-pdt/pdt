@@ -248,8 +248,10 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		loadPHPExes(fDefaultPHPExe, PHPexes.getInstance().getAllItems());
 		PHPexeItem item = PHPexes.getInstance().getItem(
 				fDefaultPHPExe.getText());
-		fCLIDebugger.setText(PHPDebuggersRegistry.getDebuggerName(item
-				.getDebuggerID()));
+		if (item != null) {
+			fCLIDebugger.setText(PHPDebuggersRegistry.getDebuggerName(item
+					.getDebuggerID()));
+		}
 		fDebugEncodingSettings
 				.setText(prefs
 						.getDefaultString(PHPDebugCorePreferenceNames.TRANSFER_ENCODING));
@@ -494,6 +496,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 				name = UNRESOLVED_PHP_VERSION;
 			combo.add(name);
 		}
+		combo.select(0);
 	}
 
 	private void loadServers(Combo combo) {
