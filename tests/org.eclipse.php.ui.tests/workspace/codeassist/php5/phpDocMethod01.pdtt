@@ -1,0 +1,28 @@
+--TEST--
+Test PHPDoc @method tag
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+/**
+ *
+ * @method Foo method1(int $int1, int $int2) multiply two integers
+ *        
+ */
+class Foo {
+}
+
+$foo = new Foo ();
+$foo->met|
+--EXPECT--
+<?php
+/**
+ *
+ * @method Foo method1(int $int1, int $int2) multiply two integers
+ *        
+ */
+class Foo {
+}
+
+$foo = new Foo ();
+$foo->method1($int1, $int2)

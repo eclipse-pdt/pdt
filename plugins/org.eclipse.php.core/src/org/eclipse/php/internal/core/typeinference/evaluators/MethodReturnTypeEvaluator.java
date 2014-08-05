@@ -188,12 +188,14 @@ public class MethodReturnTypeEvaluator extends
 		}
 		if (split[1].equals(methodName)) {
 			return split[0];
-		} else if (split[1].length() > 2 && split[1].endsWith("()")) { //$NON-NLS-1$
-			final String substring = split[1].substring(0,
-					split[1].length() - 2);
-			return substring.equals(methodName) ? split[0] : null;
 		}
-		return null;
+
+		String substring = split[1];
+		int parenIndex = split[1].indexOf('('); //$NON-NLS-1$
+		if (parenIndex != -1) {
+			substring = substring.substring(0, parenIndex);
+		}
+		return substring.equals(methodName) ? split[0] : null;
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
