@@ -68,7 +68,7 @@ public class LineBreakpointTypeChange extends LineBreakpointChange {
 		Map map = new HashMap();
 		// addJavaBreakpointAttributes(map, fDestType);
 		PHPLineBreakpoint breakpoint = new PHPConditionalBreakpoint(
-				destResource, getLineNumber(), map);
+				destResource, getLineNumber(), -1, -1, map);
 		apply(breakpoint);
 		getOriginalBreakpoint().delete();
 		return new DeleteBreakpointChange(breakpoint);
