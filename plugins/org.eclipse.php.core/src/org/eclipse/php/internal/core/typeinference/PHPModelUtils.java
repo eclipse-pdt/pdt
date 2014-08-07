@@ -2344,6 +2344,16 @@ public class PHPModelUtils {
 					}
 					return false;
 				}
+
+				@Override
+				public boolean visitGeneral(ASTNode node) throws Exception {
+					if (node.sourceEnd() < offset
+							|| node.sourceStart() > offset) {
+						return false;
+					}
+
+					return super.visitGeneral(node);
+				}
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
