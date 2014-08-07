@@ -10,7 +10,7 @@ $inputFilter->add(array(
 <?php
 $inputFilter->add(array(
 	array(
-		
+			
 	)
 ));
 ?>
