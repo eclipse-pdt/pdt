@@ -853,10 +853,8 @@ public class PHPDocumentationContentAccess {
 			fBuf.append(shortDescription);
 		if (longDescription != null && longDescription.length() > 0) {
 			fBuf.append("<p>"); //$NON-NLS-1$
-			longDescription = longDescription.replaceAll("\r\n", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
-			longDescription = longDescription.replaceAll("\n\r", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
-			longDescription = longDescription.replaceAll("\n", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
-			longDescription = longDescription.replaceAll("\r", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
+			longDescription = longDescription.replaceAll(
+					"(\r\n|\n|\r){2,}", "</p><p>"); //$NON-NLS-1$ //$NON-NLS-2$
 			fBuf.append(longDescription);
 			fBuf.append("</p>"); //$NON-NLS-1$
 		} else if (fMethod != null) {
