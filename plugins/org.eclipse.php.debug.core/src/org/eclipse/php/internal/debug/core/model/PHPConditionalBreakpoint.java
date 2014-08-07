@@ -42,11 +42,16 @@ public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
 	 *            file on which to set the breakpoint
 	 * @param lineNumber
 	 *            1-based line number of the breakpoint
+	 * @param charStart
+	 *            line start offset
+	 * @param charEnd
+	 *            line end offset
 	 * @throws CoreException
 	 *             if unable to create the breakpoint
 	 */
 	public PHPConditionalBreakpoint(final IResource resource,
-			final int lineNumber, final Map attributes) throws CoreException {
+			final int lineNumber, final int charStart, final int charEnd,
+			final Map attributes) throws CoreException {
 		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
 				IMarker marker = resource.createMarker(MARKER_ID);
@@ -60,7 +65,12 @@ public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
 						Boolean.FALSE);
 				attributes.put(IPHPDebugConstants.Condition, ""); //$NON-NLS-1$
 				attributes.put(IBreakpoint.PERSISTED, Boolean.FALSE);
-				attributes.put(IMarker.LINE_NUMBER, Integer.valueOf(lineNumber));
+				attributes
+						.put(IMarker.LINE_NUMBER, Integer.valueOf(lineNumber));
+
+				attributes.put(IMarker.CHAR_START, Integer.valueOf(charStart));
+				attributes.put(IMarker.CHAR_END, Integer.valueOf(charEnd));
+
 				marker.setAttributes(attributes);
 				setMarker(marker);
 				setEnabled(true);
@@ -102,8 +112,8 @@ public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
 			marker.setAttribute(IMarker.MESSAGE, message);
 		} else {
 			marker.setAttribute(IMarker.MESSAGE, NLS.bind(
-					PHPDebugCoreMessages.LineBreakPointMessage_1, new String[] {
-							marker.getResource().getName(),
+					PHPDebugCoreMessages.LineBreakPointMessage_1,
+					new String[] { marker.getResource().getName(),
 							Integer.toString(lineNumber) }));
 		}
 		addConditionToBP();

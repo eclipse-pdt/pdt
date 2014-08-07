@@ -13,6 +13,6 @@ public interface IPHPBreakpointProvider extends IBreakpointProvider,
 		IExecutableExtension {
 
 	IBreakpoint createBreakpoint(IEditorInput input, IResource resource,
-			int lineNumber, Map<String, String> attributes)
-			throws CoreException;
+			int lineNumber, int charStart, int charEnd,
+			Map<String, String> attributes) throws CoreException;
 }

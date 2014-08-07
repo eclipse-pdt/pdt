@@ -117,8 +117,18 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 			}
 
 			if (findBreakpointMarker(secondaryId, resource, lineNumber) == null) {
+				IRegion region = null;
+				int charStart = -1;
+				int charEnd = -1;
+				try {
+					region = document.getLineInformationOfOffset(pos);
+					charStart = region.getOffset();
+					charEnd = charStart + region.getLength();
+				} catch (BadLocationException e) {
+					PHPDebugUIPlugin.log(e);
+				}
 				point = createBreakpoint(input, resource, lineNumber,
-						attributes);
+						charStart, charEnd, attributes);
 			}
 		}
 
@@ -157,10 +167,12 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 		return null;
 	}
 
+	@Override
 	public IBreakpoint createBreakpoint(IEditorInput input, IResource resource,
-			int lineNumber, Map<String, String> attributes)
-			throws CoreException {
-		return new PHPConditionalBreakpoint(resource, lineNumber, attributes);
+			int lineNumber, int charStart, int charEnd,
+			Map<String, String> attributes) throws CoreException {
+		return new PHPConditionalBreakpoint(resource, lineNumber, charStart,
+				charEnd, attributes);
 	}
 
 	public IResource getResource(IEditorInput input) {
