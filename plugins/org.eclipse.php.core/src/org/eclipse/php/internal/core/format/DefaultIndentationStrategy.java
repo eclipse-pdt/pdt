@@ -370,9 +370,13 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 						PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
 				int bound = parenPeer != -1 ? parenPeer
 						: PHPHeuristicScanner.UNBOUND;
-				int peer = Math.max(parenPeer, scanner.findOpeningPeer(
-						offset - 1, bound, PHPHeuristicScanner.LBRACKET,
-						PHPHeuristicScanner.RBRACKET));
+
+				int bracketPeer = scanner.findOpeningPeer(offset - 1, bound,
+						PHPHeuristicScanner.LBRACKET,
+						PHPHeuristicScanner.RBRACKET);
+
+				int peer = Math.max(parenPeer, bracketPeer);
+
 				if (peer != PHPHeuristicScanner.NOT_FOUND) {
 
 					// search for assignment (i.e. "=>")
@@ -396,29 +400,29 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					token = scanner.previousToken(peer - 1,
 							PHPHeuristicScanner.UNBOUND);
 
-					boolean isArray = token == Symbols.TokenARRAY;
-					// lineState.indent.setLength(0)
-					// int baseLine = document.getLineOfOffset(peer);
+					boolean isArray = token == Symbols.TokenARRAY
+							|| peer == bracketPeer;
+
 					String newblanks = FormatterUtils.getLineBlanks(document,
 							document.getLineInformationOfOffset(peer));
 					StringBuffer newBuffer = new StringBuffer(newblanks);
 					pairArrayParen = false;
-					// IRegion region = document
-					// .getLineInformationOfOffset(offset);
+
+					String trimed = document.get(offset,
+							region.getOffset() + region.getLength() - offset)
+							.trim();
 					if (enterKeyPressed
-							|| !document
-									.get(offset,
-											region.getOffset()
-													+ region.getLength()
-													- offset)
-									.trim()
-									.startsWith(
-											BLANK + PHPHeuristicScanner.RPAREN)) {
+							|| !(trimed.startsWith(BLANK
+									+ PHPHeuristicScanner.RPAREN) || trimed
+										.startsWith(BLANK
+												+ PHPHeuristicScanner.RBRACKET))) {
 						if (isArray) {
 							region = document
 									.getLineInformationOfOffset(offset);
-							if (scanner.nextToken(offset, region.getOffset()
-									+ region.getLength()) == PHPHeuristicScanner.TokenRPAREN) {
+							int arrayBracket = scanner.nextToken(offset,
+									region.getOffset() + region.getLength());
+							if (arrayBracket == PHPHeuristicScanner.TokenRPAREN
+									|| arrayBracket == PHPHeuristicScanner.TokenRBRACKET) {
 								if (isAssignment)
 									indent(document, newBuffer, 0,
 											indentationObject.indentationChar,

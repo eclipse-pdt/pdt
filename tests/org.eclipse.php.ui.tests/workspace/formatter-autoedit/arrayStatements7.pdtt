@@ -2,11 +2,11 @@
 Tests formatting array statements.
 --FILE--
 <?php
-$inputFilter->add(array(|));
+echo array(1, 2|);
 ?>
 --EXPECT--
 <?php
-$inputFilter->add(array(
+echo array(1, 2
 		
-));
+);
 ?>
