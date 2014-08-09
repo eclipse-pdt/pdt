@@ -10,7 +10,7 @@ function test() {
 <?php
 function test() {
 	$x = [
-		
+			
 	];
 }
 ?>
