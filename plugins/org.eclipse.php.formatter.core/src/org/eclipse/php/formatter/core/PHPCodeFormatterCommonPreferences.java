@@ -22,10 +22,13 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
 import org.eclipse.php.internal.core.format.IFormatterCommonPrferences;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -124,7 +127,11 @@ public class PHPCodeFormatterCommonPreferences implements
 			ProjectScope scope = (ProjectScope) new ProjectScope(project);
 			node = scope.getNode(FormatterCorePlugin.PLUGIN_ID);
 		}
-
+		if (node == null
+				|| node.get(PreferenceConstants.FORMATTER_PROFILE, null) == null) {
+			IScopeContext context = InstanceScope.INSTANCE;
+			node = context.getNode(FormatterCorePlugin.PLUGIN_ID);
+		}
 		Map<String, Object> p = new HashMap<String, Object>(
 				defaultPrefrencesValues);
 		if (node != null && node.keys().length > 0) {

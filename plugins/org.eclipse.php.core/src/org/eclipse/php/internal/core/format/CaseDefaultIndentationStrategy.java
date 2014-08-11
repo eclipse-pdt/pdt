@@ -22,6 +22,20 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 
+	private IndentationObject indentationObject;
+
+	public CaseDefaultIndentationStrategy() {
+	}
+
+	/**
+	 * 
+	 * @param indentationObject
+	 *            basic indentation preferences, can be null
+	 */
+	public CaseDefaultIndentationStrategy(IndentationObject indentationObject) {
+		this.indentationObject = indentationObject;
+	}
+
 	public void placeMatchingBlanks(IStructuredDocument document,
 			StringBuffer result, int lineNumber, int offset)
 			throws BadLocationException {
@@ -94,14 +108,11 @@ public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 					indentationBase);
 			result.append(blanks);
 			if (addIndentation) {
-				int indentationSize = FormatterUtils
-						.getFormatterCommonPrferences().getIndentationSize(
-								document);
-				char indentationChar = FormatterUtils
-						.getFormatterCommonPrferences().getIndentationChar(
-								document);
-				for (int i = 0; i < indentationSize; i++) {
-					result.append(indentationChar);
+				if (indentationObject == null) {
+					indentationObject = new IndentationObject(document);
+				}
+				for (int i = 0; i < indentationObject.getIndentationSize(); i++) {
+					result.append(indentationObject.getIndentationChar());
 				}
 			}
 		}
