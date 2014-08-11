@@ -34,11 +34,11 @@ import org.w3c.dom.Node;
 
 public class PhpFormatter implements IStructuredFormatter {
 
-	private final IIndentationStrategy defaultIndentationStrategy = new DefaultIndentationStrategy();
-	private final IIndentationStrategy curlyCloseIndentationStrategy = new CurlyCloseIndentationStrategy();
-	private final IIndentationStrategy caseDefaultIndentationStrategy = new CaseDefaultIndentationStrategy();
-	private final IIndentationStrategy commentIndentationStrategy = new CommentIndentationStrategy();
-	private final IIndentationStrategy phpCloseTagIndentationStrategy = new PHPCloseTagIndentationStrategy();
+	private final IIndentationStrategy defaultIndentationStrategy;
+	private final IIndentationStrategy curlyCloseIndentationStrategy;
+	private final IIndentationStrategy caseDefaultIndentationStrategy;
+	private final IIndentationStrategy commentIndentationStrategy;
+	private final IIndentationStrategy phpCloseTagIndentationStrategy;
 
 	protected PhpFormatConstraints fFormatContraints = null;
 	protected IStructuredFormatPreferences fFormatPreferences = null;
@@ -50,16 +50,22 @@ public class PhpFormatter implements IStructuredFormatter {
 	private static final byte CHAR_SPACE = ' ';
 	protected boolean isCopyPaste = false;
 
-	public PhpFormatter(int start, int length, boolean isCopyPaste) {
+	public PhpFormatter(int start, int length, boolean isCopyPaste,
+			IndentationObject indentationObject) {
 		this.start = start;
 		this.length = length;
 		this.isCopyPaste = isCopyPaste;
+		this.defaultIndentationStrategy = new DefaultIndentationStrategy(
+				indentationObject);
+		this.curlyCloseIndentationStrategy = new CurlyCloseIndentationStrategy();
+		this.caseDefaultIndentationStrategy = new CaseDefaultIndentationStrategy(
+				indentationObject);
+		this.commentIndentationStrategy = new CommentIndentationStrategy();
+		this.phpCloseTagIndentationStrategy = new PHPCloseTagIndentationStrategy();
 	}
 
 	public PhpFormatter(int start, int length) {
-		this.start = start;
-		this.length = length;
-		this.isCopyPaste = false;
+		this(start, length, false, null);
 	}
 
 	public void format(Node node) {
