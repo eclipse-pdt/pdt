@@ -27,12 +27,10 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  */
 public class DereferenceNode extends ASTNode {
 
-	// ASTNode parent;
 	private Expression exp;
 
 	public DereferenceNode(Expression exp, int start, int end) {
 		super(start, end);
-		// this.parent = parent;
 		this.exp = exp;
 	}
 
@@ -42,7 +40,7 @@ public class DereferenceNode extends ASTNode {
 
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
-			if (exp != null) {
+			if (getExpression() != null) {
 				getExpression().traverse(visitor);
 			}
 			visitor.endvisit(this);

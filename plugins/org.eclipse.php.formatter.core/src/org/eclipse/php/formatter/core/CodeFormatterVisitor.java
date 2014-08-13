@@ -3608,22 +3608,28 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		handleChars(lastPosition, list.getDereferences().get(0).getStart());
 		lastPosition = list.getDereferences().get(0).getStart();
 		for (DereferenceNode dereferenceNode : list.getDereferences()) {
+			Expression name = dereferenceNode.getName();
 
-			if (dereferenceNode.getName() instanceof Scalar) {
+			if (name == null) {
 				appendToBuffer(OPEN_BRACKET);
 				// handleChars(lastPosition, dereferenceNode.getStart());
-				Scalar scalar = (Scalar) dereferenceNode.getName();
+				appendToBuffer(CLOSE_BRACKET);
+				handleChars(dereferenceNode.getStart(),
+						dereferenceNode.getEnd());
+			} else if (name instanceof Scalar) {
+				appendToBuffer(OPEN_BRACKET);
+				// handleChars(lastPosition, dereferenceNode.getStart());
+				Scalar scalar = (Scalar) name;
 				appendToBuffer(scalar.getStringValue());
 				appendToBuffer(CLOSE_BRACKET);
 				handleChars(dereferenceNode.getStart(),
 						dereferenceNode.getEnd());
 			} else {
 				appendToBuffer(OPEN_BRACKET);
-				handleChars(lastPosition, dereferenceNode.getName().getStart());
-				dereferenceNode.getName().accept(this);
+				handleChars(lastPosition, name.getStart());
+				name.accept(this);
 				appendToBuffer(CLOSE_BRACKET);
-				handleChars(dereferenceNode.getName().getEnd(),
-						dereferenceNode.getEnd());
+				handleChars(name.getEnd(), dereferenceNode.getEnd());
 			}
 
 			// handleChars(dereferenceNode.getEnd(),

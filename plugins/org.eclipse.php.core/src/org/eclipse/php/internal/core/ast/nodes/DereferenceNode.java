@@ -34,11 +34,6 @@ public class DereferenceNode extends ASTNode {
 
 	public DereferenceNode(int start, int end, AST ast, Expression indexName) {
 		super(start, end, ast);
-
-		if (indexName == null) {
-			throw new IllegalArgumentException();
-		}
-
 		setName(indexName);
 	}
 
@@ -55,16 +50,22 @@ public class DereferenceNode extends ASTNode {
 	}
 
 	public void childrenAccept(Visitor visitor) {
-		name.accept(visitor);
+		if (name != null) {
+			name.accept(visitor);
+		}
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		name.traverseTopDown(visitor);
+		if (name != null) {
+			name.traverseTopDown(visitor);
+		}
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		name.traverseBottomUp(visitor);
+		if (name != null) {
+			name.traverseBottomUp(visitor);
+		}
 		accept(visitor);
 	}
 
@@ -72,7 +73,9 @@ public class DereferenceNode extends ASTNode {
 		buffer.append(tab).append("<DereferenceNode"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(">\n"); //$NON-NLS-1$
-		name.toString(buffer, TAB + tab);
+		if (name != null) {
+			name.toString(buffer, TAB + tab);
+		}
 		buffer.append("\n"); //$NON-NLS-1$
 		buffer.append(tab).append("</DereferenceNode>"); //$NON-NLS-1$
 	}
@@ -104,9 +107,6 @@ public class DereferenceNode extends ASTNode {
 	 *                </ul>
 	 */
 	public void setName(Expression expression) {
-		if (expression == null) {
-			throw new IllegalArgumentException();
-		}
 		ASTNode oldChild = this.name;
 		preReplaceChild(oldChild, expression, NAME_PROPERTY);
 		this.name = expression;
