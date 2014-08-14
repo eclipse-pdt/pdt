@@ -845,6 +845,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		return lastPosition;
 	}
 
+	// TODO: Do correct comment placement
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440209
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440820
 	private void handleComments(
 			int offset,
 			int end,
@@ -882,6 +885,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					indentOnFirstColumn = false;
 					IRegion startLinereg = document
 							.getLineInformation(startLine);
+					// TODO: Do line width calculation based on the
+					// formatted content instead of the original content
 					lineWidth = comment.sourceStart() + offset
 							- startLinereg.getOffset();
 					if (position >= 0) {
@@ -1068,6 +1073,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 				}
 
 				start = comment.sourceEnd() + offset;
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=441825
+				lineWidth = 0;
 				break;
 			case org.eclipse.php.internal.core.compiler.ast.nodes.Comment.TYPE_PHPDOC:
 				previousCommentIsSingleLine = false;
@@ -1236,6 +1243,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 				// example while /* kuku */ ( /* kuku */$a > 0 )
 				if (getBufferFirstChar(0) != '\0') {
 					replaceBuffer.setLength(0);
+					// TODO: lineWidth should be updated here
 					resetEnableStatus(document.get(comment.sourceStart()
 							+ offset,
 							comment.sourceEnd() - comment.sourceStart()));
@@ -1258,6 +1266,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					indentOnFirstColumn = false;
 					IRegion startLinereg = document
 							.getLineInformation(startLine);
+					// TODO: Do line width calculation based on the
+					// formatted content instead of the original content
 					lineWidth = comment.sourceStart() + offset
 							- startLinereg.getOffset();
 					if (position >= 0) {
@@ -3608,28 +3618,22 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		handleChars(lastPosition, list.getDereferences().get(0).getStart());
 		lastPosition = list.getDereferences().get(0).getStart();
 		for (DereferenceNode dereferenceNode : list.getDereferences()) {
-			Expression name = dereferenceNode.getName();
 
-			if (name == null) {
+			if (dereferenceNode.getName() instanceof Scalar) {
 				appendToBuffer(OPEN_BRACKET);
 				// handleChars(lastPosition, dereferenceNode.getStart());
-				appendToBuffer(CLOSE_BRACKET);
-				handleChars(dereferenceNode.getStart(),
-						dereferenceNode.getEnd());
-			} else if (name instanceof Scalar) {
-				appendToBuffer(OPEN_BRACKET);
-				// handleChars(lastPosition, dereferenceNode.getStart());
-				Scalar scalar = (Scalar) name;
+				Scalar scalar = (Scalar) dereferenceNode.getName();
 				appendToBuffer(scalar.getStringValue());
 				appendToBuffer(CLOSE_BRACKET);
 				handleChars(dereferenceNode.getStart(),
 						dereferenceNode.getEnd());
 			} else {
 				appendToBuffer(OPEN_BRACKET);
-				handleChars(lastPosition, name.getStart());
-				name.accept(this);
+				handleChars(lastPosition, dereferenceNode.getName().getStart());
+				dereferenceNode.getName().accept(this);
 				appendToBuffer(CLOSE_BRACKET);
-				handleChars(name.getEnd(), dereferenceNode.getEnd());
+				handleChars(dereferenceNode.getName().getEnd(),
+						dereferenceNode.getEnd());
 			}
 
 			// handleChars(dereferenceNode.getEnd(),
