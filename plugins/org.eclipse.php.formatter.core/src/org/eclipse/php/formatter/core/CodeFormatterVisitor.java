@@ -845,6 +845,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		return lastPosition;
 	}
 
+	// TODO: Do correct comment placement
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440209
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440820
 	private void handleComments(
 			int offset,
 			int end,
@@ -866,7 +869,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					.next();
 			int commentStartLine = document.getLineOfOffset(comment
 					.sourceStart() + offset);
-			int position = replaceBuffer.indexOf(lineSeparator);
+			int position = replaceBuffer.lastIndexOf(lineSeparator);
 			boolean startAtFirstColumn = (document
 					.getLineOffset(commentStartLine) == comment.sourceStart()
 					+ offset);
@@ -882,6 +885,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					indentOnFirstColumn = false;
 					IRegion startLinereg = document
 							.getLineInformation(startLine);
+					// TODO: Do line width calculation based on the
+					// formatted content instead of the original content
 					lineWidth = comment.sourceStart() + offset
 							- startLinereg.getOffset();
 					if (position >= 0) {
@@ -1068,6 +1073,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 				}
 
 				start = comment.sourceEnd() + offset;
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=441825
+				lineWidth = 0;
 				break;
 			case org.eclipse.php.internal.core.compiler.ast.nodes.Comment.TYPE_PHPDOC:
 				previousCommentIsSingleLine = false;
@@ -1236,6 +1243,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 				// example while /* kuku */ ( /* kuku */$a > 0 )
 				if (getBufferFirstChar(0) != '\0') {
 					replaceBuffer.setLength(0);
+					// TODO: lineWidth should be updated here
 					resetEnableStatus(document.get(comment.sourceStart()
 							+ offset,
 							comment.sourceEnd() - comment.sourceStart()));
@@ -1258,6 +1266,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					indentOnFirstColumn = false;
 					IRegion startLinereg = document
 							.getLineInformation(startLine);
+					// TODO: Do line width calculation based on the
+					// formatted content instead of the original content
 					lineWidth = comment.sourceStart() + offset
 							- startLinereg.getOffset();
 					if (position >= 0) {
@@ -1350,18 +1360,18 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 							+ offset,
 							comment.sourceEnd() - comment.sourceStart());
 
-					boolean needInsertNewLine = commentContent
-							.endsWith(lineSeparator);
-					if (!needInsertNewLine) {
-						String[] delimiters = document.getLegalLineDelimiters();
-						for (int i = 0; i < delimiters.length; i++) {
-							needInsertNewLine = commentContent
-									.endsWith(delimiters[i]);
-							if (needInsertNewLine) {
-								break;
-							}
-						}
-					}
+					// boolean needInsertNewLine = commentContent
+					// .endsWith(lineSeparator);
+					// if (!needInsertNewLine) {
+					// String[] delimiters = document.getLegalLineDelimiters();
+					// for (int i = 0; i < delimiters.length; i++) {
+					// needInsertNewLine = commentContent
+					// .endsWith(delimiters[i]);
+					// if (needInsertNewLine) {
+					// break;
+					// }
+					// }
+					// }
 					commentContent = commentContent.trim();
 					commentContent = commentContent.substring(2,
 							commentContent.length() - 2);
@@ -1390,25 +1400,25 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 							handleCharsWithoutComments(comment.sourceStart()
 									+ offset, comment.sourceEnd() + offset,
 									true);
-							if (needInsertNewLine) {
-								insertNewLine();
-							} else {
-								IRegion reg = document
-										.getLineInformation(commentStartLine - 1);
-								int lengthAfterCommentEnd = reg.getOffset()
-										+ reg.getLength()
-										- (comment.sourceEnd() + offset);
-								if (lengthAfterCommentEnd <= 0) {
-									insertNewLine();
-								} else {
-									String stringAfterCommentEnd = document
-											.get(comment.sourceEnd() + offset,
-													lengthAfterCommentEnd);
-									if (stringAfterCommentEnd.trim().length() == 0) {
-										insertNewLine();
-									}
-								}
-							}
+							// if (needInsertNewLine) {
+							insertNewLine();
+							// } else {
+							// IRegion reg = document
+							// .getLineInformation(commentEndLine);
+							// int lengthAfterCommentEnd = reg.getOffset()
+							// + reg.getLength()
+							// - (comment.sourceEnd() + offset);
+							// if (lengthAfterCommentEnd <= 0) {
+							// insertNewLine();
+							// } else {
+							// String stringAfterCommentEnd = document
+							// .get(comment.sourceEnd() + offset,
+							// lengthAfterCommentEnd);
+							// if (stringAfterCommentEnd.trim().length() == 0) {
+							// insertNewLine();
+							// }
+							// }
+							// }
 							break;
 						}
 						commentWords = new ArrayList<String>();
