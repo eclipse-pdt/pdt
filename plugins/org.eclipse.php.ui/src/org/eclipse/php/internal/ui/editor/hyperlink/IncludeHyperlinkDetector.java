@@ -14,13 +14,9 @@ package org.eclipse.php.internal.ui.editor.hyperlink;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.internal.ui.editor.ModelElementHyperlink;
 import org.eclipse.dltk.ui.actions.OpenAction;
@@ -29,14 +25,10 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
-import org.eclipse.php.internal.core.compiler.ast.nodes.InfixExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
-import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.EditorUtility;
-import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 
 public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 
@@ -55,8 +47,6 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 		}
 
 		final int offset = region.getOffset();
-		final String file[] = new String[1];
-		final Region selectRegion[] = new Region[1];
 
 		final ISourceModule sourceModule = (ISourceModule) input;
 		ModuleDeclaration moduleDeclaration = SourceParserUtil
@@ -64,61 +54,29 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 		if (moduleDeclaration == null) {
 			return null;
 		}
-		ASTVisitor visitor = new ASTVisitor() {
-			boolean found = false;
 
-			public boolean visit(Expression expr) throws ModelException {
-				if (expr.sourceStart() < offset && expr.sourceEnd() > offset) {
-					if (expr instanceof Include) {
-						Expression fileExpr = ((Include) expr).getExpr();
-						if (fileExpr instanceof InfixExpression) {
-							InfixExpression ie = (InfixExpression) fileExpr;
-							if (ie.getRight() instanceof Scalar) {
-								fileExpr = ie.getRight();
-							}
-						}
-						if (fileExpr instanceof Scalar) {
-							String value = ((Scalar) fileExpr).getValue();
-							file[0] = ASTUtils.stripQuotes(value);
-							file[0] = file[0].trim();
-
-							// only select file, without quotes or surrounding
-							// whitespaces
-							int startIdx = fileExpr.sourceStart()
-									+ value.indexOf(file[0]);
-							int length = file[0].length();
-							selectRegion[0] = new Region(startIdx, length);
-						}
-						found = true;
-						return false;
-					}
-				}
-				return !found;
-			}
-
-			public boolean visitGeneral(ASTNode n) {
-				return !found;
-			}
-		};
-
+		IncludeHyperlinkVisitor includeVisitor = new IncludeHyperlinkVisitor(
+				offset, sourceModule);
 		try {
-			moduleDeclaration.traverse(visitor);
+			moduleDeclaration.traverse(includeVisitor);
 		} catch (Exception e) {
-			Logger.logException(e);
+			PHPUiPlugin.log(e);
 		}
 
-		if (file[0] != null) {
-			if (!inclusive(region, selectRegion[0]))
+		if (includeVisitor.getFile() != null) {
+			if (!inclusive(region, includeVisitor.getSelectRegion())) {
 				return null;
+			}
 
 			Set<String> set = new HashSet<String>();
 			set.add(sourceModule.getResource().getLocation().toOSString());
 			ISourceModule includedSourceModule = FileNetworkUtility
-					.findSourceModule(sourceModule, file[0], set);
+					.findSourceModule(sourceModule, includeVisitor.getFile(),
+							set);
 			if (includedSourceModule != null) {
 				return new IHyperlink[] { new ModelElementHyperlink(
-						selectRegion[0], includedSourceModule, new OpenAction(
-								editor)) };
+						includeVisitor.getSelectRegion(), includedSourceModule,
+						new OpenAction(editor)) };
 			}
 		}
 		return null;
