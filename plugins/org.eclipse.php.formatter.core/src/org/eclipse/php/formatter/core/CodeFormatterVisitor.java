@@ -121,7 +121,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 	private Integer peek;
 	private Set<IfStatement> processedIfStatements = new HashSet<IfStatement>();
 	private boolean newLineOfComment;
-	private String commentContent;
 	private List<String> commentWords;
 	/** disabling */
 	boolean editsEnabled;
@@ -845,6 +844,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		return lastPosition;
 	}
 
+	// TODO: Do correct comment placement
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440209
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440820
 	private void handleComments(
 			int offset,
 			int end,
@@ -866,7 +868,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					.next();
 			int commentStartLine = document.getLineOfOffset(comment
 					.sourceStart() + offset);
-			int position = replaceBuffer.indexOf(lineSeparator);
+			int position = replaceBuffer.lastIndexOf(lineSeparator);
 			boolean startAtFirstColumn = (document
 					.getLineOffset(commentStartLine) == comment.sourceStart()
 					+ offset);
@@ -874,6 +876,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					.toString());
 			String afterNewLine = EMPTY_STRING;
 			boolean indentOnFirstColumn;
+			String commentContent;
 			switch (comment.getCommentType()) {
 			case org.eclipse.php.internal.core.compiler.ast.nodes.Comment.TYPE_SINGLE_LINE:
 				indentOnFirstColumn = !startAtFirstColumn
@@ -882,6 +885,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					indentOnFirstColumn = false;
 					IRegion startLinereg = document
 							.getLineInformation(startLine);
+					// TODO: Do line width calculation based on the
+					// formatted content instead of the original content
 					lineWidth = comment.sourceStart() + offset
 							- startLinereg.getOffset();
 					if (position >= 0) {
@@ -1064,6 +1069,32 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					if (needInsertNewLine) {
 						insertNewLine();
 						needInsertNewLine = false;
+					} else {
+						insertSpaces(1);
+						afterNewLine = EMPTY_STRING;
+					}
+				} else {
+					commentContent = document.get(comment.sourceStart()
+							+ offset,
+							comment.sourceEnd() - comment.sourceStart());
+					boolean needInsertNewLine = commentContent
+							.endsWith(lineSeparator);
+					if (!needInsertNewLine) {
+						String[] delimiters = document.getLegalLineDelimiters();
+						for (int i = 0; i < delimiters.length; i++) {
+							needInsertNewLine = commentContent
+									.endsWith(delimiters[i]);
+							if (needInsertNewLine) {
+								break;
+							}
+						}
+					}
+					if (needInsertNewLine) {
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=441825
+						lineWidth = 0;
+						needInsertNewLine = false;
+					} else {
+						afterNewLine = EMPTY_STRING;
 					}
 				}
 
@@ -1236,6 +1267,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 				// example while /* kuku */ ( /* kuku */$a > 0 )
 				if (getBufferFirstChar(0) != '\0') {
 					replaceBuffer.setLength(0);
+					IRegion reg = document.getLineInformationOfOffset(end);
+					// TODO: Do line width calculation based on the
+					// formatted content instead of the original content
+					lineWidth = end - reg.getOffset();
 					resetEnableStatus(document.get(comment.sourceStart()
 							+ offset,
 							comment.sourceEnd() - comment.sourceStart()));
@@ -1258,6 +1293,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					indentOnFirstColumn = false;
 					IRegion startLinereg = document
 							.getLineInformation(startLine);
+					// TODO: Do line width calculation based on the
+					// formatted content instead of the original content
 					lineWidth = comment.sourceStart() + offset
 							- startLinereg.getOffset();
 					if (position >= 0) {
@@ -1350,18 +1387,18 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 							+ offset,
 							comment.sourceEnd() - comment.sourceStart());
 
-					boolean needInsertNewLine = commentContent
-							.endsWith(lineSeparator);
-					if (!needInsertNewLine) {
-						String[] delimiters = document.getLegalLineDelimiters();
-						for (int i = 0; i < delimiters.length; i++) {
-							needInsertNewLine = commentContent
-									.endsWith(delimiters[i]);
-							if (needInsertNewLine) {
-								break;
-							}
-						}
-					}
+					// boolean needInsertNewLine = commentContent
+					// .endsWith(lineSeparator);
+					// if (!needInsertNewLine) {
+					// String[] delimiters = document.getLegalLineDelimiters();
+					// for (int i = 0; i < delimiters.length; i++) {
+					// needInsertNewLine = commentContent
+					// .endsWith(delimiters[i]);
+					// if (needInsertNewLine) {
+					// break;
+					// }
+					// }
+					// }
 					commentContent = commentContent.trim();
 					commentContent = commentContent.substring(2,
 							commentContent.length() - 2);
@@ -1390,25 +1427,29 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 							handleCharsWithoutComments(comment.sourceStart()
 									+ offset, comment.sourceEnd() + offset,
 									true);
-							if (needInsertNewLine) {
-								insertNewLine();
-							} else {
-								IRegion reg = document
-										.getLineInformation(commentStartLine - 1);
-								int lengthAfterCommentEnd = reg.getOffset()
-										+ reg.getLength()
-										- (comment.sourceEnd() + offset);
-								if (lengthAfterCommentEnd <= 0) {
-									insertNewLine();
-								} else {
-									String stringAfterCommentEnd = document
-											.get(comment.sourceEnd() + offset,
-													lengthAfterCommentEnd);
-									if (stringAfterCommentEnd.trim().length() == 0) {
-										insertNewLine();
-									}
-								}
-							}
+							// if (needInsertNewLine) {
+							insertNewLine();
+							// needInsertNewLine = false;
+							// } else {
+							// IRegion reg = document
+							// .getLineInformation(commentEndLine);
+							// int lengthAfterCommentEnd = reg.getOffset()
+							// + reg.getLength()
+							// - (comment.sourceEnd() + offset);
+							// if (lengthAfterCommentEnd <= 0) {
+							// insertNewLine();
+							// } else {
+							// String stringAfterCommentEnd = document
+							// .get(comment.sourceEnd() + offset,
+							// lengthAfterCommentEnd);
+							// if (stringAfterCommentEnd.trim().length() == 0) {
+							// insertNewLine();
+							// } else {
+							// insertSpaces(1);
+							// afterNewLine = EMPTY_STRING;
+							// }
+							// }
+							// }
 							break;
 						}
 						commentWords = new ArrayList<String>();
@@ -1713,7 +1754,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 	}
 
 	private void initCommentWords() {
-		commentContent = join(commentWords, " "); //$NON-NLS-1$
+		String commentContent = join(commentWords, " "); //$NON-NLS-1$
 		commentContent = commentContent.trim();
 		commentWords = Arrays.asList(commentContent.split("[ \r\n]")); //$NON-NLS-1$
 		commentWords = removeEmptyString(commentWords);
