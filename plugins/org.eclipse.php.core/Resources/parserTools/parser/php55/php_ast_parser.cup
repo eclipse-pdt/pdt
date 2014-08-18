@@ -2707,6 +2707,12 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
 	RESULT = new StaticConstantAccess(classNameleft, varNameright, parser.ast, className,
 		new Identifier(varNameleft, varNameright, parser.ast, varName));
 :}
+
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM T_CLASS:varName
+{:
+    RESULT = new StaticConstantAccess(classNameleft, varNameright, parser.ast, className,
+        new Identifier(varNameleft, varNameright, parser.ast, "class"));
+:}
 ;
 
 

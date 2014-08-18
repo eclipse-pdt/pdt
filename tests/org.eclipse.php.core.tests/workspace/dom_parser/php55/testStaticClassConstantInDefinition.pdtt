@@ -1,0 +1,74 @@
+--TEST--
+Test Static ClassConstant in definitions
+--FILE--
+<?php function f($s = DateTime::class) {} class C { public $foo = DateTime::class; } ?>
+--EXPECT--
+<Program start='0' length='87'>
+	<Statements>
+		<FunctionDeclaration start='6' length='35' isReference='false'>
+			<FunctionName>
+				<Identifier start='15' length='1' name='f'/>
+			</FunctionName>
+			<FormalParameters>
+				<FormalParameter start='17' length='20' isMandatory='false'>
+					<Type>
+					</Type>
+					<ParameterName>
+						<Variable start='17' length='2' isDollared='true'>
+							<Identifier start='18' length='1' name='s'/>
+						</Variable>
+					</ParameterName>
+					<DefaultValue>
+						<StaticConstantAccess start='22' length='15'>
+							<ClassName>
+								<NamespaceName start='22' length='8' global='false' current='false'>
+									<Identifier start='22' length='8' name='DateTime'/>
+								</NamespaceName>
+							</ClassName>
+							<Constant>
+								<Identifier start='32' length='5' name='class'/>
+							</Constant>
+						</StaticConstantAccess>
+					</DefaultValue>
+				</FormalParameter>
+			</FormalParameters>
+			<FunctionBody>
+				<Block start='39' length='2' isCurly='true'>
+				</Block>
+			</FunctionBody>
+		</FunctionDeclaration>
+		<ClassDeclaration start='42' length='42' modifier=''>
+			<ClassName>
+				<Identifier start='48' length='1' name='C'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='50' length='34' isCurly='true'>
+				<FieldsDeclaration start='52' length='30' modifier='public'>
+					<VariableName>
+						<Variable start='59' length='4' isDollared='true'>
+							<Identifier start='60' length='3' name='foo'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+						<StaticConstantAccess start='66' length='15'>
+							<ClassName>
+								<NamespaceName start='66' length='8' global='false' current='false'>
+									<Identifier start='66' length='8' name='DateTime'/>
+								</NamespaceName>
+							</ClassName>
+							<Constant>
+								<Identifier start='76' length='5' name='class'/>
+							</Constant>
+						</StaticConstantAccess>
+					</InitialValue>
+				</FieldsDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='85' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -1,0 +1,33 @@
+--TEST--
+Test Static ClassConstant in definitions
+--FILE--
+<?php function f($s = DateTime::class) {} class C { public $foo = DateTime::class; } ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="88">
+	<PHPMethodDeclaration start="6" end="41" modifiers="" name="f">
+		<FormalParameter start="17" end="37" modifiers="" isMandatory="false">
+			<VariableReference start="17" end="19" name="$s">
+			</VariableReference>
+			<StaticConstantAccess start="22" end="37">
+				<FullyQualifiedReference start="22" end="30" name="DateTime">
+				</FullyQualifiedReference>
+				<ConstantReference start="32" end="37" name="class">
+				</ConstantReference>
+			</StaticConstantAccess>
+		</FormalParameter>
+	</PHPMethodDeclaration>
+	<ClassDeclaration start="42" end="84" modifiers="" name="C">
+		<PHPFieldDeclaration start="59" end="81" modifiers="public">
+			<SimpleReference start="59" end="63" name="$foo">
+			</SimpleReference>
+			<StaticConstantAccess start="66" end="81">
+				<FullyQualifiedReference start="66" end="74" name="DateTime">
+				</FullyQualifiedReference>
+				<ConstantReference start="76" end="81" name="class">
+				</ConstantReference>
+			</StaticConstantAccess>
+		</PHPFieldDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="85" end="87">
+	</EmptyStatement>
+</ModuleDeclaration>

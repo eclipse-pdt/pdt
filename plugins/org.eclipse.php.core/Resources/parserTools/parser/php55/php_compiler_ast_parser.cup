@@ -3167,6 +3167,13 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
 	StaticConstantAccess constant = new StaticConstantAccess(classNameleft, varNameright, className, vname);
 	RESULT = constant;
 :}
+
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM T_CLASS:varName
+{:
+    ConstantReference vname = new ConstantReference(varNameleft, varNameright, "class");
+    StaticConstantAccess constant = new StaticConstantAccess(classNameleft, varNameright, className, vname);
+    RESULT = constant;
+:}
 ;
 
 scalar ::=
