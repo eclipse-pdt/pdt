@@ -23,6 +23,7 @@ import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.format.DefaultIndentationStrategy;
+import org.eclipse.php.internal.core.format.IndentationObject;
 import org.eclipse.php.internal.core.format.PhpFormatter;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -40,9 +41,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 	private DefaultIndentationStrategy defaultStrategy;
 
 	public PHPAutoIndentStrategy() {
-
 		defaultStrategy = new DefaultIndentationStrategy();
-
 	}
 
 	/*
@@ -83,9 +82,11 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		if (command.offset == -1 || document.getLength() == 0)
 			return;
 		StringBuffer helpBuffer = new StringBuffer();
+		IndentationObject indentationObject = null;
 		try {
 			if (document instanceof IStructuredDocument) {
-
+				indentationObject = new IndentationObject(
+						(IStructuredDocument) document);
 				defaultStrategy.placeMatchingBlanksForStructuredDocument(
 						(IStructuredDocument) document, helpBuffer,
 						document.getLineOfOffset(command.offset),
@@ -157,7 +158,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		String start = "<?php"; //$NON-NLS-1$
 		newdocument.set(start + newline + tempsb.toString());
 		PhpFormatter formatter = new PhpFormatter(0, newdocument.getLength(),
-				true);
+				true, indentationObject);
 		formatter.format(newdocument.getFirstStructuredDocumentRegion());
 
 		List<String> list = new ArrayList<String>();

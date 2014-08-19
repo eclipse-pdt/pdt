@@ -233,7 +233,7 @@ public class IndentationBaseDetector {
 				}
 			}
 		}
-		return lineShouldInedent(checkedLineBeginState, checkedLineEndState)
+		return lineShouldIndent(checkedLineBeginState, checkedLineEndState)
 				|| forLineEndState == checkedLineBeginState;
 	}
 
@@ -498,7 +498,7 @@ public class IndentationBaseDetector {
 		return false;
 	}
 
-	private boolean lineShouldInedent(final String beginState,
+	private boolean lineShouldIndent(final String beginState,
 			final String endState) {
 		return beginState == PHPPartitionTypes.PHP_DEFAULT
 				|| endState == PHPPartitionTypes.PHP_DEFAULT;

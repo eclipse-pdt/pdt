@@ -30,26 +30,18 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 	private static boolean pairArrayParen;
 	private static int pairArrayOffset;
 
-	private static class IndentationObject {
-		public int indentationWrappedLineSize;
-		public int indentationArrayInitSize;
-		public int indentationSize;
-		public char indentationChar;
+	private IndentationObject indentationObject;
 
-		public IndentationObject(IStructuredDocument document) {
-			this.indentationWrappedLineSize = FormatterUtils
-					.getFormatterCommonPrferences()
-					.getIndentationWrappedLineSize(document);
-			this.indentationArrayInitSize = FormatterUtils
-					.getFormatterCommonPrferences()
-					.getIndentationArrayInitSize(document);
-			this.indentationSize = FormatterUtils
-					.getFormatterCommonPrferences()
-					.getIndentationSize(document);
-			this.indentationChar = FormatterUtils
-					.getFormatterCommonPrferences()
-					.getIndentationChar(document);
-		}
+	public DefaultIndentationStrategy() {
+	}
+
+	/**
+	 * 
+	 * @param indentationObject
+	 *            basic indentation preferences, can be null
+	 */
+	public DefaultIndentationStrategy(IndentationObject indentationObject) {
+		this.indentationObject = indentationObject;
 	}
 
 	// go backward and look for any region except comment region or white space
@@ -135,7 +127,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		if (forOffset == 0) {
 			return;
 		}
-		IndentationObject indentationObject = new IndentationObject(document);
+		if (indentationObject == null) {
+			indentationObject = new IndentationObject(document);
+		}
 		boolean enterKeyPressed = document.getLineDelimiter().equals(
 				result.toString());
 		int lineOfOffset = document.getLineOfOffset(forOffset);
@@ -191,8 +185,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			line = lastNonEmptyLineIndex;
 		}
 		if (shouldIndent(document, offset, line)) {
-			indent(document, result, indentationObject.indentationChar,
-					indentationObject.indentationSize);
+			indent(document, result, indentationObject.getIndentationChar(),
+					indentationObject.getIndentationSize());
 		} else {
 			boolean intended = indentMultiLineCase(document, lineNumber,
 					newForOffset, enterKeyPressed, result, blanks, commandText,
@@ -298,8 +292,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 						if (shouldIndent(document, offset, line)) {
 							indent(document, result,
-									indentationObject.indentationChar,
-									indentationObject.indentationSize);
+									indentationObject.getIndentationChar(),
+									indentationObject.getIndentationSize());
 						}
 					}
 				}
@@ -333,8 +327,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			if (IndentationUtils.inBracelessBlock(scanner, document, offset)) {
 				// lineState.inBracelessBlock = true;
 				if (!"{".equals(commandText)) { //$NON-NLS-1$
-					indent(document, result, indentationObject.indentationChar,
-							indentationObject.indentationSize);
+					indent(document, result,
+							indentationObject.getIndentationChar(),
+							indentationObject.getIndentationSize());
 				}
 				return true;
 			} else if (content.trim().startsWith(
@@ -425,29 +420,34 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 									|| arrayBracket == PHPHeuristicScanner.TokenRBRACKET) {
 								if (isAssignment)
 									indent(document, newBuffer, 0,
-											indentationObject.indentationChar,
-											indentationObject.indentationSize);
+											indentationObject
+													.getIndentationChar(),
+											indentationObject
+													.getIndentationSize());
 								else {
 									indent(document,
 											newBuffer,
-											indentationObject.indentationArrayInitSize,
-											indentationObject.indentationChar,
-											indentationObject.indentationSize);
+											indentationObject
+													.getIndentationArrayInitSize(),
+											indentationObject
+													.getIndentationChar(),
+											indentationObject
+													.getIndentationSize());
 									pairArrayParen = true;
 								}
 							} else {
-								indent(document,
-										newBuffer,
-										indentationObject.indentationArrayInitSize,
-										indentationObject.indentationChar,
-										indentationObject.indentationSize);
+								indent(document, newBuffer,
+										indentationObject
+												.getIndentationArrayInitSize(),
+										indentationObject.getIndentationChar(),
+										indentationObject.getIndentationSize());
 							}
 						} else {
-							indent(document,
-									newBuffer,
-									indentationObject.indentationWrappedLineSize,
-									indentationObject.indentationChar,
-									indentationObject.indentationSize);
+							indent(document, newBuffer,
+									indentationObject
+											.getIndentationWrappedLineSize(),
+									indentationObject.getIndentationChar(),
+									indentationObject.getIndentationSize());
 						}
 					}
 
@@ -469,9 +469,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 							document.getLineInformation(baseLine));
 					StringBuffer newBuffer = new StringBuffer(newblanks);
 					indent(document, newBuffer,
-							indentationObject.indentationWrappedLineSize,
-							indentationObject.indentationChar,
-							indentationObject.indentationSize);
+							indentationObject.getIndentationWrappedLineSize(),
+							indentationObject.getIndentationChar(),
+							indentationObject.getIndentationSize());
 					result.setLength(result.length() - blanks.length());
 					result.append(newBuffer.toString());
 					return true;
@@ -655,13 +655,10 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 							}
 						}
 						indent(document, result,
-								indentationObject.indentationWrappedLineSize,
-								indentationObject.indentationChar,
-								indentationObject.indentationSize);
-						// for (int i = 0; i < regionStart + token.getEnd()
-						// - lineInfo.getOffset(); i++){
-						// result.append(' ');
-						// }
+								indentationObject
+										.getIndentationWrappedLineSize(),
+								indentationObject.getIndentationChar(),
+								indentationObject.getIndentationSize());
 					}
 				}
 			}
