@@ -36,6 +36,7 @@ import org.eclipse.php.internal.core.util.MagicMemberUtil.MagicMember;
 import org.eclipse.php.internal.core.util.MagicMemberUtil.MagicMethod;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.util.SuperTypeHierarchyCache;
+import org.eclipse.text.edits.ReplaceEdit;
 
 /**
  * Helper to get the content of a Javadoc comment as HTML.
@@ -928,10 +929,11 @@ public class PHPDocumentationContentAccess {
 
 	private void handleInlineLinks() {
 		Matcher m = INLINE_LINK_PATTERN.matcher(fBuf);
-		StringBuffer sb = new StringBuffer();
+		List<ReplaceEdit> replaceLinks = new ArrayList<ReplaceEdit>();
 		while (m.find()) {
 			String[] strs = m.group().split("[\\s]+", 3); //$NON-NLS-1$
 			String url = removeLastRightCurlyBrace(strs[1]);
+			String link = "";//$NON-NLS-1$
 			if (url.toLowerCase().startsWith("http")) { //$NON-NLS-1$
 				String description = ""; //$NON-NLS-1$
 				if (strs.length == 3) {
@@ -939,29 +941,20 @@ public class PHPDocumentationContentAccess {
 				} else {
 					description = url;
 				}
-				String link = "<a href=\"" + url + "\">" + description + "</a>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				// m.appendReplacement(sb, link);
-				sb.append(fBuf.toString().replace(m.group(), link));
+				link = String.format("<a href=\"%s\">%s</a>", url, description); //$NON-NLS-1$ 
 			} else {
-				sb.append(fBuf.toString()
-						.replace(
-								m.group(),
-								handleLinks(Arrays.asList(new TypeReference(0,
-										0, url)))));
-				// try {
-				// m.appendReplacement(
-				// sb,
-				// handleLink(
-				// Arrays.asList(new TypeReference(0, 0, url)))
-				// .toString());
-				// } catch (Exception e) {
-				// }
+				link = handleLinks(Arrays.asList(new TypeReference(0, 0, url)))
+						.toString();
 			}
+			replaceLinks.add(new ReplaceEdit(m.start(), m.end() - m.start(),
+					link));
 		}
-		// m.appendTail(sb);
-		// fBuf = sb;
-		fBuf.append(sb);
-		sb = null;
+
+		for (int i = replaceLinks.size() - 1; i >= 0; i--) {
+			ReplaceEdit replaceLink = replaceLinks.get(i);
+			fBuf.replace(replaceLink.getOffset(), replaceLink.getOffset()
+					+ replaceLink.getLength(), replaceLink.getText());
+		}
 	}
 
 	private String removeLastRightCurlyBrace(String str) {
