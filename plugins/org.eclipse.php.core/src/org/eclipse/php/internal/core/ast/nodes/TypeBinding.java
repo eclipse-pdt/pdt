@@ -228,7 +228,7 @@ public class TypeBinding implements ITypeBinding {
 		}
 
 		if (methods == null) {
-			if (isClass()) {
+			if (isClass() || isTrait()) {
 				List<IMethodBinding> methodBindings = new ArrayList<IMethodBinding>();
 				for (IModelElement element : this.elements) {
 					IType type = (IType) element;
