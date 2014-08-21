@@ -103,8 +103,16 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 				StaticMethodInvocation methodInvocation = (StaticMethodInvocation) funcInv
 						.getParent();
 				IMethod method = ModelUtils.getMethod(methodInvocation);
-				if (method != null && ModelUtils.isDeprecated(method)) {
-					highlight(methodInvocation.getMethod().getFunctionName());
+				if (method != null) {
+					if (ModelUtils.isDeprecated(method)) {
+						highlight(methodInvocation.getMethod()
+								.getFunctionName());
+					}
+
+					IType type = method.getDeclaringType();
+					if (type != null && ModelUtils.isDeprecated(type)) {
+						highlight(methodInvocation.getClassName());
+					}
 				}
 			} else if (!(funcInv.getParent() instanceof MethodInvocation)) {
 				IModelAccessCache cache = funcInv.getAST().getBindingResolver()
