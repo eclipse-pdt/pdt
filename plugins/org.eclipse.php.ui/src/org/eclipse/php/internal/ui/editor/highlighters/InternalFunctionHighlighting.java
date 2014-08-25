@@ -54,7 +54,7 @@ public class InternalFunctionHighlighting extends AbstractSemanticHighlighting {
 		 */
 		private void dealIdentifier(Identifier identifier) {
 			String fullName = AbstractOccurrencesFinder.getFullName(identifier,
-					fLastUseParts, fCurrentNamespace);
+					fLastUseParts, null);
 			IModelElement[] elements = PhpModelAccess.getDefault().findMethods(
 					fullName, MatchRule.EXACT, 0, 0, createSearchScope(), null);
 			if (elements != null && elements.length > 0 && elements[0] != null) {

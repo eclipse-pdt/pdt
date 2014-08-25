@@ -103,7 +103,7 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 		 */
 		private void dealIdentifier(Identifier identifier) {
 			String fullName = AbstractOccurrencesFinder.getFullName(identifier,
-					fLastUseParts, fCurrentNamespace);
+					fLastUseParts, null);
 			FileContext context = new FileContext(getSourceModule(),
 					SourceParserUtil.getModuleDeclaration(getSourceModule(),
 							null), identifier.getStart());
