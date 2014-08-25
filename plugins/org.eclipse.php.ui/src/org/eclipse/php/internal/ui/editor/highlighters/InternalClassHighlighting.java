@@ -102,8 +102,15 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 		 * @param identifier
 		 */
 		private void dealIdentifier(Identifier identifier) {
+			NamespaceDeclaration namespace = fCurrentNamespace;
+			if (identifier instanceof NamespaceName) {
+				NamespaceName namespaceName = (NamespaceName) identifier;
+				if (namespaceName.isGlobal()) {
+					namespace = null;
+				}
+			}
 			String fullName = AbstractOccurrencesFinder.getFullName(identifier,
-					fLastUseParts, fCurrentNamespace);
+					fLastUseParts, namespace);
 			FileContext context = new FileContext(getSourceModule(),
 					SourceParserUtil.getModuleDeclaration(getSourceModule(),
 							null), identifier.getStart());
