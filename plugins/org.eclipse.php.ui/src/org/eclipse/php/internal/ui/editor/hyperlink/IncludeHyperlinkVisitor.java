@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.hyperlink;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -111,11 +110,10 @@ public class IncludeHyperlinkVisitor extends ASTVisitor {
 
 	private String resolveScalarValue(Scalar scalar) {
 		if (scalar.getValue() == DIR_CONST) {
-			return sourceModule.getResource().getProjectRelativePath()
+			return sourceModule.getResource().getLocation()
 					.removeLastSegments(1).toOSString();
 		} else if (scalar.getValue() == FILE_CONST) {
-			return sourceModule.getResource().getProjectRelativePath()
-					.toOSString();
+			return sourceModule.getResource().getLocation().toOSString();
 		} else {
 			String value = scalar.getValue();
 			return ASTUtils.stripQuotes(value).trim();
@@ -134,12 +132,7 @@ public class IncludeHyperlinkVisitor extends ASTVisitor {
 	}
 
 	public String getFile() {
-		IProject project = sourceModule.getResource().getProject();
-		if (project != null) {
-			return project.getLocation().append(filePath.toString())
-					.toOSString();
-		}
-		return ""; //$NON-NLS-1$
+		return filePath.toString();
 	}
 
 	public Region getSelectRegion() {
