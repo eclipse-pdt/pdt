@@ -327,9 +327,13 @@ public class PHPSearchEngine implements IIncludepathListener {
 			if (res != null) {
 				return new ResourceResult(res);
 			}
-			if (file.exists()) {
-				return new ExternalFileResult(file);
+			// for linked resources
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot()
+					.findFilesForLocationURI(file.toURI());
+			if (files != null && files.length != 0) {
+				return new ResourceResult(files[0]);
 			}
+			return new ExternalFileResult(file);
 		}
 		return null;
 	}
