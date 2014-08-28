@@ -92,8 +92,10 @@ public final class ParameterGuessingProposal extends
 			if (fc.getParent() instanceof AliasType) {
 				AliasType aliasType = (AliasType) fc.getParent();
 				alias = aliasType.getAlias();
-				fc = FakeConstructor.createFakeConstructor(null,
-						(IType) aliasType.getParent(), false);
+				if (aliasType.getParent() instanceof IType) {
+					fc = FakeConstructor.createFakeConstructor(null,
+							(IType) aliasType.getParent(), false);
+				}
 			}
 			IType type = fc.getDeclaringType();
 			IMethod[] ctors = FakeConstructor.getConstructors(type,

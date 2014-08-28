@@ -70,7 +70,9 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		if (element instanceof FakeConstructor) {
 			IType type = (IType) element.getParent();
 			if (type instanceof AliasType) {
-				type = (IType) type.getParent();
+				if (type.getParent() instanceof IType) {
+					type = (IType) type.getParent();
+				}
 				element = FakeConstructor.createFakeConstructor(null, type,
 						false);
 			}
@@ -81,7 +83,9 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 				}
 			}
 		} else if (element instanceof AliasType) {
-			element = (IType) element.getParent();
+			if (element.getParent() instanceof IType) {
+				element = (IType) element.getParent();
+			}
 		}
 		StringBuffer buffer = new StringBuffer();
 		String constantValue = null;
