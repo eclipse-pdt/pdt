@@ -21,7 +21,20 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git</tycho.scmUrl>
 	</properties>
-
+	<url>https://eclipse.org/pdt</url>
+	<ciManagement>
+		<system>hudson</system>
+		<url>https://hudson.eclipse.org/pdt</url>
+	</ciManagement>
+	<scm>
+		<connection>scm:git:http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git</connection>
+		<developerConnection>scm:git:ssh://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git</developerConnection>
+		<url>http://git.eclipse.org/c/pdt/org.eclipse.pdt.git</url>
+	</scm>
+	<issueManagement>
+		<system>Bugzilla</system>
+		<url>https://bugs.eclipse.org/bugs/buglist.cgi?product=pdt</url>
+	</issueManagement>
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -121,7 +134,45 @@
 				<artifactId>sonar-maven-plugin</artifactId>
 				<version>2.3.1</version>
 			</plugin>
-
+			<plugin>
+			   <groupId>org.eclipse.tycho</groupId>
+			   <artifactId>target-platform-configuration</artifactId>
+			   <version>${tycho-version}</version>
+			   <configuration>
+				  <environments>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86</arch>
+						</environment>
+					</environments>
+			   </configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<profiles>
