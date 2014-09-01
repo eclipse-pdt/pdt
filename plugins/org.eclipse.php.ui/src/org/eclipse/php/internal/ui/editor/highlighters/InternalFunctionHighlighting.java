@@ -13,10 +13,7 @@ package org.eclipse.php.internal.ui.editor.highlighters;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.Expression;
-import org.eclipse.php.internal.core.ast.nodes.FunctionInvocation;
-import org.eclipse.php.internal.core.ast.nodes.Identifier;
+import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.search.AbstractOccurrencesFinder;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
@@ -53,10 +50,11 @@ public class InternalFunctionHighlighting extends AbstractSemanticHighlighting {
 		 * @param identifier
 		 */
 		private void dealIdentifier(Identifier identifier) {
-			String fullName = AbstractOccurrencesFinder.getFullName(identifier,
-					fLastUseParts, fCurrentNamespace);
-			IModelElement[] elements = PhpModelAccess.getDefault().findMethods(
-					fullName, MatchRule.EXACT, 0, 0, createSearchScope(), null);
+			IModelElement[] elements = findMethods(identifier,
+					fCurrentNamespace);
+			if (elements == null || elements.length == 0) {
+				elements = findMethods(identifier, null);
+			}
 			if (elements != null && elements.length > 0 && elements[0] != null) {
 				for (IModelElement modelElement : elements) {
 					if (modelElement != null) {
@@ -67,6 +65,14 @@ public class InternalFunctionHighlighting extends AbstractSemanticHighlighting {
 					}
 				}
 			}
+		}
+
+		private IModelElement[] findMethods(Identifier identifier,
+				NamespaceDeclaration namespace) {
+			String fullName = AbstractOccurrencesFinder.getFullName(identifier,
+					fLastUseParts, namespace);
+			return PhpModelAccess.getDefault().findMethods(fullName,
+					MatchRule.EXACT, 0, 0, createSearchScope(), null);
 		}
 	}
 

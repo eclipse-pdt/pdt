@@ -1,0 +1,15 @@
+--TEST--
+Test Internal function Semantic highlighting
+--FILE--
+<?php
+namespace Test;
+
+class Test {
+	public function test() {
+		strlen("test");
+	}
+}
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.InternalFunctionHighlighting:
+highlight(strlen)
