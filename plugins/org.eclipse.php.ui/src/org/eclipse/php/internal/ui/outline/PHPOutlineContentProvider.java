@@ -11,8 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.outline;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -50,6 +49,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 	private TreeViewer fOutlineViewer;
 	private ISourceModule fSourceModule;
 	private IModelElement[] fUseStatements;
+	private Object fInput;
 
 	public PHPOutlineContentProvider(TreeViewer viewer) {
 		super();
@@ -166,11 +166,13 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		boolean isCU = (newInput instanceof ISourceModule);
 		// Add a listener if input is valid and there wasn't one
 		if (isCU && fListener == null) {
+			fInput = newInput;
 			fListener = new ElementChangedListener();
 			DLTKCore.addElementChangedListener(fListener);
 		}
 		// If the new input is not valid and there is a listener - remove it
 		else if (!isCU && fListener != null) {
+			fInput = null;
 			DLTKCore.removeElementChangedListener(fListener);
 			fListener = null;
 		}
@@ -191,9 +193,15 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		private int useStatementsCountNew;
 
 		public void elementChanged(final ElementChangedEvent e) {
-
 			final Control control = fOutlineViewer.getControl();
 			if (control == null || control.isDisposed()) {
+				return;
+			}
+
+			// filter event from different source module
+			Set<ISourceModule> eventSources = new HashSet<ISourceModule>();
+			collectSourceModules(e.getDelta(), eventSources);
+			if (!eventSources.contains(fInput)) {
 				return;
 			}
 
@@ -202,7 +210,6 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
-
 					fUseStatements = getUseStatements();
 
 					IWorkbenchWindow activeWorkbenchWindow = PlatformUI
@@ -230,7 +237,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 							}
 						}
 					}
-					IModelElementDelta delta = findElement(fSourceModule,
+					final IModelElementDelta delta = findElement(fSourceModule,
 							e.getDelta());
 					if ((delta != null || e.getType() == ElementChangedEvent.POST_CHANGE)
 							&& fOutlineViewer != null
@@ -240,10 +247,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 						if (d != null) {
 							d.asyncExec(new Runnable() {
 								public void run() {
-									if (fOutlineViewer.getTree() == null
-											|| (fOutlineViewer.getTree() != null && !fOutlineViewer
-													.getTree().isDisposed()))
-										fOutlineViewer.refresh();
+									refresh(delta);
 								}
 							});
 						}
@@ -254,6 +258,69 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			job.setPriority(Job.DECORATE);
 			job.setSystem(true);
 			job.schedule();
+		}
+
+		private void collectSourceModules(IModelElementDelta delta,
+				Set<ISourceModule> sourceModules) {
+			if (delta.getElement() instanceof ISourceModule) {
+				sourceModules.add((ISourceModule) delta.getElement());
+			}
+			for (IModelElementDelta child : delta.getAffectedChildren()) {
+				collectSourceModules(child, sourceModules);
+			}
+		}
+
+		private void refresh(IModelElementDelta delta) {
+			if (fOutlineViewer.getTree() == null
+					|| (fOutlineViewer.getTree() != null && !fOutlineViewer
+							.getTree().isDisposed())) {
+				if (delta == null) { // delta is null when file is saved
+					List<Object> toUpdate = new ArrayList<Object>();
+					Object[] elements = getElements(fInput);
+					if (elements != null) {
+						for (Object object : elements) {
+							toUpdate.add(object);
+							collectChildren(object, toUpdate);
+						}
+					}
+					fOutlineViewer.update(toUpdate.toArray(), null);
+				} else {
+					visitAndUpdate(delta);
+				}
+			}
+		}
+
+		private void collectChildren(Object parent, List<Object> toUpdate) {
+			Object[] children = getChildren(parent);
+			if (children == null) {
+				return;
+			}
+
+			for (Object child : children) {
+				toUpdate.add(child);
+				collectChildren(child, toUpdate);
+			}
+		}
+
+		private void visitAndUpdate(IModelElementDelta delta) {
+			if (delta == null) {
+				return;
+			}
+			switch (delta.getKind()) {
+			case IModelElementDelta.ADDED:
+				fOutlineViewer.add(delta.getElement().getParent(),
+						delta.getElement());
+				break;
+			case IModelElementDelta.CHANGED:
+				fOutlineViewer.update(delta.getElement(), null);
+				break;
+			case IModelElementDelta.REMOVED:
+				fOutlineViewer.remove(delta.getElement());
+				break;
+			}
+			for (IModelElementDelta child : delta.getAffectedChildren()) {
+				visitAndUpdate(child);
+			}
 		}
 
 		protected IModelElementDelta findElement(IModelElement unit,
