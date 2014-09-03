@@ -46,7 +46,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -295,9 +294,13 @@ public class PHPContentOutlineConfiguration extends
 
 	public ISelection getSelection(final TreeViewer viewer,
 			final ISelection selection) {
-		final IContentProvider contentProvider = viewer.getContentProvider();
-		if (!selection.isEmpty())
+		if (!isLinkedWithEditor(viewer)) {
+			return lastSelection;
+		}
+		if (!selection.isEmpty()) {
 			lastSelection = selection;
+		}
+		final IContentProvider contentProvider = viewer.getContentProvider();
 		if (contentProvider instanceof PHPOutlineContentProvider) {
 			if (MODE_PHP == mode) {
 				if (lastSelection instanceof IStructuredSelection
@@ -314,11 +317,6 @@ public class PHPContentOutlineConfiguration extends
 								if (element == computedSourceReference) {
 									lastSelection = new StructuredSelection(
 											computedSourceReference);
-									Widget testFindItem = viewer
-											.testFindItem(lastSelection);
-									if (testFindItem == null) {
-										viewer.refresh();
-									}
 									return lastSelection;
 								}
 							lastSelection = new StructuredSelection(parent);
