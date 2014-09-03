@@ -98,7 +98,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 *            Progress monitor
 	 * @return
 	 */
-	private <T extends IModelElement> Collection<T> filterElements(
+	protected <T extends IModelElement> Collection<T> filterElements(
 			ISourceModule sourceModule, Collection<T> elements,
 			IProgressMonitor monitor) {
 
