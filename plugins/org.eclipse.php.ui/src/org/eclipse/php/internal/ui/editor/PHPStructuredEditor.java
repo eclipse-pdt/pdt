@@ -132,6 +132,7 @@ import org.eclipse.wst.sse.ui.internal.reconcile.DocumentRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.sse.ui.reconcile.ISourceReconcilingListener;
+import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 
 import com.ibm.icu.text.BreakIterator;
 
@@ -406,7 +407,17 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	class OutlineSelectionChangedListener extends
 			AbstractSelectionChangedListener implements IDoubleClickListener {
 
+		private ContentOutlineConfiguration configuration;
+
+		public OutlineSelectionChangedListener(
+				ContentOutlineConfiguration configuration) {
+			this.configuration = configuration;
+		}
+
 		public void selectionChanged(SelectionChangedEvent event) {
+			if (!configuration.isLinkedWithEditor(null)) {
+				return;
+			}
 			doSelectionChanged(event);
 		}
 
@@ -2469,7 +2480,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				&& shouldOutlineViewBeLoaded()) {
 			final ConfigurableContentOutlinePage outlinePage = (ConfigurableContentOutlinePage) adapter;
 			if (fPHPOutlinePageListener == null) {
-				fPHPOutlinePageListener = new OutlineSelectionChangedListener();
+				fPHPOutlinePageListener = new OutlineSelectionChangedListener(
+						outlinePage.getConfiguration());
 				outlinePage.addDoubleClickListener(fPHPOutlinePageListener);
 			}
 			fPHPOutlinePageListener.install(outlinePage);
