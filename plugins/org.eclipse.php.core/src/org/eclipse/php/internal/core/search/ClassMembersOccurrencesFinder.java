@@ -502,7 +502,6 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 				if (isMethod) {
 					final Identifier functionName = classMethodDeclaration
 							.getFunction().getFunctionName();
-					ITypeBinding type = resolveDispatcherType(functionName);
 					if (classMemberName.equals(functionName.getName())) {
 						if (dispatcherType != null) {
 							if (isDispatcherTypeEquals(functionName,
