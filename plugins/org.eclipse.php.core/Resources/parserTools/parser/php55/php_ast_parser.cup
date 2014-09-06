@@ -2365,14 +2365,14 @@ namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_
 {:
 	RESULT = new FunctionInvocation(sleft, dereference == null ? eright : dereferenceright, parser.ast,
 		new FunctionName(sleft, listright, parser.ast,
-			new NamespaceName(sleft, listright, parser.ast, list, false, true)), parameters);
+			new NamespaceName(sleft, listright, parser.ast, list, false, true)), parameters, dereference);
 :}
 
 | T_NS_SEPARATOR:s namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e optional_dereference:dereference
 {:
 	RESULT = new FunctionInvocation(sleft, dereference == null ? eright : dereferenceright, parser.ast,
 		new FunctionName(sleft, listright, parser.ast,
-			new NamespaceName(sleft, listright, parser.ast, list, true, false)), parameters);
+			new NamespaceName(sleft, listright, parser.ast, list, true, false)), parameters, dereference);
 :}
 
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_name:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e optional_dereference:dereference
@@ -2380,14 +2380,14 @@ namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_
 	RESULT = new StaticMethodInvocation(classNameleft, dereference == null ? eright : dereferenceright, parser.ast, className,
 		new FunctionInvocation(fnleft, dereference == null ? eright : dereferenceright, parser.ast,
 			new FunctionName(fnleft, fnright, parser.ast,
-				fn), parameters));
+				fn), parameters, dereference));
 :}
 
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e optional_dereference:dereference
 {:
 	RESULT = new StaticMethodInvocation(classNameleft, dereference == null ? eright : dereferenceright, parser.ast, className,
 		new FunctionInvocation(reflectionNameleft, dereference == null ? eright : dereferenceright, parser.ast,
-			new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, reflectionName), parameters));
+			new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, reflectionName), parameters, dereference));
 :}
 
 | variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_name:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e optional_dereference:dereference
@@ -2395,20 +2395,20 @@ namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_
 	RESULT = new StaticMethodInvocation(classNameleft, dereference == null ? eright : dereferenceright, parser.ast, className,
 		new FunctionInvocation(fnleft, dereference == null ? eright : dereferenceright, parser.ast,
 			new FunctionName(fnleft, fnright, parser.ast,
-				fn), parameters));
+				fn), parameters, dereference));
 :}
 
 | variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e optional_dereference:dereference
 {:
 	RESULT = new StaticMethodInvocation(classNameleft, dereference == null ? eright : dereferenceright, parser.ast, className,
 		new FunctionInvocation(reflectionNameleft, eright, parser.ast,
-			new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, reflectionName), parameters));
+			new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, reflectionName), parameters, dereference));
 :}
 
 | variable_without_objects:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e optional_dereference:dereference
 {:
 	RESULT = new FunctionInvocation(reflectionNameleft, dereference == null ? eright : dereferenceright, parser.ast,
-		new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, reflectionName), parameters);
+		new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, reflectionName), parameters, dereference);
 :}
 ;
 

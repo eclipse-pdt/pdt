@@ -1,0 +1,80 @@
+--TEST--
+Test static method invocation array dereference
+--FILE--
+<?php 
+class T { public static function f() { return [1, 2]; } }
+echo T::f()[0];
+?>
+--EXPECT--
+<Program start='0' length='83'>
+	<Statements>
+		<ClassDeclaration start='7' length='57' modifier=''>
+			<ClassName>
+				<Identifier start='13' length='1' name='T'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='15' length='49' isCurly='true'>
+				<MethodDeclaration start='17' length='45' modifier='public static'>
+					<FunctionDeclaration start='31' length='31' isReference='false'>
+						<FunctionName>
+							<Identifier start='40' length='1' name='f'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='44' length='18' isCurly='true'>
+								<ReturnStatement start='46' length='14'>
+									<ArrayCreation start='53' length='6'>
+										<ArrayElement start='54' length='1'>
+											<Key>
+											</Key>
+											<Value>
+												<Scalar start='54' length='1' type='int' value='1'/>
+											</Value>
+										</ArrayElement>
+										<ArrayElement start='57' length='1'>
+											<Key>
+											</Key>
+											<Value>
+												<Scalar start='57' length='1' type='int' value='2'/>
+											</Value>
+										</ArrayElement>
+									</ArrayCreation>
+								</ReturnStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<EchoStatement start='65' length='15'>
+			<StaticMethodInvocation start='70' length='9'>
+				<ClassName>
+					<NamespaceName start='70' length='1' global='false' current='false'>
+						<Identifier start='70' length='1' name='T'/>
+					</NamespaceName>
+				</ClassName>
+				<FunctionInvocation start='73' length='6'>
+					<FunctionName start='73' length='1'>
+						<Variable start='73' length='1' isDollared='false'>
+							<Identifier start='73' length='1' name='f'/>
+						</Variable>
+					</FunctionName>
+					<Parameters>
+					</Parameters>
+						<PHPArrayDereferenceList start='-1' length='0'>
+							<DereferenceNode start='76' length='3'>
+								<Scalar start='77' length='1' type='int' value='0'/>
+							</DereferenceNode>
+						</PHPArrayDereferenceList>
+				</FunctionInvocation>
+			</StaticMethodInvocation>
+		</EchoStatement>
+		<EmptyStatement start='81' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>
