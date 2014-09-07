@@ -11,10 +11,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
+import org.eclipse.dltk.core.IImportContainer;
+import org.eclipse.dltk.core.ISourceRange;
+import org.eclipse.dltk.core.ISourceReference;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ui.ModelElementSorter;
 import org.eclipse.dltk.ui.viewsupport.SourcePositionSorter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -40,7 +45,25 @@ public class SortAction extends Action {
 			}
 		};
 	};
-	private SourcePositionSorter fSourcePositonComparator = new SourcePositionSorter();
+	private SourcePositionSorter fSourcePositonComparator = new SourcePositionSorter() {
+		public int compare(Viewer viewer, Object e1, Object e2) {
+			if (e1 instanceof IImportContainer
+					|| e2 instanceof IImportContainer) {
+				try {
+					ISourceRange sr1 = ((ISourceReference) e1).getSourceRange();
+					ISourceRange sr2 = ((ISourceReference) e2).getSourceRange();
+					if (sr1 == null || sr2 == null)
+						return 0;
+
+					return sr1.getOffset() - sr2.getOffset();
+
+				} catch (ModelException e) {
+					return 0;
+				}
+			}
+			return super.compare(viewer, e1, e2);
+		}
+	};
 
 	public SortAction(TreeViewer treeViewer) {
 		super();
@@ -54,7 +77,7 @@ public class SortAction extends Action {
 		setDescription(PHPUIMessages.PHPOutlinePage_Sort_description);
 
 		boolean checked = PHPUiPlugin.getDefault().getPreferenceStore()
-				.getBoolean(PREF_IS_SORTED); 
+				.getBoolean(PREF_IS_SORTED);
 		valueChanged(checked, false);
 	}
 
@@ -79,6 +102,6 @@ public class SortAction extends Action {
 
 		if (store)
 			PHPUiPlugin.getDefault().getPreferenceStore()
-					.setValue(PREF_IS_SORTED, on); 
+					.setValue(PREF_IS_SORTED, on);
 	}
 }
