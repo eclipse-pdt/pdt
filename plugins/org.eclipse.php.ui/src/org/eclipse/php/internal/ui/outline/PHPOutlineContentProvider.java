@@ -13,6 +13,8 @@ package org.eclipse.php.internal.ui.outline;
 
 import java.util.*;
 
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -35,6 +37,7 @@ import org.eclipse.php.internal.core.typeinference.FakeType;
 import org.eclipse.php.internal.core.typeinference.UseStatementElement;
 import org.eclipse.php.internal.core.util.OutlineFilter;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -48,8 +51,12 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 	// outline tree viewer
 	private TreeViewer fOutlineViewer;
 	private ISourceModule fSourceModule;
+	private ISourceModule fInput;
 	private IModelElement[] fUseStatements;
-	private Object fInput;
+	private UseStatementsNode fUseStatementsNode;
+
+	private ElementChangedListener fListener;
+	private ProblemChangedListener fProblemListener;
 
 	public PHPOutlineContentProvider(TreeViewer viewer) {
 		super();
@@ -61,13 +68,15 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		inputChanged(fOutlineViewer, null, null);
 	}
 
-	// private Object[] NO_CLASS = new Object[] { new NoClassElement() };
-	private ElementChangedListener fListener;
-
 	public void dispose() {
 		if (fListener != null) {
 			DLTKCore.removeElementChangedListener(fListener);
 			fListener = null;
+		}
+		if (fProblemListener != null) {
+			PHPUiPlugin.getWorkspace().removeResourceChangeListener(
+					fProblemListener);
+			fProblemListener = null;
 		}
 	}
 
@@ -113,7 +122,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			if (isNamespaceSupported(sourceModule)) {
 				// if namespaces are supported, add use statements node:
 				Object[] newChildren = new Object[children.length + 1];
-				newChildren[0] = new UseStatementsNode(sourceModule);
+				fUseStatementsNode = new UseStatementsNode(sourceModule);
+				newChildren[0] = fUseStatementsNode;
 				System.arraycopy(children, 0, newChildren, 1, children.length);
 				children = newChildren;
 			}
@@ -166,15 +176,24 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		boolean isCU = (newInput instanceof ISourceModule);
 		// Add a listener if input is valid and there wasn't one
 		if (isCU && fListener == null) {
-			fInput = newInput;
+			fInput = (ISourceModule) newInput;
 			fListener = new ElementChangedListener();
 			DLTKCore.addElementChangedListener(fListener);
+
+			fProblemListener = new ProblemChangedListener();
+			PHPUiPlugin.getWorkspace().addResourceChangeListener(
+					fProblemListener, IResourceChangeEvent.POST_CHANGE);
 		}
 		// If the new input is not valid and there is a listener - remove it
 		else if (!isCU && fListener != null) {
-			fInput = null;
 			DLTKCore.removeElementChangedListener(fListener);
 			fListener = null;
+
+			PHPUiPlugin.getWorkspace().removeResourceChangeListener(
+					fProblemListener);
+			fProblemListener = null;
+
+			fInput = null;
 		}
 	}
 
@@ -201,7 +220,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			// filter event from different source module
 			Set<ISourceModule> eventSources = new HashSet<ISourceModule>();
 			collectSourceModules(e.getDelta(), eventSources);
-			if (!eventSources.contains(fInput)) {
+			if (fInput == null || !eventSources.contains(fInput)) {
 				return;
 			}
 
@@ -271,55 +290,52 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		}
 
 		private void refresh(IModelElementDelta delta) {
+			if (delta == null) {
+				return;
+			}
 			if (fOutlineViewer.getTree() == null
 					|| (fOutlineViewer.getTree() != null && !fOutlineViewer
 							.getTree().isDisposed())) {
-				if (delta == null) { // delta is null when file is saved
-					List<Object> toUpdate = new ArrayList<Object>();
-					Object[] elements = getElements(fInput);
-					if (elements != null) {
-						for (Object object : elements) {
-							toUpdate.add(object);
-							collectChildren(object, toUpdate);
-						}
-					}
-					fOutlineViewer.update(toUpdate.toArray(), null);
-				} else {
-					visitAndUpdate(delta);
-				}
-			}
-		}
-
-		private void collectChildren(Object parent, List<Object> toUpdate) {
-			Object[] children = getChildren(parent);
-			if (children == null) {
-				return;
-			}
-
-			for (Object child : children) {
-				toUpdate.add(child);
-				collectChildren(child, toUpdate);
+				visitAndUpdate(delta);
 			}
 		}
 
 		private void visitAndUpdate(IModelElementDelta delta) {
-			if (delta == null) {
-				return;
-			}
-			switch (delta.getKind()) {
-			case IModelElementDelta.ADDED:
-				fOutlineViewer.add(delta.getElement().getParent(),
-						delta.getElement());
-				break;
-			case IModelElementDelta.CHANGED:
-				fOutlineViewer.update(delta.getElement(), null);
-				break;
-			case IModelElementDelta.REMOVED:
-				fOutlineViewer.remove(delta.getElement());
-				break;
+			if (delta.getElement() != null) {
+				IModelElement modelElement = delta.getElement();
+				switch (delta.getKind()) {
+				case IModelElementDelta.ADDED:
+					if (modelElement.getElementType() == IModelElement.IMPORT_CONTAINER) {
+						IModelElement parent = new ImportContainerFinder()
+								.findParent((IImportContainer) modelElement);
+						if (parent != null) {
+							fOutlineViewer.add(parent, modelElement);
+						}
+					} else {
+						fOutlineViewer.add(modelElement.getParent(),
+								modelElement);
+					}
+					refreshUseStatements(modelElement);
+					break;
+				case IModelElementDelta.CHANGED:
+					fOutlineViewer.update(modelElement, null);
+					break;
+				case IModelElementDelta.REMOVED:
+					fOutlineViewer.remove(modelElement);
+					refreshUseStatements(modelElement);
+					break;
+				}
 			}
 			for (IModelElementDelta child : delta.getAffectedChildren()) {
 				visitAndUpdate(child);
+			}
+		}
+
+		private void refreshUseStatements(IModelElement element) {
+			if (fUseStatementsNode != null
+					&& (element.getElementType() == IModelElement.IMPORT_CONTAINER || element
+							.getElementType() == IModelElement.IMPORT_DECLARATION)) {
+				fOutlineViewer.refresh(fUseStatementsNode);
 			}
 		}
 
@@ -373,6 +389,170 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 				return true;
 			}
 			return (flags & (IModelElementDelta.F_CONTENT | IModelElementDelta.F_FINE_GRAINED)) == IModelElementDelta.F_CONTENT;
+		}
+	}
+
+	private class ProblemChangedListener implements IResourceChangeListener,
+			IResourceDeltaVisitor {
+
+		private Set<Object> toUpdate = new HashSet<Object>();
+
+		@Override
+		public boolean visit(IResourceDelta delta) throws CoreException {
+			IResource res = delta.getResource();
+			if (res instanceof IProject
+					&& delta.getKind() == IResourceDelta.CHANGED) {
+				IProject project = (IProject) res;
+				if (!project.isAccessible()) {
+					// only track open PHP projects
+					return false;
+				}
+			}
+			visitDelta(delta, res);
+			return true;
+		}
+
+		private void visitDelta(IResourceDelta delta, IResource resource) {
+			if (fInput == null) {
+				return;
+			}
+			try {
+				IResource inputResource = fInput.getCorrespondingResource();
+				if (inputResource == null || !inputResource.equals(resource)) {
+					return;
+				}
+			} catch (ModelException e) {
+				return;
+			}
+			int kind = delta.getKind();
+			if (kind == IResourceDelta.REMOVED || kind == IResourceDelta.ADDED
+					|| kind == IResourceDelta.CHANGED) {
+				collectChangedElements(delta);
+			}
+		}
+
+		private void collectChangedElements(IResourceDelta delta) {
+			if ((delta.getFlags() & IResourceDelta.MARKERS) == 0) {
+				return;
+			}
+			IMarkerDelta[] markerDeltas = delta.getMarkerDeltas();
+			for (int i = 0; i < markerDeltas.length; i++) {
+				if (markerDeltas[i].isSubtypeOf(IMarker.PROBLEM)) {
+					Integer charStart = (Integer) markerDeltas[i]
+							.getAttribute(IMarker.CHAR_START);
+					Integer charEnd = (Integer) markerDeltas[i]
+							.getAttribute(IMarker.CHAR_END);
+
+					if (charStart != null && charEnd != null) {
+						try {
+							IModelElement element = fInput
+									.getElementAt(charStart);
+							collectToUpdate(element);
+						} catch (ModelException e) {
+							PHPUiPlugin.log(e);
+						}
+					}
+				}
+			}
+		}
+
+		private void collectToUpdate(IModelElement element) {
+			if (element == null) {
+				return;
+			}
+			toUpdate.add(element);
+
+			// update elements from virtual 'use statements' node
+			if (fUseStatementsNode != null
+					&& element.getElementType() == IModelElement.IMPORT_DECLARATION) {
+				Object[] objects = getChildren(fUseStatementsNode);
+				toUpdate.addAll(Arrays.asList(objects));
+			}
+			element = element.getParent();
+			while (element != null && !(element instanceof ISourceModule)) {
+				toUpdate.add(element);
+				// find parent for container if is in namespace
+				if (element instanceof IImportContainer) {
+					IModelElement parent = new ImportContainerFinder()
+							.findParent((IImportContainer) element);
+					if (parent != null) {
+						toUpdate.add(parent);
+					}
+				}
+				element = element.getParent();
+			}
+		}
+
+		@Override
+		public void resourceChanged(final IResourceChangeEvent event) {
+			final Control control = fOutlineViewer.getControl();
+			if (control == null || control.isDisposed()) {
+				return;
+			}
+
+			Job job = new Job(PHPUIMessages.PHPOutlineContentProvider_0) {
+
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					toUpdate.clear();
+					try {
+						IResourceDelta delta = event.getDelta();
+						if (delta != null)
+							delta.accept(ProblemChangedListener.this);
+					} catch (CoreException e) {
+						PHPUiPlugin.log(e.getStatus());
+						return Status.OK_STATUS;
+					}
+
+					if (!toUpdate.isEmpty() && fOutlineViewer != null
+							&& fOutlineViewer.getControl() != null
+							&& !fOutlineViewer.getControl().isDisposed()) {
+						Display d = control.getDisplay();
+						if (d != null) {
+							d.asyncExec(new Runnable() {
+								public void run() {
+									fOutlineViewer.update(toUpdate.toArray(),
+											null);
+								}
+							});
+						}
+					}
+					return Status.OK_STATUS;
+				}
+			};
+			job.setPriority(Job.DECORATE);
+			job.setSystem(true);
+			job.schedule();
+		}
+
+	}
+
+	private class ImportContainerFinder {
+
+		public IModelElement findParent(IImportContainer importContainer) {
+			Object[] elements = getElements(fInput);
+			for (Object element : elements) {
+				IModelElement parent = findParent(element, importContainer);
+				if (parent != null) {
+					return parent;
+				}
+			}
+			return null;
+		}
+
+		private IModelElement findParent(Object object,
+				IImportContainer importContainer) {
+			Object[] children = getChildren(object);
+			for (Object child : children) {
+				if (child == importContainer && object instanceof IModelElement) {
+					return (IModelElement) object;
+				}
+				IModelElement parent = findParent(child, importContainer);
+				if (parent != null) {
+					return parent;
+				}
+			}
+			return null;
 		}
 	}
 
