@@ -107,11 +107,14 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements
 	 * .swt.widgets.Composite)
 	 */
 	protected Control createContents(Composite parent) {
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
-				PREFIX + "php_step_filter_preference_page_context"); //$NON-NLS-1$
+		PlatformUI
+				.getWorkbench()
+				.getHelpSystem()
+				.setHelp(getControl(),
+						PREFIX + "php_step_filter_preference_page_context"); //$NON-NLS-1$
 		// The main composite
-		Composite composite = SWTFactory.createComposite(parent, parent
-				.getFont(), 1, 1, GridData.FILL_BOTH, 0, 0);
+		Composite composite = SWTFactory.createComposite(parent,
+				parent.getFont(), 1, 1, GridData.FILL_BOTH, 0, 0);
 		createStepFilterPreferences(composite);
 		return composite;
 	}
@@ -141,8 +144,8 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements
 	 * Create a group to contain the step filter related widgetry
 	 */
 	private void createStepFilterPreferences(Composite parent) {
-		Composite container = SWTFactory.createComposite(parent, parent
-				.getFont(), 2, 1, GridData.FILL_BOTH, 0, 0);
+		Composite container = SWTFactory.createComposite(parent,
+				parent.getFont(), 2, 1, GridData.FILL_BOTH, 0, 0);
 		fUseStepFiltersButton = SWTFactory
 				.createCheckButton(
 						container,
@@ -425,7 +428,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements
 					+ DebugStepFilter.FILTER_TOKENS_DELIM
 					+ filters[i].isReadOnly()
 					+ DebugStepFilter.FILTER_TOKENS_DELIM
-					+ filters[i].getPath()); 
+					+ filters[i].getPath());
 		}
 		String pref = serializeList((String[]) filtersPersistenceList
 				.toArray(new String[filtersPersistenceList.size()]));
@@ -518,8 +521,9 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements
 			if (tokens.length < 3) {
 				return new DebugStepFilter[0];
 			}
-			DebugStepFilter filter = new DebugStepFilter(Integer
-					.parseInt(tokens[0]), Boolean.parseBoolean(tokens[1]),
+			DebugStepFilter filter = new DebugStepFilter(
+					Integer.parseInt(tokens[0]),
+					Boolean.parseBoolean(tokens[1]),
 					Boolean.parseBoolean(tokens[2]), tokens[3]);
 
 			filtersToAdd.add(filter);
@@ -543,7 +547,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements
 	private String[] parseList(String listString) {
 		ArrayList<String> list = new ArrayList<String>();
 		StringTokenizer tokenizer = new StringTokenizer(listString,
-				DebugStepFilter.FILTERS_PREF_LIST_DELIM); 
+				DebugStepFilter.FILTERS_PREF_LIST_DELIM);
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken();
 			list.add(token);
@@ -560,7 +564,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < list.length; i++) {
 			if (i > 0) {
-				buffer.append(DebugStepFilter.FILTERS_PREF_LIST_DELIM); 
+				buffer.append(DebugStepFilter.FILTERS_PREF_LIST_DELIM);
 			}
 			buffer.append(list[i]);
 		}

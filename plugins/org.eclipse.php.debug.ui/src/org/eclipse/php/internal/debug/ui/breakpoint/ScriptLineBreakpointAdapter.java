@@ -456,52 +456,50 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 						Object part = service.getActivePart();
 						if (part != null && part instanceof IEditorPart) {
 							editorPart = (IEditorPart) part;
-							if (editorPart != null) {
-								IStructuredModel model = null;
-								ITextEditor textEditor = null;
-								try {
-									if (editorPart instanceof ITextEditor) {
-										textEditor = (ITextEditor) editorPart;
-									}
-									if (textEditor == null) {
-										textEditor = (ITextEditor) editorPart
-												.getAdapter(ITextEditor.class);
-									}
-									if (textEditor != null) {
-										IDocument textDocument = textEditor
-												.getDocumentProvider()
-												.getDocument(input);
-										model = StructuredModelManager
-												.getModelManager()
-												.getExistingModelForRead(
-														textDocument);
-										if (model != null) {
-											resource = BreakpointProviderBuilder
-													.getInstance()
-													.getResource(
-															input,
-															model.getContentTypeIdentifier(),
-															getFileExtension(input));
-										}
-									}
-									if (resource == null) {
-										IBreakpointProvider[] providers = BreakpointProviderBuilder
-												.getInstance()
-												.getBreakpointProviders(
-														editorPart, null,
-														getFileExtension(input));
-										for (int i = 0; i < providers.length
-												&& resource == null; i++) {
-											resource = providers[i]
-													.getResource(input);
-										}
-									}
-								} catch (Exception e) {
-									Logger.logException(e);
-								} finally {
+							IStructuredModel model = null;
+							ITextEditor textEditor = null;
+							try {
+								if (editorPart instanceof ITextEditor) {
+									textEditor = (ITextEditor) editorPart;
+								}
+								if (textEditor == null) {
+									textEditor = (ITextEditor) editorPart
+											.getAdapter(ITextEditor.class);
+								}
+								if (textEditor != null) {
+									IDocument textDocument = textEditor
+											.getDocumentProvider().getDocument(
+													input);
+									model = StructuredModelManager
+											.getModelManager()
+											.getExistingModelForRead(
+													textDocument);
 									if (model != null) {
-										model.releaseFromRead();
+										resource = BreakpointProviderBuilder
+												.getInstance()
+												.getResource(
+														input,
+														model.getContentTypeIdentifier(),
+														getFileExtension(input));
 									}
+								}
+								if (resource == null) {
+									IBreakpointProvider[] providers = BreakpointProviderBuilder
+											.getInstance()
+											.getBreakpointProviders(editorPart,
+													null,
+													getFileExtension(input));
+									for (int i = 0; i < providers.length
+											&& resource == null; i++) {
+										resource = providers[i]
+												.getResource(input);
+									}
+								}
+							} catch (Exception e) {
+								Logger.logException(e);
+							} finally {
+								if (model != null) {
+									model.releaseFromRead();
 								}
 							}
 

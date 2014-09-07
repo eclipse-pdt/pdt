@@ -565,16 +565,14 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 	public IStructuredModel loadModel(IStorageEditorInput input,
 			boolean logExceptions) {
 		String id = calculateID(input);
-		if (id == null) {
-			return null;
-		}
 
 		InputStream contents = null;
 		try {
 			contents = input.getStorage().getContents();
 		} catch (CoreException noStorageExc) {
-			if (logExceptions)
+			if (logExceptions) {
 				Logger.logException(noStorageExc);
+			}
 		}
 
 		IStructuredModel model = null;
@@ -584,8 +582,9 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 					id, contents, null);
 			model.setBaseLocation(calculateBaseLocation(input));
 		} catch (IOException e) {
-			if (logExceptions)
+			if (logExceptions) {
 				Logger.logException(e);
+			}
 		} finally {
 			if (contents != null) {
 				try {

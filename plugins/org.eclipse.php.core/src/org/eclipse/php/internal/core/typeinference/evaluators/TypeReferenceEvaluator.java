@@ -205,7 +205,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 													|| currentNamespace == null) {
 												type = new PHPClassType(
 														typeName);
-											} else if (currentNamespace != null) {
+											} else {
 												type = new PHPClassType(
 														currentNamespace
 																.getElementName(),

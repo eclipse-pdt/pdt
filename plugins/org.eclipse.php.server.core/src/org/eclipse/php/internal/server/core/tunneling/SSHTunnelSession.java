@@ -74,11 +74,13 @@ public class SSHTunnelSession {
 				} catch (JSchException e) {
 					throw e;
 				}
-				if (session == null)
-					throw new JSchException(
-							Messages.SSHTunnelSession_0 + hostname); 
-				if (session.getTimeout() != DEFAULT_TIMEOUT)
+				if (session == null) {
+					throw new JSchException(Messages.SSHTunnelSession_0
+							+ hostname);
+				}
+				if (session.getTimeout() != DEFAULT_TIMEOUT) {
 					session.setTimeout(DEFAULT_TIMEOUT);
+				}
 				SSHTunnelSession schSession = new SSHTunnelSession(session);
 				pool.put(key, schSession);
 				return schSession;
@@ -101,8 +103,9 @@ public class SSHTunnelSession {
 			throws JSchException {
 		Session session = service.createSession(location, null);
 		session.setTimeout(DEFAULT_TIMEOUT);
-		if (password != null)
+		if (password != null) {
 			session.setPassword(password);
+		}
 		service.connect(session, DEFAULT_TIMEOUT, monitor);
 		return session;
 	}

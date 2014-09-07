@@ -189,13 +189,11 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			}
 		}
 
-		if (removedServer != null) {
-			// Fire the event for the removal
-			removedServer.removePropertyChangeListener(manager);
-			ServerManagerEvent event = new ServerManagerEvent(
-					ServerManagerEvent.MANAGER_EVENT_REMOVED, removedServer);
-			manager.fireEvent(event);
-		}
+		// Fire the event for the removal
+		removedServer.removePropertyChangeListener(manager);
+		ServerManagerEvent event = new ServerManagerEvent(
+				ServerManagerEvent.MANAGER_EVENT_REMOVED, removedServer);
+		manager.fireEvent(event);
 		return removedServer;
 	}
 

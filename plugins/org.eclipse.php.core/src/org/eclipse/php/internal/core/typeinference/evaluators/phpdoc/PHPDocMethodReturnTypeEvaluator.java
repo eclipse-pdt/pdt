@@ -334,7 +334,7 @@ public class PHPDocMethodReturnTypeEvaluator extends
 			if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
 					|| currentNamespace == null) {
 				type = new PHPClassType(typeName);
-			} else if (currentNamespace != null) {
+			} else {
 				type = new PHPClassType(currentNamespace.getElementName(),
 						typeName);
 			}

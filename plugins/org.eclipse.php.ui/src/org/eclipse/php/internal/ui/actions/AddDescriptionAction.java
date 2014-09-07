@@ -473,18 +473,16 @@ public class AddDescriptionAction extends Action implements
 				ISourceReference sourceReference2 = (ISourceReference) object2;
 
 				try {
-					if (sourceReference1 == null
-							|| sourceReference1.getSourceRange() == null) {
-						if (sourceReference2 == null
-								|| sourceReference2.getSourceRange() == null) {
+					if (sourceReference1.getSourceRange() == null) {
+						if (sourceReference2.getSourceRange() == null) {
 							return 0; // both null => equal
-						} else
+						} else {
 							return 1; // only object1 is null => object1 is
-						// bigger
+							// bigger
+						}
 					}
 
-					if (sourceReference2 == null
-							|| sourceReference2.getSourceRange() == null) {
+					if (sourceReference2.getSourceRange() == null) {
 						return -1; // only object2 is null => object2 is bigger
 					}
 

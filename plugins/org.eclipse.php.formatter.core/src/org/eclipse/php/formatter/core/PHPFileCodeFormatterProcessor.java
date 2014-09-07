@@ -74,9 +74,7 @@ public class PHPFileCodeFormatterProcessor implements
 			}
 		} finally {
 			// release from model manager
-			if (structuredModel != null) {
-				structuredModel.releaseFromEdit();
-			}
+			structuredModel.releaseFromEdit();
 		}
 
 	}
