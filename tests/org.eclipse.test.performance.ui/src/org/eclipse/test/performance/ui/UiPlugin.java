@@ -58,7 +58,7 @@ public class UiPlugin extends Plugin {
 
 	public IPreferenceStore getPreferenceStore() {
 		if (this.preferenceStore == null) {
-			this.preferenceStore = new ScopedPreferenceStore(new InstanceScope(), getBundle().getSymbolicName());
+			this.preferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, getBundle().getSymbolicName());
 
 		}
 		return this.preferenceStore;

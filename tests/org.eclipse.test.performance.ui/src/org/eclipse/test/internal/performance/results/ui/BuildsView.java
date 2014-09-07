@@ -293,7 +293,7 @@ public class BuildsView extends PerformancesView {
  * Default constructor.
  */
 public BuildsView() {
-	this.preferences = new InstanceScope().getNode(IPerformancesConstants.PLUGIN_ID);
+	this.preferences = InstanceScope.INSTANCE.getNode(IPerformancesConstants.PLUGIN_ID);
 	this.preferences.addPreferenceChangeListener(this);
 }
 

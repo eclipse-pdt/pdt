@@ -2324,7 +2324,7 @@ public class PHPModelUtils {
 		if (lineSeparator == null) {
 			lineSeparator = Platform.getPreferencesService().getString(
 					Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null,
-					new IScopeContext[] { new InstanceScope() });
+					new IScopeContext[] { InstanceScope.INSTANCE });
 		}
 		if (lineSeparator == null) {
 			lineSeparator = System.getProperty(Platform.PREF_LINE_SEPARATOR);

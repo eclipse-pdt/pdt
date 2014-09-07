@@ -129,10 +129,10 @@ public abstract class OptionsConfigurationBlock {
 
 		if (fProject != null) {
 			fLookupOrder = new IScopeContext[] { new ProjectScope(fProject),
-					new InstanceScope(), new DefaultScope() };
+					InstanceScope.INSTANCE, DefaultScope.INSTANCE };
 		} else {
-			fLookupOrder = new IScopeContext[] { new InstanceScope(),
-					new DefaultScope() };
+			fLookupOrder = new IScopeContext[] { InstanceScope.INSTANCE,
+					DefaultScope.INSTANCE };
 		}
 
 		testIfOptionsComplete(allKeys);
@@ -538,7 +538,7 @@ public abstract class OptionsConfigurationBlock {
 			String newValue);
 
 	protected String[] getTokens(String text, String separator) {
-		StringTokenizer tok = new StringTokenizer(text, separator); 
+		StringTokenizer tok = new StringTokenizer(text, separator);
 		int nTokens = tok.countTokens();
 		String[] res = new String[nTokens];
 		for (int i = 0; i < res.length; i++) {

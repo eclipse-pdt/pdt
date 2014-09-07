@@ -338,7 +338,7 @@ public Object getPropertyValue(Object propKey) {
 		}
 	}
 	if (propKey.equals(P_ID_STATUS_COMMENT)) {
-		IEclipsePreferences preferences = new InstanceScope().getNode(IPerformancesConstants.PLUGIN_ID);
+		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(IPerformancesConstants.PLUGIN_ID);
 		return preferences.get(getId(), "");
 	}
 	return null;
@@ -533,7 +533,7 @@ void resetStatus() {
 
 public void setPropertyValue(Object name, Object value) {
 	if (name.equals(P_ID_STATUS_COMMENT)) {
-		IEclipsePreferences preferences = new InstanceScope().getNode(IPerformancesConstants.PLUGIN_ID);
+		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(IPerformancesConstants.PLUGIN_ID);
 		preferences.put(getId(), (String) value);
 		try {
 			preferences.flush();

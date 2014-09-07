@@ -30,7 +30,7 @@ public class PerformanceResultsPreferenceInitializer extends AbstractPreferenceI
  * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
  */
 public void initializeDefaultPreferences() {
-	IEclipsePreferences defaultPreferences = ((IScopeContext) new DefaultScope()).getNode(PLUGIN_ID);
+	IEclipsePreferences defaultPreferences = DefaultScope.INSTANCE.getNode(PLUGIN_ID);
 
 	// Eclipse version
 	defaultPreferences.putInt(PRE_ECLIPSE_VERSION, IPerformancesConstants.DEFAULT_ECLIPSE_VERSION);

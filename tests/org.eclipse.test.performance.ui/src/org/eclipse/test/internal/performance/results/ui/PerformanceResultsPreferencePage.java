@@ -703,7 +703,7 @@ protected void performDefaults() {
 public boolean performOk() {
 	storeValues();
 	try {
-		IEclipsePreferences preferences = new InstanceScope().getNode(PLUGIN_ID);
+		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(PLUGIN_ID);
 		preferences.flush();
 		BuildsView buildsView = (BuildsView) PerformancesView.getWorkbenchView("org.eclipse.test.internal.performance.results.ui.BuildsView");
 		if (buildsView != null) {

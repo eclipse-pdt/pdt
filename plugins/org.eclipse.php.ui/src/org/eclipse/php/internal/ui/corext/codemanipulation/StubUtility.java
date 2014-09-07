@@ -423,10 +423,9 @@ public class StubUtility {
 				templateName = CodeTemplateContextType.DELEGATECOMMENT_ID;
 			else
 				templateName = CodeTemplateContextType.OVERRIDECOMMENT_ID;
-		} else if (retTypeSig == null
-				&& typeName != null
+		} else if (retTypeSig == null && typeName != null
 				&& (typeName.equals(methodName) || "constructor" //$NON-NLS-1$
-						.equals(methodName))) {
+				.equals(methodName))) {
 			templateName = CodeTemplateContextType.CONSTRUCTORCOMMENT_ID;
 		}
 		Template template = getCodeTemplate(templateName, sp);
@@ -798,7 +797,7 @@ public class StubUtility {
 				return lineDelimiter;
 		}
 		// workspace preference
-		scopeContext = new IScopeContext[] { new InstanceScope() };
+		scopeContext = new IScopeContext[] { InstanceScope.INSTANCE };
 		String platformDefault = System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		return Platform.getPreferencesService().getString(Platform.PI_RUNTIME,
 				Platform.PREF_LINE_SEPARATOR, platformDefault, scopeContext);

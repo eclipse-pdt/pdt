@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -125,7 +125,7 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage
 		if (getProject() != null) {
 			fEnableProjectSettings = new Button(checkLinkComposite, SWT.CHECK);
 			fEnableProjectSettings
-					.setText(PHPUIMessages.AbstractPHPPropertyPreferencePage_0); 
+					.setText(PHPUIMessages.AbstractPHPPropertyPreferencePage_0);
 			fEnableProjectSettings.setLayoutData(new GridData(SWT.BEGINNING,
 					SWT.CENTER, false, false));
 			boolean enabledForProject = createPreferenceScopes()[0].getNode(
@@ -215,9 +215,10 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage
 		IProject project = getProject();
 		if (project != null) {
 			return new IScopeContext[] { new ProjectScope(project),
-					new InstanceScope(), new DefaultScope() };
+					InstanceScope.INSTANCE, DefaultScope.INSTANCE };
 		}
-		return new IScopeContext[] { new InstanceScope(), new DefaultScope() };
+		return new IScopeContext[] { InstanceScope.INSTANCE,
+				DefaultScope.INSTANCE };
 	}
 
 	protected abstract String getPreferenceNodeQualifier();
@@ -255,7 +256,7 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage
 				return area;
 			}
 		};
-		dialog.setMessage(PHPUIMessages.AbstractPHPPropertyPreferencePage_3); 
+		dialog.setMessage(PHPUIMessages.AbstractPHPPropertyPreferencePage_3);
 		dialog.setContentProvider(new IStructuredContentProvider() {
 			public void dispose() {
 			}
@@ -273,7 +274,7 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage
 						.getWorkbench().getDecoratorManager()
 						.getLabelDecorator()));
 		dialog.setInput(ResourcesPlugin.getWorkspace());
-		dialog.setTitle(PHPUIMessages.AbstractPHPPropertyPreferencePage_4); 
+		dialog.setTitle(PHPUIMessages.AbstractPHPPropertyPreferencePage_4);
 		if (dialog.open() == Window.OK) {
 			Object[] result = dialog.getResult();
 			if (result.length > 0) {

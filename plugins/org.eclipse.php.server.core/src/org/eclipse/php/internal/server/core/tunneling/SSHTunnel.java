@@ -122,8 +122,9 @@ public class SSHTunnel {
 						int.class };
 				try {
 					// session.setPortForwardingR(rport, host, lport)
-					Object[] values = new Object[] { Integer.valueOf(remotePort),
-							localHost, Integer.valueOf(localPort) };
+					Object[] values = new Object[] {
+							Integer.valueOf(remotePort), localHost,
+							Integer.valueOf(localPort) };
 					java.lang.reflect.Method mSetPortForwarding = sessionClass
 							.getMethod("setPortForwardingR", //$NON-NLS-1$
 									parameterTypes);
@@ -135,9 +136,8 @@ public class SSHTunnel {
 					// if this is the case, ignore it. If not, log it.
 					if (e.getCause() != null
 							&& e.getCause().getMessage() != null
-							&& e.getCause().getMessage().toLowerCase().indexOf(
-									Messages.SSHTunnel_2) == -1) 
-					{
+							&& e.getCause().getMessage().toLowerCase()
+									.indexOf(Messages.SSHTunnel_2) == -1) {
 						ex = e;
 					}
 				} catch (Exception e) {
@@ -145,27 +145,20 @@ public class SSHTunnel {
 				}
 				if (ex != null) {
 					if (isConnected()) {
-						status = new Status(
-								IStatus.WARNING,
-								Activator.PLUGIN_ID,
-								CONNECTION_WARNING_CODE,
-								Messages.SSHTunnel_3, ex); 
+						status = new Status(IStatus.WARNING,
+								Activator.PLUGIN_ID, CONNECTION_WARNING_CODE,
+								Messages.SSHTunnel_3, ex);
 					} else {
-						status = new Status(
-								IStatus.ERROR,
-								Activator.PLUGIN_ID,
-								CONNECTION_ERROR_CODE,
-								Messages.SSHTunnel_4, ex); 
+						status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+								CONNECTION_ERROR_CODE, Messages.SSHTunnel_4, ex);
 					}
 				}
 			} catch (JSchException ee) {
 				retry--;
 				if (retry < 0) {
-					status = new Status(
-							IStatus.ERROR,
-							Activator.PLUGIN_ID,
-							CONNECTION_ERROR_CODE,
-							Messages.SSHTunnel_5 + remoteHost, ee); 
+					status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+							CONNECTION_ERROR_CODE, Messages.SSHTunnel_5
+									+ remoteHost, ee);
 					break;
 				}
 				if (session != null && session.isConnected()) {
@@ -183,7 +176,7 @@ public class SSHTunnel {
 			// Change the Status to INFO and deliver the accurate password to
 			// the caller.
 			status = new Status(IStatus.INFO, Activator.PLUGIN_ID,
-					CONNECTION_PASSWORD_CHANGED_CODE, newPassword, null); 
+					CONNECTION_PASSWORD_CHANGED_CODE, newPassword, null);
 		}
 
 		return status;

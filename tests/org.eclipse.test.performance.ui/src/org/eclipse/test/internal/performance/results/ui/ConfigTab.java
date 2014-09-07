@@ -102,7 +102,7 @@ public ConfigTab(String name, String box) {
     this.configName = name;
     int idx = box.indexOf(" (");
 	this.configBox = idx > 0 ? box.substring(0, idx) : box;
-	this.preferences = new InstanceScope().getNode(IPerformancesConstants.PLUGIN_ID);
+	this.preferences = InstanceScope.INSTANCE.getNode(IPerformancesConstants.PLUGIN_ID);
 }
 
 /**

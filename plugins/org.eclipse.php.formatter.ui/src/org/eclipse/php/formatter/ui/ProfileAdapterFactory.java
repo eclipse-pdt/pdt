@@ -27,7 +27,7 @@ public class ProfileAdapterFactory implements IAdapterFactory {
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (adaptableObject instanceof IScopeContext) {
 			IScopeContext currContext = (IScopeContext) adaptableObject;
-			InstanceScope instanceScope = new InstanceScope();
+			IScopeContext instanceScope = InstanceScope.INSTANCE;
 			List<Profile> profiles = null;
 			try {
 				profiles = ProfileStore.readProfiles(instanceScope);
@@ -37,7 +37,7 @@ public class ProfileAdapterFactory implements IAdapterFactory {
 			if (profiles == null) {
 				try {
 					profiles = ProfileStore
-							.readProfilesFromPreferences(new DefaultScope());
+							.readProfilesFromPreferences(DefaultScope.INSTANCE);
 				} catch (CoreException e) {
 					Logger.logException(e);
 				}

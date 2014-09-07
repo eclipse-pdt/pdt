@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -200,8 +200,8 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 						.getExecutable().getAbsolutePath().toString() : null;
 
 				if (phpExeName == null) {
-					MessageDialog.openError(PHPDebugUIPlugin
-							.getActiveWorkbenchShell(),
+					MessageDialog.openError(
+							PHPDebugUIPlugin.getActiveWorkbenchShell(),
 							PHPDebugUIMessages.launch_noexe_msg_title,
 							PHPDebugUIMessages.launch_noexe_msg_text);
 					PreferencesUtil
@@ -228,13 +228,11 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 				final IStatus stat = ce.getStatus();
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						ErrorDialog
-								.openError(
-										PHPDebugUIPlugin
-												.getActiveWorkbenchShell(),
-										PHPDebugUIMessages.launch_failure_msg_title,
-										PHPDebugUIMessages.launch_failure_exec_msg_text,
-										stat);
+						ErrorDialog.openError(
+								PHPDebugUIPlugin.getActiveWorkbenchShell(),
+								PHPDebugUIMessages.launch_failure_msg_title,
+								PHPDebugUIMessages.launch_failure_exec_msg_text,
+								stat);
 					}
 				});
 			}
@@ -257,9 +255,10 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	private static IScopeContext[] createPreferenceScopes(IProject project) {
 		if (project != null) {
 			return new IScopeContext[] { new ProjectScope(project),
-					new InstanceScope(), new DefaultScope() };
+					InstanceScope.INSTANCE, DefaultScope.INSTANCE };
 		}
-		return new IScopeContext[] { new InstanceScope(), new DefaultScope() };
+		return new IScopeContext[] { InstanceScope.INSTANCE,
+				DefaultScope.INSTANCE };
 	}
 
 	/**
@@ -323,8 +322,8 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 				getNewConfigurationName(phpPathString));
 
 		// Set the delegate class according to selected executable.
-		wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, defaultEXE
-				.getDebuggerID());
+		wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
+				defaultEXE.getDebuggerID());
 		AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
 				.getDebuggerConfiguration(defaultEXE.getDebuggerID());
 		wc.setAttribute(
@@ -338,8 +337,8 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 		String iniPath = defaultEXE.getINILocation() != null ? defaultEXE
 				.getINILocation().toString() : null;
 		wc.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, iniPath);
-		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin
-				.getDebugInfoOption());
+		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO,
+				PHPDebugPlugin.getDebugInfoOption());
 		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 				PHPProjectPreferences.getStopAtFirstLine(phpProject));
 		if (res != null) {
@@ -361,7 +360,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	 *         fails for some reason.
 	 */
 	protected static String getNewConfigurationName(String fileName) {
-		String configurationName = PHPDebugUIMessages.PHPExeLaunchShortcut_0; 
+		String configurationName = PHPDebugUIMessages.PHPExeLaunchShortcut_0;
 		try {
 			IPath path = Path.fromOSString(fileName);
 

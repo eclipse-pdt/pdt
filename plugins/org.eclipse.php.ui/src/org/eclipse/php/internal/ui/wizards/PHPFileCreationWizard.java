@@ -49,7 +49,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 	 */
 	public PHPFileCreationWizard() {
 		super();
-		setWindowTitle(PHPUIMessages.PHPFileCreationWizard_5); 
+		setWindowTitle(PHPUIMessages.PHPFileCreationWizard_5);
 		setNeedsProgressMonitor(true);
 	}
 
@@ -105,7 +105,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 			Throwable realException = e.getTargetException();
 			MessageDialog.openError(getShell(),
 					PHPUIMessages.PHPFileCreationWizard_0,
-					realException.getMessage()); 
+					realException.getMessage());
 			return false;
 		}
 		return true;
@@ -182,7 +182,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 			IResource resource = root.findMember(new Path(containerName));
 			if (!resource.exists() || !(resource instanceof IContainer)) {
 				throwCoreException(PHPUIMessages.PHPFileCreationWizard_1
-						+ containerName + PHPUIMessages.PHPFileCreationWizard_2); 
+						+ containerName + PHPUIMessages.PHPFileCreationWizard_2);
 			}
 			IContainer container = (IContainer) resource;
 			final IFile file = container.getFile(new Path(fileName));
@@ -197,7 +197,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 			if (lineSeparator == null)
 				lineSeparator = Platform.getPreferencesService().getString(
 						Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR,
-						null, new IScopeContext[] { new InstanceScope() });
+						null, new IScopeContext[] { InstanceScope.INSTANCE });
 			if (lineSeparator == null)
 				lineSeparator = System
 						.getProperty(Platform.PREF_LINE_SEPARATOR);
@@ -289,7 +289,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 				throws CoreException {
 			IStatus status = new Status(IStatus.ERROR,
 					PHPUIMessages.PHPFileCreationWizard_4, IStatus.OK, message,
-					null); 
+					null);
 			throw new CoreException(status);
 		}
 

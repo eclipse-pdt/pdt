@@ -405,7 +405,7 @@ public class CodeFormatterConfigurationBlock extends
 			IProject project, IWorkbenchPreferenceContainer container) {
 		super(context, project, new Key[] { PROFILE_KEY }, container);
 
-		fInstanceScope = new InstanceScope();
+		fInstanceScope = InstanceScope.INSTANCE;
 		List<Profile> profiles = null;
 		try {
 			profiles = ProfileStore.readProfiles(fInstanceScope);
@@ -415,7 +415,7 @@ public class CodeFormatterConfigurationBlock extends
 		if (profiles == null) {
 			try {
 				profiles = ProfileStore
-						.readProfilesFromPreferences(new DefaultScope());
+						.readProfilesFromPreferences(DefaultScope.INSTANCE);
 			} catch (CoreException e) {
 				Logger.logException(e);
 			}
@@ -597,7 +597,8 @@ public class CodeFormatterConfigurationBlock extends
 		Key tabSizeKey = PHPFormatterConfigurationBlock.PREF_FORMATTER_TAB_SIZE;
 		Key useTabKey = PHPFormatterConfigurationBlock.PREF_FORMATTER_USE_TABS;
 
-		setValue(indentKey, Integer.valueOf(preferences.indentationSize).toString());
+		setValue(indentKey, Integer.valueOf(preferences.indentationSize)
+				.toString());
 		setValue(tabSizeKey, Integer.valueOf(preferences.tabSize).toString());
 
 		if (preferences.indentationChar == CodeFormatterPreferences.TAB_CHAR) {

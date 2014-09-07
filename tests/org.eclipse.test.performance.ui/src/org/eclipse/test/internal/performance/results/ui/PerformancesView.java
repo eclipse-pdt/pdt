@@ -170,7 +170,7 @@ static IViewPart getWorkbenchView(String viewId) {
  * The constructor.
  */
 public PerformancesView() {
-	this.preferences = new InstanceScope().getNode(IPerformancesConstants.PLUGIN_ID);
+	this.preferences = InstanceScope.INSTANCE.getNode(IPerformancesConstants.PLUGIN_ID);
 	int eclipseVersion = this.preferences.getInt(IPerformancesConstants.PRE_ECLIPSE_VERSION, IPerformancesConstants.DEFAULT_ECLIPSE_VERSION);
 	String databaseLocation = this.preferences.get(IPerformancesConstants.PRE_DATABASE_LOCATION, IPerformancesConstants.NETWORK_DATABASE_LOCATION);
 	boolean connected = this.preferences.getBoolean(IPerformancesConstants.PRE_DATABASE_CONNECTION, IPerformancesConstants.DEFAULT_DATABASE_CONNECTION);

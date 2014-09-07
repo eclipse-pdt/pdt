@@ -31,7 +31,7 @@ public class PHPDebugCorePreferenceInitializer extends
 		AbstractPreferenceInitializer {
 
 	public void initializeDefaultPreferences() {
-		IEclipsePreferences node = new DefaultScope().getNode(PHPDebugPlugin
+		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(PHPDebugPlugin
 				.getDefault().getBundle().getSymbolicName());
 
 		// formatting preferences

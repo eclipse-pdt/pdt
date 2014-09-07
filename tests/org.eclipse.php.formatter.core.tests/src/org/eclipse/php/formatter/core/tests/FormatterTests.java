@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Zend Techologies Ltd.
+ * Copyright (c) 2013, 2014 Zend Techologies Ltd.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -101,7 +101,7 @@ public class FormatterTests extends AbstractPDTTTest {
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
 
-		IScopeContext scopeContext = new InstanceScope();
+		IScopeContext scopeContext = InstanceScope.INSTANCE;
 		ProfileManager profileManager = new ProfileManager(
 				new ArrayList<Profile>(), scopeContext);
 		profileManager.clearAllSettings(scopeContext);
@@ -246,7 +246,7 @@ public class FormatterTests extends AbstractPDTTTest {
 			setUpSuite();
 
 			if (xmlFile != null) {
-				scopeContext = new InstanceScope();
+				scopeContext = InstanceScope.INSTANCE;
 				profileManager = new ProfileManager(new ArrayList<Profile>(),
 						scopeContext);
 

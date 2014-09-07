@@ -324,9 +324,10 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	private static IScopeContext[] createPreferenceScopes(IProject project) {
 		if (project != null) {
 			return new IScopeContext[] { new ProjectScope(project),
-					new InstanceScope(), new DefaultScope() };
+					InstanceScope.INSTANCE, DefaultScope.INSTANCE };
 		}
-		return new IScopeContext[] { new InstanceScope(), new DefaultScope() };
+		return new IScopeContext[] { InstanceScope.INSTANCE,
+				DefaultScope.INSTANCE };
 	}
 
 	/**

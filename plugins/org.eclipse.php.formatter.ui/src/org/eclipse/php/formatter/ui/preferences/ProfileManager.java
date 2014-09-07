@@ -320,12 +320,12 @@ public class ProfileManager extends Observable implements IProfileManager {
 
 		Collections.sort(fProfilesByName);
 
-		IScopeContext instanceScope = new InstanceScope();
+		IScopeContext instanceScope = InstanceScope.INSTANCE;
 		String profileId = instanceScope.getNode(FormatterCorePlugin.PLUGIN_ID)
 				.get(PROFILE_KEY, null);
 		if (profileId == null) {
 			// request from bug 129427
-			profileId = new DefaultScope().getNode(
+			profileId = DefaultScope.INSTANCE.getNode(
 					FormatterCorePlugin.PLUGIN_ID).get(PROFILE_KEY, null);
 			// fix for bug 89739
 			if (DEFAULT_PROFILE.equals(profileId)) { // default default:
@@ -794,7 +794,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 			}
 		}
 
-		IScopeContext instanceScope = new InstanceScope();
+		IScopeContext instanceScope = InstanceScope.INSTANCE;
 		final IEclipsePreferences uiPrefs = instanceScope
 				.getNode(FormatterCorePlugin.PLUGIN_ID);
 		if (newProfile != null
