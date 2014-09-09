@@ -18,13 +18,21 @@ public class PHPDocClassVariableGoal extends AbstractTypeGoal {
 
 	private String variableName;
 
-	public PHPDocClassVariableGoal(TypeContext context, String variableName) {
+	private int offset;
+
+	public PHPDocClassVariableGoal(TypeContext context, String variableName,
+			int offset) {
 		super(context);
 		this.variableName = variableName;
+		this.offset = offset;
 	}
 
 	public String getVariableName() {
 		return variableName;
+	}
+
+	public int getOffset() {
+		return offset;
 	}
 
 	public int hashCode() {

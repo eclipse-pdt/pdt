@@ -65,10 +65,13 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 		}
 
 		String variableName;
+		int offset = 0;
 		if (field instanceof VariableReference) { // static access
 			variableName = ((VariableReference) field).getName();
+			offset = ((VariableReference) field).sourceStart();
 		} else if (field instanceof SimpleReference) { // object access
 			variableName = '$' + ((SimpleReference) field).getName();
+			offset = ((SimpleReference) field).sourceStart();
 		} else {
 			return null;
 		}
@@ -105,7 +108,7 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 						.getCache());
 			}
 			return new IGoal[] { new PHPDocClassVariableGoal(typeContext,
-					variableName) };
+					variableName, offset) };
 		}
 
 		if (state == STATE_WAITING_FIELD_PHPDOC) {
