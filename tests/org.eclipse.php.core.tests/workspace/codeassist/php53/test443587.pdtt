@@ -1,0 +1,29 @@
+--TEST--
+Should complete class method using PHPDoc @var hinting
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=true
+--FILE--
+<?php
+
+namespace myspace;
+
+class Child {
+	public function run() {
+	}
+}
+class Parents {
+	/**
+	 *
+	 * @var Child[]
+	 */
+	public $children;
+}
+class School {
+	public function lesson(Parents $parents) {
+		foreach ( $parents->children as $child ) {
+			$child->|
+		}
+	}
+}
+--EXPECT--
+method(run)

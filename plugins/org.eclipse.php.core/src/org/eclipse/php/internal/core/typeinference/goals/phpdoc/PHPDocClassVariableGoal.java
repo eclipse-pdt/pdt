@@ -18,13 +18,34 @@ public class PHPDocClassVariableGoal extends AbstractTypeGoal {
 
 	private String variableName;
 
+	private int offset;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @deprecated This constructor will be removed in Mars release
+	 * 
+	 * @param context
+	 * @param variableName
+	 * 
+	 */
 	public PHPDocClassVariableGoal(TypeContext context, String variableName) {
+		this(context, variableName, 0);
+	}
+
+	public PHPDocClassVariableGoal(TypeContext context, String variableName,
+			int offset) {
 		super(context);
 		this.variableName = variableName;
+		this.offset = offset;
 	}
 
 	public String getVariableName() {
 		return variableName;
+	}
+
+	public int getOffset() {
+		return offset;
 	}
 
 	public int hashCode() {

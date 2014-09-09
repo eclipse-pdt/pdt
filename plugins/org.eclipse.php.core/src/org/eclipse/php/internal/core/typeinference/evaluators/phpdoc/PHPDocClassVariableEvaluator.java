@@ -55,10 +55,11 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		PHPDocClassVariableGoal typedGoal = (PHPDocClassVariableGoal) goal;
 		TypeContext context = (TypeContext) typedGoal.getContext();
 		String variableName = typedGoal.getVariableName();
+		int offset = typedGoal.getOffset();
 
 		IModelAccessCache cache = context.getCache();
 		IType[] types = PHPTypeInferenceUtils.getModelElements(
-				context.getInstanceType(), context, cache);
+				context.getInstanceType(), context, offset, cache);
 		Map<PHPDocBlock, IField> docs = new HashMap<PHPDocBlock, IField>();
 
 		if (types != null) {
@@ -108,7 +109,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 									currentNamespace, doc.sourceStart()));
 						} else if (typeName.endsWith(BRACKETS)
 								&& typeName.length() > 2) {
-							int offset = 0;
+							offset = 0;
 							try {
 								offset = typeField.getSourceRange().getOffset();
 							} catch (ModelException e) {
