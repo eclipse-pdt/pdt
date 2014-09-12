@@ -43,6 +43,12 @@ public abstract class AbstractMethodReturnTypeEvaluator extends
 
 	protected MethodsAndTypes getMethodsAndTypes() {
 		AbstractMethodReturnTypeGoal typedGoal = (AbstractMethodReturnTypeGoal) goal;
+		MethodsAndTypes mat = new MethodsAndTypes();
+		if (goal.getContext() == null) {
+			mat.methods = new IMethod[0];
+			mat.types = new IType[0];
+			return mat;
+		}
 		ISourceModule sourceModule = ((ISourceModuleContext) goal.getContext())
 				.getSourceModule();
 		IType[] types = typedGoal.getTypes();
@@ -89,10 +95,8 @@ public abstract class AbstractMethodReturnTypeEvaluator extends
 				Logger.logException(e);
 			}
 		}
-		MethodsAndTypes mat = new MethodsAndTypes();
-		mat.methods = (IMethod[]) methods.toArray(new IMethod[methods.size()]);
-		mat.types = (IType[]) methodTypes
-				.toArray(new IType[methodTypes.size()]);
+		mat.methods = methods.toArray(new IMethod[methods.size()]);
+		mat.types = methodTypes.toArray(new IType[methodTypes.size()]);
 
 		return mat;
 	}

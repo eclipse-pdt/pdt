@@ -181,6 +181,9 @@ public class PHPTypeInferenceUtils {
 	private static IType[] internalGetModelElements(
 			IEvaluatedType evaluatedType, ISourceModuleContext context,
 			int offset, IModelAccessCache cache) {
+		if (context == null) {
+			return new IType[0];
+		}
 		ISourceModule sourceModule = context.getSourceModule();
 
 		if (evaluatedType instanceof ModelClassType) {
