@@ -33,6 +33,7 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
+import org.eclipse.php.internal.core.typeinference.context.FileContext;
 
 public class ASTUtils {
 
@@ -323,9 +324,14 @@ public class ASTUtils {
 						context = contextStack.peek();
 					}
 				}
+				if (node.sourceEnd() < offset || node.sourceStart() > offset) {
+					// node is before or after our search
+					return false;
+				}
 				// search inside - we are looking for minimal node
 				return true;
 			}
+
 		};
 
 		try {
@@ -333,7 +339,14 @@ public class ASTUtils {
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
-
+		if (visitor.getContext() == null) {
+			/*
+			 * offset can be bigger than unit.end when sourceunit have syntax
+			 * error on end
+			 */
+			Logger.log(Logger.WARNING_DEBUG, "Context is null"); //$NON-NLS-1$
+			return new FileContext(sourceModule, unit, offset);
+		}
 		return visitor.getContext();
 	}
 
