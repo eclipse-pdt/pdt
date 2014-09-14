@@ -1,0 +1,17 @@
+--TEST--
+Test Commented Variable With Class Type Methods
+--FILE--
+<?php 
+	class Foobar {
+		public function nonsenseA(){} 
+	}
+	class Boobar {
+		public function nonsenseB(){} 
+	} 
+	/* @var $obj Foobar[]|Boobar[] */ 
+	$obj = null; 
+	$obj[0]->|
+ ?>
+--EXPECT--
+method(nonsenseA)
+method(nonsenseB)
