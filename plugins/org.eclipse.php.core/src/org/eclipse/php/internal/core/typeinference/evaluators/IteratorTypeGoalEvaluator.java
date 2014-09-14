@@ -97,6 +97,12 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 										new IType[] { type }, "current")); //$NON-NLS-1$
 							}
 						}
+						if (subGoals.size() == 0) {
+							MultiTypeType mType = new MultiTypeType();
+							mType.addType((IEvaluatedType) result);
+							this.result = mType;
+							return IGoal.NO_GOALS;
+						}
 						return subGoals.toArray(new IGoal[subGoals.size()]);
 					} catch (ModelException e) {
 						if (DLTKCore.DEBUG) {
