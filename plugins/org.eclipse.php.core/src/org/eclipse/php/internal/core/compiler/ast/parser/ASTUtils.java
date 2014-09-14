@@ -62,21 +62,27 @@ public class ASTUtils {
 			int typeStart = varEnd + m.group(3).length();
 			String types = m.group(4);
 
-			int pipeIdx = types.indexOf('|');
+			int pipeIdx = types.indexOf('|'); //$NON-NLS-1$
 			while (pipeIdx >= 0) {
 				String typeName = types.substring(0, pipeIdx);
 				int typeEnd = typeStart + typeName.length();
 				if (typeName.length() > 0) {
+					if (typeName.endsWith("[]")) {
+						typeName = typeName.substring(0, typeName.length() - 2); //$NON-NLS-1$
+					}
 					typeReferences.add(new TypeReference(typeStart, typeEnd,
 							typeName));
 				}
 				types = types.substring(pipeIdx + 1);
 				typeStart += pipeIdx + 1;
-				pipeIdx = types.indexOf('|');
+				pipeIdx = types.indexOf('|'); //$NON-NLS-1$
 			}
 			String typeName = types;
 			int typeEnd = typeStart + typeName.length();
 			if (typeName.length() > 0) {
+				if (typeName.endsWith("[]")) {
+					typeName = typeName.substring(0, typeName.length() - 2); //$NON-NLS-1$
+				}
 				typeReferences.add(new TypeReference(typeStart, typeEnd,
 						typeName));
 			}
