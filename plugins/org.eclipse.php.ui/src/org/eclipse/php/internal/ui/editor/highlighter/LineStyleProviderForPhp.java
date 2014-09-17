@@ -496,6 +496,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 		int nRegions = regions.size();
 		StyleRange styleRange = null;
 		TextAttribute previousAttr = null;
+		int previousEndOffset = -1;
 		for (int i = 0; i < nRegions; i++) {
 			region = regions.get(i);
 			TextAttribute attr = null;
@@ -534,8 +535,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 						if ((styleRange != null)
 								&& (previousAttr != null)
 								&& (previousAttr.equals(attr))
-								&& styleRange.start + styleRange.length == region
-										.getStart()) {
+								&& previousEndOffset + 1 == blockedRegion
+										.getStartOffset(region)) {
 							styleRange.length += region.getLength();
 						} else {
 							styleRange = createStyleRange(blockedRegion,
@@ -548,6 +549,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 							// it hasn't changed
 							previousAttr = attr;
 						}
+						previousEndOffset = blockedRegion.getEndOffset(region);
 					} else {
 						previousAttr = null;
 					}
@@ -570,6 +572,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 			ITextRegionList regions = structuredDocumentRegion.getRegions();
 			int nRegions = regions.size();
 			StyleRange styleRange = null;
+			int previousEndOffset = -1;
 			for (int i = 0; i < nRegions; i++) {
 				region = regions.get(i);
 				TextAttribute attr = null;
@@ -611,7 +614,9 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 									&& (previousAttr != null)
 									&& (previousAttr.equals(attr))
 									&& styleRange.start + styleRange.length == region
-											.getStart()) {
+											.getStart()
+									&& previousEndOffset + 1 == structuredDocumentRegion
+											.getStartOffset(region)) {
 								styleRange.length += region.getLength();
 							} else {
 								styleRange = createStyleRange(
@@ -624,6 +629,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 								// when it hasn't changed
 								previousAttr = attr;
 							}
+							previousEndOffset = structuredDocumentRegion
+									.getEndOffset(region);
 						} else {
 							previousAttr = null;
 						}
