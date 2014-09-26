@@ -1,0 +1,107 @@
+--TEST--
+Test unpack argument
+--FILE--
+<?php test(...[2, 3], ...array(4, 5), ...$tmp->array(), ...TMP::toArray(), ...new ClassName()) ?>
+--EXPECT--
+<Program start='0' length='97'>
+	<Statements>
+		<ExpressionStatement start='6' length='91'>
+			<FunctionInvocation start='6' length='88'>
+				<FunctionName start='6' length='4'>
+					<NamespaceName start='6' length='4' global='false' current='false'>
+						<Identifier start='6' length='4' name='test'/>
+					</NamespaceName>
+				</FunctionName>
+				<Parameters>
+					<PrefixExpression start='11' length='9' operator='...'>
+						<ArrayCreation start='14' length='6'>
+							<ArrayElement start='15' length='1'>
+								<Key>
+								</Key>
+								<Value>
+									<Scalar start='15' length='1' type='int' value='2'/>
+								</Value>
+							</ArrayElement>
+							<ArrayElement start='18' length='1'>
+								<Key>
+								</Key>
+								<Value>
+									<Scalar start='18' length='1' type='int' value='3'/>
+								</Value>
+							</ArrayElement>
+						</ArrayCreation>
+					</PrefixExpression>
+					<PrefixExpression start='22' length='14' operator='...'>
+						<ArrayCreation start='25' length='11'>
+							<ArrayElement start='31' length='1'>
+								<Key>
+								</Key>
+								<Value>
+									<Scalar start='31' length='1' type='int' value='4'/>
+								</Value>
+							</ArrayElement>
+							<ArrayElement start='34' length='1'>
+								<Key>
+								</Key>
+								<Value>
+									<Scalar start='34' length='1' type='int' value='5'/>
+								</Value>
+							</ArrayElement>
+						</ArrayCreation>
+					</PrefixExpression>
+					<PrefixExpression start='38' length='16' operator='...'>
+						<MethodInvocation start='41' length='13'>
+							<Dispatcher>
+								<Variable start='41' length='4' isDollared='true'>
+									<Identifier start='42' length='3' name='tmp'/>
+								</Variable>
+							</Dispatcher>
+							<Property>
+								<FunctionInvocation start='47' length='7'>
+									<FunctionName start='47' length='5'>
+										<Variable start='47' length='5' isDollared='false'>
+											<Identifier start='47' length='5' name='array'/>
+										</Variable>
+									</FunctionName>
+									<Parameters>
+									</Parameters>
+								</FunctionInvocation>
+							</Property>
+						</MethodInvocation>
+					</PrefixExpression>
+					<PrefixExpression start='56' length='17' operator='...'>
+						<StaticMethodInvocation start='59' length='14'>
+							<ClassName>
+								<NamespaceName start='59' length='3' global='false' current='false'>
+									<Identifier start='59' length='3' name='TMP'/>
+								</NamespaceName>
+							</ClassName>
+							<FunctionInvocation start='64' length='9'>
+								<FunctionName start='64' length='7'>
+									<Variable start='64' length='7' isDollared='false'>
+										<Identifier start='64' length='7' name='toArray'/>
+									</Variable>
+								</FunctionName>
+								<Parameters>
+								</Parameters>
+							</FunctionInvocation>
+						</StaticMethodInvocation>
+					</PrefixExpression>
+					<PrefixExpression start='75' length='18' operator='...'>
+						<ClassInstanceCreation start='78' length='15'>
+							<ClassName start='82' length='9'>
+								<NamespaceName start='82' length='9' global='false' current='false'>
+									<Identifier start='82' length='9' name='ClassName'/>
+								</NamespaceName>
+							</ClassName>
+							<ConstructorParameters>
+							</ConstructorParameters>
+						</ClassInstanceCreation>
+					</PrefixExpression>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

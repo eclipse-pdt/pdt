@@ -1,0 +1,45 @@
+--TEST--
+Test constant scalar expressions Operation
+--FILE--
+<?php const A = 'A' . 'B'; const B = ('A' . 'B') . 'C'; const C = 'A' . ('B' . 'C') ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="87">
+	<ConstantDeclaration start="6" end="25" modifiers="">
+		<ConstantReference start="12" end="13" name="A">
+		</ConstantReference>
+		<InfixExpression start="16" end="25" operator=".">
+			<Scalar start="16" end="19" type="string" value="&apos;A&apos;">
+			</Scalar>
+			<Scalar start="22" end="25" type="string" value="&apos;B&apos;">
+			</Scalar>
+		</InfixExpression>
+	</ConstantDeclaration>
+	<ConstantDeclaration start="27" end="54" modifiers="">
+		<ConstantReference start="33" end="34" name="B">
+		</ConstantReference>
+		<InfixExpression start="37" end="54" operator=".">
+			<InfixExpression start="38" end="47" operator=".">
+				<Scalar start="38" end="41" type="string" value="&apos;A&apos;">
+				</Scalar>
+				<Scalar start="44" end="47" type="string" value="&apos;B&apos;">
+				</Scalar>
+			</InfixExpression>
+			<Scalar start="51" end="54" type="string" value="&apos;C&apos;">
+			</Scalar>
+		</InfixExpression>
+	</ConstantDeclaration>
+	<ConstantDeclaration start="56" end="83" modifiers="">
+		<ConstantReference start="62" end="63" name="C">
+		</ConstantReference>
+		<InfixExpression start="66" end="83" operator=".">
+			<Scalar start="66" end="69" type="string" value="&apos;A&apos;">
+			</Scalar>
+			<InfixExpression start="73" end="82" operator=".">
+				<Scalar start="73" end="76" type="string" value="&apos;B&apos;">
+				</Scalar>
+				<Scalar start="79" end="82" type="string" value="&apos;C&apos;">
+				</Scalar>
+			</InfixExpression>
+		</InfixExpression>
+	</ConstantDeclaration>
+</ModuleDeclaration>

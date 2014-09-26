@@ -221,6 +221,17 @@ public class ASTParser {
 				ASTParser.EMPTY_STRING_READER);
 	}
 
+	// php 5.6 analysis
+	private static org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer createEmptyLexer_56() {
+		return new org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer(
+				ASTParser.EMPTY_STRING_READER);
+	}
+
+	private static org.eclipse.php.internal.core.ast.scanner.php56.PhpAstParser createEmptyParser_56() {
+		return new org.eclipse.php.internal.core.ast.scanner.php56.PhpAstParser(
+				createEmptyLexer_56());
+	}
+
 	// php 5.5 analysis
 	private static org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer createEmptyLexer_55() {
 		return new org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer(
@@ -434,6 +445,12 @@ public class ASTParser {
 			lexer55.setUseShortTags(useShortTags);
 			lexer55.setAST(ast);
 			return lexer55;
+		} else if (PHPVersion.PHP5_6 == phpVersion) {
+			final org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer lexer56 = getLexer56(reader);
+			lexer56.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer56.setUseShortTags(useShortTags);
+			lexer56.setAST(ast);
+			return lexer56;
 		} else {
 			throw new IllegalArgumentException(
 					CoreMessages.getString("ASTParser_1") + phpVersion); //$NON-NLS-1$
@@ -462,11 +479,28 @@ public class ASTParser {
 			org.eclipse.php.internal.core.ast.scanner.php55.PhpAstParser parser = createEmptyParser_55();
 			parser.setAST(ast);
 			return parser;
+		} else if (PHPVersion.PHP5_6 == phpVersion) {
+			org.eclipse.php.internal.core.ast.scanner.php56.PhpAstParser parser = createEmptyParser_56();
+			parser.setAST(ast);
+			return parser;
 		} else {
 			throw new IllegalArgumentException(
 					CoreMessages.getString("ASTParser_1") + phpVersion); //$NON-NLS-1$
 		}
 
+	}
+
+	/**
+	 * @param reader
+	 * @return the singleton
+	 *         {@link org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer}
+	 */
+	private static org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer getLexer56(
+			Reader reader) throws IOException {
+		final org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer phpAstLexer56 = createEmptyLexer_56();
+		phpAstLexer56.yyreset(reader);
+		phpAstLexer56.resetCommentList();
+		return phpAstLexer56;
 	}
 
 	/**

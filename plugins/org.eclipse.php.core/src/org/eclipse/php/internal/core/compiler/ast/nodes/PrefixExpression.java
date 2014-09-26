@@ -27,11 +27,14 @@ public class PrefixExpression extends Expression {
 	public static final int OP_INC = 0;
 	// '--'
 	public static final int OP_DEC = 1;
+	// '...'
+	public static final int OP_UNPACK = 2;
 
 	private final Expression variable;
 	private final int operator;
 
-	public PrefixExpression(int start, int end, Expression variable, int operator) {
+	public PrefixExpression(int start, int end, Expression variable,
+			int operator) {
 		super(start, end);
 
 		assert variable != null;
@@ -54,6 +57,8 @@ public class PrefixExpression extends Expression {
 				return "--"; //$NON-NLS-1$
 			case OP_INC:
 				return "++"; //$NON-NLS-1$
+			case OP_UNPACK:
+				return "..."; //$NON-NLS-1$
 			default:
 				throw new IllegalArgumentException();
 		}

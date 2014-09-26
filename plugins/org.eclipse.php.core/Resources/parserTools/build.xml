@@ -38,6 +38,11 @@
 		<ant dir="${antfile.dir}/parser/php55/" antfile="generateAstParser.xml" />
 		<ant dir="${antfile.dir}/parser/php55/" antfile="generateAstScanner.xml" />
 		<ant dir="${antfile.dir}/parser/php55/" antfile="generateCompilerAstParser.xml" />
+		
+		<!-- PHP 5.6 AST -->
+		<ant dir="${antfile.dir}/parser/php56/" antfile="generateAstParser.xml" />
+		<ant dir="${antfile.dir}/parser/php56/" antfile="generateAstScanner.xml" />
+		<ant dir="${antfile.dir}/parser/php56/" antfile="generateCompilerAstParser.xml" />
 
 		<!-- PHPDoc Lexer -->
 		<ant dir="${antfile.dir}/parser/phpdoc/" antfile="generatePHPDocScanner.xml" />
@@ -48,6 +53,7 @@
 		<ant dir="${antfile.dir}/highlighting/php53" antfile="generateHighlightingScanner.xml" />
 		<ant dir="${antfile.dir}/highlighting/php54" antfile="generateHighlightingScanner.xml" />
 		<ant dir="${antfile.dir}/highlighting/php55" antfile="generateHighlightingScanner.xml" />
+		<ant dir="${antfile.dir}/highlighting/php56" antfile="generateHighlightingScanner.xml" />
 		<!-- PHPTokenizer -->
 		<ant dir="${antfile.dir}/highlighting/" antfile="generatePHPTokenizer.xml" />
 		<!-- <ant dir="${antfile.dir}/highlighting/" antfile="generatePHPTokenizer.xml" /> -->

@@ -31,10 +31,13 @@ public class FormalParameter extends Argument {
 	private final SimpleReference parameterType; // this can be either type reference or array
 	private final VariableReference parameterName;
 	private final boolean isMandatory;
+	private final boolean isVariadic;
 
-	private FormalParameter(int start, int end, SimpleReference type, final VariableReference parameterName, Expression defaultValue, boolean isMandatory) {
+	public FormalParameter(int start, int end, SimpleReference type,
+			final VariableReference parameterName, Expression defaultValue,
+			boolean isMandatory, boolean isVariadic) {
 		super(parameterName, start, end, defaultValue, 0);
-		
+
 		SimpleReference ref = getRef();
 		if (ref != null) {
 			ref.setStart(parameterName.sourceStart());
@@ -46,18 +49,22 @@ public class FormalParameter extends Argument {
 		this.parameterType = type;
 		this.parameterName = parameterName;
 		this.isMandatory = isMandatory;
+		this.isVariadic = isVariadic;
 	}
 
-	public FormalParameter(int start, int end, SimpleReference type, final VariableReference parameterName, Expression defaultValue) {
-		this(start, end, type, parameterName, defaultValue, false);
+	public FormalParameter(int start, int end, SimpleReference type,
+			final VariableReference parameterName, Expression defaultValue) {
+		this(start, end, type, parameterName, defaultValue, false, false);
 	}
 
-	public FormalParameter(int start, int end, SimpleReference type, final VariableReference parameterName, boolean isMandatory) {
-		this(start, end, type, parameterName, null, isMandatory);
+	public FormalParameter(int start, int end, SimpleReference type,
+			final VariableReference parameterName, boolean isMandatory) {
+		this(start, end, type, parameterName, null, isMandatory, false);
 	}
 
-	public FormalParameter(int start, int end, SimpleReference type, final VariableReference parameterName) {
-		this(start, end, type, parameterName, null, true);
+	public FormalParameter(int start, int end, SimpleReference type,
+			final VariableReference parameterName) {
+		this(start, end, type, parameterName, null, true, false);
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
@@ -81,6 +88,10 @@ public class FormalParameter extends Argument {
 
 	public boolean isMandatory() {
 		return isMandatory;
+	}
+
+	public boolean isVariadic() {
+		return isVariadic;
 	}
 
 	public VariableReference getParameterName() {

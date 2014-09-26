@@ -1,0 +1,45 @@
+--TEST--
+Test constant scalar expressions Operation
+--FILE--
+<?php const A = 1 and 2; const B = (1 and 2) and 3; const C = 1 and (2 and 3) ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="81">
+	<ConstantDeclaration start="6" end="23" modifiers="">
+		<ConstantReference start="12" end="13" name="A">
+		</ConstantReference>
+		<InfixExpression start="16" end="23" operator="and">
+			<Scalar start="16" end="17" type="int" value="1">
+			</Scalar>
+			<Scalar start="22" end="23" type="int" value="2">
+			</Scalar>
+		</InfixExpression>
+	</ConstantDeclaration>
+	<ConstantDeclaration start="25" end="50" modifiers="">
+		<ConstantReference start="31" end="32" name="B">
+		</ConstantReference>
+		<InfixExpression start="35" end="50" operator="and">
+			<InfixExpression start="36" end="43" operator="and">
+				<Scalar start="36" end="37" type="int" value="1">
+				</Scalar>
+				<Scalar start="42" end="43" type="int" value="2">
+				</Scalar>
+			</InfixExpression>
+			<Scalar start="49" end="50" type="int" value="3">
+			</Scalar>
+		</InfixExpression>
+	</ConstantDeclaration>
+	<ConstantDeclaration start="52" end="77" modifiers="">
+		<ConstantReference start="58" end="59" name="C">
+		</ConstantReference>
+		<InfixExpression start="62" end="77" operator="and">
+			<Scalar start="62" end="63" type="int" value="1">
+			</Scalar>
+			<InfixExpression start="69" end="76" operator="and">
+				<Scalar start="69" end="70" type="int" value="2">
+				</Scalar>
+				<Scalar start="75" end="76" type="int" value="3">
+				</Scalar>
+			</InfixExpression>
+		</InfixExpression>
+	</ConstantDeclaration>
+</ModuleDeclaration>

@@ -1,0 +1,79 @@
+--TEST--
+Test Argument Unpacking
+--FILE--
+<?php 
+fn(...$args);
+$fn(...$args);
+$obj->fn(...$args);
+ClassName::fn(...$args);
+new ClassName(...$args);
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="109">
+	<ExpressionStatement start="7" end="20">
+		<PHPCallExpression start="7" end="19">
+			<FullyQualifiedReference start="7" end="9" name="fn">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="10" end="18">
+				<PrefixExpression start="10" end="18" operator="...">
+					<VariableReference start="13" end="18" name="$args">
+					</VariableReference>
+				</PrefixExpression>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="21" end="35">
+		<ReflectionCallExpression start="21" end="34">
+			<VariableReference start="21" end="24" name="$fn">
+			</VariableReference>
+			<PHPCallArgumentsList start="25" end="33">
+				<PrefixExpression start="25" end="33" operator="...">
+					<VariableReference start="28" end="33" name="$args">
+					</VariableReference>
+				</PrefixExpression>
+			</PHPCallArgumentsList>
+		</ReflectionCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="36" end="55">
+		<PHPCallExpression start="36" end="54">
+			<VariableReference start="36" end="40" name="$obj">
+			</VariableReference>
+			<SimpleReference start="42" end="44" name="fn">
+			</SimpleReference>
+			<PHPCallArgumentsList start="45" end="53">
+				<PrefixExpression start="45" end="53" operator="...">
+					<VariableReference start="48" end="53" name="$args">
+					</VariableReference>
+				</PrefixExpression>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="56" end="80">
+		<StaticMethodInvocation start="56" end="79">
+			<FullyQualifiedReference start="56" end="65" name="ClassName">
+			</FullyQualifiedReference>
+			<SimpleReference start="67" end="69" name="fn">
+			</SimpleReference>
+			<PHPCallArgumentsList start="70" end="78">
+				<PrefixExpression start="70" end="78" operator="...">
+					<VariableReference start="73" end="78" name="$args">
+					</VariableReference>
+				</PrefixExpression>
+			</PHPCallArgumentsList>
+		</StaticMethodInvocation>
+	</ExpressionStatement>
+	<ExpressionStatement start="81" end="105">
+		<ClassInstanceCreation start="81" end="104">
+			<FullyQualifiedReference start="85" end="94" name="ClassName">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="95" end="103">
+				<PrefixExpression start="95" end="103" operator="...">
+					<VariableReference start="98" end="103" name="$args">
+					</VariableReference>
+				</PrefixExpression>
+			</PHPCallArgumentsList>
+		</ClassInstanceCreation>
+	</ExpressionStatement>
+	<EmptyStatement start="106" end="108">
+	</EmptyStatement>
+</ModuleDeclaration>

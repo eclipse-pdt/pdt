@@ -73,12 +73,15 @@ public class InfixExpression extends Expression {
 	public static final int OP_SL = 22;
 	// '>>'
 	public static final int OP_SR = 23;
+	// '**'
+	public static final int OP_POW = 24;
 
 	private final Expression right;
 	private final int operator;
 	private final Expression left;
 
-	public InfixExpression(int start, int end, Expression left, int operator, Expression right) {
+	public InfixExpression(int start, int end, Expression left, int operator,
+			Expression right) {
 		super(start, end);
 
 		assert right != null && left != null;
@@ -89,56 +92,58 @@ public class InfixExpression extends Expression {
 
 	public String getOperator() {
 		switch (getOperatorType()) {
-			case OP_IS_IDENTICAL:
-				return "==="; //$NON-NLS-1$
-			case OP_IS_NOT_IDENTICAL:
-				return "!=="; //$NON-NLS-1$
-			case OP_IS_EQUAL:
-				return "=="; //$NON-NLS-1$
-			case OP_IS_NOT_EQUAL:
-				return "!="; //$NON-NLS-1$
-			case OP_RGREATER:
-				return "<"; //$NON-NLS-1$
-			case OP_IS_SMALLER_OR_EQUAL:
-				return "<="; //$NON-NLS-1$
-			case OP_LGREATER:
-				return ">"; //$NON-NLS-1$
-			case OP_IS_GREATER_OR_EQUAL:
-				return ">="; //$NON-NLS-1$
-			case OP_BOOL_OR:
-				return "||"; //$NON-NLS-1$
-			case OP_BOOL_AND:
-				return "&&"; //$NON-NLS-1$
-			case OP_STRING_OR:
-				return "or"; //$NON-NLS-1$
-			case OP_STRING_AND:
-				return "and"; //$NON-NLS-1$
-			case OP_STRING_XOR:
-				return "xor"; //$NON-NLS-1$
-			case OP_OR:
-				return "|"; //$NON-NLS-1$
-			case OP_AND:
-				return "&"; //$NON-NLS-1$
-			case OP_XOR:
-				return "^"; //$NON-NLS-1$
-			case OP_CONCAT:
-				return "."; //$NON-NLS-1$
-			case OP_PLUS:
-				return "+"; //$NON-NLS-1$
-			case OP_MINUS:
-				return "-"; //$NON-NLS-1$
-			case OP_MUL:
-				return "*"; //$NON-NLS-1$
-			case OP_DIV:
-				return "/"; //$NON-NLS-1$
-			case OP_MOD:
-				return "%"; //$NON-NLS-1$
-			case OP_SL:
-				return "<<"; //$NON-NLS-1$
-			case OP_SR:
-				return ">>"; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case OP_IS_IDENTICAL:
+			return "==="; //$NON-NLS-1$
+		case OP_IS_NOT_IDENTICAL:
+			return "!=="; //$NON-NLS-1$
+		case OP_IS_EQUAL:
+			return "=="; //$NON-NLS-1$
+		case OP_IS_NOT_EQUAL:
+			return "!="; //$NON-NLS-1$
+		case OP_RGREATER:
+			return "<"; //$NON-NLS-1$
+		case OP_IS_SMALLER_OR_EQUAL:
+			return "<="; //$NON-NLS-1$
+		case OP_LGREATER:
+			return ">"; //$NON-NLS-1$
+		case OP_IS_GREATER_OR_EQUAL:
+			return ">="; //$NON-NLS-1$
+		case OP_BOOL_OR:
+			return "||"; //$NON-NLS-1$
+		case OP_BOOL_AND:
+			return "&&"; //$NON-NLS-1$
+		case OP_STRING_OR:
+			return "or"; //$NON-NLS-1$
+		case OP_STRING_AND:
+			return "and"; //$NON-NLS-1$
+		case OP_STRING_XOR:
+			return "xor"; //$NON-NLS-1$
+		case OP_OR:
+			return "|"; //$NON-NLS-1$
+		case OP_AND:
+			return "&"; //$NON-NLS-1$
+		case OP_XOR:
+			return "^"; //$NON-NLS-1$
+		case OP_CONCAT:
+			return "."; //$NON-NLS-1$
+		case OP_PLUS:
+			return "+"; //$NON-NLS-1$
+		case OP_MINUS:
+			return "-"; //$NON-NLS-1$
+		case OP_MUL:
+			return "*"; //$NON-NLS-1$
+		case OP_DIV:
+			return "/"; //$NON-NLS-1$
+		case OP_MOD:
+			return "%"; //$NON-NLS-1$
+		case OP_SL:
+			return "<<"; //$NON-NLS-1$
+		case OP_SR:
+			return ">>"; //$NON-NLS-1$
+		case OP_POW:
+			return "**"; //$NON-NLS-1$	
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 
