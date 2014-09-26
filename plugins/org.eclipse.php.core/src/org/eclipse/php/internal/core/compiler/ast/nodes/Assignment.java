@@ -50,12 +50,15 @@ public class Assignment extends Expression {
 	public static final int OP_SR_EQUAL = 11;
 	// '=&'
 	public static final int OP_REF_EQUAL = 12;
+	// '**='
+	public static final int OP_POW_EQUAL = 13;
 
 	private final Expression variable;
 	private final int operator;
 	private final Expression value;
 
-	public Assignment(int start, int end, Expression variable, int operator, Expression value) {
+	public Assignment(int start, int end, Expression variable, int operator,
+			Expression value) {
 		super(start, end);
 
 		assert variable != null && value != null;
@@ -76,34 +79,36 @@ public class Assignment extends Expression {
 
 	public String getOperator() {
 		switch (getOperatorType()) {
-			case OP_EQUAL:
-				return "="; //$NON-NLS-1$
-			case OP_PLUS_EQUAL:
-				return "+="; //$NON-NLS-1$
-			case OP_MINUS_EQUAL:
-				return "-="; //$NON-NLS-1$
-			case OP_MUL_EQUAL:
-				return "*="; //$NON-NLS-1$
-			case OP_DIV_EQUAL:
-				return "/="; //$NON-NLS-1$
-			case OP_MOD_EQUAL:
-				return "%="; //$NON-NLS-1$
-			case OP_CONCAT_EQUAL:
-				return ".="; //$NON-NLS-1$
-			case OP_AND_EQUAL:
-				return "&="; //$NON-NLS-1$
-			case OP_OR_EQUAL:
-				return "|="; //$NON-NLS-1$
-			case OP_XOR_EQUAL:
-				return "^="; //$NON-NLS-1$
-			case OP_SL_EQUAL:
-				return "<<="; //$NON-NLS-1$
-			case OP_SR_EQUAL:
-				return ">>="; //$NON-NLS-1$
-			case OP_REF_EQUAL:
-				return "=&"; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case OP_EQUAL:
+			return "="; //$NON-NLS-1$
+		case OP_PLUS_EQUAL:
+			return "+="; //$NON-NLS-1$
+		case OP_MINUS_EQUAL:
+			return "-="; //$NON-NLS-1$
+		case OP_MUL_EQUAL:
+			return "*="; //$NON-NLS-1$
+		case OP_DIV_EQUAL:
+			return "/="; //$NON-NLS-1$
+		case OP_MOD_EQUAL:
+			return "%="; //$NON-NLS-1$
+		case OP_CONCAT_EQUAL:
+			return ".="; //$NON-NLS-1$
+		case OP_AND_EQUAL:
+			return "&="; //$NON-NLS-1$
+		case OP_OR_EQUAL:
+			return "|="; //$NON-NLS-1$
+		case OP_XOR_EQUAL:
+			return "^="; //$NON-NLS-1$
+		case OP_SL_EQUAL:
+			return "<<="; //$NON-NLS-1$
+		case OP_SR_EQUAL:
+			return ">>="; //$NON-NLS-1$
+		case OP_REF_EQUAL:
+			return "=&"; //$NON-NLS-1$
+		case OP_POW_EQUAL:
+			return "**="; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 

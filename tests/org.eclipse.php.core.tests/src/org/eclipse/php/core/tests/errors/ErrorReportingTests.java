@@ -23,6 +23,7 @@ public class ErrorReportingTests {
 		suite.addTest(PHP53ErrorReportingTests.suite());
 		suite.addTest(PHP54ErrorReportingTests.suite());
 		suite.addTest(PHP55ErrorReportingTests.suite());
+		suite.addTest(PHP56ErrorReportingTests.suite());
 		// $JUnit-END$
 		return suite;
 	}

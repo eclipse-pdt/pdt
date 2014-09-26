@@ -28,6 +28,11 @@ public class PHPDocMethodReturnTypeGoal extends AbstractMethodReturnTypeGoal {
 		super(context, types, methodName);
 	}
 
+	public PHPDocMethodReturnTypeGoal(IContext context, IType[] types,
+			String methodName, int offset) {
+		super(context, types, methodName, offset);
+	}
+
 	public boolean equals(Object obj) {
 		if (!(obj instanceof PHPDocMethodReturnTypeGoal)) {
 			return false;

@@ -20,10 +20,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.codeassist.AliasType;
-import org.eclipse.php.internal.core.codeassist.CompletionFlag;
-import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
-import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
+import org.eclipse.php.internal.core.codeassist.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.ProjectOptions;
@@ -166,14 +163,15 @@ public class PHPCompletionProposalCollector extends
 	}
 
 	private ScriptCompletionProposal createMethodDeclarationProposal(
-			CompletionProposal proposal) {
+			final CompletionProposal proposal) {
 		if (getSourceModule() == null
 				|| getSourceModule().getScriptProject() == null) {
 			return null;
 		}
 
 		String name = String.valueOf(proposal.getName());
-
+		String completion = new String(proposal.getCompletion());
+		int replaceStart = proposal.getReplaceStart();
 		String[] paramTypes;
 
 		paramTypes = new String[0];
@@ -182,11 +180,37 @@ public class PHPCompletionProposalCollector extends
 		int length = getLength(proposal);
 		String label = ((PHPCompletionProposalLabelProvider) getLabelProvider())
 				.createOverrideMethodProposalLabel(proposal);
-		ScriptCompletionProposal scriptProposal = createParameterGuessingProposal(
-				proposal, getSourceModule().getScriptProject(),
-				getSourceModule(), name, paramTypes, start, length, label,
-				String.valueOf(proposal.getCompletion()),
-				proposal.getExtraInfo());
+
+		String displayString = ((PHPCompletionProposalLabelProvider) getLabelProvider())
+				.createMethodProposalLabel(proposal);
+
+		ScriptCompletionProposal scriptProposal = null;
+		if (ProposalExtraInfo.isNotInsertUse(proposal.getExtraInfo())) {
+			Image image = getImage(((PHPCompletionProposalLabelProvider) getLabelProvider())
+					.createMethodImageDescriptor(proposal));
+			scriptProposal = new PHPCompletionProposal(completion,
+					replaceStart, length, image, displayString, 0) {
+				public String getReplacementString() {
+					IMethod method = (IMethod) proposal.getModelElement();
+					if (ProposalExtraInfo.isNoInsert(proposal.getExtraInfo())) {
+						return method.getElementName();
+					}
+					setReplacementString(method.getFullyQualifiedName("\\")); //$NON-NLS-1$
+					return super.getReplacementString();
+				}
+
+				@Override
+				public Object getExtraInfo() {
+					return proposal.getExtraInfo();
+				}
+
+			};
+		} else {
+			scriptProposal = createParameterGuessingProposal(proposal, name,
+					paramTypes, start, length, label, completion,
+					proposal.getExtraInfo());
+		}
+
 		scriptProposal.setImage(getImage(getLabelProvider()
 				.createMethodImageDescriptor(proposal)));
 
@@ -199,21 +223,17 @@ public class PHPCompletionProposalCollector extends
 	}
 
 	private ScriptCompletionProposal createParameterGuessingProposal(
-			CompletionProposal proposal, IScriptProject scriptProject,
-			ISourceModule sourceModule, String name, String[] paramTypes,
+			CompletionProposal proposal, String name, String[] paramTypes,
 			int start, int length, String label, String string, Object extraInfo) {
-		return new ParameterGuessingProposal(proposal, scriptProject,
-				sourceModule, name, paramTypes, start, length, label, string,
-				false, extraInfo, document);
+		return new ParameterGuessingProposal(proposal, getSourceModule()
+				.getScriptProject(), getSourceModule(), name, paramTypes,
+				start, length, label, string, false, extraInfo, document);
 	}
 
 	protected IScriptCompletionProposal createTypeProposal(
 			final CompletionProposal typeProposal) {
-
 		String completion = new String(typeProposal.getCompletion());
 		int replaceStart = typeProposal.getReplaceStart();
-		// int length = typeProposal.getReplaceEnd()
-		// - typeProposal.getReplaceStart() + 1;
 		int length = getLength(typeProposal);
 		Image image = getImage(((PHPCompletionProposalLabelProvider) getLabelProvider())
 				.createTypeImageDescriptor(typeProposal));
@@ -221,8 +241,6 @@ public class PHPCompletionProposalCollector extends
 		String displayString = ((PHPCompletionProposalLabelProvider) getLabelProvider())
 				.createTypeProposalLabel(typeProposal);
 
-		// return new PHPCompletionProposal(completion, replaceStart, length,
-		// image, displayString, 0);
 		ScriptCompletionProposal scriptProposal = new PHPCompletionProposal(
 				completion, replaceStart, length, image, displayString, 0) {
 			private boolean fReplacementStringComputed = false;
@@ -324,26 +342,18 @@ public class PHPCompletionProposalCollector extends
 		String completion = String.valueOf(proposal.getCompletion());
 		int start = proposal.getReplaceStart();
 		int length = getLength(proposal);
-		String label = ((PHPCompletionProposalLabelProvider) getLabelProvider())
+		String displayString = ((PHPCompletionProposalLabelProvider) getLabelProvider())
 				.createFieldProposalLabel(proposal);
 		Image image = getImage(((PHPCompletionProposalLabelProvider) getLabelProvider())
 				.createFieldImageDescriptor(proposal));
-		int relevance = computeRelevance(proposal);
-		// CompletionContext context = getContext();
-		// ScriptCompletionProposal scriptProposal =
-		// createScriptCompletionProposal(
-		// completion, start, length, image, label, relevance, /*
-		// * context
-		// * .isInDoc
-		// * ()
-		// */false);
+
 		ScriptCompletionProposal scriptProposal = new PHPCompletionProposal(
-				completion, start, length, image, label, relevance) {
+				completion, start, length, image, displayString, 0) {
 			private boolean fReplacementStringComputed = false;
 
 			public String getReplacementString() {
 				if (!fReplacementStringComputed) {
-					String replacementString = super.getReplacementString();
+					String replacementString = computeReplacementString();
 					if (ProposalExtraInfo.isAddQuote(proposal.getExtraInfo())) {
 						replacementString = "'" + replacementString + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 					}
@@ -353,14 +363,28 @@ public class PHPCompletionProposalCollector extends
 				return super.getReplacementString();
 			}
 
+			private String computeReplacementString() {
+				IField field = (IField) proposal.getModelElement();
+				if (field instanceof AliasField) {
+					AliasField aliasField = (AliasField) field;
+					return aliasField.getAlias();
+				}
+				if (ProposalExtraInfo.isFullName(proposal.getExtraInfo())) {
+					return field.getFullyQualifiedName("\\"); //$NON-NLS-1$
+				}
+				return super.getReplacementString();
+			}
+
 			@Override
 			public Object getExtraInfo() {
 				return proposal.getExtraInfo();
 			}
 		};
-		if (getSourceModule().getScriptProject() != null)
+		if (getSourceModule().getScriptProject() != null) {
 			scriptProposal.setProposalInfo(new FieldProposalInfo(
 					getSourceModule().getScriptProject(), proposal));
+		}
+		scriptProposal.setRelevance(computeRelevance(proposal));
 		scriptProposal.setTriggerCharacters(getVarTrigger());
 		return scriptProposal;
 	}

@@ -101,9 +101,10 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 								String prefix = getPrefix();
 								if (prefix.length() > 0
-										&& !Character
+										&& (!Character
 												.isJavaIdentifierStart(prefix
-														.charAt(0))) {
+														.charAt(0)) && prefix
+												.charAt(0) != '\\')) {
 									return false;
 								}
 								return true;

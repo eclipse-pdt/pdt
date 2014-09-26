@@ -863,15 +863,15 @@ public class PHPModelUtils {
 
 	private static IMethod[] getGlobalFunctions(ISourceModule sourceModule,
 			String functionName, IModelAccessCache cache,
-			IProgressMonitor monitor) {
-
+			IProgressMonitor monitor) throws ModelException {
 		if (cache != null) {
 			Collection<IMethod> functions = cache.getGlobalFunctions(
 					sourceModule, functionName, monitor);
 			if (functions == null) {
 				return PhpModelAccess.NULL_METHODS;
 			}
-			return (IMethod[]) functions.toArray(new IMethod[functions.size()]);
+			functions = filterTrueGlobal(functions);
+			return functions.toArray(new IMethod[functions.size()]);
 		}
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
@@ -879,10 +879,22 @@ public class PHPModelUtils {
 		IMethod[] functions = PhpModelAccess.getDefault().findMethods(
 				functionName, MatchRule.EXACT, Modifiers.AccGlobal, 0, scope,
 				null);
+
 		Collection<IMethod> filteredElements = filterElements(sourceModule,
-				Arrays.asList(functions), null, monitor);
+				filterTrueGlobal(Arrays.asList(functions)), null, monitor);
 		return (IMethod[]) filteredElements
 				.toArray(new IMethod[filteredElements.size()]);
+	}
+
+	private static Collection<IMethod> filterTrueGlobal(
+			Collection<IMethod> functions) {
+		List<IMethod> result = new ArrayList<IMethod>();
+		for (IMethod method : functions) {
+			if (method.getParent().getElementType() != IModelElement.TYPE) {
+				result.add(method);
+			}
+		}
+		return result;
 	}
 
 	/**

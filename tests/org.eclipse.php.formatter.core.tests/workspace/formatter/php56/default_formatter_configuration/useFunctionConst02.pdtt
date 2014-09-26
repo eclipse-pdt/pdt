@@ -1,0 +1,24 @@
+--TEST--
+Test new use function/const syntax
+--FILE--
+<?php
+namespace Bar;
+
+use 		const Foo\Bar01, 	Foo\Bar3;
+use     function Foo\Bar02, Foo\Bar6;
+	use			 Foo\Bar5;
+	
+	use 		const Foo\Bar01 as MyName, 	Foo\Bar3;
+	use     function Foo\Bar02, Foo\Bar6 		as MyName02;
+	use			 Foo\Bar5 as 	MyName3;
+--EXPECT--
+<?php
+
+namespace Bar;
+
+use const Foo\Bar01, Foo\Bar3;
+use function Foo\Bar02, Foo\Bar6;
+use Foo\Bar5;
+use const Foo\Bar01 as MyName, Foo\Bar3;
+use function Foo\Bar02, Foo\Bar6 as MyName02;
+use Foo\Bar5 as MyName3;

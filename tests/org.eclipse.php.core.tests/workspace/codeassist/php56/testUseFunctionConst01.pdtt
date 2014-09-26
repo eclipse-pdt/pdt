@@ -1,0 +1,12 @@
+--TEST--
+Test use function/const statement CA
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+
+use |
+?>
+--EXPECT--
+keyword(function)
+keyword(const)

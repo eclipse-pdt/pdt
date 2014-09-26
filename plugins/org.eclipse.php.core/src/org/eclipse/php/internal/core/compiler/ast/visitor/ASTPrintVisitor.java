@@ -676,6 +676,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(FormalParameter s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("isMandatory", Boolean.toString(s.isMandatory())); //$NON-NLS-1$
+		if (s.isVariadic()) {
+			parameters.put("isVariadic", Boolean.toString(s.isVariadic())); //$NON-NLS-1$
+		}
 		xmlWriter.startTag("FormalParameter", parameters); //$NON-NLS-1$
 		return true;
 	}
@@ -1010,6 +1013,10 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(UseStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		if (s.getStatementType() != UseStatement.T_NONE) {
+			parameters.put("statementType",
+					String.valueOf(s.getStatementType()));
+		}
 		xmlWriter.startTag("UseStatement", parameters); //$NON-NLS-1$
 
 		xmlWriter.startTag("Parts", new HashMap<String, String>()); //$NON-NLS-1$

@@ -1,0 +1,16 @@
+--TEST--
+Test Variadic Parameter CA
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+function query(DateTime ...$params) {
+	$params[0]->add|
+}
+?>
+--EXPECT--
+<?php
+function query(DateTime ...$params) {
+	$params[0]->add($interval)
+}
+?>

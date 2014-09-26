@@ -1,0 +1,14 @@
+--TEST--
+Test Constant Scalar Expressions
+--FILE--
+<?php
+const BAR = 1; function foo($a = 1 + 1, 
+		$b = 2 << 3, $c = 	BAR ? 10 : 100) {
+}
+?>
+--EXPECT--
+<?php
+const BAR = 1;
+function foo($a = 1 + 1, $b = 2 << 3, $c = BAR ? 10 : 100) {
+}
+?>

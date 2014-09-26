@@ -1,0 +1,27 @@
+--TEST--
+Test unpack argument
+--FILE--
+<?php test(...$params) ?>
+--EXPECT--
+<Program start='0' length='25'>
+	<Statements>
+		<ExpressionStatement start='6' length='19'>
+			<FunctionInvocation start='6' length='16'>
+				<FunctionName start='6' length='4'>
+					<NamespaceName start='6' length='4' global='false' current='false'>
+						<Identifier start='6' length='4' name='test'/>
+					</NamespaceName>
+				</FunctionName>
+				<Parameters>
+					<PrefixExpression start='11' length='10' operator='...'>
+						<Variable start='14' length='7' isDollared='true'>
+							<Identifier start='15' length='6' name='params'/>
+						</Variable>
+					</PrefixExpression>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

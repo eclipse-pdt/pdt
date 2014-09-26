@@ -23,6 +23,8 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerParserConstants;
+import org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpTokenNames;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
@@ -30,6 +32,9 @@ import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 
 public class FormalParameterEvaluator extends GoalEvaluator {
+
+	private static final String ELLIPSIS = PhpTokenNames
+			.getName(CompilerParserConstants.T_ELLIPSIS);
 
 	private IEvaluatedType result;
 
@@ -89,8 +94,13 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 								SimpleReference[] references = tag
 										.getReferences();
 								if (references.length == 2) {
+									String parameterName = parameter.getName();
+									if (parameter.isVariadic()) {
+										parameterName = ELLIPSIS
+												+ parameterName;
+									}
 									if (references[0].getName().equals(
-											parameter.getName())) {
+											parameterName)) {
 										// result = PHPClassType
 										// .fromSimpleReference(PHPModelUtils.getFullName(references[1].getName(),
 										// methodContext.getSourceModule(),
