@@ -1,0 +1,7 @@
+--TEST--
+Test invalid unpack argument order
+--FILE--
+<?php foo(...$lala, $plum, ...$lala2, $plum2) ?>
+--EXPECT--
+[line=1, start=20, end=25] Cannot use positional argument after argument unpacking
+[line=1, start=38, end=44] Cannot use positional argument after argument unpacking

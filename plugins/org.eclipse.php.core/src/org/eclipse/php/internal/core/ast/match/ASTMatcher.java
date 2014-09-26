@@ -541,6 +541,7 @@ public class ASTMatcher {
 		FormalParameter o = (FormalParameter) other;
 
 		return (safeEquals(node.isMandatory(), o.isMandatory())
+				&& safeEquals(node.isVariadic(), o.isVariadic())
 				&& safeSubtreeMatch(node.getParameterType(),
 						o.getParameterType())
 				&& safeSubtreeMatch(node.getParameterName(),
