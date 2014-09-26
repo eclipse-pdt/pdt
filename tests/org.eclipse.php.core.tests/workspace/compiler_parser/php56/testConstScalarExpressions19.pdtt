@@ -1,0 +1,17 @@
+--TEST--
+Test constant scalar expressions Operation
+--FILE--
+<?php const A = 1 > 2 ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="25">
+	<ConstantDeclaration start="6" end="21" modifiers="">
+		<ConstantReference start="12" end="13" name="A">
+		</ConstantReference>
+		<InfixExpression start="16" end="21" operator="&gt;">
+			<Scalar start="16" end="17" type="int" value="1">
+			</Scalar>
+			<Scalar start="20" end="21" type="int" value="2">
+			</Scalar>
+		</InfixExpression>
+	</ConstantDeclaration>
+</ModuleDeclaration>

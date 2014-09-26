@@ -352,6 +352,19 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			// for
 			// reset
 			// operation
+		} else if (PHPVersion.PHP5_6.equals(phpVersion)) {
+			result = new org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerAstLexer(
+					reader);
+			((org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerAstLexer) result)
+					.setAST(new AST(reader, PHPVersion.PHP5_6, false,
+							useShortTags));
+			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerAstLexer.ST_IN_SCRIPTING; // save
+			// the
+			// initial
+			// state
+			// for
+			// reset
+			// operation
 		} else {
 			throw new IllegalArgumentException("unrecognized version " //$NON-NLS-1$
 					+ phpVersion);
