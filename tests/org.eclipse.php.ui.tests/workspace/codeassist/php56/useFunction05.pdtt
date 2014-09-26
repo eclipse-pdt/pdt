@@ -1,0 +1,22 @@
+--TEST--
+Test use function statement
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+namespace Bar\Zip {
+    function faabc(){
+    }
+}
+namespace {
+    use function Bar\Zip\faab|
+}
+--EXPECT--
+<?php
+namespace Bar\Zip {
+    function faabc(){
+    }
+}
+namespace {
+    use function Bar\Zip\faabc
+}

@@ -1,0 +1,15 @@
+--TEST--
+Test global constant.
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+class Bar {
+	const BAR = -3 ** 2;
+	function foo($a = 1 + 1, $b = 2 << 3, $c = self::|) {
+	}
+}
+?>
+--EXPECT--
+field(BAR)
+field(class)

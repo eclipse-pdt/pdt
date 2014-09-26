@@ -50,6 +50,15 @@ public class NamespaceMemberContext extends StatementContext {
 		}
 
 		TextSequence statementText = getStatementText();
+		// disable this context for use statement
+		if (statementText.length() >= 4) {
+			if ("use".equals(statementText.subSequence(0, 3).toString()) //$NON-NLS-1$
+					&& Character.isWhitespace(statementText.subSequence(3, 4)
+							.charAt(0))) {
+				return false;
+			}
+		}
+
 		int totalLength = statementText.length();
 		int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(
 				statementText, totalLength); // read whitespace

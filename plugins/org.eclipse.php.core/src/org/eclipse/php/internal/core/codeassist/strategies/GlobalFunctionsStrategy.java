@@ -11,18 +11,29 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.compiler.env.IModuleSource;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.codeassist.AliasMethod;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.codeassist.contexts.UseFunctionNameContext;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * This strategy completes global functions
@@ -52,6 +63,13 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 			return;
 		}
 
+		boolean isUseFunctionContext = context instanceof UseFunctionNameContext;
+		int extraInfo = getExtraInfo();
+		if (isUseFunctionContext) {
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
+			extraInfo |= ProposalExtraInfo.FULL_NAME;
+		}
+
 		MatchRule matchRule = MatchRule.PREFIX;
 		if (requestor.isContextInformationMode()) {
 			matchRule = MatchRule.EXACT;
@@ -65,8 +83,75 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 		String suffix = getSuffix(abstractContext);
 
 		for (IMethod method : functions) {
-			reporter.reportMethod(method, suffix, replacementRange);
+			reporter.reportMethod(method, suffix, replacementRange, extraInfo);
 		}
+
+		addAlias(reporter, suffix);
+	}
+
+	protected void addAlias(ICompletionReporter reporter, String suffix)
+			throws BadLocationException {
+		ICompletionContext context = getContext();
+		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
+		if (abstractContext.getCompletionRequestor().isContextInformationMode()) {
+			return;
+		}
+		String prefix = abstractContext.getPrefixWithoutProcessing();
+		if (prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1) {
+			return;
+		}
+		IModuleSource module = reporter.getModule();
+		org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) module
+				.getModelElement();
+		ModuleDeclaration moduleDeclaration = SourceParserUtil
+				.getModuleDeclaration(sourceModule);
+		final int offset = abstractContext.getOffset();
+		IType namespace = PHPModelUtils.getCurrentNamespace(sourceModule,
+				offset);
+
+		final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(
+				prefix, moduleDeclaration, offset, namespace, false);
+		reportAlias(reporter, suffix, abstractContext, module, result);
+	}
+
+	protected void reportAlias(ICompletionReporter reporter, String suffix,
+			AbstractCompletionContext abstractContext, IModuleSource module,
+			final Map<String, UsePart> result) throws BadLocationException {
+		SourceRange replacementRange = getReplacementRange(abstractContext);
+		IDLTKSearchScope scope = createSearchScope();
+		for (Entry<String, UsePart> entry : result.entrySet()) {
+			String name = entry.getKey();
+			String fullName = entry.getValue().getNamespace()
+					.getFullyQualifiedName();
+			if (fullName.startsWith("\\")) { //$NON-NLS-1$
+				fullName = fullName.substring(1);
+			}
+			IMethod[] elements = PhpModelAccess.getDefault().findMethods(null,
+					fullName, MatchRule.PREFIX, 0, 0, scope, null);
+			for (int i = 0; i < elements.length; i++) {
+				String elementName = elements[i].getElementName();
+				reportAlias(reporter, scope, module, replacementRange,
+						elements[i], elementName,
+						elementName.replace(fullName, name), suffix);
+			}
+
+			elements = PhpModelAccess.getDefault().findMethods(fullName,
+					MatchRule.EXACT, 0, 0, scope, null);
+
+			for (int i = 0; i < elements.length; i++) {
+				String elementName = elements[i].getElementName();
+				reportAlias(reporter, scope, module, replacementRange,
+						elements[i], elementName, name, suffix);
+			}
+		}
+	}
+
+	protected void reportAlias(ICompletionReporter reporter,
+			IDLTKSearchScope scope, IModuleSource module,
+			SourceRange replacementRange, IMember member, String fullName,
+			String alias, String suffix) {
+		reporter.reportMethod(new AliasMethod((ModelElement) member, fullName,
+				alias), suffix, replacementRange, getExtraInfo());
 	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {
@@ -78,4 +163,9 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 		}
 		return "(".equals(nextWord) ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
+
+	protected int getExtraInfo() {
+		return ProposalExtraInfo.DEFAULT;
+	}
+
 }

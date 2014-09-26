@@ -539,6 +539,11 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(UseStatement useStatement) {
 		result.append("use "); //$NON-NLS-1$
+		if (useStatement.getStatementType() == UseStatement.T_FUNCTION) {
+			result.append("function "); //$NON-NLS-1$
+		} else if (useStatement.getStatementType() == UseStatement.T_CONST) {
+			result.append("const "); //$NON-NLS-1$
+		}
 		Iterator<UseStatementPart> it = useStatement.parts().iterator();
 		while (it.hasNext()) {
 			it.next().accept(this);

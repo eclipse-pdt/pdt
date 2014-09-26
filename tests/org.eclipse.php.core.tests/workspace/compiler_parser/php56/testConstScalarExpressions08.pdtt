@@ -1,0 +1,15 @@
+--TEST--
+Test constant scalar expressions Operation
+--FILE--
+<?php const A = ~1 ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="22">
+	<ConstantDeclaration start="6" end="18" modifiers="">
+		<ConstantReference start="12" end="13" name="A">
+		</ConstantReference>
+		<UnaryOperation start="16" end="18" operator="~">
+			<Scalar start="17" end="18" type="int" value="1">
+			</Scalar>
+		</UnaryOperation>
+	</ConstantDeclaration>
+</ModuleDeclaration>

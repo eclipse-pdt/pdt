@@ -1,0 +1,18 @@
+--TEST--
+Test use function statement element selection
+--FILE--
+<?php
+namespace Foo{
+    function foo_function($param) {
+    }
+    class foo_class{
+        
+    }
+}
+
+namespace Bar{
+
+	use function Foo\|foo_function|;
+}
+--EXPECT--
+method(foo_function)

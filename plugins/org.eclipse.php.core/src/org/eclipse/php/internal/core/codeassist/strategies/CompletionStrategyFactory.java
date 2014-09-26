@@ -243,6 +243,14 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new GlobalInterfacesStrategy(
 					context) };
 		}
+		if (contextClass == NamespaceUseFunctionNameContext.class) {
+			return new ICompletionStrategy[] { new NamespaceUseFunctionNameStrategy(
+					context) };
+		}
+		if (contextClass == NamespaceUseConstNameContext.class) {
+			return new ICompletionStrategy[] { new NamespaceUseConstNameStrategy(
+					context) };
+		}
 		if (contextClass == NamespaceMemberContext.class) {
 			return new ICompletionStrategy[] { new NamespaceElementsCompositeStrategy(
 					context, allContexts,
@@ -272,6 +280,14 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 				return new ICompletionStrategy[] { new UseNameStrategy(context) };
 			}
 
+		}
+		if (contextClass == UseConstNameContext.class) {
+			return new ICompletionStrategy[] { new GlobalConstantsStrategy(
+					context) };
+		}
+		if (contextClass == UseFunctionNameContext.class) {
+			return new ICompletionStrategy[] { new GlobalFunctionsStrategy(
+					context) };
 		}
 		if (contextClass == NamespaceUseNameContext.class) {
 			NamespaceUseNameContext useNameContext = (NamespaceUseNameContext) context;
