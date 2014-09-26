@@ -33,24 +33,26 @@ public class Assignment extends Expression implements IOperationNode {
 	public static final int OP_PLUS_EQUAL = 1;
 	// '-='
 	public static final int OP_MINUS_EQUAL = 2;
-	// '*='	
+	// '*='
 	public static final int OP_MUL_EQUAL = 3;
-	// '/='	
+	// '/='
 	public static final int OP_DIV_EQUAL = 4;
-	// '.='	
+	// '.='
 	public static final int OP_CONCAT_EQUAL = 5;
-	// '%='	
+	// '%='
 	public static final int OP_MOD_EQUAL = 6;
-	// '&='	
+	// '&='
 	public static final int OP_AND_EQUAL = 7;
-	// '|='	
+	// '|='
 	public static final int OP_OR_EQUAL = 8;
-	// '^='	
+	// '^='
 	public static final int OP_XOR_EQUAL = 9;
-	// '<<='	
+	// '<<='
 	public static final int OP_SL_EQUAL = 10;
-	// '>>='	
+	// '>>='
 	public static final int OP_SR_EQUAL = 11;
+	// '**='
+	public static final int OP_POW_EQUAL = 12;
 
 	private VariableBase leftHandSide;
 	private int operator;
@@ -59,28 +61,34 @@ public class Assignment extends Expression implements IOperationNode {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor LEFT_HAND_SIDE_PROPERTY = new ChildPropertyDescriptor(Assignment.class, "variable", VariableBase.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(Assignment.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor RIGHT_HAND_SIDE_PROPERTY = new ChildPropertyDescriptor(Assignment.class, "value", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor LEFT_HAND_SIDE_PROPERTY = new ChildPropertyDescriptor(
+			Assignment.class,
+			"variable", VariableBase.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(
+			Assignment.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor RIGHT_HAND_SIDE_PROPERTY = new ChildPropertyDescriptor(
+			Assignment.class, "value", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(
+				3);
 		properyList.add(LEFT_HAND_SIDE_PROPERTY);
 		properyList.add(OPERATOR_PROPERTY);
 		properyList.add(RIGHT_HAND_SIDE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	public Assignment(int start, int end, AST ast, VariableBase leftHandSide, int operator, Expression rightHandSide) {
+	public Assignment(int start, int end, AST ast, VariableBase leftHandSide,
+			int operator, Expression rightHandSide) {
 		super(start, end, ast);
-		if (leftHandSide == null || rightHandSide == null || getOperator(operator) == null) {
+		if (leftHandSide == null || rightHandSide == null
+				|| getOperator(operator) == null) {
 			throw new IllegalArgumentException();
 		}
 
@@ -93,35 +101,36 @@ public class Assignment extends Expression implements IOperationNode {
 		super(ast);
 	}
 
-	
 	public static String getOperator(int operator) {
 		switch (operator) {
-			case OP_EQUAL:
-				return "="; //$NON-NLS-1$
-			case OP_PLUS_EQUAL:
-				return "+="; //$NON-NLS-1$
-			case OP_MINUS_EQUAL:
-				return "-="; //$NON-NLS-1$
-			case OP_MUL_EQUAL:
-				return "*="; //$NON-NLS-1$
-			case OP_DIV_EQUAL:
-				return "/="; //$NON-NLS-1$
-			case OP_MOD_EQUAL:
-				return "%="; //$NON-NLS-1$
-			case OP_CONCAT_EQUAL:
-				return ".="; //$NON-NLS-1$
-			case OP_AND_EQUAL:
-				return "&="; //$NON-NLS-1$
-			case OP_OR_EQUAL:
-				return "|="; //$NON-NLS-1$
-			case OP_XOR_EQUAL:
-				return "^="; //$NON-NLS-1$
-			case OP_SL_EQUAL:
-				return "<<="; //$NON-NLS-1$
-			case OP_SR_EQUAL:
-				return ">>="; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case OP_EQUAL:
+			return "="; //$NON-NLS-1$
+		case OP_PLUS_EQUAL:
+			return "+="; //$NON-NLS-1$
+		case OP_MINUS_EQUAL:
+			return "-="; //$NON-NLS-1$
+		case OP_MUL_EQUAL:
+			return "*="; //$NON-NLS-1$
+		case OP_DIV_EQUAL:
+			return "/="; //$NON-NLS-1$
+		case OP_MOD_EQUAL:
+			return "%="; //$NON-NLS-1$
+		case OP_CONCAT_EQUAL:
+			return ".="; //$NON-NLS-1$
+		case OP_AND_EQUAL:
+			return "&="; //$NON-NLS-1$
+		case OP_OR_EQUAL:
+			return "|="; //$NON-NLS-1$
+		case OP_XOR_EQUAL:
+			return "^="; //$NON-NLS-1$
+		case OP_SL_EQUAL:
+			return "<<="; //$NON-NLS-1$
+		case OP_SR_EQUAL:
+			return ">>="; //$NON-NLS-1$
+		case OP_POW_EQUAL:
+			return "**="; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -191,24 +200,33 @@ public class Assignment extends Expression implements IOperationNode {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString()
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString
+	 * ()
 	 */
 	public String getOperationString() {
 		return getOperator(this.getOperator());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString(int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString
+	 * (int)
 	 */
 	public String getOperationString(int op) {
 		return getOperator(op);
 	}
-	
+
 	/**
 	 * Sets the operator of this assignment expression.
 	 * 
-	 * @param assignmentOperator the assignment operator
-	 * @exception IllegalArgumentException if the argument is incorrect
+	 * @param assignmentOperator
+	 *            the assignment operator
+	 * @exception IllegalArgumentException
+	 *                if the argument is incorrect
 	 */
 	public void setOperator(int assignmentOperator) {
 		if (getOperator(assignmentOperator) == null) {
@@ -231,13 +249,15 @@ public class Assignment extends Expression implements IOperationNode {
 	/**
 	 * Sets the left hand side of this assignment expression.
 	 * 
-	 * @param expression the left hand side node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
+	 * @param expression
+	 *            the left hand side node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
 	 */
 	public void setLeftHandSide(VariableBase leftHandSide) {
 		if (leftHandSide == null) {
@@ -262,13 +282,15 @@ public class Assignment extends Expression implements IOperationNode {
 	/**
 	 * Sets the right hand side of this assignment expression.
 	 * 
-	 * @param expression the right hand side node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
+	 * @param expression
+	 *            the right hand side node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
 	 */
 	public void setRightHandSide(Expression expression) {
 		if (expression == null) {
@@ -281,7 +303,7 @@ public class Assignment extends Expression implements IOperationNode {
 		postReplaceChild(oldChild, expression, RIGHT_HAND_SIDE_PROPERTY);
 	}
 
-	/* 
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -291,18 +313,23 @@ public class Assignment extends Expression implements IOperationNode {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final VariableBase left = ASTNode.copySubtree(target, getLeftHandSide());
-		final Expression right = ASTNode.copySubtree(target, getRightHandSide());
-		final Assignment result = new Assignment(this.getStart(), this.getEnd(), target, left, this.getOperator(), right);
+		final VariableBase left = ASTNode
+				.copySubtree(target, getLeftHandSide());
+		final Expression right = ASTNode
+				.copySubtree(target, getRightHandSide());
+		final Assignment result = new Assignment(this.getStart(),
+				this.getEnd(), target, left, this.getOperator(), right);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
+			PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
-	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property,
+			boolean get, int value) {
 		if (property == OPERATOR_PROPERTY) {
 			if (get) {
 				return getOperator();
@@ -315,7 +342,8 @@ public class Assignment extends Expression implements IOperationNode {
 		return super.internalGetSetIntProperty(property, get, value);
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
+			boolean get, ASTNode child) {
 		if (property == LEFT_HAND_SIDE_PROPERTY) {
 			if (get) {
 				return getLeftHandSide();

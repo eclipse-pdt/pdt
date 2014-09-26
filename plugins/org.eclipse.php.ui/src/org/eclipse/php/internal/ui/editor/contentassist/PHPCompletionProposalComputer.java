@@ -32,6 +32,7 @@ public class PHPCompletionProposalComputer extends
 	private PHPCompletionProposalCollector phpCompletionProposalCollector;
 	private PhpTemplateCompletionProcessor phpTemplateCompletionProcessor;
 
+	@Override
 	protected TemplateCompletionProcessor createTemplateProposalComputer(
 			ScriptContentAssistInvocationContext context) {
 		boolean explicit = false;
@@ -45,6 +46,7 @@ public class PHPCompletionProposalComputer extends
 		return phpTemplateCompletionProcessor;
 	}
 
+	@Override
 	protected ScriptCompletionProposalCollector createCollector(
 			ScriptContentAssistInvocationContext context) {
 
@@ -59,6 +61,7 @@ public class PHPCompletionProposalComputer extends
 		return phpCompletionProposalCollector;
 	}
 
+	@Override
 	protected int guessContextInformationPosition(
 			ContentAssistInvocationContext context) {
 
@@ -115,10 +118,12 @@ public class PHPCompletionProposalComputer extends
 							e.getStatus());
 	}
 
+	@Override
 	public String getErrorMessage() {
 		return fErrorMessage;
 	}
 
+	@Override
 	public void sessionEnded() {
 		super.sessionEnded();
 		fErrorMessage = null;

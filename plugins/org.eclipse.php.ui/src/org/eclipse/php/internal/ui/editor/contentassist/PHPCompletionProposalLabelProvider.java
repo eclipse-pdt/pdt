@@ -16,6 +16,8 @@ import org.eclipse.dltk.internal.core.ArchiveProjectFragment;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.php.internal.core.codeassist.AliasField;
+import org.eclipse.php.internal.core.codeassist.AliasMethod;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
@@ -30,14 +32,25 @@ public class PHPCompletionProposalLabelProvider extends
 
 	protected String createMethodProposalLabel(CompletionProposal methodProposal) {
 		StringBuffer nameBuffer = new StringBuffer();
+		boolean isAlias = methodProposal.getModelElement() instanceof AliasMethod;
 
 		// method name
-		nameBuffer.append(methodProposal.getName());
+		if (isAlias) {
+			AliasMethod aliasMethod = (AliasMethod) methodProposal
+					.getModelElement();
+			nameBuffer.append(aliasMethod.getAlias());
+		} else {
+			nameBuffer.append(methodProposal.getName());
+		}
 
 		// parameters
 		nameBuffer.append('(');
 		appendParameterList(nameBuffer, methodProposal);
 		nameBuffer.append(')');
+
+		if (isAlias) {
+			return nameBuffer.toString();
+		}
 
 		IMethod method = (IMethod) methodProposal.getModelElement();
 		nameBuffer.append(" - "); //$NON-NLS-1$
@@ -68,14 +81,23 @@ public class PHPCompletionProposalLabelProvider extends
 				return nameBuffer.toString();
 			}
 		}
-
+		boolean isAlias = method instanceof AliasMethod;
 		// method name
-		nameBuffer.append(methodProposal.getName());
+		if (isAlias) {
+			AliasMethod aliasMethod = (AliasMethod) method;
+			nameBuffer.append(aliasMethod.getAlias());
+		} else {
+			nameBuffer.append(method.getElementName());
+		}
 
 		// parameters
 		nameBuffer.append('(');
 		appendParameterList(nameBuffer, methodProposal);
 		nameBuffer.append(')'); //$NON-NLS-1$
+
+		if (isAlias) {
+			return nameBuffer.toString();
+		}
 
 		nameBuffer.append(" - "); //$NON-NLS-1$
 
@@ -158,6 +180,10 @@ public class PHPCompletionProposalLabelProvider extends
 	}
 
 	public String createFieldProposalLabel(CompletionProposal proposal) {
+		if (proposal.getModelElement() instanceof AliasField) {
+			AliasField aliasField = (AliasField) proposal.getModelElement();
+			return aliasField.getAlias();
+		}
 		return super.createFieldProposalLabel(proposal);
 	}
 

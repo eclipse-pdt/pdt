@@ -1,0 +1,41 @@
+--TEST--
+Test Power Operation
+--FILE--
+<?php foo() ** $a->bar(); $a ** $b; 1 ** 2 ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="46">
+	<ExpressionStatement start="6" end="25">
+		<InfixExpression start="6" end="24" operator="**">
+			<PHPCallExpression start="6" end="11">
+				<FullyQualifiedReference start="6" end="9" name="foo">
+				</FullyQualifiedReference>
+				<PHPCallArgumentsList start="10" end="10">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+			<PHPCallExpression start="15" end="24">
+				<VariableReference start="15" end="17" name="$a">
+				</VariableReference>
+				<SimpleReference start="19" end="22" name="bar">
+				</SimpleReference>
+				<PHPCallArgumentsList start="23" end="23">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="26" end="35">
+		<InfixExpression start="26" end="34" operator="**">
+			<VariableReference start="26" end="28" name="$a">
+			</VariableReference>
+			<VariableReference start="32" end="34" name="$b">
+			</VariableReference>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="36" end="45">
+		<InfixExpression start="36" end="42" operator="**">
+			<Scalar start="36" end="37" type="int" value="1">
+			</Scalar>
+			<Scalar start="41" end="42" type="int" value="2">
+			</Scalar>
+		</InfixExpression>
+	</ExpressionStatement>
+</ModuleDeclaration>

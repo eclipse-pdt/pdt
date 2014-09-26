@@ -17,8 +17,12 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.language.keywords.IPHPKeywordsInitializer;
 
 public class UseNameStrategy extends GlobalTypesStrategy {
+
+	private static final String FUNCTION_KEYWORD = "function"; //$NON-NLS-1$
+	private static final String CONST_KEYWORD = "const"; //$NON-NLS-1$
 
 	public UseNameStrategy(ICompletionContext context, int trueFlag,
 			int falseFlag) {
@@ -37,7 +41,21 @@ public class UseNameStrategy extends GlobalTypesStrategy {
 						NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
 			return;
 		}
+
+		reportKeyword(FUNCTION_KEYWORD, reporter);
+		reportKeyword(CONST_KEYWORD, reporter);
 		super.apply(reporter);
+	}
+
+	private void reportKeyword(String keyword, ICompletionReporter reporter)
+			throws BadLocationException {
+		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
+		if (completionContext.getPrefix() == null
+				|| keyword.startsWith(completionContext.getPrefix())) {
+			reporter.reportKeyword(keyword,
+					IPHPKeywordsInitializer.WHITESPACE_SUFFIX,
+					getReplacementRange(completionContext));
+		}
 	}
 
 	public String getNSSuffix(AbstractCompletionContext abstractContext) {

@@ -1,0 +1,111 @@
+--TEST--
+Test Argument Unpacking
+--FILE--
+<?php 
+test(1, 2);                         
+test(...[1, 2]);
+test(...array(1, 2));
+test(...new ArrayIterator([1, 2]));
+test(...$tmp->toArray());
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="148">
+	<ExpressionStatement start="7" end="18">
+		<PHPCallExpression start="7" end="17">
+			<FullyQualifiedReference start="7" end="11" name="test">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="12" end="16">
+				<Scalar start="12" end="13" type="int" value="1">
+				</Scalar>
+				<Scalar start="15" end="16" type="int" value="2">
+				</Scalar>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="44" end="60">
+		<PHPCallExpression start="44" end="59">
+			<FullyQualifiedReference start="44" end="48" name="test">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="49" end="58">
+				<PrefixExpression start="49" end="58" operator="...">
+					<ArrayCreation start="52" end="58">
+						<ArrayElement start="53" end="54">
+							<Scalar start="53" end="54" type="int" value="1">
+							</Scalar>
+						</ArrayElement>
+						<ArrayElement start="56" end="57">
+							<Scalar start="56" end="57" type="int" value="2">
+							</Scalar>
+						</ArrayElement>
+					</ArrayCreation>
+				</PrefixExpression>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="61" end="82">
+		<PHPCallExpression start="61" end="81">
+			<FullyQualifiedReference start="61" end="65" name="test">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="66" end="80">
+				<PrefixExpression start="66" end="80" operator="...">
+					<ArrayCreation start="69" end="80">
+						<ArrayElement start="75" end="76">
+							<Scalar start="75" end="76" type="int" value="1">
+							</Scalar>
+						</ArrayElement>
+						<ArrayElement start="78" end="79">
+							<Scalar start="78" end="79" type="int" value="2">
+							</Scalar>
+						</ArrayElement>
+					</ArrayCreation>
+				</PrefixExpression>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="83" end="118">
+		<PHPCallExpression start="83" end="117">
+			<FullyQualifiedReference start="83" end="87" name="test">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="88" end="116">
+				<PrefixExpression start="88" end="116" operator="...">
+					<ClassInstanceCreation start="91" end="116">
+						<FullyQualifiedReference start="95" end="108" name="ArrayIterator">
+						</FullyQualifiedReference>
+						<PHPCallArgumentsList start="109" end="115">
+							<ArrayCreation start="109" end="115">
+								<ArrayElement start="110" end="111">
+									<Scalar start="110" end="111" type="int" value="1">
+									</Scalar>
+								</ArrayElement>
+								<ArrayElement start="113" end="114">
+									<Scalar start="113" end="114" type="int" value="2">
+									</Scalar>
+								</ArrayElement>
+							</ArrayCreation>
+						</PHPCallArgumentsList>
+					</ClassInstanceCreation>
+				</PrefixExpression>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="119" end="144">
+		<PHPCallExpression start="119" end="143">
+			<FullyQualifiedReference start="119" end="123" name="test">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="124" end="142">
+				<PrefixExpression start="124" end="142" operator="...">
+					<PHPCallExpression start="127" end="142">
+						<VariableReference start="127" end="131" name="$tmp">
+						</VariableReference>
+						<SimpleReference start="133" end="140" name="toArray">
+						</SimpleReference>
+						<PHPCallArgumentsList start="141" end="141">
+						</PHPCallArgumentsList>
+					</PHPCallExpression>
+				</PrefixExpression>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="145" end="147">
+	</EmptyStatement>
+</ModuleDeclaration>

@@ -13,15 +13,11 @@ namespace One {
 	class Agree {
 		use D;
 	}
-	function funky(){
-		return 0;
-	}
 }
 namespace foo {
 	use \One\|
 }
 ?>
 --EXPECT--
-method(funky)
 type(Agree)
 type(D)
