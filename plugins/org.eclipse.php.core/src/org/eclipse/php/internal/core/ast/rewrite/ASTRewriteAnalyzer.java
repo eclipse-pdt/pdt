@@ -3114,11 +3114,12 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		} catch (Exception e) {
 			handleException(e);
 		}
+		rewriteFormalParameterVariadic(formalParameter);
 
 		// Rewrite the parameter type
 		rewriteFormalParameterType(formalParameter);
 		// Rewrite the default parameters
-		rewriteFomalParameterDefault(formalParameter);
+		rewriteFormalParameterDefault(formalParameter);
 		return rewriteRequiredNodeVisit(formalParameter,
 				FormalParameter.PARAMETER_NAME_PROPERTY);
 	}
@@ -3169,7 +3170,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @param formalParameter
 	 */
-	private void rewriteFomalParameterDefault(FormalParameter formalParameter) {
+	private void rewriteFormalParameterDefault(FormalParameter formalParameter) {
 		RewriteEvent event = getEvent(formalParameter,
 				FormalParameter.DEFAULT_VALUE_PROPERTY);
 		if (event != null) {
@@ -3193,6 +3194,35 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				doTextRemove(nameEnd, originalValue.getEnd() - nameEnd,
 						getEditGroup(event));
 				break;
+			}
+		}
+	}
+
+	/*
+	 * Rewrite the parameter's variadic value of a {@link FormalParameter}
+	 * 
+	 * @param formalParameter
+	 */
+	private void rewriteFormalParameterVariadic(FormalParameter formalParameter) {
+		RewriteEvent event = getEvent(formalParameter,
+				FormalParameter.IS_VARIADIC_PROPERTY);
+		if (event != null && event.getChangeKind() == RewriteEvent.REPLACED) {
+			TextEditGroup editGroup = getEditGroup(event);
+			boolean isVariadic = (Boolean) event.getNewValue();
+			int start = formalParameter.getStart();
+			if (isVariadic) {
+				if (formalParameter.getParameterName() instanceof Reference) {
+					start++;
+				}
+				doTextInsert(start, "... ", //$NON-NLS-1$
+						editGroup);
+			} else {
+				if (formalParameter.getParameterName() instanceof Reference) {
+					start++;
+				} else {
+					start -= 3;
+				}
+				doTextRemove(start, 3, editGroup);
 			}
 		}
 	}

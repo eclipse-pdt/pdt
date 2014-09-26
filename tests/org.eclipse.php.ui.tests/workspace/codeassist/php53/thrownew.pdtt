@@ -5,10 +5,10 @@ org.eclipse.php.core/contentAssistInsertCompletion=true
 --FILE--
 <?php
 namespace test;
-throw new Exception|
+throw new LogicException|
 ?>
 --EXPECT--
 <?php
 namespace test;
-throw new \Exception()
+throw new \LogicException($message, $code, $previous)
 ?>

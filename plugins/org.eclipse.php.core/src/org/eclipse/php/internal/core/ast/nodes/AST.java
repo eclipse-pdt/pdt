@@ -211,11 +211,23 @@ public class AST {
 			lexer55.setUseAspTagsAsPhp(aspTagsAsPhp);
 			lexer55.setUseShortTags(useShortTags);
 			return lexer55;
+		} else if (PHPVersion.PHP5_6 == phpVersion) {
+			final AstLexer lexer56 = getLexer56(reader);
+			lexer56.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer56.setUseShortTags(useShortTags);
+			return lexer56;
 		} else {
 			throw new IllegalArgumentException(
 					CoreMessages.getString("ASTParser_1") //$NON-NLS-1$
 							+ phpVersion);
 		}
+	}
+
+	private AstLexer getLexer56(Reader reader) throws IOException {
+		final org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer phpAstLexer5 = new org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer(
+				reader);
+		phpAstLexer5.setAST(this);
+		return phpAstLexer5;
 	}
 
 	private AstLexer getLexer55(Reader reader) throws IOException {
@@ -276,6 +288,11 @@ public class AST {
 			return parser;
 		} else if (PHPVersion.PHP5_5 == phpVersion) {
 			final org.eclipse.php.internal.core.ast.scanner.php55.PhpAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php55.PhpAstParser(
+					lexer);
+			parser.setAST(this);
+			return parser;
+		} else if (PHPVersion.PHP5_6 == phpVersion) {
+			final org.eclipse.php.internal.core.ast.scanner.php56.PhpAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php56.PhpAstParser(
 					lexer);
 			parser.setAST(this);
 			return parser;

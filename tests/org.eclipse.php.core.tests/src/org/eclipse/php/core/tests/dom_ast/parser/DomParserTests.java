@@ -39,12 +39,13 @@ public class DomParserTests extends AbstractPDTTTest {
 		TESTS.put(PHPVersion.PHP5_3,
 				new String[] { "/workspace/dom_parser/php53" });
 		TESTS.put(PHPVersion.PHP5_4, new String[] {
-				"/workspace/dom_parser/php53",
-				"/workspace/dom_parser/php54" });
+				"/workspace/dom_parser/php53", "/workspace/dom_parser/php54" });
 		TESTS.put(PHPVersion.PHP5_5, new String[] {
-				"/workspace/dom_parser/php53",
-				"/workspace/dom_parser/php54",
-				"/workspace/dom_parser/php55"});
+				"/workspace/dom_parser/php53", "/workspace/dom_parser/php54",
+				"/workspace/dom_parser/php55" });
+		TESTS.put(PHPVersion.PHP5_6, new String[] {
+				"/workspace/dom_parser/php53", "/workspace/dom_parser/php54",
+				"/workspace/dom_parser/php55", "/workspace/dom_parser/php56" });
 	};
 
 	public static void setUpSuite() throws Exception {

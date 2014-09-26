@@ -1,0 +1,37 @@
+--TEST--
+Test Power Operation
+--FILE--
+<?php $tmp **= $a->bar(); $a **= $b; $b **= 2 ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="49">
+	<ExpressionStatement start="6" end="25">
+		<Assignment start="6" end="24" operator="**=">
+			<VariableReference start="6" end="10" name="$tmp">
+			</VariableReference>
+			<PHPCallExpression start="15" end="24">
+				<VariableReference start="15" end="17" name="$a">
+				</VariableReference>
+				<SimpleReference start="19" end="22" name="bar">
+				</SimpleReference>
+				<PHPCallArgumentsList start="23" end="23">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="26" end="36">
+		<Assignment start="26" end="35" operator="**=">
+			<VariableReference start="26" end="28" name="$a">
+			</VariableReference>
+			<VariableReference start="33" end="35" name="$b">
+			</VariableReference>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="37" end="48">
+		<Assignment start="37" end="45" operator="**=">
+			<VariableReference start="37" end="39" name="$b">
+			</VariableReference>
+			<Scalar start="44" end="45" type="int" value="2">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+</ModuleDeclaration>
