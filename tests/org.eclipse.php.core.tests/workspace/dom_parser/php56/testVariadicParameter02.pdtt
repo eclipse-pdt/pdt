@@ -1,0 +1,37 @@
+--TEST--
+Test Variadic Parameter
+--FILE--
+<?php function test(DateTime ...$params) {} ?>
+--EXPECT--
+<Program start='0' length='46'>
+	<Statements>
+		<FunctionDeclaration start='6' length='37' isReference='false'>
+			<FunctionName>
+				<Identifier start='15' length='4' name='test'/>
+			</FunctionName>
+			<FormalParameters>
+				<FormalParameter start='20' length='19' isMandatory='false isVariadic='true'>
+					<Type>
+						<NamespaceName start='20' length='8' global='false' current='false'>
+							<Identifier start='20' length='8' name='DateTime'/>
+						</NamespaceName>
+					</Type>
+					<ParameterName>
+						<Variable start='32' length='7' isDollared='true'>
+							<Identifier start='33' length='6' name='params'/>
+						</Variable>
+					</ParameterName>
+					<DefaultValue>
+					</DefaultValue>
+				</FormalParameter>
+			</FormalParameters>
+			<FunctionBody>
+				<Block start='41' length='2' isCurly='true'>
+				</Block>
+			</FunctionBody>
+		</FunctionDeclaration>
+		<EmptyStatement start='44' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

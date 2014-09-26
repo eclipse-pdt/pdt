@@ -1,0 +1,20 @@
+--TEST--
+Test Variadic Parameter
+--FILE--
+<?php function prepare($tmp, ...$params) {} ?>
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="50">
+	<PHPMethodDeclaration start="6" end="43" modifiers="" name="prepare">
+		<FormalParameter start="23" end="27" modifiers="" isMandatory="true">
+			<VariableReference start="23" end="27" name="$tmp">
+			</VariableReference>
+		</FormalParameter>
+		<FormalParameter start="32" end="39" modifiers="" isMandatory="false" isVariadic="true">
+			<VariableReference start="32" end="39" name="$params">
+			</VariableReference>
+		</FormalParameter>
+	</PHPMethodDeclaration>
+	<EmptyStatement start="44" end="47">
+	</EmptyStatement>
+</ModuleDeclaration>

@@ -1,0 +1,39 @@
+--TEST--
+Test constant scalar expressions Operation
+--FILE--
+<?php const A = true ? 1 : 2; const B = false ?: 2 ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="54">
+	<ConstantDeclaration start="6" end="28" modifiers="">
+		<ConstantReference start="12" end="13" name="A">
+		</ConstantReference>
+		<ConditionalExpression start="16" end="28">
+			<Condition>
+				<Scalar start="16" end="20" type="string" value="true">
+				</Scalar>
+			</Condition>
+			<IfTrue>
+				<Scalar start="23" end="24" type="int" value="1">
+				</Scalar>
+			</IfTrue>
+			<IfFalse>
+				<Scalar start="27" end="28" type="int" value="2">
+				</Scalar>
+			</IfFalse>
+		</ConditionalExpression>
+	</ConstantDeclaration>
+	<ConstantDeclaration start="30" end="50" modifiers="">
+		<ConstantReference start="36" end="37" name="B">
+		</ConstantReference>
+		<ConditionalExpression start="40" end="50">
+			<Condition>
+				<Scalar start="40" end="45" type="string" value="false">
+				</Scalar>
+			</Condition>
+			<IfFalse>
+				<Scalar start="49" end="50" type="int" value="2">
+				</Scalar>
+			</IfFalse>
+		</ConditionalExpression>
+	</ConstantDeclaration>
+</ModuleDeclaration>

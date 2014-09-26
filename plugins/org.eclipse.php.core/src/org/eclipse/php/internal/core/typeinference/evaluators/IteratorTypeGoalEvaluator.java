@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.ti.GoalState;
@@ -14,6 +15,7 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FormalParameter;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
@@ -52,6 +54,12 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 			cache = (IModelAccessCache) ((IModelCacheContext) goal.getContext())
 					.getCache();
 		}
+		String variableName = null;
+		IteratorTypeGoal iteratorTypeGoal = (IteratorTypeGoal) goal;
+		if (iteratorTypeGoal.getExpression() instanceof VariableReference) {
+			variableName = ((VariableReference) iteratorTypeGoal
+					.getExpression()).getName();
+		}
 		if (state != GoalState.RECURSIVE) {
 			if (result instanceof GeneratorClassType) {
 				MultiTypeType type = new MultiTypeType();
@@ -80,7 +88,8 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 								MethodContext methodContext = (MethodContext) subgoal
 										.getContext();
 
-								if (isArrayType(methodContext, type)) {
+								if (isArrayType(methodContext, variableName,
+										type)) {
 									MultiTypeType mType = new MultiTypeType();
 									mType.addType((IEvaluatedType) result);
 									this.result = mType;
@@ -132,16 +141,26 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 	 * 
 	 * 
 	 * @param methodContext
+	 * @param variableName
 	 * @param type
 	 * @return boolean
 	 */
-	private boolean isArrayType(MethodContext methodContext, IType type) {
+	private boolean isArrayType(MethodContext methodContext,
+			String variableName, IType type) {
 
 		PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration) methodContext
 				.getMethodNode();
 
 		PHPDocBlock[] docBlocks = new PHPDocBlock[0];
-
+		for (Object object : methodDeclaration.getArguments()) {
+			if (object instanceof FormalParameter) {
+				FormalParameter formalParameter = (FormalParameter) object;
+				if (formalParameter.getName().equals(variableName)
+						&& formalParameter.isVariadic()) {
+					return true;
+				}
+			}
+		}
 		try {
 			IModelElement element = methodContext.getSourceModule()
 					.getElementAt(methodDeclaration.getNameStart());

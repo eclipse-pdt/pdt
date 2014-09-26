@@ -1,0 +1,11 @@
+--TEST--
+Test variadic parameters
+--FILE--
+<?php
+function test(...%$args%){
+	echo 1;
+	execute(...%$args%|);
+	var_dump(%$args%);
+}
+?>
+--EXPECT--
