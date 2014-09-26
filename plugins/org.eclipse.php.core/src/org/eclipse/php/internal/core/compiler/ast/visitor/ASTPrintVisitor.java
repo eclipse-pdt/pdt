@@ -676,6 +676,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(FormalParameter s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("isMandatory", Boolean.toString(s.isMandatory())); //$NON-NLS-1$
+		if (s.isVariadic()) {
+			parameters.put("isVariadic", Boolean.toString(s.isVariadic())); //$NON-NLS-1$
+		}
 		xmlWriter.startTag("FormalParameter", parameters); //$NON-NLS-1$
 		return true;
 	}

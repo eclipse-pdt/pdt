@@ -36,7 +36,8 @@ public enum PHPVersion {
 	 */
 	PHP5_3("php5.3"), //$NON-NLS-1$
 	PHP5_4("php5.4"), //$NON-NLS-1$
-	PHP5_5("php5.5"); //$NON-NLS-1$
+	PHP5_5("php5.5"), //$NON-NLS-1$
+	PHP5_6("php5.6"); //$NON-NLS-1$
 
 	private String alias;
 
@@ -74,7 +75,7 @@ public enum PHPVersion {
 	 * @return
 	 */
 	public static PHPVersion getLatestVersion() {
-		return PHP5_5;
+		return PHP5_6;
 	}
 
 }

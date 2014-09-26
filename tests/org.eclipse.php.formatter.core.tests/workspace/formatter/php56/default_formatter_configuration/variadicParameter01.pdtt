@@ -1,0 +1,29 @@
+--TEST--
+Test Pow operator
+--FILE--
+<?php
+class Foo {
+    const BAZ = 10;
+}
+ 
+class Bar {
+    public $foo = 1 + 1;
+    public $bar = [1 + 1, 1 << 2, Foo::BAZ => "foo "."bar"];
+    public $baseDir = __DIR__ . "/base";
+}
+?>
+--EXPECT--
+<?php
+class Foo {
+	const BAZ = 10;
+}
+class Bar {
+	public $foo = 1 + 1;
+	public $bar = [ 
+			1 + 1,
+			1 << 2,
+			Foo::BAZ => "foo " . "bar" 
+	];
+	public $baseDir = __DIR__ . "/base";
+}
+?>

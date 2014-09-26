@@ -63,6 +63,9 @@ public class ContentAssistTests extends AbstractPDTTTest {
 				new String[] { "/workspace/codeassist/php5" });
 		TESTS.put(PHPVersion.PHP5_3, new String[] {
 				"/workspace/codeassist/php5", "/workspace/codeassist/php53" });
+		TESTS.put(PHPVersion.PHP5_6, new String[] {
+				"/workspace/codeassist/php5", "/workspace/codeassist/php53",
+				"/workspace/codeassist/php56" });
 	};
 	protected static final char OFFSET_CHAR = '|';
 
