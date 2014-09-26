@@ -27,16 +27,30 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * use \A\B as C;
  */
 public class UseStatement extends Statement {
-	
-	private List<UsePart> parts;
 
-	public UseStatement(int start, int end, List<UsePart> parts) {
+	// none
+	public static final int T_NONE = 0;
+	// 'function' keyword
+	public static final int T_FUNCTION = 1;
+	// 'const' keyword
+	public static final int T_CONST = 2;
+
+	private List<UsePart> parts;
+	private int statementType;
+
+	public UseStatement(int start, int end, List<UsePart> parts,
+			int statementType) {
 		super(start, end);
 
 		assert parts != null;
 		this.parts = parts;
+		this.statementType = statementType;
 	}
-	
+
+	public UseStatement(int start, int end, List<UsePart> parts) {
+		this(start, end, parts, T_NONE);
+	}
+
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
 			for (UsePart part : parts) {
@@ -52,6 +66,10 @@ public class UseStatement extends Statement {
 
 	public Collection<UsePart> getParts() {
 		return parts;
+	}
+
+	public int getStatementType() {
+		return statementType;
 	}
 
 	/**

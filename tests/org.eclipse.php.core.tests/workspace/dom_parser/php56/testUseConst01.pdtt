@@ -1,0 +1,24 @@
+--TEST--
+Test use function
+--FILE--
+<?php use const Foo\Bar as MyName ?>
+--EXPECT--
+<Program start='0' length='36'>
+	<Statements>
+		<UseStatement start='6' length='30' statementType='2'>
+			<UseStatementPart start='16' length='17'>
+				<Name>
+					<NamespaceName start='16' length='7' global='false' current='false'>
+						<Identifier start='16' length='3' name='Foo'/>
+						<Identifier start='20' length='3' name='Bar'/>
+					</NamespaceName>
+				</Name>
+				<Alias>
+					<Identifier start='27' length='6' name='MyName'/>
+				</Alias>
+			</UseStatementPart>
+		</UseStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

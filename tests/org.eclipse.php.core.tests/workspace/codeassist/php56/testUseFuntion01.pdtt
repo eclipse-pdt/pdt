@@ -1,0 +1,11 @@
+--TEST--
+Test use function statement
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+
+use fun|
+?>
+--EXPECT--
+keyword(function)

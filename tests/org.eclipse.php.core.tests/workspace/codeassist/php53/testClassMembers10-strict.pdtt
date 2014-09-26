@@ -6,21 +6,17 @@ org.eclipse.php.core/contentAssistShowStrictOptions=true
 <?
 class Foo{
 	/**
-	 * @var \SoapClient
+	 * @var \LogicException
 	 */
-	public static $Client;
+	public static $Exception;
 } 
-Foo::$Client->| ?>
+Foo::$Exception->| ?>
 --EXPECT--
-method(__call)
-method(__doRequest)
-method(__getFunctions)
-method(__getLastRequest)
-method(__getLastRequestHeaders)
-method(__getLastResponse)
-method(__getLastResponseHeaders)
-method(__getTypes)
-method(__setCookie)
-method(__setLocation)
-method(__setSoapHeaders)
-method(__soapCall)
+method(__toString)
+method(getCode)
+method(getFile)
+method(getLine)
+method(getMessage)
+method(getPrevious)
+method(getTrace)
+method(getTraceAsString)

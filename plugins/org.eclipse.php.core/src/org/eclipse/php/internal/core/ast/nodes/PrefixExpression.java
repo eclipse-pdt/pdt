@@ -30,25 +30,30 @@ public class PrefixExpression extends Expression implements IOperationNode {
 	public static final int OP_INC = 0;
 	// '--'
 	public static final int OP_DEC = 1;
+	// '...'
+	public static final int OP_UNPACK = 2;
 
-	private VariableBase variable;
+	private Expression variable;
 	private int operator;
 
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor VARIABLE_PROPERTY = new ChildPropertyDescriptor(PrefixExpression.class, "variable", VariableBase.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(PrefixExpression.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor VARIABLE_PROPERTY = new ChildPropertyDescriptor(
+			PrefixExpression.class,
+			"variable", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(
+			PrefixExpression.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
+				2);
 		propertyList.add(VARIABLE_PROPERTY);
 		propertyList.add(OPERATOR_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -58,7 +63,8 @@ public class PrefixExpression extends Expression implements IOperationNode {
 		super(ast);
 	}
 
-	public PrefixExpression(int start, int end, AST ast, VariableBase variable, int operator) {
+	public PrefixExpression(int start, int end, AST ast, Expression variable,
+			int operator) {
 		super(start, end, ast);
 
 		if (variable == null) {
@@ -105,6 +111,8 @@ public class PrefixExpression extends Expression implements IOperationNode {
 				return "--"; //$NON-NLS-1$
 			case OP_INC:
 				return "++"; //$NON-NLS-1$
+			case OP_UNPACK:
+				return "..."; //$NON-NLS-1$
 			default:
 				throw new IllegalArgumentException();
 		}
@@ -141,8 +149,10 @@ public class PrefixExpression extends Expression implements IOperationNode {
 	/**
 	 * Sets the operator of this prefix expression.
 	 * 
-	 * @param operator the prefix operator
-	 * @exception IllegalArgumentException if the argument is incorrect
+	 * @param operator
+	 *            the prefix operator
+	 * @exception IllegalArgumentException
+	 *                if the argument is incorrect
 	 */
 	public void setOperator(int operator) {
 		if (getOperator(operator) == null) {
@@ -153,7 +163,8 @@ public class PrefixExpression extends Expression implements IOperationNode {
 		postValueChange(OPERATOR_PROPERTY);
 	}
 
-	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property,
+			boolean get, int value) {
 		if (property == OPERATOR_PROPERTY) {
 			if (get) {
 				return getOperator();
@@ -171,22 +182,24 @@ public class PrefixExpression extends Expression implements IOperationNode {
 	 * 
 	 * @return the expression node
 	 */
-	public VariableBase getVariable() {
+	public Expression getVariable() {
 		return variable;
 	}
 
 	/**
 	 * Sets the expression of this prefix expression.
 	 * 
-	 * @param variable the new expression node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
+	 * @param variable
+	 *            the new expression node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
 	 */
-	public void setVariable(VariableBase variable) {
+	public void setVariable(Expression variable) {
 		if (variable == null) {
 			throw new IllegalArgumentException();
 		}
@@ -196,7 +209,8 @@ public class PrefixExpression extends Expression implements IOperationNode {
 		postReplaceChild(oldChild, variable, VARIABLE_PROPERTY);
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
+			boolean get, ASTNode child) {
 		if (property == VARIABLE_PROPERTY) {
 			if (get) {
 				return getVariable();
@@ -209,7 +223,7 @@ public class PrefixExpression extends Expression implements IOperationNode {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	/* 
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -219,13 +233,16 @@ public class PrefixExpression extends Expression implements IOperationNode {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final VariableBase variable = ASTNode.copySubtree(target, this.getVariable());
-		final PrefixExpression result = new PrefixExpression(this.getStart(), this.getEnd(), target, variable, this.getOperator());
+		final Expression variable = ASTNode.copySubtree(target,
+				this.getVariable());
+		final PrefixExpression result = new PrefixExpression(this.getStart(),
+				this.getEnd(), target, variable, this.getOperator());
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
+			PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 

@@ -1,0 +1,22 @@
+--TEST--
+Test use const statement
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+namespace Bar{
+    function foo(){
+    }
+}
+namespace {
+    use function foo|
+}
+--EXPECT--
+<?php
+namespace Bar{
+    function foo(){
+    }
+}
+namespace {
+    use function Bar\foo
+}

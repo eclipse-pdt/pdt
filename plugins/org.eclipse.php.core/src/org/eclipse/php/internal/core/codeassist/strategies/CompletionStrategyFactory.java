@@ -273,6 +273,14 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			}
 
 		}
+		if (contextClass == UseConstNameContext.class) {
+			return new ICompletionStrategy[] { new GlobalConstantsStrategy(
+					context) };
+		}
+		if (contextClass == UseFunctionNameContext.class) {
+			return new ICompletionStrategy[] { new GlobalFunctionsStrategy(
+					context) };
+		}
 		if (contextClass == NamespaceUseNameContext.class) {
 			NamespaceUseNameContext useNameContext = (NamespaceUseNameContext) context;
 			if (useNameContext.isUseTrait()) {

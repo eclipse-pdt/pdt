@@ -241,7 +241,8 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 								+ secondWordStart, valueStart + secondWordEnd,
 								secondWord);
 						referencesWithOrigOrder = references;
-					} else if (secondWord.charAt(0) == '$') {
+					} else if (secondWord.charAt(0) == '$'
+							|| secondWord.startsWith("...$")) {
 						references = new SimpleReference[2];
 						references[0] = new VariableReference(valueStart
 								+ secondWordStart, valueStart + secondWordEnd,

@@ -1,0 +1,17 @@
+--TEST--
+Test use function statement element selection
+--FILE--
+<?php
+namespace Foo{
+
+	const MAXI = 567;
+    class foo_class{
+    }
+}
+
+namespace Bar{
+
+	use const Foo\|MAXI|;
+}
+--EXPECT--
+field(MAXI)

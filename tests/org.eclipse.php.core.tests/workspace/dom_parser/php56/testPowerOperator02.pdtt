@@ -1,0 +1,21 @@
+--TEST--
+Test power operator
+--FILE--
+<?php $tmp **= 3 ?>
+--EXPECT--
+<Program start='0' length='19'>
+	<Statements>
+		<ExpressionStatement start='6' length='13'>
+			<Assignment start='6' length='10' operator='**='>
+				<Variable start='6' length='4' isDollared='true'>
+					<Identifier start='7' length='3' name='tmp'/>
+				</Variable>
+				<Value>
+					<Scalar start='15' length='1' type='int' value='3'/>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>
