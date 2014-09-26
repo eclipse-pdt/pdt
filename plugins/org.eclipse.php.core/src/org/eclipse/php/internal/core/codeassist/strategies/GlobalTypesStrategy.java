@@ -111,11 +111,11 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 								abstractContext.getOffset()
 										- abstractContext.getPrefix().length()
 										- 1) == '\"')) {
-			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_NAMESPACE;
+			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_USE;
 		}
 		if ("namespace".equals(abstractContext.getPreviousWord(1)) //$NON-NLS-1$
 				|| isUseContext) {
-			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_NAMESPACE;
+			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_USE;
 		}
 
 		for (IType type : types) {

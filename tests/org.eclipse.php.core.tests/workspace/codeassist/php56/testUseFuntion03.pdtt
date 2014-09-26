@@ -1,0 +1,16 @@
+--TEST--
+Test use function statement
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+namespace Foo{
+    function foo_function($param) {
+    }
+}
+namespace Bar{
+	use function Foo\foo_function as MyFunction;
+	echo MyF|
+}
+--EXPECT--
+method(foo_function)

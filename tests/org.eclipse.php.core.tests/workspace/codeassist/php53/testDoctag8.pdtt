@@ -23,7 +23,7 @@ namespace Something {
 	}
 }
 
-namespace Foo\Bar {
+namespace Foo\Bak {
 	class Foo {
 		function fooBarFoo() {
 		}

@@ -31,39 +31,44 @@ public class FormalParameter extends ASTNode {
 	private Expression parameterType;
 	private Expression parameterName;
 	private Expression defaultValue;
-	private boolean isMandatory; // php4 "const" keyword 
+	private boolean isMandatory; // php4 "const" keyword
+	private boolean isVariadic;
 
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor PARAMETER_TYPE_PROPERTY = 
-		new ChildPropertyDescriptor(FormalParameter.class, "parameterType", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor PARAMETER_NAME_PROPERTY = 
-		new ChildPropertyDescriptor(FormalParameter.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor DEFAULT_VALUE_PROPERTY = 
-		new ChildPropertyDescriptor(FormalParameter.class, "defaultValue", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor IS_MANDATORY_PROPERTY = 
-		new SimplePropertyDescriptor(FormalParameter.class, "isMandatory", Boolean.class, OPTIONAL); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor PARAMETER_TYPE_PROPERTY = new ChildPropertyDescriptor(
+			FormalParameter.class,
+			"parameterType", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor PARAMETER_NAME_PROPERTY = new ChildPropertyDescriptor(
+			FormalParameter.class,
+			"expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor DEFAULT_VALUE_PROPERTY = new ChildPropertyDescriptor(
+			FormalParameter.class,
+			"defaultValue", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor IS_MANDATORY_PROPERTY = new SimplePropertyDescriptor(
+			FormalParameter.class, "isMandatory", Boolean.class, OPTIONAL); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor IS_VARIADIC_PROPERTY = new SimplePropertyDescriptor(
+			FormalParameter.class, "isVariadic", Boolean.class, OPTIONAL); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
-	 * FOR PHP4 
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized. FOR PHP4
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP4;
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP5;
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(
+				3);
 		properyList.add(PARAMETER_TYPE_PROPERTY);
 		properyList.add(PARAMETER_NAME_PROPERTY);
 		properyList.add(DEFAULT_VALUE_PROPERTY);
+		properyList.add(IS_VARIADIC_PROPERTY);
 		PROPERTY_DESCRIPTORS_PHP5 = Collections.unmodifiableList(properyList);
 		properyList = new ArrayList<StructuralPropertyDescriptor>(4);
 		properyList.add(PARAMETER_TYPE_PROPERTY);
@@ -74,11 +79,19 @@ public class FormalParameter extends ASTNode {
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
-		return apiLevel == PHPVersion.PHP4 ? PROPERTY_DESCRIPTORS_PHP4 : PROPERTY_DESCRIPTORS_PHP5;
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
+			PHPVersion apiLevel) {
+		return apiLevel == PHPVersion.PHP4 ? PROPERTY_DESCRIPTORS_PHP4
+				: PROPERTY_DESCRIPTORS_PHP5;
 	}
 
-	private FormalParameter(int start, int end, AST ast, Expression type, final Expression parameterName, Expression defaultValue, boolean isMandatory) {
+	public FormalParameter(AST ast) {
+		super(ast);
+	}
+
+	public FormalParameter(int start, int end, AST ast, Expression type,
+			final Expression parameterName, Expression defaultValue,
+			boolean isMandatory, boolean isVariadic) {
 		super(start, end, ast);
 
 		if (parameterName == null) {
@@ -92,29 +105,41 @@ public class FormalParameter extends ASTNode {
 			setDefaultValue(defaultValue);
 		}
 		setIsMandatory(isMandatory);
+		setIsVariadic(isVariadic);
 	}
 
-	public FormalParameter(AST ast) {
-		super(ast);
+	private FormalParameter(int start, int end, AST ast, Expression type,
+			final Expression parameterName, Expression defaultValue,
+			boolean isMandatory) {
+		this(start, end, ast, type, parameterName, defaultValue, isMandatory,
+				false);
 	}
 
-	public FormalParameter(int start, int end, AST ast, Expression type, final Variable parameterName, Expression defaultValue) {
-		this(start, end, ast, type, (Expression) parameterName, defaultValue, false);
+	public FormalParameter(int start, int end, AST ast, Expression type,
+			final Variable parameterName, Expression defaultValue) {
+		this(start, end, ast, type, (Expression) parameterName, defaultValue,
+				false);
 	}
 
-	public FormalParameter(int start, int end, AST ast, Expression type, final Reference parameterName, Expression defaultValue) {
-		this(start, end, ast, type, (Expression) parameterName, defaultValue, false);
+	public FormalParameter(int start, int end, AST ast, Expression type,
+			final Reference parameterName, Expression defaultValue) {
+		this(start, end, ast, type, (Expression) parameterName, defaultValue,
+				false);
 	}
 
-	public FormalParameter(int start, int end, AST ast, Expression type, final Variable parameterName) {
+	public FormalParameter(int start, int end, AST ast, Expression type,
+			final Variable parameterName) {
 		this(start, end, ast, type, (Expression) parameterName, null, false);
 	}
 
-	public FormalParameter(int start, int end, AST ast, Expression type, final Variable parameterName, boolean isMandatory) {
-		this(start, end, ast, type, (Expression) parameterName, null, isMandatory);
+	public FormalParameter(int start, int end, AST ast, Expression type,
+			final Variable parameterName, boolean isMandatory) {
+		this(start, end, ast, type, (Expression) parameterName, null,
+				isMandatory);
 	}
 
-	public FormalParameter(int start, int end, AST ast, Expression type, final Reference parameterName) {
+	public FormalParameter(int start, int end, AST ast, Expression type,
+			final Reference parameterName) {
 		this(start, end, ast, type, (Expression) parameterName, null, false);
 	}
 
@@ -161,7 +186,11 @@ public class FormalParameter extends ASTNode {
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<FormalParameter"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" isMandatory='").append(isMandatory).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(" isMandatory='").append(isMandatory); //$NON-NLS-1$ 
+		if (isVariadic()) {
+			buffer.append(" isVariadic='").append(isVariadic);//$NON-NLS-1$ 
+		}
+		buffer.append("'>\n"); //$NON-NLS-1$ 
 		buffer.append(TAB).append(tab).append("<Type>\n"); //$NON-NLS-1$
 		if (parameterType != null) {
 			parameterType.toString(buffer, TAB + TAB + tab);
@@ -195,13 +224,15 @@ public class FormalParameter extends ASTNode {
 	/**
 	 * Sets the default value of this parameter
 	 * 
-	 * @param value the type name of this parameter expression.
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
+	 * @param value
+	 *            the type name of this parameter expression.
+	 * @exception IllegalArgumentException
+	 *                if:isOptional
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
 	 */
 	public void setDefaultValue(Expression value) {
 		// an Assignment may occur inside a Expression - must check cycles
@@ -221,13 +252,28 @@ public class FormalParameter extends ASTNode {
 	/**
 	 * Sets the type of this cast expression.
 	 * 
-	 * @param castingType the cast type 
-	 * @exception IllegalArgumentException if the argument is incorrect
+	 * @param castingType
+	 *            the cast type
+	 * @exception IllegalArgumentException
+	 *                if the argument is incorrect
 	 */
 	public void setIsMandatory(boolean isMandatory) {
 		preValueChange(IS_MANDATORY_PROPERTY);
 		this.isMandatory = isMandatory;
 		postValueChange(IS_MANDATORY_PROPERTY);
+	}
+
+	/**
+	 * indicates if this parameter is variadic when invoking the function
+	 */
+	public boolean isVariadic() {
+		return isVariadic;
+	}
+
+	public void setIsVariadic(boolean isVariadic) {
+		preValueChange(IS_VARIADIC_PROPERTY);
+		this.isVariadic = isVariadic;
+		postValueChange(IS_VARIADIC_PROPERTY);
 	}
 
 	/**
@@ -240,13 +286,15 @@ public class FormalParameter extends ASTNode {
 	/**
 	 * Sets the name of this parameter
 	 * 
-	 * @param name the type name of this parameter expression.
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
+	 * @param name
+	 *            the type name of this parameter expression.
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
 	 */
 	public void setParameterName(Expression name) {
 		if (name == null) {
@@ -269,26 +317,30 @@ public class FormalParameter extends ASTNode {
 	/**
 	 * Sets the type of this parameter
 	 * 
-	 * @param id the type name of this parameter expression.
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
+	 * @param id
+	 *            the type name of this parameter expression.
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
 	 */
 	public void setParameterType(Expression id) {
-		if (id != null && !(id instanceof Identifier) && !(id instanceof NamespaceName)) {
+		if (id != null && !(id instanceof Identifier)
+				&& !(id instanceof NamespaceName)) {
 			throw new IllegalArgumentException();
 		}
-		//		// an Assignment may occur inside a Expression - must check cycles
+		// // an Assignment may occur inside a Expression - must check cycles
 		Expression oldChild = this.parameterType;
 		preReplaceChild(oldChild, id, PARAMETER_TYPE_PROPERTY);
 		this.parameterType = id;
 		postReplaceChild(oldChild, id, PARAMETER_TYPE_PROPERTY);
 	}
 
-	final boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
+	final boolean internalGetSetBooleanProperty(
+			SimplePropertyDescriptor property, boolean get, boolean value) {
 		if (property == IS_MANDATORY_PROPERTY) {
 			if (get) {
 				return isMandatory();
@@ -296,12 +348,20 @@ public class FormalParameter extends ASTNode {
 				setIsMandatory(value);
 				return false;
 			}
+		} else if (property == IS_VARIADIC_PROPERTY) {
+			if (get) {
+				return isVariadic();
+			} else {
+				setIsVariadic(value);
+				return false;
+			}
 		}
 		// allow default implementation to flag the error
 		return super.internalGetSetBooleanProperty(property, get, value);
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
+			boolean get, ASTNode child) {
 		if (property == PARAMETER_NAME_PROPERTY) {
 			if (get) {
 				return getParameterName();
@@ -331,24 +391,25 @@ public class FormalParameter extends ASTNode {
 	}
 
 	/**
-	 * @return Identifier name of the formal parameter name  
+	 * @return Identifier name of the formal parameter name
 	 */
 	public Identifier getParameterNameIdentifier() {
 		Expression expression = parameterName;
 		switch (parameterName.getType()) {
-			case ASTNode.REFERENCE:
-				expression = ((Reference) expression).getExpression();
-				if (expression.getType() != ASTNode.VARIABLE) {
-					throw new IllegalStateException();
-				}
-			case ASTNode.VARIABLE:
-				final Identifier variableName = (Identifier) ((Variable) expression).getName();
-				return variableName;
+		case ASTNode.REFERENCE:
+			expression = ((Reference) expression).getExpression();
+			if (expression.getType() != ASTNode.VARIABLE) {
+				throw new IllegalStateException();
+			}
+		case ASTNode.VARIABLE:
+			final Identifier variableName = (Identifier) ((Variable) expression)
+					.getName();
+			return variableName;
 		}
 		throw new IllegalStateException();
 	}
 
-	/* 
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -358,26 +419,31 @@ public class FormalParameter extends ASTNode {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final Expression name = ASTNode.copySubtree(target, this.getParameterName());
-		final Expression type = ASTNode.copySubtree(target, this.getParameterType());
-		final Expression value = ASTNode.copySubtree(target, this.getDefaultValue());
+		final Expression name = ASTNode.copySubtree(target,
+				this.getParameterName());
+		final Expression type = ASTNode.copySubtree(target,
+				this.getParameterType());
+		final Expression value = ASTNode.copySubtree(target,
+				this.getDefaultValue());
 		final boolean isMandatory = this.isMandatory();
-		final FormalParameter result = new FormalParameter(this.getStart(), this.getEnd(), target, type, name, value, isMandatory);
+		final FormalParameter result = new FormalParameter(this.getStart(),
+				this.getEnd(), target, type, name, value, isMandatory);
 		return result;
 	}
 
 	/**
-	 * Resolves and returns the binding for this formal parameter	
+	 * Resolves and returns the binding for this formal parameter
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be 
-	 *    resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
 	 */
 	public final ITypeBinding resolveTypeBinding() {
 		return this.ast.getBindingResolver().resolveTypeParameter(this);
 	}
 
 	/**
-	 * Returns true if this FormalParemeter has a valid (non null and with value) default value.
+	 * Returns true if this FormalParemeter has a valid (non null and with
+	 * value) default value.
 	 * 
 	 * @return True, iff the default value is valid.
 	 */

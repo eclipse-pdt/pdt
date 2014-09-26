@@ -1,0 +1,20 @@
+--TEST--
+Test use function statement
+--FILE--
+<?php
+namespace A {
+    /**
+     * My magic test class
+     * 
+     * @return \DateTime
+     */
+    function getdate() {
+        return 'what_ever';
+    }
+}
+ 
+namespace C {
+    use function getdate;
+    getdate()->|
+}
+--EXPECT--

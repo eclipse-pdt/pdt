@@ -1,0 +1,20 @@
+--TEST--
+Test use const syntax
+--FILE--
+<?php use const Foo\Bar as MyName ?>
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="40">
+	<UseStatement start="6" end="37" statementType="2">
+		<Parts>
+			<UsePart start="0" end="0">
+				<FullyQualifiedReference start="16" end="23" name="Foo\Bar">
+					<NamespaceReference start="16" end="19" name="Foo" global="false" local="false">
+					</NamespaceReference>
+				</FullyQualifiedReference>
+				<SimpleReference start="27" end="33" name="MyName">
+				</SimpleReference>
+			</UsePart>
+		</Parts>
+	</UseStatement>
+</ModuleDeclaration>

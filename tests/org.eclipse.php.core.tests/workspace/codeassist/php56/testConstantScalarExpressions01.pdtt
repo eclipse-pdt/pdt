@@ -1,0 +1,17 @@
+--TEST--
+Test global constant.
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+class Foo {
+    const BAZ = 10;
+}
+ 
+class Bar {
+    public $bar = 1 + Foo::|;
+}
+?>
+--EXPECT--
+field(BAZ)
+field(class)

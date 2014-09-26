@@ -13,6 +13,7 @@ public class AllTests {
 		suite.addTestSuite(PhpElementConciliatorV5_3Test.class);
 		suite.addTestSuite(PhpElementConciliatorV5_4Test.class);
 		suite.addTestSuite(PhpElementConciliatorV5_5Test.class);
+		suite.addTestSuite(PhpElementConciliatorV5_6Test.class);
 		// $JUnit-END$
 		return suite;
 	}

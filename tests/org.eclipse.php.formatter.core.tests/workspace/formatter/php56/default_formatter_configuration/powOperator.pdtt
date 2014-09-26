@@ -1,0 +1,24 @@
+--TEST--
+Test Pow operator
+--FILE--
+<?php
+$f=2**3;
+$g**=4;
+echo 2 ** 3 ** 2; 
+echo -3 ** 2; 
+echo 1 -3 ** 2;
+echo ~3** 2;
+if (2 **3 ** 2 	   == 512) {
+}
+?>
+--EXPECT--
+<?php
+$f = 2 ** 3;
+$g **= 4;
+echo 2 ** 3 ** 2;
+echo - 3 ** 2;
+echo 1 - 3 ** 2;
+echo ~ 3 ** 2;
+if (2 ** 3 ** 2 == 512) {
+}
+?>

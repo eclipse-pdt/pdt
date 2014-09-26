@@ -59,7 +59,10 @@ class DefaultLanguageModelProvider implements ILanguageModelProvider {
 		if (phpVersion == PHPVersion.PHP5_4) {
 			return LANGUAGE_LIBRARY_PATH + "5.4"; //$NON-NLS-1$
 		}
-		return LANGUAGE_LIBRARY_PATH + "5.5"; //$NON-NLS-1$
+		if (phpVersion == PHPVersion.PHP5_5) {
+			return LANGUAGE_LIBRARY_PATH + "5.5"; //$NON-NLS-1$
+		}
+		return LANGUAGE_LIBRARY_PATH + "5.6"; //$NON-NLS-1$
 	}
 
 	public Plugin getPlugin() {

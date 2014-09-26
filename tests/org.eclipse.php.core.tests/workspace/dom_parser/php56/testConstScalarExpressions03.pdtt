@@ -1,0 +1,36 @@
+--TEST--
+Test power operator
+--FILE--
+<?php class Test{ public $field = 2 << 3; } ?>
+--EXPECT--
+<Program start='0' length='46'>
+	<Statements>
+		<ClassDeclaration start='6' length='37' modifier=''>
+			<ClassName>
+				<Identifier start='12' length='4' name='Test'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='16' length='27' isCurly='true'>
+				<FieldsDeclaration start='18' length='23' modifier='public'>
+					<VariableName>
+						<Variable start='25' length='6' isDollared='true'>
+							<Identifier start='26' length='5' name='field'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+						<InfixExpression start='34' length='6' operator='&lt;&lt;'>
+							<Scalar start='34' length='1' type='int' value='2'/>
+							<Scalar start='39' length='1' type='int' value='3'/>
+						</InfixExpression>
+					</InitialValue>
+				</FieldsDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='44' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

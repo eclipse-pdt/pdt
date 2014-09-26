@@ -43,18 +43,17 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.formatter.core.Logger;
+import org.eclipse.php.formatter.ui.preferences.ProfileManager;
+import org.eclipse.php.formatter.ui.preferences.ProfileManager.CustomProfile;
+import org.eclipse.php.formatter.ui.preferences.ProfileManager.Profile;
+import org.eclipse.php.formatter.ui.preferences.ProfileStore;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.ui.format.PHPFormatProcessorProxy;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.osgi.framework.Bundle;
-
-import org.eclipse.php.formatter.core.Logger;
-import org.eclipse.php.formatter.ui.preferences.ProfileManager;
-import org.eclipse.php.formatter.ui.preferences.ProfileStore;
-import org.eclipse.php.formatter.ui.preferences.ProfileManager.CustomProfile;
-import org.eclipse.php.formatter.ui.preferences.ProfileManager.Profile;
 
 public class FormatterTests extends AbstractPDTTTest {
 
@@ -69,6 +68,8 @@ public class FormatterTests extends AbstractPDTTTest {
 				new String[] { "/workspace/formatter/php54" });
 		TESTS.put(PHPVersion.PHP5_5,
 				new String[] { "/workspace/formatter/php55" });
+		TESTS.put(PHPVersion.PHP5_6,
+				new String[] { "/workspace/formatter/php56" });
 	};
 
 	protected static Map<PdttFile, IFile> filesMap = new LinkedHashMap<PdttFile, IFile>();

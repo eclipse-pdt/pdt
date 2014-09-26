@@ -1,0 +1,63 @@
+--TEST--
+Test constant scalar expressions Operation
+--FILE--
+<?php class Bar { public $foo = 1 + 1; public $bar = [1 + 1, 1 << 2, 2 => "foo "."bar"]; public $baseDir = __DIR__ . "/base"; } ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="131">
+	<ClassDeclaration start="6" end="127" modifiers="" name="Bar">
+		<PHPFieldDeclaration start="25" end="37" modifiers="public">
+			<SimpleReference start="25" end="29" name="$foo">
+			</SimpleReference>
+			<InfixExpression start="32" end="37" operator="+">
+				<Scalar start="32" end="33" type="int" value="1">
+				</Scalar>
+				<Scalar start="36" end="37" type="int" value="1">
+				</Scalar>
+			</InfixExpression>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="46" end="87" modifiers="public">
+			<SimpleReference start="46" end="50" name="$bar">
+			</SimpleReference>
+			<ArrayCreation start="53" end="87">
+				<ArrayElement start="54" end="59">
+					<InfixExpression start="54" end="59" operator="+">
+						<Scalar start="54" end="55" type="int" value="1">
+						</Scalar>
+						<Scalar start="58" end="59" type="int" value="1">
+						</Scalar>
+					</InfixExpression>
+				</ArrayElement>
+				<ArrayElement start="61" end="67">
+					<InfixExpression start="61" end="67" operator="&lt;&lt;">
+						<Scalar start="61" end="62" type="int" value="1">
+						</Scalar>
+						<Scalar start="66" end="67" type="int" value="2">
+						</Scalar>
+					</InfixExpression>
+				</ArrayElement>
+				<ArrayElement start="69" end="86">
+					<Scalar start="69" end="70" type="int" value="2">
+					</Scalar>
+					<InfixExpression start="74" end="86" operator=".">
+						<Scalar start="74" end="80" type="string" value="&quot;foo &quot;">
+						</Scalar>
+						<Scalar start="81" end="86" type="string" value="&quot;bar&quot;">
+						</Scalar>
+					</InfixExpression>
+				</ArrayElement>
+			</ArrayCreation>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="96" end="124" modifiers="public">
+			<SimpleReference start="96" end="104" name="$baseDir">
+			</SimpleReference>
+			<InfixExpression start="107" end="124" operator=".">
+				<Scalar start="107" end="114" type="system" value="__DIR__">
+				</Scalar>
+				<Scalar start="117" end="124" type="string" value="&quot;/base&quot;">
+				</Scalar>
+			</InfixExpression>
+		</PHPFieldDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="128" end="130">
+	</EmptyStatement>
+</ModuleDeclaration>
