@@ -1,0 +1,45 @@
+--TEST--
+Test constant scalar expressions Operation
+--FILE--
+<?php const A = 1 * 2; const B = (1 * 2) * 3; const C = 1 * (2 * 3) ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="71">
+	<ConstantDeclaration start="6" end="21" modifiers="">
+		<ConstantReference start="12" end="13" name="A">
+		</ConstantReference>
+		<InfixExpression start="16" end="21" operator="*">
+			<Scalar start="16" end="17" type="int" value="1">
+			</Scalar>
+			<Scalar start="20" end="21" type="int" value="2">
+			</Scalar>
+		</InfixExpression>
+	</ConstantDeclaration>
+	<ConstantDeclaration start="23" end="44" modifiers="">
+		<ConstantReference start="29" end="30" name="B">
+		</ConstantReference>
+		<InfixExpression start="33" end="44" operator="*">
+			<InfixExpression start="34" end="39" operator="*">
+				<Scalar start="34" end="35" type="int" value="1">
+				</Scalar>
+				<Scalar start="38" end="39" type="int" value="2">
+				</Scalar>
+			</InfixExpression>
+			<Scalar start="43" end="44" type="int" value="3">
+			</Scalar>
+		</InfixExpression>
+	</ConstantDeclaration>
+	<ConstantDeclaration start="46" end="67" modifiers="">
+		<ConstantReference start="52" end="53" name="C">
+		</ConstantReference>
+		<InfixExpression start="56" end="67" operator="*">
+			<Scalar start="56" end="57" type="int" value="1">
+			</Scalar>
+			<InfixExpression start="61" end="66" operator="*">
+				<Scalar start="61" end="62" type="int" value="2">
+				</Scalar>
+				<Scalar start="65" end="66" type="int" value="3">
+				</Scalar>
+			</InfixExpression>
+		</InfixExpression>
+	</ConstantDeclaration>
+</ModuleDeclaration>

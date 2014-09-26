@@ -1,0 +1,28 @@
+--TEST--
+Test Argument Unpacking
+--FILE--
+<?php prepare(...$params1, ...$params2, ...$params3) ?>
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="59">
+	<ExpressionStatement start="6" end="56">
+		<PHPCallExpression start="6" end="52">
+			<FullyQualifiedReference start="6" end="13" name="prepare">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="14" end="51">
+				<PrefixExpression start="14" end="25" operator="...">
+					<VariableReference start="17" end="25" name="$params1">
+					</VariableReference>
+				</PrefixExpression>
+				<PrefixExpression start="27" end="38" operator="...">
+					<VariableReference start="30" end="38" name="$params2">
+					</VariableReference>
+				</PrefixExpression>
+				<PrefixExpression start="40" end="51" operator="...">
+					<VariableReference start="43" end="51" name="$params3">
+					</VariableReference>
+				</PrefixExpression>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+</ModuleDeclaration>

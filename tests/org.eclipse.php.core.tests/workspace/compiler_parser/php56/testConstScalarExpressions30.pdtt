@@ -1,0 +1,31 @@
+--TEST--
+Test constant scalar expressions Operation
+--FILE--
+<?php class Foo { const GREETING = "HELLO"; const BAZ = self::GREETING . " WORLD!"; } ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="89">
+	<ClassDeclaration start="6" end="85" modifiers="" name="Foo">
+		<ConstantDeclaration start="18" end="42" modifiers="">
+			<ConstantReference start="24" end="32" name="GREETING">
+			</ConstantReference>
+			<Scalar start="35" end="42" type="string" value="&quot;HELLO&quot;">
+			</Scalar>
+		</ConstantDeclaration>
+		<ConstantDeclaration start="44" end="82" modifiers="">
+			<ConstantReference start="50" end="53" name="BAZ">
+			</ConstantReference>
+			<InfixExpression start="56" end="82" operator=".">
+				<StaticConstantAccess start="56" end="70">
+					<FullyQualifiedReference start="56" end="60" name="self">
+					</FullyQualifiedReference>
+					<ConstantReference start="62" end="70" name="GREETING">
+					</ConstantReference>
+				</StaticConstantAccess>
+				<Scalar start="73" end="82" type="string" value="&quot; WORLD!&quot;">
+				</Scalar>
+			</InfixExpression>
+		</ConstantDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="86" end="88">
+	</EmptyStatement>
+</ModuleDeclaration>

@@ -108,8 +108,8 @@ public class ASTRewriteTests extends TestCase {
 		return new TestSuite(new Class[] { ASTRewriteTests.class,
 				NodeDeletionTests.class, ASTRewriteTestsPHP54.class,
 				NodeDeletionTestsPHP54.class, ASTRewriteTestsPHP55.class,
-				NodeDeletionTestsPHP55.class, },
-				ASTRewriteTests.class.getName());
+				NodeDeletionTestsPHP55.class, ASTRewriteTestsPHP56.class,
+				NodeDeletionTestsPHP56.class }, ASTRewriteTests.class.getName());
 	}
 
 	// //////////////////////// Tests //////////////////////////

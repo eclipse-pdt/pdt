@@ -133,6 +133,8 @@ public class PHPKeywords {
 					instance = new PHPKeywords(new KeywordInitializerPHP_5_4());
 				} else if (PHPVersion.PHP5_5 == version) {
 					instance = new PHPKeywords(new KeywordInitializerPHP_5_5());
+				} else if (PHPVersion.PHP5_6 == version) {
+					instance = new PHPKeywords(new KeywordInitializerPHP_5_6());
 				} else {
 					throw new IllegalArgumentException(Messages.PHPKeywords_0);
 				}

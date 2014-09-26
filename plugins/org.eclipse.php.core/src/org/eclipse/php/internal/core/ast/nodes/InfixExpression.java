@@ -34,7 +34,7 @@ public class InfixExpression extends Expression {
 	public static final int OP_IS_NOT_IDENTICAL = 1;
 	// '=='
 	public static final int OP_IS_EQUAL = 2;
-	// '!='	
+	// '!='
 	public static final int OP_IS_NOT_EQUAL = 3;
 	// '<'
 	public static final int OP_RGREATER = 4;
@@ -42,7 +42,7 @@ public class InfixExpression extends Expression {
 	public static final int OP_IS_SMALLER_OR_EQUAL = 5;
 	// '>'
 	public static final int OP_LGREATER = 6;
-	// '>='	
+	// '>='
 	public static final int OP_IS_GREATER_OR_EQUAL = 7;
 	// '||'
 	public static final int OP_BOOL_OR = 8;
@@ -50,7 +50,7 @@ public class InfixExpression extends Expression {
 	public static final int OP_BOOL_AND = 9;
 	// 'or'
 	public static final int OP_STRING_OR = 10;
-	// 'and'	
+	// 'and'
 	public static final int OP_STRING_AND = 11;
 	// 'xor'
 	public static final int OP_STRING_XOR = 12;
@@ -58,7 +58,7 @@ public class InfixExpression extends Expression {
 	public static final int OP_OR = 13;
 	// '&'
 	public static final int OP_AND = 14;
-	// '^'	
+	// '^'
 	public static final int OP_XOR = 15;
 	// '.'
 	public static final int OP_CONCAT = 16;
@@ -66,7 +66,7 @@ public class InfixExpression extends Expression {
 	public static final int OP_PLUS = 17;
 	// '-'
 	public static final int OP_MINUS = 18;
-	// '*'	
+	// '*'
 	public static final int OP_MUL = 19;
 	// '/'
 	public static final int OP_DIV = 20;
@@ -74,8 +74,10 @@ public class InfixExpression extends Expression {
 	public static final int OP_MOD = 21;
 	// '<<'
 	public static final int OP_SL = 22;
-	// '>>'	
+	// '>>'
 	public static final int OP_SR = 23;
+	// '**'
+	public static final int OP_POW = 24;
 
 	private Expression left;
 	private int operator;
@@ -84,35 +86,38 @@ public class InfixExpression extends Expression {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor LEFT_OPERAND_PROPERTY = 
-		new ChildPropertyDescriptor(InfixExpression.class, "left", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = 
-		new SimplePropertyDescriptor(InfixExpression.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor RIGHT_OPERAND_PROPERTY = 
-		new ChildPropertyDescriptor(InfixExpression.class, "right", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	
+	public static final ChildPropertyDescriptor LEFT_OPERAND_PROPERTY = new ChildPropertyDescriptor(
+			InfixExpression.class,
+			"left", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(
+			InfixExpression.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor RIGHT_OPERAND_PROPERTY = new ChildPropertyDescriptor(
+			InfixExpression.class,
+			"right", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(
+				3);
 		properyList.add(LEFT_OPERAND_PROPERTY);
 		properyList.add(OPERATOR_PROPERTY);
 		properyList.add(RIGHT_OPERAND_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	public InfixExpression(int start, int end, AST ast, Expression left, int operator, Expression right) {
+	public InfixExpression(int start, int end, AST ast, Expression left,
+			int operator, Expression right) {
 		super(start, end, ast);
 
 		if (right == null || left == null || getOperator(operator) == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		setLeft(left);
 		setOperator(operator);
 		setRight(right);
@@ -124,56 +129,58 @@ public class InfixExpression extends Expression {
 
 	public static String getOperator(int operator) {
 		switch (operator) {
-			case OP_IS_IDENTICAL:
-				return "==="; //$NON-NLS-1$
-			case OP_IS_NOT_IDENTICAL:
-				return "!=="; //$NON-NLS-1$
-			case OP_IS_EQUAL:
-				return "=="; //$NON-NLS-1$
-			case OP_IS_NOT_EQUAL:
-				return "!="; //$NON-NLS-1$
-			case OP_RGREATER:
-				return "<"; //$NON-NLS-1$
-			case OP_IS_SMALLER_OR_EQUAL:
-				return "<="; //$NON-NLS-1$
-			case OP_LGREATER:
-				return ">"; //$NON-NLS-1$
-			case OP_IS_GREATER_OR_EQUAL:
-				return ">="; //$NON-NLS-1$
-			case OP_BOOL_OR:
-				return "||"; //$NON-NLS-1$
-			case OP_BOOL_AND:
-				return "&&"; //$NON-NLS-1$
-			case OP_STRING_OR:
-				return "or"; //$NON-NLS-1$
-			case OP_STRING_AND:
-				return "and"; //$NON-NLS-1$
-			case OP_STRING_XOR:
-				return "xor"; //$NON-NLS-1$
-			case OP_OR:
-				return "|"; //$NON-NLS-1$
-			case OP_AND:
-				return "&"; //$NON-NLS-1$
-			case OP_XOR:
-				return "^"; //$NON-NLS-1$
-			case OP_CONCAT:
-				return "."; //$NON-NLS-1$
-			case OP_PLUS:
-				return "+"; //$NON-NLS-1$
-			case OP_MINUS:
-				return "-"; //$NON-NLS-1$
-			case OP_MUL:
-				return "*"; //$NON-NLS-1$
-			case OP_DIV:
-				return "/"; //$NON-NLS-1$
-			case OP_MOD:
-				return "%"; //$NON-NLS-1$
-			case OP_SL:
-				return "<<"; //$NON-NLS-1$
-			case OP_SR:
-				return ">>"; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case OP_IS_IDENTICAL:
+			return "==="; //$NON-NLS-1$
+		case OP_IS_NOT_IDENTICAL:
+			return "!=="; //$NON-NLS-1$
+		case OP_IS_EQUAL:
+			return "=="; //$NON-NLS-1$
+		case OP_IS_NOT_EQUAL:
+			return "!="; //$NON-NLS-1$
+		case OP_RGREATER:
+			return "<"; //$NON-NLS-1$
+		case OP_IS_SMALLER_OR_EQUAL:
+			return "<="; //$NON-NLS-1$
+		case OP_LGREATER:
+			return ">"; //$NON-NLS-1$
+		case OP_IS_GREATER_OR_EQUAL:
+			return ">="; //$NON-NLS-1$
+		case OP_BOOL_OR:
+			return "||"; //$NON-NLS-1$
+		case OP_BOOL_AND:
+			return "&&"; //$NON-NLS-1$
+		case OP_STRING_OR:
+			return "or"; //$NON-NLS-1$
+		case OP_STRING_AND:
+			return "and"; //$NON-NLS-1$
+		case OP_STRING_XOR:
+			return "xor"; //$NON-NLS-1$
+		case OP_OR:
+			return "|"; //$NON-NLS-1$
+		case OP_AND:
+			return "&"; //$NON-NLS-1$
+		case OP_XOR:
+			return "^"; //$NON-NLS-1$
+		case OP_CONCAT:
+			return "."; //$NON-NLS-1$
+		case OP_PLUS:
+			return "+"; //$NON-NLS-1$
+		case OP_MINUS:
+			return "-"; //$NON-NLS-1$
+		case OP_MUL:
+			return "*"; //$NON-NLS-1$
+		case OP_DIV:
+			return "/"; //$NON-NLS-1$
+		case OP_MOD:
+			return "%"; //$NON-NLS-1$
+		case OP_SL:
+			return "<<"; //$NON-NLS-1$
+		case OP_SR:
+			return ">>"; //$NON-NLS-1$
+		case OP_POW:
+			return "**"; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -183,7 +190,7 @@ public class InfixExpression extends Expression {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		left.accept(visitor);
@@ -220,7 +227,7 @@ public class InfixExpression extends Expression {
 	 * Returns the operator of this infix expression.
 	 * 
 	 * @return the infix operator
-	 */ 
+	 */
 	public int getOperator() {
 		return this.operator;
 	}
@@ -228,9 +235,11 @@ public class InfixExpression extends Expression {
 	/**
 	 * Sets the operator of this infix expression.
 	 * 
-	 * @param operator the infix operator
-	 * @exception IllegalArgumentException if the argument is incorrect
-	 */ 
+	 * @param operator
+	 *            the infix operator
+	 * @exception IllegalArgumentException
+	 *                if the argument is incorrect
+	 */
 	public void setOperator(int operator) {
 		if (getOperator(operator) == null) {
 			throw new IllegalArgumentException();
@@ -244,22 +253,24 @@ public class InfixExpression extends Expression {
 	 * Returns the left operand of this infix expression.
 	 * 
 	 * @return the left operand node
-	 */ 
+	 */
 	public Expression getLeft() {
 		return this.left;
 	}
-		
+
 	/**
 	 * Sets the left operand of this infix expression.
 	 * 
-	 * @param expression the left operand node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param expression
+	 *            the left operand node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setLeft(Expression expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException();
@@ -274,22 +285,24 @@ public class InfixExpression extends Expression {
 	 * Returns the right operand of this infix expression.
 	 * 
 	 * @return the right operand node
-	 */ 
+	 */
 	public Expression getRight() {
 		return this.right;
 	}
-		
+
 	/**
 	 * Sets the right operand of this infix expression.
 	 * 
-	 * @param expression the right operand node
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param expression
+	 *            the right operand node
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setRight(Expression expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException();
@@ -299,9 +312,8 @@ public class InfixExpression extends Expression {
 		this.right = expression;
 		postReplaceChild(oldChild, expression, RIGHT_OPERAND_PROPERTY);
 	}
-	
-	
-	/* 
+
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -313,16 +325,19 @@ public class InfixExpression extends Expression {
 	ASTNode clone0(AST target) {
 		final Expression left = ASTNode.copySubtree(target, getLeft());
 		final Expression right = ASTNode.copySubtree(target, getRight());
-		final InfixExpression result = new InfixExpression(this.getStart(), this.getEnd(), target, left, this.getOperator(), right);
+		final InfixExpression result = new InfixExpression(this.getStart(),
+				this.getEnd(), target, left, this.getOperator(), right);
 		return result;
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
+			PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
+			boolean get, ASTNode child) {
 		if (property == LEFT_OPERAND_PROPERTY) {
 			if (get) {
 				return getLeft();
@@ -344,7 +359,8 @@ public class InfixExpression extends Expression {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property,
+			boolean get, int value) {
 		if (property == OPERATOR_PROPERTY) {
 			if (get) {
 				return getOperator();
@@ -357,4 +373,3 @@ public class InfixExpression extends Expression {
 		return super.internalGetSetIntProperty(property, get, value);
 	}
 }
-
