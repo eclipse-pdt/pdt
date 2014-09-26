@@ -1,0 +1,32 @@
+--TEST--
+Test Argument Unpacking
+--FILE--
+<?php
+function test(...$args) { var_dump($args); }
+test(...$tmp);
+test(...$tmpA->toArray());
+test(...ABC::toArray());
+test(1, 2, 3);                         // [1, 2, 3]
+test(...[1, 2, 3]);                    // [1, 2, 3]
+test(...new ArrayIterator([1, 2, 3])); // [1, 2, 3]
+?>
+--EXPECT--
+<?php
+function test(...$args) {
+	var_dump ( $args );
+}
+test ( ...$tmp );
+test ( ...$tmpA->toArray () );
+test ( ...ABC::toArray () );
+test ( 1, 2, 3 ); // [1, 2, 3]
+test ( ...[ 
+		1,
+		2,
+		3 
+] ); // [1, 2, 3]
+test ( ...new ArrayIterator ( [ 
+		1,
+		2,
+		3 
+] ) ); // [1, 2, 3]
+?>

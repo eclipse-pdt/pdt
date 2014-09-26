@@ -44,11 +44,11 @@ import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.html.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
 /**
@@ -214,6 +214,7 @@ public class UseStatementInjector {
 	 */
 	public int inject(IDocument document, ITextViewer textViewer, int offset) {
 		IModelElement modelElement = proposal.getModelElement();
+
 		if (modelElement instanceof FakeConstructor) {
 			FakeConstructor fc = (FakeConstructor) modelElement;
 			if (fc.getParent() instanceof AliasType) {
@@ -225,13 +226,14 @@ public class UseStatementInjector {
 		}
 		if (modelElement == null)
 			return offset;
-		if (proposal instanceof PHPCompletionProposal) {
-			PHPCompletionProposal phpCompletionProposal = (PHPCompletionProposal) proposal;
+		if (proposal instanceof IPHPCompletionProposalExtension) {
+			IPHPCompletionProposalExtension phpCompletionProposal = (IPHPCompletionProposalExtension) proposal;
 			if (ProposalExtraInfo.isNoInsert(phpCompletionProposal
 					.getExtraInfo())) {
 				return offset;
 			}
 		}
+
 		try {
 			// quanlified namespace should return offset directly
 			if (offset - proposal.getReplacementLength() > 0
@@ -336,61 +338,27 @@ public class UseStatementInjector {
 									UseStatementPart newUseStatementPart = ast
 											.newUseStatementPart(
 													newNamespaceName, null);
-									org.eclipse.php.internal.core.ast.nodes.UseStatement newUseStatement = ast
-											.newUseStatement(Arrays
-													.asList(new UseStatementPart[] { newUseStatementPart }));
+									UseStatement newUseStatement = ast
+											.newUseStatement(
+													Arrays.asList(new UseStatementPart[] { newUseStatementPart }),
+													UseStatement.T_NONE);
 
 									NamespaceDeclaration currentNamespace = getCurrentNamespace(
 											program, sourceModule, offset - 1);
 									if (currentNamespace != null) {
+										List<Statement> statements = currentNamespace
+												.getBody().statements();
 										// insert in the beginning of the
-										// current
-										// namespace:
-										int index = getLastUsestatementIndex(
-												currentNamespace.getBody()
-														.statements(), offset);
-										if (index > 0) {// workaround for bug
-														// 393253
-											try {
-												int beginLine = document
-														.getLineOfOffset(currentNamespace
-																.getBody()
-																.statements()
-																.get(index - 1)
-																.getEnd()) + 1;
-												newUseStatement
-														.setSourceRange(
-																document.getLineOffset(beginLine),
-																0);
-											} catch (Exception e) {
-											}
-										}
-										currentNamespace.getBody().statements()
-												.add(index, newUseStatement);
+										// current namespace:
+										insertUseStatement(offset,
+												newUseStatement, statements,
+												document);
 									} else {
-										// insert in the beginning of the
-										// document:
-										int index = getLastUsestatementIndex(
-												program.statements(), offset);
-										if (index > 0) {// workaround for bug
-														// 393253
-											try {
-												int beginLine = document
-														.getLineOfOffset(program
-																.statements()
-																.get(index - 1)
-																.getEnd()) + 1;
-												newUseStatement
-														.setSourceRange(
-																document.getLineOffset(beginLine),
-																0);
-											} catch (Exception e) {
-											}
-										}
-										program.statements().add(index,
-												newUseStatement);
+										insertUseStatement(offset,
+												newUseStatement,
+												program.statements(), document);
 									}
-									Map options = new HashMap(
+									Map<Object, Object> options = new HashMap(
 											PHPCorePlugin.getOptions());
 									// TODO project may be null
 									IScopeContext[] contents = new IScopeContext[] {
@@ -483,7 +451,7 @@ public class UseStatementInjector {
 					return offset;
 				}
 				return offset;
-			}
+			} else
 			// class members should return offset directly
 			if (modelElement.getElementType() != IModelElement.TYPE
 					&& !(modelElement instanceof FakeConstructor)) {
@@ -495,237 +463,10 @@ public class UseStatementInjector {
 				}
 			}
 		} catch (Exception e) {
-			Logger.logException(e);
+			PHPUiPlugin.log(e);
 		}
 
-		// add use statement if needed:
-		IType namespace = PHPModelUtils.getCurrentNamespace(modelElement);
-		if (namespace != null) {
-
-			// find source module of the current editor:
-			if (textViewer instanceof PHPStructuredTextViewer) {
-				ITextEditor textEditor = ((PHPStructuredTextViewer) textViewer)
-						.getTextEditor();
-				if (textEditor instanceof PHPStructuredEditor) {
-					IModelElement editorElement = ((PHPStructuredEditor) textEditor)
-							.getModelElement();
-					if (editorElement != null) {
-						ISourceModule sourceModule = ((ModelElement) editorElement)
-								.getSourceModule();
-
-						try {
-							String namespaceName = namespace.getElementName();
-							String usePartName = namespaceName;
-							boolean useAlias = !Platform
-									.getPreferencesService()
-									.getBoolean(
-											PHPCorePlugin.ID,
-											PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE,
-											true, null);
-							if (!useAlias) {
-								usePartName = usePartName
-										+ NamespaceReference.NAMESPACE_SEPARATOR
-										+ modelElement.getElementName();
-							}
-							ModuleDeclaration moduleDeclaration = SourceParserUtil
-									.getModuleDeclaration(sourceModule);
-							TextEdit edits = null;
-
-							ASTParser parser = ASTParser
-									.newParser(sourceModule);
-							parser.setSource(document.get().toCharArray());
-							Program program = parser.createAST(null);
-
-							// don't insert USE statement for current namespace
-							if (isSameNamespace(namespaceName, program,
-									sourceModule, offset)) {
-								return offset;
-							}
-
-							// find existing use statement:
-							UsePart usePart = ASTUtils
-									.findUseStatementByNamespace(
-											moduleDeclaration, usePartName,
-											offset);
-
-							List<String> importedTypeName = getImportedTypeName(
-									moduleDeclaration, offset);
-							String typeName = ""; //$NON-NLS-1$
-							if (!useAlias) {
-								typeName = modelElement.getElementName()
-										.toLowerCase();
-							} else {
-								if (usePart != null
-										&& usePart.getAlias() != null
-										&& usePart.getAlias().getName() != null) {
-									typeName = usePart.getAlias().getName();
-								} else {
-									typeName = PHPModelUtils
-											.extractElementName(namespaceName)
-											.toLowerCase();
-								}
-							}
-
-							// if the class/namesapce has not been imported
-							// add use statement
-							if (!importedTypeName.contains(typeName)) {
-
-								program.recordModifications();
-								AST ast = program.getAST();
-								NamespaceName newNamespaceName = ast
-										.newNamespaceName(
-												createIdentifiers(ast,
-														usePartName), false,
-												false);
-								UseStatementPart newUseStatementPart = ast
-										.newUseStatementPart(newNamespaceName,
-												null);
-								org.eclipse.php.internal.core.ast.nodes.UseStatement newUseStatement = ast
-										.newUseStatement(Arrays
-												.asList(new UseStatementPart[] { newUseStatementPart }));
-
-								NamespaceDeclaration currentNamespace = getCurrentNamespace(
-										program, sourceModule, offset - 1);
-								if (currentNamespace != null) {
-									// insert in the beginning of the
-									// current
-									// namespace:
-									int index = getLastUsestatementIndex(
-											currentNamespace.getBody()
-													.statements(), offset);
-									if (index > 0) {// workaround for bug 393253
-										try {
-											int beginLine = document
-													.getLineOfOffset(currentNamespace
-															.getBody()
-															.statements()
-															.get(index - 1)
-															.getEnd()) + 1;
-											newUseStatement
-													.setSourceRange(
-															document.getLineOffset(beginLine),
-															0);
-										} catch (Exception e) {
-										}
-									}
-									currentNamespace.getBody().statements()
-											.add(index, newUseStatement);
-								} else {
-									// insert in the beginning of the
-									// document:
-									int index = getLastUsestatementIndex(
-											program.statements(), offset);
-									if (index > 0) {// workaround for bug 393253
-										try {
-											int beginLine = document
-													.getLineOfOffset(program
-															.statements()
-															.get(index - 1)
-															.getEnd()) + 1;
-											newUseStatement
-													.setSourceRange(
-															document.getLineOffset(beginLine),
-															0);
-										} catch (Exception e) {
-										}
-									}
-									program.statements().add(index,
-											newUseStatement);
-								}
-								Map options = new HashMap(
-										PHPCorePlugin.getOptions());
-								// TODO project may be null
-								IScopeContext[] contents = new IScopeContext[] {
-										new ProjectScope(modelElement
-												.getScriptProject()
-												.getProject()),
-										InstanceScope.INSTANCE,
-										DefaultScope.INSTANCE };
-								for (int i = 0; i < contents.length; i++) {
-									IScopeContext scopeContext = contents[i];
-									IEclipsePreferences node = scopeContext
-											.getNode(PHPCorePlugin.ID);
-									if (node != null) {
-										if (!options
-												.containsKey(PHPCoreConstants.FORMATTER_USE_TABS)) {
-											String useTabs = node
-													.get(PHPCoreConstants.FORMATTER_USE_TABS,
-															null);
-											if (useTabs != null) {
-												options.put(
-														PHPCoreConstants.FORMATTER_USE_TABS,
-														useTabs);
-											}
-										}
-										if (!options
-												.containsKey(PHPCoreConstants.FORMATTER_INDENTATION_SIZE)) {
-											String size = node
-													.get(PHPCoreConstants.FORMATTER_INDENTATION_SIZE,
-															null);
-											if (size != null) {
-												options.put(
-														PHPCoreConstants.FORMATTER_INDENTATION_SIZE,
-														size);
-											}
-										}
-									}
-								}
-								ast.setInsertUseStatement(true);
-								edits = program.rewrite(document, options);
-								edits.apply(document);
-								ast.setInsertUseStatement(false);
-							} else if (!useAlias
-									&& (usePart == null || !usePartName
-											.equals(usePart.getNamespace()
-													.getFullyQualifiedName()))) {
-								// if the type name already exists, use fully
-								// qualified name to replace
-								proposal.setReplacementString(NamespaceReference.NAMESPACE_SEPARATOR
-										+ namespaceName
-										+ NamespaceReference.NAMESPACE_SEPARATOR
-										+ proposal.getReplacementString());
-							}
-
-							if (useAlias && needsAliasPrepend(modelElement)) {
-
-								// update replacement string: add namespace
-								// alias prefix
-								String namespacePrefix = typeName
-										+ NamespaceReference.NAMESPACE_SEPARATOR;
-								String replacementString = proposal
-										.getReplacementString();
-
-								String existingNamespacePrefix = readNamespacePrefix(
-										sourceModule, document, offset,
-										ProjectOptions
-												.getPhpVersion(editorElement));
-
-								// Add alias to the replacement string:
-								if (!usePartName
-										.equals(existingNamespacePrefix)) {
-									replacementString = namespacePrefix
-											+ replacementString;
-								}
-								proposal.setReplacementString(replacementString);
-							}
-
-							if (edits != null) {
-								int replacementOffset = proposal
-										.getReplacementOffset()
-										+ edits.getLength();
-								offset += edits.getLength();
-								proposal.setReplacementOffset(replacementOffset);
-							}
-
-						} catch (Exception e) {
-							Logger.logException(e);
-						}
-					}
-				}
-			}
-		}
-
-		return offset;
+		return addUseStatement(modelElement, document, textViewer, offset);
 	}
 
 	private int getLastUsestatementIndex(List<Statement> statements, int offset) {
@@ -767,6 +508,218 @@ public class UseStatementInjector {
 			}
 		}
 		return importedClass;
+	}
+
+	private int addUseStatement(IModelElement modelElement, IDocument document,
+			ITextViewer textViewer, int offset) {
+		// add use statement if needed:
+		IType namespace = PHPModelUtils.getCurrentNamespace(modelElement);
+		if (namespace == null) {
+			return offset;
+		}
+
+		// find source module of the current editor:
+		if (!(textViewer instanceof PHPStructuredTextViewer)) {
+			return offset;
+		}
+		ITextEditor textEditor = ((PHPStructuredTextViewer) textViewer)
+				.getTextEditor();
+		if (!(textEditor instanceof PHPStructuredEditor)) {
+			return offset;
+
+		}
+		IModelElement editorElement = ((PHPStructuredEditor) textEditor)
+				.getModelElement();
+		if (editorElement != null) {
+			ISourceModule sourceModule = ((ModelElement) editorElement)
+					.getSourceModule();
+
+			try {
+				String namespaceName = namespace.getElementName();
+				String usePartName = namespaceName;
+				boolean useAlias = !Platform
+						.getPreferencesService()
+						.getBoolean(
+								PHPCorePlugin.ID,
+								PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE,
+								true, null);
+				if (!useAlias) {
+					usePartName = usePartName
+							+ NamespaceReference.NAMESPACE_SEPARATOR
+							+ modelElement.getElementName();
+				}
+				ModuleDeclaration moduleDeclaration = SourceParserUtil
+						.getModuleDeclaration(sourceModule);
+				TextEdit edits = null;
+
+				ASTParser parser = ASTParser.newParser(sourceModule);
+				parser.setSource(document.get().toCharArray());
+				Program program = parser.createAST(null);
+
+				// don't insert USE statement for current namespace
+				if (isSameNamespace(namespaceName, program, sourceModule,
+						offset)) {
+					return offset;
+				}
+
+				// find existing use statement:
+				UsePart usePart = ASTUtils.findUseStatementByNamespace(
+						moduleDeclaration, usePartName, offset);
+
+				List<String> importedTypeName = getImportedTypeName(
+						moduleDeclaration, offset);
+				String typeName = ""; //$NON-NLS-1$
+				if (!useAlias) {
+					typeName = modelElement.getElementName().toLowerCase();
+				} else {
+					if (usePart != null && usePart.getAlias() != null
+							&& usePart.getAlias().getName() != null) {
+						typeName = usePart.getAlias().getName();
+					} else {
+						typeName = PHPModelUtils.extractElementName(
+								namespaceName).toLowerCase();
+					}
+				}
+
+				// if the class/namesapce has not been imported
+				// add use statement
+				if (!importedTypeName.contains(typeName)) {
+					program.recordModifications();
+					AST ast = program.getAST();
+					NamespaceName newNamespaceName = ast.newNamespaceName(
+							createIdentifiers(ast, usePartName), false, false);
+					UseStatementPart newUseStatementPart = ast
+							.newUseStatementPart(newNamespaceName, null);
+					int type = getUseStatementType(modelElement);
+					UseStatement newUseStatement = ast
+							.newUseStatement(
+									Arrays.asList(new UseStatementPart[] { newUseStatementPart }),
+									type);
+
+					NamespaceDeclaration currentNamespace = getCurrentNamespace(
+							program, sourceModule, offset - 1);
+					if (currentNamespace != null) {
+						List<Statement> statements = currentNamespace.getBody()
+								.statements();
+						// insert in the beginning of the current
+						// namespace:
+						insertUseStatement(offset, newUseStatement, statements,
+								document);
+					} else {
+						insertUseStatement(offset, newUseStatement,
+								program.statements(), document);
+					}
+					Map<Object, Object> options = new HashMap(
+							PHPCorePlugin.getOptions());
+					// TODO project may be null
+					IScopeContext[] contents = new IScopeContext[] {
+							new ProjectScope(modelElement.getScriptProject()
+									.getProject()), InstanceScope.INSTANCE,
+							DefaultScope.INSTANCE };
+					for (int i = 0; i < contents.length; i++) {
+						IScopeContext scopeContext = contents[i];
+						IEclipsePreferences node = scopeContext
+								.getNode(PHPCorePlugin.ID);
+						if (node != null) {
+							if (!options
+									.containsKey(PHPCoreConstants.FORMATTER_USE_TABS)) {
+								String useTabs = node.get(
+										PHPCoreConstants.FORMATTER_USE_TABS,
+										null);
+								if (useTabs != null) {
+									options.put(
+											PHPCoreConstants.FORMATTER_USE_TABS,
+											useTabs);
+								}
+							}
+							if (!options
+									.containsKey(PHPCoreConstants.FORMATTER_INDENTATION_SIZE)) {
+								String size = node
+										.get(PHPCoreConstants.FORMATTER_INDENTATION_SIZE,
+												null);
+								if (size != null) {
+									options.put(
+											PHPCoreConstants.FORMATTER_INDENTATION_SIZE,
+											size);
+								}
+							}
+						}
+					}
+					ast.setInsertUseStatement(true);
+					edits = program.rewrite(document, options);
+					edits.apply(document);
+					ast.setInsertUseStatement(false);
+				} else if (!useAlias
+						&& (usePart == null || !usePartName.equals(usePart
+								.getNamespace().getFullyQualifiedName()))) {
+					// if the type name already exists, use fully
+					// qualified name to replace
+					proposal.setReplacementString(NamespaceReference.NAMESPACE_SEPARATOR
+							+ namespaceName
+							+ NamespaceReference.NAMESPACE_SEPARATOR
+							+ proposal.getReplacementString());
+				}
+
+				if (useAlias && needsAliasPrepend(modelElement)) {
+
+					// update replacement string: add namespace
+					// alias prefix
+					String namespacePrefix = typeName
+							+ NamespaceReference.NAMESPACE_SEPARATOR;
+					String replacementString = proposal.getReplacementString();
+
+					String existingNamespacePrefix = readNamespacePrefix(
+							sourceModule, document, offset,
+							ProjectOptions.getPhpVersion(editorElement));
+
+					// Add alias to the replacement string:
+					if (!usePartName.equals(existingNamespacePrefix)) {
+						replacementString = namespacePrefix + replacementString;
+					}
+					proposal.setReplacementString(replacementString);
+				}
+
+				if (edits != null) {
+					int replacementOffset = proposal.getReplacementOffset()
+							+ edits.getLength();
+					offset += edits.getLength();
+					proposal.setReplacementOffset(replacementOffset);
+				}
+
+			} catch (Exception e) {
+				PHPUiPlugin.log(e);
+			}
+		}
+		return offset;
+	}
+
+	public int getUseStatementType(IModelElement modelElement)
+			throws ModelException {
+		if (modelElement.getElementType() != IModelElement.TYPE
+				&& !(modelElement instanceof FakeConstructor)) {
+			if (modelElement.getElementType() == IModelElement.METHOD) {
+				return UseStatement.T_FUNCTION;
+			} else if (modelElement.getElementType() == IModelElement.FIELD
+					&& PHPFlags.isConstant(((IMember) modelElement).getFlags())) {
+				return UseStatement.T_CONST;
+			}
+		}
+		return UseStatement.T_NONE;
+	}
+
+	private void insertUseStatement(int offset, UseStatement newUseStatement,
+			List<Statement> statements, IDocument document) {
+		int index = getLastUsestatementIndex(statements, offset);
+		if (index > 0) { // workaround for bug 393253
+			try {
+				int beginLine = document.getLineOfOffset(statements.get(
+						index - 1).getEnd()) + 1;
+				newUseStatement.setSourceRange(
+						document.getLineOffset(beginLine), 0);
+			} catch (Exception e) {
+			}
+		}
+		statements.add(index, newUseStatement);
 	}
 
 	private boolean isSameNamespace(String namespaceName, Program program,

@@ -1,0 +1,24 @@
+--TEST--
+Test use function
+--FILE--
+<?php use function Foo\Bar as MyName ?>
+--EXPECT--
+<Program start='0' length='39'>
+	<Statements>
+		<UseStatement start='6' length='33' statementType='1'>
+			<UseStatementPart start='19' length='17'>
+				<Name>
+					<NamespaceName start='19' length='7' global='false' current='false'>
+						<Identifier start='19' length='3' name='Foo'/>
+						<Identifier start='23' length='3' name='Bar'/>
+					</NamespaceName>
+				</Name>
+				<Alias>
+					<Identifier start='30' length='6' name='MyName'/>
+				</Alias>
+			</UseStatementPart>
+		</UseStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

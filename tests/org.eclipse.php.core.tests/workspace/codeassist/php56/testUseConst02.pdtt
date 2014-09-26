@@ -1,0 +1,18 @@
+--TEST--
+Test use function statement
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+namespace Foo{
+	const foo_max = 456;
+    class foo_class{   
+    }
+}
+
+namespace Bar{
+
+	use const foo_|
+}
+--EXPECT--
+field(foo_max)

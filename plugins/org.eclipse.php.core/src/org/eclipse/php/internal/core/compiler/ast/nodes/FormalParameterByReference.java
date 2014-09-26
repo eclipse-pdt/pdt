@@ -17,15 +17,25 @@ import org.eclipse.dltk.ast.references.VariableReference;
 
 public class FormalParameterByReference extends FormalParameter {
 
-	public FormalParameterByReference(int start, int end, SimpleReference type, VariableReference parameterName, Expression defaultValue) {
+	public FormalParameterByReference(int start, int end, SimpleReference type,
+			VariableReference parameterName, Expression defaultValue,
+			boolean isMandatory, boolean isVariadic) {
+		super(start, end, type, parameterName, defaultValue, isMandatory,
+				isVariadic);
+	}
+
+	public FormalParameterByReference(int start, int end, SimpleReference type,
+			VariableReference parameterName, Expression defaultValue) {
 		super(start, end, type, parameterName, defaultValue);
 	}
 
-	public FormalParameterByReference(int start, int end, SimpleReference type, VariableReference parameterName, boolean isMandatory) {
+	public FormalParameterByReference(int start, int end, SimpleReference type,
+			VariableReference parameterName, boolean isMandatory) {
 		super(start, end, type, parameterName, isMandatory);
 	}
 
-	public FormalParameterByReference(int start, int end, SimpleReference type, VariableReference parameterName) {
+	public FormalParameterByReference(int start, int end, SimpleReference type,
+			VariableReference parameterName) {
 		super(start, end, type, parameterName);
 	}
 

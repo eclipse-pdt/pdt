@@ -60,10 +60,8 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 
 		PHPVersion phpVersion = ProjectOptions.getPhpVersion(input
 				.getScriptProject().getProject());
-		boolean namespacesSupported = phpVersion.isGreaterThan(PHPVersion.PHP5); // PHP
-																					// 5.3
-																					// and
-																					// greater
+		// PHP 5.3 and greater
+		boolean namespacesSupported = phpVersion.isGreaterThan(PHPVersion.PHP5);
 
 		IDocument document = textViewer.getDocument();
 		int offset = region.getOffset();

@@ -27,7 +27,9 @@ import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.codeassist.contexts.UseConstNameContext;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 
 /**
@@ -60,6 +62,13 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		String prefix = abstractContext.getPrefix();
 		if (prefix.startsWith("$")) { //$NON-NLS-1$
 			return;
+		}
+
+		boolean isUseConstContext = context instanceof UseConstNameContext;
+		int extraInfo = getExtraInfo();
+		if (isUseConstContext) {
+			extraInfo |= ProposalExtraInfo.NO_INSERT_NAMESPACE;
+			extraInfo |= ProposalExtraInfo.FULL_NAME;
 		}
 
 		MatchRule matchRule = MatchRule.PREFIX;
@@ -107,7 +116,8 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		// workaround end
 		SourceRange replaceRange = getReplacementRange(abstractContext);
 		for (IModelElement constant : enclosingTypeConstants) {
-			reporter.reportField((IField) constant, "", replaceRange, false); //$NON-NLS-1$
+			IField field = (IField) constant;
+			reporter.reportField(field, "", replaceRange, false, 0, extraInfo); //$NON-NLS-1$
 		}
 
 	}
@@ -145,6 +155,10 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		}
 		return (IModelElement[]) result
 				.toArray(new IModelElement[result.size()]);
+	}
+
+	protected int getExtraInfo() {
+		return ProposalExtraInfo.DEFAULT;
 	}
 
 	private IDLTKSearchScope getSearchScope(
