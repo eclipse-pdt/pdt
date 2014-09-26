@@ -1,0 +1,22 @@
+--TEST--
+Test constant scalar expression
+--FILE--
+<?php const TMP = 2 << 3 ?>
+--EXPECT--
+<Program start='0' length='27'>
+	<Statements>
+		<ConstantDeclaration start='6' length='21'>
+			<VariableName>
+				<Identifier start='12' length='3' name='TMP'/>
+			</VariableName>
+			<InitialValue>
+				<InfixExpression start='18' length='6' operator='&lt;&lt;'>
+					<Scalar start='18' length='1' type='int' value='2'/>
+					<Scalar start='23' length='1' type='int' value='3'/>
+				</InfixExpression>
+			</InitialValue>
+		</ConstantDeclaration>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -1,0 +1,37 @@
+--TEST--
+Test constant scalar expressions Operation
+--FILE--
+<?php const A = ((array(1,2) == array(2,1)) === false) ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="58">
+	<ConstantDeclaration start="6" end="53" modifiers="">
+		<ConstantReference start="12" end="13" name="A">
+		</ConstantReference>
+		<InfixExpression start="17" end="53" operator="===">
+			<InfixExpression start="18" end="42" operator="==">
+				<ArrayCreation start="18" end="28">
+					<ArrayElement start="24" end="25">
+						<Scalar start="24" end="25" type="int" value="1">
+						</Scalar>
+					</ArrayElement>
+					<ArrayElement start="26" end="27">
+						<Scalar start="26" end="27" type="int" value="2">
+						</Scalar>
+					</ArrayElement>
+				</ArrayCreation>
+				<ArrayCreation start="32" end="42">
+					<ArrayElement start="38" end="39">
+						<Scalar start="38" end="39" type="int" value="2">
+						</Scalar>
+					</ArrayElement>
+					<ArrayElement start="40" end="41">
+						<Scalar start="40" end="41" type="int" value="1">
+						</Scalar>
+					</ArrayElement>
+				</ArrayCreation>
+			</InfixExpression>
+			<Scalar start="48" end="53" type="string" value="false">
+			</Scalar>
+		</InfixExpression>
+	</ConstantDeclaration>
+</ModuleDeclaration>

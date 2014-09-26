@@ -541,6 +541,7 @@ public class ASTMatcher {
 		FormalParameter o = (FormalParameter) other;
 
 		return (safeEquals(node.isMandatory(), o.isMandatory())
+				&& safeEquals(node.isVariadic(), o.isVariadic())
 				&& safeSubtreeMatch(node.getParameterType(),
 						o.getParameterType())
 				&& safeSubtreeMatch(node.getParameterName(),
@@ -969,7 +970,8 @@ public class ASTMatcher {
 			return false;
 		}
 		UseStatement o = (UseStatement) other;
-		return safeSubtreeListMatch(node.parts(), o.parts());
+		return safeSubtreeListMatch(node.parts(), o.parts())
+				&& safeEquals(node.getStatementType(), o.getStatementType());
 	}
 
 	public boolean match(GotoLabel node, Object other) {

@@ -32,7 +32,6 @@ namespace foo {
 }
 ?>
 --EXPECT--
-method(funky)
 type(Agree)
 type(A)
 type(B)

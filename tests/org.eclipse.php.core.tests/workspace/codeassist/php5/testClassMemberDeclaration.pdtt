@@ -1,5 +1,7 @@
 --TEST--
 Should NOT propose final classes after 'extends'
+--PREFERENCES--
+org.eclipse.php.core/contentAssistCaseSensitivity=true
 --FILE--
 <?php
 class foo

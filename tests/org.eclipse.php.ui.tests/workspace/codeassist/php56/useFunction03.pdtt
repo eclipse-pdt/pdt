@@ -1,0 +1,24 @@
+--TEST--
+Test use function statement
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+namespace Bar {
+	function foo($param) {
+	}
+}
+namespace MySpace {
+	use function Bar\foo as MyFunction;
+	echo MyF|
+}
+--EXPECT--
+<?php
+namespace Bar {
+	function foo($param) {
+	}
+}
+namespace MySpace {
+	use function Bar\foo as MyFunction;
+	echo MyFunction($param)
+}

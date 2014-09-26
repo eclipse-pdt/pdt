@@ -1,0 +1,18 @@
+--TEST--
+Test Constant Scalar Expressions
+--FILE--
+<?php
+const FOO = 	1 + 1;
+const BAR = 	1 << 1;
+const GREETING = "HELLO";
+const BAZ = GREETING." WORLD!";
+ const BAZ2 = self::GREETING.	" WORLD!";
+?>
+--EXPECT--
+<?php
+const FOO = 1 + 1;
+const BAR = 1 << 1;
+const GREETING = "HELLO";
+const BAZ = GREETING . " WORLD!";
+const BAZ2 = self::GREETING . " WORLD!";
+?>

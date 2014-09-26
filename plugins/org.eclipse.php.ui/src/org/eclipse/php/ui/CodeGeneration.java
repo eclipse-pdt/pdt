@@ -20,7 +20,9 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.core.ast.scanner.php56.ParserConstants;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
+import org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpTokenNames;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.ui.corext.codemanipulation.StubUtility;
@@ -682,6 +684,14 @@ public class CodeGeneration {
 			parameterTypes = new String[paramNames.length];
 			for (int i = 0; i < paramNames.length; i++) {
 				parameterTypes[i] = UNKNOWN_TYPE;
+			}
+		} else {
+			for (int i = 0; i < formalParameters.size(); i++) {
+				if (formalParameters.get(i).isVariadic()) {
+					paramNames[i] = PhpTokenNames
+							.getName(ParserConstants.T_ELLIPSIS)
+							+ paramNames[i];
+				}
 			}
 		}
 		// add parameter type before parameter name

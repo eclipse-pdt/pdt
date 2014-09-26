@@ -1,0 +1,17 @@
+--TEST--
+Test power operator
+--FILE--
+<?php echo 2 ** 3 ?>
+--EXPECT--
+<Program start='0' length='20'>
+	<Statements>
+		<EchoStatement start='6' length='14'>
+			<InfixExpression start='11' length='6' operator='**'>
+				<Scalar start='11' length='1' type='int' value='2'/>
+				<Scalar start='16' length='1' type='int' value='3'/>
+			</InfixExpression>
+		</EchoStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

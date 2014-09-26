@@ -31,6 +31,8 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayVariableReference;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.*;
@@ -279,7 +281,7 @@ public class CodeAssistUtils {
 		boolean usePhpDoc = (mask & USE_PHPDOC) != 0;
 		if (usePhpDoc) {
 			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(
-					context, types, method);
+					context, types, method, offset);
 			evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal);
 
 			modelElements = PHPTypeInferenceUtils.getModelElements(
@@ -290,7 +292,7 @@ public class CodeAssistUtils {
 		}
 
 		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(
-				context, types, method, argNames);
+				context, types, method, argNames, offset);
 		evaluatedType = typeInferencer.evaluateType(methodGoal);
 		if (evaluatedType instanceof PHPThisClassType
 				&& ((PHPThisClassType) evaluatedType).getType() != null) {
@@ -574,7 +576,7 @@ public class CodeAssistUtils {
 		}
 
 		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(
-				context, types, method, argNames);
+				context, types, method, argNames, offset);
 		evaluatedType = typeInferencer.evaluateType(methodGoal);
 
 		if (evaluatedType instanceof MultiTypeType) {
@@ -772,8 +774,28 @@ public class CodeAssistUtils {
 				} else {
 					IType[] types = getFunctionReturnType(null, functionName,
 							USE_PHPDOC, sourceModule, offset, argNames);
-					if (types != null) {
+					if (types != null && types.length > 0) {
 						returnTypes.addAll(Arrays.asList(types));
+					} else {
+						IType namespace = PHPModelUtils.getCurrentNamespace(
+								sourceModule, offset);
+						ModuleDeclaration moduleDeclaration = SourceParserUtil
+								.getModuleDeclaration(sourceModule);
+						Map<String, UsePart> useParts = PHPModelUtils
+								.getAliasToNSMap(functionName,
+										moduleDeclaration, offset, namespace,
+										true);
+						if (useParts.containsKey(functionName)) {
+							String name = useParts.get(functionName)
+									.getNamespace().getFullyQualifiedName();
+							name = NamespaceReference.NAMESPACE_SEPARATOR
+									+ name;
+							types = getFunctionReturnType(null, name,
+									USE_PHPDOC, sourceModule, offset, argNames);
+							if (types != null) {
+								returnTypes.addAll(Arrays.asList(types));
+							}
+						}
 					}
 				}
 			}

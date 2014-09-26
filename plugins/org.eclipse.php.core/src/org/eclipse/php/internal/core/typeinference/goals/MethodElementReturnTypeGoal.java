@@ -32,6 +32,11 @@ public class MethodElementReturnTypeGoal extends AbstractMethodReturnTypeGoal {
 		super(context, types, methodName, argNames);
 	}
 
+	public MethodElementReturnTypeGoal(IContext context, IType[] types,
+			String methodName, String[] argNames, int offset) {
+		super(context, types, methodName, argNames, offset);
+	}
+
 	public boolean equals(Object obj) {
 		if (!(obj instanceof MethodElementReturnTypeGoal)) {
 			return false;
