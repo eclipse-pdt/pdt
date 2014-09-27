@@ -1256,6 +1256,22 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					}
 					handleCharsWithoutComments(comment.sourceStart() + offset,
 							comment.sourceEnd() + offset, true);
+				} else {
+					commentContent = document.get(comment.sourceStart()
+							+ offset,
+							comment.sourceEnd() - comment.sourceStart());
+					commentContent = commentContent.replaceAll("\r\n", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+					List<String> lines = Arrays.asList(commentContent
+							.split("\n")); //$NON-NLS-1$
+					appendToBuffer(lines.get(0));
+					for (int i = 1; i < lines.size(); i++) {
+						insertNewLine();
+						indent();
+						appendToBuffer(" ");
+						appendToBuffer(lines.get(i).replaceFirst("^[ \t]+", ""));
+					}
+					handleCharsWithoutComments(comment.sourceStart() + offset,
+							comment.sourceEnd() + offset, true);
 				}
 				start = comment.sourceEnd() + offset;
 				insertNewLine();
