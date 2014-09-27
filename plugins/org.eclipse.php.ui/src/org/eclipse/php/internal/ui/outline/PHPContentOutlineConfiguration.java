@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła - [444025]
  *******************************************************************************/
 package org.eclipse.php.internal.ui.outline;
 
@@ -28,6 +29,7 @@ import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -478,9 +480,13 @@ public class PHPContentOutlineConfiguration extends
 		 */
 		public void fill(Menu menu, int index) {
 			new MenuItem(menu, SWT.SEPARATOR, index);
+
 			MenuItem mi = new MenuItem(menu, SWT.CHECK, index + 1);
+
 			mi.setText(FilterMessages.OpenCustomFiltersDialogAction_text);
-			mi.setImage(DLTKPluginImages.DESC_ELCL_FILTER.createImage());
+			// XXX connect to ContributionItem.dispose()
+			mi.setImage(JFaceResources.getResources().createImageWithDefault(
+					DLTKPluginImages.DESC_ELCL_FILTER));
 
 			mi.setEnabled(getMode() == MODE_PHP);
 			mi.addSelectionListener(new SelectionAdapter() {
@@ -488,6 +494,7 @@ public class PHPContentOutlineConfiguration extends
 					fActionGroup.new ShowFilterDialogAction().run();
 				}
 			});
+
 		}
 
 		/*
