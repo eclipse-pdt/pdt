@@ -1267,7 +1267,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 				// example while /* kuku */ ( /* kuku */$a > 0 )
 				if (getBufferFirstChar(0) != '\0') {
 					replaceBuffer.setLength(0);
-					// TODO: lineWidth should be updated here
+					IRegion reg = document.getLineInformationOfOffset(end);
+					// TODO: Do line width calculation based on the
+					// formatted content instead of the original content
+					lineWidth = end - reg.getOffset();
 					resetEnableStatus(document.get(comment.sourceStart()
 							+ offset,
 							comment.sourceEnd() - comment.sourceStart()));
