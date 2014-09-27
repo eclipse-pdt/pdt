@@ -9,6 +9,9 @@ while /* kuku */ ( /* kuku */$a > 0 ) {
 	}
 }
 
+do {
+} while ( $g > 1 );
+
 while ( $c > 0 ) {
 	while ( $d > 0 ) {
 	}
@@ -38,10 +41,16 @@ $a = 123 + 123 + 123 +
 		 123 + 123 +
 		 123 + 123 +
 		 123;
-while /* kuku */ ( /* kuku */$a > 0 ) {
-	while ( $b > 0 ) {
-	}
-}
+while /* kuku */ ( /* kuku */$a >
+		 0 ) {
+			while ( $b >
+			 0 ) {
+			}
+		}
+		
+		do {
+		} while ( $g >
+		 1 );
 
 while ( $c > 0 ) {
 	while ( $d > 0 ) {
