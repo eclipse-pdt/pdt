@@ -25,8 +25,8 @@ function foo () {
 --EXPECT--
 <?php
 /**
-* php doc
-*/
+ * php doc
+ */
 class AAA
 {
     // comment
