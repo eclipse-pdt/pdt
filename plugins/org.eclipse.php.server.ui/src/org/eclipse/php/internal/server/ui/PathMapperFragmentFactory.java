@@ -28,8 +28,8 @@ public class PathMapperFragmentFactory implements ICompositeFragmentFactory {
 	public CompositeFragment createComposite(Composite parent,
 			IControlHandler controlHandler) {
 		// HELP
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.ADDING_A_SERVER_LOCATION_PATH_MAP);
+		PlatformUI.getWorkbench().getHelpSystem()
+				.setHelp(parent, IPHPHelpContextIds.ADDING_A_SERVER_PATH_MAP);
 		return new PathMapperCompositeFragment(parent, controlHandler, true);
 	}
 
