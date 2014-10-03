@@ -729,7 +729,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	@Override
 	protected void firePostSelectionChanged(int offset, int length) {
 		if (fTextEditor instanceof PHPStructuredEditor
-				&& !((PHPStructuredEditor) fTextEditor).fReconcileSelection) {
+				&& !((PHPStructuredEditor) fTextEditor).fReconcileSelection
+				|| true) {
 			super.firePostSelectionChanged(offset, length);
 			fPostSelectionOffset = -1;
 			fPostSelectionLength = -1;

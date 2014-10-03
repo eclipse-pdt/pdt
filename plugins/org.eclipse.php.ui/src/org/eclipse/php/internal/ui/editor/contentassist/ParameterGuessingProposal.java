@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.*;
@@ -37,6 +38,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.template.contentassist.PositionBasedCompletionProposal;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
 
 /**
@@ -325,11 +327,17 @@ public final class ParameterGuessingProposal extends
 			return false;
 		Preferences preferenceStore = PHPCorePlugin.getDefault()
 				.getPluginPreferences();
+		ScopedPreferenceStore scopedPreferenceStore = new ScopedPreferenceStore(
+				InstanceScope.INSTANCE, PHPCorePlugin.ID);
+		System.out.println(scopedPreferenceStore
+				.getBoolean(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION)
+				^ isToggleEating());
 		boolean noOverwrite = preferenceStore
 				.getBoolean(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION)
 				^ isToggleEating();
+		System.out.println(noOverwrite);
 		char[] completion = fProposal.getCompletion().toCharArray();
-		return !isInScriptdoc() && completion.length > 0
+		return !isInDoc() && completion.length > 0
 				&& (noOverwrite || completion[completion.length - 1] == ')');
 	}
 

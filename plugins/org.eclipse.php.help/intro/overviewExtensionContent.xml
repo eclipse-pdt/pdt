@@ -14,7 +14,7 @@
 		style="css/overview.css" alt-style="css/overview.properties" path="overview/@">
 		<group id="content-group" style-id="content-group">
 			<link label="Develop PHP applications"
-				url="http://www.eclipse.org/pdt/help/html/pdt_table_of_contents.htm?cp=4_0"
+				url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.eclipse.php.help/html/index.html"
 				id="pdt-overview" style-id="content-link">
 				<text>Learn how to develop PHP applications by reading the PHP Development Tools user guide</text>
 			</link>

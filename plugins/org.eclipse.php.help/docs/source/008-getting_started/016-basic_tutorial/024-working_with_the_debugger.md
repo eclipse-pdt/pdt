@@ -1,0 +1,161 @@
+# Working with the Debugger
+
+<!--context:working_with_the_debugger-->
+
+The purpose of this tutorial is to teach you how to debug files and applications both remotely and locally in order to gain maximum efficiency and accuracy from your files and projects.
+
+#### Contents:
+
+ * [Purpose and Usage](#purpose-and-usage)
+ * [Debugging Local PHP Files (PHP Scripts)](#debugging-php-files)
+ * [Debugging PHP Applications (PHP Web Pages)](#debugging-php-applications)
+
+## Purpose and Usage
+
+PDT 's Debugging feature can detect and diagnose errors in PHP code situated locally or on remote servers. The debugger allows you to control the execution of your program by setting breakpoints, suspending launched programs, stepping through your code, and examining the contents of variables.
+
+Debugging should be used at stages where your scripts and applications are formed sufficiently to be tried and tested.
+
+PDT includes several types of debugging:
+
+ * Locally Debugging PHP Scripts - Debugging PHP files using an internal PHP Executable debugger.
+ * Debugging PHP Web Pages - Debugging files, applications and projects on your server
+
+## Debugging Local PHP Files (PHP Scripts)
+
+PHP files (PHP Scripts) on your workspace can be debugged  locally using PDT's internal debugger.
+
+#### Note:
+
+_Your server must be running the XDebug in order for remote debugging  capabilities to function._
+
+Debugging a PHP File Locally
+
+Files can be debugged using PDT 's internal debugger.
+
+<!--ref-start-->
+
+This procedure demonstrates how to debug a file using the internal debugger or your server's debugger:
+
+ 1. Inside a PHP project, [create a PHP file](../../024-tasks/016-file_creation/008-creating_a_php_file_within_a_project.md), called "debug", and copy-paste the example code into it. ( [Click here to see the code](resources/debugger_code_.htm) .)
+ 2. Set a breakpoint at line 103 by double-clicking the marker bar to the left of the editor window.A blue ball will appear.
+ 3. Save the file.
+ 4. Click the arrow next to the debug button ![debug_icon.png](images/debug_icon.png "debug_icon.png") on the toolbar and select **Debug Configurations...** -or- select **Run | Debug Configurations** from the main menu -or- right-click the file in PHP Explorer view and select **Debug Configurations....**  A Debug dialog will appear.
+ 5. Double-click the PHP Script option to create a new debug configuration.
+
+![New Debug Configuration](images/debug_phpscript_configuration.png "New Debug Configuration")
+
+ 1. Enter a name for the new configuration.
+ 2. To debug the file using your PHP Executable debugger, select the PHP Executable option in the Debugger Location category.
+ 3. Under PHP File, click **Browse** and select the "debug" file.
+ 4. Ensure that the 'Break at First Line' Breakpoint checkbox is selected.
+ 5. Click **Apply**and then **Debug**.
+ 6. Click **Yes**if asked whether to open the PHP Debug Perspective.
+ 7. A number of views will open with information about your script.
+ 8. The Debug View is where the debug stack trace is displayed and the debugging process can be monitored and controlled.
+
+![Debug View](images/debug_view.png "Debug View")
+
+ 1. The debugging process will currently have stopped where your first `<?php label appears.`
+ 2. Click the Resume icon ![resume_icon.png](images/resume_icon.png "resume_icon.png") to continue to the breakpoint.
+ 3. Click Step Into ![step_into_icon.png](images/step_into_icon.png "step_into_icon.png"). The Debugger goes into the function defined in line 103 and advances to line 77.
+ 4. The Variable view will now display various information about the relevant variables and parameters through which the function was reached.
+ 5. In the editor window, place and hold the cursor over $worker_name, $worker_address, and $worker_phone. A tooltip appears displaying the variable values.
+
+![Editor View While Debugging](images/debug_tutorial_editor.png "Editor View While Debugging")
+
+ 1. Click Step Return. ![debug_step_return_icon.png](images/debug_step_return_icon.png "debug_step_return_icon.png") The cursor returns to line 103.  The Debug Output view will display the HTML output created up until the breakpoint, while the Browser Output view will show the current output to a browser.
+ 2. In the Debug view, click Resume ![resume_icon.png](images/resume_icon.png "resume_icon.png")  until the debugging process is terminated.  Notice that as the debugging process progresses, the Debug Output and Browser Output displays are updated.
+
+![Browser Output](images/debug_browser_output.png "Browser Output")
+
+ 1. The console view will display any errors or warnings about your script. In this case, it will display a Notice about an undefined variable on line 105.
+ 2. Click on the PHP Perspective icon to return to normal editing mode.
+ 3. To run the debugging process again, click the arrow next to the debug icon ![debug_icon.png](images/debug_icon.png "debug_icon.png") on the toolbar and select your configuration -or- select **Debug Configurations...** and double-click your configuration from the "Debug" dialog.  Clicking the debug icon will debug the last executed launch configuration.
+
+<!--ref-end-->
+
+#### Note:
+
+_Your server must be running the XDebug in order for remote debugging  capabilities to function._
+
+## Debugging PHP Applications (PHP Web Pages)
+
+PDT also allows you to debug applications, projects or files that are already on the server.
+
+#### Note:
+
+_Your server must be running the XDebug in order for remote debugging  capabilities to function._
+
+<!--ref-start-->
+
+This procedure demonstrates how to debug applications on a server:
+
+ 1. Inside a PHP project, [create a new PHP file](../../024-tasks/016-file_creation/008-creating_a_php_file_within_a_project.md), called "form1", with the following code:
+
+
+    <html>
+    <body>
+    <form action="welcome.php" method="post">
+    Name: <input type="text" name="name" />
+    Age: <input type="text" name="age" />
+    <input type="submit" />
+    </form>
+    </body>
+    </html>
+
+ 2. Create a second PHP file, called "welcome", with the following code:
+
+
+    <html>
+    <body>
+    Welcome <?php echo $_POST["name"]; ?>.<br />
+    You are <?php echo $_POST["age"]; ?> years old.
+    </body>
+    </html>
+
+ 3. Save both files and copy them to your server.
+ 4. Click the arrow next to the debug button ![debug_icon.png](images/debug_icon.png "debug_icon.png")  on the toolbar and select Debug Configurations... -or- right-click the file in PHP explorer or within the file's editor window and select **Debug as | Debug Configurations....**  A Debug dialog will appear.
+ 5. Double-click on the PHP Web Page option to create a new debug configuration.
+ 6. Enter a name for the new configuration.
+ 7. Select the Debugger from the Server Debugger drop-down list.
+ 8. Select your server from the drop-down list.  If you have not configured a server, click the PHP Servers link to be taken to the [PHP Servers Preferences](../../032-reference/032-preferences/080-php_servers.md) page.
+ 9. Under the File/Project category, click **Browse** and select the "form1" file. This will be the file from which the debugger will start debugging (the 'debug target'.)
+ 10. Ensure that the URL pointing to the file location is correct.  If this is not correct, unmark the Auto Generate checkbox and manually change the URL.
+
+![New Debug Configuration](images/debug_configuration_webpage.png "New Debug Configuration")
+
+ 11. Click **Apply** and then **Debug**.
+ 12. Click **Yes** when asked whether to open the PHP Debug Perspective.
+ 13. The Debug Perspective will open with several views relevant to the debugging process (See '[PHP Debug Perspective](../../032-reference/008-php_perspectives_and_views/016-php_debug_perspective/000-index.md)' for more information on the different views.)
+ 14. In the editor view, you will see the code for the "form1" file.
+ 15. In the Debug view, click **Resume** to resume the debugging process.
+ 16. The browser output will display a form asking you to enter your Name and Age.
+ 17. Select the browser view (tabbed with the editor window). This will display the output of your script in a browser in 'real time'.  Note that this is different from the Browser Output window.
+ 18. In the browser view, enter your Name and Age and click **Submit Query**.
+
+![Browser View](images/debug_webpage_ouput.png "Browser View")
+
+ 19. Another editor tab will open, with the script from the welcome.php file.
+ 20. In the Debug view, click **Resume** to resume the debugging process.
+ 21. The browser output and browser views will display the final result of your application:  `Welcome [Name].  You are [Age] years old.`
+
+![Browser Output](images/debug_webpage_browser_output.png "Browser Output")
+
+ 22. The debugging process will have terminated.
+ 23. Click on the PHP Perspective icon to return to normal editing mode.
+ 24. To run the debugging process again, click the arrow next to the debug icon ![debug_icon.png](images/debug_icon.png "debug_icon.png") on the toolbar and select your debugging configuration.
+
+<!--ref-end-->
+
+<!--links-start-->
+
+#### Related Links:
+
+ * [Debugging](../../024-tasks/152-debugging/000-index.md)
+ * [Using the Debugger](../../024-tasks/152-debugging/000-index.md)
+ * [Debugging a PHP Web Page](../../024-tasks/152-debugging/032-debugging_a_php_web_page.md)
+ * [Debug Preferences](../../032-reference/032-preferences/032-debug/000-index.md)
+ * [Running and Analyzing Debugger Results](../../024-tasks/152-debugging/040-analyzing_debugger_results.md)
+
+<!--links-end-->
