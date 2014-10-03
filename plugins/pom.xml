@@ -77,12 +77,12 @@
 	</profiles>
 
 	<modules>
+		<module>org.eclipse.php.help</module>
 		<module>org.eclipse.php.core</module>
 		<module>org.eclipse.php.core.parser</module>
 		<module>org.eclipse.php.debug.core</module>
 		<module>org.eclipse.php.debug.daemon</module>
 		<module>org.eclipse.php.debug.ui</module>
-		<module>org.eclipse.php.help</module>
 		<module>org.eclipse.php.mylyn.ui</module>
 		<module>org.eclipse.php.server.core</module>
 		<module>org.eclipse.php.server.ui</module>

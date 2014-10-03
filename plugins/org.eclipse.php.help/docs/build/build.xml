@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+    Copyright (c) 2014 Dawid Pakuła and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+    
+    Contributors:
+        Dawid Pakuła - initial API and implementation
+ -->
+<project name="org.eclipse.php.help.doc" basedir="./../../" default="build-doc">
+	<path id="wikitext.classpath">
+		<pathelement path="${compile_classpath}" />
+	</path>
+	<taskdef classpathref="wikitext.classpath" resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties" />
+	<property name="help.base.dir" value="${basedir}" />
+	<property name="doc.source.dir" value="${basedir}/docs/source" />
+	<property name="doc.template.dir" value="${basedir}/docs/template" />
+	<property name="doc.build.dir" value="${help.base.dir}/html" />
+	<property name="ui.source.dir" value="${help.base.dir}/../org.eclipse.php.ui/src" />
+	<property name="help.context.ids" value="${help.base.dir}/../org.eclipse.php.ui/src/org/eclipse/php/internal/ui/IPHPHelpContextIds.java" />
+	<property name="help.context.xml" value="${help.base.dir}/helpContexts.xml" />
+	<property name="help.toc" value="${help.base.dir}/toc.xml" />
+	<property name="run.convert" value="false" />
+	<target name="clean-doc">
+		<echo>Remove compiled documentation</echo>
+		<delete dir="${doc.build.dir}">
+		</delete>
+	</target>
+	<target name="build-doc">
+		<echo>Compile documentation</echo>
+		<mkdir dir="${doc.build.dir}" />
+		<script language="javascript" src="${basedir}/docs/build/compile.js">
+		</script>
+	</target>
+</project>

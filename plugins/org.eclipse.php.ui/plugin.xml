@@ -1951,12 +1951,12 @@
 	</extension>
 	
 	<extension point="org.eclipse.dltk.ui.buildpathContainerPage">
-		<buildpathContainerPath
+		<buildpathContainerPage
 			nature="org.eclipse.php.core.PHPNature"
 			name="User Library"
 			class="org.eclipse.dltk.internal.ui.wizards.buildpath.UserLibraryWizardPage"
 			id="org.eclipse.dltk.USER_LIBRARY">
-		</buildpathContainerPath>
+		</buildpathContainerPage>
 	</extension>
  <extension
        point="org.eclipse.dltk.ui.correctionProcessor">

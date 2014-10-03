@@ -10,5 +10,4 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Eclipse.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.eclipse.php.help,
- org.eclipse.php.help.util
+Export-Package: org.eclipse.php.help
