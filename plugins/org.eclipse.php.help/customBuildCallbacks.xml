@@ -38,6 +38,9 @@
 	<!--   build.result.folder - folder to contain the build results           -->
 	<!-- ===================================================================== -->
 	<target name="pre.build.sources">
+		<ant inheritrefs="true" antfile="docs/build/build.xml">
+			  <target name="build-doc" />
+		</ant>
 	</target>
 
 	<!-- ===================================================================== -->

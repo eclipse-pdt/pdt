@@ -2,8 +2,8 @@ package org.eclipse.php.internal.ui.phar.wizard;
 
 import java.io.File;
 import java.util.*;
-import java.util.List;
 import java.util.Map.Entry;
+import java.util.List;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
@@ -166,7 +166,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		PlatformUI
 				.getWorkbench()
 				.getHelpSystem()
-				.setHelp(composite, IPHPHelpContextIds.PHARPACKAGER_WIZARD_PAGE);
+				.setHelp(composite,
+						IPHPHelpContextIds.PHAR_PACKAGER_WIZARD_PAGE_CONTEXT);
 	}
 
 	private void createSignatureGroup(Composite parent) {

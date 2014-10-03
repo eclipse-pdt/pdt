@@ -11,7 +11,7 @@
 	<!-- this is the parent POM from which all modules inherit common settings -->
 	<properties>
 		<tycho-version>0.20.0</tycho-version>
-		<antrun-version>1.6</antrun-version>
+		<antrun-version>1.7</antrun-version>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 		<test.vmargs />
 		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
@@ -135,11 +135,11 @@
 				<version>2.4</version>
 			</plugin>
 			<plugin>
-			   <groupId>org.eclipse.tycho</groupId>
-			   <artifactId>target-platform-configuration</artifactId>
-			   <version>${tycho-version}</version>
-			   <configuration>
-				  <environments>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<environments>
 						<environment>
 							<os>win32</os>
 							<ws>win32</ws>
@@ -171,7 +171,7 @@
 							<arch>x86</arch>
 						</environment>
 					</environments>
-			   </configuration>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -209,6 +209,11 @@
 			<url>http://download.eclipse.org/cbi/updates/license/</url>
 			<layout>p2</layout>
 		</repository>
+		<repository>
+			<id>mylyn</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/mylyn/releases/3.5/</url>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -225,6 +230,10 @@
 			<id>jboss-snapshots-repository</id>
 			<name>JBoss Snapshots Repository</name>
 			<url>https://repository.jboss.org/nexus/content/repositories/snapshots/</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>eclipse.org-mylyn</id>
+			<url>https://repo.eclipse.org/content/repositories/mylyn-snapshots/</url>
 		</pluginRepository>
 	</pluginRepositories>
 
