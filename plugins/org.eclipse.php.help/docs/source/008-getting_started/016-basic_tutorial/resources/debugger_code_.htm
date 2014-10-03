@@ -1,0 +1,75 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head><title>Debugger Code (Local)</title></head>
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5">
+
+
+
+<h1>Debugger Code (Local)
+</h1>
+<p class="Note">Note:</p>
+<p class="NoteText">Remember to delete the PHP tags that are inserted by default when creating a new PHP file before pasting in the code.</p>
+<p>Copy this code into your editor to test the debugger:</p>
+<p>&#160;</p>
+<p class="code">&lt;HTML&gt;</p>
+<p class="code">&lt;BODY&gt;</p>
+<p class="code">&lt;H1&gt;Debug Demo&lt;/H1&gt;</p>
+<p class="code">&lt;table border="1" width="700"&gt;</p>
+<p class="code">&lt;tr bgcolor="red"&gt;</p>
+<p class="code">&lt;th&gt;Name&lt;/th&gt;</p>
+<p class="code">&lt;th&gt;Address&lt;/th&gt;</p>
+<p class="code">&lt;th&gt;Phone&lt;/th&gt;</p>
+<p class="code">&lt;/tr&gt;</p>
+<p class="code">&lt;?php</p>
+<p class="code">$db = array(</p>
+<p class="code">array ("John", "E 10th St., NYC, NY 23742", "(212) 555-4456"),</p>
+<p class="code">array ("Francois", "12 Bd. de Grenelle, Paris, 74897","(33) 433-544"),</p>
+<p class="code">array ("Klaus", "312 Beethoven St., Frankfurt, Germany", "(44) 332-8065"),</p>
+<p class="code">array ("Shirly", "72 Independence St., Tel Aviv, Israel 67283", "(972) 156-7777"),</p>
+<p class="code">array ("Bill", "127 Maine St., San Francisco, CA 90298", "(415) 555-6565")</p>
+<p class="code">);</p>
+<p class="code">/**</p>
+<p class="code">@return string</p>
+<p class="code">@param i int</p>
+<p class="code">@desc Returns 'white' for even numbers and 'yellow' for odd numbers</p>
+<p class="code">*/</p>
+<p class="code">function row_color($i)</p>
+<p class="code">{</p>
+<p class="code">$bgcolor1 = "white";</p>
+<p class="code">$bgcolor2 = "yellow";</p>
+<p class="code">if ( ($i % 2) == 0 ) {</p>
+<p class="code">return $bgcolor1;</p>
+<p class="code">} else {</p>
+<p class="code">return $bgcolor2;</p>
+<p class="code">}</p>
+<p class="code">}</p>
+<p class="code">/**</p>
+<p class="code">@return void</p>
+<p class="code">@desc Displays a table of the workers</p>
+<p class="code">*/</p>
+<p class="code">function display_workers()</p>
+<p class="code">{</p>
+<p class="code">global $db;</p>
+<p class="code">for ($i=0, $n=count($db); $i&lt;$n; $i++) {</p>
+<p class="code">$worker_data = $db[$i];</p>
+<p class="code">$worker_name = $worker_data[0];</p>
+<p class="code">$worker_address = $worker_data[1];</p>
+<p class="code">$worker_phone = $worker_data[2];</p>
+<p class="code">print "&lt;tr bgcolor=\"".row_color($i)."\"&gt;\n";</p>
+<p class="code">print "&lt;td&gt;$worker_name&lt;/td&gt;\n";</p>
+<p class="code">print "&lt;td&gt;$worker_address&lt;/td&gt;\n";</p>
+<p class="code">print "&lt;td&gt;$worker_phone&lt;/td&gt;\n";</p>
+<p class="code">print "&lt;/tr&gt;\n";</p>
+<p class="code">}</p>
+<p class="code">}</p>
+<p class="code">display_workers();</p>
+<p class="code">echo $undefined_variable;</p>
+<p class="code">?&gt;</p>
+<p class="code">&lt;/table&gt;</p>
+<p class="code">&lt;/BODY&gt;</p>
+<p class="code">&lt;/HTML&gt;</p>
+<p class="code">&#160;</p>
+
+
+</body>
+</html>
