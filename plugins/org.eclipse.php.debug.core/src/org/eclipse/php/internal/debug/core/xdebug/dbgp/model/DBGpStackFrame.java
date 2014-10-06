@@ -316,7 +316,8 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		if (obj instanceof DBGpStackFrame) {
 			DBGpStackFrame sf = (DBGpStackFrame) obj;
 			try {
-				// a stack frame is equal if they are at the same level and for
+				// a stack frame is equal if they are at the same level, same
+				// line and for
 				// the same file
 				//
 				// if a stack frame is equal then eclipse doesn't refresh the
@@ -341,7 +342,8 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 				boolean isEqual = sf.getQualifiedFile().equals(
 						getQualifiedFile())
 						&& sf.stackLevel.equals(stackLevel)
-						&& (sf.owningThread == owningThread);
+						&& (sf.owningThread == owningThread)
+						&& sf.getLineNumber() == getLineNumber();
 				return isEqual;
 			} catch (Exception e) {
 			}
