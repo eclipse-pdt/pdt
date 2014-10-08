@@ -1,0 +1,36 @@
+--TEST--
+Bug 445937 - Code formatter adds unwanted empty lines in front of some single-line comments
+--FILE--
+<?php
+$a = array(
+        // comment1
+        1,
+        // comment2
+        2
+);
+
+switch ($b) {
+    case 1:
+        // comment3
+        $a = 1;
+    default:
+        // comment4
+        $a = 1;
+}
+?>
+--EXPECT--
+<?php
+$a = array(
+// comment1
+1, 
+// comment2
+2);
+switch ($b) {
+    case 1:
+        // comment3
+        $a = 1;
+    default:
+        // comment4
+        $a = 1;
+}
+?>

@@ -947,6 +947,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 							lineWidth = 0;
 						}
 					} else {
+						if (position >= 0
+								&& getBufferFirstChar(position
+										+ lineSeparator.length()) == '\0') {
+							replaceBuffer.replace(position,
+									replaceBuffer.length(), ""); //$NON-NLS-1$
+						}
 						insertNewLine();
 						if (!isIndented && !commentIndetationStack.isEmpty()) {
 							CommentIndentationObject cio = commentIndetationStack
@@ -1784,13 +1790,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		// int indentLength = 0;
 		if (phpDocTag != null) {
 			tag = "@" + PHPDocTag.getTagKind(phpDocTag.getTagKind()); //$NON-NLS-1$
-			if (indentationLevelDesending) {
-				for (int i = 0; i < preferences.indentationSize; i++) {
-					// indentLength += (preferences.indentationChar ==
-					// CodeFormatterPreferences.SPACE_CHAR) ? 1
-					// : 4;
-				}
-			}
+			// if (indentationLevelDesending) {
+			// for (int i = 0; i < preferences.indentationSize; i++) {
+			// indentLength += (preferences.indentationChar ==
+			// CodeFormatterPreferences.SPACE_CHAR) ? 1
+			// : 4;
+			// }
+			// }
 		}
 		int tagLength = tag.length() + 1;
 		newLineOfComment = true;
