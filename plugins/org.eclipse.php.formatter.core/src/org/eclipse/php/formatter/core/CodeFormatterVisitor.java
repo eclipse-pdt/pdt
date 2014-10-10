@@ -1262,6 +1262,22 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					}
 					handleCharsWithoutComments(comment.sourceStart() + offset,
 							comment.sourceEnd() + offset, true);
+				} else {
+					commentContent = document.get(comment.sourceStart()
+							+ offset,
+							comment.sourceEnd() - comment.sourceStart());
+					List<String> lines = Arrays.asList(commentContent.split(
+							"\r\n?|\n", -1)); //$NON-NLS-1$
+					appendToBuffer(lines.get(0));
+					// indent all lines, even empty lines
+					for (int i = 1; i < lines.size(); i++) {
+						insertNewLine();
+						indent();
+						appendToBuffer(" "); //$NON-NLS-1$
+						appendToBuffer(lines.get(i).replaceFirst("^[ \t]+", "")); //$NON-NLS-1$
+					}
+					handleCharsWithoutComments(comment.sourceStart() + offset,
+							comment.sourceEnd() + offset, true);
 				}
 				start = comment.sourceEnd() + offset;
 				insertNewLine();
@@ -1408,9 +1424,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					commentContent = commentContent.trim();
 					commentContent = commentContent.substring(2,
 							commentContent.length() - 2);
-					commentContent = commentContent.replaceAll("\r\n", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
-					List<String> lines = Arrays.asList(commentContent
-							.split("\n")); //$NON-NLS-1$
+					List<String> lines = Arrays.asList(commentContent.split(
+							"\r\n?|\n", -1)); //$NON-NLS-1$
 					commentWords = new ArrayList<String>();
 					if (lines.size() == 1) {
 						String word = lines.get(0).trim();
@@ -1762,7 +1777,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 	private void initCommentWords() {
 		String commentContent = join(commentWords, " "); //$NON-NLS-1$
 		commentContent = commentContent.trim();
-		commentWords = Arrays.asList(commentContent.split("[ \r\n]")); //$NON-NLS-1$
+		commentWords = Arrays.asList(commentContent.split("[ \t\r\n]")); //$NON-NLS-1$
 		commentWords = removeEmptyString(commentWords);
 	}
 
