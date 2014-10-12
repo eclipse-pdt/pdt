@@ -1194,9 +1194,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					if (tags != null && tags.length > 0) {
 						if (this.preferences.comment_insert_empty_line_before_root_tags
 								&& !lastLineIsBlank) {
-							insertNewLine();
-							indent();
-							appendToBuffer(" * "); //$NON-NLS-1$
+							insertNewLineForPHPDoc();
+							appendToBuffer(" "); //$NON-NLS-1$
 						}
 						for (int i = 0; i < tags.length; i++) {
 							PHPDocTag phpDocTag = tags[i];
@@ -1252,9 +1251,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					}
 					if (this.preferences.comment_new_lines_at_javadoc_boundaries
 							&& !lastLineIsBlank) {
-						insertNewLine();
-						indent();
-						appendToBuffer(" */"); //$NON-NLS-1$
+						insertNewLineForPHPDoc();
+						appendToBuffer("/"); //$NON-NLS-1$
 					} else if (lastLineIsBlank) {
 						appendToBuffer("/"); //$NON-NLS-1$
 					} else {
@@ -1271,9 +1269,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					appendToBuffer(lines.get(0));
 					// indent all lines, even empty lines
 					for (int i = 1; i < lines.size(); i++) {
-						insertNewLine();
-						indent();
-						appendToBuffer(" "); //$NON-NLS-1$
+						insertNewLineForPHPDoc(false);
 						appendToBuffer(lines.get(i).replaceFirst("^[ \t]+", "")); //$NON-NLS-1$
 					}
 					handleCharsWithoutComments(comment.sourceStart() + offset,
@@ -1390,20 +1386,20 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 				start = comment.sourceEnd() + offset;
 				resetEnableStatus(document.get(comment.sourceStart() + offset,
 						comment.sourceEnd() - comment.sourceStart()));
+
+				if (startLine == commentStartLine) {
+					initCommentIndentVariables(offset, startLine, comment,
+							endWithNewLineIndent);
+					lineWidth = indentLengthForComment;
+				}
+				if (startAtFirstColumn
+						&& this.preferences.never_indent_block_comments_on_first_column) {
+					indentLengthForComment = 0;
+					indentStringForComment = ""; //$NON-NLS-1$
+				}
 				if (this.editsEnabled
 						&& this.preferences.comment_format_block_comment
 						&& !(comment instanceof VarComment)) {
-					if (startLine == commentStartLine) {
-						initCommentIndentVariables(offset, startLine, comment,
-								endWithNewLineIndent);
-						lineWidth = indentLengthForComment;
-					}
-					if (startAtFirstColumn
-							&& this.preferences.never_indent_block_comments_on_first_column) {
-						indentLengthForComment = 0;
-						indentStringForComment = ""; //$NON-NLS-1$
-					}
-
 					appendToBuffer("/*"); //$NON-NLS-1$
 					commentContent = document.get(comment.sourceStart()
 							+ offset,
@@ -1540,6 +1536,21 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 						indertWordToComment("*/"); //$NON-NLS-1$
 					}
 					newLineOfComment = false;
+					handleCharsWithoutComments(comment.sourceStart() + offset,
+							comment.sourceEnd() + offset, true);
+				} else {
+					commentContent = document.get(comment.sourceStart()
+							+ offset,
+							comment.sourceEnd() - comment.sourceStart());
+					List<String> lines = Arrays.asList(commentContent.split(
+							"\r\n?|\n", -1)); //$NON-NLS-1$
+					appendToBuffer(lines.get(0));
+					// indent all lines, even empty lines
+					for (int i = 1; i < lines.size(); i++) {
+						insertNewLineForPHPBlockComment(indentLengthForComment,
+								indentStringForComment, false);
+						appendToBuffer(lines.get(i).replaceFirst("^[ \t]+", "")); //$NON-NLS-1$
+					}
 					handleCharsWithoutComments(comment.sourceStart() + offset,
 							comment.sourceEnd() + offset, true);
 				}
@@ -1782,6 +1793,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 	}
 
 	private void insertNewLineForPHPBlockComment(int indentLength, String blanks) {
+		insertNewLineForPHPBlockComment(indentLength, blanks, true);
+	}
+
+	private void insertNewLineForPHPBlockComment(int indentLength,
+			String blanks, boolean addCommentSymbol) {
 		insertNewLine();
 		if (indentLength >= 0) {
 			appendToBuffer(blanks);
@@ -1789,13 +1805,25 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		} else {
 			indent();
 		}
-		appendToBuffer(" *"); //$NON-NLS-1$
+		if (addCommentSymbol) {
+			appendToBuffer(" *"); //$NON-NLS-1$
+		} else {
+			appendToBuffer(" "); //$NON-NLS-1$
+		}
 	}
 
 	private void insertNewLineForPHPDoc() {
+		insertNewLineForPHPDoc(true);
+	}
+
+	private void insertNewLineForPHPDoc(boolean addCommentSymbol) {
 		insertNewLine();
 		indent();
-		appendToBuffer(" *"); //$NON-NLS-1$
+		if (addCommentSymbol) {
+			appendToBuffer(" *"); //$NON-NLS-1$
+		} else {
+			appendToBuffer(" "); //$NON-NLS-1$
+		}
 	}
 
 	private void formatPHPDocText(List<String> words, PHPDocTag phpDocTag,
@@ -1907,9 +1935,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		if (this.preferences.comment_line_length != 9999
 				&& !newLineOfComment
 				&& (lineWidth + 1 + word.length() > this.preferences.comment_line_length)) {
-			insertNewLine();
-			indent();
-			appendToBuffer(" * "); //$NON-NLS-1$
+			insertNewLineForPHPDoc();
+			appendToBuffer(" "); //$NON-NLS-1$
 
 			if (phpDocTag != null) {
 				if (this.preferences.comment_indent_root_tags) {
