@@ -36,7 +36,9 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkingSet;
+import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.PluginTransfer;
+import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
 
@@ -218,4 +220,25 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 		dropSupport.addDropTargetListener(new WorkingSetDropAdapter(this));
 		dropSupport.start();
 	}
+
+	@Override
+	public Object getAdapter(Class key) {
+		if (key == IShowInSource.class) {
+			return getShowInSource();
+		}
+		return super.getAdapter(key);
+	}
+
+	/**
+	 * Returns the <code>IShowInSource</code> for this view.
+	 */
+	protected IShowInSource getShowInSource() {
+		return new IShowInSource() {
+			public ShowInContext getShowInContext() {
+				return new ShowInContext(getTreeViewer().getInput(),
+						getTreeViewer().getSelection());
+			}
+		};
+	}
+
 }

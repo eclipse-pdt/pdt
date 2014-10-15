@@ -15,17 +15,18 @@ import org.eclipse.dltk.internal.ui.callhierarchy.ICallHierarchyViewPart;
 import org.eclipse.dltk.internal.ui.typehierarchy.TypeHierarchyViewPart;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.ui.IContextMenuConstants;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionGroup;
+import org.eclipse.ui.actions.ContributionItemFactory;
 import org.eclipse.ui.dialogs.PropertyDialogAction;
+import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.part.Page;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
@@ -45,8 +46,7 @@ public class OpenViewActionGroup extends ActionGroup {
 	/**
 	 * Creates a new <code>OpenActionGroup</code>. The group requires that the
 	 * selection provided by the page's selection provider is of type <code>
-	 * org.eclipse.jface.viewers.IStructuredSelection</code>
-	 * .
+	 * org.eclipse.jface.viewers.IStructuredSelection</code> .
 	 * 
 	 * @param page
 	 *            the page that owns this action group
@@ -58,8 +58,7 @@ public class OpenViewActionGroup extends ActionGroup {
 	/**
 	 * Creates a new <code>OpenActionGroup</code>. The group requires that the
 	 * selection provided by the part's selection provider is of type <code>
-	 * org.eclipse.jface.viewers.IStructuredSelection</code>
-	 * .
+	 * org.eclipse.jface.viewers.IStructuredSelection</code> .
 	 * 
 	 * @param part
 	 *            the view part that owns this action group
@@ -94,8 +93,8 @@ public class OpenViewActionGroup extends ActionGroup {
 
 	private void createSiteActions(IWorkbenchSite site) {
 
-		fOpenPropertiesDialog = new PropertyDialogAction(site, site
-				.getSelectionProvider());
+		fOpenPropertiesDialog = new PropertyDialogAction(site,
+				site.getSelectionProvider());
 		fOpenPropertiesDialog
 				.setActionDefinitionId(IWorkbenchActionDefinitionIds.PROPERTIES);
 
@@ -150,9 +149,15 @@ public class OpenViewActionGroup extends ActionGroup {
 		IStructuredSelection selection = getStructuredSelection();
 		if (fOpenPropertiesDialog != null && fOpenPropertiesDialog.isEnabled()
 				&& selection != null
-				&& fOpenPropertiesDialog.isApplicableForSelection(selection))
+				&& fOpenPropertiesDialog.isApplicableForSelection(selection)) {
 			menu.appendToGroup(IContextMenuConstants.GROUP_PROPERTIES,
 					fOpenPropertiesDialog);
+		}
+		MenuManager showInSubMenu = new MenuManager(getShowInMenuLabel());
+		IWorkbenchWindow workbenchWindow = fSite.getWorkbenchWindow();
+		showInSubMenu.add(ContributionItemFactory.VIEWS_SHOW_IN
+				.create(workbenchWindow));
+		menu.appendToGroup(IContextMenuConstants.GROUP_OPEN, showInSubMenu);
 	}
 
 	/*
@@ -180,13 +185,28 @@ public class OpenViewActionGroup extends ActionGroup {
 	}
 
 	private IStructuredSelection getStructuredSelection() {
-		if(getContext() == null){
+		if (getContext() == null) {
 			return null;
 		}
 		ISelection selection = getContext().getSelection();
 		if (selection instanceof IStructuredSelection)
 			return (IStructuredSelection) selection;
 		return null;
+	}
+
+	private String getShowInMenuLabel() {
+		String keyBinding = null;
+
+		IBindingService bindingService = (IBindingService) PlatformUI
+				.getWorkbench().getAdapter(IBindingService.class);
+		if (bindingService != null)
+			keyBinding = bindingService
+					.getBestActiveBindingFormattedFor("org.eclipse.ui.navigate.showInQuickMenu"); //$NON-NLS-1$
+
+		if (keyBinding == null)
+			keyBinding = ""; //$NON-NLS-1$
+
+		return Messages.OpenViewActionGroup_ShowInLabel + '\t' + keyBinding;
 	}
 
 }

@@ -20,6 +20,7 @@ public class Messages extends NLS {
 	public static String OpenTypeHierarchyAction_0;
 	public static String OpenTypeHierarchyAction_3;
 	public static String OpenCallHierarchyAction_0;
+	public static String OpenViewActionGroup_ShowInLabel;
 	public static String RemoveFromIncludepathAction_0;
 	static {
 		// initialize resource bundle
