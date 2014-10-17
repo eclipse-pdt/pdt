@@ -79,6 +79,8 @@ public class PHPDebugCoreMessages extends NLS {
 
 	public static String ZendDebuggerConfiguration_ZendDebuggerNotInstalledError;
 
+	public static String ZendDebuggerConfigurationDialog_AutoMode;
+
 	public static String ZendDebuggerConfigurationDialog_client_host_ip;
 
 	public static String ZendDebuggerConfigurationDialog_debug_response_timeout;
@@ -86,6 +88,8 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String ZendDebuggerConfigurationDialog_invalid_response_time;
 
 	public static String ZendDebuggerConfigurationDialog_invalid_response_time_exc;
+
+	public static String ZendDebuggerConfigurationDialog_ManualMode;
 
 	public static String ZendDebuggerConfigurationDialog_runWithDebugInfo;
 
