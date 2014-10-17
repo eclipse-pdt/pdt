@@ -15,6 +15,9 @@
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -25,6 +28,8 @@ import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.*;
 
@@ -43,6 +48,8 @@ public class ZendDebuggerConfigurationDialog extends
 	protected Text fDebugResponseTimeout;
 	protected Button fUseNewProtocol;
 	protected ZendDebuggerConfiguration zendDebuggerConfiguration;
+	private Button autoModeButton;
+	private Button manualModeButton;
 
 	/**
 	 * Constructs a new Zend debugger configuration dialog.
@@ -86,6 +93,31 @@ public class ZendDebuggerConfigurationDialog extends
 				composite,
 				PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_client_host_ip,
 				PHPDebugCorePreferenceNames.CLIENT_IP);
+		autoModeButton = new Button(composite, SWT.RADIO);
+		autoModeButton
+				.setText(PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_AutoMode);
+		autoModeButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (autoModeButton.getSelection()) {
+					// bring back a default value
+					String value = DefaultScope.INSTANCE.getNode(
+							PHPDebugPlugin.ID).get(
+							PHPDebugCorePreferenceNames.CLIENT_IP, "127.0.0.1"); //$NON-NLS-1$
+					fClientIP.setText(value);
+				}
+			}
+		});
+		manualModeButton = new Button(composite, SWT.RADIO);
+		manualModeButton
+				.setText(PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_ManualMode);
+		manualModeButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				fClientIP.setEnabled(manualModeButton.getSelection());
+			}
+		});
+		new Label(composite, SWT.NONE);
 		fClientIP = addTextField(composite,
 				PHPDebugCorePreferenceNames.CLIENT_IP, 0, 2);
 		gridData = (GridData) fClientIP.getLayoutData();
@@ -117,8 +149,14 @@ public class ZendDebuggerConfigurationDialog extends
 				.getBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO));
 		fDebugTextBox.setText(Integer.toString(prefs
 				.getInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT)));
-		fClientIP.setText(prefs
-				.getString(PHPDebugCorePreferenceNames.CLIENT_IP));
+		IEclipsePreferences instanceScope = InstanceScope.INSTANCE
+				.getNode(PHPDebugPlugin.ID);
+		String customClientHosts = instanceScope.get(
+				PHPDebugCorePreferenceNames.CLIENT_IP, null);
+		autoModeButton.setSelection(customClientHosts == null);
+		manualModeButton.setSelection(customClientHosts != null);
+		fClientIP.setEnabled(customClientHosts != null);
+		fClientIP.setText(PHPDebugPlugin.getDebugHosts());
 		fDebugResponseTimeout.setText(Integer.toString(prefs
 				.getInt(PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT)));
 		fUseNewProtocol.setSelection(prefs
@@ -131,8 +169,14 @@ public class ZendDebuggerConfigurationDialog extends
 				fRunWithDebugInfo.getSelection());
 		prefs.setValue(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT,
 				fDebugTextBox.getText());
-		prefs.setValue(PHPDebugCorePreferenceNames.CLIENT_IP,
-				fClientIP.getText());
+		IEclipsePreferences instanceScope = InstanceScope.INSTANCE
+				.getNode(PHPDebugPlugin.ID);
+		if (autoModeButton.getSelection()) {
+			instanceScope.remove(PHPDebugCorePreferenceNames.CLIENT_IP);
+		} else {
+			instanceScope.put(PHPDebugCorePreferenceNames.CLIENT_IP,
+					fClientIP.getText());
+		}
 		prefs.setValue(PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT,
 				Integer.parseInt(fDebugResponseTimeout.getText()));
 		prefs.setValue(PHPDebugCorePreferenceNames.ZEND_NEW_PROTOCOL,
