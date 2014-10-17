@@ -852,7 +852,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 			String debuggerId = config.getAttribute(
 					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
 					DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
-			if (debuggerId == DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID) {
+			if (DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID.equals(debuggerId)) {
 				ZendDebuggerConfiguration debuggerConfiguration = (ZendDebuggerConfiguration) PHPDebuggersRegistry
 						.getDebuggerConfiguration(debuggerId);
 				isUseNewProtocol = debuggerConfiguration.isUseNewProtocol();
