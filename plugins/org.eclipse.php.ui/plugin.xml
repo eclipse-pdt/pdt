@@ -74,6 +74,8 @@
 
 			<showInPart id="org.eclipse.ui.views.ResourceNavigator" />
 			<showInPart id="org.eclipse.php.ui.explorer"/>
+			<showInPart id="org.eclipse.egit.ui.RepositoriesView"/>
+			<showInPart id="org.eclipse.team.ui.GenericHistoryView"/>
 
 			<viewShortcut id="org.eclipse.ui.views.ResourceNavigator"/>
 
