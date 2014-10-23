@@ -13,7 +13,7 @@
 <feature
       id="org.eclipse.php"
       label="%featureName"
-      version="3.3.1.qualifier"
+      version="3.3.2.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.php"
       license-feature="org.eclipse.license"
@@ -32,8 +32,8 @@
    </copyright>
 
    <requires>
-      <import feature="org.eclipse.dltk.core" version="3.0.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.dltk.core.index" version="3.0.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.dltk.core" version="5.0.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.dltk.core.index" version="5.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
