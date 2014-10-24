@@ -488,6 +488,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 */
 	public boolean isValid(final ILaunchConfiguration launchConfig) {
 		setErrorMessage(null);
+		setWarningMessage(null);
 		try {
 			final String phpExe = launchConfig.getAttribute(
 					IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, ""); //$NON-NLS-1$
@@ -539,6 +540,14 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 					setErrorMessage(PHPDebugUIMessages.PHP_File_Not_Exist);
 					return false;
 				}
+			}
+			// Check if script arguments can be passed (CLI SAPI required)
+			if (!fPrgmArgumentsText.getText().isEmpty()) {
+				PHPexeItem phpExeItem = phpsComboBlock.getPHPexe();
+				if (phpExeItem != null
+						&& !(PHPexeItem.SAPI_CLI.equals(phpExeItem
+								.getSapiType())))
+					setWarningMessage(PHPDebugUIMessages.PHPExecutableLaunchTab_argumentsWillNotBePassed);
 			}
 		} catch (final CoreException e) {
 		}
