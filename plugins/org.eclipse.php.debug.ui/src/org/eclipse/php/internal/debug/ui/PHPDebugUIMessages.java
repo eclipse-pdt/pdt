@@ -190,6 +190,8 @@ public class PHPDebugUIMessages extends NLS {
 
 	public static String PHPExecutableLaunchTab_2;
 
+	public static String PHPExecutableLaunchTab_argumentsWillNotBePassed;
+
 	public static String PHPExecutableLaunchTab_isNotPHPFile;
 
 	public static String PHPExecutableLaunchTab_scriptArguments;
