@@ -279,7 +279,7 @@ public class CodeAssistUtils {
 		boolean usePhpDoc = (mask & USE_PHPDOC) != 0;
 		if (usePhpDoc) {
 			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(
-					context, types, method);
+					context, types, method, offset);
 			evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal);
 
 			modelElements = PHPTypeInferenceUtils.getModelElements(
@@ -290,7 +290,7 @@ public class CodeAssistUtils {
 		}
 
 		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(
-				context, types, method, argNames);
+				context, types, method, argNames, offset);
 		evaluatedType = typeInferencer.evaluateType(methodGoal);
 		if (evaluatedType instanceof PHPThisClassType
 				&& ((PHPThisClassType) evaluatedType).getType() != null) {
@@ -574,7 +574,7 @@ public class CodeAssistUtils {
 		}
 
 		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(
-				context, types, method, argNames);
+				context, types, method, argNames, offset);
 		evaluatedType = typeInferencer.evaluateType(methodGoal);
 
 		if (evaluatedType instanceof MultiTypeType) {

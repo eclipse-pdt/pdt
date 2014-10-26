@@ -30,6 +30,7 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 	private IType[] types;
 	private IEvaluatedType evaluatedType;
 	private String[] argNames;
+	private int offset;
 
 	public AbstractMethodReturnTypeGoal(IContext context,
 			IEvaluatedType evaluatedType, String methodName) {
@@ -41,16 +42,28 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 
 	public AbstractMethodReturnTypeGoal(IContext context, IType[] types,
 			String methodName, String[] argNames) {
+		this(context, types, methodName, argNames, 0);
+	}
+
+	public AbstractMethodReturnTypeGoal(IContext context, IType[] types,
+			String methodName, String[] argNames, int offset) {
 		super(context);
 		Assert.isNotNull(methodName);
 		this.methodName = methodName;
 		this.types = types;
 		this.argNames = argNames;
+		this.offset = offset;
 	}
 
 	public AbstractMethodReturnTypeGoal(IContext context, IType[] types,
 			String methodName) {
 		this(context, types, methodName, null);
+	}
+
+	public AbstractMethodReturnTypeGoal(IContext context, IType[] types,
+			String methodName, int offset) {
+		this(context, types, methodName, null);
+		this.offset = offset;
 	}
 
 	public AbstractMethodReturnTypeGoal(IContext context,
@@ -65,6 +78,10 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 
 	public String getMethodName() {
 		return methodName;
+	}
+
+	public int getOffset() {
+		return offset;
 	}
 
 	public IType[] getTypes() {

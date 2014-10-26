@@ -254,9 +254,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			modifiers |= IPHPModifiers.Constructor;
 		}
 
-		if (parentDeclaration == null
-				|| (parentDeclaration instanceof TypeDeclaration && parentDeclaration == fCurrentNamespace)) {
+		if (parentDeclaration == null) {
 			modifiers |= Modifiers.AccGlobal;
+
 		}
 		if (!Flags.isPrivate(modifiers) && !Flags.isProtected(modifiers)
 				&& !Flags.isPublic(modifiers)) {

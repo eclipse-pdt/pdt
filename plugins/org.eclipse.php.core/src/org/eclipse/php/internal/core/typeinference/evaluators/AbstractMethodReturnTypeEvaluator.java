@@ -59,7 +59,8 @@ public abstract class AbstractMethodReturnTypeEvaluator extends
 		if (types == null) {
 			try {
 				methods.addAll(Arrays.asList(PHPModelUtils.getFunctions(
-						methodName, sourceModule, 0, cache, null)));
+						methodName, sourceModule, typedGoal.getOffset(), cache,
+						null)));
 				for (int i = 0, size = methods.size(); i < size; i++) {
 					methodTypes.add(null);
 				}
@@ -90,9 +91,8 @@ public abstract class AbstractMethodReturnTypeEvaluator extends
 			}
 		}
 		MethodsAndTypes mat = new MethodsAndTypes();
-		mat.methods = (IMethod[]) methods.toArray(new IMethod[methods.size()]);
-		mat.types = (IType[]) methodTypes
-				.toArray(new IType[methodTypes.size()]);
+		mat.methods = methods.toArray(new IMethod[methods.size()]);
+		mat.types = methodTypes.toArray(new IType[methodTypes.size()]);
 
 		return mat;
 	}
