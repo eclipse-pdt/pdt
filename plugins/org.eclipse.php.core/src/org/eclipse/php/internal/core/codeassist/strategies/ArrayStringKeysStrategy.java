@@ -54,7 +54,10 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 
 		SourceRange replaceRange = getReplacementRange(context);
 		ArrayKeyContext arrayContext = (ArrayKeyContext) context;
-		if (arrayContext.hasQuotes()) {// https://bugs.eclipse.org/bugs/show_bug.cgi?id=401766
+		boolean endsWithQuota = arrayContext.getNextChar() == '\''
+				|| arrayContext.getNextChar() == '\"';
+		if (arrayContext.hasQuotes() && !(endsWithQuota)) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=401766
 			replaceRange = new SourceRange(replaceRange.getOffset(),
 					replaceRange.getLength() + 1);
 		}
@@ -64,7 +67,8 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 		ModuleDeclaration moduleDeclaration = SourceParserUtil
 				.getModuleDeclaration(arrayContext.getSourceModule());
 		try {
-			ArrayKeyFinder finder = new ArrayKeyFinder(prefix);
+			ArrayKeyFinder finder = new ArrayKeyFinder(prefix,
+					arrayContext.getOffset());
 			moduleDeclaration.traverse(finder);
 			Set<String> names = finder.getNames();
 			int extraObject = ProposalExtraInfo.DEFAULT;
@@ -113,12 +117,13 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 	}
 
 	class ArrayKeyFinder extends PHPASTVisitor {
-		Set<String> names = new HashSet<String>();
-		String prefix;
+		private Set<String> names = new HashSet<String>();
+		private String prefix;
+		private int ignoredOffset;
 
-		public ArrayKeyFinder(String prefix) {
-			// TODO Auto-generated constructor stub
+		public ArrayKeyFinder(String prefix, int ignoredOffset) {
 			this.prefix = prefix;
+			this.ignoredOffset = ignoredOffset;
 		}
 
 		public boolean visit(ArrayCreation s) throws Exception {
@@ -142,7 +147,9 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 		}
 
 		public boolean visit(ArrayVariableReference s) throws Exception {
-
+			if (s.start() < ignoredOffset && s.end() > ignoredOffset) {
+				return super.visit(s);
+			}
 			if (s.getIndex() instanceof Scalar) {
 				Scalar scalar = (Scalar) s.getIndex();
 				if (scalar.getScalarType() == Scalar.TYPE_STRING) {

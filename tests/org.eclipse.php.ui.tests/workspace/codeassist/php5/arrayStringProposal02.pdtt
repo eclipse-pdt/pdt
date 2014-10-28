@@ -1,0 +1,18 @@
+--TEST--
+Test CA for array proposal
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=false
+--FILE--
+<?php
+$aTemp = array (
+		'xkey1' => '1' 
+);
+
+$x = $aTemp ['xk|'];
+--EXPECT--
+<?php
+$aTemp = array (
+		'xkey1' => '1' 
+);
+
+$x = $aTemp ['xkey1'];
