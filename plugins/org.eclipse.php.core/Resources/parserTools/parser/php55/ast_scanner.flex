@@ -46,8 +46,10 @@ import org.eclipse.php.internal.core.PHPVersion;
 %state ST_DOUBLE_QUOTES
 %state ST_BACKQUOTE
 %state ST_HEREDOC
-%state ST_END_HEREDOC
 %state ST_NOWDOC
+%state ST_START_HEREDOC
+%state ST_START_NOWDOC
+%state ST_END_HEREDOC
 %state ST_LOOKING_FOR_PROPERTY
 %state ST_LOOKING_FOR_VARNAME
 %state ST_VAR_OFFSET
@@ -980,17 +982,17 @@ yybegin(ST_DOCBLOCK);
     	nowdoc = hereOrNowDoc.substring(1, heredoc_len-1);
     	sym.value = nowdoc;
     	heredoc_len -= 2;
-    	yybegin(ST_NOWDOC);
+    	yybegin(ST_START_NOWDOC);
     }
     else if (hereOrNowDoc.charAt(0) == '"') {
     	heredoc = hereOrNowDoc.substring(1, heredoc_len-1);
     	sym.value = heredoc;
     	heredoc_len -= 2;
-    	yybegin(ST_HEREDOC);
+    	yybegin(ST_START_HEREDOC);
     } else {
     	heredoc = hereOrNowDoc;
     	sym.value = heredoc;
-    	yybegin(ST_HEREDOC);
+    	yybegin(ST_START_HEREDOC);
     }
     return sym;
 }
@@ -1000,7 +1002,12 @@ yybegin(ST_DOCBLOCK);
     return createSymbol(ParserConstants.T_BACKQUATE);
 }
 
-<ST_HEREDOC>{LABEL}";"?[\n\r] {
+<ST_START_HEREDOC>{ANY_CHAR} {
+	yypushback(1);
+	yybegin(ST_HEREDOC);
+}
+
+<ST_START_HEREDOC>{LABEL}";"?[\n\r] {
     String text = yytext();
     int length = text.length() - 1;
     text = text.trim();
@@ -1051,7 +1058,12 @@ yybegin(ST_DOCBLOCK);
 	return createSymbol(ParserConstants.T_END_HEREDOC);
 }
 
-<ST_NOWDOC>{LABEL}";"?[\n\r] {
+<ST_START_NOWDOC>{ANY_CHAR} {
+	yypushback(1);
+	yybegin(ST_NOWDOC);
+}
+
+<ST_START_NOWDOC>{LABEL}";"?[\n\r] {
     String text = yytext();
     int length = text.length() - 1;
     text = text.trim();
@@ -1152,6 +1164,6 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
     return createSymbol(ParserConstants.T_BACKQUATE);
 }
 
-<ST_IN_SCRIPTING,YYINITIAL,ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC,ST_END_HEREDOC,ST_NOWDOC,ST_VAR_OFFSET>{ANY_CHAR} {
+<ST_IN_SCRIPTING,YYINITIAL,ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC,ST_START_HEREDOC,ST_END_HEREDOC,ST_START_NOWDOC,ST_NOWDOC,ST_VAR_OFFSET>{ANY_CHAR} {
 	// do nothing
 }
