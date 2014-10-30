@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.PHPExeUtil;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 
 /**
@@ -179,13 +180,13 @@ public abstract class AbstractDebuggerConfiguration implements
 			String output = null;
 			File iniFile = exeItem.getINILocation();
 			if (iniFile != null) {
-				output = PHPexeItem.exec(exeItem.getExecutable()
+				output = PHPExeUtil.exec(exeItem.getExecutable()
 						.getAbsolutePath(),
 						exeItem.isLoadDefaultINI() ? "" : "-n", "-c", iniFile //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 								.getAbsolutePath(),
 						"--re", MessageFormat.format("\"{0}\"", extensionId)); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				output = PHPexeItem.exec(exeItem.getExecutable()
+				output = PHPExeUtil.exec(exeItem.getExecutable()
 						.getAbsolutePath(), "--re", extensionId); //$NON-NLS-1$
 			}
 			return output != null && !output.trim().startsWith("Exception"); //$NON-NLS-1$

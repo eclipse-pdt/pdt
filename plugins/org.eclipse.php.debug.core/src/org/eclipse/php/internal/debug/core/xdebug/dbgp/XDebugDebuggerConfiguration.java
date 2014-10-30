@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.PHPExeUtil;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.launching.XDebugExeLaunchConfigurationDelegate;
 import org.eclipse.php.internal.debug.core.launching.XDebugWebLaunchConfigurationDelegate;
@@ -122,11 +123,11 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 				String output = null;
 				File iniFile = item.getINILocation();
 				if (iniFile != null) {
-					output = PHPexeItem.exec(executable.getAbsolutePath(),
+					output = PHPExeUtil.exec(executable.getAbsolutePath(),
 							"-c", iniFile.getAbsolutePath(), "--ri", //$NON-NLS-1$ //$NON-NLS-2$
 							EXTENSION_ID);
 				} else {
-					output = PHPexeItem.exec(executable.getAbsolutePath(),
+					output = PHPExeUtil.exec(executable.getAbsolutePath(),
 							"--ri", EXTENSION_ID); //$NON-NLS-1$
 				}
 				if (output != null) {

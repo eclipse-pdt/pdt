@@ -12,23 +12,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.preferences;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
-import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
+import org.eclipse.php.internal.debug.core.PHPExeException;
+import org.eclipse.php.internal.debug.core.PHPExeUtil;
+import org.eclipse.php.internal.debug.core.PHPExeUtil.PHPExeInfo;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
 
 /**
@@ -43,23 +38,16 @@ public class PHPexeItem {
 	public static final String SAPI_CLI = "CLI"; //$NON-NLS-1$
 	public static final String SAPI_CGI = "CGI"; //$NON-NLS-1$
 
-	private static final Pattern PHP_VERSION = Pattern
-			.compile("PHP (\\d\\.\\d\\.\\d+).*? \\((.*?)\\)"); //$NON-NLS-1$
-	private static final Pattern PHP_CLI_CONFIG = Pattern
-			.compile("Configuration File \\(php.ini\\) Path => (.*)"); //$NON-NLS-1$
-	private static final Pattern PHP_CGI_CONFIG = Pattern
-			.compile("Configuration File \\(php.ini\\) Path </td><td class=\"v\">(.*?)</td>"); //$NON-NLS-1$
-
-	private String sapiType;
-	private String name;
-	private File config;
-	private File detectedConfig;
-	private File executable;
-	private String version;
-	private boolean editable = true;
-	private boolean loadDefaultINI = false;
-	private String debuggerID;
-	private boolean isDefault;
+	protected String sapiType;
+	protected String name;
+	protected File config;
+	protected File detectedConfig;
+	protected File executable;
+	protected String version;
+	protected boolean editable = true;
+	protected boolean loadDefaultINI = false;
+	protected String debuggerID;
+	protected boolean isDefault;
 	/**
 	 * store the php version list that use this PHPexeItem as default PHPexeItem
 	 */
@@ -107,8 +95,27 @@ public class PHPexeItem {
 			this.config = new File(config);
 		}
 		this.loadDefaultINI = loadDefaultINI;
-
 		detectFromPHPExe();
+	}
+
+	protected void detectFromPHPExe() {
+		PHPExeInfo phpInfo;
+		try {
+			phpInfo = PHPExeUtil.getPHPInfo(executable, false);
+		} catch (PHPExeException e) {
+			PHPDebugPlugin
+					.logErrorMessage("Could not detect PHP executable info during PHP exe item creation: " //$NON-NLS-1$
+							+ e.getMessage());
+			return;
+		}
+		if (name == null)
+			name = phpInfo.getName();
+		if (sapiType == null)
+			sapiType = phpInfo.getSapiType();
+		if (detectedConfig == null)
+			detectedConfig = phpInfo.getSystemINIFile();
+		if (version == null)
+			version = phpInfo.getVersion();
 	}
 
 	/**
@@ -127,7 +134,6 @@ public class PHPexeItem {
 		this.config = iniLocation;
 		this.debuggerID = debuggerID;
 		this.editable = editable;
-
 		detectFromPHPExe();
 	}
 
@@ -244,15 +250,11 @@ public class PHPexeItem {
 		if (executable == null) {
 			throw new IllegalArgumentException("PHP executable path is null"); //$NON-NLS-1$
 		}
-
 		if (executable.equals(this.executable)) {
 			return;
 		}
-
 		this.executable = executable;
 		this.config = null;
-
-		detectFromPHPExe();
 	}
 
 	/*
@@ -382,17 +384,6 @@ public class PHPexeItem {
 		phpexes.setItemDefaultForPHPVersion(this, phpVersion);
 	}
 
-	public IStatus validateDebugger() {
-		AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry
-				.getDebuggersConfigurations();
-		for (AbstractDebuggerConfiguration debugger : debuggers) {
-			if (getDebuggerID().equals(debugger.getDebuggerId())) {
-				return debugger.validate(this);
-			}
-		}
-		return Status.OK_STATUS;
-	}
-
 	void addPHPVersionToDefaultList(PHPVersion phpVersion) {
 		defaultForPHPVersionList.add(phpVersion);
 	}
@@ -408,117 +399,6 @@ public class PHPexeItem {
 	public PHPVersion getPHPVersionAtDefaultList(int index) {
 		assert geDefaultForPHPVersionSize() > index;
 		return defaultForPHPVersionList.get(index);
-	}
-
-	/**
-	 * Detects various things like: type, version, default configuration file,
-	 * etc. from the PHP binary
-	 */
-	protected void detectFromPHPExe() {
-		if (executable == null) {
-			throw new IllegalStateException("PHP executable path is null"); //$NON-NLS-1$
-		}
-
-		// Create empty configuration file:
-		File tempPHPIni = PHPINIUtil.createTemporaryPHPINIFile();
-
-		try {
-			PHPexes.changePermissions(executable);
-
-			// Detect version and type:
-			String output = exec(
-					executable.getAbsolutePath(),
-					"-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			Matcher m = PHP_VERSION.matcher(output);
-			if (m.find()) {
-				initFields(m);
-			} else {
-				output = exec(
-						executable.getAbsolutePath(),
-						"-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$ //$NON-NLS-2$
-				m = PHP_VERSION.matcher(output);
-				if (m.find()) {
-					initFields(m);
-				} else {
-					PHPDebugPlugin
-							.logErrorMessage("Can't determine version of the PHP executable"); //$NON-NLS-1$
-					// this.executable = null;
-					return;
-				}
-				return;
-			}
-
-			// Detect default PHP.ini location:
-			if (detectedConfig == null) {
-				output = exec(
-						executable.getAbsolutePath(),
-						this.loadDefaultINI ? "" : "-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-i"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-				if (sapiType == SAPI_CLI) {
-					m = PHP_CLI_CONFIG.matcher(output);
-				} else if (sapiType == SAPI_CGI) {
-					m = PHP_CGI_CONFIG.matcher(output);
-				}
-				if (m.find()) {
-					String configDir = m.group(1);
-					detectedConfig = new File(configDir.trim(), "php.ini"); //$NON-NLS-1$
-					if (!detectedConfig.exists()) {
-						detectedConfig = null;
-					}
-				} else {
-					PHPDebugPlugin
-							.logErrorMessage("Can't determine PHP.ini location of the PHP executable"); //$NON-NLS-1$
-					// this.executable = null;
-					return;
-				}
-			}
-		} catch (IOException e) {
-			DebugPlugin.log(e);
-		}
-	}
-
-	private void initFields(Matcher m) {
-		version = m.group(1);
-		String type = m.group(2);
-		if (type.startsWith("cgi")) { //$NON-NLS-1$
-			sapiType = SAPI_CGI;
-		} else if (type.startsWith("cli")) { //$NON-NLS-1$
-			sapiType = SAPI_CLI;
-		} else {
-			PHPDebugPlugin
-					.logErrorMessage("Can't determine type of the PHP executable"); //$NON-NLS-1$
-			// this.executable = null;
-			return;
-		}
-
-		if (name == null) {
-			name = "PHP " + version + " (" + sapiType + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		}
-	}
-
-	/**
-	 * Executes given command
-	 * 
-	 * @param cmd
-	 *            Command array
-	 * @throws IOException
-	 */
-	public static String exec(String... cmd) throws IOException {
-		String[] envParams = null;
-		String env = PHPLaunchUtilities
-				.getLibrarySearchPathEnv(new File(cmd[0]).getParentFile());
-		if (env != null) {
-			envParams = new String[] { env };
-		}
-
-		Process p = Runtime.getRuntime().exec(cmd, envParams);
-		BufferedReader r = new BufferedReader(new InputStreamReader(
-				p.getInputStream()));
-		StringBuilder buf = new StringBuilder();
-		String l;
-		while ((l = r.readLine()) != null) {
-			buf.append(l).append('\n');
-		}
-		return buf.toString();
 	}
 
 	/**
@@ -540,8 +420,9 @@ public class PHPexeItem {
 
 		try {
 			PHPexes.changePermissions(executable);
-			exec(executable.getAbsolutePath(),
-					this.loadDefaultINI ? "" : "-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v", scriptFile); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			PHPExeUtil
+					.exec(executable.getAbsolutePath(),
+							this.loadDefaultINI ? "" : "-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v", scriptFile); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} catch (IOException e) {
 			DebugPlugin.log(e);
 			status = false;
