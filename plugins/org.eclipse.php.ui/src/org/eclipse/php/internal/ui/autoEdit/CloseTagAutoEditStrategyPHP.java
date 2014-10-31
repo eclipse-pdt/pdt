@@ -97,7 +97,8 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 								if (!closeTagAppears(node.getSource(),
 										command.offset)) {
 									command.text += " ?>"; //$NON-NLS-1$
-									command.caretOffset = command.offset + 2;
+									// https://bugs.eclipse.org/bugs/show_bug.cgi?id=384262
+									command.caretOffset = command.offset + 1;
 									command.shiftsCaret = false;
 									command.doit = false;
 								}
