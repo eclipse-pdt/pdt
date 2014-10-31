@@ -1,0 +1,20 @@
+--TEST--
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=418959
+--FILE--
+<?php $test=test(); $a   ='?>'; ?>
+<?php $test=test(); $a   ='?>';
+?>
+<?php $test=test(); $a   ='?>';
+--EXPECT--
+<?php $test=test(); $a   ='?>'; ?>
+<?php
+
+
+$test = test ();
+$a = '?>';
+?>
+<?php
+
+
+$test = test ();
+$a = '?>';
