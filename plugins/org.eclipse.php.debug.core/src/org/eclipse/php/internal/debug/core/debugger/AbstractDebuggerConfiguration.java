@@ -16,6 +16,7 @@ package org.eclipse.php.internal.debug.core.debugger;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.HashMap;
 
 import org.eclipse.core.runtime.IStatus;
@@ -181,7 +182,8 @@ public abstract class AbstractDebuggerConfiguration implements
 				output = PHPexeItem.exec(exeItem.getExecutable()
 						.getAbsolutePath(),
 						exeItem.isLoadDefaultINI() ? "" : "-n", "-c", iniFile //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								.getAbsolutePath(), "--re", extensionId); //$NON-NLS-1$
+								.getAbsolutePath(),
+						"--re", MessageFormat.format("\"{0}\"", extensionId)); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
 				output = PHPexeItem.exec(exeItem.getExecutable()
 						.getAbsolutePath(), "--re", extensionId); //$NON-NLS-1$
