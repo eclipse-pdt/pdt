@@ -515,7 +515,7 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
     return PHP_LINE_COMMENT;
 }
 
-<ST_PHP_IN_SCRIPTING>"/**"(#@\+)?{WHITESPACE} {
+<ST_PHP_IN_SCRIPTING>"/**" {
     pushState(ST_PHP_DOC_COMMENT);
     return PHPDOC_COMMENT_START;
 }
