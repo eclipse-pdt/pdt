@@ -28,12 +28,12 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.VarComment;
 import org.eclipse.php.internal.core.compiler.ast.parser.php5.CompilerAstLexer;
-import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.TextEdit;
-import org.eclipse.wst.sse.core.internal.provisional.text.*;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 
 /**
  * Description: This class formats a given {@link StructuredDocument}
@@ -253,11 +253,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, 0,
 					document.getLength(), false));
 		} catch (BadLocationException e) {
+			Logger.logException(e);
 		}
 		List<ReplaceEdit> allChanges = Collections.unmodifiableList(changes);
 		List<ReplaceEdit> result = new ArrayList<ReplaceEdit>();
 		for (ReplaceEdit edit : allChanges) {
-			if (isInSingleLine(edit, partitions, 0)) {
+			if (isInSingleLine(edit, partitions)) {
 				continue;
 			}
 			result.add(edit);
@@ -791,20 +792,20 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 				// obj may be null
 				if (obj instanceof NamespaceName
 						&& ((NamespaceName) obj).isGlobal()) {
-					if (Character.isWhitespace(document.getChar(start - 1))
-							|| document.getChar(start - 1) == '\\') {
+					if (start > 0 && (Character.isWhitespace(document.getChar(start - 1))
+							|| document.getChar(start - 1) == '\\')) {
 						start -= 1;
 					}
 				} else if (i == 0 && array[i] instanceof UseStatementPart
 						&& ((UseStatementPart) array[i]).getName() != null
 						&& ((UseStatementPart) array[i]).getName().isGlobal()) {
-					if (Character.isWhitespace(document.getChar(start - 1))
-							|| document.getChar(start - 1) == '\\') {
+					if (start > 0 && (Character.isWhitespace(document.getChar(start - 1))
+							|| document.getChar(start - 1) == '\\')) {
 						start -= 1;
 					}
 				}
 			} catch (BadLocationException e) {
-				// should not be here
+				Logger.logException(e);
 			}
 			// workaround end
 			handleChars1(lastPosition, start,
@@ -2251,6 +2252,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			} while (symbol != null && symbol.sym != 0);
 		} catch (Exception e) {
 			// do nothing
+			Logger.logException(e);
 		}
 	}
 
@@ -2627,6 +2629,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			try {
 				hasComments = hasComments(lastStatementEndOffset, endPosition);
 			} catch (Exception e) {
+				Logger.logException(e);
 			}
 		}
 
@@ -2828,13 +2831,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			NamespaceName namespaceName = (NamespaceName) catchClause
 					.getClassName();
 			try {
-				if (namespaceName.isGlobal()
+				if (namespaceName.isGlobal() && start > 0
 						&& (Character.isWhitespace(document.getChar(start - 1)) || document
 								.getChar(start - 1) == '\\')) {
 					start -= 1;
 				}
 			} catch (BadLocationException e) {
-				// should not be here
+				Logger.logException(e);
 			}
 		}
 		// end
@@ -2947,13 +2950,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			try {
 				if (superClass instanceof NamespaceName
 						&& ((NamespaceName) superClass).isGlobal()) {
-					if (Character.isWhitespace(document.getChar(start - 1))
-							|| document.getChar(start - 1) == '\\') {
+					if (start > 0 && (Character.isWhitespace(document.getChar(start - 1))
+							|| document.getChar(start - 1) == '\\')) {
 						start -= 1;
 					}
 				}
 			} catch (BadLocationException e) {
 				// should not be here
+				Logger.logException(e);
 			}
 			// end
 
@@ -4534,6 +4538,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		// } else {
 		// }
 		// } catch (Exception e) {
+		// Logger.logException(e);
 		// }
 		//
 		// }
@@ -5022,13 +5027,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=326384
 			int start = namespaceName.getStart();
 			try {
-				if (namespaceName.isGlobal()
+				if (namespaceName.isGlobal() && start > 0
 						&& (Character.isWhitespace(document.getChar(start - 1)) || document
 								.getChar(start - 1) == '\\')) {
 					start -= 1;
 				}
 			} catch (BadLocationException e) {
-				// should not be here
+				Logger.logException(e);
 			}
 			// end
 
@@ -5237,98 +5242,50 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		return rootEdit;
 	}
 
-	private boolean isInSingleLine(ReplaceEdit edit, IRegion[] partitions,
-			int removedLength) {
-		removedLength = 0;
+	private boolean isInSingleLine(ReplaceEdit edit, IRegion[] partitions) {
 		for (int i = 0; i < partitions.length; i++) {
 			IRegion iTypedRegion = partitions[i];
-			if (edit.offset >= iTypedRegion.getOffset() + removedLength
+			if (edit.offset >= iTypedRegion.getOffset()
 					&& edit.offset + edit.length <= iTypedRegion.getOffset()
-							+ iTypedRegion.getLength() + removedLength) {
+							+ iTypedRegion.getLength()) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private IRegion[] getAllSingleLine(ITypedRegion[] partitions) {
+	private IRegion[] getAllSingleLine(ITypedRegion[] partitions)
+			throws BadLocationException {
 		List<IRegion> result = new ArrayList<IRegion>();
 		if (document instanceof IStructuredDocument) {
-			IStructuredDocument structuredDocument = (IStructuredDocument) document;
-			ITextRegion phpOpenRegion = null;
 			for (int i = 0; i < partitions.length; i++) {
 				ITypedRegion iTypedRegion = partitions[i];
-
 				if (PHPPartitionTypes.PHP_DEFAULT
-						.equals(iTypedRegion.getType())) {
-					if (isInSingleLine(iTypedRegion.getOffset(),
-							iTypedRegion.getLength())) {
-						result.add(iTypedRegion);
-						continue;
-					}
-					IStructuredDocumentRegion structuredDocumentRegion = structuredDocument
-							.getRegionAtCharacterOffset(iTypedRegion
-									.getOffset());
-					ITextRegionList regions = structuredDocumentRegion
-							.getRegions();
-					for (Iterator iterator = regions.iterator(); iterator
-							.hasNext();) {
-						ITextRegion iTypedRegion2 = (ITextRegion) iterator
-								.next();
-						// if (iTypedRegion2 instanceof ContextRegionContainer)
-						// {
-						// ContextRegionContainer new_name =
-						// (ContextRegionContainer) iTypedRegion2;
-						//
-						// }
-						if (PHPRegionContext.PHP_OPEN.equals(iTypedRegion2
-								.getType())) {
-							if (phpOpenRegion == null) {
-								phpOpenRegion = iTypedRegion2;
-							}
-						} else if (PHPRegionContext.PHP_CLOSE
-								.equals(iTypedRegion2.getType())) {
-							if (phpOpenRegion != null) {
-								IRegion region = new Region(
-										structuredDocumentRegion.getStart()
-												+ phpOpenRegion.getStart(),
-										iTypedRegion2.getStart()
-												+ iTypedRegion2.getLength());
-								result.add(region);
-								phpOpenRegion = null;
-							}
-						}
-					}
+						.equals(iTypedRegion.getType())
+						&& isPhpRegionOnSingleLine(iTypedRegion.getOffset(),
+								iTypedRegion.getLength())) {
+					result.add(iTypedRegion);
 				}
 			}
-			List<IRegion> temp = new ArrayList<IRegion>();
-			for (Iterator<IRegion> iterator = result.iterator(); iterator
-					.hasNext();) {
-				IRegion iRegion = iterator.next();
-				if (isInSingleLine(iRegion.getOffset(), iRegion.getLength())) {
-					temp.add(iRegion);
-				}
-			}
-			result = temp;
 		}
 		return result.toArray(new IRegion[result.size()]);
 	}
 
-	private boolean isInSingleLine(int start, int length) {
-		try {
-			String text = document.get(start, length);
-			int index = text.indexOf("<?"); //$NON-NLS-1$
-			start += index;
-			if (text.lastIndexOf("?>") >= 0) { //$NON-NLS-1$
-				length = text.lastIndexOf("?>") + 2 - index; //$NON-NLS-1$
-			}
-			if (document.getLineOfOffset(start) == document
-					.getLineOfOffset(start + length)) {
-				return true;
-			}
-		} catch (BadLocationException e) {
+	private boolean isPhpRegionOnSingleLine(int start, int length)
+			throws BadLocationException {
+		assert length >= 0;
+		int endTagLength = "?>".length();
+		if (length < endTagLength
+				|| document.getLineOfOffset(start) != document
+						.getLineOfOffset(start + length - 1)) {
+			return false;
 		}
-		return false;
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=418959
+		// Tag "?>" is optional to end a PHP region.
+		// If this tag is missing at the very end of a PHP region,
+		// this region will not be considered as a single line.
+		return "?>".equals(document.get(start + length - endTagLength,
+				endTagLength));
 	}
 
 	public static String join(Collection<String> s, String delimiter) {

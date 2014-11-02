@@ -1,0 +1,20 @@
+--TEST--
+Bug 418959 - Formatting not work on one line file with assignment
+--FILE--
+<?php $test=test(); $a   ='?>'; ?>
+<?php $test=test(); $a   ='?>';
+?>
+<?php $test=test(); $a   ='?>';
+--EXPECT--
+<?php $test=test(); $a   ='?>'; ?>
+<?php
+
+
+$test = test ();
+$a = '?>';
+?>
+<?php
+
+
+$test = test ();
+$a = '?>';
