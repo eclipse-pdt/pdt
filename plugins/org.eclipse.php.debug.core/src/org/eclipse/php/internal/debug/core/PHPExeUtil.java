@@ -15,8 +15,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,6 +72,66 @@ public final class PHPExeUtil {
 
 		public File getExecFile() {
 			return execFile;
+		}
+
+	}
+
+	/**
+	 * Provides basic info about module installed (only its name and name of a
+	 * group to which it belongs) on PHP executable in pair with some INI file.
+	 */
+	public static final class PHPModuleInfo {
+
+		private String name;
+		private String groupName;
+
+		public PHPModuleInfo(String name, String groupName) {
+			super();
+			this.name = name;
+			this.groupName = groupName;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getGroupName() {
+			return groupName;
+		}
+
+	}
+
+	public static final class PHPVersion {
+
+		private int major = 0;
+		private int minor = 0;
+		private int service = 0;
+
+		private PHPVersion(PHPexeItem phpExeItem) {
+			build(phpExeItem.getVersion());
+		}
+
+		private void build(String version) {
+			String[] parts = version.split("."); //$NON-NLS-1$
+			try {
+				major = Integer.valueOf(parts[0]);
+				minor = Integer.valueOf(parts[1]);
+				service = Integer.valueOf(parts[2]);
+			} catch (ArrayIndexOutOfBoundsException e) {
+				// skip
+			}
+		}
+
+		public int getMajor() {
+			return major;
+		}
+
+		public int getMinor() {
+			return minor;
+		}
+
+		public int getService() {
+			return service;
 		}
 
 	}
@@ -197,6 +256,87 @@ public final class PHPExeUtil {
 				configFile);
 		phpInfos.put(executableFile, phpInfo);
 		return phpInfo;
+	}
+
+	/**
+	 * Checks and outputs list of modules installed on top of given PHP
+	 * executable item.
+	 * 
+	 * @param phpExeItem
+	 * @return list of installed module names
+	 */
+	public static List<PHPModuleInfo> getModules(PHPexeItem phpExeItem) {
+		List<PHPModuleInfo> modules = new ArrayList<PHPExeUtil.PHPModuleInfo>();
+		String result;
+		File iniFile = phpExeItem.getINILocation();
+		PHPVersion phpVersion = new PHPVersion(phpExeItem);
+		try {
+			if (iniFile != null) {
+				if (phpVersion.getMajor() >= 5)
+					result = PHPExeUtil
+							.exec(phpExeItem.getExecutable().getAbsolutePath(),
+									phpExeItem.isLoadDefaultINI() ? "" : "-n", "-c", iniFile //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+											.getAbsolutePath(), "-m"); //$NON-NLS-1$
+				else
+					result = PHPExeUtil.exec(phpExeItem.getExecutable()
+							.getAbsolutePath(), "-c", iniFile //$NON-NLS-1$
+							.getAbsolutePath(), "-m"); //$NON-NLS-1$
+			} else {
+				result = PHPExeUtil.exec(phpExeItem.getExecutable()
+						.getAbsolutePath(), "-m"); //$NON-NLS-1$
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return modules;
+		}
+		Scanner scanner = new Scanner(result);
+		String currentGroup = null;
+		while (scanner.hasNextLine()) {
+			String line = scanner.nextLine().trim();
+			if (line.startsWith("[")) { //$NON-NLS-1$
+				currentGroup = line;
+				continue;
+			}
+			if (!line.isEmpty())
+				modules.add(new PHPModuleInfo(line, currentGroup));
+		}
+		scanner.close();
+		return modules;
+	}
+
+	/**
+	 * Checks if module with given name is installed on top of provided PHP
+	 * executable item (group name for a module is not taken into account).
+	 * 
+	 * @param phpExeItem
+	 * @param moduleName
+	 * @return <code>true</code> if installed, <code>false</code> otherwise
+	 */
+	public static boolean hasModule(PHPexeItem phpExeItem, String moduleName) {
+		List<PHPModuleInfo> modules = getModules(phpExeItem);
+		for (PHPModuleInfo module : modules)
+			if (module.getName().equalsIgnoreCase(moduleName))
+				return true;
+		return false;
+	}
+
+	/**
+	 * Checks if a module with given name and belonging to specific group is
+	 * installed on top of PHP executable item.
+	 * 
+	 * @param phpExeItem
+	 * @param moduleName
+	 * @param groupName
+	 * @return <code>true</code> if installed, <code>false</code> otherwise
+	 */
+	public static boolean hasModule(PHPexeItem phpExeItem, String moduleName,
+			String groupName) {
+		List<PHPModuleInfo> modules = getModules(phpExeItem);
+		for (PHPModuleInfo module : modules)
+			if (module.getName().equalsIgnoreCase(moduleName)
+					&& module.getGroupName().equalsIgnoreCase(groupName))
+				return true;
+		return false;
 	}
 
 	private static Matcher getConfigMatcher(String sapiType, Matcher m,
