@@ -149,7 +149,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 	 * @see org.eclipse.debug.core.model.IStep#canStepInto()
 	 */
 	public boolean canStepInto() {
-		return isSuspended();
+		return ((IStep) getDebugTarget()).canStepInto();
 	}
 
 	/*
@@ -158,7 +158,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 	 * @see org.eclipse.debug.core.model.IStep#canStepOver()
 	 */
 	public boolean canStepOver() {
-		return isSuspended();
+		return ((IStep) getDebugTarget()).canStepOver();
 	}
 
 	/*

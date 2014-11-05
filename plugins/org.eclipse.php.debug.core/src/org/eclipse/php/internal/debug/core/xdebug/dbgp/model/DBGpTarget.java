@@ -128,6 +128,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 	private Object sessionMutex = new Object();
 
+	private Object commandMutex = new Object();
+
 	private TimedEvent te = new TimedEvent();
 
 	// debug config settings
@@ -826,7 +828,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @see org.eclipse.debug.core.model.IStep#canStepInto()
 	 */
 	public boolean canStepInto() {
-		return isSuspended();
+		return !isStepping() && isSuspended();
 	}
 
 	/*
@@ -835,7 +837,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @see org.eclipse.debug.core.model.IStep#canStepOver()
 	 */
 	public boolean canStepOver() {
-		return isSuspended();
+		return !isStepping() && isSuspended();
 	}
 
 	/*
@@ -847,7 +849,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		// can only step return if there is a method above it, ie there is
 		// at least one stack frame above the current stack frame.
 		try {
-			if (isSuspended() && getCurrentStackFrames().length > 1) {
+			if (!isStepping() && isSuspended()
+					&& getCurrentStackFrames().length > 1) {
 				return true;
 			}
 		} catch (DebugException e) {
@@ -871,8 +874,12 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @see org.eclipse.debug.core.model.IStep#stepInto()
 	 */
 	public void stepInto() throws DebugException {
-		stepping = true;
-		resumed(DebugEvent.STEP_INTO);
+		synchronized (commandMutex) {
+			if (!canStepInto())
+				return;
+			stepping = true;
+			resumed(DebugEvent.STEP_INTO);
+		}
 		session.sendAsyncCmd(DBGpCommand.stepInto);
 	}
 
@@ -882,8 +889,12 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @see org.eclipse.debug.core.model.IStep#stepOver()
 	 */
 	public void stepOver() throws DebugException {
-		stepping = true;
-		resumed(DebugEvent.STEP_OVER);
+		synchronized (commandMutex) {
+			if (!canStepOver())
+				return;
+			stepping = true;
+			resumed(DebugEvent.STEP_OVER);
+		}
 		session.sendAsyncCmd(DBGpCommand.stepOver);
 
 	}
@@ -894,8 +905,12 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @see org.eclipse.debug.core.model.IStep#stepReturn()
 	 */
 	public void stepReturn() throws DebugException {
-		stepping = true;
-		resumed(DebugEvent.STEP_RETURN);
+		synchronized (commandMutex) {
+			if (!canStepReturn())
+				return;
+			stepping = true;
+			resumed(DebugEvent.STEP_RETURN);
+		}
 		session.sendAsyncCmd(DBGpCommand.StepOut);
 	}
 
@@ -905,8 +920,12 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @see org.eclipse.debug.core.model.ISuspendResume#resume()
 	 */
 	public void resume() throws DebugException {
-		stepping = false;
-		resumed(DebugEvent.RESUME);
+		synchronized (commandMutex) {
+			if (!canResume())
+				return;
+			stepping = false;
+			resumed(DebugEvent.RESUME);
+		}
 		// bug in eclipse 3.2. When I issue a resume when a disconnect
 		// is done, the resume button can still be pressed which
 		// wouldn't work as the session has gone.
@@ -1097,6 +1116,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		stackFrames = null;
 		currentVariables = null;
 		superGlobalVars = null;
+		stepping = false;
 		fireSuspendEvent(detail);
 		langThread.fireSuspendEvent(detail);
 	}
@@ -1138,7 +1158,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		resp = session.sendSyncCmd(DBGpCommand.featureGet, "-n supports_async"); //$NON-NLS-1$
 		if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
 			// TODO: could check the supported atttribute ?
-			//String supportedAttr = DBGpResponse.getAttribute(resp, "supported"); 
+			// String supportedAttr = DBGpResponse.getAttribute(resp,
+			// "supported");
 			Node child = resp.getParentNode().getFirstChild();
 			if (child != null) {
 				String supported = child.getNodeValue();
@@ -2280,7 +2301,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		}
 		return DBGpPreferences.DBGP_MAX_CHILDREN_DEFAULT;
 	}
-	
+
 	public int getMaxData() {
 		if (sessionPreferences != null) {
 			return sessionPreferences.getInt(
