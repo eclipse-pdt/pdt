@@ -224,43 +224,9 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 			if (fullName.startsWith("\\")) { //$NON-NLS-1$
 				fullName = fullName.substring(1);
 			}
-			IType[] elements = PhpModelAccess.getDefault().findTypes(null,
-					fullName, MatchRule.PREFIX, 0, 0, scope, null);
 			try {
-				for (int i = 0; i < elements.length; i++) {
-					String elementName = elements[i].getElementName();
-					if (!PHPFlags.isNamespace(elements[i].getFlags())) {
-						reportAlias(reporter, scope, module, replacementRange,
-								elements[i], elementName,
-								elementName.replace(fullName, name), suffix);
-					} else {
-						String nsname = prefix.replace(name, fullName);
-						if (nsname.startsWith(elementName + SPLASH)
-								&& nsname.lastIndexOf(SPLASH) == elementName
-										.length()) {
-							// namespace strategy will handle this case
-							continue;
-						}
-						IType[] typesOfNS = elements[i].getTypes();
-
-						for (int j = 0; j < typesOfNS.length; j++) {
-							reportAlias(
-									reporter,
-									scope,
-									module,
-									replacementRange,
-									typesOfNS[j],
-									elementName + SPLASH
-											+ typesOfNS[j].getElementName(),
-									(elementName + SPLASH + typesOfNS[j]
-											.getElementName()).replace(
-											fullName, name), suffix);
-						}
-					}
-				}
-
-				elements = PhpModelAccess.getDefault().findTypes(fullName,
-						MatchRule.EXACT, 0, 0, scope, null);
+				IType[] elements = PhpModelAccess.getDefault().findTypes(
+						fullName, MatchRule.EXACT, 0, 0, scope, null);
 
 				for (int i = 0; i < elements.length; i++) {
 					String elementName = elements[i].getElementName();
@@ -293,7 +259,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 					}
 				}
 			} catch (ModelException e) {
-				e.printStackTrace();
+				PHPCorePlugin.log(e);
 			}
 		}
 	}
