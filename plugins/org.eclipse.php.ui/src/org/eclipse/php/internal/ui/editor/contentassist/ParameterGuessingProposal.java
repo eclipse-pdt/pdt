@@ -260,21 +260,20 @@ public final class ParameterGuessingProposal extends
 		try {
 			if (method.isConstructor()) {
 				IType type = method.getDeclaringType();
+				boolean isInNamespace = PHPModelUtils.getCurrentNamespaceIfAny(
+						fSourceModule, getReplacementOffset()) != null;
+				boolean globalType = PHPModelUtils.getCurrentNamespace(type) == null;
 				try {
 					int flags = type.getFlags();
-					IType currentNamespace = PHPModelUtils
-							.getCurrentNamespaceIfAny(fSourceModule,
-									getReplacementOffset());
-					IType namespace = PHPModelUtils.getCurrentNamespace(type);
 					if (!PHPFlags.isNamespace(flags)
-							&& namespace == null
-							&& currentNamespace != null
+							&& globalType
+							&& isInNamespace
+							&& !(type instanceof AliasType)
 							&& !ProjectOptions.getPhpVersion(
 									sProject.getProject()).isLessThan(
 									PHPVersion.PHP5_3)
 							&& document.getChar(getReplacementOffset() - 1) != NamespaceReference.NAMESPACE_SEPARATOR) {
-						prefix = prefix
-								+ NamespaceReference.NAMESPACE_SEPARATOR;
+						prefix += NamespaceReference.NAMESPACE_SEPARATOR;
 					}
 				} catch (ModelException e) {
 					PHPUiPlugin.log(e);
