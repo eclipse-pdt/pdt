@@ -502,7 +502,8 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		phpExeItem.setName(fPHPexeName.getText());
 		phpExeItem.setDebuggerID(debuggersIds.get(fDebuggers
 				.getSelectionIndex()));
-		phpExeItem.setINILocation(new File(fPHPIni.getText()));
+		phpExeItem.setINILocation(fPHPIni.getText().isEmpty() ? null
+				: new File(fPHPIni.getText()));
 		phpExeItem.setSapiType(fSapiTypes.getText());
 		PHPExeInfo phpExeInfo = getPHPInfo(phpExeItem.getExecutable());
 		if (phpExeInfo != null)
