@@ -62,6 +62,7 @@ import com.ibm.icu.text.MessageFormat;
  * @author seva, shalom
  * 
  */
+@SuppressWarnings("restriction")
 public class InstalledPHPsBlock {
 
 	/**
@@ -185,10 +186,7 @@ public class InstalledPHPsBlock {
 	private float fWeight2 = 2 / 8F;
 	private float fWeight3 = 3 / 8F;
 
-	PHPexes phpExes;
-
 	public InstalledPHPsBlock() {
-		this.phpExes = PHPexes.getInstance();
 	}
 
 	/**
@@ -199,7 +197,8 @@ public class InstalledPHPsBlock {
 				.getShell();
 		NullProgressMonitor monitor = new NullProgressMonitor();
 		PHPexeItem phpExeItem = null;
-		PHPExeWizard wizard = new PHPExeWizard(phpExes.getAllItems());
+		PHPExeWizard wizard = new PHPExeWizard(PHPexes.getInstance()
+				.getAllItems());
 		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
 		if (dialog.open() == Window.CANCEL) {
 			monitor.setCanceled(true);
@@ -208,7 +207,7 @@ public class InstalledPHPsBlock {
 		phpExeItem = (PHPexeItem) wizard.getRootFragment().getWizardModel()
 				.getObject(PHPExeWizard.MODEL);
 		fPHPexes.add(phpExeItem);
-		phpExes.addItem(phpExeItem);
+		PHPexes.getInstance().addItem(phpExeItem);
 		fPHPExeList.refresh();
 		commitChanges();
 	}
@@ -395,9 +394,9 @@ public class InstalledPHPsBlock {
 			public void widgetSelected(SelectionEvent e) {
 				PHPexeItem defaultItem = (PHPexeItem) ((IStructuredSelection) fPHPExeList
 						.getSelection()).getFirstElement();
-				phpExes.setDefaultItem(defaultItem);
+				PHPexes.getInstance().setDefaultItem(defaultItem);
 				commitChanges();
-				setPHPs(phpExes.getAllItems());
+				setPHPs(PHPexes.getInstance().getAllItems());
 				// Preferences prefs =
 				// PHPProjectPreferences.getModelPreferences();
 				// prefs.setValue(PHPDebugCorePreferenceNames.DEFAULT_PHP,
@@ -449,7 +448,7 @@ public class InstalledPHPsBlock {
 		phpExeToEdit.setSapiType(phpExe.getSapiType());
 		phpExeToEdit.setLoadDefaultINI(phpExe.isLoadDefaultINI());
 		PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(),
-				phpExeToEdit, phpExes.getAllItems());
+				phpExeToEdit, PHPexes.getInstance().getAllItems());
 		dialog.setTitle(PHPDebugUIMessages.InstalledPHPsBlock_8);
 		if (dialog.open() != Window.OK) {
 			return;
@@ -487,7 +486,7 @@ public class InstalledPHPsBlock {
 	 */
 	protected void fillWithWorkspacePHPs() {
 		// fill with PHPs
-		final PHPexeItem[] items = phpExes.getAllItems();
+		final PHPexeItem[] items = PHPexes.getInstance().getAllItems();
 		setPHPs(items);
 	}
 
@@ -534,12 +533,11 @@ public class InstalledPHPsBlock {
 		return false;
 	}
 
-	@SuppressWarnings("unchecked")
 	private void removePHPexes() {
 		final IStructuredSelection selection = (IStructuredSelection) fPHPExeList
 				.getSelection();
 		final PHPexeItem[] phpExes = new PHPexeItem[selection.size()];
-		final Iterator iter = selection.iterator();
+		final Iterator<?> iter = selection.iterator();
 		int i = 0;
 		while (iter.hasNext()) {
 			phpExes[i] = (PHPexeItem) iter.next();
@@ -550,13 +548,13 @@ public class InstalledPHPsBlock {
 	}
 
 	public void commitChanges() {
-		phpExes.save();
+		PHPexes.getInstance().save();
 	}
 
 	public void removePHPs(final PHPexeItem[] phpExes) {
 		for (PHPexeItem element : phpExes) {
 			fPHPexes.remove(element);
-			this.phpExes.removeItem(element);
+			PHPexes.getInstance().removeItem(element);
 		}
 		fPHPExeList.refresh();
 	}
@@ -690,7 +688,6 @@ public class InstalledPHPsBlock {
 	 * Search for installed VMs in the file system
 	 */
 	protected void search() {
-
 		// choose a root directory for the search
 		final DirectoryDialog dialog = new DirectoryDialog(getShell());
 		dialog.setMessage(PHPDebugUIMessages.InstalledPHPsBlock_9);
@@ -698,29 +695,46 @@ public class InstalledPHPsBlock {
 		final String path = dialog.open();
 		if (path == null)
 			return;
-
 		// ignore installed locations
-		final Set<File> exstingLocations = new HashSet<File>();
-		Iterator<PHPexeItem> iter = fPHPexes.iterator();
-		while (iter.hasNext())
-			exstingLocations.add(iter.next().getExecutable().getParentFile());
-
+		// final Set<File> exstingLocations = new HashSet<File>();
+		// Iterator<PHPexeItem> iter = fPHPexes.iterator();
+		// while (iter.hasNext())
+		// exstingLocations.add(iter.next().getExecutable().getParentFile());
 		// search
 		final File rootDir = new File(path);
 		final List<File> locations = new ArrayList<File>();
-
+		final List<PHPexeItem> found = new ArrayList<PHPexeItem>();
 		final IRunnableWithProgress r = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) {
 				monitor.beginTask(PHPDebugUIMessages.InstalledPHPsBlock_11,
 						IProgressMonitor.UNKNOWN);
-				search(rootDir, locations, exstingLocations, monitor);
+				search(rootDir, locations, monitor);
+				if (!locations.isEmpty()) {
+					Iterator<File> iter2 = locations.iterator();
+					while (iter2.hasNext()) {
+						File location = iter2.next();
+						PHPexeItem phpExe = new PHPexeItem(null, location,
+								null,
+								PHPDebuggersRegistry.getDefaultDebuggerId(),
+								true);
+						String nameCopy = new String(phpExe.getName());
+						int i = 1;
+						while (isDuplicateName(nameCopy)) {
+							nameCopy = phpExe.getName() + ' ' + '[' + i++ + ']';
+						}
+						phpExe.setName(nameCopy);
+						if (phpExe.getExecutable() != null) {
+							found.add(phpExe);
+						}
+					}
+				}
 				monitor.done();
 			}
 		};
-
+		// Perform searching
 		try {
 			final ProgressMonitorDialog progress = new ProgressMonitorDialog(
-					getShell());
+					PlatformUI.getWorkbench().getDisplay().getActiveShell());
 			progress.run(true, true, r);
 		} catch (final InvocationTargetException e) {
 			PHPDebugUIPlugin.log(e);
@@ -728,34 +742,33 @@ public class InstalledPHPsBlock {
 			// cancelled
 			return;
 		}
-
-		if (locations.isEmpty())
-			MessageDialog.openInformation(getShell(),
+		// Show results
+		if (!found.isEmpty()) {
+			Comparator<PHPexeItem> sorter = new Comparator<PHPexeItem>() {
+				@Override
+				public int compare(PHPexeItem a, PHPexeItem b) {
+					return b.getVersion().compareTo(a.getVersion());
+				}
+			};
+			Collections.sort(found, sorter);
+			PHPsSearchResultDialog searchDialog = new PHPsSearchResultDialog(
+					found,
+					MessageFormat
+							.format(PHPDebugUIMessages.InstalledPHPsBlock_Search_result_dialog_message,
+									path));
+			searchDialog.open();
+			List<PHPexeItem> itemsToAdd = searchDialog.getPHPExecutables();
+			for (PHPexeItem item : itemsToAdd) {
+				fPHPexes.add(item);
+				PHPexes.getInstance().addItem(item);
+			}
+			fPHPExeList.refresh();
+		} else {
+			MessageDialog.openInformation(PlatformUI.getWorkbench()
+					.getDisplay().getActiveShell(),
 					PHPDebugUIMessages.InstalledPHPsBlock_12, MessageFormat
 							.format(PHPDebugUIMessages.InstalledPHPsBlock_13,
 									new Object[] { path }));
-		else {
-			Iterator<File> iter2 = locations.iterator();
-			while (iter2.hasNext()) {
-				File location = iter2.next();
-				PHPexeItem phpExe = new PHPexeItem(null, location, null,
-						PHPDebuggersRegistry.getDefaultDebuggerId(), true);
-				String nameCopy = new String(phpExe.getName());
-				int i = 1;
-				while (isDuplicateName(nameCopy)) {
-					nameCopy = phpExe.getName() + '[' + i++ + ']';
-				}
-				phpExe.setName(nameCopy);
-				// Since the search for PHP exe option does not 'know' the
-				// debugger id it should assign to the PHPexeItem,
-				// we call for PHPexes.getDefaultDebuggerId() - which can also
-				// return null in some cases.
-				if (phpExe.getExecutable() != null) {
-					fPHPexes.add(phpExe);
-					phpExes.addItem(phpExe);
-					fPHPExeList.refresh();
-				}
-			}
 		}
 
 	}
@@ -772,17 +785,13 @@ public class InstalledPHPsBlock {
 	 * @param ignore
 	 */
 	protected void search(final File directory, final List<File> found,
-			final Set<File> ignore, final IProgressMonitor monitor) {
+			final IProgressMonitor monitor) {
 		if (monitor.isCanceled())
 			return;
-
 		// Search the root directory
-		if (!ignore.contains(directory)) {
-			final File foundExe = findPHPExecutable(directory);
-			if (foundExe != null)
-				found.add(foundExe);
-		}
-
+		List<File> foundExecs = findPHPExecutable(directory);
+		if (!foundExecs.isEmpty())
+			found.addAll(foundExecs);
 		final String[] names = directory.list();
 		if (names == null)
 			return;
@@ -791,7 +800,6 @@ public class InstalledPHPsBlock {
 			if (monitor.isCanceled())
 				return;
 			final File file = new File(directory, element);
-			// PHPexeItem[] vmTypes = phpExes.getEditableItems();
 			if (file.isDirectory()) {
 				try {
 					monitor.subTask(MessageFormat.format(
@@ -800,21 +808,14 @@ public class InstalledPHPsBlock {
 									file.getCanonicalPath() }));
 				} catch (final IOException e) {
 				}
-				if (!ignore.contains(file)) {
-					if (monitor.isCanceled())
-						return;
-					final File foundExe = findPHPExecutable(file);
-					if (foundExe != null) {
-						found.add(foundExe);
-						ignore.add(file);
-					}
-					subDirs.add(file);
-				}
+				if (monitor.isCanceled())
+					return;
+				subDirs.add(file);
 			}
 		}
 		while (!subDirs.isEmpty()) {
 			final File subDir = subDirs.remove(0);
-			search(subDir, found, ignore, monitor);
+			search(subDir, found, monitor);
 			if (monitor.isCanceled())
 				return;
 		}
@@ -829,18 +830,15 @@ public class InstalledPHPsBlock {
 	 *            A directory that might hold a PHP executable.
 	 * @return A PHP executable file.
 	 */
-	private static File findPHPExecutable(File phpLocation) {
-
-		// Try each candidate in order. The first one found wins. Thus, the
-		// order
-		// of fgCandidateJavaLocations is significant.
+	private static List<File> findPHPExecutable(File phpLocation) {
+		List<File> found = new ArrayList<File>(0);
 		for (String element : PHP_CANDIDATE_BIN) {
-			File javaFile = new File(phpLocation, element);
-			if (javaFile.exists() && !javaFile.isDirectory()) {
-				return javaFile;
+			File phpExecFile = new File(phpLocation, element);
+			if (phpExecFile.exists() && !phpExecFile.isDirectory()) {
+				found.add(phpExecFile);
 			}
 		}
-		return null;
+		return found;
 	}
 
 	/**
