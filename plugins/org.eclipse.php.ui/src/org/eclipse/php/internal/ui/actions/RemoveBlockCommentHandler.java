@@ -240,7 +240,7 @@ public class RemoveBlockCommentHandler extends CommentHandler implements
 		if (isCommentEndRegion(token)) {
 			return token;
 		}
-		ITextRegion nextToken = phpScriptRegion.getPhpToken(token.getEnd() + 1);
+		ITextRegion nextToken = phpScriptRegion.getPhpToken(token.getEnd());
 		return findCommentEndToken(nextToken, phpScriptRegion);
 
 	}
