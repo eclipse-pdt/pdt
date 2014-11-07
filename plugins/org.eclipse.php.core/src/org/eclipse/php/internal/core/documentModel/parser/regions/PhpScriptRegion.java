@@ -187,7 +187,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				// move sure, region to re-parse doesn't end with unknown token
 				while (PHPRegionTypes.UNKNOWN_TOKEN.equals(tokenEnd.getType())
 						&& (tokensContaier.getLastToken() != tokenEnd)) {
-					tokenEnd = tokensContaier.getToken(tokenEnd.getEnd() + 1);
+					tokenEnd = tokensContaier.getToken(tokenEnd.getEnd());
 				}
 
 				boolean shouldDeprecatedKeyword = false;
@@ -219,7 +219,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				final LexerState startState = tokensContaier
 						.getState(newTokenOffset);
 				final LexerState endState = tokensContaier.getState(tokenEnd
-						.getEnd() + 1);
+						.getEnd());
 
 				final PhpTokenContainer newContainer = new PhpTokenContainer();
 				final AbstractPhpLexer phpLexer = getPhpLexer(

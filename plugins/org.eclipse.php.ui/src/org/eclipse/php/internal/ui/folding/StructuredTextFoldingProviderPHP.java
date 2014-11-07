@@ -1516,7 +1516,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 			while (phpToken != null
 					&& phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_START
 					&& i++ < 3) {
-				phpToken = textRegion.getPhpToken(phpToken.getEnd() + 1);
+				phpToken = textRegion.getPhpToken(phpToken.getEnd());
 			}
 			if (phpToken == null
 					|| phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_START) {
@@ -1526,7 +1526,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 			ITextRegion lastToken = null;
 			while (lastToken != phpToken && phpToken != null
 					&& phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_END) {
-				phpToken = textRegion.getPhpToken(phpToken.getEnd() + 1);
+				phpToken = textRegion.getPhpToken(phpToken.getEnd());
 			}
 
 			if (phpToken != null
