@@ -1,0 +1,53 @@
+--TEST--
+Bug 439557 - Indentation problem when pasting code
+--FILE--
+<?php
+class ZendTest {
+	public function newsPageBeforePaste() {
+|
+	}
+}
+?>
+--OTHER--
+$data=array();
+$data['debugMsg']='';
+$foo='bar';
+
+$functionName="getClosestLocationByLatLon";
+
+//Make sure arg was provided
+if(!isset($arg)){
+//No arg is set
+$data['debugMsg'].='No arg';
+echo"{$data['debugMsg']}";
+}else{
+$foo.=$arg;
+}
+if($foo != 'bar'){
+//It is bar
+}
+--EXPECT--
+<?php
+class ZendTest {
+	public function newsPageBeforePaste() {
+		$data=array();
+		$data['debugMsg']='';
+		$foo='bar';
+		
+		$functionName="getClosestLocationByLatLon";
+		
+		//Make sure arg was provided
+		if(!isset($arg)){
+			//No arg is set
+			$data['debugMsg'].='No arg';
+			echo"{$data['debugMsg']}";
+		}else{
+			$foo.=$arg;
+		}
+		if($foo != 'bar'){
+			//It is bar
+		}
+		
+	}
+}
+?>
