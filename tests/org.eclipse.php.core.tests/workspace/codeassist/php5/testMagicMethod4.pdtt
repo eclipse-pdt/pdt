@@ -1,0 +1,23 @@
+--TEST--
+Test Magic Method With Binding
+--FILE--
+<?php
+/**
+ * @method B|C foo() description
+ */
+class A {
+}
+class B {
+	public $x;
+}
+class C {
+	public $y;
+	public $z;
+}
+
+$a = new A ();
+$a->foo()->|
+--EXPECT--
+field($x)
+field($y)
+field($z)
