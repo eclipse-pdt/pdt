@@ -77,6 +77,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	protected URI fCurrProjectLocation; // null if location is platform location
 
 	private boolean fKeepContent;
+	private boolean fProjectCreated = false;
 
 	private File fDotProjectBackup;
 	private File fDotBuildpathBackup;
@@ -756,7 +757,9 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	 * Called from the wizard on cancel.
 	 */
 	public void performCancel() {
-		removeProject();
+		if (fProjectCreated) {
+			removeProject();
+		}
 	}
 
 	/**
@@ -779,6 +782,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	public void createProject(IProject project, URI locationURI,
 			IProgressMonitor monitor) throws CoreException {
 		PHPProjectUtils.createProjectAt(project, locationURI, monitor);
+		fProjectCreated = true;
 	}
 
 	protected void rememberExistingFiles(URI projectLocation)
