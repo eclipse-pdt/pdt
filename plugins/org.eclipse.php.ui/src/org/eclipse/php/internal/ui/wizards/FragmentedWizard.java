@@ -47,8 +47,8 @@ public class FragmentedWizard implements IWizard {
 	private boolean needsProgressMonitor = false;
 	private boolean forcePreviousAndNextButtons = false;
 	private boolean isHelpAvailable = false;
-	private Image defaultImage = null;
-	private RGB titleBarColor = null;
+	private Image defaultImage = null; // XXX: never used
+	private RGB titleBarColor = null; // XXX: never used
 	private String windowTitle = null;
 	private IDialogSettings dialogSettings = null;
 
@@ -164,7 +164,7 @@ public class FragmentedWizard implements IWizard {
 			public void run() {
 				Shell shell = Display.getDefault().getActiveShell();
 				MessageDialog.openError(shell,
-						PHPUIMessages.FragmentedWizard_0, message); 
+						PHPUIMessages.FragmentedWizard_0, message);
 			}
 		});
 	}
@@ -181,7 +181,7 @@ public class FragmentedWizard implements IWizard {
 			public void run() {
 				Shell shell = Display.getDefault().getActiveShell();
 				ErrorDialog.openError(shell, PHPUIMessages.FragmentedWizard_1,
-						message, status); 
+						message, status);
 			}
 		});
 	}
@@ -228,12 +228,13 @@ public class FragmentedWizard implements IWizard {
 							try {
 								Iterator iterator = list.iterator();
 								while (iterator.hasNext())
-									executeTask((WizardFragment) iterator
-											.next(), FINISH, monitor2);
+									executeTask(
+											(WizardFragment) iterator.next(),
+											FINISH, monitor2);
 							} catch (CoreException ce) {
 								Status status = new Status(IStatus.ERROR,
-										PHPUiPlugin.ID, 0, ce
-												.getLocalizedMessage(), null);
+										PHPUiPlugin.ID, 0,
+										ce.getLocalizedMessage(), null);
 								PHPUiPlugin.log(status);
 								return status;
 							}
@@ -273,7 +274,7 @@ public class FragmentedWizard implements IWizard {
 		if (t instanceof CoreException) {
 			openError(t.getLocalizedMessage(), ((CoreException) t).getStatus());
 		} else if (t instanceof NullPointerException)
-			openError(PHPUIMessages.FragmentedWizard_7); 
+			openError(PHPUIMessages.FragmentedWizard_7);
 		else
 			openError(t.getLocalizedMessage());
 

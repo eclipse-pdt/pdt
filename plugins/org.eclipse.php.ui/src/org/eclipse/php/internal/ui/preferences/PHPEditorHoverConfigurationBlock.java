@@ -129,14 +129,14 @@ public class PHPEditorHoverConfigurationBlock implements
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
-			fStore.setValue((String) fCheckBoxes.get(button), button
-					.getSelection());
+			fStore.setValue((String) fCheckBoxes.get(button),
+					button.getSelection());
 		}
 
 		public void widgetSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
-			fStore.setValue((String) fCheckBoxes.get(button), button
-					.getSelection());
+			fStore.setValue((String) fCheckBoxes.get(button),
+					button.getSelection());
 		}
 	};
 
@@ -289,13 +289,12 @@ public class PHPEditorHoverConfigurationBlock implements
 			}
 
 			public void keyReleased(KeyEvent e) {
-				if (isModifierCandidate && e.stateMask > 0
-						&& e.stateMask == e.stateMask && e.character == 0) {// &&
-																			// e.time
-																			// -time
-																			// <
-																			// 1000)
-																			// {
+				if (isModifierCandidate && e.stateMask > 0 && e.character == 0) {// &&
+																					// e.time
+																					// -time
+																					// <
+																					// 1000)
+																					// {
 					String text = fModifierEditor.getText();
 					Point selection = fModifierEditor.getSelection();
 					int i = selection.x - 1;
@@ -319,20 +318,17 @@ public class PHPEditorHoverConfigurationBlock implements
 
 					if (needsPrefixDelimiter && needsPostfixDelimiter)
 						insertString = NLS
-								.bind(
-										PHPUIMessages.PHPEditorHoverConfigurationBlock_insertDelimiterAndModifierAndDelimiter,
+								.bind(PHPUIMessages.PHPEditorHoverConfigurationBlock_insertDelimiterAndModifierAndDelimiter,
 										new String[] { Action
 												.findModifierString(e.stateMask) });
 					else if (needsPrefixDelimiter)
 						insertString = NLS
-								.bind(
-										PHPUIMessages.PHPEditorHoverConfigurationBlock_insertDelimiterAndModifier,
+								.bind(PHPUIMessages.PHPEditorHoverConfigurationBlock_insertDelimiterAndModifier,
 										new String[] { Action
 												.findModifierString(e.stateMask) });
 					else if (needsPostfixDelimiter)
 						insertString = NLS
-								.bind(
-										PHPUIMessages.PHPEditorHoverConfigurationBlock_insertModifierAndDelimiter,
+								.bind(PHPUIMessages.PHPEditorHoverConfigurationBlock_insertModifierAndDelimiter,
 										new String[] { Action
 												.findModifierString(e.stateMask) });
 					else
@@ -382,9 +378,9 @@ public class PHPEditorHoverConfigurationBlock implements
 		PHPEditorTextHoverDescriptor[] hoverDescs = getContributedHovers();
 		fHoverConfigs = new HoverConfig[hoverDescs.length];
 		for (int i = 0; i < hoverDescs.length; i++)
-			fHoverConfigs[i] = new HoverConfig(hoverDescs[i]
-					.getModifierString(), hoverDescs[i].getStateMask(),
-					hoverDescs[i].isEnabled());
+			fHoverConfigs[i] = new HoverConfig(
+					hoverDescs[i].getModifierString(),
+					hoverDescs[i].getStateMask(), hoverDescs[i].isEnabled());
 
 		fHoverTableViewer.setInput(hoverDescs);
 
@@ -426,8 +422,8 @@ public class PHPEditorHoverConfigurationBlock implements
 			maskBuf.append(fHoverConfigs[i].fStateMask);
 			maskBuf.append(PHPEditorTextHoverDescriptor.VALUE_SEPARATOR);
 		}
-		fStore.setValue(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS, buf
-				.toString());
+		fStore.setValue(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS,
+				buf.toString());
 		fStore.setValue(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS,
 				maskBuf.toString());
 
@@ -456,9 +452,10 @@ public class PHPEditorHoverConfigurationBlock implements
 				idToModifier.put(id, tokenizer.nextToken());
 		}
 
-		String compiledTextHoverModifierMasks = PHPUiPlugin.getDefault()
-				.getPreferenceStore().getString(
-						PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS);
+		String compiledTextHoverModifierMasks = PHPUiPlugin
+				.getDefault()
+				.getPreferenceStore()
+				.getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS);
 
 		tokenizer = new StringTokenizer(compiledTextHoverModifierMasks,
 				PHPEditorTextHoverDescriptor.VALUE_SEPARATOR);
@@ -559,7 +556,8 @@ public class PHPEditorHoverConfigurationBlock implements
 		while (fStatus.isOK() && i < fHoverConfigs.length) {
 			if (fHoverConfigs[i].fIsEnabled) {
 				String label = getContributedHovers()[i].getLabel();
-				Integer stateMask = Integer.valueOf(fHoverConfigs[i].fStateMask);
+				Integer stateMask = Integer
+						.valueOf(fHoverConfigs[i].fStateMask);
 				if (fHoverConfigs[i].fStateMask == -1)
 					fStatus = new StatusInfo(
 							IStatus.ERROR,

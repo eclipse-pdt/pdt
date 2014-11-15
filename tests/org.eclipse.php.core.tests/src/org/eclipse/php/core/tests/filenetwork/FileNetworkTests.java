@@ -56,6 +56,7 @@ public class FileNetworkTests extends AbstractModelTests {
 	}
 
 	protected void setUp() throws Exception {
+		super.setUp();
 		if (SCRIPT_PROJECT == null) {
 			SCRIPT_PROJECT = setUpScriptProject(PROJECT);
 			PHPCoreTests.waitForIndexer();

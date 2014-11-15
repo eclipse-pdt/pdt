@@ -125,8 +125,8 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 		this.webLaunch = false;
 		this.sessionID = sessionID;
 		this.process = null; // this will be set later
-		this.stopDebugURL = null; // never set
-		this.browser = null; // never set
+		this.stopDebugURL = null; // XXX: never used
+		this.browser = null; // XXX: never used
 	}
 
 	/**
