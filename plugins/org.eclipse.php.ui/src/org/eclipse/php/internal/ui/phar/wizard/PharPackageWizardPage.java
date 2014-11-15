@@ -2,8 +2,8 @@ package org.eclipse.php.internal.ui.phar.wizard;
 
 import java.io.File;
 import java.util.*;
-import java.util.List;
 import java.util.Map.Entry;
+import java.util.List;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
@@ -931,10 +931,9 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		String currentMessage = getMessage();
 		if (!(new File(fDestinationNamesCombo.getText()).isAbsolute())) {
 			if (currentMessage == null)
-				if (currentMessage == null)
-					setMessage(
-							PharPackagerMessages.JarPackageWizardPage_info_relativeExportDestination,
-							IMessageProvider.INFORMATION);
+				setMessage(
+						PharPackagerMessages.JarPackageWizardPage_info_relativeExportDestination,
+						IMessageProvider.INFORMATION);
 		} else {
 			if (currentMessage != null)
 				setMessage(currentMessage);
