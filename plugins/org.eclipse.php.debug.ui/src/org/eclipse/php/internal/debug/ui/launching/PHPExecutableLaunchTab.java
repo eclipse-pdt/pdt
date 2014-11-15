@@ -130,7 +130,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		// }
 	};
 
-	private Button fileLocationButton;
+	private Button fileLocationButton = null; // XXX: never set
 
 	protected WidgetListener fListener = new WidgetListener();
 	private Text locationField;

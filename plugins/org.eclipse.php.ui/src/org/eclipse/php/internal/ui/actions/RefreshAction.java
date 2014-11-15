@@ -51,8 +51,8 @@ public class RefreshAction extends SelectionDispatchAction {
 		setText(PHPUIMessages.RefreshAction_label);
 		setToolTipText(PHPUIMessages.RefreshAction_toolTip);
 		PHPPluginImages.setLocalImageDescriptors(this, "refresh_nav.gif"); //$NON-NLS-1$
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
-				IIDEHelpContextIds.REFRESH_ACTION);
+		PlatformUI.getWorkbench().getHelpSystem()
+				.setHelp(this, IIDEHelpContextIds.REFRESH_ACTION);
 	}
 
 	/*
@@ -92,7 +92,6 @@ public class RefreshAction extends SelectionDispatchAction {
 				monitor.beginTask(PHPUIMessages.RefreshAction_progressMessage,
 						resources.length * 2);
 				monitor.subTask(""); //$NON-NLS-1$
-				List javaElements = new ArrayList(5);
 				for (int r = 0; r < resources.length; r++) {
 					IResource resource = resources[r];
 					if (resource.getType() == IResource.PROJECT) {
@@ -111,8 +110,8 @@ public class RefreshAction extends SelectionDispatchAction {
 		};
 
 		try {
-			PlatformUI.getWorkbench().getProgressService().run(true, true,
-					new WorkbenchRunnableAdapter(operation));
+			PlatformUI.getWorkbench().getProgressService()
+					.run(true, true, new WorkbenchRunnableAdapter(operation));
 		} catch (InvocationTargetException e) {
 			ExceptionHandler.handle(e, getShell(),
 					PHPUIMessages.RefreshAction_error_title,
@@ -166,7 +165,7 @@ public class RefreshAction extends SelectionDispatchAction {
 		IFileStore store = EFS.getStore(location);
 		if (!store.fetchInfo().exists()) {
 			final String message = MessageFormat.format(
-					PHPUIMessages.RefreshAction_locationDeleted_message, 
+					PHPUIMessages.RefreshAction_locationDeleted_message,
 					new Object[] { project.getName(),
 							Resources.getLocationString(project) });
 			final boolean[] result = new boolean[1];

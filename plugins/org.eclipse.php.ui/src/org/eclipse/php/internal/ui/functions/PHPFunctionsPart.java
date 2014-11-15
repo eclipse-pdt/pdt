@@ -66,7 +66,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 	private PHPFunctionsLabelProvider fLabelProvider;
 
 	private Menu fContextMenu;
-	private String fWorkingSetName;
+	private String fWorkingSetName = null; // XXX: never set
 
 	private ShowFunctionHelpAction showFunctionHelpAction;
 
@@ -126,8 +126,8 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 
 		});
 		updateTitle();
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.PHP_FUNCTIONS_VIEW);
+		PlatformUI.getWorkbench().getHelpSystem()
+				.setHelp(parent, IPHPHelpContextIds.PHP_FUNCTIONS_VIEW);
 	}
 
 	/**
@@ -314,8 +314,8 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 						IDocument document = textEditor.getDocumentProvider()
 								.getDocument(textEditor.getEditorInput());
 						try {
-							document.replace(caretPosition, 0, codeData
-									.getElementName());
+							document.replace(caretPosition, 0,
+									codeData.getElementName());
 						} catch (BadLocationException e) {
 							Logger.logException(e);
 						}
@@ -477,7 +477,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		private String url;
 
 		public ShowFunctionHelpAction() {
-			super(PHPUIMessages.PHPFunctionsPart_0); 
+			super(PHPUIMessages.PHPFunctionsPart_0);
 		}
 
 		public void setURL(String url) {

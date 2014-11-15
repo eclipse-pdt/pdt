@@ -559,13 +559,13 @@ void readLocalFile(File dir) {
 		String str = stream.readUTF();
 		this.updateLocalFileNeed = this.name == null || !this.name.equals(str);
 		println("		+ name : "+str);
-		this.name = str == ""  ? null : str;
+		this.name = "".equals(str)  ? null : str;
 		str = stream.readUTF();
 		println("		+ baseline : "+str);
-		this.baselineName = str == "" ? null : str;
+		this.baselineName = "".equals(str) ? null : str;
 		str = stream.readUTF();
 		println("		+ baseline prefix: "+str);
-		this.baselinePrefix = str == "" ? null : str;
+		this.baselinePrefix = "".equals(str) ? null : str;
 
 		// Write configs info
 		int length = stream.readInt();

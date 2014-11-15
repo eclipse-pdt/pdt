@@ -230,8 +230,8 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 				String fileInProject = fi.getFile().getProjectRelativePath()
 						.toString();
 				if (fileInDebug != null
-						&& fileInDebug.endsWith('/' + fileInProject)
-						|| fileInDebug.equals(fileInProject)) {
+						&& (fileInDebug.endsWith('/' + fileInProject) || fileInDebug
+								.equals(fileInProject))) {
 					PHPDebugTarget debugTarget = (PHPDebugTarget) stackFrame
 							.getDebugTarget();
 					return debugTarget;

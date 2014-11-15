@@ -131,10 +131,8 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 		while (itr.hasNext()) {
 			IBreakpoint breakpoint = (IBreakpoint) itr.next();
 			if (breakpoint instanceof PHPConditionalBreakpoint) {
-				String condition = ""; //$NON-NLS-1$
 				try {
-					ConditionDialog((PHPConditionalBreakpoint) breakpoint,
-							condition);
+					ConditionDialog((PHPConditionalBreakpoint) breakpoint);
 				} catch (CoreException ce) {
 					// ConditionDialog doesn't throw CoreException. Just Log
 					Logger.logException(
@@ -145,8 +143,7 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 		}
 	}
 
-	protected boolean ConditionDialog(PHPConditionalBreakpoint breakpoint,
-			String condition) throws CoreException {
+	protected boolean ConditionDialog(PHPConditionalBreakpoint breakpoint) throws CoreException {
 		IInputValidator validator = new IInputValidator() {
 			public String isValid(String value) {
 				return value;
@@ -154,7 +151,6 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 		};
 
 		String currentCondition = breakpoint.getCondition();
-		condition = currentCondition;
 		boolean enableCondition = breakpoint.isConditionEnabled();
 		if (currentCondition.equals("")) //$NON-NLS-1$
 			enableCondition = true;
@@ -169,7 +165,7 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 		if (dialog.open() != Window.OK) {
 			return false;
 		}
-		condition = dialog.getValue();
+		String condition = dialog.getValue();
 		enableCondition = dialog.isSetConditionEnabled();
 		if (condition.equals("")) //$NON-NLS-1$
 			enableCondition = false;
