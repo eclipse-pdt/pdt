@@ -14,9 +14,6 @@
  */
 package org.eclipse.php.internal.debug.core.debugger;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.HashMap;
 
 import org.eclipse.core.runtime.IStatus;
@@ -176,24 +173,7 @@ public abstract class AbstractDebuggerConfiguration implements
 	public abstract IStatus validate(PHPexeItem item);
 
 	protected boolean isInstalled(PHPexeItem exeItem, String extensionId) {
-		try {
-			String output = null;
-			File iniFile = exeItem.getINILocation();
-			if (iniFile != null) {
-				output = PHPExeUtil.exec(exeItem.getExecutable()
-						.getAbsolutePath(),
-						exeItem.isLoadDefaultINI() ? "" : "-n", "-c", iniFile //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								.getAbsolutePath(),
-						"--re", MessageFormat.format("\"{0}\"", extensionId)); //$NON-NLS-1$ //$NON-NLS-2$
-			} else {
-				output = PHPExeUtil.exec(exeItem.getExecutable()
-						.getAbsolutePath(), "--re", extensionId); //$NON-NLS-1$
-			}
-			return output != null && !output.trim().startsWith("Exception"); //$NON-NLS-1$
-		} catch (IOException e) {
-			PHPDebugPlugin.log(e);
-		}
-		return false;
+		return PHPExeUtil.hasModule(exeItem, extensionId);
 	}
 
 }
