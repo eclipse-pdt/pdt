@@ -1,0 +1,18 @@
+--TEST--
+Static variable in loop
+--FILE--
+<?php
+class Classname
+{
+    static public function methodName()
+    {
+        foreach (|self::test()| as $bar) { 
+            echo 'hi';
+        }
+    }
+    public static function test(){
+    	return array();
+    }
+}
+--EXPECT--
+method(test)
