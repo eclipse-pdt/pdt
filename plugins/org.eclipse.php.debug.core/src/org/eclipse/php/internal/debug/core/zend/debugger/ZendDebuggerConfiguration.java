@@ -36,13 +36,24 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 
-	private static final String[] EXTENSION_IDS = new String[] {
-			"zend debugger", "zend_debugger" }; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String EXTENSION_MODULE_ID = "Zend Debugger"; //$NON-NLS-1$
 
 	/**
 	 * Constructs a new ZendDebuggerConfiguration.
 	 */
 	public ZendDebuggerConfiguration() {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
+	 * #getModuleId()
+	 */
+	@Override
+	public String getModuleId() {
+		return EXTENSION_MODULE_ID;
 	}
 
 	/*
@@ -135,10 +146,8 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	public IStatus validate(PHPexeItem item) {
 		File executable = item.getExecutable();
 		PHPexes.changePermissions(executable);
-		for (String extensionId : EXTENSION_IDS) {
-			if (isInstalled(item, extensionId))
-				return Status.OK_STATUS;
-		}
+		if (isInstalled(item, EXTENSION_MODULE_ID))
+			return Status.OK_STATUS;
 		return new Status(
 				IStatus.WARNING,
 				PHPDebugPlugin.ID,
