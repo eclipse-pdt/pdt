@@ -31,6 +31,8 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 %state ST_PHP_QUOTES_AFTER_VARIABLE
 %state ST_PHP_HEREDOC
 %state ST_PHP_NOWDOC
+%state ST_PHP_START_HEREDOC
+%state ST_PHP_START_NOWDOC
 %state ST_PHP_END_HEREDOC
 %state ST_PHP_LOOKING_FOR_PROPERTY
 %state ST_PHP_VAR_OFFSET
@@ -69,7 +71,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
     }
 
     protected boolean isHeredocState(int state){
-    	    	return state == ST_PHP_HEREDOC || state == ST_PHP_END_HEREDOC || state == ST_PHP_NOWDOC || state == ST_PHP_END_NOWDOC;
+        return state == ST_PHP_HEREDOC || state == ST_PHP_START_HEREDOC || state == ST_PHP_END_HEREDOC || state == ST_PHP_NOWDOC || state == ST_PHP_START_NOWDOC || state == ST_PHP_END_NOWDOC;
     }
 
     public int[] getParamenters(){
@@ -751,16 +753,16 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     if (hereOrNowDoc.charAt(0) == '\'') {
     	nowdoc = hereOrNowDoc.substring(1, hereOrNowDoc_len-1);
     	nowdoc_len = hereOrNowDoc_len - 2;
-    	yybegin(ST_PHP_NOWDOC);
+    	yybegin(ST_PHP_START_NOWDOC);
     }
     else if (hereOrNowDoc.charAt(0) == '"') {
     	heredoc = hereOrNowDoc.substring(1, hereOrNowDoc_len-1);
     	heredoc_len = hereOrNowDoc_len - 2;
-    	yybegin(ST_PHP_HEREDOC);
+    	yybegin(ST_PHP_START_HEREDOC);
     } else {
     	heredoc = hereOrNowDoc;
     	heredoc_len = hereOrNowDoc_len;
-    	yybegin(ST_PHP_HEREDOC);
+    	yybegin(ST_PHP_START_HEREDOC);
     }
     return PHP_HEREDOC_TAG;
 }
@@ -770,7 +772,12 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_HEREDOC>{LABEL}";"?[\n\r] {
+<ST_PHP_START_HEREDOC>{ANY_CHAR} {
+	yypushback(1);
+	yybegin(ST_PHP_HEREDOC);
+}
+
+<ST_PHP_START_HEREDOC>{LABEL}";"?[\n\r] {
     int label_len = yylength() - 1;
 
     if (yytext().charAt(label_len-1)==';') {
@@ -842,7 +849,12 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_NOWDOC>{LABEL}";"?[\n\r] {
+<ST_PHP_START_NOWDOC>{ANY_CHAR} {
+	yypushback(1);
+	yybegin(ST_PHP_NOWDOC);
+}
+
+<ST_PHP_START_NOWDOC>{LABEL}";"?[\n\r] {
     int label_len = yylength() - 1;
 
     if (yytext().charAt(label_len-1)==';') {
@@ -981,7 +993,7 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
    This rule must be the last in the section!!
    it should contain all the states.
    ============================================ */
-<ST_PHP_IN_SCRIPTING,ST_PHP_DOUBLE_QUOTES,ST_PHP_VAR_OFFSET,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_END_HEREDOC,ST_PHP_END_NOWDOC,ST_PHP_NOWDOC>. {
+<ST_PHP_IN_SCRIPTING,ST_PHP_DOUBLE_QUOTES,ST_PHP_VAR_OFFSET,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_START_HEREDOC,ST_PHP_END_HEREDOC,ST_PHP_START_NOWDOC,ST_PHP_END_NOWDOC,ST_PHP_NOWDOC>. {
     yypushback(1);
     pushState(ST_PHP_HIGHLIGHTING_ERROR);
 }
