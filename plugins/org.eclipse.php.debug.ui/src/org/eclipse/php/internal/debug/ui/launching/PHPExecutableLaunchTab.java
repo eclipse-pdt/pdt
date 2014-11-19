@@ -542,8 +542,22 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 				}
 			}
 			// Check if script arguments can be passed (CLI SAPI required)
-			if (!fPrgmArgumentsText.getText().isEmpty()) {
-				PHPexeItem phpExeItem = phpsComboBlock.getPHPexe();
+			String exeProgramArgs = fPrgmArgumentsText != null ? fPrgmArgumentsText
+					.getText() : null;
+			if (exeProgramArgs == null)
+				exeProgramArgs = launchConfig.getAttribute(
+						IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, ""); //$NON-NLS-1$
+			if (!exeProgramArgs.isEmpty()) {
+				PHPexeItem phpExeItem = phpsComboBlock != null ? phpsComboBlock
+						.getPHPexe() : null;
+				if (phpExeItem == null) {
+					String storedPHPexePath = launchConfig.getAttribute(
+							PHPRuntime.PHP_CONTAINER, (String) null);
+					phpExeItem = storedPHPexePath != null ? PHPRuntime
+							.getPHPexeItem(Path
+									.fromPortableString(storedPHPexePath))
+							: null;
+				}
 				if (phpExeItem != null
 						&& !(PHPexeItem.SAPI_CLI.equals(phpExeItem
 								.getSapiType())))
