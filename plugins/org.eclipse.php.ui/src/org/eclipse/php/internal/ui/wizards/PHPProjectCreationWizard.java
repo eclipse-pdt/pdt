@@ -39,7 +39,7 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 	protected PHPProjectWizardFirstPage fFirstPage;
 	protected PHPProjectWizardSecondPage fSecondPage;
 	protected PHPProjectWizardThirdPage fThirdPage;
-	protected PHPProjectWizardSecondPage fLastPage = fThirdPage;
+	protected PHPProjectWizardSecondPage fLastPage;
 	protected IConfigurationElement fConfigElement;
 
 	protected int fLastPageIndex = -1;

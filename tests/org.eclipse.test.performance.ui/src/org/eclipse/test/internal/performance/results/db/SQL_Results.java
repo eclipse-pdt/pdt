@@ -29,7 +29,6 @@ private PreparedStatement queryBuildAllScenarios,
 	queryBuildScenarios,
 	queryScenarioSummaries,
 	queryAllComments,
-	queryScenariosBuilds,
 	queryScenarioDataPoints,
 	queryScenarioTimestampDataPoints,
 	queryScenarioBuildDataPoints,
@@ -51,8 +50,6 @@ protected void dispose() throws SQLException {
 		this.queryScenarioSummaries.close();
 	if (this.queryAllComments != null)
 		this.queryAllComments.close();
-	if (this.queryScenariosBuilds != null)
-		this.queryScenariosBuilds.close();
 	if (this.queryScenarioDataPoints != null)
 		this.queryScenarioDataPoints.close();
 	if (this.queryDimScalars != null)

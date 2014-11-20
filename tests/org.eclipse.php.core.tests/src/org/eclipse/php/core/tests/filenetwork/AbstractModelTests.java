@@ -69,12 +69,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	// infos for invalid results
 	protected int tabs = 2;
 
-	// working copies usage
-	protected ISourceModule[] workingCopies;
-
 	protected WorkingCopyOwner wcOwner;
-
-	protected boolean discard;
 
 	protected String fTestProjectName = "org.eclipse.dltk.core.tests";
 
@@ -150,22 +145,6 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		super(name);
 		this.fTestProjectName = testProjectName;
 		this.tabs = tabs;
-	}
-
-	protected void setUp() throws Exception {
-		super.setUp();
-		if (this.discard) {
-			this.workingCopies = null;
-		}
-		this.discard = true;
-	}
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		if (this.discard && this.workingCopies != null) {
-			discardWorkingCopies(this.workingCopies);
-			this.wcOwner = null;
-		}
 	}
 
 	public File getSourceWorkspacePath() {

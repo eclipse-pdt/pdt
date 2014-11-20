@@ -146,7 +146,7 @@ public class PHPBreakIterator extends BreakIterator {
 		private int fState;
 
 		private final static int[][] MATRIX = new int[][] {
-		// K_INVALID, K_LOWER, K_UPPER, K_OTHER
+				// K_INVALID, K_LOWER, K_UPPER, K_OTHER
 				{ S_EXIT, S_LOWER, S_ONE_CAP, S_LOWER }, // S_INIT
 				{ S_EXIT, S_LOWER, S_EXIT, S_LOWER }, // S_LOWER
 				{ S_EXIT, S_LOWER, S_ALL_CAPS, S_LOWER }, // S_ONE_CAP
@@ -392,13 +392,6 @@ public class PHPBreakIterator extends BreakIterator {
 	public int previous() {
 		fIndex = preceding(fIndex);
 		return fIndex;
-	}
-
-	/*
-	 * @see java.text.BreakIterator#setText(java.lang.String)
-	 */
-	public void setText(String newText) {
-		setText(newText);
 	}
 
 	/**

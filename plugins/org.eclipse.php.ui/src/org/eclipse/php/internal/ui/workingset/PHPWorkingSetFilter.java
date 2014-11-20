@@ -26,15 +26,11 @@ import org.eclipse.dltk.internal.ui.workingsets.WorkingSetFilter;
  */
 public class PHPWorkingSetFilter extends WorkingSetFilter {
 
-	private IAdaptable[] fCachedWorkingSet = null;
-
 	@Override
 	public boolean isEnclosing(IModelElement element) {
 		Assert.isNotNull(element);
 
-		IAdaptable[] cachedWorkingSet = fCachedWorkingSet;
-		if (cachedWorkingSet == null)
-			cachedWorkingSet = getWorkingSet().getElements();
+		IAdaptable[] cachedWorkingSet = getWorkingSet().getElements();
 
 		IResource resource = (IResource) element.getAdapter(IResource.class);
 		if (resource == null)

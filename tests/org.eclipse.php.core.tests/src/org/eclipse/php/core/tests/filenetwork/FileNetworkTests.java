@@ -60,6 +60,7 @@ public class FileNetworkTests extends AbstractModelTests {
 			SCRIPT_PROJECT = setUpScriptProject(PROJECT);
 			PHPCoreTests.waitForIndexer();
 		}
+		super.setUp();
 	}
 
 	protected String getSavedHierarchy(String subfolder) throws CoreException,

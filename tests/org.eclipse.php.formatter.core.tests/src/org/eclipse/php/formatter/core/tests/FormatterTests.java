@@ -180,9 +180,6 @@ public class FormatterTests extends AbstractPDTTTest {
 												String beforeFormat = document
 														.get();
 
-												IRegion region = new Region(0,
-														document.getLength());
-
 												PHPFormatProcessorProxy formatter = new PHPFormatProcessorProxy();
 												formatter.formatDocument(document, 0, document.getLength());
 

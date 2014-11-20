@@ -95,8 +95,6 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	protected String fCurrentParent;
 	protected Stack<ASTNode> fNodes = new Stack<ASTNode>();
 
-	protected IIndexingRequestor requestor;
-
 	public PhpIndexingVisitor(IIndexingRequestor requestor, ISourceModule module) {
 		this.requestor = requestor;
 

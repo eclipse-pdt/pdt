@@ -57,7 +57,7 @@ public class Breakpoint implements Cloneable {
 
 	protected String fileName = ""; //$NON-NLS-1$
 	protected int lineNumber = -1;
-	transient protected Collection listeners;
+	transient protected Collection listeners; // XXX: never set
 
 	/**
 	 * Creates new Breakpoint
@@ -87,8 +87,8 @@ public class Breakpoint implements Cloneable {
 		if (this.id != id) {
 			int oldValue = this.id;
 			this.id = id;
-			fireBreakpointChanged(this, ID_CHANGED_PROPERTY, Integer.valueOf(
-					oldValue), Integer.valueOf(id));
+			fireBreakpointChanged(this, ID_CHANGED_PROPERTY,
+					Integer.valueOf(oldValue), Integer.valueOf(id));
 		}
 	}
 
@@ -125,8 +125,8 @@ public class Breakpoint implements Cloneable {
 		}
 		int oldLineNumber = lineNumber;
 		lineNumber = newLineNumber;
-		fireBreakpointChanged(this, LINE_CHANGED_PROPERTY, Integer.valueOf(
-				oldLineNumber), Integer.valueOf(newLineNumber));
+		fireBreakpointChanged(this, LINE_CHANGED_PROPERTY,
+				Integer.valueOf(oldLineNumber), Integer.valueOf(newLineNumber));
 	}
 
 	/**
@@ -156,8 +156,8 @@ public class Breakpoint implements Cloneable {
 				this.type = type;
 				conditionalFlag = (type >= 2) ? true : false;
 				staticFlag = (type == 1 || type == 3) ? true : false;
-				fireBreakpointChanged(this, TYPE_CHANGED_PROPERTY, Integer.valueOf(
-						oldValue), Integer.valueOf(id));
+				fireBreakpointChanged(this, TYPE_CHANGED_PROPERTY,
+						Integer.valueOf(oldValue), Integer.valueOf(id));
 			}
 		}
 	}
@@ -200,7 +200,10 @@ public class Breakpoint implements Cloneable {
 	 * Sets the expression of the ZEND_CONDITIONAL_BREAKPOINT .
 	 */
 	public void setExpression(String expression) {
-		if (!this.expression.equals(expression)) {
+		if (expression == null) {
+			expression = ""; //$NON-NLS-1$
+		}
+		if (!expression.equals(this.expression)) {
 			String oldValue = this.expression;
 			this.expression = expression;
 			if (!expression.equals("")) { //$NON-NLS-1$
