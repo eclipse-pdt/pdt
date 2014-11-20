@@ -11,6 +11,8 @@ Hello world
 Bye Bye world
 Bla Bla Bla
 MY_MARKER_2;
+<<<MY_MARKER_3
+MY_MARKER_3;
 fputs(<<<EOF
 set term
 plot
@@ -32,6 +34,10 @@ Bye Bye world
 Bla Bla Bla|7
 PHP_HEREDOC_TAG|
 MY_MARKER_2;
+|1
+PHP_HEREDOC_TAG|<<<MY_MARKER_3
+|6
+PHP_HEREDOC_TAG|MY_MARKER_3;
 |1
 PHP_STRING|fputs|1
 PHP_TOKEN|(|1
