@@ -1,0 +1,22 @@
+--TEST--
+Test Magic Property With Binding
+--FILE--
+<?php
+/**
+ * @property B|C $some_var description
+ */
+class A {
+}
+class B {
+	public $x;
+}
+class C {
+	public $y;
+	public $z;
+}
+$a = new A ();
+$a->some_var->|
+--EXPECT--
+field($x)
+field($y)
+field($z)

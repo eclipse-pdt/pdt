@@ -231,14 +231,17 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 	protected void resolveMagicClassVariableDeclaration(String variableName,
 			IType type, IModelAccessCache cache) {
 		final PHPDocBlock docBlock = PHPModelUtils.getDocBlock(type);
-		if (docBlock != null) {
-			for (PHPDocTag tag : docBlock.getTags()) {
-				final int tagKind = tag.getTagKind();
-				if (tagKind == PHPDocTag.PROPERTY
-						|| tagKind == PHPDocTag.PROPERTY_READ
-						|| tagKind == PHPDocTag.PROPERTY_WRITE) {
-					final String typeName = getTypeBinding(variableName, tag);
-					if (typeName != null) {
+		if (docBlock == null) {
+			return;
+		}
+		for (PHPDocTag tag : docBlock.getTags()) {
+			final int tagKind = tag.getTagKind();
+			if (tagKind == PHPDocTag.PROPERTY
+					|| tagKind == PHPDocTag.PROPERTY_READ
+					|| tagKind == PHPDocTag.PROPERTY_WRITE) {
+				final String[] typeNames = getTypeBinding(variableName, tag);
+				if (typeNames != null) {
+					for (String typeName : typeNames) {
 						IEvaluatedType resolved = PHPSimpleTypes
 								.fromString(typeName);
 						if (resolved == null) {
@@ -256,14 +259,17 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 	 * 
 	 * @param variableName
 	 * @param docTag
-	 * @return the type of the given variable
+	 * @return the types of the given variable
 	 */
-	private String getTypeBinding(String variableName, PHPDocTag docTag) {
+	private String[] getTypeBinding(String variableName, PHPDocTag docTag) {
 		final String[] split = docTag.getValue().trim().split("\\s+"); //$NON-NLS-1$
 		if (split.length < 2) {
 			return null;
 		}
-		return split[1].equals(variableName) ? split[0] : null;
+		if (split[1].equals(variableName)) {
+			return split[0].split("\\|");//$NON-NLS-1$
+		}
+		return null;
 	}
 
 	public Object produceResult() {

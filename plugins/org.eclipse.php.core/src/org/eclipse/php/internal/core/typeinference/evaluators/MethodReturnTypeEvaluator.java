@@ -138,13 +138,16 @@ public class MethodReturnTypeEvaluator extends
 
 		IType type = (IType) parent;
 		final PHPDocBlock docBlock = PHPModelUtils.getDocBlock(type);
-		if (docBlock != null) {
-			IType currentNamespace = PHPModelUtils.getCurrentNamespace(type);
-			for (PHPDocTag tag : docBlock.getTags()) {
-				final int tagKind = tag.getTagKind();
-				if (tagKind == PHPDocTag.METHOD) {
-					final String typeName = getTypeBinding(methodName, tag);
-					if (typeName != null) {
+		if (docBlock == null) {
+			return;
+		}
+		IType currentNamespace = PHPModelUtils.getCurrentNamespace(type);
+		for (PHPDocTag tag : docBlock.getTags()) {
+			final int tagKind = tag.getTagKind();
+			if (tagKind == PHPDocTag.METHOD) {
+				final String[] typeNames = getTypeBinding(methodName, tag);
+				if (typeNames != null) {
+					for (String typeName : typeNames) {
 						Matcher m = PHPDocClassVariableEvaluator.ARRAY_TYPE_PATTERN
 								.matcher(typeName);
 						if (m.find()) {
@@ -179,15 +182,15 @@ public class MethodReturnTypeEvaluator extends
 	 * 
 	 * @param variableName
 	 * @param docTag
-	 * @return the type of the given variable
+	 * @return the types of the given variable
 	 */
-	private String getTypeBinding(String methodName, PHPDocTag docTag) {
+	private String[] getTypeBinding(String methodName, PHPDocTag docTag) {
 		final String[] split = docTag.getValue().trim().split("\\s+"); //$NON-NLS-1$
 		if (split.length < 2) {
 			return null;
 		}
 		if (split[1].equals(methodName)) {
-			return split[0];
+			return split[0].split("\\|");//$NON-NLS-1$
 		}
 
 		String substring = split[1];
@@ -195,7 +198,10 @@ public class MethodReturnTypeEvaluator extends
 		if (parenIndex != -1) {
 			substring = substring.substring(0, parenIndex);
 		}
-		return substring.equals(methodName) ? split[0] : null;
+		if (substring.equals(methodName)) {
+			return split[0].split("\\|");//$NON-NLS-1$
+		}
+		return null;
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
