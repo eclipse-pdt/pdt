@@ -15,14 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IProjectFragment;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionStrategy;
@@ -71,8 +68,8 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 		return context;
 	}
 
-	public SourceRange getReplacementRange(ICompletionContext context)
-			throws BadLocationException {
+	public org.eclipse.dltk.internal.core.SourceRange getReplacementRange(
+			ICompletionContext context) throws BadLocationException {
 
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
 
@@ -85,11 +82,10 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 			length = prefixEnd - start;
 		}
 
-		SourceRange replacementRange = new SourceRange(start, length);
-		return replacementRange;
+		return new org.eclipse.dltk.internal.core.SourceRange(start, length);
 	}
 
-	public SourceRange getReplacementRangeWithBraces(ICompletionContext context)
+	public ISourceRange getReplacementRangeWithBraces(ICompletionContext context)
 			throws BadLocationException {
 
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
@@ -190,11 +186,10 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 	}
 
 	protected boolean isInsertMode() {
-		Preferences preferenceStore = PHPCorePlugin.getDefault()
-				.getPluginPreferences();
-		boolean noOverwrite = preferenceStore
-				.getBoolean(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION);
+		IEclipsePreferences preferenceStore = InstanceScope.INSTANCE
+				.getNode(PHPCorePlugin.ID);
+		boolean noOverwrite = preferenceStore.getBoolean(
+				PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true);
 		return noOverwrite;
 	}
-
 }

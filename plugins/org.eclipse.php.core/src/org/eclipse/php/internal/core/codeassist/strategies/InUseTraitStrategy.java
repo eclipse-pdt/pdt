@@ -15,9 +15,9 @@ import java.util.List;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.SourceParserUtil;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
@@ -60,7 +60,7 @@ public class InUseTraitStrategy extends AbstractCompletionStrategy {
 				.getModuleDeclaration(sourceModule, null);
 		FileContext fileContext = new FileContext(sourceModule,
 				moduleDeclaration, offset);
-		SourceRange replacementRange = getReplacementRange(abstractContext);
+		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		for (String useType : useTypes) {
 			if (useType.trim().toLowerCase().startsWith(prefix.toLowerCase())) {
 
@@ -79,12 +79,14 @@ public class InUseTraitStrategy extends AbstractCompletionStrategy {
 
 	}
 
-	public SourceRange getReplacementRange(ICompletionContext context)
-			throws BadLocationException {
-		SourceRange replacementRange = super.getReplacementRange(context);
+	public org.eclipse.dltk.internal.core.SourceRange getReplacementRange(
+			ICompletionContext context) throws BadLocationException {
+		org.eclipse.dltk.internal.core.SourceRange replacementRange = super
+				.getReplacementRange(context);
 		boolean insertMode = isInsertMode();
 		if (replacementRange.getLength() > 0 && insertMode) {
-			return new SourceRange(replacementRange.getOffset(),
+			return new org.eclipse.dltk.internal.core.SourceRange(
+					replacementRange.getOffset(),
 					replacementRange.getLength() - 1);
 		}
 		return replacementRange;

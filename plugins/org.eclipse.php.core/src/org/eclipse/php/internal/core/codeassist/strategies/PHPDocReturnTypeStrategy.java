@@ -12,7 +12,7 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
@@ -47,7 +47,7 @@ public class PHPDocReturnTypeStrategy extends GlobalTypesStrategy {
 		}
 		super.apply(reporter);
 		String prefix = ((PHPDocTagContext) context).getPrefix();
-		SourceRange replaceRange = getReplacementRange(context);
+		ISourceRange replaceRange = getReplacementRange(context);
 		for (int i = 0; i < ALL_TYPE.length; i++) {
 			reportKeyword(reporter, replaceRange, ALL_TYPE[i], prefix);
 
@@ -55,7 +55,7 @@ public class PHPDocReturnTypeStrategy extends GlobalTypesStrategy {
 	}
 
 	private void reportKeyword(ICompletionReporter reporter,
-			SourceRange replaceRange, String keyword, String prefix) {
+			ISourceRange replaceRange, String keyword, String prefix) {
 		if (keyword.startsWith(prefix)) {
 			reporter.reportKeyword(keyword, EMPTY, replaceRange);
 		}

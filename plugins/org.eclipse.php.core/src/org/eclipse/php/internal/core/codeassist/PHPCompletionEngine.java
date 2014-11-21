@@ -19,7 +19,6 @@ import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelManager;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionContextResolver;
 import org.eclipse.php.core.codeassist.ICompletionStrategy;
@@ -168,19 +167,22 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 		return relevance;
 	}
 
+	@Override
 	public void reportField(IField field, String suffix,
-			SourceRange replaceRange, boolean removeDollar) {
+			ISourceRange replaceRange, boolean removeDollar) {
 		reportField(field, suffix, replaceRange, removeDollar, 0);
 	}
 
+	@Override
 	public void reportField(IField field, String suffix,
-			SourceRange replaceRange, boolean removeDollar, int subRelevance) {
+			ISourceRange replaceRange, boolean removeDollar, int subRelevance) {
 		reportField(field, suffix, replaceRange, removeDollar, subRelevance,
 				null);
 	}
 
+	@Override
 	public void reportField(IField field, String suffix,
-			SourceRange replaceRange, boolean removeDollar, int subRelevance,
+			ISourceRange replaceRange, boolean removeDollar, int subRelevance,
 			Object extraInfo) {
 		if (processedFields.contains(field)) {
 			return;
@@ -226,7 +228,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 	}
 
 	public void reportField(IField field, String completion,
-			SourceRange replaceRange, int subRelevance) {
+			ISourceRange replaceRange, int subRelevance) {
 		if (processedFields.contains(field)) {
 			return;
 		}
@@ -266,13 +268,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 		}
 	}
 
+	@Override
 	public void reportKeyword(String keyword, String suffix,
-			SourceRange replaceRange) {
+			ISourceRange replaceRange) {
 		reportKeyword(keyword, suffix, replaceRange, 0);
 	}
 
 	public void reportKeyword(String keyword, String suffix,
-			SourceRange replaceRange, int subRelevance) {
+			ISourceRange replaceRange, int subRelevance) {
 		if (processedElements.containsKey(keyword)) {
 			return;
 		}
@@ -298,13 +301,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 		}
 	}
 
+	@Override
 	public void reportMethod(IMethod method, String suffix,
-			SourceRange replaceRange, Object extraInfo) {
+			ISourceRange replaceRange, Object extraInfo) {
 		reportMethod(method, suffix, replaceRange, extraInfo, 0);
 	}
 
 	public void reportMethod(IMethod method, String suffix,
-			SourceRange replaceRange, Object extraInfo, int subRelevance) {
+			ISourceRange replaceRange, Object extraInfo, int subRelevance) {
 		if (processedElements.containsKey(method)
 				&& ((IMethod) processedElements.get(method)).getParent()
 						.getClass() == method.getParent().getClass()) {
@@ -364,22 +368,26 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 	}
 
+	@Override
 	public void reportMethod(IMethod method, String suffix,
-			SourceRange replaceRange) {
+			ISourceRange replaceRange) {
 		reportMethod(method, suffix, replaceRange, null);
 	}
 
-	public void reportType(IType type, String suffix, SourceRange replaceRange) {
+	@Override
+	public void reportType(IType type, String suffix, ISourceRange replaceRange) {
 		reportType(type, suffix, replaceRange, null);
 	}
 
-	public void reportType(IType type, String suffix, SourceRange replaceRange,
-			Object extraInfo) {
+	@Override
+	public void reportType(IType type, String suffix,
+			ISourceRange replaceRange, Object extraInfo) {
 		reportType(type, suffix, replaceRange, extraInfo, 0);
 	}
 
-	public void reportType(IType type, String suffix, SourceRange replaceRange,
-			Object extraInfo, int subRelevance) {
+	@Override
+	public void reportType(IType type, String suffix,
+			ISourceRange replaceRange, Object extraInfo, int subRelevance) {
 		if (processedElements.containsKey(type)
 				&& processedElements.get(type).getClass() == type.getClass()) {
 			return;
@@ -437,8 +445,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 		}
 	}
 
+	@Override
 	public void reportResource(IModelElement model, IPath relative,
-			String suffix, SourceRange replaceRange) {
+			String suffix, ISourceRange replaceRange) {
 		if (processedElements.containsKey(model)
 				|| processedPaths.contains(relative)) {
 			return;

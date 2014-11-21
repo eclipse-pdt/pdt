@@ -18,8 +18,8 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.SourceParserUtil;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
@@ -66,7 +66,7 @@ public class GotoStatementStrategy extends GlobalElementStrategy {
 			GotoStatementVisitor vistor = new GotoStatementVisitor(node, prefix);
 			node.traverse(vistor);
 			List<String> getoLabels = vistor.getGotoLabels();
-			SourceRange range = getReplacementRange(context);
+			ISourceRange range = getReplacementRange(context);
 			for (String label : getoLabels) {
 				reporter.reportKeyword(label, "", range); //$NON-NLS-1$
 			}

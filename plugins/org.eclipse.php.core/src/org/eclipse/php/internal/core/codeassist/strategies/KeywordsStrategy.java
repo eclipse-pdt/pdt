@@ -14,7 +14,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import java.util.Collection;
 
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
@@ -47,7 +47,7 @@ public abstract class KeywordsStrategy extends GlobalElementStrategy {
 		AbstractCompletionContext concreteContext = (AbstractCompletionContext) context;
 		ISourceModule sourceModule = concreteContext.getSourceModule();
 		String prefix = concreteContext.getPrefix();
-		SourceRange replaceRange = getReplacementRange(concreteContext);
+		ISourceRange replaceRange = getReplacementRange(concreteContext);
 		boolean withoutSemicolon = concreteContext.getNextWord().trim()
 				.equals(IPHPKeywordsInitializer.SEMICOLON_SUFFIX);
 		Collection<KeywordData> keywordsList = PHPKeywords.getInstance(

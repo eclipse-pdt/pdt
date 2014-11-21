@@ -20,7 +20,6 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
@@ -104,14 +103,15 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 			List<IField> list = new ArrayList<IField>();
 
 			if (!prefix.startsWith("$")) { //$NON-NLS-1$
-				elements = PhpModelAccess.getDefault().findFields("$" + prefix, //$NON-NLS-1$
+				elements = PhpModelAccess.getDefault().findFields(
+						"$" + prefix, //$NON-NLS-1$
 						matchRule, Modifiers.AccGlobal, Modifiers.AccConstant,
 						scope, null);
 				list.addAll(Arrays.asList(elements));
 				elements = list.toArray(new IField[list.size()]);
 			}
 
-			SourceRange replaceRange = getReplacementRange(arrayContext);
+			ISourceRange replaceRange = getReplacementRange(arrayContext);
 			for (IModelElement element : elements) {
 				IField field = (IField) element;
 				try {
@@ -145,7 +145,7 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 			ArrayKeyContext context, String[] variables, String prefix,
 			boolean removeDollar, int extraObject) throws BadLocationException {
 		CompletionRequestor requestor = context.getCompletionRequestor();
-		SourceRange replaceRange = getReplacementRange(context);
+		ISourceRange replaceRange = getReplacementRange(context);
 		for (String variable : variables) {
 			if (removeDollar) {
 				variable = variable.substring(1);

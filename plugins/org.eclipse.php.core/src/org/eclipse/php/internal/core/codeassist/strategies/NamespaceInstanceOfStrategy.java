@@ -1,8 +1,8 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
@@ -30,7 +30,7 @@ public class NamespaceInstanceOfStrategy extends NamespaceTypesStrategy {
 		ICompletionContext context = getContext();
 		NamespaceMemberContext concreteContext = (NamespaceMemberContext) context;
 
-		SourceRange replaceRange = getReplacementRange(context);
+		ISourceRange replaceRange = getReplacementRange(context);
 
 		String suffix = "";//$NON-NLS-1$ 
 		String nsSuffix = getNSSuffix(concreteContext);

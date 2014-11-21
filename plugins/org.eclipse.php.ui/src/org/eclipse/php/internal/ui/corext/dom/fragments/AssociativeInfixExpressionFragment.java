@@ -18,13 +18,14 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.core.ISourceRange;
+import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.ast.match.PHPASTMatcher;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
-import org.eclipse.php.internal.core.corext.SourceRange;
 import org.eclipse.text.edits.TextEditGroup;
 
 public class AssociativeInfixExpressionFragment extends ASTFragment implements
@@ -34,12 +35,14 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements
 	private final InfixExpression fGroupRoot;
 
 	public static IExpressionFragment createSubPartFragmentBySourceRange(
-			InfixExpression node, SourceRange range, IDocument document)
+			InfixExpression node, ISourceRange range, IDocument document)
 			throws BadLocationException {
 		Assert.isNotNull(node);
 		Assert.isNotNull(range);
-		Assert.isTrue(!range.covers(node));
-		Assert.isTrue(new SourceRange(node).covers(range));
+		ISourceRange nodeRange = new SourceRange(node.getStart(),
+				node.getLength());
+		Assert.isTrue(!Util.covers(range, nodeRange));
+		Assert.isTrue(Util.covers(nodeRange, range));
 
 		if (!isAssociativeInfix(node))
 			return null;
@@ -94,7 +97,7 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements
 	}
 
 	private static List findSubGroupForSourceRange(List<Expression> group,
-			SourceRange range) {
+			ISourceRange range) {
 		Assert.isTrue(!group.isEmpty());
 
 		List subGroup = new ArrayList();
@@ -119,8 +122,9 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements
 			}
 		}
 		ASTNode lastGroupMember = (ASTNode) group.get(group.size() - 1);
-		if (range.getEndExclusive() == new SourceRange(lastGroupMember)
-				.getEndExclusive()) {
+		if (Util.getEndExclusive(range) == Util
+				.getEndExclusive(new SourceRange(lastGroupMember.getStart(),
+						lastGroupMember.getLength()))) {
 			subGroup.add(lastGroupMember);
 			exited = true;
 		}
@@ -130,21 +134,21 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements
 		return subGroup;
 	}
 
-	private static boolean rangeStartsBetween(SourceRange range, ASTNode first,
-			ASTNode next) {
+	private static boolean rangeStartsBetween(ISourceRange range,
+			ASTNode first, ASTNode next) {
 		int pos = range.getOffset();
 		return first.getStart() + first.getLength() <= pos
 				&& pos <= next.getStart();
 	}
 
-	private static boolean rangeEndsBetween(SourceRange range, ASTNode first,
+	private static boolean rangeEndsBetween(ISourceRange range, ASTNode first,
 			ASTNode next) {
-		int pos = range.getEndExclusive();
+		int pos = Util.getEndExclusive(range);
 		return first.getStart() + first.getLength() <= pos
 				&& pos <= next.getStart();
 	}
 
-	private static boolean rangeIncludesExtraNonWhitespace(SourceRange range,
+	private static boolean rangeIncludesExtraNonWhitespace(ISourceRange range,
 			List<Expression> operands, IDocument document, ASTNode scope)
 			throws BadLocationException {
 		return Util.rangeIncludesNonWhitespaceOutsideRange(range,

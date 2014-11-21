@@ -12,7 +12,7 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
@@ -53,7 +53,7 @@ public class PHPDocTagStrategy extends AbstractCompletionStrategy {
 		String tagName = tagContext.getTagName();
 		CompletionRequestor requestor = tagContext.getCompletionRequestor();
 
-		SourceRange replaceRange = getReplacementRange(tagContext);
+		ISourceRange replaceRange = getReplacementRange(tagContext);
 		String suffix = ""; //$NON-NLS-1$
 
 		for (String nextTag : PHPDOC_TAGS) {

@@ -14,11 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ISourceRange;
-import org.eclipse.dltk.core.ISourceReference;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -72,11 +68,9 @@ public abstract class StructureSelectionAction extends Action {
 		try {
 			sourceRange = inputElement.getSourceRange();
 			if (sourceRange == null || sourceRange.getLength() == 0) {
-				MessageDialog
-						.openInformation(
-								fEditor.getEditorSite().getShell(),
-								Messages.StructureSelectionAction_0,
-								Messages.StructureSelectionAction_1);
+				MessageDialog.openInformation(fEditor.getEditorSite()
+						.getShell(), Messages.StructureSelectionAction_0,
+						Messages.StructureSelectionAction_1);
 				return;
 			}
 		} catch (ModelException e) {

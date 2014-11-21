@@ -13,11 +13,7 @@ package org.eclipse.php.internal.core.codeassist;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.compiler.env.IModuleSource;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.dltk.core.*;
 
 /**
  * Completion reporter accepts elements to be added into completion proposals
@@ -48,7 +44,7 @@ public interface ICompletionReporter {
 	 *            proposal text
 	 */
 	public void reportResource(IModelElement model, IPath relative,
-			String suffix, SourceRange replaceRange);
+			String suffix, ISourceRange replaceRange);
 
 	/**
 	 * Reports type: interface, namespace or class
@@ -61,7 +57,7 @@ public interface ICompletionReporter {
 	 *            The range in the document to be replaced with the completion
 	 *            proposal text
 	 */
-	public void reportType(IType type, String suffix, SourceRange replaceRange);
+	public void reportType(IType type, String suffix, ISourceRange replaceRange);
 
 	/**
 	 * Reports type: interface, namespace or class
@@ -76,11 +72,11 @@ public interface ICompletionReporter {
 	 * @param extraInfo
 	 *            extraInfo for CompletionProposal
 	 */
-	public void reportType(IType type, String suffix, SourceRange replaceRange,
-			Object extraInfo);
+	public void reportType(IType type, String suffix,
+			ISourceRange replaceRange, Object extraInfo);
 
-	public void reportType(IType type, String suffix, SourceRange replaceRange,
-			Object extraInfo, int subRelevance);
+	public void reportType(IType type, String suffix,
+			ISourceRange replaceRange, Object extraInfo, int subRelevance);
 
 	/**
 	 * Reports method or function
@@ -94,7 +90,7 @@ public interface ICompletionReporter {
 	 *            proposal text
 	 */
 	public void reportMethod(IMethod method, String suffix,
-			SourceRange replaceRange);
+			ISourceRange replaceRange);
 
 	/**
 	 * Reports method or function
@@ -110,10 +106,10 @@ public interface ICompletionReporter {
 	 *            extraInfo for CompletionProposal
 	 */
 	public void reportMethod(IMethod method, String suffix,
-			SourceRange replaceRange, Object extraInfo);
+			ISourceRange replaceRange, Object extraInfo);
 
 	public void reportMethod(IMethod method, String suffix,
-			SourceRange replaceRange, Object extraInfo, int subRelevance);
+			ISourceRange replaceRange, Object extraInfo, int subRelevance);
 
 	/**
 	 * Reports field: variable, constant
@@ -129,10 +125,10 @@ public interface ICompletionReporter {
 	 *            Remove dollar from the variable in completion
 	 */
 	public void reportField(IField field, String suffix,
-			SourceRange replaceRange, boolean removeDollar);
+			ISourceRange replaceRange, boolean removeDollar);
 
 	public void reportField(IField field, String suffix,
-			SourceRange replaceRange, boolean removeDollar, int subRelevance);
+			ISourceRange replaceRange, boolean removeDollar, int subRelevance);
 
 	/**
 	 * Reports PHP keyword
@@ -146,10 +142,10 @@ public interface ICompletionReporter {
 	 *            proposal text
 	 */
 	public void reportKeyword(String keyword, String suffix,
-			SourceRange replaceRange);
+			ISourceRange replaceRange);
 
 	public void reportKeyword(String keyword, String suffix,
-			SourceRange replaceRange, int subRelevance);
+			ISourceRange replaceRange, int subRelevance);
 
 	/**
 	 * @since 2.3
@@ -158,6 +154,6 @@ public interface ICompletionReporter {
 	public IModuleSource getModule();
 
 	public void reportField(IField field, String suffix,
-			SourceRange replaceRange, boolean removeDollar, int subRelevance,
+			ISourceRange replaceRange, boolean removeDollar, int subRelevance,
 			Object extraInfo);
 }

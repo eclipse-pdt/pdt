@@ -7,7 +7,6 @@ import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -59,7 +58,7 @@ public abstract class AbstractClassInstantiationStrategy extends
 			PHPCorePlugin.log(e);
 		}
 
-		SourceRange replaceRange = getReplacementRange(context);
+		ISourceRange replaceRange = getReplacementRange(context);
 		String suffix = getSuffix(concreteContext);
 
 		IType[] types = getTypes(concreteContext);
@@ -92,7 +91,7 @@ public abstract class AbstractClassInstantiationStrategy extends
 	@Override
 	protected void reportAlias(ICompletionReporter reporter,
 			IDLTKSearchScope scope, IModuleSource module,
-			SourceRange replacementRange, IType type,
+			ISourceRange replacementRange, IType type,
 			String fullyQualifiedName, String alias, String suffix) {
 		IType aliasType = new AliasType((ModelElement) type,
 				fullyQualifiedName, alias);
@@ -106,13 +105,15 @@ public abstract class AbstractClassInstantiationStrategy extends
 
 		char nextChar = ' ';
 		try {
-			if(insertMode){
+			if (insertMode) {
 				nextChar = abstractContext.getNextChar();
-			}else{
-				SourceRange replacementRange = getReplacementRange(abstractContext);
-				nextChar = abstractContext.getDocument().getChar(replacementRange.getOffset()+replacementRange.getLength());
+			} else {
+				ISourceRange replacementRange = getReplacementRange(abstractContext);
+				nextChar = abstractContext.getDocument().getChar(
+						replacementRange.getOffset()
+								+ replacementRange.getLength());
 			}
-			
+
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 		}

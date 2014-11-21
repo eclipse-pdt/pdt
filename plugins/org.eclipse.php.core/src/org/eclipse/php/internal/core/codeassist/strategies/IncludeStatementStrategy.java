@@ -23,7 +23,6 @@ import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.internal.core.ArchiveFolder;
 import org.eclipse.dltk.internal.core.ArchiveProjectFragment;
 import org.eclipse.dltk.internal.core.ScriptFolder;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
@@ -55,7 +54,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 
 		IncludeStatementContext includeContext = (IncludeStatementContext) context;
 		String prefix = includeContext.getPrefix();
-		SourceRange replaceRange = getReplacementRange(includeContext);
+		ISourceRange replaceRange = getReplacementRange(includeContext);
 
 		final ISourceModule sourceModule = includeContext.getSourceModule();
 		if (sourceModule == null || sourceModule.getScriptProject() == null) {
@@ -77,7 +76,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 	}
 
 	private void visitEntry(IncludePath includePath, String prefix,
-			ICompletionReporter reporter, SourceRange replaceRange,
+			ICompletionReporter reporter, ISourceRange replaceRange,
 			IScriptProject project) {
 		// the root entry of this element
 		final Object entry = includePath.getEntry();
@@ -105,7 +104,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 	}
 
 	private void addExternalEntries(ICompletionReporter reporter,
-			SourceRange replaceRange, IScriptProject project,
+			ISourceRange replaceRange, IScriptProject project,
 			final Object entry, IPath prefixPathFolder, IPath lastSegmant)
 			throws ModelException {
 		switch (((IBuildpathEntry) entry).getEntryKind()) {
@@ -218,8 +217,9 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 								// adjust pharPath to right path according to
 								// prefix(equals to
 								// prefixPathFolder+lastSegmant)
-								pharPath = new Path(prefixPathFolder.append(
-										lastSegmant).toString()
+								pharPath = new Path(prefixPathFolder
+										.append(lastSegmant)
+										.toString()
 										.substring(
 												0,
 												index
@@ -249,8 +249,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 								if (relative.segmentCount() != 0
 										&& !relative
 												.toString()
-												.equals(
-														PharConstants.PHAR_EXTENSION_WITH_DOT)
+												.equals(PharConstants.PHAR_EXTENSION_WITH_DOT)
 										&& isLastSegmantPrefix
 										&& isPathPrefix(tempPrefixPathFolder,
 												fullPath)) {
@@ -287,7 +286,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 	}
 
 	private void addInternalEntries(ICompletionReporter reporter,
-			SourceRange replaceRange, Object entry, IPath prefixPathFolder,
+			ISourceRange replaceRange, Object entry, IPath prefixPathFolder,
 			IPath lastSegmant) throws CoreException {
 		IContainer container = (IContainer) entry;
 		if (prefixPathFolder.segmentCount() > 0) {
@@ -334,7 +333,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 	}
 
 	private void findResource(ICompletionReporter reporter,
-			SourceRange replaceRange, final Object entry, IPath lastSegmant,
+			ISourceRange replaceRange, final Object entry, IPath lastSegmant,
 			ICompletionContext context, IContainer container)
 			throws CoreException {
 		IResource[] members = container.members();
