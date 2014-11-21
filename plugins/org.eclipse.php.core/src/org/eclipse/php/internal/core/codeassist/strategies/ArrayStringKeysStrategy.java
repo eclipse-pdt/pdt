@@ -16,9 +16,10 @@ import java.util.Set;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
@@ -52,7 +53,7 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 			return;
 		}
 
-		SourceRange replaceRange = getReplacementRange(context);
+		ISourceRange replaceRange = getReplacementRange(context);
 		ArrayKeyContext arrayContext = (ArrayKeyContext) context;
 		boolean endsWithQuota = arrayContext.getNextChar() == '\''
 				|| arrayContext.getNextChar() == '\"';
@@ -99,7 +100,7 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 			ArrayKeyContext context, String[] variables, String prefix,
 			boolean removeDollar) throws BadLocationException {
 		CompletionRequestor requestor = context.getCompletionRequestor();
-		SourceRange replaceRange = getReplacementRange(context);
+		ISourceRange replaceRange = getReplacementRange(context);
 		for (String variable : variables) {
 			if (removeDollar) {
 				variable = variable.substring(1);

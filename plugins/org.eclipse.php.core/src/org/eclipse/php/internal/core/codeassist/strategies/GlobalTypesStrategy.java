@@ -20,7 +20,6 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.compiler.PHPFlags;
@@ -68,12 +67,14 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		this(context, 0, 0);
 	}
 
-	public SourceRange getReplacementRange(ICompletionContext context)
-			throws BadLocationException {
-		SourceRange replacementRange = super.getReplacementRange(context);
+	public org.eclipse.dltk.internal.core.SourceRange getReplacementRange(
+			ICompletionContext context) throws BadLocationException {
+		org.eclipse.dltk.internal.core.SourceRange replacementRange = super
+				.getReplacementRange(context);
 		boolean insertMode = isInsertMode();
 		if (replacementRange.getLength() > 0 && insertMode) {
-			return new SourceRange(replacementRange.getOffset(),
+			return new org.eclipse.dltk.internal.core.SourceRange(
+					replacementRange.getOffset(),
 					replacementRange.getLength() - 1);
 		}
 		return replacementRange;
@@ -95,7 +96,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		}
 		boolean isUseContext = context instanceof UseNameContext
 				&& !((UseNameContext) context).isUseTrait();
-		SourceRange replacementRange = getReplacementRange(abstractContext);
+		ISourceRange replacementRange = getReplacementRange(abstractContext);
 
 		IType[] types = getTypes(abstractContext);
 		// now we compute type suffix in PHPCompletionProposalCollector
@@ -194,7 +195,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 			String suffix, AbstractCompletionContext abstractContext,
 			IModuleSource module, final Map<String, UsePart> result)
 			throws BadLocationException {
-		SourceRange replacementRange = getReplacementRange(abstractContext);
+		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		IDLTKSearchScope scope = createSearchScope();
 		for (Entry<String, UsePart> entry : result.entrySet()) {
 			String fullName = entry.getValue().getNamespace()
@@ -214,7 +215,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 	protected void reportAlias(ICompletionReporter reporter, String suffix,
 			AbstractCompletionContext abstractContext, IModuleSource module,
 			final Map<String, UsePart> result) throws BadLocationException {
-		SourceRange replacementRange = getReplacementRange(abstractContext);
+		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		String prefix = abstractContext.getPrefixWithoutProcessing();
 		IDLTKSearchScope scope = createSearchScope();
 		for (Entry<String, UsePart> entry : result.entrySet()) {
@@ -266,7 +267,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 
 	protected void reportAlias(ICompletionReporter reporter,
 			IDLTKSearchScope scope, IModuleSource module,
-			SourceRange replacementRange, IType type, String fullName,
+			ISourceRange replacementRange, IType type, String fullName,
 			String alias, String suffix) {
 		reporter.reportType(
 				new AliasType((ModelElement) type, fullName, alias), suffix,
@@ -327,7 +328,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 			ICompletionReporter reporter) throws BadLocationException {
 
 		String prefix = context.getPrefix();
-		SourceRange replaceRange = getReplacementRange(context);
+		ISourceRange replaceRange = getReplacementRange(context);
 
 		if (CodeAssistUtils.startsWithIgnoreCase("self", prefix)) { //$NON-NLS-1$
 			if (!context.getCompletionRequestor().isContextInformationMode()

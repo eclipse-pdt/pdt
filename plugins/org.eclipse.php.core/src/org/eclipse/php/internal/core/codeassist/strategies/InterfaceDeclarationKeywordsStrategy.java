@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
@@ -20,12 +20,15 @@ import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionConte
 import org.eclipse.php.internal.core.codeassist.contexts.InterfaceDeclarationKeywordContext;
 
 /**
- * This strategy completes keywords that can be shown in a class body 
+ * This strategy completes keywords that can be shown in a class body
+ * 
  * @author michael
  */
-public class InterfaceDeclarationKeywordsStrategy extends AbstractCompletionStrategy {
-	
-	public InterfaceDeclarationKeywordsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+public class InterfaceDeclarationKeywordsStrategy extends
+		AbstractCompletionStrategy {
+
+	public InterfaceDeclarationKeywordsStrategy(ICompletionContext context,
+			IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -38,15 +41,16 @@ public class InterfaceDeclarationKeywordsStrategy extends AbstractCompletionStra
 		if (!(context instanceof InterfaceDeclarationKeywordContext)) {
 			return;
 		}
-		
+
 		InterfaceDeclarationKeywordContext concreteContext = (InterfaceDeclarationKeywordContext) context;
-		SourceRange replaceRange = getReplacementRange(concreteContext);
+		ISourceRange replaceRange = getReplacementRange(concreteContext);
 
 		if (!concreteContext.hasExtends()) {
-			reporter.reportKeyword("extends", getSuffix(concreteContext), replaceRange); //$NON-NLS-1$
+			reporter.reportKeyword(
+					"extends", getSuffix(concreteContext), replaceRange); //$NON-NLS-1$
 		}
 	}
-	
+
 	public String getSuffix(AbstractCompletionContext context) {
 		return context.hasWhitespaceBeforeCursor() ? " " : ""; //$NON-NLS-1$ //$NON-NLS-2$
 	}

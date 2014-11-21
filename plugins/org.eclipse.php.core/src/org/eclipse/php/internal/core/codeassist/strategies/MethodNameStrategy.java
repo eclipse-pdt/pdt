@@ -16,12 +16,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ITypeHierarchy;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
@@ -69,7 +65,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 		IType declaringClass = concreteContext.getDeclaringClass();
 
 		String suffix = getSuffix(concreteContext);
-		SourceRange replaceRange = null;
+		ISourceRange replaceRange = null;
 		if (suffix.equals("")) { //$NON-NLS-1$
 			replaceRange = getReplacementRange(concreteContext);
 		} else {

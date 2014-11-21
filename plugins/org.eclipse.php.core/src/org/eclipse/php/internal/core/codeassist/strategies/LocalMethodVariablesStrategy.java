@@ -13,7 +13,6 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
@@ -58,7 +57,7 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 		String prefix = concreteContext.getPrefix();
 
 		String suffix = getSuffix(concreteContext);
-		SourceRange replaceRange = null;
+		ISourceRange replaceRange = null;
 		if (suffix.equals("")) { //$NON-NLS-1$
 			replaceRange = getReplacementRange(concreteContext);
 		} else {

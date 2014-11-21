@@ -21,7 +21,6 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -75,7 +74,7 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 		IMethod[] functions = PhpModelAccess.getDefault().findMethods(prefix,
 				matchRule, Modifiers.AccGlobal, 0, scope, null);
 
-		SourceRange replacementRange = getReplacementRange(abstractContext);
+		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		String suffix = getSuffix(abstractContext);
 
 		for (IMethod method : functions) {
@@ -113,7 +112,7 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 	protected void reportAlias(ICompletionReporter reporter, String suffix,
 			AbstractCompletionContext abstractContext, IModuleSource module,
 			final Map<String, UsePart> result) throws BadLocationException {
-		SourceRange replacementRange = getReplacementRange(abstractContext);
+		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		IDLTKSearchScope scope = createSearchScope();
 		for (Entry<String, UsePart> entry : result.entrySet()) {
 			String name = entry.getKey();
@@ -144,7 +143,7 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 
 	protected void reportAlias(ICompletionReporter reporter,
 			IDLTKSearchScope scope, IModuleSource module,
-			SourceRange replacementRange, IMember member, String fullName,
+			ISourceRange replacementRange, IMember member, String fullName,
 			String alias, String suffix) {
 		reporter.reportMethod(new AliasMethod((ModelElement) member, fullName,
 				alias), suffix, replacementRange, getExtraInfo());

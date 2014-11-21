@@ -1,6 +1,6 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
@@ -35,7 +35,7 @@ public class InUseTraitKeywordStrategy extends KeywordsStrategy {
 		AbstractCompletionContext context = (AbstractCompletionContext) getContext();
 		String prefix = context.getPrefix();
 		String suffix = ""; //$NON-NLS-1$
-		SourceRange replaceRange = getReplacementRange(context);
+		ISourceRange replaceRange = getReplacementRange(context);
 		// if (context.getEnclosingType() != null) {
 		// try {
 		// int flags = context.getEnclosingType().getFlags();

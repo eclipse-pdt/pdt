@@ -12,13 +12,14 @@
 package org.eclipse.php.internal.ui.corext.dom.fragments;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.dltk.core.ISourceRange;
+import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Expression;
 import org.eclipse.php.internal.core.ast.nodes.InfixExpression;
 import org.eclipse.php.internal.core.ast.visitor.HierarchicalVisitor;
-import org.eclipse.php.internal.core.corext.SourceRange;
 import org.eclipse.php.internal.core.corext.dom.Selection;
 import org.eclipse.php.internal.core.corext.dom.SelectionAnalyzer;
 
@@ -83,20 +84,20 @@ public class ASTFragmentFactory {
 	 * @throws Exception
 	 */
 	private static IASTFragment createFragmentForSubPartBySourceRange(
-			ASTNode node, SourceRange range, ASTNode scope, IDocument document)
+			ASTNode node, ISourceRange range, ASTNode scope, IDocument document)
 			throws Exception {
 		return FragmentForSubPartBySourceRangeFactory.createFragmentFor(node,
 				range, scope, document);
 	}
 
-	private static boolean isEmptySelectionCoveredByANode(SourceRange range,
+	private static boolean isEmptySelectionCoveredByANode(ISourceRange range,
 			SelectionAnalyzer sa) {
 		return range.getLength() == 0 && sa.getFirstSelectedNode() == null
 				&& sa.getLastCoveringNode() != null;
 	}
 
 	private static boolean isSingleNodeSelected(SelectionAnalyzer sa,
-			SourceRange range, IDocument document, ASTNode scope)
+			ISourceRange range, IDocument document, ASTNode scope)
 			throws BadLocationException {
 		return sa.getSelectedNodes().length == 1
 				&& !rangeIncludesNonWhitespaceOutsideNode(range,
@@ -104,10 +105,10 @@ public class ASTFragmentFactory {
 	}
 
 	private static boolean rangeIncludesNonWhitespaceOutsideNode(
-			SourceRange range, ASTNode node, IDocument document, ASTNode scope)
+			ISourceRange range, ASTNode node, IDocument document, ASTNode scope)
 			throws BadLocationException {
 		return Util.rangeIncludesNonWhitespaceOutsideRange(range,
-				new SourceRange(node), document);
+				new SourceRange(node.getStart(), node.getLength()), document);
 	}
 
 	/**
@@ -130,14 +131,14 @@ public class ASTFragmentFactory {
 
 	private static class FragmentForSubPartBySourceRangeFactory extends
 			FragmentFactory {
-		private SourceRange fRange;
+		private ISourceRange fRange;
 		private ASTNode fScope;
 
 		private Exception modelException = null;
 		private IDocument fDocument;
 
 		public static IASTFragment createFragmentFor(ASTNode node,
-				SourceRange range, ASTNode scope, IDocument document)
+				ISourceRange range, ASTNode scope, IDocument document)
 				throws Exception {
 			return new FragmentForSubPartBySourceRangeFactory().createFragment(
 					node, range, scope, document);
@@ -158,7 +159,7 @@ public class ASTFragmentFactory {
 			return false;
 		}
 
-		protected IASTFragment createFragment(ASTNode node, SourceRange range,
+		protected IASTFragment createFragment(ASTNode node, ISourceRange range,
 				ASTNode scope, IDocument document) throws Exception {
 			fRange = range;
 			fScope = scope;
@@ -170,7 +171,7 @@ public class ASTFragmentFactory {
 		}
 
 		private static IExpressionFragment createInfixExpressionSubPartFragmentBySourceRange(
-				InfixExpression node, SourceRange range, ASTNode scope,
+				InfixExpression node, ISourceRange range, ASTNode scope,
 				IDocument document) throws Exception {
 			return AssociativeInfixExpressionFragment
 					.createSubPartFragmentBySourceRange(node, range, document);
