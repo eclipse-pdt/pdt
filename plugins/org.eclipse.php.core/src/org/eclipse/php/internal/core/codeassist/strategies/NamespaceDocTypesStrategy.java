@@ -14,10 +14,11 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
@@ -54,7 +55,7 @@ public class NamespaceDocTypesStrategy extends AbstractCompletionStrategy {
 		NamespacePHPDocVarStartContext concreteContext = (NamespacePHPDocVarStartContext) context;
 		// now we compute type suffix in PHPCompletionProposalCollector
 		String suffix = "";//$NON-NLS-1$ 
-		SourceRange replaceRange = getReplacementRange(concreteContext);
+		ISourceRange replaceRange = getReplacementRange(concreteContext);
 
 		for (IType type : getTypes(concreteContext)) {
 			reporter.reportType(type, suffix, replaceRange, getExtraInfo());
@@ -105,9 +106,9 @@ public class NamespaceDocTypesStrategy extends AbstractCompletionStrategy {
 		return result;
 	}
 
-	public SourceRange getReplacementRange(ICompletionContext context)
+	public ISourceRange getReplacementRange(ICompletionContext context)
 			throws BadLocationException {
-		SourceRange replacementRange = super.getReplacementRange(context);
+		ISourceRange replacementRange = super.getReplacementRange(context);
 		if (replacementRange.getLength() > 0) {
 			return new SourceRange(replacementRange.getOffset(),
 					replacementRange.getLength() - 1);

@@ -12,9 +12,9 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.dltk.core.IField;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
@@ -27,11 +27,13 @@ import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
 
 /**
  * This strategy completes namespace functions
+ * 
  * @author michael
  */
 public class NamespaceConstantsStrategy extends NamespaceMembersStrategy {
 
-	public NamespaceConstantsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+	public NamespaceConstantsStrategy(ICompletionContext context,
+			IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -48,7 +50,7 @@ public class NamespaceConstantsStrategy extends NamespaceMembersStrategy {
 		NamespaceMemberContext concreteContext = (NamespaceMemberContext) context;
 		String prefix = concreteContext.getPrefix();
 		String suffix = getSuffix(concreteContext);
-		SourceRange replaceRange = getReplacementRange(concreteContext);
+		ISourceRange replaceRange = getReplacementRange(concreteContext);
 
 		for (IType ns : concreteContext.getNamespaces()) {
 			try {
@@ -56,7 +58,8 @@ public class NamespaceConstantsStrategy extends NamespaceMembersStrategy {
 					if (!PHPFlags.isConstant(field.getFlags())) {
 						continue;
 					}
-					if (CodeAssistUtils.startsWithIgnoreCase(field.getElementName(), prefix)) {
+					if (CodeAssistUtils.startsWithIgnoreCase(
+							field.getElementName(), prefix)) {
 						reporter.reportField(field, suffix, replaceRange, false);
 					}
 				}
@@ -65,7 +68,7 @@ public class NamespaceConstantsStrategy extends NamespaceMembersStrategy {
 			}
 		}
 	}
-	
+
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$
 	}

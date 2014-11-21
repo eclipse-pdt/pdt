@@ -21,7 +21,6 @@ import org.eclipse.dltk.core.search.BasicSearchEngine;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
@@ -105,7 +104,7 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		}
 		fields = result.toArray(new IField[result.size()]);
 
-		SourceRange replaceRange = getReplacementRange(context);
+		ISourceRange replaceRange = getReplacementRange(context);
 		for (IModelElement var : fields) {
 			reporter.reportField((IField) var, "", replaceRange, false); //$NON-NLS-1$
 		}

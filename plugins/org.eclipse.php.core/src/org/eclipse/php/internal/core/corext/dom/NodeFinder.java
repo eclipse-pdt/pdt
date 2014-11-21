@@ -11,9 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.corext.dom;
 
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
-import org.eclipse.php.internal.core.corext.ISourceRange;
 
 /**
  * For a give range finds the node covered and the node covering.

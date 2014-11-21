@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
@@ -50,7 +50,7 @@ public class ClassDeclarationKeywordsStrategy extends
 		}
 
 		ClassDeclarationKeywordContext concreteContext = (ClassDeclarationKeywordContext) context;
-		SourceRange replaceRange = getReplacementRange(concreteContext);
+		ISourceRange replaceRange = getReplacementRange(concreteContext);
 		String prefix = concreteContext.getPrefix();
 		String statementText = concreteContext.getStatementText().toString();
 		if (CodeAssistUtils.startsWithIgnoreCase(EXTENDS, prefix)

@@ -14,9 +14,9 @@ package org.eclipse.php.internal.core.typeinference;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceField;
-import org.eclipse.dltk.internal.core.SourceRange;
 
 /**
  * This is a fake model element that can live independently from the DLTK model
