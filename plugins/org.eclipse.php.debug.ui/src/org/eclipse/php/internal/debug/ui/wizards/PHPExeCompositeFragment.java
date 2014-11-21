@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
- *     Dawid Paku≈Ça [339547]
+ *     Dawid Paku≥a [339547]
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.wizards;
 
@@ -26,6 +26,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.php.internal.debug.core.PHPExeException;
 import org.eclipse.php.internal.debug.core.PHPExeUtil;
 import org.eclipse.php.internal.debug.core.PHPExeUtil.PHPExeInfo;
+import org.eclipse.php.internal.debug.core.PHPExeUtil.PHPModuleInfo;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
@@ -42,6 +43,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
+@SuppressWarnings("restriction")
 public class PHPExeCompositeFragment extends CompositeFragment implements
 		IPHPExeCompositeFragment {
 
@@ -127,18 +129,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 				String newPath = dialog.open();
 				if (newPath != null) {
 					fPHPExePath.setText(newPath);
-					File executable = new File(newPath);
-					PHPExeInfo phpExecInfo = getPHPInfo(executable);
-					if (phpExecInfo != null) {
-						if (fPHPexeName.getText().isEmpty()
-								&& phpExecInfo.getName() != null)
-							fPHPexeName.setTextWithoutUpdate(phpExecInfo
-									.getName());
-						if (phpExecInfo.getSapiType() != null)
-							fSapiTypes.setText(phpExecInfo.getSapiType());
-					}
 				}
-				updateItem();
 			}
 		});
 		fPHPExePath.setLabelText(PHPDebugUIMessages.addPHPexeDialog_phpHome);
@@ -213,7 +204,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		init();
 		createFieldListeners();
 		updateItem();
-
+		fPHPExePath.setFocus();
 		Dialog.applyDialogFont(this);
 	}
 
@@ -224,6 +215,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 				if (isComplete())
 					updateDebuggerStatus = false;
 				updateItem();
+				updateDebuggerStatus = true;
 			}
 		});
 
@@ -238,8 +230,18 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 						path = path.removeLastSegments(1);
 						path = path.append(PHP_INI);
 						if (path.toFile().exists()) {
-							fPHPIni.setText(path.toOSString());
+							fPHPIni.setTextWithoutUpdate(path.toOSString());
 						}
+					}
+					File executable = new File(newPath);
+					PHPExeInfo phpExecInfo = getPHPInfo(executable);
+					if (phpExecInfo != null) {
+						if (fPHPexeName.getText().isEmpty()
+								&& phpExecInfo.getName() != null)
+							fPHPexeName.setTextWithoutUpdate(phpExecInfo
+									.getName());
+						if (phpExecInfo.getSapiType() != null)
+							fSapiTypes.setText(phpExecInfo.getSapiType());
 					}
 				}
 				updateItem();
@@ -342,6 +344,28 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		}
 
 		controlHandler.setTitle(getTitle());
+	}
+
+	private void setDebuggersCombo() {
+		if (!updateDebuggerStatus
+				|| getPHPExeItem().getExecutable() == null
+				|| !getPHPExeItem().getExecutable().exists()
+				|| (getPHPExeItem().getDebuggerID() != null && !debuggersIds
+						.get(fDebuggers.getSelectionIndex()).equals(
+								getPHPExeItem().getDebuggerID())))
+			return;
+		List<PHPModuleInfo> modules = PHPExeUtil.getModules(getPHPExeItem());
+		AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry
+				.getDebuggersConfigurations();
+		for (AbstractDebuggerConfiguration debugger : debuggers) {
+			for (PHPModuleInfo m : modules)
+				if (m.getName().equalsIgnoreCase(debugger.getModuleId())) {
+					int index = fDebuggers.indexOf(PHPDebuggersRegistry
+							.getDebuggerName(debugger.getDebuggerId()));
+					fDebuggers.select(index);
+					break;
+				}
+		}
 	}
 
 	private void hideDebuggersCombo() {
@@ -453,7 +477,6 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 				setMessage(getDescription(), IMessageProvider.NONE);
 			}
 		}
-		updateDebuggerStatus = true;
 		// Update control handler
 		controlHandler.update();
 	}
@@ -500,14 +523,18 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		phpExeItem.setLoadDefaultINI(fLoadDefaultPHPIni.getSelection());
 		phpExeItem.setExecutable(new File(fPHPExePath.getText()));
 		phpExeItem.setName(fPHPexeName.getText());
-		phpExeItem.setDebuggerID(debuggersIds.get(fDebuggers
-				.getSelectionIndex()));
 		phpExeItem.setINILocation(fPHPIni.getText().isEmpty() ? null
 				: new File(fPHPIni.getText()));
 		phpExeItem.setSapiType(fSapiTypes.getText());
 		PHPExeInfo phpExeInfo = getPHPInfo(phpExeItem.getExecutable());
-		if (phpExeInfo != null)
+		if (phpExeInfo != null) {
+			// Set up PHP exe item version
 			phpExeItem.setVersion(phpExeInfo.getVersion());
+			// Try to set up installed debugger automatically
+			setDebuggersCombo();
+		}
+		phpExeItem.setDebuggerID(debuggersIds.get(fDebuggers
+				.getSelectionIndex()));
 		// Validate all
 		validate();
 	}

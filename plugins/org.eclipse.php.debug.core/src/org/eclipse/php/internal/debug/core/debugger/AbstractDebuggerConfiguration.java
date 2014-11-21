@@ -131,6 +131,13 @@ public abstract class AbstractDebuggerConfiguration implements
 	public abstract int getPort();
 
 	/**
+	 * Returns corresponding PHP debug module id.
+	 * 
+	 * @return corresponding PHP debug module id
+	 */
+	public abstract String getModuleId();
+
+	/**
 	 * Returns the {@link ICommunicationDaemon} that is related to this debugger
 	 * configuration.
 	 * 

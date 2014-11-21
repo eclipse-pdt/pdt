@@ -36,12 +36,24 @@ import org.eclipse.swt.widgets.Shell;
 public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 
 	private static final String REMOTE_ENABLE = "remote_enable"; //$NON-NLS-1$
-	private static final String EXTENSION_ID = "xdebug"; //$NON-NLS-1$
+	private static final String EXTENSION_MODULE_ID = "Xdebug"; //$NON-NLS-1$
 
 	/**
 	 * Constructs a new XDebugDebuggerConfiguration.
 	 */
 	public XDebugDebuggerConfiguration() {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
+	 * #getModuleId()
+	 */
+	@Override
+	public String getModuleId() {
+		return EXTENSION_MODULE_ID;
 	}
 
 	/*
@@ -119,23 +131,23 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 		File executable = item.getExecutable();
 		try {
 			PHPexes.changePermissions(executable);
-			if (isInstalled(item, EXTENSION_ID)) {
+			if (isInstalled(item, EXTENSION_MODULE_ID)) {
 				String output = null;
 				File iniFile = item.getINILocation();
 				if (iniFile != null) {
 					output = PHPExeUtil.exec(executable.getAbsolutePath(),
 							"-c", iniFile.getAbsolutePath(), "--ri", //$NON-NLS-1$ //$NON-NLS-2$
-							EXTENSION_ID);
+							EXTENSION_MODULE_ID);
 				} else {
 					output = PHPExeUtil.exec(executable.getAbsolutePath(),
-							"--ri", EXTENSION_ID); //$NON-NLS-1$
+							"--ri", EXTENSION_MODULE_ID); //$NON-NLS-1$
 				}
 				if (output != null) {
 					String[] properties = output.split("\n"); //$NON-NLS-1$
 					for (String property : properties) {
 						String[] columns = property.split("=>"); //$NON-NLS-1$
 						if (columns.length == 3
-								&& (EXTENSION_ID + '.' + REMOTE_ENABLE)
+								&& (EXTENSION_MODULE_ID + '.' + REMOTE_ENABLE)
 										.equals(columns[0].trim())) {
 							String value = columns[1].trim();
 							if (!"on".equalsIgnoreCase(value)) { //$NON-NLS-1$
