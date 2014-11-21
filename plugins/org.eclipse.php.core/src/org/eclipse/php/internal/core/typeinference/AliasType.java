@@ -3,10 +3,10 @@ package org.eclipse.php.internal.core.typeinference;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.dltk.internal.core.SourceType;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 

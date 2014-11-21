@@ -13,7 +13,6 @@ import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.core.corext.SourceRange;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.util.SuperTypeHierarchyCache;

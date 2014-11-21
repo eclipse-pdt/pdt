@@ -15,9 +15,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -42,7 +42,7 @@ public class NamespaceUseFunctionNameStrategy extends
 
 		NamespaceUseFunctionNameContext concreteContext = (NamespaceUseFunctionNameContext) context;
 		String suffix = "";//$NON-NLS-1$ 
-		SourceRange replaceRange = getReplacementRange(concreteContext);
+		ISourceRange replaceRange = getReplacementRange(concreteContext);
 
 		for (IMethod method : getMethods(concreteContext)) {
 			reporter.reportMethod(method, suffix, replaceRange, getExtraInfo());
@@ -69,11 +69,13 @@ public class NamespaceUseFunctionNameStrategy extends
 		return result.toArray(new IMethod[result.size()]);
 	}
 
-	public SourceRange getReplacementRange(ICompletionContext context)
-			throws BadLocationException {
-		SourceRange replacementRange = super.getReplacementRange(context);
+	public org.eclipse.dltk.internal.core.SourceRange getReplacementRange(
+			ICompletionContext context) throws BadLocationException {
+		org.eclipse.dltk.internal.core.SourceRange replacementRange = super
+				.getReplacementRange(context);
 		if (replacementRange.getLength() > 0) {
-			return new SourceRange(replacementRange.getOffset(),
+			return new org.eclipse.dltk.internal.core.SourceRange(
+					replacementRange.getOffset(),
 					replacementRange.getLength() - 1);
 		}
 		return replacementRange;

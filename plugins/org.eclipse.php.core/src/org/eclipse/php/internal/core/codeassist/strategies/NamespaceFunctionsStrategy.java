@@ -12,9 +12,9 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
@@ -26,11 +26,13 @@ import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
 
 /**
  * This strategy completes namespace functions
+ * 
  * @author michael
  */
 public class NamespaceFunctionsStrategy extends NamespaceMembersStrategy {
-	
-	public NamespaceFunctionsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+
+	public NamespaceFunctionsStrategy(ICompletionContext context,
+			IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -47,12 +49,13 @@ public class NamespaceFunctionsStrategy extends NamespaceMembersStrategy {
 		NamespaceMemberContext concreteContext = (NamespaceMemberContext) context;
 		String prefix = concreteContext.getPrefix();
 		String suffix = getSuffix(concreteContext);
-		SourceRange replaceRange = getReplacementRange(concreteContext);
+		ISourceRange replaceRange = getReplacementRange(concreteContext);
 
 		for (IType ns : concreteContext.getNamespaces()) {
 			try {
 				for (IMethod method : ns.getMethods()) {
-					if (CodeAssistUtils.startsWithIgnoreCase(method.getElementName(), prefix)) {
+					if (CodeAssistUtils.startsWithIgnoreCase(
+							method.getElementName(), prefix)) {
 						reporter.reportMethod(method, suffix, replaceRange);
 					}
 				}
@@ -61,7 +64,7 @@ public class NamespaceFunctionsStrategy extends NamespaceMembersStrategy {
 			}
 		}
 	}
-	
+
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		String nextWord = null;
 		try {

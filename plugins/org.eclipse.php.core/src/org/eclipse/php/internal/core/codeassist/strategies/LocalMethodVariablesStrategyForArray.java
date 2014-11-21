@@ -2,7 +2,6 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
@@ -42,7 +41,7 @@ public class LocalMethodVariablesStrategyForArray extends
 			if (!(enclosingElement instanceof IMethod)) {
 				return;
 			}
-			SourceRange replaceRange = getReplacementRange(arrayContext);
+			ISourceRange replaceRange = getReplacementRange(arrayContext);
 			IMethod enclosingMethod = (IMethod) enclosingElement;
 
 			// complete class variable: $this

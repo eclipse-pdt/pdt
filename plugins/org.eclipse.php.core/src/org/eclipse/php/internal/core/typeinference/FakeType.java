@@ -15,8 +15,8 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.dltk.internal.core.SourceType;
 
 /**

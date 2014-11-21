@@ -24,7 +24,6 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.codeassist.ICompletionContext;
@@ -123,7 +122,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		// workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=310383
 		enclosingTypeConstants = filterClassConstants(enclosingTypeConstants);
 		// workaround end
-		SourceRange replaceRange = getReplacementRange(abstractContext);
+		ISourceRange replaceRange = getReplacementRange(abstractContext);
 		for (IModelElement constant : enclosingTypeConstants) {
 			IField field = (IField) constant;
 			reporter.reportField(field, "", replaceRange, false, 0, extraInfo); //$NON-NLS-1$
@@ -159,7 +158,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 	protected void reportAlias(ICompletionReporter reporter,
 			AbstractCompletionContext abstractContext, IModuleSource module,
 			final Map<String, UsePart> result) throws BadLocationException {
-		SourceRange replacementRange = getReplacementRange(abstractContext);
+		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		IDLTKSearchScope scope = createSearchScope();
 		for (Entry<String, UsePart> entry : result.entrySet()) {
 			String name = entry.getKey();
@@ -189,7 +188,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 
 	protected void reportAlias(ICompletionReporter reporter,
 			IDLTKSearchScope scope, IModuleSource module,
-			SourceRange replacementRange, IMember member, String fullName,
+			ISourceRange replacementRange, IMember member, String fullName,
 			String alias) {
 		reporter.reportField(new AliasField((ModelElement) member, fullName,
 				alias), "", replacementRange, false, 0, getExtraInfo()); //$NON-NLS-1$
