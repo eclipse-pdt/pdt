@@ -16,13 +16,9 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IProjectFragment;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionStrategy;
@@ -71,7 +67,7 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 		return context;
 	}
 
-	public SourceRange getReplacementRange(ICompletionContext context)
+	public ISourceRange getReplacementRange(ICompletionContext context)
 			throws BadLocationException {
 
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
@@ -89,7 +85,7 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 		return replacementRange;
 	}
 
-	public SourceRange getReplacementRangeWithBraces(ICompletionContext context)
+	public ISourceRange getReplacementRangeWithBraces(ICompletionContext context)
 			throws BadLocationException {
 
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;

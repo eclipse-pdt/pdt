@@ -16,7 +16,6 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceMethod;
 import org.eclipse.dltk.internal.core.SourceMethodUtils;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.dltk.internal.core.util.Util;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 

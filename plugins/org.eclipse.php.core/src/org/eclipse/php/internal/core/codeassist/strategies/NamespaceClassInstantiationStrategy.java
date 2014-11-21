@@ -13,7 +13,6 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
@@ -65,7 +64,7 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 			PHPCorePlugin.log(e);
 		}
 
-		SourceRange replaceRange = getReplacementRange(context);
+		ISourceRange replaceRange = getReplacementRange(context);
 
 		IType[] types = getTypes(concreteContext);
 		String suffix = getSuffix(concreteContext);

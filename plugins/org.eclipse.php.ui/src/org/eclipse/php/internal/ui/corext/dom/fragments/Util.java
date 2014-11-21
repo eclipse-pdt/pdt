@@ -15,9 +15,9 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.corext.SourceRange;
 import org.eclipse.php.internal.core.documentModel.parser.Scanner;
 import org.eclipse.php.internal.core.documentModel.parser.php5.PhpLexer;
 
@@ -30,10 +30,23 @@ import org.eclipse.php.internal.core.documentModel.parser.php5.PhpLexer;
  */
 class Util {
 
+	static boolean covers(ISourceRange range, ISourceRange nodeRange) {
+		return range.getOffset() <= nodeRange.getOffset()
+				&& getEndInclusive(range) >= getEndInclusive(nodeRange);
+	}
+
+	static int getEndExclusive(ISourceRange range) {
+		return range.getOffset() + range.getLength();
+	}
+
+	static int getEndInclusive(ISourceRange range) {
+		return getEndExclusive(range) - 1;
+	}
+
 	static boolean rangeIncludesNonWhitespaceOutsideRange(
-			SourceRange selection, SourceRange nodes, IDocument document)
+			ISourceRange selection, ISourceRange nodes, IDocument document)
 			throws BadLocationException {
-		if (!selection.covers(nodes))
+		if (!covers(selection, nodes))
 			return false;
 
 		// TODO: skip leading comments. Consider that leading line comment must

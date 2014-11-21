@@ -29,7 +29,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.dltk.core.ISourceRange;
+import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile;
@@ -210,7 +211,7 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 	 * @return offset where's the offset character set.
 	 * @throws Exception
 	 */
-	protected static SourceRange createFile(String data) throws Exception {
+	protected static ISourceRange createFile(String data) throws Exception {
 		int left = data.indexOf(SELECTION_CHAR);
 		if (left == -1) {
 			throw new IllegalArgumentException(
@@ -241,7 +242,7 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 	}
 
 	protected static IModelElement[] getSelection(String data) throws Exception {
-		SourceRange range = createFile(data);
+		ISourceRange range = createFile(data);
 		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(testFile);
 		IModelElement[] elements = sourceModule.codeSelect(range.getOffset(),
 				range.getLength());
