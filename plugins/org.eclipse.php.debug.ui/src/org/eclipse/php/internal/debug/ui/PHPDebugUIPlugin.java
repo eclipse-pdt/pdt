@@ -14,6 +14,7 @@ package org.eclipse.php.internal.debug.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.core.internal.runtime.AdapterManager;
 import org.eclipse.core.resources.IProject;
@@ -47,6 +48,7 @@ import org.eclipse.php.internal.debug.ui.views.DebugBrowserView;
 import org.eclipse.php.internal.debug.ui.views.DebugOutputView;
 import org.eclipse.php.internal.debug.ui.views.variables.PHPDebugElementAdapterFactory;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
+import org.eclipse.php.internal.ui.util.PerspectiveManager;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
@@ -57,6 +59,7 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  */
+@SuppressWarnings("restriction")
 public class PHPDebugUIPlugin extends AbstractUIPlugin {
 
 	// The shared instance.
@@ -108,6 +111,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		// class, we insert the
 		// factory before any other factory.
 		AdapterManager manager = (AdapterManager) Platform.getAdapterManager();
+		@SuppressWarnings("rawtypes")
 		List list = (List) manager.getFactories()
 				.get(IVariable.class.getName());
 		PHPDebugElementAdapterFactory propertiesFactory = new PHPDebugElementAdapterFactory();
@@ -228,21 +232,18 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 				.getActiveWorkbenchWindow();
 		if (window != null) {
 			IWorkbenchPage page = window.getActivePage();
-			IPerspectiveDescriptor descriptor = page.getPerspective();
-			if (descriptor.getId().indexOf("php") != -1) { //$NON-NLS-1$
-				if (page != null) {
-					IViewPart part = page.findView(viewID);
-					if (part == null) {
-						try {
-							page.showView(viewID);
-						} catch (PartInitException e) {
-							ErrorDialog.openError(window.getShell(),
-									PHPDebugUIMessages.ShowView_errorTitle,
-									e.getMessage(), e.getStatus());
-						}
-					} else {
-						// page.bringToTop(part);
+			if (page != null) {
+				IViewPart part = page.findView(viewID);
+				if (part == null) {
+					try {
+						page.showView(viewID);
+					} catch (PartInitException e) {
+						ErrorDialog.openError(window.getShell(),
+								PHPDebugUIMessages.ShowView_errorTitle,
+								e.getMessage(), e.getStatus());
 					}
+				} else {
+					// page.bringToTop(part);
 				}
 			}
 		}
@@ -368,10 +369,27 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 					DebugEvent event = events[i];
 					if (event.getKind() == DebugEvent.CREATE) {
 						Object obj = events[i].getSource();
-
 						if (!(obj instanceof IPHPDebugTarget))
 							continue;
-						if (PHPDebugPlugin.getOpenDebugViewsOption()) {
+						boolean isDebugMode = ILaunchManager.DEBUG_MODE
+								.equals(((IPHPDebugTarget) obj).getLaunch()
+										.getLaunchMode());
+						final AtomicBoolean isDebugPerspectiveActive = new AtomicBoolean();
+						PlatformUI.getWorkbench().getDisplay()
+								.syncExec(new Runnable() {
+									@Override
+									public void run() {
+										isDebugPerspectiveActive.set(PerspectiveManager
+												.isCurrentPerspective(
+														PlatformUI
+																.getWorkbench()
+																.getActiveWorkbenchWindow(),
+														IDebugUIConstants.ID_DEBUG_PERSPECTIVE));
+									}
+								});
+						if (PHPDebugPlugin.getOpenDebugViewsOption()
+								&& isDebugMode
+								&& isDebugPerspectiveActive.get()) {
 							Job job = new org.eclipse.ui.progress.UIJob(
 									PHPDebugUIMessages.PHPDebugUIPlugin_0) {
 								public IStatus runInUIThread(
@@ -387,7 +405,6 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 					}
 					if (event.getKind() == DebugEvent.MODEL_SPECIFIC) {
 						Object obj = events[i].getSource();
-
 						if (!(obj instanceof IPHPDebugTarget))
 							continue;
 						final Object data = events[i].getData();

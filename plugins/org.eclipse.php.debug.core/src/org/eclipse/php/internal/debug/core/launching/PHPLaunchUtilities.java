@@ -23,7 +23,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
@@ -50,7 +53,10 @@ import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
-import org.eclipse.php.internal.debug.core.preferences.*;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
+import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
+import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.server.core.Server;
@@ -70,66 +76,7 @@ import org.eclipse.ui.*;
  */
 public class PHPLaunchUtilities {
 
-	public static final String ID_PHPDebugOutput = "org.eclipse.debug.ui.PHPDebugOutput"; //$NON-NLS-1$
-	public static final String ID_PHPBrowserOutput = "org.eclipse.debug.ui.PHPBrowserOutput"; //$NON-NLS-1$
 	private static DebuggerDelayProgressMonitorDialog progressDialog;
-
-	/**
-	 * Display the Debug Output view in case it's hidden or not initialized. In
-	 * case where the Browser Output view is visible, nothing will happen and
-	 * the Browser Output will remain as the visible view during the debug
-	 * session.
-	 * 
-	 * Note that the behavior given by this function is mainly needed when we
-	 * are in a PHP Perspective (not debug) and a session without a breakpoint
-	 * was launched. So in this case a 'force' output display is triggered.
-	 * 
-	 * This function also take into account the
-	 * PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS flag and does not show the
-	 * debug views in case it was not chosen from the preferences.
-	 */
-	public static void showDebugView() {
-		Preferences prefs = PHPProjectPreferences.getModelPreferences();
-		if (!prefs.getBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS)) {
-			return;
-		}
-		// Get the page through a UI thread! Otherwise, it wont work...
-		Display.getDefault().syncExec(new Runnable() {
-			public void run() {
-				IWorkbenchPage page = PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getActivePage();
-				if (page != null) {
-					try {
-						IViewPart debugOutputPart = page
-								.findView("org.eclipse.debug.ui.PHPDebugOutput"); //$NON-NLS-1$
-						IViewPart browserOutputPart = page
-								.findView("org.eclipse.debug.ui.PHPBrowserOutput"); //$NON-NLS-1$
-
-						// Test if the Debug Output view is alive and visible.
-						boolean shouldShowDebug = false;
-						if (debugOutputPart == null
-								|| !page.isPartVisible(debugOutputPart)) {
-							shouldShowDebug = true;
-						}
-
-						// If the Browser Output is visible, do not switch to
-						// the Debug Output.
-						if (browserOutputPart != null
-								&& page.isPartVisible(browserOutputPart)) {
-							shouldShowDebug = false;
-						}
-
-						if (shouldShowDebug) {
-							page.showView("org.eclipse.debug.ui.PHPDebugOutput"); //$NON-NLS-1$
-						}
-					} catch (Exception e) {
-						Logger.logException(
-								"Error switching to the Debug Output view", e); //$NON-NLS-1$
-					}
-				}
-			}
-		});
-	}
 
 	/**
 	 * Returns true if the is at least one active PHP debug session.

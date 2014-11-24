@@ -175,7 +175,6 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			monitor.done();
 			return;
 		}
-		PHPLaunchUtilities.showDebugView();
 		this.launch = launch;
 		Server server = ServersManager.getServer(configuration.getAttribute(
 				Server.NAME, "")); //$NON-NLS-1$
@@ -327,7 +326,8 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				MessageDialog.openError(Display.getDefault().getActiveShell(),
-						PHPDebugCoreMessages.PHPWebPageLaunchDelegate_0, message);
+						PHPDebugCoreMessages.PHPWebPageLaunchDelegate_0,
+						message);
 			}
 		});
 	}

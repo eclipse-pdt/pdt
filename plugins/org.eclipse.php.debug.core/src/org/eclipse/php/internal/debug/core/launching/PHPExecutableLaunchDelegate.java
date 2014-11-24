@@ -109,7 +109,6 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			monitor.done();
 			return;
 		}
-		PHPLaunchUtilities.showDebugView();
 		IProgressMonitor subMonitor; // the total of monitor is 100
 		if (monitor.isCanceled()) {
 			return;
