@@ -51,6 +51,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 /**
  * View of the PHP parameter stack
  */
+@SuppressWarnings("restriction")
 public class DebugOutputView extends AbstractDebugView implements
 		ISelectionListener {
 
@@ -80,6 +81,7 @@ public class DebugOutputView extends AbstractDebugView implements
 		fSourceViewer = new StructuredTextViewer(parent, null, null, false,
 				styles);
 		fSourceViewer.setEditable(false);
+		fSourceViewer.configure(new StructuredTextViewerConfigurationHTML());
 		getSite().getWorkbenchWindow().getSelectionService()
 				.addSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
 		getSite().setSelectionProvider(fSourceViewer.getSelectionProvider());
@@ -242,18 +244,15 @@ public class DebugOutputView extends AbstractDebugView implements
 		if (fTarget != null) {
 			if ((fTarget.isSuspended()) || (fTarget.isTerminated())
 					|| (fTarget.isWaiting())) {
-				DebugOutput outputBuffer = fTarget.getOutputBuffer();
-				fUpdateCount = outputBuffer.getUpdateCount();
-
+				DebugOutput debugOutput = fTarget.getDebugOutput();
+				fUpdateCount = debugOutput.getUpdateCount();
 				// check if output hasn't been updated
 				if (fTarget == oldTarget && fUpdateCount == oldcount)
 					return;
-
-				String output = outputBuffer.toString();
-				dd.setText(this, output);
-			} else {
-				// Not Suspended or Terminated
-
+				dd.setText(this, debugOutput.getOutput());
+			} 
+			// Not Suspended or Terminated
+			else {
 				// the following is a fix for bug
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=205688
 				// if the target is not suspended or terminated fTarget should
@@ -270,7 +269,6 @@ public class DebugOutputView extends AbstractDebugView implements
 		} catch (Exception e) {
 			// Don't handle - it may be NPE in LineStyleProviderForEmbeddedCSS
 		}
-		fSourceViewer.configure(new StructuredTextViewerConfigurationHTML());
 		fSourceViewer.refresh();
 	}
 
@@ -292,12 +290,6 @@ public class DebugOutputView extends AbstractDebugView implements
 	 */
 	protected void fillContextMenu(IMenuManager menu) {
 		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-
-	}
-
-	public void updateObjects() {
-		super.updateObjects();
-		// update();
 
 	}
 

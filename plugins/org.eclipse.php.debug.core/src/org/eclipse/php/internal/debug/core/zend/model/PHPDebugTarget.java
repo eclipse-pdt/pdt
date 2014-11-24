@@ -60,7 +60,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 	protected String fName;
 	protected String fURL;
 	protected int fRequestPort;
-	protected DebugOutput fOutput = new DebugOutput();
+	protected DebugOutput fDebugOutput = new DebugOutput();
 
 	// suspend state
 	protected boolean fSuspended = false;
@@ -949,8 +949,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 	 * 
 	 * @return the Output buffer for the target
 	 */
-	public DebugOutput getOutputBuffer() {
-		return fOutput;
+	public DebugOutput getDebugOutput() {
+		return fDebugOutput;
 	}
 
 	/**

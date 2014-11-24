@@ -2368,7 +2368,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		this.session = session;
 	}
 
-	public DebugOutput getOutputBuffer() {
+	public DebugOutput getDebugOutput() {
 		return this.debugOutput;
 	}
 

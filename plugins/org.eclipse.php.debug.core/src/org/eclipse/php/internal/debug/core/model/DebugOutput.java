@@ -16,6 +16,7 @@ public class DebugOutput {
 	private static final String CONTENT_TYPE_HEADER = "Content-Type:"; //$NON-NLS-1$
 
 	private StringBuffer fOutput = new StringBuffer();
+	private StringBuffer fHeader = new StringBuffer();
 	private int fUpdateCount = 0;
 	private String contentType;
 
@@ -38,26 +39,18 @@ public class DebugOutput {
 	public void appendHeader(String header) {
 		if (header != null) {
 			if (header.startsWith(CONTENT_TYPE_HEADER)) {
-				String contentType = header.substring(
-						CONTENT_TYPE_HEADER.length()).trim().toLowerCase();
+				String contentType = header
+						.substring(CONTENT_TYPE_HEADER.length()).trim()
+						.toLowerCase();
 				int i = contentType.indexOf(';');
 				if (i > 0) {
 					this.contentType = contentType.substring(0, i).trim();
-					// String[] parameters =
-					// contentType.substring(i+1).split(";");
-					// for (String param : parameters) {
-					// int k = param.indexOf('=');
-					// if (k > 0) {
-					// String key = param.substring(0, k).trim();
-					// String value = param.substring(k+1).trim();
-					// }
-					// }
 				} else {
 					this.contentType = contentType;
 				}
 			}
 		}
-		fOutput.append(header);
+		fHeader.append(header);
 		fUpdateCount++;
 	}
 
@@ -83,7 +76,12 @@ public class DebugOutput {
 		return contentType;
 	}
 
-	public String toString() {
+	public String getOutput() {
 		return fOutput.toString();
 	}
+
+	public String getHeader() {
+		return fHeader.toString();
+	}
+
 }
