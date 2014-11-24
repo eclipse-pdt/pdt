@@ -24,7 +24,6 @@ import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
-import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
@@ -87,8 +86,8 @@ abstract public class AbstractASTParser extends lr_parser {
 	protected void reportError(IProblemReporter problemReporter,
 			String fileName, int start, int end, int lineNumber, String message) {
 		DefaultProblem problem = new DefaultProblem(fileName, message,
-				IProblem.Syntax, new String[0], ProblemSeverities.Error, start,
-				end, lineNumber);
+				PhpProblemIdentifier.SYNTAX, new String[0],
+				ProblemSeverities.Error, start, end, lineNumber, -1);
 		problemReporter.reportProblem(problem);
 	}
 
