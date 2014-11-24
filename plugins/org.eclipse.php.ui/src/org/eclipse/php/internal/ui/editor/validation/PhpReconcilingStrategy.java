@@ -60,7 +60,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 	public static final String ID = "org.eclipse.php.ui.internal.validation.phpreconciler"; //$NON-NLS-1$
 	private IEditorPart fEditor;
 	private IDocumentProvider fDocumentProvider;
-	private IProgressMonitor fProgressMonitor;
+	private IProgressMonitor fProgressMonitor = null; // XXX: never set
 	private IPhpScriptReconcilingListener fJavaReconcilingListener;
 	private boolean fIsScriptReconcilingListener;
 	private boolean fNotify = true;

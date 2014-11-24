@@ -28,7 +28,6 @@ import org.eclipse.swt.widgets.Shell;
 public class PHPCompletionProposalComputer extends
 		ScriptCompletionProposalComputer {
 
-	private String fErrorMessage;
 	private PHPCompletionProposalCollector phpCompletionProposalCollector;
 	private PhpTemplateCompletionProcessor phpTemplateCompletionProcessor;
 
@@ -119,14 +118,8 @@ public class PHPCompletionProposalComputer extends
 	}
 
 	@Override
-	public String getErrorMessage() {
-		return fErrorMessage;
-	}
-
-	@Override
 	public void sessionEnded() {
 		super.sessionEnded();
-		fErrorMessage = null;
 		if (phpTemplateCompletionProcessor != null) {
 			phpTemplateCompletionProcessor.reset();
 		}
