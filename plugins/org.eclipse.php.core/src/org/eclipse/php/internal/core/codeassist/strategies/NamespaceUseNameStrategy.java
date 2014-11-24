@@ -45,8 +45,8 @@ public class NamespaceUseNameStrategy extends AbstractCompletionStrategy {
 		for (IType ns : context.getNamespaces()) {
 			try {
 				for (IType type : ns.getTypes()) {
-					if (CodeAssistUtils.startsWithIgnoreCase(type
-							.getElementName(), prefix)) {
+					if (CodeAssistUtils.startsWithIgnoreCase(
+							type.getElementName(), prefix)) {
 						result.add(type);
 					}
 				}
@@ -78,6 +78,6 @@ public class NamespaceUseNameStrategy extends AbstractCompletionStrategy {
 	}
 
 	protected Object getExtraInfo() {
-		return ProposalExtraInfo.TYPE_ONLY;
+		return ProposalExtraInfo.TYPE_ONLY | ProposalExtraInfo.NO_INSERT_USE;
 	}
 }

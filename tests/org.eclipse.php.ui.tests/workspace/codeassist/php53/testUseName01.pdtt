@@ -1,0 +1,32 @@
+--TEST--
+Tests CA in use statement (453039)
+--FILE--
+<?php
+namespace Other
+{
+    class First
+    {
+        public function first($param)
+        {}
+    }
+}
+namespace MySpace
+{
+    use Other\F|
+}
+?> 
+--EXPECT--
+<?php
+namespace Other
+{
+    class First
+    {
+        public function first($param)
+        {}
+    }
+}
+namespace MySpace
+{
+    use Other\First
+}
+?> 
