@@ -386,7 +386,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 	private Object fPreviousDouble;
 	
 	private ListenerMix fSuperListener;
-	private ISelectionChangedListener fTrayUpdater;
+	private ISelectionChangedListener fTrayUpdater = null; // XXX: never set
 
 	private IDialogSettings fDialogSettings;
 

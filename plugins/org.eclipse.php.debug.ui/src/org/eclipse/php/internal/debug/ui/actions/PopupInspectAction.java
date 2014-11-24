@@ -58,7 +58,6 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 	private IAction fAction;
 	private IWorkbenchPart fTargetPart;
 	private IWorkbenchWindow fWindow;
-	private IRegion fRegion;
 
 	/**
 	 * Is the action waiting for an evaluation.
@@ -519,7 +518,7 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 	 * @return
 	 */
 	protected IRegion getRegion() {
-		return fRegion;
+		return null;
 	}
 
 	/**

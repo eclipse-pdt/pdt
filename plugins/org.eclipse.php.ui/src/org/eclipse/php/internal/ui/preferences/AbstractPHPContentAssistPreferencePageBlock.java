@@ -28,7 +28,6 @@ public abstract class AbstractPHPContentAssistPreferencePageBlock extends
 		AbstractPHPPreferenceBlock {
 
 	private IPreferenceStore preferenceStore;
-	protected PreferencePage preferencePage;
 
 	public void initializeValues(PreferencePage preferencePage) {
 		this.preferencePage = preferencePage;
