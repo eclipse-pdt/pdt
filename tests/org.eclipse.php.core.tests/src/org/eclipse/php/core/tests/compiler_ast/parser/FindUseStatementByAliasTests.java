@@ -15,99 +15,54 @@ import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
+import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.core.tests.runner.PDTTList;
+import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.parser.AbstractPHPSourceParser;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPSourceParserFactory;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-public class FindUseStatementByAliasTests extends AbstractPDTTTest {
+@RunWith(PDTTList.class)
+public class FindUseStatementByAliasTests {
 
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	@Parameters
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
 		TESTS.put(
 				PHPVersion.PHP5_3,
-				new String[] { "/workspace/astutils/find_use_statement_by_alias/php53" });
+				new String[] { "/workspace/astutils/find_use_statement_by_alias/php53" }); //$NON-NLS-1$
 	};
 
-	public FindUseStatementByAliasTests(String description) {
-		super(description);
+	private AbstractPHPSourceParser parser;
+
+	public FindUseStatementByAliasTests(PHPVersion version, String[] fileNames) {
+		parser = PHPSourceParserFactory.createParser(version);
 	}
 
-	public static Test suite() {
+	@Test
+	public void find(String fileName) throws Exception {
+		final PdttFile pdttFile = new PdttFile(fileName);
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdttFile
+				.getFile().trim().getBytes());
+		ModuleDeclaration moduleDeclaration = (ModuleDeclaration) parser.parse(
+				new InputStreamReader(inputStream), null,
+				ProjectOptions.useShortTags((IProject) null));
 
-		TestSuite suite = new TestSuite("Find Use Statement By Alias Tests");
+		String alias = pdttFile.getConfig().get("alias"); //$NON-NLS-1$
+		int offset = Integer.parseInt(pdttFile.getConfig().get("offset")); //$NON-NLS-1$
 
-		for (final PHPVersion phpVersion : TESTS.keySet()) {
-			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-			final AbstractPHPSourceParser parser = PHPSourceParserFactory
-					.createParser(phpVersion);
+		UsePart usePart = ASTUtils.findUseStatementByAlias(moduleDeclaration,
+				alias, offset);
 
-			for (String testsDirectory : TESTS.get(phpVersion)) {
-
-				for (final String fileName : getPDTTFiles(testsDirectory)) {
-					try {
-						final PdttFile pdttFile = new PdttFile(fileName);
-						phpVerSuite.addTest(new CompilerParserTests(phpVersion
-								.getAlias() + " - /" + fileName) {
-
-							protected void runTest() throws Throwable {
-
-								ByteArrayInputStream inputStream = new ByteArrayInputStream(
-										pdttFile.getFile().trim().getBytes());
-								ModuleDeclaration moduleDeclaration = (ModuleDeclaration) parser
-										.parse(new InputStreamReader(
-												inputStream),
-												null,
-												ProjectOptions
-														.useShortTags((IProject) null));
-
-								String alias = pdttFile.getConfig()
-										.get("alias");
-								int offset = Integer.parseInt(pdttFile
-										.getConfig().get("offset"));
-
-								UsePart usePart = ASTUtils
-										.findUseStatementByAlias(
-												moduleDeclaration, alias,
-												offset);
-
-								String actual = (usePart == null) ? "null"
-										: usePart.toString();
-								assertContents(pdttFile.getExpected(), actual);
-							}
-						});
-					} catch (final Exception e) {
-						// dummy test indicating PDTT file parsing failure
-						phpVerSuite.addTest(new TestCase(fileName) {
-							protected void runTest() throws Throwable {
-								throw e;
-							}
-						});
-					}
-				}
-			}
-			suite.addTest(phpVerSuite);
-		}
-
-		// Create a setup wrapper
-		TestSetup setup = new TestSetup(suite) {
-			protected void setUp() throws Exception {
-			}
-
-			protected void tearDown() throws Exception {
-			}
-		};
-		return setup;
+		String actual = (usePart == null) ? "null" : usePart.toString(); //$NON-NLS-1$
+		PDTTUtils.assertContents(pdttFile.getExpected(), actual);
 	}
 }

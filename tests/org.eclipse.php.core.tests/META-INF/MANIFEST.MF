@@ -4,7 +4,7 @@ Bundle-Name: PDT Core Unit Tests
 Bundle-SymbolicName: org.eclipse.php.core.tests;singleton:=true
 Bundle-Version: 3.3.2.qualifier
 Bundle-Activator: org.eclipse.php.core.tests.PHPCoreTests
-Require-Bundle: org.junit,
+Require-Bundle: org.junit;bundle-version="4.11.0",
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.apache.commons.lang,
@@ -17,6 +17,7 @@ Require-Bundle: org.junit,
  org.eclipse.core.filesystem
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.php.core.tests,
  org.eclipse.php.core.tests.codeassist,
  org.eclipse.php.core.tests.compiler_ast.parser,
@@ -34,4 +35,5 @@ Export-Package: org.eclipse.php.core.tests,
  org.eclipse.php.core.tests.includepath,
  org.eclipse.php.core.tests.model_structure,
  org.eclipse.php.core.tests.selection,
- org.eclipse.php.core.tests.typeinference
+ org.eclipse.php.core.tests.typeinference,
+ org.eclipse.php.core.tests.runner

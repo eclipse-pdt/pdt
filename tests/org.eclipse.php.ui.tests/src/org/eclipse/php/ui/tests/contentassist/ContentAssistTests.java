@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,19 +7,17 @@
  *
  * Contributors:
  *     William Candillon - initial API and implementation
+ *     Dawid Pakuła - convert to JUnit4
  *******************************************************************************/
 package org.eclipse.php.ui.tests.contentassist;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -30,9 +28,13 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
+import org.eclipse.php.core.tests.runner.PDTTList;
+import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
+import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
+import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -48,15 +50,23 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.junit.After;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.osgi.framework.Bundle;
 
 @SuppressWarnings("restriction")
-public class ContentAssistTests extends AbstractPDTTTest {
+@RunWith(PDTTList.class)
+public class ContentAssistTests {
 
-	protected static IProject project;
-	protected static IFile testFile;
+	protected IProject project;
+	protected IFile testFile;
+	protected PHPVersion phpVersion;
 	// protected static PHPVersion phpVersion;
-	protected static PHPStructuredEditor fEditor;
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	protected PHPStructuredEditor fEditor;
+
+	@Parameters
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
 		// TESTS.put(PHPVersion.PHP4, "/workspace/codeassist/php4");
 		TESTS.put(PHPVersion.PHP5,
@@ -69,9 +79,19 @@ public class ContentAssistTests extends AbstractPDTTTest {
 	};
 	protected static final char OFFSET_CHAR = '|';
 
-	public static void setUpSuite() throws Exception {
+	@Context
+	public static Bundle getBundle() {
+		return PHPUiTests.getDefault().getBundle();
+	}
+
+	public ContentAssistTests(PHPVersion version, String[] fileNames) {
+		this.phpVersion = version;
+	}
+
+	@BeforeList
+	public void setUpSuite() throws Exception {
 		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("Content Assist");
+				.getProject("Content Assist_" + this.phpVersion);
 		if (project.exists()) {
 			return;
 		}
@@ -88,102 +108,51 @@ public class ContentAssistTests extends AbstractPDTTTest {
 		// will insert the proposal,so we can test CA without UI interaction
 		PHPUiPlugin.getDefault().getPluginPreferences()
 				.setDefault(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
+		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
 	}
 
-	public static void tearDownSuite() throws Exception {
+	@AfterList
+	public void tearDownSuite() throws Exception {
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
 	}
 
-	public ContentAssistTests(String description) {
-		super(description);
-	}
-
-	public static Test suite() {
-
-		TestSuite suite = new TestSuite("Content Assist Tests");
-		for (Entry<PHPVersion, String[]> pair : TESTS.entrySet()) {
-			final PHPVersion phpVersion = pair.getKey();
-			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-
-			for (int i = 0; i < pair.getValue().length; i++) {
-				String[] files = getPDTTFiles(pair.getValue()[i], PHPUiTests
-						.getDefault().getBundle());
-
-				for (final String fileName : files) {
-					try {
-						final PdttFile pdttFile = new PdttFile(PHPUiTests
-								.getDefault().getBundle(), fileName);
-						phpVerSuite.addTest(new ContentAssistTests(phpVersion
-								.getAlias() + " - /" + fileName) {
-
-							protected void setUp() throws Exception {
-								PHPCoreTests.setProjectPhpVersion(project,
-										phpVersion);
-								pdttFile.applyPreferences();
-							}
-
-							protected void tearDown() throws Exception {
-								if (testFile != null) {
-									testFile.delete(true, null);
-									testFile = null;
-								}
-							}
-
-							protected void runTest() throws Throwable {
-								String data = pdttFile.getFile();
-								int offset = data.lastIndexOf(OFFSET_CHAR);
-
-								// replace the offset character
-								data = data.substring(0, offset)
-										+ data.substring(offset + 1);
-
-								createFile(
-										new ByteArrayInputStream(data
-												.getBytes()), Long
-												.toString(System
-														.currentTimeMillis()));
-								String result = executeAutoInsert(offset);
-								closeEditor();
-								if (!pdttFile.getExpected().trim()
-										.equals(result.trim())) {
-									StringBuilder errorBuf = new StringBuilder();
-									errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
-									errorBuf.append(pdttFile.getExpected());
-									errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
-									errorBuf.append(result);
-									fail(errorBuf.toString());
-								}
-							}
-						});
-					} catch (final Exception e) {
-						phpVerSuite.addTest(new TestCase(fileName) {
-							protected void runTest() throws Throwable {
-								throw e;
-							}
-						});
-					}
-				}
-			}
-
-			suite.addTest(phpVerSuite);
+	@After
+	public void tearDown() throws Exception {
+		if (testFile != null) {
+			testFile.delete(true, null);
+			testFile = null;
 		}
-
-		// Create a setup wrapper
-		TestSetup setup = new TestSetup(suite) {
-			protected void setUp() throws Exception {
-				setUpSuite();
-			}
-
-			protected void tearDown() throws Exception {
-				tearDownSuite();
-			}
-		};
-		return setup;
 	}
 
-	protected static void closeEditor() {
+	@Test
+	public void assist(String fileName) throws Exception {
+		final PdttFile pdttFile = new PdttFile(PHPUiTests.getDefault()
+				.getBundle(), fileName);
+		pdttFile.applyPreferences();
+
+		String data = pdttFile.getFile();
+		int offset = data.lastIndexOf(OFFSET_CHAR);
+
+		// replace the offset character
+		data = data.substring(0, offset) + data.substring(offset + 1);
+
+		createFile(new ByteArrayInputStream(data.getBytes()),
+				Long.toString(System.currentTimeMillis()));
+		String result = executeAutoInsert(offset);
+		closeEditor();
+		if (!pdttFile.getExpected().trim().equals(result.trim())) {
+			StringBuilder errorBuf = new StringBuilder();
+			errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
+			errorBuf.append(pdttFile.getExpected());
+			errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
+			errorBuf.append(result);
+			fail(errorBuf.toString());
+		}
+	}
+
+	protected void closeEditor() {
 		fEditor.doSave(null);
 		fEditor.getSite().getPage().closeEditor(fEditor, false);
 		fEditor = null;
@@ -199,7 +168,7 @@ public class ContentAssistTests extends AbstractPDTTTest {
 		}
 	}
 
-	protected static String executeAutoInsert(int offset) {
+	protected String executeAutoInsert(int offset) {
 		StructuredTextViewer viewer = null;
 		Display display = Display.getDefault();
 		long timeout = System.currentTimeMillis() + 3000;
@@ -220,7 +189,7 @@ public class ContentAssistTests extends AbstractPDTTTest {
 		return fEditor.getDocument().get();
 	}
 
-	protected static void createFile(InputStream inputStream, String fileName)
+	protected void createFile(InputStream inputStream, String fileName)
 			throws Exception {
 		testFile = project.getFile(new Path(fileName).removeFileExtension()
 				.addFileExtension("php").lastSegment());
@@ -239,9 +208,10 @@ public class ContentAssistTests extends AbstractPDTTTest {
 		 */
 		IEditorPart part = page.openEditor(input, "org.eclipse.php.editor",
 				true);
-		if (part instanceof PHPStructuredEditor)
+		if (part instanceof PHPStructuredEditor) {
 			fEditor = (PHPStructuredEditor) part;
-		else
+		} else {
 			assertTrue("Unable to open php editor", false);
+		}
 	}
 }

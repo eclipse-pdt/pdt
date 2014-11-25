@@ -47,7 +47,7 @@ import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.osgi.framework.Bundle;
 
-public class AbstractProjectSuite extends TestSuite {
+public abstract class AbstractProjectSuite extends TestSuite {
 
 	public static final String WORKSPACE_BASE = "workspace";
 	private Bundle bundle;
@@ -104,8 +104,8 @@ public class AbstractProjectSuite extends TestSuite {
 	 */
 	public ISourceModule getSourceModule(String projectName, String rootPath,
 			IPath path) throws ModelException {
-		IScriptFolder folder = getScriptFolder(projectName, rootPath, path
-				.removeLastSegments(1));
+		IScriptFolder folder = getScriptFolder(projectName, rootPath,
+				path.removeLastSegments(1));
 		if (folder == null) {
 			return null;
 		}

@@ -17,11 +17,6 @@ import java.io.PrintStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -36,15 +31,24 @@ import org.eclipse.dltk.core.IModelElementVisitor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
+import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.core.tests.runner.PDTTList;
+import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
+import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
+import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.junit.After;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-public class ModelStructureTests extends AbstractPDTTTest {
+@RunWith(PDTTList.class)
+public class ModelStructureTests {
 
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	@Parameters
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
 		TESTS.put(PHPVersion.PHP5_3,
 				new String[] { "/workspace/model_structure/php53" });
@@ -56,10 +60,16 @@ public class ModelStructureTests extends AbstractPDTTTest {
 				new String[] { "/workspace/model_structure/php53" });
 	};
 
-	protected static IProject project;
-	protected static IFile testFile;
+	protected IProject project;
+	protected IFile testFile;
+	protected PHPVersion version;
 
-	public static void setUpSuite() throws Exception {
+	public ModelStructureTests(PHPVersion version, String[] fileNames) {
+		this.version = version;
+	}
+
+	@BeforeList
+	public void setUpSuite() throws Exception {
 		project = ResourcesPlugin.getWorkspace().getRoot()
 				.getProject("ModelStructureTests");
 		if (project.exists()) {
@@ -73,89 +83,35 @@ public class ModelStructureTests extends AbstractPDTTTest {
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
+		PHPCoreTests.setProjectPhpVersion(project, version);
 	}
 
-	public static void tearDownSuite() throws Exception {
+	@AfterList
+	public void tearDownSuite() throws Exception {
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
 	}
 
-	public ModelStructureTests(String description) {
-		super(description);
+	@Test
+	public void structure(String fileName) throws Exception {
+		final PdttFile pdttFile = new PdttFile(fileName);
+		ISourceModule sourceModule = createFile(pdttFile.getFile());
+
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		PrintStream printStream = new PrintStream(stream);
+		sourceModule.accept(new PrintVisitor(printStream));
+		printStream.close();
+
+		PDTTUtils.assertContents(pdttFile.getExpected(), stream.toString());
 	}
 
-	public static Test suite() {
-
-		TestSuite suite = new TestSuite("Auto Code Assist Tests");
-
-		for (final PHPVersion phpVersion : TESTS.keySet()) {
-			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-
-			for (String testsDirectory : TESTS.get(phpVersion)) {
-
-				for (final String fileName : getPDTTFiles(testsDirectory)) {
-					try {
-						final PdttFile pdttFile = new PdttFile(fileName);
-						phpVerSuite.addTest(new ModelStructureTests(phpVersion
-								.getAlias() + " - /" + fileName) {
-
-							protected void setUp() throws Exception {
-								PHPCoreTests.setProjectPhpVersion(project,
-										phpVersion);
-							}
-
-							protected void tearDown() throws Exception {
-								if (testFile != null) {
-									testFile.delete(true, null);
-									testFile = null;
-								}
-							}
-
-							protected void runTest() throws Throwable {
-								ISourceModule sourceModule = createFile(pdttFile
-										.getFile());
-
-								ByteArrayOutputStream stream = new ByteArrayOutputStream();
-								PrintStream printStream = new PrintStream(
-										stream);
-								sourceModule.accept(new PrintVisitor(
-										printStream));
-								printStream.close();
-
-								assertContents(pdttFile.getExpected(),
-										stream.toString());
-							}
-						});
-					} catch (final Exception e) {
-						phpVerSuite.addTest(new TestCase(fileName) { // dummy
-																		// test
-																		// indicating
-																		// PDTT
-																		// file
-																		// parsing
-																		// failure
-									protected void runTest() throws Throwable {
-										throw e;
-									}
-								});
-					}
-				}
-			}
-			suite.addTest(phpVerSuite);
+	@After
+	public void after() throws Exception {
+		if (testFile != null) {
+			testFile.delete(true, null);
+			testFile = null;
 		}
-
-		// Create a setup wrapper
-		TestSetup setup = new TestSetup(suite) {
-			protected void setUp() throws Exception {
-				setUpSuite();
-			}
-
-			protected void tearDown() throws Exception {
-				tearDownSuite();
-			}
-		};
-		return setup;
 	}
 
 	/**
@@ -167,7 +123,7 @@ public class ModelStructureTests extends AbstractPDTTTest {
 	 * @return offset where's the offset character set.
 	 * @throws Exception
 	 */
-	protected static ISourceModule createFile(String data) throws Exception {
+	protected ISourceModule createFile(String data) throws Exception {
 		testFile = project.getFile("test.php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);

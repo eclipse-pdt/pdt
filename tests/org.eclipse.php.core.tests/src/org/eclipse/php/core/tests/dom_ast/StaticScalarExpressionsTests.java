@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009,2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,14 +8,14 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła - convert to JUnit4
  *******************************************************************************/
 package org.eclipse.php.core.tests.dom_ast;
 
-import java.io.StringReader;
+import static org.junit.Assert.assertTrue;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import java.io.StringReader;
+import java.util.Arrays;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -26,56 +26,47 @@ import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Expression;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
 
-public class StaticScalarExpressionsTests extends TestCase {
+@RunWith(Parameterized.class)
+public class StaticScalarExpressionsTests {
 
-	public StaticScalarExpressionsTests(String name) {
-		super(name);
-	}
+	@Parameter
+	public String desc;
 
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite("Static Scalar Expressions Tests");
-		for (Object[] d : DATA) {
+	@Parameter(1)
+	public String fileContent;
 
-			final String desc = (String) d[0];
-			final String str = (String) d[1];
-			final int offset = (Integer) d[2];
-			final boolean expectedStaticScalar = (Boolean) d[3];
+	@Parameter(2)
+	public int offset;
 
-			suite.addTest(new StaticScalarExpressionsTests(desc) {
+	@Parameter(3)
+	public boolean expectedStaticScalar;
 
-				/**
-				 * Checks if the expression that is located in the given offset
-				 * is static scalar
-				 */
-				protected void runTest() throws Exception {
-					StringReader reader = new StringReader(str);
-					Program program = ASTParser.newParser(reader,
-							PHPVersion.PHP5,
-							ProjectOptions.useShortTags((IProject) null))
-							.createAST(new NullProgressMonitor());
+	@Test
+	public void test() throws Exception {
+		StringReader reader = new StringReader(fileContent);
+		Program program = ASTParser.newParser(reader, PHPVersion.PHP5,
+				ProjectOptions.useShortTags((IProject) null)).createAST(
+				new NullProgressMonitor());
 
-					final ASTNode locateNode = Locator.locateNode(program,
-							offset);
-					Assert.assertTrue(
-							desc
-									+ " test fails. offset should locate an expression node was "
-									+ locateNode.getClass().getName(),
-							locateNode instanceof Expression);
+		final ASTNode locateNode = Locator.locateNode(program, offset);
+		assertTrue(desc
+				+ " test fails. offset should locate an expression node was "
+				+ locateNode.getClass().getName(),
+				locateNode instanceof Expression);
 
-					Expression expression = (Expression) locateNode;
-					final boolean actualStaticScalar = expression
-							.isStaticScalar();
+		Expression expression = (Expression) locateNode;
+		final boolean actualStaticScalar = expression.isStaticScalar();
 
-					Assert.assertTrue(desc + " test fails. Expression"
-							+ locateNode.toString() + " should "
-							+ (!expectedStaticScalar ? "not" : "")
-							+ "be static scalar",
-							actualStaticScalar == expectedStaticScalar);
-				}
-			});
-		}
-		return suite;
+		assertTrue(desc + " test fails. Expression" + locateNode.toString()
+				+ " should " + (!expectedStaticScalar ? "not" : "")
+				+ "be static scalar",
+				actualStaticScalar == expectedStaticScalar);
 	}
 
 	public static Object[][] DATA = new Object[][] {
@@ -125,4 +116,9 @@ public class StaticScalarExpressionsTests extends TestCase {
 			{ "simple array 1", "<?php $a = array();", 13, false },
 			{ "simple array 2", "<?php $a = array( 4 , 6 );", 20, false },
 			{ "simple array 3", "<?php $a = array( 4 , 6 );", 24, false } };
+
+	@Parameters(name = "{0}")
+	public static Iterable<Object[]> data() {
+		return Arrays.asList(DATA);
+	}
 }

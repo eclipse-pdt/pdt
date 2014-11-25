@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,11 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła - convert to JUnit4
  *******************************************************************************/
 package org.eclipse.php.core.tests;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 import org.eclipse.php.core.tests.codeassist.CodeAssistTests;
 import org.eclipse.php.core.tests.compiler_ast.parser.CompilerParserTests;
@@ -41,63 +39,38 @@ import org.eclipse.php.core.tests.phar.PharFileTest;
 import org.eclipse.php.core.tests.selection.SelectionEngineTests;
 import org.eclipse.php.core.tests.text.PHPTextSequenceUtilitiesTests;
 import org.eclipse.php.core.tests.typeinference.TypeInferenceTests;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-public class AllTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.php.core");
-
-		// $JUnit-BEGIN$
-
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
 		// Model tests:
-		suite.addTest(DomParserTests.suite());
-		suite.addTest(CompilerParserTests.suite());
-		suite.addTest(FindUseStatementByAliasTests.suite());
-		suite.addTest(FindUseStatementByNamespaceTests.suite());
-		suite.addTest(GetUseStatementsByTests.suite());
-		suite.addTest(TypeDeclarationVisitorTests.suite());
-		suite.addTest(TraitUseStatementVisitorTests.suite());
-		suite.addTest(ErrorReportingTests.suite());
-		suite.addTest(ASTRewriteTests.suite());
-		suite.addTest(ASTMatcherTests.suite());
-		suite.addTest(CommentMapperTests.suite());
-		suite.addTest(StaticScalarExpressionsTests.suite());
-
-		suite.addTest(CodeAssistTests.suite());
-		suite.addTest(SelectionEngineTests.suite());
-
-		suite.addTest(ModelStructureTests.suite());
-
-		suite.addTest(FileNetworkTests.suite());
-		suite.addTest(TypeInferenceTests.suite());
-
-		suite.addTest(PHPDocParserTests.suite());
-		suite.addTest(PHPDocAwareDeclarationTests.suite());
-
-		suite.addTestSuite(IncludePathManagerTests.class);
-		suite.addTestSuite(BindingTests.class);
-
+		DomParserTests.class, CompilerParserTests.class,
+		FindUseStatementByAliasTests.class,
+		FindUseStatementByNamespaceTests.class, GetUseStatementsByTests.class,
+		TraitUseStatementVisitorTests.class, TypeDeclarationVisitorTests.class,
+		ErrorReportingTests.class, ASTRewriteTests.Suite.class,
+		ASTMatcherTests.class, CommentMapperTests.class,
+		StaticScalarExpressionsTests.class, CodeAssistTests.class,
+		SelectionEngineTests.class, ModelStructureTests.class,
+		TypeInferenceTests.class,
+		FileNetworkTests.class,
+		PHPDocParserTests.class,
+		PHPDocAwareDeclarationTests.class,
+		IncludePathManagerTests.class,
+		BindingTests.class,
 		// Document tests:
-		suite.addTest(DocumentLexerTests.suite());
-		suite.addTest(FormatterTests.suite());
-		suite.addTestSuite(PHPPartitionerTests.class);
+		DocumentLexerTests.class,
+		FormatterTests.class,
+		PHPPartitionerTests.class,
+		// Phar files
+		PharFileTest.class,
+		// Concilator tests:
+		org.eclipse.php.internal.core.ast.locator.AllTests.class,
+		MarkOccurrenceTests.class,
+		// test language functions
+		org.eclipse.php.core.tests.searchEngine.AllTests.class,
+		PHPTextSequenceUtilitiesTests.class })
+public final class AllTests {
 
-		// phar file support tests
-		suite.addTest(PharFileTest.suite());
-
-		// PHPElementConciliator test cases
-		// added by qwang.
-		suite.addTest(org.eclipse.php.internal.core.ast.locator.AllTests
-				.suite());
-		// added by zhaozw.
-		suite.addTest(MarkOccurrenceTests.suite());
-
-		// test language model functions
-		suite.addTest(org.eclipse.php.core.tests.searchEngine.AllTests.suite());
-		suite.addTestSuite(PHPTextSequenceUtilitiesTests.class);
-
-		// $JUnit-END$
-
-		return suite;
-	}
 }

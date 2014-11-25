@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,8 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła - convert to JUnit4
  *******************************************************************************/
 package org.eclipse.php.core.tests.markoccurrence;
+
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -19,22 +22,21 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.core.tests.runner.PDTTList;
+import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
+import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
+import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
@@ -47,11 +49,17 @@ import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder.OccurrenceLocation;
 import org.eclipse.php.internal.core.search.OccurrencesFinderFactory;
+import org.junit.After;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-public class MarkOccurrenceTests extends AbstractPDTTTest {
+@RunWith(PDTTList.class)
+public class MarkOccurrenceTests {
 
 	protected static final char OFFSET_CHAR = '|';
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
+	@Parameters
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
 		TESTS.put(PHPVersion.PHP5,
 				new String[] { "/workspace/markoccurrence/php5" });
@@ -74,12 +82,14 @@ public class MarkOccurrenceTests extends AbstractPDTTTest {
 				"/workspace/markoccurrence/php56" });
 	};
 
-	protected static IProject project;
-	protected static IFile testFile;
+	protected IProject project;
+	protected IFile testFile;
+	protected final PHPVersion phpVersion;
 
-	public static void setUpSuite() throws Exception {
+	@BeforeList
+	public void setUpSuite() throws Exception {
 		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("MarkOccurrenceTests");
+				.getProject("MarkOccurrenceTests_" + phpVersion.toString());
 		if (project.exists()) {
 			return;
 		}
@@ -91,82 +101,37 @@ public class MarkOccurrenceTests extends AbstractPDTTTest {
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
+		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
 	}
 
-	public static void tearDownSuite() throws Exception {
+	@AfterList
+	public void tearDownSuite() throws Exception {
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
 	}
 
-	public MarkOccurrenceTests(String description) {
-		super(description);
+	@Test
+	public void occurences(String fileName) throws Exception {
+		final PdttFile pdttFile = new PdttFile(fileName);
+		pdttFile.applyPreferences();
+
+		// OccurrenceLocation[] proposals =
+		// getProposals(pdttFile
+		// .getFile());
+		compareProposals(pdttFile.getFile());
 	}
 
-	public static Test suite() {
-
-		TestSuite suite = new TestSuite("Auto Mark Occurrence Tests");
-
-		for (final PHPVersion phpVersion : TESTS.keySet()) {
-			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-
-			for (String testsDirectory : TESTS.get(phpVersion)) {
-
-				for (final String fileName : getPDTTFiles(testsDirectory)) {
-					try {
-						final PdttFile pdttFile = new PdttFile(fileName);
-						phpVerSuite.addTest(new MarkOccurrenceTests(phpVersion
-								.getAlias() + " - /" + fileName) {
-
-							protected void setUp() throws Exception {
-								PHPCoreTests.setProjectPhpVersion(project,
-										phpVersion);
-								pdttFile.applyPreferences();
-							}
-
-							protected void tearDown() throws Exception {
-								if (testFile != null) {
-									testFile.delete(true, null);
-									testFile = null;
-								}
-							}
-
-							protected void runTest() throws Throwable {
-								// OccurrenceLocation[] proposals =
-								// getProposals(pdttFile
-								// .getFile());
-								compareProposals(pdttFile.getFile());
-							}
-						});
-					} catch (final Exception e) {
-						phpVerSuite.addTest(new TestCase(fileName) { // dummy
-									// test
-									// indicating
-									// PDTT
-									// file
-									// parsing
-									// failure
-									protected void runTest() throws Throwable {
-										throw e;
-									}
-								});
-					}
-				}
-			}
-			suite.addTest(phpVerSuite);
+	@After
+	public void after() throws CoreException {
+		if (testFile != null) {
+			testFile.delete(true, null);
+			testFile = null;
 		}
+	}
 
-		// Create a setup wrapper
-		TestSetup setup = new TestSetup(suite) {
-			protected void setUp() throws Exception {
-				setUpSuite();
-			}
-
-			protected void tearDown() throws Exception {
-				tearDownSuite();
-			}
-		};
-		return setup;
+	public MarkOccurrenceTests(PHPVersion version, String[] fileNames) {
+		phpVersion = version;
 	}
 
 	/**
@@ -178,7 +143,7 @@ public class MarkOccurrenceTests extends AbstractPDTTTest {
 	 * @return offset where's the offset character set.
 	 * @throws Exception
 	 */
-	protected static void compareProposals(String data) throws Exception {
+	protected void compareProposals(String data) throws Exception {
 
 		int offset = data.lastIndexOf(OFFSET_CHAR);
 		if (offset == -1) {
@@ -270,12 +235,12 @@ public class MarkOccurrenceTests extends AbstractPDTTTest {
 				&& (node.getParent().getType() != ASTNode.QUOTE);
 	}
 
-	public static Program createProgramFromSource(IFile file) throws Exception {
+	public Program createProgramFromSource(IFile file) throws Exception {
 		ISourceModule source = DLTKCore.createSourceModuleFrom(file);
 		return createProgramFromSource(source);
 	}
 
-	public static Program createProgramFromSource(ISourceModule source)
+	public Program createProgramFromSource(ISourceModule source)
 			throws Exception {
 		PHPVersion version;
 		if (project != null) {
@@ -288,7 +253,7 @@ public class MarkOccurrenceTests extends AbstractPDTTTest {
 		return newParser.createAST(null);
 	}
 
-	protected static ISourceModule getSourceModule() {
+	protected ISourceModule getSourceModule() {
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}
 

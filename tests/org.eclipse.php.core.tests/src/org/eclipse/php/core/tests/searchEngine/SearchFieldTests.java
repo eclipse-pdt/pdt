@@ -11,16 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.searchEngine;
 
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -39,16 +36,24 @@ import org.eclipse.dltk.core.index2.search.ISearchRequestor;
 import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.core.tests.runner.PDTTList;
+import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
+import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
+import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.junit.After;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-public class SearchFieldTests extends AbstractPDTTTest {
+@RunWith(PDTTList.class)
+public class SearchFieldTests {
 
 	// protected static final char SELECTION_CsHAR = '|';
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	@Parameters
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
 		TESTS.put(PHPVersion.PHP5,
 				new String[] { "/workspace/searchEngine/php5" });
@@ -57,12 +62,18 @@ public class SearchFieldTests extends AbstractPDTTTest {
 		// "/workspace/searchEngine/php53" });
 	};
 
-	protected static IProject project;
-	protected static IFile testFile;
+	protected IProject project;
+	protected IFile testFile;
+	protected PHPVersion phpVersion;
 
-	public static void setUpSuite() throws Exception {
+	public SearchFieldTests(PHPVersion version, String[] fileNames) {
+		phpVersion = version;
+	}
+
+	@BeforeList
+	public void setUpSuite() throws Exception {
 		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("AutoSelectionEngine");
+				.getProject("AutoSelectionEngine_" + phpVersion.toString());
 		if (project.exists()) {
 			return;
 		}
@@ -74,96 +85,46 @@ public class SearchFieldTests extends AbstractPDTTTest {
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
+
+		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
 	}
 
-	public static void tearDownSuite() throws Exception {
+	@AfterList
+	public void tearDownSuite() throws Exception {
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
 	}
 
-	public SearchFieldTests(String description) {
-		super(description);
+	@After
+	public void afterTest() throws Exception {
+		if (testFile != null) {
+			testFile.delete(true, null);
+			testFile = null;
+		}
 	}
 
-	public static Test suite() {
+	@Test
+	public void search(String fileName) throws Exception {
+		final PdttFile pdttFile = new PdttFile(fileName);
 
-		TestSuite suite = new TestSuite("Search Field Tests");
+		List<String> paths = getSelection(pdttFile.getFile());
+		int occurrences = Integer.parseInt(pdttFile.getExpected().trim());
 
-		for (final PHPVersion phpVersion : TESTS.keySet()) {
-			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-
-			for (String testsDirectory : TESTS.get(phpVersion)) {
-
-				for (final String fileName : getPDTTFiles(testsDirectory)) {
-					try {
-						final PdttFile pdttFile = new PdttFile(fileName);
-						phpVerSuite.addTest(new SearchFieldTests(phpVersion
-								.getAlias() + " - /" + fileName) {
-
-							protected void setUp() throws Exception {
-								PHPCoreTests.setProjectPhpVersion(project,
-										phpVersion);
-							}
-
-							protected void tearDown() throws Exception {
-								if (testFile != null) {
-									testFile.delete(true, null);
-									testFile = null;
-								}
-							}
-
-							protected void runTest() throws Throwable {
-								List<String> paths = getSelection(pdttFile
-										.getFile());
-								int occurrences = Integer.parseInt(pdttFile
-										.getExpected().trim());
-
-								boolean proposalsEqual = true;
-								if (paths.size() == occurrences) {
-								} else {
-									proposalsEqual = false;
-								}
-
-								if (!proposalsEqual) {
-									StringBuilder errorBuf = new StringBuilder();
-									errorBuf.append("\nEXPECTED OCCURRENCE TIMES:\n-----------------------------\n");
-									errorBuf.append(pdttFile.getExpected());
-									errorBuf.append("\nACTUAL OCCURRENCE TIMES:\n-----------------------------\n");
-									errorBuf.append(paths.size());
-									fail(errorBuf.toString());
-								}
-							}
-						});
-					} catch (final Exception e) {
-						phpVerSuite.addTest(new TestCase(fileName) { // dummy
-									// test
-									// indicating
-									// PDTT
-									// file
-									// parsing
-									// failure
-									protected void runTest() throws Throwable {
-										throw e;
-									}
-								});
-					}
-				}
-			}
-			suite.addTest(phpVerSuite);
+		boolean proposalsEqual = true;
+		if (paths.size() == occurrences) {
+		} else {
+			proposalsEqual = false;
 		}
 
-		// Create a setup wrapper
-		TestSetup setup = new TestSetup(suite) {
-			protected void setUp() throws Exception {
-				setUpSuite();
-			}
-
-			protected void tearDown() throws Exception {
-				tearDownSuite();
-			}
-		};
-		return setup;
+		if (!proposalsEqual) {
+			StringBuilder errorBuf = new StringBuilder();
+			errorBuf.append("\nEXPECTED OCCURRENCE TIMES:\n-----------------------------\n");
+			errorBuf.append(pdttFile.getExpected());
+			errorBuf.append("\nACTUAL OCCURRENCE TIMES:\n-----------------------------\n");
+			errorBuf.append(paths.size());
+			fail(errorBuf.toString());
+		}
 	}
 
 	/**
@@ -175,7 +136,7 @@ public class SearchFieldTests extends AbstractPDTTTest {
 	 * @return offset where's the offset character set.
 	 * @throws Exception
 	 */
-	protected static void createFile(String data) throws Exception {
+	protected void createFile(String data) throws Exception {
 
 		testFile = project.getFile("test.php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
@@ -186,7 +147,7 @@ public class SearchFieldTests extends AbstractPDTTTest {
 		// PHPCoreTests.waitForAutoBuild();
 	}
 
-	protected static ISourceModule getSourceModule() {
+	protected ISourceModule getSourceModule() {
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}
 
@@ -198,7 +159,7 @@ public class SearchFieldTests extends AbstractPDTTTest {
 		return flags;
 	}
 
-	protected static List<String> getSelection(String data) throws Exception {
+	protected List<String> getSelection(String data) throws Exception {
 		createFile(data);
 		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(testFile);
 
@@ -220,7 +181,7 @@ public class SearchFieldTests extends AbstractPDTTTest {
 			};
 
 			searchEngine.search(IModelElement.FIELD, null, "$testField", 0, 0,
-					0, SearchFor.ALL_OCCURENCES, MatchRule.EXACT, scope,
+					0, SearchFor.ALL_OCCURRENCES, MatchRule.EXACT, scope,
 					requestor, new NullProgressMonitor());
 
 		}
