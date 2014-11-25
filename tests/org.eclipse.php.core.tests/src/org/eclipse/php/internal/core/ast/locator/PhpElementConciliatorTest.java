@@ -1,4 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *     Dawid Pakuła - convert to JUnit4
+ *******************************************************************************/
 package org.eclipse.php.internal.core.ast.locator;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -12,13 +29,15 @@ import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.nodes.TypeDeclaration;
+import org.junit.Before;
+import org.junit.Test;
 
 public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 
 	private IProject project1;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		System.setProperty("disableStartupRunner", "true");
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
@@ -42,7 +61,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 		return file;
 	}
 
-	public void testConcileClassName() {
+	@Test
+	public void concileClassName() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?php class TestRenameClass{}?>");
@@ -73,7 +93,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
-	public void testConcileClassName1() {
+	@Test
+	public void concileClassName1() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?php class TestRenameClass{} class TestExtendedClass extends TestRenameClass{}?>");
@@ -96,7 +117,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
-	public void testConcileClassName2() {
+	@Test
+	public void concileClassName2() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?php class A{function foo(){}} class B{function bar(){}} $a = new A();$a->foo(); A::foo(); $b = new B();$b->bar();B::bar();?>");
@@ -126,7 +148,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
-	public void testConcileInterface() {
+	@Test
+	public void concileInterface() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?php interface iTemplate{public function setVariable($name, $var);}?>");
@@ -158,7 +181,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 
 	}
 
-	public void testConcileInterface1() {
+	@Test
+	public void concileInterface1() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?php interface iTemplate{public function setVariable($name, $var);} class Template implements iTemplate{  public function setVariable($name, $var){}}?>");
@@ -190,7 +214,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 
 	}
 
-	public void testConcileProgram() {
+	@Test
+	public void concileProgram() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?php class TestRenameClass{}?>");
@@ -208,7 +233,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(program));
 	}
 
-	public void testConcileGlobalVar() {
+	@Test
+	public void concileGlobalVar() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?php $a = 1;  function test(){  global $a; echo $a;} ?>");
@@ -247,7 +273,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
-	public void testConcileGlobalVar1() {
+	@Test
+	public void concileGlobalVar1() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?php $a = 1;  function test(){ echo $GLOBALS['a'];} ?>");
@@ -269,7 +296,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
-	public void testConcileGlobalVar2() {
+	@Test
+	public void concileGlobalVar2() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?php $a = 1;  function test(){  global $a; echo $a;} ?>");
@@ -295,7 +323,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
-	public void testConcileFunc() {
+	@Test
+	public void concileFunc() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?php $a = 1;  function test(){ echo $GLOBALS['a'];} ?>");
@@ -326,7 +355,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
-	public void testConcileFunc1() {
+	@Test
+	public void concileFunc1() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?php function a($n){return ($n * $n);}echo a(5);?>");
@@ -349,7 +379,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
-	public void testConcileMethod1() {
+	@Test
+	public void concileMethod1() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?class foo {public static function bar(){return 'bar in a class called';}}$strFN2 = foo::bar;echo bar();?>");
@@ -373,7 +404,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
-	public void testConcileMethod2() {
+	@Test
+	public void concileMethod2() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?class foo {public function bar(){return 'bar in a class called';}}$strFN2 = new foo(); $strFN2->bar()?>");
@@ -397,7 +429,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
-	public void testConcileMethod3() {
+	@Test
+	public void concileMethod3() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?class foo {public function bar(){return 'bar in a class called';} public function f(){$this->bar();}}?>");
@@ -421,7 +454,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
-	public void testConcileMethod4() {
+	@Test
+	public void concileMethod4() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?class foo {public function bar(){return 'bar in a class called';} public function f(){$this->bar();}}?>");
@@ -445,7 +479,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
-	public void testConcileField1() {
+	@Test
+	public void concileField1() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?class foo {var $f; public function f(){$this->$f;}}?>");
@@ -460,7 +495,7 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 
 		assertNotNull(program);
 
-		// 
+		//
 		int start = 14;
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
@@ -477,7 +512,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 
 	}
 
-	public void testConcileField2() {
+	@Test
+	public void concileField2() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?class foo {var $f; public function f(){$this->$f;}} $cls= new foo(); $cls->f;?>");
@@ -501,7 +537,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
-	public void testConcileField3() {
+	@Test
+	public void concileField3() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?class foo {var $f; public function f(){$this->$f;}} $cls= new foo(); $cls->f;?>");
@@ -526,7 +563,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
-	public void testConcileStaticField1() {
+	@Test
+	public void concileStaticField1() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?class foo {public static $my_static = 'foo';} echo Foo::$my_static; echo $foo->my_static?>");
@@ -565,7 +603,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 
 	}
 
-	public void testLocalVar() {
+	@Test
+	public void localVar() {
 		IFile file = null;
 		try {
 			file = setFileContent("<? $x = 4; function assignx () {$x = 0; echo $x;} ?>");
@@ -597,7 +636,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
-	public void testLocalVar1() {
+	@Test
+	public void localVar1() {
 		IFile file = null;
 		try {
 			file = setFileContent("<? $x = 4; function assignx () {$x = 0; echo $x;} ?>");
@@ -623,7 +663,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 
 	}
 
-	public void testConcileConstant() {
+	@Test
+	public void concileConstant() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?php define(\"CONSTANT\", \"Hello world.\"); echo CONSTANT; echo Constant; ?>");
@@ -668,7 +709,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 
 	}
 
-	public void testConcileConstant1() {
+	@Test
+	public void concileConstant1() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?php define (\"TEST\", 1234);");
@@ -691,7 +733,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
-	public void testConcileConstantExists() {
+	@Test
+	public void concileConstantExists() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?php define (\"TEST\", 1234);");
@@ -708,7 +751,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 		assertTrue(PhpElementConciliator.constantAlreadyExists(program, "TEST"));
 	}
 
-	public void testConcileClsMemberExists() {
+	@Test
+	public void concileClsMemberExists() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?class foo {public static function bar(){return 'bar in a class called';}}$strFN2 = foo::bar;echo bar();?>");
@@ -736,7 +780,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				ASTNode.FUNCTION_DECLARATION));
 	}
 
-	public void testConcileClassNameExists() {
+	@Test
+	public void concileClassNameExists() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?php class TestRenameClass{}?>");
@@ -754,7 +799,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				.classNameAlreadyExists(program, "TestRenameClass");
 	}
 
-	public void testLocalVarExists() {
+	@Test
+	public void localVarExists() {
 		IFile file = null;
 		try {
 			file = setFileContent("<? $x = 4; function assignx () {$x = 0; echo $x;} ?>");
@@ -778,7 +824,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				(FunctionDeclaration) selectedNode, "x");
 	}
 
-	public void testFunExists1() {
+	@Test
+	public void funExists1() {
 		IFile file = null;
 		try {
 			file = setFileContent("<? $x = 4; function assignx () {$x = 0; echo $x;} ?>");
@@ -796,7 +843,8 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 		PhpElementConciliator.functionAlreadyExists(program, "assignx");
 	}
 
-	public void testConcileGlobalExists() {
+	@Test
+	public void concileGlobalExists() {
 		IFile file = null;
 		try {
 			file = setFileContent("<?php $a = 1;  function test(){ echo $GLOBALS['a'];} ?>");

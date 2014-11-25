@@ -10,46 +10,54 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.text;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
+import org.junit.Test;
 
-public class PHPTextSequenceUtilitiesTests extends TestCase {
+public class PHPTextSequenceUtilitiesTests {
 
-	public void testEmptyArgumentList() {
+	@Test
+	public void emptyArgumentList() {
 		String[] argNames = PHPTextSequenceUtilities.getArgNames(null, "()");
 		assertEquals(0, argNames.length);
 	}
 
-	public void testSingleArgument() {
+	@Test
+	public void singleArgument() {
 		String[] argNames = PHPTextSequenceUtilities.getArgNames(null,
 				"('MyArg')");
 		assertEquals(1, argNames.length);
 		assertEquals("'MyArg'", argNames[0]);
 	}
 
-	public void testSingleArgumentDoubleQuote() {
+	@Test
+	public void singleArgumentDoubleQuote() {
 		String[] argNames = PHPTextSequenceUtilities.getArgNames(null,
 				"(\"MyArg\")");
 		assertEquals(1, argNames.length);
 		assertEquals("\"MyArg\"", argNames[0]);
 	}
 
-	public void testSingleArgumentIgnore() {
+	@Test
+	public void singleArgumentIgnore() {
 		String[] argNames = PHPTextSequenceUtilities.getArgNames(null,
 				"($anyElement)");
 		assertEquals(1, argNames.length);
 		assertNull(argNames[0]);
 	}
 
-	public void testSingleArgumentIgnoreParenthesis() {
+	@Test
+	public void singleArgumentIgnoreParenthesis() {
 		String[] argNames = PHPTextSequenceUtilities.getArgNames(null,
 				"'MyArg'");
 		assertEquals(1, argNames.length);
 		assertEquals("'MyArg'", argNames[0]);
 	}
 
-	public void testMultiArgumentIgnore() {
+	@Test
+	public void multiArgumentIgnore() {
 		String[] argNames = PHPTextSequenceUtilities.getArgNames(null,
 				"('MyString', $anyElement)");
 		assertEquals(2, argNames.length);
@@ -57,7 +65,8 @@ public class PHPTextSequenceUtilitiesTests extends TestCase {
 		assertNull(argNames[1]);
 	}
 
-	public void testMultiArgumentIgnore2() {
+	@Test
+	public void multiArgumentIgnore2() {
 		String[] argNames = PHPTextSequenceUtilities.getArgNames(null,
 				"($anyElement, 'MyString')");
 		assertEquals(2, argNames.length);
@@ -65,7 +74,8 @@ public class PHPTextSequenceUtilitiesTests extends TestCase {
 		assertNull(argNames[0]);
 	}
 
-	public void testIgnoreInternalCall() {
+	@Test
+	public void ignoreInternalCall() {
 		String[] argNames = PHPTextSequenceUtilities.getArgNames(null,
 				"(call('something'), 'MyString')");
 		assertEquals(2, argNames.length);
@@ -73,7 +83,8 @@ public class PHPTextSequenceUtilitiesTests extends TestCase {
 		assertNull(argNames[0]);
 	}
 
-	public void testNestedCall() {
+	@Test
+	public void nestedCall() {
 		String[] argNames = PHPTextSequenceUtilities.getArgNames(null,
 				"(call('something', $this->callMe(\"Another\")), 'MyString')");
 		assertEquals(2, argNames.length);

@@ -18,4 +18,5 @@ Require-Bundle: org.junit,
  org.eclipse.test.performance
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.php.core.tests.performance

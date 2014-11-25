@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009,2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,13 +8,14 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła - convert to JUnit4
  *******************************************************************************/
 package org.eclipse.php.core.tests.dom_ast.rewrite;
 
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -44,10 +45,12 @@ import org.eclipse.php.internal.core.ast.nodes.SwitchStatement;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.text.edits.TextEdit;
+import org.junit.Test;
 
-public class NodeDeletionTests extends TestCase {
+public class NodeDeletionTests {
 
-	public void testVariable() throws Exception {
+	@Test
+	public void variable() throws Exception {
 		String str = "<?php $a; $A; ?>";
 		String expected = "<?php ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -61,7 +64,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testFunctionInvocationWithParamsFirst() throws Exception {
+	@Test
+	public void functionInvocationWithParamsFirst() throws Exception {
 		String str = "<?php $foo($a, 's<>&', 12, true, __CLASS__); ?>";
 		String expected = "<?php $foo('s<>&', 12, true, __CLASS__); ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -75,7 +79,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testFunctionInvocationWithParamsLast() throws Exception {
+	@Test
+	public void functionInvocationWithParamsLast() throws Exception {
 		String str = "<?php $foo($a, 's<>&', 12, true, __CLASS__); ?>";
 		String expected = "<?php $foo($a, 's<>&', 12, true); ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -89,7 +94,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testFunctionInvocationWithParamsMiddle() throws Exception {
+	@Test
+	public void functionInvocationWithParamsMiddle() throws Exception {
 		String str = "<?php $foo($a, 's<>&', 12, true, __CLASS__); ?>";
 		String expected = "<?php $foo($a, 's<>&', true, __CLASS__); ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -103,7 +109,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testClassRemove() throws Exception {
+	@Test
+	public void classRemove() throws Exception {
 		String str = "<?php $a = 5; class A { } ?>";
 		String expected = "<?php $a = 5; ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -114,7 +121,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testStatementBeforeClass() throws Exception {
+	@Test
+	public void statementBeforeClass() throws Exception {
 		String str = "<?php $a = 5; class A { } ?>";
 		String expected = "<?php class A { } ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -125,7 +133,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testArrayFirst() throws Exception {
+	@Test
+	public void arrayFirst() throws Exception {
 		String str = "<?php array (0, 1, 2, 3) ?>";
 		String expected = "<?php array (1, 2, 3) ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -140,7 +149,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testArrayLast() throws Exception {
+	@Test
+	public void arrayLast() throws Exception {
 		String str = "<?php array (0, 1, 2, 3) ?>";
 		String expected = "<?php array (0, 1, 2) ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -155,7 +165,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testArrayMiddle() throws Exception {
+	@Test
+	public void arrayMiddle() throws Exception {
 		String str = "<?php array (0, 1, 2, 3) ?>";
 		String expected = "<?php array (0, 1, 3) ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -170,7 +181,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteArrayKeyValue() throws Exception {
+	@Test
+	public void deleteArrayKeyValue() throws Exception {
 		String str = "<?php array('Dodo'=>'Golo','Dafna'=>'Dodidu');?>";
 		String expected = "<?php array('Dafna'=>'Dodidu');?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -185,7 +197,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testListFirst() throws Exception {
+	@Test
+	public void listFirst() throws Exception {
 		String str = "<?php list($a, $b, $c, $d) = array () ?>";
 		String expected = "<?php list($b, $c, $d) = array () ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -199,7 +212,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testListMiddle() throws Exception {
+	@Test
+	public void listMiddle() throws Exception {
 		String str = "<?php list($a, $b, $c, $d)  = array ()  ?>";
 		String expected = "<?php list($a, $b, $d)  = array ()  ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -213,7 +227,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testListLast() throws Exception {
+	@Test
+	public void listLast() throws Exception {
 		String str = "<?php list ($a, $b, $c, $d)  = array ()  ?>";
 		String expected = "<?php list ($a, $b, $c)  = array ()  ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -227,7 +242,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteBreak() throws Exception {
+	@Test
+	public void deleteBreak() throws Exception {
 		String str = "<?php break $a;?>";
 		String expected = "<?php break;?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -239,7 +255,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteContinue() throws Exception {
+	@Test
+	public void deleteContinue() throws Exception {
 		String str = "<?php continue $a;?>";
 		String expected = "<?php continue;?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -251,7 +268,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteReturn() throws Exception {
+	@Test
+	public void deleteReturn() throws Exception {
 		String str = "<?php return $a;?>";
 		String expected = "<?php return;?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -263,7 +281,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteEchoFirst() throws Exception {
+	@Test
+	public void deleteEchoFirst() throws Exception {
 		String str = "<?php echo $a, $b , $c; ?>";
 		String expected = "<?php echo $b , $c; ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -275,7 +294,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteEchoLast() throws Exception {
+	@Test
+	public void deleteEchoLast() throws Exception {
 		String str = "<?php echo $a, $b , $c; ?>";
 		String expected = "<?php echo $a, $b; ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -287,7 +307,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteEchoMiddle() throws Exception {
+	@Test
+	public void deleteEchoMiddle() throws Exception {
 		String str = "<?php echo $a, $b , $c; ?>";
 		String expected = "<?php echo $a, $c; ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -299,7 +320,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteSwitch() throws Exception {
+	@Test
+	public void deleteSwitch() throws Exception {
 		String str = "<?php switch ($i) { case 0:    echo 'i equals 0';    break; case 1:     echo 'i equals 1';     break; default:    echo 'i not equals 0,1';  }  ?>";
 		String expected = "<?php switch ($i) { case 0:    echo 'i equals 0';    break; default:    echo 'i not equals 0,1';  }  ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -311,7 +333,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteBlockFirst() throws Exception {
+	@Test
+	public void deleteBlockFirst() throws Exception {
 		String str = "<?php if ($a) { $a = 5; $b = 4; $c = 4; }  ?>";
 		String expected = "<?php if ($a) { $b = 4; $c = 4; }  ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -324,7 +347,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteBlockMiddle() throws Exception {
+	@Test
+	public void deleteBlockMiddle() throws Exception {
 		String str = "<?php if ($a) { $a = 5; $b = 4; }  ?>";
 		String expected = "<?php if ($a) { $a = 5; }  ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -337,7 +361,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteBlockLast() throws Exception {
+	@Test
+	public void deleteBlockLast() throws Exception {
 		String str = "<?php if ($a) { $a = 5; $b = 4; $c = 4;}  ?>";
 		String expected = "<?php if ($a) { $a = 5; $b = 4;}  ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -350,7 +375,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteForComponent1() throws Exception {
+	@Test
+	public void deleteForComponent1() throws Exception {
 		String str = "<?php for ($i = 1; $i <= 10; $i++) {  echo $i; } ?>";
 		String expected = "<?php for (;;) {  echo $i; } ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -364,7 +390,7 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	// public void testDeleteHtml() throws Exception {
+	// @Test public void deleteHtml() throws Exception {
 	// String str = "<html> <?php ?></html> <?php ?> </html> ";
 	// String expected = "<?php ?><?php ?>";
 	// parseAndCompare(str, expected, new ICodeManiplator() {
@@ -379,7 +405,8 @@ public class NodeDeletionTests extends TestCase {
 	// });
 	// }
 
-	public void testDeleteFunctionFormalFirst() throws Exception {
+	@Test
+	public void deleteFunctionFormalFirst() throws Exception {
 		String str = "<?php function foo($a, $b, $c = 5) { $a= 5; $b = 6; $c = 7; } ?>";
 		String expected = "<?php function foo($b, $c = 5) { $a= 5; $b = 6; $c = 7; } ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -391,7 +418,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteFunctionFormalLast() throws Exception {
+	@Test
+	public void deleteFunctionFormalLast() throws Exception {
 		String str = "<?php function foo($a, $b, $c = 5) { $a= 5; $b = 6; $c = 7; } ?>";
 		String expected = "<?php function foo($a, $b) { $a= 5; $b = 6; $c = 7; } ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -403,7 +431,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteFunctionFormalMiddle() throws Exception {
+	@Test
+	public void deleteFunctionFormalMiddle() throws Exception {
 		String str = "<?php function foo($a, $b, $c = 5) { $a= 5; $b = 6; $c = 7; } ?>";
 		String expected = "<?php function foo($a, $c = 5) { $a= 5; $b = 6; $c = 7; } ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -415,7 +444,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteFunctionBodyFirst() throws Exception {
+	@Test
+	public void deleteFunctionBodyFirst() throws Exception {
 		String str = "<?php function foo() { $a= 5; $b = 6; $c = 7; } ?>";
 		String expected = "<?php function foo() { $b = 6; $c = 7; } ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -427,7 +457,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteFunctionBodyLast() throws Exception {
+	@Test
+	public void deleteFunctionBodyLast() throws Exception {
 		String str = "<?php function foo() { $a= 5; $b = 6; $c = 7; } ?>";
 		String expected = "<?php function foo() { $a= 5; $b = 6; } ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -439,7 +470,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteFunctionBodyMiddle() throws Exception {
+	@Test
+	public void deleteFunctionBodyMiddle() throws Exception {
 		String str = "<?php function foo() { $a= 5; $b = 6; $c = 7; } ?>";
 		String expected = "<?php function foo() { $a= 5; $c = 7; } ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
@@ -451,7 +483,8 @@ public class NodeDeletionTests extends TestCase {
 		});
 	}
 
-	public void testDeleteClassElements() throws Exception {
+	@Test
+	public void deleteClassElements() throws Exception {
 		String str = "<?php final class MyClass extends SuperClass implements Interface1, Interface2 { const MY_CONSTANT = 3; public static final $myVar = 5, $yourVar; var $anotherOne; private function myFunction(MyClass $a, $b = 6) { }  } ?>";
 		String expected = "<?php final class MyClass extends SuperClass {  } ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
