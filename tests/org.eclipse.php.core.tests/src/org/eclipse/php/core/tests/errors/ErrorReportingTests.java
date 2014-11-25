@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,24 +8,16 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła - convert to JUnit4
  *******************************************************************************/
 package org.eclipse.php.core.tests.errors;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
+@RunWith(Suite.class)
+@Suite.SuiteClasses({ PHP5ErrorReportingTests.class,
+		PHP53ErrorReportingTests.class, PHP54ErrorReportingTests.class,
+		PHP55ErrorReportingTests.class, PHP56ErrorReportingTests.class })
 public class ErrorReportingTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite(ErrorReportingTests.class.getName());
-		// $JUnit-BEGIN$
-		suite.addTest(PHP5ErrorReportingTests.suite());
-		suite.addTest(PHP53ErrorReportingTests.suite());
-		suite.addTest(PHP54ErrorReportingTests.suite());
-		suite.addTest(PHP55ErrorReportingTests.suite());
-		suite.addTest(PHP56ErrorReportingTests.suite());
-		// $JUnit-END$
-		return suite;
-	}
-
 }

@@ -1,25 +1,23 @@
 package org.eclipse.php.core.tests.phar;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import junit.extensions.TestSetup;
-import junit.framework.Assert;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.phar.PharConstants;
 import org.eclipse.php.internal.core.phar.PharEntry;
@@ -28,6 +26,11 @@ import org.eclipse.php.internal.core.phar.PharFileExporter;
 import org.eclipse.php.internal.core.phar.PharPackage;
 import org.eclipse.php.internal.core.phar.Stub;
 import org.eclipse.php.internal.core.phar.digest.Digest;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 /**
  * Phar Unit tests Each folder under PHAR_PHARS_FOLDER is scanned and produces
@@ -36,90 +39,46 @@ import org.eclipse.php.internal.core.phar.digest.Digest;
  * @author zaho
  */
 
-public class PharFileTest extends AbstractPDTTTest {
+@RunWith(Parameterized.class)
+public class PharFileTest {
 
 	private static final String PHAR_PHARS_FOLDER = "/workspace/phar";
 	protected static final String[] TESTS = new String[] { PHAR_PHARS_FOLDER };
 
-	public PharFileTest(String description) {
-		super(description);
-	}
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite("PHAR Tests");
-
+	@Parameters(name = "{1} - {2} - {3} - {4}")
+	public static Iterable<Object[]> data() throws Exception {
+		List<Object[]> list = new LinkedList<Object[]>();
 		for (String testsDirectory : TESTS) {
 			File folder = getResourceFolder(testsDirectory).toFile();
-			try {
-				for (final File pharFolder : folder.listFiles()) {
-					if (pharFolder.getName().equalsIgnoreCase("CVS"))
-						continue;
-					if (pharFolder.isDirectory()) {
-						IPath stubLocation = new Path(
-								pharFolder.getAbsolutePath())
-								.append(PharConstants.STUB_PATH);
-						PharPackage pharPackage = new PharPackage();
-
-						if (stubLocation.toFile().exists()) {
-							pharPackage.setStubGenerated(false);
-							pharPackage.setStubLocation(stubLocation);
-						}
-						pharPackage.setExportType(PharConstants.PHAR);
-						pharPackage
-								.setCompressType(PharConstants.NONE_COMPRESSED);
-
-						pharPackage.setSignature(Digest.SHA1_TYPE);
-						suite.addTest(new PharTest(pharFolder.getName(),
-								pharFolder.getAbsolutePath(), pharPackage));
-
-						pharPackage
-								.setCompressType(PharConstants.BZ2_COMPRESSED);
-
-						pharPackage.setSignature(Digest.SHA1_TYPE);
-						suite.addTest(new PharTest(pharFolder.getName(),
-								pharFolder.getAbsolutePath(), pharPackage));
-
-						pharPackage
-								.setCompressType(PharConstants.GZ_COMPRESSED);
-
-						pharPackage.setSignature(Digest.MD5_TYPE);
-						suite.addTest(new PharTest(pharFolder.getName(),
-								pharFolder.getAbsolutePath(), pharPackage));
-					}
-
+			for (final File pharFolder : folder.listFiles()) {
+				if (pharFolder.getName().equalsIgnoreCase("CVS")) {
+					continue;
 				}
-			} catch (final Exception e) {
-				suite.addTest(new TestCase(folder.getAbsolutePath()) { // dummy
-					// test
-					// indicating
-					// PDTT
-					// file
-					// parsing
-					// failure
-					protected void runTest() throws Throwable {
-						throw e;
+				if (pharFolder.isDirectory()) {
+					IPath stubLocation = new Path(pharFolder.getAbsolutePath())
+							.append(PharConstants.STUB_PATH);
+					PharPackage pharPackage = new PharPackage();
+
+					if (stubLocation.toFile().exists()) {
+						pharPackage.setStubGenerated(false);
+						pharPackage.setStubLocation(stubLocation);
 					}
-				});
+					pharPackage.setExportType(PharConstants.PHAR);
+					list.add(new Object[] { pharFolder.getName(),
+							pharFolder.getAbsolutePath(), pharPackage,
+							PharConstants.NONE_COMPRESSED, Digest.SHA1_TYPE });
+
+					list.add(new Object[] { pharFolder.getName(),
+							pharFolder.getAbsolutePath(), pharPackage,
+							PharConstants.BZ2_COMPRESSED, Digest.SHA1_TYPE });
+
+					list.add(new Object[] { pharFolder.getName(),
+							pharFolder.getAbsolutePath(), pharPackage,
+							PharConstants.GZ_COMPRESSED, Digest.MD5_TYPE });
+				}
 			}
 		}
-
-		// Create a setup wrapper
-		TestSetup setup = new TestSetup(suite) {
-			protected void setUp() throws Exception {
-				setUpSuite();
-			}
-
-			protected void tearDown() throws Exception {
-				tearDownSuite();
-			}
-		};
-		return setup;
-	}
-
-	public static void setUpSuite() throws Exception {
-	}
-
-	public static void tearDownSuite() throws Exception {
+		return list;
 	}
 
 	private static IPath getResourceFolder(String fileName) {
@@ -144,7 +103,7 @@ public class PharFileTest extends AbstractPDTTTest {
 					|| PharConstants.STUB_PATH.endsWith(filename))
 				continue;
 			File file = new File(pharFileFolder, filename);
-			Assert.assertTrue(inputStreamEquals(new BufferedInputStream(
+			assertTrue(inputStreamEquals(new BufferedInputStream(
 					new FileInputStream(file)), pharFile.getInputStream(entry
 					.getValue())));
 		}
@@ -206,87 +165,88 @@ public class PharFileTest extends AbstractPDTTTest {
 		return baos.toByteArray();
 	}
 
-	private static final class PharTest extends PharFileTest {
+	private final String pharFileFolder;
+	private final IPath path;
+	private final int compressionType;
+	private final String signature;
+	private PharPackage pharPackage;
 
-		private final String pharFileFolder;
-		private final IPath path;
-		private PharPackage pharPackage;
+	public PharFileTest(String description, String resourceFolder,
+			PharPackage pharPackage, int compressionType, String signature) {
+		pharFileFolder = resourceFolder;
+		path = new Path(pharFileFolder);
+		this.pharPackage = pharPackage;
+		this.compressionType = compressionType;
+		this.signature = signature;
+	}
 
-		private PharTest(String description, String resourceFolder,
-				PharPackage pharPackage) {
-			super(description);
-			pharFileFolder = resourceFolder;
-			path = new Path(pharFileFolder);
-			this.pharPackage = pharPackage;
+	@Before
+	public void before() {
+		pharPackage.setCompressType(this.compressionType);
+		pharPackage.setSignature(this.signature);
+	}
+
+	@Test
+	public void runTest() throws Throwable {
+		File tempPhar = exportTempPhar(pharFileFolder);
+		compareContent(pharFileFolder, new PharFile(tempPhar));
+		tempPhar.delete();
+	}
+
+	private File exportTempPhar(String pharFileFolder) throws IOException,
+			CoreException {
+		File result = File.createTempFile("temp", ".phar");
+		// result.deleteOnExit();
+
+		pharPackage.setPharLocation(new Path(result.getAbsolutePath()));
+		PharFileExporter exporter = new PharFileExporter(pharPackage);
+		Stub stub = new Stub(pharPackage);
+		exporter.writeStub(stub);
+		File file = new File(pharFileFolder);
+
+		File[] children = file.listFiles();
+		for (int i = 0; i < children.length; i++) {
+			export(exporter, children[i]);
 		}
+		exporter.writeSignature();
+		exporter.finished();
+		return result;
+	}
 
-		protected void setUp() throws Exception {
+	private void export(PharFileExporter exporter, File file)
+			throws IOException, CoreException {
+		if (file.isFile()) {
+			exportFile(exporter, file);
+		} else {
+			exportFolder(exporter, file);
 		}
+	}
 
-		protected void tearDown() throws Exception {
+	private void exportFolder(PharFileExporter exporter, File file)
+			throws IOException, CoreException {
+		if (file.getName().equalsIgnoreCase("CVS"))
+			return;
+		File[] children = file.listFiles();
+		for (int i = 0; i < children.length; i++) {
+			export(exporter, children[i]);
 		}
+	}
 
-		protected void runTest() throws Throwable {
-			File tempPhar = exportTempPhar(pharFileFolder);
-			compareContent(pharFileFolder, new PharFile(tempPhar));
-			tempPhar.delete();
+	private void exportFile(PharFileExporter exporter, File file)
+			throws IOException, CoreException {
+		String destinationPath = getDestinationPath(file);
+		if (destinationPath.equals(PharConstants.STUB_PATH)
+				|| destinationPath.equals(PharConstants.SIGNATURE_PATH)) {
+			return;
 		}
+		exporter.write(file, destinationPath);
+	}
 
-		private File exportTempPhar(String pharFileFolder) throws IOException,
-				CoreException {
-			File result = File.createTempFile("temp", ".phar");
-			// result.deleteOnExit();
-
-			pharPackage.setPharLocation(new Path(result.getAbsolutePath()));
-			PharFileExporter exporter = new PharFileExporter(pharPackage);
-			Stub stub = new Stub(pharPackage);
-			exporter.writeStub(stub);
-			File file = new File(pharFileFolder);
-
-			File[] children = file.listFiles();
-			for (int i = 0; i < children.length; i++) {
-				export(exporter, children[i]);
-			}
-			exporter.writeSignature();
-			exporter.finished();
-			return result;
-		}
-
-		private void export(PharFileExporter exporter, File file)
-				throws IOException, CoreException {
-			if (file.isFile()) {
-				exportFile(exporter, file);
-			} else {
-				exportFolder(exporter, file);
-			}
-		}
-
-		private void exportFolder(PharFileExporter exporter, File file)
-				throws IOException, CoreException {
-			if (file.getName().equalsIgnoreCase("CVS"))
-				return;
-			File[] children = file.listFiles();
-			for (int i = 0; i < children.length; i++) {
-				export(exporter, children[i]);
-			}
-		}
-
-		private void exportFile(PharFileExporter exporter, File file)
-				throws IOException, CoreException {
-			String destinationPath = getDestinationPath(file);
-			if (destinationPath.equals(PharConstants.STUB_PATH)
-					|| destinationPath.equals(PharConstants.SIGNATURE_PATH)) {
-				return;
-			}
-			exporter.write(file, destinationPath);
-		}
-
-		private String getDestinationPath(File file) {
-			IPath filePath = new Path(file.getAbsolutePath());
-			filePath = filePath.removeFirstSegments(path.segmentCount());
-			filePath = filePath.setDevice(null);
-			return filePath.toString();
-		}
+	private String getDestinationPath(File file) {
+		IPath filePath = new Path(file.getAbsolutePath());
+		filePath = filePath.removeFirstSegments(path.segmentCount());
+		filePath = filePath.setDevice(null);
+		return filePath.toString();
 	}
 
 }

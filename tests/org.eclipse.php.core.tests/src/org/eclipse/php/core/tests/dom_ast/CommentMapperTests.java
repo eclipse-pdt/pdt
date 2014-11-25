@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,14 +8,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła - convert to JUnit4
  *******************************************************************************/
 package org.eclipse.php.core.tests.dom_ast;
 
 import java.io.Reader;
 import java.io.StringReader;
-
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -29,63 +27,65 @@ import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.nodes.Statement;
 import org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.junit.Test;
 
 /**
  * Tests for {@link DefaultCommentMapper}
  * 
  * @author Roy, 2007
  */
-public class CommentMapperTests extends TestCase {
+public class CommentMapperTests {
 
-	public CommentMapperTests(String name) {
-		super(name);
-	}
-
-	public static TestSuite suite() {
-		return new TestSuite(CommentMapperTests.class);
-	}
-
-	public void testVariable() throws Exception {
+	@Test
+	public void variable() throws Exception {
 		String str = "<?php \r\n// comment of $a\r\n$a; ?>";
 		parseAndCompare(str);
 	}
 
-	public void testVariableTwoComments() throws Exception {
+	@Test
+	public void variableTwoComments() throws Exception {
 		String str = "<?php \r\n// comment of $a\r\n// comment of $a\r\n$a; ?>";
 		parseAndCompare(str);
 	}
 
-	public void testVariableMultiple() throws Exception {
+	@Test
+	public void variableMultiple() throws Exception {
 		String str = "<?php \r\n/** \r\ncomment of $a */\r\n$a; ?>";
 		parseAndCompare(str);
 	}
 
-	public void testFunction() throws Exception {
+	@Test
+	public void function() throws Exception {
 		String str = "<?php \r\n// comment of foo()\r\nfunction foo() {\r\n   }; ?>";
 		parseAndCompare(str);
 	}
 
+	@Test
 	public void testClass() throws Exception {
 		String str = "<?php \r\n// comment of A\r\nclass A {\r\n}; ?>";
 		parseAndCompare(str);
 	}
 
-	public void testMethod() throws Exception {
+	@Test
+	public void method() throws Exception {
 		String str = "<?php \r\n class A {\r\n // comment of method foo()\r\n public function foo() {  }  \r\n} ?>";
 		parseAndCompareInner(str, 0);
 	}
 
-	public void testField() throws Exception {
+	@Test
+	public void field() throws Exception {
 		String str = "<?php \r\n class A {\r\n // comment of field $a \r\n public $a = 5;\r\n } ?>";
 		parseAndCompareInner(str, 0);
 	}
 
-	public void testMethodSecond() throws Exception {
+	@Test
+	public void methodSecond() throws Exception {
 		String str = "<?php \r\n class A {\r\n // comment of method foo()\r\n public function foo() {  }  \r\n \r\n // comment of method bar()\r\n public function bar() {  } \r\n } ?>";
 		parseAndCompareInner(str, 1);
 	}
 
-	public void testFieldSecond() throws Exception {
+	@Test
+	public void fieldSecond() throws Exception {
 		String str = "<?php \r\n class A {\r\n // comment of field $a \r\n public $a = 5;\r\n \r\n/** \r\n * comment of field $a */ \r\n public $b = 5;\r\n } ?>";
 		parseAndCompareInner(str, 1);
 	}

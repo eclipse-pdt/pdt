@@ -11,11 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.dom_ast.binding;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -55,17 +57,17 @@ import org.eclipse.php.internal.core.ast.nodes.StaticFieldAccess;
 import org.eclipse.php.internal.core.ast.nodes.StaticMethodInvocation;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-public class BindingTests extends TestCase {
+public class BindingTests {
 
 	protected IProject project;
 	private IFile testFile;
 
-	public BindingTests(String name) {
-		super(name);
-	}
-
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		if (project == null) {
 			project = ResourcesPlugin.getWorkspace().getRoot()
 					.getProject("BindingTests");
@@ -159,90 +161,101 @@ public class BindingTests extends TestCase {
 		return getTypeBinding(content, 0);
 	}
 
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		// testFile.delete(true, new NullProgressMonitor());
 		project.delete(true, null);
 	}
 
-	public void testBasicExpression() throws Exception {
+	@Test
+	public void basicExpression() throws Exception {
 		// create a file and get the program's root
 		String content = "<? class A { function foo() { $a = 4; $b =  /**/$a; } } ?>";
 		ITypeBinding type = getTypeBinding(content);
 
 		// check that it is a number
-		Assert.assertEquals(type.getName(), "number");
+		assertEquals(type.getName(), "number");
 	}
 
-	public void testBasicType() throws Exception {
+	@Test
+	public void basicType() throws Exception {
 		// create a file and get the program's root
 		String content = "<? class A {  } ; class B extends /**/A { } ?>";
 		ITypeBinding type = getTypeBinding(content);
 
 		// check that it is a number
-		Assert.assertEquals(type.getName(), "A");
+		assertEquals("A", type.getName());
 	}
 
-	public void testIsArray() throws Exception {
+	@Test
+	public void isArray() throws Exception {
 		// create a file and get the program's root
 		String content = "<? interface B {} class A implements B { function foo() { $a = array(1, 2, 3); $b = /**/$a; } } ?>";
 		ITypeBinding type = getTypeBinding(content);
-		Assert.assertTrue(type.isArray());
+		assertTrue(type.isArray());
 	}
 
-	public void testIsClass() throws Exception {
+	@Test
+	public void isClass() throws Exception {
 		// create a file and get the program's root
 		String content = "<? interface B {} class A implements B { function foo() { $a = new A(); $b = /**/$a; } } ?>";
 		ITypeBinding type = getTypeBinding(content);
-		Assert.assertTrue(type.isClass());
+		assertTrue(type.isClass());
 	}
 
-	public void testIsInterface() throws Exception {
+	@Test
+	public void isInterface() throws Exception {
 		// create a file and get the program's root
 		String content = "<? interface B {} class A implements /**/B { function foo() { $a = new A(); $b = $a; } } ?>";
 		ITypeBinding type = getTypeBinding(content);
-		Assert.assertTrue(type.isInterface());
+		assertTrue(type.isInterface());
 	}
 
-	public void testIsNullType() throws Exception {
+	@Test
+	public void isNullType() throws Exception {
 		// create a file and get the program's root
 		String content = "<? interface B {} class A implements B { function foo() { $a = null; $b = /**/$a; } } ?>";
 		ITypeBinding type = getTypeBinding(content);
-		Assert.assertTrue(type.isNullType());
+		assertTrue(type.isNullType());
 	}
 
-	public void testIsPrimitive() throws Exception {
+	@Test
+	public void isPrimitive() throws Exception {
 		// create a file and get the program's root
 		String content = "<? interface B {} class A implements B { function foo() { $a = true; $b = /**/$a; } } ?>";
 		ITypeBinding type = getTypeBinding(content);
-		Assert.assertTrue(type.isPrimitive());
+		assertTrue(type.isPrimitive());
 	}
 
-	public void testIsSubTypeCompatibleTrue() throws Exception {
+	@Test
+	public void isSubTypeCompatibleTrue() throws Exception {
 		// create a file and get the program's root
 		String content = "<? interface B {} class A implements /**/B { function foo() { $a = true; $b = $a; } } class C extends A{} /**/$c = new C()?>";
 		int indexOf = locateElement(content, 0);
 		ITypeBinding type = getTypeBinding(content);
 		ITypeBinding otherType = getTypeBinding(content, indexOf + 4);
-		Assert.assertTrue("Should be sub-type compatible",
+		assertTrue("Should be sub-type compatible", //$NON-NLS-1$
 				otherType.isSubTypeCompatible(type));
 	}
 
-	public void testIsSubTypeCompatibleFalse() throws Exception {
+	@Test
+	public void isSubTypeCompatibleFalse() throws Exception {
 		// create a file and get the program's root
 		String content = "<? interface B {} class A implements /**/B { function foo() { $a = true; $b = $a; } } class C extends A{} /**/$c = new C()?>";
 		int indexOf = locateElement(content, 0);
 		ITypeBinding type = getTypeBinding(content);
 		ITypeBinding otherType = getTypeBinding(content, indexOf + 4);
-		Assert.assertFalse("Should NOT be sub-type compatible",
+		assertFalse("Should NOT be sub-type compatible",
 				type.isSubTypeCompatible(otherType));
 	}
 
-	public void testBinaryName() throws Exception {
+	@Test
+	public void binaryName() throws Exception {
 		// create a file and get the program's root
 		String content = "<? interface B {} class A implements B { function foo() { $a = new A(); $b = /**/$a; } } ?>";
 		ITypeBinding type = getTypeBinding(content);
 		String binaryName = type.getBinaryName();
-		Assert.assertNotNull("Binary name was null", binaryName);
+		assertNotNull("Binary name was null", binaryName);
 	}
 
 	// public void testArraysGetComponentType() throws Exception {
@@ -252,12 +265,13 @@ public class BindingTests extends TestCase {
 	// ITypeBinding type = getTypeBinding(content);
 	// // TODO - Right now, this test will always fail until we implement this
 	// // functionality.
-	// Assert.assertTrue(
+	// assertTrue(
 	// "getComponentType() should return a non-null value for arrays",
 	// type.isArray() && type.getComponentType() != null);
 	// }
 
-	public void testGetDeclaredFields() throws Exception {
+	@Test
+	public void getDeclaredFields() throws Exception {
 		// create a file and get the program's root
 		String content = "<? interface B {} class A implements B { public $value; private $pValue; function foo() { $a = new A(); $b = /**/$a; } } ?>";
 		ITypeBinding type = getTypeBinding(content);
@@ -267,18 +281,20 @@ public class BindingTests extends TestCase {
 		// TODO - complete the implementation of VariableBinding
 	}
 
-	public void testGetDeclaredMethods() throws Exception {
+	@Test
+	public void getDeclaredMethods() throws Exception {
 		// create a file and get the program's root
 		String content = "<? interface B {} class A implements B { public $value; private $pValue; function foo() { $a = new A(); $b = /**/$a; } } ?>";
 		ITypeBinding type = getTypeBinding(content);
 		IMethodBinding[] declaredMethods = type.getDeclaredMethods();
-		Assert.assertTrue("The declaring type name is wrong",
-				declaredMethods[0].getDeclaringClass().getName().equals("A"));
+		assertTrue("The declaring type name is wrong", declaredMethods[0]
+				.getDeclaringClass().getName().equals("A"));
 		// declaredFields[0].getDeclaringFunction();
 		// TODO - complete the implementation of MethodBinding
 	}
 
-	public void testOverrides() throws Exception {
+	@Test
+	public void overrides() throws Exception {
 		// create a file and get the program's root
 		String content = "<? interface B { function foo(); } class A implements /**/B { public $value; private $pValue; function foo() { $a = new A(); $b = /**/$a; } function boo() {} function foo($g) {} } ?>";
 		int index = locateElement(content);
@@ -287,11 +303,11 @@ public class BindingTests extends TestCase {
 
 		type = getTypeBinding(content, index + 4);
 		IMethodBinding[] classAMethods = type.getDeclaredMethods();
-		Assert.assertTrue("Should override",
+		assertTrue("Should override",
 				classAMethods[0].overrides(interfaceBMethods[0]));
-		Assert.assertFalse("Should NOT override",
+		assertFalse("Should NOT override",
 				classAMethods[1].overrides(interfaceBMethods[0]));
-		Assert.assertTrue("Should override",
+		assertTrue("Should override",
 				classAMethods[2].overrides(interfaceBMethods[0]));
 	}
 
@@ -305,10 +321,11 @@ public class BindingTests extends TestCase {
 	// Expression expr = (Expression) program.getElementAt(indexOf);
 	// Object resolveConstantExpressionValue = expr
 	// .resolveConstantExpressionValue();
-	// Assert.assertNotNull(resolveConstantExpressionValue);
+	// assertNotNull(resolveConstantExpressionValue);
 	// }
 
-	public void testConstructorBinding() throws Exception {
+	@Test
+	public void constructorBinding() throws Exception {
 		String str = "<?php $a = new MyClass(); class MyClass { public function MyClass() {} } ?>";
 		Program program = createAndParse(str);
 
@@ -321,13 +338,14 @@ public class BindingTests extends TestCase {
 		IMethodBinding constructorBinding = instanceCreation
 				.resolveConstructorBinding();
 
-		Assert.assertNotNull(constructorBinding);
-		Assert.assertTrue(constructorBinding.isConstructor() == true);
-		Assert.assertTrue(constructorBinding.getName().equals("MyClass"));
-		Assert.assertTrue(constructorBinding.getKind() == IBinding.METHOD);
+		assertNotNull(constructorBinding);
+		assertTrue(constructorBinding.isConstructor() == true);
+		assertTrue(constructorBinding.getName().equals("MyClass"));
+		assertTrue(constructorBinding.getKind() == IBinding.METHOD);
 	}
 
-	public void testExpressionBinding() throws Exception {
+	@Test
+	public void expressionBinding() throws Exception {
 		String str = "<?php $a = 5+5 ?>";
 		Program program = createAndParse(str);
 
@@ -339,11 +357,12 @@ public class BindingTests extends TestCase {
 
 		ITypeBinding expressionBinding = infixExpression.resolveTypeBinding();
 
-		Assert.assertTrue(expressionBinding.getKind() == IBinding.TYPE);
+		assertTrue(expressionBinding.getKind() == IBinding.TYPE);
 		// TODO
 	}
 
-	public void testFieldAccessBinding() throws Exception {
+	@Test
+	public void fieldAccessBinding() throws Exception {
 		String str = "<?php class MyClass { var $anotherOne; }; $a = new MyClass(); $b = $a->anotherOne ?>";
 		Program program = createAndParse(str);
 
@@ -354,12 +373,13 @@ public class BindingTests extends TestCase {
 
 		IVariableBinding variableBinding = fieldAccess.resolveFieldBinding();
 
-		Assert.assertTrue(variableBinding.isField() == true);
-		Assert.assertTrue(variableBinding.getName().equals("$anotherOne"));
-		Assert.assertTrue(variableBinding.getKind() == IBinding.VARIABLE);
+		assertTrue(variableBinding.isField() == true);
+		assertTrue(variableBinding.getName().equals("$anotherOne"));
+		assertTrue(variableBinding.getKind() == IBinding.VARIABLE);
 	}
 
-	public void testThisFieldAccessBinding() throws Exception {
+	@Test
+	public void thisFieldAccessBinding() throws Exception {
 		String str = "<?php class MyClass { public $myvar = \"test\"; public function mymethod(){ return $this->myvar; }} $a = new MyClass(); $a->mymethod();?>";
 		Program program = createAndParse(str);
 
@@ -369,17 +389,17 @@ public class BindingTests extends TestCase {
 				.getExpression();
 		IMethodBinding methodBinding = methodInvocation.resolveMethodBinding();
 
-		Assert.assertNotNull(methodBinding);
-		Assert.assertTrue(methodBinding.getName().equals("mymethod"));
-		Assert.assertNotNull(methodBinding.getDeclaringClass());
-		Assert.assertTrue(methodBinding.getDeclaringClass().getName()
+		assertNotNull(methodBinding);
+		assertTrue(methodBinding.getName().equals("mymethod"));
+		assertNotNull(methodBinding.getDeclaringClass());
+		assertTrue(methodBinding.getDeclaringClass().getName()
 				.equals("MyClass"));
-		Assert.assertTrue(methodBinding.isConstructor() == false);
-		Assert.assertTrue(methodBinding.getReturnType()[0].getName().equals(
-				"string"));
+		assertTrue(methodBinding.isConstructor() == false);
+		assertTrue(methodBinding.getReturnType()[0].getName().equals("string"));
 	}
 
-	public void testStaticFieldAccessBinding() throws Exception {
+	@Test
+	public void staticFieldAccessBinding() throws Exception {
 		String str = "<?php class MyClass { public static $a = 4; } ; /**/MyClass::$a;?>";
 		Program program = createAndParse(str);
 
@@ -389,12 +409,13 @@ public class BindingTests extends TestCase {
 				.getExpression();
 		IVariableBinding fieldBinding = staticFieldAcces.resolveFieldBinding();
 
-		Assert.assertTrue(fieldBinding.isField() == true);
-		Assert.assertTrue(fieldBinding.getName().equals("$a"));
-		Assert.assertTrue(fieldBinding.getKind() == IBinding.VARIABLE);
+		assertTrue(fieldBinding.isField() == true);
+		assertTrue(fieldBinding.getName().equals("$a"));
+		assertTrue(fieldBinding.getKind() == IBinding.VARIABLE);
 	}
 
-	public void testStaticConstantAccessBinding() throws Exception {
+	@Test
+	public void staticConstantAccessBinding() throws Exception {
 		String str = "<?php class MyClass { const A = 4; } ; /**/MyClass::A;?>";
 		Program program = createAndParse(str);
 
@@ -405,11 +426,12 @@ public class BindingTests extends TestCase {
 		IVariableBinding fieldBinding = (IVariableBinding) constantAccess
 				.resolveFieldBinding();
 
-		Assert.assertNotNull(fieldBinding);
-		Assert.assertTrue(fieldBinding.isField());
+		assertNotNull(fieldBinding);
+		assertTrue(fieldBinding.isField());
 	}
 
-	public void testIncludeBinding() throws Exception {
+	@Test
+	public void includeBinding() throws Exception {
 		String str = "<?php include('myFile.php');?>";
 		Program program = createAndParse(str);
 
@@ -424,16 +446,17 @@ public class BindingTests extends TestCase {
 
 			IBinding sourceBinding = include.resolveBinding();
 
-			Assert.assertTrue(sourceBinding.getName().equals("myFile.php") == true);
-			Assert.assertTrue(sourceBinding.getPHPElement().getElementType() == IModelElement.SOURCE_MODULE);
-			Assert.assertTrue(sourceBinding.getKind() == IBinding.INCLUDE);
+			assertTrue(sourceBinding.getName().equals("myFile.php") == true);
+			assertTrue(sourceBinding.getPHPElement().getElementType() == IModelElement.SOURCE_MODULE);
+			assertTrue(sourceBinding.getKind() == IBinding.INCLUDE);
 
 		} finally {
 			myFile.delete(true, new NullProgressMonitor());
 		}
 	}
 
-	public void testFunctionDeclarationBinding() throws Exception {
+	@Test
+	public void functionDeclarationBinding() throws Exception {
 		String str = "<?php function foo() { return new SoapClient(); } ?> ";
 		Program program = createAndParse(str);
 
@@ -443,14 +466,15 @@ public class BindingTests extends TestCase {
 		IFunctionBinding functionBinding = functionDeclaration
 				.resolveFunctionBinding();
 
-		Assert.assertNotNull(functionBinding);
-		Assert.assertTrue(functionBinding.getName().equals("foo"));
+		assertNotNull(functionBinding);
+		assertTrue(functionBinding.getName().equals("foo"));
 
 		ITypeBinding[] returnTypes = functionBinding.getReturnType();
-		Assert.assertTrue(returnTypes[0].getName().equals("SoapClient"));
+		assertTrue(returnTypes[0].getName().equals("SoapClient"));
 	}
 
-	public void testMethodDeclarationBinding() throws Exception {
+	@Test
+	public void methodDeclarationBinding() throws Exception {
 		String str = "<?php class MyClass { function foo(){ return new MyClass(); } } ?>";
 		Program program = createAndParse(str);
 
@@ -460,18 +484,18 @@ public class BindingTests extends TestCase {
 				.getBody().statements().get(0);
 
 		IMethodBinding methodBinding = methodDeclaration.resolveMethodBinding();
-		Assert.assertNotNull(methodBinding);
-		Assert.assertTrue(methodBinding.getName().equals("foo"));
-		Assert.assertNotNull(methodBinding.getDeclaringClass());
-		Assert.assertTrue(methodBinding.getDeclaringClass().getName()
+		assertNotNull(methodBinding);
+		assertTrue(methodBinding.getName().equals("foo"));
+		assertNotNull(methodBinding.getDeclaringClass());
+		assertTrue(methodBinding.getDeclaringClass().getName()
 				.equals("MyClass"));
-		Assert.assertTrue(methodBinding.isConstructor() == false);
-		Assert.assertTrue(methodBinding.getReturnType()[0].getName().equals(
-				"MyClass"));
+		assertTrue(methodBinding.isConstructor() == false);
+		assertTrue(methodBinding.getReturnType()[0].getName().equals("MyClass"));
 
 	}
 
-	public void testMethodDeclarationGeneratorBinding() throws Exception {
+	@Test
+	public void methodDeclarationGeneratorBinding() throws Exception {
 		String str = "<?php class MyClass { function foo(){ yield 1; } } ?>";
 		Program program = createAndParse(str);
 
@@ -481,13 +505,13 @@ public class BindingTests extends TestCase {
 				.getBody().statements().get(0);
 
 		IMethodBinding methodBinding = methodDeclaration.resolveMethodBinding();
-		Assert.assertNotNull(methodBinding);
-		Assert.assertTrue(methodBinding.getName().equals("foo"));
-		Assert.assertNotNull(methodBinding.getDeclaringClass());
-		Assert.assertTrue(methodBinding.getDeclaringClass().getName()
+		assertNotNull(methodBinding);
+		assertTrue(methodBinding.getName().equals("foo"));
+		assertNotNull(methodBinding.getDeclaringClass());
+		assertTrue(methodBinding.getDeclaringClass().getName()
 				.equals("MyClass"));
-		Assert.assertTrue(methodBinding.isConstructor() == false);
-		Assert.assertTrue(methodBinding.getReturnType()[0].getName().equals(
+		assertTrue(methodBinding.isConstructor() == false);
+		assertTrue(methodBinding.getReturnType()[0].getName().equals(
 				"Generator"));
 
 	}
@@ -506,11 +530,12 @@ public class BindingTests extends TestCase {
 	// IMethodBinding methodBinding = methodDeclaration.resolveMethodBinding();
 	//
 	// ITypeBinding[] parameterTypes = methodBinding.getParameterTypes();
-	// Assert.assertNotNull(parameterTypes);
-	// Assert.assertTrue(parameterTypes.length == 1);
+	// assertNotNull(parameterTypes);
+	// assertTrue(parameterTypes.length == 1);
 	// }
 
-	public void testFunctionInvocationBinding() throws Exception {
+	@Test
+	public void functionInvocationBinding() throws Exception {
 		String str = "<?php function foo(){} foo(); ?>";
 		Program program = createAndParse(str);
 
@@ -521,9 +546,9 @@ public class BindingTests extends TestCase {
 
 		IFunctionBinding functionBinding = functionInvocation
 				.resolveFunctionBinding();
-		Assert.assertNotNull(functionBinding);
-		Assert.assertTrue(functionBinding.getName().equals("foo"));
-		Assert.assertTrue(functionBinding.isVarargs() == false);
+		assertNotNull(functionBinding);
+		assertTrue(functionBinding.getName().equals("foo"));
+		assertTrue(functionBinding.isVarargs() == false);
 	}
 
 	// public void testFunctionInvocationParametersBinding() throws Exception {
@@ -538,11 +563,12 @@ public class BindingTests extends TestCase {
 	// IFunctionBinding functionBinding = functionInvocation
 	// .resolveFunctionBinding();
 	// ITypeBinding[] parameterTypes = functionBinding.getParameterTypes();
-	// Assert.assertNotNull(parameterTypes);
-	// Assert.assertTrue(parameterTypes.length == 0);
+	// assertNotNull(parameterTypes);
+	// assertTrue(parameterTypes.length == 0);
 	// }
 
-	public void testMethodInvocationBinding() throws Exception {
+	@Test
+	public void methodInvocationBinding() throws Exception {
 		String str = "<?php class MyClass { function foo(){} } $a = new MyClass(); $a->foo(); ?>";
 		Program program = createAndParse(str);
 
@@ -552,14 +578,14 @@ public class BindingTests extends TestCase {
 				.getExpression();
 
 		IMethodBinding methodBinding = methodInvocation.resolveMethodBinding();
-		Assert.assertNotNull(methodBinding);
-		Assert.assertTrue(methodBinding.getName().equals("foo"));
+		assertNotNull(methodBinding);
+		assertTrue(methodBinding.getName().equals("foo"));
 
 		ITypeBinding declaringClass = methodBinding.getDeclaringClass();
-		Assert.assertNotNull(declaringClass);
-		Assert.assertTrue(declaringClass.getName().equals("MyClass"));
+		assertNotNull(declaringClass);
+		assertTrue(declaringClass.getName().equals("MyClass"));
 
-		Assert.assertTrue(methodBinding.isConstructor() == false);
+		assertTrue(methodBinding.isConstructor() == false);
 	}
 
 	// public void testMethodInvocationParametersBinding() throws Exception {
@@ -575,11 +601,12 @@ public class BindingTests extends TestCase {
 	// IMethodBinding methodBinding = methodInvocation.resolveMethodBinding();
 	//
 	// ITypeBinding[] parameterTypes = methodBinding.getParameterTypes();
-	// Assert.assertNotNull(parameterTypes);
-	// Assert.assertTrue(parameterTypes.length == 1);
+	// assertNotNull(parameterTypes);
+	// assertTrue(parameterTypes.length == 1);
 	// }
 
-	public void testStaticMethodInvocationBinding() throws Exception {
+	@Test
+	public void staticMethodInvocationBinding() throws Exception {
 		String str = "<?php class MyClass { static function foo(){} } MyClass::foo($a); ?>";
 		Program program = createAndParse(str);
 
@@ -591,14 +618,14 @@ public class BindingTests extends TestCase {
 		IMethodBinding methodBinding = staticMethodInvocation
 				.resolveMethodBinding();
 
-		Assert.assertNotNull(methodBinding);
-		Assert.assertTrue(methodBinding.isConstructor() == false);
-		Assert.assertTrue(methodBinding.getName().equals("foo"));
+		assertNotNull(methodBinding);
+		assertTrue(methodBinding.isConstructor() == false);
+		assertTrue(methodBinding.getName().equals("foo"));
 
 		ITypeBinding declaringClass = methodBinding.getDeclaringClass();
-		Assert.assertNotNull(declaringClass);
-		Assert.assertTrue(declaringClass.getName().equals("MyClass"));
-		Assert.assertTrue(methodBinding.getKind() == IBinding.METHOD);
+		assertNotNull(declaringClass);
+		assertTrue(declaringClass.getName().equals("MyClass"));
+		assertTrue(methodBinding.getKind() == IBinding.METHOD);
 	}
 
 	// public void testIdentifierBinding() throws Exception {
@@ -613,12 +640,12 @@ public class BindingTests extends TestCase {
 	//
 	// IBinding binding = identifier.resolveBinding();
 	//
-	// Assert.assertNotNull(binding);
+	// assertNotNull(binding);
 	//
 	// String name = binding.getName();
-	// Assert.assertNotNull(name);
-	// Assert.assertTrue(name.equals("a"));
-	// Assert.assertTrue(binding.getKind() == IBinding.VARIABLE);
+	// assertNotNull(name);
+	// assertTrue(name.equals("a"));
+	// assertTrue(binding.getKind() == IBinding.VARIABLE);
 	// }
 
 	// public void testVariableIntBinding1() throws Exception {
@@ -631,16 +658,16 @@ public class BindingTests extends TestCase {
 	// Variable var = (Variable) assignment.getLeftHandSide();
 	// IVariableBinding binding = var.resolveVariableBinding();
 	//
-	// Assert.assertNotNull(binding);
-	// Assert.assertTrue(binding.getDeclaringClass() == null);
-	// Assert.assertTrue(binding.getName().equals("a"));
-	// Assert.assertTrue(binding.getConstantValue() == null);
-	// Assert.assertTrue(binding.getKey() != null);
-	// Assert.assertTrue(binding.getDeclaringFunction() == null);
-	// Assert.assertTrue(binding.getKind() == IBinding.VARIABLE);
-	// Assert.assertTrue(binding.getPHPElement() instanceof FakeField);
-	// Assert.assertTrue(binding.getVariableId() == 0);
-	// Assert.assertTrue(binding.getType().getName().equals("integer")); // TODO
+	// assertNotNull(binding);
+	// assertTrue(binding.getDeclaringClass() == null);
+	// assertTrue(binding.getName().equals("a"));
+	// assertTrue(binding.getConstantValue() == null);
+	// assertTrue(binding.getKey() != null);
+	// assertTrue(binding.getDeclaringFunction() == null);
+	// assertTrue(binding.getKind() == IBinding.VARIABLE);
+	// assertTrue(binding.getPHPElement() instanceof FakeField);
+	// assertTrue(binding.getVariableId() == 0);
+	// assertTrue(binding.getType().getName().equals("integer")); // TODO
 	// // ensure
 	// // that
 	// // the
@@ -659,17 +686,17 @@ public class BindingTests extends TestCase {
 	// Variable var = (Variable) assignment.getLeftHandSide();
 	// IVariableBinding binding = var.resolveVariableBinding();
 	//
-	// Assert.assertNotNull(binding);
-	// Assert.assertTrue(binding.getName().equals("b"));
-	// Assert.assertTrue(binding.getKind() == IBinding.VARIABLE);
-	// Assert.assertTrue(binding.getType().getName().equals("integer")); // TODO
+	// assertNotNull(binding);
+	// assertTrue(binding.getName().equals("b"));
+	// assertTrue(binding.getKind() == IBinding.VARIABLE);
+	// assertTrue(binding.getType().getName().equals("integer")); // TODO
 	// // ensure
 	// // that
 	// // the
 	// // type
 	// // is
 	// // integer
-	// Assert.assertTrue(binding.getVariableId() == 1);
+	// assertTrue(binding.getVariableId() == 1);
 	// }
 
 	// public void testVariableStrBinding() throws Exception {
@@ -682,10 +709,10 @@ public class BindingTests extends TestCase {
 	// Variable var = (Variable) assignment.getLeftHandSide();
 	// IVariableBinding binding = var.resolveVariableBinding();
 	//
-	// Assert.assertNotNull(binding);
-	// Assert.assertTrue(binding.getName().equals("test"));
-	// Assert.assertTrue(binding.getKind() == IBinding.VARIABLE);
-	// Assert.assertTrue(binding.getType().getName().equals("string")); // TODO
+	// assertNotNull(binding);
+	// assertTrue(binding.getName().equals("test"));
+	// assertTrue(binding.getKind() == IBinding.VARIABLE);
+	// assertTrue(binding.getType().getName().equals("string")); // TODO
 	// // ensure
 	// // that
 	// // the
@@ -694,7 +721,8 @@ public class BindingTests extends TestCase {
 	// // String
 	// }
 
-	public void testClassDeclarationBinding() throws Exception {
+	@Test
+	public void classDeclarationBinding() throws Exception {
 		String str = "<?php class A {} ?>";
 		Program program = createAndParse(str);
 
@@ -702,13 +730,14 @@ public class BindingTests extends TestCase {
 				.statements().get(0);
 		ITypeBinding binding = classDeclaration.resolveTypeBinding();
 
-		Assert.assertNotNull(binding);
-		Assert.assertTrue(binding.getName().equals("A"));
-		Assert.assertTrue(binding.getKind() == IBinding.TYPE);
-		Assert.assertTrue(binding.isClass());
+		assertNotNull(binding);
+		assertTrue(binding.getName().equals("A"));
+		assertTrue(binding.getKind() == IBinding.TYPE);
+		assertTrue(binding.isClass());
 	}
 
-	public void testInterfaceDeclarationBinding() throws Exception {
+	@Test
+	public void interfaceDeclarationBinding() throws Exception {
 		String str = "<?php interface A {} ?>";
 		Program program = createAndParse(str);
 
@@ -716,9 +745,9 @@ public class BindingTests extends TestCase {
 				.statements().get(0);
 		ITypeBinding binding = interfaceDeclaration.resolveTypeBinding();
 
-		Assert.assertNotNull(binding);
-		Assert.assertTrue(binding.getName().equals("A"));
-		Assert.assertTrue(binding.getKind() == IBinding.TYPE);
-		Assert.assertTrue(binding.isInterface());
+		assertNotNull(binding);
+		assertTrue(binding.getName().equals("A"));
+		assertTrue(binding.getKind() == IBinding.TYPE);
+		assertTrue(binding.isInterface());
 	}
 }

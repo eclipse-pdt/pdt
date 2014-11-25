@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,19 +8,17 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła - convert to JUnit4
  *******************************************************************************/
 package org.eclipse.php.core.tests.codeassist;
+
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -34,18 +32,27 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
+import org.eclipse.php.core.tests.runner.PDTTList;
+import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
+import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
+import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
+import org.junit.After;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-public class CodeAssistTests extends AbstractPDTTTest {
+@RunWith(PDTTList.class)
+public class CodeAssistTests {
 
 	protected static final char OFFSET_CHAR = '|';
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
+	@Parameters
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
 
 		TESTS.put(PHPVersion.PHP5, new String[] {
@@ -74,12 +81,18 @@ public class CodeAssistTests extends AbstractPDTTTest {
 				"/workspace/codeassist/php56" });
 	};
 
-	protected static IProject project;
-	protected static IFile testFile;
+	protected IProject project;
+	protected IFile testFile;
+	protected PHPVersion version;
 
-	public static void setUpSuite() throws Exception {
+	public CodeAssistTests(PHPVersion version, String[] fileNames) {
+		this.version = version;
+	}
+
+	@BeforeList
+	public void setUpSuite() throws Exception {
 		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("CodeAssistTests");
+				.getProject("CodeAssistTests_" + version.toString());
 		if (project.exists()) {
 			return;
 		}
@@ -91,82 +104,30 @@ public class CodeAssistTests extends AbstractPDTTTest {
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
+		PHPCoreTests.setProjectPhpVersion(project, version);
 	}
 
-	public static void tearDownSuite() throws Exception {
+	@AfterList
+	public void tearDownSuite() throws Exception {
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
 	}
 
-	public CodeAssistTests(String description) {
-		super(description);
+	@Test
+	public void assist(String fileName) throws Exception {
+		final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(fileName);
+		pdttFile.applyPreferences();
+		CompletionProposal[] proposals = getProposals(pdttFile.getFile());
+		compareProposals(proposals, pdttFile);
 	}
 
-	public static Test suite() {
-
-		TestSuite suite = new TestSuite("Auto Code Assist Tests");
-
-		for (final PHPVersion phpVersion : TESTS.keySet()) {
-			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-
-			for (String testsDirectory : TESTS.get(phpVersion)) {
-
-				for (final String fileName : getPDTTFiles(testsDirectory)) {
-					try {
-						final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(
-								fileName);
-						phpVerSuite.addTest(new CodeAssistTests(phpVersion
-								.getAlias() + " - /" + fileName) {
-
-							protected void setUp() throws Exception {
-								PHPCoreTests.setProjectPhpVersion(project,
-										phpVersion);
-								pdttFile.applyPreferences();
-							}
-
-							protected void tearDown() throws Exception {
-								if (testFile != null) {
-									testFile.delete(true, null);
-									testFile = null;
-								}
-							}
-
-							protected void runTest() throws Throwable {
-								CompletionProposal[] proposals = getProposals(pdttFile
-										.getFile());
-								compareProposals(proposals, pdttFile);
-							}
-						});
-					} catch (final Exception e) {
-						phpVerSuite.addTest(new TestCase(fileName) { // dummy
-									// test
-									// indicating
-									// PDTT
-									// file
-									// parsing
-									// failure
-									protected void runTest() throws Throwable {
-										throw e;
-									}
-								});
-					}
-				}
-			}
-			suite.addTest(phpVerSuite);
+	@After
+	public void after() throws Exception {
+		if (testFile != null) {
+			testFile.delete(true, null);
+			testFile = null;
 		}
-
-		// Create a setup wrapper
-		TestSetup setup = new TestSetup(suite) {
-			protected void setUp() throws Exception {
-				setUpSuite();
-			}
-
-			protected void tearDown() throws Exception {
-				tearDownSuite();
-			}
-		};
-		return setup;
 	}
 
 	/**
@@ -178,7 +139,7 @@ public class CodeAssistTests extends AbstractPDTTTest {
 	 * @return offset where's the offset character set.
 	 * @throws Exception
 	 */
-	protected static int createFile(String data) throws Exception {
+	protected int createFile(String data) throws Exception {
 		int offset = data.lastIndexOf(OFFSET_CHAR);
 		if (offset == -1) {
 			throw new IllegalArgumentException("Offset character is not set");
@@ -198,18 +159,16 @@ public class CodeAssistTests extends AbstractPDTTTest {
 		return offset;
 	}
 
-	protected static ISourceModule getSourceModule() {
+	protected ISourceModule getSourceModule() {
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}
 
-	public static CompletionProposal[] getProposals(String data)
-			throws Exception {
+	public CompletionProposal[] getProposals(String data) throws Exception {
 		int offset = createFile(data);
 		return getProposals(offset);
 	}
 
-	public static CompletionProposal[] getProposals(int offset)
-			throws ModelException {
+	public CompletionProposal[] getProposals(int offset) throws ModelException {
 		return getProposals(getSourceModule(), offset);
 	}
 

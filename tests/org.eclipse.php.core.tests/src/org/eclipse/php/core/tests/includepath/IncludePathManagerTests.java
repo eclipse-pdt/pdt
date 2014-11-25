@@ -11,8 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.includepath;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -30,17 +31,16 @@ import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-public class IncludePathManagerTests extends TestCase {
+public class IncludePathManagerTests {
 
 	protected IProject project;
 
-	public IncludePathManagerTests(String name) {
-		super(name);
-	}
-
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		// Initialize include path manager:
 		IncludePathManager.getInstance();
 
@@ -60,23 +60,25 @@ public class IncludePathManagerTests extends TestCase {
 
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		project.delete(true, null);
 	}
 
-	public void testIncludePathGet() throws Exception {
+	@Test
+	public void includePathGet() throws Exception {
 		IScriptProject scriptProject = DLTKCore.create(project);
 		scriptProject.setRawBuildpath(new IBuildpathEntry[0], null);
 
 		IncludePath[] includePath = IncludePathManager.getInstance()
 				.getIncludePaths(project);
-		Assert.assertTrue(includePath.length == 0);
+		assertTrue(includePath.length == 0);
 	}
 
 	// This test checks how buildpath changes are not propogated to the include
 	// path:
-	public void testIncludePathGetAfterBPChange1() throws Exception {
+	@Test
+	public void includePathGetAfterBPChange1() throws Exception {
 		IFolder folder = project.getFolder("a");
 		folder.create(true, true, null);
 
@@ -86,12 +88,13 @@ public class IncludePathManagerTests extends TestCase {
 
 		IncludePath[] includePath = IncludePathManager.getInstance()
 				.getIncludePaths(project);
-		Assert.assertTrue(includePath.length == 0);
+		assertTrue(includePath.length == 0);
 	}
 
 	// This test checks how buildpath changes are propogated to the include
 	// path:
-	public void testIncludePathGetAfterBPChange2() throws Exception {
+	@Test
+	public void includePathGetAfterBPChange2() throws Exception {
 		String libraryPath = Platform.OS_WIN32.equals(Platform.getOS()) ? "C:\\Projects\\MyLibrary"
 				: "/var/www/MyLibrary";
 
@@ -105,9 +108,9 @@ public class IncludePathManagerTests extends TestCase {
 		IncludePath[] includePath = IncludePathManager.getInstance()
 				.getIncludePaths(project);
 
-		Assert.assertTrue(includePath.length == 1);
-		Assert.assertTrue(includePath[0].isBuildpath());
-		Assert.assertEquals(
+		assertTrue(includePath.length == 1);
+		assertTrue(includePath[0].isBuildpath());
+		assertEquals(
 				EnvironmentPathUtils
 						.getLocalPath(
 								((IBuildpathEntry) includePath[0].getEntry())
@@ -115,7 +118,8 @@ public class IncludePathManagerTests extends TestCase {
 	}
 
 	// This test checks how include path changes are saved:
-	public void testIncludePathSet() throws Exception {
+	@Test
+	public void includePathSet() throws Exception {
 		IFolder folder = project.getFolder("a");
 		folder.create(true, true, null);
 		folder = folder.getFolder("b");
@@ -132,9 +136,9 @@ public class IncludePathManagerTests extends TestCase {
 		setIncludePath(manager, includePath);
 		includePath = manager.getIncludePaths(project);
 
-		Assert.assertTrue(includePath.length == 1);
-		Assert.assertFalse(includePath[0].isBuildpath());
-		Assert.assertEquals(((IResource) includePath[0].getEntry()), folder);
+		assertTrue(includePath.length == 1);
+		assertFalse(includePath[0].isBuildpath());
+		assertEquals(((IResource) includePath[0].getEntry()), folder);
 	}
 
 	private void setIncludePath(IncludePathManager manager,
