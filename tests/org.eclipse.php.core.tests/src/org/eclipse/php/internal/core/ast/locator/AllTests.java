@@ -1,21 +1,27 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *     Dawid Pakuła - convert to JUnit4
+ *******************************************************************************/
 package org.eclipse.php.internal.core.ast.locator;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
+@RunWith(Suite.class)
+@SuiteClasses({ PhpElementConciliatorTest.class,
+		PhpElementConciliatorV5_3Test.class,
+		PhpElementConciliatorV5_4Test.class,
+		PhpElementConciliatorV5_5Test.class,
+		PhpElementConciliatorV5_6Test.class })
 public class AllTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite(
-				"Test for org.eclipse.php.internal.core.ast.locator");
-		// $JUnit-BEGIN$
-		suite.addTestSuite(PhpElementConciliatorTest.class);
-		suite.addTestSuite(PhpElementConciliatorV5_3Test.class);
-		suite.addTestSuite(PhpElementConciliatorV5_4Test.class);
-		suite.addTestSuite(PhpElementConciliatorV5_5Test.class);
-		suite.addTestSuite(PhpElementConciliatorV5_6Test.class);
-		// $JUnit-END$
-		return suite;
-	}
 
 }

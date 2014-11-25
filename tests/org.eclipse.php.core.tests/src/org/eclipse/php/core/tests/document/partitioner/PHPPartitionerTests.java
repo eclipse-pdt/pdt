@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.document.partitioner;
 
+import static org.junit.Assert.assertSame;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,9 +23,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -41,6 +40,9 @@ import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Description: This class tests {@link PHPStructuredTextPartitioner} Each
@@ -49,23 +51,10 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  * 
  * @author Alon Peled
  */
-public class PHPPartitionerTests extends TestCase {
+public class PHPPartitionerTests {
 
 	private static final String PROJECT_NAME = "partitioner";
 
-	public PHPPartitionerTests(String name) {
-		super(name);
-	}
-
-	//
-	// public static Test suite() {
-	//
-	// TestSuite suite = new TestSuite("Auto Code Assist Tests");
-	// return new Suite(PHPPartitionerTests.class);
-	// }
-
-	// Stores length of system line separator to compute the offset within the
-	// file
 	private static final int endLine = System.getProperty("line.separator")
 			.length();
 
@@ -162,7 +151,8 @@ public class PHPPartitionerTests extends TestCase {
 		}
 	}
 
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		// copy files in project from source workspace to target workspace
 		final File sourceWorkspacePath = getSourceWorkspacePath();
 		final File targetWorkspacePath = getWorkspaceRoot().getLocation()
@@ -186,7 +176,8 @@ public class PHPPartitionerTests extends TestCase {
 		project.setDescription(desc, null);
 	}
 
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
@@ -197,13 +188,12 @@ public class PHPPartitionerTests extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
-
-	public void testPartitionInHTML() throws Exception {
+	@Test
+	public void partitionInHTML() throws Exception {
 		ArrayList<String> matches = getPartitionType(phpLookUp,
 				"phpPartitionerTestHTML.php");
 		for (int i = 0; i < matches.size(); i++) {
-			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT,
-					(String) matches.get(i));
+			assertSame(PHPPartitionTypes.PHP_DEFAULT, (String) matches.get(i));
 		}
 	}
 
@@ -212,14 +202,13 @@ public class PHPPartitionerTests extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
-
-	public void testPartitionStandalone() throws Exception {
+	@Test
+	public void partitionStandalone() throws Exception {
 
 		ArrayList<String> matches = getPartitionType(phpLookUp,
 				"phpPartitionerTestPhp.php");
 		for (int i = 0; i < matches.size(); i++) {
-			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT,
-					(String) matches.get(i));
+			assertSame(PHPPartitionTypes.PHP_DEFAULT, (String) matches.get(i));
 		}
 	}
 
@@ -228,14 +217,13 @@ public class PHPPartitionerTests extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
-
-	public void testPartitionPhpAsHTMLAttributeKey() throws Exception {
+	@Test
+	public void partitionPhpAsHTMLAttributeKey() throws Exception {
 
 		ArrayList<String> matches = getPartitionType(phpLookUp,
 				"phpPartitionerTestPhpAsHTMLAttributeKey.php");
 		for (int i = 0; i < matches.size(); i++) {
-			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT,
-					(String) matches.get(i));
+			assertSame(PHPPartitionTypes.PHP_DEFAULT, (String) matches.get(i));
 		}
 	}
 
@@ -244,14 +232,13 @@ public class PHPPartitionerTests extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
-
-	public void testPartitionPhpAsHTMLAttributeValue() throws Exception {
+	@Test
+	public void partitionPhpAsHTMLAttributeValue() throws Exception {
 
 		ArrayList<String> matches = getPartitionType(phpLookUp,
 				"phpPartitionerTestPhpAsHTMLAttributeValue.php");
 		for (int i = 0; i < matches.size(); i++) {
-			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT,
-					(String) matches.get(i));
+			assertSame(PHPPartitionTypes.PHP_DEFAULT, (String) matches.get(i));
 		}
 	}
 
@@ -267,6 +254,7 @@ public class PHPPartitionerTests extends TestCase {
 	 *         type
 	 * @throws Exception
 	 */
+	@SuppressWarnings("restriction")
 	private ArrayList<String> getPartitionType(String[] markers,
 			String testDataFile) throws Exception {
 		// offset from beginning of stream

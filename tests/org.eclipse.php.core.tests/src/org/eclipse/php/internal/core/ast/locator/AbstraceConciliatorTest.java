@@ -1,5 +1,7 @@
 package org.eclipse.php.internal.core.ast.locator;
 
+import static org.junit.Assert.fail;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -18,24 +20,14 @@ import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 
-import junit.framework.TestCase;
-
-public abstract class AbstraceConciliatorTest extends TestCase {
-
-	public AbstraceConciliatorTest() {
-		super();
-	}
-
-	public AbstraceConciliatorTest(String name) {
-		super(name);
-	}
+public abstract class AbstraceConciliatorTest {
 
 	protected Program createProgram(IFile file) {
 		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
 		Program program = null;
 		try {
 			program = createProgramFromSource(sourceModule);
-	
+
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
@@ -47,7 +39,8 @@ public abstract class AbstraceConciliatorTest extends TestCase {
 		return createProgramFromSource(source);
 	}
 
-	public Program createProgramFromSource(ISourceModule source) throws Exception {
+	public Program createProgramFromSource(ISourceModule source)
+			throws Exception {
 		IResource resource = source.getResource();
 		IProject project = null;
 		if (resource instanceof IFile) {
@@ -70,20 +63,20 @@ public abstract class AbstraceConciliatorTest extends TestCase {
 	}
 
 	public IProject createProject(String name) {
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				name);
+		IProject project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject(name);
 		if (project.exists()) {
 			return project;
 		}
 		try {
 			project.create(null);
-	
+
 			project.open(IResource.BACKGROUND_REFRESH,
 					new NullProgressMonitor());
 			IProjectDescription desc = project.getDescription();
 			desc.setNatureIds(new String[] { PHPNature.ID });
 			project.setDescription(desc, null);
-	
+
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 			project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 		} catch (CoreException e) {
@@ -96,22 +89,22 @@ public abstract class AbstraceConciliatorTest extends TestCase {
 	}
 
 	public IProject createProject(String name, PHPVersion version) {
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				name);
+		IProject project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject(name);
 		if (project.exists()) {
 			return project;
 		}
 		try {
 			project.create(null);
-	
+
 			project.open(IResource.BACKGROUND_REFRESH,
 					new NullProgressMonitor());
 			IProjectDescription desc = project.getDescription();
 			desc.setNatureIds(new String[] { PHPNature.ID });
 			project.setDescription(desc, null);
-	
+
 			ProjectOptions.setPhpVersion(version, project);
-	
+
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 			project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 		} catch (CoreException e) {
