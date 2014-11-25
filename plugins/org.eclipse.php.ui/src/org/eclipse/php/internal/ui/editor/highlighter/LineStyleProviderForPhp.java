@@ -509,12 +509,14 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 			if (region instanceof ITextRegionCollection) {
 				handled = prepareTextRegion((ITextRegionCollection) region,
 						partitionStartOffset, partitionLength, holdResults);
+				previousEndOffset = -1;
 			} else {
 
 				if (region.getType() == PHPRegionContext.PHP_CONTENT) {
 					handled = preparePhpRegions(holdResults,
 							(IPhpScriptRegion) region, startOffset,
 							partitionStartOffset, partitionLength);
+					previousEndOffset = -1;
 				} else {
 					attr = getAttributeFor(region);
 					if (attr != null) {
@@ -587,12 +589,14 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 				if (region instanceof ITextRegionCollection) {
 					handled = prepareTextRegion((ITextRegionCollection) region,
 							partitionStartOffset, partitionLength, holdResults);
+					previousEndOffset = -1;
 				} else {
 
 					if (region.getType() == PHPRegionContext.PHP_CONTENT) {
 						handled = preparePhpRegions(holdResults,
 								(IPhpScriptRegion) region, startOffset,
 								partitionStartOffset, partitionLength);
+						previousEndOffset = -1;
 					} else {
 
 						attr = getAttributeFor(region);
@@ -622,6 +626,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 								styleRange = createStyleRange(
 										structuredDocumentRegion, region, attr,
 										partitionStartOffset, partitionLength);
+
 								holdResults.add(styleRange);
 								// technically speaking, we don't need to update
 								// previousAttr
