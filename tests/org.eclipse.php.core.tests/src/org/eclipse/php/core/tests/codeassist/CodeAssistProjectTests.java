@@ -85,8 +85,9 @@ public class CodeAssistProjectTests extends AbstractProjectSuite {
 			final CodeAssistProjectTests projectTests = new CodeAssistProjectTests(
 					testProject, phpVersion);
 
-			for (final File file : new File(projectTests
-					.getSourceWorkspacePath(), testProject).listFiles()) {
+			for (final File file : new File(
+					projectTests.getSourceWorkspacePath(), testProject)
+					.listFiles()) {
 				final String baseName = file.getName();
 				if (!baseName.toLowerCase().endsWith(".pdtt")) {
 					continue;

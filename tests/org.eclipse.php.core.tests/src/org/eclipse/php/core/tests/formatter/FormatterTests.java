@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,17 +8,13 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła - convert to JUnit4
  *******************************************************************************/
 package org.eclipse.php.core.tests.formatter;
 
 import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -34,18 +30,26 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ScriptModelUtil;
 import org.eclipse.dltk.core.WorkingCopyOwner;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
+import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.core.tests.runner.PDTTList;
+import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
+import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
+import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-public class FormatterTests extends AbstractPDTTTest {
+@RunWith(PDTTList.class)
+public class FormatterTests {
 
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	@Parameters
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/formatter/php5" });
 		TESTS.put(PHPVersion.PHP5_4, new String[] {
@@ -58,11 +62,19 @@ public class FormatterTests extends AbstractPDTTTest {
 				"/workspace/formatter/php55", "/workspace/formatter/php56" });
 	};
 
-	protected static Map<PdttFile, IFile> filesMap = new LinkedHashMap<PdttFile, IFile>();
-	protected static IProject project;
-	protected static int count;
+	protected IProject project;
+	protected int count;
 
-	public static void setUpSuite() throws Exception {
+	protected final PHPVersion phpVersion;
+	protected final String[] fileNames;
+
+	public FormatterTests(PHPVersion version, String[] fileNames) {
+		this.phpVersion = version;
+		this.fileNames = fileNames;
+	}
+
+	@BeforeList
+	public void setUpSuite() throws Exception {
 		project = ResourcesPlugin.getWorkspace().getRoot()
 				.getProject("FormatterTests");
 		if (project.exists()) {
@@ -91,143 +103,64 @@ public class FormatterTests extends AbstractPDTTTest {
 			}
 		});
 
-		for (PdttFile pdttFile : filesMap.keySet()) {
-			IFile file = createFile(pdttFile.getFile().trim());
-			filesMap.put(pdttFile, file);
-		}
-
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-
-		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
+		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
 	}
 
-	public static void tearDownSuite() throws Exception {
+	@AfterList
+	public void tearDownSuite() throws Exception {
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
 	}
 
-	public FormatterTests(String description) {
-		super(description);
-	}
+	@Test
+	public void formatter(String fileName) throws Exception {
+		final PdttFile pdttFile = new PdttFile(fileName);
+		IFile file = createFile(pdttFile.getFile().trim());
+		ISourceModule modelElement = (ISourceModule) DLTKCore.create(file);
+		if (ScriptModelUtil.isPrimary(modelElement))
+			modelElement.becomeWorkingCopy(new IProblemRequestor() {
 
-	public static Test suite() {
+				public void acceptProblem(IProblem problem) {
 
-		TestSuite suite = new TestSuite("Formatter Tests");
-
-		for (final PHPVersion phpVersion : TESTS.keySet()) {
-			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-
-			for (String testsDirectory : TESTS.get(phpVersion)) {
-
-				for (final String fileName : getPDTTFiles(testsDirectory)) {
-					try {
-						final PdttFile pdttFile = new PdttFile(fileName);
-						filesMap.put(pdttFile, null);
-
-						phpVerSuite.addTest(new FormatterTests(phpVersion
-								.getAlias() + " - /" + fileName) {
-
-							protected void setUp() throws Exception {
-								PHPCoreTests.setProjectPhpVersion(project,
-										phpVersion);
-							}
-
-							protected void runTest() throws Throwable {
-
-								IFile file = filesMap.get(pdttFile);
-								ISourceModule modelElement = (ISourceModule) DLTKCore
-										.create(file);
-								if (ScriptModelUtil.isPrimary(modelElement))
-									modelElement.becomeWorkingCopy(
-											new IProblemRequestor() {
-
-												public void acceptProblem(
-														IProblem problem) {
-													// TODO Auto-generated
-													// method stub
-
-												}
-
-												public void beginReporting() {
-													// TODO Auto-generated
-													// method stub
-
-												}
-
-												public void endReporting() {
-													// TODO Auto-generated
-													// method stub
-
-												}
-
-												public boolean isActive() {
-													// TODO Auto-generated
-													// method stub
-													return false;
-												}
-											}, null);
-								IStructuredModel modelForEdit = StructuredModelManager
-										.getModelManager()
-										.getModelForEdit(file);
-								try {
-									IDocument document = modelForEdit
-											.getStructuredDocument();
-									String beforeFormat = document.get();
-
-									PhpFormatProcessorImpl formatter = new PhpFormatProcessorImpl();
-									formatter.formatDocument(document, 0,
-											document.getLength());
-									assertContents(pdttFile.getExpected(),
-											document.get());
-
-									// change the document text as was before
-									// the formatting
-									document.set(beforeFormat);
-									modelForEdit.save();
-								} finally {
-									if (modelForEdit != null) {
-										modelForEdit.releaseFromEdit();
-									}
-								}
-							}
-						});
-					} catch (final Exception e) {
-						phpVerSuite.addTest(new TestCase(fileName) { // dummy
-																		// test
-																		// indicating
-																		// PDTT
-																		// file
-																		// parsing
-																		// failure
-									protected void runTest() throws Throwable {
-										throw e;
-									}
-								});
-					}
 				}
 
+				public void beginReporting() {
+
+				}
+
+				public void endReporting() {
+
+				}
+
+				public boolean isActive() {
+					return false;
+				}
+			}, null);
+		IStructuredModel modelForEdit = StructuredModelManager
+				.getModelManager().getModelForEdit(file);
+		try {
+			IDocument document = modelForEdit.getStructuredDocument();
+			String beforeFormat = document.get();
+
+			PhpFormatProcessorImpl formatter = new PhpFormatProcessorImpl();
+			formatter.formatDocument(document, 0, document.getLength());
+			PDTTUtils.assertContents(pdttFile.getExpected(), document.get());
+
+			// change the document text as was before
+			// the formatting
+			document.set(beforeFormat);
+			modelForEdit.save();
+		} finally {
+			if (modelForEdit != null) {
+				modelForEdit.releaseFromEdit();
 			}
-			suite.addTest(phpVerSuite);
 		}
-
-		// Create a setup wrapper
-		TestSetup setup = new TestSetup(suite) {
-			protected void setUp() throws Exception {
-				setUpSuite();
-			}
-
-			protected void tearDown() throws Exception {
-				tearDownSuite();
-			}
-		};
-
-		return setup;
 	}
 
-	protected static IFile createFile(String data) throws Exception {
+	protected IFile createFile(String data) throws Exception {
 		IFile testFile = project.getFile("test" + (++count) + ".php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
 		return testFile;

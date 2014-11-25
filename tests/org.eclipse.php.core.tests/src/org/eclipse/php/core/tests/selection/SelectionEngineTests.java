@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,17 +8,15 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła - convert to JUnit4
  *******************************************************************************/
 package org.eclipse.php.core.tests.selection;
+
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -29,18 +27,27 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.internal.core.SourceRange;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
+import org.eclipse.dltk.core.ISourceRange;
+import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
+import org.eclipse.php.core.tests.runner.PDTTList;
+import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
+import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
+import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.junit.After;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-public class SelectionEngineTests extends AbstractPDTTTest {
+@RunWith(PDTTList.class)
+public class SelectionEngineTests {
 
 	protected static final char SELECTION_CHAR = '|';
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	@Parameters
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/selection/php5" });
 		TESTS.put(PHPVersion.PHP5_3, new String[] {
@@ -57,12 +64,18 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 				"/workspace/selection/php56" });
 	};
 
-	protected static IProject project;
-	protected static IFile testFile;
+	protected IProject project;
+	protected IFile testFile;
+	protected PHPVersion version;
 
-	public static void setUpSuite() throws Exception {
+	public SelectionEngineTests(PHPVersion version, String[] fileNames) {
+		this.version = version;
+	}
+
+	@BeforeList
+	public void setUpSuite() throws Exception {
 		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("AutoSelectionEngine");
+				.getProject("AutoSelectionEngine_" + version.toString());
 		if (project.exists()) {
 			return;
 		}
@@ -74,131 +87,75 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
+		PHPCoreTests.setProjectPhpVersion(project, version);
 	}
 
-	public static void tearDownSuite() throws Exception {
+	@AfterList
+	public void tearDownSuite() throws Exception {
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
 	}
 
-	public SelectionEngineTests(String description) {
-		super(description);
-	}
+	@Test
+	public void selection(String fileName) throws Exception {
+		final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(fileName);
 
-	public static Test suite() {
+		IModelElement[] elements = getSelection(pdttFile.getFile());
+		ExpectedProposal[] expectedProposals = pdttFile.getExpectedProposals();
 
-		TestSuite suite = new TestSuite("Auto Selection Engine Tests");
-
-		for (final PHPVersion phpVersion : TESTS.keySet()) {
-			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-
-			for (String testsDirectory : TESTS.get(phpVersion)) {
-
-				for (final String fileName : getPDTTFiles(testsDirectory)) {
-					try {
-						final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(
-								fileName);
-						phpVerSuite.addTest(new SelectionEngineTests(phpVersion
-								.getAlias() + " - /" + fileName) {
-
-							protected void setUp() throws Exception {
-								PHPCoreTests.setProjectPhpVersion(project,
-										phpVersion);
-							}
-
-							protected void tearDown() throws Exception {
-								if (testFile != null) {
-									testFile.delete(true, null);
-									testFile = null;
-								}
-							}
-
-							protected void runTest() throws Throwable {
-								IModelElement[] elements = getSelection(pdttFile
-										.getFile());
-								ExpectedProposal[] expectedProposals = pdttFile
-										.getExpectedProposals();
-
-								boolean proposalsEqual = true;
-								if (elements.length == expectedProposals.length) {
-									for (ExpectedProposal expectedProposal : pdttFile
-											.getExpectedProposals()) {
-										boolean found = false;
-										for (IModelElement modelElement : elements) {
-											if (modelElement.getElementType() == expectedProposal.type
-													&& modelElement
-															.getElementName()
-															.equalsIgnoreCase(
-																	expectedProposal.name)) {
-												found = true;
-												break;
-											}
-										}
-										if (!found) {
-											proposalsEqual = false;
-											break;
-										}
-									}
-								} else {
-									proposalsEqual = false;
-								}
-
-								if (!proposalsEqual) {
-									StringBuilder errorBuf = new StringBuilder();
-									errorBuf.append("\nEXPECTED ELEMENTS LIST:\n-----------------------------\n");
-									errorBuf.append(pdttFile.getExpected());
-									errorBuf.append("\nACTUAL ELEMENTS LIST:\n-----------------------------\n");
-									for (IModelElement modelElement : elements) {
-										switch (modelElement.getElementType()) {
-										case IModelElement.FIELD:
-											errorBuf.append("field");
-											break;
-										case IModelElement.METHOD:
-											errorBuf.append("method");
-											break;
-										case IModelElement.TYPE:
-											errorBuf.append("type");
-											break;
-										}
-										errorBuf.append('(')
-												.append(modelElement
-														.getElementName())
-												.append(")\n");
-									}
-									fail(errorBuf.toString());
-								}
-							}
-						});
-					} catch (final Exception e) {
-						phpVerSuite.addTest(new TestCase(fileName) { // dummy
-									// test
-									// indicating
-									// PDTT
-									// file
-									// parsing
-									// failure
-									protected void runTest() throws Throwable {
-										throw e;
-									}
-								});
+		boolean proposalsEqual = true;
+		if (elements.length == expectedProposals.length) {
+			for (ExpectedProposal expectedProposal : pdttFile
+					.getExpectedProposals()) {
+				boolean found = false;
+				for (IModelElement modelElement : elements) {
+					if (modelElement.getElementType() == expectedProposal.type
+							&& modelElement.getElementName().equalsIgnoreCase(
+									expectedProposal.name)) {
+						found = true;
+						break;
 					}
 				}
+				if (!found) {
+					proposalsEqual = false;
+					break;
+				}
 			}
-			suite.addTest(phpVerSuite);
+		} else {
+			proposalsEqual = false;
 		}
 
-		// Create a setup wrapper
-		TestSetup setup = new TestSetup(suite) {
-			protected void setUp() throws Exception {
-				setUpSuite();
+		if (!proposalsEqual) {
+			StringBuilder errorBuf = new StringBuilder();
+			errorBuf.append("\nEXPECTED ELEMENTS LIST:\n-----------------------------\n");
+			errorBuf.append(pdttFile.getExpected());
+			errorBuf.append("\nACTUAL ELEMENTS LIST:\n-----------------------------\n");
+			for (IModelElement modelElement : elements) {
+				switch (modelElement.getElementType()) {
+				case IModelElement.FIELD:
+					errorBuf.append("field");
+					break;
+				case IModelElement.METHOD:
+					errorBuf.append("method");
+					break;
+				case IModelElement.TYPE:
+					errorBuf.append("type");
+					break;
+				}
+				errorBuf.append('(').append(modelElement.getElementName())
+						.append(")\n");
 			}
+			fail(errorBuf.toString());
+		}
+	}
 
-			protected void tearDown() throws Exception {
-				tearDownSuite();
-			}
-		};
-		return setup;
+	@After
+	public void after() throws Exception {
+		if (testFile != null) {
+			testFile.delete(true, null);
+			testFile = null;
+		}
 	}
 
 	/**
@@ -210,7 +167,7 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 	 * @return offset where's the offset character set.
 	 * @throws Exception
 	 */
-	protected static SourceRange createFile(String data) throws Exception {
+	protected ISourceRange createFile(String data) throws Exception {
 		int left = data.indexOf(SELECTION_CHAR);
 		if (left == -1) {
 			throw new IllegalArgumentException(
@@ -236,12 +193,12 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 		return new SourceRange(left, right - left);
 	}
 
-	protected static ISourceModule getSourceModule() {
+	protected ISourceModule getSourceModule() {
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}
 
-	protected static IModelElement[] getSelection(String data) throws Exception {
-		SourceRange range = createFile(data);
+	protected IModelElement[] getSelection(String data) throws Exception {
+		ISourceRange range = createFile(data);
 		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(testFile);
 		IModelElement[] elements = sourceModule.codeSelect(range.getOffset(),
 				range.getLength());

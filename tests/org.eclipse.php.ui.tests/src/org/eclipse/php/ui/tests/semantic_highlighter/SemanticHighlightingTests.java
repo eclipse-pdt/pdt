@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,8 +7,12 @@
  *
  * Contributors:
  *     William Candillon - initial API and implementation
+ *     Dawid Pakuła - convert to JUnit4
  *******************************************************************************/
 package org.eclipse.php.ui.tests.semantic_highlighter;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -16,12 +20,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -33,9 +31,13 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.Position;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.core.tests.runner.PDTTList;
+import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
+import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
+import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
+import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -55,19 +57,34 @@ import org.eclipse.php.internal.ui.editor.highlighters.StaticMethodHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighters.SuperGlobalHighlighting;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.tests.PHPUiTests;
+import org.junit.After;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.osgi.framework.Bundle;
 
 @SuppressWarnings("restriction")
-public class SemanticHighlightingTests extends AbstractPDTTTest {
+@RunWith(PDTTList.class)
+public class SemanticHighlightingTests {
 
-	protected static IProject project;
-	protected static IFile testFile;
-	protected static PHPVersion phpVersion;
-	protected static final Map<PHPVersion, String> TESTS = new LinkedHashMap<PHPVersion, String>();
+	protected IProject project;
+	protected IFile testFile;
+	protected PHPVersion phpVersion;
+
+	@Parameters
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS.put(PHPVersion.PHP4, "/workspace/semantic_highlighting/php4");
-		TESTS.put(PHPVersion.PHP5, "/workspace/semantic_highlighting/php5");
-		TESTS.put(PHPVersion.PHP5_3, "/workspace/semantic_highlighting/php53");
+		TESTS.put(PHPVersion.PHP4,
+				new String[] { "/workspace/semantic_highlighting/php4" });
+		TESTS.put(PHPVersion.PHP5,
+				new String[] { "/workspace/semantic_highlighting/php5" });
+		TESTS.put(PHPVersion.PHP5_3,
+				new String[] { "/workspace/semantic_highlighting/php53" });
 	};
+
+	@Context
+	public static Bundle getBundle() {
+		return PHPUiTests.getDefault().getBundle();
+	}
 
 	private static Map<String, AbstractSemanticHighlighting> highlighters = new HashMap<String, AbstractSemanticHighlighting>();
 
@@ -90,9 +107,10 @@ public class SemanticHighlightingTests extends AbstractPDTTTest {
 		highlighters.put("super_global", new SuperGlobalHighlighting());
 	}
 
-	public static void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				"SemanticHighlighting");
+	@BeforeList
+	public void setUpSuite() throws Exception {
+		project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject("SemanticHighlighting_" + phpVersion);
 		if (project.exists()) {
 			return;
 		}
@@ -104,118 +122,68 @@ public class SemanticHighlightingTests extends AbstractPDTTTest {
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
+		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
 	}
 
-	public static void tearDownSuite() throws Exception {
+	@AfterList
+	public void tearDownSuite() throws Exception {
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
 	}
 
-	public SemanticHighlightingTests(String description) {
-		super(description);
+	@After
+	public void tearDown() throws Exception {
+		if (testFile != null) {
+			testFile.delete(true, null);
+			testFile = null;
+		}
 	}
 
-	public static Test suite() {
+	public SemanticHighlightingTests(PHPVersion version, String[] fileNames) {
+		this.phpVersion = version;
+	}
 
-		TestSuite suite = new TestSuite("Semantic Highlighting Tests");
-		for (Entry<PHPVersion, String> pair : TESTS.entrySet()) {
-			phpVersion = pair.getKey();
-			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-
-			String[] files = getPDTTFiles(pair.getValue(), PHPUiTests
-					.getDefault().getBundle());
-
-			for (final String fileName : files) {
-				try {
-					final PdttFile pdttFile = new PdttFile(PHPUiTests
-							.getDefault().getBundle(), fileName);
-					phpVerSuite.addTest(new SemanticHighlightingTests(
-							phpVersion.getAlias() + " - /" + fileName) {
-
-						protected void setUp() throws Exception {
-							PHPCoreTests.setProjectPhpVersion(project,
-									PHPVersion.PHP5_3);
-						}
-
-						protected void tearDown() throws Exception {
-							if (testFile != null) {
-								testFile.delete(true, null);
-								testFile = null;
-							}
-						}
-
-						protected void runTest() throws Throwable {
-							;
-							String result = "";
-							createFile(new ByteArrayInputStream(pdttFile
-									.getFile().getBytes()));
-							ISourceModule module = getSourceModule();
-							assertNotNull(module);
-							String index = fileName.substring(fileName
-									.lastIndexOf('/') + 1, fileName
-									.indexOf('.'));
-							// System.err.println(index);
-							AbstractSemanticHighlighting highlighter = highlighters
-									.get(index);
-							assertNotNull(highlighter);
-							Program program = getProgram(module);
-							highlighter.initDefaultPreferences();
-							Position[] positions = highlighter
-									.consumes(program);
-							assertNoDuplicates(highlighter.getDisplayName(),
-									positions);
-							result += highlighter.getClass().getName() + ":\n";
-							for (Position position : positions) {
-								result += "highlight("
-										+ pdttFile.getFile().substring(
-												position.getOffset(),
-												position.getOffset()
-														+ position.getLength())
-										+ ")\n";
-							}
-							assertEquals(pdttFile.getExpected(), result);
-							// We check the other highlighters for failure
-							for (AbstractSemanticHighlighting h : highlighters
-									.values()) {
-								if (h != highlighter) {
-									h.initDefaultPreferences();
-									positions = h.consumes(program);
-									assertNoDuplicates(highlighter
-											.getDisplayName(), positions);
-								}
-							}
-						}
-
-						private Program getProgram(ISourceModule module)
-								throws ModelException, IOException {
-							return SharedASTProvider.getAST(module,
-									SharedASTProvider.WAIT_YES, null);
-
-						}
-					});
-				} catch (final Exception e) {
-					phpVerSuite.addTest(new TestCase(fileName) {
-						protected void runTest() throws Throwable {
-							throw e;
-						}
-					});
-				}
-			}
-			suite.addTest(phpVerSuite);
+	@Test
+	public void highlighter(String fileName) throws Exception {
+		final PdttFile pdttFile = new PdttFile(PHPUiTests.getDefault()
+				.getBundle(), fileName);
+		String result = "";
+		createFile(new ByteArrayInputStream(pdttFile.getFile().getBytes()));
+		ISourceModule module = getSourceModule();
+		assertNotNull(module);
+		String index = fileName.substring(fileName.lastIndexOf('/') + 1,
+				fileName.indexOf('.'));
+		// System.err.println(index);
+		AbstractSemanticHighlighting highlighter = highlighters.get(index);
+		assertNotNull(highlighter);
+		Program program = getProgram(module);
+		highlighter.initDefaultPreferences();
+		Position[] positions = highlighter.consumes(program);
+		assertNoDuplicates(highlighter.getDisplayName(), positions);
+		result += highlighter.getClass().getName() + ":\n";
+		for (Position position : positions) {
+			result += "highlight("
+					+ pdttFile.getFile().substring(position.getOffset(),
+							position.getOffset() + position.getLength())
+					+ ")\n";
 		}
-
-		// Create a setup wrapper
-		TestSetup setup = new TestSetup(suite) {
-			protected void setUp() throws Exception {
-				setUpSuite();
+		assertEquals(pdttFile.getExpected(), result);
+		// We check the other highlighters for failure
+		for (AbstractSemanticHighlighting h : highlighters.values()) {
+			if (h != highlighter) {
+				h.initDefaultPreferences();
+				positions = h.consumes(program);
+				assertNoDuplicates(highlighter.getDisplayName(), positions);
 			}
+		}
+	}
 
-			protected void tearDown() throws Exception {
-				tearDownSuite();
-			}
-		};
-		return setup;
+	private Program getProgram(ISourceModule module) throws ModelException,
+			IOException {
+		return SharedASTProvider.getAST(module, SharedASTProvider.WAIT_YES,
+				null);
+
 	}
 
 	protected void assertNoDuplicates(String highlighter, Position[] positions) {
@@ -230,7 +198,7 @@ public class SemanticHighlightingTests extends AbstractPDTTTest {
 		}
 	}
 
-	protected static void createFile(InputStream inputStream) throws Exception {
+	protected void createFile(InputStream inputStream) throws Exception {
 		testFile = project.getFile("test.php");
 		testFile.create(inputStream, true, null);
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -240,7 +208,7 @@ public class SemanticHighlightingTests extends AbstractPDTTTest {
 		// PHPCoreTests.waitForAutoBuild();
 	}
 
-	protected static ISourceModule getSourceModule() {
+	protected ISourceModule getSourceModule() {
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}
 }

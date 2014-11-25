@@ -7,23 +7,19 @@
  *
  * Contributors:
  *     Zend Technologies Ltd. - initial API and implementation
+ *     Dawid Pakuła - convert to JUnit4
  *******************************************************************************/
 package org.eclipse.php.formatter.core.tests;
+
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -38,11 +34,14 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.Region;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
+import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
+import org.eclipse.php.core.tests.runner.PDTTList;
+import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
+import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
+import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.formatter.core.Logger;
 import org.eclipse.php.formatter.ui.preferences.ProfileManager;
 import org.eclipse.php.formatter.ui.preferences.ProfileManager.CustomProfile;
@@ -53,15 +52,17 @@ import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.ui.format.PHPFormatProcessorProxy;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.osgi.framework.Bundle;
 
-public class FormatterTests extends AbstractPDTTTest {
+@RunWith(PDTTList.class)
+public class FormatterTests {
 
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	@Parameters(recursive = true)
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS
-				.put(PHPVersion.PHP5,
-						new String[] { "/workspace/formatter/php5" });
+		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/formatter/php5" });
 		TESTS.put(PHPVersion.PHP5_3,
 				new String[] { "/workspace/formatter/php53" });
 		TESTS.put(PHPVersion.PHP5_4,
@@ -71,17 +72,51 @@ public class FormatterTests extends AbstractPDTTTest {
 		TESTS.put(PHPVersion.PHP5_6,
 				new String[] { "/workspace/formatter/php56" });
 	};
+	protected static int suiteCounter = 0;
 
-	protected static Map<PdttFile, IFile> filesMap = new LinkedHashMap<PdttFile, IFile>();
-	protected static IProject project;
-	protected static int count;
+	@Context
+	public static Bundle getContext() {
+		return Activator.getDefault().getBundle();
+	}
 
-	public static void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				"FormatterTests");
-		if (project.exists()) {
-			return;
+	protected Map<String, IFile> files = new LinkedHashMap<String, IFile>();
+	protected Map<String, PdttFile> pdttFiles = new LinkedHashMap<String, PdttFile>();
+	protected final String[] fileNames;
+	protected IProject project;
+	protected int count;
+	protected final PHPVersion phpVersion;
+	protected final IScopeContext scopeContext;
+	protected final ProfileManager profileManager;
+	protected final String xmlFile;
+
+	public FormatterTests(PHPVersion version, String[] fileNames)
+			throws Exception {
+		this.phpVersion = version;
+		this.fileNames = fileNames;
+		Bundle bundle = getContext();
+		if (fileNames.length > 0) {
+			IPath path = new Path(fileNames[0]);
+			path = path.removeLastSegments(1);
+			String[] formatterConfigurationFile = PDTTUtils.getFiles(
+					path.toString(), bundle, ".xml");
+
+			if (formatterConfigurationFile.length > 0) {
+				xmlFile = formatterConfigurationFile[0];
+			} else {
+				xmlFile = null;
+			}
+		} else {
+			xmlFile = null;
 		}
+		scopeContext = InstanceScope.INSTANCE;
+		profileManager = new ProfileManager(new ArrayList<Profile>(),
+				scopeContext);
+	}
+
+	@BeforeList
+	public void setUpSuite() throws Exception {
+		project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject("FormatterTests_" + suiteCounter++);
 
 		project.create(null);
 		project.open(null);
@@ -91,207 +126,100 @@ public class FormatterTests extends AbstractPDTTTest {
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
 
-		for (PdttFile pdttFile : filesMap.keySet()) {
+		for (String fileName : fileNames) {
+			PdttFile pdttFile = new PdttFile(getContext(), fileName);
 			IFile file = createFile(pdttFile.getFile().trim());
-			filesMap.put(pdttFile, file);
+			files.put(fileName, file);
+			pdttFiles.put(fileName, pdttFile);
 		}
 
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 
+		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
+
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
 
-		IScopeContext scopeContext = InstanceScope.INSTANCE;
-		ProfileManager profileManager = new ProfileManager(
-				new ArrayList<Profile>(), scopeContext);
 		profileManager.clearAllSettings(scopeContext);
 		profileManager.commitChanges(scopeContext);
 
+		if (xmlFile != null) {
+			// apply configuration to the formatter configuration
+			// manager
+			String abcolutXmlFilePath = null;
+			try {
+				URL url = FileLocator.find(getContext(), new Path(xmlFile),
+						null);
+				URL resolved = FileLocator.resolve(url);
+				IPath path = Path.fromOSString(resolved.getFile());
+				abcolutXmlFilePath = path.toString();
+			} catch (Exception e) {
+				Logger.logException(e);
+			}
+
+			final File file = new File(abcolutXmlFilePath);
+			assertTrue("Formatter Configuration Not Found " + file.toString(),
+					file.exists());
+
+			List<Profile> profiles = null;
+			try {
+
+				profiles = ProfileStore.readProfilesFromFile(file);
+			} catch (CoreException e) {
+				Logger.logException(
+						"Error while reading profile configuration xml file", e);
+			}
+
+			// should be only one profile in file
+			if (profiles != null && profiles.size() > 0) {
+				// update formatter configuration profile
+				CustomProfile profile = (CustomProfile) profiles.iterator()
+						.next();
+				profileManager.addProfile(profile);
+				profileManager.setSelected(profile);
+				profileManager.commitChanges(scopeContext);
+
+			}
+		} else {
+
+		}
 	}
 
-	public static void tearDownSuite() throws Exception {
+	@AfterList
+	public void tearDownSuite() throws Exception {
+		setDefaultFormatter(scopeContext, profileManager);
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
 	}
 
-	public FormatterTests(String description) {
-		super(description);
-	}
+	@Test
+	public void formatter(String fileName) throws Exception {
+		IFile file = files.get(fileName);
 
-	public static Test suite() {
+		IStructuredModel modelForEdit = StructuredModelManager
+				.getModelManager().getModelForEdit(file);
+		try {
+			IDocument document = modelForEdit.getStructuredDocument();
+			String beforeFormat = document.get();
 
-		TestSuite suite = new TestSuite("Formatter Tests");
+			PHPFormatProcessorProxy formatter = new PHPFormatProcessorProxy();
+			formatter.formatDocument(document, 0, document.getLength());
 
-		for (final PHPVersion phpVersion : TESTS.keySet()) {
+			PDTTUtils.assertContents(pdttFiles.get(fileName).getExpected(),
+					document.get());
 
-			Bundle bundle = Activator.getDefault().getBundle();
-			String xmlConfigurationFile = null;
-			for (String testingDirectory : TESTS.get(phpVersion)) {
-				TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-
-				String[] testingDirectories = getTestingDirectories(bundle,
-						testingDirectory);
-				for (String testsDirectory : testingDirectories) {
-
-					TestSuite formatterConfigurationSuite = new TestSuite(
-							testsDirectory);
-
-					// read formatter configuration file from current pdtt
-					// directory
-					String[] formatterConfigurationFile = getFiles(
-							testsDirectory, bundle, ".xml");
-
-					if (formatterConfigurationFile.length > 0) {
-						xmlConfigurationFile = formatterConfigurationFile[0];
-					} else {
-						xmlConfigurationFile = null;
-					}
-
-					boolean filesFound = false;
-					for (final String fileName : getPDTTFiles(testsDirectory,
-							bundle)) {
-						filesFound = true;
-						try {
-							final PdttFile pdttFile = new PdttFile(Activator.getDefault().getBundle(), fileName);
-							filesMap.put(pdttFile, null);
-
-							formatterConfigurationSuite
-									.addTest(new FormatterTests(phpVersion
-											.getAlias() + " - /" + fileName) {
-
-										protected void setUp() throws Exception {
-											PHPCoreTests.setProjectPhpVersion(
-													project, phpVersion);
-										}
-
-										protected void runTest()
-												throws Throwable {
-
-											IFile file = filesMap.get(pdttFile);
-
-											IStructuredModel modelForEdit = StructuredModelManager
-													.getModelManager()
-													.getModelForEdit(file);
-											try {
-												IDocument document = modelForEdit
-														.getStructuredDocument();
-												String beforeFormat = document
-														.get();
-
-												PHPFormatProcessorProxy formatter = new PHPFormatProcessorProxy();
-												formatter.formatDocument(document, 0, document.getLength());
-
-												assertContents(pdttFile
-														.getExpected(),
-														document.get());
-
-												// change the document text as
-												// was
-												// before
-												// the formatting
-												document.set(beforeFormat);
-												modelForEdit.save();
-											} finally {
-												if (modelForEdit != null) {
-													modelForEdit
-															.releaseFromEdit();
-												}
-											}
-										}
-									});
-						} catch (final Exception e) {
-							phpVerSuite.addTest(new TestCase(fileName) { // dummy
-										// test
-										// indicating
-										// PDTT
-										// file
-										// parsing
-										// failure
-										protected void runTest()
-												throws Throwable {
-											throw e;
-										}
-									});
-						}
-					}
-					if(filesFound) {
-						TestSetup setup = new ConfigurableTestSetup(
-								formatterConfigurationSuite, xmlConfigurationFile);
-						phpVerSuite.addTest(setup);
-					}
-				}
-				suite.addTest(phpVerSuite);
+			// change the document text as
+			// was
+			// before
+			// the formatting
+			document.set(beforeFormat);
+			modelForEdit.save();
+		} finally {
+			if (modelForEdit != null) {
+				modelForEdit.releaseFromEdit();
 			}
-
-		}
-
-		return suite;
-	}
-
-	static class ConfigurableTestSetup extends TestSetup {
-		private String xmlFile;
-		private ProfileManager profileManager;
-		IScopeContext scopeContext;
-
-		public ConfigurableTestSetup(Test test, String xmlFile) {
-			super(test);
-			this.xmlFile = xmlFile;
-		}
-
-		protected void setUp() throws Exception {
-			setUpSuite();
-
-			if (xmlFile != null) {
-				scopeContext = InstanceScope.INSTANCE;
-				profileManager = new ProfileManager(new ArrayList<Profile>(),
-						scopeContext);
-
-				// apply configuration to the formatter configuration
-				// manager
-				String abcolutXmlFilePath = null;
-				try {
-					URL url = FileLocator.find(Activator.getDefault().getBundle(), new Path(xmlFile), null);
-					URL resolved = FileLocator.resolve(url);
-					IPath path = Path.fromOSString(resolved.getFile());
-					abcolutXmlFilePath = path.toString();
-				} catch (Exception e) {
-					Logger.logException(e);
-				}
-
-				final File file = new File(abcolutXmlFilePath);
-				assertTrue("Formatter Configuration Not Found " + file.toString(), file.exists());
-
-				List<Profile> profiles = null;
-				try {
-
-					profiles = ProfileStore.readProfilesFromFile(file);
-				} catch (CoreException e) {
-					Logger
-							.logException(
-									"Error while reading profile configuration xml file",
-									e);
-				}
-
-				//should be only one profile in file
-				if (profiles != null && profiles.size() > 0) {
-					// update formatter configuration profile
-					CustomProfile profile = (CustomProfile) profiles.iterator()
-							.next();
-					profileManager.addProfile(profile);
-					profileManager.setSelected(profile);
-					profileManager.commitChanges(scopeContext);
-
-				}
-			}
-		}
-
-		protected void tearDown() throws Exception {
-			if (xmlFile != null) {
-				setDefaultFormatter(scopeContext, profileManager);
-			}
-			tearDownSuite();
 		}
 	}
 
@@ -305,31 +233,9 @@ public class FormatterTests extends AbstractPDTTTest {
 		profileManager.commitChanges(scopeContext);
 	}
 
-	protected static IFile createFile(String data) throws Exception {
+	protected IFile createFile(String data) throws Exception {
 		IFile testFile = project.getFile("test" + (++count) + ".php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
 		return testFile;
-	}
-
-	protected static String[] getTestingDirectories(Bundle bundle,
-			String testsDirectory) {
-		Enumeration<String> entryPaths = bundle.getEntryPaths(testsDirectory);
-		List<String> files = new LinkedList<String>();
-		if (entryPaths != null) {
-			while (entryPaths.hasMoreElements()) {
-				final String path = (String) entryPaths.nextElement();
-				URL entry = bundle.getEntry(path);
-				// check whether the directory is readable:
-				try {
-
-					// TODO check if accessible directory
-					files.add(path);
-
-				} catch (Exception e) {
-					continue;
-				}
-			}
-		}
-		return (String[]) files.toArray(new String[files.size()]);
 	}
 }

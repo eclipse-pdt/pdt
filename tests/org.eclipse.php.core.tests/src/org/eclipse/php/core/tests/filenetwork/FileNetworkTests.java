@@ -17,7 +17,6 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import junit.framework.Assert;
 import junit.framework.Test;
 
 import org.eclipse.core.resources.IFile;
@@ -140,8 +139,8 @@ public class FileNetworkTests extends AbstractModelTests {
 		IMethod[] method = PHPModelUtils.getTypeHierarchyMethod(type, "foo",
 				true, null);
 
-		Assert.assertTrue("Can't find method", method.length > 0);
-		Assert.assertEquals("Wrong method was found", "a.php", method[0]
+		assertTrue("Can't find method", method.length > 0);
+		assertEquals("Wrong method was found", "a.php", method[0]
 				.getSourceModule().getElementName());
 	}
 
@@ -151,7 +150,6 @@ public class FileNetworkTests extends AbstractModelTests {
 		IMethod[] method = PHPModelUtils.getTypeHierarchyMethod(type, "foo",
 				true, null);
 
-		Assert.assertTrue("There should be two methods found",
-				method.length == 2);
+		assertTrue("There should be two methods found", method.length == 2);
 	}
 }

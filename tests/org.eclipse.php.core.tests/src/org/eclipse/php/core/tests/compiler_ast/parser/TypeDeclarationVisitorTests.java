@@ -15,25 +15,26 @@ import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
+import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.core.tests.runner.PDTTList;
+import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.parser.AbstractPHPSourceParser;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPSourceParserFactory;
 import org.eclipse.php.internal.core.compiler.ast.visitor.TypeDeclarationVisitor;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-public class TypeDeclarationVisitorTests extends AbstractPDTTTest {
+@RunWith(PDTTList.class)
+public class TypeDeclarationVisitorTests {
 
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	@Parameters
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
 		TESTS.put(
 				PHPVersion.PHP4,
@@ -52,77 +53,35 @@ public class TypeDeclarationVisitorTests extends AbstractPDTTTest {
 				"/workspace/astutils/type_declaration_visitor/php55" });
 	};
 
-	public TypeDeclarationVisitorTests(String description) {
-		super(description);
+	private AbstractPHPSourceParser parser;
+
+	public TypeDeclarationVisitorTests(PHPVersion version, String[] fileNames) {
+		parser = PHPSourceParserFactory.createParser(version);
 	}
 
-	public static Test suite() {
+	@Test
+	public void visitor(String fileName) throws Exception {
+		final PdttFile pdttFile = new PdttFile(fileName);
 
-		TestSuite suite = new TestSuite("Type Declaration Visitor Tests");
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdttFile
+				.getFile().trim().getBytes());
+		ModuleDeclaration moduleDeclaration = (ModuleDeclaration) parser.parse(
+				new InputStreamReader(inputStream), null,
+				ProjectOptions.useShortTags((IProject) null));
 
-		for (final PHPVersion phpVersion : TESTS.keySet()) {
-			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-			final AbstractPHPSourceParser parser = PHPSourceParserFactory
-					.createParser(phpVersion);
+		final StringBuilder builder = new StringBuilder();
 
-			for (String testsDirectory : TESTS.get(phpVersion)) {
-
-				for (final String fileName : getPDTTFiles(testsDirectory)) {
-					try {
-						final PdttFile pdttFile = new PdttFile(fileName);
-						phpVerSuite.addTest(new CompilerParserTests(phpVersion
-								.getAlias() + " - /" + fileName) {
-
-							protected void runTest() throws Throwable {
-
-								ByteArrayInputStream inputStream = new ByteArrayInputStream(
-										pdttFile.getFile().trim().getBytes());
-								ModuleDeclaration moduleDeclaration = (ModuleDeclaration) parser
-										.parse(new InputStreamReader(
-												inputStream),
-												null,
-												ProjectOptions
-														.useShortTags((IProject) null));
-
-								final StringBuilder builder = new StringBuilder();
-
-								moduleDeclaration
-										.traverse(new TypeDeclarationVisitor() {
-											@Override
-											public void visitType(
-													TypeDeclaration s) {
-												builder.append(s.getName());
-												builder.append('\n');
-											}
-										});
-
-								String actual = builder.toString();
-								String expected = pdttFile.getExpected();
-
-								assertContents(expected, actual);
-							}
-						});
-					} catch (final Exception e) {
-						// dummy test indicating PDTT file parsing failure
-						phpVerSuite.addTest(new TestCase(fileName) {
-							protected void runTest() throws Throwable {
-								throw e;
-							}
-						});
-					}
-				}
+		moduleDeclaration.traverse(new TypeDeclarationVisitor() {
+			@Override
+			public void visitType(TypeDeclaration s) {
+				builder.append(s.getName());
+				builder.append('\n');
 			}
-			suite.addTest(phpVerSuite);
-		}
+		});
 
-		// Create a setup wrapper
-		TestSetup setup = new TestSetup(suite) {
-			protected void setUp() throws Exception {
-			}
+		String actual = builder.toString();
+		String expected = pdttFile.getExpected();
 
-			protected void tearDown() throws Exception {
-			}
-		};
-		return setup;
+		PDTTUtils.assertContents(expected, actual);
 	}
 }
