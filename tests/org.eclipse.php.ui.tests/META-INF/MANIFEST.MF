@@ -21,3 +21,4 @@ Require-Bundle: org.junit,
  org.eclipse.jface.text
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: Eclipse.org

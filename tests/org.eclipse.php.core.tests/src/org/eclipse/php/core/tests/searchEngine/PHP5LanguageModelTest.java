@@ -1,6 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *     Dawid Pakuła - convert to JUnit4
+ *******************************************************************************/
 package org.eclipse.php.core.tests.searchEngine;
-
-import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -18,14 +28,18 @@ import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-public class PHP5LanguageModelTest extends TestCase {
+public class PHP5LanguageModelTest {
 
 	private static IProject project;
 
-	protected void setUp() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				"PHPLanguageModelTests");
+	@BeforeClass
+	public static void setUp() throws Exception {
+		project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject("PHPLanguageModelTests");
 		if (project.exists()) {
 			return;
 		}
@@ -45,13 +59,15 @@ public class PHP5LanguageModelTest extends TestCase {
 		PHPCoreTests.waitForAutoBuild();
 	}
 
-	protected void tearDown() throws Exception {
+	@AfterClass
+	public static void tearDown() throws Exception {
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
 	}
 
-	public void testBcmath() {
+	@Test
+	public void bcmath() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -69,7 +85,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		return scope;
 	}
 
-	public void testBz2() {
+	@Test
+	public void bz2() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -80,7 +97,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testCalendar() {
+	@Test
+	public void calendar() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -91,7 +109,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testCtype() {
+	@Test
+	public void ctype() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -102,7 +121,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testCurl() {
+	@Test
+	public void curl() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -113,7 +133,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testDate() {
+	@Test
+	public void date() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -124,7 +145,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testDom() {
+	@Test
+	public void dom() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -135,7 +157,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testExif() {
+	@Test
+	public void exif() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -146,7 +169,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testFilter() {
+	@Test
+	public void filter() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -157,7 +181,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testFtp() {
+	@Test
+	public void ftp() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -168,7 +193,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testGd() {
+	@Test
+	public void gd() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -179,7 +205,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testGettext() {
+	@Test
+	public void gettext() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -190,7 +217,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testHash() {
+	@Test
+	public void hash() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -201,7 +229,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testIconv() {
+	@Test
+	public void Iconv() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -212,7 +241,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testIbm_db2() {
+	@Test
+	public void Ibm_db2() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -223,7 +253,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testImap() {
+	@Test
+	public void Imap() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -234,7 +265,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testIntl() {
+	@Test
+	public void Intl() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -245,7 +277,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testJson() {
+	@Test
+	public void json() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -256,7 +289,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testLdap() {
+	@Test
+	public void ldap() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -267,7 +301,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testMcrypt() {
+	@Test
+	public void mcrypt() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -278,7 +313,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testMhash() {
+	@Test
+	public void mhash() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -289,7 +325,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testMime_magic() {
+	@Test
+	public void mime_magic() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -300,7 +337,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testMysql() {
+	@Test
+	public void mysql() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -311,7 +349,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testMysqli() {
+	@Test
+	public void mysqli() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -322,7 +361,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testOci8() {
+	@Test
+	public void oci8() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -333,7 +373,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testOpenssl() {
+	@Test
+	public void openssl() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -344,7 +385,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testPcre() {
+	@Test
+	public void pcre() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -355,7 +397,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testPosix() {
+	@Test
+	public void posix() {
 		IDLTKSearchScope scope = createScope();
 
 		IMethod[] allFunctions = PhpModelAccess.getDefault().findMethods(
@@ -365,7 +408,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testPdo() {
+	@Test
+	public void pdo() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -376,7 +420,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testPgsql() {
+	@Test
+	public void pgsql() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -387,7 +432,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testReflection() {
+	@Test
+	public void reflection() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -398,7 +444,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testSession() {
+	@Test
+	public void session() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -409,7 +456,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testSimpleXml() {
+	@Test
+	public void simpleXml() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -420,7 +468,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testSoap() {
+	@Test
+	public void soap() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -431,7 +480,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testSockets() {
+	@Test
+	public void sockets() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -442,7 +492,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testSpl() {
+	@Test
+	public void spl() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -453,7 +504,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testSqlite() {
+	@Test
+	public void sqlite() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -464,7 +516,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testStandard() {
+	@Test
+	public void standard() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -475,7 +528,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testTidy() {
+	@Test
+	public void tidy() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -486,7 +540,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testTokenizer() {
+	@Test
+	public void tokenizer() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -497,7 +552,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testXml() {
+	@Test
+	public void xml() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -508,7 +564,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testXmlreader() {
+	@Test
+	public void xmlreader() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -519,7 +576,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testXmlwriter() {
+	@Test
+	public void xmlwriter() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -530,7 +588,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testXsl() {
+	@Test
+	public void xsl() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -541,7 +600,8 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testZip() {
+	@Test
+	public void zip() {
 
 		IDLTKSearchScope scope = createScope();
 
@@ -552,14 +612,14 @@ public class PHP5LanguageModelTest extends TestCase {
 		assert (allFunctions.length > 0);
 	}
 
-	public void testZlib() {
+	@Test
+	public void zlib() {
 
 		IDLTKSearchScope scope = createScope();
 
 		IMethod[] allFunctions = PhpModelAccess.getDefault().findMethods(
 				"gzrewind", MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope,
 				new NullProgressMonitor());
-
 		assert (allFunctions.length > 0);
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009,2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,13 +8,13 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła - convert to JUnit4
  *******************************************************************************/
 package org.eclipse.php.core.tests.dom_ast.rewrite;
 
-import java.util.List;
+import static org.junit.Assert.assertTrue;
 
-import junit.framework.Assert;
-import junit.framework.TestSuite;
+import java.util.List;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -34,6 +34,9 @@ import org.eclipse.php.internal.core.ast.nodes.TraitDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.TraitPrecedenceStatement;
 import org.eclipse.php.internal.core.ast.nodes.TraitUseStatement;
 import org.eclipse.php.internal.core.ast.nodes.Variable;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * AST rewrite test which tests the ASTRewriteAnalyzer implementation.
@@ -42,14 +45,11 @@ import org.eclipse.php.internal.core.ast.nodes.Variable;
  */
 public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 
-	public ASTRewriteTestsPHP54(String name) {
-		super(name);
-	}
+	@RunWith(org.junit.runners.Suite.class)
+	@SuiteClasses({ ASTRewriteTestsPHP54.class, NodeDeletionTests.class,
+			ASTRewriteTestsPHP54.class })
+	public static class Suite {
 
-	public static TestSuite suite() {
-		return new TestSuite(new Class[] { ASTRewriteTestsPHP54.class,
-				NodeDeletionTestsPHP54.class, },
-				ASTRewriteTestsPHP54.class.getName());
 	}
 
 	@Override
@@ -57,13 +57,14 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 		return PHPVersion.PHP5_4;
 	}
 
-	public void testClassConstant() throws Exception {
+	@Test
+	public void classConstant() throws Exception {
 		String str = "<?php $a = MyClass::MY_CONST; ?>";
 		initialize(str);
 
 		List<StaticConstantAccess> staticConstants = getAllOfType(program,
 				StaticConstantAccess.class);
-		Assert.assertTrue("Unexpected list size.", staticConstants.size() == 1);
+		assertTrue("Unexpected list size.", staticConstants.size() == 1);
 		((NamespaceName) staticConstants.get(0).getClassName()).segments()
 				.get(0).setName("Foo");
 		staticConstants.get(0).setConstant(ast.newIdentifier("BAR_CONST"));
@@ -71,39 +72,42 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 		checkResult("<?php $a = Foo::BAR_CONST; ?>");
 	}
 
-	public void testClassDeclarationReplaceSuper() throws Exception {
+	@Test
+	public void classDeclarationReplaceSuper() throws Exception {
 		String str = "<?php class MyClass extends Foo { } ?> ";
 		initialize(str);
 
 		List<ClassDeclaration> declarations = getAllOfType(program,
 				ClassDeclaration.class);
-		Assert.assertTrue("Unexpected list size.", declarations.size() == 1);
+		assertTrue("Unexpected list size.", declarations.size() == 1);
 		((NamespaceName) declarations.get(0).getSuperClass()).segments().get(0)
 				.setName("Bar");
 		rewrite();
 		checkResult("<?php class MyClass extends Bar { } ?> ");
 	}
 
-	public void testClassDeclarationRenameInterface() throws Exception {
+	@Test
+	public void classDeclarationRenameInterface() throws Exception {
 		String str = "<?php class MyClass extends AAA implements Foo,Bar{ } ?> ";
 		initialize(str);
 
 		List<ClassDeclaration> declarations = getAllOfType(program,
 				ClassDeclaration.class);
-		Assert.assertTrue("Unexpected list size.", declarations.size() == 1);
+		assertTrue("Unexpected list size.", declarations.size() == 1);
 		((NamespaceName) declarations.get(0).interfaces().get(1)).segments()
 				.get(0).setName("BooBo");
 		rewrite();
 		checkResult("<?php class MyClass extends AAA implements Foo,BooBo{ } ?> ");
 	}
 
-	public void testInterfaceDeclarationRenameExtend() throws Exception {
+	@Test
+	public void interfaceDeclarationRenameExtend() throws Exception {
 		String str = "<?php interface MyInterface extends Foo, Bar{ const MY_CONSTANT = 3; public function myFunction($a); } ?> ";
 		initialize(str);
 
 		List<InterfaceDeclaration> declarations = getAllOfType(program,
 				InterfaceDeclaration.class);
-		Assert.assertTrue("Unexpected list size.", declarations.size() == 1);
+		assertTrue("Unexpected list size.", declarations.size() == 1);
 		((NamespaceName) declarations.get(0).interfaces().get(0)).segments()
 				.get(0).setName("Boobo");
 		rewrite();
@@ -111,44 +115,47 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 	}
 
 	// FIXME should fix this case,the scalar's end is wrong!
-	// public void testEmptyHeredoc() throws Exception {
+	// @Test public void emptyHeredoc() throws Exception {
 	// String str = "<?php <<<Heredoc\nabc\nefg\nHeredoc;\n?>";
 	// initialize(str);
 	//
 	// List<Quote> quotes = getAllOfType(program, Quote.class);
-	// Assert.assertTrue("Unexpected list size.", quotes.size() == 1);
+	// assertTrue("Unexpected list size.", quotes.size() == 1);
 	// quotes.get(0).expressions().clear();
 	// quotes.get(0).expressions().add(ast.newScalar("Hello World\n"));
 	// rewrite();
 	// checkResult("<?php <<<Heredoc\nHello World\nefg\nHeredoc;\n?>");
 	// }
 
-	public void testEmptyHeredoc() throws Exception {
+	@Test
+	public void emptyHeredoc() throws Exception {
 		String str = "<?php <<<Heredoc\nHeredoc;\n?>";
 		initialize(str);
 		checkResult("<?php <<<Heredoc\nHeredoc;\n?>");
 
 	}
 
-	public void testTraitDeclarationSimple() throws Exception {
+	@Test
+	public void traitDeclarationSimple() throws Exception {
 		String str = "<?php trait MyTrait { } ?> ";
 		initialize(str);
 
 		List<TraitDeclaration> declarations = getAllOfType(program,
 				TraitDeclaration.class);
-		Assert.assertTrue("Unexpected list size.", declarations.size() == 1);
+		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).setName(ast.newIdentifier("Foo"));
 		rewrite();
 		checkResult("<?php trait Foo { } ?> ");
 	}
 
-	public void testTraitFieldDeclaration() throws Exception {
+	@Test
+	public void traitFieldDeclaration() throws Exception {
 		String str = "<?php trait A { public $a = 3; final private static $var; }?>";
 		initialize(str);
 
 		List<FieldsDeclaration> declarations = getAllOfType(program,
 				FieldsDeclaration.class);
-		Assert.assertTrue("Unexpected list size.", declarations.size() == 2);
+		assertTrue("Unexpected list size.", declarations.size() == 2);
 		declarations
 				.get(0)
 				.fields()
@@ -161,13 +168,14 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 		checkResult("<?php trait A { public $a, $b = 4; protected final $var; }?>");
 	}
 
-	public void testTraitFunctionDeclaration() throws Exception {
+	@Test
+	public void traitFunctionDeclaration() throws Exception {
 		String str = "<?php function foo() {} ?> ";
 		initialize(str);
 
 		List<FunctionDeclaration> declarations = getAllOfType(program,
 				FunctionDeclaration.class);
-		Assert.assertTrue("Unexpected list size.", declarations.size() == 1);
+		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).setFunctionName(ast.newIdentifier("bar"));
 		declarations
 				.get(0)
@@ -178,26 +186,28 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 		checkResult("<?php function bar(int $a) {} ?> ");
 	}
 
-	public void testFunctionDeclarationWithCallableParam2() throws Exception {
+	@Test
+	public void functionDeclarationWithCallableParam2() throws Exception {
 		String str = "<?php function foo($a, callable $b) {} ?> ";
 		initialize(str);
 
 		List<FunctionDeclaration> declarations = getAllOfType(program,
 				FunctionDeclaration.class);
-		Assert.assertTrue("Unexpected list size.", declarations.size() == 1);
+		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).formalParameters().get(1)
 				.setParameterType(ast.newIdentifier("string"));
 		rewrite();
 		checkResult("<?php function foo($a, string $b) {} ?> ");
 	}
 
-	public void testTraitMethodDeclaration() throws Exception {
+	@Test
+	public void traitMethodDeclaration() throws Exception {
 		String str = "<?php trait A { public function foo(int $a){} }?> ";
 		initialize(str);
 
 		List<MethodDeclaration> declarations = getAllOfType(program,
 				MethodDeclaration.class);
-		Assert.assertTrue("Unexpected list size.", declarations.size() == 1);
+		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).setModifier(
 				Modifiers.AccProtected | Modifiers.AccAbstract);
 		declarations.get(0).getFunction()
@@ -206,25 +216,27 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 		checkResult("<?php trait A { protected abstract function bar(int $a){} }?> ");
 	}
 
-	public void testArrayInitializer() throws Exception {
+	@Test
+	public void arrayInitializer() throws Exception {
 		String str = "<?php $f = [new Human('Gonzalo'), 'hello']; ?>";
 		initialize(str);
 
 		List<ArrayElement> arrayAccess = getAllOfType(program,
 				ArrayElement.class);
-		Assert.assertTrue("Unexpected list size.", arrayAccess.size() == 2);
+		assertTrue("Unexpected list size.", arrayAccess.size() == 2);
 		((Scalar) arrayAccess.get(1).getValue()).setStringValue("'world'");
 		rewrite();
 		checkResult("<?php $f = [new Human('Gonzalo'), 'world']; ?>");
 	}
 
-	public void testClassInitializer() throws Exception {
+	@Test
+	public void classInitializer() throws Exception {
 		String str = "<?php (new Human('Gonzalo'))->hello(); ?>";
 		initialize(str);
 
 		List<FunctionInvocation> arrayAccess = getAllOfType(program,
 				FunctionInvocation.class);
-		Assert.assertTrue("Unexpected list size.", arrayAccess.size() == 1);
+		assertTrue("Unexpected list size.", arrayAccess.size() == 1);
 		Variable name = ast.newVariable("world");
 		name.setIsDollared(false);
 		((FunctionInvocation) arrayAccess.get(0)).getFunctionName().setName(
@@ -233,48 +245,52 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 		checkResult("<?php (new Human('Gonzalo'))->world(); ?>");
 	}
 
-	public void testExpresionFunctionInvocation() throws Exception {
+	@Test
+	public void expresionFunctionInvocation() throws Exception {
 		String str = "<?php $human->{'hello'}(); ?>";
 		initialize(str);
 
 		List<FunctionInvocation> arrayAccess = getAllOfType(program,
 				FunctionInvocation.class);
-		Assert.assertTrue("Unexpected list size.", arrayAccess.size() == 1);
+		assertTrue("Unexpected list size.", arrayAccess.size() == 1);
 		((Variable) arrayAccess.get(0).getFunctionName().getName()).setName(ast
 				.newScalar("'world'"));
 		rewrite();
 		checkResult("<?php $human->{'world'}(); ?>");
 	}
 
-	public void testStaticLambdaFunction() throws Exception {
+	@Test
+	public void staticLambdaFunction() throws Exception {
 		String str = "<?php $lambda = static function () { }; ?>";
 		initialize(str);
 
 		List<LambdaFunctionDeclaration> arrayAccess = getAllOfType(program,
 				LambdaFunctionDeclaration.class);
-		Assert.assertTrue("Unexpected list size.", arrayAccess.size() == 1);
+		assertTrue("Unexpected list size.", arrayAccess.size() == 1);
 	}
 
-	public void testUseTrait1() throws Exception {
+	@Test
+	public void useTrait1() throws Exception {
 		String str = "<?php class Test { use Hello, World; } ?>";
 		initialize(str);
 
 		List<TraitUseStatement> arrayAccess = getAllOfType(program,
 				TraitUseStatement.class);
-		Assert.assertTrue("Unexpected list size.", arrayAccess.size() == 1);
+		assertTrue("Unexpected list size.", arrayAccess.size() == 1);
 		arrayAccess.get(0).getTraitList().get(0).segments().get(0)
 				.setName("Hi");
 		rewrite();
 		checkResult("<?php class Test { use Hi, World; } ?>");
 	}
 
-	public void testUseTrait2() throws Exception {
+	@Test
+	public void useTrait2() throws Exception {
 		String str = "<?php class Aliased_Talker { use A, B {B::smallTalk insteadof A;\nA::bigTalk insteadof B;\nB::bigTalk as talk;\n}\n } ?>";
 		initialize(str);
 
 		List<TraitPrecedenceStatement> arrayAccess = getAllOfType(program,
 				TraitPrecedenceStatement.class);
-		Assert.assertTrue("Unexpected list size.", arrayAccess.size() == 2);
+		assertTrue("Unexpected list size.", arrayAccess.size() == 2);
 		arrayAccess.get(0).getPrecedence().getMethodReference().getClassName()
 				.segments().get(0).setName("B1");
 		arrayAccess.get(0).getPrecedence().getMethodReference()
@@ -282,7 +298,7 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 
 		List<TraitAliasStatement> aliasStatement = getAllOfType(program,
 				TraitAliasStatement.class);
-		Assert.assertTrue("Unexpected list size.", aliasStatement.size() == 1);
+		assertTrue("Unexpected list size.", aliasStatement.size() == 1);
 		aliasStatement.get(0).getAlias()
 				.setFunctionName(ast.newIdentifier("talking"));
 
@@ -290,25 +306,27 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 		checkResult("<?php class Aliased_Talker { use A, B {B1::bigTalk insteadof A;\nA::bigTalk insteadof B;\nB::bigTalk as talking;\n}\n } ?>");
 	}
 
-	public void testUseTrait3() throws Exception {
+	@Test
+	public void useTrait3() throws Exception {
 		String str = "<?php class Test { use HelloWorld { sayHello as protected; } } ?>";
 		initialize(str);
 
 		List<TraitAliasStatement> arrayAccess = getAllOfType(program,
 				TraitAliasStatement.class);
-		Assert.assertTrue("Unexpected list size.", arrayAccess.size() == 1);
+		assertTrue("Unexpected list size.", arrayAccess.size() == 1);
 		arrayAccess.get(0).getAlias().setModifier(Modifiers.AccPublic);
 		rewrite();
 		checkResult("<?php class Test { use HelloWorld { sayHello as public; } } ?>");
 	}
 
-	public void testUseTrait4() throws Exception {
+	@Test
+	public void useTrait4() throws Exception {
 		String str = "<?php class Test { use HelloWorld { sayHello as private myPrivateHello; } } ?>";
 		initialize(str);
 
 		List<TraitAliasStatement> arrayAccess = getAllOfType(program,
 				TraitAliasStatement.class);
-		Assert.assertTrue("Unexpected list size.", arrayAccess.size() == 1);
+		assertTrue("Unexpected list size.", arrayAccess.size() == 1);
 		arrayAccess.get(0).getAlias().setModifier(Modifiers.AccPublic);
 		arrayAccess.get(0).getAlias()
 				.setFunctionName(ast.newIdentifier("myPublicHello"));
