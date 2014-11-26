@@ -505,7 +505,7 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 		return webLaunch;
 	}
 
-	public DebugOutput getOutputBuffer() {
+	public DebugOutput getDebugOutput() {
 		return debugOutput;
 	}
 

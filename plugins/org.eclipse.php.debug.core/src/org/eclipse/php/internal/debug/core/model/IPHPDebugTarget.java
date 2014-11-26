@@ -24,7 +24,7 @@ public interface IPHPDebugTarget extends IDebugTarget {
 	 * 
 	 * @return DebugOutput containing the output.
 	 */
-	public DebugOutput getOutputBuffer();
+	public DebugOutput getDebugOutput();
 
 	/**
 	 * return true if the debug target is waiting for the next debug session. This

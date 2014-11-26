@@ -36,6 +36,7 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 
+@SuppressWarnings("restriction")
 public class DebugBrowserView extends ViewPart implements ISelectionListener {
 
 	public static final String ID_PHPBrowserOutput = "org.eclipse.debug.ui.PHPBrowserOutput"; //$NON-NLS-1$
@@ -107,7 +108,7 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener {
 						if (events[i].getKind() == DebugEvent.TERMINATE) {
 							target = (IPHPDebugTarget) obj;
 							Job job = new UIJob(
-									PHPDebugUIMessages.PHPDebugUIPlugin_0) { //$NON-NLS-1$
+									PHPDebugUIMessages.PHPDebugUIPlugin_0) {
 								public IStatus runInUIThread(
 										IProgressMonitor monitor) {
 									update(target);
@@ -174,22 +175,20 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener {
 			IPHPDebugTarget oldTarget = fTarget;
 			int oldcount = fUpdateCount;
 			fTarget = target;
-
 			DebugOutput debugOutput = null;
 			if (fTarget != null) {
 				if ((fTarget.isSuspended()) || (fTarget.isTerminated())
 						|| fTarget.isWaiting()) {
-					debugOutput = fTarget.getOutputBuffer();
+					debugOutput = fTarget.getDebugOutput();
 					fUpdateCount = debugOutput.getUpdateCount();
-
 					// check if output hasn't been updated
 					if (fTarget == oldTarget && fUpdateCount == oldcount) {
 						return;
 					}
-				} else {
-					// Not Suspended or Terminated
-
-					// the following is a fix for bug
+				} 
+				// Not Suspended or Terminated
+				else {
+					// The following is a fix for bug
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=205688
 					// if the target is not suspended or terminated fTarget
 					// should get back its old value
@@ -200,22 +199,12 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener {
 					return;
 				}
 			}
-
 			if (debugOutput != null) {
 				String contentType = debugOutput.getContentType();
 				if (contentType != null && !contentType.startsWith("text")) { //$NON-NLS-1$
 					return; // we don't show garbage anymore
 				}
-				String output = debugOutput.toString();
-				// Skip headers
-				int startIdx = output.indexOf("\r\n\r\n"); //$NON-NLS-1$
-				if (startIdx == -1) {
-					startIdx = output.indexOf("\r\n"); //$NON-NLS-1$
-				}
-				if (startIdx != -1) {
-					output = output.substring(startIdx + 2);
-				}
-				swtBrowser.setText(output);
+				swtBrowser.setText(debugOutput.getOutput(), false);
 			}
 		}
 	}

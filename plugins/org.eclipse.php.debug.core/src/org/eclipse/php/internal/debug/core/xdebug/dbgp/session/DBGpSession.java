@@ -377,7 +377,7 @@ public class DBGpSession {
 							+ outputEncoding, this, e);
 					streamStr = new String(streamData);
 				}
-				debugTarget.getOutputBuffer().append(streamStr);
+				debugTarget.getDebugOutput().append(streamStr);
 			}
 		}
 
