@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.search;
 
 import org.eclipse.php.internal.core.CoreMessages;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.ast.nodes.*;
 
 public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
@@ -76,7 +77,11 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 		}
 		if (expression.getType() == ASTNode.SCALAR) {
 			Scalar scalar = (Scalar) expression;
-			return Integer.parseInt(scalar.getStringValue());
+			try {
+				return Integer.parseInt(scalar.getStringValue());
+			} catch (NumberFormatException e) {
+				Logger.logException(e);
+			}
 		}
 		return 0;
 	}
