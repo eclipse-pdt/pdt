@@ -92,12 +92,11 @@ public class PHPStructuredTextPartitioner extends
 			return super.getPartition(offset - 1);
 		}
 		ITypedRegion result = super.getPartition(offset);
-		if (result.getType().equals(PHPPartitionTypes.PHP_DEFAULT)) {
+		if (offset > 0
+				&& result.getType().equals(PHPPartitionTypes.PHP_DEFAULT)) {
 			IStructuredDocumentRegion structuredDocumentRegion = fStructuredDocument
 					.getRegionAtCharacterOffset(offset);
-			if (structuredDocumentRegion.getStartOffset() == offset
-					|| ((offset > 0 && structuredDocumentRegion
-							.getStartOffset() == offset - 1))) {
+			if (structuredDocumentRegion.getStartOffset() == offset) {
 				return super.getPartition(offset - 1);
 			}
 		}
