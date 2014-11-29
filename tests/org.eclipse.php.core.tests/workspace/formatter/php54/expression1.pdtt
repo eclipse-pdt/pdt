@@ -1,13 +1,13 @@
 --TEST--
 Test Abs Class
 --FILE--
-<?php 
+<?php
 foreach ([new Human("Gonzalo"), new Human("Peter")] as $human) {
     echo $human->{'hello'}();
 }
 ?>
 --EXPECT--
-<?php 
+<?php
 foreach ([new Human("Gonzalo"), new Human("Peter")] as $human) {
 	echo $human->{'hello'}();
 }

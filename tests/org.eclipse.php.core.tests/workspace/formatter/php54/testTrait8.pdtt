@@ -1,7 +1,7 @@
 --TEST--
 Test Abs Class
 --FILE--
-<?php 
+<?php
 trait StaticExample {
     public static function doSomething() {
         return 'Doing something';
@@ -15,7 +15,7 @@ class Example {
 Example::doSomething();
 ?>
 --EXPECT--
-<?php 
+<?php
 trait StaticExample {
 	public static function doSomething() {
 		return 'Doing something';

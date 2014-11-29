@@ -1,7 +1,7 @@
 --TEST--
 Test Abs Class
 --FILE--
-<?php 
+<?php
 trait PropertiesTrait {
     public $x = 1;
 }
@@ -14,7 +14,7 @@ $example = new PropertiesExample;
 $example->x;
 ?>
 --EXPECT--
-<?php 
+<?php
 trait PropertiesTrait {
 	public $x = 1;
 }

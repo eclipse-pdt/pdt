@@ -1,7 +1,7 @@
 --TEST--
 Test Abs Class
 --FILE--
-<?php 
+<?php
 trait HelloWorld {
     public function sayHello() {
         echo 'Hello World!';
@@ -20,7 +20,7 @@ class MyClass2 {
 }
 ?>
 --EXPECT--
-<?php 
+<?php
 trait HelloWorld {
 	public function sayHello() {
 		echo 'Hello World!';
