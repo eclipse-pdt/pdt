@@ -1,14 +1,14 @@
 --TEST--
 Test Abs Class
 --FILE--
-<?php 
+<?php
 function data() {
     return ['name' => 'Gonzalo', 'surname' => 'Ayuso'];
 }
 echo data()['name'];
 ?>
 --EXPECT--
-<?php 
+<?php
 function data() {
 	return ['name' => 'Gonzalo', 'surname' => 'Ayuso'];
 }

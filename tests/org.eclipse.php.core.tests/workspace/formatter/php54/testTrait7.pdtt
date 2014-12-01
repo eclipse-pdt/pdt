@@ -1,7 +1,7 @@
 --TEST--
 Test Abs Class
 --FILE--
-<?php 
+<?php
 trait Counter {
     public function inc() {
         static $c = 0;
@@ -19,7 +19,7 @@ class C2 {
 }
 ?>
 --EXPECT--
-<?php 
+<?php
 trait Counter {
 	public function inc() {
 		static $c = 0;

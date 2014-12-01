@@ -1,7 +1,7 @@
 --TEST--
 Test Abs Class
 --FILE--
-<?php 
+<?php
 class Base {
     public function sayHello() {
         echo 'Hello ';
@@ -23,7 +23,7 @@ $o = new MyHelloWorld();
 $o->sayHello();
 ?>
 --EXPECT--
-<?php 
+<?php
 class Base {
 	public function sayHello() {
 		echo 'Hello ';

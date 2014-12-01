@@ -1,7 +1,7 @@
 --TEST--
 Test Abs Class
 --FILE--
-<?php 
+<?php
 trait ezcReflectionReturnInfo {
     function getReturnType() {}
     function getReturnDescription() {}
@@ -11,7 +11,7 @@ class ezcReflectionMethod extends ReflectionMethod {
 }
 ?>
 --EXPECT--
-<?php 
+<?php
 trait ezcReflectionReturnInfo {
 	function getReturnType() {
 	}
