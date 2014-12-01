@@ -199,7 +199,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					TextSequence statement = PHPTextSequenceUtilities
 							.getStatement(elementStart + tRegion.getLength(),
 									sRegion, true);
-					if (statement != null) {
+					if (statement.length() != 0) {
 						int endPosition = PHPTextSequenceUtilities
 								.readBackwardSpaces(statement,
 										statement.length());
@@ -646,7 +646,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						+ phpScriptRegion.getStart() + tRegion.getStart();
 				TextSequence statement = PHPTextSequenceUtilities.getStatement(
 						elementStart + tRegion.getLength(), sRegion, true);
-				if (statement == null) {
+				if (statement.length() == 0) {
 					return EMPTY;
 				}
 				int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(

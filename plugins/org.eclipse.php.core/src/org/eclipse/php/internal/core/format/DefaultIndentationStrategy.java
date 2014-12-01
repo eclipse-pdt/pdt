@@ -512,7 +512,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		TextSequence textSequence = PHPTextSequenceUtilities
 				.getStatement(lineStart,
 						document.getRegionAtCharacterOffset(lineStart), true);
-		if (textSequence == null) {
+		if (textSequence.length() == 0) {
 			return false;
 		}
 		String regionType = FormatterUtils.getRegionType(document,

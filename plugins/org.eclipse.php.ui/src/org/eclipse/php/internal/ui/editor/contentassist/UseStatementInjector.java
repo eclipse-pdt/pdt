@@ -189,16 +189,18 @@ public class UseStatementInjector {
 						+ phpScriptRegion.getStart() + tRegion.getStart();
 				TextSequence statement = PHPTextSequenceUtilities.getStatement(
 						elementStart + tRegion.getLength(), sRegion, true);
-				int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(
-						statement, statement.length());
-				int startPosition = PHPTextSequenceUtilities
-						.readIdentifierStartIndex(phpVersion, statement,
-								endPosition, true);
-				String elementName = statement.subSequence(startPosition,
-						endPosition).toString();
-				if (elementName.length() > 0) {
-					return PHPModelUtils.extractNamespaceName(elementName,
-							sourceModule, offset);
+				if (statement.length() != 0) {
+					int endPosition = PHPTextSequenceUtilities
+							.readBackwardSpaces(statement, statement.length());
+					int startPosition = PHPTextSequenceUtilities
+							.readIdentifierStartIndex(phpVersion, statement,
+									endPosition, true);
+					String elementName = statement.subSequence(startPosition,
+							endPosition).toString();
+					if (elementName.length() > 0) {
+						return PHPModelUtils.extractNamespaceName(elementName,
+								sourceModule, offset);
+					}
 				}
 			}
 		}

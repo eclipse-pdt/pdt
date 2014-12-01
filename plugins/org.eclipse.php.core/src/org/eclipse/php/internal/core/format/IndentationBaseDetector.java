@@ -245,7 +245,7 @@ public class IndentationBaseDetector {
 		TextSequence textSequence = PHPTextSequenceUtilities
 				.getStatement(lineStart,
 						document.getRegionAtCharacterOffset(lineStart), true);
-		if (textSequence != null
+		if (textSequence.length() != 0
 				&& IndentationUtils.isRegionTypeAllowedMultiline(FormatterUtils
 						.getRegionType(document,
 								textSequence.getOriginalOffset(0)))
@@ -267,7 +267,7 @@ public class IndentationBaseDetector {
 		TextSequence textSequence = PHPTextSequenceUtilities
 				.getStatement(lineStart,
 						document.getRegionAtCharacterOffset(lineStart), true);
-		if (textSequence != null
+		if (textSequence.length() != 0
 				&& IndentationUtils.isRegionTypeAllowedMultiline(FormatterUtils
 						.getRegionType(document,
 								textSequence.getOriginalOffset(0)))) {
@@ -404,15 +404,17 @@ public class IndentationBaseDetector {
 		TextSequence textSequence = PHPTextSequenceUtilities
 				.getStatement(lineStart,
 						document.getRegionAtCharacterOffset(lineStart), true);
-		int textOriginalOffset = textSequence.getOriginalOffset(0);
-		int textSequenceLine = document.getLineOfOffset(textOriginalOffset);
-		if (textSequence != null
-				&& textSequenceLine < currLineIndex
-				&& IndentationUtils.isRegionTypeAllowedMultiline(FormatterUtils
-						.getRegionType(document, textOriginalOffset))) {
-			return textSequenceLine;
+		if (textSequence.length() != 0) {
+			int textOriginalOffset = textSequence.getOriginalOffset(0);
+			int textSequenceLine = document.getLineOfOffset(textOriginalOffset);
+			if (textSequenceLine < currLineIndex
+					&& IndentationUtils
+							.isRegionTypeAllowedMultiline(FormatterUtils
+									.getRegionType(document, textOriginalOffset))) {
+				return textSequenceLine;
+			}
 		}
-
+		
 		return -1;
 	}
 

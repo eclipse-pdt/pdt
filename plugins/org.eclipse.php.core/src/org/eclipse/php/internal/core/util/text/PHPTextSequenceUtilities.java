@@ -70,7 +70,7 @@ public class PHPTextSequenceUtilities {
 	 *            Flag determining whether to remove comments in the resulted
 	 *            text sequence
 	 * 
-	 * @return text sequence of the statement
+	 * @return text sequence of the statement, cannot be null
 	 */
 	public static TextSequence getStatement(int offset,
 			IStructuredDocumentRegion sdRegion, boolean removeComments) {
@@ -145,22 +145,21 @@ public class PHPTextSequenceUtilities {
 						readForwardSpaces(textSequence, 0),
 						textSequence.length());
 				return textSequence;
-
 			} catch (BadLocationException e) {
 			}
 		}
 
-		return null;
+		return TextSequenceUtilities.createTextSequence(sdRegion, 0, 0);
 	}
 
 	private static TextSequence removeComments(TextSequence textSequence) {
 		List<IRegion> comments = collectComments(textSequence);
 		for (int i = comments.size() - 1; i >= 0; i--) {
 			IRegion commentStartRegion = comments.get(i);
+			int end = Math.min(commentStartRegion.getOffset()
+					+ commentStartRegion.getLength(), textSequence.length());
 			textSequence = textSequence.cutTextSequence(
-					commentStartRegion.getOffset(),
-					commentStartRegion.getOffset()
-							+ commentStartRegion.getLength());
+					commentStartRegion.getOffset(), end);
 		}
 		return textSequence;
 	}
