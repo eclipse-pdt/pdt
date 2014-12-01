@@ -55,7 +55,8 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		CompletionRequestor requestor = concreteContext
 				.getCompletionRequestor();
 
-		String prefix = concreteContext.getPrefix();
+		String prefix = concreteContext.getPrefix().isEmpty() ? concreteContext
+				.getPreviousWord() : concreteContext.getPrefix();
 		boolean isParentCall = isParentCall(concreteContext);
 		String suffix = getSuffix(concreteContext);
 
