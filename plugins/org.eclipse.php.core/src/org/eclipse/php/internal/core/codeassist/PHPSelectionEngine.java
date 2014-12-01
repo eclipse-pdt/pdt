@@ -646,7 +646,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						+ phpScriptRegion.getStart() + tRegion.getStart();
 				TextSequence statement = PHPTextSequenceUtilities.getStatement(
 						elementStart + tRegion.getLength(), sRegion, true);
-				if (statement == null) {
+				if (statement == null || statement.length() <= 0) {
 					return EMPTY;
 				}
 				int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(
