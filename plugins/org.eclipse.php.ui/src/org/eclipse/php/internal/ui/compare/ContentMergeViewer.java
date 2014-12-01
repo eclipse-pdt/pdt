@@ -1449,7 +1449,10 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 		Object input = getInput();
 		if (isLeftDirty() || isRightDirty()) {
 			flushContent(input, null);
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=453799
+			// refresh only when necessary to avoid use-after-handle-disposal
+			// (i.e. when getMergeContentProvider() returns null)
+			refresh();
 		}
-		refresh();
 	}
 }
