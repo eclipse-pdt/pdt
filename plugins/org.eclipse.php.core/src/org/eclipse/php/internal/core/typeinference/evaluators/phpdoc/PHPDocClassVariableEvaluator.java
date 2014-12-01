@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.*;
@@ -23,10 +24,8 @@ import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.AbstractPHPGoalEvaluator;
@@ -61,8 +60,16 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		IType[] types = PHPTypeInferenceUtils.getModelElements(
 				context.getInstanceType(), context, offset, cache);
 		Map<PHPDocBlock, IField> docs = new HashMap<PHPDocBlock, IField>();
-
+		boolean lookOnlyForArrayTypes = false;
 		if (types != null) {
+			// remove array index from field name
+			if (variableName.endsWith("]")) { //$NON-NLS-1$
+				int index = variableName.indexOf("["); //$NON-NLS-1$
+				if (index != -1) {
+					variableName = variableName.substring(0, index);
+					lookOnlyForArrayTypes = true;
+				}
+			}
 			for (IType type : types) {
 				try {
 					// we look in whole hiearchy
@@ -93,36 +100,47 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 			}
 		}
 
+		if (!lookOnlyForArrayTypes) {
+			int start = offset + variableName.length();
+			int end = offset + variableName.length() + 1;
+			ASTNode node = ASTUtils.findMinimalNode(context.getRootNode(),
+					start, end);
+			if (node instanceof ForEachStatement) {
+				lookOnlyForArrayTypes = true;
+			}
+		}
+
 		for (Entry<PHPDocBlock, IField> entry : docs.entrySet()) {
 			PHPDocBlock doc = entry.getKey();
 			IField typeField = entry.getValue();
 			IType currentNamespace = PHPModelUtils
 					.getCurrentNamespace(typeField);
+
 			for (PHPDocTag tag : doc.getTags()) {
 				if (tag.getTagKind() == PHPDocTag.VAR) {
 					SimpleReference[] references = tag.getReferences();
 					for (SimpleReference ref : references) {
 						String typeName = ref.getName();
 						Matcher m = ARRAY_TYPE_PATTERN.matcher(typeName);
-						if (m.find()) {
-							evaluated.add(getArrayType(m.group(),
-									currentNamespace, doc.sourceStart()));
-						} else if (typeName.endsWith(BRACKETS)
-								&& typeName.length() > 2) {
-							offset = 0;
-							try {
-								offset = typeField.getSourceRange().getOffset();
-							} catch (ModelException e) {
-							}
-							evaluated.add(getArrayType(typeName.substring(0,
-									typeName.length() - 2), currentNamespace,
-									offset));
+						if (lookOnlyForArrayTypes) {
+							if (m.find()) {
+								evaluated.add(getArrayType(m.group(),
+										currentNamespace, doc.sourceStart()));
+							} else if (typeName.endsWith(BRACKETS)
+									&& typeName.length() > 2) {
+								offset = 0;
+								try {
+									offset = typeField.getSourceRange()
+											.getOffset();
+								} catch (ModelException e) {
+								}
+								evaluated.add(getArrayType(typeName.substring(
+										0, typeName.length() - 2),
+										currentNamespace, offset));
 
+							}
 						} else {
 							if (currentNamespace != null) {
-								ModuleDeclaration moduleDeclaration = SourceParserUtil
-										.getModuleDeclaration(currentNamespace
-												.getSourceModule());
 								if (typeName.indexOf(SPLASH) > 0) {
 									// check if the first part is an
 									// alias,then get the full name
@@ -130,7 +148,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 											typeName.indexOf(SPLASH));
 									final Map<String, UsePart> result = PHPModelUtils
 											.getAliasToNSMap(prefix,
-													moduleDeclaration,
+													context.getRootNode(),
 													doc.sourceStart(),
 													currentNamespace, true);
 									if (result.containsKey(prefix)) {
@@ -148,7 +166,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 									String prefix = typeName;
 									final Map<String, UsePart> result = PHPModelUtils
 											.getAliasToNSMap(prefix,
-													moduleDeclaration,
+													context.getRootNode(),
 													doc.sourceStart(),
 													currentNamespace, true);
 									if (result.containsKey(prefix)) {
@@ -210,16 +228,20 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		String[] typeNames = type.split(","); //$NON-NLS-1$
 		for (String name : typeNames) {
 			if (!"".equals(name)) { //$NON-NLS-1$
-
-				if (name.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0
-						&& currentNamespace != null) {
+				int nsSeparatorIndex = name
+						.indexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+				if (currentNamespace != null) {
 					// check if the first part is an
 					// alias,then get the full name
 					ModuleDeclaration moduleDeclaration = SourceParserUtil
 							.getModuleDeclaration(currentNamespace
 									.getSourceModule());
-					String prefix = name.substring(0, name
-							.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
+					String prefix = name;
+					if (nsSeparatorIndex != -1) {
+						name.substring(
+								0,
+								name.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
+					}
 					final Map<String, UsePart> result = PHPModelUtils
 							.getAliasToNSMap(prefix, moduleDeclaration, offset,
 									currentNamespace, true);

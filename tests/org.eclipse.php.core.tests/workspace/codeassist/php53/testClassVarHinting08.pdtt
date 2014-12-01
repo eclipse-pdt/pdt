@@ -1,0 +1,37 @@
+--TEST--
+Test @var tag CA
+--FILE--
+<?
+namespace Foo\Bar
+{
+    class Barx
+    {
+        public function test01()
+        {}
+    }
+}
+namespace Foo\Pal
+{
+    class Palx
+    {
+        public function test02()
+        {}
+    }
+}
+namespace Foo
+{
+    class Test
+    {
+        /**
+         * @var \Foo\Bar\Barx|\Foo\Pal\Palx[]
+         */
+        protected $test;
+
+        function myMethod()
+        {
+            $this->test[0]->|
+        }
+    }
+}
+--EXPECT--
+method(test02)

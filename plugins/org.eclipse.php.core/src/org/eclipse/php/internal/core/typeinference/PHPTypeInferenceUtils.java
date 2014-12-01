@@ -244,6 +244,17 @@ public class PHPTypeInferenceUtils {
 			}
 			// the elements are filtered already
 			return tmpList.toArray(new IType[tmpList.size()]);
+		} else if (evaluatedType instanceof MultiTypeType) {
+			MultiTypeType multiTypeType = (MultiTypeType) evaluatedType;
+			List<IType> result = new ArrayList<IType>();
+			for (IEvaluatedType tmpType : multiTypeType.getTypes()) {
+				IType[] tmpTypes = internalGetModelElements(tmpType, context,
+						offset, cache);
+				if (tmpTypes != null) {
+					result.addAll(Arrays.asList(tmpTypes));
+				}
+				return result.toArray(new IType[result.size()]);
+			}
 		}
 
 		return null;
