@@ -372,6 +372,9 @@
       <action facet="php.component" version="5.5" type="install">
          <delegate class="org.eclipse.php.internal.core.facet.InstallActionDelegate" />
       </action>
+      <action facet="php.component" version="5.6" type="install">
+         <delegate class="org.eclipse.php.internal.core.facet.InstallActionDelegate" />
+      </action>
       <action facet="php.component" version="4" type="version-change">
          <delegate class="org.eclipse.php.internal.core.facet.VersionChangeActionDelegate" />
       </action>
