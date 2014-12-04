@@ -1,0 +1,17 @@
+--TEST--
+Test different versions of Magic Method
+--FILE--
+<?php
+/**
+ * @method string getString()
+ * @method void setInteger(integer $integer)
+ * @method setString(integer $integer)
+ */
+class Concrete {
+}
+$tmp = new Concrete (); 
+$tmp->|
+--EXPECT--
+method(getString)
+method(setInteger)
+method(setString)
