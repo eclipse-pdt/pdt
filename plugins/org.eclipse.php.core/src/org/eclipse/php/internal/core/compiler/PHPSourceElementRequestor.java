@@ -53,7 +53,7 @@ import org.eclipse.php.internal.core.util.MagicMemberUtil.MagicMethod;
  */
 public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
-	private static final String MAGIC_PROPERTY_TYPE = "MagicPropertyType"; //$NON-NLS-1$
+	//private static final String MAGIC_PROPERTY_TYPE = "MagicPropertyType"; //$NON-NLS-1$
 	private static final String CONSTRUCTOR_NAME = "__construct"; //$NON-NLS-1$
 	private static final String VOID_RETURN_TYPE = "void"; //$NON-NLS-1$
 	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+"); //$NON-NLS-1$
@@ -284,7 +284,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	private boolean visitMethodDeclaration(MethodDeclaration method)
 			throws Exception {
 		this.fNodes.push(method);
-		List args = method.getArguments();
+		List<?> args = method.getArguments();
 
 		String[] parameter = new String[args.size()];
 		String[] initializers = new String[args.size()];
@@ -353,7 +353,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	private String[] processParamterTypes(MethodDeclaration methodDeclaration) {
-		List args = methodDeclaration.getArguments();
+		List<?> args = methodDeclaration.getArguments();
 		PHPDocBlock docBlock = ((PHPMethodDeclaration) methodDeclaration)
 				.getPHPDoc();
 		String[] parameterType = new String[args.size()];
@@ -425,11 +425,11 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (superClasses == null) {
 			return new String[] {};
 		}
-		List superClassNames = superClasses.getChilds();
+		List<ASTNode> superClassNames = superClasses.getChilds();
 		List<String> result = new ArrayList<String>(superClassNames.size());
-		Iterator iterator = superClassNames.iterator();
+		Iterator<ASTNode> iterator = superClassNames.iterator();
 		while (iterator.hasNext()) {
-			Object nameNode = iterator.next();
+			ASTNode nameNode = iterator.next();
 
 			String name;
 			if (nameNode instanceof FullyQualifiedReference) {
@@ -536,8 +536,20 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 					} else if (tagKind == PHPDocTag.METHOD) {
 						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
+
+						// workaround for lack of method return type
+						String docTagValue = docTag.getValue().trim();
+						int index = docTagValue.indexOf('('); //$NON-NLS-1$
+						if (index != -1) {
+							String[] split = WHITESPACE_SEPERATOR
+									.split(docTagValue.substring(0, index));
+							if (split.length == 1) {
+								docTagValue = VOID_RETURN_TYPE
+										+ " " + docTagValue; //$NON-NLS-1$
+							}
+						}
 						final String[] split = WHITESPACE_SEPERATOR
-								.split(docTag.getValue().trim());
+								.split(docTagValue);
 						if (split.length < 2) {
 							break;
 						}
@@ -558,11 +570,11 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 						MagicMethod magicMethod;
 						if (mi.name != null && mi.name.indexOf('(') > 0) {
 							magicMethod = MagicMemberUtil
-									.getMagicMethod2(docTag.getValue());
+									.getMagicMethod2(docTagValue);
 							mi.name = magicMethod.name;
 						} else {
-							magicMethod = MagicMemberUtil.getMagicMethod(docTag
-									.getValue());
+							magicMethod = MagicMemberUtil
+									.getMagicMethod(docTagValue);
 						}
 						if (magicMethod != null) {
 							mi.parameterNames = magicMethod.parameterNames;
