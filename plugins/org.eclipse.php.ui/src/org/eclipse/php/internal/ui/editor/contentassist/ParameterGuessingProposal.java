@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.*;
@@ -65,6 +65,13 @@ public final class ParameterGuessingProposal extends
 	private IDocument document = null;
 	private IScriptProject sProject = null;
 
+	private ICompletionProposal[][] fChoices; // initialized by
+	// guessParameters()
+	private Position[] fPositions; // initialized by guessParameters()
+
+	private IRegion fSelectedRegion; // initialized by apply()
+	private IPositionUpdater fUpdater;
+
 	public ParameterGuessingProposal(CompletionProposal proposal,
 			IScriptProject jproject, ISourceModule cu, String methodName,
 			String[] paramTypes, int start, int length, String displayName,
@@ -80,51 +87,12 @@ public final class ParameterGuessingProposal extends
 		this.sProject = jproject;
 	}
 
-	/**
-	 * if modelElement is an instance of FakeConstructor, we need to get the
-	 * real constructor
-	 * 
-	 * @param modelElement
-	 * @return
-	 */
-	private IMethod getProperMethod(IMethod modelElement) {
-		if (modelElement instanceof FakeConstructor) {
-			FakeConstructor fc = (FakeConstructor) modelElement;
-			if (fc.getParent() instanceof AliasType) {
-				AliasType aliasType = (AliasType) fc.getParent();
-				alias = aliasType.getAlias();
-				if (aliasType.getParent() instanceof IType) {
-					fc = FakeConstructor.createFakeConstructor(null,
-							(IType) aliasType.getParent(), false);
-				}
-			}
-			IType type = fc.getDeclaringType();
-			IMethod[] ctors = FakeConstructor.getConstructors(type,
-					fc.isEnclosingClass());
-			// here we must make sure ctors[1] != null,
-			// it means there is an available FakeConstructor for ctors[0]
-			if (ctors != null && ctors.length == 2 && ctors[0] != null
-					&& ctors[1] != null) {
-				return ctors[0];
-			}
-			return fc;
-		}
-
-		return modelElement;
-	}
-
-	private ICompletionProposal[][] fChoices; // initialized by
-	// guessParameters()
-	private Position[] fPositions; // initialized by guessParameters()
-
-	private IRegion fSelectedRegion; // initialized by apply()
-	private IPositionUpdater fUpdater;
-
 	/*
 	 * @see ICompletionProposalExtension#apply(IDocument, char)
 	 */
 	public void apply(IDocument document, char trigger, int offset) {
 		try {
+			dealPrefix();
 			dealSuffix(document, offset);
 			super.apply(document, trigger, offset);
 
@@ -180,6 +148,49 @@ public final class ParameterGuessingProposal extends
 			PHPUiPlugin.log(e);
 			openErrorDialog(e);
 		}
+	}
+
+	private void dealPrefix() {
+		String prefix = ""; //$NON-NLS-1$
+		try {
+			if (method.isConstructor()) {
+				IType type = method.getDeclaringType();
+				boolean isInNamespace = PHPModelUtils.getCurrentNamespaceIfAny(
+						fSourceModule, getReplacementOffset()) != null;
+				boolean globalType = PHPModelUtils.getCurrentNamespace(type) == null;
+				try {
+					int flags = type.getFlags();
+					if (!PHPFlags.isNamespace(flags)
+							&& globalType
+							&& isInNamespace
+							&& !(type instanceof AliasType)
+							&& !ProjectOptions.getPhpVersion(
+									sProject.getProject()).isLessThan(
+									PHPVersion.PHP5_3)
+							&& document.getChar(getReplacementOffset() - 1) != NamespaceReference.NAMESPACE_SEPARATOR) {
+						prefix += NamespaceReference.NAMESPACE_SEPARATOR;
+					}
+				} catch (ModelException e) {
+					PHPUiPlugin.log(e);
+				} catch (BadLocationException e) {
+					PHPUiPlugin.log(e);
+				}
+			}
+		} catch (ModelException e) {
+		}
+		if (ProposalExtraInfo.isMethodOnly(extraInfo)) {
+			setReplacementString(prefix + method.getElementName());
+			return;
+		}
+
+		IEclipsePreferences prefs = InstanceScope.INSTANCE
+				.getNode(PHPCorePlugin.ID);
+		boolean fileArgumentNames = prefs.getBoolean(
+				PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, true);
+		if (fileArgumentNames && !fReplacementStringComputed)
+			setReplacementString(computeReplacementString(prefix));
+		if (!fileArgumentNames)
+			setReplacementString(prefix + super.getReplacementString());
 	}
 
 	private void dealSuffix(IDocument document, int offset) {
@@ -256,61 +267,55 @@ public final class ParameterGuessingProposal extends
 	}
 
 	public String getReplacementString() {
-		String prefix = ""; //$NON-NLS-1$
-		try {
-			if (method.isConstructor()) {
-				IType type = method.getDeclaringType();
-				boolean isInNamespace = PHPModelUtils.getCurrentNamespaceIfAny(
-						fSourceModule, getReplacementOffset()) != null;
-				boolean globalType = PHPModelUtils.getCurrentNamespace(type) == null;
-				try {
-					int flags = type.getFlags();
-					if (!PHPFlags.isNamespace(flags)
-							&& globalType
-							&& isInNamespace
-							&& !(type instanceof AliasType)
-							&& !ProjectOptions.getPhpVersion(
-									sProject.getProject()).isLessThan(
-									PHPVersion.PHP5_3)
-							&& document.getChar(getReplacementOffset() - 1) != NamespaceReference.NAMESPACE_SEPARATOR) {
-						prefix += NamespaceReference.NAMESPACE_SEPARATOR;
-					}
-				} catch (ModelException e) {
-					PHPUiPlugin.log(e);
-				} catch (BadLocationException e) {
-					PHPUiPlugin.log(e);
-				}
-			}
-		} catch (ModelException e) {
-		}
-		if (ProposalExtraInfo.isMethodOnly(extraInfo)) {
-			setReplacementString(prefix + method.getElementName());
-			return super.getReplacementString();
-		}
-		boolean fileArgumentNames = Platform.getPreferencesService()
-				.getBoolean(PHPCorePlugin.ID,
-						PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, true,
-						null);
-		if (fileArgumentNames && !fReplacementStringComputed)
-			setReplacementString(prefix + computeReplacementString());
-		if (!fileArgumentNames)
-			setReplacementString(prefix + super.getReplacementString());
 
 		return super.getReplacementString();
 	}
 
-	private String computeReplacementString() {
+	private String computeReplacementString(String prefix) {
 		fReplacementStringComputed = true;
 		try {
 			// we should get the real constructor here
 			method = getProperMethod(method);
 			if (alias != null || hasParameters() && hasArgumentList()) {
-				return computeGuessingCompletion();
+				return computeGuessingCompletion(prefix);
 			}
 		} catch (ModelException e) {
-			e.printStackTrace();
+			PHPCorePlugin.log(e);
 		}
-		return super.getReplacementString();
+		return prefix + super.getReplacementString();
+	}
+
+	/**
+	 * if modelElement is an instance of FakeConstructor, we need to get the
+	 * real constructor
+	 * 
+	 * @param modelElement
+	 * @return
+	 */
+	private IMethod getProperMethod(IMethod modelElement) {
+		if (modelElement instanceof FakeConstructor) {
+			FakeConstructor fc = (FakeConstructor) modelElement;
+			if (fc.getParent() instanceof AliasType) {
+				AliasType aliasType = (AliasType) fc.getParent();
+				alias = aliasType.getAlias();
+				if (aliasType.getParent() instanceof IType) {
+					fc = FakeConstructor.createFakeConstructor(null,
+							(IType) aliasType.getParent(), false);
+				}
+			}
+			IType type = fc.getDeclaringType();
+			IMethod[] ctors = FakeConstructor.getConstructors(type,
+					fc.isEnclosingClass());
+			// here we must make sure ctors[1] != null,
+			// it means there is an available FakeConstructor for ctors[0]
+			if (ctors != null && ctors.length == 2 && ctors[0] != null
+					&& ctors[1] != null) {
+				return ctors[0];
+			}
+			return fc;
+		}
+
+		return modelElement;
 	}
 
 	/**
@@ -323,10 +328,10 @@ public final class ParameterGuessingProposal extends
 	protected boolean hasArgumentList() {
 		if (CompletionProposal.METHOD_NAME_REFERENCE == fProposal.getKind())
 			return false;
-		Preferences preferenceStore = PHPCorePlugin.getDefault()
-				.getPluginPreferences();
-		boolean noOverwrite = preferenceStore
-				.getBoolean(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION)
+		IEclipsePreferences prefs = InstanceScope.INSTANCE
+				.getNode(PHPCorePlugin.ID);
+		boolean noOverwrite = prefs.getBoolean(
+				PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true)
 				^ isToggleEating();
 		char[] completion = fProposal.getCompletion().toCharArray();
 		return !isInScriptdoc() && completion.length > 0
@@ -378,13 +383,15 @@ public final class ParameterGuessingProposal extends
 	 * Creates the completion string. Offsets and Lengths are set to the offsets
 	 * and lengths of the parameters.
 	 * 
+	 * @param prefix
+	 *            completion prefix
 	 * @return the completion string
 	 * @throws ModelException
 	 *             if parameter guessing failed
 	 */
-	private String computeGuessingCompletion() throws ModelException {
-
-		StringBuffer buffer = new StringBuffer();
+	private String computeGuessingCompletion(String prefix)
+			throws ModelException {
+		StringBuffer buffer = new StringBuffer(prefix);
 		appendMethodNameReplacement(buffer);
 
 		setCursorPosition(buffer.length());
