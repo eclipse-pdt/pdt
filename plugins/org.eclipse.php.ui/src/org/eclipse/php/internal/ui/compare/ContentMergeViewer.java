@@ -849,36 +849,44 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 	private void internalRefresh(Object input) {
 
 		IMergeViewerContentProvider content = getMergeContentProvider();
-		if (content != null) {
-			Object ancestor = content.getAncestorContent(input);
-			boolean oldFlag = fIsThreeWay;
-			if (Utilities.isHunk(input)) {
-				fIsThreeWay = true;
-			} else if (input instanceof ICompareInput)
-				fIsThreeWay = (((ICompareInput) input).getKind() & Differencer.DIRECTION_MASK) != 0;
-			else
-				fIsThreeWay = ancestor != null;
-
-			if (fAncestorItem != null)
-				fAncestorItem.setVisible(fIsThreeWay);
-
-			if (fAncestorVisible && oldFlag != fIsThreeWay)
-				fComposite.layout(true);
-
-			Object left = content.getLeftContent(input);
-			Object right = content.getRightContent(input);
-			updateContent(ancestor, left, right);
-
-			updateHeader();
-			ToolBarManager tbm = CompareViewerPane.getToolBarManager(fComposite
-					.getParent());
-			if (tbm != null) {
-				updateToolItems();
-				tbm.update(true);
-				tbm.getControl().getParent().layout(true);
-			}
-
+		if (content == null) {
+			return;
 		}
+		Object ancestor = content.getAncestorContent(input);
+		boolean oldFlag = fIsThreeWay;
+		if (Utilities.isHunk(input)) {
+			fIsThreeWay = true;
+		} else if (input instanceof ICompareInput)
+			fIsThreeWay = (((ICompareInput) input).getKind() & Differencer.DIRECTION_MASK) != 0;
+		else
+			fIsThreeWay = ancestor != null;
+
+		if (fAncestorItem != null)
+			fAncestorItem.setVisible(fIsThreeWay);
+
+		if (fAncestorVisible && oldFlag != fIsThreeWay)
+			fComposite.layout(true);
+
+		Object left = content.getLeftContent(input);
+		Object right = content.getRightContent(input);
+		updateContent(ancestor, left, right);
+
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=453799
+		// Content provider may be disposed after call to updateContent()
+		content = getMergeContentProvider();
+		if (content == null) {
+			return;
+		}
+
+		updateHeader();
+		ToolBarManager tbm = CompareViewerPane.getToolBarManager(fComposite
+				.getParent());
+		if (tbm != null) {
+			updateToolItems();
+			tbm.update(true);
+			tbm.getControl().getParent().layout(true);
+		}
+
 	}
 
 	// ---- layout & SWT control creation
@@ -1152,7 +1160,9 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 	protected void updateToolItems() {
 
 		IMergeViewerContentProvider content = getMergeContentProvider();
-
+		if (content == null) {
+			return;
+		}
 		Object input = getInput();
 
 		if (fCopyLeftToRightAction != null) {
@@ -1188,6 +1198,9 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 	protected void updateHeader() {
 
 		IMergeViewerContentProvider content = getMergeContentProvider();
+		if (content == null) {
+			return;
+		}
 		Object input = getInput();
 
 		// Only change a label if there is a new label available
@@ -1346,6 +1359,9 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 
 		// write back modified contents
 		IMergeViewerContentProvider content = (IMergeViewerContentProvider) getContentProvider();
+		if (content == null) {
+			return;
+		}
 
 		boolean leftEmpty = content.getLeftContent(input) == null;
 		boolean rightEmpty = content.getRightContent(input) == null;
@@ -1374,6 +1390,9 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 
 	void flushLeftSide(Object input, IProgressMonitor monitor) {
 		IMergeViewerContentProvider content = (IMergeViewerContentProvider) getContentProvider();
+		if (content == null) {
+			return;
+		}
 
 		boolean rightEmpty = content.getRightContent(input) == null;
 
@@ -1388,6 +1407,9 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 
 	void flushRightSide(Object input, IProgressMonitor monitor) {
 		IMergeViewerContentProvider content = (IMergeViewerContentProvider) getContentProvider();
+		if (content == null) {
+			return;
+		}
 
 		boolean leftEmpty = content.getLeftContent(input) == null;
 
