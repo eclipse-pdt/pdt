@@ -4672,6 +4672,9 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable {
 
 		// check and handle any shared buffers
 		IMergeViewerContentProvider content = getMergeContentProvider();
+		if (content == null) {
+			return;
+		}
 		Object leftContent = content.getLeftContent(oldInput);
 		Object rightContent = content.getRightContent(oldInput);
 
@@ -4702,6 +4705,9 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable {
 		flushRightSide(oldInput, monitor);
 
 		IMergeViewerContentProvider content = getMergeContentProvider();
+		if (content == null) {
+			return;
+		}
 
 		if (!(content instanceof MergeViewerContentProvider) || isLeftDirty()
 				|| isRightDirty()) {
@@ -4818,6 +4824,10 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable {
 		} else {
 			doDiff();
 		}
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=453799
+		// Viewer may be disposed when there are no more diffs available
+		if (getControl().isDisposed())
+			return;
 
 		if (includeControls)
 			updateControls();
@@ -4909,6 +4919,9 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable {
 
 	void flushLeftSide(Object oldInput, IProgressMonitor monitor) {
 		IMergeViewerContentProvider content = getMergeContentProvider();
+		if (content == null) {
+			return;
+		}
 		Object leftContent = content.getLeftContent(oldInput);
 
 		if (leftContent != null && getCompareConfiguration().isLeftEditable()
@@ -4926,6 +4939,9 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable {
 
 	void flushRightSide(Object oldInput, IProgressMonitor monitor) {
 		IMergeViewerContentProvider content = getMergeContentProvider();
+		if (content == null) {
+			return;
+		}
 		Object rightContent = content.getRightContent(oldInput);
 
 		if (rightContent != null && getCompareConfiguration().isRightEditable()
