@@ -1,0 +1,36 @@
+--TEST--
+Check that the lexer doesn't return an empty PHP_CONSTANT_ENCAPSED_STRING token
+from inside a heredoc (bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=450875).
+This test is only useful if this file has Windows newlines.
+--FILE--
+<?php 
+function test(){
+<<<FOO
+test
+FOO;
+}
+?>
+--EXPECT--
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE| 
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|test|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+|1
+PHP_HEREDOC_TAG|<<<FOO
+|7
+PHP_CONSTANT_ENCAPSED_STRING|test
+|7
+PHP_HEREDOC_TAG|FOO;
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1
