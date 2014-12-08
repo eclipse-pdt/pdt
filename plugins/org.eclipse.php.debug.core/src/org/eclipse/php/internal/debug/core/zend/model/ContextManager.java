@@ -31,7 +31,6 @@ public class ContextManager {
 	private int fSuspendCount;
 
 	private final static String DUMMY_PHP_FILE = "dummy.php"; //$NON-NLS-1$
-	private final static String THIS_VARIABLE = "$this"; //$NON-NLS-1$
 
 	public ContextManager(PHPDebugTarget target, IRemoteDebugger debugger) {
 		super();
@@ -181,7 +180,6 @@ public class ContextManager {
 		if (expressionsManager == null) {
 			return new Expression[0];
 		}
-		expressionsManager.update(new DefaultExpression(THIS_VARIABLE), 1);
 		return expressionsManager.getLocalVariables(1);
 	}
 
