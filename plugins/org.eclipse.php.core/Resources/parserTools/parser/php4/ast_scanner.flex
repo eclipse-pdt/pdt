@@ -718,7 +718,6 @@ NEWLINE=("\r"|"\n"|"\r\n")
    		handleLineCommentEnd();
         yypushback(yylength());
 		yybegin(ST_IN_SCRIPTING);
-		//return T_COMMENT;
 	} 
 }
 

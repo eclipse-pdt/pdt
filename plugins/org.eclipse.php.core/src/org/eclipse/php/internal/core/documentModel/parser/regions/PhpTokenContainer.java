@@ -61,7 +61,7 @@ public class PhpTokenContainer {
 		// smart searching
 		ITextRegion result = tokensIterator.hasNext() ? tokensIterator.next()
 				: tokensIterator.previous();
-		assert result != null;
+		assert result != null && result.getLength() > 0;
 
 		if (isInside(result, offset)) {
 			return result;
@@ -72,11 +72,12 @@ public class PhpTokenContainer {
 			// from next
 			while (tokensIterator.hasNext() && !isInside(result, offset)) {
 				result = tokensIterator.next();
-
+				assert result != null && result.getLength() > 0;
 			}
 		} else { // else go fetch from previous
 			while (tokensIterator.hasPrevious() && !isInside(result, offset)) {
 				result = tokensIterator.previous();
+				assert result != null && result.getLength() > 0;
 			}
 			// moves the iterator to the next one
 			if (tokensIterator.hasNext()) {

@@ -888,7 +888,6 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\x7f-\xff\n\r]|({LABEL}([^a-zA-Z0-9_\x
 	    handleLineCommentEnd();
         yypushback(yylength());
 		yybegin(ST_IN_SCRIPTING);
-		//return T_COMMENT;
 	} 
 }
 
