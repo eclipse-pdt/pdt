@@ -180,7 +180,7 @@ public class ContextManager {
 		if (expressionsManager == null) {
 			return new Expression[0];
 		}
-		return expressionsManager.getLocalVariables(1);
+		return expressionsManager.getCurrentVariables(1);
 	}
 
 	private IVariable[] createVariables() {

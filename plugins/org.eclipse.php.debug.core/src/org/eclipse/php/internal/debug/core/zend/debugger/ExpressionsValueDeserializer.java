@@ -146,7 +146,7 @@ public class ExpressionsValueDeserializer {
 
 	private ExpressionValue buildObjectType(Expression expression,
 			VariableReader reader) {
-		String objectName = reader.readString();
+		String className = reader.readString();
 		int objectLength = reader.readInt();
 
 		if (reader.isLastEnd()) {
@@ -175,10 +175,10 @@ public class ExpressionsValueDeserializer {
 			}
 			expressionNodes[i].setValue(build(expression, reader));
 		}
-		String valueAsString = "Object of: " + objectName; //$NON-NLS-1$
+		String valueAsString = "Object of: " + className; //$NON-NLS-1$
 
-		return new ExpressionValue(ExpressionValue.OBJECT_TYPE, objectName,
-				valueAsString, expressionNodes);
+		return new ObjectExpressionValue(className, valueAsString,
+				expressionNodes);
 	}
 
 	private Expression createDefaultVariable(String name) {
