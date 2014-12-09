@@ -27,12 +27,14 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 	private static final Expression[] EMPTY_VARIABLE_ARRAY = new Expression[0];
 	private static final byte[] ILLEGAL_VAR = { 'N' };
 
+	private final static String GET_LOCALS = "eval('if (isset($this)) {$this;}; return get_defined_vars();')"; //$NON-NLS-1$
+	private final static String GET_GLOBALS = "$GLOBALS"; //$NON-NLS-1$
+
 	private Debugger debugger;
-	private Map hashResultDepthOne = new HashMap();
-	private Map hashResultDepthZero = new HashMap();
-	// private Map globalHashResultDepthOne = new HashMap();
-	private String[] localsVariablePath = new String[] { "get_defined_vars()" }; //$NON-NLS-1$
-	private String[] globalVariablePath = new String[] { "$GLOBALS" }; //$NON-NLS-1$
+	private Map<String, Object> hashResultDepthOne = new HashMap<String, Object>();
+	private Map<String, byte[]> hashResultDepthZero = new HashMap<String, byte[]>();
+	private String[] localsVariablePath = new String[] { GET_LOCALS };
+	private String[] globalVariablePath = new String[] { GET_GLOBALS };
 	private ExpressionsValueDeserializer expressionValueDeserializer;
 
 	/**
