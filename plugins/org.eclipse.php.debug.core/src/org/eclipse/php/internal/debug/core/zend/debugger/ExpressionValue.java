@@ -62,7 +62,7 @@ public class ExpressionValue {
 	}
 
 	public Expression[] getChildren() {
-		return sort(children);
+		return sort(getOriChildren());
 	}
 
 	public static Expression[] sort(Expression[] children) {

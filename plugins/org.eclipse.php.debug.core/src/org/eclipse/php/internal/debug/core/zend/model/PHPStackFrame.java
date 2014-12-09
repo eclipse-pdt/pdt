@@ -39,6 +39,8 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	private int fDepth;
 	private Expression[] fLocalVariables;
 
+	private PHPVariable[] fVariables;
+
 	/**
 	 * Create new PHP stack frame
 	 * 
@@ -101,13 +103,15 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	 */
 	public IVariable[] getVariables() throws DebugException {
 		Expression[] localVariables = ExpressionValue.sort(fLocalVariables);
-		IVariable[] variables = new PHPVariable[localVariables.length];
-		for (int i = 0; i < localVariables.length; i++) {
-			variables[i] = new PHPVariable(
-					(PHPDebugTarget) fThread.getDebugTarget(),
-					localVariables[i]);
+		if (fVariables == null) {
+			fVariables = new PHPVariable[localVariables.length];
+			for (int i = 0; i < localVariables.length; i++) {
+				fVariables[i] = new PHPVariable(
+						(PHPDebugTarget) fThread.getDebugTarget(),
+						localVariables[i], false);
+			}
 		}
-		return variables;
+		return fVariables;
 	}
 
 	/*

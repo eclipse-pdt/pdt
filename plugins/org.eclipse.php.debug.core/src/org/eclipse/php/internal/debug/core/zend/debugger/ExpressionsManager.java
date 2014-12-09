@@ -17,15 +17,10 @@ public interface ExpressionsManager {
 
 	public boolean assignValue(Expression expression, String value, int depth);
 
-	public Expression[] getLocalVariables();
-
-	public Expression[] getGlobalVariables();
-
-	public Expression[] getLocalVariables(int depth);
-
-	public Expression[] getGlobalVariables(int depth);
+	public Expression[] getCurrentVariables(int depth);
 
 	public Expression buildExpression(String name);
 
 	public void update(Expression expression, int depth);
+
 }
