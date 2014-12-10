@@ -32,7 +32,6 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 	static final String PHP_ARRAY = "array"; // children, numchildren, page, pagesize, recursive attribute //$NON-NLS-1$
 	static final String PHP_OBJECT = "object"; //children, classname, numchildren, page, pagesize, recursive attribute //$NON-NLS-1$
 	static final String PHP_RESOURCE = "resource"; // pre-rendered string for information, cannot be changed //$NON-NLS-1$
-	static final String PHP_UNINIT = "uninitialized"; //$NON-NLS-1$
 
 	private DBGpValue value;
 	private String name;
@@ -79,13 +78,8 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 			value = new DBGpResourceValue(this, property);
 		} else if (type.equals(PHP_NULL)) {
 			value = new DBGpNullValue(this, property);
-		} else if (type.equals(PHP_UNINIT)) {
-			value = new DBGpUnInitValue(this);
 		} else if (type.equals(PHP_ARRAY) || type.equals(PHP_OBJECT)) {
 			value = new DBGpContainerValue(this, property);
-		} else {
-			// The default which is an uninitialised variable
-			value = new DBGpUnInitValue(this);
 		}
 	}
 
