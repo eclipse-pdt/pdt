@@ -1,0 +1,14 @@
+--TEST--
+Test @param hinting
+--FILE--
+<?php
+/**
+ * 
+ * @param Serializable $param1
+ */
+function xyz($param1)
+{
+    $param1->s|
+}
+--EXPECT--
+method(serialize)

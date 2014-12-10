@@ -1,0 +1,16 @@
+--TEST--
+Test function @return hinting
+--FILE--
+<?php
+/**
+ * 
+ * @return DateTime[]
+ */
+function test_function() {
+	return array ();
+}
+function ok() {
+	test_function()[0]->f|
+}
+--EXPECT--
+method(format)

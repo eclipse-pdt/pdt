@@ -11,10 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
+import java.util.regex.Pattern;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
@@ -23,18 +26,17 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
-import org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerParserConstants;
-import org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpTokenNames;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
-import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 
 public class FormalParameterEvaluator extends GoalEvaluator {
 
-	private static final String ELLIPSIS = PhpTokenNames
-			.getName(CompilerParserConstants.T_ELLIPSIS);
+	private static final String ELLIPSIS = "..."; //$NON-NLS-1$
+
+	private static final String BRACKETS_PATTERN = Pattern
+			.quote(PHPEvaluationUtils.BRACKETS);
 
 	private IEvaluatedType result;
 
@@ -55,9 +57,10 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 				MethodContext methodContext = (MethodContext) context;
 				PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration) methodContext
 						.getMethodNode();
+				ISourceModule sourceModule = methodContext.getSourceModule();
 				PHPDocBlock[] docBlocks = new PHPDocBlock[0];
 				try {
-					IModelElement element = methodContext.getSourceModule()
+					IModelElement element = sourceModule
 							.getElementAt(methodDeclaration.getNameStart());
 					if (element instanceof IMethod) {
 						IMethod method = (IMethod) element;
@@ -90,58 +93,39 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 					}
 					if (docBlock != null) {
 						for (PHPDocTag tag : docBlock.getTags()) {
-							if (tag.getTagKind() == PHPDocTag.PARAM) {
-								SimpleReference[] references = tag
-										.getReferences();
-								if (references.length == 2) {
-									String parameterName = parameter.getName();
-									if (parameter.isVariadic()) {
-										parameterName = ELLIPSIS
-												+ parameterName;
-									}
-									if (references[0].getName().equals(
-											parameterName)) {
-										// result = PHPClassType
-										// .fromSimpleReference(PHPModelUtils.getFullName(references[1].getName(),
-										// methodContext.getSourceModule(),
-										// references[1].sourceStart()));
-										// fix unit test testDoctag7.pdtt
-										String typeName = references[1]
-												.getName();
-										if (typeName
-												.endsWith(PHPDocClassVariableEvaluator.BRACKETS)) {
-											typeName = typeName.substring(0,
-													typeName.length() - 2);
+							if (tag.getTagKind() != PHPDocTag.PARAM) {
+								continue;
+							}
+							SimpleReference[] references = tag.getReferences();
+							if (references.length == 2) {
+								String parameterName = parameter.getName();
+								if (parameter.isVariadic()) {
+									parameterName = ELLIPSIS + parameterName;
+								}
+								if (references[0].getName().equals(
+										parameterName)) {
+
+									int offset = references[1].sourceStart();
+									String[] typeNames = references[1]
+											.getName().split("\\|"); //$NON-NLS-1$
+									MultiTypeType multiType = new MultiTypeType();
+									for (String typeName : typeNames) {
+										if (typeName.trim().isEmpty()) {
+											continue;
 										}
-										if (typeName.indexOf('|') >= 0) {
-											String[] typeNames = typeName
-													.split("|"); //$NON-NLS-1$
-											MultiTypeType arrayType = new MultiTypeType();
-											for (int i = 0; i < typeNames.length; i++) {
-												if (typeNames[i].trim()
-														.length() == 0
-														|| typeNames[i]
-																.equals("|")) { //$NON-NLS-1$
-													continue;
-												}
-												arrayType
-														.addType(PHPClassType
-																.fromTypeName(
-																		typeNames[i],
-																		methodContext
-																				.getSourceModule(),
-																		references[1]
-																				.sourceStart()));
-											}
-											result = arrayType;
-										} else
-											result = PHPClassType
-													.fromTypeName(
-															typeName,
-															methodContext
-																	.getSourceModule(),
-															references[1]
-																	.sourceStart());
+
+										typeName = typeName.replaceAll(
+												BRACKETS_PATTERN, "");
+
+										multiType.addType(PHPClassType
+												.fromTypeName(typeName,
+														sourceModule, offset));
+									}
+									// when it is not true multi type
+									if (multiType.size() == 1) {
+										result = multiType.get(0);
+									} else if (multiType.size() > 1) {
+										result = multiType;
 									}
 								}
 							}
