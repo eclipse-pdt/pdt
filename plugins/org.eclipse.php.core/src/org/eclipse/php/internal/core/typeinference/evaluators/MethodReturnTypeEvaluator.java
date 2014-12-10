@@ -11,9 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -34,7 +34,6 @@ import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
-import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 
 public class MethodReturnTypeEvaluator extends
@@ -145,63 +144,28 @@ public class MethodReturnTypeEvaluator extends
 		for (PHPDocTag tag : docBlock.getTags()) {
 			final int tagKind = tag.getTagKind();
 			if (tagKind == PHPDocTag.METHOD) {
-				final String[] typeNames = getTypeBinding(methodName, tag);
-				if (typeNames != null) {
-					for (String typeName : typeNames) {
-						Matcher m = PHPDocClassVariableEvaluator.ARRAY_TYPE_PATTERN
-								.matcher(typeName);
-						if (m.find()) {
-							evaluated.add(PHPDocClassVariableEvaluator
-									.getArrayType(m.group(), currentNamespace,
-											tag.sourceStart()));
-						} else if (typeName
-								.endsWith(PHPDocClassVariableEvaluator.BRACKETS)
-								&& typeName.length() > 2) {
-							int offset = tag.sourceStart();
-							evaluated.add(PHPDocClassVariableEvaluator
-									.getArrayType(
-											typeName.substring(0,
-													typeName.length() - 2),
-											currentNamespace, offset));
-						} else {
-							IEvaluatedType resolved = PHPSimpleTypes
-									.fromString(typeName);
-							if (resolved == null) {
-								resolved = new PHPClassType(typeName);
-							}
-							evaluated.add(resolved);
+				final Collection<String> typeNames = PHPEvaluationUtils
+						.getTypeBinding(methodName, tag);
+				for (String typeName : typeNames) {
+					if (typeName.trim().isEmpty()) {
+						continue;
+					}
+					IEvaluatedType evaluatedType = PHPEvaluationUtils
+							.extractArrayType(typeName, currentNamespace,
+									tag.sourceStart());
+					if (evaluatedType != null) {
+						evaluated.add(evaluatedType);
+					} else {
+						IEvaluatedType resolved = PHPSimpleTypes
+								.fromString(typeName);
+						if (resolved == null) {
+							resolved = new PHPClassType(typeName);
 						}
+						evaluated.add(resolved);
 					}
 				}
 			}
 		}
-	}
-
-	/**
-	 * Resolves the type from the @property tag
-	 * 
-	 * @param variableName
-	 * @param docTag
-	 * @return the types of the given variable
-	 */
-	private String[] getTypeBinding(String methodName, PHPDocTag docTag) {
-		final String[] split = docTag.getValue().trim().split("\\s+"); //$NON-NLS-1$
-		if (split.length < 2) {
-			return null;
-		}
-		if (split[1].equals(methodName)) {
-			return split[0].split("\\|");//$NON-NLS-1$
-		}
-
-		String substring = split[1];
-		int parenIndex = split[1].indexOf('('); //$NON-NLS-1$
-		if (parenIndex != -1) {
-			substring = substring.substring(0, parenIndex);
-		}
-		if (substring.equals(methodName)) {
-			return split[0].split("\\|");//$NON-NLS-1$
-		}
-		return null;
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {

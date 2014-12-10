@@ -25,7 +25,6 @@ import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
-import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 import org.eclipse.php.internal.core.typeinference.goals.IteratorTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
@@ -199,10 +198,8 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 						SimpleReference[] refs = tag.getReferences();
 						if (refs != null
 								&& refs.length > 1
-								&& refs[1]
-										.getName()
-										.equals(type.getElementName()
-												+ PHPDocClassVariableEvaluator.BRACKETS)) {
+								&& refs[1].getName().equals(
+										type.getElementName() + PHPEvaluationUtils.BRACKETS)) {
 							return true;
 						}
 					}

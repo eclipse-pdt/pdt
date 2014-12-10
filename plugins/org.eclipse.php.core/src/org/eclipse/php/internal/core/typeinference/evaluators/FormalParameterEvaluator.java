@@ -23,18 +23,14 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
-import org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerParserConstants;
-import org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpTokenNames;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
-import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 
 public class FormalParameterEvaluator extends GoalEvaluator {
 
-	private static final String ELLIPSIS = PhpTokenNames
-			.getName(CompilerParserConstants.T_ELLIPSIS);
+	private static final String ELLIPSIS = "..."; //$NON-NLS-1$
 
 	private IEvaluatedType result;
 
@@ -108,14 +104,13 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 										// fix unit test testDoctag7.pdtt
 										String typeName = references[1]
 												.getName();
-										if (typeName
-												.endsWith(PHPDocClassVariableEvaluator.BRACKETS)) {
+										if (typeName.endsWith(PHPEvaluationUtils.BRACKETS)) {
 											typeName = typeName.substring(0,
 													typeName.length() - 2);
 										}
 										if (typeName.indexOf('|') >= 0) {
 											String[] typeNames = typeName
-													.split("|"); //$NON-NLS-1$
+													.split("\\|"); //$NON-NLS-1$
 											MultiTypeType arrayType = new MultiTypeType();
 											for (int i = 0; i < typeNames.length; i++) {
 												if (typeNames[i].trim()

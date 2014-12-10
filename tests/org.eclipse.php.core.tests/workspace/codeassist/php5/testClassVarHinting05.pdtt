@@ -1,0 +1,33 @@
+--TEST--
+Test Class Var Hinting Hier
+--FILE--
+<?php
+class GrandParents {
+	/**
+	 *
+	 * @var Parents[]
+	 */
+	public $parents_collection;
+}
+class Parents {
+	/**
+	 *
+	 * @var Child[]
+	 */
+	public $children_collection;
+}
+class Child {
+	public $name;    
+}
+
+$child = new Child();
+$parents = new Parents();
+$grand_parents = new GrandParents();
+$parents->children_collection[] = $child; 
+$grand_parents->parents_collection[] = $parents; 
+
+$first_parent = $grand_parents->parents_collection[0];  
+$first_child = $first_parent->children_collection[0];   
+$first_child->|
+--EXPECT--
+field($name)

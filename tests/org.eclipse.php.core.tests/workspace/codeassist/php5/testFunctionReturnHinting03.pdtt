@@ -1,0 +1,17 @@
+--TEST--
+Test function @return hinting
+--FILE--
+<?php
+/**
+ * 
+ * @return DateTime|DateTimeZone
+ */
+function test_function() {
+	return array ();
+}
+function ok() {
+	test_function()->getO|
+}
+--EXPECT--
+method(getOffset)
+method(getOffset)
