@@ -14,6 +14,8 @@ package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -1317,22 +1319,30 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @return
 	 */
 	private IVariable[] parseVarResp(DBGpResponse resp, String reportedLevel) {
-		IVariable[] variables = new IVariable[0];
-
 		// If you cannot get a property, then a single variable is created with
 		// no information as their is a child node, if there are no variables
 		// this method creates a 0 size array which is good.
+		List<DBGpVariable> variables = new ArrayList<DBGpVariable>();
 		if (DBGpUtils.isGoodDBGpResponse(this, resp)
 				&& resp.getErrorCode() == DBGpResponse.ERROR_OK) {
 			Node parent = resp.getParentNode();
 			NodeList properties = parent.getChildNodes();
-			variables = new DBGpVariable[properties.getLength()];
 			for (int i = 0; i < properties.getLength(); i++) {
 				Node property = properties.item(i);
-				variables[i] = new DBGpVariable(this, property, reportedLevel);
+				if (shouldSkip(property))
+					continue;
+				variables.add(new DBGpVariable(this, property, reportedLevel));
 			}
 		}
-		return variables;
+		return variables.toArray(new DBGpVariable[variables.size()]);
+	}
+
+	private boolean shouldSkip(Node property) {
+		String type = DBGpResponse.getAttribute(property, "type"); //$NON-NLS-1$
+		// Skip uninitialized variables
+		if (type.equalsIgnoreCase("uninitialized")) //$NON-NLS-1$
+			return true;
+		return false;
 	}
 
 	/**
