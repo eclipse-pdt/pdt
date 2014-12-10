@@ -1,0 +1,15 @@
+--TEST--
+Test @param hinting
+--FILE--
+<?php
+/**
+ * 
+ * @param DateTime[]|DateTimeZone[] $param1
+ */
+function xyz($param1)
+{
+    $param1[0]->geto|
+}
+--EXPECT--
+method(getOffset)
+method(getOffset)

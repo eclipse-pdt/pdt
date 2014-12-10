@@ -1,0 +1,16 @@
+--TEST--
+Test @param hinting
+--FILE--
+<?php
+/**
+ * 
+ * @param DateTime[] $param1
+ */
+function xyz($param1)
+{
+    foreach ($param1 as $value){
+        $value->a|
+    }
+}
+--EXPECT--
+method(add)

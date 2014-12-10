@@ -13,11 +13,9 @@ package org.eclipse.php.internal.core.typeinference.evaluators.phpdoc;
 
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
@@ -26,9 +24,12 @@ import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.typeinference.*;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.AbstractPHPGoalEvaluator;
+import org.eclipse.php.internal.core.typeinference.evaluators.PHPEvaluationUtils;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 
 /**
@@ -37,14 +38,13 @@ import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVaria
  */
 public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 
+	public static final String BRACKETS = PHPEvaluationUtils.BRACKETS;
+
+	public final static Pattern ARRAY_TYPE_PATTERN = PHPEvaluationUtils.ARRAY_TYPE_PATTERN;
+
 	private static final String SPLASH = "\\"; //$NON-NLS-1$
 
-	public static final String BRACKETS = "[]"; //$NON-NLS-1$
-
 	private List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
-
-	public final static Pattern ARRAY_TYPE_PATTERN = Pattern
-			.compile("array\\[.*\\]"); //$NON-NLS-1$
 
 	public PHPDocClassVariableEvaluator(IGoal goal) {
 		super(goal);
@@ -100,6 +100,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 			}
 		}
 
+		// check if is in ForEach statement
 		if (!lookOnlyForArrayTypes) {
 			int start = offset + variableName.length();
 			int end = offset + variableName.length() + 1;
@@ -109,6 +110,8 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 				lookOnlyForArrayTypes = true;
 			}
 		}
+
+		List<IEvaluatedType> arrayEvaluated = new LinkedList<IEvaluatedType>();
 
 		for (Entry<PHPDocBlock, IField> entry : docs.entrySet()) {
 			PHPDocBlock doc = entry.getKey();
@@ -121,24 +124,12 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 					SimpleReference[] references = tag.getReferences();
 					for (SimpleReference ref : references) {
 						String typeName = ref.getName();
-						Matcher m = ARRAY_TYPE_PATTERN.matcher(typeName);
-						if (lookOnlyForArrayTypes) {
-							if (m.find()) {
-								evaluated.add(getArrayType(m.group(),
-										currentNamespace, doc.sourceStart()));
-							} else if (typeName.endsWith(BRACKETS)
-									&& typeName.length() > 2) {
-								offset = 0;
-								try {
-									offset = typeField.getSourceRange()
-											.getOffset();
-								} catch (ModelException e) {
-								}
-								evaluated.add(getArrayType(typeName.substring(
-										0, typeName.length() - 2),
-										currentNamespace, offset));
 
-							}
+						IEvaluatedType evaluatedType = PHPEvaluationUtils
+								.extractArrayType(typeName, currentNamespace,
+										tag.sourceStart());
+						if (evaluatedType != null) {
+							arrayEvaluated.add(evaluatedType);
 						} else {
 							if (currentNamespace != null) {
 								if (typeName.indexOf(SPLASH) > 0) {
@@ -181,20 +172,24 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 									}
 								}
 							}
-
-							IEvaluatedType type = getEvaluatedType(typeName,
-									currentNamespace);
+							IEvaluatedType type = PHPEvaluationUtils
+									.getEvaluatedType(typeName,
+											currentNamespace);
 							if (type != null) {
 								evaluated.add(type);
 							}
-							// IEvaluatedType type = PHPClassType
-							// .fromSimpleReference(ref);
-							// evaluated.add(type);
 						}
-
 					}
 				}
 			}
+		}
+
+		if (variableName.startsWith("$")) { //$NON-NLS-1$
+			if (lookOnlyForArrayTypes) {
+				evaluated = arrayEvaluated;
+			}
+		} else {
+			evaluated.addAll(arrayEvaluated);
 		}
 
 		return IGoal.NO_GOALS;
@@ -211,75 +206,13 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
+	/**
+	 * 
+	 * @deprecated will be removed in Mars
+	 */
 	public static MultiTypeType getArrayType(String type,
 			IType currentNamespace, int offset) {
-		int beginIndex = type.indexOf("[") + 1; //$NON-NLS-1$
-		int endIndex = type.lastIndexOf("]"); //$NON-NLS-1$
-		if (endIndex != -1) {
-			type = type.substring(beginIndex, endIndex);
-		}
-		MultiTypeType arrayType = new MultiTypeType();
-		Matcher m = ARRAY_TYPE_PATTERN.matcher(type);
-		if (m.find()) {
-			arrayType
-					.addType(getArrayType(m.group(), currentNamespace, offset));
-			type = m.replaceAll(""); //$NON-NLS-1$
-		}
-		String[] typeNames = type.split(","); //$NON-NLS-1$
-		for (String name : typeNames) {
-			if (!"".equals(name)) { //$NON-NLS-1$
-				int nsSeparatorIndex = name
-						.indexOf(NamespaceReference.NAMESPACE_SEPARATOR);
-				if (currentNamespace != null) {
-					// check if the first part is an
-					// alias,then get the full name
-					ModuleDeclaration moduleDeclaration = SourceParserUtil
-							.getModuleDeclaration(currentNamespace
-									.getSourceModule());
-					String prefix = name;
-					if (nsSeparatorIndex != -1) {
-						name.substring(
-								0,
-								name.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
-					}
-					final Map<String, UsePart> result = PHPModelUtils
-							.getAliasToNSMap(prefix, moduleDeclaration, offset,
-									currentNamespace, true);
-					if (result.containsKey(prefix)) {
-						String fullName = result.get(prefix).getNamespace()
-								.getFullyQualifiedName();
-						name = name.replace(prefix, fullName);
-						if (name.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
-							name = NamespaceReference.NAMESPACE_SEPARATOR
-									+ name;
-						}
-					}
-				}
-				arrayType.addType(getEvaluatedType(name, currentNamespace));
-			}
-		}
-		return arrayType;
-	}
-
-	public static IEvaluatedType getEvaluatedType(String typeName,
-			IType currentNamespace) {
-		IEvaluatedType type = PHPSimpleTypes.fromString(typeName);
-		if (type == null) {
-			if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0
-					&& currentNamespace != null) {
-				typeName = NamespaceReference.NAMESPACE_SEPARATOR
-						+ currentNamespace.getElementName()
-						+ NamespaceReference.NAMESPACE_SEPARATOR + typeName;
-			}
-			if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
-					|| currentNamespace == null) {
-				type = new PHPClassType(typeName);
-			} else {
-				type = new PHPClassType(currentNamespace.getElementName(),
-						typeName);
-			}
-		}
-		return type;
+		return PHPEvaluationUtils.getArrayType(type, currentNamespace, offset);
 	}
 
 }

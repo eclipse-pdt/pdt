@@ -30,6 +30,7 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.project.ProjectOptions;
@@ -99,7 +100,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 
 						if (typeDeclaration != null
 								&& field instanceof SourceRefElement) {
-							SourceRefElement sourceRefElement = (SourceRefElement) field;
+							ISourceReference sourceRefElement = (ISourceReference) field;
 							ISourceRange sourceRange = sourceRefElement
 									.getSourceRange();
 
@@ -223,7 +224,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 					}
 				}
 			} catch (ModelException e) {
-				e.printStackTrace();
+				PHPCorePlugin.log(e);
 			}
 		}
 	}
@@ -239,37 +240,21 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			if (tagKind == PHPDocTag.PROPERTY
 					|| tagKind == PHPDocTag.PROPERTY_READ
 					|| tagKind == PHPDocTag.PROPERTY_WRITE) {
-				final String[] typeNames = getTypeBinding(variableName, tag);
-				if (typeNames != null) {
-					for (String typeName : typeNames) {
-						IEvaluatedType resolved = PHPSimpleTypes
-								.fromString(typeName);
-						if (resolved == null) {
-							resolved = new PHPClassType(typeName);
-						}
-						evaluated.add(resolved);
+				final Collection<String> typeNames = PHPEvaluationUtils
+						.getTypeBinding(variableName, tag);
+				for (String typeName : typeNames) {
+					if (typeName.trim().isEmpty()) {
+						continue;
 					}
+					IEvaluatedType resolved = PHPSimpleTypes
+							.fromString(typeName);
+					if (resolved == null) {
+						resolved = new PHPClassType(typeName);
+					}
+					evaluated.add(resolved);
 				}
 			}
 		}
-	}
-
-	/**
-	 * Resolves the type from the @property tag
-	 * 
-	 * @param variableName
-	 * @param docTag
-	 * @return the types of the given variable
-	 */
-	private String[] getTypeBinding(String variableName, PHPDocTag docTag) {
-		final String[] split = docTag.getValue().trim().split("\\s+"); //$NON-NLS-1$
-		if (split.length < 2) {
-			return null;
-		}
-		if (split[1].equals(variableName)) {
-			return split[0].split("\\|");//$NON-NLS-1$
-		}
-		return null;
 	}
 
 	public Object produceResult() {

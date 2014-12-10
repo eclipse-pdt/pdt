@@ -29,11 +29,15 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.index.IPHPDocAwareElement;
-import org.eclipse.php.internal.core.typeinference.*;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.AbstractMethodReturnTypeEvaluator;
+import org.eclipse.php.internal.core.typeinference.evaluators.PHPEvaluationUtils;
 import org.eclipse.php.internal.core.typeinference.goals.AbstractMethodReturnTypeGoal;
 
 /**
@@ -47,20 +51,10 @@ import org.eclipse.php.internal.core.typeinference.goals.AbstractMethodReturnTyp
 public class PHPDocMethodReturnTypeEvaluator extends
 		AbstractMethodReturnTypeEvaluator {
 
-	private static final String BRACKETS = "[]"; //$NON-NLS-1$
-
-	private final static Pattern ARRAY_TYPE_PATTERN = Pattern
-			.compile("array\\[.*\\]"); //$NON-NLS-1$
-
 	private final static String SELF_RETURN_TYPE = "self"; //$NON-NLS-1$
 
 	private final static Pattern MULTITYPE_PATTERN = Pattern.compile(
 			"^multitype:(.+)$", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
-
-	/**
-	 * Used for splitting the data types list of the returned tag
-	 */
-	// private final static Pattern PIPE_PATTERN = Pattern.compile("\\|");
 
 	/**
 	 * Holds the result of evaluated types that this evaluator resolved
@@ -71,64 +65,7 @@ public class PHPDocMethodReturnTypeEvaluator extends
 		super(goal);
 	}
 
-	private void evaluateReturnType(List<String> returnTypeList,
-			PHPDocBlock docBlock, IMethod method) {
-
-		PHPDocTag[] tags = docBlock.getTags(PHPDocTagKinds.RETURN);
-		PHPDocTag[] inherit = docBlock.getTags(PHPDocTagKinds.INHERITDOC);
-
-		if (inherit != null && inherit.length == 1) {
-			IType type = method.getDeclaringType();
-
-			if (type != null) {
-				try {
-					IContext context = goal.getContext();
-					IModelAccessCache cache = null;
-					if (context instanceof IModelCacheContext) {
-						cache = ((IModelCacheContext) context).getCache();
-					}
-					IType[] superClasses = PHPModelUtils.getSuperClasses(
-							type,
-							cache == null ? null : cache.getSuperTypeHierarchy(
-									type, null));
-
-					for (IType superClass : superClasses) {
-						IMethod superClassMethod = superClass.getMethod(method
-								.getElementName());
-
-						if (superClassMethod != null) {
-							PHPDocBlock superDocBlock = PHPModelUtils
-									.getDocBlock(superClassMethod);
-							if (superDocBlock == null) {
-								continue;
-							}
-							evaluateReturnType(returnTypeList, superDocBlock,
-									superClassMethod);
-						}
-					}
-				} catch (ModelException e) {
-					Logger.logException(e);
-				}
-			}
-		}
-
-		if (tags != null && tags.length > 0) {
-			for (PHPDocTag phpDocTag : tags) {
-				if (phpDocTag.getReferences() != null
-						&& phpDocTag.getReferences().length > 0) {
-					for (SimpleReference ref : phpDocTag.getReferences()) {
-						String type = ref.getName();
-						if (type != null) {
-							returnTypeList.add(type);
-						}
-					}
-				}
-			}
-		}
-	}
-
 	public IGoal[] init() {
-
 		for (IMethod method : getMethods()) {
 			IType currentNamespace = PHPModelUtils.getCurrentNamespace(method);
 			String[] typeNames = null;
@@ -148,30 +85,23 @@ public class PHPDocMethodReturnTypeEvaluator extends
 			if (typeNames != null) {
 				MultiTypeType evalMultiType = null;
 				for (String typeName : typeNames) {
-					Matcher m = ARRAY_TYPE_PATTERN.matcher(typeName);
-					Matcher multi = MULTITYPE_PATTERN.matcher(typeName);
-					if (m.find()) {
-						int offset = 0;
-						try {
-							offset = method.getSourceRange().getOffset();
-						} catch (ModelException e) {
-						}
-						evaluated.add(getArrayType(m.group(), currentNamespace,
-								offset));
-
-					} else if (typeName.endsWith(BRACKETS)
-							&& typeName.length() > 2) {
-						int offset = 0;
-						try {
-							offset = method.getSourceRange().getOffset();
-						} catch (ModelException e) {
-						}
-						evaluated.add(getArrayType(
-								typeName.substring(0, typeName.length() - 2),
-								currentNamespace, offset));
+					if (typeName.trim().isEmpty()) {
+						continue;
+					}
+					int offset = 0;
+					try {
+						offset = method.getSourceRange().getOffset();
+					} catch (ModelException e) {
+						PHPCorePlugin.log(e);
+					}
+					IEvaluatedType evaluatedType = PHPEvaluationUtils
+							.extractArrayType(typeName, currentNamespace,
+									offset);
+					if (evaluatedType != null) {
+						evaluated.add(evaluatedType);
 					} else {
 						boolean isMulti = false;
-
+						Matcher multi = MULTITYPE_PATTERN.matcher(typeName);
 						if (multi.find()) {
 							if (evalMultiType == null) {
 								evalMultiType = new MultiTypeType();
@@ -183,8 +113,10 @@ public class PHPDocMethodReturnTypeEvaluator extends
 						IType[] types = goal.getTypes();
 						if (typeName.equals(SELF_RETURN_TYPE) && types != null) {
 							for (IType t : types) {
-								IEvaluatedType type = getEvaluatedType(
-										PHPModelUtils.getFullName(t), null);
+								IEvaluatedType type = PHPEvaluationUtils
+										.getEvaluatedType(
+												PHPModelUtils.getFullName(t),
+												null);
 								if (type != null) {
 									if (isMulti) {
 										evalMultiType.addType(type);
@@ -195,7 +127,6 @@ public class PHPDocMethodReturnTypeEvaluator extends
 							}
 						} else {
 							if (currentNamespace != null) {
-
 								PHPDocBlock docBlock = PHPModelUtils
 										.getDocBlock(method);
 								ModuleDeclaration moduleDeclaration = SourceParserUtil
@@ -248,8 +179,9 @@ public class PHPDocMethodReturnTypeEvaluator extends
 									}
 								}
 							}
-							IEvaluatedType type = getEvaluatedType(typeName,
-									currentNamespace);
+							IEvaluatedType type = PHPEvaluationUtils
+									.getEvaluatedType(typeName,
+											currentNamespace);
 							if (type != null) {
 								if (isMulti) {
 									evalMultiType.addType(type);
@@ -269,77 +201,59 @@ public class PHPDocMethodReturnTypeEvaluator extends
 		return IGoal.NO_GOALS;
 	}
 
-	private MultiTypeType getArrayType(String type, IType currentNamespace,
-			int offset) {
-		int beginIndex = type.indexOf("[") + 1; //$NON-NLS-1$
-		int endIndex = type.lastIndexOf("]"); //$NON-NLS-1$
-		if (endIndex != -1) {
-			type = type.substring(beginIndex, endIndex);
+	private void evaluateReturnType(List<String> returnTypeList,
+			PHPDocBlock docBlock, IMethod method) {
+		PHPDocTag[] tags = docBlock.getTags(PHPDocTagKinds.RETURN);
+		PHPDocTag[] inherit = docBlock.getTags(PHPDocTagKinds.INHERITDOC);
+
+		if (inherit != null && inherit.length == 1) {
+			IType type = method.getDeclaringType();
+
+			if (type != null) {
+				try {
+					IContext context = goal.getContext();
+					IModelAccessCache cache = null;
+					if (context instanceof IModelCacheContext) {
+						cache = ((IModelCacheContext) context).getCache();
+					}
+					IType[] superClasses = PHPModelUtils.getSuperClasses(
+							type,
+							cache == null ? null : cache.getSuperTypeHierarchy(
+									type, null));
+
+					for (IType superClass : superClasses) {
+						IMethod superClassMethod = superClass.getMethod(method
+								.getElementName());
+
+						if (superClassMethod != null) {
+							PHPDocBlock superDocBlock = PHPModelUtils
+									.getDocBlock(superClassMethod);
+							if (superDocBlock == null) {
+								continue;
+							}
+							evaluateReturnType(returnTypeList, superDocBlock,
+									superClassMethod);
+						}
+					}
+				} catch (ModelException e) {
+					Logger.logException(e);
+				}
+			}
 		}
 
-		MultiTypeType arrayType = new MultiTypeType();
-		Matcher m = ARRAY_TYPE_PATTERN.matcher(type);
-		if (m.find()) {
-			arrayType
-					.addType(getArrayType(m.group(), currentNamespace, offset));
-			type = m.replaceAll(""); //$NON-NLS-1$
-		} else if (type.endsWith(BRACKETS) && type.length() > 2) {
-			arrayType.addType(getArrayType(
-					type.substring(0, type.length() - 2), currentNamespace,
-					offset));
-			type = type.replaceAll(BRACKETS, ""); //$NON-NLS-1$
-		}
-		String[] typeNames = type.split(","); //$NON-NLS-1$
-		for (String name : typeNames) {
-			if (!"".equals(name)) { //$NON-NLS-1$
-
-				if (name.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0
-						&& currentNamespace != null) {
-					// check if the first part is an
-					// alias,then get the full name
-					ModuleDeclaration moduleDeclaration = SourceParserUtil
-							.getModuleDeclaration(currentNamespace
-									.getSourceModule());
-					String prefix = name.substring(0, name
-							.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
-					final Map<String, UsePart> result = PHPModelUtils
-							.getAliasToNSMap(prefix, moduleDeclaration, offset,
-									currentNamespace, true);
-					if (result.containsKey(prefix)) {
-						String fullName = result.get(prefix).getNamespace()
-								.getFullyQualifiedName();
-						name = name.replace(prefix, fullName);
-						if (name.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
-							name = NamespaceReference.NAMESPACE_SEPARATOR
-									+ name;
+		if (tags != null && tags.length > 0) {
+			for (PHPDocTag phpDocTag : tags) {
+				if (phpDocTag.getReferences() != null
+						&& phpDocTag.getReferences().length > 0) {
+					for (SimpleReference ref : phpDocTag.getReferences()) {
+						String type = ref.getName();
+						if (type != null) {
+							returnTypeList.add(type);
 						}
 					}
 				}
-				arrayType.addType(getEvaluatedType(name, currentNamespace));
 			}
 		}
-		return arrayType;
-	}
-
-	private IEvaluatedType getEvaluatedType(String typeName,
-			IType currentNamespace) {
-		IEvaluatedType type = PHPSimpleTypes.fromString(typeName);
-		if (type == null) {
-			if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0
-					&& currentNamespace != null) {
-				typeName = NamespaceReference.NAMESPACE_SEPARATOR
-						+ currentNamespace.getElementName()
-						+ NamespaceReference.NAMESPACE_SEPARATOR + typeName;
-			}
-			if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
-					|| currentNamespace == null) {
-				type = new PHPClassType(typeName);
-			} else {
-				type = new PHPClassType(currentNamespace.getElementName(),
-						typeName);
-			}
-		}
-		return type;
 	}
 
 	public Object produceResult() {
