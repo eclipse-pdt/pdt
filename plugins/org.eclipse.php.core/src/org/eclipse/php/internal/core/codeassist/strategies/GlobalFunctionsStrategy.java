@@ -47,19 +47,15 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 	}
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
-
 		ICompletionContext context = getContext();
 
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
 		CompletionRequestor requestor = abstractContext
 				.getCompletionRequestor();
 
-		if (abstractContext.getPrefixWithoutProcessing().trim().length() == 0) {
-			return;
-		}
-
-		String prefix = abstractContext.getPrefix();
-		if (prefix.startsWith("$")) { //$NON-NLS-1$
+		String prefix = abstractContext.getPrefix().isEmpty() ? abstractContext
+				.getPreviousWord() : abstractContext.getPrefix();
+		if (prefix.trim().isEmpty() || prefix.startsWith("$")) { //$NON-NLS-1$
 			return;
 		}
 

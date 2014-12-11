@@ -36,7 +36,8 @@ public abstract class AbstractGlobalStatementContext extends StatementContext {
 			boolean isExplicit = phpCompletionRequestor.isExplicit();
 			if (!isExplicit) {
 				try {
-					String prefix = getPrefix();
+					String prefix = getPrefix().isEmpty() ? getPreviousWord()
+							: getPrefix();
 					if ((prefix == null || prefix.length() == 0)) {
 						return false;
 					}
