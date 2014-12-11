@@ -35,7 +35,7 @@ public class DBGpNullValue extends DBGpValue {
 		if (data != null) {
 			setValueString(data.trim());
 		} else {
-			setValueString(IDBGpModelConstants.UNINITIALIZED_VAR_CONTENT);
+			setValueString(DBGpVariable.PHP_NULL);
 		}
 	}
 
