@@ -292,6 +292,7 @@ public final class ParameterGuessingProposal extends
 	 * @param modelElement
 	 * @return
 	 */
+	@SuppressWarnings("restriction")
 	private IMethod getProperMethod(IMethod modelElement) {
 		if (modelElement instanceof FakeConstructor) {
 			FakeConstructor fc = (FakeConstructor) modelElement;
@@ -334,7 +335,7 @@ public final class ParameterGuessingProposal extends
 				PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true)
 				^ isToggleEating();
 		char[] completion = fProposal.getCompletion().toCharArray();
-		return !isInScriptdoc() && completion.length > 0
+		return !isInDoc() && completion.length > 0
 				&& (noOverwrite || completion[completion.length - 1] == ')');
 	}
 
@@ -353,6 +354,7 @@ public final class ParameterGuessingProposal extends
 		return alias + LPAREN + RPAREN;
 	}
 
+	@SuppressWarnings("restriction")
 	private void initAlias() {
 		if (method instanceof FakeConstructor) {
 			FakeConstructor fc = (FakeConstructor) method;
