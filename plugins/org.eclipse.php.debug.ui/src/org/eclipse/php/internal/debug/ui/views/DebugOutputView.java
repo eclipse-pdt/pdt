@@ -244,13 +244,13 @@ public class DebugOutputView extends AbstractDebugView implements
 		if (fTarget != null) {
 			if ((fTarget.isSuspended()) || (fTarget.isTerminated())
 					|| (fTarget.isWaiting())) {
-				DebugOutput debugOutput = fTarget.getDebugOutput();
+				DebugOutput debugOutput = fTarget.getOutputBuffer();
 				fUpdateCount = debugOutput.getUpdateCount();
 				// check if output hasn't been updated
 				if (fTarget == oldTarget && fUpdateCount == oldcount)
 					return;
 				dd.setText(this, debugOutput.getOutput());
-			} 
+			}
 			// Not Suspended or Terminated
 			else {
 				// the following is a fix for bug

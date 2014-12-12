@@ -84,4 +84,7 @@ public class DebugOutput {
 		return fHeader.toString();
 	}
 
+	public String toString() {
+		return fOutput.toString();
+	}
 }

@@ -179,13 +179,13 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener {
 			if (fTarget != null) {
 				if ((fTarget.isSuspended()) || (fTarget.isTerminated())
 						|| fTarget.isWaiting()) {
-					debugOutput = fTarget.getDebugOutput();
+					debugOutput = fTarget.getOutputBuffer();
 					fUpdateCount = debugOutput.getUpdateCount();
 					// check if output hasn't been updated
 					if (fTarget == oldTarget && fUpdateCount == oldcount) {
 						return;
 					}
-				} 
+				}
 				// Not Suspended or Terminated
 				else {
 					// The following is a fix for bug

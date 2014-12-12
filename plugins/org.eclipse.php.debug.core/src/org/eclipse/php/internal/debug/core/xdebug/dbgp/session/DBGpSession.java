@@ -377,7 +377,7 @@ public class DBGpSession {
 							+ outputEncoding, this, e);
 					streamStr = new String(streamData);
 				}
-				debugTarget.getDebugOutput().append(streamStr);
+				debugTarget.getOutputBuffer().append(streamStr);
 			}
 		}
 
@@ -480,10 +480,9 @@ public class DBGpSession {
 								.mapToWorkspaceFileIfRequired(filename);
 						debugTarget.breakpointHit(filename, lineno);
 					} catch (NumberFormatException nfe) {
-						DBGpLogger
-								.logException(
-										"Unexpected number format exception", //$NON-NLS-1$
-										this, nfe);
+						DBGpLogger.logException(
+								"Unexpected number format exception", //$NON-NLS-1$
+								this, nfe);
 					}
 				}
 			}
