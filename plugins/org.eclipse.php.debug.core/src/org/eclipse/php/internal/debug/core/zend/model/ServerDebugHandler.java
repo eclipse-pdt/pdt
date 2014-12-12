@@ -245,12 +245,12 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 	public void newOutput(String output) {
 		super.newOutput(output);
-		fDebugTarget.getDebugOutput().append(output);
+		fDebugTarget.getOutputBuffer().append(output);
 	}
 
 	public void newHeaderOutput(String output) {
 		super.newHeaderOutput(output);
-		fDebugTarget.getDebugOutput().appendHeader(output);
+		fDebugTarget.getOutputBuffer().appendHeader(output);
 	}
 
 	public void setDebugTarget(PHPDebugTarget debugTarget) {

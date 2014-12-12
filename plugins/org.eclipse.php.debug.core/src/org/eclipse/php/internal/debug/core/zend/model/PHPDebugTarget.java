@@ -949,7 +949,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 	 * 
 	 * @return the Output buffer for the target
 	 */
-	public DebugOutput getDebugOutput() {
+	public DebugOutput getOutputBuffer() {
 		return fDebugOutput;
 	}
 
