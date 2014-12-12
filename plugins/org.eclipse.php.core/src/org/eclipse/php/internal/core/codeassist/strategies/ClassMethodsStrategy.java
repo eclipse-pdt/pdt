@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -172,38 +173,35 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		return false;
 	}
 
-	private IMethod getConstructor(IType type, IMethod[] methods) {
-		for (int i = 0; i < methods.length; i++) {
-			IMethod method = methods[i];
-			if (isConstructor(method)) {
-				return method;
-			}
-		}
-
-		return null;
-	}
+	// private IMethod getConstructor(IType type, IMethod[] methods) {
+	// for (int i = 0; i < methods.length; i++) {
+	// IMethod method = methods[i];
+	// if (isConstructor(method)) {
+	// return method;
+	// }
+	// }
+	//
+	// return null;
+	// }
 
 	protected boolean showNonStaticMembers(ClassMemberContext context) {
 		return super.showNonStaticMembers(context)
 				|| context.getTriggerType() == Trigger.CLASS;
 	}
 
-	public String getSuffix(AbstractCompletionContext abstractContext) {
-		String nextWord = null;
-		try {
-			nextWord = abstractContext.getNextWord();
-			if ("(".equals(nextWord)) { //$NON-NLS-1$
-				return ""; //$NON-NLS-1$
-			} else {
-				// workaround for
-				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=323462
-				if (abstractContext.getPrefix().trim().length() == 0) {
-					nextWord = abstractContext.getNextWord(2);
-				}
+	public String getSuffix(AbstractCompletionContext abstractContext)
+			throws BadLocationException {
+		// look for method bracket or end of line
+		IDocument document = abstractContext.getDocument();
+		int offset = abstractContext.getOffset();
+		char ch = document.getChar(offset);
+		while (document.getLength() > offset && ch != '(') { //$NON-NLS-1$
+			ch = document.getChar(offset);
+			if (ch == '\n') { //$NON-NLS-1$
+				return "()"; //$NON-NLS-1$
 			}
-		} catch (BadLocationException e) {
-			PHPCorePlugin.log(e);
+			offset++;
 		}
-		return "(".equals(nextWord) ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return ""; //$NON-NLS-1$
 	}
 }

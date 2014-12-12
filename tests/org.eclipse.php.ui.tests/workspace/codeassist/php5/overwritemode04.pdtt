@@ -1,0 +1,32 @@
+--TEST--
+Test overwrite mode
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=false
+--FILE--
+<?php
+class B{
+
+	function overwrite($c,$d){}
+}
+class A
+{
+	function usage()
+	{
+		$b = new B();
+		$b->|bla ('haha', true);
+	}
+}
+--EXPECT--
+<?php
+class B{
+
+	function overwrite($c,$d){}
+}
+class A
+{
+	function usage()
+	{
+		$b = new B();
+		$b->overwrite ('haha', true);
+	}
+}
