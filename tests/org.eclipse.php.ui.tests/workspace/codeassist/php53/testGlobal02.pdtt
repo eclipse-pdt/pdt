@@ -1,0 +1,8 @@
+--TEST--
+Test CA proposal for global elements
+--FILE--
+<?php
+str_w|
+--EXPECT--
+<?php
+str_word_count($string)
