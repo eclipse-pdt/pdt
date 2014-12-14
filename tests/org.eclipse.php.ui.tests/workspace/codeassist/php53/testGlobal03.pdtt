@@ -1,0 +1,12 @@
+--TEST--
+Test CA proposal for global elements
+--FILE--
+<?php
+namespace Foo;
+
+new Datetimez|
+--EXPECT--
+<?php
+namespace Foo;
+
+new \DateTimeZone($timezone)

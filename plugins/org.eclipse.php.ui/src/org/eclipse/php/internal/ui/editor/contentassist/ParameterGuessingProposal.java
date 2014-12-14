@@ -152,32 +152,10 @@ public final class ParameterGuessingProposal extends
 
 	private void dealPrefix() {
 		String prefix = ""; //$NON-NLS-1$
-		try {
-			if (method.isConstructor()) {
-				IType type = method.getDeclaringType();
-				boolean isInNamespace = PHPModelUtils.getCurrentNamespaceIfAny(
-						fSourceModule, getReplacementOffset()) != null;
-				boolean globalType = PHPModelUtils.getCurrentNamespace(type) == null;
-				try {
-					int flags = type.getFlags();
-					if (!PHPFlags.isNamespace(flags)
-							&& globalType
-							&& isInNamespace
-							&& !(type instanceof AliasType)
-							&& !ProjectOptions.getPhpVersion(
-									sProject.getProject()).isLessThan(
-									PHPVersion.PHP5_3)
-							&& document.getChar(getReplacementOffset() - 1) != NamespaceReference.NAMESPACE_SEPARATOR) {
-						prefix += NamespaceReference.NAMESPACE_SEPARATOR;
-					}
-				} catch (ModelException e) {
-					PHPUiPlugin.log(e);
-				} catch (BadLocationException e) {
-					PHPUiPlugin.log(e);
-				}
-			}
-		} catch (ModelException e) {
+		if (shouldHaveGlobalNamespace()) {
+			prefix += NamespaceReference.NAMESPACE_SEPARATOR;
 		}
+
 		if (ProposalExtraInfo.isMethodOnly(extraInfo)) {
 			setReplacementString(prefix + method.getElementName());
 			return;
@@ -191,6 +169,33 @@ public final class ParameterGuessingProposal extends
 			setReplacementString(computeReplacementString(prefix));
 		if (!fileArgumentNames)
 			setReplacementString(prefix + super.getReplacementString());
+	}
+
+	private boolean shouldHaveGlobalNamespace() {
+		if (ProjectOptions.getPhpVersion(sProject.getProject()).isLessThan(
+				PHPVersion.PHP5_3)) {
+			return false;
+		}
+		IType type = method.getDeclaringType();
+		boolean isInNamespace = PHPModelUtils.getCurrentNamespaceIfAny(
+				fSourceModule, getReplacementOffset()) != null;
+		boolean globalType = PHPModelUtils.getCurrentNamespace(type) == null;
+		boolean isNotAlias = !(type instanceof AliasType);
+		try {
+			int flags = type == null ? 0 : type.getFlags();
+			if (!PHPFlags.isNamespace(flags)
+					&& globalType
+					&& isInNamespace
+					&& isNotAlias
+					&& document.getChar(getReplacementOffset() - 1) != NamespaceReference.NAMESPACE_SEPARATOR) {
+				return true;
+			}
+		} catch (ModelException e) {
+			PHPUiPlugin.log(e);
+		} catch (BadLocationException e) {
+			PHPUiPlugin.log(e);
+		}
+		return false;
 	}
 
 	private void dealSuffix(IDocument document, int offset) {
