@@ -16,7 +16,7 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
 import org.eclipse.php.internal.debug.core.zend.communication.CommunicationAdministrator;
 import org.eclipse.php.internal.debug.core.zend.communication.CommunicationClient;
-import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
+import org.eclipse.php.internal.debug.core.zend.communication.DebugConnection;
 
 /**
  * @author michael
@@ -25,7 +25,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThr
 public interface IRemoteDebugger extends Debugger, CommunicationClient,
 		CommunicationAdministrator, IDebugFeatures {
 
-	public DebugConnectionThread getConnectionThread();
+	public DebugConnection getConnection();
 
 	public IDebugHandler getDebugHandler();
 

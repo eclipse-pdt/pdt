@@ -51,7 +51,7 @@ import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.preferences.*;
-import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
+import org.eclipse.php.internal.debug.core.zend.communication.DebugConnection;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.tunneling.SSHTunnel;
@@ -481,12 +481,12 @@ public class PHPLaunchUtilities {
 	 * a good chance that the {@link #showLaunchErrorMessage()} should be
 	 * called.
 	 * 
-	 * @param debugConnectionThread
+	 * @param debugConnection
 	 * @see #hideWaitForDebuggerMessage()
 	 * @see #showLaunchErrorMessage()
 	 */
 	public static void showWaitForDebuggerMessage(
-			final DebugConnectionThread debugConnectionThread) {
+			final DebugConnection debugConnection) {
 		if (progressDialog != null) {
 			// Allow only one progress indicator
 			return;
@@ -495,7 +495,7 @@ public class PHPLaunchUtilities {
 			public void run() {
 				progressDialog = new DebuggerDelayProgressMonitorDialog();
 				if (progressDialog.open() == Window.CANCEL) {
-					debugConnectionThread.closeConnection();
+					debugConnection.disconnect();
 				}
 				progressDialog = null;
 			}

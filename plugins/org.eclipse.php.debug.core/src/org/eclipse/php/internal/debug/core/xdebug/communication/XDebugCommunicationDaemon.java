@@ -137,7 +137,7 @@ public class XDebugCommunicationDaemon extends
 	 * 
 	 * @param socket
 	 */
-	protected void startConnectionThread(Socket socket) {
+	protected void startConnection(Socket socket) {
 		// a socket has been accepted by the listener. This runs on the listener
 		// thread so we should make damn sure we don't throw an exception here
 		// otherwise it will abort that thread.
