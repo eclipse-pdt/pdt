@@ -503,11 +503,14 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
 		case '%':
 		case '>':
 			yypushback(1);
+			if (yylength() > 0) {
+				return PHP_LINE_COMMENT;
+			}
 			break;
 		default:
 			popState();
+			return PHP_LINE_COMMENT;
 	}
-	return PHP_LINE_COMMENT;
 }
 
 <ST_PHP_LINE_COMMENT>{NEWLINE} {

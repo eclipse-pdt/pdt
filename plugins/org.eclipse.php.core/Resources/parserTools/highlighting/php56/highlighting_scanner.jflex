@@ -610,7 +610,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_TOKEN;
 }
 
-<ST_PHP_VAR_OFFSET>{TOKENS}|[;{}\"`] {//the difference from the original rules comes from the fact that we took ';' out out of tokens
+<ST_PHP_VAR_OFFSET>{TOKENS}|[;{}\"`] {//the difference from the original rules comes from the fact that we took ';' out of tokens
 	return UNKNOWN_TOKEN;
 }
 
@@ -648,11 +648,14 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 		case '%':
 		case '>':
 			yypushback(1);
+			if (yylength() > 0) {
+				return PHP_LINE_COMMENT;
+			}
 			break;
 		default:
 			popState();
+			return PHP_LINE_COMMENT;
 	}
-	 return PHP_LINE_COMMENT;
 }
 
 <ST_PHP_LINE_COMMENT>{NEWLINE} {
@@ -836,7 +839,12 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 
         yybegin(ST_PHP_END_HEREDOC);
     }
-    return PHP_CONSTANT_ENCAPSED_STRING;
+    // In some cases, all text is pushed back (using yypushback()),
+    // especially when the parsed document has Windows newlines.
+    // In those cases, ignore this rule and try next one...
+    if (yylength() > 0) {
+        return PHP_CONSTANT_ENCAPSED_STRING;
+    }
 }
 
 <ST_PHP_END_HEREDOC>{NEWLINE}*({ANY_CHAR}[^\n\r;])*{LABEL}";"?[\n\r] {
@@ -917,7 +925,12 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 
         yybegin(ST_PHP_END_NOWDOC);
 	}
-	return PHP_CONSTANT_ENCAPSED_STRING;
+    // In some cases, all text is pushed back (using yypushback()),
+    // especially when the parsed document has Windows newlines.
+    // In those cases, ignore this rule and try next one...
+    if (yylength() > 0) {
+        return PHP_CONSTANT_ENCAPSED_STRING;
+    }
 }
 
 <ST_PHP_END_NOWDOC>{NEWLINE}{LABEL}";"?[\n\r] {
