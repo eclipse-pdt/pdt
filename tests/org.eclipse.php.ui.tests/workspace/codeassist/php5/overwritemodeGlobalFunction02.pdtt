@@ -1,0 +1,16 @@
+--TEST--
+Test overwrite mode
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=false
+--FILE--
+<?php
+function _xyz($param) {
+}
+
+_x|lalalala (4);
+--EXPECT--
+<?php
+function _xyz($param) {
+}
+
+_xyz (4);

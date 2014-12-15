@@ -1,0 +1,34 @@
+--TEST--
+Test overwrite mode
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=false
+--FILE--
+<?php
+class Foo {
+	public function bar($params) {
+	}
+}
+
+class Test {
+	public function run() {
+		$foo = new Foo();
+        $foo->|
+        
+		if (true){}
+	}
+}
+--EXPECT--
+<?php
+class Foo {
+	public function bar($params) {
+	}
+}
+
+class Test {
+	public function run() {
+		$foo = new Foo();
+        $foo->bar($params)
+        
+		if (true){}
+	}
+}
