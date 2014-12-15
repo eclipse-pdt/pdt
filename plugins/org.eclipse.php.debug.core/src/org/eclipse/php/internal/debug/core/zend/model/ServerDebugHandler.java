@@ -24,7 +24,7 @@ import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.model.SimpleDebugHandler;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
-import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
+import org.eclipse.php.internal.debug.core.zend.communication.DebugConnection;
 import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
 import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManager;
 import org.eclipse.php.internal.debug.core.zend.debugger.IRemoteDebugger;
@@ -40,13 +40,13 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	private IRemoteDebugger fRemoteDebugger;
 	private boolean fStatus;
 	protected PHPDebugTarget fDebugTarget;
-	protected DebugConnectionThread fConnectionThread;
+	protected DebugConnection fDebugConnection;
 
 	public ServerDebugHandler() {
 	}
 
 	protected IRemoteDebugger createRemoteDebugger() {
-		return new RemoteDebugger(this, fConnectionThread);
+		return new RemoteDebugger(this, fDebugConnection);
 	}
 
 	public IRemoteDebugger getRemoteDebugger() {
@@ -255,9 +255,9 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 	public void setDebugTarget(PHPDebugTarget debugTarget) {
 		this.fDebugTarget = debugTarget;
-		fConnectionThread = fDebugTarget.getConnectionThread();
+		fDebugConnection = fDebugTarget.getDebugConnection();
 		fRemoteDebugger = createRemoteDebugger();
-		fConnectionThread.getCommunicationAdministrator()
+		fDebugConnection.getCommunicationAdministrator()
 				.connectionEstablished();
 	}
 

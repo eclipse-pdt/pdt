@@ -31,7 +31,7 @@ import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.php.internal.debug.core.model.*;
 import org.eclipse.php.internal.debug.core.pathmapper.*;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
-import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
+import org.eclipse.php.internal.debug.core.zend.communication.DebugConnection;
 import org.eclipse.php.internal.debug.core.zend.debugger.*;
 import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
 import org.eclipse.php.internal.server.core.Server;
@@ -101,15 +101,15 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 	protected BreakpointSet fBreakpointSet;
 	protected IBreakpointManager fBreakpointManager;
 	protected boolean fIsServerWindows = false;
-	protected DebugConnectionThread fConnectionThread;
+	protected DebugConnection fDebugConnection;
 	protected Set<String> fAddFilesPaths;
 
 	/**
 	 * Constructs a new debug target in the given launch for the associated PHP
 	 * Debugger on a Apache Server.
 	 * 
-	 * @param connectionThread
-	 *            The debug connection thread for the communication read and
+	 * @param connection
+	 *            The debug connection for the communication read and
 	 *            write processes.
 	 * @param launch
 	 *            containing launch
@@ -120,12 +120,12 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 	 * @exception CoreException
 	 *                if unable to connect to host
 	 */
-	public PHPDebugTarget(DebugConnectionThread connectionThread,
+	public PHPDebugTarget(DebugConnection connection,
 			ILaunch launch, String URL, int requestPort, IProcess process,
 			boolean runAsDebug, boolean stopAtFirstLine, IProject project)
 			throws CoreException {
 		super(null);
-		fConnectionThread = connectionThread;
+		fDebugConnection = connection;
 		fURL = URL;
 		fIsPHPCGI = false;
 
@@ -138,7 +138,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 	 * Debugger using PHP exe.
 	 * 
 	 * @param connectionThread
-	 *            The debug connection thread for the communication read and
+	 *            The debug connection for the communication read and
 	 *            write processes.
 	 * @param launch
 	 *            containing launch
@@ -149,7 +149,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 	 * @exception CoreException
 	 *                if unable to connect to host
 	 */
-	public PHPDebugTarget(DebugConnectionThread connectionThread,
+	public PHPDebugTarget(DebugConnection connectionThread,
 			ILaunch launch, String phpExe, IFile fileToDebug, int requestPort,
 			IProcess process, boolean runAsDebug, boolean stopAtFirstLine,
 			IProject project) throws CoreException {
@@ -157,12 +157,12 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 				requestPort, process, runAsDebug, stopAtFirstLine, project);
 	}
 
-	public PHPDebugTarget(DebugConnectionThread connectionThread,
+	public PHPDebugTarget(DebugConnection connectionThread,
 			ILaunch launch, String phpExe, String fileToDebug, int requestPort,
 			IProcess process, boolean runAsDebug, boolean stopAtFirstLine,
 			IProject project) throws CoreException {
 		super(null);
-		fConnectionThread = connectionThread;
+		fDebugConnection = connectionThread;
 		fName = fileToDebug;
 		fIsPHPCGI = true;
 		initDebugTarget(launch, requestPort, process, runAsDebug,
@@ -174,8 +174,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 	 * 
 	 * @return The DebugConnectionThread.
 	 */
-	public DebugConnectionThread getConnectionThread() {
-		return fConnectionThread;
+	public DebugConnection getDebugConnection() {
+		return fDebugConnection;
 	}
 
 	/*

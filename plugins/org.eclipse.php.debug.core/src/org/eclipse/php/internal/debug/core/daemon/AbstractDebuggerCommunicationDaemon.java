@@ -156,14 +156,12 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 	public abstract int getReceiverPort();
 
 	/**
-	 * Starts a connection handling thread on the given Socket. This method
-	 * should be overridden by extending classes to create a different debug
-	 * connection threads. The connection thread itself should execute itself in
-	 * a different thread in order to release the current thread.
+	 * Starts a connection on the given Socket. This method should be overridden
+	 * by extending classes to create a different debug connections.
 	 * 
 	 * @param socket
 	 */
-	protected abstract void startConnectionThread(Socket socket);
+	protected abstract void startConnection(Socket socket);
 
 	/**
 	 * Returns the debugger ID that is using this communication daemon.
@@ -212,7 +210,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 					Socket socket = serverSocket.accept();
 					socket.setReceiveBufferSize(1024 * 128);
 					socket.setSendBufferSize(1024 * 128);
-					startConnectionThread(socket);
+					startConnection(socket);
 				}
 			} catch (IOException e) {
 				synchronized (lock) {

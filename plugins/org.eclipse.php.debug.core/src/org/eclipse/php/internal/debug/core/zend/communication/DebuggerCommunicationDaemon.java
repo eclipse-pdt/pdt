@@ -30,10 +30,22 @@ import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNam
  * 
  * @author Shalom Gibly
  */
+@SuppressWarnings("deprecation")
 public class DebuggerCommunicationDaemon extends
 		AbstractDebuggerCommunicationDaemon implements ICommunicationDaemon {
 
 	public static final String ZEND_DEBUGGER_ID = "org.eclipse.php.debug.core.zendDebugger"; //$NON-NLS-1$
+
+	// A port change listener
+	private class PortChangeListener implements IPropertyChangeListener {
+		public void propertyChange(PropertyChangeEvent event) {
+			if (event.getProperty().equals(
+					PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT)) {
+				resetSocket();
+			}
+		}
+	}
+
 	private IPropertyChangeListener portChangeListener;
 
 	/**
@@ -52,18 +64,6 @@ public class DebuggerCommunicationDaemon extends
 	}
 
 	/**
-	 * Initialize a daemon change listener
-	 */
-	protected void initDeamonChangeListener() {
-		if (portChangeListener == null) {
-			Preferences preferences = PHPDebugPlugin.getDefault()
-					.getPluginPreferences();
-			portChangeListener = new PortChangeListener();
-			preferences.addPropertyChangeListener(portChangeListener);
-		}
-	}
-
-	/**
 	 * Returns the server socket port used for the debug requests listening
 	 * thread.
 	 * 
@@ -71,29 +71,6 @@ public class DebuggerCommunicationDaemon extends
 	 */
 	public int getReceiverPort() {
 		return PHPDebugPlugin.getDebugPort(ZEND_DEBUGGER_ID);
-	}
-
-	/**
-	 * Starts a connection handling thread on the given Socket. This method can
-	 * be overridden by extending classes to create a different debug connection
-	 * threads. The connection thread itself should execute itself in a
-	 * different thread in order to release the current thread.
-	 * 
-	 * @param socket
-	 */
-	protected void startConnectionThread(Socket socket) {
-		// Handles the connection in a new thread
-		new DebugConnectionThread(socket);
-	}
-
-	// A port change listener
-	private class PortChangeListener implements IPropertyChangeListener {
-		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(
-					PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT)) {
-				resetSocket();
-			}
-		}
 	}
 
 	/**
@@ -116,4 +93,27 @@ public class DebuggerCommunicationDaemon extends
 	public boolean isDebuggerDaemon() {
 		return true;
 	}
+
+	/**
+	 * Initialize a daemon change listener
+	 */
+	protected void initDeamonChangeListener() {
+		if (portChangeListener == null) {
+			Preferences preferences = PHPDebugPlugin.getDefault()
+					.getPluginPreferences();
+			portChangeListener = new PortChangeListener();
+			preferences.addPropertyChangeListener(portChangeListener);
+		}
+	}
+
+	/**
+	 * Starts a connection on the given Socket. This method can be overridden by
+	 * extending classes to create a different debug connection.
+	 * 
+	 * @param socket
+	 */
+	protected synchronized void startConnection(Socket socket) {
+		new DebugConnection(socket);
+	}
+
 }
