@@ -3182,10 +3182,9 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				break;
 			case RewriteEvent.INSERTED:
 				Scalar scalar = (Scalar) event.getNewValue();
-				String scalarValue = scalar.getStringValue();
 				if (scalar != null) {
 					doTextInsert(formalParameter.getStart(), " = " //$NON-NLS-1$
-							+ scalarValue, getEditGroup(event));
+							+ scalar.getStringValue(), getEditGroup(event));
 				}
 				break;
 			case RewriteEvent.REMOVED:

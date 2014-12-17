@@ -72,10 +72,13 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 			return;
 		}
 
-		DebugConsoleMonitor debugMonitor = (DebugConsoleMonitor) proxy
-				.getConsoleStreamMonitor();
+		DebugConsoleMonitor debugMonitor;
 		if (proxy != null) {
+			debugMonitor = (DebugConsoleMonitor) proxy
+					.getConsoleStreamMonitor();
 			fConsole.connect(debugMonitor, PHP_DEBUG_STREAM);
+		} else {
+			debugMonitor = null;
 		}
 
 		fLaunch = process.getLaunch();

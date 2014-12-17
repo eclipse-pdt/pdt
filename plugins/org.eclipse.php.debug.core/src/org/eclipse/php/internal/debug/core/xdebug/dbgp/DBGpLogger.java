@@ -65,8 +65,8 @@ public class DBGpLogger {
 	 *            the exception to output
 	 */
 	public static void debugException(Throwable exc) {
-		debug(exc.getClass().toString() + ":" + exc.getMessage()); //$NON-NLS-1$
 		if (exc != null) {
+			debug(exc.getClass().toString() + ":" + exc.getMessage()); //$NON-NLS-1$
 			StackTraceElement[] els = exc.getStackTrace();
 			for (int i = 0; i < els.length; i++) {
 				debug(els[i].toString());

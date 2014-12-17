@@ -108,7 +108,7 @@ class DeleteChangeCreator {
 		Assert.isNotNull(modelElements);
 		Assert.isNotNull(manager);
 		TextFileChange textFileChange = null;
-		if (cu != null && cu.getResource() instanceof IFile) {
+		if (cu.getResource() instanceof IFile) {
 			textFileChange = new TextFileChange(cu.getElementName(),
 					(IFile) cu.getResource());
 			MultiTextEdit fileChangeRootEdit = new MultiTextEdit();

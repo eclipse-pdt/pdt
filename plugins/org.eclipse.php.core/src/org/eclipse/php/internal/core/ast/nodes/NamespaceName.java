@@ -80,9 +80,6 @@ public class NamespaceName extends Identifier {
 			boolean global, boolean current) {
 		super(start, end, ast, buildName(segments, global, current));
 
-		if (segments == null) {
-			throw new IllegalArgumentException();
-		}
 		for (Identifier name : segments) {
 			this.segments.add(name);
 		}
@@ -93,12 +90,15 @@ public class NamespaceName extends Identifier {
 
 	public NamespaceName(int start, int end, AST ast, List segments,
 			boolean global, boolean current) {
-		super(start, end, ast, buildName((Identifier[]) segments
-				.toArray(new Identifier[segments.size()]), global, current));
+		super(
+				start,
+				end,
+				ast,
+				buildName(
+						(Identifier[]) segments
+								.toArray(new Identifier[getSegmentSize(segments)]),
+						global, current));
 
-		if (segments == null) {
-			throw new IllegalArgumentException();
-		}
 		Iterator<Identifier> it = segments.iterator();
 		while (it.hasNext()) {
 			this.segments.add(it.next());
@@ -108,8 +108,18 @@ public class NamespaceName extends Identifier {
 		this.current = current;
 	}
 
+	private static int getSegmentSize(List segments) {
+		if (segments == null) {
+			throw new IllegalArgumentException();
+		}
+		return segments.size();
+	}
+
 	protected static String buildName(Identifier[] segments, boolean global,
 			boolean current) {
+		if (segments == null) {
+			throw new IllegalArgumentException();
+		}
 		StringBuilder buf = new StringBuilder();
 		if (global) {
 			buf.append('\\');
@@ -226,8 +236,8 @@ public class NamespaceName extends Identifier {
 		final List segments = ASTNode.copySubtrees(target, segments());
 		final boolean global = isGlobal();
 		final boolean current = isCurrent();
-		final NamespaceName result = new NamespaceName(this.getStart(), this
-				.getEnd(), target, segments, global, current);
+		final NamespaceName result = new NamespaceName(this.getStart(),
+				this.getEnd(), target, segments, global, current);
 		return result;
 	}
 

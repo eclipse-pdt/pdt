@@ -21,7 +21,6 @@ import org.eclipse.core.filebuffers.ITextFileBufferManager;
 import org.eclipse.core.filebuffers.LocationKind;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -392,9 +391,8 @@ public class DocumentAdapter implements IBuffer, IDocumentListener {
 	 */
 	public boolean isReadOnly() {
 		IResource resource = getUnderlyingResource();
-		ResourceAttributes resourceAttributes = resource
-				.getResourceAttributes();
-		return resource == null ? true : resourceAttributes.isReadOnly();
+		return resource == null ? true : resource.getResourceAttributes()
+				.isReadOnly();
 	}
 
 	/*

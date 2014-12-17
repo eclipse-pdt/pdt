@@ -65,6 +65,9 @@ public class PHPResourceMarkerAnnotationModel extends
 	 * org.eclipse.core.resources.IMarker)
 	 */
 	protected boolean isAcceptable(IMarker marker) {
+		if (marker == null) {
+			return false;
+		}
 		try {
 			Object attr = marker.getAttribute(IBreakpointConstants.ATTR_HIDDEN);
 			if (attr != null && ((Boolean) attr).equals(Boolean.TRUE))
@@ -83,8 +86,7 @@ public class PHPResourceMarkerAnnotationModel extends
 		boolean isSameFile = Path.fromPortableString(
 				fSecondaryMarkerAttributeValue).equals(path);
 
-		return marker != null && getResource().equals(marker.getResource())
-				&& isSameFile;
+		return getResource().equals(marker.getResource()) && isSameFile;
 	}
 
 	public final static String SECONDARY_ID_KEY = IBreakpointConstants.RESOURCE_PATH;
@@ -154,14 +156,14 @@ public class PHPResourceMarkerAnnotationModel extends
 		protected Image getImage(Display display) {
 			Image image = null;
 			if (fAnnotationType == TemporaryAnnotation.ANNOT_ERROR) {
-				image = PlatformUI.getWorkbench().getSharedImages().getImage(
-						ISharedImages.IMG_OBJS_ERROR_TSK);
+				image = PlatformUI.getWorkbench().getSharedImages()
+						.getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
 			} else if (fAnnotationType == TemporaryAnnotation.ANNOT_WARNING) {
-				image = PlatformUI.getWorkbench().getSharedImages().getImage(
-						ISharedImages.IMG_OBJS_WARN_TSK);
+				image = PlatformUI.getWorkbench().getSharedImages()
+						.getImage(ISharedImages.IMG_OBJS_WARN_TSK);
 			} else if (fAnnotationType == TemporaryAnnotation.ANNOT_INFO) {
-				image = PlatformUI.getWorkbench().getSharedImages().getImage(
-						ISharedImages.IMG_OBJS_INFO_TSK);
+				image = PlatformUI.getWorkbench().getSharedImages()
+						.getImage(ISharedImages.IMG_OBJS_INFO_TSK);
 			}
 
 			if (image != null && isGrayed())

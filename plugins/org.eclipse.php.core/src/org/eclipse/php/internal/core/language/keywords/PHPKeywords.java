@@ -152,10 +152,13 @@ public class PHPKeywords {
 	 */
 	public Collection<KeywordData> findByPrefix(String prefix) {
 		List<KeywordData> result = new LinkedList<KeywordData>();
+		if (prefix == null) {
+			return result;
+		}
 		for (KeywordData data : keywordData) {
 			if (data.name.startsWith(prefix)
-					|| (data.ignoreCase && prefix != null && data.name
-							.toLowerCase().startsWith(prefix.toLowerCase()))) {
+					|| (data.ignoreCase && data.name.toLowerCase().startsWith(
+							prefix.toLowerCase()))) {
 				result.add(data);
 			}
 		}
@@ -170,10 +173,13 @@ public class PHPKeywords {
 	 */
 	public Collection<String> findNamesByPrefix(String prefix) {
 		List<String> result = new LinkedList<String>();
+		if (prefix == null) {
+			return result;
+		}
 		for (KeywordData data : keywordData) {
 			if (data.name.startsWith(prefix)
-					|| (data.ignoreCase && prefix != null && data.name
-							.toLowerCase().startsWith(prefix.toLowerCase()))) {
+					|| (data.ignoreCase && data.name.toLowerCase().startsWith(
+							prefix.toLowerCase()))) {
 				result.add(data.name);
 			}
 		}

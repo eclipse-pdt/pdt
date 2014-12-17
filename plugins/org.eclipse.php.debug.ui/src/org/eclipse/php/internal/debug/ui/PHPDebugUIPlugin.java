@@ -228,9 +228,9 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 				.getActiveWorkbenchWindow();
 		if (window != null) {
 			IWorkbenchPage page = window.getActivePage();
-			IPerspectiveDescriptor descriptor = page.getPerspective();
-			if (descriptor.getId().indexOf("php") != -1) { //$NON-NLS-1$
-				if (page != null) {
+			if (page != null) {
+				IPerspectiveDescriptor descriptor = page.getPerspective();
+				if (descriptor.getId().indexOf("php") != -1) { //$NON-NLS-1$
 					IViewPart part = page.findView(viewID);
 					if (part == null) {
 						try {

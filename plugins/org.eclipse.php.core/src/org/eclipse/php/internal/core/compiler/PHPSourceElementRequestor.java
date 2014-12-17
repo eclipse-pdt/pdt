@@ -184,8 +184,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		Collection<FormalParameter> arguments = lambdaMethod.getArguments();
 		StringBuilder metadata = new StringBuilder();
-		String[] parameters = new String[arguments.size()];
+		String[] parameters;
 		if (arguments != null) {
+			parameters = new String[arguments.size()];
 			Iterator<FormalParameter> i = arguments.iterator();
 			int indx = 0;
 			while (i.hasNext()) {
@@ -197,6 +198,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 					metadata.append(","); //$NON-NLS-1$
 				}
 			}
+		} else {
+			parameters = new String[0];
 		}
 
 		// Add method declaration:

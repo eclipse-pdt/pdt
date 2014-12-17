@@ -55,6 +55,9 @@ public class MethodReturnTypeEvaluator extends
 		MethodsAndTypes mat = getMethodsAndTypes();
 		for (int i = 0; i < mat.methods.length; i++) {
 			IMethod method = mat.methods[i];
+			if (method == null) {
+				continue;
+			}
 
 			ISourceModule sourceModule = method.getSourceModule();
 			ModuleDeclaration module = SourceParserUtil
@@ -118,9 +121,7 @@ public class MethodReturnTypeEvaluator extends
 					}
 				}
 			}
-			if (method != null) {
-				resolveMagicMethodDeclaration(method, methodName);
-			}
+			resolveMagicMethodDeclaration(method, methodName);
 		}
 
 		return subGoals.toArray(new IGoal[subGoals.size()]);

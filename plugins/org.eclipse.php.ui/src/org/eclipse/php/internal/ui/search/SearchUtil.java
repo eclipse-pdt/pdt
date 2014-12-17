@@ -56,20 +56,21 @@ public class SearchUtil {
 	}
 
 	public static String toString(IWorkingSet[] workingSets) {
-		Arrays.sort(workingSets, new WorkingSetComparator());
 		String result = ""; //$NON-NLS-1$
-		if (workingSets != null && workingSets.length > 0) {
-			boolean firstFound = false;
-			for (int i = 0; i < workingSets.length; i++) {
-				String workingSetName = workingSets[i].getName();
-				if (firstFound)
-					result = Messages.format(
-							PHPUIMessages.SearchUtil_workingSetConcatenation,
-							new String[] { result, workingSetName }); 
-				else {
-					result = workingSetName;
-					firstFound = true;
-				}
+		if (workingSets == null || workingSets.length == 0) {
+			return result;
+		}
+		Arrays.sort(workingSets, new WorkingSetComparator());
+		boolean firstFound = false;
+		for (int i = 0; i < workingSets.length; i++) {
+			String workingSetName = workingSets[i].getName();
+			if (firstFound)
+				result = Messages.format(
+						PHPUIMessages.SearchUtil_workingSetConcatenation,
+						new String[] { result, workingSetName });
+			else {
+				result = workingSetName;
+				firstFound = true;
 			}
 		}
 		return result;
