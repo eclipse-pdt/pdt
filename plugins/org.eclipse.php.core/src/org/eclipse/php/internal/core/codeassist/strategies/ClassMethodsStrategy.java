@@ -193,10 +193,11 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		// look for method bracket or end of line
 		IDocument document = abstractContext.getDocument();
 		int offset = abstractContext.getOffset();
-		char ch = document.getChar(offset);
-		while (document.getLength() > offset && ch != '(') { //$NON-NLS-1$
-			ch = document.getChar(offset);
-			if (ch == '\n') { //$NON-NLS-1$
+		while (document.getLength() > offset) { //$NON-NLS-1$
+			char ch = document.getChar(offset);
+			if (ch == '(') {
+				break;
+			} else if (ch == '\n') { //$NON-NLS-1$
 				return "()"; //$NON-NLS-1$
 			}
 			offset++;
