@@ -74,7 +74,8 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			cache = ((IModelCacheContext) context).getCache();
 		}
 
-		String variableName = typedGoal.getVariableName();
+		String variableName = PHPEvaluationUtils.removeArrayBrackets(typedGoal
+				.getVariableName());
 
 		final List<IGoal> subGoals = new LinkedList<IGoal>();
 		for (final IType type : types) {
@@ -125,17 +126,13 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 					}
 				}
 
-				if (subGoals.size() == 0) {
-					getGoalFromStaticDeclaration(variableName, subGoals, type,
-							null);
-				}
+				addGoalFromStaticDeclaration(variableName, subGoals, type, null);
+
 				fieldDeclaringTypeSet.remove(type);
-				if (subGoals.size() == 0 && !fieldDeclaringTypeSet.isEmpty()) {
-					for (Entry<IType, IType> entry : fieldDeclaringTypeSet
-							.entrySet()) {
-						getGoalFromStaticDeclaration(variableName, subGoals,
-								entry.getKey(), entry.getValue());
-					}
+				for (Entry<IType, IType> entry : fieldDeclaringTypeSet
+						.entrySet()) {
+					addGoalFromStaticDeclaration(variableName, subGoals,
+							entry.getKey(), entry.getValue());
 				}
 			} catch (CoreException e) {
 				if (DLTKCore.DEBUG) {
@@ -149,7 +146,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		return subGoals.toArray(new IGoal[subGoals.size()]);
 	}
 
-	protected void getGoalFromStaticDeclaration(String variableName,
+	protected void addGoalFromStaticDeclaration(String variableName,
 			final List<IGoal> subGoals, final IType declaringType,
 			IType realType) throws ModelException {
 		ISourceModule sourceModule = declaringType.getSourceModule();
@@ -284,7 +281,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		private int length;
 		private String variableName;
 		private ISourceModule sourceModule;
-		private Map<ASTNode, IContext> staticDeclarations;
+		private Map<ASTNode, IContext> staticDeclarations = new HashMap<ASTNode, IContext>();
 
 		public ClassDeclarationSearcher(ISourceModule sourceModule,
 				TypeDeclaration typeDeclaration, int offset, int length,
@@ -295,21 +292,17 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			this.length = length;
 			this.sourceModule = sourceModule;
 			this.variableName = variableName;
-			this.staticDeclarations = new HashMap<ASTNode, IContext>();
 		}
 
 		public ClassDeclarationSearcher(ISourceModule sourceModule,
 				TypeDeclaration typeDeclaration, int offset, int length,
 				String variableName, IType realType, IType declaringType) {
-			// this(sourceModule, typeDeclaration2, offset2, length2,
-			// variableName);
 			super(sourceModule, realType, declaringType);
 			this.typeDeclaration = typeDeclaration;
 			this.offset = offset;
 			this.length = length;
 			this.sourceModule = sourceModule;
 			this.variableName = variableName;
-			this.staticDeclarations = new HashMap<ASTNode, IContext>();
 		}
 
 		public ASTNode getResult() {

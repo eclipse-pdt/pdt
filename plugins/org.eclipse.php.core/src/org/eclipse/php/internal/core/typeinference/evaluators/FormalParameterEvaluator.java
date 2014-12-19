@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
-import java.util.regex.Pattern;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IMethod;
@@ -34,9 +32,6 @@ import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 public class FormalParameterEvaluator extends GoalEvaluator {
 
 	private static final String ELLIPSIS = "..."; //$NON-NLS-1$
-
-	private static final String BRACKETS_PATTERN = Pattern
-			.quote(PHPEvaluationUtils.BRACKETS);
 
 	private IEvaluatedType result;
 
@@ -114,8 +109,8 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 											continue;
 										}
 
-										typeName = typeName.replaceAll(
-												BRACKETS_PATTERN, "");
+										typeName = PHPEvaluationUtils
+												.removeArrayBrackets(typeName);
 
 										multiType.addType(PHPClassType
 												.fromTypeName(typeName,

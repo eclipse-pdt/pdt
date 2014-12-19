@@ -37,6 +37,8 @@ public class PHPEvaluationUtils {
 	public final static Pattern ARRAY_TYPE_PATTERN = Pattern
 			.compile("array\\[.*\\]"); //$NON-NLS-1$
 
+	public static final String BRACKETS_PATTERN = "\\[.*\\]";
+
 	public static IEvaluatedType extractArrayType(String typeName,
 			IType currentNamespace, int offset) {
 		if (typeName == null || typeName.isEmpty()) {
@@ -166,6 +168,10 @@ public class PHPEvaluationUtils {
 			}
 		}
 		return type;
+	}
+
+	public static String removeArrayBrackets(String variableName) {
+		return variableName.replaceAll(BRACKETS_PATTERN, "");
 	}
 
 }

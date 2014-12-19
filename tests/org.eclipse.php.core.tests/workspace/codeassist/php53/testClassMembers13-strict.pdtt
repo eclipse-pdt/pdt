@@ -1,0 +1,32 @@
+--TEST--
+Should complete class variables
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=true
+--FILE--
+<?php
+class MyObject {
+	public function run() {
+	}
+}
+class ObjectCollection {
+	/**
+	 *
+	 * @return MyObject[] test
+	 */
+	public function get_many() {
+	}
+}
+class Service {
+	protected $objects = array();
+	public function load() {
+		$collection = new ObjectCollection ();
+		$this->objects = $collection->get_many ();
+	}
+	public function test() {
+		foreach ( $this->objects as $object ) {
+			$object->|
+		}
+	}
+}
+--EXPECT--
+method(run)
