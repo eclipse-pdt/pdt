@@ -16,6 +16,6 @@ class Test {
 ?>
 --EXPECT--
 org.eclipse.php.internal.ui.editor.highlighters.InternalClassHighlighting:
-highlight(SplFixedArray)
+highlight(\SplFixedArray)
 highlight(LogicExceptionAlias)
-highlight(Exception)
+highlight(\Exception)
