@@ -1,0 +1,17 @@
+--TEST--
+Test formatting for global functions
+--FILE--
+<?php
+
+namespace Test{
+\str_getcsv($test);
+}
+?>
+--EXPECT--
+<?php
+
+namespace Test {
+
+	\str_getcsv ( $test );
+}
+?>
