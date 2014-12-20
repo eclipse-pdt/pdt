@@ -42,6 +42,7 @@ import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunch;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
+import org.eclipse.php.internal.debug.core.zend.model.PHPMultiDebugTarget;
 import org.eclipse.php.internal.debug.ui.actions.EvaluationContextManager;
 import org.eclipse.php.internal.debug.ui.views.DebugBrowserView;
 import org.eclipse.php.internal.debug.ui.views.DebugOutputView;
@@ -112,6 +113,8 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 				.get(IVariable.class.getName());
 		PHPDebugElementAdapterFactory propertiesFactory = new PHPDebugElementAdapterFactory();
 		manager.registerAdapters(propertiesFactory, IVariable.class);
+		manager.registerAdapters(propertiesFactory, PHPMultiDebugTarget.class);
+		manager.registerAdapters(propertiesFactory, PHPLaunch.class);
 		// In case the list had some factories, make sure our factory is the
 		// first in the list.
 		if (list != null && list.size() > 1) {

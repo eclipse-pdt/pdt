@@ -37,32 +37,53 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	private IDebugTarget fDebugTarget;
 	private int fExitValue;
 
+	/**
+	 * Creates new PHP process for given launch and with provided name.
+	 * 
+	 * @param launch
+	 * @param name
+	 */
 	public PHPProcess(ILaunch launch, String name) {
 		fLaunch = launch;
 		fName = name;
 		fTerminated = false;
-		launch.addProcess(this);
 		fProxy = new PHPStreamsProxy();
 		fireCreationEvent();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.debug.core.model.IProcess#getLabel()
+	 */
 	public String getLabel() {
 		return fName;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.debug.core.model.IProcess#getLaunch()
+	 */
 	public ILaunch getLaunch() {
-
 		return fLaunch;
 	}
 
-	protected void setLaunch(ILaunch launch) {
-		fLaunch = launch;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.debug.core.model.IProcess#getStreamsProxy()
+	 */
 	public IStreamsProxy getStreamsProxy() {
 		return fProxy;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.debug.core.model.IProcess#setAttribute(java.lang.String,
+	 * java.lang.String)
+	 */
 	public void setAttribute(String key, String value) {
 		if (fAttributes == null) {
 			fAttributes = new HashMap<String, String>(5);
@@ -75,6 +96,11 @@ public class PHPProcess extends PlatformObject implements IProcess {
 		fireChangeEvent();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.debug.core.model.IProcess#getAttribute(java.lang.String)
+	 */
 	public String getAttribute(String key) {
 		if (fAttributes == null) {
 			return null;
@@ -82,15 +108,21 @@ public class PHPProcess extends PlatformObject implements IProcess {
 		return (String) fAttributes.get(key);
 	}
 
-	public void setExitValue(int exitValue) {
-		this.fExitValue = exitValue;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.debug.core.model.IProcess#getExitValue()
+	 */
 	public int getExitValue() throws DebugException {
 		return fExitValue;
 	}
 
-	public Object getAdapter(Class adapter) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
+	 */
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter.equals(IProcess.class)) {
 			return this;
 		}
@@ -110,42 +142,95 @@ public class PHPProcess extends PlatformObject implements IProcess {
 		return super.getAdapter(adapter);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
+	 */
 	public boolean canTerminate() {
 		return !fTerminated;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
+	 */
 	public boolean isTerminated() {
 		return fTerminated;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.debug.core.model.ITerminate#terminate()
+	 */
 	public void terminate() throws DebugException {
-		// fLaunch.terminate(); // No need starting from Eclipse 3.3
 		fTerminated = true;
 		fireTerminateEvent();
 	}
 
+	/**
+	 * Sets PHP hyperlink.
+	 * 
+	 * @param pLink
+	 */
 	public void setPHPHyperLink(PHPHyperLink pLink) {
 		fPHPHyperLink = pLink;
 	}
 
+	/**
+	 * Returns PHP hyperlink.
+	 * 
+	 * @return PHP hyperlink
+	 */
 	public PHPHyperLink getPHPHyperLink() {
 		return fPHPHyperLink;
 	}
 
+	/**
+	 * Returns corresponding console.
+	 * 
+	 * @return console
+	 */
 	public IConsole getConsole() {
 		return fConsole;
 	}
 
+	/**
+	 * Sets corresponding console.
+	 * 
+	 * @param console
+	 */
 	public void setConsole(IConsole console) {
 		fConsole = console;
 	}
 
+	/**
+	 * Returns related debug target.
+	 * 
+	 * @return debug target
+	 */
 	public IDebugTarget getDebugTarget() {
 		return fDebugTarget;
 	}
 
+	/**
+	 * Sets related debug target.
+	 * 
+	 * @param target
+	 */
 	public void setDebugTarget(IDebugTarget target) {
 		fDebugTarget = target;
+	}
+
+	/**
+	 * Set up exit value.
+	 * 
+	 * @param exitValue
+	 */
+	public void setExitValue(int exitValue) {
+		this.fExitValue = exitValue;
 	}
 
 	/**
@@ -153,19 +238,6 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	 */
 	protected void fireCreationEvent() {
 		fireEvent(new DebugEvent(this, DebugEvent.CREATE));
-	}
-
-	/**
-	 * Fires the given debug event.
-	 * 
-	 * @param event
-	 *            debug event to fire
-	 */
-	protected void fireEvent(DebugEvent event) {
-		DebugPlugin manager = DebugPlugin.getDefault();
-		if (manager != null) {
-			manager.fireDebugEventSet(new DebugEvent[] { event });
-		}
 	}
 
 	/**
@@ -181,4 +253,18 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	protected void fireChangeEvent() {
 		fireEvent(new DebugEvent(this, DebugEvent.CHANGE));
 	}
+
+	/**
+	 * Fires the given debug event.
+	 * 
+	 * @param event
+	 *            debug event to fire
+	 */
+	protected void fireEvent(DebugEvent event) {
+		DebugPlugin manager = DebugPlugin.getDefault();
+		if (manager != null) {
+			manager.fireDebugEventSet(new DebugEvent[] { event });
+		}
+	}
+
 }
