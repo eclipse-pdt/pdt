@@ -17,20 +17,17 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.debug.internal.core.LaunchManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugMessageHandler;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugRequestHandler;
@@ -55,11 +52,11 @@ import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.*;
 import org.eclipse.php.internal.debug.core.zend.debugger.parameters.AbstractDebugParametersInitializer;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
+import org.eclipse.php.internal.debug.core.zend.model.PHPMultiDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.testConnection.DebugServerTestController;
 import org.eclipse.php.internal.debug.core.zend.testConnection.DebugServerTestEvent;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 import com.ibm.icu.text.MessageFormat;
 
@@ -222,9 +219,10 @@ public class DebugConnection {
 				getCommunicationAdministrator().connectionClosed();
 			}
 			shutdown();
-			// Just for sure
-			disconnect();
+			// Have to be here as well as in message receiver
+			DebugConnection.this.terminate();
 		}
+
 	}
 
 	/**
@@ -365,6 +363,8 @@ public class DebugConnection {
 			cancel();
 			// Shutdown message handler
 			messageHandler.connectionClosed();
+			// Have to be here as well as in message handler
+			DebugConnection.this.terminate();
 		}
 
 		private void showProtocolError() {
@@ -384,6 +384,79 @@ public class DebugConnection {
 		}
 
 	}
+
+	protected class SessionDescriptor {
+
+		private int id;
+		private int ordinal;
+		private DebugSessionStartedNotification startedNotification;
+
+		public SessionDescriptor(
+				DebugSessionStartedNotification startedNotification) {
+			this.startedNotification = startedNotification;
+			this.id = -1;
+			this.ordinal = -1;
+			build();
+		}
+
+		public DebugSessionStartedNotification getStartedNotification() {
+			return startedNotification;
+		}
+
+		private void build() {
+			String params;
+			if (startedNotification.getQuery().contains(
+					AbstractDebugParametersInitializer.DEBUG_SESSION_ID))
+				params = startedNotification.getQuery();
+			else
+				params = startedNotification.getOptions();
+			List<String> parameters = Arrays.asList(params.split("&")); //$NON-NLS-1$
+			Iterator<String> i = parameters.iterator();
+			while (i.hasNext()) {
+				String parameter = i.next();
+				if (parameter
+						.startsWith(AbstractDebugParametersInitializer.DEBUG_SESSION_ID)) {
+					int idx = parameter.indexOf('=');
+					Integer parsedId = parseInt(parameter.substring(idx + 1));
+					if (parsedId != null)
+						id = parsedId;
+					if (i.hasNext()) {
+						Integer parsedOrdinal = parseInt(i.next());
+						if (parsedOrdinal != null)
+							ordinal = parsedOrdinal;
+					}
+				}
+			}
+		}
+
+		private Integer parseInt(String number) {
+			try {
+				return Integer.parseInt(number);
+			} catch (NumberFormatException e) {
+				return null;
+			}
+		}
+
+		public int getId() {
+			return id;
+		}
+
+		public int getOrdinal() {
+			return ordinal;
+		}
+
+		public boolean isPrimary() {
+			return getOrdinal() < 0;
+		}
+
+		public boolean isUnknown() {
+			return getId() < 0 && getOrdinal() < 0;
+		}
+
+	}
+
+	private static final Lock HOOK_LOCK = new ReentrantLock(true);
+	private static final long HOOK_TIMEOUT = 10000;
 
 	// Phantom message used to notify that connection was closed
 	private final IDebugMessage CONNECTION_CLOSED = new DebugMessageImpl() {
@@ -437,18 +510,10 @@ public class DebugConnection {
 	}
 
 	/**
-	 * Closes the connection. Destroys the server socket without cleaning the
-	 * the request/response tables. The cleaning will be done by
-	 * InputMessageHandler on termination.
+	 * Closes the connection. Causes message receiver & handler to be shutdown.
 	 */
 	public synchronized void disconnect() {
-		if (!isConnected())
-			return;
-		// Mark it as closed already
-		isConnected = false;
 		messageReceiver.shutdown();
-		cleanSocket();
-		Logger.debugMSG("DEBUG CONNECTION: Socket Cleaned"); //$NON-NLS-1$
 	}
 
 	/**
@@ -458,90 +523,26 @@ public class DebugConnection {
 		return isConnected;
 	}
 
+	/**
+	 * Returns communication client
+	 * 
+	 * @return communication client
+	 */
 	public CommunicationClient getCommunicationClient() {
 		return communicationClient;
 	}
 
+	/**
+	 * Returns communication administrator
+	 * 
+	 * @return communication administrator
+	 */
 	public CommunicationAdministrator getCommunicationAdministrator() {
 		return communicationAdministrator;
 	}
 
 	/**
-	 * Hook the debug session to the correct ILaunch that started it.
-	 * 
-	 * @param debugSessionStartedNotification
-	 * @return True, if the debug session hook was successful; False, otherwise.
-	 */
-	public boolean hookDebugSession(
-			DebugSessionStartedNotification debugSessionStartedNotification)
-			throws CoreException {
-		String query = debugSessionStartedNotification.getQuery();
-		int sessionID = getSessionID(query);
-		if (sessionID == 0) {
-			sessionID = getSessionID(debugSessionStartedNotification
-					.getOptions());
-		}
-		/*
-		 * Get the launch, but keep it in the map for any other debug requests
-		 * that are related to the debug session id. The launch is mapped until
-		 * the launches are cleared.
-		 */
-		ILaunch launch = PHPSessionLaunchMapper.get(sessionID);
-		if (launch == null) {
-			/*
-			 * We cannot find a launch the we can associate to the given session
-			 * id (if any) Try to take the first launch that is terminated and
-			 * has a 'Debug all Pages' attribute.
-			 */
-			ILaunch[] launchs = DebugPlugin.getDefault().getLaunchManager()
-					.getLaunches();
-			for (ILaunch aLaunch : launchs) {
-				String debugType = aLaunch
-						.getAttribute(IPHPDebugConstants.DEBUGGING_PAGES);
-				if (aLaunch.isTerminated()
-						&& (IPHPDebugConstants.DEBUGGING_ALL_PAGES
-								.equals(debugType) || IPHPDebugConstants.DEBUGGING_START_FROM
-								.equals(debugType))) {
-					launch = aLaunch;
-					break;
-				}
-			}
-		}
-		if (launch != null) {
-			// Remove any debug targets and processes that were terminated.
-			IDebugTarget[] debugTargets = launch.getDebugTargets();
-			IProcess[] processes = launch.getProcesses();
-			for (IDebugTarget element : debugTargets) {
-				if (element.isTerminated()) {
-					launch.removeDebugTarget(element);
-				} else {
-					// Do not allow any other targets or processes when an
-					// active debug target exists - FIXME (should be done
-					// better)
-					return true;
-				}
-			}
-			for (IProcess element : processes) {
-				if (element.isTerminated()) {
-					launch.removeProcess(element);
-				}
-			}
-			// Hook by launch type
-			if (Boolean
-					.toString(true)
-					.equals(launch
-							.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER))) {
-				hookServerDebug(launch, debugSessionStartedNotification);
-			} else {
-				hookPHPExeDebug(launch, debugSessionStartedNotification);
-			}
-			return true;
-		}
-		return handleHookError("No session id"); //$NON-NLS-1$
-	}
-
-	/**
-	 * Deliver a Notification.
+	 * Sends a notification.
 	 * 
 	 * @param msg
 	 *            The delivered notification message.
@@ -691,33 +692,58 @@ public class DebugConnection {
 		}
 	}
 
+	/**
+	 * Sets communication administrator.
+	 * 
+	 * @param admin
+	 */
 	public void setCommunicationAdministrator(CommunicationAdministrator admin) {
 		communicationAdministrator = admin;
 	}
 
+	/**
+	 * Sets communication client.
+	 * 
+	 * @param client
+	 */
 	public void setCommunicationClient(CommunicationClient client) {
 		this.communicationClient = client;
 	}
 
-	protected void connect() {
-		requestsTable = new IntHashtable();
-		responseTable = new IntHashtable();
-		responseHandlers = new Hashtable<Integer, ResponseHandler>();
-		messageHandlers = new HashMap<Integer, IDebugMessageHandler>();
-		try {
-			socket.setTcpNoDelay(true);
-			this.connectionIn = new DataInputStream(socket.getInputStream());
-			this.connectionOut = new DataOutputStream(socket.getOutputStream());
-			messageHandler = new MessageHandler();
-			messageReceiver = new MessageReceiver();
-			// Start message handler
-			messageHandler.schedule();
-			// Start message receiver
-			messageReceiver.schedule();
-			isInitialized = true;
-		} catch (Exception e) {
-			PHPDebugPlugin.log(e);
+	protected boolean hookLaunch(SessionDescriptor sessionDescriptor)
+			throws CoreException {
+		// Try to hook any of the existing launches
+		ILaunch launch = PHPSessionLaunchMapper.get(sessionDescriptor.getId());
+		/*
+		 * There are no existing launches (created by user nor "mock" ones) for
+		 * incoming session ID, try to find/create new "mock" launch
+		 */
+		if (launch == null)
+			launch = fetchLaunch(sessionDescriptor);
+		/*
+		 * If session is primary (new one has come) and launch exists then it
+		 * means that session has been restarted. If so, terminate the previous
+		 * launch.
+		 */
+		else if (sessionDescriptor.isPrimary() && !launch.isTerminated())
+			try {
+				launch.terminate();
+			} catch (DebugException e) {
+				// ignore
+			}
+		// Move on with the launch
+		if (launch != null) {
+			// Remove terminated elements if any
+			cleanup(launch);
+			// Hook by launch type
+			if (isServerLaunch(launch)) {
+				hookServerLaunch(launch, sessionDescriptor);
+			} else {
+				hookPHPExeLaunch(launch, sessionDescriptor);
+			}
+			return true;
 		}
+		return false;
 	}
 
 	/**
@@ -728,9 +754,8 @@ public class DebugConnection {
 	 * @param startedNotification
 	 *            A DebugSessionStartedNotification
 	 */
-	protected void hookServerDebug(final ILaunch launch,
-			DebugSessionStartedNotification startedNotification)
-			throws CoreException {
+	protected void hookServerLaunch(final ILaunch launch,
+			SessionDescriptor sessionDescriptor) throws CoreException {
 		ILaunchConfiguration launchConfiguration = launch
 				.getLaunchConfiguration();
 		IProject project = getProject(launchConfiguration);
@@ -738,7 +763,7 @@ public class DebugConnection {
 				IDebugParametersKeys.TRANSFER_ENCODING, "")); //$NON-NLS-1$
 		messageReceiver.setOutputEncoding(launchConfiguration.getAttribute(
 				IDebugParametersKeys.OUTPUT_ENCODING, "")); //$NON-NLS-1$
-		String URL = getURL(launchConfiguration);
+		String URL = launchConfiguration.getAttribute(Server.BASE_URL, ""); //$NON-NLS-1$
 		boolean stopAtFirstLine = project == null ? true
 				: PHPProjectPreferences.getStopAtFirstLine(project);
 		int requestPort = PHPDebugPlugin
@@ -751,12 +776,8 @@ public class DebugConnection {
 		PHPProcess process = new PHPProcess(launch, URL);
 		debugTarget = (PHPDebugTarget) createDebugTarget(this, launch, URL,
 				requestPort, process, runWithDebug, stopAtFirstLine, project);
-		launch.addDebugTarget(debugTarget);
-		/*
-		 * A fix for Linux display problem. This code will auto-expand the
-		 * debugger view tree.
-		 */
-		autoExpand(launch);
+		// Bind debug target to the launch
+		bindTarget(launch);
 	}
 
 	/**
@@ -767,9 +788,8 @@ public class DebugConnection {
 	 * @param startedNotification
 	 *            A DebugSessionStartedNotification
 	 */
-	protected void hookPHPExeDebug(final ILaunch launch,
-			DebugSessionStartedNotification startedNotification)
-			throws CoreException {
+	protected void hookPHPExeLaunch(final ILaunch launch,
+			SessionDescriptor sessionDescriptor) throws CoreException {
 		ILaunchConfiguration launchConfiguration = launch
 				.getLaunchConfiguration();
 		messageReceiver.setTransferEncoding(launchConfiguration.getAttribute(
@@ -811,18 +831,283 @@ public class DebugConnection {
 		debugTarget = (PHPDebugTarget) createDebugTarget(this, launch,
 				phpExeString, debugFileName, requestPort, process,
 				runWithDebugInfo, stopAtFirstLine, project);
-		launch.addDebugTarget(debugTarget);
+		// Bind debug target to the launch
+		bindTarget(launch);
+	}
+
+	/**
+	 * Handle a debug session hook error. This method can be subclassed for
+	 * handling more complex causes. The default implementation is to display
+	 * the toString() value of the cause and return false.
+	 * 
+	 * @param cause
+	 *            An object that represents the cause for the error. Can be a
+	 *            String description or a different complex object that can
+	 *            supply more information.
+	 * @return True, if the error was fixed in this method; False, otherwise.
+	 */
+	protected void hookError(Object cause) {
+		if (cause != null) {
+			Logger.log(Logger.ERROR, cause.toString());
+		} else {
+			Logger.log(Logger.ERROR, "Debug hook error"); //$NON-NLS-1$
+		}
+	}
+
+	protected ILaunch fetchLaunch(SessionDescriptor sessionDescriptor)
+			throws CoreException {
+		// TODO - this one should be done better in the future...
 		/*
-		 * A fix for Linux display problem. This code will auto-expand the
-		 * debugger view tree.
+		 * We cannot find a launch the we can associate to the given session id
+		 * (if any) Try to take the first launch that is terminated and has a
+		 * 'Debug all Pages' attribute.
 		 */
-		autoExpand(launch);
+		ILaunch[] launchs = DebugPlugin.getDefault().getLaunchManager()
+				.getLaunches();
+		for (ILaunch aLaunch : launchs) {
+			String debugType = aLaunch
+					.getAttribute(IPHPDebugConstants.DEBUGGING_PAGES);
+			if (aLaunch.isTerminated()
+					&& (IPHPDebugConstants.DEBUGGING_ALL_PAGES
+							.equals(debugType) || IPHPDebugConstants.DEBUGGING_START_FROM
+							.equals(debugType))) {
+				return aLaunch;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Creates a new IDebugTarget. This create method is usually used when
+	 * hooking a PHP web page launch.
+	 * 
+	 * @throws CoreException
+	 */
+	protected IDebugTarget createDebugTarget(DebugConnection thread,
+			ILaunch launch, String url, int requestPort, PHPProcess process,
+			boolean runWithDebug, boolean stopAtFirstLine, IProject project)
+			throws CoreException {
+		return new PHPDebugTarget(thread, launch, url, requestPort, process,
+				runWithDebug, stopAtFirstLine, project);
+	}
+
+	/**
+	 * Creates a new IDebugTarget. This create method is usually used when
+	 * hooking a PHP executable launch.
+	 * 
+	 * @throws CoreException
+	 */
+	protected IDebugTarget createDebugTarget(DebugConnection thread,
+			ILaunch launch, String phpExeString, String debugFileName,
+			int requestPort, PHPProcess process, boolean runWithDebugInfo,
+			boolean stopAtFirstLine, IProject project) throws CoreException {
+		return new PHPDebugTarget(thread, launch, phpExeString, debugFileName,
+				requestPort, process, runWithDebugInfo, stopAtFirstLine,
+				project);
+	}
+
+	/**
+	 * Get {@link IProject} instance from provided launch configuration.
+	 * 
+	 * @param configuration
+	 * @return {@link IProject}
+	 * @throws CoreException
+	 */
+	protected IProject getProject(ILaunchConfiguration configuration)
+			throws CoreException {
+		String projectName = configuration.getAttribute(
+				IPHPDebugConstants.PHP_Project, (String) null);
+		if (projectName != null) {
+			return ResourcesPlugin.getWorkspace().getRoot()
+					.getProject(projectName);
+		}
+		return null;
+	}
+
+	protected boolean setProtocol(int protocolID) {
+		SetProtocolRequest request = new SetProtocolRequest();
+		request.setProtocolID(protocolID);
+		try {
+			Object response = sendRequest(request);
+			if (response != null && response instanceof SetProtocolResponse) {
+				int responceProtocolID = ((SetProtocolResponse) response)
+						.getProtocolID();
+				if (responceProtocolID == protocolID) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		return false;
+	}
+
+	/**
+	 * This method checks whether the server protocol is older than the latest
+	 * Studio protocol.
+	 * 
+	 * @return <code>true</code> if debugger protocol matches the Studio
+	 *         protocol, otherwise <code>false</code>
+	 */
+	protected boolean verifyProtocolID(int serverProtocolID) {
+		if (serverProtocolID < RemoteDebugger.PROTOCOL_ID_LATEST) {
+			return setProtocol(RemoteDebugger.PROTOCOL_ID_LATEST);
+		}
+		return true;
+	}
+
+	/**
+	 * This method checks whether this launch is a server one.
+	 * 
+	 * @param launch
+	 * @return <code>true</code> if launch is server one, otherwise
+	 *         <code>false</code>
+	 */
+	protected boolean isServerLaunch(ILaunch launch) {
+		return Boolean.toString(true).equals(
+				launch.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER));
+	}
+
+	/**
+	 * Hook the debug session to the correct ILaunch that started it.
+	 * 
+	 * @param debugSessionStartedNotification
+	 * @return True, if the debug session hook was successful; False, otherwise.
+	 */
+	private void hookDebugSession(
+			DebugSessionStartedNotification debugSessionStartedNotification)
+			throws CoreException {
+		/*
+		 * Try to hook (debug session -> launch) only one at a time, just to
+		 * avoid an ugly mess with debug events.
+		 */
+		try {
+			// Do not lock forever
+			HOOK_LOCK.tryLock(HOOK_TIMEOUT, TimeUnit.MILLISECONDS);
+			SessionDescriptor sessionDescriptor = new SessionDescriptor(
+					debugSessionStartedNotification);
+			if (!hookLaunch(sessionDescriptor))
+				// May happen
+				hookError("No session id"); //$NON-NLS-1$
+		} catch (InterruptedException e) {
+			Logger.logException(e);
+		} finally {
+			HOOK_LOCK.unlock();
+		}
+	}
+
+	/**
+	 * Bind debug target to the launch finally.
+	 * 
+	 * @param launch
+	 * @throws CoreException
+	 */
+	private void bindTarget(ILaunch launch) throws CoreException {
+		IDebugTarget target = launch.getDebugTarget();
+		if (target != null) {
+			/*
+			 * Launch already has one multiple-threaded target, extend it with
+			 * incoming sub-target.
+			 */
+			if (target instanceof PHPMultiDebugTarget) {
+				PHPMultiDebugTarget multi = (PHPMultiDebugTarget) target;
+				multi.addSubTarget(debugTarget);
+			}
+			/*
+			 * Launch already has one single-threaded target, replace it with
+			 * multiple-threaded one.
+			 */
+			else if (target instanceof PHPDebugTarget) {
+				PHPDebugTarget single = (PHPDebugTarget) target;
+				// Cleanup 'single' info
+				launch.removeDebugTarget(single);
+				IProcess[] processes = launch.getProcesses();
+				for (IProcess p : processes)
+					launch.removeProcess(p);
+				// Create 'multi' process & target
+				PHPProcess process = new PHPProcess(launch,
+						"Parallel Requests' Process"); //$NON-NLS-1$
+				PHPMultiDebugTarget multi = new PHPMultiDebugTarget(launch,
+						process);
+				multi.addSubTarget(single);
+				multi.addSubTarget(debugTarget);
+				// Connect to launch
+				launch.addDebugTarget(multi);
+				launch.addProcess(process);
+			}
+		} else {
+			// It is just single-threaded target
+			launch.addDebugTarget(debugTarget);
+			launch.addProcess(debugTarget.getProcess());
+		}
+	}
+
+	/**
+	 * Clean up launch. Remove terminated launches and processes.
+	 * 
+	 * @param launch
+	 */
+	private void cleanup(ILaunch launch) {
+		final IDebugTarget[] debugTargets = launch.getDebugTargets();
+		final IProcess[] processes = launch.getProcesses();
+		final ILaunch currentLaunch = launch;
+		for (IDebugTarget element : debugTargets) {
+			if (element.isTerminated()) {
+				currentLaunch.removeDebugTarget(element);
+			}
+		}
+		for (IProcess element : processes) {
+			if (element.isTerminated()) {
+				currentLaunch.removeProcess(element);
+			}
+		}
+	}
+
+	private IDebugMessageHandler createMessageHandler(IDebugMessage message) {
+		if (!messageHandlers.containsKey(message.getType())) {
+			IDebugMessageHandler requestHandler = DebugMessagesRegistry
+					.getHandler(message);
+			messageHandlers.put(message.getType(), requestHandler);
+		}
+		return messageHandlers.get(message.getType());
+	}
+
+	/**
+	 * In case of a peerResponseTimeout exception we let the communication
+	 * client handle the logic of the peerResponseTimeout.
+	 */
+	private void handlePeerResponseTimeout() {
+		getCommunicationClient().handlePeerResponseTimeout();
+	}
+
+	/**
+	 * Start the connection with debugger.
+	 */
+	private void connect() {
+		requestsTable = new IntHashtable();
+		responseTable = new IntHashtable();
+		responseHandlers = new Hashtable<Integer, ResponseHandler>();
+		messageHandlers = new HashMap<Integer, IDebugMessageHandler>();
+		try {
+			socket.setTcpNoDelay(true);
+			this.connectionIn = new DataInputStream(socket.getInputStream());
+			this.connectionOut = new DataOutputStream(socket.getOutputStream());
+			messageHandler = new MessageHandler();
+			messageReceiver = new MessageReceiver();
+			// Start message handler
+			messageHandler.schedule();
+			// Start message receiver
+			messageReceiver.schedule();
+			isInitialized = true;
+		} catch (Exception e) {
+			PHPDebugPlugin.log(e);
+		}
 	}
 
 	/**
 	 * Destroys the socket and initialize it to null.
 	 */
-	protected void cleanSocket() {
+	private void cleanSocket() {
 		if (!isInitialized)
 			return;
 		if (socket != null) {
@@ -871,172 +1156,15 @@ public class DebugConnection {
 	}
 
 	/**
-	 * Creates a new IDebugTarget. This create method is usually used when
-	 * hooking a PHP web page launch.
-	 * 
-	 * @throws CoreException
+	 * Terminates connection completely.
 	 */
-	protected IDebugTarget createDebugTarget(DebugConnection thread,
-			ILaunch launch, String url, int requestPort, PHPProcess process,
-			boolean runWithDebug, boolean stopAtFirstLine, IProject project)
-			throws CoreException {
-		return new PHPDebugTarget(thread, launch, url, requestPort, process,
-				runWithDebug, stopAtFirstLine, project);
-	}
-
-	/**
-	 * Creates a new IDebugTarget. This create method is usually used when
-	 * hooking a PHP executable launch.
-	 * 
-	 * @throws CoreException
-	 */
-	protected IDebugTarget createDebugTarget(DebugConnection thread,
-			ILaunch launch, String phpExeString, String debugFileName,
-			int requestPort, PHPProcess process, boolean runWithDebugInfo,
-			boolean stopAtFirstLine, IProject project) throws CoreException {
-		return new PHPDebugTarget(thread, launch, phpExeString, debugFileName,
-				requestPort, process, runWithDebugInfo, stopAtFirstLine,
-				project);
-	}
-
-	/**
-	 * Get url from provided launch configuration.
-	 * 
-	 * @param configuration
-	 * @return
-	 * @throws CoreException
-	 */
-	protected String getURL(ILaunchConfiguration configuration)
-			throws CoreException {
-		return configuration.getAttribute(Server.BASE_URL, ""); //$NON-NLS-1$
-	}
-
-	/**
-	 * Extract the session id from the query. Return -1 if no session id was
-	 * located.
-	 * 
-	 * @param query
-	 * @return The session id, or -1 if non was located in the query.
-	 */
-	protected int getSessionID(String query) {
-		int indx = query
-				.lastIndexOf(AbstractDebugParametersInitializer.DEBUG_SESSION_ID
-						+ "="); //$NON-NLS-1$
-		if (indx < 0) {
-			return -1;
-		}
-		indx += AbstractDebugParametersInitializer.DEBUG_SESSION_ID.length() + 1;
-		query = query.substring(indx);
-		indx = query.indexOf('&');
-		if (indx > -1) {
-			return Integer.parseInt(query.substring(0, indx));
-		}
-		return Integer.parseInt(query.trim());
-	}
-
-	/**
-	 * Get {@link IProject} instance from provided launch configuration.
-	 * 
-	 * @param configuration
-	 * @return {@link IProject}
-	 * @throws CoreException
-	 */
-	protected IProject getProject(ILaunchConfiguration configuration)
-			throws CoreException {
-		String projectName = configuration.getAttribute(
-				IPHPDebugConstants.PHP_Project, (String) null);
-		if (projectName != null) {
-			return ResourcesPlugin.getWorkspace().getRoot()
-					.getProject(projectName);
-		}
-		return null;
-	}
-
-	/**
-	 * Handle a debug session hook error. This method can be subclassed for
-	 * handling more complex causes. The default implementation is to display
-	 * the toString() value of the cause and return false.
-	 * 
-	 * @param cause
-	 *            An object that represents the cause for the error. Can be a
-	 *            String description or a different complex object that can
-	 *            supply more information.
-	 * @return True, if the error was fixed in this method; False, otherwise.
-	 */
-	protected boolean handleHookError(Object cause) {
-		if (cause != null) {
-			Logger.log(Logger.ERROR, cause.toString());
-		} else {
-			Logger.log(Logger.ERROR, "Debug hook error"); //$NON-NLS-1$
-		}
-		return false;
-	}
-
-	protected boolean setProtocol(int protocolID) {
-		SetProtocolRequest request = new SetProtocolRequest();
-		request.setProtocolID(protocolID);
-		try {
-			Object response = sendRequest(request);
-			if (response != null && response instanceof SetProtocolResponse) {
-				int responceProtocolID = ((SetProtocolResponse) response)
-						.getProtocolID();
-				if (responceProtocolID == protocolID) {
-					return true;
-				}
-			}
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
-		return false;
-	}
-
-	/**
-	 * This method checks whether the server protocol is older than the latest
-	 * Studio protocol.
-	 * 
-	 * @return <code>true</code> if debugger protocol matches the Studio
-	 *         protocol, otherwise <code>false</code>
-	 */
-	protected boolean verifyProtocolID(int serverProtocolID) {
-		if (serverProtocolID < RemoteDebugger.PROTOCOL_ID_LATEST) {
-			return setProtocol(RemoteDebugger.PROTOCOL_ID_LATEST);
-		}
-		return true;
-	}
-
-	private IDebugMessageHandler createMessageHandler(IDebugMessage message) {
-		if (!messageHandlers.containsKey(message.getType())) {
-			IDebugMessageHandler requestHandler = DebugMessagesRegistry
-					.getHandler(message);
-			messageHandlers.put(message.getType(), requestHandler);
-		}
-		return messageHandlers.get(message.getType());
-	}
-
-	/**
-	 * In case of a peerResponseTimeout exception we let the communication
-	 * client handle the logic of the peerResponseTimeout.
-	 */
-	private void handlePeerResponseTimeout() {
-		getCommunicationClient().handlePeerResponseTimeout();
-	}
-
-	/*
-	 * A fix for Linux display problem. This code will auto-expand the debugger
-	 * view tree. Added to fix a problem while migrating to 3.3. The stack tree
-	 * was not updated.
-	 */
-	private void autoExpand(final ILaunch launch) {
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				LaunchManager manager = (LaunchManager) DebugPlugin
-						.getDefault().getLaunchManager();
-				manager.fireUpdate(new ILaunch[] { launch },
-						LaunchManager.ADDED);
-				manager.fireUpdate(new ILaunch[] { launch },
-						LaunchManager.CHANGED);
-			}
-		});
+	private void terminate() {
+		if (!isConnected())
+			return;
+		// Mark it as closed already
+		isConnected = false;
+		cleanSocket();
+		Logger.debugMSG("DEBUG CONNECTION: Socket Cleaned"); //$NON-NLS-1$
 	}
 
 }
