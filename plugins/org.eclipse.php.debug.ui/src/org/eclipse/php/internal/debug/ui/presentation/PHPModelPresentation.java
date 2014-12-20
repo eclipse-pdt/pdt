@@ -38,6 +38,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
+import org.eclipse.php.internal.debug.core.zend.model.PHPMultiDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
@@ -199,7 +200,12 @@ public class PHPModelPresentation extends LabelProvider implements
 					PHPDebugUIMessages.MPresentation_Terminated_1,
 					new Object[] {});
 		}
-		return label + PHPDebugUIMessages.MPresentation_PHP_APP_1;
+		String name = PHPDebugUIMessages.MPresentation_PHP_APP_1;
+		if (target instanceof PHPMultiDebugTarget) {
+			name = PHPDebugUIMessages.MPresentation_PHP_APP_1
+					+ PHPDebugUIMessages.PHPModelPresentation_ParallelRequests;
+		}
+		return label + name;
 	}
 
 	private String resolveUntitledEditorName(String location) {
