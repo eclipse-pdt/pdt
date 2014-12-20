@@ -30,7 +30,6 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.VarComment;
 import org.eclipse.php.internal.core.compiler.ast.parser.php5.CompilerAstLexer;
 import org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerParserConstants;
 import org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpTokenNames;
-import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.text.edits.MultiTextEdit;
@@ -797,39 +796,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 				break;
 			}
 
-			// workaround; remove this after fixing of
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=326384
-			int start = array[i].getStart();
-			try {
-				// a NamespaceName object can be wrapped in
-				// a FormalParameter object
-				Object obj = array[i] instanceof FormalParameter ? ((FormalParameter) array[i])
-						.getParameterType() : array[i];
-
-				// obj may be null
-				if (obj instanceof NamespaceName
-						&& ((NamespaceName) obj).isGlobal()) {
-					if (start > 0
-							&& (Character.isWhitespace(document
-									.getChar(start - 1)) || document
-									.getChar(start - 1) == '\\')) {
-						start -= 1;
-					}
-				} else if (i == 0 && array[i] instanceof UseStatementPart
-						&& ((UseStatementPart) array[i]).getName() != null
-						&& ((UseStatementPart) array[i]).getName().isGlobal()) {
-					if (start > 0
-							&& (Character.isWhitespace(document
-									.getChar(start - 1)) || document
-									.getChar(start - 1) == '\\')) {
-						start -= 1;
-					}
-				}
-			} catch (BadLocationException e) {
-				Logger.logException(e);
-			}
-			// workaround end
-			handleChars1(lastPosition, start,
+			handleChars1(lastPosition, array[i].getStart(),
 					oldIndentationLevel != indentationLevel, indentGap);
 			array[i].accept(this);
 			if (array[i] instanceof FunctionInvocation) {
@@ -2845,24 +2812,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			insertSpace();
 		}
 		lineWidth += 5;
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=326384
-		int start = catchClause.getClassName().getStart();
-		if (catchClause.getClassName() instanceof NamespaceName) {
-			NamespaceName namespaceName = (NamespaceName) catchClause
-					.getClassName();
-			try {
-				if (namespaceName.isGlobal()
-						&& start > 0
-						&& (Character.isWhitespace(document.getChar(start - 1)) || document
-								.getChar(start - 1) == '\\')) {
-					start -= 1;
-				}
-			} catch (BadLocationException e) {
-				Logger.logException(e);
-			}
-		}
-		// end
-		handleChars(catchClause.getStart() + 5, start);
+		handleChars(catchClause.getStart() + 5, catchClause.getClassName()
+				.getStart());
 
 		// handle the catch identifier
 		catchClause.getClassName().accept(this);
@@ -2964,26 +2915,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		// handle super class
 		if (superClass != null) {
 			appendToBuffer(" extends "); //$NON-NLS-1$
-			int start = superClass.getStart();
-			// workaround
-			// remove this after fixing of
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=326384
-			try {
-				if (superClass instanceof NamespaceName
-						&& ((NamespaceName) superClass).isGlobal()) {
-					if (start > 0
-							&& (Character.isWhitespace(document
-									.getChar(start - 1)) || document
-									.getChar(start - 1) == '\\')) {
-						start -= 1;
-					}
-				}
-			} catch (BadLocationException e) {
-				Logger.logException(e);
-			}
-			// end
-
-			handleChars(lastPosition, start);
+			handleChars(lastPosition, superClass.getStart());
 			classDeclaration.getSuperClass().accept(this);
 			lastPosition = classDeclaration.getSuperClass().getEnd();
 		}
@@ -5052,23 +4984,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		}
 		List<Identifier> segments = namespaceName.segments();
 		if (segments.size() > 0) {
-			// workaround
-			// remove this after fixing of
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=326384
-			int start = namespaceName.getStart();
-			try {
-				if (namespaceName.isGlobal()
-						&& start > 0
-						&& (Character.isWhitespace(document.getChar(start - 1)) || document
-								.getChar(start - 1) == '\\')) {
-					start -= 1;
-				}
-			} catch (BadLocationException e) {
-				Logger.logException(e);
-			}
-			// end
-
-			handleChars(start, segments.get(0).getStart());
+			handleChars(namespaceName.getStart(), segments.get(0).getStart());
 			Iterator<Identifier> it = segments.iterator();
 			Identifier prev = null;
 			while (it.hasNext()) {

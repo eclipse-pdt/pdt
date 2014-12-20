@@ -26,7 +26,7 @@ Foo::$d;
 $a= new Foo();
 $a= new \My\aa\cc\Foo();
 %bb\Foo%::$d;
-$a= new \%My\aa\bb\Foo%();
+$a= new %\My\aa\bb\Foo%();
 $a= new %bb\Foo%|();
 ?>
 --EXPECT--
