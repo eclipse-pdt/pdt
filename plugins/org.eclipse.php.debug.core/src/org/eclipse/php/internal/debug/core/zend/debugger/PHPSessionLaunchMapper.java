@@ -13,12 +13,10 @@ package org.eclipse.php.internal.debug.core.zend.debugger;
 
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.ILaunchesListener;
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
 import org.eclipse.php.internal.core.util.collections.IntMap;
 import org.eclipse.php.internal.core.util.collections.IntMap.Entry;
-import org.eclipse.php.internal.debug.core.launching.PHPLaunch;
 import org.eclipse.swt.browser.Browser;
 
 /**
@@ -78,48 +76,6 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 		return (ILaunch) getInstance().map.remove(sessionID);
 	}
 
-	public void launchesAdded(ILaunch[] launches) {
-		updateSystemProperty(launches);
-	}
-
-	public void launchesChanged(ILaunch[] launches) {
-		updateSystemProperty(launches);
-	}
-
-	public void launchesRemoved(ILaunch[] launches) {
-		// Remove any launch mapping if the launch was removed and we are still
-		// mapping it.
-		IntMap.Entry[] entries = new IntMap.Entry[map.size()];
-		map.entrySet().toArray(entries);
-		for (Entry entry : entries) {
-			for (ILaunch element : launches) {
-				if (entry.getValue() == element) {
-					map.remove(entry.getKey());
-				}
-			}
-		}
-		updateSystemProperty(launches);
-
-		if (hasNoDebugLaunch()) {
-			// In case we have no more php debug launches, clear the browser's
-			// cache
-			// (cookies) to avoid any debug session trigger as a result
-			// of a remaining cookie.
-			Browser.clearSessions();
-		}
-	}
-
-	private boolean hasNoDebugLaunch() {
-		ILaunch[] l = DebugPlugin.getDefault().getLaunchManager().getLaunches();
-		int dbgSessions = 0;
-		for (int i = 0; i < l.length; i++) {
-			if (ILaunchManager.DEBUG_MODE.equals(l[i].getLaunchMode())
-					&& l[i] instanceof PHPLaunch)
-				dbgSessions++;
-		}
-		return dbgSessions == 0;
-	}
-
 	/**
 	 * Update the "org.eclipse.php.debug.ui.activeDebugging" system property.
 	 * This method is important for any action that is defined to be visible
@@ -135,4 +91,37 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 		System.setProperty(SYSTEM_DEBUG_PROPERTY, hasActiveLaunch ? "true" //$NON-NLS-1$
 				: "false"); //$NON-NLS-1$
 	}
+
+	public void launchesAdded(ILaunch[] launches) {
+		updateSystemProperty(launches);
+	}
+
+	public void launchesChanged(ILaunch[] launches) {
+		updateSystemProperty(launches);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void launchesRemoved(ILaunch[] launches) {
+		// Remove any launch mapping if the launch was removed and we are still
+		// mapping it.
+		IntMap.Entry[] entries = new IntMap.Entry[map.size()];
+		map.entrySet().toArray(entries);
+		for (Entry entry : entries) {
+			for (ILaunch element : launches) {
+				if (entry.getValue() == element) {
+					map.remove(entry.getKey());
+				}
+			}
+		}
+		updateSystemProperty(launches);
+		/*
+		 * In case we have no more running debug launches (mapped for Zend
+		 * Debugger only), clear the browser's cache (cookies) to avoid any
+		 * debug session trigger as a result of a remaining cookie.
+		 */
+		if (map.isEmpty()) {
+			Browser.clearSessions();
+		}
+	}
+
 }
