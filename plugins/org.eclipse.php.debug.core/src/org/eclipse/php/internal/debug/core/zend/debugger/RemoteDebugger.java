@@ -272,6 +272,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	public String convertToLocalFilename(String remoteFile) {
 		String currentScript = null;
 		PHPstack callStack = getCallStack();
+		if (callStack == null)
+			return null;
 		if (callStack.getSize() > 0) {
 			currentScript = callStack.getLayer(callStack.getSize() - 1)
 					.getResolvedCalledFileName();
