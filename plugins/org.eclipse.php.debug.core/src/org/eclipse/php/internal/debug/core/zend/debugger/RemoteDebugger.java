@@ -879,6 +879,10 @@ public class RemoteDebugger implements IRemoteDebugger {
 			warnOlderDebugVersion();
 			return true;
 		}
+		// All of above failed, check if the connection is active (it could be
+		// terminated in the meantime by the user i.e.)
+		if (!isActive())
+			return true;
 		// user is using an incompatible version of debugger:
 		getDebugHandler().wrongDebugServer();
 		return false;
