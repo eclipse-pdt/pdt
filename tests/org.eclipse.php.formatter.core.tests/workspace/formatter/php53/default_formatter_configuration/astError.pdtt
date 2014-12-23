@@ -1,0 +1,17 @@
+--TEST--
+Test formatting for code with ASTError
+Bug 441419 - Each format operation adds additional blank line
+--FILE--
+<?php
+function myFunc(Tree $tree) {
+  $tree->
+  ;
+}
+?>
+--EXPECT--
+<?php
+function myFunc(Tree $tree) {
+  $tree->
+  ;
+}
+?>
