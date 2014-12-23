@@ -2534,30 +2534,46 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		for (int i = 0; i < statements.length; i++) {
 			boolean isHtmlStatement = statements[i].getType() == ASTNode.IN_LINE_HTML;
 			boolean isASTError = statements[i].getType() == ASTNode.AST_ERROR;
+			// fixed bug 441419
+			// in case of previous statement is an error there is no need for
+			// new lines
+			// because the lastStatementEndOffset position move to the current
+			// statement start position
+			boolean isStatementAfterError = i > 0 ? statements[i - 1].getType() == ASTNode.AST_ERROR
+					: false;
 			if (isASTError && i + 1 < statements.length) {
+				// move the lastStatementEndOffset position to the start of the
+				// next statement start position
 				lastStatementEndOffset = statements[i + 1].getStart();
 			} else {
 				if (isPhpMode && !isHtmlStatement) {
 					// PHP -> PHP
-					if (getPhpStartTag(lastStatementEndOffset) != -1) {
+					if (!isStatementAfterError
+							&& getPhpStartTag(lastStatementEndOffset) != -1) {
 						insertNewLine();
 					}
 					if (isThrowOrReturnFormatCase(statements)) {
 						// do nothing... This is a Throw/Return case
 					} else {
-						insertNewLines(statements[i]);
-						indent();
+						if (!isStatementAfterError) {
+							insertNewLines(statements[i]);
+							indent();
+						}
 					}
-					handleChars(lastStatementEndOffset,
-							statements[i].getStart());
+					if (lastStatementEndOffset <= statements[i].getStart()) {
+						handleChars(lastStatementEndOffset,
+								statements[i].getStart());
+					}
 				} else if (isPhpMode && isHtmlStatement) {
 					// PHP -> HTML
 					isPhpMode = false;
 				} else if (!isPhpMode && !isHtmlStatement) {
 					// HTML -> PHP
-					isPhpEqualTag = getPhpStartTag(lastStatementEndOffset) == PHP_OPEN_SHORT_TAG_WITH_EQUAL;
-					insertNewLines(statements[i]);
-					indent();
+					if (!isStatementAfterError) {
+						isPhpEqualTag = getPhpStartTag(lastStatementEndOffset) == PHP_OPEN_SHORT_TAG_WITH_EQUAL;
+						insertNewLines(statements[i]);
+						indent();
+					}
 					if (lastStatementEndOffset <= statements[i].getStart()) {
 						handleChars(lastStatementEndOffset,
 								statements[i].getStart());
@@ -4521,15 +4537,16 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 				lastStatementEndOffset = statements[i + 1].getStart();
 			} else {
 				if (isPhpMode && !isHtmlStatement) {
-
 					// PHP -> PHP
 					if (lastStatementEndOffset > 0) {
 						if (!isStatementAfterError
 								&& getPhpStartTag(lastStatementEndOffset) != -1) {
 							insertNewLine();
 						}
-						insertNewLines(statements[i]);
-						indent();
+						if (!isStatementAfterError) {
+							insertNewLines(statements[i]);
+							indent();
+						}
 						if (lastStatementEndOffset <= statements[i].getStart()) {
 							handleChars(lastStatementEndOffset,
 									statements[i].getStart());
@@ -4550,8 +4567,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 						isPhpEqualTag = getPhpStartTag(lastStatementEndOffset) == PHP_OPEN_SHORT_TAG_WITH_EQUAL;
 						indentationLevel = getPhpTagIndentationLevel(lastStatementEndOffset);
 						insertNewLines(statements[i]);
+						indent();
 					}
-					indent();
 					if (lastStatementEndOffset <= statements[i].getStart()) {
 						handleChars(lastStatementEndOffset,
 								statements[i].getStart());
