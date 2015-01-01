@@ -888,6 +888,9 @@ private final String scanXMLCommentText() throws IOException {
 %state ST_DHTML_ATTRIBUTE_NAME
 %state ST_DHTML_EQUALS
 %state ST_DHTML_ATTRIBUTE_VALUE
+// NB: considering the current lexical rules, JFlex will assign same
+// value to the states ST_DHTML_TAG_CLOSE, ST_BLOCK_TAG_INTERNAL_SCAN
+// and ST_ABORT_EMBEDDED
 %state ST_DHTML_TAG_CLOSE
 
 
@@ -918,6 +921,9 @@ private final String scanXMLCommentText() throws IOException {
 %state ST_PHP_CONTENT
 %state ST_XML_ATTRIBUTE_VALUE_SQUOTED
 %state ST_XML_ATTRIBUTE_VALUE_DQUOTED
+// NB: considering the current lexical rules, JFlex will assign same
+// value to the states ST_DHTML_TAG_CLOSE, ST_BLOCK_TAG_INTERNAL_SCAN
+// and ST_ABORT_EMBEDDED
 %state ST_BLOCK_TAG_INTERNAL_SCAN
 %state ST_ABORT_EMBEDDED
 
@@ -1376,8 +1382,11 @@ PHP_ASP_END=%>
 	// tag inside of JSP attribute value start
 	yybegin(ST_XML_TAG_NAME);
 	assembleEmbeddedContainer(XML_TAG_OPEN, new String[]{XML_TAG_CLOSE,XML_EMPTY_TAG_CLOSE});
-	if(yystate() != ST_ABORT_EMBEDDED)
-        yybegin(incomingState);
+	if(yystate() != ST_ABORT_EMBEDDED) {
+		// set incoming state when container
+		// was correctly assembled
+		yybegin(incomingState);
+	}
 	return PROXY_CONTEXT;
 }
 <ST_XML_ATTRIBUTE_VALUE_DQUOTED,ST_XML_ATTRIBUTE_VALUE_SQUOTED> {genericEndTagOpen} {
@@ -1388,8 +1397,11 @@ PHP_ASP_END=%>
 	// Php attribute value start - end tag
 	yybegin(ST_XML_TAG_NAME);
 	assembleEmbeddedContainer(XML_END_TAG_OPEN, new String[]{XML_TAG_CLOSE,XML_EMPTY_TAG_CLOSE});
-	if(yystate() != ST_ABORT_EMBEDDED)
-        yybegin(incomingState);
+	if(yystate() != ST_ABORT_EMBEDDED) {
+		// set incoming state when container
+		// was correctly assembled
+		yybegin(incomingState);
+	}
 	return PROXY_CONTEXT;
 }
 
@@ -1578,9 +1590,9 @@ PHP_ASP_END=%>
 			}
 			yybegin(ST_PHP_CONTENT);
 			assembleEmbeddedContainer(PHP_OPEN, PHP_CLOSE);
-			if (yystate() == ST_BLOCK_TAG_INTERNAL_SCAN) {
-				yybegin(ST_BLOCK_TAG_SCAN);
-				return BLOCK_TEXT;
+			if (yystate() == ST_ABORT_EMBEDDED) {
+				// leave with unchanged state
+				return PROXY_CONTEXT;
 			}
 			// required help for successive embedded regions
 			if (yystate() == ST_XML_TAG_NAME) {
@@ -1945,9 +1957,9 @@ PHP_ASP_END=%>
 			}
 			yybegin(ST_PHP_CONTENT);
 			assembleEmbeddedContainer(PHP_OPEN, PHP_CLOSE);
-			if(yystate() == ST_BLOCK_TAG_INTERNAL_SCAN) {
-				yybegin(ST_BLOCK_TAG_SCAN);
-				return BLOCK_TEXT;
+			if(yystate() == ST_ABORT_EMBEDDED) {
+				// leave with unchanged state
+				return PROXY_CONTEXT;
 			}
 			// required help for successive embedded regions
 			if(yystate() == ST_XML_TAG_NAME) {
