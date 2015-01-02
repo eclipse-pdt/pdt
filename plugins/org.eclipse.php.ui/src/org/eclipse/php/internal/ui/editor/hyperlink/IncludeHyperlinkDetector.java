@@ -69,7 +69,9 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 			}
 
 			Set<String> set = new HashSet<String>();
-			set.add(sourceModule.getResource().getLocation().toOSString());
+			if (sourceModule.getResource() != null) {
+				set.add(sourceModule.getResource().getLocation().toOSString());
+			}
 			ISourceModule includedSourceModule = FileNetworkUtility
 					.findSourceModule(sourceModule, includeVisitor.getFile(),
 							set);
@@ -86,6 +88,9 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 	 * @return true if region1 is included in region2
 	 */
 	private boolean inclusive(IRegion region1, Region region2) {
+		if (region1 == null || region2 == null) {
+			return false;
+		}
 		return (region1.getOffset() >= region2.getOffset())
 				&& (region1.getOffset() + region1.getLength() <= region2
 						.getOffset() + region2.getLength());

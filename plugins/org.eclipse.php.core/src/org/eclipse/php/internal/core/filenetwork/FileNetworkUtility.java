@@ -318,8 +318,17 @@ public class FileNetworkUtility {
 			sourceModule = (ISourceModule) DLTKCore.create(resource);
 		} else if (result instanceof IncludedFileResult) {
 			IncludedFileResult incResult = (IncludedFileResult) result;
-			IProjectFragment[] projectFragments = incResult
-					.getProjectFragments();
+			IProjectFragment[] projectFragments = null;
+
+			if (incResult.getProjectFragments() != null) {
+				projectFragments = incResult.getProjectFragments();
+			} else if (incResult.getContainer() != null) {
+				IProjectFragment fragment = from.getScriptProject()
+						.getProjectFragment(incResult.getContainer().getPath());
+				if (fragment != null) {
+					projectFragments = new IProjectFragment[] { fragment };
+				}
+			}
 			if (projectFragments != null) {
 				String folderPath = ""; //$NON-NLS-1$
 				String moduleName = path;

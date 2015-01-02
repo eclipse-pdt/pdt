@@ -376,6 +376,7 @@ public class PHPStructuredTextViewerConfiguration extends
 							return detector.detectHyperlinks(textViewer,
 									region, canShowMultipleHyperlinks);
 						} catch (Throwable e) {
+							PHPUiPlugin.log(e);
 						}
 						return null;
 					}
