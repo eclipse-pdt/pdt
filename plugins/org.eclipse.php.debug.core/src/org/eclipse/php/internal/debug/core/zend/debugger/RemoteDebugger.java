@@ -272,6 +272,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	public String convertToLocalFilename(String remoteFile) {
 		String currentScript = null;
 		PHPstack callStack = getCallStack();
+		if (callStack == null)
+			return null;
 		if (callStack.getSize() > 0) {
 			currentScript = callStack.getLayer(callStack.getSize() - 1)
 					.getResolvedCalledFileName();
@@ -1141,13 +1143,11 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (!this.isActive()) {
 			return null;
 		}
-
 		PHPDebugTarget debugTarget = getDebugHandler().getDebugTarget();
 		int suspendCount = debugTarget.getSuspendCount();
 		if (suspendCount == previousSuspendCount && cachedStack != null) {
 			return cachedStack;
 		}
-
 		GetCallStackRequest request = new GetCallStackRequest();
 		PHPstack remoteStack = null;
 		try {
@@ -1160,10 +1160,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 			exc.printStackTrace();
 		}
 		convertToSystem(remoteStack);
-
 		previousSuspendCount = suspendCount;
 		cachedStack = remoteStack;
-
 		return remoteStack;
 	}
 

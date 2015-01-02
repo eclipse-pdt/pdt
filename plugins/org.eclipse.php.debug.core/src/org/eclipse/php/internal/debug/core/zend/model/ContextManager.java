@@ -63,31 +63,32 @@ public class ContextManager {
 	}
 
 	public IStackFrame[] getStackFrames() throws DebugException {
-
 		fFramesInitLock.acquire();
 		try {
 			if (fSuspendCount == fTarget.getSuspendCount()) {
 				return fFrames;
 			}
-
 			// check to see if eclipse is getting the same stack frames again.
 			PHPstack stack = fDebugger.getCallStack();
-			StackLayer[] layers = stack.getLayers();
-			if (layers.length == 1
-					&& layers[0].getCalledFileName().endsWith(DUMMY_PHP_FILE)) {
-				fDebugger.finish();// reached dummy file --> finish debug !
-				return fFrames;
+			if (stack != null) {
+				StackLayer[] layers = stack.getLayers();
+				if (layers.length == 1
+						&& layers[0].getCalledFileName().endsWith(
+								DUMMY_PHP_FILE)) {
+					fDebugger.finish();// reached dummy file --> finish debug !
+					return fFrames;
+				}
+				PHPThread thread = (PHPThread) fTarget.getThreads()[0];
+				IStackFrame[] newFrames = applyDebugFilters(createNewFrames(
+						layers, thread));
+				copyVariablesFromPreviousFrames(newFrames);
+				fFrames = newFrames;
+			} else {
+				// Connection was probably dumped
+				fFrames = new IStackFrame[0];
 			}
-
-			PHPThread thread = (PHPThread) fTarget.getThreads()[0];
-			IStackFrame[] newFrames = applyDebugFilters(createNewFrames(layers,
-					thread));
-			copyVariablesFromPreviousFrames(newFrames);
-			fFrames = newFrames;
-
 			fSuspendCount = fTarget.getSuspendCount();
 			return fFrames;
-
 		} finally {
 			fFramesInitLock.release();
 		}
