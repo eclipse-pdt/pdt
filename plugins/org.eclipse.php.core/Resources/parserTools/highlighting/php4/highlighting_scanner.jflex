@@ -119,7 +119,7 @@ LNUM=[0-9]+
 DNUM=([0-9]*[\.][0-9]+)|([0-9]+[\.][0-9]*)
 EXPONENT_DNUM=(({LNUM}|{DNUM})[eE][+-]?{LNUM}?)
 HNUM="0x"[0-9a-fA-F]+
-LABEL=[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
+LABEL=[a-zA-Z_\u007f-\uffff][a-zA-Z0-9_\u007f-\uffff]*
 WHITESPACE=[ \n\r\t]+
 TABS_AND_SPACES=[ \t]*
 TOKENS=[:,.\[\]()|\^&+-//*=%!~$<>?@]
@@ -681,7 +681,7 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC>"$"[^a-zA-Z_\x7f-\xff{] {
+<ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC>"$"[^a-zA-Z_\u007f-\uffff{] {
     if (yylength() == 2) {
         yypushback(1);
     }

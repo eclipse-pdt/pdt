@@ -1,0 +1,55 @@
+--TEST--
+Bug 455696 - Code formatter will delete non ACSII function name
+--FILE--
+<?php
+function say_здравствуйте() {
+$say_здравствуйте = 'say_здравствуйте';
+$say_здравствуйте = "say_здравствуйте";
+echo <<<say_здравствуйте
+{$say_здравствуйте}
+say_здравствуйте;
+}
+say_здравствуйте();
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="204">
+	<PHPMethodDeclaration start="6" end="180" modifiers="" name="say_здравствуйте">
+		<ExpressionStatement start="36" end="75">
+			<Assignment start="36" end="74" operator="=">
+				<VariableReference start="36" end="53" name="$say_здравствуйте">
+				</VariableReference>
+				<Scalar start="56" end="74" type="string" value="&apos;say_здравствуйте&apos;">
+				</Scalar>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start="76" end="115">
+			<Assignment start="76" end="114" operator="=">
+				<VariableReference start="76" end="93" name="$say_здравствуйте">
+				</VariableReference>
+				<Scalar start="96" end="114" type="string" value="&quot;say_здравствуйте&quot;">
+				</Scalar>
+			</Assignment>
+		</ExpressionStatement>
+		<EchoStatement start="116" end="178">
+			<Quote start="121" end="177" type="heredoc">
+				<ReflectionVariableReference start="141" end="160">
+					<VariableReference start="142" end="159" name="$say_здравствуйте">
+					</VariableReference>
+				</ReflectionVariableReference>
+				<Scalar start="160" end="176" type="string" value="
+">
+				</Scalar>
+			</Quote>
+		</EchoStatement>
+	</PHPMethodDeclaration>
+	<ExpressionStatement start="181" end="200">
+		<PHPCallExpression start="181" end="199">
+			<FullyQualifiedReference start="181" end="197" name="say_здравствуйте">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="198" end="198">
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="201" end="203">
+	</EmptyStatement>
+</ModuleDeclaration>
