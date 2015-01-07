@@ -319,7 +319,7 @@ public class PHPTextSequenceUtilities {
 		boolean onBackslash = false;
 		boolean onWhitespace = false;
 		int oldStartPosition = startPosition;
-
+		startPosition = readBackwardSpaces(textSequence, startPosition);
 		while (startPosition > 0) {
 			char ch = textSequence.charAt(startPosition - 1);
 			if (!Character.isLetterOrDigit(ch) && ch != '_') {
