@@ -239,6 +239,8 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PHPLaunchingPreferencePage_Never;
 	public static String PHPLaunchingPreferencePage_Prompt;
 	public static String PHPLaunchingPreferencePage_switchToPHPMessage;
+
+	public static String PHPModelPresentation_ParallelRequests;
 	public static String PHPPrimitiveValueEditor_0;
 	public static String PHPPrimitiveValueEditor_1;
 	public static String PHPPrimitiveValueEditor_2;
