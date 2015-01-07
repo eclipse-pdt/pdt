@@ -717,8 +717,9 @@ public class CodeAssistUtils {
 					.readIdentifierStartIndex(phpVersion, statementText,
 							functionNameEnd, false);
 
-			String functionName = statementText.subSequence(functionNameStart,
-					functionNameEnd).toString();
+			String functionName = statementText
+					.subSequence(functionNameStart, functionNameEnd).toString()
+					.trim();
 			// if its a non class function
 			Set<IType> returnTypes = new LinkedHashSet<IType>();
 			if (functionNameStart == functionNameEnd
