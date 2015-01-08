@@ -240,26 +240,53 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
         setTagValue();
     }
 
-
     private void updateStartPos(){
         startPos = zzMarkedPos;
         oldString = null;
     }
     
-    public void reset(java.io.Reader  reader, char[] buffer, int[] parameters){
-    	this.zzReader = reader;
-    	this.zzBuffer = buffer;
-    	this.zzMarkedPos = parameters[0];
-    	this.zzPushbackPos = parameters[1];
-    	this.zzCurrentPos = parameters[2];
-    	this.zzStartRead = parameters[3];
-    	this.zzEndRead = parameters[4];
-    	this.yyline = parameters[5];  
-    }
+	/**
+	 * Resets the {@code PhpAstLexer} properties to given parameters. Be
+	 * careful, method {@link #next_token()} also caches those properties using
+	 * internal variables (zzCurrentPosL, zzMarkedPosL, zzBufferL, zzEndReadL)
+	 * that should be accordingly resetted by the lexical rules calling
+	 * {@link #reset(java.io.Reader, char[], int[])}. Also be careful that those
+	 * internal variables could change from one version of JFlex to another.
+	 * 
+	 * @param reader
+	 * @param buffer
+	 * @param parameters
+	 */
+	public void reset(java.io.Reader reader, char[] buffer, int[] parameters) {
+		// (re)set all properties like in yyreset(java.io.Reader reader)
+
+		this.zzReader = reader;
+		this.zzBuffer = buffer;
+		this.zzMarkedPos = parameters[0];
+		this.zzPushbackPos = parameters[1];
+		this.zzCurrentPos = parameters[2];
+		this.zzStartRead = parameters[3];
+		this.zzEndRead = parameters[4];
+		this.yyline = parameters[5];
+		// XXX: never used
+		this.yychar = 0;
+		// XXX: never used
+		this.yycolumn = 0;
+		this.zzAtEOF = parameters[7] != 0;
+		this.zzEOFDone = parameters[8] != 0;
+
+		// NB: zzAtBOL and zzLexicalState won't be set using (directly) the
+		// array "parameters", we always restart this scanner with the YYINITIAL
+		// state
+		this.zzAtBOL = this.zzAtEOF ? false : true;
+		this.zzLexicalState = YYINITIAL;
+	}
     
-    public int[] getParamenters(){
-    	return new int[]{zzMarkedPos, zzPushbackPos, zzCurrentPos, zzStartRead, zzEndRead, yyline, zzLexicalState};
-    }
+	public int[] getParamenters() {
+		return new int[] { zzMarkedPos, zzPushbackPos, zzCurrentPos,
+				zzStartRead, zzEndRead, yyline, zzAtBOL ? 1 : 0,
+				zzAtEOF ? 1 : 0, zzEOFDone ? 1 : 0 };
+	}
     
     public char[] getBuffer(){
     	return zzBuffer;
