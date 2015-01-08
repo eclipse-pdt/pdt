@@ -62,8 +62,8 @@ public class LanguageModelContainer implements IBuildpathContainer {
 						path = copyToInstanceLocation(provider, path, project);
 						if (path != null) {
 
-							LanguageModelInitializer.addPathName(path, provider
-									.getName());
+							LanguageModelInitializer.addPathName(path,
+									provider.getName());
 
 							IEnvironment environment = EnvironmentManager
 									.getEnvironment(project);
@@ -72,8 +72,8 @@ public class LanguageModelContainer implements IBuildpathContainer {
 										environment, path);
 							}
 							entries.add(DLTKCore.newLibraryEntry(path,
-									BuildpathEntry.NO_ACCESS_RULES,
-									BuildpathEntry.NO_EXTRA_ATTRIBUTES,
+									IBuildpathEntry.NO_ACCESS_RULES,
+									IBuildpathEntry.NO_EXTRA_ATTRIBUTES,
 									BuildpathEntry.INCLUDE_ALL,
 									BuildpathEntry.EXCLUDE_NONE, false, true));
 						}

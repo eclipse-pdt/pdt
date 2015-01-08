@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,17 +8,27 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła [456902]
  *******************************************************************************/
 package org.eclipse.php.internal.core.language;
 
+import java.io.File;
 import java.util.*;
 
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileSystem;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
+import org.eclipse.dltk.core.search.indexing.IndexManager;
+import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.core.language.ILanguageModelProvider;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -36,6 +46,8 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	public static final String CONTAINER_PATH = PHPCorePlugin.ID + ".LANGUAGE"; //$NON-NLS-1$
 	public static final Path LANGUAGE_CONTAINER_PATH = new Path(
 			LanguageModelInitializer.CONTAINER_PATH);
+
+	private static final String LANGUAGE_PREFIX = "__language__"; //$NON-NLS-1$
 
 	/**
 	 * Listeners for PHP version change map (per project)
@@ -109,6 +121,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 				});
 	}
 
+	@Override
 	public void initialize(IPath containerPath, IScriptProject scriptProject)
 			throws CoreException {
 		if (containerPath.segmentCount() > 0
@@ -151,7 +164,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 
 				// see getTargetLocation() below for description:
 				if (path.segmentCount() > 2) {
-					return "__language__".equals(path.segment(path //$NON-NLS-1$
+					return LANGUAGE_PREFIX.equals(path.segment(path
 							.segmentCount() - 2));
 				}
 			}
@@ -226,7 +239,61 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		return provider
 				.getPlugin()
 				.getStateLocation()
-				.append("__language__") //$NON-NLS-1$
+				.append(LANGUAGE_PREFIX)
 				.append(Integer.toHexString(sourcePath.toOSString().hashCode()));
+	}
+
+	/**
+	 * Drop unsused patches
+	 * 
+	 * @see http://eclip.se/456902
+	 * @param projects
+	 * @throws CoreException
+	 */
+	@SuppressWarnings("restriction")
+	public static void cleanup(IProgressMonitor monitor) throws CoreException {
+		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
+				.getProjects();
+		Set<IPath> inUse = new HashSet<IPath>();
+		Set<IPath> toDrop = new HashSet<IPath>();
+		for (IProject project : projects) {
+			if (!PHPToolkitUtil.isPhpProject(project)) {
+				continue;
+			}
+			IBuildpathContainer container = DLTKCore.getBuildpathContainer(
+					Path.fromPortableString(CONTAINER_PATH),
+					DLTKCore.create(project));
+			for (IBuildpathEntry entry : container.getBuildpathEntries()) {
+				inUse.add(entry.getPath());
+			}
+		}
+
+		for (ILanguageModelProvider provider : getContributedProviders()) {
+			File dir = provider.getPlugin().getStateLocation()
+					.append(LANGUAGE_PREFIX).toFile();
+			if (!dir.exists() || !dir.isDirectory()) {
+				continue;
+			}
+			for (File lib : dir.listFiles()) {
+				IPath compare = EnvironmentPathUtils.getFullPath(
+						LocalEnvironment.ENVIRONMENT_ID,
+						Path.fromOSString(lib.getPath()));
+				if (inUse.contains(compare)) {
+					continue;
+				}
+
+				toDrop.add(compare);
+			}
+		}
+
+		final IndexManager indexManager = ModelManager.getModelManager()
+				.getIndexManager();
+		final IFileSystem efs = EFS.getLocalFileSystem();
+
+		for (IPath path : toDrop) {
+			indexManager.removeIndex(path);
+			efs.getStore(EnvironmentPathUtils.getLocalPath(path)).delete(
+					EFS.NONE, monitor);
+		}
 	}
 }
