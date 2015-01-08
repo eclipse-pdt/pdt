@@ -160,13 +160,22 @@ import org.eclipse.php.internal.core.PHPVersion;
         return new Symbol(symbolNumber, leftPosition, leftPosition + getTokenLength());
     }
 
-    public int[] getParamenters(){
-    	return new int[]{zzMarkedPos, zzPushbackPos, zzCurrentPos, zzStartRead, zzEndRead, yyline};
-    }
+	public int[] getParamenters() {
+		return new int[] { zzMarkedPos, zzPushbackPos, zzCurrentPos,
+				zzStartRead, zzEndRead, yyline, zzAtBOL ? 1 : 0,
+				zzAtEOF ? 1 : 0, zzEOFDone ? 1 : 0 };
+	}
 
-	protected boolean parsePHPDoc(){
+	/**
+	 * Parses a PHPDoc block comment. Underlying reader (zzReader) can be closed
+	 * in the process (when EOF is reached).
+	 * 
+	 * @return true when PHPDoc was parsed, false otherwise (false also implies
+	 *         that this scanner wasn't resetted)
+	 */
+	protected boolean parsePHPDoc() {
 		final IDocumentorLexer documentorLexer = getDocumentorLexer(zzReader);
-		if(documentorLexer == null){
+		if(documentorLexer == null) {
 			return false;
 		}
 		yypushback(zzMarkedPos - zzStartRead);
@@ -178,12 +187,24 @@ import org.eclipse.php.internal.core.PHPVersion;
 		return true;
 	}
 
-
 	protected IDocumentorLexer getDocumentorLexer(java.io.Reader  reader) {
 		return null;
 	}
 
-	public void reset(java.io.Reader  reader, char[] buffer, int[] parameters){
+	/**
+	 * Resets the {@code PhpAstLexer} properties to previous values, but leaves
+	 * the lexical state unchanged. Be careful, method {@link #next_token()}
+	 * also caches those properties using internal variables (zzCurrentPosL,
+	 * zzMarkedPosL, zzBufferL, zzEndReadL) that should be accordingly resetted
+	 * by the lexical rules calling
+	 * {@link #reset(java.io.Reader, char[], int[])}. Also be careful that those
+	 * internal variables could change from one version of JFlex to another.
+	 * 
+	 * @param reader
+	 * @param buffer
+	 * @param parameters
+	 */
+	public void reset(java.io.Reader reader, char[] buffer, int[] parameters) {
 		this.zzReader = reader;
 		this.zzBuffer = buffer;
 		this.zzMarkedPos = parameters[0];
@@ -193,8 +214,14 @@ import org.eclipse.php.internal.core.PHPVersion;
 		this.zzEndRead = parameters[4];
 		this.yyline = parameters[5];
 		this.yychar = this.zzStartRead - this.zzPushbackPos;
+		// XXX: never used
+		this.yycolumn = 0;
+		this.zzAtEOF = parameters[7] != 0;
+		this.zzEOFDone = parameters[8] != 0;
+		// XXX: check if there's no side-effect to reset zzAtBOL
+		// when zzAtEOF is false and zzMarkedPos is equal to zzStartRead
+		this.zzAtBOL = this.zzAtEOF ? false : (parameters[6] != 0);
 	}
-
 %}
 
 LNUM=[0-9]+
@@ -915,9 +942,21 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_IN_SCRIPTING>"/**" {
-if (!parsePHPDoc()) {
-handleCommentStart();
-yybegin(ST_DOCBLOCK);
+if (parsePHPDoc()) {
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=316077
+	// Reset the internal variables caching the values
+	// previously resetted by parsePHPDoc().
+	// Actually it would be enough to only reset zzEndReadL,
+	// but do it cleanly...
+	// Also be careful that those internal variables could
+	// change from one version of JFlex to another.
+	zzCurrentPosL = zzCurrentPos;
+	zzMarkedPosL = zzMarkedPos;
+	zzBufferL = zzBuffer;
+	zzEndReadL = zzEndRead;
+} else {
+	handleCommentStart();
+	yybegin(ST_DOCBLOCK);
 }
 }
 
