@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła [456902]
  *******************************************************************************/
 package org.eclipse.php.internal.core;
 
@@ -27,6 +28,7 @@ import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
+import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.util.ProjectBackwardCompatibilityUtil;
@@ -93,7 +95,7 @@ public class PHPCorePlugin extends Plugin {
 				// run the conversion over all the projects in the workspace -
 				// all open projects will be converted
 				try {
-					convertProjects();
+					convertProjects(monitor);
 				} catch (CoreException e) {
 					log(e);
 				}
@@ -195,10 +197,12 @@ public class PHPCorePlugin extends Plugin {
 	 * Gathers all the projects in the workspace and sends them to the
 	 * conversion method
 	 */
-	private void convertProjects() throws CoreException, ModelException {
+	private void convertProjects(IProgressMonitor monitor)
+			throws CoreException, ModelException {
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
 				.getProjects();
 		processProjects(projects);
+		LanguageModelInitializer.cleanup(projects, monitor);
 	}
 
 	/**
