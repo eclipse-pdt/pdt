@@ -172,6 +172,7 @@ public class PHPDebugUIMessages extends NLS {
 
 	public static String PHPDebugStepFilterPreferencePage_useStepFilters;
 	public static String PHPDebugUIPlugin_0;
+	public static String PHPDebugUIPlugin_1;
 	public static String PHPDebugUIPlugin_2;
 
 	public static String PHPexe_Run_With_Debug_Info;
