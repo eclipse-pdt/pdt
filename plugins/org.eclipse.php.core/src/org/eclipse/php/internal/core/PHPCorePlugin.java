@@ -407,36 +407,35 @@ public class PHPCorePlugin extends Plugin {
 						CoreMessages.PHPCorePlugin_initializingPHPToolkit, 125);
 			}
 
-			LanguageModelInitializer.cleanup(monitor);
-
 			// dummy query for waiting until the indexes are ready
 			IDLTKSearchScope scope = SearchEngine
 					.createWorkspaceScope(PHPLanguageToolkit.getDefault());
 			try {
+				LanguageModelInitializer.cleanup(monitor);
 				if (monitor != null) {
 					monitor.subTask(CoreMessages.PHPCorePlugin_initializingSearchEngine);
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findMethods("", MatchRule.PREFIX, //$NON-NLS-1$
+				PhpModelAccess.getDefault().findMethods(ID, MatchRule.PREFIX,
 						Modifiers.AccGlobal, 0, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findTypes("", MatchRule.PREFIX, //$NON-NLS-1$
+				PhpModelAccess.getDefault().findTypes(ID, MatchRule.PREFIX,
 						Modifiers.AccGlobal, 0, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findFields("", MatchRule.PREFIX, //$NON-NLS-1$
+				PhpModelAccess.getDefault().findFields(ID, MatchRule.PREFIX,
 						Modifiers.AccGlobal, 0, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findIncludes("", MatchRule.PREFIX, //$NON-NLS-1$
+				PhpModelAccess.getDefault().findIncludes(ID, MatchRule.PREFIX,
 						scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
