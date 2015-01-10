@@ -1,0 +1,9 @@
+--TEST--
+Bug 316077 - Endless "java.io.IOException: Stream closed" log
+--FILE--
+<?php
+/** 
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="1">
+</ModuleDeclaration>
