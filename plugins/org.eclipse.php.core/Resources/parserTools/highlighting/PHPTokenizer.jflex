@@ -533,11 +533,18 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 				}
 			} catch (IOException e) {
 				// primGetNextToken() calls may throw an IOException
-				// catch and do nothing since the isEOF check below
-				// will properly exit if the input was too short
+				Logger.logException(e);
+				internalContext = null;
+				notFinished = false;
+				break;
 			} catch (Exception f) {
 				// some other exception happened; never should
 				Logger.logException(f);
+				// ... but IllegalArgumentException("Unknown PHP version")
+				// can be thrown from doScanEndPhp(), so avoid infinite loops
+				internalContext = null;
+				notFinished = false;
+				break;
 			}
 			boolean isEndingType = yystate() == ST_ABORT_EMBEDDED;
 			if(!isEndingType) {
