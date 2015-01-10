@@ -1197,6 +1197,11 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
     return createSymbol(ParserConstants.T_BACKQUATE);
 }
 
+<ST_IN_SCRIPTING>['] {
+    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=457201
+    return createFullSymbol(ParserConstants.T_CONSTANT_ENCAPSED_STRING);
+}
+
 <ST_IN_SCRIPTING,YYINITIAL,ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC,ST_START_HEREDOC,ST_END_HEREDOC,ST_START_NOWDOC,ST_NOWDOC,ST_VAR_OFFSET>{ANY_CHAR} {
 	// do nothing
 }
