@@ -60,6 +60,7 @@ terminal  String T_STRING_VARNAME;
 terminal  String T_VARIABLE;
 terminal  String T_NUM_STRING;
 terminal  T_INLINE_HTML;
+terminal  String T_CHARACTER;
 terminal  String T_ENCAPSED_AND_WHITESPACE;
 terminal  String T_CONSTANT_ENCAPSED_STRING;
 terminal  T_ECHO;
@@ -157,7 +158,7 @@ terminal PHPDocBlock T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PU
 terminal T_OPEN_PARENTHESE,T_CLOSE_PARENTHESE;
 terminal T_NEKUDOTAIM;
 terminal T_DOLLAR;
-terminal T_QUATE,T_BACKQUATE;
+terminal T_QUATE,T_BACKQUATE,T_SINGLE_QUATE;
 
 /* Non terminals */
 
@@ -2769,6 +2770,11 @@ T_STRING_VARNAME:scalar
 	Quote quote = new Quote(startleft, endright, list, Quote.QT_QUOTE);
 	RESULT = quote;
 :}
+| T_SINGLE_QUATE:start encaps_list:list T_SINGLE_QUATE:end
+{:
+	Quote quote = new Quote(startleft, endright, list, Quote.QT_SINGLE);
+	RESULT = quote;
+:}
 | T_START_HEREDOC:start encaps_list:list T_END_HEREDOC:end
 {:
 	Quote hereDoc = new Quote(startleft, endright, list, Quote.QT_HEREDOC);
@@ -3241,6 +3247,13 @@ encaps_list:list encaps_var:var
 | encaps_list:list T_ENCAPSED_AND_WHITESPACE:string
 {:
 	Scalar scalar = new Scalar(stringleft, stringright, string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING);
+	list.add(scalar);
+	RESULT = list;
+:}
+
+| encaps_list:list T_CHARACTER:string
+{:
+	Scalar scalar = new Scalar(stringleft, stringright, string, Scalar.TYPE_STRING);
 	list.add(scalar);
 	RESULT = list;
 :}

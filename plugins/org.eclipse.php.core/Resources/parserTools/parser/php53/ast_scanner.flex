@@ -44,6 +44,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 %standalone
 %state ST_IN_SCRIPTING
 %state ST_DOUBLE_QUOTES
+%state ST_SINGLE_QUOTE
 %state ST_BACKQUOTE
 %state ST_HEREDOC
 %state ST_NOWDOC
@@ -1018,6 +1019,11 @@ if (parsePHPDoc()) {
     return createSymbol(ParserConstants.T_BACKQUATE);
 }
 
+<ST_IN_SCRIPTING>['] {
+    yybegin(ST_SINGLE_QUOTE);
+    return createSymbol(ParserConstants.T_SINGLE_QUATE);
+}
+
 <ST_START_HEREDOC>{ANY_CHAR} {
 	yypushback(1);
 	yybegin(ST_HEREDOC);
@@ -1125,6 +1131,18 @@ if (parsePHPDoc()) {
 	yypushback(1);
 }
 
+<ST_SINGLE_QUOTE>([^'\\]|\\[^'\\])+ {
+    return createSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
+}
+
+<ST_SINGLE_QUOTE>"\\'" {
+    return createSymbol(ParserConstants.T_CHARACTER);
+}
+
+<ST_SINGLE_QUOTE>"\\\\" {
+    return createSymbol(ParserConstants.T_CHARACTER);
+}
+
 <ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"{$" {
     pushState(ST_IN_SCRIPTING);
     yypushback(yylength()-1);
@@ -1180,6 +1198,11 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
     return createSymbol(ParserConstants.T_BACKQUATE);
 }
 
-<ST_IN_SCRIPTING,YYINITIAL,ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC,ST_START_HEREDOC,ST_END_HEREDOC,ST_START_NOWDOC,ST_NOWDOC,ST_VAR_OFFSET>{ANY_CHAR} {
+<ST_SINGLE_QUOTE>['] {
+    yybegin(ST_IN_SCRIPTING);
+    return createSymbol(ParserConstants.T_SINGLE_QUATE);
+}
+
+<ST_IN_SCRIPTING,YYINITIAL,ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_SINGLE_QUOTE,ST_HEREDOC,ST_START_HEREDOC,ST_END_HEREDOC,ST_START_NOWDOC,ST_NOWDOC,ST_VAR_OFFSET>{ANY_CHAR} {
 	// do nothing
 }
