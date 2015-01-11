@@ -82,6 +82,7 @@ terminal  String T_STRING_VARNAME;
 terminal  String T_VARIABLE;
 terminal  String T_NUM_STRING;
 terminal  T_INLINE_HTML;
+terminal  String T_CHARACTER;
 terminal  String T_ENCAPSED_AND_WHITESPACE;
 terminal  String T_CONSTANT_ENCAPSED_STRING;
 terminal  T_ECHO;
@@ -179,7 +180,7 @@ terminal T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC;
 terminal T_OPEN_PARENTHESE,T_CLOSE_PARENTHESE;
 terminal T_NEKUDOTAIM;
 terminal T_DOLLAR;
-terminal T_QUATE,T_BACKQUATE;
+terminal T_QUATE,T_BACKQUATE,T_SINGLE_QUATE;
 
 /* Non terminals */
 
@@ -2344,6 +2345,11 @@ T_STRING_VARNAME:scalar
 	RESULT = new Quote(sleft, eright, parser.ast, list, Quote.QT_QUOTE);
 :}
 
+| T_SINGLE_QUATE:s encaps_list:list T_SINGLE_QUATE:e
+{:
+	RESULT = new Quote(sleft, eright, parser.ast, list, Quote.QT_SINGLE);
+:}
+
 | T_START_HEREDOC:s encaps_list:list T_END_HEREDOC:e
 {:
 	RESULT = new Quote(sleft, eright, parser.ast, list, Quote.QT_HEREDOC);
@@ -2764,6 +2770,12 @@ encaps_list:list encaps_var:var
 | encaps_list:list T_ENCAPSED_AND_WHITESPACE:string
 {:
 	list.add(new Scalar(stringleft, stringright, parser.ast, string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING));
+	RESULT = list;
+:}
+
+| encaps_list:list T_CHARACTER:string
+{:
+	list.add(new Scalar(stringleft, stringright, parser.ast, string, Scalar.TYPE_STRING));
 	RESULT = list;
 :}
 

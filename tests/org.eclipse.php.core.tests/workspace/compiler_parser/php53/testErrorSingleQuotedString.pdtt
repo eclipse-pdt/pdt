@@ -1,0 +1,13 @@
+--TEST--
+Bug 457201 - [parser] malformed single-quoted string does not always produce syntax error
+--FILE--
+<?php $a = 'test''; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="18">
+	<ASTError start="6" end="17">
+	</ASTError>
+	<Errors>
+		<ASTError start="17" end="18">
+		</ASTError>
+	</Errors>
+</ModuleDeclaration>

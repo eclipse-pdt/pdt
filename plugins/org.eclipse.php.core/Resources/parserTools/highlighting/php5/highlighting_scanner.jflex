@@ -27,6 +27,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 
 %state ST_PHP_IN_SCRIPTING
 %state ST_PHP_DOUBLE_QUOTES
+%state ST_PHP_SINGLE_QUOTE
 %state ST_PHP_BACKQUOTE
 %state ST_PHP_QUOTES_AFTER_VARIABLE
 %state ST_PHP_HEREDOC
@@ -714,12 +715,29 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
+<ST_PHP_IN_SCRIPTING>b?[\"] {
+    pushState(ST_PHP_DOUBLE_QUOTES);
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
 <ST_PHP_IN_SCRIPTING>(b?[']([^'\\]|("\\"{ANY_CHAR}))*[']) {
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_IN_SCRIPTING>b?[\"] {
-    pushState(ST_PHP_DOUBLE_QUOTES);
+<ST_PHP_IN_SCRIPTING>b?['] {
+    pushState(ST_PHP_SINGLE_QUOTE);
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_SINGLE_QUOTE>([^'\\]|\\[^'\\])+ {
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_SINGLE_QUOTE>"\\'" {
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_SINGLE_QUOTE>"\\\\" {
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
@@ -872,12 +890,21 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
+<ST_PHP_SINGLE_QUOTE>['] {
+    popState();
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
 <ST_PHP_BACKQUOTE>[`] {
     popState();
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
 <ST_PHP_DOUBLE_QUOTES>. {
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_SINGLE_QUOTE>. {
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
@@ -898,7 +925,7 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
    This rule must be the last in the section!!
    it should contain all the states.
    ============================================ */
-<ST_PHP_IN_SCRIPTING,ST_PHP_DOUBLE_QUOTES,ST_PHP_VAR_OFFSET,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_START_HEREDOC,ST_PHP_END_HEREDOC>. {
+<ST_PHP_IN_SCRIPTING,ST_PHP_DOUBLE_QUOTES,ST_PHP_VAR_OFFSET,ST_PHP_SINGLE_QUOTE,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_START_HEREDOC,ST_PHP_END_HEREDOC>. {
     yypushback(1);
     pushState(ST_PHP_HIGHLIGHTING_ERROR);
 }
