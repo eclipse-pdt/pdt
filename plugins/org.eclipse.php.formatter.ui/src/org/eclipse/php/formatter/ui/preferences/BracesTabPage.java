@@ -36,6 +36,9 @@ public class BracesTabPage extends ModifyDialogTabPage {
 			"    }" + //$NON-NLS-1$
 			"  }" + //$NON-NLS-1$
 			"}" + //$NON-NLS-1$
+			"$lambda = function () {" + //$NON-NLS-1$
+			"  do_something();" + //$NON-NLS-1$
+			"};" + //$NON-NLS-1$
 			"\n?>"; //$NON-NLS-1$
 
 	private CodeFormatterPreview fPreview;
@@ -44,6 +47,7 @@ public class BracesTabPage extends ModifyDialogTabPage {
 
 	private ComboPreference classDeclaration;
 	private ComboPreference methodDeclaration;
+	private ComboPreference lambdaFunctionDeclaration;
 	private ComboPreference blocks;
 	private ComboPreference switchCase;
 
@@ -73,6 +77,12 @@ public class BracesTabPage extends ModifyDialogTabPage {
 				codeFormatterPreferences.brace_position_for_class);
 		methodDeclaration = createBracesCombo(group, numColumns,
 				FormatterMessages.BracesTabPage_option_method_declaration);
+		setComboValue(methodDeclaration,
+				codeFormatterPreferences.brace_position_for_lambda_function);
+		lambdaFunctionDeclaration = createBracesCombo(
+				group,
+				numColumns,
+				FormatterMessages.BracesTabPage_option_lambda_function_declaration);
 		setComboValue(methodDeclaration,
 				codeFormatterPreferences.brace_position_for_function);
 		blocks = createBracesCombo(group, numColumns,
@@ -111,6 +121,7 @@ public class BracesTabPage extends ModifyDialogTabPage {
 		if (isInitialized) {
 			codeFormatterPreferences.brace_position_for_class = getComboValue(classDeclaration);
 			codeFormatterPreferences.brace_position_for_function = getComboValue(methodDeclaration);
+			codeFormatterPreferences.brace_position_for_lambda_function = getComboValue(lambdaFunctionDeclaration);
 			codeFormatterPreferences.brace_position_for_block = getComboValue(blocks);
 			codeFormatterPreferences.brace_position_for_switch = getComboValue(switchCase);
 		}

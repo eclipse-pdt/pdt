@@ -148,6 +148,7 @@ public class CodeFormatterPreferences {
 	public boolean insert_space_before_comma_in_function_declaration;
 	public boolean insert_space_after_comma_in_function_declaration;
 	public byte brace_position_for_function;
+	public byte brace_position_for_lambda_function;
 	public boolean insert_space_before_opening_brace_in_function;
 
 	public boolean insert_space_before_opening_paren_in_if;
@@ -604,6 +605,10 @@ public class CodeFormatterPreferences {
 		brace_position_for_function = getByteValue(
 				preferences,
 				CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_METHOD_DECLARATION);
+		brace_position_for_lambda_function = getByteValue(
+				preferences,
+				CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_LAMBDA_FUNCTION_DECLARATION,
+				brace_position_for_function);
 		insert_space_before_opening_brace_in_function = getBooleanValue(
 				preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_METHOD_DECLARATION);
@@ -1046,6 +1051,15 @@ public class CodeFormatterPreferences {
 		return Byte.parseByte(value);
 	}
 
+	private byte getByteValue(Map<String, Object> preferences, String key,
+			byte defaultValue) {
+		String value = (String) preferences.get(key);
+		if (value == null) {
+			return defaultValue;
+		}
+		return Byte.parseByte(value);
+	}
+
 	private boolean getBooleanValue(Map<String, Object> preferences, String key) {
 		return TRUE.equals(preferences.get(key));
 	}
@@ -1379,6 +1393,9 @@ public class CodeFormatterPreferences {
 		options.put(
 				CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_METHOD_DECLARATION,
 				String.valueOf(brace_position_for_function));
+		options.put(
+				CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_LAMBDA_FUNCTION_DECLARATION,
+				String.valueOf(brace_position_for_lambda_function));
 		options.put(
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_METHOD_DECLARATION,
 				insert_space_before_opening_brace_in_function ? TRUE : FALSE);
