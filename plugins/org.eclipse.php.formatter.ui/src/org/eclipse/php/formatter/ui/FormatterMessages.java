@@ -317,6 +317,7 @@ final public class FormatterMessages extends NLS {
 	public static String BracesTabPage_option_class_declaration;
 	public static String BracesTabPage_option_anonymous_class_declaration;
 	public static String BracesTabPage_option_method_declaration;
+	public static String BracesTabPage_option_lambda_function_declaration;
 	public static String BracesTabPage_option_constructor_declaration;
 	public static String BracesTabPage_option_blocks;
 	public static String BracesTabPage_option_blocks_in_case;
