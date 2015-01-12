@@ -33,6 +33,7 @@ final public class PSR2FormatterPreferences implements
 
 		preferences.brace_position_for_block = CodeFormatterPreferences.SAME_LINE;
 		preferences.brace_position_for_function = CodeFormatterPreferences.NEXT_LINE;
+		preferences.brace_position_for_lambda_function = CodeFormatterPreferences.SAME_LINE;
 		preferences.brace_position_for_switch = CodeFormatterPreferences.SAME_LINE;
 		preferences.brace_position_for_class = CodeFormatterPreferences.NEXT_LINE;
 
