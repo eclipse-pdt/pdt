@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
+@SuppressWarnings("restriction")
 public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 		IPHPTextHover {
 
@@ -78,7 +79,8 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 				int varLength = 0;
 
 				String regionType = region.getType();
-				if (regionType == PHPRegionTypes.PHP_VARIABLE) {
+				if (regionType == PHPRegionTypes.PHP_VARIABLE
+						|| regionType == PHPRegionTypes.PHP_THIS) {
 					varOffset = hoverRegion.getOffset();
 					varLength = hoverRegion.getLength();
 					try {
@@ -138,6 +140,10 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 				}
 			}
 		}
+		return null;
+	}
+
+	public IHoverMessageDecorator getMessageDecorator() {
 		return null;
 	}
 
@@ -246,7 +252,4 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 		return null;
 	}
 
-	public IHoverMessageDecorator getMessageDecorator() {
-		return null;
-	}
 }
