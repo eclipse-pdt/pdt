@@ -1,0 +1,24 @@
+--TEST--
+
+--FILE--
+FILENAME://TestExtractVar4.php
+<?php
+$a = |$mnogodulgapromenliva + $drugamnogodulgapromenliva;
+$b = $mnogodulgapromenliva + $drugamnogodulgapromenliva + $prom;
+$c = $mnogodulgapromenliva + $drugamnogodulgapromenliva -2;
+$d = ( $mnogodulgapromenliva + $drugamnogodulgapromenliva ) / 5;
+$e = $mnogodulgapromenliva + $drugamnogodulgapromenliva + 9;
+?>
+--CONFIG--
+length:50
+newName:test
+--EXPECT--
+FILENAME://TestExtractVar4.php
+<?php
+$test = $mnogodulgapromenliva + $drugamnogodulgapromenliva;
+$a = $test;
+$b = $test + $prom;
+$c = $test -2;
+$d = $test / 5;
+$e = $test + 9;
+?>

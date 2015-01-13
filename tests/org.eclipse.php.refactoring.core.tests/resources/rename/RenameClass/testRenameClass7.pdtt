@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClass7.php
+<?php class Foo{function Foo(){}}
+--CONFIG--
+start:26
+newName:Foo1
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameClass7.php
+<?php class Foo1{function Foo1(){}}

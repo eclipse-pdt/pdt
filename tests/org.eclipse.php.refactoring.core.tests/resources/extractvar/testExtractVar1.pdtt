@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestExtractVar1.php
+<?php function foo(){} foo();?>
+--CONFIG--
+start:23
+length:6
+newName:c
+--EXPECT--
+FILENAME://TestExtractVar1.php
+<?php function foo(){} $c = foo ();?>

@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestExtractDynamicFun.php
+<?php class A{function foo(){}function doo(){$this->foo();}}?>
+--CONFIG--
+start:45
+length:13
+newName:extractedMethod
+--EXPECT--
+FILENAME://TestExtractDynamicFun.php
+<?php class A{function foo(){}function doo(){$this->extractedMethod();}private function extractedMethod(){$this->foo();}}?>

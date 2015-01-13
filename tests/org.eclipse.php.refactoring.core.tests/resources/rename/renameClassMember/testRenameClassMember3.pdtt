@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClassMember3.php
+<?php class A { private function myName() {	return true; }} class B extends A {	private function myName() {return true;}}
+--CONFIG--
+start:99
+newName:myName1
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameClassMember3.php
+<?php class A { private function myName() {	return true; }} class B extends A {	private function myName1() {return true;}}

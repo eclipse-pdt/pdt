@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestExtractVar2.php
+<?php for($i = 1; $i <= 10; $i++){ $j=10;}
+--CONFIG--
+start:35
+length:6
+newName:j2
+--EXPECT--
+FILENAME://TestExtractVar2.php
+<?php for($i = 1; $i <= 10; $i++){ $j2 = $j=10;}

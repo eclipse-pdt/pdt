@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClass6.php
+<?php class Foo{const GIVEN = 1;} function fun(Foo $a){};
+--CONFIG--
+start:48
+newName:Foo1
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameClass6.php
+<?php class Foo1{const GIVEN = 1;} function fun(Foo1 $a){};

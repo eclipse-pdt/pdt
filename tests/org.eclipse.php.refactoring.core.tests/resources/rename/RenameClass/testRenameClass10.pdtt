@@ -1,0 +1,25 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClass10.php
+<?php
+class TestRenameClass10{
+
+}
+class TestRenameClass10_sub extends TestRename|Class10 {
+
+}
+?>
+--CONFIG--
+newName:PreTestRenameClass10sur
+updateTextualMatches:false
+--EXPECT--
+FILENAME://TestRenameClass10.php
+<?php
+class PreTestRenameClass10sur{
+
+}
+class TestRenameClass10_sub extends PreTestRenameClass10sur {
+
+}
+?>

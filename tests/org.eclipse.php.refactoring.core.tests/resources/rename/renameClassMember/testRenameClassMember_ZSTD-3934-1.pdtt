@@ -1,0 +1,16 @@
+--TEST--
+
+--FILE--
+FILENAME://testRenameClassMember_ZSTD-3934-1_randomfile.php
+<?php echo Testclass1::MYCONST; ?>
+FILENAME://testRenameClassMember_ZSTD-3934-1_Testclass.php
+<?php class Testclass1 { const MYCONST = "val"; } ?>
+--CONFIG--
+start:24
+newName:MYCONST1
+updateTextualMatches:false
+--EXPECT--
+FILENAME://testRenameClassMember_ZSTD-3934-1_randomfile.php
+<?php echo Testclass1::MYCONST1; ?>
+FILENAME://testRenameClassMember_ZSTD-3934-1_Testclass.php
+<?php class Testclass1 { const MYCONST1 = "val"; } ?>

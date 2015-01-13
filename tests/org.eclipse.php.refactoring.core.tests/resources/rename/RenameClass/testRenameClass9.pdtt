@@ -1,0 +1,37 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClass9.php
+<?php
+class TestRenameClass9
+{
+	/**
+	 * @param TestRenameClass9 $a
+	 * @param TestRenameClass9 $b
+	 * @return TestRenameClass9
+	 */
+	function fun(TestRenameClass9 $a,TestRenameClass9| $b)
+	{
+		return new TestRenameClass9();
+	}
+}
+?>
+--CONFIG--
+newName:TestRenameClass91
+updateTextualMatches:false
+--EXPECT--
+FILENAME://TestRenameClass9.php
+<?php
+class TestRenameClass91
+{
+	/**
+	 * @param TestRenameClass91 $a
+	 * @param TestRenameClass91 $b
+	 * @return TestRenameClass91
+	 */
+	function fun(TestRenameClass91 $a,TestRenameClass91 $b)
+	{
+		return new TestRenameClass91();
+	}
+}
+?>

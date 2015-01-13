@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClassMember27036.php
+<?php class MyClass{function method(){echo 1;} static function staticMethod(){echo 2;} function otherMethod(){self::staticMethod();$this->method();}} interface MyInterface{function interfaceMethod();}class MyClass2 extends MyClass implements MyInterface{function method(){parent::method(); }function interfaceMethod() {echo 5;}}
+--CONFIG--
+start:281
+newName:method1
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameClassMember27036.php
+<?php class MyClass{function method1(){echo 1;} static function staticMethod(){echo 2;} function otherMethod(){self::staticMethod();$this->method1();}} interface MyInterface{function interfaceMethod();}class MyClass2 extends MyClass implements MyInterface{function method1(){parent::method1(); }function interfaceMethod() {echo 5;}}

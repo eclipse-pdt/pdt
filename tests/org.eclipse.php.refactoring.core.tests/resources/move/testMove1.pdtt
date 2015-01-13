@@ -1,0 +1,15 @@
+--TEST--
+
+--FILE--
+FILENAME://source/TestMoveFile.php
+<?php class TestRenameClass{}?>
+FILENAME://source/SimpleInclude.php
+<?php include('TestMoveFile.php'); ?>
+--CONFIG--
+dest:/
+updateReference:true
+--EXPECT--
+FILENAME://TestMoveFile.php
+<?php class TestRenameClass{}?>
+FILENAME://source/SimpleInclude.php
+<?php include('../TestMoveFile.php'); ?>

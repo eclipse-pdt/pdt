@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameInterface.php
+<?php interface TestRenameClass{}?>
+--CONFIG--
+start:17
+newName:TestRenameInterface1
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameInterface.php
+<?php interface TestRenameInterface1{}?>

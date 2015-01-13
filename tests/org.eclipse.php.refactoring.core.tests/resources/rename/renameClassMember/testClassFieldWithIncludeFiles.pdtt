@@ -1,0 +1,12 @@
+--TEST--
+The rename should still be all right even the include files are not existing. In this case, the resolve binding can return null.
+--FILE--
+FILENAME://testClassFieldWithIncludeFiles.php
+<?php class sc_tests_common extends testCollection {public $master; protected function should_setup($method_string) {	sc_daemon::get_instance ( $server_array ['staf_handle'] )->stop; return false;}}
+--CONFIG--
+start:61
+newName:master1
+updateTextualMatches:false
+--EXPECT--
+FILENAME://testClassFieldWithIncludeFiles.php
+<?php class sc_tests_common extends testCollection {public $master1; protected function should_setup($method_string) {	sc_daemon::get_instance ( $server_array ['staf_handle'] )->stop; return false;}}

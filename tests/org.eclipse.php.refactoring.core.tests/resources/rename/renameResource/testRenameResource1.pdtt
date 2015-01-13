@@ -1,0 +1,16 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameResource4.php
+<?php class TestRenameResource{}?>
+FILENAME://SimpleInclude.php
+<?php include 'TestRenameResource4.php'; ?>
+--CONFIG--
+newName:TestRenameResource5.php
+updateClassName:true
+updateReference:true
+--EXPECT--
+FILENAME://TestRenameResource5.php
+<?php class TestRenameResource{}?>
+FILENAME://SimpleInclude.php
+<?php include 'TestRenameResource5.php'; ?>
