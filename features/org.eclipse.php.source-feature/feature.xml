@@ -94,13 +94,26 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.php.formatter.core"
+         id="org.eclipse.php.formatter.core.source"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.php.formatter.ui"
+         id="org.eclipse.php.formatter.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.php.refactoring.core.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.php.refactoring.ui.source"
          download-size="0"
          install-size="0"
          version="0.0.0"

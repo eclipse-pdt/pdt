@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClass2.php
+<?php class Foo{public static $my_static = 'foo';} Foo::$my_static;
+--CONFIG--
+start:52
+newName:Foo1
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameClass2.php
+<?php class Foo1{public static $my_static = 'foo';} Foo1::$my_static;

@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClassMember.php
+<?php class Item { public $title;}?>
+--CONFIG--
+start:28
+newName:title1
+updateTextualMatches:false
+--EXPECT--
+FILENAME://TestRenameClassMember.php
+<?php class Item { public $title1;}?>

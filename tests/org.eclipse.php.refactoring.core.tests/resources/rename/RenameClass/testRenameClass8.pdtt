@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClass8.php
+<?php class TestRenameClass8{} class TestRenameClass8Ex extends TestRenameClass8{}?>
+--CONFIG--
+start:65
+newName:TestRenameClass81
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameClass8.php
+<?php class TestRenameClass81{} class TestRenameClass8Ex extends TestRenameClass81{}?>

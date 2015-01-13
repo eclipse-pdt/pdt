@@ -1,0 +1,11 @@
+--TEST--
+
+--FILE--
+FILENAME://testRenameTraitMember1.php
+<?php trait RenameTraitMember1 { public $t|itle;}?>
+--CONFIG--
+newName:title1
+updateTextualMatches:false
+--EXPECT--
+FILENAME://testRenameTraitMember1.php
+<?php trait RenameTraitMember1 { public $title1;}?>

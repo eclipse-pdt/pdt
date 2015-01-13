@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameGlobalVar1.php
+<?php $a = 1; function Sum(){global $a;}?>
+--CONFIG--
+start:38
+newName:b
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameGlobalVar1.php
+<?php $b = 1; function Sum(){global $b;}?>

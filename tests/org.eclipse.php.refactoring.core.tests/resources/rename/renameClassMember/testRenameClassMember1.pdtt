@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClassMember1.php
+<?php class Visitor {public function isAllowed ($pPermissionCode){return true;}} class NonVisitor{public function isAllowed ($pPermissionCode){return false;}} class EditPage{private $isAllowed = false;public function __construct (){$lVisitor = new Visitor();$this->isAllowed = $lVisitor->isAllowed('EDIT_PAGE');}}class ViewPage{private $isAllowed = false;public function __construct (){$lVisitor = new NonVisitor();$this->isAllowed = $lVisitor->isAllowed('VIEW_PAGE');}}?>
+--CONFIG--
+start:38
+newName:isAllowed1
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameClassMember1.php
+<?php class Visitor {public function isAllowed1 ($pPermissionCode){return true;}} class NonVisitor{public function isAllowed ($pPermissionCode){return false;}} class EditPage{private $isAllowed = false;public function __construct (){$lVisitor = new Visitor();$this->isAllowed = $lVisitor->isAllowed1('EDIT_PAGE');}}class ViewPage{private $isAllowed = false;public function __construct (){$lVisitor = new NonVisitor();$this->isAllowed = $lVisitor->isAllowed('VIEW_PAGE');}}?>

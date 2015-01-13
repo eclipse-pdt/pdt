@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameLoalVar.php
+<?php function getC(variable $ff1){return $ff1;}?>
+--CONFIG--
+start:30
+newName:ff
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameLoalVar.php
+<?php function getC(variable $ff){return $ff;}?>

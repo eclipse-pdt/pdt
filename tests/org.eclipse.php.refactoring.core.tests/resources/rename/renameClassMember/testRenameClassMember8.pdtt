@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClassMember8.php
+<?php class Item { /** * @name foo */	public function foo() {}}?>
+--CONFIG--
+start:57
+newName:foo1
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameClassMember8.php
+<?php class Item { /** * @name foo1 */	public function foo1() {}}?>
