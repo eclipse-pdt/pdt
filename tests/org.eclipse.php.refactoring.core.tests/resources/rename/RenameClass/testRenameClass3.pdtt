@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClass3.php
+<?php class Foo{public static function aStaticMethod() {}} Foo::aStaticMethod();
+--CONFIG--
+start:60
+newName:Foo1
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameClass3.php
+<?php class Foo1{public static function aStaticMethod() {}} Foo1::aStaticMethod();

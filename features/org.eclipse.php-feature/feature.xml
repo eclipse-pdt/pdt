@@ -23,13 +23,13 @@
       %description
    </description>
 
-   <license url="%licenseURL">
-      %license
-   </license>
-
    <copyright>
       %copyright
    </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
 
    <requires>
       <import feature="org.eclipse.dltk.core" version="5.0.0" match="greaterOrEqual"/>
@@ -107,6 +107,20 @@
 
    <plugin
          id="org.eclipse.php.formatter.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.php.refactoring.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.php.refactoring.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"

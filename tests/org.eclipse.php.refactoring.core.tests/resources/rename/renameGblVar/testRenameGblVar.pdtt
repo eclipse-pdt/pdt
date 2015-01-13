@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameGlobalVar.php
+<?php $abb=1;?>
+--CONFIG--
+start:8
+newName:a
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameGlobalVar.php
+<?php $a=1;?>

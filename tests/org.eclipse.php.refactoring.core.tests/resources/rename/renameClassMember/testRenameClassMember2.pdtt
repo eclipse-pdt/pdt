@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClassMember2.php
+<?php class Visitor {public function isAllowed ($pPermissionCode){return true;}} class VisitorCh extends Visitor{public function isAllowed ($pPermissionCode){return false;}} ?>
+--CONFIG--
+start:38
+newName:isAllowed1
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameClassMember2.php
+<?php class Visitor {public function isAllowed1 ($pPermissionCode){return true;}} class VisitorCh extends Visitor{public function isAllowed1 ($pPermissionCode){return false;}} ?>

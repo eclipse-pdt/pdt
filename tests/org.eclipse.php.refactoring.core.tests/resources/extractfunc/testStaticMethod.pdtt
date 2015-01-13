@@ -1,0 +1,13 @@
+--TEST--
+
+--FILE--
+FILENAME://TestExtractStaticMethod.php
+<?php class A{static function foo(){}static function doo(){self::foo();}}?>
+--CONFIG--
+start:59
+length:12
+newName:extractedMethod
+visibility:default
+--EXPECT--
+FILENAME://TestExtractStaticMethod.php
+<?php class A{static function foo(){}static function doo(){self::extractedMethod();}static function extractedMethod(){self::foo();}}?>

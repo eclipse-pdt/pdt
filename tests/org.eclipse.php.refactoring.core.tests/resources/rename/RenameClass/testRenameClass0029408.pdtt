@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClass0029408.php
+<?php class MyClass1 { const con = "constant value"; function showCons1tant() { echo self::con; }}?>
+--CONFIG--
+start:14
+newName:MyClass2
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameClass0029408.php
+<?php class MyClass2 { const con = "constant value"; function showCons1tant() { echo self::con; }}?>

@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameResource2.php
+<?php class TestRenameResource{}?>
+--CONFIG--
+newName:TestRenameResource3.php
+updateClassName:false
+updateReference:false
+--EXPECT--
+FILENAME://TestRenameResource3.php
+<?php class TestRenameResource{}?>

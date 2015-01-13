@@ -1,0 +1,12 @@
+--TEST--
+0030723: [Beta Users] "Update texual occurrences ..." does not rename in the PHPDoc  
+--FILE--
+FILENAME://TestRenameLoalVar1.php
+<?php /**  @param string $footer Example */ function doSomeStuff($header, $footer) { echo $footer;} ?>
+--CONFIG--
+start:74
+newName:footer1
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameLoalVar1.php
+<?php /**  @param string $footer1 Example */ function doSomeStuff($header, $footer1) { echo $footer1;} ?>

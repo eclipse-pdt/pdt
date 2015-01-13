@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestExtractVar3.php
+<?php try{checkNum(2);}catch(Exception $e){$e->getMessage();}?>
+--CONFIG--
+start:43
+length:17
+newName:getMessage
+--EXPECT--
+FILENAME://TestExtractVar3.php
+<?php try{checkNum(2);}catch(Exception $e){$getMessage = $e->getMessage();}?>

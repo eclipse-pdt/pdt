@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClassMember12.php
+<?php class Item{public static function foo12(){}public static function another(){Item::foo12 ();}}class ItemEx extends Item{public static function another(){$this->foo12 ();}} ItemEx::foo12();?>
+--CONFIG--
+start:41
+newName:foo120
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameClassMember12.php
+<?php class Item{public static function foo120(){}public static function another(){Item::foo120 ();}}class ItemEx extends Item{public static function another(){$this->foo120 ();}} ItemEx::foo120();?>

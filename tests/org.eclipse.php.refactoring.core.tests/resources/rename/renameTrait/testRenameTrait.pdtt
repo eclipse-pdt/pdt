@@ -1,0 +1,55 @@
+--TEST--
+
+--FILE--
+FILENAME://testRenameTrait.php
+<?php
+trait RenameTra|it{
+	public function fun1(){
+	}
+	public function fun2() {
+	}
+	public function fun3() {
+	}
+	public $a;
+	private $b;
+	public $c;
+}
+class RenameTrait_class {
+	use RenameTrait{
+		fun1 as public;
+		a as a1;
+	}
+	use RenameTrait{
+		RenameTrait::fun2 as public fun4;
+		b as public b1;
+	}
+}
+?>
+--CONFIG--
+newName:RenameTrait1
+updateTextualMatches:false
+--EXPECT--
+FILENAME://testRenameTrait.php
+<?php
+trait RenameTrait1{
+	public function fun1(){
+	}
+	public function fun2() {
+	}
+	public function fun3() {
+	}
+	public $a;
+	private $b;
+	public $c;
+}
+class RenameTrait_class {
+	use RenameTrait1{
+		fun1 as public;
+		a as a1;
+	}
+	use RenameTrait1{
+		RenameTrait1::fun2 as public fun4;
+		b as public b1;
+	}
+}
+?>

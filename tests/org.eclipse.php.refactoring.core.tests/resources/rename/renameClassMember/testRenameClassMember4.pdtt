@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClassMember4.php
+<?php class Visitor {const constant = 'constant value';} ?>
+--CONFIG--
+start:28
+newName:constant1
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameClassMember4.php
+<?php class Visitor {const constant1 = 'constant1 value';} ?>

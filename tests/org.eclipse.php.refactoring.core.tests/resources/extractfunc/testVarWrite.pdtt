@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestExtractVarWrite.php
+<?php $a = 5;echo $a;?>
+--CONFIG--
+start:6
+length:7
+newName:extractedFunction
+--EXPECT--
+FILENAME://TestExtractVarWrite.php
+<?php $a=extractedFunction();echo $a;function extractedFunction(){$a = 5;return $a;}?>

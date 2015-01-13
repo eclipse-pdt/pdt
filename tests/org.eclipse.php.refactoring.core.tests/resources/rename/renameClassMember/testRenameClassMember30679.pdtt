@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClassMember30679.php
+<?php class ClassMember30679 {  public $a = "a"; private function fun() {  echo $this->d; }}class ClassMember30679B extends ClassMember30679 { function foo() {  echo $this->a;  }} ?>
+--CONFIG--
+start:174
+newName:a1
+updateTextualMatches:false
+--EXPECT--
+FILENAME://TestRenameClassMember30679.php
+<?php class ClassMember30679 {  public $a1 = "a"; private function fun() {  echo $this->d; }}class ClassMember30679B extends ClassMember30679 { function foo() {  echo $this->a1;  }} ?>
