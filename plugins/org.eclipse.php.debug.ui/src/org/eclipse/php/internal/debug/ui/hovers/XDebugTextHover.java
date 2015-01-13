@@ -71,7 +71,8 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements
 
 				if (region != null) {
 					String regionType = region.getType();
-					if (regionType == PHPRegionTypes.PHP_VARIABLE) {
+					if (regionType == PHPRegionTypes.PHP_VARIABLE
+							|| regionType == PHPRegionTypes.PHP_THIS) {
 						String variable = null;
 						try {
 							variable = textViewer.getDocument().get(
