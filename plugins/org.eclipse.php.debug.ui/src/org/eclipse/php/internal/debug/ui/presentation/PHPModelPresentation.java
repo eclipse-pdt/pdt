@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,6 +61,7 @@ import com.ibm.icu.text.MessageFormat;
 /**
  * Renders PHP debug elements
  */
+@SuppressWarnings("restriction")
 public class PHPModelPresentation extends LabelProvider implements
 		IDebugModelPresentation {
 
@@ -74,7 +75,20 @@ public class PHPModelPresentation extends LabelProvider implements
 	 * , java.lang.Object)
 	 */
 
-	public void setAttribute(String attribute, Object value) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.IDebugModelPresentation#computeDetail(org.eclipse
+	 * .debug.core.model.IValue, org.eclipse.debug.ui.IValueDetailListener)
+	 */
+	public void computeDetail(IValue value, IValueDetailListener listener) {
+		String detail = ""; //$NON-NLS-1$
+		try {
+			detail = value.getValueString();
+		} catch (DebugException e) {
+		}
+		listener.detailComputed(value, detail);
 	}
 
 	/*
@@ -87,6 +101,74 @@ public class PHPModelPresentation extends LabelProvider implements
 			return getBreakpointImage((PHPConditionalBreakpoint) element);
 		}
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
+	 */
+	public String getText(Object element) {
+		if (element instanceof IDebugTarget) {
+			return getTargetText((IDebugTarget) element);
+		} else if (element instanceof IThread) {
+			return getThreadText((IThread) element);
+		} else if (element instanceof IStackFrame) {
+			return getStackFrameText((IStackFrame) element);
+		} else if (element instanceof ILineBreakpoint) {
+			return getLineBreakpointText((ILineBreakpoint) element);
+		}
+		return null;
+
+	}
+
+	public String getEditorId(IEditorInput input, Object inputObject) {
+		if (input instanceof NonExistingPHPFileEditorInput) {
+			return UntitledPHPEditor.ID;
+		}
+		try {
+			IEditorDescriptor descriptor = IDE.getEditorDescriptor(input
+					.getName());
+			return descriptor.getId();
+		} catch (PartInitException e) {
+			return null;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.ISourcePresentation#getEditorInput(java.lang.Object)
+	 */
+	public IEditorInput getEditorInput(Object element) {
+		if (element instanceof IFile) {
+			return new FileEditorInput((IFile) element);
+		}
+		if (element instanceof IFileHandle) {
+			return new ExternalFileEditorInput((IFileHandle) element);
+		}
+		if (element instanceof ILineBreakpoint) {
+			return getLineBreakpointEditorInput(element);
+		}
+		if (element instanceof IStorage) {
+			return new ExternalStorageEditorInput((IStorage) element);
+		}
+		if (element instanceof IFileStore) {
+			IFileStore fileStore = (IFileStore) element;
+			NonExistingPHPFileEditorInput nonExistingEditorInput = NonExistingPHPFileEditorInput
+					.findEditorInput(new Path(fileStore.toURI().getPath()));
+			if (nonExistingEditorInput != null) {
+				return nonExistingEditorInput;
+			}
+			return new FileStoreEditorInput(fileStore);
+		}
+		Logger.log(Logger.WARNING_DEBUG, "Unknown editor input type: " //$NON-NLS-1$
+				+ element.getClass().getName());
+		return null;
+	}
+
+	public void setAttribute(String attribute, Object value) {
 	}
 
 	/**
@@ -125,25 +207,6 @@ public class PHPModelPresentation extends LabelProvider implements
 		return fDebugImageRegistry;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
-	 */
-	public String getText(Object element) {
-		if (element instanceof IDebugTarget) {
-			return getTargetText((IDebugTarget) element);
-		} else if (element instanceof IThread) {
-			return getThreadText((IThread) element);
-		} else if (element instanceof IStackFrame) {
-			return getStackFrameText((IStackFrame) element);
-		} else if (element instanceof ILineBreakpoint) {
-			return getLineBreakpointText((ILineBreakpoint) element);
-		}
-		return null;
-
-	}
-
 	protected String getLineBreakpointText(ILineBreakpoint breakpoint) {
 		IMarker marker = breakpoint.getMarker();
 		IResource resource = marker.getResource();
@@ -151,16 +214,14 @@ public class PHPModelPresentation extends LabelProvider implements
 			Integer lineNumber = (Integer) marker
 					.getAttribute(IMarker.LINE_NUMBER);
 			String fileName = null;
-
 			if (resource instanceof IFile) {
 				fileName = resource.getFullPath().toString();
 			} else if (resource instanceof IWorkspaceRoot) {
 				fileName = (String) marker
 						.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
-
 				IPath path = Path.fromPortableString(fileName);
-
-				if ((path.getDevice() == null) && (path.toString().startsWith("org.eclipse.dltk"))) { //$NON-NLS-1$
+				if ((path.getDevice() == null)
+						&& (path.toString().startsWith("org.eclipse.dltk"))) { //$NON-NLS-1$
 					String fullPathString = path.toString();
 					String absolutePath = fullPathString
 							.substring(fullPathString.indexOf(':') + 1);
@@ -168,8 +229,6 @@ public class PHPModelPresentation extends LabelProvider implements
 				} else {
 					path = EnvironmentPathUtils.getLocalPath(path);
 				}
-
-
 				NonExistingPHPFileEditorInput nonExistingEditorInput = NonExistingPHPFileEditorInput
 						.findEditorInput(path);
 				if (nonExistingEditorInput != null) {
@@ -182,7 +241,6 @@ public class PHPModelPresentation extends LabelProvider implements
 						fileName = path.toPortableString();
 					}
 				}
-
 			}
 			if (fileName != null) {
 				return fileName + " [line: " + lineNumber.toString() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -208,22 +266,8 @@ public class PHPModelPresentation extends LabelProvider implements
 		return label + name;
 	}
 
-	private String resolveUntitledEditorName(String location) {
-		try {
-			NonExistingPHPFileEditorInput nonExistingEditorInput = NonExistingPHPFileEditorInput
-					.findEditorInput(new Path(location));
-			if (nonExistingEditorInput != null) {
-				location = nonExistingEditorInput.getName();
-			}
-		} catch (Exception e) {
-		}
-		return location;
-	}
-
 	protected String getThreadText(IThread thread) {
-
 		StringBuilder buf = new StringBuilder();
-
 		IDebugTarget target = (IDebugTarget) thread.getDebugTarget();
 		try {
 			String targetName = target.getName();
@@ -233,7 +277,6 @@ public class PHPModelPresentation extends LabelProvider implements
 			// Just log should never happen
 			Logger.logException(e);
 		}
-
 		if (thread.isStepping()) {
 			buf.append(PHPDebugUIMessages.MPresentation_Stepping_1);
 		} else if (thread.isSuspended()) {
@@ -244,12 +287,11 @@ public class PHPModelPresentation extends LabelProvider implements
 				IBreakpoint breakpoint = breakpoints[0]; // there can only be
 				// one in PHP
 				if (breakpoint instanceof PHPLineBreakpoint) {
-					buf
-							.append(PHPDebugUIMessages.MPresentation_SLineBreakpoint_1);
+					buf.append(PHPDebugUIMessages.MPresentation_SLineBreakpoint_1);
 				}
 			}
 		} else if (thread.isTerminated()) {
-			buf.append(PHPDebugUIMessages.MPresentation_Terminated_1); 
+			buf.append(PHPDebugUIMessages.MPresentation_Terminated_1);
 		}
 		return buf.toString();
 	}
@@ -264,70 +306,17 @@ public class PHPModelPresentation extends LabelProvider implements
 					buffer.append(frameName);
 					buffer.append("(): "); //$NON-NLS-1$
 				}
-
 				String sourceName = phpStackFrame.getSourceName();
 				sourceName = resolveUntitledEditorName(sourceName);
 				buffer.append(sourceName);
-
-				buffer.append(PHPDebugUIMessages.MPresentation_ATLine_1
-						+ (phpStackFrame.getLineNumber()));
+				buffer.append(PHPDebugUIMessages.MPresentation_ATLine_1 + ' '
+						+ phpStackFrame.getLineNumber());
 				return buffer.toString();
-
 			} catch (DebugException e) {
 				Logger.logException(e);
 			}
 		}
 		return ""; //$NON-NLS-1$
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.debug.ui.IDebugModelPresentation#computeDetail(org.eclipse
-	 * .debug.core.model.IValue, org.eclipse.debug.ui.IValueDetailListener)
-	 */
-	public void computeDetail(IValue value, IValueDetailListener listener) {
-		String detail = ""; //$NON-NLS-1$
-		try {
-			detail = value.getValueString();
-		} catch (DebugException e) {
-		}
-		listener.detailComputed(value, detail);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ISourcePresentation#getEditorInput(java.lang.Object)
-	 */
-	public IEditorInput getEditorInput(Object element) {
-		if (element instanceof IFile) {
-			return new FileEditorInput((IFile) element);
-		}
-		if (element instanceof IFileHandle) {
-			return new ExternalFileEditorInput((IFileHandle) element);
-		}
-		if (element instanceof ILineBreakpoint) {
-			return getLineBreakpointEditorInput(element);
-		}
-		if (element instanceof IStorage) {
-			return new ExternalStorageEditorInput((IStorage) element);
-		}
-		if (element instanceof IFileStore) {
-			IFileStore fileStore = (IFileStore) element;
-			NonExistingPHPFileEditorInput nonExistingEditorInput = NonExistingPHPFileEditorInput
-					.findEditorInput(new Path(fileStore.toURI().getPath()));
-			if (nonExistingEditorInput != null) {
-				return nonExistingEditorInput;
-			}
-
-			return new FileStoreEditorInput(fileStore);
-		}
-		Logger.log(Logger.WARNING_DEBUG, "Unknown editor input type: " //$NON-NLS-1$
-				+ element.getClass().getName());
-		return null;
 	}
 
 	protected IEditorInput getLineBreakpointEditorInput(Object element) {
@@ -337,7 +326,6 @@ public class PHPModelPresentation extends LabelProvider implements
 		if (resource instanceof IFile) {
 			return new FileEditorInput((IFile) resource);
 		}
-		// else
 		try {
 			final String location = (String) marker
 					.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
@@ -345,23 +333,19 @@ public class PHPModelPresentation extends LabelProvider implements
 				return null;
 			}
 			IPath path = Path.fromPortableString(location);
-
 			NonExistingPHPFileEditorInput nonExistingEditorInput = NonExistingPHPFileEditorInput
 					.findEditorInput(path);
 			if (nonExistingEditorInput != null) {
 				return nonExistingEditorInput;
 			}
-
 			HandleFactory fac = new HandleFactory();
 			IDLTKSearchScope scope = DLTKSearchScopeFactory
 					.getInstance()
 					.createWorkspaceScope(true, PHPLanguageToolkit.getDefault());
 			Openable openable = fac.createOpenable(path.toString(), scope);
-
 			if (openable instanceof IStorage) {
 				return new ExternalStorageEditorInput((IStorage) openable);
 			}
-
 			// Support external files opened using File -> Open
 			File localFile = new File(location);
 			if (localFile.exists()) {
@@ -373,16 +357,16 @@ public class PHPModelPresentation extends LabelProvider implements
 		return null;
 	}
 
-	public String getEditorId(IEditorInput input, Object inputObject) {
-		if (input instanceof NonExistingPHPFileEditorInput) {
-			return UntitledPHPEditor.ID;
-		}
+	private String resolveUntitledEditorName(String location) {
 		try {
-			IEditorDescriptor descriptor = IDE.getEditorDescriptor(input
-					.getName());
-			return descriptor.getId();
-		} catch (PartInitException e) {
-			return null;
+			NonExistingPHPFileEditorInput nonExistingEditorInput = NonExistingPHPFileEditorInput
+					.findEditorInput(new Path(location));
+			if (nonExistingEditorInput != null) {
+				location = nonExistingEditorInput.getName();
+			}
+		} catch (Exception e) {
 		}
+		return location;
 	}
+
 }
