@@ -1,0 +1,11 @@
+--TEST--
+
+--FILE--
+FILENAME://TestMoveFile2.php
+<?php class TestRenameClass{}?>
+--CONFIG--
+dest:destination
+updateReference:false
+--EXPECT--
+FILENAME://destination/TestMoveFile2.php
+<?php class TestRenameClass{}?>

@@ -1,0 +1,69 @@
+--TEST--
+
+--FILE--
+FILENAME://testRenameTraitMember4.php
+<?php
+trait RenameTraitMember4{
+	public function fun1(){
+	}
+	public function fun2() {
+	}
+	public function fun3() {
+	}
+	public $a;
+	private $b;
+	public $c;
+}
+class RenameTraitMember4class1 {
+	use RenameTraitMember4{
+		fun1 as public;
+		a as a1;
+	}
+	use RenameTraitMember4{
+		RenameTraitMember4::fun2 as public fun4;
+		b as public b1;
+	}
+}
+$a = new RenameTraitMember4class1();
+$a->fun1();
+$a->fun4();
+$a->fun3();
+$a->b|1;
+$a->a1;
+$a->c;
+?>
+--CONFIG--
+newName:b11
+updateTextualMatches:false
+--EXPECT--
+FILENAME://testRenameTraitMember4.php
+<?php
+trait RenameTraitMember4{
+	public function fun1(){
+	}
+	public function fun2() {
+	}
+	public function fun3() {
+	}
+	public $a;
+	private $b;
+	public $c;
+}
+class RenameTraitMember4class1 {
+	use RenameTraitMember4{
+		fun1 as public;
+		a as a1;
+	}
+	use RenameTraitMember4{
+		RenameTraitMember4::fun2 as public fun4;
+		b as public b11;
+	}
+}
+$a = new RenameTraitMember4class1();
+$a->fun1();
+$a->fun4();
+$a->fun3();
+$a->b11;
+$a->a1;
+$a->c;
+?>

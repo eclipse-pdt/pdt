@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+    <extension point="org.eclipse.php.ui.phpActionDelegator">
+        <action actionId="org.eclipse.php.ui.actions.Move"
+            class="org.eclipse.php.refactoring.ui.actions.RefactoringMoveAction" id="org.eclipse.php.refactoring.ui.moveAction"
+            priority="20" />
+    </extension>
+
+    <extension point="org.eclipse.php.ui.phpActionDelegator">
+        <action actionId="org.eclipse.php.ui.actions.RenameElement"
+            class="org.eclipse.php.refactoring.ui.actions.RenamePHPElementActionDelegate" id="org.eclipse.php.refactoring.ui.renameAction"
+            priority="20" />
+    </extension>
+    
+      <extension point="org.eclipse.ui.commands">
+        <command categoryId="org.eclipse.php.ui.category.refactoring"
+            id="org.eclipse.php.refactoring.ui.commands.extractVariable" name="%ExtractVariable.name" />
+        <command categoryId="org.eclipse.php.ui.category.refactoring"
+            id="org.eclipse.php.refactoring.ui.commands.extractMethod" name="%ExtractVariable.name" />
+            
+    </extension>
+     <extension point="org.eclipse.ui.bindings">
+        <key commandId="org.eclipse.php.refactoring.ui.commands.extractVariable"
+            contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.php.ui.zendStudioAcceleratorConfiguration"
+            sequence="M3+M2+L" />
+        <key commandId="org.eclipse.php.refactoring.ui.commands.extractVariable"
+            contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.php.ui.zendStudioAcceleratorConfiguration"
+            sequence="M3+M2+L" />
+        <key commandId="org.eclipse.php.refactoring.ui.commands.extractMethod"
+            contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.php.ui.zendStudioAcceleratorConfiguration"
+            sequence="M3+M2+M" />
+        <key commandId="org.eclipse.php.refactoring.ui.commands.extractMethod"
+            contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.php.ui.zendStudioAcceleratorConfiguration"
+            sequence="M3+M2+M" />      
+                  
+    </extension>
+ 
+    <extension point="org.eclipse.ui.popupMenus">
+        <viewerContribution
+            id="org.eclipse.php.refactoring.ui.editorPopupContribution" targetID="org.eclipse.php.core.phpsource.source.EditorContext">
+           <action
+                 class="org.eclipse.php.refactoring.ui.actions.ExtractVariableActionDelegate"
+                 definitionId="org.eclipse.php.refactoring.ui.commands.extractVariable"
+                 id="org.eclipse.php.refactoring.ui.pop.extractVar"
+                 label="%action.label"
+                 menubarPath="refactorPopupMenuId/extractGroup">
+           </action>
+           <menu
+                 id="refactorPopupMenuId"
+                 label="%Refactoring.menu.label"
+                 path="sourcePopupMenuId">
+              <separator
+                    name="extractGroup">
+              </separator>
+           </menu>
+           <action
+                 class="org.eclipse.php.refactoring.ui.actions.ExtractFunctionActionDelegate"
+                 definitionId="org.eclipse.php.refactoring.ui.commands.extractMethod"
+                 id="org.eclipse.php.refactoring.ui.pop.extractMethod"
+                 label="%action.label.0"
+                 menubarPath="refactorPopupMenuId/extractGroup">
+           </action>
+        </viewerContribution>
+    </extension>
+    <extension point="org.eclipse.ui.popupMenus">
+       <objectContribution
+             id="org.eclipse.php.refactoring.ui.resourcePopupContribution"
+             nameFilter="none"
+             objectClass="org.eclipse.core.resources.IResource">
+            <action
+                class="org.eclipse.php.refactoring.ui.actions.ExtractVariableActionDelegate"
+                definitionId="org.eclipse.php.refactoring.ui.commands.extractVariable"
+                id="org.eclipse.php.refactoring.ui.actions.editor.popup.extractVariable"
+                label="%ExtractVariable.label" 
+                tooltip="%ExtractVariable.tooltip">
+            </action>
+        </objectContribution>
+    </extension>
+    <extension point="org.eclipse.core.runtime.adapters">
+        <factory
+            class="org.eclipse.php.refactoring.ui.wizard.RefactoringAdapterFactory"
+            adaptableType="org.eclipse.ltk.core.refactoring.TextFileChange">
+            <adapter type="org.eclipse.ltk.ui.refactoring.TextEditChangeNode" />
+        </factory>
+        <factory
+            class="org.eclipse.php.refactoring.ui.wizard.RefactoringAdapterFactory"
+            adaptableType="org.eclipse.ltk.core.refactoring.MultiStateTextFileChange">
+            <adapter type="org.eclipse.ltk.ui.refactoring.TextEditChangeNode" />
+        </factory>
+        <factory
+            class="org.eclipse.php.refactoring.ui.wizard.RefactoringAdapterFactory"
+            adaptableType="org.eclipse.ltk.core.refactoring.DocumentChange">
+            <adapter type="org.eclipse.ltk.ui.refactoring.TextEditChangeNode" />
+        </factory>
+    </extension>
+      <extension point="org.eclipse.ltk.ui.refactoring.statusContextViewers">
+      <statusContextViewer
+            class="org.eclipse.php.refactoring.ui.wizard.PHPFileStatusContextViewer"
+            id="org.eclipse.php.refactoring.ui.StatusContextViewer">
+         <enablement>
+            <or>
+               <instanceof value="org.eclipse.ltk.core.refactoring.FileStatusContext"/>
+            </or>
+         </enablement>
+      </statusContextViewer>
+   </extension>
+      <extension
+            point="org.eclipse.ui.preferencePages">
+         <page
+               category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+               class="org.eclipse.php.refactoring.ui.prefereces.PHPCodeRefactorPreferencePage"
+               id="org.eclipse.php.refactoring.ui.preferencePage"
+               name="%refactor.name">
+         </page>
+      </extension>
+      <extension
+            point="org.eclipse.core.runtime.preferences">
+         <initializer
+               class="org.eclipse.php.refactoring.ui.prefereces.PreferenceInitializer">
+         </initializer>
+      </extension>
+      <extension
+            point="org.eclipse.ui.actionSets">
+         <actionSet
+               id="org.eclipse.php.refactoring.ui.extractSet"
+               label="%actionSet.label"
+               visible="false">
+            <!--<menu
+                  id="org.eclipse.php.refactoring.ui.extract.menu"
+                  label="%menu.label.0"
+                  path="org.eclipse.pdt.ui.refactoring.menu/reorgGroup?after=additions">
+               <separator
+                     name="org.eclipse.php.refactoring.ui.extract">
+               </separator>
+            </menu>-->
+            <menu
+               label="%Refactoring.menu.label"
+               path="edit"
+               id="org.eclipse.pdt.ui.refactoring.menu">
+	            <separator name="additions"/>
+	         </menu>
+            <action
+                  class="org.eclipse.php.refactoring.ui.actions.ExtractVariableActionDelegate"
+                  definitionId="org.eclipse.php.refactoring.ui.commands.extractVariable"
+                  id="org.eclipse.php.refactoring.ui.extractVar"
+                  label="%action.label"
+                  menubarPath="org.eclipse.pdt.ui.refactoring.menu/additions"
+                  style="push">
+            </action>
+            <action
+                  class="org.eclipse.php.refactoring.ui.actions.ExtractFunctionActionDelegate"
+                  definitionId="org.eclipse.php.refactoring.ui.commands.extractMethod"
+                  id="org.eclipse.php.refactoring.ui.extractMethod"
+                  label="%action.label.0"
+                  menubarPath="org.eclipse.pdt.ui.refactoring.menu/additions"
+                  style="push">
+            </action>
+         </actionSet>
+      </extension>
+      <extension
+            point="org.eclipse.ui.actionSetPartAssociations">
+         <actionSetPartAssociation
+               targetID="org.eclipse.php.refactoring.ui.extractSet">
+            <part
+                  id="org.eclipse.php.editor">
+            </part>
+         </actionSetPartAssociation>
+         <actionSetPartAssociation
+               targetID="org.eclipse.php.refactoring.ui.extractSet">
+            <part
+                  id="org.eclipse.php.ui.explorer">
+            </part>
+         </actionSetPartAssociation>
+      </extension>
+
+ 
+   
+ 
+</plugin>

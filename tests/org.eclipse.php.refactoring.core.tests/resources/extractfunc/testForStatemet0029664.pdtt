@@ -1,0 +1,13 @@
+--TEST--
+
+--FILE--
+FILENAME://TestForStatemet0029664.php
+<?php for($index =0;$index<10;$index++){echo $index;}?>
+
+--CONFIG--
+start:6
+length:47
+newName:extractedMethod
+--EXPECT--
+FILENAME://TestForStatemet0029664.php
+<?php $index = extractedMethod (); function extractedMethod() {for($index =0;$index<10;$index++){echo $index;}return $index;}?>

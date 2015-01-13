@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameGlobalConstant.php
+<?php define ( "CONSTA1", "Hello world." ); echo CONSTA1; ?>
+--CONFIG--
+start:16
+newName:CONSTA12
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameGlobalConstant.php
+<?php define ( "CONSTA12", "Hello world." ); echo CONSTA12; ?>

@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameFunction1.php
+<?php function getRenameFunc1A(){} class mCls{public function getRenameFunc1A(){}}?>
+--CONFIG--
+start:17
+newName:getRenameFunc1AB
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameFunction1.php
+<?php function getRenameFunc1AB(){} class mCls{public function getRenameFunc1A(){}}?>

@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClass5.php
+<?php class FooException{const GIVEN = 1;} try{}catch(FooException $e){};
+--CONFIG--
+start:55
+newName:FooException1
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameClass5.php
+<?php class FooException1{const GIVEN = 1;} try{}catch(FooException1 $e){};

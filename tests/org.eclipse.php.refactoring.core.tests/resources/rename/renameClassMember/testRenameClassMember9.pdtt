@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClassMember9.php
+<?php class Item {public function foo9(){}public function another(){$this->foo9();}}class ItemEx extends Item{public function another(){$this->foo9();}}$a = new ItemEx ( );$a->foo9(); ?>
+--CONFIG--
+start:179
+newName:foo91
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameClassMember9.php
+<?php class Item {public function foo91(){}public function another(){$this->foo91();}}class ItemEx extends Item{public function another(){$this->foo91();}}$a = new ItemEx ( );$a->foo91(); ?>

@@ -1,0 +1,37 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameLoalVar2.php
+<?php
+class TestRenameLoalVar2
+{
+	/**
+	 * @param TestRenameLoalVar2 $a
+	 * @param TestRenameLoalVar2 $b
+	 * @return TestRenameLoalVar2
+	 */
+	function fun(TestRenameLoalVar2 $a,TestRenameLoalVar2 $b|)
+	{
+		return new TestRenameLoalVar2();
+	}
+}
+?>
+--CONFIG--
+newName:c
+updateTextualMatches:false
+--EXPECT--
+FILENAME://TestRenameLoalVar2.php
+<?php
+class TestRenameLoalVar2
+{
+	/**
+	 * @param TestRenameLoalVar2 $a
+	 * @param TestRenameLoalVar2 $c
+	 * @return TestRenameLoalVar2
+	 */
+	function fun(TestRenameLoalVar2 $a,TestRenameLoalVar2 $c)
+	{
+		return new TestRenameLoalVar2();
+	}
+}
+?>

@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+FILENAME://TestRenameClassMember5.php
+<?php class Item { public $title;} class ItemEx extends Item{public $title;}?>
+--CONFIG--
+start:28
+newName:title1
+updateTextualMatches:true
+--EXPECT--
+FILENAME://TestRenameClassMember5.php
+<?php class Item { public $title1;} class ItemEx extends Item{public $title1;}?>

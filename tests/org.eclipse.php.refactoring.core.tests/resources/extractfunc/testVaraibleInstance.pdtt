@@ -1,0 +1,13 @@
+--TEST--
+<?php function foo(&$a){}extractedFunction($a);function extractedFunction(&$a) {foo($a);}?>
+
+--FILE--
+FILENAME://TestExtractVariableInstance.php
+<?php function foo($a){}foo($a);?>
+--CONFIG--
+start:24
+length:8
+newName:extractedFunction
+--EXPECT--
+FILENAME://TestExtractVariableInstance.php
+<?php function foo($a){}extractedFunction();function extractedFunction(){foo($a);}?>
