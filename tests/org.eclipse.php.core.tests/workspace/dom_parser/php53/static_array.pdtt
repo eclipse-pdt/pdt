@@ -1,0 +1,113 @@
+--TEST--
+Static array
+--FILE--
+<?php
+static $myArray = array(
+    'A' =>array(
+                    '1' => 'valueA1',
+                    '2' => 'valueA2'
+    ),
+    'B' => array(
+                    '1' => 'valueB1',
+                    '2' => 'valueB2'
+    ),
+    'C' => array(
+                    '1' => 'valueC1',
+                    '2' => 'valueC2'
+    )
+);
+?>
+--EXPECT--
+<Program start='0' length='334'>
+	<Statements>
+		<StaticStatement start='6' length='325'>
+			<Assignment start='13' length='317' operator='='>
+				<Variable start='13' length='8' isDollared='true'>
+					<Identifier start='14' length='7' name='myArray'/>
+				</Variable>
+				<Value>
+					<ArrayCreation start='24' length='306'>
+						<ArrayElement start='35' length='93'>
+							<Key>
+								<Scalar start='35' length='3' type='string' value='&apos;A&apos;'/>
+							</Key>
+							<Value>
+								<ArrayCreation start='41' length='87'>
+									<ArrayElement start='68' length='16'>
+										<Key>
+											<Scalar start='68' length='3' type='string' value='&apos;1&apos;'/>
+										</Key>
+										<Value>
+											<Scalar start='75' length='9' type='string' value='&apos;valueA1&apos;'/>
+										</Value>
+									</ArrayElement>
+									<ArrayElement start='106' length='16'>
+										<Key>
+											<Scalar start='106' length='3' type='string' value='&apos;2&apos;'/>
+										</Key>
+										<Value>
+											<Scalar start='113' length='9' type='string' value='&apos;valueA2&apos;'/>
+										</Value>
+									</ArrayElement>
+								</ArrayCreation>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='134' length='94'>
+							<Key>
+								<Scalar start='134' length='3' type='string' value='&apos;B&apos;'/>
+							</Key>
+							<Value>
+								<ArrayCreation start='141' length='87'>
+									<ArrayElement start='168' length='16'>
+										<Key>
+											<Scalar start='168' length='3' type='string' value='&apos;1&apos;'/>
+										</Key>
+										<Value>
+											<Scalar start='175' length='9' type='string' value='&apos;valueB1&apos;'/>
+										</Value>
+									</ArrayElement>
+									<ArrayElement start='206' length='16'>
+										<Key>
+											<Scalar start='206' length='3' type='string' value='&apos;2&apos;'/>
+										</Key>
+										<Value>
+											<Scalar start='213' length='9' type='string' value='&apos;valueB2&apos;'/>
+										</Value>
+									</ArrayElement>
+								</ArrayCreation>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='234' length='94'>
+							<Key>
+								<Scalar start='234' length='3' type='string' value='&apos;C&apos;'/>
+							</Key>
+							<Value>
+								<ArrayCreation start='241' length='87'>
+									<ArrayElement start='268' length='16'>
+										<Key>
+											<Scalar start='268' length='3' type='string' value='&apos;1&apos;'/>
+										</Key>
+										<Value>
+											<Scalar start='275' length='9' type='string' value='&apos;valueC1&apos;'/>
+										</Value>
+									</ArrayElement>
+									<ArrayElement start='306' length='16'>
+										<Key>
+											<Scalar start='306' length='3' type='string' value='&apos;2&apos;'/>
+										</Key>
+										<Value>
+											<Scalar start='313' length='9' type='string' value='&apos;valueC2&apos;'/>
+										</Value>
+									</ArrayElement>
+								</ArrayCreation>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Value>
+			</Assignment>
+		</StaticStatement>
+		<EmptyStatement start='332' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

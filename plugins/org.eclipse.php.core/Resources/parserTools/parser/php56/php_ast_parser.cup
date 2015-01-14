@@ -3026,7 +3026,7 @@ non_empty_static_array_pair_list:list T_COMMA static_operation:key T_DOUBLE_ARRO
 | static_operation:key T_DOUBLE_ARROW static_operation:expr
 {:
 	List list = new LinkedList();
-	list.add(new ArrayElement(exprleft, exprright, parser.ast, key, expr));
+	list.add(new ArrayElement(keyleft, exprright, parser.ast, key, expr));
 	RESULT = list;
 :}
 
