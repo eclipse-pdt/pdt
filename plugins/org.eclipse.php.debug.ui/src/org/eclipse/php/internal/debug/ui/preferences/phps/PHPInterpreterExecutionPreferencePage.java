@@ -82,8 +82,8 @@ public class PHPInterpreterExecutionPreferencePage extends
 	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.PHPEXE_ENV_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem()
+				.setHelp(parent, IPHPHelpContextIds.PHPEXE_ENV_PREFERENCES);
 	}
 
 	/*
