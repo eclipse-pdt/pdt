@@ -1,0 +1,21 @@
+--TEST--
+Test different versions of Magic Method (first magic method is broken)
+--FILE--
+<?php
+/**
+ * @method getString
+ * @method void setInteger(integer $integer)
+ * @method setString(integer $integer)
+ */
+class Concrete
+{
+    function realFunction($param)
+    {}
+}
+
+$aa = new Concrete();
+$aa->|
+--EXPECT--
+method(realFunction)
+method(setInteger)
+method(setString)
