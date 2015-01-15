@@ -691,61 +691,56 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private static MagicMember getMagicMember(IMember member) {
-		if (member instanceof IMethod || member instanceof IField) {
-			IType type = null;
-			if (member instanceof IMethod) {
-				type = ((IMethod) member).getDeclaringType();
-				PHPDocBlock doc = PHPModelUtils.getDocBlock(type);
-				if (doc != null) {
-					Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+"); //$NON-NLS-1$
-					final PHPDocTag[] tags = doc.getTags();
-					for (PHPDocTag docTag : tags) {
-						final int tagKind = docTag.getTagKind();
-						if (tagKind == PHPDocTag.METHOD) {
-							// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
-							final String[] split = WHITESPACE_SEPERATOR
-									.split(docTag.getValue().trim());
-							if (split.length < 2) {
-								continue;
-							}
+		if (!(member instanceof IMethod || member instanceof IField)) {
+			return null;
+		}
 
-							if (MagicMemberUtil.removeParenthesis(split)
-									.equals(member.getElementName())) {
-								return MagicMemberUtil.getMagicMethod(docTag
-										.getValue());
-							} else if (MagicMemberUtil
-									.removeParenthesis2(split).equals(
-											member.getElementName())) {
-								return MagicMemberUtil.getMagicMethod2(docTag
-										.getValue());
-							}
-						}
+		IType type = member.getDeclaringType();
+		PHPDocBlock doc = PHPModelUtils.getDocBlock(type);
+		if (doc == null) {
+			return null;
+		}
+
+		Pattern WHITESPACE_SEPERATOR = MagicMemberUtil.WHITESPACE_SEPERATOR;
+		final PHPDocTag[] tags = doc.getTags();
+		for (PHPDocTag docTag : tags) {
+			final int tagKind = docTag.getTagKind();
+			if (member instanceof IMethod && tagKind == PHPDocTag.METHOD) {
+				// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
+				String docTagValue = docTag.getValue().trim();
+				int index = docTagValue.indexOf('('); //$NON-NLS-1$
+				if (index != -1) {
+					String[] split = WHITESPACE_SEPERATOR.split(docTagValue
+							.substring(0, index));
+					if (split.length == 1) {
+						docTagValue = MagicMemberUtil.VOID_RETURN_TYPE
+								+ " " + docTagValue; //$NON-NLS-1$
 					}
 				}
-			} else {
-				type = ((IField) member).getDeclaringType();
-				PHPDocBlock doc = PHPModelUtils.getDocBlock(type);
-				if (doc != null) {
-					Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+"); //$NON-NLS-1$
-					final PHPDocTag[] tags = doc.getTags();
-					for (PHPDocTag docTag : tags) {
-						final int tagKind = docTag.getTagKind();
-						if (tagKind == PHPDocTag.PROPERTY
-								|| tagKind == PHPDocTag.PROPERTY_READ
-								|| tagKind == PHPDocTag.PROPERTY_WRITE) {
-							// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.property.pkg.html
-							final String[] split = WHITESPACE_SEPERATOR
-									.split(docTag.getValue().trim());
-							if (split.length < 2) {
-								continue;
-							}
+				final String[] split = WHITESPACE_SEPERATOR.split(docTagValue);
+				if (split.length < 2) {
+					continue;
+				}
 
-							if (split[1].equals(member.getElementName())) {
-								return MagicMemberUtil.getMagicField(docTag
-										.getValue());
-							}
-						}
-					}
+				if (MagicMemberUtil.removeParenthesis(split).equals(
+						member.getElementName())) {
+					return MagicMemberUtil.getMagicMethod(docTagValue);
+				} else if (MagicMemberUtil.removeParenthesis2(split).equals(
+						member.getElementName())) {
+					return MagicMemberUtil.getMagicMethod2(docTagValue);
+				}
+			} else if (member instanceof IField
+					&& (tagKind == PHPDocTag.PROPERTY
+							|| tagKind == PHPDocTag.PROPERTY_READ || tagKind == PHPDocTag.PROPERTY_WRITE)) {
+				// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.property.pkg.html
+				final MagicField magicField = MagicMemberUtil
+						.getMagicField(docTag.getValue());
+				if (magicField == null) {
+					continue;
+				}
+
+				if (member.getElementName().equals(magicField.name)) {
+					return magicField;
 				}
 			}
 		}
