@@ -53,10 +53,8 @@ import org.eclipse.php.internal.core.util.MagicMemberUtil.MagicMethod;
  */
 public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
-	//private static final String MAGIC_PROPERTY_TYPE = "MagicPropertyType"; //$NON-NLS-1$
 	private static final String CONSTRUCTOR_NAME = "__construct"; //$NON-NLS-1$
-	private static final String VOID_RETURN_TYPE = "void"; //$NON-NLS-1$
-	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+"); //$NON-NLS-1$
+	private static final String VOID_RETURN_TYPE = MagicMemberUtil.VOID_RETURN_TYPE;
 	private static final String GLOBAL_NAMESPACE_CONTAINER_NAME = "global namespace"; //$NON-NLS-1$
 	private static final String DEFAULT_VALUE = " "; //$NON-NLS-1$
 	/**
@@ -534,6 +532,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			IPHPDocAwareDeclaration declaration = (IPHPDocAwareDeclaration) type;
 			final PHPDocBlock doc = declaration.getPHPDoc();
 			if (doc != null) {
+				Pattern WHITESPACE_SEPERATOR = MagicMemberUtil.WHITESPACE_SEPERATOR;
 				final PHPDocTag[] tags = doc.getTags();
 				for (PHPDocTag docTag : tags) {
 					final int tagKind = docTag.getTagKind();
@@ -544,7 +543,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 						final String[] split = WHITESPACE_SEPERATOR
 								.split(docTag.getValue().trim());
 						if (split.length < 2) {
-							break;
+							continue;
 						}
 						ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 						info.modifiers = Modifiers.AccPublic
@@ -579,7 +578,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 						final String[] split = WHITESPACE_SEPERATOR
 								.split(docTagValue);
 						if (split.length < 2) {
-							break;
+							continue;
 						}
 
 						ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
