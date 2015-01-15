@@ -70,7 +70,6 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 			matchRule = MatchRule.EXACT;
 		}
 		IDLTKSearchScope scope = createSearchScope();
-
 		IMethod[] functions = PhpModelAccess.getDefault().findMethods(prefix,
 				matchRule, Modifiers.AccGlobal, 0, scope, null);
 
@@ -121,15 +120,17 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 			if (fullName.startsWith("\\")) { //$NON-NLS-1$
 				fullName = fullName.substring(1);
 			}
-			IMethod[] elements = PhpModelAccess.getDefault().findMethods(null,
-					fullName, MatchRule.PREFIX, 0, 0, scope, null);
-			for (int i = 0; i < elements.length; i++) {
-				String elementName = elements[i].getElementName();
-				reportAlias(reporter, scope, module, replacementRange,
-						elements[i], elementName,
-						elementName.replace(fullName, name), suffix);
+			IMethod[] elements;
+			if (!fullName.contains("\\")) { //$NON-NLS-1$
+				elements = PhpModelAccess.getDefault().findMethods(null,
+						fullName, MatchRule.PREFIX, 0, 0, scope, null);
+				for (int i = 0; i < elements.length; i++) {
+					String elementName = elements[i].getElementName();
+					reportAlias(reporter, scope, module, replacementRange,
+							elements[i], elementName,
+							elementName.replace(fullName, name), suffix);
+				}
 			}
-
 			elements = PhpModelAccess.getDefault().findMethods(fullName,
 					MatchRule.EXACT, 0, 0, scope, null);
 
