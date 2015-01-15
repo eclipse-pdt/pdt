@@ -8,7 +8,7 @@ The following video tutorials were created by members of the PHP community in or
 
 ### Part 1
 
-<object width="425" height="344"> <param name="movie" value="http://www.youtube.com/v/hfHEmZXJLgw&amp;hl=en&amp;amp;fs=1" /> <param name="allowFullScreen" value="true" /> <param name="allowscriptaccess" value="always" /> <embed src="http://www.youtube.com/v/vrfzpk-yhl4&amp;amp;hl=en&amp;amp;fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344" /></object>
+<iframe width="425" height="344" src="//www.youtube.com/embed/hfHEmZXJLgw" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 
 #### About the Video:
 
@@ -29,13 +29,13 @@ The download process has been slightly modified since this video was produced.
  * Basic coding / syntax coloring / navigation / go to source
  * Code assist
 
-[http://www.youtube.com/watch?v=VRFZpk-YHl4&amp;feature=related](http://www.youtube.com/watch?v=VRFZpk-YHl4&amp;feature=related)
+[http://www.youtube.com/watch?v=VRFZpk-YHl4](http://www.youtube.com/watch?v=VRFZpk-YHl4)
 
 <!--note-end-->
 
 ### Part2
 
-<object width="425" height="344"> <param name="movie" value="http://www.youtube.com/v/hfHEmZXJLgw&amp;amp;hl=en&amp;amp;fs=1"/> <param name="allowFullScreen" value="true" /> <param name="allowscriptaccess" value="always"/> <embed src="http://www.youtube.com/v/x8wncihjxco&amp;amp;hl=en&amp;amp;fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344" /></object>
+<iframe width="425" height="344" src="//www.youtube.com/embed/hfHEmZXJLgw" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 
 #### About the Video:
 
@@ -51,7 +51,7 @@ The video covers the following features:
  * PHPDocblocks
  * Templates
 
-[http://www.youtube.com/watch?v=x8WnciHjXco&amp;feature=related](http://www.youtube.com/watch?v=x8WnciHjXco&amp;feature=related)
+[http://www.youtube.com/watch?v=x8WnciHjXco](http://www.youtube.com/watch?v=x8WnciHjXco)
 
 ## Eclipse PDTCourtesy of [ralphz](http://theorangeit.org/)
 
@@ -84,7 +84,7 @@ The video covers the following features:
 
 ## Introduction to Eclipse PDTCourtesy of [beardygeek](http://www.beardygeek.com/)
 
-<object width="425" height="344"> <param name="movie" value="http://www.youtube.com/v/Prc61pkGGh8&amp;amp;hl=en&amp;amp;fs=1" /> <param name="allowFullScreen" value="true" /> <param name="allowscriptaccess" value="always" /> <embed src="http://www.youtube.com/v/prc61pkggh8&amp;amp;hl=en&amp;amp;fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344" /></object>
+<iframe width="425" height="344" src="//www.youtube.com/embed/Prc61pkGGh8" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 
 #### About the Video:
 
@@ -100,7 +100,7 @@ The video covers the following features:
 
 ## PHP Tutorial 01 - Start a new project in eclipseCourtesy of [beardygeek](http://www.beardygeek.com/)
 
-<object width="425" height="344"> <param name="movie" value="http://www.youtube.com/v/hfHEmZXJLgw&amp;amp;hl=en&amp;amp;fs=1"/> <param name="allowFullScreen" value="true"/> <param name="allowscriptaccess" value="always"/> <embed src="http://www.youtube.com/v/hfhemzxjlgw&amp;amp;hl=en&amp;amp;fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"/></object>
+<iframe width="425" height="344" src="//www.youtube.com/embed/hfHEmZXJLgw" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 
 #### About the Video:
 
@@ -116,7 +116,7 @@ The video covers the following features:
 
 ## PHP Object Oriented Programming in Eclipse IDECourtesy of [ConnorAlves](http://il.youtube.com/user/ConnorAlves)
 
-<object width="425" height="344"> <param name="movie" value="http://www.youtube.com/v/rud7_Bqrhdo&amp;amp;hl=en&amp;amp;fs=1"/> <param name="allowFullScreen" value="true"/> <param name="allowscriptaccess" value="always"/> <embed src="http://www.youtube.com/v/rud7_bqrhdo&amp;amp;hl=en&amp;amp;fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"/></object>
+<iframe width="425" height="344" src="//www.youtube.com/embed/rud7_Bqrhdo" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 
 #### About the Video:
 
@@ -129,11 +129,11 @@ The video covers the following features:
  * Outline views
  * Use of libraries, classes, variables
 
-[http://www.youtube.com/watch?gl=IL&amp;hl=en&amp;v=rud7_Bqrhdo](http://www.youtube.com/watch?gl=IL&amp;hl=en&amp;v=rud7_Bqrhdo)
+[http://www.youtube.com/watch?v=rud7_Bqrhdo](http://www.youtube.com/watch?v=rud7_Bqrhdo)
 
 ## Simple Ajax and PHP application tutorialCourtesy of [ConnorAlves](http://il.youtube.com/user/ConnorAlves)
 
-<object width="425" height="344"> <param name="movie" value="http://www.youtube.com/v/zp8sOwIMxnw&amp;hl=en&amp;fs=1"/> <param name="allowFullScreen" value="true"/> <param name="allowscriptaccess" value="always"/> <embed src="http://www.youtube.com/v/zp8sowimxnw&amp;hl=en&amp;fs=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"/></object>
+<iframe width="425" height="344" src="//www.youtube.com/embed/zp8sOwIMxnw" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 
 #### About the Video:
 
@@ -144,4 +144,4 @@ The video covers the following features:
  * Outline views
  * Ajax libraries, classes and variables
 
-[http://il.youtube.com/watch?v=zp8sOwIMxnw&amp;feature=channel_page](http://il.youtube.com/watch?v=zp8sOwIMxnw&feature=channel_page)
+[http://il.youtube.com/watch?v=zp8sOwIMxnw&feature=channel_page](http://il.youtube.com/watch?v=zp8sOwIMxnw&feature=channel_page)
