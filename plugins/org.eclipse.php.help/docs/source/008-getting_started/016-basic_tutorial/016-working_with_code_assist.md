@@ -9,9 +9,9 @@ The purpose of this tutorial is to teach you how to use PDT 's Content Assist fu
  * [Purpose and Usage](#purpose-and-usage)
  * [Activating Content Assist](#activating-code-assist)
  * [Making Content Assist Elements Available Within the Same Scope](#making-content-assist-elements-available-within-the-same-scope)
- * [Function Parameter Hints](#Function_Parameter_Hints)
- * [Class Type Hints](#Class_Type_Hints)
- * [Configuring Content Assist](#Configuring_Code_Assist)
+ * [Function Parameter Hints](#function-parameter-hints)
+ * [Class Type Hints](#class-type-hints)
+ * [Configuring Content Assist](#configuring-code-assist)
 
 ## Purpose and Usage
 

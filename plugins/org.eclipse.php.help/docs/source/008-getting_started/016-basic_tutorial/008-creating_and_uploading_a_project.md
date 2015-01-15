@@ -6,8 +6,8 @@ The purpose of this tutorial is to guide you through the steps involved in creat
 
 #### Contents:
 
- * [Creating a PHP Project](#Creating_PHP_Project)
- * [Creating a PHP File](#Creating_PHP_File)
+ * [Creating a PHP Project](#creating-a-php-project)
+ * [Creating a PHP File](#creating-a-php-file)
 
 ## Creatinga PHP Project
 
@@ -23,7 +23,7 @@ To create a new PHP Project:
 
 The new project will be listed in PHP Explorer view.
 
-## Creating a PHPFile
+## Creating a PHP File
 
 Creating a PHP file within PDT will automatically add PHP tags to the script, and allow you to fully utilize PDT 's PHP functionality.
 
@@ -32,7 +32,8 @@ Creating a PHP file within PDT will automatically add PHP tags to the script, an
 To create a new PHP file within a project:
 
  1. In PHP Explorer view, right-click your project and select **New | PHP File** -or- select your project and go to **File Menu | New | PHP File**.
- 2. Enter the File Name and click **Finish**.  An editor window will appear with the following basic PHP code:  ![php_code.png](images/php_code.png "php_code.png")
+ 2. Enter the File Name and click **Finish**.  An editor window will appear with the following basic PHP code:  
+    ![php_code.png](images/php_code.png "php_code.png")
  3. Add your code to the new file.
  4. Save the file by clicking the Save button ![save_icon.png](images/save_icon.png "save_icon.png") on the toolbar.
  5. To complete your project, create more PHP files by repeating steps 1-7.

@@ -92,15 +92,6 @@ Debugging Preferences can be configured from the [Debug Preferences page](../032
 
 See [Debugging](../016-concepts/128-debugging_concept.md) for more information.
 
-### Remote Server Explorer(RSE)
-
-RSE (Remote Server Explorer) provides transparent access to remote resources, including the upload and download of files.
-
- 1. To configure a new connection, open the Servers View, situated at the bottom of the page, click the Connections node and from the right-click menu select **New | New Connections.**
- 2. Use the New Connection dialog to choose the connection type configure your settings and save.
-
-To learn more about working with RSE, see Working with Remote Server Explorer.
-
 ### Perspectives of Interest
 
 To open a perspective go to **Window | Open Perspective**, select "Other" to view a full list of perspectives.
