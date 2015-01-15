@@ -25,17 +25,17 @@ See the Workbench User Guide for more on [Perspectives](PLUGINS_ROOT/org.eclipse
 <br />
 **Note:**
 <br />
-Additional user guides can be accessed from inside PDT by going to **Help | Help Contents**, or from the Eclipse Online Documentation site ([http://help.eclipse.org/ganymede/index.jsp](http://help.eclipse.org/ganymede/index.jsp)).
+Additional user guides can be accessed from inside PDT by going to **Help | Help Contents**, or from the Eclipse Online Documentation site ([http://help.eclipse.org/luna/index.jsp](http://help.eclipse.org/luna/index.jsp)).
 </td></tr>
 <tr><td>Show View</td>
 <td></td>
 <td>Displays a selected view.
 <br />
-See the Workbench User Guide for more on [Views](PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-5.htm) [Views](http://help.eclipse.org/ganymede/index.jsp?topic=/org.eclipse.platform.doc.user/gettingstarted/qs-02e.htm) .
+See the Workbench User Guide for more on [Views](PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-5.htm) and [Views Basic Tutorial](PLUGINS_ROOT/org.eclipse.platform.doc.user/gettingStarted/qs-02e.htm) .
 <br />
 **Note:**
 <br />
-Additional user guides can be accessed from inside PDT by going to **Help | Help Contents**, or from the Eclipse Online Documentation site ([http://help.eclipse.org/ganymede/index.jsp](http://help.eclipse.org/ganymede/index.jsp)).
+Additional user guides can be accessed from inside PDT by going to **Help | Help Contents**, or from the Eclipse Online Documentation site ([http://help.eclipse.org/luna/index.jsp](http://help.eclipse.org/luna/index.jsp)).
 </td></tr>
 <tr><td>Customize Perspective</td>
 <td></td>

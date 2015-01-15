@@ -13,15 +13,15 @@ The Features covered in the Quick Start are:
 
 ### Workbench
 
-The Workbench is a window that displays [Perspectives](http://help.eclipse.org/ganymede/topic/org.eclipse.platform.doc.user/concepts/concepts-4.htm), [Views](http://help.eclipse.org/ganymede/index.jsp?topic=/org.eclipse.platform.doc.user/gettingstarted/qs-02e.htm) and menu bars through which different operations can be performed.
+The Workbench is a window that displays [Perspectives](PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-4.htm), [Views](PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-5.htm?cp=0_2_4) and menu bars through which different operations can be performed.
 
-See the [Workbench](http://help.eclipse.org/ganymede/topic/org.eclipse.platform.doc.user/gettingstarted/qs-02a.htm) topic in the Workbench User Guide for more on using and customizing the Workbench.
+See the [Workbench](PLUGINS_ROOT/org.eclipse.platform.doc.user/gettingStarted/qs-02a.htm) topic in the Workbench User Guide for more on using and customizing the Workbench.
 
 <!--note-start-->
 
 #### Note:
 
-Additional user guides can be accessed from inside PDT by going to **Help | Help Contents**, or from the Eclipse Online Documentation site ([http://help.eclipse.org/ganymede/index.jsp](http://help.eclipse.org/ganymede/index.jsp)).
+Additional user guides can be accessed from inside PDT by going to **Help | Help Contents**, or from the Eclipse Online Documentation site ([http://help.eclipse.org/luna/index.jsp](http://help.eclipse.org/luna/index.jsp)).
 
 <!--note-end-->
 
