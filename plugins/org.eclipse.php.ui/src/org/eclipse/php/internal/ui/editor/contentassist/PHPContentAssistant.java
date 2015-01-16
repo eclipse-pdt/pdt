@@ -34,7 +34,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 public class PHPContentAssistant extends StructuredContentAssistant implements
 		IScriptContentAssistExtension {
 
-	private static final int DEFAULT_AUTO_ACTIVATION_DELAY = 500;
+	private static final int DEFAULT_AUTO_ACTIVATION_DELAY = 200;
 	private int fAutoActivationDelay = DEFAULT_AUTO_ACTIVATION_DELAY;
 
 	private ITextViewer fViewer;
@@ -159,16 +159,12 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 					activation = (char[]) evaluatePrivateMemberMethod(
 							"fContentAssistSubjectControlAdapter", "getCompletionProposalAutoActivationCharacters", new Class[] { ContentAssistant.class, int.class }, new Object[] { PHPContentAssistant.super, pos }); //$NON-NLS-1$ //$NON-NLS-2$
 					activated = contains(activation, e.character);
-				} else {
-					if (e.character == 0x3E && document.getChar(pos - 1) != '-') {// '>'
-																					// will
-																					// not
-																					// trigger
-																					// proposal
-																					// popuped
-						stop();
-						return;
-					}
+				} else
+				// just '>' or just '-' will not trigger proposal pop-up
+				if ((e.character == '>' && document.getChar(pos - 1) != '-')
+						|| (e.character == '-')) {
+					stop();
+					return;
 				}
 				int showStyle;
 				if (activated && !isProposalPopupActive()) {

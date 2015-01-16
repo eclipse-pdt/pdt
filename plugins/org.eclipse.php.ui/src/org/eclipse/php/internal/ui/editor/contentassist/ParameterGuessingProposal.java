@@ -38,7 +38,6 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.template.contentassist.PositionBasedCompletionProposal;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
 
 /**
@@ -340,7 +339,6 @@ public final class ParameterGuessingProposal extends
 		boolean noOverwrite = prefs.getBoolean(
 				PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true)
 				^ isToggleEating();
-		System.out.println(noOverwrite);
 		char[] completion = fProposal.getCompletion().toCharArray();
 		return !isInDoc() && completion.length > 0
 				&& (noOverwrite || completion[completion.length - 1] == ')');
