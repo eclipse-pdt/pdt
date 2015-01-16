@@ -325,8 +325,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			PHPHeuristicScanner scanner = PHPHeuristicScanner
 					.createHeuristicScanner(document, offset, true);
 			if (IndentationUtils.inBracelessBlock(scanner, document, offset)) {
-				// lineState.inBracelessBlock = true;
-				if (!"{".equals(commandText)) { //$NON-NLS-1$
+				// TODO Remove whole when if statement when old formatter will
+				// be removed
+				if (!"{".equals(commandText) && !enterKeyPressed) { //$NON-NLS-1$
 					indent(document, result,
 							indentationObject.getIndentationChar(),
 							indentationObject.getIndentationSize());
