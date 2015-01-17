@@ -76,6 +76,12 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	protected List<ASTNode> deferredDeclarations = new LinkedList<ASTNode>();
 
 	/**
+	 * Deferred elements that where declared in method/function but should
+	 * belong to the namespaced scope.
+	 */
+	protected List<ASTNode> deferredNamespacedDeclarations = new LinkedList<ASTNode>();
+
+	/**
 	 * This stack contains a set per method, where each set contains all global
 	 * variables names delcared through 'global' keyword inside this method.
 	 */
@@ -192,6 +198,18 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	public boolean endvisit(TypeDeclaration type) throws Exception {
 		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
+			while (deferredNamespacedDeclarations != null
+					&& !deferredNamespacedDeclarations.isEmpty()) {
+				final ASTNode[] declarations = deferredNamespacedDeclarations
+						.toArray(new ASTNode[deferredNamespacedDeclarations
+								.size()]);
+				deferredNamespacedDeclarations.clear();
+
+				for (ASTNode deferred : declarations) {
+					deferred.traverse(this);
+				}
+			}
+
 			fCurrentNamespace = null; // there are no nested namespaces
 			fCurrentQualifier = null;
 			fLastUseParts.clear();
@@ -234,7 +252,11 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		// list
 		// and get out of the nested element visiting process
 		if (parentDeclaration instanceof MethodDeclaration) {
-			deferredDeclarations.add(method);
+			if (fCurrentNamespace == null) {
+				deferredDeclarations.add(method);
+			} else {
+				deferredNamespacedDeclarations.add(method);
+			}
 			return visitGeneral(method);
 		}
 
@@ -394,7 +416,11 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 		// In case we are entering a nested element
 		if (parentDeclaration instanceof MethodDeclaration) {
-			deferredDeclarations.add(type);
+			if (fCurrentNamespace == null) {
+				deferredDeclarations.add(type);
+			} else {
+				deferredNamespacedDeclarations.add(type);
+			}
 			return visitGeneral(type);
 		}
 
