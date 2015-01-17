@@ -1,0 +1,17 @@
+--TEST--
+Test namespace nested function
+--FILE--
+<?php
+namespace A;
+function foo() {
+	class B {
+    	
+	}
+}
+
+?>
+--EXPECT--
+FILE: test.php
+	NAMESPACE: A
+		FUNCTION: foo
+		CLASS: B
