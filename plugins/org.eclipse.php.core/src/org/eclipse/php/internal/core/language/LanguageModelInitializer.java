@@ -23,8 +23,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
-import org.eclipse.dltk.core.search.indexing.IndexManager;
-import org.eclipse.dltk.internal.core.ModelManager;
+import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
 import org.eclipse.php.core.language.ILanguageModelProvider;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -286,12 +285,10 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 			}
 		}
 
-		final IndexManager indexManager = ModelManager.getModelManager()
-				.getIndexManager();
 		final IFileSystem efs = EFS.getLocalFileSystem();
 
 		for (IPath path : toDrop) {
-			indexManager.removeIndex(path);
+			ProjectIndexerManager.removeProject(path);
 			efs.getStore(EnvironmentPathUtils.getLocalPath(path)).delete(
 					EFS.NONE, monitor);
 		}
