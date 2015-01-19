@@ -8,6 +8,12 @@
  * Contributors:
  *     Dawid Pakuła - initial API and implementation
  *******************************************************************************/
+// JDK >= 8 support:
+var version = java.lang.System.getProperty("java.version").split(".");
+if (parseInt(version[0]) == 1 && parseInt(version[1]) > 7) {
+    load("nashorn:mozilla_compat.js");
+}
+
 importPackage(Packages.org.apache.tools.ant.types);
 importClass(java.io.File);
 importClass(java.util.Scanner);
