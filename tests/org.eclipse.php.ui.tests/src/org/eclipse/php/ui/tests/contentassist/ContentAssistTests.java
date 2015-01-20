@@ -72,7 +72,8 @@ public class ContentAssistTests {
 		TESTS.put(PHPVersion.PHP5,
 				new String[] { "/workspace/codeassist/php5" });
 		TESTS.put(PHPVersion.PHP5_3, new String[] {
-				"/workspace/codeassist/php5", "/workspace/codeassist/php53" });
+				"/workspace/codeassist/php5", "/workspace/codeassist/php53",
+				"/workspace/codeassist/php53/classExclusive" });
 		TESTS.put(PHPVersion.PHP5_6, new String[] {
 				"/workspace/codeassist/php5", "/workspace/codeassist/php53",
 				"/workspace/codeassist/php56" });

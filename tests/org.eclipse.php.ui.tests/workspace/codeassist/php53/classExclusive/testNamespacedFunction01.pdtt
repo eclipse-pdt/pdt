@@ -1,0 +1,26 @@
+--TEST--
+Test CA with global const for PHP lover then 5.6
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+namespace Test\Tor
+{
+    function myFunction($param) {
+    }
+}
+namespace Foo
+{
+    myFunct|
+}
+--EXPECT--
+<?php
+namespace Test\Tor
+{
+    function myFunction($param) {
+    }
+}
+namespace Foo
+{
+    \Test\Tor\myFunction($param)
+}
