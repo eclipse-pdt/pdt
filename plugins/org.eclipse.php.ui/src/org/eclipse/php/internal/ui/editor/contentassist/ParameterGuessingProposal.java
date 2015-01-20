@@ -94,11 +94,16 @@ public final class ParameterGuessingProposal extends
 		try {
 			dealPrefix();
 			dealSuffix(document, offset);
+
+			// TODO lengthChange is workaround for replacement string changed by
+			// super class, this needs better solution
+			int lengthChange = getReplacementString().length();
 			super.apply(document, trigger, offset);
+			lengthChange = Math.max(0, getReplacementString().length()
+					- lengthChange);
 
 			int baseOffset = getReplacementOffset();
 			String replacement = getReplacementString();
-
 			if (fPositions != null && fPositions.length > 0
 					&& getTextViewer() != null) {
 
@@ -106,7 +111,8 @@ public final class ParameterGuessingProposal extends
 
 				for (int i = 0; i < fPositions.length; i++) {
 					LinkedPositionGroup group = new LinkedPositionGroup();
-					int positionOffset = fPositions[i].getOffset();
+					int positionOffset = fPositions[i].getOffset()
+							+ lengthChange;
 					int positionLength = fPositions[i].getLength();
 
 					if (fChoices[i].length < 2) {
@@ -269,11 +275,6 @@ public final class ParameterGuessingProposal extends
 	 */
 	protected boolean needsLinkedMode() {
 		return false; // we handle it ourselves
-	}
-
-	public String getReplacementString() {
-
-		return super.getReplacementString();
 	}
 
 	private String computeReplacementString(String prefix) {

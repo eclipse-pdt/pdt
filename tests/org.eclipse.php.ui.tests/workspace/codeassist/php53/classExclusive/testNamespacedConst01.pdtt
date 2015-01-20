@@ -1,0 +1,24 @@
+--TEST--
+Test CA with global const for PHP lover then 5.6
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+namespace Test\Tor
+{
+    const BAXR = 1;
+}
+namespace Foo
+{
+    BAX|
+}
+--EXPECT--
+<?php
+namespace Test\Tor
+{
+    const BAXR = 1;
+}
+namespace Foo
+{
+    \Test\Tor\BAXR
+}
