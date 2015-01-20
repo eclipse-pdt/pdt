@@ -1563,7 +1563,7 @@ PHP_ASP_END=%>
 		yybegin(ST_PI);
 		return XML_PI_OPEN;
 	} else if ("<?=".equals(yytext()) //$NON-NLS-1$
-	        && PHPVersion.PHP5_3.isLessThan(phpVersion)
+	        && !PHPVersion.PHP5_3.isLessThan(phpVersion)
 	        && !ProjectOptions.useShortTags(project) ) {
 	    yybegin(ST_PI);
         return XML_PI_OPEN;
