@@ -230,7 +230,7 @@ public class XDebugCommunicationDaemon extends
 		if (session.getSessionId() == null && !multiSession) {
 			// non multisession web launch
 			target = new DBGpTarget(remoteLaunch, null, null,
-					session.getIdeKey(), stopAtFirstLine, null);
+					session.getIdeKey(), null, stopAtFirstLine);
 
 			// try to locate a relevant server definition so we can get its path
 			// mapper
@@ -277,7 +277,7 @@ public class XDebugCommunicationDaemon extends
 			// we are a multisession web launch
 			DBGpMultiSessionTarget multiSessionTarget = new DBGpMultiSessionTarget(
 					remoteLaunch, null, null, session.getIdeKey(),
-					stopAtFirstLine, null);
+					stopAtFirstLine);
 			DBGpSessionHandler.getInstance().addSessionListener(
 					(IDBGpSessionListener) multiSessionTarget);
 			remoteLaunch.addDebugTarget(multiSessionTarget);
