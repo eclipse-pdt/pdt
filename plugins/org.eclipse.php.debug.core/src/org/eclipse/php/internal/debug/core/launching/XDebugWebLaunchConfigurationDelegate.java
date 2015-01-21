@@ -172,13 +172,13 @@ public class XDebugWebLaunchConfigurationDelegate extends
 			// session manager
 			if (XDebugPreferenceMgr.useMultiSession() == true) {
 				target = new DBGpMultiSessionTarget(launch, launchScript,
-						startStopURLs[1], ideKey, stopAtFirstLine, browser[0]);
+						startStopURLs[1], ideKey, stopAtFirstLine);
 				target.setPathMapper(PathMapperRegistry.getByServer(server));
 				launch.addDebugTarget(target); // has to be added now, not
 												// later.
 			} else {
 				target = new DBGpTarget(launch, launchScript, startStopURLs[1],
-						ideKey, stopAtFirstLine, browser[0]);
+						ideKey, null, stopAtFirstLine);
 				target.setPathMapper(PathMapperRegistry.getByServer(server));
 			}
 			DBGpSessionHandler.getInstance().addSessionListener(

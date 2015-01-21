@@ -11,9 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -46,8 +48,6 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.browser.IWebBrowser;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -67,9 +67,6 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 	// required for EXE target support
 	private IProcess process;
-
-	// required for Web target support
-	private IWebBrowser browser;
 
 	private String stopDebugURL;
 
@@ -182,7 +179,6 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		this.sessionID = sessionID;
 		this.process = null; // this will be set later
 		this.stopDebugURL = null; // never set
-		this.browser = null; // never set
 	}
 
 	/**
@@ -195,18 +191,16 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @param stopAtStart
 	 */
 	public DBGpTarget(ILaunch launch, String workspaceRelativeScript,
-			String stopDebugURL, String ideKey, boolean stopAtStart,
-			IWebBrowser browser) {
+			String stopDebugURL, String ideKey, String sessionID,
+			boolean stopAtStart) {
 		this();
 		this.stopAtStart = stopAtStart;
 		this.launch = launch;
 		this.projectScript = workspaceRelativeScript;
 		this.ideKey = ideKey;
 		this.webLaunch = true;
-		this.sessionID = null; // in the web launch we have no need for the
-		// session ID.
+		this.sessionID = sessionID;
 		this.stopDebugURL = stopDebugURL;
-		this.browser = browser;
 		this.process = null;
 	}
 
@@ -626,28 +620,24 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	}
 
 	/**
-	 * 
-	 * 
+	 * Sends stop debug session URL.
 	 */
 	private void sendStopDebugURL() {
 		if (stopDebugURL == null) {
 			return;
 		}
-
 		try {
-			if (browser != null) {
-				DBGpLogger
-						.debug("browser is not null, sending " + stopDebugURL); //$NON-NLS-1$
-				browser.openURL(new URL(stopDebugURL));
-			} else {
-				DBGpUtils.openInternalBrowserView(stopDebugURL);
+			DBGpLogger.debug("browser is not null, sending " + stopDebugURL); //$NON-NLS-1$
+			URL url = new URL(stopDebugURL);
+			try {
+				URLConnection connection = url.openConnection();
+				connection.connect();
+			} catch (IOException e) {
+				DBGpLogger.logException(
+						"Failed to send stop XDebug session URL: " + stopDebugURL, this, e); //$NON-NLS-1$
 			}
-		} catch (PartInitException e) {
-			DBGpLogger.logException(
-					"Failed to send stop URL: " + stopDebugURL, this, e); //$NON-NLS-1$
 		} catch (MalformedURLException e) {
-			// this should never happen, if it does I want it in the log
-			// as something will need to be fixed
+			// Should not happen
 			DBGpLogger.logException(null, this, e);
 		}
 	}
