@@ -12,7 +12,7 @@ package org.eclipse.php.refactoring.core;
 
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
-import org.eclipse.dltk.corext.SourceRange;
+import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.dltk.internal.corext.refactoring.base.ScriptStatusContext;
 
 public class SourceModuleSourceContext extends ScriptStatusContext {

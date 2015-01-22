@@ -91,23 +91,24 @@ public class LinkedNodeFinder {
 			}
 		}
 
-		return (OccurrenceLocation[]) locationList.toArray();
+		return locationList
+				.toArray(new OccurrenceLocation[locationList.size()]);
 	}
 
 	public static Identifier[] findByBinding(ASTNode root,
 			IVariableBinding binding) {
-		ArrayList res = new ArrayList();
+		ArrayList<Identifier> res = new ArrayList<Identifier>();
 		BindingFinder nodeFinder = new BindingFinder(binding, res);
 		root.accept(nodeFinder);
-		return (Identifier[]) res.toArray(new Identifier[res.size()]);
+		return res.toArray(new Identifier[res.size()]);
 	}
 
 	private static class BindingFinder extends AbstractVisitor {
 
 		private IBinding fBinding;
-		private ArrayList fResult;
+		private ArrayList<Identifier> fResult;
 
-		public BindingFinder(IBinding binding, ArrayList result) {
+		public BindingFinder(IBinding binding, ArrayList<Identifier> result) {
 			fBinding = binding;
 			fResult = result;
 		}
