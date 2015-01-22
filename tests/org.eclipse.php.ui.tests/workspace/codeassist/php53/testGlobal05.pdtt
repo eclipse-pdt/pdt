@@ -1,0 +1,14 @@
+--TEST--
+Test CA proposal for global elements
+--FILE--
+<?php
+namespace Foo;
+
+$d = new \DateTime();
+$d->ad|
+--EXPECT--
+<?php
+namespace Foo;
+
+$d = new \DateTime();
+$d->add($interval)

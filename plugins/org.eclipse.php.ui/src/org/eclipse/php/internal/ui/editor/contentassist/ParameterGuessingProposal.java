@@ -23,7 +23,6 @@ import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.link.*;
-import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -185,12 +184,15 @@ public final class ParameterGuessingProposal extends
 		IType type = method.getDeclaringType();
 		boolean isInNamespace = PHPModelUtils.getCurrentNamespaceIfAny(
 				fSourceModule, getReplacementOffset()) != null;
-		boolean globalType = PHPModelUtils.getCurrentNamespace(type) == null;
+
 		boolean isNotAlias = !(type instanceof AliasType);
+		boolean isNamespacedType = PHPModelUtils.getCurrentNamespace(type) != null;
+
 		try {
-			int flags = type == null ? 0 : type.getFlags();
-			if (!PHPFlags.isNamespace(flags)
-					&& globalType
+			boolean globalMethod = (type == null && method.getNamespace() == null)
+					|| (type != null && !isNamespacedType && method
+							.isConstructor());
+			if (globalMethod
 					&& isInNamespace
 					&& isNotAlias
 					&& document.getChar(getReplacementOffset() - 1) != NamespaceReference.NAMESPACE_SEPARATOR) {
