@@ -39,6 +39,7 @@ public class PHPContentAssistOptionsConfigurationBlock extends
 	protected Button showVariableFromReferencedFilesCheckBox;
 	protected Button insertFullyQualifiedNameForNamespaceCheckBox;
 	protected Button fInsertParameterNamesRadioButton;
+	protected Button fPrefixGlobalFunctionCallRadioButton;
 
 	public void setCompositeAddon(Composite parent) {
 		Composite composite = createSubsection(parent,
@@ -101,6 +102,11 @@ public class PHPContentAssistOptionsConfigurationBlock extends
 				composite,
 				PHPUIMessages.CodeAssistPreferencePage_fillParameterNamesOnMethodCompletion,
 				PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, 0);
+
+		fPrefixGlobalFunctionCallRadioButton = addCheckBox(
+				composite,
+				PHPUIMessages.CodeAssistPreferencePage_insertGlobalPrefixForFunctionCallInsideNamespace,
+				PHPCoreConstants.CODEASSIST_PREFIX_GLOBAL_FUNCTION_CALL, 0);
 	}
 
 	protected void initializeValues() {

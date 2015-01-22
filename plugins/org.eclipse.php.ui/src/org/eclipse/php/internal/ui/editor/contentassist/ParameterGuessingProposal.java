@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.core.*;
@@ -189,10 +190,10 @@ public final class ParameterGuessingProposal extends
 		boolean isNamespacedType = PHPModelUtils.getCurrentNamespace(type) != null;
 
 		try {
-			boolean globalMethod = (type == null && method.getNamespace() == null)
-					|| (type != null && !isNamespacedType && method
-							.isConstructor());
-			if (globalMethod
+			boolean globalMethod = (type == null && method.getNamespace() == null);
+			boolean globalConstructor = type != null && !isNamespacedType
+					&& method.isConstructor();
+			if (((globalMethod && prefixGlobalFunctionCall()) || globalConstructor)
 					&& isInNamespace
 					&& isNotAlias
 					&& document.getChar(getReplacementOffset() - 1) != NamespaceReference.NAMESPACE_SEPARATOR) {
@@ -204,6 +205,12 @@ public final class ParameterGuessingProposal extends
 			PHPUiPlugin.log(e);
 		}
 		return false;
+	}
+
+	private boolean prefixGlobalFunctionCall() {
+		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
+				PHPCoreConstants.CODEASSIST_PREFIX_GLOBAL_FUNCTION_CALL, false,
+				null);
 	}
 
 	private void dealSuffix(IDocument document, int offset) {

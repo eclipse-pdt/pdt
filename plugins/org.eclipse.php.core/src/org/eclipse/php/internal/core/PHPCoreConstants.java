@@ -138,6 +138,18 @@ public interface PHPCoreConstants {
 	public final static String CODEASSIST_FILL_ARGUMENT_NAMES = "contentAssistFillMethodArguments"; //$NON-NLS-1$
 
 	/**
+	 * A named preference that controls if global prefix ("\") should be
+	 * inserted for global function call inside namespace method is selected
+	 * from as list of code assist proposal.
+	 * <p>
+	 * Value is of type <code>Boolean</code>.
+	 * </p>
+	 * 
+	 * @since 3.4.0
+	 */
+	public final static String CODEASSIST_PREFIX_GLOBAL_FUNCTION_CALL = "contentAssistPrefixGlobalFunctionCall"; //$NON-NLS-1$
+
+	/**
 	 * A named preference that controls if code assist also contains proposals
 	 * of class/method/field stub which does not exist,and when user choose it,a
 	 * new class/method/field will be inserted

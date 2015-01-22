@@ -999,6 +999,7 @@ public final class PHPUIMessages extends NLS {
 	public static String CodeTemplateBlock_templates_edit_button;
 
 	public static String CodeAssistPreferencePage_showVariablesFromReferencedFiles;
+	public static String CodeAssistPreferencePage_insertGlobalPrefixForFunctionCallInsideNamespace;
 
 	public static String PHPUiPlugin_4;
 	public static String PHPUiPlugin_5;

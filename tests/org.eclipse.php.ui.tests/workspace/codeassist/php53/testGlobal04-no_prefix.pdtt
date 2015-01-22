@@ -1,7 +1,7 @@
 --TEST--
 Test CA proposal for global elements
 --PREFERENCES--
-org.eclipse.php.core/contentAssistPrefixGlobalFunctionCall=true
+org.eclipse.php.core/contentAssistPrefixGlobalFunctionCall=false
 --FILE--
 <?php
 namespace Foo;
@@ -11,4 +11,4 @@ str_w|
 <?php
 namespace Foo;
 
-\str_word_count($string)
+str_word_count($string)
