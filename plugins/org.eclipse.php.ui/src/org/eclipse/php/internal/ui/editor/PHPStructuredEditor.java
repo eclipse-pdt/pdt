@@ -296,6 +296,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 	private boolean saveActionsEnabled = false;
 	private boolean saveActionsIgnoreEmptyLines = false;
+	private boolean formatOnSaveEnabled = false;
 
 	/**
 	 * The override and implements indicator manager for this editor.
@@ -436,7 +437,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 	private void doSelectionChanged(ISelection selection) {
 		ISourceReference reference = null;
-		Iterator iter = ((IStructuredSelection) selection).iterator();
+		Iterator<?> iter = ((IStructuredSelection) selection).iterator();
 		while (iter.hasNext()) {
 			Object o = iter.next();
 			if (o instanceof ISourceReference) {
@@ -2468,7 +2469,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 	OutlineSelectionChangedListener fPHPOutlinePageListener;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("restriction")
 	public Object getAdapter(Class required) {
 
 		Object adapter = super.getAdapter(required);
@@ -3525,9 +3526,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				.getPreferencesValue(
 						PreferenceConstants.FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY,
 						null, project);
+		String formatOnSavePref = prefSupport.getPreferencesValue(
+				PreferenceConstants.FORMAT_ON_SAVE, null, project);
 
 		saveActionsEnabled = Boolean.parseBoolean(doCleanupPref);
 		saveActionsIgnoreEmptyLines = Boolean.parseBoolean(ignoreEmptyPref);
+		formatOnSaveEnabled = Boolean.parseBoolean(formatOnSavePref);
 	}
 
 	/*
@@ -3568,6 +3572,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				Logger.logException(e);
 			}
 		}
+
+		if (formatOnSaveEnabled) {
+			getTextViewer()
+					.doOperation(PHPStructuredTextViewer.FORMAT_DOCUMENT);
+		}
+
 		super.doSave(progressMonitor);
 	}
 

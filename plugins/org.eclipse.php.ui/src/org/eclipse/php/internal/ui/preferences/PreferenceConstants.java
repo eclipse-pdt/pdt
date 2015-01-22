@@ -988,6 +988,7 @@ public class PreferenceConstants {
 	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES = "cleanup.remove_trailing_whitespaces"; //$NON-NLS-1$
 	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES_ALL = "cleanup.remove_trailing_whitespaces_all"; //$NON-NLS-1$
 	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY = "cleanup.remove_trailing_whitespaces_ignore_empty"; //$NON-NLS-1$
+	public static final String FORMAT_ON_SAVE = "cleanup.format.on.save"; //$NON-NLS-1$
 	public static final String PREF_OUTLINEMODE = "ChangeOutlineModeAction.selectedMode"; //$NON-NLS-1$
 
 	/**
@@ -1212,6 +1213,7 @@ public class PreferenceConstants {
 		store.setDefault(FORMAT_REMOVE_TRAILING_WHITESPACES, false);
 		store.setDefault(FORMAT_REMOVE_TRAILING_WHITESPACES_ALL, true);
 		store.setDefault(FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY, false);
+		store.setDefault(FORMAT_ON_SAVE, false);
 
 		// default php outline mode
 		store.setDefault(PREF_OUTLINEMODE,

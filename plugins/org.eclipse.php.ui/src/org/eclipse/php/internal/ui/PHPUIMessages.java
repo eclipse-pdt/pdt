@@ -949,6 +949,8 @@ public final class PHPUIMessages extends NLS {
 	public static String SaveActionsConfigurationBlock_2;
 	public static String FilterDescriptor_filterCreationError_title;
 	public static String SaveActionsConfigurationBlock_0;
+
+	public static String SaveActionsConfigurationBlock_1;
 	public static String GotoType_dialog_message;
 	public static String CodeTemplateBlock_error_read_title;
 	public static String ConfigureIncludePathAction_label;
