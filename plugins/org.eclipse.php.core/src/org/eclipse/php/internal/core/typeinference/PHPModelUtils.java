@@ -2278,6 +2278,24 @@ public class PHPModelUtils {
 
 	public static String getFullName(IType declaringType) {
 		try {
+			int flags = declaringType.getFlags();
+			if (PHPFlags.isNamespace(flags)) {
+				return declaringType.getElementName();
+			}
+			IModelElement parent = declaringType.getParent();
+			if (parent != null) {
+				if (parent.getElementType() == IModelElement.SOURCE_MODULE) {
+					return declaringType.getElementName();
+				} else if (parent.getElementType() == IModelElement.TYPE
+						&& PHPFlags.isNamespace(((IType) parent).getFlags())) {
+					StringBuilder b = new StringBuilder(parent.getElementName());
+					b.append(NamespaceReference.NAMESPACE_SEPARATOR);
+					b.append(declaringType.getElementName());
+
+					return b.toString();
+				}
+
+			}
 			return getFullName(declaringType.getElementName(),
 					declaringType.getSourceModule(), declaringType
 							.getSourceRange().getOffset());
