@@ -39,6 +39,18 @@ public class PHPEvaluationUtils {
 
 	public static final String BRACKETS_PATTERN = "\\[.*\\]";
 
+	public static String extractArrayType(String typeName) {
+		Matcher m = PHPEvaluationUtils.ARRAY_TYPE_PATTERN.matcher(typeName);
+		if (m.find()) {
+			int beginIndex = typeName.indexOf("[") + 1; //$NON-NLS-1$
+			int endIndex = typeName.lastIndexOf("]"); //$NON-NLS-1$
+			if (endIndex != -1) {
+				return typeName.substring(beginIndex, endIndex);
+			}
+		}
+		return removeArrayBrackets(typeName);
+	}
+
 	public static IEvaluatedType extractArrayType(String typeName,
 			IType currentNamespace, int offset) {
 		if (typeName == null || typeName.isEmpty()) {

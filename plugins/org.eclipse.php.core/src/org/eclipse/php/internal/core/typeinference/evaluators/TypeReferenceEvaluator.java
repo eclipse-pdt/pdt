@@ -122,9 +122,9 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 
 								ASTListNode superClasses = classDecl
 										.getSuperClasses();
-								List childs = superClasses.getChilds();
-								for (Iterator iterator = childs.iterator(); iterator
-										.hasNext();) {
+								List<ASTNode> childs = superClasses.getChilds();
+								for (Iterator<ASTNode> iterator = childs
+										.iterator(); iterator.hasNext();) {
 									ASTNode node = (ASTNode) iterator.next();
 									NamespaceReference namespace = null;
 									SimpleReference reference = null;
@@ -274,8 +274,10 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 						.getFullyQualifiedName();
 			} else {
 				fullyQualifiedName = typeReference.getName();
-				className = PHPModelUtils
-						.extractElementName(fullyQualifiedName);
+
+				className = PHPEvaluationUtils
+						.extractArrayType(fullyQualifiedName);
+				className = PHPModelUtils.extractElementName(className);
 			}
 			ISourceModule sourceModule = ((ISourceModuleContext) context)
 					.getSourceModule();
