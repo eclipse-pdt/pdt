@@ -28,6 +28,8 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String DebuggerConnection_Problem_1;
 	public static String DebuggerConnection_Problem_2;
 	public static String DebuggerConnection_Problem_3;
+	public static String DebuggerConnection_Problem_4;
+	public static String DebuggerConnection_Problem_5;
 	public static String DebuggerConnection_Failed_1;
 	public static String Debugger_Unexpected_Error_1;
 	public static String Debugger_ResourceNotFound;

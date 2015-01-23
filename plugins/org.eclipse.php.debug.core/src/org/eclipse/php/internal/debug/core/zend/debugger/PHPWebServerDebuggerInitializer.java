@@ -282,11 +282,28 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 				inputStream.close();
 			}
 		} catch (UnknownHostException e) {
-			Logger.logException("Unknown host: " + requestURL.getHost(), e); //$NON-NLS-1$
+			String errorMessage = PHPDebugCoreMessages.DebuggerConnection_Problem_4
+					+ requestURL.getHost();
+			Logger.logException(errorMessage, e);
+			throw new DebugException(new Status(IStatus.ERROR,
+					PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR,
+					errorMessage, e));
 		} catch (ConnectException e) {
-			Logger.logException("Unable to connect to URL " + requestURL, e); //$NON-NLS-1$
+			String errorMessage = PHPDebugCoreMessages.DebuggerConnection_Problem_5
+					+ requestURL.toString().substring(0,
+							requestURL.toString().indexOf('?'));
+			Logger.logException(errorMessage, e);
+			throw new DebugException(new Status(IStatus.ERROR,
+					PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR,
+					errorMessage, e));
 		} catch (IOException e) {
-			Logger.logException("Unable to connect to URL " + requestURL, e); //$NON-NLS-1$
+			String errorMessage = PHPDebugCoreMessages.DebuggerConnection_Problem_5
+					+ requestURL.toString().substring(0,
+							requestURL.toString().indexOf('?'));
+			Logger.logException(errorMessage, e);
+			throw new DebugException(new Status(IStatus.ERROR,
+					PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR,
+					errorMessage, e));
 		} catch (Exception e) {
 			Logger.logException(
 					"Unexpected exception communicating with Web server", e); //$NON-NLS-1$
