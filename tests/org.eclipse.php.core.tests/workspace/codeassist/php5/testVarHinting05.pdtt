@@ -1,0 +1,22 @@
+--TEST--
+Test local Var Hinting
+--FILE--
+<?php
+class MyObject1 {
+
+    public function foo1() {
+    }
+}
+class MyObject2 {
+
+    public function foo2() {
+    }
+}
+/**
+ * From 'my_vars.php'
+ * @var $liste3 MyObject1[]|MyObject2[]
+ */
+$liste3[0]->|
+--EXPECT--
+method(foo1)
+method(foo2)
