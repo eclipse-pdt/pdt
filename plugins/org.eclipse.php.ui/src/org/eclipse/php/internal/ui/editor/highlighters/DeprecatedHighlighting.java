@@ -82,6 +82,62 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 			return true;
 		}
 
+		@Override
+		public boolean visit(StaticConstantAccess staticConstantAccess) {
+			ITypeBinding type = staticConstantAccess.getClassName()
+					.resolveTypeBinding();
+
+			if (type != null && ModelUtils.isDeprecated(type.getPHPElement())) {
+				highlight(staticConstantAccess.getClassName());
+			}
+
+			String fieldName = staticConstantAccess.getConstant().getName();
+			if (type != null && fieldName != null) {
+				IVariableBinding[] fields = type.getDeclaredFields();
+				for (IVariableBinding field : fields) {
+					if (field.getName().toLowerCase()
+							.equals(fieldName.toLowerCase())) {
+						if (ModelUtils.isDeprecated(field.getPHPElement())) {
+							highlight(staticConstantAccess.getConstant());
+						}
+						break;
+					}
+				}
+			}
+
+			return super.visit(staticConstantAccess);
+		}
+
+		@Override
+		public boolean visit(StaticFieldAccess staticFieldAccess) {
+			ITypeBinding type = staticFieldAccess.getClassName()
+					.resolveTypeBinding();
+
+			if (type != null && ModelUtils.isDeprecated(type.getPHPElement())) {
+				highlight(staticFieldAccess.getClassName());
+			}
+
+			String fieldName = null;
+			if (staticFieldAccess.getField().getName() instanceof Identifier) {
+				fieldName = ((Identifier) staticFieldAccess.getField()
+						.getName()).getName();
+			}
+
+			if (type != null && fieldName != null) {
+				IVariableBinding[] fields = type.getDeclaredFields();
+				for (IVariableBinding field : fields) {
+					if (field.getName().substring(1).toLowerCase()
+							.equals(fieldName.toLowerCase())) {
+						if (ModelUtils.isDeprecated(field.getPHPElement())) {
+							highlight(staticFieldAccess.getField());
+						}
+					}
+				}
+			}
+			return super.visit(staticFieldAccess);
+		}
+
+		@Override
 		public boolean visit(FieldAccess fieldAccess) {
 			IField field = ModelUtils.getField(fieldAccess);
 			if (field != null && ModelUtils.isDeprecated(field)) {
@@ -90,6 +146,7 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 			return true;
 		}
 
+		@Override
 		public boolean visit(MethodInvocation methodInv) {
 			IMethod method = ModelUtils.getMethod(methodInv);
 			if (method != null && ModelUtils.isDeprecated(method)) {
@@ -98,6 +155,7 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 			return true;
 		}
 
+		@Override
 		public boolean visit(FunctionInvocation funcInv) {
 			if ((funcInv.getParent() instanceof StaticMethodInvocation)) {
 				StaticMethodInvocation methodInvocation = (StaticMethodInvocation) funcInv

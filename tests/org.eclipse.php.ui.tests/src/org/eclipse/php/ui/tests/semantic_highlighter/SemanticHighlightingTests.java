@@ -33,11 +33,11 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.Position;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -152,9 +152,13 @@ public class SemanticHighlightingTests {
 		createFile(new ByteArrayInputStream(pdttFile.getFile().getBytes()));
 		ISourceModule module = getSourceModule();
 		assertNotNull(module);
+
 		String index = fileName.substring(fileName.lastIndexOf('/') + 1,
 				fileName.indexOf('.'));
-		// System.err.println(index);
+		int endIndex = index.indexOf('-');
+		if (endIndex != -1) {
+			index = index.substring(0, endIndex);
+		}
 		AbstractSemanticHighlighting highlighter = highlighters.get(index);
 		assertNotNull(highlighter);
 		Program program = getProgram(module);

@@ -1,0 +1,42 @@
+--TEST--
+Test Deprecated Semantic highlighting
+--FILE--
+<?php
+/**
+ * @deprecated
+ */
+class Test
+{
+    /**
+     * @deprecated
+     */
+    const TYU = 1;
+
+    /**
+     * @deprecated
+     */
+    public static $foo;
+
+    /**
+     * @deprecated
+     */
+    public static function bar()
+    {}
+}
+
+Test::TYU; 
+Test::$foo;
+Test::bar();
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.DeprecatedHighlighting:
+highlight(Test)
+highlight(TYU)
+highlight($foo)
+highlight(bar)
+highlight(Test)
+highlight(TYU)
+highlight(Test)
+highlight($foo)
+highlight(Test)
+highlight(bar)
