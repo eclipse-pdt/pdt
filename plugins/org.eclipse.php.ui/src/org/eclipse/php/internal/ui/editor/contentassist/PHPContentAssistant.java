@@ -165,6 +165,14 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 						|| (e.character == '-')) {
 					stop();
 					return;
+
+				} else
+				// Bug 458285 - do not run auto assist with empty identifier
+				if (Character.isWhitespace(e.character)
+						|| (e.character == '\\' && Character
+								.isWhitespace(document.getChar(pos - 1)))) {
+					stop();
+					return;
 				}
 				int showStyle;
 				if (activated && !isProposalPopupActive()) {
