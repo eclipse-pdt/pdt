@@ -184,7 +184,22 @@ public class PHPCompletionProposalLabelProvider extends
 			AliasField aliasField = (AliasField) proposal.getModelElement();
 			return aliasField.getAlias();
 		}
-		return super.createFieldProposalLabel(proposal);
+		IModelElement element = proposal.getModelElement();
+		if (element != null && element.getElementType() == IModelElement.FIELD) {
+			final IField field = (IField) element;
+			try {
+				String type = field.getType();
+				if (type != null) {
+					StringBuilder sb = new StringBuilder(proposal.getName());
+					sb.append(getReturnTypeSeparator());
+					sb.append(type);
+					return sb.toString();
+				}
+			} catch (ModelException e) {
+				// ignore
+			}
+		}
+		return proposal.getName();
 	}
 
 	@Override

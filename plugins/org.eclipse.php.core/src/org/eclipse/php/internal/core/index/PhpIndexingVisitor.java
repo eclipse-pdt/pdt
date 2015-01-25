@@ -45,6 +45,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 
 /**
@@ -165,22 +166,38 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 							buf.append(type);
 						}
 						info.put("r", buf.toString()); //$NON-NLS-1$
+					} else if (tag.getTagKind() == PHPDocTag.VAR) {
+						SimpleReference[] references = tag.getReferences();
+						if (references.length > 0) {
+							info.put("v", //$NON-NLS-1$
+									PHPModelUtils
+											.extractElementName(references[0]
+													.getName()));
+						}
 					}
 				}
-				StringBuilder buf = new StringBuilder();
-				for (Entry<String, String> e : info.entrySet()) {
-					if (buf.length() > 0) {
-						buf.append(';');
-					}
-					buf.append(e.getKey());
-					if (e.getValue() != null) {
-						buf.append(':').append(e.getValue());
-					}
-				}
-				return buf.length() > 0 ? buf.toString() : null;
+				return encodeDocInfo(info);
 			}
 		}
 		return null;
+	}
+
+	protected static String encodeDocInfo(Map<String, String> info) {
+		if (info == null) {
+			return null;
+		}
+
+		StringBuilder buf = new StringBuilder();
+		for (Entry<String, String> e : info.entrySet()) {
+			if (buf.length() > 0) {
+				buf.append(';');
+			}
+			buf.append(e.getKey());
+			if (e.getValue() != null) {
+				buf.append(':').append(e.getValue());
+			}
+		}
+		return buf.length() > 0 ? buf.toString() : null;
 	}
 
 	public boolean endvisit(MethodDeclaration method) throws Exception {
@@ -548,10 +565,15 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						String name = removeParenthesis(split);
 						int offset = docTag.sourceStart();
 						int length = docTag.sourceStart() + 9;
+
+						Map<String, String> info = new HashMap<String, String>();
+						info.put("v", split[0]); //$NON-NLS-1$
+
 						modifyDeclaration(null, new DeclarationInfo(
 								IModelElement.FIELD, Modifiers.AccPublic,
 								offset, length, offset, length, name, null,
-								null, fCurrentQualifier, fCurrentParent));
+								encodeDocInfo(info), fCurrentQualifier,
+								fCurrentParent));
 
 					} else if (tagKind == PHPDocTag.METHOD) {
 						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
@@ -568,10 +590,14 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						}
 						int offset = docTag.sourceStart();
 						int length = docTag.sourceStart() + 6;
+						Map<String, String> info = new HashMap<String, String>();
+						info.put("r", split[0]); //$NON-NLS-1$
+
 						modifyDeclaration(null, new DeclarationInfo(
 								IModelElement.METHOD, Modifiers.AccPublic,
 								offset, length, offset, length, name, null,
-								null, fCurrentQualifier, fCurrentParent));
+								encodeDocInfo(info), fCurrentQualifier,
+								fCurrentParent));
 					}
 				}
 			}
