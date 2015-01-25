@@ -164,6 +164,15 @@ public class PhpElementResolver implements IElementResolver {
 		public INamespace getNamespace() throws ModelException {
 			return null;
 		}
+
+		@Override
+		public String getType() throws ModelException {
+			Map<String, String> info = decodeDocInfo(doc);
+			if (info != null) {
+				return info.get("v"); //$NON-NLS-1$
+			}
+			return null;
+		}
 	}
 
 	private static class IndexMethod extends SourceMethod implements
