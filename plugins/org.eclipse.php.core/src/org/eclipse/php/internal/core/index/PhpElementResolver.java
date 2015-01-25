@@ -159,6 +159,11 @@ public class PhpElementResolver implements IElementResolver {
 		public String[] getReturnTypes() {
 			return null;
 		}
+
+		@Override
+		public INamespace getNamespace() throws ModelException {
+			return null;
+		}
 	}
 
 	private static class IndexMethod extends SourceMethod implements
@@ -255,6 +260,12 @@ public class PhpElementResolver implements IElementResolver {
 			}
 			return null;
 		}
+
+		@Override
+		public INamespace getNamespace() throws ModelException {
+			return null;
+		}
+
 	}
 
 	private static class IndexType extends SourceType implements
@@ -300,5 +311,11 @@ public class PhpElementResolver implements IElementResolver {
 		public String[] getReturnTypes() {
 			return null;
 		}
+
+		@Override
+		public INamespace getNamespace() throws ModelException {
+			return null;
+		}
+
 	}
 }
