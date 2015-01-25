@@ -118,11 +118,14 @@ public class ProblemHoverProcessor extends AnnotationHoverProcessor {
 				if (!isAnnotationValid(a))
 					continue;
 
-				Position p = model.getPosition(a);
+				Position position = model.getPosition(a);
+				if (position == null)
+					continue;
+
 				// check if this is an annotation in the region we are
 				// concerned with
-				if (p.overlapsWith(hoverRegion.getOffset(), hoverRegion
-						.getLength())) {
+				if (position.overlapsWith(hoverRegion.getOffset(),
+						hoverRegion.getLength())) {
 					String msg = a.getText();
 					if ((msg != null) && msg.trim().length() > 0) {
 						// now we only consider ProblemAnnotation,and sometime

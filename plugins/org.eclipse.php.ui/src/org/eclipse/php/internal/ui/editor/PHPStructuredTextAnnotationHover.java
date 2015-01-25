@@ -101,9 +101,8 @@ public class PHPStructuredTextAnnotationHover extends
 		}
 
 		void insertPageProlog(StringBuffer buffer, int position) {
-			buffer
-					.insert(position,
-							"<html><body text=\"#000000\" bgcolor=\"#FFFF88\"><font size=-1>"); //$NON-NLS-1$
+			buffer.insert(position,
+					"<html><body text=\"#000000\" bgcolor=\"#FFFF88\"><font size=-1>"); //$NON-NLS-1$
 		}
 
 		String read(Reader rd) {
@@ -163,8 +162,7 @@ public class PHPStructuredTextAnnotationHover extends
 					return 1;
 				if (markerLine <= line
 						&& line <= document.getLineOfOffset(position
-								.getOffset()
-								+ position.getLength()))
+								.getOffset() + position.getLength()))
 					return 2;
 			} catch (BadLocationException x) {
 			}
@@ -304,7 +302,11 @@ public class PHPStructuredTextAnnotationHover extends
 			Object o = e.next();
 			if (o instanceof Annotation) {
 				Annotation a = (Annotation) o;
-				if (compareRulerLine(model.getPosition(a), document, line) == 1) {
+				Position position = model.getPosition(a);
+				if (position == null)
+					continue;
+
+				if (compareRulerLine(position, document, line) == 1) {
 					if (a instanceof AnnotationBag) {
 						AnnotationBag bag = (AnnotationBag) a;
 						Iterator iterator = bag.iterator();
