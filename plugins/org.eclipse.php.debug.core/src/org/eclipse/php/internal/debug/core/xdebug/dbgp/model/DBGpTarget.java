@@ -655,8 +655,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 		synchronized (sessionMutex) {
 			session = null;
-			if (STATE_TERMINATING == targetState
-					|| STATE_STARTED_RUNNING == targetState) {
+			if (STATE_TERMINATING == targetState) {
 				// we are terminating, if we are a web launch, we need to issue
 				// the
 				// stop URL, then terminate the debug target.
