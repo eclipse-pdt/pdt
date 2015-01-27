@@ -1,0 +1,36 @@
+--TEST--
+Bug 458446 - Namespace reference start offset is before parent node
+--FILE--
+<?php
+namespace Foo\Bar
+{
+    class Test
+    {
+    }
+}
+namespace XYZ
+{
+    new \Foo\Bar\Test();
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="101">
+	<NamespaceDeclaration start="6" end="54" modifiers="" name="Foo\Bar">
+		<ClassDeclaration start="30" end="52" modifiers="" name="Test">
+		</ClassDeclaration>
+	</NamespaceDeclaration>
+	<NamespaceDeclaration start="55" end="97" modifiers="" name="XYZ">
+		<ExpressionStatement start="75" end="95">
+			<ClassInstanceCreation start="75" end="94">
+				<FullyQualifiedReference start="79" end="92" name="\Foo\Bar\Test">
+					<NamespaceReference start="79" end="87" name="\Foo\Bar" global="true" local="false">
+					</NamespaceReference>
+				</FullyQualifiedReference>
+				<PHPCallArgumentsList start="93" end="93">
+				</PHPCallArgumentsList>
+			</ClassInstanceCreation>
+		</ExpressionStatement>
+	</NamespaceDeclaration>
+	<EmptyStatement start="98" end="100">
+	</EmptyStatement>
+</ModuleDeclaration>
