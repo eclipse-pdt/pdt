@@ -607,8 +607,9 @@ namespace_name:name
 		namespace = new NamespaceReference(sleft, sright, "");
 		name.setNamespace(namespace);
 	}
-		namespace.setGlobal(true);
-		namespace.setStart(namespace.sourceStart() - 1);
+	namespace.setGlobal(true);
+	namespace.setStart(sleft);
+	name.setStart(sleft);
 
 	UsePart usePart = new UsePart(name, null);
 	RESULT = usePart;
@@ -621,8 +622,9 @@ namespace_name:name
 		namespace = new NamespaceReference(sleft, sright, "");
 		name.setNamespace(namespace);
 	}
-		namespace.setGlobal(true);
-		namespace.setStart(namespace.sourceStart() - 1);
+	namespace.setGlobal(true);
+	namespace.setStart(sleft);
+	name.setStart(sleft);
 
 	UsePart usePart = new UsePart(name,
 		new SimpleReference(aliasNameleft, aliasNameright, aliasName));
@@ -2708,8 +2710,9 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 		namespace = new NamespaceReference(sleft, sright, "");
 		functionName.setNamespace(namespace);
 	}
-		namespace.setGlobal(true);
-		namespace.setStart(namespace.sourceStart() - 1);
+	namespace.setGlobal(true);
+	namespace.setStart(sleft);
+	functionName.setStart(sleft);
 	RESULT = new PHPCallExpression(sleft, dereference == null ? endright : dereferenceright, null, functionName, parameters, dereference);
 :}
 
@@ -2788,8 +2791,9 @@ T_STATIC:s
 		namespace = new NamespaceReference(sleft, sright, "");
 		name.setNamespace(namespace);
 	}
-		namespace.setGlobal(true);
-		namespace.setStart(namespace.sourceStart() - 1);
+	namespace.setGlobal(true);
+	namespace.setStart(sleft);
+	name.setStart(sleft);
 	RESULT = name;
 :}
 ;
@@ -2815,8 +2819,9 @@ namespace_name:name
 		namespace = new NamespaceReference(sleft, sright, "");
 		name.setNamespace(namespace);
 	}
-		namespace.setGlobal(true);
-		namespace.setStart(namespace.sourceStart() - 1);
+	namespace.setGlobal(true);
+	namespace.setStart(sleft);
+	name.setStart(sleft);
 	RESULT = name;
 :}
 ;
@@ -3045,8 +3050,9 @@ common_scalar:scalar
 		namespace = new NamespaceReference(sleft, sright, "");
 		name.setNamespace(namespace);
 	}
-		namespace.setGlobal(true);
-		namespace.setStart(namespace.sourceStart() - 1);
+	namespace.setGlobal(true);
+	namespace.setStart(sleft);
+	name.setStart(sleft);
 	RESULT = name;
 :}
 
@@ -3122,8 +3128,9 @@ T_STRING_VARNAME:scalar
 		namespace = new NamespaceReference(sleft, sright, "");
 		name.setNamespace(namespace);
 	}
-		namespace.setGlobal(true);
-		namespace.setStart(namespace.sourceStart() - 1);
+	namespace.setGlobal(true);
+	namespace.setStart(sleft);
+	name.setStart(sleft);
 	RESULT = name;
 :}
 | common_scalar:scalar
