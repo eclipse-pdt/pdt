@@ -45,6 +45,10 @@ public class PHPDebugCoreMessages extends NLS {
 
 	public static String IPHPDebugConstants_0;
 
+	public static String PHPDebugPlugin_PerformingPostStartupOperations;
+
+	public static String PHPDebugPlugin_PostStartup;
+
 	public static String PHPExecutableDebuggerInitializer_6;
 
 	public static String PHPExecutableDebuggerInitializer_7;

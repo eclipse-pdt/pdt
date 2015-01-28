@@ -12,10 +12,12 @@
 package org.eclipse.php.internal.debug.core;
 
 import java.net.MalformedURLException;
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
@@ -45,11 +47,80 @@ import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleEvent;
+import org.osgi.framework.BundleListener;
 
 /**
- * The main plugin class to be used in the desktop.
+ * The PHP Debug plug-in class.
  */
+@SuppressWarnings("restriction")
 public class PHPDebugPlugin extends Plugin {
+
+	/**
+	 * This class is used to start separate non-UI job just right after
+	 * encompassing bundle is started to perform "right-after startup"
+	 * operations. Everything that doesn't need UI thread and is not required to
+	 * be initialized only while starting bundle should be placed here.
+	 */
+	private class PostStart implements BundleListener {
+
+		@Override
+		public void bundleChanged(BundleEvent event) {
+			if (event.getBundle() == getBundle()
+					&& event.getType() == BundleEvent.STARTED) {
+				Job handler = new Job(
+						PHPDebugCoreMessages.PHPDebugPlugin_PostStartup) {
+					@Override
+					protected IStatus run(IProgressMonitor monitor) {
+						// Perform 'Post Startup'
+						try {
+							monitor.beginTask(
+									PHPDebugCoreMessages.PHPDebugPlugin_PerformingPostStartupOperations,
+									IProgressMonitor.UNKNOWN);
+							perform();
+						} catch (Exception e) {
+							Logger.logException(
+									MessageFormat
+											.format("Errors occurred while performing ''{0}'' bundle post startup.", //$NON-NLS-1$
+													ID), e);
+						} finally {
+							// Unregister itself from listeners
+							getBundle().getBundleContext()
+									.removeBundleListener(PostStart.this);
+							monitor.done();
+						}
+						return Status.OK_STATUS;
+					}
+				};
+				// Hide from the user
+				handler.setUser(false);
+				handler.setSystem(true);
+				handler.schedule();
+			}
+		}
+
+		private void perform() {
+			// Set the auto-remove old launches listener
+			IPreferenceStore preferenceStore = DebugUIPlugin.getDefault()
+					.getPreferenceStore();
+			fInitialAutoRemoveLaunches = preferenceStore
+					.getBoolean(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES);
+			preferenceStore
+					.addPropertyChangeListener(new AutoRemoveOldLaunchesListener());
+			org.eclipse.php.internal.server.core.Activator.getDefault();
+			// Create default server
+			createDefaultPHPServer();
+			XDebugPreferenceMgr.setDefaults();
+			XDebugLaunchListener.getInstance();
+			DBGpProxyHandler.instance.configure();
+			/*
+			 * This has to be called as the last operation to start all the
+			 * debugger daemons that handle communication channels
+			 */
+			DaemonPlugin.getDefault();
+		}
+
+	}
 
 	public static final String ID = "org.eclipse.php.debug.core"; //$NON-NLS-1$
 	public static final int INTERNAL_ERROR = 10001;
@@ -67,6 +138,7 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public PHPDebugPlugin() {
 		plugin = this;
+		getBundle().getBundleContext().addBundleListener(new PostStart());
 	}
 
 	public static final boolean DEBUG = Boolean
@@ -78,35 +150,6 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		DaemonPlugin.getDefault();
-		// Set the AutoRemoveOldLaunchesListener
-		IPreferenceStore preferenceStore = DebugUIPlugin.getDefault()
-				.getPreferenceStore();
-		fInitialAutoRemoveLaunches = preferenceStore
-				.getBoolean(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES);
-		preferenceStore
-				.addPropertyChangeListener(new AutoRemoveOldLaunchesListener());
-		org.eclipse.php.internal.server.core.Activator.getDefault(); // TODO -
-		// Check
-		// if
-		// getInstance
-		// is
-		// needed
-		// check for default server
-		createDefaultPHPServer();
-
-		// TODO - XDebug - See if this can be removed and use a preferences
-		// initializer.
-		// It's important the the default setting will occur before loading the
-		// daemons.
-		XDebugPreferenceMgr.setDefaults();
-
-		// Start all the daemons. CODE MOVED TO DAEMON PLUGIN
-		// DaemonPlugin.getDefault().startDaemons(null);
-
-		// TODO - XDebug - See if this can be removed
-		XDebugLaunchListener.getInstance();
-		DBGpProxyHandler.instance.configure();
 	}
 
 	/**
