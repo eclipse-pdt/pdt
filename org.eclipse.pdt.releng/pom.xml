@@ -190,7 +190,7 @@
 		<repository>
 			<id>dltk-tests</id>
 			<layout>p2</layout>
-			<url>https://hudson.eclipse.org/hudson/job/dltk-nightly/lastSuccessfulBuild/artifact/org.eclipse.dltk.releng/build/update.site/target/site/</url>
+			<url>https://hudson.eclipse.org/dltk/job/dltk-nightly/lastSuccessfulBuild/artifact/org.eclipse.dltk.releng/build/update.site/target/repository/</url>
 		</repository>
 		<repository>
 			<id>luna</id>
