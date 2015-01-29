@@ -49,7 +49,7 @@ public class BindingUtility {
 	private Map<SourceRange, IEvaluatedType> evaluatedTypesCache = new HashMap<SourceRange, IEvaluatedType>();
 	private int timeLimit = TIME_LIMIT;
 	private IModelAccessCache modelAccessCache;
-	private IPHPTypeInferencer cachedInferencer = new PHPTypeInferencer();
+	private IPHPTypeInferencer cachedInferencer = null;
 
 	/**
 	 * Creates new instance of binding utility.
@@ -158,11 +158,14 @@ public class BindingUtility {
 		return getType(new SourceRange(startOffset, length));
 	}
 
+	protected IPHPTypeInferencer getTypeInferencer() {
+		return cachedInferencer == null ? new PHPTypeInferencer()
+				: cachedInferencer;
+	}
+
 	protected IEvaluatedType getType(SourceRange sourceRange, IContext context,
 			ASTNode node) {
-		IPHPTypeInferencer typeInferencer = cachedInferencer == null ? new PHPTypeInferencer()
-				: cachedInferencer;
-		return typeInferencer.evaluateType(
+		return getTypeInferencer().evaluateType(
 				new ExpressionTypeGoal(context, node), timeLimit);
 	}
 
@@ -562,7 +565,7 @@ public class BindingUtility {
 				ContextFinder contextFinder = getContext(sourceRange);
 				IContext context = contextFinder.getContext();
 				IEvaluatedType resolvedExpression = PHPTypeInferenceUtils
-						.resolveExpression(cachedInferencer, sourceModule,
+						.resolveExpression(getTypeInferencer(), sourceModule,
 								sourceModuleDeclaration, context, expr);
 				if (resolvedExpression != null) {
 					evaluated.add(resolvedExpression);
@@ -585,7 +588,7 @@ public class BindingUtility {
 						ContextFinder contextFinder = getContext(sourceRange);
 						IContext context = contextFinder.getContext();
 						IEvaluatedType resolvedExpression = PHPTypeInferenceUtils
-								.resolveExpression(cachedInferencer,
+								.resolveExpression(getTypeInferencer(),
 										sourceModule, sourceModuleDeclaration,
 										context, expr);
 						if (resolvedExpression != null) {
