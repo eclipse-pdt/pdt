@@ -25,7 +25,10 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.model.PerFileModelAccessCache;
-import org.eclipse.php.internal.core.typeinference.*;
+import org.eclipse.php.internal.core.typeinference.BindingUtility;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
+import org.eclipse.php.internal.core.typeinference.PHPCachedTypeInferencer;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 /**
  * @author Roy, 2008 TODO : caching is a must have for this resolver
@@ -899,6 +902,6 @@ public class DefaultBindingResolver extends BindingResolver {
 
 	@Override
 	public void stopBindingSession() {
-		bindingUtil.setCachedInferencer(new PHPTypeInferencer());
+		bindingUtil.setCachedInferencer(null);
 	}
 }
