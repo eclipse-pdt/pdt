@@ -1,0 +1,20 @@
+--TEST--
+Tests formatting array statements.
+--FILE--
+<?php
+function test() {
+	$x = [
+		'key' => [|]
+	];
+}
+?>
+--EXPECT--
+<?php
+function test() {
+	$x = [
+		'key' => [
+				
+		]
+	];
+}
+?>

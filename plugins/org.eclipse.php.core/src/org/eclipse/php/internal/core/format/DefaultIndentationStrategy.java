@@ -418,13 +418,18 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 									region.getOffset() + region.getLength());
 							if (arrayBracket == PHPHeuristicScanner.TokenRPAREN
 									|| arrayBracket == PHPHeuristicScanner.TokenRBRACKET) {
-								if (isAssignment)
+								int prev = scanner.previousToken(offset - 1,
+										PHPHeuristicScanner.UNBOUND);
+								if ((isAssignment
+										&& arrayBracket == PHPHeuristicScanner.TokenRPAREN && prev != PHPHeuristicScanner.TokenLPAREN)
+										|| (isAssignment
+												&& arrayBracket == PHPHeuristicScanner.TokenRBRACKET && prev != PHPHeuristicScanner.TokenLBRACKET)) {
 									indent(document, newBuffer, 0,
 											indentationObject
 													.getIndentationChar(),
 											indentationObject
 													.getIndentationSize());
-								else {
+								} else {
 									indent(document,
 											newBuffer,
 											indentationObject
