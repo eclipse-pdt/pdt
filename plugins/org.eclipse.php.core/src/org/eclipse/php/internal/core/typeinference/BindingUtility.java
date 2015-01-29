@@ -49,7 +49,7 @@ public class BindingUtility {
 	private Map<SourceRange, IEvaluatedType> evaluatedTypesCache = new HashMap<SourceRange, IEvaluatedType>();
 	private int timeLimit = TIME_LIMIT;
 	private IModelAccessCache modelAccessCache;
-	private IPHPTypeInferencer cachedInferencer = new PHPTypeInferencer();
+	private IPHPTypeInferencer cachedInferencer;
 
 	/**
 	 * Creates new instance of binding utility.
@@ -160,10 +160,9 @@ public class BindingUtility {
 
 	protected IEvaluatedType getType(SourceRange sourceRange, IContext context,
 			ASTNode node) {
-		IPHPTypeInferencer typeInferencer = cachedInferencer == null ? new PHPTypeInferencer()
-				: cachedInferencer;
-		return typeInferencer.evaluateType(
-				new ExpressionTypeGoal(context, node), timeLimit);
+		return (cachedInferencer == null ? new PHPTypeInferencer()
+				: cachedInferencer).evaluateType(new ExpressionTypeGoal(
+				context, node), timeLimit);
 	}
 
 	protected ContextFinder getContext(SourceRange sourceRange)
