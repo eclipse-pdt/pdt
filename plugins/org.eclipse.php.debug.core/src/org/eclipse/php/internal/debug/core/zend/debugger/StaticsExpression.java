@@ -16,11 +16,11 @@ import java.text.MessageFormat;
 /**
  * Expression for fetching class static members.
  * 
- * @author Bartlomiej Laczkowski, 2014
+ * @author Bartlomiej Laczkowski
  */
 public class StaticsExpression extends DefaultExpression {
 
-	private static final String GET_STATICS = "(new ReflectionClass(''{0}''))->getStaticProperties()"; //$NON-NLS-1$
+	private static final String GET_STATICS = "eval(''if (class_exists(\"ReflectionClass\")) return (new ReflectionClass(\"{0}\"))->getStaticProperties(); else return array();'');"; //$NON-NLS-1$
 
 	public StaticsExpression(String className) {
 		super(MessageFormat.format(GET_STATICS, className));

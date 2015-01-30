@@ -26,12 +26,12 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 	private static final Expression[] EMPTY_VARIABLE_ARRAY = new Expression[0];
 	private static final byte[] ILLEGAL_VAR = { 'N' };
 
-	private final static String GET_LOCALS = "eval('if (isset($this)) {$this;}; return array_merge(get_defined_vars(), array(constant(\\'__CLASS__\\')));')"; //$NON-NLS-1$
+	private final static String GET_CURRENT_CONTEXT = "eval('if (isset($this)) {$this;}; return array_merge(get_defined_vars(), array(constant(\\'__CLASS__\\')));')"; //$NON-NLS-1$
 
 	private Debugger debugger;
 	private Map<String, Object> hashResultDepthOne = new HashMap<String, Object>();
 	private Map<String, byte[]> hashResultDepthZero = new HashMap<String, byte[]>();
-	private String[] localsVariablePath = new String[] { GET_LOCALS };
+	private String[] currentContextPath = new String[] { GET_CURRENT_CONTEXT };
 	private ExpressionsValueDeserializer expressionValueDeserializer;
 
 	/**
@@ -89,7 +89,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 	}
 
 	public Expression[] getCurrentVariables(int depth) {
-		byte[] value = getVariableValue(localsVariablePath, depth);
+		byte[] value = getVariableValue(currentContextPath, depth);
 		ExpressionValue variableValue = expressionValueDeserializer
 				.deserializer(null, value);
 		Expression[] variables = variableValue.getOriChildren();
@@ -112,7 +112,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		Expression dummyClass = variables[variables.length - 1];
 		String className = (String) dummyClass.getValue().getValue();
 		// Check if we are in static context
-		if (!hasThis && !className.isEmpty()) {
+		if (!hasThis && className!= null && !className.isEmpty()) {
 			Expression statics = new StaticsExpression(className);
 			update(statics, 1);
 			Expression[] staticVariables = statics.getValue().getChildren();
