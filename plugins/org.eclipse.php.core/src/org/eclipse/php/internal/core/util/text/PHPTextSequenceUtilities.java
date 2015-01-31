@@ -60,7 +60,8 @@ public class PHPTextSequenceUtilities {
 
 	/**
 	 * This function returns statement text depending on the current offset. It
-	 * searches backwards until it finds ';', '{' or '}'.
+	 * searches backwards (starting from offset - 1) until it finds ';', '{' or
+	 * '}'.
 	 * 
 	 * @param offset
 	 *            The absolute offset in the document
