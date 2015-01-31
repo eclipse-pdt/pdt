@@ -10,65 +10,47 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.rename;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import junit.framework.TestCase;
+import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.refactoring.core.test.PdttFileExt;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(PDTTList.class)
 public class RenameLocalVariableProcessorTest extends AbstractRenameRefactoringTest {
 
-	public RenameLocalVariableProcessorTest(String fileName) {
-		super(fileName);
+	public RenameLocalVariableProcessorTest(String[] fileNames) {
+		super(fileNames);
 	}
+	
+	@PDTTList.Parameters
+	public static String[] dirs = {"/resources/rename/renameLocalVar/"}; //$NON-NLS-1$
 
-	public List<TestCase> createTest() {
-		List<TestCase> tests = new ArrayList<TestCase>();
-		try {
-			initFiles();
-		} catch (Exception e1) {
-			return tests;
-		}
+	@Test
+	public void test(String fileName) throws Exception {
+		PdttFileExt testFile = filesMap.get(fileName);
+		IFile file = project.findFile(testFile.getTestFiles().get(0).getName());
 
-		for (final String fileName : filesMap.keySet()) {
-			final PdttFileExt testFile = filesMap.get(fileName);
-			tests.add(new RenameLocalVariableProcessorTest(fileName){
-				@Override
-				protected void runTest() throws Throwable {
-					IFile file = project.findFile(testFile.getTestFiles().get(0).getName());
+		Program program = createProgram(file);
 
-					Program program = createProgram(file);
+		assertNotNull(program);
 
-					assertNotNull(program);
+		int start = Integer.valueOf(testFile.getConfig().get("start"));
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
 
-					int start = Integer.valueOf(testFile.getConfig().get("start"));
-					ASTNode selectedNode = locateNode(program, start, 0);
-					assertNotNull(selectedNode);
+		RenameLocalVariableProcessor processor = new RenameLocalVariableProcessor(file, selectedNode);
 
-					RenameLocalVariableProcessor processor = new RenameLocalVariableProcessor(file, selectedNode);
+		processor.setNewElementName(testFile.getConfig().get("newName"));
+		processor.setUpdateTextualMatches(Boolean.valueOf(testFile.getConfig().get("updateTextualMatches")));
 
-					processor.setNewElementName(testFile.getConfig().get("newName"));
-					processor.setUpdateTextualMatches(Boolean.valueOf(testFile.getConfig().get("updateTextualMatches")));
-
-					checkInitCondition(processor);
-					performChange(processor);
-					checkTestResult(testFile);
-				}
-				@Override
-				protected void tearDown() throws Exception {
-
-				}	
-			});
-		}
-		return tests;
-	}
-
-	@Override
-	protected String getTestDirectory() {
-		return "/resources/rename/renameLocalVar/";
+		checkInitCondition(processor);
+		performChange(processor);
+		checkTestResult(testFile);
+		
 	}
 }

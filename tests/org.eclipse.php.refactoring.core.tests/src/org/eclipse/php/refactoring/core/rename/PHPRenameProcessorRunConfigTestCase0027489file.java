@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.rename;
 
+import static org.junit.Assert.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
@@ -29,6 +31,9 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.refactoring.core.test.FileUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class PHPRenameProcessorRunConfigTestCase0027489file extends
 		AbstractRenameRefactoringTest {
@@ -52,8 +57,8 @@ public class PHPRenameProcessorRunConfigTestCase0027489file extends
 
 	private IFile configFile;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception  {
 		System.setProperty("disableStartupRunner", "true");
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
@@ -97,7 +102,8 @@ public class PHPRenameProcessorRunConfigTestCase0027489file extends
 		PHPCoreTests.waitForAutoBuild();
 	}
 
-	public void testRename() {
+	@Test
+	public void testRename() throws Exception {
 
 		IFile file = project1.getProject().getFile(
 				"source/RenameRunConfigTest0027489file.php");
@@ -150,13 +156,8 @@ public class PHPRenameProcessorRunConfigTestCase0027489file extends
 		}
 	}
 
-	@Override
-	protected String getTestDirectory() {
-		return "";
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		project1.delete(IResource.FOLDER, new NullProgressMonitor());
 	}
 }

@@ -16,14 +16,14 @@ import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.refactoring.core.test.AbstractRefactoringTest;
 
 public abstract class AbstractRenameRefactoringTest extends AbstractRefactoringTest {
+	protected AbstractRenameRefactoringTest(String[] fileNames) {
+		super(fileNames);
+	}
+
 	public AbstractRenameRefactoringTest() {
 		super();
 	}
-
-	public AbstractRenameRefactoringTest(String name) {
-		super(name);
-	}
-
+	
 	protected ASTNode locateNode(Program program,int start,int end) {
 		ASTNode locateNode = NodeFinder.perform(program, start, end);
 		return locateNode;

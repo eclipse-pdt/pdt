@@ -10,67 +10,48 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.rename;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.refactoring.core.test.PdttFileExt;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(PDTTList.class)
 public class RenameClassProcessorTest extends AbstractRenameRefactoringTest {
-
-	public RenameClassProcessorTest(String name) {
-	   super(name);
+	
+	@PDTTList.Parameters
+	public static String[] dirs = {"/resources/rename/renameClass/"}; //$NON-NLS-1$
+	
+	public RenameClassProcessorTest(String[] fileNames) {
+		super(fileNames);
 	}
+	
+	@Test
+	public void rename(String fileName) throws Exception {
+		PdttFileExt testFile = filesMap.get(fileName);
+		IFile file = project.findFile(testFile.getTestFiles().get(0).getName());
 
-	public List<TestCase> createTest() {
-		List<TestCase> tests = new ArrayList<TestCase>();
-		try {
-			initFiles();
-		} catch (Exception e1) {
-			return tests;
-		}
+		Program program = createProgram(file);
 
-		for (final String fileName : filesMap.keySet()) {
-			final PdttFileExt testFile = filesMap.get(fileName);
-			tests.add(new RenameClassProcessorTest(fileName) {
-				@Override
-				protected void runTest() throws Throwable {
-					IFile file = project.findFile(testFile.getTestFiles().get(0).getName());
+		assertNotNull(program);
 
-					Program program = createProgram(file);
+		int start = Integer.valueOf(testFile.getConfig().get("start"));
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
 
-					assertNotNull(program);
+		RenameClassProcessor processor = new RenameClassProcessor(file, selectedNode);
 
-					int start = Integer.valueOf(testFile.getConfig().get("start"));
-					ASTNode selectedNode = locateNode(program, start, 0);
-					assertNotNull(selectedNode);
+		processor.setNewElementName(testFile.getConfig().get("newName"));
+		processor.setUpdateTextualMatches(Boolean.valueOf(testFile.getConfig().get("updateTextualMatches")));
 
-					RenameClassProcessor processor = new RenameClassProcessor(file, selectedNode);
-
-					processor.setNewElementName(testFile.getConfig().get("newName"));
-					processor.setUpdateTextualMatches(Boolean.valueOf(testFile.getConfig().get("updateTextualMatches")));
-
-					checkInitCondition(processor);
-					checkFinalCondition(processor);
-					
-					performChange(processor);
-					checkTestResult(testFile);
-				}
-				@Override
-				protected void tearDown() throws Exception {
-
-				}	
-			});
-		}
-		return tests;
-	}
-
-	@Override
-	protected String getTestDirectory() {
-		return "/resources/rename/renameClass/";
+		checkInitCondition(processor);
+		checkFinalCondition(processor);
+		
+		performChange(processor);
+		checkTestResult(testFile);
 	}
 }

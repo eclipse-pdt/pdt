@@ -10,72 +10,57 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.rename;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import junit.framework.TestCase;
+import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.refactoring.core.test.PdttFileExt;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 
+@RunWith(PDTTList.class)
 public class RenameTraitMemberProcessorTest extends RenameClassMemberProcessorTest {
 
-	public RenameTraitMemberProcessorTest(String name) {
-		super(name);
+	public RenameTraitMemberProcessorTest(String[] fileNames) {
+		super(fileNames);
+	}
+	
+	@PDTTList.BeforeList
+	@Override
+	public void setUpSuite() throws Exception {
+		super.setUpSuite();
+		PHPCoreTests.setProjectPhpVersion(project.getProject(),
+				PHPVersion.PHP5_4);
 	}
 
-	@Override
-	public List<TestCase> createTest() {
-		List<TestCase> tests = new ArrayList<TestCase>();
-		try {
-			initFiles();
-			PHPCoreTests.setProjectPhpVersion(project.getProject(),
-					PHPVersion.PHP5_4);
-		} catch (Exception e1) {
-			return tests;
-		}
+	@PDTTList.Parameters
+	public static String[] dirs = {"/resources/rename/renameTraitMember/"}; //$NON-NLS-1$
+	
+	@Test
+	public void test(String fileName) throws Exception {
+		PdttFileExt testFile = filesMap.get(fileName);
+		IFile file = project.findFile(testFile.getTestFiles().get(0).getName());
 
-		for (final String fileName : filesMap.keySet()) {
-			final PdttFileExt testFile = filesMap.get(fileName);
-			tests.add(new RenameTraitMemberProcessorTest(fileName) {
-				@Override
-				protected void runTest() throws Throwable {
-					IFile file = project.findFile(testFile.getTestFiles().get(0).getName());
+		Program program = createProgram(file);
 
-					Program program = createProgram(file);
+		assertNotNull(program);
 
-					assertNotNull(program);
+		int start = Integer.valueOf(testFile.getConfig().get("start"));
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
 
-					int start = Integer.valueOf(testFile.getConfig().get("start"));
-					ASTNode selectedNode = locateNode(program, start, 0);
-					assertNotNull(selectedNode);
+		RenameClassMemberProcessor processor = new RenameClassMemberProcessor(file, selectedNode);
 
-					RenameClassMemberProcessor processor = new RenameClassMemberProcessor(file, selectedNode);
+		processor.setNewElementName(testFile.getConfig().get("newName"));
+		processor.setUpdateTextualMatches(Boolean.valueOf(testFile.getConfig().get("updateTextualMatches")));
 
-					processor.setNewElementName(testFile.getConfig().get("newName"));
-					processor.setUpdateTextualMatches(Boolean.valueOf(testFile.getConfig().get("updateTextualMatches")));
-
-					checkInitCondition(processor);
-					performChange(processor);
-					checkTestResult(testFile);
-				}
-
-				@Override
-				protected void tearDown() throws Exception {
-
-				}				
-			});
-		}
-		return tests;
-	}
-
-	@Override
-	protected String getTestDirectory() {
-		return "/resources/rename/renameTraitMember/";
+		checkInitCondition(processor);
+		performChange(processor);
+		checkTestResult(testFile);
 	}
 }

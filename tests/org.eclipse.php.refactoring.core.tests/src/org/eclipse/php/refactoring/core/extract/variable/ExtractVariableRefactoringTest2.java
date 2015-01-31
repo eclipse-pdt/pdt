@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.extract.variable;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,20 +32,17 @@ import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ExtractVariableRefactoringTest2 extends AbstractRefactoringTest {
 
 	private IProject project1;
 	private IFile file;
 
-	@Override
-	protected String getTestDirectory() {
-
-		return "";
-	}
-
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 
 		System.setProperty("disableStartupRunner", "true");
 		PHPCoreTests.waitForIndexer();
@@ -56,8 +57,7 @@ public class ExtractVariableRefactoringTest2 extends AbstractRefactoringTest {
 		}
 		file = folder.getFile("ExtractVariableRefactoringTest2.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php $a = 4; $c = $a; $a = 5; $b = $a; ?>".getBytes());
+		InputStream source = new ByteArrayInputStream("<?php $a = 4; $c = $a; $a = 5; $b = $a; ?>".getBytes());
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
 		} else {
@@ -65,17 +65,17 @@ public class ExtractVariableRefactoringTest2 extends AbstractRefactoringTest {
 		}
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 	}
 
+	@Test
 	public void testExtract() {
 
 		IStructuredModel model = null;
 		try {
-			model = StructuredModelManager.getModelManager()
-					.createUnManagedStructuredModelFor(file);
+			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
 		} catch (IOException e) {
 			fail(e.getMessage());
 		} catch (CoreException e) {
@@ -88,12 +88,10 @@ public class ExtractVariableRefactoringTest2 extends AbstractRefactoringTest {
 
 		ExtractVariableRefactoring processor;
 		try {
-			processor = new ExtractVariableRefactoring(DLTKCore
-					.createSourceModuleFrom(file), structuredDocument, 19, 2);
+			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 19, 2);
 			processor.setNewVariableName("c");
 
-			RefactoringStatus status = processor
-					.checkInitialConditions(new NullProgressMonitor());
+			RefactoringStatus status = processor.checkInitialConditions(new NullProgressMonitor());
 			assertEquals(Status.OK, status.getSeverity());
 
 			status = processor.checkFinalConditions(new NullProgressMonitor());
@@ -104,13 +102,13 @@ public class ExtractVariableRefactoringTest2 extends AbstractRefactoringTest {
 		}
 	}
 
-	//Testing extract lefthand side expression.
+	// Testing extract lefthand side expression.
+	@Test
 	public void testExtract1() {
 
 		IStructuredModel model = null;
 		try {
-			model = StructuredModelManager.getModelManager()
-					.createUnManagedStructuredModelFor(file);
+			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
 		} catch (IOException e) {
 			fail(e.getMessage());
 		} catch (CoreException e) {
@@ -123,12 +121,10 @@ public class ExtractVariableRefactoringTest2 extends AbstractRefactoringTest {
 
 		ExtractVariableRefactoring processor;
 		try {
-			processor = new ExtractVariableRefactoring(DLTKCore
-					.createSourceModuleFrom(file), structuredDocument, 6, 2);
+			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 6, 2);
 			processor.setNewVariableName("c");
 
-			RefactoringStatus status = processor
-					.checkInitialConditions(new NullProgressMonitor());
+			RefactoringStatus status = processor.checkInitialConditions(new NullProgressMonitor());
 			assertEquals(Status.ERROR, status.getSeverity());
 
 		} catch (CoreException e) {
@@ -136,13 +132,13 @@ public class ExtractVariableRefactoringTest2 extends AbstractRefactoringTest {
 		}
 	}
 
-	//Testing duplicated variable name.
+	// Testing duplicated variable name.
+	@Test
 	public void testExtract2() {
 
 		IStructuredModel model = null;
 		try {
-			model = StructuredModelManager.getModelManager()
-					.createUnManagedStructuredModelFor(file);
+			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
 		} catch (IOException e) {
 			fail(e.getMessage());
 		} catch (CoreException e) {
@@ -155,14 +151,12 @@ public class ExtractVariableRefactoringTest2 extends AbstractRefactoringTest {
 
 		ExtractVariableRefactoring processor;
 		try {
-			processor = new ExtractVariableRefactoring(DLTKCore
-					.createSourceModuleFrom(file), structuredDocument, 11, 1);
+			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 11, 1);
 			processor.setNewVariableName("c");
 
-			RefactoringStatus status = processor
-					.checkInitialConditions(new NullProgressMonitor());
+			RefactoringStatus status = processor.checkInitialConditions(new NullProgressMonitor());
 			assertEquals(Status.OK, status.getSeverity());
-			
+
 			status = processor.checkFinalConditions(new NullProgressMonitor());
 			assertEquals(Status.WARNING, status.getSeverity());
 		} catch (CoreException e) {

@@ -10,6 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,55 +32,54 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor;
-import org.eclipse.php.core.tests.AbstractPDTTTest;
+import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.refactoring.core.utils.ASTUtils;
+import org.osgi.framework.Bundle;
 
-public abstract class AbstractRefactoringTest extends AbstractPDTTTest {
+public abstract class AbstractRefactoringTest {
 
+	protected String[] fileNames = null;
 	protected static final char OFFSET_CHAR = '|';
 	protected TestProject project;
 	protected Map<String, PdttFileExt> filesMap = new LinkedHashMap<String, PdttFileExt>();
 
-	public AbstractRefactoringTest(String name) {
-		super(name);
-	}
-
 	public AbstractRefactoringTest() {
-		super();
+	}
+	
+	protected AbstractRefactoringTest(String[] fileNames) {
+		this.fileNames = fileNames;
 	}
 
-	@Override
-	protected void setUp() throws Exception {
+	@PDTTList.BeforeList
+	public void setUpSuite() throws Exception {
 		project = getProject();
-		super.setUp();
+		initFiles(fileNames);
 	}
 
-	protected void initFiles() throws Exception {
+	protected void initFiles(String[] fileNames) throws Exception {
 		project = getProject();
-		String[] fileNames = getPDTTFiles(getTestDirectory(), Activator
-				.getDefault().getBundle());
 		for (final String fileName : fileNames) {
-			final PdttFileExt pdttFile = new PdttFileExt(Activator.getDefault()
-					.getBundle(), fileName);
+			final PdttFileExt pdttFile = new PdttFileExt(getBundle(), fileName);
 			for (FileInfo testFile : pdttFile.getTestFiles()) {
-				project.createFile(testFile.getName(), getContents(pdttFile,testFile));
+				project.createFile(testFile.getName(), getContents(pdttFile, testFile));
 			}
 			filesMap.put(fileName, pdttFile);
 		}
-		
+
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
 	}
 
 	private String getContents(PdttFileExt pdttFile, FileInfo testFile) {
-		String data=testFile.getContents();
+		String data = testFile.getContents();
 		int offset = data.lastIndexOf(OFFSET_CHAR);
 		if (offset < 0) {
 			return data;
 		}
-		pdttFile.getConfig().put("start",String.valueOf(offset));
+		pdttFile.getConfig().put("start", String.valueOf(offset));
 		// replace the offset character
 		data = data.substring(0, offset) + data.substring(offset + 1);
 		return data;
@@ -84,23 +89,15 @@ public abstract class AbstractRefactoringTest extends AbstractPDTTTest {
 		return new TestProject("Refactoring");
 	}
 
-	protected abstract String getTestDirectory();
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@PDTTList.AfterList
+	public void tearDown() throws Exception {
 		project.delete();
 	}
 
-	protected Program createProgram(IFile file) {
+	protected Program createProgram(IFile file) throws Exception {
 		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
 		Program program = null;
-		try {
-			program = ASTUtils.createProgramFromSource(sourceModule);
-
-		} catch (Exception e) {
-			fail(e.getMessage());
-		}
+		program = ASTUtils.createProgramFromSource(sourceModule);
 		return program;
 	}
 
@@ -135,8 +132,7 @@ public abstract class AbstractRefactoringTest extends AbstractPDTTTest {
 
 	protected void checkInitCondition(RefactoringProcessor processor) {
 		try {
-			RefactoringStatus status = processor
-					.checkInitialConditions(new NullProgressMonitor());
+			RefactoringStatus status = processor.checkInitialConditions(new NullProgressMonitor());
 			assertEquals(Status.OK, status.getSeverity());
 		} catch (OperationCanceledException e1) {
 			fail(e1.getMessage());
@@ -145,11 +141,9 @@ public abstract class AbstractRefactoringTest extends AbstractPDTTTest {
 		}
 	}
 
-	
 	protected void checkFinalCondition(RefactoringProcessor processor) {
 		try {
-			RefactoringStatus status = processor
-					.checkFinalConditions(new NullProgressMonitor(),null);
+			RefactoringStatus status = processor.checkFinalConditions(new NullProgressMonitor(), null);
 			assertNotSame(Status.ERROR, status.getSeverity());
 		} catch (OperationCanceledException e1) {
 			fail(e1.getMessage());
@@ -157,6 +151,7 @@ public abstract class AbstractRefactoringTest extends AbstractPDTTTest {
 			fail(e1.getMessage());
 		}
 	}
+
 	protected void performChange(Refactoring processor) {
 		try {
 			Change change = processor.createChange(new NullProgressMonitor());
@@ -172,8 +167,7 @@ public abstract class AbstractRefactoringTest extends AbstractPDTTTest {
 
 	protected void checkInitCondition(Refactoring processor) {
 		try {
-			RefactoringStatus status = processor
-					.checkInitialConditions(new NullProgressMonitor());
+			RefactoringStatus status = processor.checkInitialConditions(new NullProgressMonitor());
 			assertEquals(Status.OK, status.getSeverity());
 		} catch (OperationCanceledException e1) {
 			fail(e1.getMessage());
@@ -188,11 +182,17 @@ public abstract class AbstractRefactoringTest extends AbstractPDTTTest {
 			IFile file = project.findFile(expFile.getName());
 			assertTrue(file.exists());
 			try {
-				assertContents(getContents(pdttFile,expFile), FileUtils.getContents(file));
-				//assertEquals(getContents(pdttFile,expFile), FileUtils.getContents(file));
+				PDTTUtils.assertContents(getContents(pdttFile, expFile), FileUtils.getContents(file));
+				// assertEquals(getContents(pdttFile,expFile),
+				// FileUtils.getContents(file));
 			} catch (IOException e) {
 				fail(e.getMessage());
 			}
 		}
+	}
+
+	@PDTTList.Context
+	public static Bundle getBundle() {
+		return Activator.getDefault().getBundle();
 	}
 }

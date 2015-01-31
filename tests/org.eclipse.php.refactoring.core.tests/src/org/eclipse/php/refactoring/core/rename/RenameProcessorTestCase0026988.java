@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.rename;
 
+import static org.junit.Assert.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -30,13 +32,16 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.refactoring.core.test.FileUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class RenameProcessorTestCase0026988 extends AbstractRenameRefactoringTest {
 	private IProject project1;
 	private IProject project2;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
 
@@ -103,6 +108,7 @@ public class RenameProcessorTestCase0026988 extends AbstractRenameRefactoringTes
 		PHPCoreTests.waitForAutoBuild();
 	}
 	
+	@Test
 	public void testRename(){
 		RenameFolderProcessor processor = new RenameFolderProcessor(project1);
 		processor.setNewElementName("project11");
@@ -122,14 +128,9 @@ public class RenameProcessorTestCase0026988 extends AbstractRenameRefactoringTes
 		assertTrue(FileUtils.isInBuildpath(project.getFullPath(), scriptProject,IBuildpathEntry.BPE_PROJECT));
 	}
 	
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		project1.delete(IResource.FORCE, new NullProgressMonitor());
 		project2.delete(IResource.FORCE, new NullProgressMonitor());
-	}
-
-	@Override
-	protected String getTestDirectory() {
-		return "";
 	}
 }

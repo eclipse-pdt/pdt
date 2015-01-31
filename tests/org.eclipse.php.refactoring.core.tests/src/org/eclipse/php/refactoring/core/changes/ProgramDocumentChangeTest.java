@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.changes;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
@@ -22,14 +25,17 @@ import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.refactoring.core.rename.AbstractRenameRefactoringTest;
 import org.eclipse.php.refactoring.core.test.FileUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ProgramDocumentChangeTest extends AbstractRenameRefactoringTest {
 
 	private IProject project1;
 	private IFile file;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
 
@@ -55,24 +61,20 @@ public class ProgramDocumentChangeTest extends AbstractRenameRefactoringTest {
 		PHPCoreTests.waitForAutoBuild();
 	}
 
-	@Override
-	protected String getTestDirectory() {
-		return "";
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		project1.delete(IResource.FORCE, new NullProgressMonitor());
 	}
-	
-	public void testGetProgram() {
+
+	@Test
+	public void testGetProgram() throws Exception {
 		Program program = createProgram(file);
 
 		assertNotNull(program);
-		
+
 		ProgramDocumentChange change = new ProgramDocumentChange("TestProgram", new DummyDocument(), program);
-		assertEquals(program,change.getProgram());
-		
-		assertEquals(program,change.getAdapter(Program.class));
+		assertEquals(program, change.getProgram());
+
+		assertEquals(program, change.getAdapter(Program.class));
 	}
 }

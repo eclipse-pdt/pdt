@@ -10,49 +10,26 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.extract.function;
 
-import java.util.List;
-
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.php.refactoring.core.test.TestProject;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
+@RunWith(Suite.class)
+@Suite.SuiteClasses({ExtractFunctionRefactoringTest.class})
 public class AllTests {
 
 	private static TestProject project;
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.php.refactoring.core.extract.function");
-		//$JUnit-BEGIN$
-
-		List<TestCase> tests = new ExtractFunctionRefactoringTest("").createTest();
-		for (TestCase test : tests) {
-			suite.addTest(test);
-		}
-
-		// Create a setup wrapper
-		TestSetup setup = new TestSetup(suite) {
-			@Override
-			protected void setUp() throws Exception {
-				setUpSuite();
-			}
-
-			@Override
-			protected void tearDown() throws Exception {
-				tearDownSuite();
-			}
-		};
-		return setup;
-	}
-
-	protected static void setUpSuite() {
+	@BeforeClass
+	public static void setUpSuite() {
 		project = new TestProject("RefactoringExtractFunc");
 		System.setProperty("disableStartupRunner", "true");
 	}
 
-	protected static void tearDownSuite() {
+	@AfterClass
+	public static void tearDownSuite() {
 		try {
 			project.delete();
 		} catch (Exception e) {

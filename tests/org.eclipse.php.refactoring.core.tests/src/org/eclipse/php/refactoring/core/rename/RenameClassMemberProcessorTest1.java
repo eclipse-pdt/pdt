@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.rename;
 
+import static org.junit.Assert.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +25,9 @@ import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.refactoring.core.test.FileUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class RenameClassMemberProcessorTest1 extends
 		AbstractRenameRefactoringTest {
@@ -30,8 +35,8 @@ public class RenameClassMemberProcessorTest1 extends
 	private IProject project1;
 	private IFile file;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
 
@@ -57,7 +62,8 @@ public class RenameClassMemberProcessorTest1 extends
 		PHPCoreTests.waitForAutoBuild();
 	}
 
-	public void testRename1() {
+	@Test
+	public void testRename1() throws Exception {
 		Program program = createProgram(file);
 
 		assertNotNull(program);
@@ -83,13 +89,9 @@ public class RenameClassMemberProcessorTest1 extends
 			e.printStackTrace();
 		}
 	}
-	@Override
-	protected String getTestDirectory() {
-		return "";
-	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		project1.delete(IResource.FORCE, new NullProgressMonitor());
 	}
 }

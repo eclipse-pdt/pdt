@@ -10,111 +10,34 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.rename;
 
-import java.util.List;
-
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.php.refactoring.core.test.TestProject;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
+@RunWith(Suite.class)
+@Suite.SuiteClasses({ RenameClassProcessorTest.class, RenameTraitProcessorTest.class, RenameClassMemberProcessorTest.class,
+		RenameTraitMemberProcessorTest.class, RenameFunctionProcessorTest.class, RenameGlobalConstantProcessorTest.class,
+		RenameGlobalVariableProcessorTest.class, RenameLocalVariableProcessorTest.class, RenameResourceProcessorTest.class,
+		RenameProcessorTestCase0026915.class, RenameProcessorTestCase0026972.class, RenameProcessorTestCase0026988.class, RenameProcessorTestCase0027134.class,
+		RenameFuncProcessorTestCase0027497.class, PHPRenameProcessorRunConfigTestCase0027489.class, PHPRenameProcessorRunConfigTestCase0027489file.class,
+		RenameFolderTestCase1.class, RenameFolderTestCase2.class, RenameFolderTestCase30346.class, RenameLocalVarTest2.class,
+		RenameClassMemberProcessorTest1.class, RenameClassMemberProcessorTest2.class, RenameClassMemberProcessorTest3.class,
+		RenameClassMemberProcessorTest0027555.class, RenameFileTestCase0029095.class, RenameFileWithClass.class, RenameProcessorTestCase0029408.class,
+		RenameProcessorTestCaseZSTD_1006.class })
 public class AllTests {
 
 	private static TestProject project;
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite(
-				"Test for org.eclipse.php.refactoring.core.rename");
-		// $JUnit-BEGIN$
-		List<TestCase> tests = new RenameClassProcessorTest("").createTest();
-		for (TestCase test : tests) {
-			suite.addTest(test);
-		}
-		tests = new RenameTraitProcessorTest("").createTest();
-		for (TestCase test : tests) {
-			suite.addTest(test);
-		}
-		// $JUnit-BEGIN$
-		tests = new RenameClassMemberProcessorTest("")
-				.createTest();
-		for (TestCase test : tests) {
-			suite.addTest(test);
-		}
-
-		tests = new RenameTraitMemberProcessorTest("")
-				.createTest();
-		for (TestCase test : tests) {
-			suite.addTest(test);
-		}
-
-
-		tests = new RenameFunctionProcessorTest("").createTest();
-		for (TestCase test : tests) {
-			suite.addTest(test);
-		}
-
-		tests = new RenameGlobalConstantProcessorTest("").createTest();
-		for (TestCase test : tests) {
-			suite.addTest(test);
-		}
-
-		tests = new RenameGlobalVariableProcessorTest("").createTest();
-		for (TestCase test : tests) {
-			suite.addTest(test);
-		}
-
-		tests = new RenameLocalVariableProcessorTest("").createTest();
-		for (TestCase test : tests) {
-			suite.addTest(test);
-		}
-
-		tests = new RenameResourceProcessorTest("").createTest();
-		for (TestCase test : tests) {
-			suite.addTest(test);
-		}
-
-		suite.addTestSuite(RenameProcessorTestCase0026915.class);
-		suite.addTestSuite(RenameProcessorTestCase0026972.class);
-		suite.addTestSuite(RenameProcessorTestCase0026988.class);
-		suite.addTestSuite(RenameProcessorTestCase0027134.class);
-		suite.addTestSuite(RenameFuncProcessorTestCase0027497.class);
-		suite.addTestSuite(PHPRenameProcessorRunConfigTestCase0027489.class);
-		suite.addTestSuite(PHPRenameProcessorRunConfigTestCase0027489file.class);
-		suite.addTestSuite(RenameFolderTestCase1.class);
-		suite.addTestSuite(RenameFolderTestCase2.class);
-		suite.addTestSuite(RenameFolderTestCase30346.class);
-		suite.addTestSuite(RenameLocalVarTest2.class);
-		suite.addTestSuite(RenameClassMemberProcessorTest1.class);
-		suite.addTestSuite(RenameClassMemberProcessorTest2.class);
-		suite.addTestSuite(RenameClassMemberProcessorTest3.class);
-		suite.addTestSuite(RenameClassMemberProcessorTest0027555.class);
-		suite.addTestSuite(RenameFileTestCase0029095.class);
-		suite.addTestSuite(RenameFileWithClass.class);
-		suite.addTestSuite(RenameProcessorTestCase0029408.class);
-		suite.addTestSuite(RenameProcessorTestCaseZSTD_1006.class);
-
-		// Create a setup wrapper
-		TestSetup setup = new TestSetup(suite) {
-			@Override
-			protected void setUp() throws Exception {
-				setUpSuite();
-			}
-
-			@Override
-			protected void tearDown() throws Exception {
-				tearDownSuite();
-			}
-		};
-		return setup;
-	}
-
-	protected static void setUpSuite() {
+	@BeforeClass
+	public static void setUpSuite() {
 		project = new TestProject("Refactoring");
 		System.setProperty("disableStartupRunner", "true");
 	}
 
-	protected static void tearDownSuite() {
+	@AfterClass
+	public static void tearDownSuite() {
 		try {
 			project.delete();
 		} catch (Exception e) {

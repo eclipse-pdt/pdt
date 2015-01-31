@@ -10,60 +10,41 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.rename;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.refactoring.core.test.PdttFileExt;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(PDTTList.class)
 public class RenameResourceProcessorTest extends AbstractRenameRefactoringTest {
-	public RenameResourceProcessorTest(String fileName) {
-		super(fileName);
+	public RenameResourceProcessorTest(String[] fileNames) {
+		super(fileNames);
 	}
+	
+	@PDTTList.Parameters
+	public static String[] dirs = {"/resources/rename/renameResource/"}; //$NON-NLS-1$
 
-	public List<TestCase> createTest() {
-		List<TestCase> tests = new ArrayList<TestCase>();
-		try {
-			initFiles();
-		} catch (Exception e1) {
-			return tests;
-		}
+	@Test
+	public void test(String fileName) throws Exception {
+		PdttFileExt testFile = filesMap.get(fileName);
+		IFile file = project.findFile(testFile.getTestFiles().get(0).getName());
 
-		for (final String fileName : filesMap.keySet()) {
-			final PdttFileExt testFile = filesMap.get(fileName);
-			tests.add(new RenameResourceProcessorTest(fileName){
-				@Override
-				protected void runTest() throws Throwable {
-					IFile file = project.findFile(testFile.getTestFiles().get(0).getName());
+		Program program = createProgram(file);
 
-					Program program = createProgram(file);
+		assertNotNull(program);
 
-					assertNotNull(program);
+		RenameFileProcessor processor = new RenameFileProcessor(file, program);
+		processor.setNewElementName(testFile.getConfig().get("newName"));
+		
+		processor.setUpdateRefernces(Boolean.valueOf(testFile.getConfig().get("updateReference")));
+		processor.setAttribute(RenameFileProcessor.UPDATECLASSNAME, testFile.getConfig().get("updateClassName"));
 
-					RenameFileProcessor processor = new RenameFileProcessor(file, program);
-					processor.setNewElementName(testFile.getConfig().get("newName"));
-					
-					processor.setUpdateRefernces(Boolean.valueOf(testFile.getConfig().get("updateReference")));
-					processor.setAttribute(RenameFileProcessor.UPDATECLASSNAME, testFile.getConfig().get("updateClassName"));
-
-					checkInitCondition(processor);
-					performChange(processor);
-					checkTestResult(testFile);
-				}
-				@Override
-				protected void tearDown() throws Exception {
-
-				}	
-			});
-		}
-		return tests;
-	}
-
-	@Override
-	protected String getTestDirectory() {
-		return "/resources/rename/renameResource/";
+		checkInitCondition(processor);
+		performChange(processor);
+		checkTestResult(testFile);
 	}
 }

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.extract.variable;
 
+import static org.junit.Assert.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,20 +30,17 @@ import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ExtractVariableRefactoringTest3 extends AbstractRefactoringTest {
 
 	private IProject project1;
 	private IFile file;
 
-	@Override
-	protected String getTestDirectory() {
-
-		return "";
-	}
-
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 
 		System.setProperty("disableStartupRunner", "true");
 		PHPCoreTests.waitForIndexer();
@@ -65,12 +64,13 @@ public class ExtractVariableRefactoringTest3 extends AbstractRefactoringTest {
 		}
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 
 	}
 
 	// Testing extract lefthand side expression.
+	@Test
 	public void testExtract() {
 
 		IStructuredModel model = null;

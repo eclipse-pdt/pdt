@@ -10,13 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.move;
 
+import static org.junit.Assert.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -37,13 +37,15 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.refactoring.core.test.FileUtils;
+import org.junit.Before;
+import org.junit.Test;
 
-public class PHPMoveProcessorTestCase1 extends TestCase {
+public class PHPMoveProcessorTestCase1 {
 	private IProject project1;
 	private IProject project2;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		System.setProperty("disableStartupRunner","true");
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
@@ -100,6 +102,7 @@ public class PHPMoveProcessorTestCase1 extends TestCase {
 		PHPCoreTests.waitForAutoBuild();
 	}
 	
+	@Test
 	public void testMoveing(){
 		PHPMoveProcessor processor = new PHPMoveProcessor(project1.getProject().getFolder("src"));
 		

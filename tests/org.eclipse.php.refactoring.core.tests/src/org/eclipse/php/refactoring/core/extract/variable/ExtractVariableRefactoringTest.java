@@ -10,16 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.extract.variable;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import static org.junit.Assert.*;
 
-import junit.framework.TestCase;
+import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.php.core.tests.PHPCoreTests;
+import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.refactoring.core.test.AbstractRefactoringTest;
 import org.eclipse.php.refactoring.core.test.FileInfo;
 import org.eclipse.php.refactoring.core.test.PdttFileExt;
@@ -27,10 +27,13 @@ import org.eclipse.php.refactoring.core.test.TestProject;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(PDTTList.class)
 public class ExtractVariableRefactoringTest extends AbstractRefactoringTest {
-	public ExtractVariableRefactoringTest(String name) {
-		super(name);
+	public ExtractVariableRefactoringTest(String[] fileNames) {
+		super(fileNames);
 	}
 
 	@Override
@@ -38,68 +41,43 @@ public class ExtractVariableRefactoringTest extends AbstractRefactoringTest {
 		return new TestProject("RefactoringExtractVar");
 	}
 
-	public List<TestCase> createTest() {
-		List<TestCase> tests = new ArrayList<TestCase>();
+	@PDTTList.Parameters
+	public static String[] dirs = { "/resources/extractvar/" }; //$NON-NLS-1$
+
+	@Test
+	public void test(String fileName) throws CoreException {
+		PdttFileExt testFile = filesMap.get(fileName);
+		IFile file = project.findFile(testFile.getTestFiles().get(0).getName());
+
+		IStructuredModel model = null;
 		try {
-			initFiles();
-		} catch (Exception e1) {
-			return tests;
+			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
+		} catch (IOException e) {
+			fail(e.getMessage());
+		} catch (CoreException e) {
+			fail(e.getMessage());
 		}
+		assertNotNull(model);
 
-		for (final String fileName : filesMap.keySet()) {
-			final PdttFileExt testFile = filesMap.get(fileName);
-			tests.add(new ExtractVariableRefactoringTest(fileName) {
-				@Override
-				protected void runTest() throws Throwable {
-					IFile file = project.findFile(testFile.getTestFiles()
-							.get(0).getName());
+		IStructuredDocument structuredDocument = model.getStructuredDocument();
+		assertNotNull(structuredDocument);
 
-					IStructuredModel model = null;
-					try {
-						model = StructuredModelManager.getModelManager()
-								.createUnManagedStructuredModelFor(file);
-					} catch (IOException e) {
-						fail(e.getMessage());
-					} catch (CoreException e) {
-						fail(e.getMessage());
-					}
-					assertNotNull(model);
+		int start = Integer.valueOf(testFile.getConfig().get("start"));
 
-					IStructuredDocument structuredDocument = model
-							.getStructuredDocument();
-					assertNotNull(structuredDocument);
+		int length = Integer.valueOf(testFile.getConfig().get("length"));
 
-					int start = Integer.valueOf(testFile.getConfig().get(
-							"start"));
+		String visibility = testFile.getConfig().get("visibility");
 
-					int length = Integer.valueOf(testFile.getConfig().get(
-							"length"));
+		ExtractVariableRefactoring processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, start, length);
 
-					String visibility = testFile.getConfig().get("visibility");
+		processor.setNewVariableName(testFile.getConfig().get("newName"));
 
-					ExtractVariableRefactoring processor = new ExtractVariableRefactoring(
-							DLTKCore.createSourceModuleFrom(file),
-							structuredDocument, start, length);
-
-					processor.setNewVariableName(testFile.getConfig().get(
-							"newName"));
-
-					checkInitCondition(processor);
-					performChange(processor);
-					checkTestResult(testFile, structuredDocument);
-				}
-
-				@Override
-				protected void tearDown() throws Exception {
-
-				}
-			});
-		}
-		return tests;
+		checkInitCondition(processor);
+		performChange(processor);
+		checkTestResult(testFile, structuredDocument);
 	}
 
-	protected void checkTestResult(PdttFileExt testFile,
-			IStructuredDocument structuredDocument) {
+	protected void checkTestResult(PdttFileExt testFile, IStructuredDocument structuredDocument) {
 		List<FileInfo> files = testFile.getExpectedFiles();
 		for (FileInfo expFile : files) {
 			IFile file = project.findFile(expFile.getName());
@@ -107,16 +85,10 @@ public class ExtractVariableRefactoringTest extends AbstractRefactoringTest {
 
 			String content = structuredDocument.get();
 
-			String diff = PHPCoreTests.compareContentsIgnoreWhitespace(expFile
-					.getContents(), content);
+			String diff = PHPCoreTests.compareContentsIgnoreWhitespace(expFile.getContents(), content);
 			if (diff != null) {
 				fail(diff);
 			}
 		}
-	}
-
-	@Override
-	protected String getTestDirectory() {
-		return "/resources/extractvar/";
 	}
 }

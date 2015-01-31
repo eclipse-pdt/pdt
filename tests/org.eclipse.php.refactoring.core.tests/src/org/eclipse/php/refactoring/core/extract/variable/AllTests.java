@@ -10,59 +10,32 @@
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.extract.variable;
 
-import java.util.List;
-
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.eclipse.php.refactoring.core.test.TestProject;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
+@RunWith(Suite.class)
+@Suite.SuiteClasses({ ExtractVariableRefactoringTest.class, ExtractVariableRefactoringTest1.class, ExtractVariableRefactoringTest2.class,
+		ExtractVariableRefactoringTest3.class, ExtractVariableRefactoringTest27457.class, ExtractVariableRefactoringTest26642.class,
+		ExtractVariableRefactoringTestGetVariableName.class })
 public class AllTests {
 
 	private static TestProject project;
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.php.refactoring.core.extract.variable");
-		//$JUnit-BEGIN$
-
-		List<TestCase> tests = new ExtractVariableRefactoringTest("").createTest();
-		for (TestCase test : tests) {
-			suite.addTest(test);
-		}
-		suite.addTestSuite(ExtractVariableRefactoringTest1.class);
-		suite.addTestSuite(ExtractVariableRefactoringTest2.class);
-		suite.addTestSuite(ExtractVariableRefactoringTest3.class);
-		suite.addTestSuite(ExtractVariableRefactoringTest27457.class);
-		suite.addTestSuite(ExtractVariableRefactoringTest26642.class);
-		suite.addTestSuite(ExtractVariableRefactoringTestGetVariableName.class);
-
-		// Create a setup wrapper
-		TestSetup setup = new TestSetup(suite) {
-			@Override
-			protected void setUp() throws Exception {
-				setUpSuite();
-			}
-
-			@Override
-			protected void tearDown() throws Exception {
-				tearDownSuite();
-			}
-		};
-		return setup;
-	}
-
-	protected static void setUpSuite() {
+	@BeforeClass
+	public static void setUpSuite() {
 		project = new TestProject("RefactoringExtractVar");
 		System.setProperty("disableStartupRunner", "true");
 	}
 
-	protected static void tearDownSuite() {
+	@AfterClass
+	public static void tearDownSuite() {
 		try {
 			project.delete();
 		} catch (Exception e) {
 		}
-		//		System.setProperty("disableStartupRunner",null);
+		// System.setProperty("disableStartupRunner",null,
 	}
 }

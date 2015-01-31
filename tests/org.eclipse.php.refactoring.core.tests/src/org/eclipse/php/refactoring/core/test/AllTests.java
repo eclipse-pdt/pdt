@@ -7,25 +7,20 @@
  * 
  * Contributors:
  *     Zend Technologies - initial API and implementation
+ *     Dawid Pakuła - 457924
  *******************************************************************************/
 package org.eclipse.php.refactoring.core.test;
+
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+@RunWith(Suite.class)
+@Suite.SuiteClasses({ org.eclipse.php.refactoring.core.rename.AllTests.class, org.eclipse.php.refactoring.core.move.AllTests.class,
+		org.eclipse.php.refactoring.core.extract.function.AllTests.class, org.eclipse.php.refactoring.core.extract.variable.AllTests.class,
+		org.eclipse.php.refactoring.ui.actions.AllTests.class, org.eclipse.php.refactoring.core.changes.AllTests.class })
 public class AllTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.php.refactoring.core.test");
-		//$JUnit-BEGIN$
-		suite.addTest(org.eclipse.php.refactoring.core.rename.AllTests.suite());
-		suite.addTest(org.eclipse.php.refactoring.core.move.AllTests.suite());
-		suite.addTest(org.eclipse.php.refactoring.core.extract.function.AllTests.suite());
-		suite.addTest(org.eclipse.php.refactoring.core.extract.variable.AllTests.suite());
-		suite.addTest(org.eclipse.php.refactoring.ui.actions.AllTests.suite());
-		suite.addTest(org.eclipse.php.refactoring.core.changes.AllTests.suite());
-		//$JUnit-END$
-		return suite;
-	}
 
 }
