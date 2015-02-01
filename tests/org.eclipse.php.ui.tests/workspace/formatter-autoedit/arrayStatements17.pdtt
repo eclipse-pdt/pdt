@@ -1,0 +1,12 @@
+--TEST--
+Tests formatting array statements.
+--FILE--
+<?php
+Route::url('partners', array(|));
+?>
+--EXPECT--
+<?php
+Route::url('partners', array(
+		
+));
+?>
