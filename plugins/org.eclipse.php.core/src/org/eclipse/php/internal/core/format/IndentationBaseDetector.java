@@ -87,7 +87,7 @@ public class IndentationBaseDetector {
 		lineEnd = Math.min(lineEnd, offset);
 		if (lineEnd == lineInfo.getOffset()) {
 			lineEnd = IndentationUtils.moveLineStartToNonBlankChar(document,
-					lineEnd, currLineIndex) - 1;
+					lineEnd, currLineIndex, false);
 		}
 		if (lineEnd == document.getLength() && lineEnd > 0) {
 			lineEnd--;
@@ -240,7 +240,7 @@ public class IndentationBaseDetector {
 	private int getMultiLineStatementStartOffset(int lineStart,
 			int currLineIndex, int checkedOffset) throws BadLocationException {
 		lineStart = IndentationUtils.moveLineStartToNonBlankChar(document,
-				lineStart, currLineIndex);
+				lineStart, currLineIndex, true);
 
 		TextSequence textSequence = PHPTextSequenceUtilities
 				.getStatement(lineStart,
@@ -399,7 +399,7 @@ public class IndentationBaseDetector {
 	private int getMultiLineStatementStartOffset(int lineStart,
 			int currLineIndex) {
 		lineStart = IndentationUtils.moveLineStartToNonBlankChar(document,
-				lineStart, currLineIndex);
+				lineStart, currLineIndex, true);
 
 		TextSequence textSequence = PHPTextSequenceUtilities
 				.getStatement(lineStart,
@@ -414,7 +414,7 @@ public class IndentationBaseDetector {
 				return textSequenceLine;
 			}
 		}
-		
+
 		return -1;
 	}
 

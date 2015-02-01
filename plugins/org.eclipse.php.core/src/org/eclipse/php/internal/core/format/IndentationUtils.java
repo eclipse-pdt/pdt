@@ -31,7 +31,8 @@ public class IndentationUtils {
 				&& !PHPRegionTypes.PHPDOC_COMMENT_START.equals(regionType)
 				&& !PHPRegionTypes.PHP_COMMENT_START.equals(regionType)
 				&& !PHPRegionTypes.PHP_LINE_COMMENT.equals(regionType)
-				&& !PHPRegionTypes.PHP_STRING.equals(regionType)
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=458777
+				// && !PHPRegionTypes.PHP_STRING.equals(regionType)
 				&& !PHPRegionTypes.PHP_CASE.equals(regionType)
 				&& !PHPRegionTypes.PHP_DEFAULT.equals(regionType);
 	}
@@ -49,7 +50,7 @@ public class IndentationUtils {
 	}
 
 	public static int moveLineStartToNonBlankChar(IStructuredDocument document,
-			int lineStart, int currLineIndex) {
+			int lineStart, int currLineIndex, boolean moveAfterNonBlankChar) {
 		try {
 			char[] line = document.get(lineStart,
 					document.getLineLength(currLineIndex)).toCharArray();
@@ -58,7 +59,7 @@ public class IndentationUtils {
 				if (Character.isWhitespace(c)) {
 				} else {
 					// move line start to first non blank char
-					lineStart += i + 1;
+					lineStart += i + (moveAfterNonBlankChar ? 1 : 0);
 					break;
 				}
 			}
