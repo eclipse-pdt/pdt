@@ -509,10 +509,10 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 							&& !fOutlineViewer.getControl().isDisposed()) {
 						Display d = control.getDisplay();
 						if (d != null) {
+							final Object[] objects = toUpdate.toArray();
 							d.asyncExec(new Runnable() {
 								public void run() {
-									fOutlineViewer.update(toUpdate.toArray(),
-											null);
+									fOutlineViewer.update(objects, null);
 								}
 							});
 						}
