@@ -78,17 +78,4 @@ public class InUseTraitStrategy extends AbstractCompletionStrategy {
 		}
 
 	}
-
-	public org.eclipse.dltk.internal.core.SourceRange getReplacementRange(
-			ICompletionContext context) throws BadLocationException {
-		org.eclipse.dltk.internal.core.SourceRange replacementRange = super
-				.getReplacementRange(context);
-		boolean insertMode = isInsertMode();
-		if (replacementRange.getLength() > 0 && insertMode) {
-			return new org.eclipse.dltk.internal.core.SourceRange(
-					replacementRange.getOffset(),
-					replacementRange.getLength() - 1);
-		}
-		return replacementRange;
-	}
 }

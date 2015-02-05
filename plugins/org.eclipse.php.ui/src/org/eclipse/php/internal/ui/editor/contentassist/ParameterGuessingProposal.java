@@ -215,16 +215,10 @@ public final class ParameterGuessingProposal extends
 
 	private void dealSuffix(IDocument document, int offset) {
 		boolean toggleEating = isToggleEating();
-		boolean instertCompletion = insertCompletion();
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=395654
-		// workaround for GlobalTypesStrategy.getReplacementRange()
-		if (instertCompletion && toggleEating) {
-			setReplacementLength(getReplacementLength() + 1);
-		}
-
+		boolean insertCompletion = insertCompletion();
 		String replacement = getReplacementString();
 		if (replacement.endsWith(RPAREN)) {
-			if (instertCompletion && toggleEating) {
+			if (!insertCompletion || toggleEating) {
 				if (cursorInBrackets(document, getReplacementOffset()
 						+ getReplacementLength() + 1)) {
 					setReplacementLength(getReplacementLength() + 2);
@@ -239,7 +233,7 @@ public final class ParameterGuessingProposal extends
 			// append with parameters when using insert mode,for example
 			// getA|($a),we should generate getA()($a) instead of getA($a),but
 			// for getA|(),we should generate getA()
-			if (insertCompletion() && !cursorInBrackets(document, offset + 1)) {
+			if (insertCompletion && !cursorInBrackets(document, offset + 1)) {
 				replacement = replacement + PARENS;
 				setReplacementString(replacement);
 			}

@@ -105,18 +105,6 @@ public class NamespaceDocTypesStrategy extends AbstractCompletionStrategy {
 		return result;
 	}
 
-	public org.eclipse.dltk.internal.core.SourceRange getReplacementRange(
-			ICompletionContext context) throws BadLocationException {
-		org.eclipse.dltk.internal.core.SourceRange replacementRange = super
-				.getReplacementRange(context);
-		if (replacementRange.getLength() > 0) {
-			return new org.eclipse.dltk.internal.core.SourceRange(
-					replacementRange.getOffset(),
-					replacementRange.getLength() - 1);
-		}
-		return replacementRange;
-	}
-
 	protected Object getExtraInfo() {
 		return ProposalExtraInfo.TYPE_ONLY;
 	}

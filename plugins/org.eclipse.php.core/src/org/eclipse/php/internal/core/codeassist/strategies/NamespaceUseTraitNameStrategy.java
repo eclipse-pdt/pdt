@@ -62,18 +62,6 @@ public class NamespaceUseTraitNameStrategy extends AbstractCompletionStrategy {
 		return (IType[]) result.toArray(new IType[result.size()]);
 	}
 
-	public org.eclipse.dltk.internal.core.SourceRange getReplacementRange(
-			ICompletionContext context) throws BadLocationException {
-		org.eclipse.dltk.internal.core.SourceRange replacementRange = super
-				.getReplacementRange(context);
-		if (replacementRange.getLength() > 0) {
-			return new org.eclipse.dltk.internal.core.SourceRange(
-					replacementRange.getOffset(),
-					replacementRange.getLength() - 1);
-		}
-		return replacementRange;
-	}
-
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		String nextWord = null;
 		try {
