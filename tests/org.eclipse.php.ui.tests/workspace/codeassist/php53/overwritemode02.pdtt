@@ -1,0 +1,31 @@
+--TEST--
+Test overwrite mode
+Bug 459306 - CA invalid overwrites function FQN for PHP 5.5 and lower
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=false
+--FILE--
+<?php
+namespace Bar
+{
+
+    function myFunction()
+    {}
+}
+namespace Foo
+{
+    \Bar\|Something();
+}
+?>
+--EXPECT--
+<?php
+namespace Bar
+{
+
+    function myFunction()
+    {}
+}
+namespace Foo
+{
+    \Bar\Something();
+}
+?>
