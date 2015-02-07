@@ -1,0 +1,45 @@
+--TEST--
+Test overwrite mode
+Bug 458794 - CA class name overwrite issue
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=false
+--FILE--
+<?php
+namespace MainSpace
+{
+    class OtherClass
+    {
+    }
+}
+namespace OtherSpace
+{
+    class TestClass
+    {
+
+        function returnsmsms()
+        {
+            new \MainSpace\|SomethingClass ();
+        }
+    }
+}
+?>
+--EXPECT--
+<?php
+namespace MainSpace
+{
+    class OtherClass
+    {
+    }
+}
+namespace OtherSpace
+{
+    class TestClass
+    {
+
+        function returnsmsms()
+        {
+            new \MainSpace\SomethingClass ();
+        }
+    }
+}
+?>

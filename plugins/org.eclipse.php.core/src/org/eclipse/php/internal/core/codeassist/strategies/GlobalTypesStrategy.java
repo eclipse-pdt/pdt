@@ -67,19 +67,6 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		this(context, 0, 0);
 	}
 
-	public org.eclipse.dltk.internal.core.SourceRange getReplacementRange(
-			ICompletionContext context) throws BadLocationException {
-		org.eclipse.dltk.internal.core.SourceRange replacementRange = super
-				.getReplacementRange(context);
-		boolean insertMode = isInsertMode();
-		if (replacementRange.getLength() > 0 && insertMode) {
-			return new org.eclipse.dltk.internal.core.SourceRange(
-					replacementRange.getOffset(),
-					replacementRange.getLength() - 1);
-		}
-		return replacementRange;
-	}
-
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 
 		ICompletionContext context = getContext();
