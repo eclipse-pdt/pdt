@@ -100,17 +100,16 @@ public class UseStatementInjector {
 		}
 
 		try {
-			// quanlified namespace should return offset directly
-			if (offset - proposal.getReplacementLength() > 0
-					&& document.getChar(offset
-							- proposal.getReplacementLength() - 1) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			// qualified namespace should return offset directly
+			if (proposal.getReplacementOffset() > 0
+					&& document.getChar(proposal.getReplacementOffset() - 1) == NamespaceReference.NAMESPACE_SEPARATOR) {
 				return offset;
 			}
 			if (modelElement.getElementType() == IModelElement.TYPE
 					&& PHPFlags.isNamespace(((IType) modelElement).getFlags())) {
-				if (offset - proposal.getReplacementLength() > 0) {
+				if (offset > 0) {
 					String prefix = document.get(
-							offset - proposal.getReplacementLength(),
+							proposal.getReplacementOffset(),
 							proposal.getReplacementLength());
 					String fullName = ((IType) modelElement).getElementName();
 					if (fullName.startsWith(prefix)

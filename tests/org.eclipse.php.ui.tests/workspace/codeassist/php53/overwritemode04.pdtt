@@ -1,0 +1,29 @@
+--TEST--
+Test overwrite mode
+Bug 459368 - CA for FQN class inserts also use statement
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=false
+--FILE--
+<?php
+namespace Bar
+{
+    class Test{
+    }
+}
+namespace Foo
+{
+    \Bar\T| ;
+}
+?>
+--EXPECT--
+<?php
+namespace Bar
+{
+    class Test{
+    }
+}
+namespace Foo
+{
+    \Bar\Test ;
+}
+?>

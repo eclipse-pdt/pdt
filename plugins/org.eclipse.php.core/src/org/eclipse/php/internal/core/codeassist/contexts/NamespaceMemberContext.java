@@ -155,8 +155,12 @@ public class NamespaceMemberContext extends StatementContext {
 			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
 			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken
 					.getEnd());
-			return getRegionCollection().getStartOffset()
-					+ phpScriptRegion.getStart() + nextRegion.getTextEnd();
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=459368
+			// Also check that we only retrieve PHP labels.
+			if (nextRegion.getType() == PHPRegionTypes.PHP_STRING) {
+				return getRegionCollection().getStartOffset()
+						+ phpScriptRegion.getStart() + nextRegion.getTextEnd();
+			}
 		}
 		return super.getPrefixEnd();
 	}
