@@ -19,6 +19,7 @@ import org.eclipse.dltk.ui.text.ScriptTextTools;
 import org.eclipse.dltk.ui.text.completion.ScriptOverrideCompletionProposal;
 import org.eclipse.jface.internal.text.html.BrowserInformationControl;
 import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposalExtension4;
 import org.eclipse.jface.text.contentassist.IContextInformation;
@@ -83,7 +84,27 @@ public class PHPOverrideCompletionProposal extends
 					}
 				}
 				if (!hasArguments) {
-					setCursorPosition(offset - getReplacementOffset() + 2);
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=459377
+					// Check if we have some parameters inside of parentheses,
+					// even if they shouldn't be there.
+					// In this case, place cursor after left parenthesis,
+					// otherwise place cursor after right parenthesis.
+					IRegion line = document.getLineInformationOfOffset(offset);
+					int lineEnd = line.getOffset() + line.getLength();
+					int pos = offset + 1;
+					while (pos < lineEnd) {
+						if (Character.isWhitespace(document.getChar(pos))) {
+							pos++;
+							continue;
+						}
+						if (document.getChar(pos) == ')') {
+							pos++;
+							break;
+						}
+						pos = offset + 1;
+						break;
+					}
+					setCursorPosition(pos - getReplacementOffset());
 				} else {
 					setCursorPosition(offset - getReplacementOffset() + 1);
 				}

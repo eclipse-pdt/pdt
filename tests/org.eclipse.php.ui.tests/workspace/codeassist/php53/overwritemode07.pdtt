@@ -1,0 +1,43 @@
+--TEST--
+Test overwrite mode
+Bug 459377 - CA overwrite should better handle parameters between parentheses
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=false
+--FILE--
+<?php
+namespace MainSpace
+{
+    class OtherClass
+    {
+    }
+}
+namespace OtherSpace
+{
+    class TestClass
+    {
+        function returnsmsms()
+        {
+            new \MainSpace\O|therFoo  ( $param );
+        }
+    }
+}
+?>
+--EXPECT--
+<?php
+namespace MainSpace
+{
+    class OtherClass
+    {
+    }
+}
+namespace OtherSpace
+{
+    class TestClass
+    {
+        function returnsmsms()
+        {
+            new \MainSpace\OtherClass  ( $param );
+        }
+    }
+}
+?>
