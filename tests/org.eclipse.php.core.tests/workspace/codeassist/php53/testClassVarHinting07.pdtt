@@ -37,4 +37,5 @@ namespace Foo
     }
 }
 --EXPECT--
+method(test01)
 method(test02)

@@ -1,0 +1,30 @@
+--TEST--
+Test class field 
+Bug 459391 - No CA proposal for class field (phpDoc)
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+class object {
+	public $prop;
+}
+class object_collection {
+	/**
+	 *
+	 * @var object[]
+	 */
+	public $array;
+	public function get_all() {
+		return $this->array;
+	}
+}
+class test {
+	function testme() {
+		$collection = new object_collection ();
+		foreach ( $collection->get_all () as $object ) {
+			$object->|; 
+		}
+	}
+}
+--EXPECT--
+field($prop)
