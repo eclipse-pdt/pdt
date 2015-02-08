@@ -49,12 +49,10 @@ import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
 public final class ParameterGuessingProposal extends
 		PHPOverrideCompletionProposal implements
 		IPHPCompletionProposalExtension {
-	private static final String PARENS = "()"; //$NON-NLS-1$
 	private static final char[] NO_TRIGGERS = new char[0];
-	protected static final String LPAREN = "("; //$NON-NLS-1$
-	protected static final String RPAREN = ")"; //$NON-NLS-1$
+	protected static final char LPAREN = '('; //$NON-NLS-1$
+	protected static final char RPAREN = ')'; //$NON-NLS-1$
 	protected static final String COMMA = ", "; //$NON-NLS-1$
-	protected static final String SPACE = " "; //$NON-NLS-1$
 	private CompletionProposal fProposal;
 	private IMethod method;
 	private final boolean fFillBestGuess;
@@ -217,16 +215,37 @@ public final class ParameterGuessingProposal extends
 		boolean toggleEating = isToggleEating();
 		boolean insertCompletion = insertCompletion();
 		String replacement = getReplacementString();
-		if (replacement.endsWith(RPAREN)) {
-			int pos = -1;
+		int posReplacementLP = replacement.indexOf(LPAREN);
+		if (posReplacementLP >= 0
+				&& replacement.endsWith(String.valueOf(RPAREN))) {
+			int searchOffset;
 			if (!insertCompletion || toggleEating) {
-				pos = getRelativePositionAfterBrackets(document,
-						getReplacementOffset() + getReplacementLength());
+				searchOffset = getReplacementOffset() + getReplacementLength();
 			} else {
-				pos = getRelativePositionAfterBrackets(document, offset);
+				searchOffset = offset;
 			}
-			if (pos >= 0) {
-				setReplacementLength(getReplacementLength() + pos);
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=459377
+			int posLP = getRelativePositionOf(document, searchOffset, LPAREN);
+			int posRP = -1;
+			if (posLP >= 0) {
+				posRP = getRelativePositionOf(document, searchOffset
+						+ (posLP + 1), RPAREN);
+			}
+			if (posLP >= 0) {
+				if (posRP < 0) {
+					// we truncate the replacement text starting
+					// from left parenthesis (included)
+					replacement = replacement.substring(0, posReplacementLP);
+					setReplacementString(replacement);
+					// put the cursor before left parenthesis in document,
+					// it will be put after left parenthesis through
+					// PHPOverrideCompletionProposal#calculateCursorPosition()
+					setReplacementLength(getReplacementLength() + posLP);
+				} else {
+					// put the cursor after right parenthesis in document
+					setReplacementLength(getReplacementLength() + (posLP + 1)
+							+ (posRP + 1));
+				}
 			}
 		} else {
 			// deal with case that a method that do not have parameters but with
@@ -234,25 +253,40 @@ public final class ParameterGuessingProposal extends
 			// getA|($a),we should generate getA()($a) instead of getA($a),but
 			// for getA|(),we should generate getA()
 			if (insertCompletion
-					&& getRelativePositionAfterBrackets(document, offset) < 0) {
-				replacement = replacement + PARENS;
+					&& getRelativePositionOf(document, offset, LPAREN) < 0) {
+				replacement = replacement + LPAREN + RPAREN;
 				setReplacementString(replacement);
 			}
 		}
 	}
 
-	private int getRelativePositionAfterBrackets(IDocument document, int offset) {
+	/**
+	 * Retrieves the position of the first occurrence of a "search" character,
+	 * starting from "offset" position and until end of line.
+	 * 
+	 * @param document
+	 * @param offset
+	 * @param search
+	 *            character to search
+	 * @return position of "search" character relative to offset, -1 if not
+	 *         found or if there are non-whitespace characters between "offset"
+	 *         position and the first occurrence of the "search" character
+	 */
+	private int getRelativePositionOf(IDocument document, int offset,
+			char search) {
 		try {
 			IRegion line = document.getLineInformationOfOffset(offset);
-			int lineOffset = line.getOffset();
-			int lineEnd = lineOffset + line.getLength();
+			int lineEnd = line.getOffset() + line.getLength();
+			if (offset >= lineEnd) {
+				// end of line
+				return -1;
+			}
 			int pos = 0;
-			while (offset + pos < lineEnd - 2 // "()".length()
+			while (offset + pos < lineEnd - 1 // 1 = "search" length
 					&& Character.isWhitespace(document.getChar(offset + pos))) {
 				pos++;
 			}
-			String nextWord = document.get(offset + pos, 2); // "()".length()
-			return PARENS.equals(nextWord) ? pos + 2 : -1;
+			return document.getChar(offset + pos) == search ? pos : -1;
 		} catch (BadLocationException e) {
 		}
 		return -1;
