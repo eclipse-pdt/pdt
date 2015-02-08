@@ -78,13 +78,13 @@ public class BracesTabPage extends ModifyDialogTabPage {
 		methodDeclaration = createBracesCombo(group, numColumns,
 				FormatterMessages.BracesTabPage_option_method_declaration);
 		setComboValue(methodDeclaration,
-				codeFormatterPreferences.brace_position_for_lambda_function);
+				codeFormatterPreferences.brace_position_for_function);
 		lambdaFunctionDeclaration = createBracesCombo(
 				group,
 				numColumns,
 				FormatterMessages.BracesTabPage_option_lambda_function_declaration);
-		setComboValue(methodDeclaration,
-				codeFormatterPreferences.brace_position_for_function);
+		setComboValue(lambdaFunctionDeclaration,
+				codeFormatterPreferences.brace_position_for_lambda_function);
 		blocks = createBracesCombo(group, numColumns,
 				FormatterMessages.BracesTabPage_option_blocks);
 		setComboValue(blocks, codeFormatterPreferences.brace_position_for_block);
