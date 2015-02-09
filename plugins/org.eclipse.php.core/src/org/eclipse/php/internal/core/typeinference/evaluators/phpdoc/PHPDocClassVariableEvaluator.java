@@ -15,15 +15,16 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
-import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
@@ -60,14 +61,12 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		IType[] types = PHPTypeInferenceUtils.getModelElements(
 				context.getInstanceType(), context, offset, cache);
 		Map<PHPDocBlock, IField> docs = new HashMap<PHPDocBlock, IField>();
-		boolean lookOnlyForArrayTypes = false;
 		if (types != null) {
 			// remove array index from field name
 			if (variableName.endsWith("]")) { //$NON-NLS-1$
 				int index = variableName.indexOf("["); //$NON-NLS-1$
 				if (index != -1) {
 					variableName = variableName.substring(0, index);
-					lookOnlyForArrayTypes = true;
 				}
 			}
 			for (IType type : types) {
@@ -100,19 +99,6 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 			}
 		}
 
-		// check if is in ForEach statement
-		if (!lookOnlyForArrayTypes) {
-			int start = offset + variableName.length();
-			int end = offset + variableName.length() + 1;
-			ASTNode node = ASTUtils.findMinimalNode(context.getRootNode(),
-					start, end);
-			if (node instanceof ForEachStatement) {
-				lookOnlyForArrayTypes = true;
-			}
-		}
-
-		List<IEvaluatedType> arrayEvaluated = new LinkedList<IEvaluatedType>();
-
 		for (Entry<PHPDocBlock, IField> entry : docs.entrySet()) {
 			PHPDocBlock doc = entry.getKey();
 			IField typeField = entry.getValue();
@@ -129,7 +115,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 								.extractArrayType(typeName, currentNamespace,
 										tag.sourceStart());
 						if (evaluatedType != null) {
-							arrayEvaluated.add(evaluatedType);
+							evaluated.add(evaluatedType);
 						} else {
 							if (currentNamespace != null) {
 								if (typeName.indexOf(SPLASH) > 0) {
@@ -182,14 +168,6 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 					}
 				}
 			}
-		}
-
-		if (variableName.startsWith("$")) { //$NON-NLS-1$
-			if (lookOnlyForArrayTypes) {
-				evaluated = arrayEvaluated;
-			}
-		} else {
-			evaluated.addAll(arrayEvaluated);
 		}
 
 		return IGoal.NO_GOALS;
