@@ -63,6 +63,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 	public static final String PARAMETER_SEPERATOR = "|"; //$NON-NLS-1$
 	public static final String NULL_VALUE = "#"; //$NON-NLS-1$
+	public static final String GLOBAL_PARENT = "<global>"; //$NON-NLS-1$
 	private static final String DEFAULT_VALUE = " "; //$NON-NLS-1$
 	/**
 	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
@@ -127,6 +128,12 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	public void modifyDeclaration(ASTNode node, DeclarationInfo info) {
 		for (PhpIndexingVisitorExtension visitor : extensions) {
 			visitor.modifyDeclaration(node, info);
+		}
+		if (info.elementType == IModelElement.FIELD
+				|| info.elementType == IModelElement.METHOD) {
+			if ((info.flags & IPHPModifiers.AccGlobal) != 0) {
+				info.parent = GLOBAL_PARENT;
+			}
 		}
 		requestor.addDeclaration(info);
 	}

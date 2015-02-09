@@ -43,7 +43,7 @@ public class PhpElementResolver implements IElementResolver {
 			parentElement = new IndexType(parentElement, qualifier,
 					Modifiers.AccNameSpace, 0, 0, 0, 0, null, doc);
 		}
-		if (parent != null) {
+		if (parent != null && !PhpIndexingVisitor.GLOBAL_PARENT.equals(parent)) {
 			parentElement = new SourceType(parentElement, parent);
 		}
 
