@@ -25,6 +25,7 @@ import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.model.IncludeField;
 
 public class PhpElementResolver implements IElementResolver {
@@ -57,6 +58,12 @@ public class PhpElementResolver implements IElementResolver {
 		}
 
 		ModelElement parentElement = (ModelElement) sourceModule;
+		if (PHPCoreConstants.FILE_PARENT.equals(parent)) {
+			parent = null;
+		}
+		if (PHPCoreConstants.GLOBAL_NAMESPACE.equals(qualifier)) {
+			qualifier = null;
+		}
 		if (qualifier != null) {
 			// namespace:
 			parentElement = new IndexType(parentElement, qualifier, Modifiers.AccNameSpace, 0, 0, 0, 0, null, doc,

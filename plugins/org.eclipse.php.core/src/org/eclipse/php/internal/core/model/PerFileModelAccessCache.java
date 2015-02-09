@@ -3,7 +3,6 @@ package org.eclipse.php.internal.core.model;
 import java.util.*;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
@@ -148,8 +147,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			// this class:
 			IScriptProject scriptProject = sourceModule.getScriptProject();
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-			functions = Arrays.asList(PhpModelAccess.getDefault().findMethods(functionName, MatchRule.EXACT,
-					Modifiers.AccGlobal, 0, scope, monitor));
+			functions = Arrays.asList(
+					PhpModelAccess.getDefault().findFunctions(functionName, MatchRule.EXACT, 0, 0, scope, monitor));
 
 		} else {
 			functionName = functionName.toLowerCase();
@@ -162,8 +161,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 					IScriptProject scriptProject = sourceModule.getScriptProject();
 					IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 
-					IMethod[] allFunctions = PhpModelAccess.getDefault().findMethods(functionName, MatchRule.EXACT,
-							Modifiers.AccGlobal, 0, scope, monitor);
+					IMethod[] allFunctions = PhpModelAccess.getDefault().findFunctions(functionName, MatchRule.EXACT, 0,
+							0, scope, monitor);
 					Collection<IMethod> funcList = new ArrayList<IMethod>(allFunctions.length);
 					for (IMethod function : allFunctions) {
 						funcList.add(function);

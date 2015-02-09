@@ -11,18 +11,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.model;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.php.core.compiler.IPHPModifiers;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 
 public class PhpModelAccess extends ModelAccess {
 	public static final IType[] NULL_TYPES = new IType[0];
@@ -67,11 +66,80 @@ public class PhpModelAccess extends ModelAccess {
 	@Override
 	public IMethod[] findMethods(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
+
 		IMethod[] result = super.findMethods(qualifier, name, matchRule, trueFlags, falseFlags, scope, monitor);
 		if (result == null) {
 			result = PhpModelAccess.NULL_METHODS;
 		}
 		return result;
+	}
+
+	protected <T extends IModelElement> boolean findFileElements(int elementType, String name, MatchRule matchRule,
+			int trueFlags, int falseFlags, IDLTKSearchScope scope, final Collection<T> result,
+			IProgressMonitor monitor) {
+		String qualifier = null;
+		if (name != null) {
+			ISearchPatternProcessor processor = DLTKLanguageManager
+					.getSearchPatternProcessor(scope.getLanguageToolkit());
+			if (processor != null) {
+				String delim = processor.getDelimiterReplacementString();
+				int i = name.lastIndexOf(delim);
+				if (i != -1) {
+					qualifier = name.substring(0, i);
+					name = name.substring(i + 1);
+				}
+			}
+		}
+		return findFileElements(elementType, qualifier, name, matchRule, trueFlags, falseFlags, scope, result, monitor);
+	}
+
+	protected <T extends IModelElement> boolean findFileElements(int elementType, String qualifier, String name,
+			MatchRule matchRule, int trueFlags, int falseFlags, IDLTKSearchScope scope, final Collection<T> result,
+			IProgressMonitor monitor) {
+		return findElements(elementType, qualifier, name, PHPCoreConstants.FILE_PARENT, matchRule, trueFlags,
+				falseFlags, scope, result, monitor);
+	}
+
+	public IMethod[] findFunctions(String name, MatchRule matchRule, int trueFlags, int falseFlags,
+			IDLTKSearchScope scope, IProgressMonitor monitor) {
+		List<IMethod> result = new LinkedList<IMethod>();
+		if (!findFileElements(IModelElement.METHOD, name, matchRule, trueFlags, falseFlags, scope, result, monitor)) {
+			return PhpModelAccess.NULL_METHODS;
+		}
+
+		return result.toArray(new IMethod[result.size()]);
+	}
+
+	public IMethod[] findFunctions(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
+			IDLTKSearchScope scope, IProgressMonitor monitor) {
+		List<IMethod> result = new LinkedList<IMethod>();
+		if (!findFileElements(IModelElement.METHOD, qualifier, name, matchRule, trueFlags, falseFlags, scope, result,
+				monitor)) {
+			return PhpModelAccess.NULL_METHODS;
+		}
+
+		return result.toArray(new IMethod[result.size()]);
+	}
+
+	public IField[] findFileFields(String name, MatchRule matchRule, int trueFlags, int falseFlags,
+			IDLTKSearchScope scope, IProgressMonitor monitor) {
+		List<IField> result = new LinkedList<IField>();
+		if (!findFileElements(IModelElement.FIELD, name, matchRule, trueFlags, falseFlags, scope, result, monitor)) {
+			return PhpModelAccess.NULL_FIELDS;
+		}
+
+		return result.toArray(new IField[result.size()]);
+	}
+
+	public IField[] findFileField(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
+			IDLTKSearchScope scope, IProgressMonitor monitor) {
+		List<IField> result = new LinkedList<IField>();
+		if (!findFileElements(IModelElement.FIELD, qualifier, name, matchRule, trueFlags, falseFlags, scope, result,
+				monitor)) {
+			return PhpModelAccess.NULL_FIELDS;
+		}
+
+		return result.toArray(new IField[result.size()]);
 	}
 
 	@Override
@@ -133,4 +201,5 @@ public class PhpModelAccess extends ModelAccess {
 		}
 		return (IField[]) result.toArray(new IField[result.size()]);
 	}
+
 }
