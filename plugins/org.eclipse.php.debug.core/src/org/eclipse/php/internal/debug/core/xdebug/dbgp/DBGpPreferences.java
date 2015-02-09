@@ -21,7 +21,7 @@ public class DBGpPreferences {
 
 	// define DBGp session defaults
 	public static final int DBGP_MAX_DEPTH_DEFAULT = 3;
-	public static final int DBGP_MAX_CHILDREN_DEFAULT = 31;
+	public static final int DBGP_MAX_CHILDREN_DEFAULT = 51;
 	public static final boolean DBGP_SHOW_GLOBALS_DEFAULT = true;
 	public static final int DBGP_CAPTURE_DEFAULT = 0;
 	public static final int DBGP_MAX_DATA_DEFAULT = 1024;
@@ -34,7 +34,7 @@ public class DBGpPreferences {
 	public static final String DBGP_CAPTURE_STDERR_PROPERTY = "CaptureStderr"; //$NON-NLS-1$
 	public static final String DBGP_MAX_DATA_PROPERTY = "MaxData"; //$NON-NLS-1$
 
-	private Map preferences = new HashMap();
+	private Map<String, Object> preferences = new HashMap<String, Object>();
 
 	public void setValue(String name, int value) {
 		preferences.put(name, value);

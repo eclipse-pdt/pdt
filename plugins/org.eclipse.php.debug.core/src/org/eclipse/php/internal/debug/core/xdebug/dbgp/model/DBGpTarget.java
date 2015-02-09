@@ -11,6 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIND_LOCAL;
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIND_SUPER_GLOBAL;
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIND_THIS;
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.VIRTUAL_CLASS;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -23,9 +28,24 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.debug.core.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IMarkerDelta;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.core.DebugEvent;
+import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.IBreakpointManager;
+import org.eclipse.debug.core.IBreakpointManagerListener;
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.*;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -36,6 +56,7 @@ import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
+import org.eclipse.php.internal.debug.core.model.VariablesUtil;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
@@ -46,7 +67,11 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpoint;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpPreferences;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.*;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.Base64;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpCommand;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.EngineTypes;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
@@ -1514,7 +1539,31 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		if (locals.length > 0) {
 			System.arraycopy(locals, 0, merged, globals.length, locals.length);
 		}
+		setContextFacets(merged);
+		VariablesUtil.sortContextMembers(merged);
 		return merged;
+	}
+
+	private void setContextFacets(IVariable[] contextVariables) {
+		for (int i = 0; i < contextVariables.length; i++) {
+			if (contextVariables[i] instanceof AbstractDBGpBaseVariable) {
+				AbstractDBGpBaseVariable dbgpVariable = (AbstractDBGpBaseVariable) contextVariables[i];
+				String endName;
+				try {
+					endName = dbgpVariable.getName();
+					if (VariablesUtil.isThis(endName))
+						dbgpVariable.addFacets(KIND_THIS);
+					else if (VariablesUtil.isSuperGlobal(endName))
+						dbgpVariable.addFacets(KIND_SUPER_GLOBAL);
+					else if (VariablesUtil.isClassIndicator(endName))
+						dbgpVariable.addFacets(VIRTUAL_CLASS);
+					else
+						dbgpVariable.addFacets(KIND_LOCAL);
+				} catch (DebugException e) {
+					// should not happen
+				}
+			}
+		}
 	}
 
 	/**
