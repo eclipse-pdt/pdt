@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -33,6 +34,7 @@ import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
+import org.eclipse.php.internal.debug.core.model.VariablesUtil;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
@@ -634,7 +636,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 				connection.connect();
 			} catch (IOException e) {
 				DBGpLogger.logException(
-						"Failed to send stop XDebug session URL: " + stopDebugURL, this, e); //$NON-NLS-1$
+								"Failed to send stop XDebug session URL: " + stopDebugURL, this, e); //$NON-NLS-1$
 			}
 		} catch (MalformedURLException e) {
 			// Should not happen
@@ -1298,7 +1300,31 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		if (locals.length > 0) {
 			System.arraycopy(locals, 0, merged, globals.length, locals.length);
 		}
+		setContextFacets(merged);
+		VariablesUtil.sortContextMembers(merged);
 		return merged;
+	}
+
+	private void setContextFacets(IVariable[] contextVariables) {
+		for (int i = 0; i < contextVariables.length; i++) {
+			if (contextVariables[i] instanceof AbstractDBGpBaseVariable) {
+				AbstractDBGpBaseVariable dbgpVariable = (AbstractDBGpBaseVariable) contextVariables[i];
+				String endName;
+				try {
+					endName = dbgpVariable.getName();
+					if (VariablesUtil.isThis(endName))
+						dbgpVariable.addFacets(KIND_THIS);
+					else if (VariablesUtil.isSuperGlobal(endName))
+						dbgpVariable.addFacets(KIND_SUPER_GLOBAL);
+					else if (VariablesUtil.isClassIndicator(endName))
+						dbgpVariable.addFacets(VIRTUAL_CLASS);
+					else
+						dbgpVariable.addFacets(KIND_LOCAL);
+				} catch (DebugException e) {
+					// should not happen
+				}
+			}
+		}
 	}
 
 	/**

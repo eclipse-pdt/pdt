@@ -11,12 +11,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.model;
 
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
+
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.debug.ui.actions.IWatchExpressionFactoryAdapter;
 import org.eclipse.php.internal.debug.core.Logger;
+import org.eclipse.php.internal.debug.core.model.IVariableFacet;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
 import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpression;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
@@ -31,6 +34,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 	private PHPValue value;
 	private boolean hasChanged = false;
 	private boolean global = false;
+	private String name = null;
 
 	/**
 	 * Constructs a variable contained in the given stack frame with the given
@@ -73,7 +77,18 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 	 * @see org.eclipse.debug.core.model.IVariable#getName()
 	 */
 	public String getName() throws DebugException {
-		return (variable.getLastName());
+		if (name == null) {
+			String endName = variable.getLastName();
+			if (variable.hasFacet(KIND_OBJECT_MEMBER)) {
+				int idx = endName.lastIndexOf(':');
+				if (idx != -1)
+					endName = endName.substring(idx + 1);
+			} else if (variable.hasFacet(KIND_ARRAY_MEMBER)) {
+				endName = '[' + endName + ']';
+			}
+			name = endName;
+		}
+		return name;
 	}
 
 	/*
@@ -141,7 +156,9 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 	 * ()
 	 */
 	public boolean supportsValueModification() {
-		// return pValue.isPrimative();
+		// Not supported yet
+		if (variable.hasFacet(MOD_STATIC) || variable.hasFacet(VIRTUAL_CLASS))
+			return false;
 		return true;
 	}
 
@@ -167,10 +184,14 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 		return true;
 	}
 
-	public Object getAdapter(Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == IWatchExpressionFactoryAdapter.class) {
 			return new WatchExpressionFactoryAdapter();
 		}
+		if (adapter == Expression.class || adapter == IVariableFacet.class) {
+			return variable;
+		}
 		return super.getAdapter(adapter);
 	}
+
 }
