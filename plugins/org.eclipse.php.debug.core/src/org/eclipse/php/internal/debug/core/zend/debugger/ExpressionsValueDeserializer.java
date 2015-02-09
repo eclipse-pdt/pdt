@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 
@@ -29,14 +31,6 @@ public class ExpressionsValueDeserializer {
 		}
 		return build(expression, new VariableReader(value));
 	}
-
-	// private byte[] getBytes(String text) {
-	// try {
-	// return text.getBytes(fEncoding);
-	// } catch (UnsupportedEncodingException e) {
-	// }
-	// return text.getBytes();
-	// }
 
 	private String getText(byte[] buf) {
 		try {
@@ -112,13 +106,10 @@ public class ExpressionsValueDeserializer {
 			VariableReader reader) {
 		int objectLength = reader.readInt();
 		int originalLength = objectLength;
-
-		// System.out.println("objectLength " + objectLength);
 		if (reader.isLastEnd()) {
 			objectLength = 0;
 		}
 		Expression[] variableNodes = new Expression[objectLength];
-
 		for (int i = 0; i < objectLength; i++) {
 			char type = reader.readType();
 			// System.out.println("type " + type);
@@ -135,26 +126,23 @@ public class ExpressionsValueDeserializer {
 				variableNodes[i] = createDefaultVariable(name);
 			} else {
 				variableNodes[i] = expression.createChildExpression(name,
-						'[' + name + ']');
+						'[' + name + ']', KIND_ARRAY_MEMBER);
 			}
 			variableNodes[i].setValue(build(expression, reader));
 		}
-
 		return new ExpressionValue(ExpressionValue.ARRAY_TYPE, "Array", //$NON-NLS-1$
-				"Array [" + originalLength + ']', variableNodes); //$NON-NLS-1$
+				"Array [" + originalLength + ']', variableNodes, originalLength); //$NON-NLS-1$
 	}
 
 	private ExpressionValue buildObjectType(Expression expression,
 			VariableReader reader) {
 		String className = reader.readString();
 		int objectLength = reader.readInt();
-
+		int originalLength = objectLength;
 		if (reader.isLastEnd()) {
 			objectLength = 0;
 		}
-
 		Expression[] expressionNodes = new Expression[objectLength];
-
 		for (int i = 0; i < objectLength; i++) {
 			char type = reader.readType();
 			// System.out.println("type " + type);
@@ -171,14 +159,13 @@ public class ExpressionsValueDeserializer {
 				expressionNodes[i] = createDefaultVariable(name);
 			} else {
 				expressionNodes[i] = expression.createChildExpression(name,
-						"->" + name); //$NON-NLS-1$
+						"->" + name, KIND_OBJECT_MEMBER); //$NON-NLS-1$
 			}
 			expressionNodes[i].setValue(build(expression, reader));
 		}
 		String valueAsString = "Object of: " + className; //$NON-NLS-1$
-
-		return new ObjectExpressionValue(className, valueAsString,
-				expressionNodes);
+		return new ExpressionValue(ExpressionValue.OBJECT_TYPE, className,
+				valueAsString, expressionNodes, originalLength);
 	}
 
 	private Expression createDefaultVariable(String name) {

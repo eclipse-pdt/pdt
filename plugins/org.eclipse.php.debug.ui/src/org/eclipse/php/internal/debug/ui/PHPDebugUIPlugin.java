@@ -27,6 +27,7 @@ import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.debug.internal.ui.viewers.model.InternalTreeModelViewer;
+import org.eclipse.debug.internal.ui.views.launch.DebugElementAdapterFactory;
 import org.eclipse.debug.internal.ui.views.launch.LaunchView;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.IDebugModelPresentation;
@@ -58,6 +59,7 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  */
+@SuppressWarnings("restriction")
 public class PHPDebugUIPlugin extends AbstractUIPlugin {
 
 	// The shared instance.
@@ -109,8 +111,8 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		// class, we insert the
 		// factory before any other factory.
 		AdapterManager manager = (AdapterManager) Platform.getAdapterManager();
-		List list = (List) manager.getFactories()
-				.get(IVariable.class.getName());
+		List<DebugElementAdapterFactory> list = (List<DebugElementAdapterFactory>) manager
+				.getFactories().get(IVariable.class.getName());
 		PHPDebugElementAdapterFactory propertiesFactory = new PHPDebugElementAdapterFactory();
 		manager.registerAdapters(propertiesFactory, IVariable.class);
 		manager.registerAdapters(propertiesFactory, PHPMultiDebugTarget.class);
@@ -183,7 +185,12 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	 */
 	public static ImageDescriptorRegistry getImageDescriptorRegistry() {
 		if (getDefault().fImageDescriptorRegistry == null) {
-			getDefault().fImageDescriptorRegistry = new ImageDescriptorRegistry();
+			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					getDefault().fImageDescriptorRegistry = new ImageDescriptorRegistry();
+				}
+			});
 		}
 		return getDefault().fImageDescriptorRegistry;
 	}
@@ -258,6 +265,10 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	public static void log(Throwable e) {
 		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR,
 				"PHP ui plugin internal error", e)); //$NON-NLS-1$
+	}
+
+	public static void logErrorMessage(String message) {
+		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR, message, null));
 	}
 
 	public static IProject getProject(String projectName) {
