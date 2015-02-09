@@ -25,7 +25,7 @@ public abstract class DBGpValue extends DBGpElement implements IValue {
 
 	private boolean modifiable = false;
 	private IVariable[] variables = new IVariable[0];
-	private DBGpBaseVariable owner;
+	private AbstractDBGpBaseVariable owner;
 	private String valueString = ""; //$NON-NLS-1$
 	private byte[] valueBytes = null;
 
@@ -39,12 +39,12 @@ public abstract class DBGpValue extends DBGpElement implements IValue {
 
 	private static final String ENCODING_BASE64 = "base64"; //$NON-NLS-1$
 
-	public DBGpValue(DBGpBaseVariable variable) {
+	public DBGpValue(AbstractDBGpBaseVariable variable) {
 		super(variable.getDebugTarget());
 		owner = variable;
 	}
 
-	public DBGpValue(DBGpBaseVariable variable, Node property) {
+	public DBGpValue(AbstractDBGpBaseVariable variable, Node property) {
 		super(variable.getDebugTarget());
 		owner = variable;
 		simpleParseNode(property);
@@ -97,7 +97,7 @@ public abstract class DBGpValue extends DBGpElement implements IValue {
 	public void setValue(String expression) throws DebugException {
 	}
 
-	public DBGpBaseVariable getOwner() {
+	public AbstractDBGpBaseVariable getOwner() {
 		return owner;
 	}
 

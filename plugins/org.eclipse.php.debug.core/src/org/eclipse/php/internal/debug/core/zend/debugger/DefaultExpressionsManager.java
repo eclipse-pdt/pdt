@@ -11,12 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
-import java.text.MessageFormat;
 import java.util.*;
 
-import org.eclipse.debug.core.model.IDebugTarget;
-import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
+import org.eclipse.php.internal.debug.core.model.VariablesUtil;
+import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 
 /**
  * @author guy
@@ -26,12 +24,9 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 	private static final Expression[] EMPTY_VARIABLE_ARRAY = new Expression[0];
 	private static final byte[] ILLEGAL_VAR = { 'N' };
 
-	private final static String GET_CURRENT_CONTEXT = "eval('if (isset($this)) {$this;}; return array_merge(get_defined_vars(), array(constant(\\'__CLASS__\\')));')"; //$NON-NLS-1$
-
 	private Debugger debugger;
 	private Map<String, Object> hashResultDepthOne = new HashMap<String, Object>();
 	private Map<String, byte[]> hashResultDepthZero = new HashMap<String, byte[]>();
-	private String[] currentContextPath = new String[] { GET_CURRENT_CONTEXT };
 	private ExpressionsValueDeserializer expressionValueDeserializer;
 
 	/**
@@ -41,15 +36,6 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		this.debugger = debugger;
 		expressionValueDeserializer = new ExpressionsValueDeserializer(
 				transferEncoding);
-	}
-
-	public static ExpressionsManager getCurrent() {
-		IDebugTarget debugTarget = PHPDebugPlugin.getActiveDebugTarget();
-		if (debugTarget != null && debugTarget instanceof PHPDebugTarget) {
-			PHPDebugTarget phpDebugTarget = (PHPDebugTarget) debugTarget;
-			return phpDebugTarget.getExpressionManager();
-		}
-		return null;
 	}
 
 	public byte[] getExpressionValue(Expression expression, int depth) {
@@ -68,14 +54,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		String[] path = new String[name.length - 1];
 		System.arraycopy(name, 1, path, 0, name.length - 1);
 		boolean status = true;
-		if (expression instanceof StaticMemberExpression) {
-			String member = expression.getLastName();
-			Expression changeStatic = new DefaultExpression(
-					MessageFormat.format("eval(''self::${0}={1};'')", member, //$NON-NLS-1$
-							value));
-			update(changeStatic, 1);
-		} else
-			status = debugger.assignValue(name[0], value, depth, path);
+		status = debugger.assignValue(name[0], value, depth, path);
 		byte[] eValue = debugger.getVariableValue(name[0], depth, path);
 		if (status) {
 			String key = buildKey(name);
@@ -89,9 +68,10 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 	}
 
 	public Expression[] getCurrentVariables(int depth) {
-		byte[] value = getVariableValue(currentContextPath, depth);
+		Expression contextExpression = new CurrentContextExpression();
+		byte[] value = getExpressionValue(contextExpression, depth);
 		ExpressionValue variableValue = expressionValueDeserializer
-				.deserializer(null, value);
+				.deserializer(contextExpression, value);
 		Expression[] variables = variableValue.getOriChildren();
 		if (variables == null) {
 			variables = EMPTY_VARIABLE_ARRAY;
@@ -112,15 +92,16 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		Expression dummyClass = variables[variables.length - 1];
 		String className = (String) dummyClass.getValue().getValue();
 		// Check if we are in static context
-		if (!hasThis && className!= null && !className.isEmpty()) {
-			Expression statics = new StaticsExpression(className);
-			update(statics, 1);
-			Expression[] staticVariables = statics.getValue().getChildren();
-			if (staticVariables != null)
-				currentVariables.addAll(Arrays.asList(staticVariables));
+		if (!hasThis && className != null && !className.isEmpty()) {
+			Expression staticClassContext = ExpressionsUtil.fetchStaticContext(
+					className, this);
+			if (staticClassContext != null)
+				currentVariables.add(staticClassContext);
 		}
 		variables = currentVariables.toArray(new Expression[currentVariables
 				.size()]);
+		// Sort by type (default order: this or class, locals, super globals)
+		VariablesUtil.sortContextMembers(variables);
 		hashResultDepthOne.put("LOCALS", variables); //$NON-NLS-1$
 		return variables;
 	}
@@ -130,9 +111,30 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 	}
 
 	public void update(Expression expression, int depth) {
+		if (expression.getValue().getType() == ExpressionValue.VIRTUAL_CLASS_TYPE)
+			return;
 		byte[] value = getExpressionValue(expression, depth);
-		expression.setValue(expressionValueDeserializer.deserializer(
-				expression, value));
+		ExpressionValue expressionValue = expressionValueDeserializer
+				.deserializer(expression, value);
+		// Workaround for fetching static members for objects
+		if (expressionValue.getType() == ExpressionValue.OBJECT_TYPE) {
+			Expression[] expressionStaticNodes = ExpressionsUtil
+					.fetchStaticMembers((String) expressionValue.getValue(),
+							this);
+			List<Expression> allNodes = new ArrayList<Expression>();
+			allNodes.addAll(Arrays.asList(expressionStaticNodes));
+			allNodes.addAll(Arrays.asList(expressionValue.getChildren()));
+			expressionValue = new ExpressionValue(ExpressionValue.OBJECT_TYPE,
+					expressionValue.getValue(),
+					expressionValue.getValueAsString(),
+					allNodes.toArray(new Expression[allNodes.size()]),
+					expressionValue.getChildrenCount()
+							+ expressionStaticNodes.length);
+		}
+		// Sort object members by type & name
+		if (!PHPProjectPreferences.isSortByName())
+			VariablesUtil.sortObjectMembers(expressionValue.getOriChildren());
+		expression.setValue(expressionValue);
 	}
 
 	private byte[] getVariableValue(String[] name, int depth) {

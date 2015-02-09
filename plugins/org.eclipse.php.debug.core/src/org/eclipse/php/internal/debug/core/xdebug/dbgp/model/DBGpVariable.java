@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugEvent;
@@ -19,10 +21,11 @@ import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.model.VariablesUtil;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.w3c.dom.Node;
 
-public class DBGpVariable extends DBGpBaseVariable implements IVariable {
+public class DBGpVariable extends AbstractDBGpBaseVariable implements IVariable {
 
 	static final String PHP_BOOL = "bool"; //$NON-NLS-1$
 	static final String PHP_INT = "int"; //$NON-NLS-1$
@@ -35,31 +38,24 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 
 	private DBGpValue value;
 	private String name;
-	// private String address;
+	// TODO - private String address;
 	private String type;
 
-	public DBGpVariable(DBGpTarget target, Node property, String level) {
-		super(target, level);
+	public DBGpVariable(DBGpTarget target, Node property, String level,
+			Facet... facets) {
+		super(target, level, facets);
 		parseProperty(property);
 	}
 
 	private void parseProperty(Node property) {
-
-		// we could have a property which has no name, fullname or type
-		// as a result of an expression evaluation
+		/*
+		 * We could have a property which has no name, full-name or type as a
+		 * result of an expression evaluation
+		 */
 		name = DBGpResponse.getAttribute(property, "name"); //$NON-NLS-1$
 		setFullName(DBGpResponse.getAttribute(property, "fullname")); //$NON-NLS-1$
-
-		// hopefully this will put the $ at appropriate point in the variable
-		// name
-		if (getFullName().length() > 1
-				&& name.equals(getFullName().substring(1))) {
-			name = getFullName();
-		}
-
 		setAddress(DBGpResponse.getAttribute(property, "address")); //$NON-NLS-1$
 		type = DBGpResponse.getAttribute(property, "type"); //$NON-NLS-1$
-
 		if (type.equals(PHP_BOOL)) {
 			value = new DBGpBoolValue(this, property);
 		} else if (type.equals(PHP_INT)) {
@@ -81,6 +77,26 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 		} else if (type.equals(PHP_ARRAY) || type.equals(PHP_OBJECT)) {
 			value = new DBGpContainerValue(this, property);
 		}
+		String facets = DBGpResponse.getAttribute(property, "facet"); //$NON-NLS-1$
+		if (facets.contains("static")) //$NON-NLS-1$
+			addFacets(Facet.MOD_STATIC);
+		if (facets.contains("public")) //$NON-NLS-1$
+			addFacets(Facet.MOD_PUBLIC);
+		else if (facets.contains("protected")) //$NON-NLS-1$
+			addFacets(Facet.MOD_PROTECTED);
+		else if (facets.contains("private")) //$NON-NLS-1$
+			addFacets(Facet.MOD_PRIVATE);
+		// Hopefully this will put the $ at appropriate point in the name
+		if (getFullName().length() > 1
+				&& name.equals(getFullName().substring(1))) {
+			name = getFullName();
+		}
+		if (hasFacet(KIND_ARRAY_MEMBER))
+			name = '[' + name + ']';
+		else if (hasFacet(Facet.MOD_STATIC) && name.startsWith(":")) { //$NON-NLS-1$
+			name = name.substring(name.lastIndexOf(':') + 1);
+		} else if (name.equals("::")) //$NON-NLS-1$
+			name = VariablesUtil.CLASS_INDICATOR;
 	}
 
 	/*
@@ -98,6 +114,8 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 	 * @see org.eclipse.debug.core.model.IVariable#getReferenceTypeName()
 	 */
 	public String getReferenceTypeName() throws DebugException {
+		if (getName().equals(VariablesUtil.CLASS_INDICATOR))
+			return "class"; //$NON-NLS-1$
 		return type;
 	}
 
@@ -116,10 +134,11 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 	 * @see org.eclipse.debug.core.model.IVariable#hasValueChanged()
 	 */
 	public boolean hasValueChanged() throws DebugException {
-		// this is a GUI facility to show if a variable has changed since the
-		// last suspend. If you always return false, it doesn't highlight in the
-		// variables
-		// view. A future facility.
+		/*
+		 * this is a GUI facility to show if a variable has changed since the
+		 * last suspend. If you always return false, it doesn't highlight in the
+		 * variables view. A future facility.
+		 */
 		return false;
 	}
 
@@ -131,21 +150,17 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 	 * )
 	 */
 	public void setValue(String expression) throws DebugException {
-		// assume never called unless supportsValueModification is true
-		// also assume that will only be called if been verified
-		// BUG in eclipse 3.2: Cell modification doesn't call verify Value and
-		// it should.
-		// It does if you use the editor pane.
+		/*
+		 * assume never called unless supportsValueModification is true also
+		 * assume that will only be called if been verified BUG in eclipse 3.2:
+		 * Cell modification doesn't call verify Value and it should. It does if
+		 * you use the editor pane.
+		 */
 		if (!verifyValue(expression)) {
 			// setValue called, but verifyValue failed
 			Status stat = new Status(Status.WARNING, PHPDebugPlugin.ID,
 					PHPDebugCoreMessages.XDebug_DBGpVariable_0);
 			throw new DebugException(stat);
-			// DebugUIPlugin.errorDialog(Display.getDefault().getActiveShell(),
-			// ActionMessages.AssignValueAction_2,
-			// MessageFormat.format(ActionMessages.AssignValueAction_3, new
-			// String[] {expression, name}), new StatusInfo(IStatus.ERROR,
-			// ActionMessages.AssignValueAction_4)); //
 		} else {
 			// attempt to set the property
 			if (((DBGpTarget) getDebugTarget()).setProperty(this, expression)) {
@@ -171,21 +186,6 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 	public void setValue(IValue xvalue) throws DebugException {
 		// assume never called unless supportsValueModification is true
 		setValue(xvalue.getValueString());
-	}
-
-	/**
-	 * replaces this variable's underlying value, but does not send it to the
-	 * application this is useful if we have obtained a value containing more
-	 * data than the original when it was created (eg a string).
-	 * 
-	 * @param value
-	 *            the new value.
-	 */
-	public void replaceValue(IValue value) {
-		if (value instanceof DBGpValue) {
-			this.value = (DBGpValue) value;
-			fireChangeEvent(DebugEvent.CONTENT);
-		}
 	}
 
 	/*
@@ -222,42 +222,19 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 		return verifyValue(xvalue.getValueString());
 	}
 
-	// public String getAddress() {
-	// return address;
-	// }
-
-	/*
-	 * // implement equals and hashcode to all the viewer to determine if a
-	 * variable has changed. public boolean equals(Object obj) { if (obj ==
-	 * this) { return true; } if (!(obj instanceof DBGpVariable)) {
-	 * DBGpLogger.debug(obj.getClass().getName() + " not the right type");
-	 * return false; } DBGpVariable variable = (DBGpVariable)obj;
+	/**
+	 * replaces this variable's underlying value, but does not send it to the
+	 * application this is useful if we have obtained a value containing more
+	 * data than the original when it was created (eg a string).
 	 * 
-	 * 
-	 * 
-	 * if (!variable.getDebugTarget().equals(getDebugTarget())) {
-	 * DBGpLogger.debug(obj.getClass().getName() +
-	 * " not the right DEBUG TARGET"); return false; }
-	 * 
-	 * DBGpLogger.debug("DBGpVariable equals:" + getFullName() + "=" +
-	 * variable.getFullName());
-	 * 
-	 * if (!variable.getFullName().equals(this.getFullName())) { return false; }
-	 * 
-	 * 
-	 * IValue myValue = null; IValue otherValue = null; try { myValue =
-	 * getValue(); otherValue = variable.getValue();
-	 * DBGpLogger.debug("DBGpVariable equals:" + myValue.getValueString() + "="
-	 * + otherValue.getValueString()); } catch (DebugException e) { }
-	 * 
-	 * if (myValue == otherValue || (myValue != null &&
-	 * myValue.equals(otherValue))) { DBGpLogger.debug("DBGpVariable is EQUAL");
-	 * return true; } DBGpLogger.debug("DBGpVariable is NOT EQUAL"); return
-	 * false; }
-	 * 
-	 * public int hashCode() { int varHash = getDebugTarget().hashCode() +
-	 * value.hashCode() + getFullName().hashCode();
-	 * DBGpLogger.debug("DBGpVariable hashcode:" + getFullName() + "=" +
-	 * varHash); return varHash; }
+	 * @param value
+	 *            the new value.
 	 */
+	public void replaceValue(IValue value) {
+		if (value instanceof DBGpValue) {
+			this.value = (DBGpValue) value;
+			fireChangeEvent(DebugEvent.CONTENT);
+		}
+	}
+
 }

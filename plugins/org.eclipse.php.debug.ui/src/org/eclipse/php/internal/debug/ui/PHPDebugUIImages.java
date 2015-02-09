@@ -36,10 +36,22 @@ public class PHPDebugUIImages {
 	private static final String T_OVR = ICONS_PATH + "ovr16/"; //$NON-NLS-1$
 	private static final String T_WIZBAN = ICONS_PATH + "wizban/"; //$NON-NLS-1$
 
-	public static final String IMG_OVR_CONDITIONAL_BREAKPOINT = "IMG_OBJS_CONDITIONAL_BREAKPOINT"; //$NON-NLS-1$
-	public static final String IMG_OVR_CONDITIONAL_BREAKPOINT_DISABLED = "IMG_OBJS_CONDITIONAL_BREAKPOINT_DISABLED"; //$NON-NLS-1$
+	public static final String IMG_OVR_CONDITIONAL_BREAKPOINT = "IMG_OVR_CONDITIONAL_BREAKPOINT"; //$NON-NLS-1$
+	public static final String IMG_OVR_CONDITIONAL_BREAKPOINT_DISABLED = "IMG_OVR_CONDITIONAL_BREAKPOINT_DISABLED"; //$NON-NLS-1$
+	public static final String IMG_OVR_MEMBER_STATIC = "IMG_OVR_MEMBER_STATIC"; //$NON-NLS-1$
+	public static final String IMG_OVR_MEMBER_CONSTANT = "IMG_OVR_MEMBER_CONSTANT"; //$NON-NLS-1$
+
 	public static final String IMG_WIZBAN_PHPEXE = "IMG_WIZBAN_PHPEXE"; //$NON-NLS-1$
+
 	public static final String IMG_OBJ_PATH_MAPPING = "IMG_OBJ_PATH_MAPPING"; //$NON-NLS-1$
+	public static final String IMG_OBJ_MEMBER_PUBLIC_ACCESS = "IMG_OBJ_MEMBER_PUBLIC_ACCESS"; //$NON-NLS-1$
+	public static final String IMG_OBJ_MEMBER_PROTECTED_ACCESS = "IMG_OBJ_MEMBER_PROTECTED_ACCESS"; //$NON-NLS-1$
+	public static final String IMG_OBJ_MEMBER_PRIVATE_ACCESS = "IMG_OBJ_MEMBER_PRIVATE_ACCESS"; //$NON-NLS-1$
+	public static final String IMG_OBJ_MEMBER_ARRAY = "IMG_OBJ_MEMBER_ARRAY"; //$NON-NLS-1$
+	public static final String IMG_OBJ_MEMBER_VIRTUAL_CONTAINER = "IMG_OBJ_MEMBER_VIRTUAL_CONTAINER"; //$NON-NLS-1$
+	public static final String IMG_OBJ_MEMBER_LOCAL = "IMG_OBJ_MEMBER_LOCAL"; //$NON-NLS-1$
+	public static final String IMG_OBJ_MEMBER_SUPER_GLOBAL = "IMG_OBJ_MEMBER_SUPER_GLOBAL"; //$NON-NLS-1$
+	public static final String IMG_OBJ_MEMBER_VIRTUAL_CLASS = "IMG_OBJ_MEMBER_VIRTUAL_CLASS"; //$NON-NLS-1$
 
 	/**
 	 * Returns the image managed under the given key in this registry.
@@ -72,8 +84,8 @@ public class PHPDebugUIImages {
 	}
 
 	private static void initializeImageRegistry() {
-		fgImageRegistry = new ImageRegistry(PHPDebugUIPlugin
-				.getStandardDisplay());
+		fgImageRegistry = new ImageRegistry(
+				PHPDebugUIPlugin.getStandardDisplay());
 		declareImages();
 	}
 
@@ -82,8 +94,25 @@ public class PHPDebugUIImages {
 				+ "conditional_ovr.gif"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OVR_CONDITIONAL_BREAKPOINT_DISABLED, T_OVR
 				+ "conditional_ovr_disabled.gif"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OVR_MEMBER_CONSTANT, T_OVR
+				+ "constant_ovr.gif"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OVR_MEMBER_STATIC, T_OVR + "static_ovr.gif"); //$NON-NLS-1$
 		declareRegistryImage(IMG_WIZBAN_PHPEXE, T_WIZBAN + "phpexe_wiz.gif"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_PATH_MAPPING, T_OBJ + "path_mapping.gif"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_MEMBER_LOCAL, T_OBJ + "member_local.gif"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_MEMBER_SUPER_GLOBAL, T_OBJ
+				+ "member_super_global.gif"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_MEMBER_VIRTUAL_CLASS, T_OBJ
+				+ "member_virtual_class.gif"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_MEMBER_ARRAY, T_OBJ + "member_array.gif"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_MEMBER_VIRTUAL_CONTAINER, T_OBJ
+				+ "member_virtual_container.gif"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_MEMBER_PUBLIC_ACCESS, T_OBJ
+				+ "member_public_access.gif"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_MEMBER_PROTECTED_ACCESS, T_OBJ
+				+ "member_protected_access.gif"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_MEMBER_PRIVATE_ACCESS, T_OBJ
+				+ "member_private_access.gif"); //$NON-NLS-1$
 	}
 
 	/**
