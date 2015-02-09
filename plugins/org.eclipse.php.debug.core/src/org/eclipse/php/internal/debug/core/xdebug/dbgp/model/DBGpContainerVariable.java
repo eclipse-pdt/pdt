@@ -11,13 +11,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
+
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 import org.w3c.dom.Node;
 
-public class DBGpContainerVariable extends DBGpBaseVariable implements
+public class DBGpContainerVariable extends AbstractDBGpBaseVariable implements
 		IVariable {
 
 	private int page;
@@ -27,7 +29,7 @@ public class DBGpContainerVariable extends DBGpBaseVariable implements
 
 	public DBGpContainerVariable(IDebugTarget target, int page, int pageSize,
 			int numChildren, Node property, String stackLevel, String fullName) {
-		super(target, stackLevel, fullName);
+		super(target, stackLevel, fullName, VIRTUAL_PARTITION);
 		this.page = page;
 		this.pageSize = pageSize;
 		this.numChildren = numChildren;
@@ -72,20 +74,21 @@ public class DBGpContainerVariable extends DBGpBaseVariable implements
 	}
 
 	/**
-	 * return the page reference
+	 * Return the page reference.
 	 * 
-	 * @return
+	 * @return the page reference
 	 */
 	public int getPage() {
 		return page;
 	}
 
 	/**
-	 * return the page size
+	 * Returns the page size.
 	 * 
-	 * @return
+	 * @return the page size
 	 */
 	public int getPageSize() {
 		return pageSize;
 	}
+
 }

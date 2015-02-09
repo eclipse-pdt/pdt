@@ -161,7 +161,7 @@ public class StackLayer {
 		buffer.append(toStringCalledFunctionLine());
 		buffer
 				.append("  " + callerFileName + " line " //$NON-NLS-1$ //$NON-NLS-2$
-						+ (callerLineNumber + 1));
+				+ (callerLineNumber + 1));
 		return buffer.toString();
 	}
 
@@ -202,7 +202,7 @@ public class StackLayer {
 		}
 
 		public Expression createChildExpression(String endName,
-				String endRepresentation) {
+				String endRepresentation, Facet... facets) {
 			return new DefaultStackVariable(this, endName, stackDepth,
 					endRepresentation);
 		}

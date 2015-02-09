@@ -11,9 +11,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
+
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
+import org.eclipse.php.internal.debug.core.model.VariablesUtil;
+import org.eclipse.php.internal.debug.core.model.VirtualPartition;
+import org.eclipse.php.internal.debug.core.model.VirtualPartition.IVariableProvider;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -30,7 +35,8 @@ public class DBGpContainerValue extends DBGpValue {
 	private static final boolean IS_OBJECT = true;
 	private boolean containerType = IS_ARRAY;
 
-	public DBGpContainerValue(DBGpBaseVariable owningVariable, Node property) {
+	public DBGpContainerValue(AbstractDBGpBaseVariable owningVariable,
+			Node property) {
 		super(owningVariable);
 		setModifiable(false);
 		if (property != null) {
@@ -45,21 +51,20 @@ public class DBGpContainerValue extends DBGpValue {
 	 * @param property
 	 */
 	private void parseData(Node property) {
-		// children, numchildren, page, pagesize, recursive attribute page and
-		// pagesize
-		// only appear if you exceed the max_children option limit. Pagesize is
-		// the max_children limit.
-		// children can be zero, but we may as well get all the information
-		// we can, so no point checking the flag. We also need to make sure
-		// that DBGpVariable is not set to null here otherwise it will attempt
-		// to defer the info. This is ok for no children as page will be set to
-		// -1
+		/*
+		 * children, numchildren, page, pagesize, recursive attribute page and
+		 * pagesize only appear if you exceed the max_children option limit.
+		 * Pagesize is the max_children limit. children can be zero, but we may
+		 * as well get all the information we can, so no point checking the
+		 * flag. We also need to make sure that DBGpVariable is not set to null
+		 * here otherwise it will attempt to defer the info. This is ok for no
+		 * children as page will be set to -1
+		 */
 		String type = DBGpResponse.getAttribute(property, "type"); //$NON-NLS-1$
 		if (type.equals(DBGpVariable.PHP_OBJECT)) {
 			containerType = IS_OBJECT;
 			className = DBGpResponse.getAttribute(property, "classname"); //$NON-NLS-1$
 		}
-
 		String numChildStr = DBGpResponse.getAttribute(property, "numchildren"); //$NON-NLS-1$
 		numChild = 0;
 		if (numChildStr != null && numChildStr.trim().length() != 0) {
@@ -82,7 +87,6 @@ public class DBGpContainerValue extends DBGpValue {
 				// do nothing
 			}
 		}
-
 		page = -1;
 		if (pageStr != null && pageStr.trim().length() != 0) {
 			try {
@@ -96,22 +100,24 @@ public class DBGpContainerValue extends DBGpValue {
 			// control
 			page = 0;
 		}
-
-		// TODO: Improvement: nApplyCount > 1 in the zend hash table for an
-		// array or object
-		// String recursiveStr = DBGpResponse.getAttribute(property,
-		// "recursive");
-
-		// xdebug in 2.1 now outputs the page and pagesize attribute even if
-		// there is only a single page, ie page will never be -1 now. in
-		// xdebug 2.0.5, page will only be -1 if numChild <= pagesize, so we
-		// check for that (instead of page == -1) now which provides the
-		// required behaviour of no [x..y] type format.
+		/*
+		 * TODO: Improvement: nApplyCount > 1 in the zend hash table for an
+		 * array or object String recursiveStr =
+		 * DBGpResponse.getAttribute(property, "recursive");
+		 */
+		/*
+		 * XDebug in 2.1 now outputs the page and pagesize attribute even if
+		 * there is only a single page, ie page will never be -1 now. in xdebug
+		 * 2.0.5, page will only be -1 if numChild <= pagesize, so we check for
+		 * that (instead of page == -1) now which provides the required
+		 * behaviour of no [x..y] type format.
+		 */
 		if (numChild <= pageSize || getOwner() instanceof DBGpContainerVariable) {
-			// we have a full set of entries or we have a complete subset within
-			// a ContainerVariable
-			// create a standard child entries that show the variables and their
-			// values
+			/*
+			 * we have a full set of entries or we have a complete subset within
+			 * a ContainerVariable create a standard child entries that show the
+			 * variables and their values
+			 */
 			NodeList childProperties = property.getChildNodes();
 			int childrenReceived = childProperties.getLength();
 			if (childrenReceived > 0) {
@@ -120,51 +126,78 @@ public class DBGpContainerValue extends DBGpValue {
 					Node childProperty = childProperties.item(i);
 					childVariables[i] = new DBGpVariable(
 							(DBGpTarget) getDebugTarget(), childProperty,
-							getOwner().getStackLevel());
+							getOwner().getStackLevel(),
+							containerType == IS_OBJECT ? KIND_OBJECT_MEMBER
+									: KIND_ARRAY_MEMBER);
 				}
+				if (containerType == IS_OBJECT)
+					VariablesUtil.sortObjectMembers(childVariables);
 			}
 		} else {
-
-			// create container variables to handle a complete subset
-			// and that show their name as a container [x...y] in the debug view
+			/*
+			 * create container variables to handle a complete subset and that
+			 * show their name as a container [x...y] in the debug view
+			 */
 			int subCount = roundUp((double) numChild / (double) pageSize);
-			childVariables = new DBGpContainerVariable[subCount];
-
-			// // we can populate the 1st one, we assume page=0 here.
-			// // TODO: xdebug appears to do strange things on the watch
-			// expression. For example
-			// // if I have expanded $a (array of 201 elements) then a watch
-			// doesn't get page 0, it could get page 4 for example.
-			// childVariables[0] = new DBGpContainerVariable(getDebugTarget(),
-			// page, pageSize, numChild, property, getOwner().getStackLevel(),
-			// getOwner().getFullName());
-			// for (int i = 1; i < subCount; i++) {
-			// childVariables[i] = new DBGpContainerVariable(getDebugTarget(),
-			// page + i, pageSize, numChild, null, getOwner().getStackLevel(),
-			// getOwner().getFullName());
-			// }
-
+			childVariables = new VirtualPartition[subCount];
+			/*
+			 * we can populate the 1st one, we assume page=0 here. TODO: xdebug
+			 * appears to do strange things on the watch expression. For example
+			 * // if I have expanded $a (array of 201 elements) then a watch
+			 * doesn't get page 0, it could get page 4 for example.
+			 * childVariables[0] = new DBGpContainerVariable(getDebugTarget(),
+			 * page, pageSize, numChild, property, getOwner().getStackLevel(),
+			 * getOwner().getFullName()); for (int i = 1; i < subCount; i++) {
+			 * childVariables[i] = new DBGpContainerVariable(getDebugTarget(),
+			 * page + i, pageSize, numChild, null, getOwner().getStackLevel(),
+			 * getOwner().getFullName()); }
+			 */
 			for (int i = 0; i < subCount; i++) {
+				int startIndex = i * pageSize;
+				int endIndex = (i + 1) * pageSize - 1;
+				if (endIndex > numChild) {
+					endIndex = numChild - 1;
+				}
 				if (i == page) {
-					// we have data for this page so pass the property info to
-					// the container
-					childVariables[i] = new DBGpContainerVariable(
+					// we have data for this page so pass the property info
+					final IVariable var = new DBGpContainerVariable(
 							getDebugTarget(), i, pageSize, numChild, property,
 							getOwner().getStackLevel(), getOwner()
 									.getFullName());
+					IVariable partition = new VirtualPartition(this,
+							new IVariableProvider() {
+								@Override
+								public IVariable[] getVariables()
+										throws DebugException {
+									return var.getValue().getVariables();
+								}
+							}, startIndex, endIndex);
+					childVariables[i] = partition;
 				} else {
-					// we don't have data for this page so create a container
-					// with no info, could be fetched later.
-					childVariables[i] = new DBGpContainerVariable(
+					/*
+					 * we don't have data for this page so create a container
+					 * with no info, could be fetched later.
+					 */
+					final IVariable var = new DBGpContainerVariable(
 							getDebugTarget(), i, pageSize, numChild, null,
 							getOwner().getStackLevel(), getOwner()
 									.getFullName());
-					// we copy the address from the original data as we could
-					// use it if we don't
-					// have a fullname from the variable, eg if an eval was
-					// done.
-					((DBGpContainerVariable) childVariables[i])
-							.setAddress(getOwner().getAddress());
+					/*
+					 * we copy the address from the original data as we could
+					 * use it if we don't have a fullname from the variable, eg
+					 * if an eval was done.
+					 */
+					((DBGpContainerVariable) var).setAddress(getOwner()
+							.getAddress());
+					IVariable partition = new VirtualPartition(this,
+							new IVariableProvider() {
+								@Override
+								public IVariable[] getVariables()
+										throws DebugException {
+									return var.getValue().getVariables();
+								}
+							}, startIndex, endIndex);
+					childVariables[i] = partition;
 				}
 			}
 		}
@@ -177,17 +210,47 @@ public class DBGpContainerValue extends DBGpValue {
 	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#getReferenceTypeName()
 	 */
 	public String getReferenceTypeName() throws DebugException {
-		if (containerType == IS_OBJECT) {
+		if (getOwner().getName().equals(VariablesUtil.CLASS_INDICATOR))
+			return "class"; //$NON-NLS-1$
+		if (containerType == IS_OBJECT)
 			return DBGpVariable.PHP_OBJECT;
-		}
 		return DBGpVariable.PHP_ARRAY;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#getVariables()
+	 */
+	public IVariable[] getVariables() throws DebugException {
+		if (childVariables == null) {
+			requestValue();
+			if (childVariables == null)
+				childVariables = new IVariable[0];
+		}
+		return childVariables;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#hasVariables()
+	 */
+	public boolean hasVariables() throws DebugException {
+		if (numChild == 0)
+			return false;
+		// if childVariables is null, we assume we do have
+		// some variables, it's just they need to be got.
+		boolean hasVars = (childVariables == null || childVariables.length > 0);
+		return hasVars;
+	}
+
 	void genValueString(String notUsed) {
-		// only show an entry for a container value if we are not
-		// in a container variable as this is a subset which already
-		// has the relevant information being displayed from the container
-		// variable
+		/*
+		 * only show an entry for a container value if we are not in a container
+		 * variable as this is a subset which already has the relevant
+		 * information being displayed from the container variable
+		 */
 		if (!(getOwner() instanceof DBGpContainerVariable)) {
 			if (containerType == IS_OBJECT) {
 				if (className != null && className.trim().length() != 0) {
@@ -202,27 +265,12 @@ public class DBGpContainerValue extends DBGpValue {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#getVariables()
-	 */
-	public IVariable[] getVariables() throws DebugException {
-		if (childVariables == null) {
-			requestValue();
-			if (childVariables == null) {
-				childVariables = new IVariable[0];
-			}
-		}
-		return childVariables;
-	}
-
 	/**
 	 * if we don't have any data for this container we need to request it.
 	 */
 	private void requestValue() {
 		DBGpTarget target = (DBGpTarget) getDebugTarget();
-		DBGpBaseVariable var = getOwner();
+		AbstractDBGpBaseVariable var = getOwner();
 		int page = 0;
 		if (var instanceof DBGpContainerVariable) {
 			page = ((DBGpContainerVariable) var).getPage();
@@ -234,18 +282,6 @@ public class DBGpContainerValue extends DBGpValue {
 		if (property != null) {
 			parseData(property);
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#hasVariables()
-	 */
-	public boolean hasVariables() throws DebugException {
-		// if childVariables is null, we assume we do have
-		// some variables, it's just they need to be got.
-		boolean hasVars = (childVariables == null || childVariables.length > 0);
-		return hasVars;
 	}
 
 	/**
@@ -266,4 +302,5 @@ public class DBGpContainerValue extends DBGpValue {
 		}
 		return (int) retVal;
 	}
+
 }

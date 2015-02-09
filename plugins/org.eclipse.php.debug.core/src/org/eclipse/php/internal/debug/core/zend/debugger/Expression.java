@@ -11,7 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
-public interface Expression {
+import org.eclipse.php.internal.debug.core.model.IVariableFacet;
+
+public interface Expression extends IVariableFacet {
 
 	public String[] getName();
 
@@ -23,6 +25,7 @@ public interface Expression {
 
 	public ExpressionValue getValue();
 
-	public Expression createChildExpression(String name, String representation);
+	public Expression createChildExpression(String name, String representation,
+			Facet... facet);
 
 }
