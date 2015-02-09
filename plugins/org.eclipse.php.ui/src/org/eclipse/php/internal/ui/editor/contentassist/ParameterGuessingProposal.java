@@ -22,7 +22,9 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.link.*;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -638,6 +640,11 @@ public final class ParameterGuessingProposal extends
 		}
 
 		super.setReplacementOffset(replacementOffset);
+	}
+
+	@Override
+	public IModelElement getModelElement() {
+		return method;
 	}
 
 	public Object getExtraInfo() {

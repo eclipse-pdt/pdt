@@ -113,21 +113,20 @@ public class PHPOverrideCompletionProposal extends
 						if (parameter.getDefaultValue() != null) {
 							sb.append("=").append(parameter.getDefaultValue()); //$NON-NLS-1$
 						}
-						sb.append(","); //$NON-NLS-1$
+						sb.append(", "); //$NON-NLS-1$
 					}
 					String infoDisplayString = sb.toString();
 					if (infoDisplayString.length() > 0) {
 						infoDisplayString = infoDisplayString.substring(0,
-								infoDisplayString.length() - 1);
+								infoDisplayString.length() - 2);
 						return new ContextInformation(displayString,
 								infoDisplayString);
 					}
 
 				}
 			} catch (ModelException e) {
-				e.printStackTrace();
+				PHPUiPlugin.log(e);
 			}
-
 		}
 
 		String infoDisplayString = displayString;
