@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.model;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.php.core.compiler.IPHPModifiers;
+import org.eclipse.php.internal.core.index.PhpIndexingVisitor;
 
 public class PhpModelAccess extends ModelAccess {
 	public static final IType[] NULL_TYPES = new IType[0];
@@ -49,6 +51,7 @@ public class PhpModelAccess extends ModelAccess {
 	public IField[] findFields(String qualifier, String name,
 			MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
+
 		IField[] result = super.findFields(qualifier, name, matchRule,
 				trueFlags, falseFlags, scope, monitor);
 		if (result == null) {
@@ -73,6 +76,7 @@ public class PhpModelAccess extends ModelAccess {
 	public IMethod[] findMethods(String qualifier, String name,
 			MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
+
 		IMethod[] result = super.findMethods(qualifier, name, matchRule,
 				trueFlags, falseFlags, scope, monitor);
 		if (result == null) {
@@ -137,5 +141,22 @@ public class PhpModelAccess extends ModelAccess {
 			return PhpModelAccess.NULL_FIELDS;
 		}
 		return (IField[]) result.toArray(new IField[result.size()]);
+	}
+
+	@Override
+	protected <T extends IModelElement> boolean findElements(int elementType,
+			String qualifier, String name, MatchRule matchRule, int trueFlags,
+			int falseFlags, IDLTKSearchScope scope, Collection<T> result,
+			IProgressMonitor monitor) {
+		if ((elementType == IModelElement.FIELD || elementType == IModelElement.METHOD)
+				&& (trueFlags & IPHPModifiers.AccGlobal) != 0) {
+			return findElements(IModelElement.METHOD, qualifier, name,
+					PhpIndexingVisitor.GLOBAL_PARENT, matchRule, trueFlags
+							& ~IPHPModifiers.AccGlobal, falseFlags, scope,
+					result, monitor);
+
+		}
+		return super.findElements(elementType, qualifier, name, matchRule,
+				trueFlags, falseFlags, scope, result, monitor);
 	}
 }
