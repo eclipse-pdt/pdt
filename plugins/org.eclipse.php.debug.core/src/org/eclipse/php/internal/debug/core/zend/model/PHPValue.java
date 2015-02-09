@@ -11,10 +11,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.model;
 
+import java.util.Arrays;
+
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
+import org.eclipse.php.internal.debug.core.model.VirtualPartition;
+import org.eclipse.php.internal.debug.core.model.VirtualPartition.IVariableProvider;
 import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpression;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
 import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
@@ -26,8 +30,8 @@ import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionsManager;
 public class PHPValue extends PHPDebugElement implements IValue {
 
 	private static final String[] VARIABLE_TYPES = { "NULL", "INT", "STRING", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			"BOOLEAN", "DOUBLE", "ARRAY", "OBJECT", "RESOURCE" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-
+			"BOOLEAN", "DOUBLE", "ARRAY", "OBJECT", "RESOURCE", "CLASS" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+	private static final int ARRAY_PARTITION_BOUNDARY = 100;
 	private Expression fVariable;
 	private ExpressionValue fValue;
 	private boolean fGlobal;
@@ -87,8 +91,38 @@ public class PHPValue extends PHPDebugElement implements IValue {
 			if (fChildren == null) {
 				fChildren = new IVariable[0];
 			}
+			// Check if we should divide it into partitions
+			if (fValue.getType() == ExpressionValue.ARRAY_TYPE
+					&& fChildren.length >= ARRAY_PARTITION_BOUNDARY) {
+				createPartitions();
+			}
 		}
 		return fChildren;
+	}
+
+	private void createPartitions() {
+		int numChild = fChildren.length;
+		int partitions = (int) Math.ceil(numChild / (double) 100);
+		IVariable[] children = new IVariable[partitions];
+		for (int i = 0; i < partitions; i++) {
+			int startIndex = i * ARRAY_PARTITION_BOUNDARY;
+			int endIndex = (i + 1) * ARRAY_PARTITION_BOUNDARY - 1;
+			if (endIndex > numChild) {
+				endIndex = numChild - 1;
+			}
+			final IVariable[] vars = Arrays.copyOfRange(fChildren,
+					startIndex, endIndex + 1);
+			IVariable var = new VirtualPartition(this,
+					new IVariableProvider() {
+						@Override
+						public IVariable[] getVariables()
+								throws DebugException {
+							return vars;
+						}
+					}, startIndex, endIndex);
+			children[i] = var;
+		}
+		fChildren = children;
 	}
 
 	private void requestVariables() {
@@ -126,14 +160,11 @@ public class PHPValue extends PHPDebugElement implements IValue {
 	 */
 	public boolean hasVariables() throws DebugException {
 		boolean isArrayOrObject = fValue.getType() == 5
-				|| fValue.getType() == 6;
+				|| fValue.getType() == 6 || fValue.getType() == 8;
 		if (!isArrayOrObject) {
 			return false;
 		}
-		// if childVariables is null, we assume we do have
-		// some variables, it's just they need to be got.
-		boolean hasVars = (fChildren == null || fChildren.length > 0);
-		return hasVars;
+		return fValue.getChildrenCount() > 0;
 	}
 
 	public void updateValue(ExpressionValue value) {
@@ -141,11 +172,12 @@ public class PHPValue extends PHPDebugElement implements IValue {
 		initChildren(fValue);
 	}
 
-	public boolean isPrimative() {
+	public boolean isPrimitive() {
 		return fValue.isPrimitive();
 	}
 
 	public Expression getVariable() {
 		return fVariable;
 	}
+
 }

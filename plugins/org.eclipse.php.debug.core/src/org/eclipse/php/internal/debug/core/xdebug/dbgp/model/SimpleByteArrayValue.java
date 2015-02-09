@@ -11,11 +11,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIND_ARRAY_MEMBER;
+
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.php.internal.debug.core.model.VirtualPartition;
+import org.eclipse.php.internal.debug.core.model.VirtualPartition.IVariableProvider;
 
 public class SimpleByteArrayValue extends DBGpElement implements IValue {
 	private byte[] value;
@@ -79,19 +83,15 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 	public static IVariable[] createVariables(byte[] bytes, int bytePos,
 			int byteCount, int startOffset, IDebugTarget debugTarget) {
 		final int childLimit = 100;
-
 		IVariable[] childVariables = null;
-
 		// determine the number of variables to return
 		if (byteCount > childLimit) {
-
-			// more than one variable to be returned
+			// more than one variable to be returned - split to partitions
 			int split = childLimit;
 			int children = byteCount / split;
 			if (byteCount % split != 0) {
 				children++;
 			}
-
 			while (children > childLimit) {
 				split *= 10;
 				children = byteCount / split;
@@ -99,9 +99,7 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 					children++;
 				}
 			}
-
 			childVariables = new IVariable[children + startOffset];
-
 			// now populate the variables
 			int rangeStart = bytePos;
 			int rangeEnd = 0;
@@ -112,25 +110,32 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 					rangeEnd = rangeStart + split - 1;
 				}
 				if (rangeStart <= rangeEnd) {
-					IValue iv = new SimpleByteArrayValue(bytes, rangeStart,
-							rangeEnd, debugTarget);
-					childVariables[j + startOffset] = new SimpleVariable("[" //$NON-NLS-1$
-							+ rangeStart + ".." + rangeEnd + "]", iv, //$NON-NLS-1$ //$NON-NLS-2$
-							debugTarget);
+					final IValue value = new SimpleByteArrayValue(bytes,
+							rangeStart, rangeEnd, debugTarget);
+					IVariable partition = new VirtualPartition(debugTarget,
+							new IVariableProvider() {
+								@Override
+								public IVariable[] getVariables()
+										throws DebugException {
+									return value.getVariables();
+								}
+							}, rangeStart, rangeEnd);
+					childVariables[j + startOffset] = partition;
 					rangeStart += split;
-
 				}
 			}
 		} else {
-			childVariables = new IVariable[byteCount + startOffset];
+			childVariables = new SimpleVariable[byteCount + startOffset];
 			// don't split out the data.
 			for (int i = 0; i < byteCount; i++) {
 				IValue iv2 = new SimpleByteValue(bytes[bytePos + i],
 						debugTarget);
-				childVariables[i + startOffset] = new SimpleVariable(Integer
-						.toString(bytePos + i), iv2, debugTarget);
+				childVariables[i + startOffset] = new SimpleVariable(
+						Integer.toString(bytePos + i), iv2, debugTarget,
+						KIND_ARRAY_MEMBER);
 			}
 		}
 		return childVariables;
 	}
+	
 }

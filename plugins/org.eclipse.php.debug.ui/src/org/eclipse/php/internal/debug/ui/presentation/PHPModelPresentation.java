@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.presentation;
 
+import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.*;
+
 import java.io.File;
 
 import org.eclipse.core.filesystem.IFileStore;
@@ -36,13 +38,13 @@ import org.eclipse.dltk.internal.ui.search.DLTKSearchScopeFactory;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
+import org.eclipse.php.internal.debug.core.model.IVariableFacet;
+import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.zend.model.PHPMultiDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
-import org.eclipse.php.internal.debug.ui.Logger;
-import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
-import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.internal.debug.ui.*;
 import org.eclipse.php.internal.debug.ui.breakpoint.PHPBreakpointImageDescriptor;
 import org.eclipse.php.internal.ui.editor.UntitledPHPEditor;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
@@ -71,14 +73,6 @@ public class PHPModelPresentation extends LabelProvider implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.debug.ui.IDebugModelPresentation#setAttribute(java.lang.String
-	 * , java.lang.Object)
-	 */
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
 	 * org.eclipse.debug.ui.IDebugModelPresentation#computeDetail(org.eclipse
 	 * .debug.core.model.IValue, org.eclipse.debug.ui.IValueDetailListener)
 	 */
@@ -99,6 +93,8 @@ public class PHPModelPresentation extends LabelProvider implements
 	public Image getImage(Object element) {
 		if (element instanceof PHPConditionalBreakpoint) {
 			return getBreakpointImage((PHPConditionalBreakpoint) element);
+		} else if (element instanceof IVariable) {
+			return getVariableImage((IVariable) element);
 		}
 		return null;
 	}
@@ -168,7 +164,87 @@ public class PHPModelPresentation extends LabelProvider implements
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.IDebugModelPresentation#setAttribute(java.lang.String
+	 * , java.lang.Object)
+	 */
 	public void setAttribute(String attribute, Object value) {
+	}
+
+	protected Image getVariableImage(IVariable variable) {
+		IVariableFacet facetOwner = null;
+		if (variable instanceof IVariableFacet) {
+			facetOwner = (IVariableFacet) variable;
+		} else {
+			facetOwner = (IVariableFacet) variable
+					.getAdapter(IVariableFacet.class);
+		}
+		if (facetOwner == null)
+			return null;
+		if (facetOwner.hasFacet(KIND_SUPER_GLOBAL)) {
+			return PHPDebugUIImages
+					.get(PHPDebugUIImages.IMG_OBJ_MEMBER_SUPER_GLOBAL);
+		}
+		if (facetOwner.hasFacet(KIND_LOCAL)) {
+			return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_MEMBER_LOCAL);
+		}
+		if (facetOwner.hasFacet(KIND_THIS)) {
+			return PHPDebugUIImages
+					.get(PHPDebugUIImages.IMG_OBJ_MEMBER_PUBLIC_ACCESS);
+		}
+		if (facetOwner.hasFacet(KIND_ARRAY_MEMBER)) {
+			return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_MEMBER_ARRAY);
+		}
+		if (facetOwner.hasFacet(KIND_OBJECT_MEMBER)) {
+			if (facetOwner.hasFacet(Facet.MOD_PUBLIC)) {
+				if (facetOwner.hasFacet(Facet.MOD_STATIC))
+					return getDebugImageRegistry()
+							.get(new PHPDebugUICompositeImageDescriptor(
+									PHPDebugUIImages
+											.getImageDescriptor(PHPDebugUIImages.IMG_OBJ_MEMBER_PUBLIC_ACCESS),
+									PHPDebugUIImages
+											.getImageDescriptor(PHPDebugUIImages.IMG_OVR_MEMBER_STATIC),
+									PHPDebugUICompositeImageDescriptor.TOP_RIGHT));
+				return PHPDebugUIImages
+						.get(PHPDebugUIImages.IMG_OBJ_MEMBER_PUBLIC_ACCESS);
+			}
+			if (facetOwner.hasFacet(Facet.MOD_PROTECTED)) {
+				if (facetOwner.hasFacet(Facet.MOD_STATIC))
+					return getDebugImageRegistry()
+							.get(new PHPDebugUICompositeImageDescriptor(
+									PHPDebugUIImages
+											.getImageDescriptor(PHPDebugUIImages.IMG_OBJ_MEMBER_PROTECTED_ACCESS),
+									PHPDebugUIImages
+											.getImageDescriptor(PHPDebugUIImages.IMG_OVR_MEMBER_STATIC),
+									PHPDebugUICompositeImageDescriptor.TOP_RIGHT));
+				return PHPDebugUIImages
+						.get(PHPDebugUIImages.IMG_OBJ_MEMBER_PROTECTED_ACCESS);
+			}
+			if (facetOwner.hasFacet(Facet.MOD_PRIVATE)) {
+				if (facetOwner.hasFacet(Facet.MOD_STATIC))
+					return getDebugImageRegistry()
+							.get(new PHPDebugUICompositeImageDescriptor(
+									PHPDebugUIImages
+											.getImageDescriptor(PHPDebugUIImages.IMG_OBJ_MEMBER_PRIVATE_ACCESS),
+									PHPDebugUIImages
+											.getImageDescriptor(PHPDebugUIImages.IMG_OVR_MEMBER_STATIC),
+									PHPDebugUICompositeImageDescriptor.TOP_RIGHT));
+				return PHPDebugUIImages
+						.get(PHPDebugUIImages.IMG_OBJ_MEMBER_PRIVATE_ACCESS);
+			}
+		}
+		if (facetOwner.hasFacet(VIRTUAL_CLASS)) {
+			return PHPDebugUIImages
+					.get(PHPDebugUIImages.IMG_OBJ_MEMBER_VIRTUAL_CLASS);
+		}
+		if (facetOwner.hasFacet(VIRTUAL_PARTITION)) {
+			return PHPDebugUIImages
+					.get(PHPDebugUIImages.IMG_OBJ_MEMBER_VIRTUAL_CONTAINER);
+		}
+		return null;
 	}
 
 	/**
