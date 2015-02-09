@@ -78,13 +78,13 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		IField[] fields = null;
 		if (showVarsFromOtherFiles(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES)) {
 			IDLTKSearchScope scope = createSearchScope();
-			fields = PhpModelAccess.getDefault().findFields(prefix, matchRule, Modifiers.AccGlobal,
+			fields = PhpModelAccess.getDefault().findFileFields(prefix, matchRule, Modifiers.AccGlobal,
 					Modifiers.AccConstant, scope, null);
 		} else if (showVarsFromOtherFiles(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_REFERENCED_FILES)) {
 			// FIXME why we can't get $myGlobalVar from php
 			// code:list($myGlobalVar) = 0;
 			IDLTKSearchScope scope = createSearchScopeWithReferencedFiles(abstractContext.getSourceModule());
-			fields = PhpModelAccess.getDefault().findFields(prefix, matchRule, Modifiers.AccGlobal,
+			fields = PhpModelAccess.getDefault().findFileFields(prefix, matchRule, Modifiers.AccGlobal,
 					Modifiers.AccConstant, scope, null);
 		}
 

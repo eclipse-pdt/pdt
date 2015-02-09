@@ -18,8 +18,11 @@ public interface PHPCoreConstants {
 	/**
 	 * Increase this value to force rebuilding PHP projects during startup
 	 */
-	public static final String STRUCTURE_VERSION = "6"; //$NON-NLS-1$
+	public static final String STRUCTURE_VERSION = "7"; //$NON-NLS-1$
 	public static final String STRUCTURE_VERSION_PREFERENCE = "pdt.structure.version"; //$NON-NLS-1$
+
+	public static final String FILE_PARENT = "<f>"; //$NON-NLS-1$
+	public static final String GLOBAL_NAMESPACE = "<g>"; //$NON-NLS-1$
 
 	public static final String IP_VARIABLE_INITIALIZER_EXTPOINT_ID = "includePathVariables"; //$NON-NLS-1$
 

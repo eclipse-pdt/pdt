@@ -126,7 +126,7 @@ public enum ProjectOutlineGroups {
 				break;
 
 			case GROUP_FUNCTIONS:
-				IMethod[] findMethods = PhpModelAccess.getDefault().findMethods(null, MatchRule.PREFIX,
+				IMethod[] findMethods = PhpModelAccess.getDefault().findFunctions(null, MatchRule.PREFIX,
 						Modifiers.AccGlobal, 0, scope, null);
 				if (findMethods != null) {
 					childrenList.addAll(Arrays.asList(findMethods));

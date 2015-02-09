@@ -39,12 +39,12 @@ public class GlobalNamespace extends SourceType {
 
 	public IField[] getFields() throws ModelException {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(), IDLTKSearchScope.SOURCES);
-		return PhpModelAccess.getDefault().findFields(null, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, null);
+		return PhpModelAccess.getDefault().findFileFields(null, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, null);
 	}
 
 	public IMethod[] getMethods() throws ModelException {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(), IDLTKSearchScope.SOURCES);
-		return PhpModelAccess.getDefault().findMethods(null, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, null);
+		return PhpModelAccess.getDefault().findFunctions(null, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, null);
 	}
 
 	public IType[] getTypes() throws ModelException {

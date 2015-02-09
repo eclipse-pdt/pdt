@@ -71,8 +71,8 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 
-		IField[] elements = PhpModelAccess.getDefault().findFields(variableName, MatchRule.EXACT, Modifiers.AccGlobal,
-				Modifiers.AccConstant, scope, null);
+		IField[] elements = PhpModelAccess.getDefault().findFileFields(variableName, MatchRule.EXACT,
+				Modifiers.AccGlobal, Modifiers.AccConstant, scope, null);
 
 		// if no element found, return empty array.
 		if (elements == null) {

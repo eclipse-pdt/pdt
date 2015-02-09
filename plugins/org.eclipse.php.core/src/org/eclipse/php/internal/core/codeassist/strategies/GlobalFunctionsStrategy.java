@@ -14,7 +14,6 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
@@ -69,8 +68,7 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 			matchRule = MatchRule.EXACT;
 		}
 		IDLTKSearchScope scope = createSearchScope();
-		IMethod[] functions = PhpModelAccess.getDefault().findMethods(prefix, matchRule, Modifiers.AccGlobal, 0, scope,
-				null);
+		IMethod[] functions = PhpModelAccess.getDefault().findFunctions(prefix, matchRule, 0, 0, scope, null);
 
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		String suffix = getSuffix(abstractContext);

@@ -126,6 +126,14 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		for (PhpIndexingVisitorExtension visitor : extensions) {
 			visitor.modifyDeclaration(node, info);
 		}
+		if (info.elementType != IModelElement.PACKAGE_DECLARATION) {
+			if (info.parent == null) {
+				info.parent = PHPCoreConstants.FILE_PARENT;
+			}
+			if (info.qualifier == null) {
+				info.qualifier = PHPCoreConstants.GLOBAL_NAMESPACE;
+			}
+		}
 		requestor.addDeclaration(info);
 	}
 
