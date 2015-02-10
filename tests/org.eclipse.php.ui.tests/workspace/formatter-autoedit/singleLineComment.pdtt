@@ -1,0 +1,17 @@
+--TEST--
+Bug 457701 - Improper auto-indent after single line comment
+--FILE--
+<?php
+$foo = 1;
+if ($foo == 1){
+    // we need more foo or else |
+}
+?>
+--EXPECT--
+<?php
+$foo = 1;
+if ($foo == 1){
+    // we need more foo or else 
+    
+}
+?>
