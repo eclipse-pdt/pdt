@@ -152,7 +152,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					+ lineInformationOfOffset.getLength()
 					&& document.getChar(i) != '/'; i++)
 				;
-			newForOffset = (forOffset < i) ? i : forOffset;
+			newForOffset = (i < forOffset) ? i : forOffset;
 
 		}
 		// end
