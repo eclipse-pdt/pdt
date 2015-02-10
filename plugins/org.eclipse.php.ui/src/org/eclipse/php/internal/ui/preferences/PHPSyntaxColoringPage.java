@@ -1129,7 +1129,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 			final ISourceModule sourceModule = DLTKUIPlugin
 					.getDocumentProvider().getWorkingCopy(input);
 			if (sourceModule != null) {
-				ASTParser parser = ASTParser.newParser(PHPVersion.PHP5_5,
+				// TODO: automatically choose latest PHP version available
+				ASTParser parser = ASTParser.newParser(PHPVersion.PHP5_6,
 						sourceModule);
 				parser.setSource(fDocument.get().toCharArray());
 
