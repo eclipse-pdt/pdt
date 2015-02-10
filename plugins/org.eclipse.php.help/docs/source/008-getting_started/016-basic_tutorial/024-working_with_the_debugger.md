@@ -7,8 +7,8 @@ The purpose of this tutorial is to teach you how to debug files and applications
 #### Contents:
 
  * [Purpose and Usage](#purpose-and-usage)
- * [Debugging Local PHP Files (PHP Scripts)](#debugging-php-files)
- * [Debugging PHP Applications (PHP Web Pages)](#debugging-php-applications)
+ * [Debugging Local PHP Files (PHP CLI Application)](#debugging-local-php-files-php-cli-application)
+ * [Debugging PHP Web Applications (PHP Web Application)](#debugging-php-web-applications-php-web-application)
 
 ## Purpose and Usage
 
@@ -21,9 +21,9 @@ PDT includes several types of debugging:
  * Locally Debugging PHP Scripts - Debugging PHP files using an internal PHP Executable debugger.
  * Debugging PHP Web Pages - Debugging files, applications and projects on your server
 
-## Debugging Local PHP Files (PHP Scripts)
+## Debugging Local PHP Files (PHP CLI Application)
 
-PHP files (PHP Scripts) on your workspace can be debugged  locally using PDT's internal debugger.
+PHP files (PHP CLI Application) on your workspace can be debugged locally using PDT's internal debugger.
 
 <!--note-start-->
 
@@ -61,9 +61,9 @@ This procedure demonstrates how to debug a file using the internal debugger or y
  
  9\. Ensure that the 'Break at First Line' Breakpoint checkbox is selected.
  
- 10\. Click **Apply**and then **Debug**.
+ 10\. Click **Apply** and then **Debug**.
  
- 11\. Click **Yes**if asked whether to open the PHP Debug Perspective.
+ 11\. Click **Yes** if asked whether to open the PHP Debug Perspective.
  
  12\. A number of views will open with information about your script.
  
@@ -102,7 +102,7 @@ Your server must be running the XDebug or Zend Debugger in order for remote debu
 
 <!--note-end-->
 
-## Debugging PHP Applications (PHP Web Pages)
+## Debugging PHP Web Applications (PHP Web Application)
 
 PDT also allows you to debug applications, projects or files that are already on the server.
 
