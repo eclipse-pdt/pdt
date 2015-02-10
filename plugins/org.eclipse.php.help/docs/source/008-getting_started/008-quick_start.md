@@ -7,7 +7,7 @@ The following Quick Start page will help newcomers and (even) our veteran users 
 The Features covered in the Quick Start are:
 
  * [Workspaces](#workbench)
- * [Creating a PHP Project](#creating-php-project)
+ * [Creating a PHP Project](#creating-a-php-project)
  * [Creating a PHP File](#creating-a-php-file)
  * [PHP Debugging](#php-debugging)
 
@@ -21,7 +21,7 @@ See the [Workbench](PLUGINS_ROOT/org.eclipse.platform.doc.user/gettingStarted/qs
 
 #### Note:
 
-Additional user guides can be accessed from inside PDT by going to **Help | Help Contents**, or from the Eclipse Online Documentation site ([http://help.eclipse.org/luna/index.jsp](http://help.eclipse.org/luna/index.jsp)).
+Additional user guides can be accessed from inside PDT by going to **Help | Help Contents**, or from the Eclipse Online Documentation site ([http://help.eclipse.org/](http://help.eclipse.org/)).
 
 <!--note-end-->
 
@@ -29,7 +29,7 @@ Additional user guides can be accessed from inside PDT by going to **Help | Help
 
 Workspaces are the files system location where all your projects are created and stored.
 
-You can use the default Workspace created by PDT or from the menu bar go to File | Switch Workspace | Other to select a different Workspace.
+You can use the default Workspace created by PDT or from the menu bar go to **File | Switch Workspace | Other** to select a different Workspace.
 
 ### Creating a PHP Project
 
@@ -65,16 +65,16 @@ See [Creating PHP Files](../024-tasks/016-file_creation/000-index.md) for more i
 
 ### PHP Debugging
 
-The Zend Debugger detects and diagnoses errors in PHP code situated on local or remote servers:
+The debugger detects and diagnoses errors in PHP code situated on local or remote servers:
 
 <!--ref-start-->
 
 To debug a PHP script situated on your workspace:
 
  1. Set breakpoints at the relevant locations in your script by double-clicking the Marker Bar (located at the left of the editor area) at the relevant line. A blue ball appears to indicate that a breakpoint is set.
- 2. From the main menu, select **Run | Open Debug Dialog**  -Or- right-click the file in PHP Explorer view and select **Debug As | Open Debug Dialog**.
- 3. To create a new configuration, double-click the 'PHP Script' category.
- 4. Enter all relevant information and click Apply and Debug.
+ 2. From the main menu, select **Run | Debug Configurations**  -Or- right-click the file in PHP Explorer view and select **Debug As | Debug Configurations**.
+ 3. To create a new configuration, double-click the **PHP CLI Application** category.
+ 4. Enter all relevant information and click **Apply** and **Debug**.
 
 <!--ref-end-->
 
@@ -82,9 +82,9 @@ To debug a PHP script situated on your workspace:
 
 To debug a PHP Web page situated on a server:
 
- 1. From the main menu, select **Run | Open Debug Dialog** -or- right-click the file in PHP Explorer view and select **Debug As | Open Debug Dialog**.
- 2. To create a new configuration, double-click the 'PHP Web Page' category.
- 3. Enter the required information and click **Apply**and **Debug**.
+ 1. From the main menu, select **Run | Debug Configurations** -or- right-click the file in PHP Explorer view and select **Debug As | Debug Configurations**.
+ 2. To create a new configuration, double-click the **PHP Web Application** category.
+ 3. Enter the required information and click **Apply** and **Debug**.
 
 <!--ref-end-->
 
@@ -98,7 +98,7 @@ To open a perspective go to **Window | Open Perspective**, select "Other" to vie
 
  * PHP (default) - This is the perspective that will open by default in PDT . It allows you to manage and create PHP projects and files.
  * PHP Debug - Allows you to manage and track the debugging process.
- * CVS / SVN Repository Exploring - Allows you to manage and view your source control.
+ * GIT / CVS / SVN Repository Exploring - Allows you to manage and view your source control.
 
 See [PHP Perspectives and Views](../032-reference/008-php_perspectives_and_views/000-index.md) for more information.
 

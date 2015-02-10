@@ -9,7 +9,7 @@ The purpose of this tutorial is to guide you through the steps involved in creat
  * [Creating a PHP Project](#creating-a-php-project)
  * [Creating a PHP File](#creating-a-php-file)
 
-## Creatinga PHP Project
+## Creating a PHP Project
 
 <!--ref-start-->
 

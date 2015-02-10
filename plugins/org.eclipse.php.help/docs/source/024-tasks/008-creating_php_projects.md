@@ -8,17 +8,18 @@ PHP projects are the containers within which all PHP and other application files
 
 To create a new PHP project:
 
- 1. From the menu bar, go to **File | New | PHP Project**  -Or- In PHP Explorer view, right-click and select **New | PHP Project**.  The New PHP Project wizard is displayed. <br />![new_php_project_wizard.png](images/new_php_project_wizard.png "new_php_project_wizard.png") 1. Enter the following information:
+ 1. From the menu bar, go to **File | New | PHP Project**  -Or- In PHP Explorer view, right-click and select **New | PHP Project**.  The New PHP Project wizard is displayed. <br />![new_php_project_wizard.png](images/new_php_project_wizard.png "new_php_project_wizard.png") 
+ 1. Enter the following information:
     * Project name - The required project name
     * Contents - Select whether to:
-    * Create a new project in the workspace - Creates a new PHP project in the workspace directory.
-    * Create a project from existing source - Creates a PHP project pointing to files situated outside of the workspace.  Click **Browse** to select the required source content.
+     * Create a new project in the workspace - Creates a new PHP project in the workspace directory.
+     * Create a project from existing source - Creates a PHP project pointing to files situated outside of the workspace.  Click **Browse** to select the required source content.
     * PHP Version - Select whether to:
-    * Use default PHP settings - Uses the default PHP Interpreter settings.
-    * Use project specific settings - Select the PHP version to be used for the project and whether ASP tags are used as PHP tags.  See [PHP Version Support](../016-concepts/008-php_support.md) for more information
+     * Use default PHP settings - Uses the default PHP Interpreter settings.
+     * Use project specific settings - Select the PHP version to be used for the project and whether ASP tags are used as PHP tags.  See [PHP Version Support](../016-concepts/008-php_support.md) for more information
     * Project Layout - Select whether to:
-    * Use project as source folder - All resources within the project will be added to the Build Path by default.
-    * Create separate folders for source files and public resources - Separate folders will be created in which you can place resources which should be included or excluded from the Build Path.  See [Configuring a Project's PHP Build Path](176-configuring_build_paths.md) for more information.The default setting for this option can be configured from the [New Project Layout Preferences](../032-reference/032-preferences/048-new_project_layout_preferences.md) page.
+     * Use project as source folder - All resources within the project will be added to the Build Path by default.
+     * Create separate folders for source files and public resources - Separate folders will be created in which you can place resources which should be included or excluded from the Build Path.  See [Configuring a Project's PHP Build Path](176-configuring_build_paths.md) for more information.The default setting for this option can be configured from the [New Project Layout Preferences](../032-reference/032-preferences/048-new_project_layout_preferences.md) page.
     * JavaScript Support - Mark the 'Enable JavaScript support for this project' checkbox for JavaScript functionality (e.g. JavaScript Content Assist options) to be available to the project.  See [Enabling JavaScript Support in PHP Projects](../024-tasks/208-using_javascript/008-enabling_javascript_support_in_php_projects.md) for more information.
  2. Click **Next** to [configure the project's Include Path](168-adding_elements_to_a_project_s_include_path.md) (this can also be done following the project creation).
  3. Click **Next** to [configure the project's PHP Build Path](176-configuring_build_paths.md) (this can also be done following project creation).

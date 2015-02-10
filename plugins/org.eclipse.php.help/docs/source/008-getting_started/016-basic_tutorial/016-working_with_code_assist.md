@@ -7,11 +7,11 @@ The purpose of this tutorial is to teach you how to use PDT 's Content Assist fu
 #### Contents:
 
  * [Purpose and Usage](#purpose-and-usage)
- * [Activating Content Assist](#activating-code-assist)
+ * [Activating Content Assist](#activating-content-assist)
  * [Making Content Assist Elements Available Within the Same Scope](#making-content-assist-elements-available-within-the-same-scope)
  * [Function Parameter Hints](#function-parameter-hints)
  * [Class Type Hints](#class-type-hints)
- * [Configuring Content Assist](#configuring-code-assist)
+ * [Configuring Content Assist](#configuring-content-assist)
 
 ## Purpose and Usage
 
@@ -26,10 +26,11 @@ Each type of code element will have a unique icon:
  3. ![template_icon.png](images/template_icon.png "template_icon.png") - Templates
  4. ![classes_icon.png](images/classes_icon.png "classes_icon.png") - Classes
  5. ![interfaces_icon.png](images/interfaces_icon.png "interfaces_icon.png") - Interfaces
- 6. ![constants_icon.png](images/constants_icon.png "constants_icon.png") - Constants
- 7. ![variables_icon.png](images/variables_icon.png "variables_icon.png") - Variables (public)
+ 6. ![traits_icon.png](images/traits_icon.png "traits_icon.png") - Traits
+ 7. ![constants_icon.png](images/constants_icon.png "constants_icon.png") - Constants
+ 8. ![variables_icon.png](images/variables_icon.png "variables_icon.png") - Variables (public)
 
-Content Assist works with the following elements: PHP Classes, Functions, Variables, Constants, Keywords, Interfaces, Attributes, Values, Nested Functions, Names and Syntax, as well as all user defined Classes, Functions, and Constants.
+Content Assist works with the following elements: PHP Classes, Functions, Variables, Constants, Keywords, Interfaces, Traits, Attributes, Values, Nested Functions, Names and Syntax, as well as all user defined Classes, Functions, and Constants.
 
 <!--note-start-->
 
@@ -70,7 +71,7 @@ When entering a function call, a Function Parameter Hint box will be displayed d
 **The following procedure demonstrates using the Function Parameter Hint feature**:
 
  1. Place your cursor between the parentheses of the above function call: "define()"
- 2. Press Ctrl+Shift+Space.
+ 2. Press **Ctrl+Shift+Space**.
 
 A function parameter hint box will be displayed indicating the types of parameters that should be inserted between the parentheses.
 
@@ -122,8 +123,8 @@ Code elements defined in one file are also available for use by other files with
 The following steps demonstrate using Content Assist for inserting elements within the same project:
 
  1. Within the same project as "File1", create a new PHP file called "File2".
- 2. On the line beneath the opening PHP tag, type "def" and press **Ctrl+Spac**e to activate Content Assist. Double-click one of the define options.
- 3. Between the parentheses, type "cont" and press **Ctrl+Space**to activate Content Assist. The element 'continent', defined in "File1", will be available.
+ 2. On the line beneath the opening PHP tag, type "def" and press **Ctrl+Space** to activate Content Assist. Double-click one of the define options.
+ 3. Between the parentheses, type "cont" and press **Ctrl+Space** to activate Content Assist. The element 'continent', defined in "File1", will be available.
  4. Double-click 'continent' to enter it into your code.
 
 When the element is highlighted, Content Assist displays the original location of the code element, its value ('africa') and all other information available.
@@ -152,24 +153,15 @@ By using a comment you can assign a variable its exact class value. This assignm
             echo "Values: $a, $b";
         }
     }
-    /* @var $myVar Test */
     $myVar = getClass();
     $myVar->
     ?>
 
- 1. Place your cursor after  '$myVar->' (on the line above the closing PHP tag) and press **Ctrl+Space**to activate Content Assist. Content Assist will open with the function defined in 'Test' class (printValues($a, $b)). Double click it to enter it into your code.
+ 1. Place your cursor after  '$myVar->' (on the line above the closing PHP tag) and press **Ctrl+Space** to activate Content Assist. Content Assist will open with the function defined in 'Test' class (printValues($a, $b)). Double click it to enter it into your code.
 
 <!--ref-end-->
 
-<!--note-start-->
-
-#### Note:
-
-Without the comment, Content Assist will not be available for the function.
-
-<!--note-end-->
-
-## ConfiguringContent Assist
+## Configuring Content Assist
 
 Content Assist options can be configured through the [Content Assist Preferences page](../../032-reference/032-preferences/040-editor/008-code_assist.md), accessible from **Window | Preferences | PHP | Editor | Content Assist**.
 
