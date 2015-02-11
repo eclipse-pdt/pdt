@@ -1,5 +1,5 @@
 /**********************************************************************
- Copyright (c) 2000, 2002 IBM Corp. and others.
+ Copyright (c) 2000, 2015 IBM Corp. and others.
  All rights reserved. This program and the accompanying materials
  are made available under the terms of the Common Public License v1.0
  which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  Contributors:
  IBM Corporation - Initial implementation
  www.phpeclipse.de
+ Dawid Pakuła [459462]
  **********************************************************************/
 package org.eclipse.php.internal.ui.autoEdit;
 
@@ -57,6 +58,9 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				&& getPreferenceStore().getBoolean(
 						PreferenceConstants.EDITOR_SMART_PASTE)) {
 			try {
+				// bug 459462
+				defaultStrategy.setIndentationObject(null);
+
 				smartPaste(d, c);
 			} catch (Exception e) {
 				PHPUiPlugin.log(e);

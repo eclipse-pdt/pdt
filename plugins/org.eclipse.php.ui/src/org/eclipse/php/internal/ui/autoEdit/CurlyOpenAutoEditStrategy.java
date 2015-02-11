@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła [459462]
  *******************************************************************************/
 package org.eclipse.php.internal.ui.autoEdit;
 
@@ -27,6 +28,7 @@ public class CurlyOpenAutoEditStrategy extends IndentLineAutoEditStrategy
 	public void customizeDocumentCommand(IDocument document,
 			DocumentCommand command) {
 		if (command.text != null && command.text.endsWith("{")) { //$NON-NLS-1$
+			setIndentationObject(null); // reset
 			autoIndentBeforeCurlyOpen((IStructuredDocument) document, command);
 		}
 	}
