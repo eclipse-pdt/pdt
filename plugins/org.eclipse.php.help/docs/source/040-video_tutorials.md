@@ -53,35 +53,6 @@ The video covers the following features:
 
 [http://www.youtube.com/watch?v=x8WnciHjXco](http://www.youtube.com/watch?v=x8WnciHjXco)
 
-## Eclipse PDTCourtesy of [ralphz](http://theorangeit.org/)
-
-### Eclipse PDT #1
-
-<object style="border: Solid 2px #495e72;" width="425" height="344"> <embed src="http://vimeo.com/moogaloop.swf?clip_id=1077103&amp;amp;server=vimeo.com&amp;amp;show_title=1&amp;amp;show_byline=1&amp;amp;show_portrait=0&amp;amp;color=ffffff&amp;amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="400" height="302" /></object>
-
-#### About the Video:
-
-This video demonstrates installing PDT on Ubuntu 7.10
-
-[http://theorangeit.org/2008/04/03/eclipse-pdt-1](http://theorangeit.org/2008/04/03/eclipse-pdt-1)
-
-### Eclipse PDT #2
-
-<object width="425" height="344"> <embed src="http://vimeo.com/moogaloop.swf?clip_id=926921&amp;amp;server=vimeo.com&amp;amp;show_title=1&amp;amp;show_byline=1&amp;amp;show_portrait=0&amp;amp;color=ffffff&amp;amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="400" height="302" /></object>
-
-#### About the Video:
-
-This video provides an overview of basic PDT functionality and how to get started.
-
-The video covers the following features:
-
- * Workspaces, the workbench, PHP views
- * Project creation
- * Basic coding  including using and editing templates
- * Code assist and phpdoc blocks
-
-[http://theorangeit.org/2008/04/16/eclipse-pdt-2/](http://theorangeit.org/2008/04/16/eclipse-pdt-2/)
-
 ## Introduction to Eclipse PDTCourtesy of [beardygeek](http://www.beardygeek.com/)
 
 <iframe width="425" height="344" src="//www.youtube.com/embed/Prc61pkGGh8" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
