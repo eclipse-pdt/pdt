@@ -22,9 +22,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.link.*;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -228,13 +226,15 @@ public final class ParameterGuessingProposal extends
 			}
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=459377
 			int posLP = getRelativePositionOf(document, searchOffset, LPAREN);
-			int posRP = -1;
 			if (posLP >= 0) {
-				posRP = getRelativePositionOf(document, searchOffset
+				int posRP = getRelativePositionOf(document, searchOffset
 						+ (posLP + 1), RPAREN);
-			}
-			if (posLP >= 0) {
 				if (posRP < 0) {
+					// unset all parameters that have to be written in the
+					// document, they should not collide with the text
+					// already written in the document after left parenthesis
+					fPositions = null;
+					fChoices = null;
 					// we truncate the replacement text starting
 					// from left parenthesis (included)
 					replacement = replacement.substring(0, posReplacementLP);
@@ -250,14 +250,25 @@ public final class ParameterGuessingProposal extends
 				}
 			}
 		} else {
-			// deal with case that a method that do not have parameters but with
-			// append with parameters when using insert mode,for example
-			// getA|($a),we should generate getA()($a) instead of getA($a),but
-			// for getA|(),we should generate getA()
-			if (insertCompletion
-					&& getRelativePositionOf(document, offset, LPAREN) < 0) {
+			// unset all existing parameters (if any), they are useless now
+			fPositions = null;
+			fChoices = null;
+			int searchOffset;
+			if (!insertCompletion || toggleEating) {
+				searchOffset = getReplacementOffset() + getReplacementLength();
+			} else {
+				searchOffset = offset;
+			}
+			int posLP = getRelativePositionOf(document, searchOffset, LPAREN);
+			if (posLP < 0) {
+				// append missing parentheses in insert and overwrite mode
 				replacement = replacement + LPAREN + RPAREN;
 				setReplacementString(replacement);
+			} else {
+				// put the cursor before left parenthesis in document,
+				// it will be put after left parenthesis through
+				// PHPOverrideCompletionProposal#calculateCursorPosition()
+				setReplacementLength(getReplacementLength() + posLP);
 			}
 		}
 	}
@@ -330,7 +341,7 @@ public final class ParameterGuessingProposal extends
 		try {
 			// we should get the real constructor here
 			method = getProperMethod(method);
-			if (alias != null || hasParameters() && hasArgumentList()) {
+			if (alias != null || (hasParameters() && hasArgumentList())) {
 				return computeGuessingCompletion(prefix);
 			}
 		} catch (ModelException e) {
@@ -383,14 +394,8 @@ public final class ParameterGuessingProposal extends
 	protected boolean hasArgumentList() {
 		if (CompletionProposal.METHOD_NAME_REFERENCE == fProposal.getKind())
 			return false;
-		IEclipsePreferences prefs = InstanceScope.INSTANCE
-				.getNode(PHPCorePlugin.ID);
-		boolean noOverwrite = prefs.getBoolean(
-				PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true)
-				^ isToggleEating();
-		char[] completion = fProposal.getCompletion().toCharArray();
-		return !isInDoc() && completion.length > 0
-				&& (noOverwrite || completion[completion.length - 1] == ')');
+		String completion = fProposal.getCompletion();
+		return !isInDoc() && completion.length() > 0;
 	}
 
 	protected boolean isValidPrefix(String prefix) {
