@@ -27,6 +27,6 @@ class A
 	function usage()
 	{
 		$b = new B();
-		$b->overwrite ('haha', true);
+		$b->overwrite('haha', true);
 	}
 }

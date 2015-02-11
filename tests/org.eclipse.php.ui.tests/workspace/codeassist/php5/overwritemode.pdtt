@@ -4,9 +4,9 @@ Test overwrite mode
 org.eclipse.php.core/contentAssistInsertCompletion=false
 --FILE--
 <?php
-new SoapC|lient123(); 
+new Except|ion123(); 
 ?>
 --EXPECT--
 <?php
-new SoapClient(); 
+new Exception(); 
 ?>

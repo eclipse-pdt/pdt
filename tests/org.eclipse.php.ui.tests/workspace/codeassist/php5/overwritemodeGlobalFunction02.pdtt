@@ -13,4 +13,4 @@ _x|lalalala (4);
 function _xyz($param) {
 }
 
-_xyz (4);
+_xyz(4);
