@@ -73,7 +73,13 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String PHPLaunchUtilities_terminate;
 	public static String PHPLaunchUtilities_waitingForDebugger;
 
-	public static String PHPWebPageLaunchDelegate_0;
+	public static String PHPWebPageLaunchDelegate_DialogError;
+
+	public static String PHPWebPageLaunchDelegate_DialogErrorDebug;
+
+	public static String PHPWebPageLaunchDelegate_DialogErrorProfile;
+
+	public static String PHPWebPageLaunchDelegate_DialogErrorRun;
 
 	public static String PHPWebPageLaunchDelegate_serverNotFound;
 

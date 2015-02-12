@@ -304,7 +304,14 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 				fireError(status);
 				errorMessage = status.getMessage();
 			}
-			displayErrorMessage(errorMessage);
+			String errorTitle = PHPDebugCoreMessages.PHPWebPageLaunchDelegate_DialogError;
+			if (ILaunchManager.RUN_MODE.equals(launch.getLaunchMode()))
+				errorTitle = PHPDebugCoreMessages.PHPWebPageLaunchDelegate_DialogErrorRun;
+			else if (ILaunchManager.DEBUG_MODE.equals(launch.getLaunchMode()))
+				errorTitle = PHPDebugCoreMessages.PHPWebPageLaunchDelegate_DialogErrorDebug;
+			else if (ILaunchManager.PROFILE_MODE.equals(launch.getLaunchMode()))
+				errorTitle = PHPDebugCoreMessages.PHPWebPageLaunchDelegate_DialogErrorProfile;
+			displayErrorMessage(errorTitle, errorMessage);
 		}
 	}
 
@@ -323,11 +330,11 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 * @param message
 	 *            The error to display.
 	 */
-	protected void displayErrorMessage(final String message) {
+	protected void displayErrorMessage(final String title, final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				MessageDialog.openError(Display.getDefault().getActiveShell(),
-						PHPDebugCoreMessages.PHPWebPageLaunchDelegate_0, message);
+						title, message);
 			}
 		});
 	}
