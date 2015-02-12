@@ -392,10 +392,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		}
 	}
 
-	private class ProblemChangedListener implements IResourceChangeListener,
-			IResourceDeltaVisitor {
-
-		private Set<Object> toUpdate = new HashSet<Object>();
+	private class ProblemChangedCollector implements IResourceDeltaVisitor {
+		public Set<Object> toUpdate = new HashSet<Object>();
 
 		@Override
 		public boolean visit(IResourceDelta delta) throws CoreException {
@@ -482,6 +480,9 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 				element = element.getParent();
 			}
 		}
+	}
+
+	private class ProblemChangedListener implements IResourceChangeListener {
 
 		@Override
 		public void resourceChanged(final IResourceChangeEvent event) {
@@ -494,22 +495,24 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
-					toUpdate.clear();
+					final ProblemChangedCollector collector = new ProblemChangedCollector();
 					try {
 						IResourceDelta delta = event.getDelta();
-						if (delta != null)
-							delta.accept(ProblemChangedListener.this);
+						if (delta != null) {
+							delta.accept(collector);
+						}
 					} catch (CoreException e) {
 						PHPUiPlugin.log(e.getStatus());
 						return Status.OK_STATUS;
 					}
 
-					if (!toUpdate.isEmpty() && fOutlineViewer != null
+					if (!collector.toUpdate.isEmpty() && fOutlineViewer != null
 							&& fOutlineViewer.getControl() != null
 							&& !fOutlineViewer.getControl().isDisposed()) {
 						Display d = control.getDisplay();
 						if (d != null) {
-							final Object[] objects = toUpdate.toArray();
+							final Object[] objects = collector.toUpdate
+									.toArray();
 							d.asyncExec(new Runnable() {
 								public void run() {
 									fOutlineViewer.update(objects, null);
