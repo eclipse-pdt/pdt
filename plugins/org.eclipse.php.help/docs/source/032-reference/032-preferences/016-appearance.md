@@ -1,4 +1,4 @@
-# AppearancePreferences
+# Appearance Preferences
 
 <!--context:appearance_preferences-->
 

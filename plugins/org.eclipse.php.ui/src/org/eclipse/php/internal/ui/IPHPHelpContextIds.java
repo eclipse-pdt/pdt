@@ -270,6 +270,8 @@ public static final String PHP = PREFIX + "php"; //$NON-NLS-1$ 032-reference/032
 
 public static final String APPEARANCE_PREFERENCES = PREFIX + "appearance_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/016-appearance.md
 
+public static final String CODE_REFACTOR_PREFERENCES = PREFIX + "code_refactor_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/020-code_refactor.md
+
 public static final String CODE_STYLE_PREFERENCES = PREFIX + "code_style_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/024-code_style_preferences/000-index.md
 
 public static final String CODE_TEMPLATES_PREFERENCES = PREFIX + "code_templates_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/024-code_style_preferences/008-code_templates_preferences.md

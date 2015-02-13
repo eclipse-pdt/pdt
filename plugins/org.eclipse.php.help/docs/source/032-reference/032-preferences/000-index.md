@@ -4,7 +4,7 @@
 
 Below is a list of the different PHP preferences which can be configured.
 
-To access this menu, go to Window menu and select Preferences | PHP.
+To access this menu, go to Window menu and select **Preferences | PHP**.
 
 <table>
 <tr><th>Preference</th>
@@ -18,6 +18,10 @@ To access this menu, go to Window menu and select Preferences | PHP.
 <tr><td>[Appearance](016-appearance.md)</td>
 
 <td>Configure the display of elements in Outline views.</td></tr>
+
+<tr><td>[Code Refactor](020-code_refactor.md)</td>
+
+<td>Code refactoring preferences</td></tr>
 
 <tr><td>[Code Style](024-code_style_preferences/000-index.md)</td>
 
