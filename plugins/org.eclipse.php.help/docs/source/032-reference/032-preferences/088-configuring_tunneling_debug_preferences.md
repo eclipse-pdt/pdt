@@ -10,11 +10,15 @@ This procedure describes how to configure your Debug preferences to enable tunne
 
 To configure Debug Settings for PDT :
 
- 1. Open the PHP Debug Preferences page by going to  **Window | Preferences | PHP | Debug**. <br />![PHP Debug Preferences](images/configuring_tunneling_debug_preferences.png "PHP Debug Preferences")
- 2. In the "Debug Options" section, ensure the following default settings are configured:
-    * The Zend Debugger port number must be 10137.
-    * In the "Advanced Zend Debugger Options" category, the Broadcast Port must be set to 20080.
-    * In the Client Host/IP category, enter the Client Host/IP to which debugging results will be returned. PDT will automatically search for and recognize the Client Host/IP, but entering a specific Host/IP will speed up the debugging process and decrease the likelihood of session time-outs.
+1\. Open the PHP Debug Preferences page by going to **Window | Preferences | PHP | Debug**. 
+
+![PHP Debug Preferences](images/configuring_tunneling_debug_preferences.png "PHP Debug Preferences")
+
+2\. In the "Debug Options" section, ensure the following default settings are configured:
+ 
+ * The Zend Debugger port number must be 10137.
+ * In the "Advanced Zend Debugger Options" category, the Broadcast Port must be set to 20080.
+ * In the Client Host/IP category, enter the Client Host/IP to which debugging results will be returned. PDT will automatically search for and recognize the Client Host/IP, but entering a specific Host/IP will speed up the debugging process and decrease the likelihood of session time-outs.
 
 <!--ref-end-->
 

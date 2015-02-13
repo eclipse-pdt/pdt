@@ -9,34 +9,34 @@ A list of possible code elements is displayed in relevant locations within your 
 Each type of code element will have a unique icon. See [PHP Icons](../032-reference/048-php_icons.md) for a description of each of the icons.
 
 <table>
-<tr><td>![code_assist_triangle.png](images/code_assist_triangle.png "code_assist_triangle.png")</td>
+<tr><td><img src="images/code_assist_triangle.png" /></td>
 <td>Reserved PHP Words</td></tr>
 
-<tr><td>![code_assist_circle.png](images/code_assist_circle.png "code_assist_circle.png")</td>
+<tr><td><img src="images/code_assist_circle.png" /></td>
 <td>Functions</td></tr>
 
-<tr><td>![template_icon.png](images/template_icon.png "template_icon.png")</td>
+<tr><td><img src="images/template_icon.png" /></td>
 <td>Templates</td></tr>
 
-<tr><td>![classes_icon.png](images/classes_icon.png "classes_icon.png")</td>
+<tr><td><img src="images/classes_icon.png" /></td>
 <td>Classes</td></tr>
 
-<tr><td>![interfaces_icon.png](images/interfaces_icon.png "interfaces_icon.png")</td>
+<tr><td><img src="images/interfaces_icon.png" /></td>
 <td>Interfaces</td></tr>
 
-<tr><td>![constants_icon.png](images/constants_icon.png "constants_icon.png")</td>
+<tr><td><img src="images/constants_icon.png" /></td>
 <td>Constants</td></tr>
 
-<tr><td>![variables_icon.png](images/variables_icon.png "variables_icon.png")</td>
+<tr><td><img src="images/variables_icon.png" /></td>
 <td>Variables (public)</td></tr>
 
-<tr><td>![php_file_icon.png](images/php_file_icon.png "php_file_icon.png")</td>
+<tr><td><img src="images/php_file_icon.png" /></td>
 <td>PHP File Include Call</td></tr>
 
-<tr><td>![namespace_icon.png](images/namespace_icon.png "namespace_icon.png")</td>
+<tr><td><img src="images/namespace_icon.png" /></td>
 <td>Namespaces (PHP 5.3)</td></tr>
 
-<tr><td>![package_icon.png](images/package_icon.png "package_icon.png")</td>
+<tr><td><img src="images/package_icon.png" /></td>
 <td>Packages</td></tr>
 </table>
 
@@ -107,8 +107,8 @@ By using a comment you can assign a variable its exact class value. This assignm
 
 To assign a variable its class value using a comment:
 
- # Create your function and assign variables to it.
- # Enter a comment in the form:
+1. Create your function and assign variables to it.
+2. Enter a comment in the form:
 
 
     /* @var $"new variable" "Class name" */

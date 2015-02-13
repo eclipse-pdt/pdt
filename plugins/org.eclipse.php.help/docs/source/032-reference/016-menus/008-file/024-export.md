@@ -11,11 +11,11 @@ The options available under the Export submenu are:
 
 <th>Description</th></tr>
 
-<tr><td>**General**</td>
+<tr><td><b>General</b></td>
 
-<td>**Ant Buildfiles -**Generates Ant buildfiles based on the configuration of the Java projects.
+<td><b>Ant Buildfiles -</b>Generates Ant buildfiles based on the configuration of the Java projects.
 <br />
-**Archive File** - Exports files from the Workbench to an archive file in the local file system.
+<b>Archive File</b> - Exports files from the Workbench to an archive file in the local file system.
 <br />
 Breakpoints - Exports breakpoints from the workbench to a breakpoint  file. A list of available breakpoints will be displayed in the Export Breakpoint wizard. Select the relevant breakpoints and the name and location of the file to which they should be exported.
 <br />
@@ -25,13 +25,13 @@ File System - Export files from your workspace to your local file system.
 <br />
 Preferences -  Export preferences from the Workbench. In the Export Preferences wizard, select the preferences to export and the location of the preferences (.epf) file to which you want to export them.</td></tr>
 
-<tr><td>**EJB**</td>
+<tr><td><b>EJB</b></td>
 
-<td>**EJB JAR file**</td></tr>
+<td><b>EJB JAR file</b></td></tr>
 
 <tr><td>J2EE</td>
 
-<td>**App Client JAR file**
+<td><b>App Client JAR file</b>
 <br />
 EAR file
 <br />
@@ -39,7 +39,7 @@ RAR file</td></tr>
 
 <tr><td>Java</td>
 
-<td>**JAR File - Allows you to create a JAR file.**
+<td><b>JAR File - Allows you to create a JAR file.</b>
 <br />
 See ["JAR file exporter"](PLUGINS_ROOT/org.eclipse.jdt.doc.user/reference/ref-export-jar.htm) for more information.
 <br />
@@ -49,15 +49,15 @@ See " [Javadoc generation](PLUGINS_ROOT/org.eclipse.jdt.doc.user/reference/ref-e
 
 <tr><td>Plug-in Development</td>
 
-<td>**Deployable features - Exports the selected features in a form suitable for deploying in an Eclipse product.**
+<td><b>Deployable features - Exports the selected features in a form suitable for deploying in an Eclipse product.</b>
 <br />
 Deployable plug-ins and fragments - Exports the selected plug-ins and/or fragments in a form suitable for deploying in an Eclipse product.
 <br />
-**Eclipse product** - Exports an Eclipse product.</td></tr>
+<b>Eclipse product</b> - Exports an Eclipse product.</td></tr>
 
 <tr><td>Team</td>
 
-<td>**Team Project Set - Exports Imports a description of the repository and version control information for a set of projects.**
+<td><b>Team Project Set - Exports Imports a description of the repository and version control information for a set of projects.</b>
 <br />
 For more on Team Project Sets, see ['Sharing your workspace setup using Project Sets](PLUGINS_ROOT/org.eclipse.platform.doc.user/tasks/tasks-cvs-project-set.htm)' .</td></tr>
 

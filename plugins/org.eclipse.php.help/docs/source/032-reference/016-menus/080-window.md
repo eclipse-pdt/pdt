@@ -23,9 +23,9 @@ Clicking on the window's X icon will close only that window and not the whole wo
 <td>Opens a selected perspective, containing a selection of views.
 See the Workbench User Guide for more on [Perspectives](PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-4.htm) .
 <br />
-**Note:**
+<b>Note:</b>
 <br />
-Additional user guides can be accessed from inside PDT by going to **Help | Help Contents**, or from the Eclipse Online Documentation site ([http://help.eclipse.org/luna/index.jsp](http://help.eclipse.org/luna/index.jsp)).
+Additional user guides can be accessed from inside PDT by going to <b>Help | Help Contents</b>, or from the Eclipse Online Documentation site ([http://help.eclipse.org/luna/index.jsp](http://help.eclipse.org/luna/index.jsp)).
 </td></tr>
 <tr><td>Show View</td>
 <td></td>
@@ -33,9 +33,9 @@ Additional user guides can be accessed from inside PDT by going to **Help | Help
 <br />
 See the Workbench User Guide for more on [Views](PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-5.htm) and [Views Basic Tutorial](PLUGINS_ROOT/org.eclipse.platform.doc.user/gettingStarted/qs-02e.htm) .
 <br />
-**Note:**
+<b>Note:</b>
 <br />
-Additional user guides can be accessed from inside PDT by going to **Help | Help Contents**, or from the Eclipse Online Documentation site ([http://help.eclipse.org/luna/index.jsp](http://help.eclipse.org/luna/index.jsp)).
+Additional user guides can be accessed from inside PDT by going to <b>Help | Help Contents</b>, or from the Eclipse Online Documentation site ([http://help.eclipse.org/luna/index.jsp](http://help.eclipse.org/luna/index.jsp)).
 </td></tr>
 <tr><td>Customize Perspective</td>
 <td></td>

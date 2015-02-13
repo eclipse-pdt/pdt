@@ -10,7 +10,7 @@ The options available under the Import submenu are:
 <tr><th>Name</th>
 <th>Description</th></tr>
 <tr><td>General</td>
-<td>**Archive File**- Extracts files from the archive file into the workbench.
+<td><b>Archive File</b>- Extracts files from the archive file into the workbench.
 <br />
 Breakpoints - Creates a breakpoint working set.
 <br />
@@ -20,12 +20,12 @@ File System - Files from the local file system. Browse to the folder in which th
 <br />
 Preferences - Import preferences from a preferences file on the local file system into the workbench.</td></tr>
 <tr><td>CVS</td>
-<td>**Projects from CVS**- Imports projects by connecting to a CVS repository. Once a project has been imported from CVS, changes can be made to projects and files which can then be committed to update the CVS repository.  A CVS repository connection needs to be configured before using this function.
+<td><b>Projects from CVS</b>- Imports projects by connecting to a CVS repository. Once a project has been imported from CVS, changes can be made to projects and files which can then be committed to update the CVS repository.  A CVS repository connection needs to be configured before using this function.
 For more information, see "Working with CVS".</td></tr>
-<tr><td>**EJB**</td>
+<tr><td><b>EJB</b></td>
 <td>EJB JAR file</td></tr>
 <tr><td>J2EE</td>
-<td>**App Client JAR file**
+<td><b>App Client JAR file</b>
 <br />
 EAR file
 <br />
@@ -33,21 +33,21 @@ J2EE Utility Jar
 <br />
 RAR file</td></tr>
 <tr><td>Plug-in Development</td>
-<td>**Features - Imports features from your file system into your workspace.**
+<td><b>Features - Imports features from your file system into your workspace.</b>
 <br />
 For more see ["Feature Import".](PLUGINS_ROOT/org.eclipse.pde.doc.user/guide/tools/import_wizards/import_features.htm)Plug-ins and Fragments - Imports plugins and fragments from your file system into your workspace.  For more see ["Plug-in Import](PLUGINS_ROOT/org.eclipse.pde.doc.user/guide/tools/import_wizards/import_plugins.htm) " .</td></tr>
-<tr><td>**SVN**</td>
-<td>**Projects from SVN - Imports projects by connecting to an SVN repository. Once a project has been imported from SVN, changes can be made to projects and files which can then be committed to update the SVN repository.**
+<tr><td><b>SVN</b></td>
+<td><b>Projects from SVN - Imports projects by connecting to an SVN repository. Once a project has been imported from SVN, changes can be made to projects and files which can then be committed to update the SVN repository.</b>
 <br />
 An SVN repository connection needs to be configures before using this function.  For more information, see " Working with SVN ".</td></tr>
-<tr><td>**Team**</td>
-<td>**Team Project Set - Imports a description of the repository and version control information for a set of projects.**
+<tr><td><b>Team</b></td>
+<td><b>Team Project Set - Imports a description of the repository and version control information for a set of projects.</b>
 <br />
 For more on Team Project Sets, see ['Sharing your workspace setup using Project Sets](PLUGINS_ROOT/org.eclipse.platform.doc.user/tasks/tasks-cvs-project-set.htm)' .</td></tr>
 <tr><td>Web</td>
 <td>WAR file - Imports WAR files.</td></tr>
 <tr><td>Web Services</td>
-<td>**Web Service - Imports Web Services**
+<td><b>Web Service - Imports Web Services</b>
 <br />
 WSIL - Imports WSIL files.</td></tr>
 </table>

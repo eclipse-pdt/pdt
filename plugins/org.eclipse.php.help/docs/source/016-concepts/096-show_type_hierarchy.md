@@ -6,11 +6,11 @@ The Type Hierarchy views display the hierarchy for a given type (a class name, i
 
 A type hierarchy can be displayed in two ways:
 
- 1. **Quick Type Hierarchy view -** Displays a simple hierarchy view within the editor.
+1\. **Quick Type Hierarchy view -** Displays a simple hierarchy view within the editor.
 
 ![Quick Type Hierarchy View](images/quick_type_hierarchy.png "Quick Type Hierarchy View")
 
- 2. **Type Hierarchy view -** A standalone view.
+2\. **Type Hierarchy view -** A standalone view.
     * The Type Hierarchy Tree - Displays the type's supertypes and/or subtypes.
     * Member list pane - Displays the type's members.
 

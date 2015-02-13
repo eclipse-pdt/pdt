@@ -61,7 +61,7 @@ If there are unsaved changes in the file, you will be prompted to save them befo
 
 <td>Ctrl+Shift+S</td>
 
-<td>**<span style="font-weight: normal;">Saves all open files.**</span></td></tr>
+<td><b>Saves all open files.</b></td></tr>
 
 <tr><td>Revert</td>
 
@@ -109,7 +109,7 @@ For more on renaming files using the rename feature, see "Renaming a file".</td>
 
 <td></td>
 
-<td>**<span style="font-weight: normal;">Selects the preferred line ending style. Choices of Windows, Unix and Mac styles.**</span></td></tr>
+<td><b>Selects the preferred line ending style. Choices of Windows, Unix and Mac styles.</b></td></tr>
 
 <tr><td>Print</td>
 

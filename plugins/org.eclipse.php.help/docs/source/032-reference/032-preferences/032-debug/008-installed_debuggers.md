@@ -17,10 +17,11 @@ To configure your Zend Debugger settings:
 
 ![zend_debugger_settings_pdt.png](images/zend_debugger_settings_pdt.png "zend_debugger_settings_pdt.png")
 
-1. Configure the following:
-    * Debug Port - The port which the Zend Debugger will use. The default port is 10137.
-    * Run with Debug info - Mark the checkbox for Debug info, such as the Console view and the Browser Output, to be displayed when a Run configuration is executed.
-    * Client Host/IP - Enter the Client Host/IP to which debugging results will be returned. PDT will automatically search for and recognize the  Client Host/IP, but entering a specific Host/IP will speed up the debugging process and decrease the likelihood of session timeouts.
+1\. Configure the following:
+   
+ * Debug Port - The port which the Zend Debugger will use. The default port is 10137.
+ * Run with Debug info - Mark the checkbox for Debug info, such as the Console view and the Browser Output, to be displayed when a Run configuration is executed.
+ * Client Host/IP - Enter the Client Host/IP to which debugging results will be returned. PDT will automatically search for and recognize the  Client Host/IP, but entering a specific Host/IP will speed up the debugging process and decrease the likelihood of session timeouts.
 
 <!--note-start-->
 
