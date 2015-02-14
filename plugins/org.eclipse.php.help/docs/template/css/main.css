@@ -5,7 +5,13 @@ html {
     background-color: #fff;
     overflow: scroll;
     box-sizing: border-box;
-    padding: 20px
+    padding: 0px;
+    margin: 0px
+}
+
+body {
+    margin: 0px;
+    padding: 10px
 }
 
 code {
@@ -20,8 +26,12 @@ code, tt {
     font-size: 12px
 }
 
+#help_breadcrumbs {
+    font-size: 10px
+}
+
 a, a code {
-    color: #4183c4
+    color: #4183c4 !important
 }
 
 ol>li {
@@ -43,7 +53,7 @@ ul>li {
 }
 
 a.absent {
-    color: #c00
+    color: #c00 !important
 }
 
 a.anchor {
@@ -69,7 +79,7 @@ h1, h2, h3, h4, h5, h6 {
 h1 .octicon-link, h2 .octicon-link, h3 .octicon-link, h4 .octicon-link,
     h5 .octicon-link, h6 .octicon-link {
     display: none;
-    color: #000
+    color: #000 !important;
 }
 
 h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor,
@@ -414,4 +424,24 @@ kbd {
 
 .note h4 {
     border-bottom: 1px solid #ddd
+}
+
+@media (max-width: 400px) {
+    .ref, .links {
+        background: none;
+        border-left: 4px solid #bdbdbd;
+        padding-left: 5px;
+    }
+    html {
+        margin: 0px;
+        padding: 0px;
+        line-height: 1.4 !important
+    }
+    body {
+        padding: 5px !important;
+        margin: 0px
+    }
+    #help_breadcrumbs {
+        font-size: 10px !important
+    }
 }
