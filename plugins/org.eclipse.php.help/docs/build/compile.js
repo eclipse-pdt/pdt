@@ -166,7 +166,7 @@ var debug = function(el) {
         task = project.createTask('replace');
         task.setFile(tree.realTarget);
         task.setToken('</body>');
-        task.setValue(footerTemplate + "</body>");
+        task.setValue(footerTemplate.replace('${file_path}', tree.url) + "</body>");
         task.perform();
         
         task = project.createTask('replace');
