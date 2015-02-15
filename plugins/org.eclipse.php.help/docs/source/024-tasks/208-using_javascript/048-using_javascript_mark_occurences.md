@@ -20,12 +20,12 @@ All instances where the element is referenced within the file will be highlighte
 
 To configure Mark Occurrences settings:
 
- 1. To toggle mark occurrences, click the Toggle Mark Occurrences button ![javascript_mark_occurences_icon.png](images/javascript_mark_occurences_icon.png "javascript_mark_occurences_icon.png") on the toolbar -or- press Alt+Shift+O.
+ 1. To toggle mark occurrences, click the Toggle Mark Occurrences button ![javascript_mark_occurences_icon.png](images/javascript_mark_occurences_icon.png "javascript_mark_occurences_icon.png") on the toolbar -or- press **Alt+Shift+O**.
  2. To configure further Mark Occurences preferences, go to the JavaScript Mark Occurrences preferences page, accessed from **Window | Preferences | Web | JavaScript | Editor | Mark Occurrences**. <br />![Mark Occurrences Preferences Page](images/javascript_mark_occurences_preferences.png "Mark Occurrences Preferences Page")
  3. Mark the "Mark occurrences of the selected element" checkbox to enable the Mark Occurrences feature.
  4. Select which element's occurrences will be marked by marking the checkboxes next to the required elements.
  5. Mark the "Keep marks when the selection changes'" checkbox for marks to continue to be displayed once the cursor has been moved from the selected element.
- 6. Click **Apply**to apply your changes.
+ 6. Click **Apply** to apply your changes.
 
 <!--note-start-->
 

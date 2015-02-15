@@ -10,7 +10,7 @@ JavaScript's Build Path allows you to select JavaScript resources to include/exc
 
 #### Note:
 
-JavaScript Support must be <[enabled for the project](008-enabling_javascript_support_in_php_projects.md) before you can set the JavaScript Build Path.
+JavaScript Support must be [enabled for the project](008-enabling_javascript_support_in_php_projects.md) before you can set the JavaScript Build Path.
 
 <!--note-end-->
 
@@ -20,11 +20,11 @@ The JavaScript Build Path is determined by the resources included in the project
 
 To configure the project's JavaScript Build Path:
 
- 1. In PHP Explorer view, right-click the required project and select Properties | JavaScript | JavaScript Libraries.  In this properties page you can add the following elements to the project's JavaScript Build Path:
- 2. [Libraries](#Libraries) - Built-in and user defined libraries contain pre-written collections of JavaScript source files that have prototyped object/class definitions and JsDoc.
- 3. [Global Super Types](#Global_SuperType) - Each object/field/function in the added libraries will be added to the project's Global Scope. Every JavaScript file in the project will then have access to these objects/fields/functions.
- 4. [Source](#Source) - Other folders/files/variables from your file system or linked from an external source.
- 5. [Projects](#Projects) - Other projects in the workspace or on your file system
+ 1. In PHP Explorer view, right-click the required project and select **Properties | JavaScript | JavaScript Libraries**.  In this properties page you can add the following elements to the project's JavaScript Build Path:
+ 2. [Libraries](#libraries-tab) - Built-in and user defined libraries contain pre-written collections of JavaScript source files that have prototyped object/class definitions and JsDoc.
+ 3. [Source](#source) - Other folders/files/variables from your file system or linked from an external source.
+ 4. [Projects](#projects) - Other projects in the workspace or on your file system
+ 5. [Global Super Types](#global-supertype-tab) - Each object/field/function in the added libraries will be added to the project's Global Scope. Every JavaScript file in the project will then have access to these objects/fields/functions.
 
 ### Libraries Tab
 
@@ -44,15 +44,15 @@ The default Runtime Libraries (Script Language Libraries, Web Project support fo
 
 To add a built-in library to the JavaScript Build Path:
 
- 1. Click 'Add a Runtime Library...'.  The Add Library dialog will appear.
+ 1. Click **Add a Runtime Library...**.  The Add Library dialog will appear.
  2. Select the required library and click Next and Finish.
 
 To add a User Library to the JavaScript Build Path:
 
-1. Click 'Add a Runtime Library...'.  The Add Library dialog will appear.
-2. Select 'User Library' and click Next.  A list of previously configured User Libraries will appear. <br />![javascript_includepath_lib1.png](images/javascript_includepath_lib1.png "javascript_includepath_lib1.png")
+1. Click **Add a Runtime Library...**.  The Add Library dialog will appear.
+2. Select **User Library** and click Next.  A list of previously configured **User Libraries** will appear. <br />![javascript_includepath_lib1.png](images/javascript_includepath_lib1.png "javascript_includepath_lib1.png")
 3. If you have not yet configured your User Libraries:
-  1. Click the User Libraries button to be taken to the JavaScript User Libraries preferences page (also accessible from Window | Preferences | JavaScript | Include Path | User Libraries).
+  1. Click the User Libraries button to be taken to the JavaScript User Libraries preferences page (also accessible from **Window | Preferences | JavaScript | Include Path | User Libraries**).
   2. Click New.  The New User Library dialog will open.<br />![javascript_new_user_library1.png](images/javascript_new_user_library1.png "javascript_new_user_library1.png")
   3. Enter a name for the library you would like to add and click OK.  The library name will be added to the User Libraries list. This is just a placeholder name to which you will add the required files in order to create your own library.
   4. Select the name from the list and click 'Add .js.'
@@ -65,19 +65,6 @@ To add a library folder from your Workspace to the JavaScript Build Path:
 
 1. Click the 'Add a Library Folder' button.  The library folder selection dialog will display a list of available folders.
 2. Select the required folder(s) and click OK.
-
-### Global Super Type Tab
-
-The project's Global Scope contains all the objects, fields and functions contained in the libraries which have been added to the JavaScript Build Path. Elements in the Global SuperType will be available to all PHP and JavaScript files within the project.
-
-![javascript_global_supertype.png](images/javascript_global_supertype.png "javascript_global_supertype.png")
-
-In addition, the Global SuperType tab allows you to select a 'SuperType' class. All JavaScript elements which are not defined in their own class will automatically be added to this class. This will allow you to select these elements from the Content Assist list according to the SuperType Class name you selected.
-
-To configure the SuperType class:
-
- 1. Click the 'Select & Re-order Libraries' button.  The JavaScript Sourcefile SuperType Selection dialog will open.
- 2. Select the class name for the SuperType class and click OK.  All elements which are not defined in a class will be added to the selected class. Entering the class name will display these elements in the Content Assist list.
 
 ### Source Tab
 
@@ -116,6 +103,19 @@ To add a Variable Classpath Entry:
 4. Click OK.  The Variable will be added to the Include Path Variables list.
 5. Click OK to return to the Variable Classpath Entry selection list.
 5. Select the variable you would like to add to the project's JavaScript Build Path and click OK.
+
+### Global SuperType Tab
+
+The project's Global Scope contains all the objects, fields and functions contained in the libraries which have been added to the JavaScript Build Path. Elements in the Global SuperType will be available to all PHP and JavaScript files within the project.
+
+![javascript_global_supertype.png](images/javascript_global_supertype.png "javascript_global_supertype.png")
+
+In addition, the Global SuperType tab allows you to select a 'SuperType' class. All JavaScript elements which are not defined in their own class will automatically be added to this class. This will allow you to select these elements from the Content Assist list according to the SuperType Class name you selected.
+
+To configure the SuperType class:
+
+ 1. Click the 'Select & Re-order Libraries' button.  The JavaScript Sourcefile SuperType Selection dialog will open.
+ 2. Select the class name for the SuperType class and click OK.  All elements which are not defined in a class will be added to the selected class. Entering the class name will display these elements in the Content Assist list.
 
 <!--note-start-->
 

@@ -18,14 +18,14 @@ To access JavaScript Content Assist options:
 
  1. Type the relevant HTML and JavaScript tags: <br />![javascript_code.png](images/javascript_code.png "javascript_code.png")
  2. JavaScript Content Assist options will now be available.
- 3. Type the first few letters of the required element.  The Content Assist list will be displayed (if the Content Assist list is not automatically displayed, press Ctrl + Space or go to your [JavaScript Content Assist preferences page](#Content_Assist_Preferences) to configure your auto activation preferences).
+ 3. Type the first few letters of the required element.  The Content Assist list will be displayed (if the Content Assist list is not automatically displayed, press **Ctrl + Space** or go to your [JavaScript Content Assist preferences page](#javascript-content-assist-configuration) to configure your auto activation preferences).
  4. Select the relevant option from the Content Assist window by double-clicking or pressing Enter.
  5. If you selected a JavaScript class, type a period "." after the name of the class to display a Content Assist window with the classes' relevant functions and methods. <br />![javascript_class.png](images/javascript_class.png "javascript_class.png")
  6. Select the required option to complete your JavaScript code.
 
 <!--ref-end-->
 
-### JavaScriptContent Assist Configuration
+### JavaScript Content Assist Configuration
 
 JavaScript Content Assist options can be configured from the JavaScript Content Assist preferences page.
 

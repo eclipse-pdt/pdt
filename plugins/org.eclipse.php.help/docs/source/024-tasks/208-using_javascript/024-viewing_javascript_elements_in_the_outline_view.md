@@ -8,7 +8,7 @@ This procedure describes how to view JavaScript objects and elements in the Outl
 
 To view your JavaScript objects in the Outline view:
 
- 1. Go to the Outline view.  If it is not displayed, go to Window | Show View | Outline.
+ 1. Go to the Outline view.  If it is not displayed, go to **Window | Show View | Outline**.
  2. If your JavaScript objects are contained within a PHP file, click the Menu arrow ![menu_icon.png](images/menu_icon.png "menu_icon.png") on the Outline view's toolbar and select html.  HTML and JavaScript objects contained within the file will be displayed in a tree view. <br />
     ![javascript_outline.png](images/javascript_outline.png "javascript_outline.png")
  3. Double-Clicking the `<Script>` node in the outline view will select the entire `<script>` element in the Editor.
