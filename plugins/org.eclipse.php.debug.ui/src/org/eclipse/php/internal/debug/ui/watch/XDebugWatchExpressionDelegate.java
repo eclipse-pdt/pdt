@@ -105,6 +105,7 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 			 */
 			result = debugTarget.eval(testExp);
 			if (result != null) {
+				result.setUserData("eval-watch", expressionText, null); //$NON-NLS-1$
 				IVariable tempVar = new DBGpVariable(debugTarget, result,
 						stackLevel);
 				evalResult = null;

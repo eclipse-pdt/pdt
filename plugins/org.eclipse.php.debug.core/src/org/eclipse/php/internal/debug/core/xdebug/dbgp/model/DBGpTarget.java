@@ -17,7 +17,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -29,6 +31,7 @@ import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.core.phar.PharPath;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
+import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
@@ -54,6 +57,177 @@ import org.w3c.dom.NodeList;
 public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		IDBGpDebugTarget, IStep, IBreakpointManagerListener,
 		IDBGpSessionListener {
+
+	private static class DBGpBreakpointCmd {
+		private String cmd;
+		private DBGpBreakpoint bp;
+
+		public DBGpBreakpointCmd(String cmd, DBGpBreakpoint bp) {
+			this.cmd = cmd;
+			this.bp = bp;
+		}
+
+		public String getCmd() {
+			return cmd;
+		}
+
+		public DBGpBreakpoint getBp() {
+			return bp;
+		}
+
+	}
+
+	/**
+	 * class to manage breakpoint conditions
+	 * 
+	 */
+	private static class DBGpBreakpointCondition {
+
+		private String hitCondition;
+		private String hitValue;
+		private String expression;
+
+		private int type;
+		public static final int NONE = 0;
+		public static final int HIT = 1;
+		public static final int EXPR = 2;
+		public static final int INVALID = 3;
+
+		public DBGpBreakpointCondition(DBGpBreakpoint bp) {
+			type = NONE;
+			if (bp.isConditional() && bp.isConditionEnabled()) {
+
+				// supported
+				// - expression
+				// - hit(condition value)
+				String bpExpression = bp.getExpression().trim();
+				if (bpExpression.endsWith(")") && (bpExpression.startsWith("hit(") || bpExpression.startsWith("HIT("))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					if (bpExpression.length() > 5) {
+						// support the following formats
+						// - >= x, >=x
+						// - ==x == x
+						// - %x % x
+						type = HIT;
+						String internal = bpExpression.substring(4,
+								bpExpression.length() - 1).trim();
+						if (internal.startsWith("%")) { //$NON-NLS-1$
+							hitCondition = "%"; //$NON-NLS-1$
+							hitValue = internal.substring(1).trim();
+						} else {
+							hitCondition = internal.substring(0, 2);
+							if (hitCondition.equals("==") || hitCondition.equals(">=")) { //$NON-NLS-1$ //$NON-NLS-2$
+								hitValue = internal.substring(2).trim();
+							} else {
+								type = INVALID;
+							}
+						}
+
+						if (type != INVALID) {
+							try {
+								Integer.parseInt(hitValue);
+							} catch (NumberFormatException nfe) {
+								type = INVALID;
+							}
+						}
+					} else {
+						type = INVALID;
+					}
+				} else if (bpExpression.length() == 0) {
+					type = NONE;
+					expression = bpExpression;
+				} else {
+					type = EXPR;
+					expression = bpExpression;
+				}
+			}
+		}
+
+		public String getExpression() {
+			return expression;
+		}
+
+		public String getHitCondition() {
+			return hitCondition;
+		}
+
+		public String getHitValue() {
+			return hitValue;
+		}
+
+		public int getType() {
+			return type;
+		}
+	}
+
+	private static class DBGpValueStorage {
+
+		private static final String KEY_SEPARATOR = ">>>"; //$NON-NLS-1$
+		private static final String TAG_WATCH = "watch-value"; //$NON-NLS-1$
+		private static final String TAG_CONTEXT = "context-value"; //$NON-NLS-1$
+
+		private Map<String, String> current = new HashMap<String, String>();
+		private Map<String, String> previous = new HashMap<String, String>();
+
+		public boolean store(DBGpValue value, Node property) {
+			boolean hasChanged = false;
+			String key = createKey(value, property);
+			String valueAsString = null;
+			try {
+				valueAsString = value == null ? null : value.getValueString();
+			} catch (DebugException e) {
+				// should not happen, nonetheless...
+				Logger.logException(e);
+			}
+			String cached = previous.get(key);
+			if (cached != null && !cached.equals(valueAsString))
+				hasChanged = true;
+			current.put(key, valueAsString);
+			return hasChanged;
+		}
+
+		public void reset() {
+			previous = current;
+			current = new HashMap<String, String>();
+		}
+
+		private String createKey(DBGpValue value, Node property) {
+			String key;
+			String level = value == null ? "0" : value.getOwner().getStackLevel(); //$NON-NLS-1$
+			String valuePath = DBGpResponse.getAttribute(property, "fullname"); //$NON-NLS-1$
+			/*
+			 * If is empty then it means that this is watch expression result.
+			 * In this case build dummy chain from scratch to cache its value.
+			 */
+			if (valuePath.isEmpty()) {
+				StringBuilder chain = new StringBuilder();
+				boolean done = false;
+				Object exp = (Object) property.getUserData("eval-watch"); //$NON-NLS-1$
+				if (exp == null) {
+					chain.append(DBGpResponse.getAttribute(property, "name")); //$NON-NLS-1$
+				} else {
+					chain.append((String) exp);
+					done = true;
+				}
+				Node next = property.getParentNode();
+				while (!done && next != null) {
+					String element = DBGpResponse.getAttribute(next, "name"); //$NON-NLS-1$
+					if (element.isEmpty()) {
+						element = (String) next.getUserData("eval-watch"); //$NON-NLS-1$
+						chain.insert(0, element + KEY_SEPARATOR);
+						break;
+					}
+					chain.insert(0, element + KEY_SEPARATOR);
+					next = next.getParentNode();
+				}
+				key = TAG_WATCH + KEY_SEPARATOR + level + KEY_SEPARATOR
+						+ chain.toString();
+			} else {
+				key = TAG_CONTEXT + KEY_SEPARATOR + level + KEY_SEPARATOR
+						+ valuePath;
+			}
+			return key;
+		}
+	}
 
 	// used to identify this debug target with the associated
 	// script being debugged.
@@ -147,6 +321,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	// need to have something in case a target is terminated before
 	// a session is initiated to stop a NPE in the debug view
 	private DebugOutput debugOutput = new DebugOutput();
+
+	private DBGpValueStorage valueStorage = new DBGpValueStorage();
 
 	/**
 	 * Base constructor
@@ -635,8 +811,9 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 				URLConnection connection = url.openConnection();
 				connection.connect();
 			} catch (IOException e) {
-				DBGpLogger.logException(
-						"Failed to send stop XDebug session URL: " + stopDebugURL, this, e); //$NON-NLS-1$
+				DBGpLogger
+						.logException(
+								"Failed to send stop XDebug session URL: " + stopDebugURL, this, e); //$NON-NLS-1$
 			}
 		} catch (MalformedURLException e) {
 			// Should not happen
@@ -1112,6 +1289,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		currentVariables = null;
 		superGlobalVars = null;
 		stepping = false;
+		valueStorage.reset();
 		fireSuspendEvent(detail);
 		langThread.fireSuspendEvent(detail);
 	}
@@ -2137,107 +2315,6 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		DBGpCmdQueue.clear();
 	}
 
-	private static class DBGpBreakpointCmd {
-		private String cmd;
-		private DBGpBreakpoint bp;
-
-		public DBGpBreakpointCmd(String cmd, DBGpBreakpoint bp) {
-			this.cmd = cmd;
-			this.bp = bp;
-		}
-
-		public String getCmd() {
-			return cmd;
-		}
-
-		public DBGpBreakpoint getBp() {
-			return bp;
-		}
-
-	}
-
-	/**
-	 * class to manage breakpoint conditions
-	 * 
-	 */
-	private static class DBGpBreakpointCondition {
-
-		private String hitCondition;
-		private String hitValue;
-		private String expression;
-
-		private int type;
-		public static final int NONE = 0;
-		public static final int HIT = 1;
-		public static final int EXPR = 2;
-		public static final int INVALID = 3;
-
-		public DBGpBreakpointCondition(DBGpBreakpoint bp) {
-			type = NONE;
-			if (bp.isConditional() && bp.isConditionEnabled()) {
-
-				// supported
-				// - expression
-				// - hit(condition value)
-				String bpExpression = bp.getExpression().trim();
-				if (bpExpression.endsWith(")") && (bpExpression.startsWith("hit(") || bpExpression.startsWith("HIT("))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					if (bpExpression.length() > 5) {
-						// support the following formats
-						// - >= x, >=x
-						// - ==x == x
-						// - %x % x
-						type = HIT;
-						String internal = bpExpression.substring(4,
-								bpExpression.length() - 1).trim();
-						if (internal.startsWith("%")) { //$NON-NLS-1$
-							hitCondition = "%"; //$NON-NLS-1$
-							hitValue = internal.substring(1).trim();
-						} else {
-							hitCondition = internal.substring(0, 2);
-							if (hitCondition.equals("==") || hitCondition.equals(">=")) { //$NON-NLS-1$ //$NON-NLS-2$
-								hitValue = internal.substring(2).trim();
-							} else {
-								type = INVALID;
-							}
-						}
-
-						if (type != INVALID) {
-							try {
-								Integer.parseInt(hitValue);
-							} catch (NumberFormatException nfe) {
-								type = INVALID;
-							}
-						}
-					} else {
-						type = INVALID;
-					}
-				} else if (bpExpression.length() == 0) {
-					type = NONE;
-					expression = bpExpression;
-				} else {
-					type = EXPR;
-					expression = bpExpression;
-				}
-			}
-		}
-
-		public String getExpression() {
-			return expression;
-		}
-
-		public String getHitCondition() {
-			return hitCondition;
-		}
-
-		public String getHitValue() {
-			return hitValue;
-		}
-
-		public int getType() {
-			return type;
-		}
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -2426,4 +2503,17 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		boolean isWaiting = (STATE_STARTED_SESSION_WAIT == targetState);
 		return isWaiting;
 	}
+
+	/**
+	 * Adds variable's value to the storage.
+	 * 
+	 * @param value
+	 * @param property
+	 * @return <code>true</code> if given value has changed since previous
+	 *         suspension, <code>false</code> otherwise
+	 */
+	synchronized boolean storeValue(DBGpValue value, Node property) {
+		return valueStorage.store(value, property);
+	}
+
 }
