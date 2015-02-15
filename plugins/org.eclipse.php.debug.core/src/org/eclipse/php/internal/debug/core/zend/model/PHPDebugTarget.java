@@ -47,7 +47,37 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 		IBreakpointManagerListener, IStepFilters {
 
+	private static class PHPValueStorage {
+
+		private Map<String, String> current = new HashMap<String, String>();
+		private Map<String, String> previous = new HashMap<String, String>();
+
+		public boolean store(Expression value) {
+			boolean hasChanged = false;
+			String key = createKey(value);
+			String currentValue = value.getValue().getValueAsString();
+			String cached = previous.get(key);
+			if (cached != null && !cached.equals(currentValue))
+				hasChanged = true;
+			current.put(key, currentValue);
+			return hasChanged;
+		}
+
+		public void reset() {
+			previous = current;
+			current = new HashMap<String, String>();
+		}
+
+		private String createKey(Expression value) {
+			StringBuilder chain = new StringBuilder();
+			for (String element : value.getName())
+				chain.append(element);
+			return chain.toString();
+		}
+	}
+
 	private ContextManager fContextManager;
+	private final PHPValueStorage fValueStorage = new PHPValueStorage();
 
 	// use step filter or not
 	boolean isStepFiltersEnabled;
@@ -529,6 +559,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 		} catch (DebugException e) {
 			// PHPThread doesn't throw exception
 		}
+		fValueStorage.reset();
 		fThread.fireSuspendEvent(detail);
 	}
 
@@ -1182,6 +1213,17 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 				PHPDebugPlugin.log(e);
 			}
 		}
+	}
+
+	/**
+	 * Adds variable's value to the storage.
+	 * 
+	 * @param value
+	 * @return <code>true</code> if given value has changed since previous
+	 *         suspension, <code>false</code> otherwise
+	 */
+	synchronized boolean storeValue(Expression value) {
+		return fValueStorage.store(value);
 	}
 
 	private void getBreakpointsIncludePath(IProject container,
