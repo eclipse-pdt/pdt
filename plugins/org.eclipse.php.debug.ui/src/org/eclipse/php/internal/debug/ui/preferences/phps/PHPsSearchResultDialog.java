@@ -16,11 +16,13 @@ import java.util.List;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -47,7 +49,12 @@ public class PHPsSearchResultDialog extends MessageDialog {
 			switch (columnIndex) {
 			case 0:
 				return ((PHPexeItem) element).getName();
-			case 1:
+			case 1: {
+				String debugger = PHPDebuggersRegistry
+						.getDebuggerName(((PHPexeItem) element).getDebuggerID());
+				return debugger != null ? debugger : "<none>"; //$NON-NLS-1$
+			}
+			case 2:
 				return ((PHPexeItem) element).getExecutable().getAbsolutePath();
 			default:
 				break;
@@ -100,7 +107,6 @@ public class PHPsSearchResultDialog extends MessageDialog {
 				false));
 		GridData tableCompositeGridData = new GridData(SWT.FILL, SWT.FILL,
 				true, true);
-		tableCompositeGridData.widthHint = 480;
 		Table resultTable = new Table(tableComposite, SWT.CHECK | SWT.SINGLE
 				| SWT.FULL_SELECTION | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		resultTable.setLayoutData(tableCompositeGridData);
@@ -111,11 +117,14 @@ public class PHPsSearchResultDialog extends MessageDialog {
 		resultTableViewer.setContentProvider(new ArrayContentProvider());
 		TableColumn nameColumn = new TableColumn(resultTable, SWT.LEFT);
 		nameColumn.setText(Messages.PHPsSearchResultDialog_Name);
+		TableColumn debuggerColumn = new TableColumn(resultTable, SWT.LEFT);
+		debuggerColumn.setText("Debugger");
 		TableColumn locationColumn = new TableColumn(resultTable, SWT.LEFT);
 		locationColumn.setText(Messages.PHPsSearchResultDialog_Location);
 		TableColumnLayout clayout = new TableColumnLayout();
-		clayout.setColumnData(nameColumn, new ColumnWeightData(40, true));
-		clayout.setColumnData(locationColumn, new ColumnWeightData(60, true));
+		clayout.setColumnData(nameColumn, new ColumnWeightData(28, true));
+		clayout.setColumnData(debuggerColumn, new ColumnWeightData(22, true));
+		clayout.setColumnData(locationColumn, new ColumnWeightData(50, true));
 		resultTable.getParent().setLayout(clayout);
 		resultTableViewer.setInput(results);
 		resultTableViewer.setAllChecked(true);
@@ -147,8 +156,14 @@ public class PHPsSearchResultDialog extends MessageDialog {
 		// OK pressed
 		if (buttonId == 0) {
 			Object[] selected = resultTableViewer.getCheckedElements();
-			for (Object s : selected)
-				phpExecs.add((PHPexeItem) s);
+			for (Object s : selected) {
+				PHPexeItem phpExe = (PHPexeItem) s;
+				// If no debugger installed, set ID for default one
+				if (phpExe.getDebuggerID() == null)
+					phpExe.setDebuggerID(PHPDebuggersRegistry
+							.getDefaultDebuggerId());
+				phpExecs.add(phpExe);
+			}
 		}
 		super.buttonPressed(buttonId);
 	}
@@ -160,6 +175,16 @@ public class PHPsSearchResultDialog extends MessageDialog {
 	 */
 	public List<PHPexeItem> getPHPExecutables() {
 		return phpExecs;
+	}
+
+	@Override
+	protected Point getInitialSize() {
+		return new Point(720, 440);
+	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
 	}
 
 }

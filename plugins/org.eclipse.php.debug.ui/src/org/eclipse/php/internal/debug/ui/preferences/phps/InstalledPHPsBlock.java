@@ -15,6 +15,7 @@ package org.eclipse.php.internal.debug.ui.preferences.phps;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.List;
 
@@ -28,6 +29,9 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.internal.debug.core.PHPExeUtil;
+import org.eclipse.php.internal.debug.core.PHPExeUtil.PHPModuleInfo;
+import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
@@ -47,8 +51,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.PlatformUI;
-
-import com.ibm.icu.text.MessageFormat;
 
 /**
  * A composite that displays installed PHP's in a table. PHPs can be added,
@@ -695,12 +697,6 @@ public class InstalledPHPsBlock {
 		final String path = dialog.open();
 		if (path == null)
 			return;
-		// ignore installed locations
-		// final Set<File> exstingLocations = new HashSet<File>();
-		// Iterator<PHPexeItem> iter = fPHPexes.iterator();
-		// while (iter.hasNext())
-		// exstingLocations.add(iter.next().getExecutable().getParentFile());
-		// search
 		final File rootDir = new File(path);
 		final List<File> locations = new ArrayList<File>();
 		final List<PHPexeItem> found = new ArrayList<PHPexeItem>();
@@ -710,17 +706,50 @@ public class InstalledPHPsBlock {
 						IProgressMonitor.UNKNOWN);
 				search(rootDir, locations, monitor);
 				if (!locations.isEmpty()) {
+					monitor.setTaskName(PHPDebugUIMessages.InstalledPHPsBlock_Processing_search_results);
 					Iterator<File> iter2 = locations.iterator();
 					while (iter2.hasNext()) {
+						if (monitor.isCanceled())
+							break;
 						File location = iter2.next();
 						PHPexeItem phpExe = new PHPexeItem(null, location,
-								null,
-								PHPDebuggersRegistry.getDefaultDebuggerId(),
-								true);
+								null, null, true);
+						if (phpExe.getName() == null)
+							continue;
 						String nameCopy = new String(phpExe.getName());
+						monitor.subTask(MessageFormat
+								.format(PHPDebugUIMessages.InstalledPHPsBlock_Fetching_php_exe_info,
+										nameCopy));
+						List<PHPModuleInfo> modules = PHPExeUtil
+								.getModules(phpExe);
+						AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry
+								.getDebuggersConfigurations();
+						for (AbstractDebuggerConfiguration debugger : debuggers) {
+							for (PHPModuleInfo m : modules)
+								if (m.getName().equalsIgnoreCase(
+										debugger.getModuleId())) {
+									phpExe.setDebuggerID(debugger
+											.getDebuggerId());
+									break;
+								}
+						}
 						int i = 1;
-						while (isDuplicateName(nameCopy)) {
-							nameCopy = phpExe.getName() + ' ' + '[' + i++ + ']';
+						// Check for duplicated names
+						duplicates: while (true) {
+							if (isDuplicateName(nameCopy)) {
+								nameCopy = phpExe.getName() + ' ' + '[' + i++
+										+ ']';
+								continue duplicates;
+							} else {
+								for (PHPexeItem item : found)
+									if (nameCopy.equalsIgnoreCase(item
+											.getName())) {
+										nameCopy = phpExe.getName() + ' ' + '['
+												+ i++ + ']';
+										continue duplicates;
+									}
+							}
+							break duplicates;
 						}
 						phpExe.setName(nameCopy);
 						if (phpExe.getExecutable() != null) {
@@ -734,7 +763,12 @@ public class InstalledPHPsBlock {
 		// Perform searching
 		try {
 			final ProgressMonitorDialog progress = new ProgressMonitorDialog(
-					PlatformUI.getWorkbench().getDisplay().getActiveShell());
+					PlatformUI.getWorkbench().getDisplay().getActiveShell()) {
+				protected void configureShell(Shell shell) {
+					super.configureShell(shell);
+					shell.setText(PHPDebugUIMessages.InstalledPHPsBlock_PHP_executables_search);
+				};
+			};
 			progress.run(true, true, r);
 		} catch (final InvocationTargetException e) {
 			PHPDebugUIPlugin.log(e);
@@ -790,8 +824,12 @@ public class InstalledPHPsBlock {
 			return;
 		// Search the root directory
 		List<File> foundExecs = findPHPExecutable(directory);
-		if (!foundExecs.isEmpty())
+		if (!foundExecs.isEmpty()) {
 			found.addAll(foundExecs);
+			monitor.setTaskName(MessageFormat.format(
+					PHPDebugUIMessages.InstalledPHPsBlock_Searching_with_found,
+					found.size()));
+		}
 		final String[] names = directory.list();
 		if (names == null)
 			return;
@@ -804,8 +842,7 @@ public class InstalledPHPsBlock {
 				try {
 					monitor.subTask(MessageFormat.format(
 							PHPDebugUIMessages.InstalledPHPsBlock_14,
-							new Object[] { Integer.toString(found.size()),
-									file.getCanonicalPath() }));
+							file.getCanonicalPath()));
 				} catch (final IOException e) {
 				}
 				if (monitor.isCanceled())
