@@ -34,6 +34,8 @@ public static final String CREATING_PROJECTS_AND_FILES = PREFIX + "creating_proj
 
 public static final String WORKING_WITH_CODE_ASSIST = PREFIX + "working_with_code_assist"; //$NON-NLS-1$ 008-getting_started/016-basic_tutorial/016-working_with_code_assist.md
 
+public static final String WORKING_WITH_REFACTORING = PREFIX + "working_with_refactoring"; //$NON-NLS-1$ 008-getting_started/016-basic_tutorial/020-working_with_refactoring.md
+
 public static final String WORKING_WITH_THE_DEBUGGER = PREFIX + "working_with_the_debugger"; //$NON-NLS-1$ 008-getting_started/016-basic_tutorial/024-working_with_the_debugger.md
 
 public static final String CONCEPTS = PREFIX + "concepts"; //$NON-NLS-1$ 016-concepts/000-index.md
@@ -59,6 +61,8 @@ public static final String PHPDOC_COMMENTS = PREFIX + "phpdoc_comments"; //$NON-
 public static final String BOOKMARKS = PREFIX + "bookmarks"; //$NON-NLS-1$ 016-concepts/064-commenting_code/016-bookmarks.md
 
 public static final String HOVER_SUPPORT = PREFIX + "hover_support"; //$NON-NLS-1$ 016-concepts/072-hover_support.md
+
+public static final String REFACTORING = PREFIX + "refactoring"; //$NON-NLS-1$ 016-concepts/076-refactoring.md
 
 public static final String OVERRIDE_INDICATORS = PREFIX + "override_indicators"; //$NON-NLS-1$ 016-concepts/080-override_indicators.md
 
@@ -123,6 +127,18 @@ public static final String VIEWING_TYPE_HIERARCHIES = PREFIX + "viewing_type_hie
 public static final String CREATING_PHP_WORKING_SETS = PREFIX + "creating_php_working_sets"; //$NON-NLS-1$ 024-tasks/104-creating_php_working_sets.md
 
 public static final String USING_MARK_OCCURRENCES = PREFIX + "using_mark_occurrences"; //$NON-NLS-1$ 024-tasks/112-using_mark_occurrences.md
+
+public static final String USING_REFACTORING = PREFIX + "using_refactoring"; //$NON-NLS-1$ 024-tasks/116-using_refactoring/000-index.md
+
+public static final String RENAMING_FILES = PREFIX + "renaming_files"; //$NON-NLS-1$ 024-tasks/116-using_refactoring/008-renaming_files.md
+
+public static final String RENAMING_ELEMENTS = PREFIX + "renaming_elements"; //$NON-NLS-1$ 024-tasks/116-using_refactoring/016-renaming_elements.md
+
+public static final String MOVING_FILES = PREFIX + "moving_files"; //$NON-NLS-1$ 024-tasks/116-using_refactoring/024-moving_files.md
+
+public static final String EXTRACTING_VARIABLES = PREFIX + "extracting_variables"; //$NON-NLS-1$ 024-tasks/116-using_refactoring/032-extracting_variables.md
+
+public static final String EXTRACTING_METHODS = PREFIX + "extracting_methods"; //$NON-NLS-1$ 024-tasks/116-using_refactoring/040-extracting_methods.md
 
 public static final String HOW_TO_COMMENT_AND_UNCOMMENT_PHP_CODE = PREFIX + "how_to_comment_and_uncomment_php_code"; //$NON-NLS-1$ 024-tasks/120-how_to_comment_and_uncomment_php_code.md
 
@@ -347,8 +363,6 @@ public static final String PHP_INTERPRETER_PROPERTIES = PREFIX + "php_interprete
 public static final String PHP_TASK_TAGS_PROPERTIES = PREFIX + "php_task_tags_properties"; //$NON-NLS-1$ 032-reference/040-php_project_properties/064-php_task_tags_properties.md
 
 public static final String PROJECT_REFERENCES_PROPERTIES = PREFIX + "project_references_properties"; //$NON-NLS-1$ 032-reference/040-php_project_properties/072-project_references_properties.md
-
-public static final String REFACTORING_HISTORY = PREFIX + "refactoring_history"; //$NON-NLS-1$ 032-reference/040-php_project_properties/080-refactoring_history.md
 
 public static final String RUN_DEBUG_SETTINGS_PROPERTIES = PREFIX + "run_debug_settings_properties"; //$NON-NLS-1$ 032-reference/040-php_project_properties/088-run_debug_settings_properties.md
 

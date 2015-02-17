@@ -19,7 +19,6 @@ The properties available will depend on the resource selected. The following pro
  * [PHP Interpreter Properties](056-php_interpreter_properties.md)
  * [PHP Task Tags Properties](064-php_task_tags_properties.md)
  * [Project References Properties](072-project_references_properties.md)
- * [Refactoring History](080-refactoring_history.md)
  * [Run/Debug Settings Properties](088-run_debug_settings_properties.md)
  * [Save Actions Properties](096-save_actions_properties.md)
  * Task Repository - For more information see the [Mylyn User Guide](http://wiki.eclipse.org/index.php/Mylyn_User_Guide).

@@ -8,4 +8,5 @@ Get up and running with one of these tutorials:
 
  * [Creating Projects and Files](008-creating_and_uploading_a_project.md)
  * [Working with Content Assist](016-working_with_code_assist.md)
+ * [Working with Refactoring](020-working_with_refactoring.md)
  * [Working with the Debugger](024-working_with_the_debugger.md)
