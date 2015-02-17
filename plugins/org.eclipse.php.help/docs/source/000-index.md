@@ -4,7 +4,7 @@
 
 ![view_wiz.gif](images/view_wiz.gif "view_wiz.gif")![php2wsdl_wiz.gif](images/php2wsdl_wiz.gif "php2wsdl_wiz.gif")![newpfile_wiz.gif](images/newpfile_wiz.gif "newpfile_wiz.gif")![newphpprj_wiz.gif](images/newphpprj_wiz.gif "newphpprj_wiz.gif")![license_key_wiz.gif](images/license_key_wiz.gif "license_key_wiz.gif")![framework_project_wiz.gif](images/framework_project_wiz.gif "framework_project_wiz.gif")![export_phpdoc_wiz.gif](images/export_phpdoc_wiz.gif "export_phpdoc_wiz.gif")
 
-## Using the PDTHelp System
+## Using the PDT Help System
 
 Browse topics in the Contents frame (![contents_view.gif](images/contents_view.gif "contents_view.gif")) on the left. Click on a topic to have it displayed. Use the Back and Forward buttons to navigate within the history of viewed topics.
 
