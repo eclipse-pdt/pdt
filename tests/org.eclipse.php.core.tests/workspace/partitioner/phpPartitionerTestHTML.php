@@ -20,5 +20,6 @@ echo "Quote";
  */
 
 ?>
+<a href="#<?php echo $num;?>"></a>
 </body>
 </html>
