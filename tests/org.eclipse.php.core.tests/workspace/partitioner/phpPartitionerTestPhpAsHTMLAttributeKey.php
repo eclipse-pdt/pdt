@@ -10,6 +10,7 @@
 	print("Running test");//PHP_Single_Comment
 ?>="60%">test</td>
 			<td>test1</td>
+			<td><a href="#<?php echo $num;?>"></a></td>
 		</tr>
 	</table>
  </form>

@@ -61,7 +61,7 @@ public class PHPPartitionerTests {
 	// The markers looked for in the PHP partition
 	private static final String[] phpLookUp = { "php", "echo",
 			"PHP_Single_Comment", "PHP_Multi_Comment", "PHP_Doc",
-			"Test quoted string partition", "1 F d, Y", "Running test" };
+			"Test quoted string partition", "1 F d, Y", "Running test", "$num" };
 
 	protected static IProject project;
 	protected static IFile testFile;
