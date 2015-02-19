@@ -2,14 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-        <artifactId>tests</artifactId>
-        <groupId>org.eclipse.php</groupId>
-        <version>3.4.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
-    <artifactId>org.eclipse.php.refactoring.core.tests</artifactId>
-    <packaging>eclipse-test-plugin</packaging>
-    <build>
+		<artifactId>tests</artifactId>
+		<groupId>org.eclipse.php</groupId>
+		<version>3.4.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>org.eclipse.php.refactoring.core.tests</artifactId>
+	<packaging>eclipse-test-plugin</packaging>
+	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
@@ -18,10 +18,21 @@
 				<configuration>
 					<testSuite>org.eclipse.php.refactoring.core.tests</testSuite>
 					<testClass>org.eclipse.php.refactoring.core.test.AllTests</testClass>
-			        <useUIHarness>true</useUIHarness>
-			        <useUIThread>false</useUIThread>
-			        <argLine>-Xmx512m -XX:MaxPermSize=256m ${test.vmargs}</argLine>
+					<useUIHarness>true</useUIHarness>
+					<useUIThread>false</useUIThread>
+					<argLine>-Xmx512m -XX:MaxPermSize=256m ${test.vmargs}</argLine>
 					<testFailureIgnore>false</testFailureIgnore>
+					<dependencies>
+						<dependency>
+							<type>p2-installable-unit</type>
+							<artifactId>org.eclipse.dltk.core.index.sql.h2</artifactId>
+						</dependency>
+						<dependency>
+							<type>eclipse-feature</type>
+							<artifactId>org.eclipse.e4.rcp</artifactId>
+							<version>0.0.0</version>
+						</dependency>
+					</dependencies>
 				</configuration>
 			</plugin>
 		</plugins>

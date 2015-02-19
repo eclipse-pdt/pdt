@@ -78,7 +78,8 @@ public class RenameClassMemberProcessorTest1 extends
 		checkInitCondition(processor);
 		
 		performChange(processor);
-		
+		PHPCoreTests.waitForIndexer();
+		PHPCoreTests.waitForAutoBuild();
 
 		try {
 			String content = FileUtils.getContents(file);

@@ -177,6 +177,8 @@ public abstract class AbstractRefactoringTest {
 	}
 
 	protected void checkTestResult(PdttFileExt pdttFile) {
+		PHPCoreTests.waitForIndexer();
+		PHPCoreTests.waitForAutoBuild();
 		List<FileInfo> files = pdttFile.getExpectedFiles();
 		for (FileInfo expFile : files) {
 			IFile file = project.findFile(expFile.getName());
