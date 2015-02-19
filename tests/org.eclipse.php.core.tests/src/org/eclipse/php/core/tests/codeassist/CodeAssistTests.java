@@ -154,7 +154,7 @@ public class CodeAssistTests {
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 
 		PHPCoreTests.waitForIndexer();
-		// PHPCoreTests.waitForAutoBuild();
+		PHPCoreTests.waitForAutoBuild();
 
 		return offset;
 	}

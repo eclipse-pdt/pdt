@@ -121,7 +121,7 @@ public class PHPMoveProcessorRunConfigTestCase1 {
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
-		
+		PHPCoreTests.waitForAutoBuild();
 		try {
 			config = DebugPlugin.getDefault().getLaunchManager().getLaunchConfiguration(configFile);
 
