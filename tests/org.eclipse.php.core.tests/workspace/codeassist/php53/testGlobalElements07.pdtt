@@ -1,0 +1,7 @@
+--TEST--
+Should complete global function
+--FILE--
+<?php 
+echo \   in_|
+--EXPECT--
+method(in_array)

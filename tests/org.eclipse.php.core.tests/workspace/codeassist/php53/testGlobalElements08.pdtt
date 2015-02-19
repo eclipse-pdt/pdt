@@ -1,0 +1,7 @@
+--TEST--
+Should complete global constant
+--FILE--
+<?php 
+$var = \ COUNT_NORM|
+--EXPECT--
+field(COUNT_NORMAL)

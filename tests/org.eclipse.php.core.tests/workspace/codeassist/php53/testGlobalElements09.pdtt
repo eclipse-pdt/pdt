@@ -1,0 +1,9 @@
+--TEST--
+Should complete global type
+--FILE--
+<?php 
+$foo = [
+	'bar' => \	LogicExcept|
+];
+--EXPECT--
+type(LogicException)
