@@ -167,12 +167,44 @@ public class ContextManager {
 		if (resolvedFile == null) {
 			resolvedFile = fTarget.getLastFileName();
 		}
-		frames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(),
-				resolvedFile, (layers.length == 1) ? "" //$NON-NLS-1$
+		PHPStackFrame topFrame = new PHPStackFrame(thread,
+				fTarget.getLastFileName(), resolvedFile,
+				(layers.length == 1) ? "" //$NON-NLS-1$
 						: layers[layers.length - 1].getCalledFunctionName(),
 				fTarget.getLastStop(), frameCt, getLocalVariables());
 
+		if (fFrames != null)
+			frames[0] = mergeFrame((PHPStackFrame) fFrames[0], topFrame);
+		else
+			frames[0] = topFrame;
+
 		return frames;
+	}
+
+	/**
+	 * Merge existing top frame with the incoming one. If both frames have only
+	 * different line number then existing is being updated with the use of data
+	 * from incoming one.
+	 * 
+	 * @param existingFrame
+	 * @param incomingFrame
+	 * @return merged frame
+	 * @throws DebugException
+	 */
+	private IStackFrame mergeFrame(PHPStackFrame existingFrame,
+			PHPStackFrame incomingFrame) throws DebugException {
+		if (existingFrame.getName().equals(incomingFrame.getName())
+				&& existingFrame.getAbsoluteFileName().equals(
+						incomingFrame.getAbsoluteFileName())
+				&& existingFrame.getSourceName().equals(
+						incomingFrame.getSourceName())
+				&& existingFrame.getThread() == incomingFrame.getThread()
+				&& existingFrame.getDepth() == incomingFrame.getDepth()) {
+			existingFrame.update(incomingFrame.getLineNumber(),
+					incomingFrame.getStackVariables());
+			return existingFrame;
+		}
+		return incomingFrame;
 	}
 
 	private Expression[] getLocalVariables() {
