@@ -11,14 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.dialogs.openType.generic;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.internal.ide.dialogs.SimpleListContentProvider;
 
 public class ElementAddition implements Runnable {
 
@@ -44,8 +40,7 @@ public class ElementAddition implements Runnable {
 					if (!continueAddingElements) {
 						return;
 					}
-					tableViewer
-							.setContentProvider(new SimpleListContentProvider());
+					tableViewer.setContentProvider(new ArrayContentProvider());
 					tableViewer.setInput(null);
 				}
 			});
@@ -79,34 +74,8 @@ public class ElementAddition implements Runnable {
 							if (!continueAddingElements) {
 								return;
 							}
-							tableViewer
-									.setSelection(new IStructuredSelection() {
-										public Object getFirstElement() {
-											return element;
-										}
-
-										public Iterator iterator() {
-											return toList().iterator();
-										}
-
-										public int size() {
-											return 1;
-										}
-
-										public Object[] toArray() {
-											return new Object[] { element };
-										}
-
-										public List toList() {
-											ArrayList arrayList = new ArrayList();
-											arrayList.add(element);
-											return arrayList;
-										}
-
-										public boolean isEmpty() {
-											return false;
-										}
-									});
+							tableViewer.setSelection(new StructuredSelection(
+									element));
 						}
 					});
 				}
