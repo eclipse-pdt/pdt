@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.php</groupId>
 	<artifactId>org.eclipse.pdt.releng</artifactId>
@@ -18,6 +19,7 @@
 		<sonar.jacoco.reportPath>../../org.eclipse.pdt.releng/target/jacoco.exec</sonar.jacoco.reportPath>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git</tycho.scmUrl>
+		<eclipseNext>false</eclipseNext>
 	</properties>
 	<url>https://eclipse.org/pdt</url>
 	<ciManagement>
@@ -192,17 +194,42 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>eclipse-current</id>
+			<activation>
+				<property>
+					<name>!eclipseNext</name>
+				</property>
+			</activation>
+			<repositories>
+				<repository>
+					<id>eclipse-current</id>
+					<layout>p2</layout>
+					<url>http://download.eclipse.org/releases/luna</url>
+				</repository>
+			</repositories>
+		</profile>
+		<profile>
+			<id>eclipse-next</id>
+			<activation>
+				<property>
+					<name>eclipseNext</name>
+				</property>
+			</activation>
+			<repositories>
+				<repository>
+					<id>eclipse-next</id>
+					<layout>p2</layout>
+					<url>http://download.eclipse.org/releases/mars</url>
+				</repository>
+			</repositories>
+		</profile>
 	</profiles>
 	<repositories>
 		<repository>
 			<id>dltk-tests</id>
 			<layout>p2</layout>
 			<url>https://hudson.eclipse.org/dltk/job/dltk-nightly/lastSuccessfulBuild/artifact/org.eclipse.dltk.releng/build/update.site/target/repository/</url>
-		</repository>
-		<repository>
-			<id>luna</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/luna</url>
 		</repository>
 		<repository>
 			<id>eclipse-tests</id>
