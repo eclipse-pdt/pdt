@@ -85,7 +85,7 @@ public class NamespaceMemberContext extends StatementContext {
 		}
 
 		int endNamespace = PHPTextSequenceUtilities.readBackwardSpaces(
-				statementText, elementStart - 1);
+				statementText, elementStart);
 		int nsNameStart = PHPTextSequenceUtilities.readNamespaceStartIndex(
 				statementText, endNamespace, false);
 		String nsName = statementText.subSequence(nsNameStart, elementStart)
