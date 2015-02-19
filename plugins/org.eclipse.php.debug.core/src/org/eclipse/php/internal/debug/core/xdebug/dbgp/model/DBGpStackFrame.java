@@ -33,6 +33,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 								// in workspace
 	private int lineNo; // line within the file of this stack frame
 	private String name = ""; // string to display in debugger for this stack frame //$NON-NLS-1$
+	private IVariable[] variables;
 
 	// private IVariable[] variables; // variables exposed to this stack frame
 
@@ -71,7 +72,12 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 			// fileName = null;
 			fileName = qualifiedFile;
 		}
-		name = fileName + "." + function + "() : lineno " + lineNo; //$NON-NLS-1$ //$NON-NLS-2$
+		name = fileName + "." + function + "()"; //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	void update(int lineNo) throws DebugException {
+		this.lineNo = lineNo;
+		this.variables = null;
 	}
 
 	/*
@@ -148,8 +154,10 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		// see equals() as to where variables cannot be cached in the stack
 		// frame
 		DBGpLogger.debug("getting variables for stackframe on line: " + lineNo); //$NON-NLS-1$
-		IVariable[] variables = ((DBGpTarget) getDebugTarget())
-				.getVariables(stackLevel);
+		if (variables == null) {
+			variables = ((DBGpTarget) getDebugTarget())
+					.getVariables(stackLevel);
+		}
 		return variables;
 	}
 
@@ -159,8 +167,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * @see org.eclipse.debug.core.model.IStackFrame#hasVariables()
 	 */
 	public boolean hasVariables() throws DebugException {
-		IVariable[] variables = getVariables();
-		return (variables != null && variables.length > 0);
+		return (getVariables() != null && getVariables().length > 0);
 	}
 
 	/*

@@ -110,6 +110,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 	private IStackFrame[] stackFrames;
 
+	private IStackFrame[] previousFrames;
+
 	private IVariable[] currentVariables;
 
 	private DBGpBreakpointFacade bpFacade;
@@ -1105,6 +1107,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	public void suspended(int detail) {
 		setState(STATE_STARTED_SUSPENDED);
 		processQueuedBpCmds();
+		previousFrames = stackFrames;
 		stackFrames = null;
 		currentVariables = null;
 		superGlobalVars = null;
@@ -1200,11 +1203,20 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 							.sendSyncCmd(DBGpCommand.stackGet);
 					if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
 						Node parent = resp.getParentNode();
-						NodeList stackNodes = parent.getChildNodes(); // <stack>
-						// entries
+						NodeList stackNodes = parent.getChildNodes();
+						// <stack> entries
 						stackFrames = new IStackFrame[stackNodes.getLength()];
 						for (int i = 0; i < stackNodes.getLength(); i++) {
 							Node stackNode = stackNodes.item(i);
+							// merge top frame
+							if (i == 0 && previousFrames != null) {
+								// merge top frame
+								stackFrames[0] = mergeFrame(
+										(DBGpStackFrame) previousFrames[0],
+										new DBGpStackFrame(langThread,
+												stackNode));
+								continue;
+							}
 							stackFrames[i] = new DBGpStackFrame(langThread,
 									stackNode);
 						}
@@ -1214,6 +1226,32 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 			}
 		}
 		return stackFrames;
+	}
+
+	/**
+	 * Merge existing top frame with the incoming one. If both frames have only
+	 * different line number then existing is being updated with the use of data
+	 * from incoming one.
+	 * 
+	 * @param previousFrame
+	 * @param incomingFrame
+	 * @return merged frame
+	 * @throws DebugException
+	 */
+	private IStackFrame mergeFrame(DBGpStackFrame previousFrame,
+			DBGpStackFrame incomingFrame) throws DebugException {
+		if (previousFrame.getThread() == incomingFrame.getThread()
+				&& previousFrame.getName().equals(incomingFrame.getName())
+				&& previousFrame.getStackLevel().equals(
+						incomingFrame.getStackLevel())
+				&& previousFrame.getSourceName().equals(
+						incomingFrame.getSourceName())
+				&& previousFrame.getQualifiedFile().equals(
+						incomingFrame.getQualifiedFile())) {
+			previousFrame.update(incomingFrame.getLineNumber());
+			return previousFrame;
+		}
+		return incomingFrame;
 	}
 
 	/**
