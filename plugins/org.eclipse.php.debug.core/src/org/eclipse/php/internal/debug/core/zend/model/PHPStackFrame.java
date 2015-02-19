@@ -87,6 +87,22 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		fLocalVariables = localVariables;
 	}
 
+	void update(int lineNumber, Expression[] localVariables)
+			throws DebugException {
+		fLineNumber = lineNumber;
+		fVariables = null;
+		fLocalVariables = localVariables;
+	}
+
+	/**
+	 * Returns this stack frame's unique identifier within its thread
+	 * 
+	 * @return this stack frame's unique identifier within its thread
+	 */
+	protected int getDepth() {
+		return fDepth;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -129,10 +145,6 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	 * @see org.eclipse.debug.core.model.IStackFrame#getLineNumber()
 	 */
 	public int getLineNumber() throws DebugException {
-		return fLineNumber;
-	}
-
-	public int checkLineNumber() throws DebugException {
 		return fLineNumber;
 	}
 
@@ -316,41 +328,6 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		getThread().terminate();
 	}
 
-	/**
-	 * Returns the name of the source file this stack frame is associated with.
-	 * 
-	 * @return the name of the source file this stack frame is associated with
-	 */
-	public String getSourceName() {
-		return fResolvedFileName;
-	}
-
-	/**
-	 * Returns the file name with full path.
-	 * 
-	 * @return the file name with full path
-	 */
-	public String getAbsoluteFileName() {
-		return fFileName;
-	}
-
-	/**
-	 * Returns this stack frame's unique identifier within its thread
-	 * 
-	 * @return this stack frame's unique identifier within its thread
-	 */
-	protected int getIdentifier() {
-		return fDepth;
-	}
-
-	public Expression[] getStackVariables() {
-		return fLocalVariables;
-	}
-
-	public void setStackVariables(Expression[] variables) {
-		fLocalVariables = variables;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -404,4 +381,35 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 			return false;
 		return true;
 	}
+
+	public int checkLineNumber() throws DebugException {
+		return fLineNumber;
+	}
+
+	/**
+	 * Returns the name of the source file this stack frame is associated with.
+	 * 
+	 * @return the name of the source file this stack frame is associated with
+	 */
+	public String getSourceName() {
+		return fResolvedFileName;
+	}
+
+	/**
+	 * Returns the file name with full path.
+	 * 
+	 * @return the file name with full path
+	 */
+	public String getAbsoluteFileName() {
+		return fFileName;
+	}
+
+	public Expression[] getStackVariables() {
+		return fLocalVariables;
+	}
+
+	public void setStackVariables(Expression[] variables) {
+		fLocalVariables = variables;
+	}
+
 }
