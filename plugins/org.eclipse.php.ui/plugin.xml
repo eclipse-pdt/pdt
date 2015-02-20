@@ -627,6 +627,16 @@
 			description="%HideNonPublic.description" class="org.eclipse.php.internal.ui.filters.NonPublicFilter"
 			id="org.eclipse.php.ui.OutlinePage.NonPublicFilter" 
 			targetId="org.eclipse.php.ui.OutlinePage"/>
+		<filter name="%HideUseStatements.label" enabled="true"
+			description="%HideUseStatements.description" class="org.eclipse.php.internal.ui.filters.UseStatementsFilter"
+			id="org.eclipse.php.ui.OutlinePage.UseStatmentsFilter"
+			targetId="org.eclipse.php.ui.OutlinePage">
+		</filter>
+		<filter name="%HideImportDeclarations.label" enabled="false"
+			description="%HideImportDeclarations.description" class="org.eclipse.dltk.internal.ui.filters.ImportDeclarationFilter"
+			id="org.eclipse.php.ui.OutlinePage.ImportDelcarationsFilter"
+			targetId="org.eclipse.php.ui.OutlinePage">
+		</filter>
 	</extension>
 
 	<extension point="org.eclipse.ui.actionSetPartAssociations">
