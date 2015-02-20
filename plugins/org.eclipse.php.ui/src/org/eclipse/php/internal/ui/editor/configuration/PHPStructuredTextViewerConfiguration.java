@@ -38,7 +38,6 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredText
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.core.format.IFormatterCommonPrferences;
-import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.autoEdit.CloseTagAutoEditStrategyPHP;
 import org.eclipse.php.internal.ui.autoEdit.IndentLineAutoEditStrategy;
@@ -68,7 +67,6 @@ import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.correction.CompoundQuickAssistProcessor;
-import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.style.ReconcilerHighlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.StructuredPresentationReconciler;
@@ -409,9 +407,6 @@ public class PHPStructuredTextViewerConfiguration extends
 			usedFormatter = new MultiPassContentFormatter(
 					getConfiguredDocumentPartitioning(sourceViewer),
 					IHTMLPartitions.HTML_DEFAULT);
-			((MultiPassContentFormatter) usedFormatter)
-					.setMasterStrategy(new StructuredFormattingStrategy(
-							new PhpFormatProcessorImpl()));
 		}
 
 		return usedFormatter;

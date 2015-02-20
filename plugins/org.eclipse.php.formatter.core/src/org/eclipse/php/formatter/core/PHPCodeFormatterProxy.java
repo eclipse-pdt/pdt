@@ -19,10 +19,12 @@ import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.IFormattingStrategy;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.format.*;
+import org.eclipse.php.internal.core.format.DefaultCodeFormattingProcessor;
+import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
+import org.eclipse.php.internal.core.format.IContentFormatter2;
+import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
-import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 
 public class PHPCodeFormatterProxy implements IContentFormatter,
 		IContentFormatter2, IFormatterProcessorFactory {
@@ -37,9 +39,6 @@ public class PHPCodeFormatterProxy implements IContentFormatter,
 			formatter = new MultiPassContentFormatter(
 					IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING,
 					IHTMLPartitions.HTML_DEFAULT);
-			((MultiPassContentFormatter) formatter)
-					.setMasterStrategy(new StructuredFormattingStrategy(
-							new PhpFormatProcessorImpl()));
 		}
 
 	}

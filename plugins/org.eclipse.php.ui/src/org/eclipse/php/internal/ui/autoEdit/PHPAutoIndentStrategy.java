@@ -25,7 +25,7 @@ import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.format.DefaultIndentationStrategy;
 import org.eclipse.php.internal.core.format.IndentationObject;
-import org.eclipse.php.internal.core.format.PhpFormatter;
+import org.eclipse.php.internal.core.format.PhpIndentationFormatter;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -161,8 +161,8 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				new PhpSourceParser());
 		String start = "<?php"; //$NON-NLS-1$
 		newdocument.set(start + newline + tempsb.toString());
-		PhpFormatter formatter = new PhpFormatter(0, newdocument.getLength(),
-				true, indentationObject);
+		PhpIndentationFormatter formatter = new PhpIndentationFormatter(0, newdocument.getLength(),
+				indentationObject);
 		formatter.format(newdocument.getFirstStructuredDocumentRegion());
 
 		List<String> list = new ArrayList<String>();
