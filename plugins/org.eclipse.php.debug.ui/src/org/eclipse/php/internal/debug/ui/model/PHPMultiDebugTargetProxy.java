@@ -66,8 +66,10 @@ public class PHPMultiDebugTargetProxy extends DebugTargetProxy {
 			/*
 			 * Get target from launch (launch has the wrapping multiple-target)
 			 */
-			IDebugTarget debugTarget = ((IDebugElement) source).getLaunch()
-					.getDebugTarget();
+			ILaunch launch = ((IDebugElement) source).getLaunch();
+			if (launch == null)
+				return false;
+			IDebugTarget debugTarget = launch.getDebugTarget();
 			if (debugTarget != null) {
 				return debugTarget.equals(this.debugTarget);
 			}
