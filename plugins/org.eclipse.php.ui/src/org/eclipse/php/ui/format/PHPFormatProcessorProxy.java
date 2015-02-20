@@ -23,14 +23,12 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
-import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.w3c.dom.Node;
 
 /**
@@ -72,13 +70,9 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 			}
 		}
 		if (phpFormatter == null) {
-
 			phpFormatter = new MultiPassContentFormatter(
 					IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING,
 					IHTMLPartitions.HTML_DEFAULT);
-			((MultiPassContentFormatter) phpFormatter)
-					.setMasterStrategy(new StructuredFormattingStrategy(
-							new PhpFormatProcessorImpl()));
 		}
 		return phpFormatter;
 	}

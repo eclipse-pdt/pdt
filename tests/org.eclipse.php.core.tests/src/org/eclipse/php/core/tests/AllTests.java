@@ -31,7 +31,6 @@ import org.eclipse.php.core.tests.dom_ast.parser.DomParserTests;
 import org.eclipse.php.core.tests.dom_ast.rewrite.ASTRewriteTests;
 import org.eclipse.php.core.tests.errors.ErrorReportingTests;
 import org.eclipse.php.core.tests.filenetwork.FileNetworkTests;
-import org.eclipse.php.core.tests.formatter.FormatterTests;
 import org.eclipse.php.core.tests.includepath.IncludePathManagerTests;
 import org.eclipse.php.core.tests.markoccurrence.MarkOccurrenceTests;
 import org.eclipse.php.core.tests.model_structure.ModelStructureTests;
@@ -53,15 +52,13 @@ import org.junit.runners.Suite;
 		ASTMatcherTests.class, CommentMapperTests.class,
 		StaticScalarExpressionsTests.class, CodeAssistTests.class,
 		SelectionEngineTests.class, ModelStructureTests.class,
-		TypeInferenceTests.class,
-		FileNetworkTests.class,
+		TypeInferenceTests.class, FileNetworkTests.class,
 		PHPDocParserTests.class,
 		PHPDocAwareDeclarationTests.class,
 		IncludePathManagerTests.class,
 		BindingTests.class,
 		// Document tests:
 		DocumentLexerTests.class,
-		FormatterTests.class,
 		PHPPartitionerTests.class,
 		// Phar files
 		PharFileTest.class,

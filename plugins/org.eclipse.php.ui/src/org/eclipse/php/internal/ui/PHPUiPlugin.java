@@ -31,7 +31,6 @@ import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.osgi.service.environment.EnvironmentInfo;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
-import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
 import org.eclipse.php.internal.ui.editor.ASTProvider;
 import org.eclipse.php.internal.ui.editor.templates.PhpCommentTemplateContextType;
@@ -55,7 +54,6 @@ import org.eclipse.ui.texteditor.ConfigurationElementSorter;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.jsdt.core.ITypeRoot;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
-import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
@@ -597,9 +595,6 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 				fActiveFormatter = new MultiPassContentFormatter(
 						IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING,
 						IHTMLPartitions.HTML_DEFAULT);
-				((MultiPassContentFormatter) fActiveFormatter)
-						.setMasterStrategy(new StructuredFormattingStrategy(
-								new PhpFormatProcessorImpl()));
 			}
 		}
 		return fActiveFormatter;

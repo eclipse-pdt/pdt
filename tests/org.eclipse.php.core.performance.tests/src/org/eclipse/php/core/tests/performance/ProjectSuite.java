@@ -27,7 +27,6 @@ import org.eclipse.php.core.tests.performance.PerformanceMonitor.Operation;
 import org.eclipse.php.core.tests.performance.ast.locator.PhpElementConciliatorTestWrapper;
 import org.eclipse.php.core.tests.performance.codeassist.CodeAssistTestsWrapper;
 import org.eclipse.php.core.tests.performance.filenetwork.FileNetworkTestsWrapper;
-import org.eclipse.php.core.tests.performance.formatter.FormatterTestsWrapper;
 import org.eclipse.php.core.tests.performance.markoccurrence.MarkOccurrenceTestsWrapper;
 import org.eclipse.php.core.tests.performance.selection.SelectionEngineTestsWrapper;
 import org.eclipse.php.core.tests.performance.typeinference.TypeInferenceTestsWrapper;
@@ -127,7 +126,6 @@ public class ProjectSuite extends AbstractModelTests {
 		suite.addTest(new CodeAssistTestsWrapper().suite(map));
 		suite.addTest(new MarkOccurrenceTestsWrapper().suite(map));
 		suite.addTest(new PhpElementConciliatorTestWrapper().suite(map));
-		suite.addTest(new FormatterTestsWrapper().suite(map));
 		suite.addTest(new SelectionEngineTestsWrapper().suite(map));
 		suite.addTest(new TypeInferenceTestsWrapper().suite(map));
 		suite.addTest(new FileNetworkTestsWrapper().suite(map));
