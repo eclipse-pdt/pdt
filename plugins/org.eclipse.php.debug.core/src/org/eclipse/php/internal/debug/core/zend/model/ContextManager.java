@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IStackFrame;
+import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.zend.debugger.*;
@@ -78,7 +79,13 @@ public class ContextManager {
 					fDebugger.finish();// reached dummy file --> finish debug !
 					return fFrames;
 				}
-				PHPThread thread = (PHPThread) fTarget.getThreads()[0];
+				IThread[] threads = fTarget.getThreads();
+				if (threads == null || threads.length == 0) {
+					// Connection was probably dumped
+					fFrames = new IStackFrame[0];
+					return fFrames;
+				}
+				PHPThread thread = (PHPThread) threads[0];
 				IStackFrame[] newFrames = applyDebugFilters(createNewFrames(
 						layers, thread));
 				copyVariablesFromPreviousFrames(newFrames);
