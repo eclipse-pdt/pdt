@@ -53,7 +53,7 @@ public class ExtractFunctionRefactoringTest extends AbstractRefactoringTest {
 
 		IStructuredModel model = null;
 		try {
-			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
+			model = createUnManagedStructuredModelFor(file);
 		} catch (IOException e) {
 			fail(e.getMessage());
 		} catch (CoreException e) {

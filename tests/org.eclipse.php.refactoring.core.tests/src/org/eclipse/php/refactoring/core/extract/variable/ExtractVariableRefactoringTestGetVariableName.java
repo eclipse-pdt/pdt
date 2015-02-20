@@ -73,7 +73,7 @@ public class ExtractVariableRefactoringTestGetVariableName extends AbstractRefac
 
 		IStructuredModel model = null;
 		try {
-			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
+			model = createUnManagedStructuredModelFor(file);
 		} catch (IOException e) {
 			fail(e.getMessage());
 		} catch (CoreException e) {
@@ -105,7 +105,7 @@ public class ExtractVariableRefactoringTestGetVariableName extends AbstractRefac
 
 		IStructuredModel model = null;
 		try {
-			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
+			model = createUnManagedStructuredModelFor(file);
 		} catch (IOException e) {
 			fail(e.getMessage());
 		} catch (CoreException e) {
@@ -137,7 +137,7 @@ public class ExtractVariableRefactoringTestGetVariableName extends AbstractRefac
 
 		IStructuredModel model = null;
 		try {
-			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
+			model = createUnManagedStructuredModelFor(file);
 		} catch (IOException e) {
 			fail(e.getMessage());
 		} catch (CoreException e) {
@@ -169,7 +169,7 @@ public class ExtractVariableRefactoringTestGetVariableName extends AbstractRefac
 
 		IStructuredModel model = null;
 		try {
-			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
+			model = createUnManagedStructuredModelFor(file);
 		} catch (IOException e) {
 			fail(e.getMessage());
 		} catch (CoreException e) {
@@ -200,7 +200,7 @@ public class ExtractVariableRefactoringTestGetVariableName extends AbstractRefac
 
 		IStructuredModel model = null;
 		try {
-			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
+			model = createUnManagedStructuredModelFor(file);
 		} catch (IOException e) {
 			fail(e.getMessage());
 		} catch (CoreException e) {
@@ -232,7 +232,7 @@ public class ExtractVariableRefactoringTestGetVariableName extends AbstractRefac
 
 		IStructuredModel model = null;
 		try {
-			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
+			model = createUnManagedStructuredModelFor(file);
 		} catch (IOException e) {
 			fail(e.getMessage());
 		} catch (CoreException e) {

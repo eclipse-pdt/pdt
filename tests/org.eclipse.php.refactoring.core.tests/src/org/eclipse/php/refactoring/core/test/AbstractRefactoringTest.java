@@ -37,6 +37,9 @@ import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.refactoring.core.utils.ASTUtils;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.junit.Assert;
 import org.osgi.framework.Bundle;
 
 public abstract class AbstractRefactoringTest {
@@ -196,5 +199,21 @@ public abstract class AbstractRefactoringTest {
 	@PDTTList.Context
 	public static Bundle getBundle() {
 		return Activator.getDefault().getBundle();
+	}
+	
+	public static IStructuredModel createUnManagedStructuredModelFor(IFile file) throws IOException, CoreException
+	{
+		IStructuredModel model = null;
+		try {
+			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
+		} catch (Exception e) {
+			try {
+				Thread.sleep(3000);
+				model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
+			} catch (InterruptedException e1) {
+				Assert.fail(e1.getMessage());
+			}
+		}
+		return model;
 	}
 }

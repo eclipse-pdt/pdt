@@ -78,7 +78,7 @@ public class ExtractVariableRefactoringTest26642 extends AbstractRefactoringTest
 
 		IStructuredModel model = null;
 		try {
-			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
+			model = createUnManagedStructuredModelFor(file);
 		} catch (IOException e) {
 			fail(e.getMessage());
 		} catch (CoreException e) {
