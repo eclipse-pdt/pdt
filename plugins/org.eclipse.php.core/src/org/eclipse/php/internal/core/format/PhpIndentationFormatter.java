@@ -14,25 +14,19 @@ package org.eclipse.php.internal.core.format;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.documentModel.dom.AttrImplForPhp;
-import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.wst.sse.core.internal.format.IStructuredFormatContraints;
-import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
-import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
-import org.eclipse.wst.sse.core.internal.provisional.text.*;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.text.rules.SimpleStructuredRegion;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.w3c.dom.Node;
 
-public class PhpFormatter implements IStructuredFormatter {
+public class PhpIndentationFormatter {
 
 	private final IIndentationStrategy defaultIndentationStrategy;
 	private final IIndentationStrategy curlyCloseIndentationStrategy;
@@ -40,21 +34,20 @@ public class PhpFormatter implements IStructuredFormatter {
 	private final IIndentationStrategy commentIndentationStrategy;
 	private final IIndentationStrategy phpCloseTagIndentationStrategy;
 
-	protected PhpFormatConstraints fFormatContraints = null;
-	protected IStructuredFormatPreferences fFormatPreferences = null;
-	protected IProgressMonitor fProgressMonitor = null;
 	private final int length;
 	private final int start;
 
 	private static final byte CHAR_TAB = '\t';
 	private static final byte CHAR_SPACE = ' ';
-	protected boolean isCopyPaste = false;
 
-	public PhpFormatter(int start, int length, boolean isCopyPaste,
+	private final StringBuffer resultBuffer = new StringBuffer();
+	private boolean isInHeredoc;
+	private Set<Integer> ignoreLines = new HashSet<Integer>();
+
+	public PhpIndentationFormatter(int start, int length,
 			IndentationObject indentationObject) {
 		this.start = start;
 		this.length = length;
-		this.isCopyPaste = isCopyPaste;
 		this.defaultIndentationStrategy = new DefaultIndentationStrategy(
 				indentationObject);
 		this.curlyCloseIndentationStrategy = new CurlyCloseIndentationStrategy();
@@ -62,95 +55,6 @@ public class PhpFormatter implements IStructuredFormatter {
 				indentationObject);
 		this.commentIndentationStrategy = new CommentIndentationStrategy();
 		this.phpCloseTagIndentationStrategy = new PHPCloseTagIndentationStrategy();
-	}
-
-	public PhpFormatter(int start, int length) {
-		this(start, length, false, null);
-	}
-
-	public void format(Node node) {
-		format(node, getFormatContraints());
-	}
-
-	public void format(Node node, IStructuredFormatContraints formatContraints) {
-		if (node instanceof IDOMNode) {
-			formatNode((IDOMNode) node, formatContraints);
-		}
-
-	}
-
-	/**
-	 * Recursivly call the format node on every node in the model
-	 * 
-	 * @param node
-	 *            - to fotmat
-	 * @param formatContraints
-	 */
-	private void formatNode(IDOMNode node,
-			IStructuredFormatContraints formatContraints) {
-
-		// if it is php node - format
-		if (node instanceof ElementImplForPhp
-				&& ((ElementImplForPhp) node).isPhpTag()) {
-			IStructuredDocumentRegion sdRegionStart = node
-					.getStartStructuredDocumentRegion();
-			// IStructuredDocumentRegion sdRegionEnd =
-			// node.getLastStructuredDocumentRegion();
-			// sdRegionEnd = sdRegionEnd == null ? sdRegionStart : sdRegionEnd;
-			format(sdRegionStart);
-		}
-
-		if (node instanceof AttrImplForPhp) {
-			// calculate lines
-			IStructuredDocument document = node.getStructuredDocument();
-			int lineIndex = document.getLineOfOffset(node.getStartOffset());
-			int endLineIndex = document.getLineOfOffset(node.getEndOffset());
-
-			// format each line
-			for (; lineIndex <= endLineIndex; lineIndex++) {
-				formatLine(document, lineIndex);
-			}
-		}
-
-		if (node.hasChildNodes()) { // container
-			IDOMNode child = (IDOMNode) node.getFirstChild();
-			while (child != null) {
-				formatNode(child, formatContraints);
-				child = (IDOMNode) child.getNextSibling();
-			}
-		}
-	}
-
-	public IStructuredFormatContraints getFormatContraints() {
-		if (fFormatContraints == null) {
-			fFormatContraints = new PhpFormatConstraints();
-		}
-		return fFormatContraints;
-	}
-
-	public IStructuredFormatPreferences getFormatPreferences() {
-		return fFormatPreferences;
-	}
-
-	public void setFormatPreferences(
-			IStructuredFormatPreferences formatPreferences) {
-		this.fFormatPreferences = formatPreferences;
-	}
-
-	public void setProgressMonitor(IProgressMonitor monitor) {
-		this.fProgressMonitor = monitor;
-	}
-
-	protected final int getStart() {
-		return start;
-	}
-
-	protected final int getLength() {
-		return length;
-	}
-
-	public Set<Integer> getIgnoreLines() {
-		return ignoreLines;
 	}
 
 	public void format(IStructuredDocumentRegion sdRegion) {
@@ -170,79 +74,7 @@ public class PhpFormatter implements IStructuredFormatter {
 		IStructuredDocument document = sdRegion.getParentDocument();
 		int lineIndex = document.getLineOfOffset(startFormat);
 		int endLineIndex = document.getLineOfOffset(endFormat);
-		if (!isCopyPaste) {
-			ITextRegionList textRegions = sdRegion.getRegions();
-			String newline = document.getLineDelimiter();
-			for (int i = 0; i < textRegions.size(); i++) {
-				ITextRegion textRegion = textRegions.get(i);
-				if (textRegion instanceof PhpScriptRegion) {
-					int startOffset = sdRegion.getStartOffset(textRegion);
-					PhpScriptRegion scriptRegion = (PhpScriptRegion) textRegion;
-					ITextRegion[] phpTokens;
-					try {
-						phpTokens = scriptRegion.getPhpTokens(0,
-								textRegion.getLength());
-						for (int j = phpTokens.length - 1; j >= 0; j--) {
-							ITextRegion phpToken = phpTokens[j];
-							int start = startOffset + phpToken.getStart();
-							int end = start + phpToken.getLength();
-							if (/* endFormat >= end || */startFormat <= start
-									&& endFormat >= end) {
-								if (phpToken.getType().equals(
-										PHPRegionTypes.PHP_CURLY_OPEN)) {
-									if (j < phpTokens.length - 1 && j > 0) {
-										if (phpTokens[j - 1].getType().equals(
-												PHPRegionTypes.PHP_TOKEN)
-												&& !isComment(phpTokens[j + 1])
-												&& document
-														.getLineOfOffset(startOffset
-																+ phpToken
-																		.getStart()) == document
-														.getLineOfOffset(startOffset
-																+ phpTokens[j + 1]
-																		.getStart())) {
-											document.replace(startOffset
-													+ phpToken.getEnd(), 0,
-													newline);
-											endLineIndex++;
-										}
-									}
-								} else if (phpToken.getType().equals(
-										PHPRegionTypes.PHP_CURLY_CLOSE)) {
-									if (j > 0
-											&& (phpTokens[j - 1]
-													.getType()
-													.equals(PHPRegionTypes.PHP_SEMICOLON)
-													|| phpTokens[j - 1]
-															.getType()
-															.equals(PHPRegionTypes.PHP_CURLY_CLOSE) || phpTokens[j - 1]
-													.getType()
-													.equals(PHPRegionTypes.PHP_COMMENT_END))) {
-										if (document
-												.getLineOfOffset(startOffset
-														+ phpToken.getStart()) == document
-												.getLineOfOffset(startOffset
-														+ phpTokens[j - 1]
-																.getStart())) {
-											document.replace(
-													startOffset
-															+ phpTokens[j - 1]
-																	.getEnd(),
-													0, newline);
-											endLineIndex++;
-										}
-									}
-								}
-							}
 
-						}
-					} catch (BadLocationException e) {
-					}
-				}
-			}
-		}
-
-		sdRegion.getRegionAtCharacterOffset(startFormat);
 		// TODO get token of each line then insert line seporator after { and
 		// after } if there is no line seporator
 		// format each line
@@ -251,24 +83,6 @@ public class PhpFormatter implements IStructuredFormatter {
 		}
 
 	}
-
-	private boolean isComment(ITextRegion iTextRegion) {
-		if (iTextRegion.getType().equals(PHPRegionTypes.PHP_COMMENT)
-				|| iTextRegion.getType().equals(
-						PHPRegionTypes.PHP_COMMENT_START)
-				|| iTextRegion.getType()
-						.equals(PHPRegionTypes.PHP_LINE_COMMENT)
-				|| iTextRegion.getType().equals(PHPRegionTypes.PHPDOC_COMMENT)
-				|| iTextRegion.getType().equals(
-						PHPRegionTypes.PHPDOC_COMMENT_START)) {
-			return true;
-		}
-		return false;
-	}
-
-	private final StringBuffer resultBuffer = new StringBuffer();
-	private boolean isInHeredoc;
-	private Set<Integer> ignoreLines = new HashSet<Integer>();
 
 	/**
 	 * formats a PHP line according to the strategies and formatting conventions
@@ -388,16 +202,16 @@ public class PhpFormatter implements IStructuredFormatter {
 					|| (lastTokenInLine != null && lastTokenInLine.getType() == PHPRegionTypes.PHP_HEREDOC_TAG)) {
 				isInHeredoc = !isInHeredoc;
 			}
-			if (isCopyPaste) {
-				if (firstTokenType == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
-					int startLine = document.getLineOfOffset(firstTokenInLine
-							.getStart() + scriptRegionLength);
-					if (startLine < lineNumber) {
-						ignoreLines.add(lineNumber);
-						return;
-					}
+
+			if (firstTokenType == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
+				int startLine = document.getLineOfOffset(firstTokenInLine
+						.getStart() + scriptRegionLength);
+				if (startLine < lineNumber) {
+					ignoreLines.add(lineNumber);
+					return;
 				}
 			}
+
 			if (!formatThisLine) {
 				ignoreLines.add(lineNumber);
 				return;
@@ -499,6 +313,18 @@ public class PhpFormatter implements IStructuredFormatter {
 				|| (checkedLineBeginState == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT)
 				|| (checkedLineBeginState == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)
 				|| (checkedLineBeginState == PHPPartitionTypes.PHP_DOC) || (checkedLineBeginState == PHPPartitionTypes.PHP_QUOTED_STRING));
+	}
+
+	protected final int getStart() {
+		return start;
+	}
+
+	protected final int getLength() {
+		return length;
+	}
+
+	public Set<Integer> getIgnoreLines() {
+		return ignoreLines;
 	}
 
 	protected IIndentationStrategy getIndentationStrategy(char c) {
