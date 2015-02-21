@@ -27,9 +27,9 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.formatter.FormatterTests;
+import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.core.tests.runner.AbstractPDTTRunner.Context;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.ui.tests.PHPUiTests;
@@ -108,6 +108,10 @@ public class FormatterAutoEditTests extends FormatterTests {
 			cmd.length = 0;
 			if (pdttFile.getOther() != null) {
 				cmd.text = pdttFile.getOther();
+				if (cmd.text != null && cmd.text.trim().length() == 1) {
+					// support single (non-blank) character insertion
+					cmd.text = cmd.text.trim();
+				}
 			} else {
 				cmd.text = "\n";
 			}

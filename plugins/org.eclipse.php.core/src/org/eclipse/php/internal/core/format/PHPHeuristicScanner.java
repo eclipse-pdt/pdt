@@ -998,8 +998,8 @@ public final class PHPHeuristicScanner implements Symbols {
 			if (fDocument instanceof BasicStructuredDocument) {
 				IStructuredDocumentRegion sdRegion = ((BasicStructuredDocument) fDocument)
 						.getRegionAtCharacterOffset(position);
-				ITextRegion textRegion = sdRegion
-						.getRegionAtCharacterOffset(position);
+				ITextRegion textRegion = sdRegion != null ? sdRegion
+						.getRegionAtCharacterOffset(position) : null;
 				if (textRegion instanceof IPhpScriptRegion) {
 					IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
 					textRegion = phpScriptRegion.getPhpToken(position
@@ -1050,8 +1050,8 @@ public final class PHPHeuristicScanner implements Symbols {
 			if (fDocument instanceof BasicStructuredDocument) {
 				IStructuredDocumentRegion sdRegion = ((BasicStructuredDocument) fDocument)
 						.getRegionAtCharacterOffset(position);
-				ITextRegion textRegion = sdRegion
-						.getRegionAtCharacterOffset(position);
+				ITextRegion textRegion = sdRegion != null ? sdRegion
+						.getRegionAtCharacterOffset(position) : null;
 				if (textRegion instanceof IPhpScriptRegion) {
 					IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
 					textRegion = phpScriptRegion.getPhpToken(position

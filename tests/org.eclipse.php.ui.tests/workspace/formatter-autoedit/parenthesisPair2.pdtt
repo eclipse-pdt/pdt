@@ -1,0 +1,8 @@
+--TEST--
+Bug 426496 - Wrong parenthesis pair while writing
+--FILE--
+<div <?php echo Settings::get|?>></div>
+--OTHER--
+(
+--EXPECT--
+<div <?php echo Settings::get()?>></div>

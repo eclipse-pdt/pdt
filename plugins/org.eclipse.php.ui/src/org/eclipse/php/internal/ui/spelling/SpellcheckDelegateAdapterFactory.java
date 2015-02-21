@@ -54,8 +54,8 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 				if (doc instanceof BasicStructuredDocument) {
 					IStructuredDocumentRegion sdRegion = ((BasicStructuredDocument) doc)
 							.getRegionAtCharacterOffset(offset);
-					ITextRegion textRegion = sdRegion
-							.getRegionAtCharacterOffset(offset);
+					ITextRegion textRegion = sdRegion != null ? sdRegion
+							.getRegionAtCharacterOffset(offset) : null;
 					try {
 						if (textRegion instanceof IPhpScriptRegion) {
 							IPhpScriptRegion phpReg = (IPhpScriptRegion) textRegion;

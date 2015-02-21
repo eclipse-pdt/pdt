@@ -555,8 +555,6 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 		try {
 			IRegion lineInfo = document.getLineInformation(lineNumber);
-			final IStructuredDocumentRegion sdRegion = document
-					.getRegionAtCharacterOffset(offset);
 			ITextRegion token = getLastTokenRegion(document, lineInfo, offset);
 			if (token == null)
 				return -1;
@@ -593,8 +591,6 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			int offset, int lineNumber) {
 		try {
 			IRegion lineInfo = document.getLineInformation(lineNumber);
-			final IStructuredDocumentRegion sdRegion = document
-					.getRegionAtCharacterOffset(offset);
 			ITextRegion token = getLastTokenRegion(document, lineInfo,
 					lineInfo.getOffset() + lineInfo.getLength());
 			if (token == null)// comment
@@ -679,8 +675,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		}
 	}
 
-	static boolean shouldIndent(final IStructuredDocument document, int offset,
-			final int lineNumber) {
+	private static boolean shouldIndent(final IStructuredDocument document,
+			int offset, final int lineNumber) {
 		try {
 			final IRegion lineInfo = document.getLineInformation(lineNumber);
 
