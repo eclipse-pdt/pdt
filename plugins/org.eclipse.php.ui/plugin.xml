@@ -187,7 +187,17 @@
 			value="XML_COMMENT_TEXT, PHP_CONTENT, XML_CONTENT" target="org.eclipse.php.core.phpsource" />
 		<provisionalDefinition type="activecontexts"
 			value="org.eclipse.php.core.phpsource" target="org.eclipse.php.core.phpsource" />
-		
+		<provisionalDefinition type="preferencepages"
+			value="org.eclipse.php.ui.preferences.PHPEditorPreferencePage,
+			org.eclipse.php.ui.preferences.PHPTemplatesPreferencePage,
+			org.eclipse.php.ui.preferences.PHPColorPage,
+			org.eclipse.php.ui.preferences.PHPFoldingPreferencePage,
+			org.eclipse.php.ui.preferences.PhpTypingPreferencePage,
+			org.eclipse.php.ui.preferences.PHPEditorHoverPreferencePage,
+			org.eclipse.php.ui.preferences.MarkOccurrencesPreferencePage,
+			org.eclipse.php.ui.preferences.PHPContentAssistPreferencePage,
+			org.eclipse.php.ui.preferences.PHPEditorHoverPreferencePage,
+			org.eclipse.php.ui.preferences.PHPEditorSaveActionsPreferencePage" target="org.eclipse.php.core.phpsource" />
 		<provisionalConfiguration
 			type="org.eclipse.jface.text.quickassist.IQuickAssistProcessor"	
             class="org.eclipse.php.internal.ui.text.correction.PHPCorrectionProcessor"
