@@ -26,6 +26,7 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
@@ -105,6 +106,11 @@ public class CodeAssistTests {
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
 		PHPCoreTests.setProjectPhpVersion(project, version);
+
+		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+			ResourcesPlugin.getWorkspace().getDescription()
+					.setAutoBuilding(false);
+		}
 	}
 
 	@AfterList
@@ -112,6 +118,11 @@ public class CodeAssistTests {
 		project.close(null);
 		project.delete(true, true, null);
 		project = null;
+
+		if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+			ResourcesPlugin.getWorkspace().getDescription()
+					.setAutoBuilding(true);
+		}
 	}
 
 	@Test
@@ -147,12 +158,12 @@ public class CodeAssistTests {
 
 		// replace the offset character
 		data = data.substring(0, offset) + data.substring(offset + 1);
-
 		testFile = project.getFile("test.php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 
+		testFile.touch(new NullProgressMonitor());
+		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
 		PHPCoreTests.waitForIndexer();
 		// PHPCoreTests.waitForAutoBuild();
 
