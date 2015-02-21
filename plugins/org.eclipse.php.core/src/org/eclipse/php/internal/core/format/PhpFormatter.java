@@ -242,9 +242,8 @@ public class PhpFormatter implements IStructuredFormatter {
 			}
 		}
 
-		sdRegion.getRegionAtCharacterOffset(startFormat);
-		// TODO get token of each line then insert line seporator after { and
-		// after } if there is no line seporator
+		// TODO get token of each line then insert line separator after { and
+		// after } if there is no line separator
 		// format each line
 		for (; lineIndex <= endLineIndex; lineIndex++) {
 			formatLine(document, lineIndex);

@@ -1,0 +1,12 @@
+--TEST--
+Bug 426496 - Wrong parenthesis pair while writing
+--FILE--
+<style type="text/css">
+    attr: <?php echo Settings::get|?>
+</style>
+--OTHER--
+(
+--EXPECT--
+<style type="text/css">
+    attr: <?php echo Settings::get()?>
+</style>

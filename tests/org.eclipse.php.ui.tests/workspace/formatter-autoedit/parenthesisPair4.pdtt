@@ -1,0 +1,12 @@
+--TEST--
+Bug 426496 - Wrong parenthesis pair while writing
+--FILE--
+<script type="text/javascript">
+    var v = <?php echo Settings::get|?>
+</script>
+--OTHER--
+(
+--EXPECT--
+<script type="text/javascript">
+    var v = <?php echo Settings::get()?>
+</script>

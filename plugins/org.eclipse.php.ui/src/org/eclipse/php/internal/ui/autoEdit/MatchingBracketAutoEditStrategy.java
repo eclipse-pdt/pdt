@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@ package org.eclipse.php.internal.ui.autoEdit;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -156,26 +155,16 @@ public class MatchingBracketAutoEditStrategy extends
 			}
 
 			int currOffset = offset + 1;
+			// Find the structured document region:
 			IStructuredDocumentRegion sdRegion = document
 					.getRegionAtCharacterOffset(currOffset);
-			while (currOffset >= 0 && sdRegion != null) {
-				if (sdRegion.getType() != PHPRegionTypes.PHP_CONTENT) {
-					currOffset = sdRegion.getStartOffset() - 1;
-					sdRegion = document.getRegionAtCharacterOffset(currOffset);
-					continue;
-				}
 
-				ITextRegion tRegion = sdRegion
-						.getRegionAtCharacterOffset(currOffset);
+			ITextRegion tRegion = sdRegion != null ? sdRegion
+					.getRegionAtCharacterOffset(currOffset) : null;
 
-				// in case the cursor on the beginning of '?>' tag
-				// we decrease the offset to get the PhpScriptRegion
-				if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
-					tRegion = sdRegion
-							.getRegionAtCharacterOffset(currOffset - 1);
-				}
-
+			while (currOffset >= 0 && tRegion != null) {
 				int regionStart = sdRegion.getStartOffset(tRegion);
+
 				// in case of container we have the extract the PhpScriptRegion
 				if (tRegion instanceof ITextRegionContainer) {
 					ITextRegionContainer container = (ITextRegionContainer) tRegion;
@@ -183,7 +172,8 @@ public class MatchingBracketAutoEditStrategy extends
 					regionStart += tRegion.getStart();
 				}
 
-				if (tRegion instanceof IPhpScriptRegion) {
+				// This text region must be of type PhpScriptRegion:
+				if (tRegion.getType() == PHPRegionTypes.PHP_CONTENT) {
 					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 					tRegion = scriptRegion
 							.getPhpToken(currOffset - regionStart);
@@ -214,9 +204,9 @@ public class MatchingBracketAutoEditStrategy extends
 					}
 				}
 
-				currOffset = sdRegion.getStartOffset() - 1;
-				sdRegion = (currOffset < 0) ? null : document
-						.getRegionAtCharacterOffset(currOffset);
+				currOffset = regionStart - 1;
+				tRegion = currOffset < sdRegion.getStartOffset() ? null
+						: sdRegion.getRegionAtCharacterOffset(currOffset);
 
 			}
 		} catch (BadLocationException e) {
@@ -239,7 +229,7 @@ public class MatchingBracketAutoEditStrategy extends
 						getMatchingChar(addedChar));
 				// this check means that all opening brackets has a closing one
 				if (result == MATCHING_BRACKET_NOT_NEEDED) {
-					// this check is for the case of ()) when the carret is
+					// this check is for the case of ()) when the caret is
 					// between the two ')'
 					// typing ')' will add another ')' to the document
 					if (matcher.match(document, endSelection + 1) != null
