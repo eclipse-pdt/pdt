@@ -32,16 +32,17 @@ public final class WhiteSpaceOptions {
 
 		public int index;
 
-		protected final Map fWorkingValues;
-		protected final ArrayList fChildren;
+		protected final Map<String, Object> fWorkingValues;
+		protected final ArrayList<Node> fChildren;
 
-		public Node(InnerNode parent, Map workingValues, String message) {
+		public Node(InnerNode parent, Map<String, Object> workingValues,
+				String message) {
 			if (workingValues == null || message == null)
 				throw new IllegalArgumentException();
 			fParent = parent;
 			fWorkingValues = workingValues;
 			fName = message;
-			fChildren = new ArrayList();
+			fChildren = new ArrayList<Node>();
 			if (fParent != null)
 				fParent.add(this);
 		}
@@ -52,7 +53,7 @@ public final class WhiteSpaceOptions {
 			return !fChildren.isEmpty();
 		}
 
-		public List getChildren() {
+		public List<Node> getChildren() {
 			return Collections.unmodifiableList(fChildren);
 		}
 
@@ -64,9 +65,9 @@ public final class WhiteSpaceOptions {
 			return fName;
 		}
 
-		public abstract List getSnippets();
+		public abstract List<String> getSnippets();
 
-		public abstract void getCheckedLeafs(List list);
+		public abstract void getCheckedLeafs(List<Node> list);
 	}
 
 	/**
@@ -74,26 +75,29 @@ public final class WhiteSpaceOptions {
 	 */
 	public static class InnerNode extends Node {
 
-		public InnerNode(InnerNode parent, Map workingValues, String messageKey) {
+		public InnerNode(InnerNode parent, Map<String, Object> workingValues,
+				String messageKey) {
 			super(parent, workingValues, messageKey);
 		}
 
 		public void setChecked(boolean checked) {
-			for (final Iterator iter = fChildren.iterator(); iter.hasNext();)
-				((Node) iter.next()).setChecked(checked);
+			for (final Iterator<Node> iter = fChildren.iterator(); iter
+					.hasNext();)
+				(iter.next()).setChecked(checked);
 		}
 
 		public void add(Node child) {
 			fChildren.add(child);
 		}
 
-		public List getSnippets() {
-			final ArrayList snippets = new ArrayList(fChildren.size());
-			for (Iterator iter = fChildren.iterator(); iter.hasNext();) {
-				final List childSnippets = ((Node) iter.next()).getSnippets();
-				for (final Iterator chIter = childSnippets.iterator(); chIter
+		public List<String> getSnippets() {
+			final ArrayList<String> snippets = new ArrayList<String>(
+					fChildren.size());
+			for (Iterator<Node> iter = fChildren.iterator(); iter.hasNext();) {
+				final List<String> childSnippets = iter.next().getSnippets();
+				for (final Iterator<String> chIter = childSnippets.iterator(); chIter
 						.hasNext();) {
-					final Object snippet = chIter.next();
+					final String snippet = chIter.next();
 					if (!snippets.contains(snippet))
 						snippets.add(snippet);
 				}
@@ -101,9 +105,9 @@ public final class WhiteSpaceOptions {
 			return snippets;
 		}
 
-		public void getCheckedLeafs(List list) {
-			for (Iterator iter = fChildren.iterator(); iter.hasNext();) {
-				((Node) iter.next()).getCheckedLeafs(list);
+		public void getCheckedLeafs(List<Node> list) {
+			for (Iterator<Node> iter = fChildren.iterator(); iter.hasNext();) {
+				iter.next().getCheckedLeafs(list);
 			}
 		}
 	}
@@ -113,13 +117,13 @@ public final class WhiteSpaceOptions {
 	 */
 	public static class OptionNode extends Node {
 		private final String fKey;
-		private final ArrayList fSnippets;
+		private final ArrayList<String> fSnippets;
 
-		public OptionNode(InnerNode parent, Map workingValues,
+		public OptionNode(InnerNode parent, Map<String, Object> workingValues,
 				String messageKey, String key, String snippet) {
 			super(parent, workingValues, messageKey);
 			fKey = key;
-			fSnippets = new ArrayList(1);
+			fSnippets = new ArrayList<String>(1);
 			fSnippets.add(snippet);
 		}
 
@@ -133,11 +137,11 @@ public final class WhiteSpaceOptions {
 					.get(fKey));
 		}
 
-		public List getSnippets() {
+		public List<String> getSnippets() {
 			return fSnippets;
 		}
 
-		public void getCheckedLeafs(List list) {
+		public void getCheckedLeafs(List<Node> list) {
 			if (getChecked())
 				list.add(this);
 		}
@@ -201,8 +205,9 @@ public final class WhiteSpaceOptions {
 	 * @param workingValues
 	 * @return returns roots (type <code>Node</code>)
 	 */
-	public static List createTreeBySyntaxElem(Map workingValues) {
-		final ArrayList roots = new ArrayList();
+	public static List<Node> createTreeBySyntaxElem(
+			Map<String, Object> workingValues) {
+		final ArrayList<Node> roots = new ArrayList<Node>();
 
 		InnerNode element;
 
@@ -366,9 +371,9 @@ public final class WhiteSpaceOptions {
 	 * @param workingValues
 	 * @return returns roots (type <code>Node</code>)
 	 */
-	public static List createAltTree(Map workingValues) {
+	public static List<Node> createAltTree(Map<String, Object> workingValues) {
 
-		final ArrayList roots = new ArrayList();
+		final ArrayList<Node> roots = new ArrayList<Node>();
 
 		InnerNode parent;
 
@@ -474,14 +479,15 @@ public final class WhiteSpaceOptions {
 		return roots;
 	}
 
-	private static InnerNode createParentNode(List roots, Map workingValues,
-			String text) {
+	private static InnerNode createParentNode(List<Node> roots,
+			Map<String, Object> workingValues, String text) {
 		final InnerNode parent = new InnerNode(null, workingValues, text);
 		roots.add(parent);
 		return parent;
 	}
 
-	public static ArrayList createTreeByPhpElement(Map workingValues) {
+	public static ArrayList<Node> createTreeByPhpElement(
+			Map<String, Object> workingValues) {
 
 		final InnerNode declarations = new InnerNode(null, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_declarations);
@@ -522,7 +528,7 @@ public final class WhiteSpaceOptions {
 		createArrayCreationTree(workingValues, arrays);
 		createArrayElementAccessTree(workingValues, arrays);
 
-		final ArrayList roots = new ArrayList();
+		final ArrayList<Node> roots = new ArrayList<Node>();
 		roots.add(declarations);
 		roots.add(statements);
 		roots.add(expressions);
@@ -530,8 +536,8 @@ public final class WhiteSpaceOptions {
 		return roots;
 	}
 
-	private static void createBeforeQuestionTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createBeforeQuestionTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -540,8 +546,8 @@ public final class WhiteSpaceOptions {
 				CONDITIONAL_PREVIEW);
 	}
 
-	private static void createBeforeSemicolonTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createBeforeSemicolonTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -554,8 +560,8 @@ public final class WhiteSpaceOptions {
 				SEMICOLON_PREVIEW);
 	}
 
-	private static void createBeforeColonTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createBeforeColonTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -579,8 +585,8 @@ public final class WhiteSpaceOptions {
 				SWITCH_PREVIEW);
 	}
 
-	private static void createBeforeCommaTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createBeforeCommaTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -649,8 +655,8 @@ public final class WhiteSpaceOptions {
 				STATIC_PREVIEW);
 	}
 
-	private static void createBeforeOperatorTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createBeforeOperatorTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -683,8 +689,8 @@ public final class WhiteSpaceOptions {
 				OPERATOR_PREVIEW);
 	}
 
-	private static void createBeforeClosingBracketTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createBeforeClosingBracketTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -693,8 +699,8 @@ public final class WhiteSpaceOptions {
 				ARRAY_ACCESS_PREVIEW);
 	}
 
-	private static void createBeforeOpenBracketTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createBeforeOpenBracketTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -703,8 +709,8 @@ public final class WhiteSpaceOptions {
 				ARRAY_ACCESS_PREVIEW);
 	}
 
-	private static void createBeforeOpenBraceTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createBeforeOpenBraceTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 
 		createOption(
 				parent,
@@ -732,8 +738,8 @@ public final class WhiteSpaceOptions {
 				SWITCH_PREVIEW);
 	}
 
-	private static void createBeforeClosingParenTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createBeforeClosingParenTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 
 		createOption(
 				parent,
@@ -803,8 +809,8 @@ public final class WhiteSpaceOptions {
 				PARENTHESIS_EXPRESSION_PREVIEW);
 	}
 
-	private static void createBeforeOpenParenTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createBeforeOpenParenTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 
 		createOption(
 				parent,
@@ -862,8 +868,8 @@ public final class WhiteSpaceOptions {
 				METHOD_CALL_PREVIEW);
 	}
 
-	private static void createAfterQuestionTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createAfterQuestionTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -872,8 +878,8 @@ public final class WhiteSpaceOptions {
 				CONDITIONAL_PREVIEW);
 	}
 
-	private static void createAfterColoncolonTree(Map workingValues,
-			InnerNode parent) {
+	private static void createAfterColoncolonTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -888,8 +894,8 @@ public final class WhiteSpaceOptions {
 				METHOD_CALL_PREVIEW);
 	}
 
-	private static void createBeforeColoncolonTree(Map workingValues,
-			InnerNode parent) {
+	private static void createBeforeColoncolonTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -904,7 +910,8 @@ public final class WhiteSpaceOptions {
 				METHOD_CALL_PREVIEW);
 	}
 
-	private static void createAfterArrowTree(Map workingValues, InnerNode parent) {
+	private static void createAfterArrowTree(Map<String, Object> workingValues,
+			InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -937,8 +944,8 @@ public final class WhiteSpaceOptions {
 				YIELD_PREVIEW);
 	}
 
-	private static void createBeforeArrowTree(Map workingValues,
-			InnerNode parent) {
+	private static void createBeforeArrowTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -972,8 +979,8 @@ public final class WhiteSpaceOptions {
 
 	}
 
-	private static void createAfterSemicolonTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createAfterSemicolonTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -982,7 +989,7 @@ public final class WhiteSpaceOptions {
 				FOR_PREVIEW);
 	}
 
-	private static void createAfterColonTree(Map workingValues,
+	private static void createAfterColonTree(Map<String, Object> workingValues,
 			final InnerNode parent) {
 		createOption(
 				parent,
@@ -992,7 +999,7 @@ public final class WhiteSpaceOptions {
 				CONDITIONAL_PREVIEW);
 	}
 
-	private static void createAfterCommaTree(Map workingValues,
+	private static void createAfterCommaTree(Map<String, Object> workingValues,
 			final InnerNode parent) {
 		createOption(
 				parent,
@@ -1062,8 +1069,8 @@ public final class WhiteSpaceOptions {
 				STATIC_PREVIEW);
 	}
 
-	private static void createAfterOperatorTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createAfterOperatorTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 
 		createOption(
 				parent,
@@ -1097,8 +1104,8 @@ public final class WhiteSpaceOptions {
 				OPERATOR_PREVIEW);
 	}
 
-	private static void createAfterOpenBracketTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createAfterOpenBracketTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -1107,8 +1114,8 @@ public final class WhiteSpaceOptions {
 				ARRAY_ACCESS_PREVIEW);
 	}
 
-	private static void createAfterCloseBraceTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createAfterCloseBraceTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -1117,8 +1124,8 @@ public final class WhiteSpaceOptions {
 				BLOCK_PREVIEW);
 	}
 
-	private static void createAfterCloseParenTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createAfterCloseParenTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 
 		createOption(
 				parent,
@@ -1128,8 +1135,8 @@ public final class WhiteSpaceOptions {
 				CAST_PREVIEW);
 	}
 
-	private static void createAfterOpenParenTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createAfterOpenParenTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -1198,8 +1205,8 @@ public final class WhiteSpaceOptions {
 				PARENTHESIS_EXPRESSION_PREVIEW);
 	}
 
-	private static void createBetweenEmptyParenTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createBetweenEmptyParenTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -1214,8 +1221,8 @@ public final class WhiteSpaceOptions {
 				METHOD_CALL_PREVIEW);
 	}
 
-	private static void createBetweenEmptyBracketsTree(Map workingValues,
-			final InnerNode parent) {
+	private static void createBetweenEmptyBracketsTree(
+			Map<String, Object> workingValues, final InnerNode parent) {
 		createOption(
 				parent,
 				workingValues,
@@ -1226,7 +1233,8 @@ public final class WhiteSpaceOptions {
 
 	// syntax element tree
 
-	private static InnerNode createClassTree(Map workingValues, InnerNode parent) {
+	private static InnerNode createClassTree(Map<String, Object> workingValues,
+			InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_classes);
 		createOption(
@@ -1251,8 +1259,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createAssignmentTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createAssignmentTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_assignments);
 		createOption(
@@ -1270,8 +1278,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createOperatorTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createOperatorTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_operators);
 
@@ -1326,8 +1334,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createMethodDeclTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createMethodDeclTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_methods);
 
@@ -1378,7 +1386,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createFieldTree(Map workingValues, InnerNode parent) {
+	private static InnerNode createFieldTree(Map<String, Object> workingValues,
+			InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_fields);
 
@@ -1409,8 +1418,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createArrayCreationTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createArrayCreationTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_arraycreation);
 
@@ -1491,8 +1500,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createArrayElementAccessTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createArrayElementAccessTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_arrayelem);
 
@@ -1524,8 +1533,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createFunctionCallTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createFunctionCallTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_calls);
 
@@ -1592,8 +1601,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createFieldAccessTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createFieldAccessTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_fieldaccess);
 
@@ -1624,7 +1633,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createBlockTree(Map workingValues, InnerNode parent) {
+	private static InnerNode createBlockTree(Map<String, Object> workingValues,
+			InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_blocks);
 
@@ -1643,8 +1653,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createSwitchStatementTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createSwitchStatementTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_switch);
 
@@ -1687,8 +1697,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createDoWhileTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createDoWhileTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_do);
 
@@ -1714,8 +1724,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createTryStatementTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createTryStatementTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_try);
 
@@ -1740,8 +1750,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createStaticTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createStaticTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_static);
 
@@ -1760,8 +1770,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createGlobalTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createGlobalTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_global);
 
@@ -1780,7 +1790,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createEchoTree(Map workingValues, InnerNode parent) {
+	private static InnerNode createEchoTree(Map<String, Object> workingValues,
+			InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_echo);
 
@@ -1799,8 +1810,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createIfStatementTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createIfStatementTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_if);
 
@@ -1825,8 +1836,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createForStatementTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createForStatementTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_for);
 
@@ -1876,8 +1887,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createForeachStatementTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createForeachStatementTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_foreach);
 
@@ -1915,8 +1926,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createYieldStatementTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createYieldStatementTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_yield);
 
@@ -1936,8 +1947,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createConditionalTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createConditionalTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_conditionals);
 
@@ -1968,8 +1979,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createParenthesisExpressionTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createParenthesisExpressionTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_parenexpr);
 
@@ -1988,8 +1999,8 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createTypecastTree(Map workingValues,
-			InnerNode parent) {
+	private static InnerNode createTypecastTree(
+			Map<String, Object> workingValues, InnerNode parent) {
 		final InnerNode root = new InnerNode(parent, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_typecasts);
 
@@ -2014,19 +2025,20 @@ public final class WhiteSpaceOptions {
 		return root;
 	}
 
-	private static InnerNode createChild(InnerNode root, Map workingValues,
-			String message) {
+	private static InnerNode createChild(InnerNode root,
+			Map<String, Object> workingValues, String message) {
 		return new InnerNode(root, workingValues, message);
 	}
 
-	private static OptionNode createOption(InnerNode root, Map workingValues,
-			String message, String key, String snippet) {
+	private static OptionNode createOption(InnerNode root,
+			Map<String, Object> workingValues, String message, String key,
+			String snippet) {
 		return new OptionNode(root, workingValues, message, key, snippet);
 	}
 
-	public static void makeIndexForNodes(List tree, List flatList) {
-		for (final Iterator iter = tree.iterator(); iter.hasNext();) {
-			final Node node = (Node) iter.next();
+	public static void makeIndexForNodes(List<Node> tree, List<Node> flatList) {
+		for (final Iterator<Node> iter = tree.iterator(); iter.hasNext();) {
+			final Node node = iter.next();
 			node.index = flatList.size();
 			flatList.add(node);
 			makeIndexForNodes(node.getChildren(), flatList);

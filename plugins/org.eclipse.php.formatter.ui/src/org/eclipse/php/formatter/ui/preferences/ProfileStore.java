@@ -52,10 +52,10 @@ public class ProfileStore {
 	 */
 	private final static class ProfileDefaultHandler extends DefaultHandler {
 
-		private List fProfiles;
+		private List<Profile> fProfiles;
 
 		private String fName;
-		private Map fSettings;
+		private Map<String, Object> fSettings;
 
 		public void startElement(String uri, String localName, String qName,
 				Attributes attributes) throws SAXException {
@@ -69,10 +69,10 @@ public class ProfileStore {
 			} else if (qName.equals(XML_NODE_PROFILE)) {
 
 				fName = attributes.getValue(XML_ATTRIBUTE_NAME);
-				fSettings = new HashMap(200);
+				fSettings = new HashMap<String, Object>(200);
 
 			} else if (qName.equals(XML_NODE_ROOT)) {
-				fProfiles = new ArrayList();
+				fProfiles = new ArrayList<Profile>();
 			}
 		}
 
@@ -84,7 +84,7 @@ public class ProfileStore {
 			}
 		}
 
-		public List getProfiles() {
+		public List<Profile> getProfiles() {
 			return fProfiles;
 		}
 
@@ -106,6 +106,8 @@ public class ProfileStore {
 	private final static String XML_ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
 	private final static String XML_ATTRIBUTE_VALUE = "value"; //$NON-NLS-1$
 
+	private static final List<Profile> EMPTY_PROFILES = Collections.emptyList();
+
 	private ProfileStore() {
 	}
 
@@ -116,15 +118,16 @@ public class ProfileStore {
 	 *         the latest version.
 	 * @throws CoreException
 	 */
-	public static List readProfiles(IScopeContext scope) throws CoreException {
-		List res = readProfilesFromPreferences(scope);
+	public static List<Profile> readProfiles(IScopeContext scope)
+			throws CoreException {
+		List<Profile> res = readProfilesFromPreferences(scope);
 		if (res == null) {
 			return readOldForCompatibility(scope);
 		}
 		return res;
 	}
 
-	public static void writeProfiles(Collection profiles,
+	public static void writeProfiles(Collection<Profile> profiles,
 			IScopeContext instanceScope) throws CoreException {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream(2000);
 		try {
@@ -148,7 +151,7 @@ public class ProfileStore {
 		}
 	}
 
-	public static List readProfilesFromPreferences(IScopeContext scope)
+	public static List<Profile> readProfilesFromPreferences(IScopeContext scope)
 			throws CoreException {
 		String string = scope.getNode(FormatterCorePlugin.PLUGIN_ID).get(
 				PREF_FORMATTER_PROFILES, null);
@@ -161,7 +164,7 @@ public class ProfileStore {
 			}
 			InputStream is = new ByteArrayInputStream(bytes);
 			try {
-				List res = readProfilesFromStream(new InputSource(is));
+				List<Profile> res = readProfilesFromStream(new InputSource(is));
 				return res;
 			} finally {
 				try {
@@ -179,7 +182,8 @@ public class ProfileStore {
 	 * 
 	 * @return returns a list of <code>CustomProfile</code> or <code>null</code>
 	 */
-	private static List readOldForCompatibility(IScopeContext instanceScope) {
+	private static List<Profile> readOldForCompatibility(
+			IScopeContext instanceScope) {
 
 		// in 3.0 M9 and less the profiles were stored in a file in the plugin's
 		// meta data
@@ -195,7 +199,8 @@ public class ProfileStore {
 			// UTF-8: Kept for compatibility
 			final FileReader reader = new FileReader(file);
 			try {
-				List res = readProfilesFromStream(new InputSource(reader));
+				List<Profile> res = readProfilesFromStream(new InputSource(
+						reader));
 				if (res != null) {
 					writeProfiles(res, instanceScope);
 				}
@@ -221,7 +226,8 @@ public class ProfileStore {
 	 * @return returns a list of <code>CustomProfile</code> or <code>null</code>
 	 * @throws CoreException
 	 */
-	public static List readProfilesFromFile(File file) throws CoreException {
+	public static List<Profile> readProfilesFromFile(File file)
+			throws CoreException {
 		try {
 			final FileInputStream reader = new FileInputStream(file);
 			try {
@@ -248,7 +254,7 @@ public class ProfileStore {
 	 * @return returns a list of <code>CustomProfile</code> or <code>null</code>
 	 * @throws CoreException
 	 */
-	private static List readProfilesFromStream(InputSource inputSource)
+	private static List<Profile> readProfilesFromStream(InputSource inputSource)
 			throws CoreException {
 
 		final ProfileDefaultHandler handler = new ProfileDefaultHandler();
@@ -281,8 +287,8 @@ public class ProfileStore {
 	 *            File to write
 	 * @throws CoreException
 	 */
-	public static void writeProfilesToFile(Collection profiles, File file)
-			throws CoreException {
+	public static void writeProfilesToFile(Collection<Profile> profiles,
+			File file) throws CoreException {
 		final OutputStream writer;
 		try {
 			writer = new FileOutputStream(file);
@@ -310,7 +316,7 @@ public class ProfileStore {
 	 *            Stream to write
 	 * @throws CoreException
 	 */
-	private static void writeProfilesToStream(Collection profiles,
+	private static void writeProfilesToStream(Collection<Profile> profiles,
 			OutputStream stream) throws CoreException {
 
 		try {
@@ -323,8 +329,9 @@ public class ProfileStore {
 
 			document.appendChild(rootElement);
 
-			for (final Iterator iter = profiles.iterator(); iter.hasNext();) {
-				final Profile profile = (Profile) iter.next();
+			for (final Iterator<Profile> iter = profiles.iterator(); iter
+					.hasNext();) {
+				final Profile profile = iter.next();
 				if (profile.isProfileToSave()) {
 					final Element profileElement = createProfileElement(
 							profile, document);
@@ -359,7 +366,7 @@ public class ProfileStore {
 		final Element element = document.createElement(XML_NODE_PROFILE);
 		element.setAttribute(XML_ATTRIBUTE_NAME, profile.getName());
 
-		final Iterator keyIter = ProfileManager.getKeys().iterator();
+		final Iterator<String> keyIter = ProfileManager.getKeys().iterator();
 
 		while (keyIter.hasNext()) {
 			final String key = (String) keyIter.next();
@@ -382,9 +389,9 @@ public class ProfileStore {
 	public static void checkCurrentOptionsVersion() {
 		IScopeContext instanceScope = InstanceScope.INSTANCE;
 		try {
-			List profiles = ProfileStore.readProfiles(instanceScope);
+			List<Profile> profiles = ProfileStore.readProfiles(instanceScope);
 			if (profiles == null) {
-				profiles = Collections.EMPTY_LIST;
+				profiles = EMPTY_PROFILES;
 			}
 			ProfileManager manager = new ProfileManager(profiles, instanceScope);
 			if (manager.getSelected() instanceof CustomProfile) {

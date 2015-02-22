@@ -17,11 +17,11 @@ import org.eclipse.swt.widgets.Group;
 
 public class BlankLinesTabPage extends ModifyDialogTabPage {
 
-	private final String PREVIEW = "<?php\n"
-			+ "namespace test;\n"
-			+ "use test1;\n"
-			+ "use test2;\n"
-			+ "use test3;\n"
+	private final String PREVIEW = "<?php\n" //$NON-NLS-1$
+			+ "namespace test;\n" //$NON-NLS-1$
+			+ "use test1;\n" //$NON-NLS-1$
+			+ "use test2;\n" //$NON-NLS-1$
+			+ "use test3;\n" //$NON-NLS-1$
 			+ createPreviewHeader(FormatterMessages.BlankLinesTabPage_preview_header)
 			+ "class Example {" + //$NON-NLS-1$
 			"  const CONST2 = 3;" + "  var $theInt= 1;" + //$NON-NLS-1$
@@ -40,9 +40,6 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 			"    }" + //$NON-NLS-1$
 			"  }" + //$NON-NLS-1$
 			"} namespace test1;\n" + "interface MyInterface {}\n?>"; //$NON-NLS-1$
-
-	private final static int MIN_NUMBER_LINES = 0;
-	private final static int MAX_NUMBER_LINES = 99;
 
 	private boolean isInitialized = false;
 
@@ -200,15 +197,6 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 
 	protected void initializePage() {
 		fPreview.setPreviewText(PREVIEW);
-	}
-
-	/*
-	 * A helper method to create a number preference for blank lines.
-	 */
-	private void createBlankLineTextField(Composite composite, int numColumns,
-			String message, String key) {
-		createNumberPref(composite, numColumns, message, MIN_NUMBER_LINES,
-				MAX_NUMBER_LINES);
 	}
 
 	/*

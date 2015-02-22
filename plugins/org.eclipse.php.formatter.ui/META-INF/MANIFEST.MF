@@ -15,7 +15,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.text,
  org.eclipse.wst.sse.core,
  org.eclipse.wst.sse.ui
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.formatter.ui.preferences
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 

@@ -30,7 +30,6 @@ import org.eclipse.php.formatter.ui.preferences.ProfileManager.CustomProfile;
 import org.eclipse.php.formatter.ui.preferences.ProfileManager.Profile;
 import org.eclipse.php.internal.ui.preferences.IStatusChangeListener;
 import org.eclipse.php.internal.ui.preferences.PHPCoreOptionsConfigurationBlock;
-import org.eclipse.php.internal.ui.preferences.PHPFormatterConfigurationBlock;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.preferences.util.Key;
 import org.eclipse.php.internal.ui.util.ExceptionHandler;
@@ -583,30 +582,6 @@ public class CodeFormatterConfigurationBlock extends
 		layout.marginWidth = 0;
 		composite.setLayout(layout);
 		return composite;
-	}
-
-	/**
-	 * This method was added to update required PDT preferences from Neon
-	 * Settings
-	 * 
-	 * @deprecated
-	 * @param preferences
-	 */
-	public void updatePDTPreferences(CodeFormatterPreferences preferences) {
-		Key indentKey = PHPFormatterConfigurationBlock.PREF_FORMATTER_INDENTATION_SIZE;
-		Key tabSizeKey = PHPFormatterConfigurationBlock.PREF_FORMATTER_TAB_SIZE;
-		Key useTabKey = PHPFormatterConfigurationBlock.PREF_FORMATTER_USE_TABS;
-
-		setValue(indentKey, Integer.valueOf(preferences.indentationSize)
-				.toString());
-		setValue(tabSizeKey, Integer.valueOf(preferences.tabSize).toString());
-
-		if (preferences.indentationChar == CodeFormatterPreferences.TAB_CHAR) {
-			setValue(useTabKey, "true");
-		} else {
-			setValue(useTabKey, "false");
-		}
-
 	}
 
 	private void configurePreview(Composite composite, int numColumns) {

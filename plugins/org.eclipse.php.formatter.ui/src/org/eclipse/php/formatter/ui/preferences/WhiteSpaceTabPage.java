@@ -45,8 +45,8 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		private final String PREF_NODE_KEY = FormatterUIPlugin.PLUGIN_ID
 				+ "formatter_page.white_space_tab_page.node"; //$NON-NLS-1$
 
-		private final List fIndexedNodeList;
-		private final List fTree;
+		private final List<Node> fIndexedNodeList;
+		private final List<Node> fTree;
 
 		private ContainerCheckedTreeViewer fTreeViewer;
 		private Composite fComposite;
@@ -54,7 +54,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		private Node fLastSelected = null;
 
 		public SyntaxComponent() {
-			fIndexedNodeList = new ArrayList();
+			fIndexedNodeList = new ArrayList<Node>();
 			fTree = WhiteSpaceOptions.createAltTree(fworkingValues);
 			WhiteSpaceOptions.makeIndexForNodes(fTree, fIndexedNodeList);
 		}
@@ -72,7 +72,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 					| SWT.BORDER | SWT.V_SCROLL);
 			fTreeViewer.setContentProvider(new ITreeContentProvider() {
 				public Object[] getElements(Object inputElement) {
-					return ((Collection) inputElement).toArray();
+					return ((Collection<?>) inputElement).toArray();
 				}
 
 				public Object[] getChildren(Object parentElement) {
@@ -111,9 +111,9 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		}
 
 		public void refreshState() {
-			final ArrayList checked = new ArrayList(100);
-			for (Iterator iter = fTree.iterator(); iter.hasNext();)
-				((Node) iter.next()).getCheckedLeafs(checked);
+			final ArrayList<Node> checked = new ArrayList<Node>(100);
+			for (Iterator<Node> iter = fTree.iterator(); iter.hasNext();)
+				(iter.next()).getCheckedLeafs(checked);
 			fTreeViewer.setGrayedElements(new Object[0]);
 			fTreeViewer.setCheckedElements(checked.toArray());
 			setPreviewText();
@@ -175,10 +175,10 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		}
 
 		private void setPreviewText() {
-			String previewText = "";
+			String previewText = ""; //$NON-NLS-§$
 			if (fLastSelected != null) {
-				previewText = "<?php\n";
-				List snippets = fLastSelected.getSnippets();
+				previewText = "<?php\n"; //$NON-NLS-1$
+				List<String> snippets = fLastSelected.getSnippets();
 				for (int i = 0; i < snippets.size(); i++) {
 					previewText += snippets.get(i);
 				}
@@ -196,8 +196,8 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		private final String PREF_OPTION_INDEX = FormatterUIPlugin.PLUGIN_ID
 				+ "formatter_page.white_space.php_view.option"; //$NON-NLS-1$
 
-		private final ArrayList fIndexedNodeList;
-		private final ArrayList fTree;
+		private final ArrayList<Node> fIndexedNodeList;
+		private final ArrayList<Node> fTree;
 
 		private InnerNode fLastSelected;
 
@@ -207,7 +207,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		private Composite fComposite;
 
 		public PhpElementComponent() {
-			fIndexedNodeList = new ArrayList();
+			fIndexedNodeList = new ArrayList<Node>();
 			fTree = WhiteSpaceOptions.createTreeByPhpElement(fworkingValues);
 			WhiteSpaceOptions.makeIndexForNodes(fTree, fIndexedNodeList);
 		}
@@ -232,15 +232,16 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 
 			fInnerViewer.setContentProvider(new ITreeContentProvider() {
 				public Object[] getElements(Object inputElement) {
-					return ((Collection) inputElement).toArray();
+					return ((Collection<?>) inputElement).toArray();
 				}
 
 				public Object[] getChildren(Object parentElement) {
-					final List children = ((Node) parentElement).getChildren();
-					final ArrayList innerChildren = new ArrayList();
-					for (final Iterator iter = children.iterator(); iter
+					final List<Node> children = ((Node) parentElement)
+							.getChildren();
+					final ArrayList<Node> innerChildren = new ArrayList<Node>();
+					for (final Iterator<Node> iter = children.iterator(); iter
 							.hasNext();) {
-						final Object o = iter.next();
+						final Node o = iter.next();
 						if (o instanceof InnerNode)
 							innerChildren.add(o);
 					}
@@ -254,8 +255,8 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 				}
 
 				public boolean hasChildren(Object element) {
-					final List children = ((Node) element).getChildren();
-					for (final Iterator iter = children.iterator(); iter
+					final List<Node> children = ((Node) element).getChildren();
+					for (final Iterator<Node> iter = children.iterator(); iter
 							.hasNext();)
 						if (iter.next() instanceof InnerNode)
 							return true;
@@ -373,29 +374,30 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 
 		private void innerViewerChanged(InnerNode selectedNode) {
 
-			final List children = selectedNode.getChildren();
+			final List<Node> children = selectedNode.getChildren();
 
-			final ArrayList optionsChildren = new ArrayList();
-			for (final Iterator iter = children.iterator(); iter.hasNext();) {
-				final Object o = iter.next();
+			final ArrayList<Node> optionsChildren = new ArrayList<Node>();
+			for (final Iterator<Node> iter = children.iterator(); iter
+					.hasNext();) {
+				final Node o = iter.next();
 				if (o instanceof OptionNode)
 					optionsChildren.add(o);
 			}
 
 			fOptionsViewer.setInput(optionsChildren.toArray());
 
-			for (final Iterator iter = optionsChildren.iterator(); iter
+			for (final Iterator<Node> iter = optionsChildren.iterator(); iter
 					.hasNext();) {
 				final OptionNode child = (OptionNode) iter.next();
 				fOptionsViewer.setChecked(child, child.getChecked());
 			}
 
-			String previewText = "<?php\n";
-			List snippets = selectedNode.getSnippets();
+			String previewText = "<?php\n"; //$NON-NLS-1$
+			List<String> snippets = selectedNode.getSnippets();
 			for (int i = 0; i < snippets.size(); i++) {
 				previewText += snippets.get(i);
 			}
-			previewText += "\n?>";
+			previewText += "\n?>"; //$NON-NLS-1$
 
 			fPreview.setPreviewText(previewText);
 			doUpdatePreview();
@@ -488,7 +490,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 
 	protected CodeFormatterPreview fPreview;
 
-	private Map fworkingValues;
+	private Map<String, Object> fworkingValues;
 
 	private boolean isInitialized = false;
 
@@ -534,7 +536,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		}
 	}
 
-	public void setPreferencesValues(Map preferences) {
+	public void setPreferencesValues(Map<String, Object> preferences) {
 		codeFormatterPreferences.insert_space_after_opening_paren_in_while = getBooleanValue(
 				preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_WHILE);
@@ -870,7 +872,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 
 	}
 
-	private boolean getBooleanValue(Map preferences, String key) {
+	private boolean getBooleanValue(Map<String, Object> preferences, String key) {
 		return CodeFormatterPreferences.TRUE.equals(preferences.get(key));
 	}
 }

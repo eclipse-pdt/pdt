@@ -52,7 +52,7 @@ public class CreateProfileDialog extends StatusDialog {
 			FormatterMessages.CreateProfileDialog_status_message_profile_with_this_name_already_exists);
 
 	private final ProfileManager fProfileManager;
-	private final List fSortedProfiles;
+	private final List<Profile> fSortedProfiles;
 	private final String[] fSortedNames;
 
 	private CustomProfile fCreatedProfile;
@@ -178,8 +178,8 @@ public class CreateProfileDialog extends StatusDialog {
 		FormatterUIPlugin.getDefault().getDialogSettings()
 				.put(PREF_OPEN_EDIT_DIALOG, fOpenEditDialog);
 
-		final Map preferences = ((Profile) fSortedProfiles.get(fProfileCombo
-				.getSelectionIndex())).getSettings();
+		final Map<String, Object> preferences = fSortedProfiles.get(
+				fProfileCombo.getSelectionIndex()).getSettings();
 
 		final String profileName = fNameText.getText();
 

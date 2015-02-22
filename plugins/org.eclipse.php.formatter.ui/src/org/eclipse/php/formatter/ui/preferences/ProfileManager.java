@@ -292,6 +292,8 @@ public class ProfileManager extends Observable implements IProfileManager {
 	 */
 	private final static List<String> fKeys;
 
+	private static final Map<String, Object> EMPTY_MAP = Collections.emptyMap();;
+
 	static {
 		fKeys = new ArrayList<String>(CodeFormatterPreferences
 				.getDefaultPreferences().getMap().keySet());
@@ -622,7 +624,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	public void clearAllSettings(IScopeContext context) {
 		final IEclipsePreferences prefs = context
 				.getNode(FormatterCorePlugin.PLUGIN_ID);
-		updatePreferences(prefs, fKeys, Collections.EMPTY_MAP);
+		updatePreferences(prefs, fKeys, EMPTY_MAP);
 
 		prefs.remove(PROFILE_KEY);
 	}

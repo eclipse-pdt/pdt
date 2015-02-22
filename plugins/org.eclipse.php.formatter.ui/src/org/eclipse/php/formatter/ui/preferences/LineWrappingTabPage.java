@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.*;
 /**
  * @author yaronm
  */
-@SuppressWarnings("restriction")
 public class LineWrappingTabPage extends ModifyDialogTabPage {
 
 	/**

@@ -62,24 +62,22 @@ public class ModifyDialog extends StatusDialog {
 	private final boolean fNewProfile;
 
 	private Profile fProfile;
-	private final Map preferences;
+	private final Map<String, Object> preferences;
 	private final CodeFormatterPreferences codeFormatterPreferences;
 
 	private IStatus fStandardStatus;
 
-	protected final List fTabPages;
+	protected final List<ModifyDialogTabPage> fTabPages;
 
 	final IDialogSettings fDialogSettings;
 	private TabFolder fTabFolder;
 	private ProfileManager fProfileManager;
 	private Button fApplyButton;
-	private CodeFormatterConfigurationBlock configBlock;
 
 	protected ModifyDialog(CodeFormatterConfigurationBlock configBlock,
 			Shell parentShell, Profile profile, ProfileManager profileManager,
 			boolean newProfile) {
 		super(parentShell);
-		this.configBlock = configBlock;
 		fProfileManager = profileManager;
 		fNewProfile = newProfile;
 		setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
@@ -104,7 +102,7 @@ public class ModifyDialog extends StatusDialog {
 		codeFormatterPreferences = new CodeFormatterPreferences(preferences);
 		updateStatus(fStandardStatus);
 		setStatusLineAboveButtons(false);
-		fTabPages = new ArrayList();
+		fTabPages = new ArrayList<ModifyDialogTabPage>();
 		fDialogSettings = FormatterUIPlugin.getDefault().getDialogSettings();
 	}
 

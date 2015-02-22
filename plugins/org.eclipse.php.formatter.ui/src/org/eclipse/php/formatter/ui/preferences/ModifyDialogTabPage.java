@@ -497,22 +497,22 @@ public abstract class ModifyDialogTabPage {
 
 		private final IDialogSettings fDialogSettings;
 
-		private final Map fItemMap;
-		private final List fItemList;
+		private final Map<Control, Integer> fItemMap;
+		private final List<Control> fItemList;
 
 		private int fIndex;
 
 		public DefaultFocusManager() {
 			fDialogSettings = FormatterUIPlugin.getDefault()
 					.getDialogSettings();
-			fItemMap = new HashMap();
-			fItemList = new ArrayList();
+			fItemMap = new HashMap<Control, Integer>();
+			fItemList = new ArrayList<Control>();
 			fIndex = 0;
 		}
 
 		public void focusGained(FocusEvent e) {
-			fDialogSettings.put(PREF_LAST_FOCUS_INDEX,
-					((Integer) fItemMap.get(e.widget)).intValue());
+			fDialogSettings.put(PREF_LAST_FOCUS_INDEX, fItemMap.get(e.widget)
+					.intValue());
 		}
 
 		public void add(Control control) {
@@ -537,7 +537,7 @@ public abstract class ModifyDialogTabPage {
 				index = fDialogSettings.getInt(PREF_LAST_FOCUS_INDEX);
 				// make sure the value is within the range
 				if ((index >= 0) && (index <= fItemList.size() - 1)) {
-					((Control) fItemList.get(index)).setFocus();
+					fItemList.get(index).setFocus();
 				}
 			} catch (NumberFormatException ex) {
 				// this is the first time

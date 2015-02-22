@@ -22,6 +22,7 @@ import org.eclipse.php.formatter.ui.preferences.ProfileManager;
 import org.eclipse.php.formatter.ui.preferences.ProfileManager.Profile;
 import org.eclipse.php.formatter.ui.preferences.ProfileStore;
 
+@SuppressWarnings("rawtypes")
 public class ProfileAdapterFactory implements IAdapterFactory {
 
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
