@@ -32,7 +32,7 @@ public class IndentationUtils {
 				&& !PHPRegionTypes.PHP_COMMENT_START.equals(regionType)
 				&& !PHPRegionTypes.PHP_LINE_COMMENT.equals(regionType)
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=458777
-				// && !PHPRegionTypes.PHP_STRING.equals(regionType)
+				// && !PHPRegionTypes.PHP_LABEL.equals(regionType)
 				&& !PHPRegionTypes.PHP_CASE.equals(regionType)
 				&& !PHPRegionTypes.PHP_DEFAULT.equals(regionType);
 	}

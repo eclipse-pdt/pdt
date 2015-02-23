@@ -82,7 +82,16 @@ public interface PHPRegionTypes {
 
 	static final String PHP_FOR = "PHP_FOR"; //$NON-NLS-1$
 
-	static final String PHP_STRING = "PHP_STRING"; //$NON-NLS-1$
+	/**
+	 * Will be removed in the future. Instead use new constant
+	 * {@link PHPRegionTypes#PHP_LABEL}.
+	 * 
+	 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=458924
+	 * @deprecated
+	 */
+	static final String PHP_STRING = "PHP_LABEL"; //$NON-NLS-1$
+
+	static final String PHP_LABEL = "PHP_LABEL"; //$NON-NLS-1$
 
 	// static final String PHP_DIV = "PHP_DIV";
 

@@ -7,10 +7,10 @@ var_dump(...$args)
 --EXPECT--
 PHP_TOKEN|<|1
 PHP_TOKEN|?|1
-PHP_STRING|php|1
+PHP_LABEL|php|1
 WHITESPACE| 
 |1
-PHP_STRING|var_dump|1
+PHP_LABEL|var_dump|1
 PHP_TOKEN|(|1
 PHP_TOKEN|.|1
 PHP_TOKEN|.|1

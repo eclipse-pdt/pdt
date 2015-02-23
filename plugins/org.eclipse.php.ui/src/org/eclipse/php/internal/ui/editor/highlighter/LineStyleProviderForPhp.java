@@ -53,7 +53,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 	// (color)
 	static {
 		// Normal text:
-		fColorTypes.put(PHPRegionTypes.PHP_STRING,
+		fColorTypes.put(PHPRegionTypes.PHP_LABEL,
 				PreferenceConstants.EDITOR_NORMAL_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_TOKEN,
 				PreferenceConstants.EDITOR_NORMAL_COLOR);

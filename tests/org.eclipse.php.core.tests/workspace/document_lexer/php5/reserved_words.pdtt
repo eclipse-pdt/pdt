@@ -266,7 +266,7 @@ PHP_PUBLIC|public|1
 WHITESPACE|
 
 |1
-PHP_STRING|exception|1
+PHP_LABEL|exception|1
 WHITESPACE|
 |1
-PHP_STRING|php_user_filter|1
+PHP_LABEL|php_user_filter|1

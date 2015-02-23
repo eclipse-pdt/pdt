@@ -347,7 +347,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 
 <ST_PHP_LOOKING_FOR_PROPERTY>{LABEL} {
     popState();
-    return PHP_STRING;
+    return PHP_LABEL;
 }
 
 <ST_PHP_LOOKING_FOR_PROPERTY>{ANY_CHAR} {
@@ -626,7 +626,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 }
 
 <ST_PHP_IN_SCRIPTING,ST_PHP_VAR_OFFSET>{LABEL} {
-    return  PHP_STRING;
+    return  PHP_LABEL;
 }
 
 <ST_PHP_IN_SCRIPTING>{WHITESPACE} {

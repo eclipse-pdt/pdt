@@ -142,7 +142,7 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 	}
 
 	private boolean isStaticCall(String type) {
-		return PHPRegionTypes.PHP_STRING.equals(type)
+		return PHPRegionTypes.PHP_LABEL.equals(type)
 				|| PHPRegionTypes.PHP_PARENT.equals(type)
 				|| PHPRegionTypes.PHP_SELF.equals(type)
 				|| PHPRegionTypes.PHP_NS_SEPARATOR.equals(type);

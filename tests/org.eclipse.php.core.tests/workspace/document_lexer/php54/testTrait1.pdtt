@@ -13,19 +13,19 @@ class ezcReflectionMethod extends ReflectionMethod {
 --EXPECT--
 PHP_TOKEN|<|1
 PHP_TOKEN|?|1
-PHP_STRING|php|1
+PHP_LABEL|php|1
 WHITESPACE| 
 |1
 PHP_TRAIT|trait|1
 WHITESPACE| |1
-PHP_STRING|ezcReflectionReturnInfo|1
+PHP_LABEL|ezcReflectionReturnInfo|1
 WHITESPACE| |1
 PHP_CURLY_OPEN|{|1
 WHITESPACE|
     |1
 PHP_FUNCTION|function|1
 WHITESPACE| |1
-PHP_STRING|getReturnType|1
+PHP_LABEL|getReturnType|1
 PHP_TOKEN|(|1
 PHP_TOKEN|)|1
 WHITESPACE| |1
@@ -35,7 +35,7 @@ WHITESPACE|
     |1
 PHP_FUNCTION|function|1
 WHITESPACE| |1
-PHP_STRING|getReturnDescription|1
+PHP_LABEL|getReturnDescription|1
 PHP_TOKEN|(|1
 PHP_TOKEN|)|1
 WHITESPACE| |1
@@ -48,18 +48,18 @@ WHITESPACE|
 |1
 PHP_CLASS|class|1
 WHITESPACE| |1
-PHP_STRING|ezcReflectionMethod|1
+PHP_LABEL|ezcReflectionMethod|1
 WHITESPACE| |1
 PHP_EXTENDS|extends|1
 WHITESPACE| |1
-PHP_STRING|ReflectionMethod|1
+PHP_LABEL|ReflectionMethod|1
 WHITESPACE| |1
 PHP_CURLY_OPEN|{|1
 WHITESPACE|
     |1
 PHP_USE|use|1
 WHITESPACE| |1
-PHP_STRING|ezcReflectionReturnInfo|1
+PHP_LABEL|ezcReflectionReturnInfo|1
 PHP_SEMICOLON|;|1
 WHITESPACE|
 |1

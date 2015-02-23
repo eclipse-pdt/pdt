@@ -282,7 +282,7 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
 
 <ST_PHP_LOOKING_FOR_PROPERTY>{LABEL} {
     popState();
-    return PHP_STRING;
+    return PHP_LABEL;
 }
 
 <ST_PHP_LOOKING_FOR_PROPERTY>{ANY_CHAR} {
@@ -476,7 +476,7 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
 }
 
 <ST_PHP_IN_SCRIPTING>{LABEL} {
-    return  PHP_STRING;
+    return  PHP_LABEL;
 }
 
 <ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC>{LABEL} {

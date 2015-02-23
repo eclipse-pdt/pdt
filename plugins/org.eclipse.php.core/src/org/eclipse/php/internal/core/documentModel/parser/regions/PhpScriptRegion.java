@@ -231,7 +231,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 					String yylex = phpLexer.getNextToken();
 					if (shouldDeprecatedKeyword
 							&& PhpTokenContainer.isKeyword(yylex)) {
-						yylex = PHPRegionTypes.PHP_STRING;
+						yylex = PHPRegionTypes.PHP_LABEL;
 					}
 					int yylength;
 					final int toOffset = offset + length;
@@ -336,7 +336,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				// never happens
 				assert false;
 			}
-		} else if (tokenStart.getType() == PHPRegionTypes.PHP_STRING) {
+		} else if (tokenStart.getType() == PHPRegionTypes.PHP_LABEL) {
 			try {
 				ITextRegion token = tokensContaier.getToken(tokenStart
 						.getStart() - 1);

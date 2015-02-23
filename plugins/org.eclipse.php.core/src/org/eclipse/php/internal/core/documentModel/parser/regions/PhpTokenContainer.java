@@ -318,7 +318,7 @@ public class PhpTokenContainer {
 					.get(phpTokens.size() - 1);
 			if (deprecatedKeywordAfter(lastContextRegion.getType())) {
 				if (isKeyword(yylex)) {
-					yylex = PHPRegionTypes.PHP_STRING;
+					yylex = PHPRegionTypes.PHP_LABEL;
 				}
 			}
 		}

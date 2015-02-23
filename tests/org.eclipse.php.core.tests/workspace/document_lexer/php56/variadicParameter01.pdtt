@@ -8,12 +8,12 @@ function test(...$args){
 --EXPECT--
 PHP_TOKEN|<|1
 PHP_TOKEN|?|1
-PHP_STRING|php|1
+PHP_LABEL|php|1
 WHITESPACE| 
 |1
 PHP_FUNCTION|function|1
 WHITESPACE| |1
-PHP_STRING|test|1
+PHP_LABEL|test|1
 PHP_TOKEN|(|1
 PHP_TOKEN|.|1
 PHP_TOKEN|.|1

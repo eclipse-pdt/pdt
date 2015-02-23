@@ -14,12 +14,12 @@ say_здравствуйте();
 --EXPECT--
 PHP_TOKEN|<|1
 PHP_TOKEN|?|1
-PHP_STRING|php|1
+PHP_LABEL|php|1
 WHITESPACE|
 |1
 PHP_FUNCTION|function|1
 WHITESPACE| |1
-PHP_STRING|say_здравствуйте|1
+PHP_LABEL|say_здравствуйте|1
 PHP_TOKEN|(|1
 PHP_TOKEN|)|1
 WHITESPACE| |1
@@ -55,7 +55,7 @@ say_здравствуйте;
 PHP_CURLY_CLOSE|}|1
 WHITESPACE|
 |1
-PHP_STRING|say_здравствуйте|1
+PHP_LABEL|say_здравствуйте|1
 PHP_TOKEN|(|1
 PHP_TOKEN|)|1
 PHP_SEMICOLON|;|1

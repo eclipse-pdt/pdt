@@ -773,7 +773,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			String type = types.get(1);
 			try {
 				if (type == PHPRegionTypes.PHP_SEMICOLON
-						&& type1 == PHPRegionTypes.PHP_STRING
+						&& type1 == PHPRegionTypes.PHP_LABEL
 						&& Character.isWhitespace(document.getChar(offset - 1))) {
 
 					return TRAIT_KEYWORD;
@@ -783,15 +783,15 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			if (type == PHPRegionTypes.PHP_CURLY_OPEN
 					|| type == PHPRegionTypes.PHP_INSTEADOF
 					|| type == PHPRegionTypes.PHP_SEMICOLON
-					|| type1 == PHPRegionTypes.PHP_STRING) {
+					|| type1 == PHPRegionTypes.PHP_LABEL) {
 				return TRAIT_NAME;
 			}
 		} else if (types.size() == 3) {
 			String type = types.get(0);
 			String type1 = types.get(1);
 			String type2 = types.get(2);
-			if (type == PHPRegionTypes.PHP_STRING
-					&& type1 == PHPRegionTypes.PHP_STRING
+			if (type == PHPRegionTypes.PHP_LABEL
+					&& type1 == PHPRegionTypes.PHP_LABEL
 					&& type2 == PHPRegionTypes.PHP_SEMICOLON) {
 				return TRAIT_KEYWORD;
 			}
@@ -799,9 +799,9 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			String type = types.get(0);
 			String type1 = types.get(1);
 			String type2 = types.get(2);
-			if (type == PHPRegionTypes.PHP_STRING
+			if (type == PHPRegionTypes.PHP_LABEL
 					&& type1 == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM
-					&& type2 == PHPRegionTypes.PHP_STRING) {
+					&& type2 == PHPRegionTypes.PHP_LABEL) {
 				return TRAIT_KEYWORD;
 			}
 		}

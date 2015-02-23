@@ -157,7 +157,7 @@ public class NamespaceMemberContext extends StatementContext {
 					.getEnd());
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=459368
 			// Also check that we only retrieve PHP labels.
-			if (nextRegion.getType() == PHPRegionTypes.PHP_STRING) {
+			if (nextRegion.getType() == PHPRegionTypes.PHP_LABEL) {
 				return getRegionCollection().getStartOffset()
 						+ phpScriptRegion.getStart() + nextRegion.getTextEnd();
 			}

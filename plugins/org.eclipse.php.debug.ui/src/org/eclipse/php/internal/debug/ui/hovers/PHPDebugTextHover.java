@@ -96,7 +96,7 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 					} catch (BadLocationException e) {
 						Logger.logException("Error retrieving the value\n", e); //$NON-NLS-1$
 					}
-				} else if (regionType == PHPRegionTypes.PHP_STRING) {
+				} else if (regionType == PHPRegionTypes.PHP_LABEL) {
 					try {
 						ITextRegion nextRegion = phpScriptRegion
 								.getPhpToken(region.getEnd());
