@@ -102,28 +102,50 @@ public final class ParameterGuessingProposal extends
 
 			int baseOffset = getReplacementOffset();
 			String replacement = getReplacementString();
-			if (fPositions != null && fPositions.length > 0
-					&& getTextViewer() != null) {
+			boolean hasParameters = false;
+			try {
+				hasParameters = method.getParameters().length != 0;
+			} catch (ModelException e) {
+				PHPUiPlugin.log(e);
+			}
 
+			if (hasParameters && getTextViewer() != null) {
 				LinkedModeModel model = new LinkedModeModel();
 
-				for (int i = 0; i < fPositions.length; i++) {
-					LinkedPositionGroup group = new LinkedPositionGroup();
-					int positionOffset = fPositions[i].getOffset()
-							+ lengthChange;
-					int positionLength = fPositions[i].getLength();
+				if ((fPositions != null && fPositions.length > 0)) {
+					for (int i = 0; i < fPositions.length; i++) {
+						LinkedPositionGroup group = new LinkedPositionGroup();
+						int positionOffset = fPositions[i].getOffset()
+								+ lengthChange;
+						int positionLength = fPositions[i].getLength();
 
-					if (fChoices[i].length < 2) {
-						group.addPosition(new LinkedPosition(document,
-								positionOffset, positionLength,
-								LinkedPositionGroup.NO_STOP));
-					} else {
-						ensurePositionCategoryInstalled(document, model);
-						document.addPosition(getCategory(), fPositions[i]);
-						group.addPosition(new ProposalPosition(document,
-								positionOffset, positionLength,
-								LinkedPositionGroup.NO_STOP, fChoices[i]));
+						if (fChoices[i].length < 2) {
+							group.addPosition(new LinkedPosition(document,
+									positionOffset, positionLength,
+									LinkedPositionGroup.NO_STOP));
+						} else {
+							ensurePositionCategoryInstalled(document, model);
+							document.addPosition(getCategory(), fPositions[i]);
+							group.addPosition(new ProposalPosition(document,
+									positionOffset, positionLength,
+									LinkedPositionGroup.NO_STOP, fChoices[i]));
+						}
+						model.addGroup(group);
 					}
+				} else {
+					LinkedPositionGroup group = new LinkedPositionGroup();
+					int insideBracketsOffset = 0;
+					int leftBracketsOffset = replacement.lastIndexOf('(');
+					if (leftBracketsOffset != -1) {
+						insideBracketsOffset = baseOffset + leftBracketsOffset
+								+ 1;
+					} else {
+						insideBracketsOffset = baseOffset
+								+ replacement.length() - 1;
+					}
+					group.addPosition(new LinkedPosition(document,
+							insideBracketsOffset, 0,
+							LinkedPositionGroup.NO_STOP));
 					model.addGroup(group);
 				}
 
@@ -132,12 +154,10 @@ public final class ParameterGuessingProposal extends
 				LinkedModeUI ui = new EditorLinkedModeUI(model, getTextViewer());
 				ui.setExitPosition(getTextViewer(),
 						baseOffset + replacement.length(), 0, Integer.MAX_VALUE);
-				// ui.setExitPolicy(new ExitPolicy(')', document));
 				ui.setCyclingMode(LinkedModeUI.CYCLE_WHEN_NO_PARENT);
 				ui.setDoContextInfo(true);
 				ui.enter();
 				fSelectedRegion = ui.getSelectedRegion();
-
 			} else {
 				fSelectedRegion = new Region(baseOffset + getCursorPosition(),
 						0);
