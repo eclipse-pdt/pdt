@@ -1,0 +1,40 @@
+--TEST--
+Should complete class variables
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=true
+--FILE--
+<?php
+namespace object_space {
+
+	class object {
+		public $prop;
+	}
+	class object_collection {
+		/**
+		 *
+		 * @var object[]
+		 */
+		public $array;
+		public function get_all() {
+			return $this->array;
+		}
+		public function get_first() {
+			return $this->array [0];
+		}
+	}
+}
+
+namespace test_space {
+
+	use object_space\object_collection;
+
+	class test {
+		function testme() {
+			$collection = new object_collection ();
+			$object = $collection->get_first ();
+			$object->|;
+		}
+	}
+}
+--EXPECT--
+field($prop)

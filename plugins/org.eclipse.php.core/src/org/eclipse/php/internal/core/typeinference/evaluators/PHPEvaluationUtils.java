@@ -28,7 +28,6 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 
 public class PHPEvaluationUtils {
 
@@ -116,6 +115,8 @@ public class PHPEvaluationUtils {
 							name = NamespaceReference.NAMESPACE_SEPARATOR
 									+ name;
 						}
+					} else {
+
 					}
 				}
 				arrayType.addType(getEvaluatedType(name, currentNamespace));
@@ -163,23 +164,18 @@ public class PHPEvaluationUtils {
 	 */
 	public static IEvaluatedType getEvaluatedType(String typeName,
 			IType currentNamespace) {
-		IEvaluatedType type = PHPSimpleTypes.fromString(typeName);
-		if (type == null) {
-			if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0
-					&& currentNamespace != null) {
-				typeName = NamespaceReference.NAMESPACE_SEPARATOR
-						+ currentNamespace.getElementName()
-						+ NamespaceReference.NAMESPACE_SEPARATOR + typeName;
-			}
-			if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
-					|| currentNamespace == null) {
-				type = new PHPClassType(typeName);
-			} else {
-				type = new PHPClassType(currentNamespace.getElementName(),
-						typeName);
-			}
+		if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0
+				&& currentNamespace != null) {
+			typeName = NamespaceReference.NAMESPACE_SEPARATOR
+					+ currentNamespace.getElementName()
+					+ NamespaceReference.NAMESPACE_SEPARATOR + typeName;
 		}
-		return type;
+		if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
+				|| currentNamespace == null) {
+			return new PHPClassType(typeName);
+		} else {
+			return new PHPClassType(currentNamespace.getElementName(), typeName);
+		}
 	}
 
 	public static String removeArrayBrackets(String variableName) {
