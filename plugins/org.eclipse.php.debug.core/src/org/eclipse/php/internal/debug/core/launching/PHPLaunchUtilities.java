@@ -894,7 +894,7 @@ public class PHPLaunchUtilities {
 			return null; // "PATH";
 		}
 		if (os.startsWith("Mac")) { //$NON-NLS-1$
-			return "DYLD_LIBRARY_PATH"; //$NON-NLS-1$
+			return "DYLD_FALLBACK_LIBRARY_PATH"; //$NON-NLS-1$
 		}
 		return "LD_LIBRARY_PATH"; //$NON-NLS-1$
 	}
