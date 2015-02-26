@@ -849,7 +849,8 @@ public class PHPLaunchUtilities {
 			return null;
 		}
 		String value = getLibrarySearchEnvValue(variable, phpExeDir, quoted);
-		return new StringBuilder(variable).append('=').append(value).toString();
+		return new StringBuilder(variable).append('=').append(value)
+				.append(":${").append(variable).append('}').toString(); //$NON-NLS-1$
 	}
 
 	public static String getLibrarySearchPathEnv(File phpExeDir) {
