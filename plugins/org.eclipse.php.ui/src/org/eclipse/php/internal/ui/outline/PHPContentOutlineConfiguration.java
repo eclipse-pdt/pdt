@@ -130,10 +130,8 @@ public class PHPContentOutlineConfiguration extends
 				changeOutlineModeActionHTML);
 
 		// Custom filter group
-		if (fCustomFiltersActionGroup == null) {
-			fCustomFiltersActionGroup = new CustomFiltersActionGroup(
-					OUTLINE_PAGE, viewer);
-		}
+		fCustomFiltersActionGroup = new CustomFiltersActionGroup(OUTLINE_PAGE,
+				viewer);
 
 		final IContributionItem filtersItem = new FilterActionGroupContributionItem(
 				fCustomFiltersActionGroup);
@@ -195,6 +193,10 @@ public class PHPContentOutlineConfiguration extends
 		// if (fShowGroupsAction != null) {
 		// fShowGroupsAction.dispose();
 		// }
+		if (fCustomFiltersActionGroup != null) {
+			fCustomFiltersActionGroup.dispose();
+		}
+
 		if (changeOutlineModeActionHTML != null
 				&& propertyChangeListener != null) {
 			changeOutlineModeActionHTML
