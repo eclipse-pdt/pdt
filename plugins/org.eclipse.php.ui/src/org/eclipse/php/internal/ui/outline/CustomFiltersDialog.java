@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.activities.WorkbenchActivityHelper;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
+@SuppressWarnings("restriction")
 public class CustomFiltersDialog extends SelectionDialog {
 
 	private static final String SEPARATOR = ","; //$NON-NLS-1$
@@ -44,7 +45,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 	private Button fEnableUserDefinedPatterns;
 	private Text fUserDefinedPatterns;
 
-	private Stack fFilterDescriptorChangeHistory;
+	private Stack<FilterDescriptor> fFilterDescriptorChangeHistory;
 
 	/**
 	 * Creates a dialog to customize script element filters.
@@ -74,7 +75,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		fEnabledFilterIds = enabledFilterIds;
 
 		fBuiltInFilters = getFilterDescriptors(fViewId);
-		fFilterDescriptorChangeHistory = new Stack();
+		fFilterDescriptorChangeHistory = new Stack<FilterDescriptor>();
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
 
@@ -84,7 +85,8 @@ public class CustomFiltersDialog extends SelectionDialog {
 	public static FilterDescriptor[] getFilterDescriptors(String targetId) {
 		FilterDescriptor[] filterDescs = FilterDescriptor
 				.getFilterDescriptors();
-		List result = new ArrayList(filterDescs.length);
+		List<FilterDescriptor> result = new ArrayList<FilterDescriptor>(
+				filterDescs.length);
 		for (int i = 0; i < filterDescs.length; i++) {
 			String tid = filterDescs[i].getTargetId();
 			if (WorkbenchActivityHelper.filterItem(filterDescs[i]))
@@ -92,8 +94,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 			if (targetId.equals(tid))// exactly equal
 				result.add(filterDescs[i]);
 		}
-		return (FilterDescriptor[]) result.toArray(new FilterDescriptor[result
-				.size()]);
+		return result.toArray(new FilterDescriptor[result.size()]);
 	}
 
 	protected void configureShell(Shell shell) {
@@ -183,7 +184,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		fCheckBoxList.setInput(fBuiltInFilters);
 		setInitialSelections(getEnabledFilterDescriptors());
 
-		List initialSelection = getInitialElementSelections();
+		List<?> initialSelection = getInitialElementSelections();
 		if (initialSelection != null && !initialSelection.isEmpty())
 			checkInitialSelections();
 
@@ -219,9 +220,11 @@ public class CustomFiltersDialog extends SelectionDialog {
 				Object element = event.getElement();
 				if (element instanceof FilterDescriptor) {
 					// renew if already touched
-					if (fFilterDescriptorChangeHistory.contains(element))
-						fFilterDescriptorChangeHistory.remove(element);
-					fFilterDescriptorChangeHistory.push(element);
+					FilterDescriptor fd = (FilterDescriptor) element;
+					if (fFilterDescriptorChangeHistory.contains(fd)) {
+						fFilterDescriptorChangeHistory.remove(fd);
+					}
+					fFilterDescriptorChangeHistory.push(fd);
 				}
 			}
 		});
@@ -271,14 +274,14 @@ public class CustomFiltersDialog extends SelectionDialog {
 	}
 
 	private void checkInitialSelections() {
-		Iterator itemsToCheck = getInitialElementSelections().iterator();
+		Iterator<?> itemsToCheck = getInitialElementSelections().iterator();
 		while (itemsToCheck.hasNext())
 			fCheckBoxList.setChecked(itemsToCheck.next(), true);
 	}
 
 	protected void okPressed() {
 		if (fBuiltInFilters != null) {
-			ArrayList result = new ArrayList();
+			ArrayList<FilterDescriptor> result = new ArrayList<FilterDescriptor>();
 			for (int i = 0; i < fBuiltInFilters.length; ++i) {
 				if (fCheckBoxList.getChecked(fBuiltInFilters[i]))
 					result.add(fBuiltInFilters[i]);
@@ -304,7 +307,8 @@ public class CustomFiltersDialog extends SelectionDialog {
 	}
 
 	// ---------- result handling ----------
-
+	@SuppressWarnings("rawtypes")
+	@Override
 	protected void setResult(List newResult) {
 		super.setResult(newResult);
 		if (fUserDefinedPatterns.getText().length() > 0) {
@@ -329,7 +333,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 	 */
 	public String[] getEnabledFilterIds() {
 		Object[] result = getResult();
-		Set enabledIds = new HashSet(result.length);
+		Set<String> enabledIds = new HashSet<String>(result.length);
 		for (int i = 0; i < result.length; i++)
 			enabledIds.add(((FilterDescriptor) result[i]).getId());
 		return (String[]) enabledIds.toArray(new String[enabledIds.size()]);
@@ -346,28 +350,28 @@ public class CustomFiltersDialog extends SelectionDialog {
 	 * @return a stack with the filter descriptor check history
 	 * 
 	 */
-	public Stack getFilterDescriptorChangeHistory() {
+	public Stack<FilterDescriptor> getFilterDescriptorChangeHistory() {
 		return fFilterDescriptorChangeHistory;
 	}
 
 	private FilterDescriptor[] getEnabledFilterDescriptors() {
 		FilterDescriptor[] filterDescs = fBuiltInFilters;
-		List result = new ArrayList(filterDescs.length);
-		List enabledFilterIds = Arrays.asList(fEnabledFilterIds);
+		List<FilterDescriptor> result = new ArrayList<FilterDescriptor>(
+				filterDescs.length);
+		List<String> enabledFilterIds = Arrays.asList(fEnabledFilterIds);
 		for (int i = 0; i < filterDescs.length; i++) {
 			String id = filterDescs[i].getId();
 			if (enabledFilterIds.contains(id))
 				result.add(filterDescs[i]);
 		}
-		return (FilterDescriptor[]) result.toArray(new FilterDescriptor[result
-				.size()]);
+		return result.toArray(new FilterDescriptor[result.size()]);
 	}
 
 	public static String[] convertFromString(String patterns, String separator) {
 		StringTokenizer tokenizer = new StringTokenizer(patterns, separator,
 				true);
 		int tokenCount = tokenizer.countTokens();
-		List result = new ArrayList(tokenCount);
+		List<String> result = new ArrayList<String>(tokenCount);
 		boolean escape = false;
 		boolean append = false;
 		while (tokenizer.hasMoreTokens()) {
@@ -388,10 +392,10 @@ public class CustomFiltersDialog extends SelectionDialog {
 				escape = false;
 			}
 		}
-		return (String[]) result.toArray(new String[result.size()]);
+		return result.toArray(new String[result.size()]);
 	}
 
-	private static void addPattern(List list, String pattern) {
+	private static void addPattern(List<String> list, String pattern) {
 		if (list.isEmpty())
 			list.add(pattern);
 		else {
