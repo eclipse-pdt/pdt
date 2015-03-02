@@ -59,6 +59,7 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 /**
  * Configuration holder for the PHP outline at the WST outline
  */
+@SuppressWarnings("restriction")
 public class PHPContentOutlineConfiguration extends
 		HTMLContentOutlineConfiguration {
 
@@ -130,10 +131,8 @@ public class PHPContentOutlineConfiguration extends
 				changeOutlineModeActionHTML);
 
 		// Custom filter group
-		if (fCustomFiltersActionGroup == null) {
-			fCustomFiltersActionGroup = new CustomFiltersActionGroup(
-					OUTLINE_PAGE, viewer);
-		}
+		fCustomFiltersActionGroup = new CustomFiltersActionGroup(OUTLINE_PAGE,
+				viewer);
 
 		final IContributionItem filtersItem = new FilterActionGroupContributionItem(
 				fCustomFiltersActionGroup);
@@ -195,6 +194,10 @@ public class PHPContentOutlineConfiguration extends
 		// if (fShowGroupsAction != null) {
 		// fShowGroupsAction.dispose();
 		// }
+		if (fCustomFiltersActionGroup != null) {
+			fCustomFiltersActionGroup.dispose();
+		}
+
 		if (changeOutlineModeActionHTML != null
 				&& propertyChangeListener != null) {
 			changeOutlineModeActionHTML
@@ -478,6 +481,7 @@ public class PHPContentOutlineConfiguration extends
 		/*
 		 * Overrides method from ContributionItem.
 		 */
+
 		public void fill(Menu menu, int index) {
 			new MenuItem(menu, SWT.SEPARATOR, index);
 
