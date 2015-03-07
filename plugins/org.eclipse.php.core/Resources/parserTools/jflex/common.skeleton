@@ -9,15 +9,15 @@
 ---  lexical states, charmap
 
   /* error codes */
-  final private static int ZZ_UNKNOWN_ERROR = 0;
-  final private static int ZZ_NO_MATCH = 1;
-  final private static int ZZ_PUSHBACK_2BIG = 2;
+  private static final int ZZ_UNKNOWN_ERROR = 0;
+  private static final int ZZ_NO_MATCH = 1;
+  private static final int ZZ_PUSHBACK_2BIG = 2;
 
   /* error messages for the codes above */
-  final private static String ZZ_ERROR_MSG[] = {
-    "Unkown internal scanner error",		//$NON-NLS-1$
+  private static final String ZZ_ERROR_MSG[] = {
+    "Unknown internal scanner error",		//$NON-NLS-1$
     "Error: could not match input",		//$NON-NLS-1$
-    "Error: pushback value was too large"	//$NON-NLS-1$
+    "Error: pushback value was too large"		//$NON-NLS-1$
   };
 
 --- isFinal list
@@ -36,9 +36,6 @@
 
   /** the textposition at the last accepting state */
   private int zzMarkedPos;
-
-  /** the textposition at the last state to be included in yytext */
-  private int zzPushbackPos;
 
   /** the current text position in the buffer */
   private int zzCurrentPos;
@@ -60,21 +57,38 @@
    * the number of characters from the last newline up to the start of the 
    * matched text
    */
-  //private int yycolumn;
+  private int yycolumn;
 
   /** 
    * zzAtBOL == true <=> the scanner is currently at the beginning of a line
    */
-  //private boolean zzAtBOL = true;
+  private boolean zzAtBOL = true;
 
   /** zzAtEOF == true <=> the scanner is at the EOF */
   private boolean zzAtEOF;
 
+  /** denotes if the user-EOF-code has already been executed */
+  private boolean zzEOFDone;
+  
+  /** 
+   * The number of occupied positions in zzBuffer beyond zzEndRead.
+   * When a lead/high surrogate has been read from the input stream
+   * into the final zzBuffer position, this will have a value of 1;
+   * otherwise, it will have a value of 0.
+   */
+  private int zzFinalHighSurrogate = 0;
+
 --- user class code
+
+  /** the textposition at the last state to be included in yytext */
+  private int _zzPushbackPos;
+
+  /* The following fields are added in order to support the change in zzRefill */
+  private String oldString = null;
+  private int startPos = 0;
 
   /**
    * Creates a new scanner
-   * There is also a java.io.InputStream version of this constructor.
    *
    * @param   in  the java.io.Reader to read input from.
    */
@@ -90,8 +104,12 @@
    */
   private boolean zzRefill() throws java.io.IOException {
 
+    oldString = new String(zzBuffer, startPos, zzMarkedPos-startPos);
+
     /* first: make room (if you can) */
     if (zzStartRead > 0) {
+      zzEndRead += zzFinalHighSurrogate;
+      zzFinalHighSurrogate = 0;
       System.arraycopy(zzBuffer, zzStartRead,
                        zzBuffer, 0,
                        zzEndRead-zzStartRead);
@@ -100,31 +118,44 @@
       zzEndRead-= zzStartRead;
       zzCurrentPos-= zzStartRead;
       zzMarkedPos-= zzStartRead;
-      zzPushbackPos-= zzStartRead;
+      _zzPushbackPos-= zzStartRead;
+      startPos = 0;
       zzStartRead = 0;
     }
 
     /* is the buffer big enough? */
-    if (zzCurrentPos >= zzBuffer.length) {
+    if (zzCurrentPos >= zzBuffer.length - zzFinalHighSurrogate) {
       /* if not: blow it up */
-      char newBuffer[] = new char[zzCurrentPos*2];
+      char newBuffer[] = new char[zzBuffer.length*2];
       System.arraycopy(zzBuffer, 0, newBuffer, 0, zzBuffer.length);
       zzBuffer = newBuffer;
+      zzEndRead += zzFinalHighSurrogate;
+      zzFinalHighSurrogate = 0;
     }
 
-    /* finally: fill the buffer with new input */
-    int numRead = zzReader.read(zzBuffer, zzEndRead,
-                                            zzBuffer.length-zzEndRead);
+    /* fill the buffer with new input */
+    int requested = zzBuffer.length - zzEndRead;
+    int numRead = zzReader.read(zzBuffer, zzEndRead, requested);
 
-    if (numRead < 0) {
-      return true;
+    // unlikely but not impossible: read 0 characters, but not at end of stream
+    if (numRead == 0) {
+      numRead = zzReader.read(zzBuffer, zzEndRead, requested);
     }
-    else {
-      zzEndRead+= numRead;
+    if (numRead > 0) {
+      zzEndRead += numRead;
+      if (numRead == requested) { /* possibly more input available */
+        if (Character.isHighSurrogate(zzBuffer[zzEndRead - 1])) {
+          --zzEndRead;
+          zzFinalHighSurrogate = 1;
+        }
+      }
       return false;
     }
+
+    return true;
   }
-  
+
+
   /**
    * Gets the next input character.
    *
@@ -150,7 +181,7 @@
     return zzBuffer[zzCurrentPos++];
   }
 
-    
+
   /**
    * Closes the input stream.
    */
@@ -171,16 +202,23 @@
    * <b>cannot</b> be reused (internal buffer is discarded and lost).
    * Lexical state is set to <tt>ZZ_INITIAL</tt>.
    *
+   * Internal scan buffer is resized down to its initial length, if it has grown.
+   *
    * @param reader   the new input stream 
    */
   public final void yyreset(java.io.Reader reader) {
     zzReader = reader;
-    //zzAtBOL  = true;
+    zzAtBOL  = true;
     zzAtEOF  = false;
+    zzEOFDone = false;
     zzEndRead = zzStartRead = 0;
-    zzCurrentPos = zzMarkedPos = zzPushbackPos = 0;
-    yyline = yychar = 0;
+    zzCurrentPos = zzMarkedPos = _zzPushbackPos = startPos = 0;
+    oldString = null;
+    zzFinalHighSurrogate = 0;
+    yyline = yychar = yycolumn = 0;
     zzLexicalState = YYINITIAL;
+    if (zzBuffer.length > ZZ_BUFFERSIZE)
+      zzBuffer = new char[ZZ_BUFFERSIZE];
   }
 
 
@@ -257,12 +295,7 @@
       message = ZZ_ERROR_MSG[ZZ_UNKNOWN_ERROR];
     }
 
-	Logger.log(Logger.ERROR, message);
-	try {
 --- throws clause
-    } catch(Error e) {
-        // BC
-    }
   } 
 
 
@@ -281,90 +314,23 @@
     zzMarkedPos -= number;
   }
 
-	/**
-	 * user method - skeleton.sed
-	 */
-	protected final boolean containsTagName(char[] markerTagName, int offset, int tagnameLength) {
-		for(int j = 0; j < fBlockMarkers.size(); j++) {
-			BlockMarker marker = (BlockMarker)fBlockMarkers.get(j);
-			if(marker.getTagName().length() == tagnameLength) {
-				boolean matchesSoFar = true;
-				for(int i = 0; i < tagnameLength && matchesSoFar; i++) {
-					if(marker.isCaseSensitive()) {
-						if(marker.getTagName().charAt(i) != markerTagName[i + offset])
-							matchesSoFar = false;
-					}
-					else {
-						if(Character.toLowerCase(marker.getTagName().charAt(i)) != Character.toLowerCase(markerTagName[i + offset]))
-							matchesSoFar = false;
-					}
-				}
-				if(matchesSoFar)
-					return true;
-			}
-		}
-		return false;
-	}
 
 	/**
-	 * user method - skeleton.sed
-	 *
-	 * Return ALL of the regions scannable within the remaining text
-	 * Note: for verification use
+	 * user method - common.sse
 	 */
-	public final List getRegions() {
-		List tokens = new ArrayList();
-		ITextRegion region = null;
-		try {
-			region = getNextToken();
-			while(region != null) {
-				if (region != null) {
-					tokens.add(region);
-				}
-				region = getNextToken();
-			}
-		}
-		catch (StackOverflowError e) {
-			Logger.logException(getClass().getName()+": input could not be tokenized correctly at position " + getOffset(), e);//$NON-NLS-1$
-			throw e;
-		}
-		catch (Exception e) {
-			// Since this is convenience method and NOT the recommended 
-			// way of getting tokens, many errors are simply hidden
-			Logger.logException("Exception not handled retrieving regions: " + e.getLocalizedMessage(), e);//$NON-NLS-1$
-		}
-		return tokens;
+	private void updateStartPos(){
+		startPos = zzMarkedPos;
+		oldString = null;
 	}
+
+
 	/**
-	 * user method - skeleton.sed
+	 * user method - common.sse
 	 */
-	private final void dump(String s) {
-		if (Debug.debugTokenizer) {
-			System.out.println(s + " (" + yychar + "-" + //$NON-NLS-2$//$NON-NLS-1$
-				(yylength() + yychar) + "):\'" +//$NON-NLS-1$
-					StringUtils.escape(yytext()) + "\'");//$NON-NLS-1$
-		}
-	}
-	/* user method  - skeleton.sed */
 	public final boolean isEOF() {
 		return zzAtEOF;
 	}
-/* user method - skeleton.sed */
-protected final boolean containsTagName(String markerTagName) {
-	Iterator blocks = fBlockMarkers.iterator();
-	while(blocks.hasNext()) {
-		BlockMarker marker = (BlockMarker)blocks.next();
-		if(marker.isCaseSensitive()) {
-			if(marker.getTagName().equals(markerTagName))
-				return true;
-		}
-		else {
-			if(marker.getTagName().equalsIgnoreCase(markerTagName))
-				return true;
-		}
-	}
-	return false;
-}
+
 
 --- zzDoEOF
   /**
@@ -413,15 +379,15 @@ protected final boolean containsTagName(String markerTagName) {
       zzMarkedPos = zzMarkedPosL;
 --- char count update
 
---- actions
-        default: 
-          if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
-            zzAtEOF = true;
+      if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
+        zzAtEOF = true;
 --- eofvalue
-          } 
-          else {
+      }
+      else {
+--- actions
+          default:
 --- no match
-          }
+        }
       }
     }
   }
