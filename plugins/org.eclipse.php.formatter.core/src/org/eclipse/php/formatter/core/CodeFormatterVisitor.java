@@ -1637,6 +1637,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		// TODO the value should be calculated from ReplaceEdit changes
 		indentLengthForComment = 0;
 		indentStringForComment = ""; //$NON-NLS-1$
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=461701
+		// Indentation is never set and used when inside of <?= ?> tags.
+		// See also method indent().
+		if (isPhpEqualTag) {
+			return;
+		}
 		IRegion startRegion = document.getLineInformation(startLine);
 		String startLineContent = document.get(startRegion.getOffset(),
 				comment.sourceStart() + offset - startRegion.getOffset())
