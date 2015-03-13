@@ -23,6 +23,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
@@ -136,12 +137,21 @@ public class PHPEvaluationUtils {
 	 */
 	public static Collection<String> getTypeBinding(String name,
 			PHPDocTag docTag) {
-		final String[] split = docTag.getValue().trim().split("\\s+"); //$NON-NLS-1$
+		String[] split = docTag.getValue().trim().split("\\s+"); //$NON-NLS-1$
 		if (split.length < 2) {
 			return null;
 		}
 		if (split[1].equals(name)) {
+			if (Constants.STATIC.equals(split[0])) {
+				return Collections.emptyList();
+			}
 			return Arrays.asList(split[0].split("\\|")); //$NON-NLS-1$
+		}
+		if (Constants.STATIC.equals(split[0])) {
+			split = Arrays.copyOfRange(split, 1, split.length);
+			if (split.length < 2) {
+				return Collections.emptyList();
+			}
 		}
 
 		String substring = split[1];
