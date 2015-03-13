@@ -11,10 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp;
 
-import java.io.IOException;
-import java.net.DatagramSocket;
-import java.net.ServerSocket;
-
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -95,7 +91,7 @@ public class XDebugConfigurationDialog extends
 		Composite mainSubSection = subsections[0];
 		addLabelControl(mainSubSection,
 				PHPDebugCoreMessages.DebuggerConfigurationDialog_debugPort,
-				XDebugPreferenceMgr.XDEBUG_PREF_PORT); 
+				XDebugPreferenceMgr.XDEBUG_PREF_PORT);
 		portTextBox = addNumTextField(mainSubSection,
 				XDebugPreferenceMgr.XDEBUG_PREF_PORT, 5, 2, false);
 		showGlobals = addCheckBox(
@@ -155,12 +151,12 @@ public class XDebugConfigurationDialog extends
 		});
 		addLabelControl(proxySubSection,
 				PHPDebugCoreMessages.XDebugConfigurationDialog_idekey,
-				XDebugPreferenceMgr.XDEBUG_PREF_IDEKEY); 
+				XDebugPreferenceMgr.XDEBUG_PREF_IDEKEY);
 		idekeyTextBox = addATextField(proxySubSection,
 				XDebugPreferenceMgr.XDEBUG_PREF_IDEKEY, 100, 2);
 		addLabelControl(proxySubSection,
 				PHPDebugCoreMessages.XDebugConfigurationDialog_proxy,
-				XDebugPreferenceMgr.XDEBUG_PREF_PROXY); 
+				XDebugPreferenceMgr.XDEBUG_PREF_PROXY);
 		proxyTextBox = addATextField(proxySubSection,
 				XDebugPreferenceMgr.XDEBUG_PREF_PROXY, 100, 2);
 
@@ -262,14 +258,14 @@ public class XDebugConfigurationDialog extends
 		Preferences prefs = XDebugPreferenceMgr.getPreferences();
 
 		// general
-		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_PORT, portTextBox
-				.getText());
+		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_PORT,
+				portTextBox.getText());
 		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_SHOWSUPERGLOBALS,
 				showGlobals.getSelection());
 		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_ARRAYDEPTH,
 				variableDepth.getSelection());
-		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_CHILDREN, maxChildren
-				.getSelection());
+		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_CHILDREN,
+				maxChildren.getSelection());
 		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_DATA,
 				maxData.getSelection());
 		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_MULTISESSION,
@@ -284,13 +280,12 @@ public class XDebugConfigurationDialog extends
 				captureStderr.getSelectionIndex());
 
 		// proxy
-		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_USEPROXY, useProxy
-				.getSelection());
-		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_IDEKEY, idekeyTextBox
-				.getText());
-		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_PROXY, proxyTextBox
-				.getText());
-		DBGpProxyHandler.instance.configure();
+		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_USEPROXY,
+				useProxy.getSelection());
+		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_IDEKEY,
+				idekeyTextBox.getText());
+		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_PROXY,
+				proxyTextBox.getText());
 
 		PHPDebugPlugin.getDefault().savePluginPreferences(); // save
 		super.okPressed();
@@ -332,7 +327,7 @@ public class XDebugConfigurationDialog extends
 		useProxy.setSelection(useProxyState);
 		String ideKey = prefs.getString(XDebugPreferenceMgr.XDEBUG_PREF_IDEKEY);
 		if (ideKey == null || ideKey.length() == 0) {
-			ideKey = DBGpProxyHandler.instance.generateIDEKey();
+			ideKey = "";
 		}
 		idekeyTextBox.setText(ideKey);
 		proxyTextBox.setText(prefs

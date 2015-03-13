@@ -38,6 +38,7 @@ import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandlersManager;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 import org.eclipse.php.internal.debug.core.zend.debugger.ProcessCrashDetector;
@@ -63,7 +64,7 @@ public class XDebugExeLaunchConfigurationDelegate extends
 				IPHPDebugConstants.ATTR_FILE, (String) null);
 		if (phpScriptString == null || phpScriptString.trim().length() == 0) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
-			displayErrorMessage(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_0); 
+			displayErrorMessage(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_0);
 			return;
 		}
 		if (monitor.isCanceled()) {
@@ -171,14 +172,20 @@ public class XDebugExeLaunchConfigurationDelegate extends
 			String sessionID = DBGpSessionHandler.getInstance()
 					.generateSessionId();
 			String ideKey = null;
-			if (DBGpProxyHandler.instance.useProxy()) {
-				ideKey = DBGpProxyHandler.instance.getCurrentIdeKey();
-				if (DBGpProxyHandler.instance.registerWithProxy() == false) {
-					displayErrorMessage(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_2
-							+ DBGpProxyHandler.instance.getErrorMsg()); 
-					DebugPlugin.getDefault().getLaunchManager()
-							.removeLaunch(launch);
-					return;
+			PHPexeItem phpExeItem = PHPexes.getInstance().getItemForFile(
+					phpExeString, phpIniString);
+			if (phpExeItem != null) {
+				DBGpProxyHandler proxyHandler = DBGpProxyHandlersManager.INSTANCE
+						.getHandler(phpExeItem.getUniqueId());
+				if (proxyHandler.useProxy()) {
+					ideKey = proxyHandler.getCurrentIdeKey();
+					if (proxyHandler.registerWithProxy() == false) {
+						displayErrorMessage(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_2
+								+ proxyHandler.getErrorMsg());
+						DebugPlugin.getDefault().getLaunchManager()
+								.removeLaunch(launch);
+						return;
+					}
 				}
 			} else {
 				ideKey = DBGpSessionHandler.getInstance().getIDEKey();
@@ -198,7 +205,7 @@ public class XDebugExeLaunchConfigurationDelegate extends
 		IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 30);
 		subMonitor.beginTask(
 				PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_3,
-				10); 
+				10);
 
 		// determine the working directory. default is the location of the
 		// script
@@ -271,7 +278,7 @@ public class XDebugExeLaunchConfigurationDelegate extends
 				target.setProcess(eclipseProcessWrapper);
 				launch.addDebugTarget(target);
 				subMonitor
-						.subTask(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_4); 
+						.subTask(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_4);
 				target.waitForInitialSession(
 						(DBGpBreakpointFacade) IDELayerFactory.getIDELayer(),
 						XDebugPreferenceMgr.createSessionPreferences(), monitor);

@@ -23,6 +23,8 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String LineBreakPointMessage_1;
 	public static String ConditionalBreakPointMessage_1;
 	public static String ConditionalBreakPointMessage_2;
+	public static String DBGpProxyConnection_Registering_DBGp_proxy;
+
 	public static String DebuggerFileNotFound_1;
 	public static String DebuggerDebugPortInUse_1;
 	public static String DebuggerConnection_Problem_1;

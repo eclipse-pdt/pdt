@@ -30,6 +30,7 @@ import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandlersManager;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpMultiSessionTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.IDBGpDebugTarget;
@@ -127,11 +128,13 @@ public class XDebugWebLaunchConfigurationDelegate extends
 			String sessionId = DBGpSessionHandler.getInstance()
 					.generateSessionId();
 			String ideKey = null;
-			if (DBGpProxyHandler.instance.useProxy()) {
-				ideKey = DBGpProxyHandler.instance.getCurrentIdeKey();
-				if (DBGpProxyHandler.instance.registerWithProxy() == false) {
+			DBGpProxyHandler proxyHandler = DBGpProxyHandlersManager.INSTANCE
+					.getHandler(server.getUniqueId());
+			if (proxyHandler.useProxy()) {
+				ideKey = proxyHandler.getCurrentIdeKey();
+				if (proxyHandler.registerWithProxy() == false) {
 					displayErrorMessage(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_2
-							+ DBGpProxyHandler.instance.getErrorMsg());
+							+ proxyHandler.getErrorMsg());
 					DebugPlugin.getDefault().getLaunchManager()
 							.removeLaunch(launch);
 					return;

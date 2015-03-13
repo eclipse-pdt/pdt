@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.php.debug.daemon">
+<schema targetNamespace="org.eclipse.php.debug.daemon" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
          <meta.schema plugin="org.eclipse.php.debug.daemon" id="debugCommunicationDaemon" name="Debug Communication Daemon"/>
@@ -11,6 +11,11 @@
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence minOccurs="1" maxOccurs="unbounded">
             <element ref="daemon"/>
@@ -52,7 +57,7 @@
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  A unique identifier for this deamon extention.
+                  A unique identifier for this deamon extension.
                </documentation>
             </annotation>
          </attribute>
@@ -70,6 +75,13 @@
             <annotation>
                <documentation>
                   The name of this deamon [optional].
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="overrides" type="string">
+            <annotation>
+               <documentation>
+                  Unique ID of communication daemon that is overriden by this daemon definition.
                </documentation>
             </annotation>
          </attribute>

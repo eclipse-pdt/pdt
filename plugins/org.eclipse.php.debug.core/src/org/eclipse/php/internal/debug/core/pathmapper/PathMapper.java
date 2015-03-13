@@ -263,8 +263,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public synchronized void restoreFromMap(HashMap map) {
+	public synchronized void restoreFromMap(Map<String, Object> map) {
 		if (map == null) {
 			return;
 		}
@@ -272,9 +271,11 @@ public class PathMapper implements IXMLPreferencesStorable {
 		localToRemoteMap.clear();
 		localToPathEntryType.clear();
 
-		Iterator i = map.keySet().iterator();
+		Iterator<String> i = map.keySet().iterator();
 		while (i.hasNext()) {
-			HashMap entryMap = (HashMap) map.get(i.next());
+			@SuppressWarnings("unchecked")
+			Map<String, Object> entryMap = (Map<String, Object>) map.get(i
+					.next());
 			String localStr = (String) entryMap.get("local"); //$NON-NLS-1$
 			String remoteStr = (String) entryMap.get("remote"); //$NON-NLS-1$
 			String typeStr = (String) entryMap.get("type"); //$NON-NLS-1$
@@ -289,13 +290,12 @@ public class PathMapper implements IXMLPreferencesStorable {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public synchronized HashMap storeToMap() {
-		HashMap entries = new HashMap();
+	public synchronized Map<String, Object> storeToMap() {
+		Map<String, Object> entries = new HashMap<String, Object>();
 		Iterator<VirtualPath> i = localToRemoteMap.keySet().iterator();
 		int c = 1;
 		while (i.hasNext()) {
-			HashMap entry = new HashMap();
+			Map<String, Object> entry = new HashMap<String, Object>();
 			VirtualPath local = i.next();
 			VirtualPath remote = localToRemoteMap.get(local);
 			Type type = localToPathEntryType.get(local);
@@ -308,4 +308,5 @@ public class PathMapper implements IXMLPreferencesStorable {
 		}
 		return entries;
 	}
+
 }

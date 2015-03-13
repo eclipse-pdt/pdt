@@ -18,11 +18,11 @@ import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
+import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -41,6 +41,10 @@ public class PHPsSearchResultDialog extends MessageDialog {
 
 		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
+			switch (columnIndex) {
+			case 0:
+				return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_PHP_EXE);
+			}
 			return null;
 		}
 
@@ -95,8 +99,9 @@ public class PHPsSearchResultDialog extends MessageDialog {
 		tableCompositeLayout.marginHeight = 0;
 		tableCompositeLayout.marginWidth = 0;
 		tableComposite.setLayout(tableCompositeLayout);
-		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				true));
+		GridData tcGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		tcGridData.widthHint = 600;
+		tableComposite.setLayoutData(tcGridData);
 		// Buttons composite
 		Composite buttonsComposite = new Composite(composite, SWT.NONE);
 		GridLayout buttonsCompositeLayout = new GridLayout();
@@ -118,7 +123,7 @@ public class PHPsSearchResultDialog extends MessageDialog {
 		TableColumn nameColumn = new TableColumn(resultTable, SWT.LEFT);
 		nameColumn.setText(Messages.PHPsSearchResultDialog_Name);
 		TableColumn debuggerColumn = new TableColumn(resultTable, SWT.LEFT);
-		debuggerColumn.setText("Debugger");
+		debuggerColumn.setText(Messages.PHPsSearchResultDialog_Debugger_column);
 		TableColumn locationColumn = new TableColumn(resultTable, SWT.LEFT);
 		locationColumn.setText(Messages.PHPsSearchResultDialog_Location);
 		TableColumnLayout clayout = new TableColumnLayout();
@@ -177,10 +182,10 @@ public class PHPsSearchResultDialog extends MessageDialog {
 		return phpExecs;
 	}
 
-	@Override
-	protected Point getInitialSize() {
-		return new Point(720, 440);
-	}
+	// @Override
+	// protected Point getInitialSize() {
+	// return new Point(720, 440);
+	// }
 
 	@Override
 	protected boolean isResizable() {

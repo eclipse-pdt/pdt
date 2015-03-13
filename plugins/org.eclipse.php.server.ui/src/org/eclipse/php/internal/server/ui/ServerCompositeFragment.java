@@ -13,13 +13,10 @@ package org.eclipse.php.internal.server.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.LinkedList;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.server.PHPServerUIMessages;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
@@ -37,17 +34,13 @@ import org.eclipse.swt.widgets.*;
 /**
  * Wizard page to set the server install directory.
  */
+@SuppressWarnings("restriction")
 public class ServerCompositeFragment extends CompositeFragment {
 
 	protected Text name;
 	protected Text url;
 	protected Combo combo;
-	protected Combo debuggerCombo;
-	private ValuesCache originalValuesCache = new ValuesCache();
-	private ValuesCache modifiedValuesCache;
 	private Text webroot;
-
-	private LinkedList<String> debuggersIds;
 
 	/**
 	 * ServerCompositeFragment
@@ -63,9 +56,8 @@ public class ServerCompositeFragment extends CompositeFragment {
 		setDescription(PHPServerUIMessages
 				.getString("ServerCompositeFragment.specifyInformation")); //$NON-NLS-1$
 		controlHandler.setDescription(getDescription());
-		controlHandler.setImageDescriptor(ServersPluginImages.DESC_WIZ_SERVER);
-		debuggersIds = new LinkedList<String>(
-				PHPDebuggersRegistry.getDebuggersIds());
+		setImageDescriptor(ServersPluginImages.DESC_WIZ_SERVER);
+		controlHandler.setImageDescriptor(getImageDescriptor());
 		setDisplayName(PHPServerUIMessages
 				.getString("ServerCompositeFragment.server")); //$NON-NLS-1$
 		createControl();
@@ -98,65 +90,29 @@ public class ServerCompositeFragment extends CompositeFragment {
 		GridLayout layout = new GridLayout(1, true);
 		setLayout(layout);
 		setLayoutData(new GridData(GridData.FILL_BOTH));
-
 		Composite nameGroup = new Composite(this, SWT.NONE);
 		layout = new GridLayout();
 		layout.numColumns = 2;
 		nameGroup.setLayout(layout);
 		nameGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
 		Label label = new Label(nameGroup, SWT.NONE);
 		label.setText(PHPServerUIMessages
 				.getString("ServerCompositeFragment.nameLabel")); //$NON-NLS-1$
 		GridData data = new GridData();
 		label.setLayoutData(data);
-
 		name = new Text(nameGroup, SWT.BORDER);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		name.setLayoutData(data);
 		name.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				if (getServer() != null)
-					modifiedValuesCache.serverName = name.getText();
+				getServer().setName(name.getText());
 				validate();
 			}
 		});
-
-		Label debuggerLabel = new Label(nameGroup, SWT.NONE);
-		debuggerLabel.setText(PHPServerUIMessages
-				.getString("ServerCompositeFragment.debuggerLabel")); //$NON-NLS-1$
-		debuggerLabel.setLayoutData(new GridData());
-
-		debuggerCombo = new Combo(nameGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
-		data = new GridData(SWT.LEFT, SWT.FILL, true, false);
-		debuggerCombo.setLayoutData(data);
-
-		debuggerCombo.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				if (getServer() != null) {
-					int index = debuggerCombo.getSelectionIndex();
-					modifiedValuesCache.debuggerId = debuggersIds.get(index);
-				}
-				validate();
-			}
-		});
-
-		String defaultDebugger = PHPDebugPlugin.getCurrentDebuggerId();
-		for (int i = 0; i < debuggersIds.size(); ++i) {
-			String id = debuggersIds.get(i);
-			String debuggerName = PHPDebuggersRegistry.getDebuggerName(id);
-			debuggerCombo.add(debuggerName, i);
-			if (id.equals(defaultDebugger)) {
-				debuggerCombo.select(i);
-			}
-		}
-
 		createURLGroup(this);
 		init();
 		validate();
-
 		Dialog.applyDialogFont(this);
-
 		name.forceFocus();
 	}
 
@@ -164,26 +120,17 @@ public class ServerCompositeFragment extends CompositeFragment {
 		Server server = getServer();
 		if (name == null || server == null)
 			return;
-
-		originalValuesCache.url = server.getBaseURL();
-		originalValuesCache.serverName = server.getName();
-		originalValuesCache.host = server.getHost();
-		originalValuesCache.webroot = server.getDocumentRoot();
-		originalValuesCache.debuggerId = server.getDebuggerId();
-		// Clone the cache
-		modifiedValuesCache = new ValuesCache(originalValuesCache);
-
-		if (originalValuesCache.serverName != null) {
+		if (getServer().getName() != null) {
 			boolean nameSet = false;
-			String serverName = originalValuesCache.serverName;
+			String serverName = getServer().getName();
 			String orgName = serverName;
 			if (!isForEditing()) {
 				for (int i = 0; i < 10; i++) {
 					boolean ok = checkServerName(serverName);
 					if (ok) {
 						name.setText(serverName);
-						// workingCopy.setName(serverName);
-						modifiedValuesCache.serverName = serverName;
+						getServer().setName(serverName);
+						;
 						nameSet = true;
 						break;
 					}
@@ -191,8 +138,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 				}
 				if (!nameSet) {
 					name.setText(""); //$NON-NLS-1$
-					// workingCopy.setName("");
-					modifiedValuesCache.serverName = ""; //$NON-NLS-1$
+					getServer().setName(""); //$NON-NLS-1$
 				}
 			} else {
 				name.setText(serverName);
@@ -200,28 +146,16 @@ public class ServerCompositeFragment extends CompositeFragment {
 		} else {
 			name.setText(""); //$NON-NLS-1$
 		}
-		if (originalValuesCache.webroot != null) {
-			webroot.setText(originalValuesCache.webroot);
+		if (getServer().getDocumentRoot() != null) {
+			webroot.setText(getServer().getDocumentRoot());
 		}
-		if (originalValuesCache.debuggerId != null) {
-			String name = PHPDebuggersRegistry
-					.getDebuggerName(originalValuesCache.debuggerId);
-			String[] values = debuggerCombo.getItems();
-			for (int i = 0; i < values.length; i++) {
-				if (values[i].equals(name)) {
-					debuggerCombo.select(i);
-					break;
-				}
-			}
-		}
-		String baseURL = originalValuesCache.url;
+		String baseURL = getServer().getBaseURL();
 		if (!baseURL.equals("")) { //$NON-NLS-1$
 			url.setText(baseURL);
 			try {
 				URL originalURL = new URL(baseURL);
 				int port = originalURL.getPort();
-				originalValuesCache.port = port;
-				modifiedValuesCache.port = port;
+				getServer().setPort(String.valueOf(port));
 			} catch (Exception e) {
 				setMessage(
 						PHPServerUIMessages
@@ -230,21 +164,20 @@ public class ServerCompositeFragment extends CompositeFragment {
 		} else {
 			baseURL = "http://" + server.getHost(); //$NON-NLS-1$
 			url.setText(baseURL);
-			modifiedValuesCache.url = baseURL;
 			try {
+				getServer().setBaseURL(baseURL);
 				URL createdURL = new URL(baseURL);
 				int port = createdURL.getPort();
-				modifiedValuesCache.port = port;
+				getServer().setPort(String.valueOf(port));
 			} catch (Exception e) {
 				setMessage(
 						PHPServerUIMessages
 								.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
 			}
 		}
-		if (originalValuesCache.serverName != null
-				&& originalValuesCache.serverName.length() > 0) {
+		if (getServer().getName() != null && getServer().getName().length() > 0) {
 			setTitle(PHPServerUIMessages
-					.getString("ServerCompositeFragment.editServer") + " [" + originalValuesCache.serverName + ']'); //$NON-NLS-1$ //$NON-NLS-2$
+					.getString("ServerCompositeFragment.editServer") + " [" + getServer().getName() + ']'); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			setTitle(PHPServerUIMessages
 					.getString("ServerCompositeFragment.configureServer")); //$NON-NLS-1$
@@ -257,9 +190,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 			setMessage("", IMessageProvider.ERROR); //$NON-NLS-1$
 			return;
 		}
-
 		setMessage(getDescription(), IMessageProvider.NONE);
-
 		String urlStr = url.getText();
 		if (urlStr != null && !urlStr.trim().equals("")) { //$NON-NLS-1$
 			boolean ok = checkServerUrl(urlStr);
@@ -269,7 +200,6 @@ public class ServerCompositeFragment extends CompositeFragment {
 								.getString("ServerCompositeFragment.duplicateServerUrl"), IMessageProvider.ERROR); //$NON-NLS-1$
 			}
 		}
-
 		try {
 			URL url = new URL(urlStr);
 			if (url.getPath() != null && url.getPath().length() != 0) {
@@ -279,14 +209,12 @@ public class ServerCompositeFragment extends CompositeFragment {
 			// in case of Malformed URL - reset
 			urlStr = null;
 		}
-
 		if (urlStr == null || urlStr.equals("")) { //$NON-NLS-1$
 			setMessage(
 					PHPServerUIMessages
 							.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
 			return;
 		}
-
 		try {
 			URL baseURL = new URL(urlStr);
 			String host = baseURL.getHost();
@@ -297,18 +225,15 @@ public class ServerCompositeFragment extends CompositeFragment {
 			}
 			int port = baseURL.getPort();
 
-			// workingCopy.setHost(host);
-			// server.setPort(String.valueOf(port));
-			modifiedValuesCache.host = host;
-			modifiedValuesCache.port = port;
+			getServer().setHost(host);
+			getServer().setPort(String.valueOf(port));
 		} catch (Exception e) {
 			setMessage(
 					PHPServerUIMessages
 							.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
 			return;
 		}
-
-		String serverName = modifiedValuesCache.serverName;
+		String serverName = getServer().getName();
 		if (serverName == null || serverName.trim().equals("")) { //$NON-NLS-1$
 			setMessage(
 					PHPServerUIMessages
@@ -327,18 +252,10 @@ public class ServerCompositeFragment extends CompositeFragment {
 					PHPServerUIMessages
 							.getString("ServerCompositeFragment.webrootNotExists"), IMessageProvider.ERROR); //$NON-NLS-1$
 		}
-
-		controlHandler.update();
-	}
-
-	protected void setMessage(String message, int type) {
-		controlHandler.setMessage(message, type);
-		setComplete(type != IMessageProvider.ERROR);
 		controlHandler.update();
 	}
 
 	protected void createURLGroup(Composite parent) {
-
 		Group group = new Group(parent, SWT.NONE);
 		group.setFont(parent.getFont());
 		GridLayout layout = new GridLayout(3, false);
@@ -347,50 +264,44 @@ public class ServerCompositeFragment extends CompositeFragment {
 		group.setLayoutData(data);
 		group.setText(PHPServerUIMessages
 				.getString("ServerCompositeFragment.serverProperties")); //$NON-NLS-1$
-
 		Label urlLabel = new Label(group, SWT.None);
 		urlLabel.setText(PHPServerUIMessages
 				.getString("ServerCompositeFragment.baseURL")); //$NON-NLS-1$
-
 		url = new Text(group, SWT.BORDER);
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 2;
 		url.setLayoutData(layoutData);
-
 		url.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				if (getServer() != null) {
 					String urlStr = url.getText();
-					// server.setBaseURL(urlStr);
-					modifiedValuesCache.url = urlStr;
+					try {
+						getServer().setBaseURL(urlStr);
+					} catch (MalformedURLException e1) {
+						// ignore
+					}
 				}
 				validate();
 			}
 		});
-
 		Label labelRoot = new Label(group, SWT.None);
 		labelRoot.setText(PHPServerUIMessages
 				.getString("ServerCompositeFragment.localWebRoot")); //$NON-NLS-1$
 		labelRoot.setLayoutData(new GridData());
-
 		webroot = new Text(group, SWT.BORDER);
 		webroot.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
 		webroot.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				if (getServer() != null) {
 					String webrootStr = webroot.getText();
-					// server.setBaseURL(urlStr);
-					modifiedValuesCache.webroot = webrootStr;
+					getServer().setDocumentRoot(webrootStr);
 				}
 				validate();
 			}
 		});
-
 		Button browseButton = new Button(group, SWT.PUSH);
 		browseButton.setText(PHPServerUIMessages
 				.getString("ServerCompositeFragment.browse")); //$NON-NLS-1$
-
 		browseButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				DirectoryDialog dialog = new DirectoryDialog(getShell());
@@ -402,23 +313,20 @@ public class ServerCompositeFragment extends CompositeFragment {
 				if (result != null)
 					webroot.setText(result.toString());
 			}
-
 		});
 
 	}
 
 	private boolean checkServerName(String name) {
 		name = name.trim();
-		if (name.equals(originalValuesCache.serverName)) {
-			return true;
-		}
 		Server[] allServers = ServersManager.getServers();
-
 		if (allServers != null) {
 			int size = allServers.length;
 			for (int i = 0; i < size; i++) {
 				Server server = allServers[i];
-				if (name.equals(server.getName()))
+				if (name.equals(server.getName())
+						&& !getServer().getUniqueId().equals(
+								server.getUniqueId()))
 					return false;
 			}
 		}
@@ -427,19 +335,14 @@ public class ServerCompositeFragment extends CompositeFragment {
 
 	private boolean checkServerUrl(String url) {
 		url = url.trim();
-		if (originalValuesCache.serverName != null
-				&& originalValuesCache.serverName.trim().length() > 0) {
-			if (url.equals(originalValuesCache.url)) {
-				return true;
-			}
-		}
 		Server[] allServers = ServersManager.getServers();
-
 		if (allServers != null) {
 			int size = allServers.length;
 			for (int i = 0; i < size; i++) {
 				Server server = allServers[i];
-				if (url.equals(server.getBaseURL()))
+				if (url.equals(server.getBaseURL())
+						&& !getServer().getUniqueId().equals(
+								server.getUniqueId()))
 					return false;
 			}
 		}
@@ -451,34 +354,13 @@ public class ServerCompositeFragment extends CompositeFragment {
 	 */
 	public boolean performOk() {
 		try {
-			Server defaultServer = ServersManager.getDefaultServer(null);
-			boolean isDefault = false;
-			isDefault = defaultServer != null
-					&& defaultServer.getName().equals(
-							originalValuesCache.serverName);
-
 			Server server = getServer();
-			// Save any modification logged into the modified value cache
-			// object.
-			if (server != null) {
-				server.setPort(String.valueOf(modifiedValuesCache.port));
-				server.setBaseURL(modifiedValuesCache.url);
-			}
-			server.setHost(modifiedValuesCache.host);
-			server.setName(modifiedValuesCache.serverName);
-			server.setDocumentRoot(modifiedValuesCache.webroot);
-			server.setDebuggerId(modifiedValuesCache.debuggerId);
-			if (originalValuesCache.serverName != null
-					&& !originalValuesCache.serverName.equals("") && //$NON-NLS-1$
-					!originalValuesCache.serverName
-							.equals(modifiedValuesCache.serverName)) {
-				// Update the ServerManager with the new server name
-
-				ServersManager.removeServer(originalValuesCache.serverName);
+			Server originalServer = ServersManager.findServer(server
+					.getUniqueId());
+			if (originalServer != null) {
+				originalServer.update(server);
+			} else {
 				ServersManager.addServer(server);
-				if (isDefault) {
-					ServersManager.setDefaultServer(null, server);
-				}
 			}
 		} catch (Throwable e) {
 			Logger.logException("Error while saving the server settings", e); //$NON-NLS-1$
@@ -487,49 +369,4 @@ public class ServerCompositeFragment extends CompositeFragment {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.internal.server.ui.CompositeFragment#performCancel()
-	 */
-	public boolean performCancel() {
-		// Since the performOk might be triggered if this composite is inside a
-		// wizard fragment, we have to
-		// implement the perform cancel to revert any changes made.
-		try {
-			Server server = getServer();
-			if (server != null) {
-				server.setPort(String.valueOf(originalValuesCache.port));
-				server.setBaseURL(originalValuesCache.url);
-			}
-			server.setHost(originalValuesCache.host);
-			server.setName(originalValuesCache.serverName);
-		} catch (Throwable e) {
-			Logger.logException("Error while reverting the server settings", e); //$NON-NLS-1$
-			return false;
-		}
-		return super.performCancel();
-	}
-
-	// A class used as a local original IServerWorkingCopy values cache.
-	private class ValuesCache {
-		String webroot;
-		String serverName;
-		String url;
-		String host;
-		String debuggerId;
-		int port;
-
-		public ValuesCache() {
-		}
-
-		public ValuesCache(ValuesCache cache) {
-			this.serverName = cache.serverName;
-			this.url = cache.url;
-			this.port = cache.port;
-			this.host = cache.host;
-			this.webroot = cache.webroot;
-			this.debuggerId = cache.debuggerId;
-		}
-	}
 }
