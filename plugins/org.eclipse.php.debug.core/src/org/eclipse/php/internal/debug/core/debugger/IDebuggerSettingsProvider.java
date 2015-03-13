@@ -1,0 +1,60 @@
+/*******************************************************************************
+ * Copyright (c) 2015 Zend Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Zend Technologies - initial API and implementation
+ *******************************************************************************/
+package org.eclipse.php.internal.debug.core.debugger;
+
+import java.util.List;
+
+import org.eclipse.php.internal.core.IUniqueIdentityElement;
+
+/**
+ * Common interface for debugger settings providers.
+ * 
+ * @author Bartlomiej Laczkowski
+ */
+public interface IDebuggerSettingsProvider {
+
+	/**
+	 * Returns unique provider ID.
+	 * 
+	 * @return unique provider ID
+	 */
+	String getId();
+
+	/**
+	 * Returns debugger settings for given owner (e.g. PHP server or executable)
+	 * 
+	 * @param owner
+	 * @return debugger settings for given owner
+	 */
+	IDebuggerSettings get(IUniqueIdentityElement owner);
+
+	/**
+	 * Returns all available settings from this provider.
+	 * 
+	 * @return all available settings.
+	 */
+	List<IDebuggerSettings> getAll();
+
+	/**
+	 * Save given settings.
+	 * 
+	 * @param settings
+	 */
+	void save(IDebuggerSettings settings);
+
+	/**
+	 * Deletes given settings.
+	 * 
+	 * @param settings
+	 */
+	void delete(IDebuggerSettings settings);
+
+}

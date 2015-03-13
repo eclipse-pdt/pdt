@@ -443,25 +443,24 @@ public class InstalledPHPsBlock {
 		if (phpExe == null) {
 			return;
 		}
-		PHPexeItem phpExeToEdit = new PHPexeItem(phpExe.getName(),
-				phpExe.getExecutable(), phpExe.getINILocation(),
-				phpExe.getDebuggerID(), phpExe.isEditable());
-		// phpExeToEdit.setLoadDefaultINI(phpExe.isLoadDefaultINI());
-		phpExeToEdit.setSapiType(phpExe.getSapiType());
-		phpExeToEdit.setLoadDefaultINI(phpExe.isLoadDefaultINI());
-		PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(),
-				phpExeToEdit, PHPexes.getInstance().getAllItems());
-		dialog.setTitle(PHPDebugUIMessages.InstalledPHPsBlock_8);
-		if (dialog.open() != Window.OK) {
-			return;
+		try {
+			// Clone as a copy will preserve the unique ID as well
+			PHPexeItem phpExeToEdit = phpExe.clone();
+			PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(),
+					phpExeToEdit, PHPexes.getInstance().getAllItems());
+			dialog.setTitle(PHPDebugUIMessages.InstalledPHPsBlock_8);
+			if (dialog.open() != Window.OK) {
+				return;
+			}
+			phpExe.setName(phpExeToEdit.getName());
+			phpExe.setExecutable(phpExeToEdit.getExecutable());
+			phpExe.setINILocation(phpExeToEdit.getINILocation());
+			phpExe.setDebuggerID(phpExeToEdit.getDebuggerID());
+			phpExe.setSapiType(phpExeToEdit.getSapiType());
+			phpExe.setLoadDefaultINI(phpExeToEdit.isLoadDefaultINI());
+		} catch (CloneNotSupportedException e) {
+			// Can not happen
 		}
-		phpExe.setName(phpExeToEdit.getName());
-		phpExe.setExecutable(phpExeToEdit.getExecutable());
-		phpExe.setINILocation(phpExeToEdit.getINILocation());
-		phpExe.setDebuggerID(phpExeToEdit.getDebuggerID());
-		phpExe.setSapiType(phpExeToEdit.getSapiType());
-		phpExe.setLoadDefaultINI(phpExeToEdit.isLoadDefaultINI());
-
 		fPHPExeList.refresh();
 		commitChanges();
 	}

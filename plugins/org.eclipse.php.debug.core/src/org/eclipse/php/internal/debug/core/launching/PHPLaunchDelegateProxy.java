@@ -30,6 +30,9 @@ import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNam
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
+import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsUtil;
+import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
 
 /**
  * The PHP launch delegate proxy is designed to supply flexibility in delegating
@@ -40,6 +43,7 @@ import org.eclipse.php.internal.debug.core.preferences.PHPexes;
  * @author Shalom Gibly
  * 
  */
+@SuppressWarnings("restriction")
 public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 
 	protected ILaunchConfigurationDelegate2 launchConfigurationDelegate;
@@ -86,6 +90,11 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 				.getLaunchConfigurationType(IPHPDebugConstants.PHPEXELaunchType);
 		if (configuration.getType().equals(exeType)) {
 			configuration = updatePHPExeAttributes(configuration);
+		}
+		ILaunchConfigurationType serverType = lm
+				.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
+		if (configuration.getType().equals(serverType)) {
+			configuration = updatePHPServerAttributes(configuration);
 		}
 		return getConfigurationDelegate(configuration).getLaunch(configuration,
 				mode);
@@ -209,8 +218,25 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 				wc.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION,
 						(String) null);
 			}
+			// Set up custom port from exe configuration
+			int debugPort = ZendDebuggerSettingsUtil.getDebugPort(item);
+			if (debugPort != -1)
+				wc.setAttribute(IPHPDebugConstants.PHP_Port, debugPort);
 			configuration = wc.doSave();
 		}
+		return configuration;
+	}
+
+	private ILaunchConfiguration updatePHPServerAttributes(
+			ILaunchConfiguration configuration) throws CoreException {
+		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
+		Server server = ServersManager.getServer(configuration.getAttribute(
+				Server.NAME, "")); //$NON-NLS-1$
+		// Set up custom port from server configuration
+		int debugPort = ZendDebuggerSettingsUtil.getDebugPort(server);
+		if (debugPort != -1)
+			wc.setAttribute(IPHPDebugConstants.PHP_Port, debugPort);
+		configuration = wc.doSave();
 		return configuration;
 	}
 
