@@ -19,14 +19,14 @@ import java.util.*;
  * Server helper class.
  */
 public class ServerHelper {
-	protected Map map;
+	protected Map<String, String> map;
 
 	// property change listeners
-	private transient List propertyListeners;
+	private transient List<PropertyChangeListener> propertyListeners;
 	private Server server;
 
 	public ServerHelper(Server server) {
-		this.map = new HashMap();
+		this.map = new HashMap<String, String>();
 		this.server = server;
 	}
 
@@ -50,7 +50,7 @@ public class ServerHelper {
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		if (propertyListeners == null) {
-			propertyListeners = new ArrayList(2);
+			propertyListeners = new ArrayList<PropertyChangeListener>(2);
 		}
 		propertyListeners.add(listener);
 	}
@@ -85,16 +85,16 @@ public class ServerHelper {
 		PropertyChangeEvent event = new PropertyChangeEvent(server,
 				propertyName, oldValue, newValue);
 		try {
-			Iterator iterator = propertyListeners.iterator();
+			Iterator<PropertyChangeListener> iterator = propertyListeners
+					.iterator();
 			while (iterator.hasNext()) {
 				try {
 					PropertyChangeListener listener = (PropertyChangeListener) iterator
 							.next();
 					listener.propertyChange(event);
 				} catch (Exception e) {
-					Logger
-							.logException("Error firing property change event", //$NON-NLS-1$
-									e);
+					Logger.logException("Error firing property change event", //$NON-NLS-1$
+							e);
 				}
 			}
 		} catch (Exception e) {
@@ -142,4 +142,5 @@ public class ServerHelper {
 			return false;
 		return true;
 	}
+
 }

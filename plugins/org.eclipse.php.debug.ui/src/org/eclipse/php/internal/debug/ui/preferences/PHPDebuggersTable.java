@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
+import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.ui.util.SWTUtil;
 import org.eclipse.swt.SWT;
@@ -44,8 +45,7 @@ public class PHPDebuggersTable {
 	private TableViewer fPHPDebuggers;
 	private Button fSettingsButton;
 	// column weights
-	private float fWeight1 = 3 / 5F;
-	private float fWeight2 = 1.9F / 5F;
+	private float fWeight1 = 4.9F / 5F;
 	// ignore column re-sizing when the table is being resized
 	private boolean fResizingTable = false;
 
@@ -93,9 +93,6 @@ public class PHPDebuggersTable {
 		debuggerTypeColumn
 				.setText(PHPDebugUIMessages.PHPDebuggersTable_debuggerType);
 
-		final TableColumn debugPortColumn = new TableColumn(table, SWT.NULL);
-		debugPortColumn.setText(PHPDebugUIMessages.PHPDebuggersTable_port);
-
 		fPHPDebuggers = new CheckboxTableViewer(table);
 		fPHPDebuggers.setLabelProvider(new PHPDebuggersLabelProvider());
 		fPHPDebuggers.setContentProvider(new PHPDebuggersContentProvider());
@@ -140,15 +137,13 @@ public class PHPDebuggersTable {
 				return super.compare(viewer, e1, e2);
 			}
 		});
-		configureTableResizing(parent, buttons, table, debuggerTypeColumn,
-				debugPortColumn);
+		configureTableResizing(parent, buttons, table, debuggerTypeColumn);
 
 		fillWithWorkspaceDebuggers();
 		enableButtons();
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				resizeTable(parent, buttons, table, debuggerTypeColumn,
-						debugPortColumn);
+				resizeTable(parent, buttons, table, debuggerTypeColumn);
 			}
 		});
 	}
@@ -170,19 +165,16 @@ public class PHPDebuggersTable {
 
 	private void configureTableResizing(final Composite parent,
 			final Composite buttons, final Table table,
-			final TableColumn debuggerTypeColumn,
-			final TableColumn debugPortColumn) {
+			final TableColumn debuggerTypeColumn) {
 		parent.addControlListener(new ControlAdapter() {
 			public void controlResized(final ControlEvent e) {
-				resizeTable(parent, buttons, table, debuggerTypeColumn,
-						debugPortColumn);
+				resizeTable(parent, buttons, table, debuggerTypeColumn);
 			}
 		});
 		table.addListener(SWT.Paint, new Listener() {
 			public void handleEvent(final Event event) {
 				table.removeListener(SWT.Paint, this);
-				resizeTable(parent, buttons, table, debuggerTypeColumn,
-						debugPortColumn);
+				resizeTable(parent, buttons, table, debuggerTypeColumn);
 			}
 		});
 		debuggerTypeColumn.addControlListener(new ControlAdapter() {
@@ -191,17 +183,10 @@ public class PHPDebuggersTable {
 					fWeight1 = getColumnWeight(0);
 			}
 		});
-		debugPortColumn.addControlListener(new ControlAdapter() {
-			public void controlResized(final ControlEvent e) {
-				if (debugPortColumn.getWidth() > 0 && !fResizingTable)
-					fWeight2 = getColumnWeight(1);
-			}
-		});
 	}
 
 	private void resizeTable(final Composite parent, final Composite buttons,
-			final Table table, final TableColumn column1,
-			final TableColumn column2) {
+			final Table table, final TableColumn column1) {
 		fResizingTable = true;
 		int parentWidth = -1;
 		int parentHeight = -1;
@@ -230,7 +215,6 @@ public class PHPDebuggersTable {
 			// smaller first and then resize the table to
 			// match the client area width
 			column1.setWidth(Math.round(width * fWeight1));
-			column2.setWidth(Math.round(width * fWeight2));
 			table.setSize(width, parentHeight);
 		} else {
 			// table is getting bigger so make the table
@@ -238,7 +222,6 @@ public class PHPDebuggersTable {
 			// to match the client area width
 			table.setSize(width, parentHeight);
 			column1.setWidth(Math.round(width * fWeight1));
-			column2.setWidth(Math.round(width * fWeight2));
 		}
 		fResizingTable = false;
 	}
@@ -251,11 +234,9 @@ public class PHPDebuggersTable {
 			return (float) columnWidth / tableWidth;
 		switch (col) {
 		case 0:
-			return 3 / 5F;
-		case 1:
-			return 1.9F / 5F;
+			return 4.9F / 5F;
 		default:
-			return 1.9F / 5F;
+			return 4.9F / 5F;
 		}
 	}
 
@@ -341,7 +322,7 @@ public class PHPDebuggersTable {
 		 * @see ITableLabelProvider#getColumnImage(Object, int)
 		 */
 		public Image getColumnImage(final Object element, final int columnIndex) {
-			return null;
+			return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_DEBUG_CONF);
 		}
 
 		/**
@@ -353,12 +334,6 @@ public class PHPDebuggersTable {
 				switch (columnIndex) {
 				case 0:
 					return configuration.getName();
-				case 1:
-					int port = configuration.getPort();
-					if (port < 0) {
-						return PHPDebugUIMessages.PHPDebuggersTable_notDefined;
-					}
-					return String.valueOf(port);
 				}
 			}
 			return element.toString();

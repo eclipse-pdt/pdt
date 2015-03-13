@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
@@ -28,6 +30,7 @@ public abstract class CompositeFragment extends Composite {
 	private String title;
 	private String description;
 	private Object fragmentData;
+	private ImageDescriptor imageDescriptor;
 
 	/**
 	 * Constructs a new CompositeFragment.
@@ -98,6 +101,22 @@ public abstract class CompositeFragment extends Composite {
 			name = ""; //$NON-NLS-1$
 		}
 		return name;
+	}
+
+	/**
+	 * Sets image descriptor
+	 * 
+	 * @param descriptor
+	 */
+	public void setImageDescriptor(ImageDescriptor descriptor) {
+		imageDescriptor = descriptor;
+	}
+
+	/**
+	 * @return the imageDescriptor
+	 */
+	public ImageDescriptor getImageDescriptor() {
+		return imageDescriptor;
 	}
 
 	/**
@@ -207,12 +226,20 @@ public abstract class CompositeFragment extends Composite {
 	 */
 	public abstract void validate();
 
+	public void setMessage(String message, int type) {
+		controlHandler.setMessage(message, type);
+		setComplete(type != IMessageProvider.ERROR);
+		controlHandler.update();
+	}
+
 	/**
 	 * Sets the completeness state of this composite.
 	 * 
 	 * @param isComplete
 	 */
-	protected void setComplete(boolean isComplete) {
+	public void setComplete(boolean isComplete) {
 		this.isComplete = isComplete;
+		controlHandler.update();
 	}
+
 }

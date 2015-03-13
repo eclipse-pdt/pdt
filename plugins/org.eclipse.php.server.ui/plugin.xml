@@ -85,11 +85,18 @@
 			fragmentsGroupID="org.eclipse.php.server.ui.serverWizardAndComposite"
 			id="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory"
 			name="Basic Factory" />
+  <wizardAndCompositeFragment
+        class="org.eclipse.php.internal.debug.ui.wizards.DebuggerCompositeFragmentFactory"
+        fragmentsGroupID="org.eclipse.php.server.ui.serverWizardAndComposite"
+        id="org.eclipse.php.debug.ui.wizards.DebuggerCompositeFragmentFactory"
+        name="Debugger Fragment"
+        placeAfter="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory">
+  </wizardAndCompositeFragment>
 		<wizardAndCompositeFragment
 			class="org.eclipse.php.internal.server.ui.PathMapperFragmentFactory"
 			fragmentsGroupID="org.eclipse.php.server.ui.serverWizardAndComposite"
 			id="org.eclipse.php.internal.server.ui.PathMapperFragmentFactory"
-			name="Path Mapper Fragment" placeAfter="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory">
+			name="Path Mapper Fragment" placeAfter="org.eclipse.php.debug.ui.wizards.DebuggerCompositeFragmentFactory">
 		</wizardAndCompositeFragment>
 	</extension>
 	

@@ -11,10 +11,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.daemon;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
-import org.eclipse.php.internal.debug.daemon.communication.CommunicationDaemonRegistry;
+import org.eclipse.php.internal.debug.daemon.communication.DaemonsRegistry;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -81,8 +83,8 @@ public class DaemonPlugin extends Plugin {
 	 */
 	public void startDaemons(String debuggerID) {
 		if (daemons == null) {
-			daemons = CommunicationDaemonRegistry
-					.getBestMatchCommunicationDaemons();
+			List<ICommunicationDaemon> loaded = DaemonsRegistry.getDaemons();
+			daemons = loaded.toArray(new ICommunicationDaemon[loaded.size()]);
 		}
 		if (daemons != null) {
 			for (int i = 0; i < daemons.length; i++) {
