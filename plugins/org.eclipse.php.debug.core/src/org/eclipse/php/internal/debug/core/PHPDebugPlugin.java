@@ -35,11 +35,12 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
+import org.eclipse.php.internal.debug.core.debugger.DebuggerSettingsManager;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.php.internal.debug.core.launching.XDebugLaunchListener;
 import org.eclipse.php.internal.debug.core.preferences.*;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandlersManager;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.zend.debugger.IRemoteDebugger;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
@@ -112,12 +113,9 @@ public class PHPDebugPlugin extends Plugin {
 			createDefaultPHPServer();
 			XDebugPreferenceMgr.setDefaults();
 			XDebugLaunchListener.getInstance();
-			DBGpProxyHandler.instance.configure();
-			/*
-			 * This has to be called as the last operation to start all the
-			 * debugger daemons that handle communication channels
-			 */
 			DaemonPlugin.getDefault();
+			DebuggerSettingsManager.INSTANCE.startup();
+			DBGpProxyHandlersManager.INSTANCE.startup();
 		}
 
 	}
@@ -157,9 +155,9 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		XDebugLaunchListener.shutdown();
-		DBGpProxyHandler.instance.unregister();
+		DBGpProxyHandlersManager.INSTANCE.shutdown();
 		savePluginPreferences();
-
+		DebuggerSettingsManager.INSTANCE.shutdown();
 		super.stop(context);
 		plugin = null;
 		DebugUIPlugin

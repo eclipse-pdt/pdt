@@ -12,24 +12,24 @@
 package org.eclipse.php.internal.core.util.preferences;
 
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.php.internal.core.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * XML preferences reader for reading XML structures from the prefernces store.
+ * XML preferences reader for reading XML structures from the preferences store.
  * This class works in combination with IXMLPreferencesStorable.
  */
+@SuppressWarnings("deprecation")
 public class XMLPreferencesReader {
 
 	public static final char DELIMITER = (char) 5;
@@ -49,6 +49,17 @@ public class XMLPreferencesReader {
 		return s;
 	}
 
+	/**
+	 * Read XML nodes to values map
+	 * 
+	 * @param nodeList
+	 * @param skipEmptyNodes
+	 * @return values map
+	 * 
+	 * @deprecated Since 3.5 - use
+	 *             {@link XMLPreferencesReader#read(NodeList, boolean)} instead
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static HashMap read(NodeList nl) {
 		HashMap map = new HashMap(nl.getLength());
 		for (int i = 0; i < nl.getLength(); ++i) {
@@ -65,6 +76,45 @@ public class XMLPreferencesReader {
 		return map;
 	}
 
+	/**
+	 * Read XML nodes to values map
+	 * 
+	 * @param nodeList
+	 * @param skipEmptyNodes
+	 * @return values map
+	 */
+	private static Map<String, Object> read(NodeList nodeList,
+			boolean skipEmptyNodes) {
+		Map<String, Object> map = new HashMap<String, Object>(
+				nodeList.getLength());
+		for (int i = 0; i < nodeList.getLength(); ++i) {
+			Node n = nodeList.item(i);
+			if (n.hasChildNodes()) {
+				if (n.getFirstChild().getNodeType() == Node.TEXT_NODE) {
+					map.put(n.getNodeName(), getUnEscaped(n.getFirstChild()
+							.getNodeValue()));
+				} else {
+					map.put(n.getNodeName(),
+							read(n.getChildNodes(), skipEmptyNodes));
+				}
+			} else if (!skipEmptyNodes) {
+				map.put(n.getNodeName(), ""); //$NON-NLS-1$
+			}
+		}
+		return map;
+	}
+
+	/**
+	 * Converts given XML string to values map
+	 * 
+	 * @param str
+	 * @param skipEmptyNodes
+	 * @return values map
+	 * 
+	 * @deprecated Since 3.5 - use
+	 *             {@link XMLPreferencesReader#read(String, boolean)} instead
+	 */
+	@SuppressWarnings("rawtypes")
 	protected static HashMap read(String str) {
 		try {
 			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
@@ -73,9 +123,7 @@ public class XMLPreferencesReader {
 			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
 			Document doc = docBuilder.parse(new ByteArrayInputStream(str
 					.getBytes()));
-
 			return read(doc.getChildNodes());
-
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
@@ -83,19 +131,71 @@ public class XMLPreferencesReader {
 	}
 
 	/**
-	 * Reads a map of elements from the Preferences by a given key.
+	 * Converts given XML string to values map
+	 * 
+	 * @param str
+	 * @param skipEmptyNodes
+	 * @return values map
+	 */
+	protected static Map<String, Object> read(String str, boolean skipEmptyNodes) {
+		try {
+			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+			Document doc = docBuilder.parse(new ByteArrayInputStream(str
+					.getBytes()));
+			return read(doc.getChildNodes(), skipEmptyNodes);
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		return null;
+	}
+
+	/**
+	 * Reads a map of elements from the preferences by a given key.
 	 * 
 	 * @param store
 	 * @param prefsKey
-	 * @return
+	 * @return a map of elements from the preferences by a given key
+	 * 
+	 * @deprecated Since 3.5 - use
+	 *             {@link XMLPreferencesReader#read(IEclipsePreferences, String, boolean)}
+	 *             instead
 	 */
+	@SuppressWarnings("rawtypes")
 	public static HashMap[] read(Preferences store, String prefsKey) {
 		String storedValue = store.getString(prefsKey);
 		return getHashFromStoredValue(storedValue);
 	}
 
-	public static HashMap[] getHashFromStoredValue(String storedValue) {
+	/**
+	 * Reads a map of elements from the preferences by a given key.
+	 * 
+	 * @param store
+	 * @param prefsKey
+	 * @param skipEmptyNodes
+	 * @return a map of elements from the preferences by a given key
+	 */
+	public static List<Map<String, Object>> read(IEclipsePreferences store,
+			String prefsKey, boolean skipEmptyNodes) {
+		String storedValue = store.get(prefsKey, null);
+		if (storedValue == null)
+			return new ArrayList<Map<String, Object>>();
+		return getMapsFromValue(storedValue, skipEmptyNodes);
+	}
 
+	/**
+	 * Returns array of maps with stored values.
+	 * 
+	 * @param storedValue
+	 * @return array of maps with stored values
+	 * 
+	 * @deprecated Since 3.5 - use
+	 *             {@link XMLPreferencesReader#getMapsFromValue(String, boolean)}
+	 *             instead
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static HashMap[] getHashFromStoredValue(String storedValue) {
 		ArrayList maps = new ArrayList();
 		StringTokenizer st = new StringTokenizer(storedValue, new String(
 				new char[] { DELIMITER }));
@@ -103,6 +203,24 @@ public class XMLPreferencesReader {
 			maps.add(read(st.nextToken()));
 		}
 		return (HashMap[]) maps.toArray(new HashMap[maps.size()]);
-
 	}
+
+	/**
+	 * Returns array of maps with stored values.
+	 * 
+	 * @param storedValue
+	 * @param skipEmptyNodes
+	 * @return array of maps with stored values
+	 */
+	public static List<Map<String, Object>> getMapsFromValue(
+			String storedValue, boolean skipEmptyNodes) {
+		List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
+		StringTokenizer st = new StringTokenizer(storedValue, new String(
+				new char[] { DELIMITER }));
+		while (st.hasMoreTokens()) {
+			maps.add(read(st.nextToken(), skipEmptyNodes));
+		}
+		return maps;
+	}
+
 }
