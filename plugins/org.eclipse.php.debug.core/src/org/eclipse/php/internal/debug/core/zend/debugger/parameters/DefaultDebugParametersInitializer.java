@@ -24,10 +24,14 @@ import org.eclipse.php.debug.core.debugger.parameters.IWebDebugParametersInitial
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsUtil;
+import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
 
 /**
  * Default debug parameters initializer.
  */
+@SuppressWarnings("restriction")
 public class DefaultDebugParametersInitializer extends
 		AbstractDebugParametersInitializer implements
 		IWebDebugParametersInitializer {
@@ -41,6 +45,8 @@ public class DefaultDebugParametersInitializer extends
 	 */
 	public Hashtable<String, String> getDebugParameters(ILaunch launch) {
 		Hashtable<String, String> parameters = new Hashtable<String, String>();
+		ILaunchConfiguration launchConfiguration = launch
+				.getLaunchConfiguration();
 		parameters.put(START_DEBUG, "1"); //$NON-NLS-1$
 
 		String port = launch.getAttribute(IDebugParametersKeys.PORT);
@@ -60,9 +66,25 @@ public class DefaultDebugParametersInitializer extends
 
 		if (getBooleanValue(launch
 				.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER))) {
-			parameters.put(DEBUG_HOST, PHPDebugPlugin.getDebugHosts());
-			parameters.put(DEBUG_NO_CACHE, Long.toString(System
-					.currentTimeMillis()));
+			String debugHosts = PHPDebugPlugin.getDebugHosts();
+			// Set up custom server debug hosts if any
+			if (launchConfiguration != null) {
+				try {
+					Server server = ServersManager
+							.getServer(launchConfiguration.getAttribute(
+									Server.NAME, "")); //$NON-NLS-1$
+					String customHosts = ZendDebuggerSettingsUtil
+							.getDebugHosts(server);
+					if (!customHosts.isEmpty())
+						debugHosts = customHosts;
+				} catch (CoreException ce) {
+					Logger.logException(ce);
+				}
+			}
+			parameters.put(DEBUG_HOST, debugHosts);
+
+			parameters.put(DEBUG_NO_CACHE,
+					Long.toString(System.currentTimeMillis()));
 		}
 
 		if (ILaunchManager.DEBUG_MODE.equals(launch.getLaunchMode())
@@ -74,8 +96,6 @@ public class DefaultDebugParametersInitializer extends
 		if (url != null) {
 			parameters.put(ORIGINAL_URL, url);
 		}
-		ILaunchConfiguration launchConfiguration = launch
-				.getLaunchConfiguration();
 		if (launchConfiguration != null) {
 			try {
 				String sessionSetting = launchConfiguration.getAttribute(
@@ -90,8 +110,7 @@ public class DefaultDebugParametersInitializer extends
 				} else if (IPHPDebugConstants.DEBUGGING_START_FROM
 						.equals(sessionSetting)) {
 					parameters
-							.put(
-									DEBUG_START_URL,
+							.put(DEBUG_START_URL,
 									launchConfiguration
 											.getAttribute(
 													IPHPDebugConstants.DEBUGGING_START_FROM_URL,

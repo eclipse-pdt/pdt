@@ -29,6 +29,8 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -74,7 +76,7 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 
 	protected Control createDialogArea(Composite parent) {
 		// Create a tabbed container that will hold all the fragments
-		CTabFolder tabs = SWTUtil.createTabFolder(parent);
+		final CTabFolder tabs = SWTUtil.createTabFolder(parent);
 		ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry
 				.getFragmentsFactories(FRAGMENT_GROUP_ID);
 		for (ICompositeFragmentFactory element : factories) {
@@ -89,6 +91,25 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 			tabItem.setControl(fragment);
 			runtimeComposites.add(fragment);
 		}
+		tabs.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				widgetDefaultSelected(e);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				int tabIdx = tabs.getSelectionIndex();
+				CTabItem item = tabs.getItem(tabIdx);
+				CompositeFragment fragment = (CompositeFragment) item
+						.getControl();
+				/*
+				 * Re-initialize fragment data whenever a tab with given
+				 * fragment is changed (other tabs might change object data)
+				 */
+				fragment.setData(getPHPExeItem());
+			}
+		});
 		getShell().setText(Messages.PHPExeEditDialog_1);
 		tabs.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -131,6 +152,13 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 			}
 			button.setEnabled(true);
 		}
+	}
+
+	@Override
+	protected Point getInitialSize() {
+		Point size = super.getInitialSize();
+		size.y += 100;
+		return size;
 	}
 
 }

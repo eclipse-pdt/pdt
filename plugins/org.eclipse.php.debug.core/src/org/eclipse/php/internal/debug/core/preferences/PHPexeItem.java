@@ -19,7 +19,9 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.php.internal.core.IUniqueIdentityElement;
 import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.UniqueIdentityElementUtil;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.PHPExeException;
 import org.eclipse.php.internal.debug.core.PHPExeUtil;
@@ -33,10 +35,12 @@ import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
  * 
  * @author shalom, michael
  */
-public class PHPexeItem {
+public class PHPexeItem implements IUniqueIdentityElement, Cloneable {
 
 	public static final String SAPI_CLI = "CLI"; //$NON-NLS-1$
 	public static final String SAPI_CGI = "CGI"; //$NON-NLS-1$
+
+	public static final String ID_PREFIX = "php-exe"; //$NON-NLS-1$
 
 	protected String sapiType;
 	protected String name;
@@ -48,6 +52,8 @@ public class PHPexeItem {
 	protected boolean loadDefaultINI = false;
 	protected String debuggerID;
 	protected boolean isDefault;
+
+	private String uniqueId;
 	/**
 	 * store the php version list that use this PHPexeItem as default PHPexeItem
 	 */
@@ -55,20 +61,29 @@ public class PHPexeItem {
 
 	/**
 	 * Constructs a new PHP executable item.
+	 */
+	public PHPexeItem() {
+		createUniqueId();
+	}
+
+	/**
+	 * Constructs a new PHP executable item.
 	 * 
 	 * @param name
-	 *            PHP executable nice name (like: PHP 5.3 CGI)
 	 * @param executable
-	 *            PHP executable file
-	 * @param config
-	 *            The configuration file (php.ini) location (can be null)
+	 * @param iniLocation
 	 * @param debuggerID
-	 *            ID of debugger (see org.eclipse.php.debug.core.phpDebuggers
-	 *            extension point)
+	 * @param editable
 	 */
-	public PHPexeItem(String name, String executable, String config,
-			String debuggerID) {
-		this(name, executable, config, debuggerID, false);
+	public PHPexeItem(String name, File executable, File iniLocation,
+			String debuggerID, boolean editable) {
+		this.name = name;
+		this.executable = executable;
+		this.config = iniLocation;
+		this.debuggerID = debuggerID;
+		this.editable = editable;
+		detectFromPHPExe();
+		createUniqueId();
 	}
 
 	/**
@@ -96,6 +111,15 @@ public class PHPexeItem {
 		}
 		this.loadDefaultINI = loadDefaultINI;
 		detectFromPHPExe();
+		createUniqueId();
+	}
+
+	private final void createUniqueId() {
+		setUniqueId(UniqueIdentityElementUtil.generateId(ID_PREFIX));
+	}
+
+	final void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
 	}
 
 	protected void detectFromPHPExe() {
@@ -118,29 +142,9 @@ public class PHPexeItem {
 			version = phpInfo.getVersion();
 	}
 
-	/**
-	 * Constructs a new PHP executable item.
-	 * 
-	 * @param name
-	 * @param executable
-	 * @param iniLocation
-	 * @param debuggerID
-	 * @param editable
-	 */
-	public PHPexeItem(String name, File executable, File iniLocation,
-			String debuggerID, boolean editable) {
-		this.name = name;
-		this.executable = executable;
-		this.config = iniLocation;
-		this.debuggerID = debuggerID;
-		this.editable = editable;
-		detectFromPHPExe();
-	}
-
-	/**
-	 * Constructs a new PHP executable item.
-	 */
-	public PHPexeItem() {
+	@Override
+	public String getUniqueId() {
+		return uniqueId;
 	}
 
 	/**
@@ -429,6 +433,11 @@ public class PHPexeItem {
 		}
 
 		return status;
+	}
+
+	@Override
+	public PHPexeItem clone() throws CloneNotSupportedException {
+		return (PHPexeItem) super.clone();
 	}
 
 }

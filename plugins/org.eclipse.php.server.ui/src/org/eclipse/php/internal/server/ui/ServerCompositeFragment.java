@@ -13,13 +13,10 @@ package org.eclipse.php.internal.server.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.LinkedList;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.server.PHPServerUIMessages;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
@@ -42,12 +39,9 @@ public class ServerCompositeFragment extends CompositeFragment {
 	protected Text name;
 	protected Text url;
 	protected Combo combo;
-	protected Combo debuggerCombo;
 	private ValuesCache originalValuesCache = new ValuesCache();
 	private ValuesCache modifiedValuesCache;
 	private Text webroot;
-
-	private LinkedList<String> debuggersIds;
 
 	/**
 	 * ServerCompositeFragment
@@ -63,9 +57,8 @@ public class ServerCompositeFragment extends CompositeFragment {
 		setDescription(PHPServerUIMessages
 				.getString("ServerCompositeFragment.specifyInformation")); //$NON-NLS-1$
 		controlHandler.setDescription(getDescription());
-		controlHandler.setImageDescriptor(ServersPluginImages.DESC_WIZ_SERVER);
-		debuggersIds = new LinkedList<String>(
-				PHPDebuggersRegistry.getDebuggersIds());
+		setImageDescriptor(ServersPluginImages.DESC_WIZ_SERVER);
+		controlHandler.setImageDescriptor(getImageDescriptor());
 		setDisplayName(PHPServerUIMessages
 				.getString("ServerCompositeFragment.server")); //$NON-NLS-1$
 		createControl();
@@ -98,19 +91,16 @@ public class ServerCompositeFragment extends CompositeFragment {
 		GridLayout layout = new GridLayout(1, true);
 		setLayout(layout);
 		setLayoutData(new GridData(GridData.FILL_BOTH));
-
 		Composite nameGroup = new Composite(this, SWT.NONE);
 		layout = new GridLayout();
 		layout.numColumns = 2;
 		nameGroup.setLayout(layout);
 		nameGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
 		Label label = new Label(nameGroup, SWT.NONE);
 		label.setText(PHPServerUIMessages
 				.getString("ServerCompositeFragment.nameLabel")); //$NON-NLS-1$
 		GridData data = new GridData();
 		label.setLayoutData(data);
-
 		name = new Text(nameGroup, SWT.BORDER);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		name.setLayoutData(data);
@@ -121,42 +111,10 @@ public class ServerCompositeFragment extends CompositeFragment {
 				validate();
 			}
 		});
-
-		Label debuggerLabel = new Label(nameGroup, SWT.NONE);
-		debuggerLabel.setText(PHPServerUIMessages
-				.getString("ServerCompositeFragment.debuggerLabel")); //$NON-NLS-1$
-		debuggerLabel.setLayoutData(new GridData());
-
-		debuggerCombo = new Combo(nameGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
-		data = new GridData(SWT.LEFT, SWT.FILL, true, false);
-		debuggerCombo.setLayoutData(data);
-
-		debuggerCombo.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				if (getServer() != null) {
-					int index = debuggerCombo.getSelectionIndex();
-					modifiedValuesCache.debuggerId = debuggersIds.get(index);
-				}
-				validate();
-			}
-		});
-
-		String defaultDebugger = PHPDebugPlugin.getCurrentDebuggerId();
-		for (int i = 0; i < debuggersIds.size(); ++i) {
-			String id = debuggersIds.get(i);
-			String debuggerName = PHPDebuggersRegistry.getDebuggerName(id);
-			debuggerCombo.add(debuggerName, i);
-			if (id.equals(defaultDebugger)) {
-				debuggerCombo.select(i);
-			}
-		}
-
 		createURLGroup(this);
 		init();
 		validate();
-
 		Dialog.applyDialogFont(this);
-
 		name.forceFocus();
 	}
 
@@ -164,15 +122,12 @@ public class ServerCompositeFragment extends CompositeFragment {
 		Server server = getServer();
 		if (name == null || server == null)
 			return;
-
 		originalValuesCache.url = server.getBaseURL();
 		originalValuesCache.serverName = server.getName();
 		originalValuesCache.host = server.getHost();
 		originalValuesCache.webroot = server.getDocumentRoot();
-		originalValuesCache.debuggerId = server.getDebuggerId();
 		// Clone the cache
 		modifiedValuesCache = new ValuesCache(originalValuesCache);
-
 		if (originalValuesCache.serverName != null) {
 			boolean nameSet = false;
 			String serverName = originalValuesCache.serverName;
@@ -202,17 +157,6 @@ public class ServerCompositeFragment extends CompositeFragment {
 		}
 		if (originalValuesCache.webroot != null) {
 			webroot.setText(originalValuesCache.webroot);
-		}
-		if (originalValuesCache.debuggerId != null) {
-			String name = PHPDebuggersRegistry
-					.getDebuggerName(originalValuesCache.debuggerId);
-			String[] values = debuggerCombo.getItems();
-			for (int i = 0; i < values.length; i++) {
-				if (values[i].equals(name)) {
-					debuggerCombo.select(i);
-					break;
-				}
-			}
 		}
 		String baseURL = originalValuesCache.url;
 		if (!baseURL.equals("")) { //$NON-NLS-1$
@@ -328,12 +272,6 @@ public class ServerCompositeFragment extends CompositeFragment {
 							.getString("ServerCompositeFragment.webrootNotExists"), IMessageProvider.ERROR); //$NON-NLS-1$
 		}
 
-		controlHandler.update();
-	}
-
-	protected void setMessage(String message, int type) {
-		controlHandler.setMessage(message, type);
-		setComplete(type != IMessageProvider.ERROR);
 		controlHandler.update();
 	}
 
@@ -467,7 +405,6 @@ public class ServerCompositeFragment extends CompositeFragment {
 			server.setHost(modifiedValuesCache.host);
 			server.setName(modifiedValuesCache.serverName);
 			server.setDocumentRoot(modifiedValuesCache.webroot);
-			server.setDebuggerId(modifiedValuesCache.debuggerId);
 			if (originalValuesCache.serverName != null
 					&& !originalValuesCache.serverName.equals("") && //$NON-NLS-1$
 					!originalValuesCache.serverName
@@ -517,7 +454,6 @@ public class ServerCompositeFragment extends CompositeFragment {
 		String serverName;
 		String url;
 		String host;
-		String debuggerId;
 		int port;
 
 		public ValuesCache() {
@@ -529,7 +465,6 @@ public class ServerCompositeFragment extends CompositeFragment {
 			this.port = cache.port;
 			this.host = cache.host;
 			this.webroot = cache.webroot;
-			this.debuggerId = cache.debuggerId;
 		}
 	}
 }

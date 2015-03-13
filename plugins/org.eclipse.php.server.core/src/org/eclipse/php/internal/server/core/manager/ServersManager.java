@@ -14,17 +14,12 @@ package org.eclipse.php.internal.server.core.manager;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
@@ -42,6 +37,36 @@ import org.osgi.service.prefs.BackingStoreException;
  * @author shalom
  */
 public class ServersManager implements PropertyChangeListener, IAdaptable {
+
+	private class ServersUpgrade extends Job {
+
+		private boolean upgraded = true;
+
+		private ServersUpgrade() {
+			super("Upgrading Server Configurations...");
+		}
+
+		void check(Map<String, Map<String, String>> record) {
+			Map<String, String> attributes = record.get(Server.SERVER_ELEMENT);
+			if (!attributes.containsKey(Server.UNIQUE_ID))
+				upgraded = false;
+		}
+
+		void perform() {
+			if (!upgraded)
+				schedule();
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			monitor.beginTask("Saving Upgraded Server Configurations...",
+					IProgressMonitor.UNKNOWN);
+			save();
+			monitor.done();
+			return Status.OK_STATUS;
+		}
+
+	}
 
 	/** Servers preferences key */
 	public static final String SERVERS_PREFERENCES_KEY = "phpServers"; //$NON-NLS-1$
@@ -219,6 +244,26 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			}
 		}
 		return oldServer;
+	}
+
+	public static Server getServerByHost(String host) {
+		for (Server server : getServers()) {
+			if (host.equals(server.getHost()))
+				return server;
+		}
+		return null;
+	}
+
+	public static Server findServer(String serverId) {
+		ServersManager manager = getInstance();
+		for (Iterator iterator = manager.servers.values().iterator(); iterator
+				.hasNext();) {
+			Server server = (Server) iterator.next();
+			if (server.getUniqueId().equals(serverId)) {
+				return server;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -426,6 +471,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		// servers hash (map name to Server instance).
 		HashMap[] serversConfigs = XMLPreferencesReader.read(Activator
 				.getDefault().getPluginPreferences(), SERVERS_PREFERENCES_KEY);
+		ServersUpgrade upgrader = new ServersUpgrade();
 		// Then we create the servers from their configurations...
 		for (HashMap serverMap : serversConfigs) {
 			Server server = new Server();
@@ -435,7 +481,9 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			// Register the manager as a Server lister to get nofitications
 			// about attribute changes.
 			server.addPropertyChangeListener(this);
+			upgrader.check(serverMap);
 		}
+		upgrader.perform();
 	}
 
 	/**

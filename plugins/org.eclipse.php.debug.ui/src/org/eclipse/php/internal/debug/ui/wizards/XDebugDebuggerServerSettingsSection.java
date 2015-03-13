@@ -1,0 +1,249 @@
+/*******************************************************************************
+ * Copyright (c) 2015 Zend Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Zend Technologies - initial API and implementation
+ *******************************************************************************/
+package org.eclipse.php.internal.debug.ui.wizards;
+
+import static org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSettingsConstants.PROP_CLIENT_PORT;
+
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsWorkingCopy;
+import org.eclipse.php.internal.ui.wizards.CompositeFragment;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.*;
+
+/**
+ * XDebug debugger settings section for PHP server.
+ * 
+ * @author Bartlomiej Laczkowski
+ */
+@SuppressWarnings("restriction")
+public class XDebugDebuggerServerSettingsSection implements
+		IDebuggerSettingsSection {
+
+	protected IDebuggerSettingsWorkingCopy settingsWorkingCopy;
+	protected CompositeFragment compositeFragment;
+	protected Composite settingsComposite;
+
+	/**
+	 * 
+	 */
+	public XDebugDebuggerServerSettingsSection(
+			CompositeFragment compositeFragment,
+			final IDebuggerSettingsWorkingCopy settingsWorkingCopy) {
+		this.settingsWorkingCopy = settingsWorkingCopy;
+		this.compositeFragment = compositeFragment;
+		this.settingsComposite = createComposite();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
+	 * getComposite()
+	 */
+	@Override
+	public Composite getComposite() {
+		return settingsComposite;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#performOK
+	 * ()
+	 */
+	@Override
+	public boolean performOK() {
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
+	 * performCancel()
+	 */
+	@Override
+	public boolean performCancel() {
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#validate
+	 * ()
+	 */
+	public void validate() {
+		String clientPort = (String) settingsWorkingCopy
+				.getAttribute(PROP_CLIENT_PORT);
+		if (clientPort == null || clientPort.isEmpty()) {
+			compositeFragment
+					.setMessage(
+							Messages.XDebugDebuggerSettingsSection_Client_port_is_missing,
+							IMessageProvider.ERROR);
+			return;
+		}
+
+		// TODO - will be supported soon
+
+		// boolean isProxyEnabled = Boolean.valueOf(settingsWorkingCopy
+		// .getAttribute(PROP_PROXY_ENABLE));
+		// if (isProxyEnabled) {
+		// String proxyIdeKey = settingsWorkingCopy
+		// .getAttribute(PROP_PROXY_IDE_KEY);
+		// if (proxyIdeKey == null || proxyIdeKey.isEmpty()) {
+		// compositeFragment
+		// .setMessage(
+		// Messages.XDebugDebuggerServerSettingsSection_IDE_key_is_missing,
+		// IMessageProvider.ERROR);
+		// return;
+		// }
+		// String proxyAddress = settingsWorkingCopy
+		// .getAttribute(PROP_PROXY_ADDRESS);
+		// if (proxyAddress == null || proxyAddress.isEmpty()) {
+		// compositeFragment
+		// .setMessage(
+		// Messages.XDebugDebuggerServerSettingsSection_Proxy_address_is_missing,
+		// IMessageProvider.ERROR);
+		// return;
+		// }
+		// }
+		compositeFragment.setMessage(compositeFragment.getDescription(),
+				IMessageProvider.NONE);
+	}
+
+	private Composite createComposite() {
+		// Main composite
+		Composite settingsComposite = new Composite(compositeFragment, SWT.NONE);
+		GridLayout scLayout = new GridLayout();
+		scLayout.marginHeight = 0;
+		scLayout.marginWidth = 0;
+		settingsComposite.setLayout(scLayout);
+		GridData scGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		scGridData.horizontalSpan = 2;
+		settingsComposite.setLayoutData(scGridData);
+		// Connection group
+		Group connectionGroup = new Group(settingsComposite, SWT.NONE);
+		connectionGroup.setFont(compositeFragment.getFont());
+		GridLayout cgLayout = new GridLayout(2, false);
+		connectionGroup.setLayout(cgLayout);
+		GridData cgGridData = new GridData(GridData.FILL_HORIZONTAL);
+		connectionGroup.setLayoutData(cgGridData);
+		connectionGroup
+				.setText(Messages.XDebugDebuggerSettingsSection_Connection_settings);
+		// Client port
+		Label clientPortLabel = new Label(connectionGroup, SWT.None);
+		clientPortLabel
+				.setText(Messages.XDebugDebuggerSettingsSection_Client_port);
+		final Text clientPortText = new Text(connectionGroup, SWT.BORDER);
+		GridData cptLayoutData = new GridData(GridData.FILL_HORIZONTAL);
+		clientPortText.setLayoutData(cptLayoutData);
+		clientPortText.setText(settingsWorkingCopy
+				.getAttribute(PROP_CLIENT_PORT));
+		clientPortText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				String port = clientPortText.getText();
+				settingsWorkingCopy.setAttribute(PROP_CLIENT_PORT, port);
+				validate();
+			}
+		});
+		// Advanced sub-group
+		Group advancedSubGroup = new Group(connectionGroup, SWT.NONE);
+		advancedSubGroup.setLayout(new GridLayout(2, false));
+		GridData dbgpGridData = new GridData(GridData.FILL_HORIZONTAL);
+		dbgpGridData.horizontalSpan = 2;
+		advancedSubGroup.setLayoutData(dbgpGridData);
+		advancedSubGroup
+				.setText(Messages.XDebugDebuggerSettingsSection_Advanced_group);
+		// Enable DBGp proxy
+		final Button enableProxy = new Button(advancedSubGroup, SWT.CHECK);
+		GridData epGridData = new GridData(SWT.LEFT, SWT.CENTER, true, false);
+		epGridData.horizontalSpan = 2;
+		enableProxy.setLayoutData(epGridData);
+		enableProxy
+				.setText(Messages.XDebugDebuggerSettingsSection_Enable_DBGp_proxy);
+		// Proxy IDE key
+		Label proxyIdeKeyLabel = new Label(advancedSubGroup, SWT.None);
+		proxyIdeKeyLabel
+				.setText(Messages.XDebugDebuggerSettingsSection_Proxy_ide_key);
+		final Text proxyIdeKeyText = new Text(advancedSubGroup, SWT.BORDER);
+		GridData pikLayoutData = new GridData(GridData.FILL_HORIZONTAL);
+		proxyIdeKeyText.setLayoutData(pikLayoutData);
+		// proxyIdeKeyText.setText(settingsWorkingCopy
+		// .getAttribute(PROP_PROXY_IDE_KEY));
+		proxyIdeKeyText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				// String ideKey = proxyIdeKeyText.getText();
+				// settingsWorkingCopy.setAttribute(PROP_PROXY_IDE_KEY, ideKey);
+				validate();
+			}
+		});
+		// Proxy address
+		Label proxyAddressLabel = new Label(advancedSubGroup, SWT.None);
+		proxyAddressLabel
+				.setText(Messages.XDebugDebuggerSettingsSection_Proxy_address);
+		final Text proxyAddressText = new Text(advancedSubGroup, SWT.BORDER);
+		GridData patLayoutData = new GridData(GridData.FILL_HORIZONTAL);
+		proxyAddressText.setLayoutData(patLayoutData);
+		// proxyAddressText.setText(settingsWorkingCopy
+		// .getAttribute(PROP_PROXY_ADDRESS));
+		proxyAddressText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				// String proxyAddress = proxyAddressText.getText();
+				// settingsWorkingCopy.setAttribute(PROP_PROXY_ADDRESS,
+				// proxyAddress);
+				validate();
+			}
+		});
+		// Set up enabled/disabled for proxy
+		enableProxy.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				widgetDefaultSelected(e);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				proxyIdeKeyText.setEnabled(enableProxy.getSelection());
+				proxyAddressText.setEnabled(enableProxy.getSelection());
+				// settingsWorkingCopy.setAttribute(PROP_PROXY_ENABLE,
+				// String.valueOf(enableProxy.getSelection()));
+				validate();
+			}
+		});
+		// boolean isProxyEnabled = Boolean.valueOf(settingsWorkingCopy
+		// .getAttribute(PROP_PROXY_ENABLE));
+		// enableProxy.setSelection(isProxyEnabled);
+		// proxyIdeKeyText.setEnabled(isProxyEnabled);
+		// proxyAddressText.setEnabled(isProxyEnabled);
+
+		// TODO - will be supported soon
+		advancedSubGroup.setEnabled(false);
+		enableProxy.setEnabled(false);
+		proxyAddressLabel.setEnabled(false);
+		proxyAddressText.setEnabled(false);
+		proxyIdeKeyLabel.setEnabled(false);
+		proxyIdeKeyText.setEnabled(false);
+
+		validate();
+		return settingsComposite;
+
+	}
+
+}

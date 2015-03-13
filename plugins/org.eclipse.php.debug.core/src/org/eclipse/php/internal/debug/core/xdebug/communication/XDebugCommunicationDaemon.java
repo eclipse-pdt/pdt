@@ -15,20 +15,30 @@
 package org.eclipse.php.internal.debug.core.xdebug.communication;
 
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.daemon.AbstractDebuggerCommunicationDaemon;
+import org.eclipse.php.internal.debug.core.debugger.DebuggerSettingsManager;
+import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings;
+import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsListener;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceLookupDirector;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
@@ -36,6 +46,7 @@ import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr.AcceptRemoteSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSettingsConstants;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpMultiSessionTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession;
@@ -56,309 +67,447 @@ import com.ibm.icu.text.MessageFormat;
  * @author Shalom Gibly
  * @since PDT 1.0
  */
-public class XDebugCommunicationDaemon extends
-		AbstractDebuggerCommunicationDaemon {
+@SuppressWarnings("restriction")
+public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 
 	public static final String XDEBUG_DEBUGGER_ID = "org.eclipse.php.debug.core.xdebugDebugger"; //$NON-NLS-1$
-	private PortChangeListener portChangeListener;
 
-	// private boolean isInitialized;
+	private class CommunicationDaemon extends
+			AbstractDebuggerCommunicationDaemon {
 
-	/**
-	 * An XDebug communication daemon.
-	 */
-	public XDebugCommunicationDaemon() {
+		private class PromptUser implements Runnable {
+			private DBGpSession session;
+			private boolean result;
+
+			public boolean isResult() {
+				return result;
+			}
+
+			public PromptUser(DBGpSession session) {
+				this.session = session;
+			}
+
+			public void run() {
+				String insert = session.getRemoteAddress()
+						.getCanonicalHostName()
+						+ "/" + session.getRemoteAddress().getHostAddress(); //$NON-NLS-1$
+				String message = MessageFormat.format(
+						PHPDebugCoreMessages.XDebugMessage_remoteSessionPrompt,
+						new Object[] { insert });
+				result = MessageDialog.openQuestion(Display.getDefault()
+						.getActiveShell(),
+						PHPDebugCoreMessages.XDebugMessage_remoteSessionTitle,
+						message);
+			}
+		}
+
+		private int port;
+
+		public CommunicationDaemon(int port) {
+			this.port = port;
+			init();
+		}
+
+		public int getReceiverPort() {
+			return port;
+		}
+
+		public boolean isDebuggerDaemon() {
+			return true;
+		}
+
+		public String getDebuggerID() {
+			return XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID;
+		}
+
+		/**
+		 * Starts a connection handling thread on the given Socket.
+		 * 
+		 * @param socket
+		 */
+		protected void startConnection(Socket socket) {
+			/*
+			 * A socket has been accepted by the listener. This runs on the
+			 * listener thread so we should make damn sure we don't throw an
+			 * exception here otherwise it will abort that thread.
+			 */
+			if (DBGpLogger.debugSession()) {
+				DBGpLogger
+						.debug("Connection established: " + socket.toString()); //$NON-NLS-1$
+			}
+			try {
+				DBGpSession session = new DBGpSession(socket);
+				if (session.isActive()) {
+					if (!DBGpSessionHandler.getInstance().fireSessionAdded(
+							session)) {
+						// Session not taken, we want to create a launch
+						AcceptRemoteSession aSess = XDebugPreferenceMgr
+								.getAcceptRemoteSession();
+						if (aSess != AcceptRemoteSession.off) {
+							if (aSess == AcceptRemoteSession.localhost
+									&& session.getRemoteAddress()
+											.isLoopbackAddress() == false) {
+								session.endSession();
+							} else if (aSess == AcceptRemoteSession.prompt) {
+								PromptUser prompt = new PromptUser(session);
+								Display.getDefault().syncExec(prompt);
+								if (prompt.isResult()) {
+									createLaunch(session);
+								} else {
+									session.endSession();
+								}
+
+							} else {
+								/*
+								 * session was either local host or from any
+								 * outside one and preferences allow it.
+								 */
+								createLaunch(session);
+							}
+						} else {
+							// reject the session
+							session.endSession();
+						}
+					}
+				}
+			} catch (Exception e) {
+				DBGpLogger
+						.logException(
+								"Unexpected Exception: Listener thread still listening", //$NON-NLS-1$
+								this, e);
+			}
+		}
+
+		/**
+		 * create a launch and appropriate debug targets to automate launch
+		 * initiation. If any problems occurred, we can throw the session away
+		 * using session.endSession();
+		 * 
+		 * @param session
+		 *            the DBGpSession.
+		 * @throws CoreException
+		 */
+		private void createLaunch(DBGpSession session) throws CoreException {
+			boolean stopAtFirstLine = PHPProjectPreferences
+					.getStopAtFirstLine(null);
+			DBGpTarget target = null;
+			PathMapper mapper = null;
+			PHPSourceLookupDirector srcLocator = new PHPSourceLookupDirector();
+			srcLocator
+					.setSourcePathComputer(DebugPlugin
+							.getDefault()
+							.getLaunchManager()
+							.getSourcePathComputer(
+									"org.eclipse.php.debug.core.sourcePathComputer.php")); //$NON-NLS-1$
+			ILaunchConfigurationType type = null;
+			ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
+			if (session.getSessionId() == null) {
+				// WEB launch
+				type = lm
+						.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
+			} else {
+				// CLI launch
+				type = lm
+						.getLaunchConfigurationType(IPHPDebugConstants.PHPEXELaunchType);
+			}
+			ILaunchConfiguration launchConfig = type.newInstance(null,
+					PHPDebugCoreMessages.XDebugMessage_remoteSessionTitle);
+			srcLocator.initializeDefaults(launchConfig);
+			srcLocator.initializeParticipants();
+			ILaunch remoteLaunch = new Launch(launchConfig,
+					ILaunchManager.DEBUG_MODE, srcLocator);
+			boolean multiSession = XDebugPreferenceMgr.useMultiSession();
+			if (session.getSessionId() == null && !multiSession) {
+				// Non multi-session web launch
+				target = new DBGpTarget(remoteLaunch, null, null,
+						session.getIdeKey(), null, stopAtFirstLine);
+				/*
+				 * try to locate a relevant server definition so we can get its
+				 * path mapper
+				 */
+				Server server = null;
+				Server[] servers = ServersManager.getServers();
+				for (int i = 0; i < servers.length; i++) {
+					if (servers[i].getPort() == session.getRemotePort()
+							&& servers[i].getHost().equalsIgnoreCase(
+									session.getRemoteHostname())) {
+						server = servers[i];
+						break;
+					}
+				}
+				if (server != null) {
+					mapper = PathMapperRegistry.getByServer(server);
+				}
+				if (mapper == null) {
+					/*
+					 * Create a temporary path mapper, we may look to holding
+					 * these via the pathmapper registry in the future but they
+					 * would be persisted.
+					 */
+					mapper = new PathMapper();
+				}
+				/*
+				 * Need to add ourselves as a session listener for future
+				 * sessions.
+				 */
+				DBGpSessionHandler.getInstance().addSessionListener(
+						(IDBGpSessionListener) target);
+			} else {
+				// CLI launch or multisession web launch: create a single target
+				target = new DBGpTarget(remoteLaunch,
+						null /* no script name */, session.getIdeKey(),
+						session.getSessionId(), stopAtFirstLine);
+				// Create a temporary path mapper
+				mapper = new PathMapper();
+			}
+
+			// Set up the target with the relevant connections
+			target.setPathMapper(mapper);
+			target.setSession(session);
+			session.setDebugTarget(target);
+
+			if (multiSession && session.getSessionId() == null) {
+				// We are a multisession web launch
+				DBGpMultiSessionTarget multiSessionTarget = new DBGpMultiSessionTarget(
+						remoteLaunch, null, null, session.getIdeKey(),
+						stopAtFirstLine);
+				DBGpSessionHandler.getInstance().addSessionListener(
+						(IDBGpSessionListener) multiSessionTarget);
+				remoteLaunch.addDebugTarget(multiSessionTarget);
+				multiSessionTarget.sessionReceived(
+						(DBGpBreakpointFacade) IDELayerFactory.getIDELayer(),
+						XDebugPreferenceMgr.createSessionPreferences(), target,
+						mapper);
+			} else {
+				// Not a mult-isession web launch, so just add to the launch
+				remoteLaunch.addDebugTarget(target);
+				// Tell the target it now has a session.
+				target.sessionReceived(
+						(DBGpBreakpointFacade) IDELayerFactory.getIDELayer(),
+						XDebugPreferenceMgr.createSessionPreferences());
+				/*
+				 * Probably could do waitForInitialSession as session has
+				 * already been set.
+				 */
+			}
+
+			// add the remote launch to the launch manager
+			DebugPlugin.getDefault().getLaunchManager().addLaunch(remoteLaunch);
+
+			/*
+			 * Check to see owning session target is still active, if so do a
+			 * perspective switch
+			 */
+			if (target.isTerminated() == false
+					&& target.isTerminating() == false) {
+				Display.getDefault().asyncExec(new Runnable() {
+
+					public void run() {
+						IWorkbenchWindow window = PlatformUI.getWorkbench()
+								.getActiveWorkbenchWindow();
+						// Code the Debug perspective.
+						// org.eclipse.debug.ui.DebugPerspective
+						// also look at the PHPLaunchUtilities
+						if (!PerspectiveManager.isCurrentPerspective(window,
+								IDebugUIConstants.ID_DEBUG_PERSPECTIVE)) {
+							if (PerspectiveManager.shouldSwitchPerspective(
+									window,
+									IDebugUIConstants.ID_DEBUG_PERSPECTIVE)) {
+								PerspectiveManager.switchToPerspective(window,
+										IDebugUIConstants.ID_DEBUG_PERSPECTIVE);
+							}
+						}
+					}
+
+				});
+			}
+		}
+
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.php.internal.debug.core.daemon.
-	 * AbstractDebuggerCommunicationDaemon#init()
-	 */
-	public void init() {
-		initDeamonChangeListener();
-		super.init();
-	}
+	private List<AbstractDebuggerCommunicationDaemon> daemons = new ArrayList<AbstractDebuggerCommunicationDaemon>();
+	private IPreferenceChangeListener defaultPortListener = null;
+	private IDebuggerSettingsListener debuggerSettingsListener = null;
 
-	// @Override
-	// public void startListen() {
-	// synchronized (lock) {
-	// if (!isAlive && serverSocket != null) {
-	// startListenThread();
-	// } else {
-	// isInitialized = true;
-	// }
-	// }
-	// }
-
-	/**
-	 * Initialize a daemon change listener
-	 */
-	protected void initDeamonChangeListener() {
-		if (portChangeListener == null) {
-			Preferences preferences = PHPDebugPlugin.getDefault()
-					.getPluginPreferences();
-			portChangeListener = new PortChangeListener();
-			preferences.addPropertyChangeListener(portChangeListener);
+	// A port change listener
+	private class DefaultPortListener implements IPreferenceChangeListener {
+		@Override
+		public void preferenceChange(PreferenceChangeEvent event) {
+			if (event.getKey().equals(
+					PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT)) {
+				reset();
+			}
 		}
 	}
 
-	/**
-	 * Returns the server socket port used for the debug requests listening
-	 * thread.
-	 * 
-	 * @return The port specified in the preferences.
-	 */
-	public int getReceiverPort() {
-		return PHPDebugPlugin.getDebugPort(XDEBUG_DEBUGGER_ID);
+	private class DebuggerSettingsListener implements IDebuggerSettingsListener {
+
+		@Override
+		public void settingsAdded(IDebuggerSettings settings) {
+			if (getDebuggerID().equals(settings.getDebuggerId()))
+				reset();
+		}
+
+		@Override
+		public void settingsRemoved(IDebuggerSettings settings) {
+			if (getDebuggerID().equals(settings.getDebuggerId()))
+				reset();
+		}
+
+		@Override
+		public void settingsChanged(PropertyChangeEvent[] events) {
+			for (PropertyChangeEvent event : events) {
+				IDebuggerSettings settings = (IDebuggerSettings) event
+						.getSource();
+				if (getDebuggerID().equals(settings.getDebuggerId())
+						&& event.getProperty()
+								.equals(XDebugDebuggerSettingsConstants.PROP_CLIENT_PORT)) {
+					reset();
+				}
+			}
+		}
+
 	}
 
-	/**
-	 * Returns the XDebug debugger ID.
-	 * 
-	 * @return The debugger ID that is using this daemon (e.g. XDebug).
-	 * @since PDT 1.0
-	 */
+	@Override
+	public void init() {
+		registerListeners();
+		reset();
+	}
+
+	@Override
+	public boolean isListening() {
+		for (ICommunicationDaemon daemon : daemons)
+			if (!daemon.isListening())
+				return false;
+		return true;
+	}
+
+	@Override
+	public void startListen() {
+		for (ICommunicationDaemon daemon : daemons)
+			daemon.startListen();
+	}
+
+	@Override
+	public void stopListen() {
+		unregisterListeners();
+		for (ICommunicationDaemon daemon : daemons)
+			daemon.startListen();
+	}
+
+	@Override
+	public boolean resetSocket() {
+		for (ICommunicationDaemon daemon : daemons)
+			daemon.resetSocket();
+		return false;
+	}
+
+	@Override
+	public void handleMultipleBindingError() {
+		// Won't be called
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
+	@Override
 	public String getDebuggerID() {
 		return XDEBUG_DEBUGGER_ID;
 	}
 
-	/**
-	 * Returns if this daemon is a debugger daemon. In this case, always return
-	 * true.
-	 */
+	@Override
 	public boolean isDebuggerDaemon() {
 		return true;
 	}
 
-	/**
-	 * Starts a connection handling thread on the given Socket.
-	 * 
-	 * @param socket
-	 */
-	protected void startConnection(Socket socket) {
-		// a socket has been accepted by the listener. This runs on the listener
-		// thread so we should make damn sure we don't throw an exception here
-		// otherwise it will abort that thread.
-		if (DBGpLogger.debugSession()) {
-			DBGpLogger.debug("Connection established: " + socket.toString()); //$NON-NLS-1$
-		}
-
-		try {
-			DBGpSession session = new DBGpSession(socket);
-			if (session.isActive()) {
-				if (!DBGpSessionHandler.getInstance().fireSessionAdded(session)) {
-					// Session not taken, we want to create a launch
-					AcceptRemoteSession aSess = XDebugPreferenceMgr
-							.getAcceptRemoteSession();
-					if (aSess != AcceptRemoteSession.off) {
-						if (aSess == AcceptRemoteSession.localhost
-								&& session.getRemoteAddress()
-										.isLoopbackAddress() == false) {
-							session.endSession();
-						} else if (aSess == AcceptRemoteSession.prompt) {
-							PromptUser prompt = new PromptUser(session);
-							Display.getDefault().syncExec(prompt);
-							if (prompt.isResult()) {
-								createLaunch(session);
-							} else {
-								session.endSession();
-							}
-
-						} else {
-							// session was either localhost or from any outside
-							// one and
-							// preferences allow it.
-							createLaunch(session);
-						}
-					} else {
-						// reject the session
-						session.endSession();
-					}
-				}
-			}
-		} catch (Exception e) {
-			DBGpLogger.logException(
-					"Unexpected Exception: Listener thread still listening", //$NON-NLS-1$
-					this, e);
-		}
-		// isInitialized = true;
+	@Override
+	public boolean isInitialized() {
+		for (ICommunicationDaemon daemon : daemons)
+			if (!daemon.isInitialized())
+				return false;
+		return true;
 	}
 
-	/**
-	 * create a launch and appropriate debug targets to automate launch
-	 * initiation. If any problems occurred, we can throw the session away using
-	 * session.endSession();
-	 * 
-	 * @param session
-	 *            the DBGpSession.
-	 * @throws CoreException
-	 */
-	private void createLaunch(DBGpSession session) throws CoreException {
-		boolean stopAtFirstLine = PHPProjectPreferences
-				.getStopAtFirstLine(null);
-		DBGpTarget target = null;
-		PathMapper mapper = null;
-		PHPSourceLookupDirector srcLocator = new PHPSourceLookupDirector();
-		srcLocator.setSourcePathComputer(DebugPlugin
-				.getDefault()
-				.getLaunchManager()
-				.getSourcePathComputer(
-						"org.eclipse.php.debug.core.sourcePathComputer.php")); //$NON-NLS-1$
-		ILaunchConfigurationType type = null;
-		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
-
-		if (session.getSessionId() == null) {
-			// web launch
-			type = lm
-					.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
-		} else {
-			// cli launch
-			type = lm
-					.getLaunchConfigurationType(IPHPDebugConstants.PHPEXELaunchType);
+	private Set<Integer> getPorts() {
+		Set<Integer> ports = new HashSet<Integer>();
+		// Get default port from preferences first
+		Integer defaultPort = PHPDebugPlugin.getDebugPort(getDebuggerID());
+		ports.add(defaultPort);
+		// Get ports from all of debugger dedicated settings
+		for (IDebuggerSettings settings : DebuggerSettingsManager.INSTANCE
+				.findSettings(getDebuggerID())) {
+			String clientPort = settings
+					.getAttribute(XDebugDebuggerSettingsConstants.PROP_CLIENT_PORT);
+			try {
+				Integer dedicatedPort = Integer.valueOf(clientPort);
+				ports.add(dedicatedPort);
+			} catch (Exception e) {
+				// ignore
+			}
 		}
+		return ports;
+	}
 
-		ILaunchConfiguration launchConfig = type.newInstance(null,
-				PHPDebugCoreMessages.XDebugMessage_remoteSessionTitle);
-		srcLocator.initializeDefaults(launchConfig);
-		srcLocator.initializeParticipants();
-		ILaunch remoteLaunch = new Launch(launchConfig,
-				ILaunchManager.DEBUG_MODE, srcLocator);
-		boolean multiSession = XDebugPreferenceMgr.useMultiSession();
+	private void registerListeners() {
+		if (defaultPortListener == null) {
+			defaultPortListener = new DefaultPortListener();
+			InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
+					.addPreferenceChangeListener(defaultPortListener);
+		}
+		if (debuggerSettingsListener == null) {
+			debuggerSettingsListener = new DebuggerSettingsListener();
+			DebuggerSettingsManager.INSTANCE
+					.addSettingsListener(debuggerSettingsListener);
+		}
+	}
 
-		if (session.getSessionId() == null && !multiSession) {
-			// non multisession web launch
-			target = new DBGpTarget(remoteLaunch, null, null,
-					session.getIdeKey(), null, stopAtFirstLine);
+	private void unregisterListeners() {
+		if (defaultPortListener != null) {
+			InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
+					.addPreferenceChangeListener(defaultPortListener);
+		}
+		if (debuggerSettingsListener != null) {
+			DebuggerSettingsManager.INSTANCE
+					.addSettingsListener(debuggerSettingsListener);
+		}
+	}
 
-			// try to locate a relevant server definition so we can get its path
-			// mapper
-			Server server = null;
-			Server[] servers = ServersManager.getServers();
-			for (int i = 0; i < servers.length; i++) {
-				if (servers[i].getPort() == session.getRemotePort()
-						&& servers[i].getHost().equalsIgnoreCase(
-								session.getRemoteHostname())) {
-					server = servers[i];
+	private synchronized void reset() {
+		Set<Integer> ports = getPorts();
+		List<AbstractDebuggerCommunicationDaemon> daemonsToSet = new ArrayList<AbstractDebuggerCommunicationDaemon>();
+		// Shutdown daemons that should not listen anymore
+		for (AbstractDebuggerCommunicationDaemon daemon : daemons) {
+			boolean isRedundant = true;
+			for (int port : ports) {
+				if (daemon.getReceiverPort() == port) {
+					daemonsToSet.add(daemon);
+					isRedundant = false;
 					break;
 				}
 			}
-			if (server != null) {
-				mapper = PathMapperRegistry.getByServer(server);
+			if (isRedundant) {
+				daemon.stopListen();
 			}
-
-			if (mapper == null) {
-				// create a temporary path mapper, we may look to holding these
-				// via the pathmapper registry in the future
-				// but they would be persisted.
-				mapper = new PathMapper();
-			}
-			// need to add ourselves as a session listener for future sessions
-			DBGpSessionHandler.getInstance().addSessionListener(
-					(IDBGpSessionListener) target);
-		} else {
-			// cli launch or multisession web launch: create a single shot
-			// target
-			target = new DBGpTarget(remoteLaunch, null /* no script name */,
-					session.getIdeKey(), session.getSessionId(),
-					stopAtFirstLine);
-			// PathMapper p = PathMapperRegistry.getByPHPExe(null);
-			// create a temporary path mapper
-			mapper = new PathMapper();
 		}
-
-		// set up the target with the relevant connections
-		target.setPathMapper(mapper);
-		target.setSession(session);
-		session.setDebugTarget(target);
-
-		if (multiSession && session.getSessionId() == null) {
-			// we are a multisession web launch
-			DBGpMultiSessionTarget multiSessionTarget = new DBGpMultiSessionTarget(
-					remoteLaunch, null, null, session.getIdeKey(),
-					stopAtFirstLine);
-			DBGpSessionHandler.getInstance().addSessionListener(
-					(IDBGpSessionListener) multiSessionTarget);
-			remoteLaunch.addDebugTarget(multiSessionTarget);
-			multiSessionTarget.sessionReceived(
-					(DBGpBreakpointFacade) IDELayerFactory.getIDELayer(),
-					XDebugPreferenceMgr.createSessionPreferences(), target,
-					mapper);
-		} else {
-			// we are not a multisession web launch, so just add to the launch
-			remoteLaunch.addDebugTarget(target);
-			// tell the target it now has a session.
-			target.sessionReceived(
-					(DBGpBreakpointFacade) IDELayerFactory.getIDELayer(),
-					XDebugPreferenceMgr.createSessionPreferences());
-			// probably could do waitForInitialSession as session has already
-			// been set.
-		}
-
-		// add the remote launch to the launch manager
-		DebugPlugin.getDefault().getLaunchManager().addLaunch(remoteLaunch);
-
-		// check to see owning session target is still active, if so do a
-		// perspective switch
-		if (target.isTerminated() == false && target.isTerminating() == false) {
-			Display.getDefault().asyncExec(new Runnable() {
-
-				public void run() {
-					IWorkbenchWindow window = PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow();
-					// code the debug perspective.
-					// org.eclipse.debug.ui.DebugPerspective
-					// also look at the PHPLaunchUtilities
-					if (!PerspectiveManager.isCurrentPerspective(window,
-							IDebugUIConstants.ID_DEBUG_PERSPECTIVE)) {
-						if (PerspectiveManager.shouldSwitchPerspective(window,
-								IDebugUIConstants.ID_DEBUG_PERSPECTIVE)) {
-							PerspectiveManager.switchToPerspective(window,
-									IDebugUIConstants.ID_DEBUG_PERSPECTIVE);
-						}
-					}
+		// Start new daemons if there should be any
+		for (int port : ports) {
+			boolean isRunning = false;
+			for (AbstractDebuggerCommunicationDaemon daemon : daemons) {
+				if (daemon.getReceiverPort() == port) {
+					isRunning = true;
+					break;
 				}
-
-			});
-		}
-	}
-
-	/*
-	 * A property change listener which resets the server socket listener on
-	 * every XDebug port change.
-	 */
-	private class PortChangeListener implements IPropertyChangeListener {
-		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty()
-					.equals(XDebugPreferenceMgr.XDEBUG_PREF_PORT)) {
-				resetSocket();
+			}
+			if (!isRunning) {
+				AbstractDebuggerCommunicationDaemon newDaemon = new CommunicationDaemon(
+						port);
+				daemonsToSet.add(newDaemon);
 			}
 		}
+		daemons = daemonsToSet;
 	}
 
-	private class PromptUser implements Runnable {
-		private DBGpSession session;
-		private boolean result;
-
-		public boolean isResult() {
-			return result;
-		}
-
-		public PromptUser(DBGpSession session) {
-			this.session = session;
-		}
-
-		public void run() {
-			String insert = session.getRemoteAddress().getCanonicalHostName()
-					+ "/" + session.getRemoteAddress().getHostAddress(); //$NON-NLS-1$
-			String message = MessageFormat.format(
-					PHPDebugCoreMessages.XDebugMessage_remoteSessionPrompt,
-					new Object[] { insert });
-			result = MessageDialog.openQuestion(Display.getDefault()
-					.getActiveShell(),
-					PHPDebugCoreMessages.XDebugMessage_remoteSessionTitle,
-					message);
-		}
-	}
 }
