@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.core.pathmapper;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -133,25 +134,27 @@ public class PathMapperRegistry implements IXMLPreferencesStorable,
 	}
 
 	@SuppressWarnings("unchecked")
-	public synchronized void restoreFromMap(HashMap map) {
+	public synchronized void restoreFromMap(Map<String, Object> map) {
 		if (map == null) {
 			return;
 		}
 		serverPathMapper.clear();
 		phpExePathMapper.clear();
 
-		map = (HashMap) map.get("pathMappers"); //$NON-NLS-1$
+		map = (Map<String, Object>) map.get("pathMappers"); //$NON-NLS-1$
 		if (map == null) {
 			return;
 		}
-		Iterator i = map.keySet().iterator();
+		Iterator<String> i = map.keySet().iterator();
 		while (i.hasNext()) {
-			HashMap entryMap = (HashMap) map.get(i.next());
+			Map<String, Object> entryMap = (Map<String, Object>) map.get(i
+					.next());
 			String serverName = (String) entryMap.get("server"); //$NON-NLS-1$
 			String phpExeFile = (String) entryMap.get("phpExe"); //$NON-NLS-1$
 			String phpIniFile = (String) entryMap.get("phpIni"); //$NON-NLS-1$
 			PathMapper pathMapper = new PathMapper();
-			pathMapper.restoreFromMap((HashMap) entryMap.get("mapper")); //$NON-NLS-1$
+			pathMapper.restoreFromMap((Map<String, Object>) entryMap
+					.get("mapper")); //$NON-NLS-1$
 			if (serverName != null) {
 				Server server = ServersManager.getServer(serverName);
 				if (server != null) {
@@ -167,13 +170,12 @@ public class PathMapperRegistry implements IXMLPreferencesStorable,
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public synchronized HashMap storeToMap() {
-		HashMap elements = new HashMap();
-		Iterator i = serverPathMapper.keySet().iterator();
+	public synchronized Map<String, Object> storeToMap() {
+		Map<String, Object> elements = new HashMap<String, Object>();
+		Iterator<?> i = serverPathMapper.keySet().iterator();
 		int c = 1;
 		while (i.hasNext()) {
-			HashMap entry = new HashMap();
+			Map<String, Object> entry = new HashMap<String, Object>();
 			Server server = (Server) i.next();
 			PathMapper pathMapper = serverPathMapper.get(server);
 			entry.put("server", server.getName()); //$NON-NLS-1$
@@ -184,7 +186,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable,
 		}
 		i = phpExePathMapper.keySet().iterator();
 		while (i.hasNext()) {
-			HashMap entry = new HashMap();
+			Map<String, Object> entry = new HashMap<String, Object>();
 			PHPexeItem phpExeItem = (PHPexeItem) i.next();
 			PathMapper pathMapper = phpExePathMapper.get(phpExeItem);
 			entry.put("phpExe", phpExeItem.getExecutable().toString()); //$NON-NLS-1$
@@ -194,7 +196,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable,
 			entry.put("mapper", pathMapper.storeToMap()); //$NON-NLS-1$
 			elements.put("item" + (c++), entry); //$NON-NLS-1$
 		}
-		HashMap root = new HashMap();
+		Map<String, Object> root = new HashMap<String, Object>();
 		root.put("pathMappers", elements); //$NON-NLS-1$
 		return root;
 	}

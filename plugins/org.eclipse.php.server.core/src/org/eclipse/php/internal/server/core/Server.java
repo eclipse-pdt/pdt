@@ -16,21 +16,26 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.php.internal.core.IUniqueIdentityElement;
+import org.eclipse.php.internal.core.UniqueIdentityElementUtil;
 import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
 
 /**
  * A generic server implementation.
  */
-public class Server implements IXMLPreferencesStorable, IAdaptable {
+public class Server implements IXMLPreferencesStorable, IAdaptable,
+		IUniqueIdentityElement {
 
 	// Used as a root element name when saving and loading the preferences.
 	public static final String SERVER_ELEMENT = "server"; //$NON-NLS-1$
-
 	// Server properties.
+	public static final String UNIQUE_ID = "id"; //$NON-NLS-1$
 	public static final String NAME = "name"; //$NON-NLS-1$
 	public static final String BASE_URL = "base_url"; //$NON-NLS-1$
 	public static final String DOCUMENT_ROOT = "document_root"; //$NON-NLS-1$
@@ -39,9 +44,9 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 	public static final String FILE_NAME = "file_name"; //$NON-NLS-1$
 	public static final String DEBUGGER = "debuggerId"; //$NON-NLS-1$
 
-	private static final int DEFAULT_HTTP_PORT = 80;
-
 	public static final String LOCALSERVER = "localserver"; //$NON-NLS-1$
+	public static final String ID_PREFIX = "php-server"; //$NON-NLS-1$
+	private static final int DEFAULT_HTTP_PORT = 80;
 
 	private ServerHelper helper;
 
@@ -50,6 +55,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 	 */
 	public Server() {
 		helper = new ServerHelper(this);
+		createUniqueId();
 	}
 
 	/**
@@ -69,6 +75,15 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 		setHost(host);
 		setBaseURL(baseURL);
 		setDocumentRoot(documentRoot);
+	}
+
+	@Override
+	public String getUniqueId() {
+		return getAttribute(UNIQUE_ID, null);
+	}
+
+	private void createUniqueId() {
+		setAttribute(UNIQUE_ID, UniqueIdentityElementUtil.generateId(ID_PREFIX));
 	}
 
 	/**
@@ -281,12 +296,18 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable
 	 * #restoreFromMap(java.util.HashMap)
 	 */
-	public void restoreFromMap(HashMap map) {
-		HashMap properties = (HashMap) map.get(SERVER_ELEMENT);
+	public void restoreFromMap(Map<String, Object> map) {
+		@SuppressWarnings("unchecked")
+		Map<String, Object> properties = (Map<String, Object>) map
+				.get(SERVER_ELEMENT);
 		// This will cause for property change events to be fired on every
 		// attribute set.
-		for (Entry entry : (Set<Entry>) properties.entrySet()) {
+		for (Entry<?, ?> entry : properties.entrySet()) {
 			setAttribute((String) entry.getKey(), (String) entry.getValue());
+		}
+		// Backward check (older releases didn't have unique ID for servers)
+		if (!properties.containsKey(UNIQUE_ID)) {
+			createUniqueId();
 		}
 	}
 
@@ -297,9 +318,9 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable
 	 * #storeToMap()
 	 */
-	public HashMap storeToMap() {
-		HashMap properties = new HashMap(helper.map);
-		HashMap serverMap = new HashMap(1);
+	public Map<String, Object> storeToMap() {
+		Map<String, Object> properties = new HashMap<String, Object>(helper.map);
+		Map<String, Object> serverMap = new HashMap<String, Object>(1);
 		serverMap.put(SERVER_ELEMENT, properties);
 		return serverMap;
 	}
@@ -321,7 +342,36 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 		return false;
 	}
 
-	public Object getAdapter(Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		return null;
 	}
+
+	/**
+	 * Creates and returns working copy of this server.
+	 * 
+	 * @return working copy of this server
+	 */
+	public Server makeCopy() {
+		Server copy = new Server();
+		copy.helper.map = new HashMap<String, String>(helper.map);
+		return copy;
+	}
+
+	/**
+	 * Updates original server with given working copy data.
+	 * 
+	 * @param copy
+	 */
+	public void update(Server copy) {
+		// Copy unique ID must be the same as the original
+		Assert.isTrue(getUniqueId().equals(copy.getUniqueId()));
+		Set<String> keys = copy.helper.map.keySet();
+		// Update all attributes of original server
+		for (String key : keys) {
+			if (key.equals(UNIQUE_ID))
+				continue;
+			helper.setAttribute(key, copy.helper.map.get(key));
+		}
+	}
+
 }

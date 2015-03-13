@@ -36,6 +36,25 @@ import org.eclipse.ui.activities.WorkbenchActivityHelper;
  */
 public class PHPexes {
 
+	private class PHPexesUpgrade {
+
+		private void upgrade() {
+			String uniqueIds = PHPProjectPreferences
+					.getModelPreferences()
+					.getString(
+							PHPDebugCorePreferenceNames.INSTALLED_PHP_UNIQUE_IDS);
+			PHPexeItem[] userItems = getEditableItems();
+			// There are no user items, no need to upgrade
+			if (userItems.length == 0)
+				return;
+			// Upgrade unique IDs if those don't exist in preferences
+			if (uniqueIds == null || uniqueIds.isEmpty()) {
+				save();
+			}
+		}
+
+	}
+
 	private static final String NULL_PLACE_HOLDER = "null"; //$NON-NLS-1$
 	private static final String SEPARATOR_FOR_PHPVERSION = "/"; //$NON-NLS-1$
 	private static final String DEFAULT_ATTRIBUTE = "default"; //$NON-NLS-1$
@@ -129,6 +148,48 @@ public class PHPexes {
 	}
 
 	/**
+	 * Updates original item with the data from working copy.
+	 * 
+	 * @param original
+	 * @param copy
+	 */
+	public void updateItem(PHPexeItem original, PHPexeItem copy) {
+		// Remove binding from debuggers ID map
+		String debuggerID = original.getDebuggerID();
+		HashMap<String, PHPexeItem> exes = items.get(debuggerID);
+		PHPexeItem removedItem = null;
+		if (exes != null) {
+			removedItem = exes.remove(original.getName());
+		}
+		if (!original.getDebuggerID().equals(copy.getDebuggerID())
+				&& removedItem != null && removedItem.isDefault()) {
+			defaultItems.remove(debuggerID);
+			Iterator<PHPexeItem> iterator = exes.values().iterator();
+			if (iterator.hasNext()) {
+				setDefaultItem(iterator.next());
+			}
+		}
+		// Update original item
+		original.setName(copy.getName());
+		original.setExecutable(copy.getExecutable());
+		original.setINILocation(copy.getINILocation());
+		original.setDebuggerID(copy.getDebuggerID());
+		original.setSapiType(copy.getSapiType());
+		original.setLoadDefaultINI(copy.isLoadDefaultINI());
+		// Add new binding after update
+		debuggerID = original.getDebuggerID();
+		exes = items.get(debuggerID);
+		if (exes == null) {
+			exes = new HashMap<String, PHPexeItem>();
+			items.put(debuggerID, exes);
+		}
+		if (exes.isEmpty()) {
+			setDefaultItem(original);
+		}
+		exes.put(original.getName(), original);
+	}
+
+	/**
 	 * Returns the default item for the specified debugger.
 	 * 
 	 * @return The default PHPexeItem for the given debugger, or null if no such
@@ -212,6 +273,20 @@ public class PHPexes {
 				if (item != null) {
 					return item;
 				}
+			}
+		}
+		return null;
+	}
+
+	public PHPexeItem findItem(String id) {
+		for (Iterator<String> iterator = items.keySet().iterator(); iterator
+				.hasNext();) {
+			String debuggerId = iterator.next();
+			HashMap<String, PHPexeItem> map = items.get(debuggerId);
+			if (map != null) {
+				for (PHPexeItem value : map.values())
+					if (value.getUniqueId().equals(id))
+						return value;
 			}
 		}
 		return null;
@@ -402,6 +477,15 @@ public class PHPexes {
 		final String[] loadDefaultInis = loadDefaultInisString.length() > 0 ? loadDefaultInisString
 				.split(SEPARATOR) : new String[phpExecutablesLocations.length];
 
+		// Load the PHP items unique IDs
+		String uniqueIdsString = prefs
+				.getString(PHPDebugCorePreferenceNames.INSTALLED_PHP_UNIQUE_IDS);
+		if (uniqueIdsString == null) {
+			uniqueIdsString = "";
+		}
+		final String[] phpExecutablesUniqueIds = uniqueIdsString.length() > 0 ? uniqueIdsString
+				.split(SEPARATOR) : new String[0];
+
 		// Load the debuggers array
 		String debuggersString = prefs
 				.getString(PHPDebugCorePreferenceNames.INSTALLED_PHP_DEBUGGERS);
@@ -434,7 +518,10 @@ public class PHPexes {
 					phpExecutablesLocations[i], iniLocation, debuggers[i],
 					loadDefaultInis[i] != null
 							&& loadDefaultInis[i].equals(TRUE));
-
+			// Overwrite the one generated in new executable constructor with
+			// one that is stored in preferences
+			if (phpExecutablesUniqueIds.length != 0)
+				item.setUniqueId(phpExecutablesUniqueIds[i]);
 			// the size of defaultItemForPHPVersions may be 0 when you use this
 			// first time
 			if (defaultItemForPHPVersions.length == phpExecutablesLocations.length) {
@@ -468,7 +555,6 @@ public class PHPexes {
 				}
 			}
 		}
-
 		// Load the defaults
 		String defaultsString = prefs
 				.getString(PHPDebugCorePreferenceNames.INSTALLED_PHP_DEFAULTS);
@@ -485,6 +571,8 @@ public class PHPexes {
 				setDefaultItem(debuggerDefault[0], debuggerDefault[1]);
 			}
 		}
+		// Check if PHP exe items preferences need upgrade
+		(new PHPexesUpgrade()).upgrade();
 	}
 
 	/**
@@ -552,6 +640,16 @@ public class PHPexes {
 							if (version != null) {
 								newItem.setVersion(version);
 							}
+							/*
+							 * Override unique ID to be always the same when
+							 * loading item from extension once again (restart)
+							 * 
+							 * TODO - should be done better after improving the
+							 * PHP executables model architecture...
+							 */
+							String uniqueID = "php-extension-exe-" //$NON-NLS-1$
+									+ file.getPath().toString();
+							newItem.setUniqueId(uniqueID);
 							addItem(newItem);
 							if (isDefault) {
 								setDefaultItem(newItem);
@@ -651,6 +749,7 @@ public class PHPexes {
 		final StringBuffer locationsString = new StringBuffer();
 		final StringBuffer inisString = new StringBuffer();
 		final StringBuffer namesString = new StringBuffer();
+		final StringBuffer uniqueIdsString = new StringBuffer();
 		final StringBuffer debuggersString = new StringBuffer();
 		final StringBuffer defaultItemForPHPVersionString = new StringBuffer();
 		final StringBuffer loadIniDefaultString = new StringBuffer();
@@ -660,6 +759,7 @@ public class PHPexes {
 				locationsString.append(SEPARATOR);
 				inisString.append(SEPARATOR);
 				namesString.append(SEPARATOR);
+				uniqueIdsString.append(SEPARATOR);
 				debuggersString.append(SEPARATOR);
 				defaultItemForPHPVersionString.append(SEPARATOR);
 				loadIniDefaultString.append(SEPARATOR);
@@ -668,6 +768,7 @@ public class PHPexes {
 			inisString.append(item.getINILocation() != null ? item
 					.getINILocation().toString() : NULL_PLACE_HOLDER);
 			namesString.append(item.getName());
+			uniqueIdsString.append(item.getUniqueId());
 			debuggersString.append(item.getDebuggerID());
 			loadIniDefaultString.append(item.isLoadDefaultINI() ? TRUE : FALSE);
 
@@ -687,6 +788,8 @@ public class PHPexes {
 		}
 		prefs.setValue(PHPDebugCorePreferenceNames.INSTALLED_PHP_NAMES,
 				namesString.toString());
+		prefs.setValue(PHPDebugCorePreferenceNames.INSTALLED_PHP_UNIQUE_IDS,
+				uniqueIdsString.toString());
 		prefs.setValue(PHPDebugCorePreferenceNames.INSTALLED_PHP_LOCATIONS,
 				locationsString.toString());
 		prefs.setValue(PHPDebugCorePreferenceNames.INSTALLED_PHP_INIS,

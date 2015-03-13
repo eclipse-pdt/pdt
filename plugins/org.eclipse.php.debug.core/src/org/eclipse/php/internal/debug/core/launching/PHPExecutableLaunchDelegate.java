@@ -177,6 +177,12 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			int requestPort = PHPDebugPlugin
 					.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 
+			// Set custom port if any from debugger's owner settings
+			int customRequestPort = configuration.getAttribute(
+					IPHPDebugConstants.PHP_Port, -1);
+			if (customRequestPort != -1)
+				requestPort = customRequestPort;
+
 			ILaunchConfigurationWorkingCopy wc;
 			if (configuration.isWorkingCopy()) {
 				wc = (ILaunchConfigurationWorkingCopy) configuration;

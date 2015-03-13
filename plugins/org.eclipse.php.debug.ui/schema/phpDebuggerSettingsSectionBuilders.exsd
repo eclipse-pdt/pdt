@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.php.debug.ui" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.php.debug.ui" id="phpDebuggerSettingsSectionBuilders" name="Debugger Settings Section Builders"/>
+      </appInfo>
+      <documentation>
+         This extension point allows contributors to add builders for creating presentation sections for given debugger settings providers.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
+      <complexType>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="phpDebuggerSettingsSectionBuilder"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="phpDebuggerSettingsSectionBuilder">
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Unique ID of debugger settings section builder.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="phpDebuggerSettingsProviderId" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The related debugger&apos;s settings provider unique id.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The builder presentable name.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="builder" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A class which implements org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSectionBuilder.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSectionBuilder"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         3.5
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+            &lt;extension
+         point=&quot;org.eclipse.php.debug.ui.phpDebuggerSettingsSectionBuilders&quot;&gt;
+      &lt;phpDebuggerSettingsSectionBuilder
+            builder=&quot;org.eclipse.php.internal.debug.ui.wizards.ZendDebuggerSettingsSectionBuilder&quot;
+            id=&quot;org.eclipse.php.debug.ui.zendDebuggerSettingsSectionBuilder&quot;
+            name=&quot;Zend Debugger Settings Section Builder&quot;
+            phpDebuggerSettingsProviderId=&quot;org.eclipse.php.debug.core.zendDebuggerSettingsProvider&quot;&gt;
+      &lt;/phpDebuggerSettingsSectionBuilder&gt;
+   &lt;/extension&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiinfo"/>
+      </appInfo>
+      <documentation>
+         &lt;p&gt;
+Plugins that want to use this extension point must implement this interface: &lt;samp&gt;org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSectionBuilder&lt;/samp&gt;.
+&lt;/p&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         No default implementation for this extension point.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2015 Zend Technologies and others.&lt;br&gt;
+All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
+      </documentation>
+   </annotation>
+
+</schema>
