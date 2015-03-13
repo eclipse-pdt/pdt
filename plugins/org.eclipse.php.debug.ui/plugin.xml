@@ -21,7 +21,10 @@
 		schema="schema/phpConsoleListeners.exsd" />
 	<extension-point id="debugServerConnectionTest" name="Debug Server Connection Test"
 		schema="schema/debugServerConnectionTest.exsd" />
- <extension-point id="phpBreakpointProviders" name="PHP Breakpoint Provider" schema="schema/phpBreakpointProviders.exsd"/>
+    <extension-point id="phpBreakpointProviders" name="PHP Breakpoint Provider" 
+        schema="schema/phpBreakpointProviders.exsd"/>
+    <extension-point id="phpDebuggerSettingsSectionBuilders" name="PHP Debugger Settings Section Builders" 
+        schema="schema/phpDebuggerSettingsSectionBuilders.exsd"/>
 	
 	<extension point="org.eclipse.ui.commands">
 		<command categoryId="org.eclipse.debug.ui.category.run"
@@ -520,6 +523,13 @@
 			id="org.eclipse.php.internal.debug.ui.preferences.phps.PHPExeCompositeFragmentFactory"
 			name="Basic Fragment">
 		</wizardAndCompositeFragment>
+  <wizardAndCompositeFragment
+        class="org.eclipse.php.internal.debug.ui.wizards.DebuggerCompositeFragmentFactory"
+        fragmentsGroupID="org.eclipse.php.debug.ui.phpExeWizardCompositeFragment"
+        id="org.eclipse.php.debug.ui.wizards.DebuggerCompositeFragmentFactory"
+        name="Debugger Fragment"
+        placeAfter="org.eclipse.php.internal.debug.ui.preferences.phps.PHPExeCompositeFragmentFactory">
+  </wizardAndCompositeFragment>
 	</extension>
 	
 	<extension point="org.eclipse.php.debug.ui.phpConsoleListeners">
@@ -620,6 +630,21 @@
                id="org.eclipse.php.debug.ui.SortByName">
          </action>
       </viewerContribution>
+   </extension>
+   <extension
+         point="org.eclipse.php.debug.ui.phpDebuggerSettingsSectionBuilders">
+      <phpDebuggerSettingsSectionBuilder
+            builder="org.eclipse.php.internal.debug.ui.wizards.ZendDebuggerSettingsSectionBuilder"
+            id="org.eclipse.php.debug.ui.zendDebuggerSettingsSectionBuilder"
+            name="Zend Debugger Settings Section Builder"
+            phpDebuggerSettingsProviderId="org.eclipse.php.debug.core.zendDebuggerSettingsProvider">
+      </phpDebuggerSettingsSectionBuilder>
+      <phpDebuggerSettingsSectionBuilder
+            builder="org.eclipse.php.internal.debug.ui.wizards.XDebugDebuggerSettingsSectionBuilder"
+            id="org.eclipse.php.debug.ui.xdebugDebuggerSettingsSectionBuilder"
+            name="XDebug Debugger Settings Section Builder"
+            phpDebuggerSettingsProviderId="org.eclipse.php.debug.core.xdebugDebuggerSettingsProvider">
+      </phpDebuggerSettingsSectionBuilder>
    </extension>
    
 </plugin>

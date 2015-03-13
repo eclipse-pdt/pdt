@@ -29,6 +29,9 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -55,8 +58,8 @@ public class ServerEditDialog extends TitleAreaDialog implements
 	public ServerEditDialog(Shell parentShell, Server server) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
-
-		this.server = server;
+		// Work on a simple working copy
+		this.server = server.makeCopy();
 		runtimeComposites = new ArrayList(3);
 	}
 
@@ -76,8 +79,19 @@ public class ServerEditDialog extends TitleAreaDialog implements
 	}
 
 	protected Control createDialogArea(Composite parent) {
+		// create the top level composite for the dialog area
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.verticalSpacing = 0;
+		layout.horizontalSpacing = 0;
+		composite.setLayout(layout);
+		GridData gridData = new GridData(GridData.FILL_BOTH);
+		composite.setLayoutData(gridData);
+		composite.setFont(parent.getFont());
 		// Create a tabbed container that will hold all the fragments
-		tabs = SWTUtil.createTabFolder(parent);
+		tabs = SWTUtil.createTabFolder(composite);
 		ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry
 				.getFragmentsFactories(FRAGMENT_GROUP_ID);
 		for (ICompositeFragmentFactory element : factories) {
@@ -89,7 +103,23 @@ public class ServerEditDialog extends TitleAreaDialog implements
 			tabItem.setData(fragment.getId());
 			runtimeComposites.add(fragment);
 		}
+		tabs.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				widgetDefaultSelected(e);
+			}
 
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				int tabIdx = tabs.getSelectionIndex();
+				CTabItem item = tabs.getItem(tabIdx);
+				CompositeFragment fragment = (CompositeFragment) item
+						.getControl();
+				setTitle(fragment.getTitle());
+				setDescription(fragment.getDescription());
+				fragment.validate();
+			}
+		});
 		getShell().setText(
 				PHPServerUIMessages.getString("ServerEditDialog.editServer")); //$NON-NLS-1$
 		getShell().setImage(
@@ -105,6 +135,14 @@ public class ServerEditDialog extends TitleAreaDialog implements
 		return tabs;
 	}
 
+	@Override
+	protected Point getInitialSize() {
+		Point size = super.getInitialSize();
+		// Make some more space between dialog bottom pane
+		size.y += 100;
+		return size;
+	}
+
 	private void setSelect(String id) {
 		if (id == null) {
 			return;
@@ -112,6 +150,13 @@ public class ServerEditDialog extends TitleAreaDialog implements
 		for (int i = 0; i < tabs.getItemCount(); i++) {
 			if (id.equals(tabs.getItem(i).getData())) {
 				tabs.setSelection(i);
+				// Update tab
+				CompositeFragment fragment = (CompositeFragment) tabs
+						.getItem(i).getControl();
+				setTitle(fragment.getTitle());
+				setImageDescriptor(fragment.getImageDescriptor());
+				setDescription(fragment.getDescription());
+				fragment.validate();
 				break;
 			}
 		}
@@ -128,6 +173,17 @@ public class ServerEditDialog extends TitleAreaDialog implements
 			((CompositeFragment) composites.next()).performCancel();
 		}
 		super.cancelPressed();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.dialogs.TrayDialog#handleShellCloseEvent()
+	 */
+	@Override
+	protected void handleShellCloseEvent() {
+		cancelPressed();
+		super.handleShellCloseEvent();
 	}
 
 	/*
@@ -208,13 +264,15 @@ public class ServerEditDialog extends TitleAreaDialog implements
 	private class TabsSelectionListener implements SelectionListener {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
-			// Do nothing
+			widgetSelected(e);
 		}
 
 		public void widgetSelected(SelectionEvent e) {
 			CTabItem item = (CTabItem) e.item;
 			CompositeFragment fragment = (CompositeFragment) item.getControl();
 			setTitle(fragment.getTitle());
+			setImageDescriptor(fragment.getImageDescriptor());
+			setDescription(fragment.getDescription());
 			fragment.validate();
 		}
 

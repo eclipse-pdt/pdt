@@ -15,7 +15,9 @@
 package org.eclipse.php.internal.debug.core.preferences;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -108,7 +110,7 @@ public abstract class AbstractDebuggerConfigurationDialog extends
 		Text textBox = new Text(parent, SWT.BORDER | SWT.SINGLE);
 		textBox.setData(key);
 
-		GridData data = new GridData();
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		if (textlimit != 0) {
 			textBox.setTextLimit(textlimit);
 		}
@@ -143,4 +145,48 @@ public abstract class AbstractDebuggerConfigurationDialog extends
 		checkBox.setData(prefKey);
 		return checkBox;
 	}
+
+	/**
+	 * Creates a composite with a highlighted Note entry and a message text.
+	 * This is designed to take up the full width of the page.
+	 * 
+	 * @param font
+	 *            the font to use
+	 * @param composite
+	 *            the parent composite
+	 * @param title
+	 *            the title of the note
+	 * @param message
+	 *            the message for the note
+	 * @return the composite for the note
+	 */
+	protected Composite createNoteComposite(Font font, Composite composite,
+			String title, String message, int horizontalSpan) {
+		Composite messageComposite = new Composite(composite, SWT.NONE);
+		GridLayout messageLayout = new GridLayout();
+		messageLayout.numColumns = 2;
+		messageLayout.marginWidth = 0;
+		messageLayout.marginHeight = 0;
+		messageLayout.marginTop = 10;
+		messageComposite.setLayout(messageLayout);
+		GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		gridData.horizontalSpan = horizontalSpan;
+		gridData.widthHint = convertWidthInCharsToPixels(title.length()
+				+ message.length() + 1);
+		messageComposite.setLayoutData(gridData);
+		messageComposite.setFont(font);
+
+		final Label noteLabel = new Label(messageComposite, SWT.BOLD);
+		noteLabel.setText(title);
+		noteLabel.setFont(JFaceResources.getFontRegistry().getBold(
+				JFaceResources.DIALOG_FONT));
+		noteLabel
+				.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
+
+		Label messageLabel = new Label(messageComposite, SWT.WRAP);
+		messageLabel.setText(message);
+		messageLabel.setFont(font);
+		return messageComposite;
+	}
+
 }

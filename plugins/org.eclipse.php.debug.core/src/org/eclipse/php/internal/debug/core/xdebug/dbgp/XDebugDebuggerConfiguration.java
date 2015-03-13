@@ -35,6 +35,8 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 
+	public static final String ID = "org.eclipse.php.debug.core.xdebugDebugger"; //$NON-NLS-1$
+
 	private static final String REMOTE_ENABLE = "remote_enable"; //$NON-NLS-1$
 	private static final String EXTENSION_MODULE_ID = "Xdebug"; //$NON-NLS-1$
 

@@ -29,11 +29,13 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+@SuppressWarnings("restriction")
 public class PHPExeEditDialog extends TitleAreaDialog implements
 		IControlHandler {
 
@@ -74,7 +76,7 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 
 	protected Control createDialogArea(Composite parent) {
 		// Create a tabbed container that will hold all the fragments
-		CTabFolder tabs = SWTUtil.createTabFolder(parent);
+		final CTabFolder tabs = SWTUtil.createTabFolder(parent);
 		ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry
 				.getFragmentsFactories(FRAGMENT_GROUP_ID);
 		for (ICompositeFragmentFactory element : factories) {
@@ -89,16 +91,17 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 			tabItem.setControl(fragment);
 			runtimeComposites.add(fragment);
 		}
-		getShell().setText(Messages.PHPExeEditDialog_1);
 		tabs.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				CTabItem item = (CTabItem) e.item;
 				CompositeFragment fragment = (CompositeFragment) item
 						.getControl();
 				setTitle(fragment.getTitle());
+				setDescription(fragment.getDescription());
 				fragment.validate();
 			}
 		});
+		getShell().setText(Messages.PHPExeEditDialog_1);
 		return tabs;
 	}
 
@@ -118,6 +121,12 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 		super.okPressed();
 	}
 
+	@Override
+	protected void handleShellCloseEvent() {
+		cancelPressed();
+		super.handleShellCloseEvent();
+	}
+
 	public void update() {
 		Button button = getButton(IDialogConstants.OK_ID);
 		if (button != null) {
@@ -131,6 +140,13 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 			}
 			button.setEnabled(true);
 		}
+	}
+
+	@Override
+	protected Point getInitialSize() {
+		Point size = super.getInitialSize();
+		size.y += 100;
+		return size;
 	}
 
 }

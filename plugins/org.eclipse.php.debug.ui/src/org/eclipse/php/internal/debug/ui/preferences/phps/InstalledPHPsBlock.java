@@ -35,6 +35,7 @@ import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguratio
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
+import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.debug.ui.wizards.ClosableWizardDialog;
@@ -95,6 +96,10 @@ public class InstalledPHPsBlock {
 		 * @see ITableLabelProvider#getColumnImage(Object, int)
 		 */
 		public Image getColumnImage(final Object element, final int columnIndex) {
+			switch (columnIndex) {
+			case 0:
+				return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_PHP_EXE);
+			}
 			return null;
 		}
 
@@ -108,7 +113,6 @@ public class InstalledPHPsBlock {
 				case 0:
 					if (isDefault(element)) {
 						return phpExe.getName()
-								+ ' '
 								+ PHPDebugUIMessages.PHPsPreferencePage_WorkspaceDefault;
 					}
 					return phpExe.getName();
@@ -443,25 +447,16 @@ public class InstalledPHPsBlock {
 		if (phpExe == null) {
 			return;
 		}
-		PHPexeItem phpExeToEdit = new PHPexeItem(phpExe.getName(),
-				phpExe.getExecutable(), phpExe.getINILocation(),
-				phpExe.getDebuggerID(), phpExe.isEditable());
-		// phpExeToEdit.setLoadDefaultINI(phpExe.isLoadDefaultINI());
-		phpExeToEdit.setSapiType(phpExe.getSapiType());
-		phpExeToEdit.setLoadDefaultINI(phpExe.isLoadDefaultINI());
+		// Work on a simple copy
+		PHPexeItem phpExeToEdit = phpExe.makeCopy();
 		PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(),
 				phpExeToEdit, PHPexes.getInstance().getAllItems());
 		dialog.setTitle(PHPDebugUIMessages.InstalledPHPsBlock_8);
 		if (dialog.open() != Window.OK) {
 			return;
 		}
-		phpExe.setName(phpExeToEdit.getName());
-		phpExe.setExecutable(phpExeToEdit.getExecutable());
-		phpExe.setINILocation(phpExeToEdit.getINILocation());
-		phpExe.setDebuggerID(phpExeToEdit.getDebuggerID());
-		phpExe.setSapiType(phpExeToEdit.getSapiType());
-		phpExe.setLoadDefaultINI(phpExeToEdit.isLoadDefaultINI());
-
+		// Update original item
+		PHPexes.getInstance().updateItem(phpExe, phpExeToEdit);
 		fPHPExeList.refresh();
 		commitChanges();
 	}
@@ -795,6 +790,7 @@ public class InstalledPHPsBlock {
 			for (PHPexeItem item : itemsToAdd) {
 				fPHPexes.add(item);
 				PHPexes.getInstance().addItem(item);
+				PHPexes.getInstance().save();
 			}
 			fPHPExeList.refresh();
 		} else {

@@ -23,7 +23,7 @@ import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
-import org.eclipse.php.internal.debug.daemon.communication.CommunicationDaemonRegistry;
+import org.eclipse.php.internal.debug.daemon.communication.DaemonsRegistry;
 import org.eclipse.ui.IPluginContribution;
 import org.eclipse.ui.activities.WorkbenchActivityHelper;
 
@@ -175,8 +175,8 @@ public class PHPDebuggersRegistry {
 					configuration.setDebuggerId(id);
 					configuration.setName(name);
 					try {
-						ICommunicationDaemon[] daemons = CommunicationDaemonRegistry
-								.getBestMatchCommunicationDaemons();
+						List<ICommunicationDaemon> daemons = DaemonsRegistry
+								.getDaemons();
 						// find the daemon that fits this configuration (match
 						// by debugger-id)
 						for (ICommunicationDaemon daemon : daemons) {
