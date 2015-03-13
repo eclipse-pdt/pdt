@@ -14,21 +14,14 @@ package org.eclipse.php.internal.debug.ui.wizards;
 
 import java.io.File;
 import java.text.MessageFormat;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.php.internal.debug.core.PHPExeException;
 import org.eclipse.php.internal.debug.core.PHPExeUtil;
 import org.eclipse.php.internal.debug.core.PHPExeUtil.PHPExeInfo;
-import org.eclipse.php.internal.debug.core.PHPExeUtil.PHPModuleInfo;
-import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
-import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
@@ -53,14 +46,10 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 	private StringButtonDialogField fPHPExePath;
 	private StringButtonDialogField fPHPIni;
 	private Button fLoadDefaultPHPIni;
-	private List<String> debuggersIds;
-	private Label fDebuggersLabel;
-	private Combo fDebuggers;
 	private Label fSapiTypesLabel;
 	private Combo fSapiTypes;
 	private String initialName;
 	private boolean isIniFileSet = false;
-	private boolean updateDebuggerStatus = true;
 
 	public PHPExeCompositeFragment(Composite parent, IControlHandler handler,
 			boolean isForEditing) {
@@ -70,9 +59,6 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		controlHandler.setDescription(getDescription());
 		controlHandler.setImageDescriptor(PHPDebugUIImages
 				.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_PHPEXE));
-
-		debuggersIds = new LinkedList<String>(
-				PHPDebuggersRegistry.getDebuggersIds());
 		createControl();
 	}
 
@@ -182,25 +168,6 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		fSapiTypes.add(PHPexeItem.SAPI_CLI);
 		fSapiTypes.add(PHPexeItem.SAPI_CGI);
 
-		fDebuggersLabel = new Label(parent, SWT.LEFT | SWT.WRAP);
-		fDebuggersLabel.setFont(parent.getFont());
-		fDebuggersLabel.setText(PHPDebugUIMessages.addPHPexeDialog_phpDebugger);
-		data = new GridData();
-		data.horizontalSpan = 1;
-		fDebuggersLabel.setLayoutData(data);
-
-		fDebuggers = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
-		data = new GridData();
-		data.horizontalSpan = 2;
-		data.grabExcessHorizontalSpace = true;
-		fDebuggers.setLayoutData(data);
-
-		for (int i = 0; i < debuggersIds.size(); ++i) {
-			String id = debuggersIds.get(i);
-			String debuggerName = PHPDebuggersRegistry.getDebuggerName(id);
-			fDebuggers.add(debuggerName, i);
-		}
-
 		init();
 		createFieldListeners();
 		updateItem();
@@ -211,11 +178,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 	protected void createFieldListeners() {
 		fPHPexeName.setDialogFieldListener(new IDialogFieldListener() {
 			public void dialogFieldChanged(DialogField field) {
-				// Do not validate debugger while changing name
-				if (isComplete())
-					updateDebuggerStatus = false;
 				updateItem();
-				updateDebuggerStatus = true;
 			}
 		});
 
@@ -274,15 +237,6 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 			}
 		});
 
-		fDebuggers.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-				updateItem();
-			}
-
-			public void widgetSelected(SelectionEvent e) {
-				updateItem();
-			}
-		});
 	}
 
 	protected void init() {
@@ -291,19 +245,6 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 			fPHPexeName.setTextWithoutUpdate(""); //$NON-NLS-1$
 			fPHPExePath.setTextWithoutUpdate(""); //$NON-NLS-1$
 			fPHPIni.setTextWithoutUpdate(""); //$NON-NLS-1$
-			String defaultDebuggerId = PHPDebuggersRegistry
-					.getDefaultDebuggerId();
-			if (defaultDebuggerId != null) {
-				int index = fDebuggers.indexOf(PHPDebuggersRegistry
-						.getDebuggerName(defaultDebuggerId));
-				fDebuggers.select(index);
-			} else {
-				if (fDebuggers.getItemCount() > 0) {
-					fDebuggers.select(0);
-				} else {
-					hideDebuggersCombo();
-				}
-			}
 			setTitle(PHPDebugUIMessages.PHPExeCompositeFragment_10);
 		} else {
 			initialName = phpExeItem.getName();
@@ -319,20 +260,6 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 			fPHPIni.setEnabled(phpExeItem.isEditable());
 			fLoadDefaultPHPIni.setEnabled(phpExeItem.isEditable());
 			fLoadDefaultPHPIni.setSelection(phpExeItem.isLoadDefaultINI());
-			String debuggerID = phpExeItem.getDebuggerID();
-			fDebuggers.setEnabled(phpExeItem.isEditable());
-			fDebuggersLabel.setEnabled(phpExeItem.isEditable());
-			int index = fDebuggers.indexOf(PHPDebuggersRegistry
-					.getDebuggerName(debuggerID));
-			if (index > -1) {
-				fDebuggers.select(index);
-			} else {
-				if (fDebuggers.getItemCount() > 0) {
-					fDebuggers.select(0);
-				} else {
-					hideDebuggersCombo();
-				}
-			}
 			String sapiType = phpExeItem.getSapiType();
 			if (sapiType != null) {
 				fSapiTypes.setText(sapiType);
@@ -346,33 +273,6 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		controlHandler.setTitle(getTitle());
 	}
 
-	private void setDebuggersCombo() {
-		if (!updateDebuggerStatus
-				|| getPHPExeItem().getExecutable() == null
-				|| !getPHPExeItem().getExecutable().exists()
-				|| (getPHPExeItem().getDebuggerID() != null && !debuggersIds
-						.get(fDebuggers.getSelectionIndex()).equals(
-								getPHPExeItem().getDebuggerID())))
-			return;
-		List<PHPModuleInfo> modules = PHPExeUtil.getModules(getPHPExeItem());
-		AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry
-				.getDebuggersConfigurations();
-		for (AbstractDebuggerConfiguration debugger : debuggers) {
-			for (PHPModuleInfo m : modules)
-				if (m.getName().equalsIgnoreCase(debugger.getModuleId())) {
-					int index = fDebuggers.indexOf(PHPDebuggersRegistry
-							.getDebuggerName(debugger.getDebuggerId()));
-					fDebuggers.select(index);
-					break;
-				}
-		}
-	}
-
-	private void hideDebuggersCombo() {
-		fDebuggers.setVisible(false);
-		fDebuggersLabel.setVisible(false);
-	}
-
 	public void validate() {
 		PHPexeItem phpExeItem = getPHPExeItem();
 		// Let's reset previous state
@@ -383,16 +283,16 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		// Check if PHP executable location is empty
 		if (phpExeItem.getExecutable() == null
 				|| phpExeItem.getExecutable().getPath().length() == 0) {
-			setComplete(false);
 			setMessage(PHPDebugUIMessages.addPHPexeDialog_enterLocation,
 					IMessageProvider.INFORMATION);
+			setComplete(false);
 			return;
 		}
 		// Check if name is empty
 		if (phpExeItem.getName().isEmpty()) {
-			setComplete(false);
 			setMessage(PHPDebugUIMessages.addPHPexeDialog_enterName,
 					IMessageProvider.INFORMATION);
+			setComplete(false);
 			return;
 		}
 		/* ERRORS */
@@ -452,40 +352,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 				}
 			}
 		}
-		// Check debugger status
-		if (updateDebuggerStatus) {
-			IStatus debuggerStatus = Status.OK_STATUS;
-			AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry
-					.getDebuggersConfigurations();
-			for (AbstractDebuggerConfiguration debugger : debuggers) {
-				if (getPHPExeItem().getDebuggerID().equals(
-						debugger.getDebuggerId())) {
-					debuggerStatus = debugger.validate(getPHPExeItem());
-				}
-			}
-			if (debuggerStatus.getSeverity() != IStatus.OK) {
-				if (debuggerStatus.getSeverity() == IStatus.ERROR) {
-					setMessage(debuggerStatus.getMessage(),
-							IMessageProvider.ERROR);
-					// set complete ?
-					return;
-				} else {
-					setMessage(debuggerStatus.getMessage(),
-							IMessageProvider.WARNING);
-				}
-			} else {
-				setMessage(getDescription(), IMessageProvider.NONE);
-			}
-		}
 		// Update control handler
-		controlHandler.update();
-	}
-
-	protected void setMessage(String message, int type) {
-		controlHandler.setMessage(message, type);
-		// Might be already incomplete
-		if (isComplete())
-			setComplete(type != IMessageProvider.ERROR);
 		controlHandler.update();
 	}
 
@@ -512,9 +379,9 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 			return;
 		// Check whether we can edit this item
 		if (phpExeItem != null && !phpExeItem.isEditable()) {
-			setComplete(false);
 			setMessage(PHPDebugUIMessages.addPHPexeDialog_readOnlyPHPExe,
 					IMessageProvider.INFORMATION);
+			setComplete(false);
 			// If it is not editable it doesn't mean that it is correct
 			validate();
 			return;
@@ -530,11 +397,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		if (phpExeInfo != null) {
 			// Set up PHP exe item version
 			phpExeItem.setVersion(phpExeInfo.getVersion());
-			// Try to set up installed debugger automatically
-			setDebuggersCombo();
 		}
-		phpExeItem.setDebuggerID(debuggersIds.get(fDebuggers
-				.getSelectionIndex()));
 		// Validate all
 		validate();
 	}

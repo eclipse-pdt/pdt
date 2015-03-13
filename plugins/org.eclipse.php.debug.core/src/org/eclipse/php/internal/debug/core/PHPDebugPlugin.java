@@ -35,6 +35,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
+import org.eclipse.php.internal.debug.core.debugger.DebuggerSettingsManager;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.php.internal.debug.core.launching.XDebugLaunchListener;
 import org.eclipse.php.internal.debug.core.preferences.*;
@@ -113,6 +114,7 @@ public class PHPDebugPlugin extends Plugin {
 			XDebugPreferenceMgr.setDefaults();
 			XDebugLaunchListener.getInstance();
 			DBGpProxyHandler.instance.configure();
+			DebuggerSettingsManager.INSTANCE.startup();
 			/*
 			 * This has to be called as the last operation to start all the
 			 * debugger daemons that handle communication channels
@@ -159,7 +161,7 @@ public class PHPDebugPlugin extends Plugin {
 		XDebugLaunchListener.shutdown();
 		DBGpProxyHandler.instance.unregister();
 		savePluginPreferences();
-
+		DebuggerSettingsManager.INSTANCE.shutdown();
 		super.stop(context);
 		plugin = null;
 		DebugUIPlugin

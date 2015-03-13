@@ -49,6 +49,7 @@ import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.debugger.DebugMessagesRegistry;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
+import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsUtil;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.*;
 import org.eclipse.php.internal.debug.core.zend.debugger.parameters.AbstractDebugParametersInitializer;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
@@ -134,6 +135,7 @@ public class DebugConnection {
 							// START DEBUG (create debug target)
 							else {
 								hookDebugSession((DebugSessionStartedNotification) incomingMessage);
+								setResponseTimeout((DebugSessionStartedNotification) incomingMessage);
 							}
 						}
 						// Creation of debug session has succeeded
@@ -501,10 +503,6 @@ public class DebugConnection {
 	 * @param socket
 	 */
 	public DebugConnection(Socket socket) {
-		debugResponseTimeout = Platform.getPreferencesService()
-				.getInt(PHPDebugPlugin.ID,
-						PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT,
-						10000, null);
 		this.socket = socket;
 		connect();
 	}
@@ -768,6 +766,12 @@ public class DebugConnection {
 				: PHPProjectPreferences.getStopAtFirstLine(project);
 		int requestPort = PHPDebugPlugin
 				.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+		try {
+			requestPort = Integer.valueOf(launch
+					.getAttribute(IDebugParametersKeys.PORT));
+		} catch (Exception e) {
+			// should not happen
+		}
 		boolean runWithDebug = launchConfiguration.getAttribute(
 				IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
 		if (launch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE)) {
@@ -826,6 +830,12 @@ public class DebugConnection {
 				.getStopAtFirstLine(project);
 		int requestPort = PHPDebugPlugin
 				.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+		try {
+			requestPort = Integer.valueOf(launch
+					.getAttribute(IDebugParametersKeys.PORT));
+		} catch (Exception e) {
+			// should not happen
+		}
 		IPath phpExe = new Path(phpExeString);
 		PHPProcess process = new PHPProcess(launch, phpExe.toOSString());
 		debugTarget = (PHPDebugTarget) createDebugTarget(this, launch,
@@ -1165,6 +1175,19 @@ public class DebugConnection {
 		isConnected = false;
 		cleanSocket();
 		Logger.debugMSG("DEBUG CONNECTION: Socket Cleaned"); //$NON-NLS-1$
+	}
+
+	private void setResponseTimeout(
+			DebugSessionStartedNotification startedNotification) {
+		// Set default from preferences first
+		debugResponseTimeout = Platform.getPreferencesService()
+				.getInt(PHPDebugPlugin.ID,
+						PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT,
+						10000, null);
+		int customResponseTimeout = ZendDebuggerSettingsUtil
+				.getResponseTimeout(startedNotification);
+		if (customResponseTimeout != -1)
+			debugResponseTimeout = customResponseTimeout;
 	}
 
 }

@@ -13,6 +13,7 @@ package org.eclipse.php.internal.server.ui;
 
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -35,4 +36,13 @@ public class ClosableWizardDialog extends WizardDialog {
 	public void finishPressed() {
 		super.finishPressed();
 	}
+
+	@Override
+	protected Point getInitialSize() {
+		Point size = super.getInitialSize();
+		// Make some more space between dialog bottom pane
+		size.y += 50;
+		return size;
+	}
+
 }

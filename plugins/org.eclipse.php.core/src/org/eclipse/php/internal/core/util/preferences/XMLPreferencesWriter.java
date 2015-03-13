@@ -11,17 +11,21 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.util.preferences;
 
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.php.internal.core.Logger;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * XML preferences writer for writing XML structures into the prefernces store.
  * This class works in combination with IXMLPreferencesStorable.
  */
+@SuppressWarnings("deprecation")
 public class XMLPreferencesWriter {
 
 	public static final char DELIMITER = (char) 5;
@@ -63,15 +67,16 @@ public class XMLPreferencesWriter {
 		return null;
 	}
 
-	protected static void write(StringBuffer sb, HashMap map) {
-		for (Entry entry : (Set<Entry>) map.entrySet()) {
+	@SuppressWarnings("unchecked")
+	protected static void write(StringBuffer sb, Map<String, Object> map) {
+		for (Entry<?, ?> entry : map.entrySet()) {
 			String key = (String) entry.getKey();
 			sb.append("<"); //$NON-NLS-1$
 			sb.append(key);
 			sb.append(">"); //$NON-NLS-1$
 			Object object = entry.getValue();
-			if (object instanceof HashMap) {
-				write(sb, (HashMap) object);
+			if (object instanceof Map) {
+				write(sb, (Map<String, Object>) object);
 			} else {
 				if (object != null) {
 					sb.append(getEscaped(object.toString()));
@@ -97,12 +102,40 @@ public class XMLPreferencesWriter {
 	 *            The key to store by.
 	 * @param objects
 	 *            The IXMLPreferencesStorables to store.
+	 * 
+	 * @deprecated Since 3.5 - use
+	 *             {@link XMLPreferencesWriter#write(IEclipsePreferences, String, List)}
+	 *             instead
 	 */
 	public static void write(Preferences pluginPreferences, String prefsKey,
 			IXMLPreferencesStorable[] objects) {
 		StringBuffer sb = new StringBuffer();
 		appendDelimitedString(sb, objects);
 		pluginPreferences.setValue(prefsKey, sb.toString());
+	}
+
+	/**
+	 * Writes a group of IXMLPreferencesStorables to the given plug-in
+	 * preferences.
+	 * 
+	 * @param pluginPreferences
+	 *            A Preferences instance
+	 * @param prefsKey
+	 *            The key to store by.
+	 * @param objects
+	 *            The IXMLPreferencesStorables to store.
+	 */
+	public static void write(IEclipsePreferences pluginPreferences,
+			String prefsKey, List<IXMLPreferencesStorable> objects) {
+		StringBuffer sb = new StringBuffer();
+		appendDelimitedString(sb,
+				objects.toArray(new IXMLPreferencesStorable[objects.size()]));
+		pluginPreferences.put(prefsKey, sb.toString());
+		try {
+			pluginPreferences.flush();
+		} catch (BackingStoreException e) {
+			Logger.logException("Could not write XML preferences.", e); //$NON-NLS-1$
+		}
 	}
 
 	/**
@@ -117,12 +150,38 @@ public class XMLPreferencesWriter {
 	 *            The key to store by.
 	 * @param object
 	 *            The IXMLPreferencesStorable to store.
+	 * 
+	 * @deprecated Since 3.5 - use
+	 *             {@link XMLPreferencesWriter#write(IEclipsePreferences, String, IXMLPreferencesStorable)}
+	 *             instead
 	 */
 	public static void write(Preferences pluginPreferences, String prefsKey,
 			IXMLPreferencesStorable object) {
 		StringBuffer sb = new StringBuffer();
 		write(sb, object.storeToMap());
 		pluginPreferences.setValue(prefsKey, sb.toString());
+	}
+
+	/**
+	 * Writes an IXMLPreferencesStorable to the given plug-in preferences.
+	 * 
+	 * @param pluginPreferences
+	 *            A Preferences instance
+	 * @param prefsKey
+	 *            The key to store by.
+	 * @param object
+	 *            The IXMLPreferencesStorable to store.
+	 */
+	public static void write(IEclipsePreferences pluginPreferences,
+			String prefsKey, IXMLPreferencesStorable object) {
+		StringBuffer sb = new StringBuffer();
+		write(sb, object.storeToMap());
+		pluginPreferences.put(prefsKey, sb.toString());
+		try {
+			pluginPreferences.flush();
+		} catch (BackingStoreException e) {
+			Logger.logException("Could not write XML preferences.", e); //$NON-NLS-1$
+		}
 	}
 
 	// Append the elements one by one into the given StringBuffer.

@@ -51,9 +51,14 @@ import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.preferences.*;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerConfiguration;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSettingsUtil;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnection;
+import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerConfiguration;
+import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsUtil;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.server.core.tunneling.SSHTunnel;
 import org.eclipse.php.internal.server.core.tunneling.SSHTunnelFactory;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -1169,7 +1174,25 @@ public class PHPLaunchUtilities {
 					PHPDebugPlugin.getCurrentDebuggerId());
 			AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
 					.getDebuggerConfiguration(debuggerID);
-			return debuggerConfiguration.getPort();
+			int port = debuggerConfiguration.getPort();
+			Server server = ServersManager.getServer(launchConfiguration
+					.getAttribute(Server.NAME, "")); //$NON-NLS-1$
+			int customPort = -1;
+			// Check custom port for server's Zend Debugger
+			if (ZendDebuggerConfiguration.ID.equals(debuggerID)) {
+				if (server != null) {
+					customPort = ZendDebuggerSettingsUtil.getDebugPort(server);
+				}
+			}
+			// Check custom port for server's XDebug
+			else if (XDebugDebuggerConfiguration.ID.equals(debuggerID)) {
+				if (server != null) {
+					customPort = XDebugDebuggerSettingsUtil
+							.getDebugPort(server);
+				}
+			}
+			if (customPort != -1)
+				port = customPort;
 		} catch (Exception e) {
 			Logger.logException(
 					"Could not retrieve the debugger's port number", e);//$NON-NLS-1$

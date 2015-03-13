@@ -20,6 +20,7 @@
    <extension-point id="phpExe" name="PHP exe" schema="schema/phpExe.exsd"/>
    <extension-point id="phpDebugParametersInitializers" name="phpDebugParametersInitializers" schema="schema/phpDebugParametersInitializer.exsd"/>
    <extension-point id="phpDebuggers" name="PHP Debuggers" schema="schema/phpDebuggers.exsd"/>
+   <extension-point id="phpDebuggerSettingsProviders" name="PHP Debugger Settings Providers" schema="schema/phpDebuggerSettingsProviders.exsd"/>
    <extension-point id="pathEntryFilters" name="PHP Path Entry Filters" schema="schema/pathEntryFilters.exsd"/>
    <extension-point id="phpDebugStepFilters" name="PHP Debug Step Filters" schema="schema/phpDebugStepFilters.exsd"/>
    <extension-point id="phpLaunchDelegateListener" name="phpLaunchDelegateListener" schema="schema/phpLaunchDelegateListener.exsd"/>
@@ -406,5 +407,20 @@
             id="org.eclipse.php.debug.core.xdebugDebugger"
             name="XDebug">
       </phpDebugger>
+   </extension>
+   <extension
+         point="org.eclipse.php.debug.core.phpDebuggerSettingsProviders">
+      <phpDebuggerSettingsProvider
+            debuggerId="org.eclipse.php.debug.core.zendDebugger"
+            id="org.eclipse.php.debug.core.zendDebuggerSettingsProvider"
+            name="Zend Debugger Settings Provider"
+            provider="org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsProvider">
+      </phpDebuggerSettingsProvider>
+      <phpDebuggerSettingsProvider
+            debuggerId="org.eclipse.php.debug.core.xdebugDebugger"
+            id="org.eclipse.php.debug.core.xdebugDebuggerSettingsProvider"
+            name="XDebug Debugger Settings Provider"
+            provider="org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSettingsProvider">
+      </phpDebuggerSettingsProvider>
    </extension>
 </plugin>

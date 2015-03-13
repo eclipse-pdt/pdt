@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
+import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
@@ -82,8 +83,7 @@ public class PHPInterpreterExecutionConfigurationBlock {
 		 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 		 */
 		public Image getImage(Object element) {
-			return DLTKPluginImages.getDescriptor(
-					DLTKPluginImages.IMG_OBJS_LIBRARY).createImage();
+			return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_PHP_EXE);
 		}
 
 		/**
@@ -197,9 +197,8 @@ public class PHPInterpreterExecutionConfigurationBlock {
 				if (event.getChecked()) {
 					Object element = event.getElement();
 					versionToDefaultItem
-							.put(
-									(PHPVersion) ((IStructuredSelection) fProfilesViewer
-											.getSelection()).getFirstElement(),
+							.put((PHPVersion) ((IStructuredSelection) fProfilesViewer
+									.getSelection()).getFirstElement(),
 									(PHPexeItem) element);
 					fJREsViewer.setCheckedElements(new Object[] { element });
 				} else {
@@ -233,8 +232,8 @@ public class PHPInterpreterExecutionConfigurationBlock {
 		for (Iterator<PHPVersion> iterator = versionToDefaultItem.keySet()
 				.iterator(); iterator.hasNext();) {
 			PHPVersion version = iterator.next();
-			phpExes.setItemDefaultForPHPVersion(versionToDefaultItem
-					.get(version), version);
+			phpExes.setItemDefaultForPHPVersion(
+					versionToDefaultItem.get(version), version);
 		}
 		phpExes.save();
 		return true;
