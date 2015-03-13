@@ -1,0 +1,17 @@
+--TEST--
+Test 
+--FILE--
+<?php
+/**
+ * @method static DateTime foo()
+ * @method static bar()
+ */
+class Test {
+    
+}
+?>
+--EXPECT--
+FILE: test.php
+	CLASS: Test
+		METHOD: foo
+		METHOD: bar

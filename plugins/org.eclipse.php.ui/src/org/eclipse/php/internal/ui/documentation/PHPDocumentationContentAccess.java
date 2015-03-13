@@ -25,6 +25,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.util.MethodOverrideTester;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
@@ -713,13 +714,29 @@ public class PHPDocumentationContentAccess {
 					String[] split = WHITESPACE_SEPERATOR.split(docTagValue
 							.substring(0, index));
 					if (split.length == 1) {
-						docTagValue = MagicMemberUtil.VOID_RETURN_TYPE
-								+ " " + docTagValue; //$NON-NLS-1$
+						docTagValue = new StringBuilder(
+								MagicMemberUtil.VOID_RETURN_TYPE)
+								.append(Constants.SPACE).append(docTagValue)
+								.toString();
+					} else if (split.length == 2
+							&& Constants.STATIC.equals(split[0])) {
+						StringBuilder sb = new StringBuilder(Constants.STATIC);
+						sb.append(Constants.SPACE).append(
+								MagicMemberUtil.VOID_RETURN_TYPE);
+						sb.append(docTagValue.substring(6));
+						docTagValue = sb.toString();
 					}
 				}
-				final String[] split = WHITESPACE_SEPERATOR.split(docTagValue);
+				String[] split = WHITESPACE_SEPERATOR.split(docTagValue);
 				if (split.length < 2) {
 					continue;
+				}
+				if (Constants.STATIC.equals(split[0].trim())) {
+					if (split.length < 3) {
+						break;
+					}
+					split = Arrays.copyOfRange(split, 1, split.length);
+					docTagValue = docTagValue.substring(7);
 				}
 
 				if (MagicMemberUtil.removeParenthesis(split).equals(

@@ -577,10 +577,18 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 					} else if (tagKind == PHPDocTag.METHOD) {
 						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
-						final String[] split = WHITESPACE_SEPERATOR
-								.split(docTag.getValue().trim());
+						String[] split = WHITESPACE_SEPERATOR.split(docTag
+								.getValue().trim());
 						if (split.length < 2) {
 							break;
+						}
+						int methodModifiers = Modifiers.AccPublic;
+						if (Constants.STATIC.equals(split[0].trim())) {
+							if (split.length < 3) {
+								break;
+							}
+							methodModifiers |= Modifiers.AccStatic;
+							split = Arrays.copyOfRange(split, 1, split.length);
 						}
 
 						String name = removeParenthesis(split);
@@ -594,8 +602,8 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						info.put("r", split[0]); //$NON-NLS-1$
 
 						modifyDeclaration(null, new DeclarationInfo(
-								IModelElement.METHOD, Modifiers.AccPublic,
-								offset, length, offset, length, name, null,
+								IModelElement.METHOD, methodModifiers, offset,
+								length, offset, length, name, null,
 								encodeDocInfo(info), fCurrentQualifier,
 								fCurrentParent));
 					}
