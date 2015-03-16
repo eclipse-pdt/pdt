@@ -72,6 +72,9 @@
 
 --- user class code
 
+	// where the last internal container block was found
+	private int fLastInternalBlockStart = -1;
+
   /**
    * Creates a new scanner
    * There is also a java.io.InputStream version of this constructor.
@@ -101,6 +104,7 @@
       zzCurrentPos-= zzStartRead;
       zzMarkedPos-= zzStartRead;
       zzPushbackPos-= zzStartRead;
+      fLastInternalBlockStart = -1;
       zzStartRead = 0;
     }
 
@@ -179,6 +183,7 @@
     zzAtEOF  = false;
     zzEndRead = zzStartRead = 0;
     zzCurrentPos = zzMarkedPos = zzPushbackPos = 0;
+    fLastInternalBlockStart = -1;
     yyline = yychar = 0;
     zzLexicalState = YYINITIAL;
   }
