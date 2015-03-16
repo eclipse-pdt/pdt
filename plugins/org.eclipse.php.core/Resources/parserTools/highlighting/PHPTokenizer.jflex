@@ -37,9 +37,6 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 %%
 
 %{
-	// where the last internal container block was found
-	private int fLastInternalBlockStart = -1;
-
 	private int fTokenCount = 0;
  
 	// required holders for white-space compacting
@@ -236,7 +233,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 			// Look for a PHP beginning at the current position; this case wouldn't be handled by the preceding section
 			// since it relies upon *having* closeTagStringLength amount of input to work as designed.  Must be sure we don't
 			// spill over the end of the buffer while checking.
-			if(allowPHP && zzStartRead != fLastInternalBlockStart && zzCurrentPos > 0 && zzCurrentPos < zzBuffer.length - 1 &&
+			if(allowPHP && zzStartRead != fLastInternalBlockStart && zzCurrentPos > 0 && zzCurrentPos < zzEndRead - 1 &&
 					zzBuffer[zzCurrentPos - 1] == '<' && 
 					(zzBuffer[zzCurrentPos] == '?' || (zzBuffer[zzCurrentPos] == '%' && ProjectOptions.isSupportingAspTags(project)))) {
 				fLastInternalBlockStart = zzMarkedPos = zzCurrentPos - 1;
@@ -256,7 +253,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 			// Look for a JSP beginning at the current position; this case wouldn't be handled by the preceding section
 			// since it relies upon *having* closeTagStringLength amount of input to work as designed.  Must be sure we don't
 			// spill over the end of the buffer while checking.
-			else if(allowPHP && zzStartRead != fLastInternalBlockStart && zzCurrentPos > 0 && zzCurrentPos < zzBuffer.length - 1 &&
+			else if(allowPHP && zzStartRead != fLastInternalBlockStart && zzCurrentPos > 0 && zzCurrentPos < zzEndRead - 1 &&
 					zzBuffer[zzCurrentPos - 1] == '<' && zzBuffer[zzCurrentPos] == '?') {
 				fLastInternalBlockStart = zzMarkedPos = zzCurrentPos - 1;
 				zzCurrentPos = zzMarkedPos + 1;
@@ -274,7 +271,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 			// Look for a JSP beginning immediately in the block area; this case wouldn't be handled by the preceding section
 			// since it relies upon zzCurrentPos equaling exactly the previous end +1 to work as designed.
 			else if(allowPHP && zzStartRead != fLastInternalBlockStart && zzStartRead > 0 &&
-					zzStartRead < zzBuffer.length - 1 && zzBuffer[zzStartRead] == '<' && zzBuffer[zzStartRead + 1] == '?') {
+					zzStartRead < zzEndRead - 1 && zzBuffer[zzStartRead] == '<' && zzBuffer[zzStartRead + 1] == '?') {
 				fLastInternalBlockStart = zzMarkedPos = zzStartRead;
 				zzCurrentPos = zzMarkedPos + 1;
 				int resumeState = yystate();
@@ -300,7 +297,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 				// and see if it matches
 				
 				// safety check for array accesses (zzCurrentPos is the *last* character we can check against)
-				if(zzCurrentPos >= searchStringLength && zzCurrentPos <= zzBuffer.length) {
+				if(zzCurrentPos >= searchStringLength && zzCurrentPos <= zzEndRead) {
 					for(i = 0; i < searchStringLength; i++) {
 						if(same && fIsCaseSensitiveBlocking)
 							same = zzBuffer[i + zzCurrentPos - searchStringLength] == searchString.charAt(i);
@@ -313,7 +310,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 					same = false;
 				}
 			}
-			if (same && requireTailSeparator && zzCurrentPos < zzBuffer.length) {
+			if (same && requireTailSeparator && zzCurrentPos < zzEndRead) {
 				// Additional check for close tags to ensure that targetString="</script" doesn't match
 				// "</scriptS"
 				lastCheckChar = zzBuffer[zzCurrentPos];
