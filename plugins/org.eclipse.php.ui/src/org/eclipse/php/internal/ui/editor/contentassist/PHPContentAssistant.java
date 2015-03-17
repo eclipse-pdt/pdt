@@ -170,7 +170,12 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 				// Bug 458285 - do not run auto assist with empty identifier
 				if (Character.isWhitespace(e.character)
 						|| (e.character == '\\' && Character
-								.isWhitespace(document.getChar(pos - 1)))) {
+								.isWhitespace(document.getChar(pos - 1)))
+						|| e.character == ',' || e.character == '('
+						|| e.character == ')' || e.character == '{'
+						|| e.character == '}' || e.character == '['
+						|| e.character == ']' || e.character == '\''
+						|| e.character == '"') {
 					stop();
 					return;
 				}
