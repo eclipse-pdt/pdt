@@ -12,7 +12,7 @@
 <project name="Downloading JFlex from www.jflex.de" default="getJFlexJar">
 	
 	<target name="init">
-		<property name="jflexVersion" value="1.4.1" />
+		<property name="jflexVersion" value="1.6.1" />
 
 		<!-- if dir exists, then it'll be used to get jflex -->
 		<available file="/shared/tools/php" property="jflex.work.dir" value="/shared/tools/php"/>
@@ -20,10 +20,9 @@
 		<property name="jflex.work.dir" value="${java.io.tmpdir}/PDT_JFlex_files"/>
 		
 		<mkdir dir="${jflex.work.dir}" />
-		<property name="jflexJar" value="${jflex.work.dir}/jflex-${jflexVersion}/lib/JFlex.jar" />
+		<property name="jflexJar" value="${jflex.work.dir}/jflex-${jflexVersion}/lib/jflex-${jflexVersion}.jar" />
 	</target>
-	
-	
+
 	<target name="getJFlexJar" depends="init">
 			<available property="jarExists" file="${jflexJar}" />
 			<antcall target="setHttpProxy" />

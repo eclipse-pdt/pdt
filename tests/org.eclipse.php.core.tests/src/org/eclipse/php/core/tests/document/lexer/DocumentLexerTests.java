@@ -13,10 +13,12 @@
 package org.eclipse.php.core.tests.document.lexer;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.php.core.tests.PDTTUtils;
+import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
@@ -59,10 +61,12 @@ public class DocumentLexerTests {
 
 	@Test
 	public void test(String fileName) throws Exception {
-		final PdttFile pdttFile = new PdttFile(fileName);
-		AbstractPhpLexer lexer = PhpLexerFactory.createLexer(
-				new ByteArrayInputStream(pdttFile.getFile().trim().getBytes()),
-				version);
+		final PdttFile pdttFile = new PdttFile(PHPCoreTests.getDefault()
+				.getBundle(), fileName, "UTF-8");
+		AbstractPhpLexer lexer = PhpLexerFactory
+				.createLexer(new InputStreamReader(new ByteArrayInputStream(
+						pdttFile.getFile().trim().getBytes("UTF-8")), "UTF-8"),
+						version);
 		int inScriptingState = lexer.getClass().getField("ST_PHP_IN_SCRIPTING")
 				.getInt(lexer); // different lexers have
 								// different state codes
