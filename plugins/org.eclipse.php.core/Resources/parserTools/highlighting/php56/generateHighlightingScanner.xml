@@ -16,14 +16,19 @@
 	<target name="checkUpToDate">
 		<uptodate
 			property="upToDate"
-			srcfile="highlighting_scanner.jflex"
-			targetfile="../../../../src/org/eclipse/php/internal/core/documentModel/parser/php56/PhpLexer.java" />
+			targetfile="../../../../src/org/eclipse/php/internal/core/documentModel/parser/php56/PhpLexer.java">
+			<srcfiles dir="." includes="highlighting_scanner.jflex" />
+			<srcfiles dir="../../jflex" includes="common.skeleton" />
+		</uptodate>
 	</target>
 
 	<target name="generateScanner" depends="checkUpToDate,getJFlexJar" unless="upToDate">
 		<java jar="${jflexJar}" fork="true">
+			<arg value="--legacydot" />
 			<arg value="-d" />
 			<arg value="../../../../src/org/eclipse/php/internal/core/documentModel/parser/php56" />
+			<arg value="-skel" />
+			<arg value="../../jflex/common.skeleton" />
 			<arg value="-nobak" />
 			<arg value="highlighting_scanner.jflex" />
 		</java>

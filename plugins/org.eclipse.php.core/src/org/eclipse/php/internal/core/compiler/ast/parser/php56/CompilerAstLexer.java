@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.parser.php56;
 
-import java.io.InputStream;
-
 import java_cup.runtime.Symbol;
 
 import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
@@ -27,10 +25,6 @@ public class CompilerAstLexer extends
 		org.eclipse.php.internal.core.ast.scanner.php56.PhpAstLexer {
 
 	private PHPDocBlock latestDocBlock;
-
-	public CompilerAstLexer(InputStream in) {
-		super(in);
-	}
 
 	public CompilerAstLexer(java.io.Reader in) {
 		super(in);

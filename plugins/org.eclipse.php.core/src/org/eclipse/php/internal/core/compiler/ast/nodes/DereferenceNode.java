@@ -42,7 +42,7 @@ public class DereferenceNode extends ASTNode {
 
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
-			if (exp != null) {
+			if (getExpression() != null) {
 				getExpression().traverse(visitor);
 			}
 			visitor.endvisit(this);
