@@ -92,7 +92,7 @@ public class PdttFile {
 	 * @throws Exception
 	 */
 	public PdttFile(String fileName) throws Exception {
-		this(PHPCoreTests.getDefault().getBundle(), fileName);
+		this(PHPCoreTests.getDefault().getBundle(), fileName, null);
 	}
 
 	/**
@@ -104,11 +104,27 @@ public class PdttFile {
 	 * @throws Exception
 	 */
 	public PdttFile(Bundle testBundle, String fileName) throws Exception {
+		this(testBundle, fileName, null);
+	}
+
+	/**
+	 * Constructs new PdttFile
+	 * 
+	 * @param testBundle
+	 *            The testing plug-in
+	 * @param fileName
+	 * @param charsetName
+	 *            charset to use (if null, platform's default charset will be
+	 *            used)
+	 * @throws Exception
+	 */
+	public PdttFile(Bundle testBundle, String fileName, String charsetName)
+			throws Exception {
 		this.testBundle = testBundle;
 		this.fileName = fileName;
 		InputStream reader = openResource(fileName);
 		try {
-			parse(reader);
+			parse(reader, charsetName);
 		} finally {
 			if (reader != null) {
 				reader.close();
@@ -195,8 +211,23 @@ public class PdttFile {
 	 * @throws Exception
 	 */
 	protected void parse(InputStream inputStream) throws Exception {
-		BufferedReader bReader = new BufferedReader(new InputStreamReader(
-				inputStream));
+		parse(inputStream, null);
+	}
+
+	/**
+	 * Internal method for parsing a .pdtt test file
+	 * 
+	 * @param inputStream
+	 * @param charsetName
+	 *            charset to use (if null, platform's default charset will be
+	 *            used)
+	 * @throws Exception
+	 */
+	protected void parse(InputStream inputStream, String charsetName)
+			throws Exception {
+		BufferedReader bReader = charsetName != null ? new BufferedReader(
+				new InputStreamReader(inputStream, charsetName))
+				: new BufferedReader(new InputStreamReader(inputStream));
 
 		String line = bReader.readLine();
 		STATES state = null;
@@ -265,8 +296,10 @@ public class PdttFile {
 		w.println(file.trim());
 		w.println(STATES.EXPECT.getName());
 		w.println(expected.trim());
-		w.println(STATES.OTHER.getName());
-		w.println(other.trim());
+		if (other != null) {
+			w.println(STATES.OTHER.getName());
+			w.println(other.trim());
+		}
 	}
 
 	/**
