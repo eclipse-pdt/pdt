@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
@@ -118,6 +119,9 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 							evaluated.add(evaluatedType);
 						} else {
 							if (currentNamespace != null) {
+								ModuleDeclaration moduleDeclaration = SourceParserUtil
+										.getModuleDeclaration(currentNamespace
+												.getSourceModule());
 								if (typeName.indexOf(SPLASH) > 0) {
 									// check if the first part is an
 									// alias,then get the full name
@@ -125,7 +129,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 											typeName.indexOf(SPLASH));
 									final Map<String, UsePart> result = PHPModelUtils
 											.getAliasToNSMap(prefix,
-													context.getRootNode(),
+													moduleDeclaration,
 													doc.sourceStart(),
 													currentNamespace, true);
 									if (result.containsKey(prefix)) {
@@ -143,7 +147,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 									String prefix = typeName;
 									final Map<String, UsePart> result = PHPModelUtils
 											.getAliasToNSMap(prefix,
-													context.getRootNode(),
+													moduleDeclaration,
 													doc.sourceStart(),
 													currentNamespace, true);
 									if (result.containsKey(prefix)) {
