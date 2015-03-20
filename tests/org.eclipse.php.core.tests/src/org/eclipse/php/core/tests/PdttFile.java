@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -22,10 +24,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-
-import junit.framework.Assert;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
@@ -54,7 +59,8 @@ public class PdttFile {
 	protected enum STATES {
 
 		TEST("--TEST--"), CONFIG("--CONFIG--"), PREFERENCES("--PREFERENCES--"), FILE(
-				"--FILE--"), EXPECT("--EXPECT--"), OTHER("--OTHER--");
+				"--FILE--"), EXPECT("--EXPECT--"), OTHER("--OTHER--"), OTHER_FILE(
+				"--FILE([0-9]+)--");
 
 		private static class Names {
 			private static Map<String, STATES> map = new HashMap<String, STATES>();
@@ -82,6 +88,11 @@ public class PdttFile {
 	private String preferences;
 	private String description;
 	private String file = "";
+	/**
+	 * @since 3.5 List of additional files
+	 */
+	private List<CharSequence> otherFiles = new LinkedList<CharSequence>();
+	private int currentFile;
 	private String expected = "";
 	private String other;
 
@@ -113,6 +124,13 @@ public class PdttFile {
 			if (reader != null) {
 				reader.close();
 			}
+			List<CharSequence> tmp = new ArrayList<CharSequence>(
+					otherFiles.size());
+			int i = 0;
+			for (CharSequence seq : otherFiles) {
+				tmp.add(i, seq.toString());
+			}
+			otherFiles = tmp;
 		}
 	}
 
@@ -122,8 +140,9 @@ public class PdttFile {
 	 * @return
 	 */
 	public String getDescription() throws Exception {
-		Assert.assertNotNull("File: " + fileName
-				+ " doesn't contain --TEST-- section", description);
+		assertNotNull(
+				"File: " + fileName + " doesn't contain --TEST-- section",
+				description);
 		return description;
 	}
 
@@ -155,9 +174,21 @@ public class PdttFile {
 	 * @return
 	 */
 	public String getFile() {
-		Assert.assertNotNull("File: " + fileName
-				+ " doesn't contain --FILE-- section", file);
+		assertNotNull(
+				"File: " + fileName + " doesn't contain --FILE-- section", file);
 		return file;
+	}
+
+	public String getOtherFile(int index) {
+		assertNotNull(new StringBuilder("File:").append(fileName).append('[')
+				.append(index).append("] doesn't contain --FILE").append(index)
+				.append("-- section").toString(), otherFiles.get(index));
+
+		return otherFiles.get(index).toString();
+	}
+
+	public String[] getOtherFiles() {
+		return otherFiles.toArray(new String[otherFiles.size()]);
 	}
 
 	/**
@@ -166,7 +197,7 @@ public class PdttFile {
 	 * @return
 	 */
 	public String getExpected() {
-		Assert.assertNotNull("File: " + fileName
+		assertNotNull("File: " + fileName
 				+ " doesn't contain --EXPECT-- section", expected);
 		return expected;
 	}
@@ -201,7 +232,7 @@ public class PdttFile {
 		String line = bReader.readLine();
 		STATES state = null;
 		while (line != null) {
-			if (line.matches("--[A-Z]+--")) {
+			if (line.matches("--[A-Z0-9]+--")) {
 				state = parseStateLine(line);
 				if (state == null) {
 					throw new Exception("Wrong state: " + line);
@@ -276,7 +307,18 @@ public class PdttFile {
 	 * @return STATE
 	 */
 	protected STATES parseStateLine(String line) {
-		return STATES.byName(line);
+		STATES state = STATES.byName(line);
+		if (state == null) {
+			Pattern compile = Pattern.compile(STATES.OTHER_FILE.name);
+			Matcher matcher = compile.matcher(line);
+			if (matcher.matches()) {
+				state = STATES.OTHER_FILE;
+				currentFile = Integer.valueOf(matcher.group(1));
+				otherFiles.add(currentFile, new StringBuilder());
+			}
+		}
+
+		return state;
 	}
 
 	/**
@@ -293,6 +335,10 @@ public class PdttFile {
 			break;
 		case FILE:
 			this.file += (line + "\n");
+			break;
+		case OTHER_FILE:
+			((StringBuilder) this.otherFiles.get(currentFile)).append(line)
+					.append('\n');
 			break;
 		case EXPECT:
 			this.expected += (line + "\n");

@@ -1,0 +1,74 @@
+--TEST--
+Bug http://eclip.se/462553
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+namespace testspace
+{
+    use ParentClassSpace\ParentClass;
+    
+    
+    class TestClass
+    {
+        function testme()
+        {
+            $parent = new ParentClass();
+            
+            foreach($parent->child_group->get_all() as $child)
+            {
+                $child->|
+            }            
+        }
+    }    
+}
+
+
+--FILE0--
+<?php
+namespace ChildSpace
+{
+    class Child
+    {
+        public $property_1; 
+        
+        public $property_2;
+    
+    }
+}
+--FILE1--
+<?php
+namespace ChildSpace
+{
+    class ChildGroup
+    {
+    	/**
+    	 * @var Child[]
+    	 */
+        public	$group = array();
+        
+        
+        public function get_all()
+        {
+            return $this->group;
+        }
+    }
+}
+--FILE2--
+<?php
+namespace ParentClassSpace
+{
+    use ChildSpace\ChildGroup;
+    
+    class ParentClass
+    {
+        /**
+         * @var ChildGroup
+         */    
+        public $child_group = array();
+        
+    }
+}
+--EXPECT--
+field($property_1)
+field($property_2)
