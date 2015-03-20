@@ -15,6 +15,7 @@ package org.eclipse.php.core.tests.codeassist;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -84,6 +85,7 @@ public class CodeAssistTests {
 
 	protected IProject project;
 	protected IFile testFile;
+	protected List<IFile> otherFiles = null;
 	protected PHPVersion version;
 
 	public CodeAssistTests(PHPVersion version, String[] fileNames) {
@@ -129,7 +131,8 @@ public class CodeAssistTests {
 	public void assist(String fileName) throws Exception {
 		final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(fileName);
 		pdttFile.applyPreferences();
-		CompletionProposal[] proposals = getProposals(pdttFile.getFile());
+		CompletionProposal[] proposals = getProposals(pdttFile.getFile(),
+				pdttFile.getOtherFiles());
 		compareProposals(proposals, pdttFile);
 	}
 
@@ -138,6 +141,14 @@ public class CodeAssistTests {
 		if (testFile != null) {
 			testFile.delete(true, null);
 			testFile = null;
+		}
+		if (otherFiles != null) {
+			for (IFile file : otherFiles) {
+				if (file != null) {
+					file.delete(true, null);
+				}
+			}
+			otherFiles = null;
 		}
 	}
 
@@ -150,7 +161,7 @@ public class CodeAssistTests {
 	 * @return offset where's the offset character set.
 	 * @throws Exception
 	 */
-	protected int createFile(String data) throws Exception {
+	protected int createFile(String data, String[] otherFiles) throws Exception {
 		int offset = data.lastIndexOf(OFFSET_CHAR);
 		if (offset == -1) {
 			throw new IllegalArgumentException("Offset character is not set");
@@ -160,6 +171,15 @@ public class CodeAssistTests {
 		data = data.substring(0, offset) + data.substring(offset + 1);
 		testFile = project.getFile("test.php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
+		this.otherFiles = new ArrayList<IFile>(otherFiles.length);
+		int i = 0;
+		for (String otherFileContent : otherFiles) {
+			IFile tmp = project.getFile(String.format("test%s.php", i));
+			tmp.create(new ByteArrayInputStream(otherFileContent.getBytes()),
+					true, null);
+			this.otherFiles.add(i, tmp);
+			i++;
+		}
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
 		testFile.touch(new NullProgressMonitor());
@@ -174,8 +194,9 @@ public class CodeAssistTests {
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}
 
-	public CompletionProposal[] getProposals(String data) throws Exception {
-		int offset = createFile(data);
+	public CompletionProposal[] getProposals(String data, String[] otherFiles)
+			throws Exception {
+		int offset = createFile(data, otherFiles);
 		return getProposals(offset);
 	}
 
