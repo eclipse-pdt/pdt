@@ -270,10 +270,10 @@
 	</pluginRepositories>
 
 	<modules>
-		<module>../plugins</module>
-		<module>../tests</module>
-		<module>../features</module>
-		<module>../dev/org.eclipse.php-repository</module>
+		<module>plugins</module>
+		<module>tests</module>
+		<module>features</module>
+		<module>dev/org.eclipse.php-repository</module>
 	</modules>
 
 </project>
