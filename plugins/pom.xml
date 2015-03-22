@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.php</groupId>
 	<artifactId>plugins</artifactId>
@@ -9,7 +10,7 @@
 		<artifactId>org.eclipse.pdt.releng</artifactId>
 		<groupId>org.eclipse.php</groupId>
 		<version>3.5.0-SNAPSHOT</version>
-		<relativePath>../org.eclipse.pdt.releng/pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<profiles>
 		<profile>
@@ -76,8 +77,8 @@
 		</profile>
 	</profiles>
 
-  <modules>
-    <module>org.eclipse.php.help</module>
+	<modules>
+		<module>org.eclipse.php.help</module>
 		<module>org.eclipse.php.core</module>
 		<module>org.eclipse.php.core.parser</module>
 		<module>org.eclipse.php.debug.core</module>
