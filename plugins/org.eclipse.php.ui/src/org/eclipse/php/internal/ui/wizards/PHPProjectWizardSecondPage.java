@@ -104,8 +104,11 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 					throws InvocationTargetException, InterruptedException {
 				try {
 					if (fIsAutobuild == null) {
-						fIsAutobuild = Boolean.valueOf(CoreUtility
-								.enableAutoBuild(false));
+						fIsAutobuild = fFirstPage.getIsAutobuild();
+						if (fIsAutobuild == null) {
+							fIsAutobuild = Boolean.valueOf(CoreUtility
+									.enableAutoBuild(false));
+						}
 					}
 					updateProject(monitor);
 				} catch (CoreException e) {
@@ -497,6 +500,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 		} finally {
 			monitor.done();
 			if (fIsAutobuild != null) {
+
 				CoreUtility.enableAutoBuild(fIsAutobuild.booleanValue());
 				fIsAutobuild = null;
 			}

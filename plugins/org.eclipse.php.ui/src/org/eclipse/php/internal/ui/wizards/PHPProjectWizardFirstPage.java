@@ -991,4 +991,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		}
 		return null;
 	}
+
+	protected Boolean getIsAutobuild() {
+		return fIsAutobuild;
+	}
 }
