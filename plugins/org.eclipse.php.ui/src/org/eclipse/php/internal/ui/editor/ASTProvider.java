@@ -515,7 +515,10 @@ public final class ASTProvider {
 								.println(getThreadName()
 										+ " - " + DEBUG_PREFIX + "waiting for AST for: " + input.getElementName()); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-					fWaitLock.wait();
+					fWaitLock.wait(30000); // XXX: The 30 seconds timeout is an
+											// attempt to at least avoid a
+											// deadlock. See
+											// https://bugs.eclipse.org/366048#c21
 				}
 
 				// Check whether active element is still valid

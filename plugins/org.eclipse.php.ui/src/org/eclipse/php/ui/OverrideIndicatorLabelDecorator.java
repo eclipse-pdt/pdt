@@ -159,7 +159,10 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator,
 	protected int getOverrideIndicators(IMethod method) throws ModelException,
 			IOException {
 		Program astRoot = SharedASTProvider.getAST(method.getSourceModule(),
-				SharedASTProvider.WAIT_ACTIVE_ONLY, null);
+				SharedASTProvider.WAIT_NO, null);
+		// XXX: WAIT_NO (instead of WAIT_ACTIVE_ONLY) due bug 443712 and until
+		// bug 438661 will be fixed (PHPReconcilingStrategy require access to
+		// UI thread)
 		if (astRoot != null) {
 			int res = findInHierarchyWithAST(astRoot, method);
 			if (res != -1) {
