@@ -52,7 +52,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 
 	public abstract String yytext();
 
-	public abstract void reset(Reader reader, char[] buffer, int[] parameters);
+	protected abstract void reset(Reader reader, char[] buffer, int[] parameters);
 
 	public abstract int yystate();
 
@@ -157,14 +157,6 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 		return getZZStartRead() - getZZPushBackPosition();
 	}
 
-	/**
-	 * reset to a new segment. this do not change the state of the lexer. This
-	 * method is used to scan nore than one segment as if the are one segment.
-	 */
-	public void reset(final Segment s) {
-		reset(s.array, s.offset, s.count);
-	}
-
 	public void initialize(final int state) {
 		phpStack = new StateStack();
 		yybegin(state);
@@ -172,7 +164,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 
 	/**
 	 * reset to a new segment. this do not change the state of the lexer. This
-	 * method is used to scan nore than one segment as if the are one segment.
+	 * method is used to scan more than one segment as if the are one segment.
 	 */
 
 	// lex to the end of the stream.

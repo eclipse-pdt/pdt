@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.php.core.tests.PDTTUtils;
+import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
@@ -65,7 +66,8 @@ public class CompilerParserTests {
 
 	@Test
 	public void parserTest(String fileName) throws Exception {
-		final PdttFile pdttFile = new PdttFile(fileName);
+		final PdttFile pdttFile = new PdttFile(PHPCoreTests.getDefault()
+				.getBundle(), fileName, "UTF-8");
 
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdttFile
 				.getFile().trim().getBytes());
