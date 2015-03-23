@@ -296,8 +296,17 @@ public class PdttFile {
 		w.println(file.trim());
 		w.println(STATES.EXPECT.getName());
 		w.println(expected.trim());
-		w.println(STATES.OTHER.getName());
-		w.println(other.trim());
+		if (other != null) {
+			w.println(STATES.OTHER.getName());
+			w.println(other.trim());
+		}
+		if (otherFiles.size() > 0) {
+			int i = 0;
+			for (CharSequence seq : otherFiles) {
+				w.println(STATES.OTHER_FILE.getName() + i);
+				w.println(seq.toString().trim());
+			}
+		}
 	}
 
 	/**
