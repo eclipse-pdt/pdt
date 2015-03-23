@@ -50,11 +50,10 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
     private int tagPosition = 0;
     private StringBuffer sBuffer = null;
     private int numOfLines = 0;
-    private int startPos = 0;
 	private List<Scalar> textList;
 
 	public PHPDocBlock parse() {
-		int start = zzStartRead - zzPushbackPos;
+		int start = zzStartRead - _zzPushbackPos;
 		longDesc = "";
 		tagList = new ArrayList<PHPDocTag>();
 		textList = new ArrayList<Scalar>();
@@ -83,7 +82,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		PHPDocTag[] tags = new PHPDocTag[tagList.size()];
 		tagList.toArray(tags);
 
-		PHPDocBlock rv = new PHPDocBlock(start, zzMarkedPos - zzPushbackPos,
+		PHPDocBlock rv = new PHPDocBlock(start, zzMarkedPos - _zzPushbackPos,
 				shortDesc, longDesc, tags, textList);
 
 		return rv;
@@ -113,7 +112,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 	private int findTagPosition() {
 		for (int i = zzStartRead; i < zzMarkedPos; i++) {
 			if (zzBuffer[i] == '@') {
-				return i - zzPushbackPos;
+				return i - _zzPushbackPos;
 			}
 		}
 		return -1;
@@ -137,7 +136,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		}
 
 		PHPDocTag basicPHPDocTag = new PHPDocTag(tagPosition, zzStartRead
-				- zzPushbackPos, currTagId, value, getTexts(tagPosition,
+				- _zzPushbackPos, currTagId, value, getTexts(tagPosition,
 				zzStartRead, true));
 		tagList.add(basicPHPDocTag);
 	}
@@ -240,11 +239,6 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
         setTagValue();
     }
 
-    private void updateStartPos(){
-        startPos = zzMarkedPos;
-        oldString = null;
-    }
-    
 	/**
 	 * Resets the {@code PhpAstLexer} properties to given parameters. Be
 	 * careful, method {@link #next_token()} also caches those properties using
@@ -263,7 +257,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		this.zzReader = reader;
 		this.zzBuffer = buffer;
 		this.zzMarkedPos = parameters[0];
-		this.zzPushbackPos = parameters[1];
+		this._zzPushbackPos = parameters[1];
 		this.zzCurrentPos = parameters[2];
 		this.zzStartRead = parameters[3];
 		this.zzEndRead = parameters[4];
@@ -274,6 +268,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		this.yycolumn = 0;
 		this.zzAtEOF = parameters[7] != 0;
 		this.zzEOFDone = parameters[8] != 0;
+		this.zzFinalHighSurrogate = parameters[9];
 
 		// NB: zzAtBOL and zzLexicalState won't be set using (directly) the
 		// array "parameters", we always restart this scanner with the YYINITIAL
@@ -283,9 +278,9 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 	}
     
 	public int[] getParamenters() {
-		return new int[] { zzMarkedPos, zzPushbackPos, zzCurrentPos,
+		return new int[] { zzMarkedPos, _zzPushbackPos, zzCurrentPos,
 				zzStartRead, zzEndRead, yyline, zzAtBOL ? 1 : 0,
-				zzAtEOF ? 1 : 0, zzEOFDone ? 1 : 0 };
+				zzAtEOF ? 1 : 0, zzEOFDone ? 1 : 0, zzFinalHighSurrogate };
 	}
     
     public char[] getBuffer(){
