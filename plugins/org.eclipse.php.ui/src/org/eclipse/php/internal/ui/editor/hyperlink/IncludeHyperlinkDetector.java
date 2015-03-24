@@ -14,6 +14,7 @@ package org.eclipse.php.internal.ui.editor.hyperlink;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
@@ -69,8 +70,9 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 			}
 
 			Set<String> set = new HashSet<String>();
-			if (sourceModule.getResource() != null) {
-				set.add(sourceModule.getResource().getLocation().toOSString());
+			IResource resource = sourceModule.getResource();
+			if (resource != null && resource.getLocation() != null) {
+				set.add(resource.getLocation().toOSString());
 			}
 			ISourceModule includedSourceModule = FileNetworkUtility
 					.findSourceModule(sourceModule, includeVisitor.getFile(),
