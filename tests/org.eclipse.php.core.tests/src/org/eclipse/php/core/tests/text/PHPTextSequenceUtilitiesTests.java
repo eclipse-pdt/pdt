@@ -91,4 +91,36 @@ public class PHPTextSequenceUtilitiesTests {
 		assertEquals("'MyString'", argNames[1]);
 		assertNull(argNames[0]);
 	}
+
+	@Test
+	public void suggestObjectOperator() {
+		assertEquals(">", PHPTextSequenceUtilities.suggestObjectOperator("$x-"));
+		assertEquals(">",
+				PHPTextSequenceUtilities.suggestObjectOperator("$x -"));
+
+		assertEquals("->", PHPTextSequenceUtilities.suggestObjectOperator("$x"));
+		assertEquals("->",
+				PHPTextSequenceUtilities.suggestObjectOperator("$x->field"));
+		assertEquals("->",
+				PHPTextSequenceUtilities
+						.suggestObjectOperator("$x\n->call()\n"));
+		assertEquals("->",
+				PHPTextSequenceUtilities.suggestObjectOperator("X::$x"));
+
+		assertEquals("->",
+				PHPTextSequenceUtilities.suggestObjectOperator("$x[0]"));
+
+	}
+
+	@Test
+	public void suggestStaticObjectOperator() {
+		assertEquals(":", PHPTextSequenceUtilities.suggestObjectOperator("X:"));
+		assertEquals("::", PHPTextSequenceUtilities.suggestObjectOperator("X"));
+	}
+
+	@Test
+	public void ignoreObjecOperator() {
+		assertNull(PHPTextSequenceUtilities.suggestObjectOperator("$x->"));
+		assertNull(PHPTextSequenceUtilities.suggestObjectOperator("X::"));
+	}
 }
