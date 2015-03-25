@@ -22,16 +22,16 @@
     </extension>
      <extension point="org.eclipse.ui.bindings">
         <key commandId="org.eclipse.php.refactoring.ui.commands.extractVariable"
-            contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.php.ui.zendStudioAcceleratorConfiguration"
+            contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M3+M2+L" />
         <key commandId="org.eclipse.php.refactoring.ui.commands.extractVariable"
-            contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.php.ui.zendStudioAcceleratorConfiguration"
+            contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M3+M2+L" />
         <key commandId="org.eclipse.php.refactoring.ui.commands.extractMethod"
-            contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.php.ui.zendStudioAcceleratorConfiguration"
+            contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M3+M2+M" />
         <key commandId="org.eclipse.php.refactoring.ui.commands.extractMethod"
-            contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.php.ui.zendStudioAcceleratorConfiguration"
+            contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M3+M2+M" />      
                   
     </extension>
