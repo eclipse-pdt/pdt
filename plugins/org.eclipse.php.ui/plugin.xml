@@ -690,6 +690,15 @@
 	</extension>
 
 	<extension point="org.eclipse.ui.handlers">
+		<handler class="org.eclipse.php.internal.ui.actions.AddObjectOperator"
+			commandId="org.eclipse.php.ui.edit.text.add.objectoperator">
+			<activeWhen>
+				<reference definitionId="org.eclipse.php.ui.phpContentType.definition" />
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.eclipse.php.ui.phpContentType.definition" />
+			</enabledWhen>
+		</handler>
 		<handler class="org.eclipse.php.internal.ui.actions.AddDescriptionHandler"
 			commandId="org.eclipse.php.ui.edit.text.add.description">
 			<activeWhen>
@@ -1108,6 +1117,8 @@
       </command>
 		<command name="%action.addDescription.name" description="%action.addDescription.description"
 			categoryId="org.eclipse.ui.category.edit" id="org.eclipse.php.ui.edit.text.add.description" />
+		<command name="%action.addObjectOperator.name" description="%action.addObjectOperator.description"
+			categoryId="org.eclipse.ui.category.edit" id="org.eclipse.php.ui.edit.text.add.objectoperator" />
 		<command name="%toggleMarkOccurrences.label" description="%toggleMarkOccurrences.description"
 			categoryId="org.eclipse.php.ui.category.source" id="org.eclipse.php.ui.edit.text.toggleMarkOccurrences" />
 		<!-- perspectives -->
@@ -1234,6 +1245,9 @@
             
 		<key sequence="M1+M2+J" contextId="org.eclipse.php.ui.phpEditorScope"
 			commandId="org.eclipse.php.ui.edit.text.add.description" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+
+		<key sequence="CTRL+." commandId="org.eclipse.php.ui.edit.text.add.objectoperator" 
+		contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 
 		<!-- refactoring -->
 		<key commandId="org.eclipse.dltk.ui.edit.text.script.rename.element"
