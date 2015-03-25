@@ -34,6 +34,7 @@ public final class PHPUIMessages extends NLS {
 		return fResourceBundle;
 	}
 
+	public static String AddObjectOperator_tooltip;
 	public static String CodeAssistPreferencePage_autoActivationDelayPositive;
 	public static String IncludePathDialogAccess_ExtZIPArchiveDialog_new_title;
 	public static String RemoveBlockComment_description;
