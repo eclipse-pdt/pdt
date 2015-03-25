@@ -55,6 +55,9 @@ public class PHPTextSequenceUtilities {
 	private static final String LBRACKET = "["; //$NON-NLS-1$
 	private static final String RBRACKET = "]"; //$NON-NLS-1$
 
+	private static final String OBJECT_OPERATOR = "->"; //$NON-NLS-1$
+	private static final String PAAMAYIM_NEKUDOTAYIM = "::"; //$NON-NLS-1$
+
 	private PHPTextSequenceUtilities() {
 	}
 
@@ -711,6 +714,62 @@ public class PHPTextSequenceUtilities {
 		}
 
 		return args.toArray(new String[args.size()]);
+	}
+
+	public static String suggestObjectOperator(CharSequence statement) {
+		String insert = null;
+		statement = statement.toString().trim();
+		int statementPosition = statement.length() - 1;
+		if (statementPosition < 0) {
+			return null;
+		}
+
+		int charAt = statement.charAt(statementPosition);
+		if (charAt == '>') {
+			return null;
+		}
+		if (charAt == '-') {
+			insert = String.valueOf('>');
+		} else if (charAt == ':') {
+			if (statementPosition > 0
+					&& statement.charAt(statementPosition - 1) == ':') {
+				return null;
+			}
+			insert = String.valueOf(':');
+		} else {
+			statementPosition = PHPTextSequenceUtilities.readBackwardSpaces(
+					statement, statementPosition);
+			switch (statement.charAt(statementPosition)) {
+			case '}':
+			case ')':
+			case ']':
+				insert = OBJECT_OPERATOR;
+				break;
+			case '>':
+			case ':':
+				return null;
+			default:
+				int identStart = PHPTextSequenceUtilities
+						.readIdentifierStartIndex(statement, statementPosition,
+								true);
+				if (statement.charAt(identStart) == '$'
+						|| statement.charAt(identStart) == '}') {
+					insert = OBJECT_OPERATOR;
+				} else {
+					identStart = PHPTextSequenceUtilities.readBackwardSpaces(
+							statement, identStart - 1);
+					if (identStart > 1 && statement.charAt(identStart) == '>'
+							&& statement.charAt(identStart - 1) == '-') {
+						insert = OBJECT_OPERATOR;
+					} else {
+						insert = PAAMAYIM_NEKUDOTAYIM;
+					}
+				}
+			}
+
+		}
+
+		return insert;
 	}
 
 }
