@@ -27,7 +27,6 @@ import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.debug.internal.ui.viewers.model.InternalTreeModelViewer;
-import org.eclipse.debug.internal.ui.views.launch.DebugElementAdapterFactory;
 import org.eclipse.debug.internal.ui.views.launch.LaunchView;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.IDebugModelPresentation;
@@ -111,7 +110,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		// class, we insert the
 		// factory before any other factory.
 		AdapterManager manager = (AdapterManager) Platform.getAdapterManager();
-		List<DebugElementAdapterFactory> list = (List<DebugElementAdapterFactory>) manager
+		List<IAdapterFactory> list = (List<IAdapterFactory>) manager
 				.getFactories().get(IVariable.class.getName());
 		PHPDebugElementAdapterFactory propertiesFactory = new PHPDebugElementAdapterFactory();
 		manager.registerAdapters(propertiesFactory, IVariable.class);
