@@ -1,0 +1,22 @@
+--TEST--
+Test different versions of Magic Method (first magic method is broken)
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+/**
+ * @method static getString
+ * @method static void setInteger(integer $integer)
+ * @method static setString(integer $integer)
+ */
+class Concrete
+{
+    function realFunction($param)
+    {}
+}
+
+Concrete::|
+--EXPECT--
+field(class)
+method(setInteger)
+method(setString)
