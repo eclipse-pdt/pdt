@@ -16,11 +16,7 @@ import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIN
 import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIND_THIS;
 import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.VIRTUAL_CLASS;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +46,7 @@ import org.eclipse.debug.core.model.*;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.core.phar.PharPath;
+import org.eclipse.php.internal.debug.core.PHPDebugUtil;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -829,20 +826,13 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		if (stopDebugURL == null) {
 			return;
 		}
+		DBGpLogger.debug("browser is not null, sending " + stopDebugURL); //$NON-NLS-1$
 		try {
-			DBGpLogger.debug("browser is not null, sending " + stopDebugURL); //$NON-NLS-1$
-			URL url = new URL(stopDebugURL);
-			try {
-				URLConnection connection = url.openConnection();
-				connection.connect();
-			} catch (IOException e) {
-				DBGpLogger
-						.logException(
-								"Failed to send stop XDebug session URL: " + stopDebugURL, this, e); //$NON-NLS-1$
-			}
-		} catch (MalformedURLException e) {
-			// Should not happen
-			DBGpLogger.logException(null, this, e);
+			PHPDebugUtil.openLaunchURL(stopDebugURL);
+		} catch (DebugException e) {
+			DBGpLogger
+					.logException(
+							"Failed to send stop XDebug session URL: " + stopDebugURL, this, e); //$NON-NLS-1$
 		}
 	}
 
