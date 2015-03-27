@@ -1,5 +1,7 @@
 --TEST--
 Test different versions of Magic Method (first magic method is broken)
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=true
 --FILE--
 <?php
 /**
@@ -15,5 +17,6 @@ class Concrete
 
 Concrete::|
 --EXPECT--
+method(realFunction)
 method(setInteger)
 method(setString)
