@@ -61,8 +61,6 @@ import org.eclipse.php.internal.core.PHPVersion;
     private boolean asp_tags = false;
     private boolean short_tags_allowed = true;
     private StateStack stack = new StateStack();
-    private char yy_old_buffer[] = new char[ZZ_BUFFERSIZE];
-    private int yy_old_pushbackPos;
     protected int commentStartPosition;
 
 	private AST ast;
@@ -115,7 +113,7 @@ import org.eclipse.php.internal.core.PHPVersion;
     }
 
     protected int getTokenStartPosition() {
-        return zzStartRead - zzPushbackPos;
+        return zzStartRead - _zzPushbackPos;
     }
 
     protected int getTokenLength() {
@@ -123,7 +121,7 @@ import org.eclipse.php.internal.core.PHPVersion;
     }
 
     public int getLength() {
-        return zzEndRead - zzPushbackPos;
+        return zzEndRead - _zzPushbackPos;
     }
     
     private void handleCommentStart() {
@@ -159,9 +157,9 @@ import org.eclipse.php.internal.core.PHPVersion;
     }
 
 	public int[] getParamenters() {
-		return new int[] { zzMarkedPos, zzPushbackPos, zzCurrentPos,
+		return new int[] { zzMarkedPos, _zzPushbackPos, zzCurrentPos,
 				zzStartRead, zzEndRead, yyline, zzAtBOL ? 1 : 0,
-				zzAtEOF ? 1 : 0, zzEOFDone ? 1 : 0 };
+				zzAtEOF ? 1 : 0, zzEOFDone ? 1 : 0, zzFinalHighSurrogate };
 	}
     
 	/**
@@ -206,16 +204,17 @@ import org.eclipse.php.internal.core.PHPVersion;
 		this.zzReader = reader;
 		this.zzBuffer = buffer;
 		this.zzMarkedPos = parameters[0];
-		this.zzPushbackPos = parameters[1];
+		this._zzPushbackPos = parameters[1];
 		this.zzCurrentPos = parameters[2];
 		this.zzStartRead = parameters[3];
 		this.zzEndRead = parameters[4];
 		this.yyline = parameters[5];
-		this.yychar = this.zzStartRead - this.zzPushbackPos;
+		this.yychar = this.zzStartRead - this._zzPushbackPos;
 		// XXX: never used
 		this.yycolumn = 0;
 		this.zzAtEOF = parameters[7] != 0;
 		this.zzEOFDone = parameters[8] != 0;
+		this.zzFinalHighSurrogate = parameters[9];
 		// XXX: check if there's no side-effect to reset zzAtBOL
 		// when zzAtEOF is false and zzMarkedPos is equal to zzStartRead.
 		// One possible case would be that IDocumentorLexer#parse() matches

@@ -18,6 +18,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.php.core.tests.PDTTUtils;
+import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
@@ -59,7 +60,8 @@ public class DomParserTests {
 
 	@Test
 	public void parserTest(String fileName) throws Exception {
-		PdttFile file = new PdttFile(fileName);
+		PdttFile file = new PdttFile(PHPCoreTests.getDefault().getBundle(),
+				fileName, "UTF-8");
 
 		parser.setSource(file.getFile().trim().toCharArray());
 		Program program = parser.createAST(new NullProgressMonitor());
