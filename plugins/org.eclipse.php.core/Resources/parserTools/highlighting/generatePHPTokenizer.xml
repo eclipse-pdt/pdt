@@ -10,23 +10,28 @@
         Zend Technologies
  -->
 <project name="Generating PHPTokenizer" default="generateScanner" basedir=".">
+
 	<import file="../jflex/build.xml" />
+
 	<target name="checkUpToDate">
 		<uptodate
 			property="upToDate"
-			srcfile="PHPTokenizer.jflex"
-			targetfile="../../../src/org/eclipse/php/internal/core/documentModel/parser/PHPTokenizer.java" />
+			targetfile="../../../src/org/eclipse/php/internal/core/documentModel/parser/PHPTokenizer.java">
+			<srcfiles dir="." includes="PHPTokenizer.jflex" />
+			<srcfiles dir="../jflex" includes="PHPTokenizer.skeleton" />
+		</uptodate>
 	</target>
 
 	<target name="generateScanner" depends="checkUpToDate,getJFlexJar" unless="upToDate">
 		<java jar="${jflexJar}" fork="true">
+			<arg value="--legacydot" />
 			<arg value="-d" />
 			<arg value="../../../src/org/eclipse/php/internal/core/documentModel/parser" />
 			<arg value="-skel" />
-			<arg value="skeleton.sse" />
+			<arg value="../jflex/PHPTokenizer.skeleton" />
+			<arg value="-nobak" />
 			<arg value="PHPTokenizer.jflex" />
 		</java>
-		
-		<delete file="../../../src/org/eclipse/php/internal/core/documentModel/parser/PHPTokenizer.java~" />
 	</target>
+
 </project>
