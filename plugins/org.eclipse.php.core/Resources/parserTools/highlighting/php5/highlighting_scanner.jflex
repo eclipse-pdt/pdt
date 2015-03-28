@@ -45,23 +45,14 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
     public PhpLexer(int state){
         initialize(state);
     }
-    public void reset(char array[], int offset, int length) {
-        this.zzBuffer = array;
-        this.zzCurrentPos = offset;
-        this.zzMarkedPos = offset;
-        this.zzPushbackPos = offset;
-        this.yychar = offset;
-        this.zzEndRead = offset + length;
-        this.zzStartRead = offset;
-        this.zzAtEOF = zzCurrentPos >= zzEndRead;
-        this.firstPos = offset;
-    }
 
-    public void reset(java.io.Reader  reader, char[] buffer, int[] parameters){
+    // NB: this method resets the lexer only partially
+    protected void reset(java.io.Reader reader, char[] buffer, int[] parameters){
     	this.zzReader = reader;
     	this.zzBuffer = buffer;
+    	this.zzFinalHighSurrogate = 0;
     	this.zzMarkedPos = parameters[0];
-    	this.zzPushbackPos = parameters[1];
+    	this._zzPushbackPos = parameters[1];
     	this.zzCurrentPos = parameters[2];
     	this.zzStartRead = parameters[3];
     	this.zzEndRead = parameters[4];
@@ -74,7 +65,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
     }
 
     public int[] getParamenters(){
-    	return new int[]{zzMarkedPos, zzPushbackPos, zzCurrentPos, zzStartRead, zzEndRead, yyline, zzLexicalState};
+    	return new int[]{zzMarkedPos, _zzPushbackPos, zzCurrentPos, zzStartRead, zzEndRead, yyline, zzLexicalState};
     }
 
     protected int getZZLexicalState() {
@@ -98,7 +89,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
     }
 
     protected int getZZPushBackPosition() {
-    	return this.zzPushbackPos;
+    	return this._zzPushbackPos;
     }
 
 	protected void pushBack(int i) {

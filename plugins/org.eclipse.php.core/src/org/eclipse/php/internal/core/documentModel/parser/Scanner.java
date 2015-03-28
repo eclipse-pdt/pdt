@@ -57,18 +57,6 @@ public interface Scanner {
 
 	public void getText(int start, int length, Segment s);
 
-	/**
-	 * reset to a new segment. this do not change the state of the lexer. This
-	 * method is used to scan nore than one segment as if the are one segment.
-	 */
-	public void reset(char array[], int offset, int length);
-
-	/**
-	 * reset to a new segment. this do not change the state of the lexer. This
-	 * method is used to scan nore than one segment as if the are one segment.
-	 */
-	public void reset(Segment s);
-
 	public void setState(Object state);
 
 	public void initialize(int state);
