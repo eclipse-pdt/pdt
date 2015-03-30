@@ -38,6 +38,7 @@ public class PHPSimpleTypes {
 	public static final IEvaluatedType VOID = new PHPClassType("void"); //$NON-NLS-1$
 	public static final IEvaluatedType NULL = new SimpleType(
 			SimpleType.TYPE_NULL);
+	public static final IEvaluatedType MIXED = new PHPClassType("mixed"); //$NON-NLS-1$
 
 	static {
 		SIMPLE_TYPES = new HashMap<String, IEvaluatedType>();
@@ -55,6 +56,7 @@ public class PHPSimpleTypes {
 		SIMPLE_TYPES.put("object", OBJECT); //$NON-NLS-1$
 		SIMPLE_TYPES.put("void", VOID); //$NON-NLS-1$
 		SIMPLE_TYPES.put("null", NULL); //$NON-NLS-1$
+		SIMPLE_TYPES.put("mixed", MIXED); //$NON-NLS-1$
 	}
 
 	/**
@@ -65,5 +67,27 @@ public class PHPSimpleTypes {
 	 */
 	public static IEvaluatedType fromString(String type) {
 		return SIMPLE_TYPES.get(type.toLowerCase());
+	}
+
+	/**
+	 * Case senitive version f
+	 * 
+	 * @param type
+	 * @return
+	 * @since 3.5
+	 */
+	public static IEvaluatedType fromStringCS(String type) {
+		return SIMPLE_TYPES.get(type);
+	}
+
+	/**
+	 * Case sensitive version
+	 * 
+	 * @param type
+	 * @return
+	 * @since 3.5
+	 */
+	public static boolean isSimpleTypeCS(String type) {
+		return SIMPLE_TYPES.containsKey(type);
 	}
 }

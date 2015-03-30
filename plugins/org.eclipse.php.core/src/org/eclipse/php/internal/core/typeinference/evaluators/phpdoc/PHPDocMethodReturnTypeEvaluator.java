@@ -34,6 +34,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.index.IPHPDocAwareElement;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.AbstractMethodReturnTypeEvaluator;
@@ -101,6 +102,7 @@ public class PHPDocMethodReturnTypeEvaluator extends
 						evaluated.add(evaluatedType);
 					} else {
 						boolean isMulti = false;
+
 						Matcher multi = MULTITYPE_PATTERN.matcher(typeName);
 						if (multi.find()) {
 							if (evalMultiType == null) {
@@ -111,7 +113,16 @@ public class PHPDocMethodReturnTypeEvaluator extends
 						}
 						AbstractMethodReturnTypeGoal goal = (AbstractMethodReturnTypeGoal) getGoal();
 						IType[] types = goal.getTypes();
-						if (typeName.equals(SELF_RETURN_TYPE) && types != null) {
+						if (PHPSimpleTypes.isSimpleTypeCS(typeName)) {
+							IEvaluatedType type = PHPSimpleTypes
+									.fromStringCS(typeName);
+							if (isMulti) {
+								evalMultiType.addType(type);
+							} else {
+								evaluated.add(type);
+							}
+						} else if (typeName.equals(SELF_RETURN_TYPE)
+								&& types != null) {
 							for (IType t : types) {
 								IEvaluatedType type = PHPEvaluationUtils
 										.getEvaluatedType(

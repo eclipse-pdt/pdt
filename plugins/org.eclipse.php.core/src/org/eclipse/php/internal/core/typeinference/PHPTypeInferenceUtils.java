@@ -182,7 +182,9 @@ public class PHPTypeInferenceUtils {
 			IEvaluatedType evaluatedType, ISourceModuleContext context,
 			int offset, IModelAccessCache cache) {
 		ISourceModule sourceModule = context.getSourceModule();
-
+		if (isSimple(evaluatedType)) {
+			return null;
+		}
 		if (evaluatedType instanceof ModelClassType) {
 			return new IType[] { ((ModelClassType) evaluatedType)
 					.getTypeDeclaration() };
@@ -273,7 +275,8 @@ public class PHPTypeInferenceUtils {
 		if (object == null || object instanceof SimpleType) {
 			return true;
 		} else if (PHPSimpleTypes.RESOURCE == object
-				|| PHPSimpleTypes.OBJECT == object) {
+				|| PHPSimpleTypes.OBJECT == object
+				|| PHPSimpleTypes.MIXED == object) {
 			return true;
 		} else if (object instanceof MultiTypeType) {
 			for (IEvaluatedType type : ((MultiTypeType) object).getTypes()) {
