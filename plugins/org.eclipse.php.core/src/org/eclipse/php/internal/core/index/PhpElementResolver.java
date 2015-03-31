@@ -48,6 +48,7 @@ public class PhpElementResolver implements IElementResolver {
 		}
 
 		switch (elementType) {
+		case IModelElement.PACKAGE_DECLARATION:
 		case IModelElement.TYPE:
 			String[] superClassNames = null;
 			if (metadata != null) {

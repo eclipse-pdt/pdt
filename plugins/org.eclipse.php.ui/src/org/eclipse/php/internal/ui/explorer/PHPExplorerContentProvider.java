@@ -18,7 +18,6 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.IOpenable;
 import org.eclipse.dltk.core.IType;
@@ -342,8 +341,8 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 			throws ModelException {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(project,
 				IDLTKSearchScope.SOURCES);
-		IType[] namespaces = PhpModelAccess.getDefault().findTypes(null,
-				MatchRule.PREFIX, Modifiers.AccNameSpace, 0, scope, null);
+		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null,
+				null, MatchRule.PREFIX, 0, 0, scope, null);
 		Map<String, List<IType>> aggregated = new HashMap<String, List<IType>>();
 		for (IType ns : namespaces) {
 			String elementName = ns.getElementName();
@@ -367,8 +366,8 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(create,
 				IDLTKSearchScope.SOURCES);
-		IType[] namespaces = PhpModelAccess.getDefault().findTypes(null,
-				MatchRule.PREFIX, Modifiers.AccNameSpace, 0, scope, null);
+		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null,
+				null, MatchRule.PREFIX, 0, 0, scope, null);
 		Map<String, List<IType>> aggregated = new HashMap<String, List<IType>>();
 		for (IType ns : namespaces) {
 			String elementName = ns.getElementName();

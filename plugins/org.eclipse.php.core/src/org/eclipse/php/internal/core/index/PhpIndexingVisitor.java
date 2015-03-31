@@ -410,7 +410,6 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	}
 
 	public boolean visit(TypeDeclaration type) throws Exception {
-		boolean isNamespace = false;
 		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
 			fCurrentNamespace = namespaceDecl;
@@ -418,57 +417,63 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			if (namespaceDecl.isGlobal()) {
 				return visitGeneral(type);
 			}
-			isNamespace = true;
-		}
+			declarations.push(type);
 
-		Declaration parentDeclaration = null;
-		if (!declarations.empty()) {
-			parentDeclaration = declarations.peek();
-		}
-		declarations.push(type);
-
-		if (!(parentDeclaration instanceof NamespaceDeclaration)) {
-			type.setModifier(Modifiers.AccGlobal);
-		}
-
-		// In case we are entering a nested element
-		if (parentDeclaration instanceof MethodDeclaration) {
-			if (fCurrentNamespace == null) {
-				deferredDeclarations.add(type);
-			} else {
-				deferredNamespacedDeclarations.add(type);
-			}
-			return visitGeneral(type);
-		}
-
-		int modifiers = type.getModifiers();
-
-		// check whether this is a namespace
-		if (isNamespace) {
-			modifiers |= Modifiers.AccNameSpace;
+			int modifiers = type.getModifiers() | Modifiers.AccNameSpace;
 			fCurrentQualifier = type.getName();
-		} else {
-			fCurrentParent = type.getName();
-		}
 
-		String[] superClasses = processSuperClasses(type);
-		StringBuilder metadata = new StringBuilder();
-		for (int i = 0; i < superClasses.length; ++i) {
-			metadata.append(superClasses[i]);
-			if (i < superClasses.length - 1) {
-				metadata.append(","); //$NON-NLS-1$
+			modifiers = markAsDeprecated(modifiers, type);
+			modifyDeclaration(
+					type,
+					new DeclarationInfo(IModelElement.PACKAGE_DECLARATION,
+							modifiers, type.sourceStart(), type.sourceEnd()
+									- type.sourceStart(), type.getNameStart(),
+							type.getNameEnd() - type.getNameStart(), type
+									.getName(), null, encodeDocInfo(type),
+							null, null));
+		} else {
+			Declaration parentDeclaration = null;
+			if (!declarations.empty()) {
+				parentDeclaration = declarations.peek();
 			}
+			declarations.push(type);
+
+			if (!(parentDeclaration instanceof NamespaceDeclaration)) {
+				type.setModifier(Modifiers.AccGlobal);
+			}
+
+			// In case we are entering a nested element
+			if (parentDeclaration instanceof MethodDeclaration) {
+				if (fCurrentNamespace == null) {
+					deferredDeclarations.add(type);
+				} else {
+					deferredNamespacedDeclarations.add(type);
+				}
+				return visitGeneral(type);
+			}
+
+			int modifiers = type.getModifiers();
+			fCurrentParent = type.getName();
+
+			String[] superClasses = processSuperClasses(type);
+			StringBuilder metadata = new StringBuilder();
+			for (int i = 0; i < superClasses.length; ++i) {
+				metadata.append(superClasses[i]);
+				if (i < superClasses.length - 1) {
+					metadata.append(","); //$NON-NLS-1$
+				}
+			}
+			modifiers = markAsDeprecated(modifiers, type);
+			modifyDeclaration(
+					type,
+					new DeclarationInfo(IModelElement.TYPE, modifiers, type
+							.sourceStart(), type.sourceEnd()
+							- type.sourceStart(), type.getNameStart(), type
+							.getNameEnd() - type.getNameStart(),
+							type.getName(), metadata.length() == 0 ? null
+									: metadata.toString(), encodeDocInfo(type),
+							fCurrentQualifier, null));
 		}
-		modifiers = markAsDeprecated(modifiers, type);
-		modifyDeclaration(
-				type,
-				new DeclarationInfo(IModelElement.TYPE, modifiers, type
-						.sourceStart(), type.sourceEnd() - type.sourceStart(),
-						type.getNameStart(), type.getNameEnd()
-								- type.getNameStart(), type.getName(), metadata
-								.length() == 0 ? null : metadata.toString(),
-						encodeDocInfo(type), isNamespace ? null
-								: fCurrentQualifier, null));
 
 		for (PhpIndexingVisitorExtension visitor : extensions) {
 			visitor.visit(type);

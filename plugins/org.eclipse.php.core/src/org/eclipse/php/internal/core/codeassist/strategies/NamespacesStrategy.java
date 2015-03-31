@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
@@ -28,12 +27,12 @@ import org.eclipse.php.internal.core.model.PhpModelAccess;
 public class NamespacesStrategy extends GlobalTypesStrategy {
 
 	public NamespacesStrategy(ICompletionContext context) {
-		super(context, Modifiers.AccNameSpace, 0);
+		super(context, 0, 0);
 	}
 
 	public NamespacesStrategy(ICompletionContext context,
 			boolean addClassInNamespace) {
-		super(context, Modifiers.AccNameSpace, 0, addClassInNamespace);
+		super(context, 0, 0, addClassInNamespace);
 	}
 
 	public String getNSSuffix(AbstractCompletionContext abstractContext) {
@@ -50,10 +49,10 @@ public class NamespacesStrategy extends GlobalTypesStrategy {
 
 		IDLTKSearchScope scope = createSearchScope();
 		if (context.getCompletionRequestor().isContextInformationMode()) {
-			return PhpModelAccess.getDefault().findTypes(null, prefix,
+			return PhpModelAccess.getDefault().findNamespaces(null, prefix,
 					MatchRule.EXACT, trueFlag, falseFlag, scope, null);
 		}
-		return PhpModelAccess.getDefault().findTypes(null, prefix,
+		return PhpModelAccess.getDefault().findNamespaces(null, prefix,
 				MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
 	}
 }
