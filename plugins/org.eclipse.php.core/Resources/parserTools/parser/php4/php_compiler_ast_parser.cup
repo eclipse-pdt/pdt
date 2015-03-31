@@ -6,7 +6,6 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php4;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 import java.util.*;
 import org.eclipse.dltk.ast.*;
 import org.eclipse.dltk.ast.declarations.*;
@@ -19,7 +18,7 @@ import org.eclipse.php.internal.core.ast.scanner.php4.*;
 
 parser code {:
 
-	public Expression createDispatch(Expression dispatcher, Expression property) {
+    public Expression createDispatch(Expression dispatcher, Expression property) {
 
         if (property.getKind() == ASTNodeKinds.REFLECTION_CALL_EXPRESSION) {
             ((ReflectionCallExpression) property).setReceiver (dispatcher);
@@ -33,9 +32,9 @@ parser code {:
 
         return dispatcher;
     }
-    
-    protected Expression constructStaticMember(TypeReference className, Expression dispatcher) {
-    
+
+	protected Expression constructStaticMember(TypeReference className, Expression dispatcher) {
+
 		Expression result = null;
 		if (dispatcher.getKind() == ASTNodeKinds.FIELD_ACCESS) {
 			FieldAccess fieldAccess = (FieldAccess)dispatcher;
@@ -64,7 +63,14 @@ parser code {:
 	protected String getTokenName(int token) {
 		return PhpTokenNames.getName(token);
 	}
-	
+
+    protected void report_expected_token_ids()
+    {
+        // XXX : really verbose, disable it completely for now
+        // if (DLTKCore.DEBUG) {
+        //     super.report_expected_token_ids();
+        // }
+    }
 :}
 
 /* terminals */

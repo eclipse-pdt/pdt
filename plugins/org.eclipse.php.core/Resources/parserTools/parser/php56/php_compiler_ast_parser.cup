@@ -46,6 +46,14 @@ parser code {:
 	protected String getTokenName(int token) {
 		return PhpTokenNames.getName(token);
 	}
+
+    protected void report_expected_token_ids()
+    {
+        // XXX : really verbose, disable it completely for now
+        // if (DLTKCore.DEBUG) {
+        //     super.report_expected_token_ids();
+        // }
+    }
 :}
 
 /* terminals */
