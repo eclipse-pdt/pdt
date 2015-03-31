@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
@@ -152,9 +151,8 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends
 		if (fullName.startsWith("\\")) { //$NON-NLS-1$
 			fullName = fullName.substring(1);
 		}
-		possibleNamespaces = PhpModelAccess.getDefault().findTypes(null,
-				fullName, MatchRule.PREFIX, Modifiers.AccNameSpace, 0, scope,
-				null);
+		possibleNamespaces = PhpModelAccess.getDefault().findNamespaces(null,
+				fullName, MatchRule.PREFIX, 0, 0, scope, null);
 	}
 
 	/**

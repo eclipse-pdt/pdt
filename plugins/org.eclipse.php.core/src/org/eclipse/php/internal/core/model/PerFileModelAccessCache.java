@@ -31,6 +31,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	private Map<String, Collection<IMethod>> globalFunctionsCache;
 	private Map<String, Collection<IType>> allTypesCache;
 	private Map<String, Collection<IType>> allTraitsCache;
+	private Map<String, Collection<IType>> allNamespacesCache;
 	private ReferenceTree fileHierarchy;
 
 	/**
@@ -44,6 +45,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 		allTraitsCache = Collections
 				.synchronizedMap(new HashMap<String, Collection<IType>>());
 		allTypesCache = Collections
+				.synchronizedMap(new HashMap<String, Collection<IType>>());
+		allNamespacesCache = Collections
 				.synchronizedMap(new HashMap<String, Collection<IType>>());
 	}
 
@@ -249,6 +252,50 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	}
 
 	/**
+	 * Returns cached result of a namespace search, or invokes a new search
+	 * query
+	 * 
+	 * @param sourceModule
+	 *            Current source module
+	 * @param namespaceName
+	 *            namespace name
+	 * @param monitor
+	 *            Progress monitor
+	 * @return namespaces collection if found, otherwise <code>null</code>
+	 */
+	public Collection<IType> getNamespaces(ISourceModule sourceModule,
+			String namespaceName, IProgressMonitor monitor) {
+
+		Collection<IType> namespaces;
+
+		if (!this.sourceModule.equals(sourceModule)) {
+			// Invoke a new search, since we only cache for the original file in
+			// this class:
+			IScriptProject scriptProject = sourceModule.getScriptProject();
+			IDLTKSearchScope scope = SearchEngine
+					.createSearchScope(scriptProject);
+			namespaces = Arrays.asList(PhpModelAccess.getDefault()
+					.findNamespaces(null, namespaceName, MatchRule.EXACT, 0, 0,
+							scope, null));
+
+		} else {
+			final String searchFor = namespaceName.toLowerCase();
+			if (!allNamespacesCache.containsKey(searchFor)) {
+				IScriptProject scriptProject = sourceModule.getScriptProject();
+				IDLTKSearchScope scope = SearchEngine
+						.createSearchScope(scriptProject);
+
+				allNamespacesCache.put(searchFor, Arrays.asList(PhpModelAccess
+						.getDefault().findNamespaces(null, namespaceName,
+								MatchRule.EXACT, 0, 0, scope, null)));
+			}
+
+			namespaces = allNamespacesCache.get(searchFor);
+		}
+		return filterElements(sourceModule, namespaces, monitor);
+	}
+
+	/**
 	 * Returns cached result of a trait search, or invokes a new search query
 	 * 
 	 * @param sourceModule
@@ -382,44 +429,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	public Collection<IType> getClassesOrInterfaces(ISourceModule sourceModule,
 			String name, String namespaceName, IProgressMonitor monitor)
 			throws ModelException {
-		Collection<IType> allTypes = getTypes(sourceModule, name,
-				namespaceName, monitor);
-		if (allTypes == null) {
-			return null;
-		}
-		Collection<IType> result = new LinkedList<IType>();
-		for (IType type : allTypes) {
-			if (!PHPFlags.isNamespace(type.getFlags())) {
-				result.add(type);
-			}
-		}
-		return result;
+		return getTypes(sourceModule, name, namespaceName, monitor);
 	}
 
-	/**
-	 * Searches for name-spaces by name
-	 * 
-	 * @param sourceModule
-	 *            Current source module
-	 * @param name
-	 *            Name-space name
-	 * @param monitor
-	 *            Progress monitor
-	 * @return name-spaces collection if found, otherwise <code>null</code>
-	 * @throws ModelException
-	 */
-	public Collection<IType> getNamespaces(ISourceModule sourceModule,
-			String name, IProgressMonitor monitor) throws ModelException {
-		Collection<IType> allTypes = getTypes(sourceModule, name, null, monitor);
-		if (allTypes == null) {
-			return null;
-		}
-		Collection<IType> result = new LinkedList<IType>();
-		for (IType type : allTypes) {
-			if (PHPFlags.isNamespace(type.getFlags())) {
-				result.add(type);
-			}
-		}
-		return result;
-	}
 }
