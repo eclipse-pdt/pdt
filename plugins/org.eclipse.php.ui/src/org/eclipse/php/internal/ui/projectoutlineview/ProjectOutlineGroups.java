@@ -106,9 +106,9 @@ public enum ProjectOutlineGroups {
 					});
 			switch (this) {
 			case GROUP_NAMESPACES:
-				IType[] namespaces = PhpModelAccess.getDefault().findTypes(
-						null, MatchRule.PREFIX, Modifiers.AccNameSpace, 0,
-						scope, null);
+				IType[] namespaces = PhpModelAccess.getDefault()
+						.findNamespaces(null, null, MatchRule.PREFIX, 0, 0,
+								scope, null);
 				Map<String, List<IType>> nsByName = new HashMap<String, List<IType>>();
 				if (namespaces != null) {
 					for (IType namespace : namespaces) {

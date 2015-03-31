@@ -104,6 +104,17 @@ public class PhpModelAccess extends ModelAccess {
 		return result;
 	}
 
+	public IType[] findNamespaces(String qualifier, String name,
+			MatchRule matchRule, int trueFlags, int falseFlags,
+			IDLTKSearchScope scope, IProgressMonitor monitor) {
+		List<IType> result = new LinkedList<IType>();
+		if (!findElements(IModelElement.PACKAGE_DECLARATION, qualifier, name,
+				matchRule, trueFlags, falseFlags, scope, result, monitor)) {
+			return NULL_TYPES;
+		}
+		return result.toArray(new IType[result.size()]);
+	}
+
 	public IType[] findTraits(String name, MatchRule matchRule, int trueFlags,
 			int falseFlags, IDLTKSearchScope scope, IProgressMonitor monitor) {
 		IType[] result = super.findTypes(name, matchRule, trueFlags

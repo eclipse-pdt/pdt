@@ -1294,9 +1294,8 @@ public class PHPModelUtils {
 		}
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
-		IType[] namespaces = PhpModelAccess.getDefault().findTypes(null,
-				namespaceName, MatchRule.EXACT, Modifiers.AccNameSpace, 0,
-				scope, monitor);
+		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null,
+				namespaceName, MatchRule.EXACT, 0, 0, scope, monitor);
 		return namespaces;
 	}
 
