@@ -6,7 +6,6 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php53;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 import java.util.*;
 import org.eclipse.dltk.ast.*;
 import org.eclipse.dltk.ast.declarations.*;
@@ -22,13 +21,13 @@ parser code {:
 	class ModifierDocPair {
 		public int modifier;
 		public PHPDocBlock doc;
-		
+
 		public ModifierDocPair(int modifier, PHPDocBlock doc) {
 			this.modifier = modifier;
 			this.doc = doc;
 		}
 	}
-	
+
 	public Expression createDispatch(Expression dispatcher, Expression property) {
 
 		if (property.getKind() == ASTNodeKinds.REFLECTION_CALL_EXPRESSION) {
@@ -47,6 +46,14 @@ parser code {:
 	protected String getTokenName(int token) {
 		return PhpTokenNames.getName(token);
 	}
+
+    protected void report_expected_token_ids()
+    {
+        // XXX : really verbose, disable it completely for now
+        // if (DLTKCore.DEBUG) {
+        //     super.report_expected_token_ids();
+        // }
+    }
 :}
 
 /* terminals */
