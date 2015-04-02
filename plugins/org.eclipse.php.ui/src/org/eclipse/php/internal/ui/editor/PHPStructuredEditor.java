@@ -98,7 +98,8 @@ import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.*;
+import org.eclipse.swt.custom.ST;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -2309,21 +2310,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		addEditorReconcilingListener(getSourceViewerConfiguration(),
 				getTextViewer());
 
-		StyledText styledText = getTextViewer().getTextWidget();
-		styledText.getContent().addTextChangeListener(new TextChangeListener() {
-			public void textChanging(TextChangingEvent event) {
-				fReconcileSelection = true;
-				PHPUiPlugin.getDefault().getASTProvider().markASTDirty();
-			}
-
-			public void textChanged(TextChangedEvent event) {
-
-			}
-
-			public void textSet(TextChangedEvent event) {
-			}
-		});
-
 		fEditorSelectionChangedListener = new EditorSelectionChangedListener();
 		fEditorSelectionChangedListener.install(getSelectionProvider());
 		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
@@ -2868,7 +2854,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	}
 
 	public void aboutToBeReconciled() {
-
+		fReconcileSelection = true;
 		// Notify AST provider
 		PHPUiPlugin.getDefault().getASTProvider()
 				.aboutToBeReconciled((ISourceModule) getModelElement());
