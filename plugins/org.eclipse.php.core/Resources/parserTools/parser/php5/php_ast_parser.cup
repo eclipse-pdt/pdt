@@ -8,6 +8,7 @@ package org.eclipse.php.internal.core.ast.scanner.php5;
 
 
 import java.util.*;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.dltk.ast.Modifiers;
 
@@ -18,12 +19,12 @@ parser code {:
 	protected final static Integer ABSTRACT = Integer.valueOf(Modifiers.AccAbstract);
 	protected final static Integer FINAL = Integer.valueOf(Modifiers.AccFinal);
 	protected final static Integer STATIC = Integer.valueOf(Modifiers.AccStatic);
-	
+
 	AST ast;
-  
+
 	public final void setAST (AST ast) {
 		this.ast = ast;
-	}	
+	}
 
 	public Dispatch createDispatch(VariableBase dispatcher, VariableBase property) {
 		Dispatch dispatch = null;
@@ -37,26 +38,32 @@ parser code {:
 		return dispatch;
 	}
 
-    /**
-     * Report a non fatal error (or warning).  This method takes a message
-     * string and an additional object (to be used by specializations implemented in subclasses).
-     * The super class prints the message to System.err.
+    /** Report a non fatal error (or warning).  This method takes a message 
+     *  string and an additional object (to be used by specializations 
+     *  implemented in subclasses).  Here in the base class a very simple 
+     *  implementation is provided which simply prints the message to 
+     *  System.err. 
+     *
      * @param message an error message.
      * @param info    an extra object reserved for use by specialized subclasses.
      */
-    public void report_error(String message, Object info) {
-		// System.err.print(message);
-  		// if (info instanceof Symbol)
-		//	if (((Symbol)info).left != -1)
-		//		System.err.println(" at character " + ((Symbol)info).left + " of input");
-		//	else System.err.println("");
-	    // else 
-	   	//	System.err.println("");
-    }	
-	
-	
-	public void report_fatal_error(
-    String   message, 
+    public void report_error(String message, Object info)
+    {
+        if (DLTKCore.DEBUG) {
+            super.report_error(message, info);
+        }
+    }
+
+    protected void report_expected_token_ids()
+    {
+        // XXX : really verbose, disable it completely for now
+        // if (DLTKCore.DEBUG) {
+        //     super.report_expected_token_ids();
+        // }
+    }
+
+    public void report_fatal_error(
+    String   message,
     Object   info)
     throws java.lang.Exception
     {
@@ -67,7 +74,7 @@ parser code {:
       report_error(message, info);
 
       /* throw an exception */
-     // throw new Exception("Can't recover from previous error(s)");
+      // throw new Exception("Can't recover from previous error(s)");
     }
 :}
 
