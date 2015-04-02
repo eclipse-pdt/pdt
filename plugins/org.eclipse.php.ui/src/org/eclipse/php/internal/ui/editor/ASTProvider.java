@@ -228,8 +228,6 @@ public final class ASTProvider {
 	private boolean fIsReconciling;
 	private IWorkbenchPart fActiveEditor;
 
-	private boolean isASTDirty;
-
 	/**
 	 * Returns the Java plug-in's AST provider.
 	 * 
@@ -433,7 +431,6 @@ public final class ASTProvider {
 		}
 
 		fAST = ast;
-		isASTDirty = false;
 
 		// Signal AST change
 		synchronized (fWaitLock) {
@@ -472,7 +469,7 @@ public final class ASTProvider {
 		synchronized (this) {
 			isActiveElement = input.equals(fActiveJavaElement);
 			if (isActiveElement) {
-				if (fAST != null && !isASTDirty) {
+				if (fAST != null) {
 					if (DEBUG) {
 						System.out
 								.println(getThreadName()
@@ -756,7 +753,4 @@ public final class ASTProvider {
 		}
 	}
 
-	public void markASTDirty() {
-		isASTDirty = true;
-	}
 }
