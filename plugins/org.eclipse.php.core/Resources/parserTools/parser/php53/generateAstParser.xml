@@ -4,7 +4,7 @@
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
     http://www.eclipse.org/legal/epl-v10.html
-    
+
     Contributors:
         IBM Corporation - initial API and implementation
         Zend Technologies
@@ -19,12 +19,12 @@
 	</target>
 
 	<target name="generateParser" depends="checkUpToDate" unless="upToDate">
-		<java 
-			classpath="../../../../../org.eclipse.php.core.parser"
+		<java
+			classpath="../../../../../org.eclipse.php.core.parser/target/classes"
 			classname="java_cup.Main"
 			input="php_ast_parser.cup"
 			fork="true">
-			
+
 			<arg value="-compact_red"/>
 			<arg value="-expect"/>
 			<arg value="4"/>
@@ -37,11 +37,11 @@
 
 		<move
 			file="PhpAstParser.java"
-			todir="../../../../src/org/eclipse/php/internal/core/ast/scanner/php53"/>
+			todir="../../../../src/org/eclipse/php/internal/core/ast/scanner/php53" />
 
 		<move
 			file="ParserConstants.java"
-			todir="../../../../src/org/eclipse/php/internal/core/ast/scanner/php53"/>
+			todir="../../../../src/org/eclipse/php/internal/core/ast/scanner/php53" />
 
 	</target>
 

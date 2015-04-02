@@ -17,6 +17,7 @@ import java.util.Stack;
 
 import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;
+import java_cup.runtime.SymbolFactory;
 import java_cup.runtime.lr_parser;
 
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
@@ -61,6 +62,10 @@ abstract public class AbstractASTParser extends lr_parser {
 
 	public AbstractASTParser(Scanner s) {
 		super(s);
+	}
+
+	public AbstractASTParser(Scanner s, SymbolFactory sf) {
+		super(s, sf);
 	}
 
 	public void setProblemReporter(IProblemReporter problemReporter) {
