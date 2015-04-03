@@ -44,10 +44,34 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 		FormalParameter parameter = (FormalParameter) typedGoal.getExpression();
 
 		SimpleReference type = parameter.getParameterType();
+		IContext context = typedGoal.getContext();
 		if (type != null && "array".equals(type.getName()) == false) { //$NON-NLS-1$
-			result = PHPClassType.fromSimpleReference(type);
+			if (context instanceof MethodContext) {
+				MethodContext methodContext = (MethodContext) context;
+
+				String typeName = type.getName();
+				String namespace = null;
+				if (type instanceof FullyQualifiedReference) {
+					FullyQualifiedReference fqn = (FullyQualifiedReference) type;
+					if (fqn.getNamespace() != null) {
+						namespace = fqn.getNamespace().getName();
+					}
+				}
+				if (namespace == null) {
+					String fullName = PHPModelUtils.getFullName(typeName,
+							methodContext.getSourceModule(), parameter.start());
+					typeName = PHPModelUtils.extractElementName(fullName);
+					namespace = PHPModelUtils.extractNameSapceName(fullName);
+				}
+				if (namespace != null) {
+					result = new PHPClassType(namespace, typeName);
+				} else {
+					result = new PHPClassType(typeName);
+				}
+			} else {
+				result = PHPClassType.fromSimpleReference(type);
+			}
 		} else {
-			IContext context = typedGoal.getContext();
 			if (context instanceof MethodContext) {
 				MethodContext methodContext = (MethodContext) context;
 				PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration) methodContext
