@@ -1,0 +1,40 @@
+--TEST--
+Bug http://eclip.se/463897
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+namespace testspace {
+
+	use buildspace\ExtendedClass;
+
+	class TestClass {
+		function test() {
+			$extended_class = new ExtendedClass ( $obj );
+			
+			$extended_class->get_obj ()->|;
+		}
+	}
+}
+--FILE0--
+<?php
+namespace buildspace {
+
+	class Object {
+		function run() {
+		}
+	}
+	class BaseClass {
+		protected $object;
+		function __construct(Object $obj) {
+			$this->object = $obj;
+		}
+		function get_obj() {
+			return $this->object;
+		}
+	}
+	class ExtendedClass extends BaseClass {
+	}
+}
+--EXPECT--
+method(run)
