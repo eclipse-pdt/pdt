@@ -109,6 +109,8 @@ public class AddObjectOperator extends AbstractHandler implements IHandler {
 				.getExistingModelForEdit(document);
 		if (model != null) {
 			try {
+				AutoActivationTrigger.register(document);
+
 				TextSequence statement = PHPTextSequenceUtilities.getStatement(
 						textSelection.getOffset(), textRegion, true);
 				String insert = PHPTextSequenceUtilities
@@ -131,8 +133,6 @@ public class AddObjectOperator extends AbstractHandler implements IHandler {
 				}
 			} finally {
 				model.releaseFromEdit();
-				AutoActivationTrigger.register(document);
-
 			}
 		}
 	}
