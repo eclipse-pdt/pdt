@@ -61,6 +61,7 @@ public class ContentAssistTests {
 
 	protected IProject project;
 	protected IFile testFile;
+	protected IFile[] otherFiles = new IFile[0];
 	protected PHPVersion phpVersion;
 	// protected static PHPVersion phpVersion;
 	protected PHPStructuredEditor fEditor;
@@ -125,6 +126,12 @@ public class ContentAssistTests {
 			testFile.delete(true, null);
 			testFile = null;
 		}
+		if (otherFiles != null) {
+			for (IFile f : otherFiles) {
+				f.delete(true, null);
+			}
+			otherFiles = null;
+		}
 	}
 
 	@Test
@@ -138,9 +145,9 @@ public class ContentAssistTests {
 
 		// replace the offset character
 		data = data.substring(0, offset) + data.substring(offset + 1);
-
 		createFile(new ByteArrayInputStream(data.getBytes()),
-				Long.toString(System.currentTimeMillis()));
+				Long.toString(System.currentTimeMillis()),
+				prepareOtherStreams(pdttFile));
 		String result = executeAutoInsert(offset);
 		closeEditor();
 		if (!pdttFile.getExpected().trim().equals(result.trim())) {
@@ -151,6 +158,16 @@ public class ContentAssistTests {
 			errorBuf.append(result);
 			fail(errorBuf.toString());
 		}
+	}
+
+	protected InputStream[] prepareOtherStreams(PdttFile file) {
+		String[] contents = file.getOtherFiles();
+		InputStream[] result = new InputStream[contents.length];
+		for (int i = 0; i < contents.length; i++) {
+			result[i] = new ByteArrayInputStream(contents[i].getBytes());
+		}
+
+		return result;
 	}
 
 	protected void closeEditor() {
@@ -192,9 +209,20 @@ public class ContentAssistTests {
 
 	protected void createFile(InputStream inputStream, String fileName)
 			throws Exception {
+		createFile(inputStream, fileName, new InputStream[0]);
+	}
+
+	protected void createFile(InputStream inputStream, String fileName,
+			InputStream[] other) throws Exception {
 		testFile = project.getFile(new Path(fileName).removeFileExtension()
 				.addFileExtension("php").lastSegment());
 		testFile.create(inputStream, true, null);
+		otherFiles = new IFile[other.length];
+		for (int i = 0; i < other.length; i++) {
+			otherFiles[i] = project.getFile(new Path(i + fileName)
+					.addFileExtension("php").lastSegment());
+			otherFiles[i].create(other[i], true, null);
+		}
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);

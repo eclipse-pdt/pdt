@@ -46,6 +46,7 @@ import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
@@ -88,6 +89,14 @@ public class UseStatementInjector {
 				|| modelElement instanceof AliasMethod
 				|| modelElement instanceof AliasField) {
 			return offset;
+		}
+		try {
+			if (modelElement.getElementType() == IModelElement.METHOD
+					&& (((IMethod) modelElement).isConstructor())) {
+				modelElement = modelElement.getAncestor(IModelElement.TYPE);
+			}
+		} catch (ModelException e) {
+			Logger.logException(e);
 		}
 		if (modelElement == null)
 			return offset;

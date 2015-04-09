@@ -1,0 +1,37 @@
+--TEST--
+Test CA for extending another class
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE0--
+<?php
+namespace project1\view\components;
+
+class Button
+{
+    public function __construct($label)
+    {
+    }
+}
+--FILE--
+<?php
+namespace project2\view\pages;
+
+class Home
+{
+    public function __construct()
+    {
+        $button = new Butt|
+    }
+}
+--EXPECT--
+<?php
+namespace project2\view\pages;
+
+use project1\view\components\Button;
+class Home
+{
+    public function __construct()
+    {
+        $button = new Button($label)
+    }
+}
