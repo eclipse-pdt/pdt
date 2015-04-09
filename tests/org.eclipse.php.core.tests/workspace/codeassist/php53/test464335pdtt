@@ -1,0 +1,20 @@
+--TEST--
+Bug http://eclip.se/464335
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+namespace Bar;
+
+use Foo\Test;
+
+new Test|
+--FILE0--
+<?php
+
+namespace Foo;
+
+class Test {
+}
+--EXPECT--
+method(Test)
