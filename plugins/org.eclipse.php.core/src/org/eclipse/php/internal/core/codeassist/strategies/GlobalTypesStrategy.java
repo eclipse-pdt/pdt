@@ -206,6 +206,9 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		String prefix = abstractContext.getPrefixWithoutProcessing();
 		IDLTKSearchScope scope = createSearchScope();
 		for (Entry<String, UsePart> entry : result.entrySet()) {
+			if (entry.getValue().getAlias() == null) {
+				continue;
+			}
 			String name = entry.getKey();
 			String fullName = entry.getValue().getNamespace()
 					.getFullyQualifiedName();
