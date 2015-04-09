@@ -147,24 +147,34 @@ public class FormatterAutoEditTests {
 			IDocument document = modelForEdit.getStructuredDocument();
 			String beforeFormat = document.get();
 			String data = document.get();
-			int offset = data.lastIndexOf(OFFSET_CHAR);
-			if (offset == -1) {
+			int firstOffset = data.indexOf(OFFSET_CHAR);
+			int lastOffset = data.lastIndexOf(OFFSET_CHAR);
+			if (lastOffset == -1) {
 				throw new IllegalArgumentException(
 						"Offset character is not set");
 			}
 
-			// replace the offset character
-			data = data.substring(0, offset) + data.substring(offset + 1);
+			DocumentCommand cmd = new DocumentCommand() {
+			};
+
+			// replace the offset character(s)
+			if (firstOffset == lastOffset) {
+				data = data.substring(0, lastOffset)
+						+ data.substring(lastOffset + 1);
+				cmd.offset = lastOffset;
+				cmd.length = 0;
+			} else {
+				data = data.substring(0, firstOffset)
+						+ data.substring(firstOffset + 1, lastOffset)
+						+ data.substring(lastOffset + 1);
+				cmd.offset = firstOffset;
+				cmd.length = lastOffset - (firstOffset + 1);
+			}
 
 			document.set(data);
 
 			IAutoEditStrategy indentLineAutoEditStrategy = new MainAutoEditStrategy();
 
-			DocumentCommand cmd = new DocumentCommand() {
-			};
-
-			cmd.offset = offset;
-			cmd.length = 0;
 			if (pdttFile.getOther() != null) {
 				cmd.text = pdttFile.getOther();
 				if (cmd.text != null && cmd.text.trim().length() == 1) {
