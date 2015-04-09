@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>org.eclipse.pdt.releng</artifactId>
@@ -9,27 +10,27 @@
 	</parent>
 	<artifactId>org.eclipse.php.repository</artifactId>
 	<packaging>eclipse-repository</packaging>
-
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.jboss.tools.tycho-plugins</groupId>
-				<artifactId>repository-utils</artifactId>
-				<version>0.19.0-SNAPSHOT</version>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
 				<executions>
 					<execution>
-						<id>generate-facade</id>
-						<phase>package</phase>
+						<id>copy-p2-index</id>
+						<!-- here the phase you need -->
+						<phase>verify</phase>
 						<goals>
-							<goal>generate-repository-facade</goal>
+							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<!-- Symbols are used while expanding index.html template -->
-							<symbols>
-								<update.site.name>PHP Development Tools Repository</update.site.name>
-							</symbols>
-							<siteTemplateFolder>${basedir}/siteTemplate</siteTemplateFolder>
-							<p2StatsUrl>http://download.eclipse.org/stats</p2StatsUrl>
+							<outputDirectory>${project.basedir}/target/repository</outputDirectory>
+							<resources>
+								<resource>
+									<directory>siteTemplate/</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
 						</configuration>
 					</execution>
 				</executions>
@@ -41,6 +42,40 @@
 			<id>release</id>
 			<build>
 				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho.extras</groupId>
+						<artifactId>tycho-eclipserun-plugin</artifactId>
+						<version>${tycho-version}</version>
+						<executions>
+							<execution>
+								<id>add-repo-properties</id>
+								<goals>
+									<goal>eclipse-run</goal>
+								</goals>
+								<phase>package</phase>
+								<configuration>
+									<appArgLine>-application org.eclipse.wtp.releng.tools.addRepoProperties</appArgLine>
+									<argLine><![CDATA[-DartifactRepoDirectory=${project.build.directory}/repository -Dp2MirrorsURL=${p2.mirrorsURL} -Dp2StatsURI=${p2.statsURL} -DstatsTrackedArtifacts=${p2.statsTrackedArtifacts} -DstatsArtifactsSuffix=-${project.version}]]></argLine>
+									<dependencies>
+										<dependency>
+											<artifactId>org.eclipse.wtp.releng.tools.feature</artifactId>
+											<type>eclipse-feature</type>
+										</dependency>
+									</dependencies>
+									<repositories>
+										<repository>
+											<url>http://download.eclipse.org/webtools/releng/repository</url>
+											<layout>p2</layout>
+										</repository>
+										<repository>
+											<url>http://download.eclipse.org/releases/luna</url>
+											<layout>p2</layout>
+										</repository>
+									</repositories>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
 					<plugin>
 						<groupId>org.eclipse.tycho</groupId>
 						<artifactId>target-platform-configuration</artifactId>
