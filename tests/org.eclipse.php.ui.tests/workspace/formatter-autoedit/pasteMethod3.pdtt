@@ -1,0 +1,23 @@
+--TEST--
+Tests formatting pasted method.
+--FILE--
+<?php
+    function foo()
+    {
+        while (true) {
+            $a = 0;
+   |     }
+    }
+?>
+--OTHER--
+            $a = 0;
+--EXPECT--
+<?php
+    function foo()
+    {
+        while (true) {
+            $a = 0;
+            $a = 0;
+        }
+    }
+?>
