@@ -14,6 +14,13 @@ package org.eclipse.php.internal.core;
 public interface PHPCoreConstants {
 
 	public static final String PLUGIN_ID = PHPCorePlugin.ID;
+
+	/**
+	 * Increase this value to force rebuilding PHP projects during startup
+	 */
+	public static final String STRUCTURE_VERSION = "1"; //$NON-NLS-1$
+	public static final String STRUCTURE_VERSION_PREFERENCE = "pdt.structure.version"; //$NON-NLS-1$
+
 	public static final String IP_VARIABLE_INITIALIZER_EXTPOINT_ID = "includePathVariables"; //$NON-NLS-1$
 
 	//

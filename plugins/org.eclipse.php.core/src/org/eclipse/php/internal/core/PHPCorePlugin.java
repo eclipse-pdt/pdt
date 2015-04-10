@@ -19,6 +19,8 @@ import java.util.Hashtable;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
@@ -33,6 +35,7 @@ import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.util.ProjectBackwardCompatibilityUtil;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -99,6 +102,8 @@ public class PHPCorePlugin extends Plugin {
 				} catch (CoreException e) {
 					log(e);
 				}
+
+				rebuildProjects();
 
 				return Status.OK_STATUS;
 			}
@@ -189,6 +194,43 @@ public class PHPCorePlugin extends Plugin {
 				} catch (CoreException e) {
 					Logger.logException(e);
 				}
+			}
+		}
+	}
+
+	/**
+	 * Check if model version is changed and rebuild PHP projects if necessary.
+	 * 
+	 * @see PHPCoreConstants.STRUCTURE_VERSION
+	 */
+	private void rebuildProjects() {
+		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(ID);
+		String modelVersion = preferences.get(
+				PHPCoreConstants.STRUCTURE_VERSION_PREFERENCE, null);
+		if (PHPCoreConstants.STRUCTURE_VERSION.equals(modelVersion)) {
+			return;
+		}
+
+		preferences.put(PHPCoreConstants.STRUCTURE_VERSION_PREFERENCE,
+				PHPCoreConstants.STRUCTURE_VERSION);
+		try {
+			preferences.flush();
+		} catch (BackingStoreException e1) {
+			Logger.logException(e1);
+		}
+
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IProject[] projects = workspace.getRoot().getProjects();
+		if (workspace.isAutoBuilding()) {
+			try {
+				for (IProject project : projects) {
+					if (PHPToolkitUtil.isPhpProject(project)) {
+						project.build(IncrementalProjectBuilder.CLEAN_BUILD,
+								null);
+					}
+				}
+			} catch (CoreException e) {
+				Logger.logException(e);
 			}
 		}
 	}
