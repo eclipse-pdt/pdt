@@ -9,6 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *     Dawid Pakuła [459462]
+ *     Thierry Blind [464039]
  *******************************************************************************/
 package org.eclipse.php.internal.ui.autoEdit;
 
@@ -55,15 +56,16 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy
 			helpBuffer.setLength(0);
 			helpBuffer.append(command.text);
 
-			final int currentOffset = command.offset;
+			final int startOffset = command.offset;
+			final int endOffset = startOffset + command.length;
 
-			final int lineNumber = document.getLineOfOffset(currentOffset);
+			final int startLineNumber = document.getLineOfOffset(startOffset);
 
-			placeMatchingBlanks(document, helpBuffer, lineNumber, command);
+			placeMatchingBlanks(document, helpBuffer, startLineNumber, command);
 
 			int futureCaretPosition = -1;
 
-			if (currentOffset > 0) {
+			if (startOffset > 0) {
 				final IAfterNewLineAutoEditStrategy autoEditStrategy = getAfterNewLineAutoEditStrategy(
 						document, command);
 				if (autoEditStrategy != null)
@@ -71,32 +73,74 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy
 							.autoEditAfterNewLine(document, command, helpBuffer);
 			}
 
-			final IRegion lineInfo = document.getLineInformation(lineNumber);
+			IRegion firstLineInfo = document
+					.getLineInformationOfOffset(startOffset);
+			int firstLineOffset = firstLineInfo.getOffset();
+			int firstLineLength = firstLineInfo.getLength();
+			String firstLineText = document.get(firstLineOffset,
+					firstLineLength);
 
-			final int startOffset = lineInfo.getOffset();
-			final int length = lineInfo.getLength();
+			IRegion lastLineInfo;
+			int lastLineOffset;
+			int lastLineLength;
+			String lastLineText;
 
-			final String lineText = document.get(startOffset, length);
+			// In most case, selections are empty or single-line selections.
+			if (firstLineOffset <= endOffset
+					&& endOffset <= firstLineOffset + firstLineLength) {
+				lastLineInfo = firstLineInfo;
+				lastLineOffset = firstLineOffset;
+				lastLineLength = firstLineLength;
+				lastLineText = firstLineText;
+			} else {
+				lastLineInfo = document.getLineInformationOfOffset(endOffset);
+				lastLineOffset = lastLineInfo.getOffset();
+				lastLineLength = lastLineInfo.getLength();
+				lastLineText = document.get(lastLineOffset, lastLineLength);
+			}
 
-			// find the first non blank char of the element.
-			int i;
-			for (i = 0; i < length
-					&& (lineText.charAt(i) == ' ' || lineText.charAt(i) == '\t'); i++)
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=464039
+			// How it works: remove blank chars in front of first and last line
+			// of selection, because "helpBuffer" already contains (new &
+			// correct) indentation for those lines.
+			//
+			// Start by removing blank chars BEFORE actual selection.
+			// Only valid if all chars between firstLineOffset and
+			// startOffset - 1 are blank chars.
+			if (startOffset > firstLineOffset) {
+				int pos = 0;
+				for (; pos < startOffset - firstLineOffset
+						&& (firstLineText.charAt(pos) == ' ' || firstLineText
+								.charAt(pos) == '\t'); pos++)
+					;
+				if (pos == startOffset - firstLineOffset) {
+					// Tweak: also try to keep previous indentation when
+					// "helpBuffer" starts with a newline char. It's mainly
+					// cosmetic, first line of selection should keep its
+					// blank chars (between firstLineOffset and startOffset - 1)
+					// if its content (starting from startOffset) is put/pushed
+					// on a new line.
+					if (helpBuffer.length() > 0
+							&& (helpBuffer.charAt(0) == '\r' || helpBuffer
+									.charAt(0) == '\n')) {
+						helpBuffer.insert(
+								0,
+								firstLineText.substring(0, startOffset
+										- firstLineOffset));
+					}
+					command.length += startOffset - firstLineOffset;
+					command.offset = firstLineOffset;
+				}
+			}
+			// Continue by removing all blank chars AFTER end of
+			// selection.
+			for (int i = endOffset - lastLineOffset; i < lastLineLength
+					&& (lastLineText.charAt(i) == ' ' || lastLineText.charAt(i) == '\t'); i++, command.length++)
 				;
 
-			// if we are in the blaks at the start of the element then select
-			// them
-			// so they will be replaced with the MatchingBlanks.
-			if (currentOffset < startOffset + i) {
-				// if (command.length != 0) { // comment out in order to fix bug
-				// # 139437
-				command.offset = Math.min(command.offset, startOffset);
-				// }
-				command.length = Math.max(i, command.length);
-			}
 			command.text = helpBuffer.toString();
 
-			// if we need to put the caret at a position differnt then the end
+			// if we need to put the caret at a position different then the end
 			// of the text
 			if (DefaultIndentationStrategy.getPairArrayParen()) {
 				futureCaretPosition = DefaultIndentationStrategy
@@ -104,7 +148,7 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy
 				DefaultIndentationStrategy.unsetPairArrayParen();
 			}
 			if (futureCaretPosition != -1) {
-				// runing the command ourselfs
+				// running the command ourself
 				document.replace(command.offset, command.length, command.text);
 				// consuming the command
 				command.length = 0;
@@ -136,6 +180,7 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy
 			throws BadLocationException {
 		if (command.length > 0)
 			return null;
+
 		final int offset = command.offset;
 
 		String currentState = FormatterUtils.getPartitionType(document, offset,
@@ -181,10 +226,11 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy
 			final StringBuffer result, final int lineNumber,
 			final DocumentCommand command) throws BadLocationException {
 		final int forOffset = command.offset;
-		final IRegion lineInfo = document.getLineInformation(lineNumber);
+		final IRegion endLineInfo = document
+				.getLineInformationOfOffset(forOffset + command.length);
 		// read the rest of the line
 		final String lineText = document.get(forOffset + command.length,
-				lineInfo.getOffset() + lineInfo.getLength()
+				endLineInfo.getOffset() + endLineInfo.getLength()
 						- (forOffset + command.length));
 		final String trimedText = lineText.trim();
 
@@ -233,9 +279,9 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy
 				program = SharedASTProvider.getAST(sourceModules[0],
 						SharedASTProvider.WAIT_YES, null);
 			} catch (ModelException e) {
-				e.printStackTrace();
+				Logger.logException(e);
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.logException(e);
 			}
 		}
 		return program;
