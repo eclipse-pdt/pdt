@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.ui.workingsets.WorkingSetFilter;
 
@@ -40,6 +41,10 @@ public class PHPWorkingSetFilter extends WorkingSetFilter {
 
 		IResource resource = (IResource) element.getAdapter(IResource.class);
 		if (resource == null) {
+			IScriptProject ancestor = element.getAncestor(IScriptProject.class);
+			if (ancestor != null) {
+				return isEnclosing(ancestor);
+			}
 			return false;
 		}
 
