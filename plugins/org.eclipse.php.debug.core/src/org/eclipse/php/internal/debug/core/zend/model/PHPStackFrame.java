@@ -328,60 +328,6 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		getThread().terminate();
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((fFunctionName == null) ? 0 : fFunctionName.hashCode());
-		result = prime * result + fDepth;
-		result = prime * result + fLineNumber;
-		result = prime
-				* result
-				+ ((fResolvedFileName == null) ? 0 : fResolvedFileName
-						.hashCode());
-		result = prime * result + ((fThread == null) ? 0 : fThread.hashCode());
-		result = prime * result
-				+ ((fLocalVariables == null) ? 0 : fLocalVariables.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PHPStackFrame other = (PHPStackFrame) obj;
-		if (fFunctionName == null) {
-			if (other.fFunctionName != null)
-				return false;
-		} else if (!fFunctionName.equals(other.fFunctionName))
-			return false;
-		if (fDepth != other.fDepth)
-			return false;
-		if (fLineNumber != other.fLineNumber)
-			return false;
-		if (fResolvedFileName == null) {
-			if (other.fResolvedFileName != null)
-				return false;
-		} else if (!fResolvedFileName.equals(other.fResolvedFileName))
-			return false;
-		if (fThread == null) {
-			if (other.fThread != null)
-				return false;
-		} else if (!fThread.equals(other.fThread))
-			return false;
-		if (fLocalVariables == null) {
-			if (other.fLocalVariables != null)
-				return false;
-		} else if (!fLocalVariables.equals(other.fLocalVariables))
-			return false;
-		return true;
-	}
-
 	public int checkLineNumber() throws DebugException {
 		return fLineNumber;
 	}
