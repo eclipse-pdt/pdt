@@ -191,6 +191,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		private Map<String, String> previous = new HashMap<String, String>();
 
 		public boolean store(DBGpValue value, Node property) {
+			if (DBGpResponse.getAttribute(property, "name").equals("$this")) //$NON-NLS-1$ //$NON-NLS-2$
+				return false;
 			boolean hasChanged = false;
 			String key = createKey(value, property);
 			String valueAsString = null;

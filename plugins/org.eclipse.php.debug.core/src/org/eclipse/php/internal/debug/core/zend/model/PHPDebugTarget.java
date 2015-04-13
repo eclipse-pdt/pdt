@@ -53,6 +53,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 		private Map<String, String> previous = new HashMap<String, String>();
 
 		public boolean store(Expression value) {
+			if (value.getLastName().equalsIgnoreCase("$this")) //$NON-NLS-1$
+				return false;
 			boolean hasChanged = false;
 			String key = createKey(value);
 			String currentValue = value.getValue().getValueAsString();
