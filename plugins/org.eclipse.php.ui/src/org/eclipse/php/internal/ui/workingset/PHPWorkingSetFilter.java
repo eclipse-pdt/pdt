@@ -34,7 +34,8 @@ public class PHPWorkingSetFilter extends WorkingSetFilter {
 		Assert.isNotNull(element);
 
 		if (element instanceof IMember) {
-			return isEnclosing(element.getAncestor(ISourceModule.class));
+			ISourceModule ancestor = element.getAncestor(ISourceModule.class);
+			return ancestor == null ? false : isEnclosing(ancestor);
 		}
 
 		IAdaptable[] cachedWorkingSet = getWorkingSet().getElements();
