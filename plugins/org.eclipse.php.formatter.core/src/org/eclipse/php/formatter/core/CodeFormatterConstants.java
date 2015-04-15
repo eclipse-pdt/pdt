@@ -682,7 +682,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to position the braces of a lambda function declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.brace_position_for_method_declaration&quot;
+	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.brace_position_for_lambda_function_declaration&quot;
 	 *     - possible values:   { END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_ON_WRAP }
 	 *     - default:           END_OF_LINE
 	 * </pre>
@@ -3541,6 +3541,7 @@ public class CodeFormatterConstants {
 	 * @see #FORMATTER_BRACE_POSITION_FOR_BLOCK
 	 * @see #FORMATTER_BRACE_POSITION_FOR_CONSTRUCTOR_DECLARATION
 	 * @see #FORMATTER_BRACE_POSITION_FOR_METHOD_DECLARATION
+	 * @see #FORMATTER_BRACE_POSITION_FOR_LAMBDA_FUNCTION_DECLARATION
 	 * @see #FORMATTER_BRACE_POSITION_FOR_SWITCH
 	 * @see #FORMATTER_BRACE_POSITION_FOR_TYPE_DECLARATION
 	 * @since 3.0
@@ -3557,6 +3558,7 @@ public class CodeFormatterConstants {
 	 * @see #FORMATTER_BRACE_POSITION_FOR_BLOCK
 	 * @see #FORMATTER_BRACE_POSITION_FOR_CONSTRUCTOR_DECLARATION
 	 * @see #FORMATTER_BRACE_POSITION_FOR_METHOD_DECLARATION
+	 * @see #FORMATTER_BRACE_POSITION_FOR_LAMBDA_FUNCTION_DECLARATION
 	 * @see #FORMATTER_BRACE_POSITION_FOR_SWITCH
 	 * @see #FORMATTER_BRACE_POSITION_FOR_TYPE_DECLARATION
 	 * @since 3.0
@@ -3573,6 +3575,7 @@ public class CodeFormatterConstants {
 	 * @see #FORMATTER_BRACE_POSITION_FOR_BLOCK
 	 * @see #FORMATTER_BRACE_POSITION_FOR_CONSTRUCTOR_DECLARATION
 	 * @see #FORMATTER_BRACE_POSITION_FOR_METHOD_DECLARATION
+	 * @see #FORMATTER_BRACE_POSITION_FOR_LAMBDA_FUNCTION_DECLARATION
 	 * @see #FORMATTER_BRACE_POSITION_FOR_SWITCH
 	 * @see #FORMATTER_BRACE_POSITION_FOR_TYPE_DECLARATION
 	 * @since 3.0

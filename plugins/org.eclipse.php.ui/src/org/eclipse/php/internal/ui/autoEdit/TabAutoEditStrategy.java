@@ -40,6 +40,26 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 	public void customizeDocumentCommand(IDocument document,
 			DocumentCommand command) {
 		if ((command.text != null) && command.text.equals("\t")) { //$NON-NLS-1$
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=464605
+			// Workaround for bug 464605:
+			// tabulation handling conflicts here with JavaAutoIndentStrategy's
+			// handling when command.text.length() is equal to 1 and
+			// command.offset is inside a JavaScript partition.
+			//
+			// NB: the JavaScript indentation preferences will be used
+			// in this case and no more the PHP indentation preferences!
+			//
+			// See also JavaAutoIndentStrategy#customizeDocumentCommand(...)
+			// and JavaAutoIndentStrategy#smartIndentOnKeypress(...).
+			// XXX: in same way, we should probably disable
+			// IndentLineAutoEditStrategy when inside a JavaScript partition,
+			// and let JavaAutoIndentStrategy do all the job...
+			String partitionType = FormatterUtils.getPartitionType(
+					(IStructuredDocument) document, command.offset, true);
+			if (FormatterUtils.PARTITION_JS_SCRIPT.equals(partitionType)) {
+				return;
+			}
+
 			// override original tab command
 			command.text = ""; //$NON-NLS-1$
 
