@@ -607,8 +607,8 @@
 			id="org.eclipse.php.ui.explorer.FieldsFilter"
 			targetId="org.eclipse.php.ui.explorer">
 		</filter>
-		<filter name="%HideUseStatements.label" enabled="true"
-			description="%HideUseStatements.description" class="org.eclipse.dltk.internal.ui.filters.ImportDeclarationFilter"
+		<filter name="%HideImportDeclarations.label" enabled="true"
+			description="%HideImportDeclarations.description" class="org.eclipse.dltk.internal.ui.filters.ImportDeclarationFilter"
 			id="org.eclipse.php.ui.explorer.UseStatementFilter"
 			targetId="org.eclipse.php.ui.explorer">
 		</filter>
