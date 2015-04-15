@@ -32,6 +32,9 @@ public class FormatterUtils {
 	private static PHPStructuredTextPartitioner partitioner = new PHPStructuredTextPartitioner();
 	private static IFormatterCommonPrferences usedFormatter;
 
+	public static final String PARTITION_CSS_STYLE = "org.eclipse.wst.css.STYLE"; //$NON-NLS-1$
+	public static final String PARTITION_JS_SCRIPT = "org.eclipse.wst.html.SCRIPT"; //$NON-NLS-1$
+
 	public static String getRegionType(IStructuredDocument document, int offset) {
 		try {
 			IStructuredDocumentRegion sdRegion = document

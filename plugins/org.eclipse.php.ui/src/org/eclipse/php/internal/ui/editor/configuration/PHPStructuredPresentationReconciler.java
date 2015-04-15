@@ -6,19 +6,18 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.presentation.IPresentationRepairer;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.wst.sse.core.internal.text.rules.SimpleStructuredTypedRegion;
 import org.eclipse.wst.sse.ui.internal.provisional.style.StructuredPresentationReconciler;
 
 public class PHPStructuredPresentationReconciler extends
 		StructuredPresentationReconciler {
-	private static final String CSS_STYLE = "org.eclipse.wst.css.STYLE"; //$NON-NLS-1$
-	private static final String JS_SCRIPT = "org.eclipse.wst.html.SCRIPT"; //$NON-NLS-1$
 	private Map fRepairers;
 	private static final Set<String> fTypeSet = new HashSet<String>();
 	static {
-		fTypeSet.add(CSS_STYLE);
-		fTypeSet.add(JS_SCRIPT);
+		fTypeSet.add(FormatterUtils.PARTITION_CSS_STYLE);
+		fTypeSet.add(FormatterUtils.PARTITION_JS_SCRIPT);
 	}
 
 	ITypedRegion getWholeRegion(ITypedRegion[] wholePartitions,
