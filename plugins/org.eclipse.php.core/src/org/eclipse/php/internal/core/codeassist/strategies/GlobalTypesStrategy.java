@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
@@ -290,18 +291,25 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 			IType[] types = PhpModelAccess.getDefault().findTypes(prefix,
 					MatchRule.CAMEL_CASE, trueFlag, falseFlag, scope, null);
 
-			IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(
-					null, prefix, MatchRule.CAMEL_CASE, trueFlag, falseFlag,
-					scope, null);
-
 			result.addAll(Arrays.asList(types));
-			result.addAll(Arrays.asList(namespaces));
+
+			if ((Modifiers.AccNameSpace & falseFlag) == 0) {
+				IType[] namespaces = PhpModelAccess.getDefault()
+						.findNamespaces(null, prefix, MatchRule.CAMEL_CASE,
+								trueFlag, falseFlag, scope, null);
+
+				result.addAll(Arrays.asList(namespaces));
+			}
 		}
 		IType[] types = PhpModelAccess.getDefault().findTypes(null, prefix,
 				MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
-		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null,
-				prefix, MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
-
+		IType[] namespaces;
+		if ((Modifiers.AccNameSpace & falseFlag) == 0) {
+			namespaces = PhpModelAccess.getDefault().findNamespaces(null,
+					prefix, MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
+		} else {
+			namespaces = new IType[0];
+		}
 		if (context instanceof NamespaceMemberContext) {
 			for (IType type : types) {
 				if (PHPModelUtils.getFullName(type).startsWith(prefix)) {
