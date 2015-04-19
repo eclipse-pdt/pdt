@@ -121,10 +121,7 @@ public class DebuggerUnsupportedSettingsSection implements
 	private Composite createComposite() {
 		// Main composite
 		Composite settingsComposite = new Composite(compositeFragment, SWT.NONE);
-		GridLayout scLayout = new GridLayout();
-		scLayout.marginHeight = 0;
-		scLayout.marginWidth = 0;
-		settingsComposite.setLayout(scLayout);
+		settingsComposite.setLayout(new GridLayout());
 		GridData scGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		scGridData.horizontalSpan = 2;
 		settingsComposite.setLayoutData(scGridData);
