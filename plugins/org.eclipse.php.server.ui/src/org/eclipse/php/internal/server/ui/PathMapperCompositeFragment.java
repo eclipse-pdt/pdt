@@ -35,17 +35,21 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 	public PathMapperCompositeFragment(Composite parent,
 			IControlHandler handler, boolean isForEditing) {
 		super(parent, handler, isForEditing);
-		controlHandler.setTitle(Messages.PathMapperCompositeFragment_0);
-		controlHandler.setDescription(Messages.PathMapperCompositeFragment_1);
-		setImageDescriptor(ServersPluginImages.DESC_WIZ_SERVER);
-		controlHandler.setImageDescriptor(getImageDescriptor());
-		setDisplayName(Messages.PathMapperCompositeFragment_2);
-		setTitle(Messages.PathMapperCompositeFragment_3);
-		setDescription(Messages.PathMapperCompositeFragment_4);
+		createDescription();
 		if (isForEditing) {
 			setData(((ServerEditDialog) controlHandler).getServer());
 		}
 		createControl(isForEditing);
+	}
+
+	protected void createDescription() {
+		setTitle(Messages.PathMapperCompositeFragment_0);
+		controlHandler.setTitle(getTitle());
+		setDescription(Messages.PathMapperCompositeFragment_1);
+		controlHandler.setDescription(getDescription());
+		setImageDescriptor(ServersPluginImages.DESC_WIZ_MAPPING_SERVER);
+		controlHandler.setImageDescriptor(getImageDescriptor());
+		setDisplayName(Messages.PathMapperCompositeFragment_2);
 	}
 
 	/**

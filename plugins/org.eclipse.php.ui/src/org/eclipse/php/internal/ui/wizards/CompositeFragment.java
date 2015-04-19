@@ -47,6 +47,7 @@ public abstract class CompositeFragment extends Composite {
 		super(parent, style);
 		this.controlHandler = handler;
 		this.isForEditing = isForEditing;
+		parent.setBackgroundMode(SWT.INHERIT_DEFAULT);
 	}
 
 	/**

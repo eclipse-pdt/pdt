@@ -179,10 +179,7 @@ public class ZendDebuggerServerSettingsSection implements
 	protected Composite createComposite() {
 		// Main composite
 		Composite settingsComposite = new Composite(compositeFragment, SWT.NONE);
-		GridLayout sLayout = new GridLayout();
-		sLayout.marginHeight = 0;
-		sLayout.marginWidth = 0;
-		settingsComposite.setLayout(sLayout);
+		settingsComposite.setLayout(new GridLayout());
 		GridData sGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		settingsComposite.setLayoutData(sGridData);
 		// Connection group

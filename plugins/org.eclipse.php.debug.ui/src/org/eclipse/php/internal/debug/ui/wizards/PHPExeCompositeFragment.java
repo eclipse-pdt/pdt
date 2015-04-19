@@ -54,12 +54,28 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 	public PHPExeCompositeFragment(Composite parent, IControlHandler handler,
 			boolean isForEditing) {
 		super(parent, handler, isForEditing);
-		setDescription(PHPDebugUIMessages.PHPExeCompositeFragment_0);
-		setDisplayName(PHPDebugUIMessages.PHPExeCompositeFragment_2);
-		controlHandler.setDescription(getDescription());
-		controlHandler.setImageDescriptor(PHPDebugUIImages
-				.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_PHPEXE));
+		createDescription();
 		createControl();
+	}
+
+	protected void createDescription() {
+		setDisplayName(PHPDebugUIMessages.PHPExeCompositeFragment_2);
+		setDescription(PHPDebugUIMessages.PHPExeCompositeFragment_0);
+		controlHandler.setDescription(getDescription());
+		setImageDescriptor(PHPDebugUIImages
+				.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_PHPEXE));
+		controlHandler.setImageDescriptor(getImageDescriptor());
+		switch (controlHandler.getKind()) {
+		case WIZARD:
+			setTitle(PHPDebugUIMessages.PHPExeCompositeFragment_10);
+			break;
+		case EDITOR:
+			setTitle(PHPDebugUIMessages.PHPExeCompositeFragment_11);
+			break;
+		default:
+			break;
+		}
+		controlHandler.setTitle(getTitle());
 	}
 
 	public void setExistingItems(PHPexeItem[] existingItems) {
@@ -245,7 +261,6 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 			fPHPexeName.setTextWithoutUpdate(""); //$NON-NLS-1$
 			fPHPExePath.setTextWithoutUpdate(""); //$NON-NLS-1$
 			fPHPIni.setTextWithoutUpdate(""); //$NON-NLS-1$
-			setTitle(PHPDebugUIMessages.PHPExeCompositeFragment_10);
 		} else {
 			initialName = phpExeItem.getName();
 			fPHPexeName.setTextWithoutUpdate(phpExeItem.getName());
@@ -266,11 +281,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 			}
 			fSapiTypes.setEnabled(phpExeItem.isEditable());
 			fSapiTypesLabel.setEnabled(phpExeItem.isEditable());
-
-			setTitle(PHPDebugUIMessages.PHPExeCompositeFragment_11);
 		}
-
-		controlHandler.setTitle(getTitle());
 	}
 
 	public void validate() {
