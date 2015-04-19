@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.wizards;
 
-import org.eclipse.swt.widgets.Composite;
 
 /**
  * Common interface for debugger settings owner sections.
@@ -18,13 +17,6 @@ import org.eclipse.swt.widgets.Composite;
  * @author Bartlomiej Laczkowski
  */
 public interface IDebuggerSettingsSection {
-
-	/**
-	 * Composite with settings section data
-	 * 
-	 * @return composite with settings section data
-	 */
-	Composite getComposite();
 
 	/**
 	 * Performs special processing when parent composite fragment 'OK' button

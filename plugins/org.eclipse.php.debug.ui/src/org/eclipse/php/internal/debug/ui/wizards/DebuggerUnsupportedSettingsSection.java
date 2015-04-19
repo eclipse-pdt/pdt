@@ -42,20 +42,10 @@ public class DebuggerUnsupportedSettingsSection implements
 	 * Creates new unsupported settings section.
 	 */
 	public DebuggerUnsupportedSettingsSection(
-			CompositeFragment compositeFragment) {
+			CompositeFragment compositeFragment, Composite settingsComposite) {
 		this.compositeFragment = compositeFragment;
-		this.settingsComposite = createComposite();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
-	 * getComposite()
-	 */
-	@Override
-	public Composite getComposite() {
-		return settingsComposite;
+		this.settingsComposite = settingsComposite;
+		createContents();
 	}
 
 	/*
@@ -118,20 +108,17 @@ public class DebuggerUnsupportedSettingsSection implements
 		// Nothing to test
 	}
 
-	private Composite createComposite() {
+	private void createContents() {
 		// Main composite
-		Composite settingsComposite = new Composite(compositeFragment, SWT.NONE);
-		GridLayout scLayout = new GridLayout();
-		scLayout.marginHeight = 0;
-		scLayout.marginWidth = 0;
-		settingsComposite.setLayout(scLayout);
+		Composite sectionComposite = new Composite(settingsComposite, SWT.NONE);
+		sectionComposite.setLayout(new GridLayout());
 		GridData scGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		scGridData.horizontalSpan = 2;
-		settingsComposite.setLayoutData(scGridData);
-		Label unsupportedLabel = new Label(settingsComposite, SWT.NONE);
+		sectionComposite.setLayoutData(scGridData);
+		Label unsupportedLabel = new Label(sectionComposite, SWT.NONE);
 		unsupportedLabel
 				.setText(Messages.DebuggerUnsupportedSettingsSection_Settings_unsupported_for_debugger_type);
-		Link link = new Link(settingsComposite, SWT.NONE);
+		Link link = new Link(sectionComposite, SWT.NONE);
 		link.setText(Messages.DebuggerUnsupportedSettingsSection_Check_global_settings_in_preferences);
 		link.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -139,7 +126,6 @@ public class DebuggerUnsupportedSettingsSection implements
 				openLink();
 			}
 		});
-		return settingsComposite;
 	}
 
 	private void openLink() {

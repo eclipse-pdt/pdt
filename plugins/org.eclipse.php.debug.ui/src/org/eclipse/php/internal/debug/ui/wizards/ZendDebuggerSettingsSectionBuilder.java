@@ -12,6 +12,7 @@ package org.eclipse.php.internal.debug.ui.wizards;
 
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsWorkingCopy;
 import org.eclipse.php.internal.ui.wizards.CompositeFragment;
+import org.eclipse.swt.widgets.Composite;
 
 /**
  * Zend debugger settings section builder.
@@ -24,14 +25,14 @@ public class ZendDebuggerSettingsSectionBuilder implements
 
 	@Override
 	public IDebuggerSettingsSection build(CompositeFragment compositeFragment,
-			IDebuggerSettingsWorkingCopy settingsWorkingCopy) {
+			Composite debuggerSettingsComposite, IDebuggerSettingsWorkingCopy settingsWorkingCopy) {
 		switch (settingsWorkingCopy.getKind()) {
 		case PHP_SERVER:
 			return new ZendDebuggerServerSettingsSection(compositeFragment,
-					settingsWorkingCopy);
+					debuggerSettingsComposite, settingsWorkingCopy);
 		case PHP_EXE:
 			return new ZendDebuggerExeSettingsSection(compositeFragment,
-					settingsWorkingCopy);
+					debuggerSettingsComposite, settingsWorkingCopy);
 		default:
 			break;
 		}
