@@ -4,9 +4,10 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.ui.wizards.messages"; //$NON-NLS-1$
+	public static String DebuggerCompositeFragment_Configure_exe_debugger_settings;
 	public static String DebuggerCompositeFragment_Configure_server_debugger_settings;
 	public static String DebuggerCompositeFragment_Debugger;
-	public static String DebuggerCompositeFragment_Edit_debugger_settings;
+	public static String DebuggerCompositeFragment_Debugger_settings;
 	public static String DebuggerCompositeFragment_Test_button;
 	public static String DebuggerUnsupportedSettingsSection_Check_global_settings_in_preferences;
 	public static String DebuggerUnsupportedSettingsSection_Settings_unsupported_for_debugger_type;

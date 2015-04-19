@@ -54,12 +54,27 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 	public PHPExeCompositeFragment(Composite parent, IControlHandler handler,
 			boolean isForEditing) {
 		super(parent, handler, isForEditing);
-		setDescription(PHPDebugUIMessages.PHPExeCompositeFragment_0);
+		createDescription();
+	}
+
+	protected void createDescription() {
 		setDisplayName(PHPDebugUIMessages.PHPExeCompositeFragment_2);
+		setDescription(PHPDebugUIMessages.PHPExeCompositeFragment_0);
 		controlHandler.setDescription(getDescription());
-		controlHandler.setImageDescriptor(PHPDebugUIImages
+		setImageDescriptor(PHPDebugUIImages
 				.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_PHPEXE));
-		createControl();
+		controlHandler.setImageDescriptor(getImageDescriptor());
+		switch (controlHandler.getKind()) {
+		case WIZARD:
+			setTitle(PHPDebugUIMessages.PHPExeCompositeFragment_10);
+			break;
+		case EDITOR:
+			setTitle(PHPDebugUIMessages.PHPExeCompositeFragment_11);
+			break;
+		default:
+			break;
+		}
+		controlHandler.setTitle(getTitle());
 	}
 
 	public void setExistingItems(PHPexeItem[] existingItems) {
@@ -91,18 +106,14 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		return new File(fPHPIni.getText());
 	}
 
-	protected void createControl() {
-		PixelConverter pixelConverter = new PixelConverter(this);
+	protected void createContents(Composite parent) {
+		PixelConverter pixelConverter = new PixelConverter(parent);
 
-		GridLayout layout = new GridLayout(1, true);
-		setLayout(layout);
-		setLayoutData(new GridData(GridData.FILL_BOTH));
-
-		Composite parent = new Composite(this, SWT.NONE);
-		layout = new GridLayout();
+		Composite settingsComposite = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout();
 		layout.numColumns = 3;
-		parent.setLayout(layout);
-		parent.setLayoutData(new GridData(GridData.FILL_BOTH));
+		settingsComposite.setLayout(layout);
+		settingsComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		fPHPexeName = new StringDialogField();
 		fPHPexeName.setLabelText(PHPDebugUIMessages.addPHPexeDialog_phpName);
@@ -137,30 +148,30 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		fPHPIni.setLabelText(PHPDebugUIMessages.addPHPexeDialog_phpIni);
 		fPHPIni.setButtonLabel(PHPDebugUIMessages.addPHPexeDialog_browse1);
 
-		fPHPexeName.doFillIntoGrid(parent, 3);
-		fPHPExePath.doFillIntoGrid(parent, 3);
-		((GridData) fPHPExePath.getTextControl(parent).getLayoutData()).widthHint = pixelConverter
+		fPHPexeName.doFillIntoGrid(settingsComposite, 3);
+		fPHPExePath.doFillIntoGrid(settingsComposite, 3);
+		((GridData) fPHPExePath.getTextControl(settingsComposite).getLayoutData()).widthHint = pixelConverter
 				.convertWidthInCharsToPixels(50);
 
-		fPHPIni.doFillIntoGrid(parent, 3);
-		((GridData) fPHPIni.getTextControl(parent).getLayoutData()).widthHint = pixelConverter
+		fPHPIni.doFillIntoGrid(settingsComposite, 3);
+		((GridData) fPHPIni.getTextControl(settingsComposite).getLayoutData()).widthHint = pixelConverter
 				.convertWidthInCharsToPixels(50);
 
-		fLoadDefaultPHPIni = new Button(parent, SWT.CHECK);
+		fLoadDefaultPHPIni = new Button(settingsComposite, SWT.CHECK);
 		fLoadDefaultPHPIni
 				.setText(PHPDebugUIMessages.addPHPexeDialog_loadDefaultPHPIni);
 		GridData loadDefaultPHPIniData = new GridData(GridData.FILL);
 		loadDefaultPHPIniData.horizontalSpan = 3;
 		fLoadDefaultPHPIni.setLayoutData(loadDefaultPHPIniData);
 
-		fSapiTypesLabel = new Label(parent, SWT.LEFT | SWT.WRAP);
-		fSapiTypesLabel.setFont(parent.getFont());
+		fSapiTypesLabel = new Label(settingsComposite, SWT.LEFT | SWT.WRAP);
+		fSapiTypesLabel.setFont(settingsComposite.getFont());
 		fSapiTypesLabel.setText(PHPDebugUIMessages.PHPExeCompositeFragment_1);
 		GridData data = new GridData();
 		data.horizontalSpan = 1;
 		fSapiTypesLabel.setLayoutData(data);
 
-		fSapiTypes = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
+		fSapiTypes = new Combo(settingsComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		data = new GridData();
 		data.horizontalSpan = 2;
 		data.grabExcessHorizontalSpace = true;
@@ -245,7 +256,6 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 			fPHPexeName.setTextWithoutUpdate(""); //$NON-NLS-1$
 			fPHPExePath.setTextWithoutUpdate(""); //$NON-NLS-1$
 			fPHPIni.setTextWithoutUpdate(""); //$NON-NLS-1$
-			setTitle(PHPDebugUIMessages.PHPExeCompositeFragment_10);
 		} else {
 			initialName = phpExeItem.getName();
 			fPHPexeName.setTextWithoutUpdate(phpExeItem.getName());
@@ -266,11 +276,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 			}
 			fSapiTypes.setEnabled(phpExeItem.isEditable());
 			fSapiTypesLabel.setEnabled(phpExeItem.isEditable());
-
-			setTitle(PHPDebugUIMessages.PHPExeCompositeFragment_11);
 		}
-
-		controlHandler.setTitle(getTitle());
 	}
 
 	public void validate() {

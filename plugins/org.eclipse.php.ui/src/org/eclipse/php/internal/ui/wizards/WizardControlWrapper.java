@@ -85,4 +85,14 @@ public class WizardControlWrapper implements IControlHandler {
 	public void setMessage(String newMessage, int newType) {
 		wizard.setMessage(newMessage, newType);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.php.internal.ui.wizards.IControlHandler#getKind()
+	 */
+	public Kind getKind() {
+		return Kind.WIZARD;
+	}
+
 }

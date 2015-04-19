@@ -22,12 +22,12 @@ import org.eclipse.php.internal.ui.wizards.CompositeFragment;
 import org.eclipse.php.internal.ui.wizards.IControlHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author michael
  */
+@SuppressWarnings("restriction")
 public class PathMapperCompositeFragment extends CompositeFragment {
 
 	private PathMappingComposite pathMapperComposite;
@@ -35,39 +35,30 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 	public PathMapperCompositeFragment(Composite parent,
 			IControlHandler handler, boolean isForEditing) {
 		super(parent, handler, isForEditing);
-		controlHandler.setTitle(Messages.PathMapperCompositeFragment_0);
-		controlHandler.setDescription(Messages.PathMapperCompositeFragment_1);
-		setImageDescriptor(ServersPluginImages.DESC_WIZ_SERVER);
-		controlHandler.setImageDescriptor(getImageDescriptor());
-		setDisplayName(Messages.PathMapperCompositeFragment_2);
-		setTitle(Messages.PathMapperCompositeFragment_3);
-		setDescription(Messages.PathMapperCompositeFragment_4);
+		createDescription();
 		if (isForEditing) {
 			setData(((ServerEditDialog) controlHandler).getServer());
 		}
-		createControl(isForEditing);
+	}
+
+	protected void createDescription() {
+		setTitle(Messages.PathMapperCompositeFragment_0);
+		controlHandler.setTitle(getTitle());
+		setDescription(Messages.PathMapperCompositeFragment_1);
+		controlHandler.setDescription(getDescription());
+		setImageDescriptor(ServersPluginImages.DESC_WIZ_MAPPING_SERVER);
+		controlHandler.setImageDescriptor(getImageDescriptor());
+		setDisplayName(Messages.PathMapperCompositeFragment_2);
 	}
 
 	/**
 	 * Create the page
 	 */
-	protected void createControl(boolean isForEditing) {
-		// set layout for this composite (whole page)
-		GridLayout pageLayout = new GridLayout();
-		setLayout(pageLayout);
-
-		Composite composite = new Composite(this, SWT.NONE);
-		pageLayout.numColumns = 1;
-		composite.setLayout(pageLayout);
+	protected void createContents(Composite parent) {
+		pathMapperComposite = new PathMappingComposite(parent, SWT.NONE);
 		GridData data = new GridData(GridData.FILL_BOTH);
-		composite.setLayoutData(data);
-
-		pathMapperComposite = new PathMappingComposite(composite, SWT.NONE);
-		data = new GridData(GridData.FILL_BOTH);
 		pathMapperComposite.setLayoutData(data);
-
 		Dialog.applyDialogFont(this);
-
 		init();
 		validate();
 	}
@@ -135,4 +126,5 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 		super.setEnabled(enabled);
 		pathMapperComposite.setEnabled(enabled);
 	}
+
 }

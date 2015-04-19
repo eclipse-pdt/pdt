@@ -42,22 +42,13 @@ public class XDebugDebuggerServerSettingsSection implements
 	 * Creates new section.
 	 */
 	public XDebugDebuggerServerSettingsSection(
-			CompositeFragment compositeFragment,
+			final CompositeFragment compositeFragment,
+			final Composite debuggerSettingsComposite,
 			final IDebuggerSettingsWorkingCopy settingsWorkingCopy) {
 		this.settingsWorkingCopy = settingsWorkingCopy;
 		this.compositeFragment = compositeFragment;
-		this.settingsComposite = createComposite();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
-	 * getComposite()
-	 */
-	@Override
-	public Composite getComposite() {
-		return settingsComposite;
+		this.settingsComposite = debuggerSettingsComposite;
+		createContents();
 	}
 
 	/*
@@ -154,16 +145,7 @@ public class XDebugDebuggerServerSettingsSection implements
 		// Nothing to perform yet
 	}
 
-	protected Composite createComposite() {
-		// Main composite
-		Composite settingsComposite = new Composite(compositeFragment, SWT.NONE);
-		GridLayout scLayout = new GridLayout();
-		scLayout.marginHeight = 0;
-		scLayout.marginWidth = 0;
-		settingsComposite.setLayout(scLayout);
-		GridData scGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		scGridData.horizontalSpan = 2;
-		settingsComposite.setLayoutData(scGridData);
+	protected void createContents() {
 		// Connection group
 		Group connectionGroup = new Group(settingsComposite, SWT.NONE);
 		connectionGroup.setFont(compositeFragment.getFont());
@@ -258,7 +240,6 @@ public class XDebugDebuggerServerSettingsSection implements
 		enableProxy.setSelection(isProxyEnabled);
 		proxyIdeKeyText.setEnabled(isProxyEnabled);
 		proxyAddressText.setEnabled(isProxyEnabled);
-		return settingsComposite;
 	}
 
 }

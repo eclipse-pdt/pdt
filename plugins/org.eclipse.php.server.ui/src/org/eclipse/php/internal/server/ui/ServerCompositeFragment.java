@@ -53,14 +53,32 @@ public class ServerCompositeFragment extends CompositeFragment {
 	public ServerCompositeFragment(Composite parent, IControlHandler handler,
 			boolean isForEditing) {
 		super(parent, handler, isForEditing);
+		createDescription();
+	}
+
+	protected void createDescription() {
+		setDisplayName(PHPServerUIMessages
+				.getString("ServerCompositeFragment.server")); //$NON-NLS-1$
 		setDescription(PHPServerUIMessages
 				.getString("ServerCompositeFragment.specifyInformation")); //$NON-NLS-1$
 		controlHandler.setDescription(getDescription());
 		setImageDescriptor(ServersPluginImages.DESC_WIZ_SERVER);
 		controlHandler.setImageDescriptor(getImageDescriptor());
-		setDisplayName(PHPServerUIMessages
-				.getString("ServerCompositeFragment.server")); //$NON-NLS-1$
-		createControl();
+		switch (controlHandler.getKind()) {
+		case WIZARD: {
+			setTitle(PHPServerUIMessages
+					.getString("ServerCompositeFragment.newPhpServer")); //$NON-NLS-1$
+			break;
+		}
+		case EDITOR: {
+			setTitle(PHPServerUIMessages
+					.getString("ServerCompositeFragment.phpServer")); //$NON-NLS-1$
+			break;
+		}
+		default:
+			break;
+		}
+		controlHandler.setTitle(getTitle());
 	}
 
 	/**
@@ -86,11 +104,9 @@ public class ServerCompositeFragment extends CompositeFragment {
 	/**
 	 * Provide a wizard page to change the Server's installation directory.
 	 */
-	protected void createControl() {
+	protected void createContents(Composite parent) {
+		Composite nameGroup = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(1, true);
-		setLayout(layout);
-		setLayoutData(new GridData(GridData.FILL_BOTH));
-		Composite nameGroup = new Composite(this, SWT.NONE);
 		layout = new GridLayout();
 		layout.numColumns = 2;
 		nameGroup.setLayout(layout);
@@ -109,10 +125,10 @@ public class ServerCompositeFragment extends CompositeFragment {
 				validate();
 			}
 		});
-		createURLGroup(this);
+		createURLGroup(parent);
 		init();
 		validate();
-		Dialog.applyDialogFont(this);
+		Dialog.applyDialogFont(parent);
 		name.forceFocus();
 	}
 
@@ -175,14 +191,6 @@ public class ServerCompositeFragment extends CompositeFragment {
 								.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
 			}
 		}
-		if (getServer().getName() != null && getServer().getName().length() > 0) {
-			setTitle(PHPServerUIMessages
-					.getString("ServerCompositeFragment.editServer") + " [" + getServer().getName() + ']'); //$NON-NLS-1$ //$NON-NLS-2$
-		} else {
-			setTitle(PHPServerUIMessages
-					.getString("ServerCompositeFragment.configureServer")); //$NON-NLS-1$
-		}
-		controlHandler.setTitle(getTitle());
 	}
 
 	public void validate() {
@@ -256,8 +264,14 @@ public class ServerCompositeFragment extends CompositeFragment {
 	}
 
 	protected void createURLGroup(Composite parent) {
-		Group group = new Group(parent, SWT.NONE);
-		group.setFont(parent.getFont());
+		// Main composite
+		Composite urlGroupComposite = new Composite(parent, SWT.NONE);
+		GridLayout sLayout = new GridLayout();
+		urlGroupComposite.setLayout(sLayout);
+		GridData sGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		urlGroupComposite.setLayoutData(sGridData);
+		Group group = new Group(urlGroupComposite, SWT.NONE);
+		group.setFont(urlGroupComposite.getFont());
 		GridLayout layout = new GridLayout(3, false);
 		group.setLayout(layout);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);

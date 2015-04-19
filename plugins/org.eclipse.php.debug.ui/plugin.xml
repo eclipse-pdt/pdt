@@ -81,9 +81,9 @@
 				</separator>
 			</menu>
 			<action class="org.eclipse.php.internal.debug.ui.actions.PHPWatchAction"
-				disabledIcon="icon/full/dtool16/watch_exp.gif" enablesFor="+"
-				helpContextId="watch_action_context" hoverIcon="icon/full/etool16/watch_exp.gif"
-				icon="icon/full/etool16/watch_exp.gif" id="org.eclipse.php.debug.ui.WatchAction"
+				disabledIcon="icon/full/dtool16/watch_exp.png" enablesFor="+"
+				helpContextId="watch_action_context" hoverIcon="icon/full/etool16/watch_exp.png"
+				icon="icon/full/etool16/watch_exp.png" id="org.eclipse.php.debug.ui.WatchAction"
 				label="%Watch.label" menubarPath="org.eclipse.ui.run/phpGroup"
 				style="push">
 				<enablement>
@@ -98,9 +98,9 @@
 			
 			<action class="org.eclipse.php.internal.debug.ui.actions.PopupInspectAction"
 				definitionId="org.eclipse.php.debug.ui.commands.Inspect"
-				disabledIcon="icon/full/dtool16/insp_sbook.gif" enablesFor="+"
-				helpContextId="inspect_action_context" hoverIcon="icon/full/etool16/insp_sbook.gif"
-				icon="icon/full/etool16/insp_sbook.gif" id="org.eclipse.php.debug.ui.commands.Inspect"
+				disabledIcon="icon/full/dtool16/insp_sbook.png" enablesFor="+"
+				helpContextId="inspect_action_context" hoverIcon="icon/full/etool16/insp_sbook.png"
+				icon="icon/full/etool16/insp_sbook.png" id="org.eclipse.php.debug.ui.commands.Inspect"
 				label="%Inspect" menubarPath="org.eclipse.ui.run/phpGroup"
 				style="push">
 				<enablement>
@@ -145,14 +145,14 @@
 	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
 		<launchConfigurationTypeImage
 			configTypeID="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"
-			icon="icon/full/obj16/php_exec.gif"
+			icon="icon/full/obj16/php_exec.png"
 			id="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType" />
 	</extension>
 	
 	<extension point="org.eclipse.debug.ui.launchShortcuts">
 		<shortcut
 			class="org.eclipse.php.internal.debug.ui.launching.PHPExeLaunchShortcut"
-			description="%ScriptLaunch.description" icon="icon/full/obj16/php_exec.gif"
+			description="%ScriptLaunch.description" icon="icon/full/obj16/php_exec.png"
 			id="org.eclipse.php.deubg.ui.phpexeShortcut" label="%phpexeApplicationShortcut.label"
 			modes="run, debug">
 			
@@ -213,12 +213,12 @@
 				definitionId="org.eclipse.debug.ui.commands.RunToLine" id="php.editor.context.runToLineAction"
 				label="%runToLine.label" menubarPath="additions" />
 			<action class="org.eclipse.php.internal.debug.ui.actions.PHPWatchAction"
-				enablesFor="+" icon="icon/full/etool16/watch_exp.gif" id="org.eclipse.php.debug.ui.popup.WatchAction"
+				enablesFor="+" icon="icon/full/etool16/watch_exp.png" id="org.eclipse.php.debug.ui.popup.WatchAction"
 				label="%Watch.label" menubarPath="additions">
 			</action>
 			<action class="org.eclipse.php.internal.debug.ui.actions.PopupInspectAction"
 				definitionId="org.eclipse.php.debug.ui.commands.Inspect"
-				enablesFor="+" icon="icon/full/etool16/insp_sbook.gif" id="org.eclipse.php.debug.ui.commands.Inspect"
+				enablesFor="+" icon="icon/full/etool16/insp_sbook.png" id="org.eclipse.php.debug.ui.commands.Inspect"
 				label="%ActionDefinition.inspect.name" menubarPath="additions">
 			</action>
 			<visibility>
@@ -307,12 +307,12 @@
 			name="%parameterStack.name" id="org.eclipse.debug.ui.PHPStackView" />
 		<view category="org.eclipse.php.ui.views"
 			class="org.eclipse.php.internal.debug.ui.views.DebugOutputView"
-			icon="icon/full/obj16/debug_output.gif"
+			icon="icon/full/obj16/debug_output.png"
 			id="org.eclipse.debug.ui.PHPDebugOutput" name="%debugOutput.name">
 		</view>
 		<view category="org.eclipse.php.ui.views"
 			class="org.eclipse.php.internal.debug.ui.views.DebugBrowserView"
-			icon="icon/full/obj16/browser_output.gif"
+			icon="icon/full/obj16/browser_output.png"
 			id="org.eclipse.debug.ui.PHPBrowserOutput" name="%browserOutput.name">
 		</view>
 	</extension>

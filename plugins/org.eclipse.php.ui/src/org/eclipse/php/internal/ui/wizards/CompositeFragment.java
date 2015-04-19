@@ -14,6 +14,8 @@ package org.eclipse.php.internal.ui.wizards;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -47,6 +49,8 @@ public abstract class CompositeFragment extends Composite {
 		super(parent, style);
 		this.controlHandler = handler;
 		this.isForEditing = isForEditing;
+		parent.setBackgroundMode(SWT.INHERIT_DEFAULT);
+		createControl();
 	}
 
 	/**
@@ -62,6 +66,19 @@ public abstract class CompositeFragment extends Composite {
 			boolean isForEditing) {
 		this(parent, SWT.NONE, handler, isForEditing);
 	}
+
+	/**
+	 * Performs special processing when the OK button has been pressed.
+	 * 
+	 * @return <code>false</code> to abort the container's OK processing and
+	 *         <code>true</code> to allow the OK to happen
+	 */
+	public abstract boolean performOk();
+
+	/**
+	 * Validate data values in current composite.
+	 */
+	public abstract void validate();
 
 	/**
 	 * Attach data instance to this fragment.
@@ -180,14 +197,6 @@ public abstract class CompositeFragment extends Composite {
 	}
 
 	/**
-	 * Performs special processing when the OK button has been pressed.
-	 * 
-	 * @return <code>false</code> to abort the container's OK processing and
-	 *         <code>true</code> to allow the OK to happen
-	 */
-	public abstract boolean performOk();
-
-	/**
 	 * Performs special processing when the Apply button has been pressed.
 	 * <p>
 	 * The default implementation of this framework method simply calls
@@ -221,11 +230,6 @@ public abstract class CompositeFragment extends Composite {
 		return isComplete;
 	}
 
-	/**
-	 * Validate data values in current composite.
-	 */
-	public abstract void validate();
-
 	public void setMessage(String message, int type) {
 		controlHandler.setMessage(message, type);
 		setComplete(type != IMessageProvider.ERROR);
@@ -240,6 +244,29 @@ public abstract class CompositeFragment extends Composite {
 	public void setComplete(boolean isComplete) {
 		this.isComplete = isComplete;
 		controlHandler.update();
+	}
+
+	/**
+	 * Creates contents of this fragment with the use of provided parent
+	 * composite.
+	 * 
+	 * @param parent
+	 */
+	protected abstract void createContents(Composite parent);
+
+	/**
+	 * Creates control for this fragment.
+	 */
+	protected void createControl() {
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		setLayout(layout);
+		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		Composite composite = new Composite(this, SWT.NONE);
+		composite.setLayout(new GridLayout());
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		createContents(composite);
 	}
 
 }

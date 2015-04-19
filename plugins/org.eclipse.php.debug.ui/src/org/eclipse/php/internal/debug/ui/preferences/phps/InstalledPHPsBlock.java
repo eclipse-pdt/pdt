@@ -451,7 +451,6 @@ public class InstalledPHPsBlock {
 		PHPexeItem phpExeToEdit = phpExe.makeCopy();
 		PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(),
 				phpExeToEdit, PHPexes.getInstance().getAllItems());
-		dialog.setTitle(PHPDebugUIMessages.InstalledPHPsBlock_8);
 		if (dialog.open() != Window.OK) {
 			return;
 		}

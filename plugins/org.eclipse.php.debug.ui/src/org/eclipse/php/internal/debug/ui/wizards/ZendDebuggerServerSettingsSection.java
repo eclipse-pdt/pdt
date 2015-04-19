@@ -55,22 +55,13 @@ public class ZendDebuggerServerSettingsSection implements
 	 * 
 	 */
 	public ZendDebuggerServerSettingsSection(
-			CompositeFragment compositeFragment,
+			final CompositeFragment compositeFragment,
+			final Composite debuggerSettingsComposite,
 			final IDebuggerSettingsWorkingCopy settingsWorkingCopy) {
 		this.settingsWorkingCopy = settingsWorkingCopy;
 		this.compositeFragment = compositeFragment;
-		this.settingsComposite = createComposite();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
-	 * getComposite()
-	 */
-	@Override
-	public Composite getComposite() {
-		return settingsComposite;
+		this.settingsComposite = debuggerSettingsComposite;
+		createContents();
 	}
 
 	/*
@@ -176,15 +167,7 @@ public class ZendDebuggerServerSettingsSection implements
 		}
 	}
 
-	protected Composite createComposite() {
-		// Main composite
-		Composite settingsComposite = new Composite(compositeFragment, SWT.NONE);
-		GridLayout sLayout = new GridLayout();
-		sLayout.marginHeight = 0;
-		sLayout.marginWidth = 0;
-		settingsComposite.setLayout(sLayout);
-		GridData sGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		settingsComposite.setLayoutData(sGridData);
+	protected void createContents() {
 		// Connection group
 		Group connectionGroup = new Group(settingsComposite, SWT.NONE);
 		connectionGroup.setFont(compositeFragment.getFont());
@@ -245,7 +228,6 @@ public class ZendDebuggerServerSettingsSection implements
 		});
 		// Initial validation
 		validate();
-		return settingsComposite;
 	}
 
 }

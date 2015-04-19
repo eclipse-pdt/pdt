@@ -71,6 +71,8 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	private IDebuggerSettingsWorkingCopy debuggerSettingsWC;
 	private Map<String, IDebuggerSettingsWorkingCopy> settingsWCBuffer = new HashMap<String, IDebuggerSettingsWorkingCopy>();
 	private String detectedDebuggerId = null;
+	private Composite debuggerSettingsComposite;
+	private Composite mainComposite;
 
 	/**
 	 * Creates new debugger composite fragment.
@@ -82,17 +84,6 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	public DebuggerCompositeFragment(Composite parent, IControlHandler handler,
 			boolean isForEditing) {
 		super(parent, handler, isForEditing);
-		setDisplayName(Messages.DebuggerCompositeFragment_Debugger);
-		setTitle(Messages.DebuggerCompositeFragment_Edit_debugger_settings);
-		controlHandler.setTitle(getTitle());
-		setDescription(Messages.DebuggerCompositeFragment_Configure_server_debugger_settings);
-		controlHandler.setDescription(getDescription());
-		setImageDescriptor(PHPDebugUIImages
-				.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_DEBUG_SERVER));
-		controlHandler.setImageDescriptor(getImageDescriptor());
-		debuggersIds = new LinkedList<String>(
-				PHPDebuggersRegistry.getDebuggersIds());
-		createControl();
 	}
 
 	@Override
@@ -161,8 +152,9 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		if (debuggerOwner != null
 				&& !(debuggerOwner instanceof IUniqueIdentityElement)) {
 			throw new IllegalArgumentException(
-					"The given object is not a Server"); //$NON-NLS-1$
+					"The given object is not a PHP Server or Executable"); //$NON-NLS-1$
 		}
+		createDescription(debuggerOwner);
 		super.setData(debuggerOwner);
 		init();
 		validate();
@@ -179,11 +171,16 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		IDebuggerSettings settings = DebuggerSettingsManager.INSTANCE
 				.findSettings(debuggerOwner.getUniqueId(), debuggerId);
 		if (debuggerSettingsSection != null) {
-			debuggerSettingsSection.getComposite().dispose();
+			debuggerSettingsComposite.dispose();
 		}
+		// Rebuild settings composite
+		debuggerSettingsComposite = new Composite(mainComposite, SWT.NONE);
+		debuggerSettingsComposite.setLayout(new GridLayout());
+		debuggerSettingsComposite.setLayoutData(new GridData(SWT.FILL,
+				SWT.FILL, true, true));
 		if (settings == null) {
 			debuggerSettingsSection = new DebuggerUnsupportedSettingsSection(
-					this);
+					this, debuggerSettingsComposite);
 		} else {
 			debuggerSettingsWC = getSettingsWC(debuggerId, settings);
 			IDebuggerSettingsProvider provider = DebuggerSettingsProviderRegistry
@@ -191,7 +188,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			IDebuggerSettingsSectionBuilder sectionBuilder = DebuggerSettingsSectionBuildersRegistry
 					.getBuilder(provider.getId());
 			debuggerSettingsSection = sectionBuilder.build(this,
-					debuggerSettingsWC);
+					debuggerSettingsComposite, debuggerSettingsWC);
 		}
 		if (!debuggerSettingsSection.canTest())
 			debuggerTest.setVisible(false);
@@ -212,15 +209,32 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		return debuggerSettingsWC;
 	}
 
-	protected void createControl() {
-		GridLayout layout = new GridLayout(1, true);
-		setLayout(layout);
-		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		Composite debuggerChoice = new Composite(this, SWT.NONE);
+	protected void createDescription(Object owner) {
+		if (owner instanceof PHPexeItem) {
+			setImageDescriptor(PHPDebugUIImages
+					.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_DEBUG_PHPEXE));
+			setDescription(Messages.DebuggerCompositeFragment_Configure_exe_debugger_settings);
+		} else if (owner instanceof Server) {
+			setImageDescriptor(PHPDebugUIImages
+					.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_DEBUG_SERVER));
+			setDescription(Messages.DebuggerCompositeFragment_Configure_server_debugger_settings);
+		}
+		setDisplayName(Messages.DebuggerCompositeFragment_Debugger);
+		setTitle(Messages.DebuggerCompositeFragment_Debugger_settings);
+		controlHandler.setTitle(getTitle());
+		controlHandler.setImageDescriptor(getImageDescriptor());
+		controlHandler.setDescription(getDescription());
+	}
+
+	protected void createContents(Composite parent) {
+		debuggersIds = new LinkedList<String>(
+				PHPDebuggersRegistry.getDebuggersIds());
+		mainComposite = parent;
+		Composite debuggerChoice = new Composite(parent, SWT.NONE);
 		GridLayout dcLayout = new GridLayout();
 		dcLayout.numColumns = 3;
 		debuggerChoice.setLayout(dcLayout);
-		debuggerChoice.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false,
+		debuggerChoice.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				false));
 		Label debuggerLabel = new Label(debuggerChoice, SWT.NONE);
 		debuggerLabel.setText("Debugger:"); //$NON-NLS-1$
@@ -261,7 +275,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			String debuggerName = PHPDebuggersRegistry.getDebuggerName(id);
 			debuggerCombo.add(debuggerName, i);
 		}
-		Label separator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
+		Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
 		separator
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		Dialog.applyDialogFont(this);
