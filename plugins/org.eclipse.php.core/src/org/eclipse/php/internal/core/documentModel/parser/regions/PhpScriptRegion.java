@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,7 +43,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 
 	private static final String PHP_SCRIPT = "PHP Script"; //$NON-NLS-1$
 	private PhpTokenContainer tokensContaier = new PhpTokenContainer();
-	private final IProject project;
+	private IProject project;
 	private int updatedTokensStart = -1;
 
 	public int getUpdatedTokensStart() {
@@ -322,6 +322,36 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			Logger.logException(e);
 		}
 		completeReparse(phpLexer);
+	}
+
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=464489
+	// Workaround for bug 464489:
+	// this method is called by the SSE framework when an existing region
+	// content has to be updated using a new one.
+	// The SSE framework doesn't know that this class also contains additional
+	// "region-is-splitted-into-tokens" informations (as PhpScriptRegion doesn't
+	// implement ITextRegionCollection), so we have to manually keep those
+	// additional internal variables in sync with the new position informations.
+	// See also StructuredDocumentReParser#isCollectionRegion(ITextRegion
+	// aRegion), StructuredDocumentReParser#swapNewForOldRegion(...) and
+	// StructuredDocumentReParser#transferEmbeddedRegions(...).
+	@Override
+	public void equatePositions(ITextRegion region) {
+		super.equatePositions(region);
+		if (region instanceof PhpScriptRegion) {
+			PhpScriptRegion sRegion = (PhpScriptRegion) region;
+			// XXX: we clone the tokens container for more safety (but it's not
+			// a deep copy, because tokens and lexer state changes are not
+			// cloned)
+			this.tokensContaier = (PhpTokenContainer) sRegion.tokensContaier
+					.clone();
+			this.project = sRegion.project;
+			this.updatedTokensStart = sRegion.updatedTokensStart;
+			this.updatedTokensEnd = sRegion.updatedTokensEnd;
+			this.ST_PHP_LINE_COMMENT = sRegion.ST_PHP_LINE_COMMENT;
+			this.ST_PHP_IN_SCRIPTING = sRegion.ST_PHP_IN_SCRIPTING;
+			this.isFullReparsed = sRegion.isFullReparsed;
+		}
 	}
 
 	private synchronized final boolean isHereDoc(final ITextRegion tokenStart) {

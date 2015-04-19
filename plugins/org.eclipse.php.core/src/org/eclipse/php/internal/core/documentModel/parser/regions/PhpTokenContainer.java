@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
  * 
  * @author Roy, 2007
  */
-public class PhpTokenContainer {
+public class PhpTokenContainer implements Cloneable {
 
 	// holds PHP tokens
 	protected final LinkedList<ContextRegion> phpTokens = new LinkedList<ContextRegion>(); // of
@@ -39,6 +39,21 @@ public class PhpTokenContainer {
 	// this iterator follows the localization principle
 	// i.e. the user usually works in the same area of the document
 	protected ListIterator<ContextRegion> tokensIterator = null;
+
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=464489
+	// workaround for bug 464489
+	@Override
+	public Object clone() {
+		PhpTokenContainer clone = new PhpTokenContainer();
+		clone.getModelForCreation();
+		clone.reset();
+
+		clone.phpTokens.addAll(phpTokens);
+		clone.lexerStateChanges.addAll(lexerStateChanges);
+
+		clone.releaseModelFromCreation();
+		return clone;
+	}
 
 	/**
 	 * find token for a given location
@@ -251,7 +266,8 @@ public class PhpTokenContainer {
 	}
 
 	/**
-	 * One must call releaseModelForWrite() after constructing the
+	 * One must call releaseModelForWrite() after constructing the list of php
+	 * tokens
 	 */
 	public synchronized void releaseModelFromCreation() {
 		tokensIterator = phpTokens.listIterator();
