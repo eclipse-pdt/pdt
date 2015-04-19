@@ -17,7 +17,7 @@
 		<launchConfigurationTypeImage
 			id="org.eclipse.php.server.ui.launchConfigurationTypeImage"
 			configTypeID="org.eclipse.php.debug.core.launching.webPageLaunch"
-			icon="icons/full/obj16/server.gif">
+			icon="icons/full/obj16/server.png">
 		</launchConfigurationTypeImage>
 	</extension>
 
@@ -43,7 +43,7 @@
 	<extension point="org.eclipse.debug.ui.launchShortcuts">
 		<shortcut
 			class="org.eclipse.php.internal.server.ui.launching.PHPWebPageLaunchShortcut"
-			description="%WebLaunch.description" icon="icons/full/obj16/server_run.gif"
+			description="%WebLaunch.description" icon="icons/full/obj16/server_run.png"
 			id="org.eclipse.php.server.ui.phpServerShortcut" label="%phpServerShortcut.label"
 			modes="run, debug">
 			<contextualLaunch>

@@ -44,6 +44,7 @@ public class PHPDebugUIImages {
 	public static final String IMG_WIZBAN_XDEBUG_CONF = "IMG_WIZBAN_XDEBUG_CONF"; //$NON-NLS-1$
 	public static final String IMG_WIZBAN_ZEND_DEBUGGER_CONF = "IMG_WIZBAN_ZEND_DEBUGGER_CONF"; //$NON-NLS-1$
 	public static final String IMG_WIZBAN_PHPEXE = "IMG_WIZBAN_PHPEXE"; //$NON-NLS-1$
+	public static final String IMG_WIZBAN_DEBUG_PHPEXE = "IMG_WIZBAN_DEBUG_PHPEXE"; //$NON-NLS-1$
 	public static final String IMG_WIZBAN_DEBUG_SERVER = "IMG_WIZBAN_DEBUG_SERVER"; //$NON-NLS-1$
 
 	public static final String IMG_OBJ_DEBUG_CONF = "IMG_OBJ_DEBUG_CONF"; //$NON-NLS-1$
@@ -96,9 +97,9 @@ public class PHPDebugUIImages {
 
 	private static void declareImages() {
 		declareRegistryImage(IMG_OVR_CONDITIONAL_BREAKPOINT, T_OVR
-				+ "conditional_ovr.gif"); //$NON-NLS-1$
+				+ "conditional_ovr.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OVR_CONDITIONAL_BREAKPOINT_DISABLED, T_OVR
-				+ "conditional_ovr_disabled.gif"); //$NON-NLS-1$
+				+ "conditional_ovr_disabled.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OVR_MEMBER_CONSTANT, T_OVR
 				+ "constant_ovr.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OVR_MEMBER_STATIC, T_OVR + "static_ovr.png"); //$NON-NLS-1$
@@ -106,12 +107,14 @@ public class PHPDebugUIImages {
 				+ "xdebug_conf_wiz.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_WIZBAN_ZEND_DEBUGGER_CONF, T_WIZBAN
 				+ "zend_debugger_conf_wiz.png"); //$NON-NLS-1$
-		declareRegistryImage(IMG_WIZBAN_PHPEXE, T_WIZBAN + "phpexe_wiz.gif"); //$NON-NLS-1$
+		declareRegistryImage(IMG_WIZBAN_PHPEXE, T_WIZBAN + "php_exe_wiz.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_WIZBAN_DEBUG_PHPEXE, T_WIZBAN
+				+ "php_exe_debug_wiz.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_WIZBAN_DEBUG_SERVER, T_WIZBAN
-				+ "server_debug_wiz.gif"); //$NON-NLS-1$
-		declareRegistryImage(IMG_OBJ_DEBUG_CONF, T_OBJ + "debug_conf.gif"); //$NON-NLS-1$
-		declareRegistryImage(IMG_OBJ_PHP_EXE, T_OBJ + "php_exe.gif"); //$NON-NLS-1$
-		declareRegistryImage(IMG_OBJ_PATH_MAPPING, T_OBJ + "path_mapping.gif"); //$NON-NLS-1$
+				+ "server_debug_wiz.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_DEBUG_CONF, T_OBJ + "debug_conf.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_PHP_EXE, T_OBJ + "php_exe.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_PATH_MAPPING, T_OBJ + "path_mapping.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_MEMBER_LOCAL, T_OBJ + "member_local.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_MEMBER_SUPER_GLOBAL, T_OBJ
 				+ "member_super_global.png"); //$NON-NLS-1$

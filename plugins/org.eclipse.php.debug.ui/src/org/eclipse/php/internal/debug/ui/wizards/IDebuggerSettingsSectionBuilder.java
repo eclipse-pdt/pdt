@@ -12,6 +12,7 @@ package org.eclipse.php.internal.debug.ui.wizards;
 
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsWorkingCopy;
 import org.eclipse.php.internal.ui.wizards.CompositeFragment;
+import org.eclipse.swt.widgets.Composite;
 
 /**
  * Common interface for implementors of debugger settings section builder.
@@ -29,6 +30,6 @@ public interface IDebuggerSettingsSectionBuilder {
 	 * @return debugger settings section composite
 	 */
 	public IDebuggerSettingsSection build(CompositeFragment compositeFragment,
-			IDebuggerSettingsWorkingCopy settingsWorkingCopy);
+			Composite debuggerSettingsComposite, IDebuggerSettingsWorkingCopy settingsWorkingCopy);
 
 }
