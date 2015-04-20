@@ -1,0 +1,13 @@
+--TEST--
+Class field in loop - http://eclip.se/464987
+--FILE--
+<?php
+class DictFormat {
+	protected $foo = array();
+	public function apply($a, $b, $c) {
+		foreach ( |$this->foo| as $field ) {
+		}
+	}
+}
+--EXPECT--
+field($foo)

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009,2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,11 +65,13 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
+@SuppressWarnings("restriction")
 public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 	private static final String OPEN_BRACE = "("; //$NON-NLS-1$
 	private static final String PROTECTED = "protected"; //$NON-NLS-1$
 	private static final String PUBLIC = "public"; //$NON-NLS-1$
+	private static final String OBJECT_OPERATOR = "->"; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
 	private static final String NS_SEPARATOR = "\\"; //$NON-NLS-1$
 	private static final String CONST = "const"; //$NON-NLS-1$
@@ -845,7 +847,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								sourceModule, offset, cache, null);
 					}
 					if ((INSTEADOF.equals(nextWord) || AS.equals(nextWord))
-							&& !PAAMAYIM_NEKUDOTAIM.equals(trigger)) {
+							&& (!PAAMAYIM_NEKUDOTAIM.equals(trigger) && !OBJECT_OPERATOR
+									.equals(trigger))) {
 						if (types != null && types.length > 0) {
 							List<IMethod> methods = new LinkedList<IMethod>();
 							for (IType t : types) {
