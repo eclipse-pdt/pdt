@@ -18,6 +18,8 @@ import org.eclipse.dltk.core.ITypeHierarchy;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ui.text.ScriptOutlineInformationControl;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
+import org.eclipse.dltk.ui.viewsupport.StyledDecoratingModelLabelProvider;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -82,8 +84,16 @@ public class PHPOutlineInformationControl extends
 		IDecoratorManager decoratorMgr = PlatformUI.getWorkbench()
 				.getDecoratorManager();
 		if (decoratorMgr.getEnabled("org.eclipse.php.ui.override.decorator")) { //$NON-NLS-1$
-			((ScriptUILabelProvider) viewer.getLabelProvider())
-					.addLabelDecorator(new OverrideIndicatorLabelDecorator());
+			IBaseLabelProvider labelProvider = viewer.getLabelProvider();
+			if (labelProvider instanceof ScriptUILabelProvider) {
+				((ScriptUILabelProvider) viewer.getLabelProvider())
+						.addLabelDecorator(new OverrideIndicatorLabelDecorator());
+			} else if (labelProvider instanceof StyledDecoratingModelLabelProvider) {
+				// DLTK 5.2
+				((ScriptUILabelProvider) ((StyledDecoratingModelLabelProvider) labelProvider)
+						.getStyledStringProvider())
+						.addLabelDecorator(new OverrideIndicatorLabelDecorator());
+			}
 		}
 		return viewer;
 	}
