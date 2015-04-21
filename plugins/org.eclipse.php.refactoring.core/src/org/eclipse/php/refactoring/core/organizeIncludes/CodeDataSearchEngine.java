@@ -466,7 +466,7 @@ public class CodeDataSearchEngine {
 				.getRegionAtCharacterOffset(offset);
 		TextSequence statement = PHPTextSequenceUtilities.getStatement(offset,
 				region, false);
-		if (statement == null)
+		if (statement.length() == 0)
 			return null;
 		String partitionType = TextSequenceUtilities.getTypeByAbsoluteOffset(
 				statement, offset);
