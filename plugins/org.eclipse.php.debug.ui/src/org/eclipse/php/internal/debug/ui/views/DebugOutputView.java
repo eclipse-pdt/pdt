@@ -117,6 +117,7 @@ public class DebugOutputView extends AbstractDebugOutputView implements
 	private IDebugEventSetListener fTerminateListener;
 	private StructuredTextViewer fSourceViewer;
 	private DebugViewPartListener fPartListener;
+	private IPropertyChangeListener fPropertyChangeListener;
 
 	public DebugOutputView() {
 		super();
@@ -189,8 +190,13 @@ public class DebugOutputView extends AbstractDebugOutputView implements
 				.removeSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
 		DebugPlugin.getDefault().removeDebugEventListener(fTerminateListener);
 		if (fPartListener != null) {
-			fPartListener = new DebugViewPartListener();
 			getSite().getPage().removePartListener(fPartListener);
+			fPartListener = null;
+		}
+		if (fPropertyChangeListener != null) {
+			EditorsPlugin.getDefault().getPreferenceStore()
+					.removePropertyChangeListener(fPropertyChangeListener);
+			fPropertyChangeListener = null;
 		}
 		super.dispose();
 	}
@@ -261,20 +267,28 @@ public class DebugOutputView extends AbstractDebugOutputView implements
 		IPreferenceStore store = EditorsPlugin.getDefault()
 				.getPreferenceStore();
 		fSourceViewer.getTextWidget().setBackground(getBackgroundColor(store));
-		IPropertyChangeListener listener = new IPropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent event) {
-				IPreferenceStore store = EditorsPlugin.getDefault()
-						.getPreferenceStore();
-				String prop = event.getProperty();
-				if (prop.equals(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT)
-						|| prop.equals(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND)) {
-					fSourceViewer.getTextWidget().setBackground(
-							getBackgroundColor(store));
-				}
+		if (fPropertyChangeListener == null) {
+			fPropertyChangeListener = new IPropertyChangeListener() {
+				public void propertyChange(PropertyChangeEvent event) {
+					IPreferenceStore store = EditorsPlugin.getDefault()
+							.getPreferenceStore();
+					String prop = event.getProperty();
+					if (prop.equals(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT)
+							|| prop.equals(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND)) {
+						if (fSourceViewer == null
+								|| fSourceViewer.getTextWidget() == null
+								|| fSourceViewer.getTextWidget().isDisposed()) {
+							return;
+						}
+						fSourceViewer.getTextWidget().setBackground(
+								getBackgroundColor(store));
+					}
 
-			}
-		};
-		store.addPropertyChangeListener(listener);
+				}
+			};
+			store.addPropertyChangeListener(fPropertyChangeListener);
+		}
+
 	}
 
 }
