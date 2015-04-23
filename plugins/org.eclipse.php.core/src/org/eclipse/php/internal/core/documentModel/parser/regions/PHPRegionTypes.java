@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.documentModel.parser.regions;
 
+@SuppressWarnings("all")//$NON-NLS-1$
 public interface PHPRegionTypes {
 
 	static final String PHP_KEYWORD = "PHP_KEYWORD"; //$NON-NLS-1$

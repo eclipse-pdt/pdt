@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.php</groupId>
 	<artifactId>tests</artifactId>
@@ -78,6 +79,37 @@
 					</plugin>
 				</plugins>
 			</build>
+		</profile>
+		<profile>
+			<id>coverage</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>0.7.4.201502262128</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+								<id>pre-test</id>
+								<configuration>
+									<destFile>${sonar.jacoco.reportPath}</destFile>
+									<includes>
+										<include>org.eclipse.php.*</include>
+									</includes>
+									<propertyName>jacoco.argLine</propertyName>
+									<append>true</append>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+			<properties>
+				<tycho.testArgLine>${jacoco.argLine}</tycho.testArgLine>
+			</properties>
 		</profile>
 	</profiles>
 

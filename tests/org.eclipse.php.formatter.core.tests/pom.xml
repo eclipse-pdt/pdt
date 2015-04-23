@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>tests</artifactId>
@@ -22,11 +23,15 @@
 					<useUIThread>false</useUIThread>
 					<argLine>-Xmx512m -XX:MaxPermSize=256m ${test.vmargs} ${tycho.testArgLine}</argLine>
 					<dependencies>
-					   <dependency>
-                            <type>eclipse-feature</type>
-                            <artifactId>org.eclipse.e4.rcp</artifactId>
-                            <version>0.0.0</version>
-                        </dependency>
+						<dependency>
+							<type>p2-installable-unit</type>
+							<artifactId>org.eclipse.dltk.core.index.sql.h2</artifactId>
+						</dependency>
+						<dependency>
+							<type>eclipse-feature</type>
+							<artifactId>org.eclipse.e4.rcp</artifactId>
+							<version>0.0.0</version>
+						</dependency>
 					</dependencies>
 					<testSuite>org.eclipse.php.formatter.core.tests</testSuite>
 					<testClass>org.eclipse.php.formatter.core.tests.AllTests</testClass>
