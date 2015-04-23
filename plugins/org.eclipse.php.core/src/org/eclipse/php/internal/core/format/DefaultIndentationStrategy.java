@@ -330,7 +330,11 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					region.getOffset() + region.getLength() - offset);
 			PHPHeuristicScanner scanner = PHPHeuristicScanner
 					.createHeuristicScanner(document, offset, true);
-			if (IndentationUtils.inBracelessBlock(scanner, document, offset)) {
+			if (content.trim().startsWith("//") && enterKeyPressed) { //$NON-NLS-1$
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=457701
+				return true;
+			} else if (IndentationUtils.inBracelessBlock(scanner, document,
+					offset)) {
 				// lineState.inBracelessBlock = true;
 				if (!"{".equals(commandText)) { //$NON-NLS-1$
 					indent(document, result,
