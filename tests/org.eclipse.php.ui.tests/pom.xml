@@ -23,7 +23,7 @@
 					<testClass>org.eclipse.php.ui.tests.AllTests</testClass>
 					<useUIHarness>true</useUIHarness>
 					<useUIThread>true</useUIThread>
-					<argLine>-Xmx512m -XX:MaxPermSize=256m ${test.vmargs}</argLine>
+					<argLine>-Xmx512m -XX:MaxPermSize=256m ${test.vmargs} ${tycho.testArgLine}</argLine>
 					<dependencies>
 						<dependency>
 							<type>p2-installable-unit</type>

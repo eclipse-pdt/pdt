@@ -20,7 +20,7 @@
 				<configuration>
 					<useUIHarness>true</useUIHarness>
 					<useUIThread>false</useUIThread>
-					<argLine>-Xmx512m -XX:MaxPermSize=256m ${test.vmargs}</argLine>
+					<argLine>-Xmx512m -XX:MaxPermSize=256m ${test.vmargs} ${tycho.testArgLine}</argLine>
 					<dependencies>
 					   <dependency>
                             <type>eclipse-feature</type>
