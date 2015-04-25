@@ -103,14 +103,14 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		for (Entry<PHPDocBlock, IField> entry : docs.entrySet()) {
 			PHPDocBlock doc = entry.getKey();
 			IField typeField = entry.getValue();
-			IType currentNamespace = PHPModelUtils
-					.getCurrentNamespace(typeField);
+			IType namespace = PHPModelUtils.getCurrentNamespace(typeField);
 
 			for (PHPDocTag tag : doc.getTags()) {
 				if (tag.getTagKind() == PHPDocTag.VAR) {
 					SimpleReference[] references = tag.getReferences();
 					for (SimpleReference ref : references) {
 						String typeName = ref.getName();
+						IType currentNamespace = namespace;
 
 						IEvaluatedType evaluatedType = PHPEvaluationUtils
 								.extractArrayType(typeName, currentNamespace,
@@ -142,6 +142,9 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 											typeName = NamespaceReference.NAMESPACE_SEPARATOR
 													+ typeName;
 										}
+									} else {
+										// https://bugs.eclipse.org/bugs/show_bug.cgi?id=465263
+										currentNamespace = null;
 									}
 								} else if (typeName.indexOf(SPLASH) < 0) {
 									String prefix = typeName;
@@ -159,6 +162,9 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 											typeName = NamespaceReference.NAMESPACE_SEPARATOR
 													+ typeName;
 										}
+									} else {
+										// https://bugs.eclipse.org/bugs/show_bug.cgi?id=465263
+										currentNamespace = null;
 									}
 								}
 							}

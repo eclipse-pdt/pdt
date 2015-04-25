@@ -120,9 +120,9 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy
 					// blank chars (between firstLineOffset and startOffset - 1)
 					// if its content (starting from startOffset) is put/pushed
 					// on a new line.
-					if (helpBuffer.length() > 0
-							&& (helpBuffer.charAt(0) == '\r' || helpBuffer
-									.charAt(0) == '\n')) {
+					if (TextUtilities.startsWith(
+							document.getLegalLineDelimiters(),
+							helpBuffer.toString()) != -1) {
 						helpBuffer.insert(
 								0,
 								firstLineText.substring(0, startOffset
