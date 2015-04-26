@@ -26,10 +26,7 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.YieldExpression;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
@@ -86,8 +83,18 @@ public class MethodReturnTypeEvaluator extends
 									.getCache());
 				}
 
+				final MethodDeclaration topDeclaration = decl;
+
 				ASTVisitor visitor = new ASTVisitor() {
 					public boolean visitGeneral(ASTNode node) throws Exception {
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=464921
+						// do not evaluate content of inner lambda functions
+						if (node instanceof LambdaFunctionDeclaration
+						// but never exclude top node (even if this case cannot
+						// happen here)
+								&& node != topDeclaration) {
+							return false;
+						}
 						if (node instanceof ReturnStatement) {
 							ReturnStatement statement = (ReturnStatement) node;
 							Expression expr = statement.getExpr();
