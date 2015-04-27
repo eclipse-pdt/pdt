@@ -1396,6 +1396,9 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 			styles.add(PreferenceConstants.EDITOR_NORMAL_COLOR);
 			styles.add(PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR);
 			styles.add(PreferenceConstants.EDITOR_KEYWORD_COLOR);
+			styles.add(PreferenceConstants.EDITOR_KEYWORD_PRIVATE_COLOR);
+			styles.add(PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR);
+			styles.add(PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR);
 			styles.add(PreferenceConstants.EDITOR_VARIABLE_COLOR);
 			styles.add(PreferenceConstants.EDITOR_STRING_COLOR);
 			styles.add(PreferenceConstants.EDITOR_NUMBER_COLOR);
@@ -1511,6 +1514,15 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 				PHPUIMessages.ColorPage_BoundryMaker);
 		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_KEYWORD_COLOR,
 				PHPUIMessages.ColorPage_Keyword);
+		fStyleToDescriptionMap.put(
+				PreferenceConstants.EDITOR_KEYWORD_PRIVATE_COLOR,
+				PHPUIMessages.ColorPage_KeywordPrivate);
+		fStyleToDescriptionMap.put(
+				PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR,
+				PHPUIMessages.ColorPage_KeywordProtected);
+		fStyleToDescriptionMap.put(
+				PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR,
+				PHPUIMessages.ColorPage_KeywordPublic);
 		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_VARIABLE_COLOR,
 				PHPUIMessages.ColorPage_Variable);
 		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_STRING_COLOR,

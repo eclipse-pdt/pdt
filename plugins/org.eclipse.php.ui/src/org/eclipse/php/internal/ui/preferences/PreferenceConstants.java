@@ -393,6 +393,54 @@ public class PreferenceConstants {
 
 	/**
 	 * A named preference that holds the default color for the PHP variable
+	 * 
+	 * @since 3.5.0
+	 */
+	public static final String EDITOR_KEYWORD_PUBLIC_COLOR = "editorColorKeywordPublic"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the default color for the PHP variable
+	 * 
+	 * @since 3.5.0
+	 */
+	public static final String EDITOR_KEYWORD_PUBLIC_DEFAULT_COLOR = ColorHelper
+			.packStylePreferences(new String[] {
+					ColorHelper.getColorString(34, 128, 76), null, "true" }); //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the default color for the PHP variable
+	 * 
+	 * @since 3.5.0
+	 */
+	public static final String EDITOR_KEYWORD_PROTECTED_COLOR = "editorColorKeywordProtected"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the default color for the PHP variable
+	 * 
+	 * @since 3.5.0
+	 */
+	public static final String EDITOR_KEYWORD_PROTECTED_DEFAULT_COLOR = ColorHelper
+			.packStylePreferences(new String[] {
+					ColorHelper.getColorString(165, 124, 44), null, "true" }); //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the default color for the PHP variable
+	 * 
+	 * @since 3.5.0
+	 */
+	public static final String EDITOR_KEYWORD_PRIVATE_COLOR = "editorColorKeywordPrivate"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the default color for the PHP variable
+	 * 
+	 * @since 3.5.0
+	 */
+	public static final String EDITOR_KEYWORD_PRIVATE_DEFAULT_COLOR = ColorHelper
+			.packStylePreferences(new String[] {
+					ColorHelper.getColorString(194, 27, 48), null, "true" }); //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the default color for public keyword
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
@@ -1131,6 +1179,13 @@ public class PreferenceConstants {
 		store.setDefault(EDITOR_PHPDOC_COLOR, EDITOR_PHPDOC_DEFAULT_COLOR);
 		store.setDefault(EDITOR_TASK_COLOR, EDITOR_TASK_DEFAULT_COLOR);
 
+		store.setDefault(EDITOR_KEYWORD_PRIVATE_COLOR,
+				EDITOR_KEYWORD_PRIVATE_DEFAULT_COLOR);
+		store.setDefault(EDITOR_KEYWORD_PROTECTED_COLOR,
+				EDITOR_KEYWORD_PROTECTED_DEFAULT_COLOR);
+		store.setDefault(EDITOR_KEYWORD_PUBLIC_COLOR,
+				EDITOR_KEYWORD_PUBLIC_DEFAULT_COLOR);
+
 		// SyntaxColoringPage enable
 		store.setDefault(getEnabledPreferenceKey(EDITOR_NORMAL_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_BOUNDARYMARKER_COLOR),
@@ -1147,6 +1202,14 @@ public class PreferenceConstants {
 				true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_PHPDOC_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_TASK_COLOR), true);
+
+		store.setDefault(getEnabledPreferenceKey(EDITOR_KEYWORD_PUBLIC_COLOR),
+				true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_KEYWORD_PRIVATE_COLOR),
+				true);
+		store.setDefault(
+				getEnabledPreferenceKey(EDITOR_KEYWORD_PROTECTED_COLOR), true);
+
 		// PHP options
 		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION,
 				PHPVersion.PHP5_3.toString());
