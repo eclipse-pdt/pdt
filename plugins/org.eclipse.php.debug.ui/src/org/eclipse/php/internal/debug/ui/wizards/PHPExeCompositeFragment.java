@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPExeException;
 import org.eclipse.php.internal.debug.core.PHPExeUtil;
 import org.eclipse.php.internal.debug.core.PHPExeUtil.PHPExeInfo;
@@ -375,6 +376,8 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		try {
 			return PHPExeUtil.getPHPInfo(executable, false);
 		} catch (PHPExeException e) {
+			Logger.logException("Could not obtain PHP executable info.", //$NON-NLS-1$
+					e);
 			return null;
 		}
 	}

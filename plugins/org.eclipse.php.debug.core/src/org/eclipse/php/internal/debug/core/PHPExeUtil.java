@@ -20,10 +20,13 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Class providing utility methods for PHP executables. Clients may use it to
@@ -145,6 +148,7 @@ public final class PHPExeUtil {
 			.compile("Configuration File \\(php.ini\\) Path </td><td class=\"v\">(.*?)</td>"); //$NON-NLS-1$
 
 	private static final Map<File, PHPExeInfo> phpInfos = new HashMap<File, PHPExeInfo>();
+	private static final List<File> installErrors = new ArrayList<File>();
 
 	private PHPExeUtil() {
 	};
@@ -183,7 +187,7 @@ public final class PHPExeUtil {
 	 * @return PHP info
 	 * @throws PHPExeException
 	 */
-	public synchronized static PHPExeInfo getPHPInfo(File executableFile,
+	public synchronized static PHPExeInfo getPHPInfo(final File executableFile,
 			boolean reload) throws PHPExeException {
 		PHPExeInfo phpInfo = phpInfos.get(executableFile);
 		if (phpInfo != null && !reload)
@@ -210,9 +214,10 @@ public final class PHPExeUtil {
 				output = fetchVersion(executableFile, tempPHPIni, false);
 				m = PATTERN_PHP_VERSION.matcher(output);
 				if (!m.find()) {
+					showInstallError(executableFile);
 					throw new PHPExeException(
 							MessageFormat
-									.format("Can't determine version of the PHP executable ({0}).", exePath)); //$NON-NLS-1$
+									.format("Cannot determine version of the PHP executable ({0}).", exePath)); //$NON-NLS-1$
 				}
 			}
 			// Fetch version
@@ -227,7 +232,7 @@ public final class PHPExeUtil {
 			} else {
 				throw new PHPExeException(
 						MessageFormat
-								.format("Can't determine type of the PHP executable ({0}).", exePath)); //$NON-NLS-1$
+								.format("Cannot determine type of the PHP executable ({0}).", exePath)); //$NON-NLS-1$
 			}
 			// Fetch default name
 			name = "PHP " + version + " (" + sapiType + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -241,7 +246,7 @@ public final class PHPExeUtil {
 				if (!m.find()) {
 					throw new PHPExeException(
 							MessageFormat
-									.format("Can't determine php.ini location of the PHP executable ({0}).", exePath)); //$NON-NLS-1$
+									.format("Cannot determine php.ini location of the PHP executable ({0}).", exePath)); //$NON-NLS-1$
 				}
 			}
 			String configDir = m.group(1);
@@ -367,6 +372,34 @@ public final class PHPExeUtil {
 		return PHPExeUtil
 				.exec(exec.getAbsolutePath(),
 						skipSystemIni ? "" : "-n", "-c", tmpIni.getParentFile().getAbsolutePath(), "-i"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	}
+
+	private static void showInstallError(final File executableFile) {
+		if (Platform.getOS().equals(Platform.OS_WIN32)) {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					/*
+					 * Do not open another message dialog if there is already an
+					 * active one for particular PHP executable file location
+					 */
+					if (installErrors.contains(executableFile))
+						return;
+					installErrors.add(executableFile);
+					MessageDialog
+							.openError(
+									PlatformUI.getWorkbench()
+											.getActiveWorkbenchWindow()
+											.getShell(),
+									Messages.PHPExeUtil_PHP_executable_error,
+									MessageFormat
+											.format(Messages.PHPExeUtil_PHP_installation_details_could_not_be_obtained,
+													executableFile
+															.getAbsolutePath()));
+					installErrors.remove(executableFile);
+				}
+			});
+		}
 	}
 
 }
