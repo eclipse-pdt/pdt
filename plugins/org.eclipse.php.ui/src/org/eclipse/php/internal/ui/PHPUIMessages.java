@@ -109,6 +109,9 @@ public final class PHPUIMessages extends NLS {
 	public static String OpenProjectAction_dialog_message;
 	public static String NewPHPManualSiteDialog_chooseCHMFile;
 	public static String ColorPage_Keyword;
+	public static String ColorPage_KeywordPrivate;
+	public static String ColorPage_KeywordProtected;
+	public static String ColorPage_KeywordPublic;
 	public static String PHPAnnotationHover_multipleMarkersAtThisLine;
 	public static String ColorPage_CodeExample_0;
 	public static String PasteSourceReferencesFromClipboardAction_paste1;

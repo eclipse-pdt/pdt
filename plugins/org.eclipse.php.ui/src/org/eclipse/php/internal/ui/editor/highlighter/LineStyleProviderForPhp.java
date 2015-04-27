@@ -146,11 +146,11 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 		fColorTypes.put(PHPRegionTypes.PHP_PRINT,
 				PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_PUBLIC,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
+				PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_PRIVATE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
+				PreferenceConstants.EDITOR_KEYWORD_PRIVATE_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_PROTECTED,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
+				PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_REQUIRE,
 				PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_REQUIRE_ONCE,
@@ -172,7 +172,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 		fColorTypes.put(PHPRegionTypes.PHP_USE,
 				PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_VAR,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
+				PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_WHILE,
 				PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_LOGICAL_XOR,
@@ -839,6 +839,9 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 		addTextAttribute(PreferenceConstants.EDITOR_NUMBER_COLOR);
 		addTextAttribute(PreferenceConstants.EDITOR_HEREDOC_COLOR);
 		addTextAttribute(PreferenceConstants.EDITOR_TASK_COLOR);
+		addTextAttribute(PreferenceConstants.EDITOR_KEYWORD_PRIVATE_COLOR);
+		addTextAttribute(PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR);
+		addTextAttribute(PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR);
 	}
 
 	protected void clearColors() {
@@ -891,7 +894,13 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 					|| PreferenceConstants.EDITOR_PHPDOC_COLOR.equals(prefKey)
 					|| PreferenceConstants.EDITOR_NUMBER_COLOR.equals(prefKey)
 					|| PreferenceConstants.EDITOR_HEREDOC_COLOR.equals(prefKey)
-					|| PreferenceConstants.EDITOR_TASK_COLOR.equals(prefKey)) {
+					|| PreferenceConstants.EDITOR_TASK_COLOR.equals(prefKey)
+					|| PreferenceConstants.EDITOR_KEYWORD_PRIVATE_COLOR
+							.equals(prefKey)
+					|| PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR
+							.equals(prefKey)
+					|| PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR
+							.equals(prefKey)) {
 				addTextAttribute(prefKey);
 			} else if (PreferenceConstants.getEnabledPreferenceKey(
 					PreferenceConstants.EDITOR_NORMAL_COLOR).equals(prefKey)
@@ -927,7 +936,16 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 							prefKey)
 					|| PreferenceConstants.getEnabledPreferenceKey(
 							PreferenceConstants.EDITOR_TASK_COLOR).equals(
-							prefKey)) {
+							prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(
+							PreferenceConstants.EDITOR_KEYWORD_PRIVATE_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(
+							PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(
+							PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR)
+							.equals(prefKey)) {
 				boolean enabled = getColorPreferences().getBoolean(prefKey);
 				prefKey = prefKey.split("\\.")[1]; //$NON-NLS-1$
 				if (enabled) {
