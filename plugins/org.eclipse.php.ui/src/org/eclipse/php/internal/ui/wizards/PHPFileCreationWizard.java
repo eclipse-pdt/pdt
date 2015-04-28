@@ -70,12 +70,13 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 	 */
 	public boolean performFinish() {
 		final String containerName = phpFileCreationWizardPage
-				.getContainerName();
+				.getContainerFullPath().lastSegment();
 		final String fileName = phpFileCreationWizardPage.getFileName();
 		newPhpTemplatesWizardPage.resetTableViewerInput();
 		IScriptProject project = null;
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IResource resource = root.findMember(new Path(containerName));
+		IResource resource = root.findMember(phpFileCreationWizardPage
+				.getContainerFullPath());
 		if (!resource.exists() || !(resource instanceof IContainer)) {
 			project = DLTKCore.create(resource.getProject());
 		}
