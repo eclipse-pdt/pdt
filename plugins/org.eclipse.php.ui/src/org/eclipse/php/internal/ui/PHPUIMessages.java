@@ -875,7 +875,6 @@ public final class PHPUIMessages extends NLS {
 	public static String AddBlockCommentAction_label;
 	public static String RenamePHPElementAction_0;
 	public static String IncludePathContainerDefaultPage_path_label;
-	public static String newPhpFile_create;
 	public static String Search_FindReferencesInProjectAction_label;
 	public static String PHPBasePreferencePage_doubleclick_expand;
 	public static String CutAction_text;

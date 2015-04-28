@@ -70,15 +70,21 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 	 */
 	public boolean performFinish() {
 		final String containerName = phpFileCreationWizardPage
-				.getContainerName();
+				.getContainerFullPath().toString();
 		final String fileName = phpFileCreationWizardPage.getFileName();
 		newPhpTemplatesWizardPage.resetTableViewerInput();
 		IScriptProject project = null;
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IResource resource = root.findMember(new Path(containerName));
+		IResource resource = root.findMember(phpFileCreationWizardPage
+				.getContainerFullPath());
 		if (!resource.exists() || !(resource instanceof IContainer)) {
 			project = DLTKCore.create(resource.getProject());
 		}
+		final IFile file = phpFileCreationWizardPage.createNewFile();
+		if (file == null) {
+			return false;
+		}
+
 		String lineSeparator = Util.getLineSeparator(null, project);
 		final PHPTemplateStore.CompiledTemplate template = this.newPhpTemplatesWizardPage
 				.compileTemplate(containerName, fileName, lineSeparator);
@@ -88,8 +94,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 					throws InvocationTargetException {
 				try {
 					new FileCreator().createFile(PHPFileCreationWizard.this,
-							containerName, fileName, monitor, template.string,
-							template.offset);
+							file, monitor, template.string, template.offset);
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);
 				} finally {
@@ -141,20 +146,17 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		 * @param monitor
 		 * @param contents
 		 * @throws CoreException
-		 * @see {@link #createFile(Wizard, String, String, IProgressMonitor, String, String)}
+		 * @see {@link #createFile(Wizard, IFile, IProgressMonitor, String, String)}
 		 */
-		public void createFile(Wizard wizard, String containerName,
-				String fileName, IProgressMonitor monitor, String contents)
-				throws CoreException {
-			createFile(wizard, containerName, fileName, monitor, contents, 0,
-					null);
+		public void createFile(Wizard wizard, IFile file,
+				IProgressMonitor monitor, String contents) throws CoreException {
+			createFile(wizard, file, monitor, contents, 0, null);
 		}
 
-		public void createFile(Wizard wizard, String containerName,
-				String fileName, IProgressMonitor monitor, String contents,
-				int offset) throws CoreException {
-			createFile(wizard, containerName, fileName, monitor, contents,
-					offset, null);
+		public void createFile(Wizard wizard, IFile file,
+				IProgressMonitor monitor, String contents, int offset)
+				throws CoreException {
+			createFile(wizard, file, monitor, contents, offset, null);
 		}
 
 		/**
@@ -172,89 +174,80 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		 *            null).
 		 * @throws CoreException
 		 */
-		public void createFile(Wizard wizard, String containerName,
-				String fileName, IProgressMonitor monitor, String contents,
-				final int offset, final String editorID) throws CoreException {
+		public void createFile(Wizard wizard, final IFile file,
+				IProgressMonitor monitor, String contents, final int offset,
+				final String editorID) throws CoreException {
 			// create a sample file
-			monitor.beginTask(
-					NLS.bind(PHPUIMessages.newPhpFile_create, fileName), 2);
-			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-			IResource resource = root.findMember(new Path(containerName));
-			if (!resource.exists() || !(resource instanceof IContainer)) {
-				throwCoreException(PHPUIMessages.PHPFileCreationWizard_1
-						+ containerName + PHPUIMessages.PHPFileCreationWizard_2);
-			}
-			IContainer container = (IContainer) resource;
-			final IFile file = container.getFile(new Path(fileName));
-
-			// adopt project's/workspace's line delimiter (separator)
-			String lineSeparator = Platform.getPreferencesService().getString(
-					Platform.PI_RUNTIME,
-					Platform.PREF_LINE_SEPARATOR,
-					null,
-					new IScopeContext[] { new ProjectScope(container
-							.getProject()) });
-			if (lineSeparator == null)
-				lineSeparator = Platform.getPreferencesService().getString(
-						Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR,
-						null, new IScopeContext[] { InstanceScope.INSTANCE });
-			if (lineSeparator == null)
-				lineSeparator = System
-						.getProperty(Platform.PREF_LINE_SEPARATOR);
-			if (contents != null) {
-				contents = contents.replaceAll("(\n\r?|\r\n?)", lineSeparator); //$NON-NLS-1$
-			}
-
-			try {
-				InputStream stream = openContentStream(contents,
-						getCharSetValue(container));
-				if (file.exists()) {
-					file.setContents(stream, true, true, monitor);
-				} else {
-					file.create(stream, true, monitor);
-				}
-				stream.close();
-			} catch (IOException e) {
-				Logger.logException(e);
-				return;
-			}
-
-			// Change file encoding:
-			/*
-			 * if (container instanceof IProject) { PHPProjectOptions options =
-			 * PHPProjectOptions.forProject((IProject) container); if (options
-			 * != null) { String defaultEncoding = (String)
-			 * options.getOption(PHPCoreConstants.PHPOPTION_DEFAULT_ENCODING);
-			 * if (defaultEncoding == null || defaultEncoding.length() == 0) {
-			 * defaultEncoding = container.getDefaultCharset(); }
-			 * file.setCharset(defaultEncoding, monitor); } }
-			 */
-
-			monitor.worked(1);
-			monitor.setTaskName(NLS.bind(PHPUIMessages.newPhpFile_openning,
-					fileName));
-			wizard.getShell().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					IWorkbenchPage page = PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow().getActivePage();
-					try {
-						normalizeFile(file);
-						IEditorPart editor;
-						if (editorID == null) {
-							editor = IDE.openEditor(page, file, true);
-						} else {
-							editor = IDE.openEditor(page, file, editorID, true);
-						}
-						if (editor instanceof PHPStructuredEditor) {
-							StructuredTextViewer textViewer = ((PHPStructuredEditor) editor)
-									.getTextViewer();
-							textViewer.setSelectedRange(offset, 0);
-						}
-					} catch (PartInitException e) {
+			IContainer container = file.getParent();
+			if (file != null) {
+				if (!file.isLinked()) {
+					// adopt project's/workspace's line delimiter (separator)
+					String lineSeparator = Platform.getPreferencesService()
+							.getString(
+									Platform.PI_RUNTIME,
+									Platform.PREF_LINE_SEPARATOR,
+									null,
+									new IScopeContext[] { new ProjectScope(
+											container.getProject()) });
+					if (lineSeparator == null)
+						lineSeparator = Platform
+								.getPreferencesService()
+								.getString(
+										Platform.PI_RUNTIME,
+										Platform.PREF_LINE_SEPARATOR,
+										null,
+										new IScopeContext[] { InstanceScope.INSTANCE });
+					if (lineSeparator == null)
+						lineSeparator = System
+								.getProperty(Platform.PREF_LINE_SEPARATOR);
+					if (contents != null) {
+						contents = contents.replaceAll(
+								"(\n\r?|\r\n?)", lineSeparator); //$NON-NLS-1$
 					}
+
+					try {
+						InputStream stream = openContentStream(contents,
+								getCharSetValue(container));
+						if (file.exists()) {
+							file.setContents(stream, true, true, monitor);
+						} else {
+							file.create(stream, true, monitor);
+						}
+						stream.close();
+					} catch (IOException e) {
+						Logger.logException(e);
+						return;
+					}
+
 				}
-			});
-			monitor.worked(1);
+				monitor.worked(1);
+				monitor.setTaskName(NLS.bind(PHPUIMessages.newPhpFile_openning,
+						file.getName()));
+				wizard.getShell().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						IWorkbenchPage page = PlatformUI.getWorkbench()
+								.getActiveWorkbenchWindow().getActivePage();
+						try {
+							normalizeFile(file);
+							IEditorPart editor;
+							if (editorID == null) {
+								editor = IDE.openEditor(page, file, true);
+							} else {
+								editor = IDE.openEditor(page, file, editorID,
+										true);
+							}
+							if (editor instanceof PHPStructuredEditor) {
+								StructuredTextViewer textViewer = ((PHPStructuredEditor) editor)
+										.getTextViewer();
+								textViewer.setSelectedRange(offset, 0);
+							}
+						} catch (PartInitException e) {
+						}
+					}
+				});
+				monitor.worked(1);
+			}
+
 		}
 
 		/**
