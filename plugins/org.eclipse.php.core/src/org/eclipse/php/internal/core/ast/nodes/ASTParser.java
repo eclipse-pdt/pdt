@@ -176,7 +176,8 @@ public class ASTParser {
 	 * This operation creates an abstract syntax tree for the given AST Factory
 	 * 
 	 * @param progressMonitor
-	 * @return Program that represents the equivalent AST
+	 * @return Program that represents the equivalent AST, null if AST couldn't
+	 *         be built
 	 * @throws Exception
 	 *             - for exception occurs on the parsing step
 	 */
