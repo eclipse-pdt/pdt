@@ -157,10 +157,11 @@ public class UseStatementInjector {
 								parser.setSource(document.get().toCharArray());
 								Program program = parser.createAST(null);
 
-								// don't insert USE statement for current
-								// namespace
-								if (isSameNamespace(namespaceName, program,
-										sourceModule, offset)) {
+								// Don't insert USE statement for current namespace.
+								// "program != null" is a workaround for bug 465687.
+								if (program != null
+										&& isSameNamespace(namespaceName,
+												program, sourceModule, offset)) {
 									return offset;
 								}
 
@@ -174,9 +175,10 @@ public class UseStatementInjector {
 										moduleDeclaration, offset);
 								String typeName = namespaceName;
 
-								// if the class/namesapce has not been imported
+								// if the class/namespace has not been imported
 								// add use statement
-								if (!importedTypeName.contains(typeName)) {
+								if (program != null
+										&& !importedTypeName.contains(typeName)) {
 
 									program.recordModifications();
 									AST ast = program.getAST();
@@ -303,8 +305,11 @@ public class UseStatementInjector {
 			parser.setSource(document.get().toCharArray());
 			Program program = parser.createAST(null);
 
-			// don't insert USE statement for current namespace
-			if (isSameNamespace(namespaceName, program, sourceModule, offset)) {
+			// Don't insert USE statement for current namespace.
+			// "program != null" is a workaround for bug 465687.
+			if (program != null
+					&& isSameNamespace(namespaceName, program, sourceModule,
+							offset)) {
 				return offset;
 			}
 
@@ -330,7 +335,8 @@ public class UseStatementInjector {
 			PHPVersion phpVersion = ProjectOptions.getPhpVersion(modelElement);
 			// if the class/namesapce has not been imported
 			// add use statement
-			if (!importedTypeName.contains(typeName)
+			if (program != null
+					&& !importedTypeName.contains(typeName)
 					&& canInsertUseStatement(getUseStatementType(modelElement),
 							phpVersion)) {
 				program.recordModifications();
