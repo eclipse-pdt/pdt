@@ -1126,7 +1126,7 @@ if (parsePHPDoc()) {
         return createSymbol(ParserConstants.T_END_HEREDOC);
     }
     else {
-    	yybegin(ST_HEREDOC);
+    	yybegin(ST_NOWDOC);
     }
 }
 
