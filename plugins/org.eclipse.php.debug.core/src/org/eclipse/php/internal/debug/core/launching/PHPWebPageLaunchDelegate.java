@@ -34,7 +34,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicat
 import org.eclipse.php.internal.debug.core.zend.debugger.IDebuggerInitializer;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPWebServerDebuggerInitializer;
-import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
+import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsUtil;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.server.core.tunneling.SSHTunnel;
@@ -155,15 +155,6 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			monitor.done();
 			return; // canceled
 		}
-		// Check that the debug daemon is functional
-		// DEBUGGER - Make sure that the active debugger id is indeed Zend's
-		// debugger
-		if (!DaemonPlugin.getDefault().validateCommunicationDaemons(
-				DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
-			monitor.setCanceled(true);
-			monitor.done();
-			return;
-		}
 		// Check for previous launches
 		if (!PHPLaunchUtilities.notifyPreviousLaunches(launch)) {
 			monitor.setCanceled(true);
@@ -220,14 +211,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 					Boolean.toString(stopAtFirstLine));
 		}
-		int requestPort = PHPDebugPlugin
-				.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
-
-		// Set custom port if any from debugger's owner settings
-		int customRequestPort = configuration.getAttribute(
-				IPHPDebugConstants.PHP_Port, -1);
-		if (customRequestPort != -1)
-			requestPort = customRequestPort;
+		int requestPort = getDebugPort(server);
 
 		// Generate a session id for this launch and put it in the map
 		int sessionID = DebugSessionIdGenerator.generateSessionID();
@@ -241,6 +225,20 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		launch.setAttribute(IDebugParametersKeys.ORIGINAL_URL, URL);
 		launch.setAttribute(IDebugParametersKeys.SESSION_ID,
 				Integer.toString(sessionID));
+
+		// Check that the debug daemon is functional
+		// DEBUGGER - Make sure that the active debugger id is indeed Zend's
+		// debugger
+		if (!PHPLaunchUtilities.isDebugDaemonActive(requestPort,
+				DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
+			PHPLaunchUtilities
+					.showLaunchErrorMessage(NLS
+							.bind(PHPDebugCoreMessages.WebLaunchConfigurationDelegate_PortInUse,
+									requestPort, server.getName()));
+			monitor.setCanceled(true);
+			monitor.done();
+			return;
+		}
 
 		// Trigger the session by initiating a debug request to the debug server
 		runDispatch = new RunDispatchJobWebServer(launch);
@@ -328,6 +326,20 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 */
 	protected IDebuggerInitializer createDebuggerInitilizer() {
 		return new PHPWebServerDebuggerInitializer();
+	}
+
+	/**
+	 * @param server
+	 * @return debug port for given server
+	 * @throws CoreException
+	 */
+	protected int getDebugPort(Server server) throws CoreException {
+		int customRequestPort = ZendDebuggerSettingsUtil.getDebugPort(server
+				.getUniqueId());
+		if (customRequestPort != -1)
+			return customRequestPort;
+		return PHPDebugPlugin
+				.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 	}
 
 	/**

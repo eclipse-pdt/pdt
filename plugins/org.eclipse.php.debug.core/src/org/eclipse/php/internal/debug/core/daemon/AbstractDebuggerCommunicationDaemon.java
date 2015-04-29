@@ -101,9 +101,9 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 	 * 
 	 * @return True, if the daemon is listening; False, otherwise.
 	 */
-	public boolean isListening() {
+	public boolean isListening(int port) {
 		synchronized (lock) {
-			return isAlive;
+			return isAlive && getReceiverPort() == port;
 		}
 	}
 

@@ -10,10 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.wizards;
 
-import static org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSettingsConstants.*;
+import static org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSettingsConstants.PROP_CLIENT_PORT;
+import static org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSettingsConstants.PROP_PROXY_ADDRESS;
+import static org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSettingsConstants.PROP_PROXY_ENABLE;
+import static org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSettingsConstants.PROP_PROXY_IDE_KEY;
+
+import java.text.MessageFormat;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsWorkingCopy;
+import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
+import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandlersManager;
 import org.eclipse.php.internal.ui.wizards.CompositeFragment;
 import org.eclipse.swt.SWT;
@@ -95,6 +102,18 @@ public class XDebugDebuggerServerSettingsSection implements
 					.setMessage(
 							Messages.XDebugDebuggerSettingsSection_Client_port_is_missing,
 							IMessageProvider.ERROR);
+			return;
+		}
+		int port = Integer.valueOf(clientPort);
+		if (!PHPLaunchUtilities.isPortAvailable(port)
+				&& !PHPLaunchUtilities.isDebugDaemonActive(port,
+						XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID)) {
+			compositeFragment
+					.setMessage(
+							MessageFormat
+									.format(Messages.DebuggerCommonSettingsSection_Port_is_already_in_use,
+											clientPort),
+							IMessageProvider.WARNING);
 			return;
 		}
 		boolean isProxyEnabled = Boolean.valueOf(settingsWorkingCopy

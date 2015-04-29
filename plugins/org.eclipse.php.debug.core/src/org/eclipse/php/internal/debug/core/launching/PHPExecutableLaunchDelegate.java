@@ -25,22 +25,16 @@ import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.debug.ui.CommonTab;
 import org.eclipse.debug.ui.RefreshTab;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
-import org.eclipse.php.internal.debug.core.Logger;
-import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
-import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.*;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
-import org.eclipse.php.internal.debug.core.zend.debugger.DebugParametersInitializersRegistry;
-import org.eclipse.php.internal.debug.core.zend.debugger.PHPExecutableDebuggerInitializer;
-import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
-import org.eclipse.php.internal.debug.core.zend.debugger.ProcessCrashDetector;
-import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
+import org.eclipse.php.internal.debug.core.zend.debugger.*;
 import org.eclipse.swt.widgets.Display;
 
 import com.ibm.icu.text.MessageFormat;
@@ -94,15 +88,6 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
-		// Check that the debug daemon is functional
-		// DEBUGGER - Make sure that the active debugger id is indeed Zend's
-		// debugger
-		if (!DaemonPlugin.getDefault().validateCommunicationDaemons(
-				DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
-			monitor.setCanceled(true);
-			monitor.done();
-			return;
-		}
 		// Check for previous launches.
 		if (!PHPLaunchUtilities.notifyPreviousLaunches(launch)) {
 			monitor.setCanceled(true);
@@ -114,7 +99,14 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		if (monitor.isCanceled()) {
 			return;
 		}
-
+		PHPexeItem phpExeItem = PHPExeUtil.getPHPExeItem(configuration);
+		if (phpExeItem == null) {
+			Logger.log(Logger.ERROR,
+					"Launch configuration could not find PHP exe item"); //$NON-NLS-1$
+			monitor.setCanceled(true);
+			monitor.done();
+			return;
+		}
 		String phpExeString = configuration.getAttribute(
 				IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
 		String phpIniPath = configuration.getAttribute(
@@ -174,14 +166,8 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			boolean stopAtFirstLine = configuration.getAttribute(
 					IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 					PHPProjectPreferences.getStopAtFirstLine(project));
-			int requestPort = PHPDebugPlugin
-					.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 
-			// Set custom port if any from debugger's owner settings
-			int customRequestPort = configuration.getAttribute(
-					IPHPDebugConstants.PHP_Port, -1);
-			if (customRequestPort != -1)
-				requestPort = customRequestPort;
+			int requestPort = getDebugPort(phpExeItem);
 
 			ILaunchConfigurationWorkingCopy wc;
 			if (configuration.isWorkingCopy()) {
@@ -220,6 +206,20 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 					Boolean.toString(stopAtFirstLine));
 			launch.setAttribute(IDebugParametersKeys.SESSION_ID,
 					Integer.toString(sessionID));
+
+			// Check that the debug daemon is functional
+			// DEBUGGER - Make sure that the active debugger id is indeed Zend's
+			// debugger
+			if (!PHPLaunchUtilities.isDebugDaemonActive(requestPort,
+					DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
+				PHPLaunchUtilities
+						.showLaunchErrorMessage(NLS
+								.bind(PHPDebugCoreMessages.ExeLaunchConfigurationDelegate_PortInUse,
+										requestPort, phpExeItem.getName()));
+				monitor.setCanceled(true);
+				monitor.done();
+				return;
+			}
 
 			// Trigger the debug session by initiating a debug requset to the
 			// php.exe
@@ -344,6 +344,20 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				RefreshTab.refreshResources(configuration, subMonitor);
 			}
 		}
+	}
+
+	/**
+	 * @param phpExe
+	 * @return debug port for given phpExe
+	 * @throws CoreException
+	 */
+	protected int getDebugPort(PHPexeItem phpExe) throws CoreException {
+		int customRequestPort = ZendDebuggerSettingsUtil.getDebugPort(phpExe
+				.getUniqueId());
+		if (customRequestPort != -1)
+			return customRequestPort;
+		return PHPDebugPlugin
+				.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 	}
 
 	private void displayErrorMessage(final String message) {

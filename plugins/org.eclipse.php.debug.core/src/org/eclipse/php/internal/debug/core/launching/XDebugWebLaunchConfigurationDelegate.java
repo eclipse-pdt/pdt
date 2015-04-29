@@ -31,12 +31,12 @@ import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicat
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandlersManager;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSettingsUtil;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpMultiSessionTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.IDBGpDebugTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
-import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.server.core.tunneling.SSHTunnel;
@@ -49,19 +49,6 @@ public class XDebugWebLaunchConfigurationDelegate extends
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		String debuggerId = XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID;
-		if (!DaemonPlugin.getDefault().validateCommunicationDaemons(debuggerId)) {
-			int port = PHPDebugPlugin.getDebugPort(debuggerId);
-			if (!PHPLaunchUtilities.isPortAvailable(port)) {
-				PHPLaunchUtilities
-						.showLaunchErrorMessage(NLS
-								.bind(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_PortInUse,
-										port));
-			}
-			monitor.setCanceled(true);
-			monitor.done();
-			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
-			return;
-		}
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 			if (XDebugLaunchListener.getInstance().isWebLaunchActive()) {
 				displayErrorMessage(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_0);
@@ -163,6 +150,18 @@ public class XDebugWebLaunchConfigurationDelegate extends
 			}
 			DBGpSessionHandler.getInstance().addSessionListener(
 					(IDBGpSessionListener) target);
+			int requestPort = getDebugPort(server);
+			if (!PHPLaunchUtilities.isDebugDaemonActive(requestPort,
+					XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID)) {
+				PHPLaunchUtilities
+						.showLaunchErrorMessage(NLS
+								.bind(PHPDebugCoreMessages.WebLaunchConfigurationDelegate_PortInUse,
+										requestPort, server.getName()));
+				monitor.setCanceled(true);
+				monitor.done();
+				return;
+			}
+
 		} else {
 			startStopURLs = new String[] { baseURL, null };
 		}
@@ -227,6 +226,16 @@ public class XDebugWebLaunchConfigurationDelegate extends
 		startStopURLs[1] = baseURL
 				+ "XDEBUG_SESSION_STOP_NO_EXEC=" + ideKey + "&KEY=" + sessionId; //$NON-NLS-1$ //$NON-NLS-2$
 		return startStopURLs;
+	}
+
+	protected int getDebugPort(Server server) {
+		// Set custom port if any from debugger's owner settings
+		int customRequestPort = XDebugDebuggerSettingsUtil.getDebugPort(server
+				.getUniqueId());
+		if (customRequestPort != -1)
+			return customRequestPort;
+		return PHPDebugPlugin
+				.getDebugPort(XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID);
 	}
 
 	/**
