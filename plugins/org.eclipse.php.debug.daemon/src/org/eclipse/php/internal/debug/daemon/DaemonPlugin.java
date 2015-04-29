@@ -174,15 +174,17 @@ public class DaemonPlugin extends Plugin {
 	 *         False, otherwise.
 	 * @since PDT 1.0
 	 */
-	public boolean validateCommunicationDaemons(String debuggerID) {
+	public boolean validateCommunicationDaemons(String debuggerID, int port) {
 		boolean validated = true;
 		if (daemons != null) {
 			for (int i = 0; i < daemons.length; i++) {
 				if (debuggerID == null
 						|| (daemons[i].isDebuggerDaemon() && debuggerID
 								.equals(daemons[i].getDebuggerID()))) {
-					if (!daemons[i].isListening()) {
-						validated &= daemons[i].resetSocket();
+					if (!daemons[i].isListening(port)) {
+						// Try to restart daemons
+						daemons[i].resetSocket();
+						validated = daemons[i].isListening(port);
 					}
 				}
 			}

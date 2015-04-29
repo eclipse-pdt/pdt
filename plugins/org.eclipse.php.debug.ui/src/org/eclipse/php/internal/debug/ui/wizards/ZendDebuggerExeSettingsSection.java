@@ -12,12 +12,16 @@ package org.eclipse.php.internal.debug.ui.wizards;
 
 import static org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsConstants.PROP_CLIENT_PORT;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsWorkingCopy;
+import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
+import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.ui.wizards.CompositeFragment;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -119,6 +123,18 @@ public class ZendDebuggerExeSettingsSection implements IDebuggerSettingsSection 
 		if (debuggerStatus.getSeverity() == IStatus.WARNING) {
 			compositeFragment.setMessage(debuggerStatus.getMessage(),
 					IMessageProvider.WARNING);
+			return;
+		}
+		int port = Integer.valueOf(clientPort);
+		if (!PHPLaunchUtilities.isPortAvailable(port)
+				&& !PHPLaunchUtilities.isDebugDaemonActive(port,
+						DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
+			compositeFragment
+					.setMessage(
+							MessageFormat
+									.format(Messages.DebuggerCommonSettingsSection_Port_is_already_in_use,
+											clientPort),
+							IMessageProvider.WARNING);
 			return;
 		}
 	}

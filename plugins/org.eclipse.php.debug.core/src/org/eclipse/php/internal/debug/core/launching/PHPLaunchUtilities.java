@@ -57,6 +57,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.DebugConnection;
 import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsUtil;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
+import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.server.core.tunneling.SSHTunnel;
@@ -1242,6 +1243,13 @@ public class PHPLaunchUtilities {
 		return node;
 	}
 
+	/**
+	 * Checks if given port is not already occupied.
+	 * 
+	 * @param port
+	 * @return <code>true</code> if given port number is not already occupied,
+	 *         <code>false</code> otherwise
+	 */
 	public static boolean isPortAvailable(int port) {
 		ServerSocket ss = null;
 		DatagramSocket ds = null;
@@ -1265,6 +1273,20 @@ public class PHPLaunchUtilities {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Checks if there is any running debug daemon available for given debugger
+	 * type and port number.
+	 * 
+	 * @param port
+	 * @param debuggerId
+	 * @return <code>true</code> if there is running debug daemon,
+	 *         <code>false</code> otherwise
+	 */
+	public static boolean isDebugDaemonActive(int port, String debuggerId) {
+		return DaemonPlugin.getDefault().validateCommunicationDaemons(
+				debuggerId, port);
 	}
 
 }

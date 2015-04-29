@@ -449,11 +449,13 @@ public class XDebugConfigurationDialog extends
 						errorMessage = PHPDebugCoreMessages.XDebugConfigurationDialog_invalidPortRange;
 					}
 					if (valid) {
-						if (iValue != PHPDebugPlugin
-								.getDebugPort(XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID)
-								&& !PHPLaunchUtilities.isPortAvailable(iValue)) {
+						if (!PHPLaunchUtilities.isPortAvailable(iValue)
+								&& !PHPLaunchUtilities
+										.isDebugDaemonActive(
+												iValue,
+												XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID)) {
 							valid = false;
-							errorMessage = PHPDebugCoreMessages.XDebugConfigurationDialog_PortInUse;
+							errorMessage = PHPDebugCoreMessages.DebugConfigurationDialog_PortInUse;
 						}
 					}
 				} else {

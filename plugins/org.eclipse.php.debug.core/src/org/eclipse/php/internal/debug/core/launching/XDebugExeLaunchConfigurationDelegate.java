@@ -24,11 +24,9 @@ import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
-import org.eclipse.php.internal.debug.core.Logger;
-import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
-import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.*;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
@@ -36,9 +34,11 @@ import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
+import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandlersManager;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSettingsUtil;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 import org.eclipse.php.internal.debug.core.zend.debugger.ProcessCrashDetector;
@@ -54,7 +54,14 @@ public class XDebugExeLaunchConfigurationDelegate extends
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 			return;
 		}
-
+		PHPexeItem phpExeItem = PHPExeUtil.getPHPExeItem(configuration);
+		if (phpExeItem == null) {
+			Logger.log(Logger.ERROR,
+					"Launch configuration could not find PHP exe item"); //$NON-NLS-1$
+			monitor.setCanceled(true);
+			monitor.done();
+			return;
+		}
 		// get the launch info: php exe, php ini
 		final String phpExeString = configuration.getAttribute(
 				IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
@@ -172,8 +179,6 @@ public class XDebugExeLaunchConfigurationDelegate extends
 			String sessionID = DBGpSessionHandler.getInstance()
 					.generateSessionId();
 			String ideKey = null;
-			PHPexeItem phpExeItem = PHPexes.getInstance().getItemForFile(
-					phpExeString, phpIniString);
 			if (phpExeItem != null) {
 				DBGpProxyHandler proxyHandler = DBGpProxyHandlersManager.INSTANCE
 						.getHandler(phpExeItem.getUniqueId());
@@ -197,6 +202,22 @@ public class XDebugExeLaunchConfigurationDelegate extends
 			DBGpSessionHandler.getInstance().addSessionListener(target);
 			envVarString = createDebugLaunchEnvironment(configuration,
 					sessionID, ideKey, phpExe);
+
+			int requestPort = getDebugPort(phpExeItem);
+			// Check that the debug daemon is functional
+			// DEBUGGER - Make sure that the active debugger id is indeed Zend's
+			// debugger
+			if (!PHPLaunchUtilities.isDebugDaemonActive(requestPort,
+					XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID)) {
+				PHPLaunchUtilities
+						.showLaunchErrorMessage(NLS
+								.bind(PHPDebugCoreMessages.ExeLaunchConfigurationDelegate_PortInUse,
+										requestPort, phpExeItem.getName()));
+				monitor.setCanceled(true);
+				monitor.done();
+				return;
+			}
+
 		} else {
 			envVarString = PHPLaunchUtilities.getEnvironment(configuration,
 					new String[] { getLibraryPath(phpExe) });
@@ -340,6 +361,20 @@ public class XDebugExeLaunchConfigurationDelegate extends
 		exePath = exePath.removeLastSegments(1);
 		buf.append(exePath.toOSString());
 		return buf.toString();
+	}
+
+	/**
+	 * @param phpExe
+	 * @return debug port for given phpExe
+	 * @throws CoreException
+	 */
+	protected int getDebugPort(PHPexeItem phpExe) throws CoreException {
+		int customRequestPort = XDebugDebuggerSettingsUtil.getDebugPort(phpExe
+				.getUniqueId());
+		if (customRequestPort != -1)
+			return customRequestPort;
+		return PHPDebugPlugin
+				.getDebugPort(XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID);
 	}
 
 	/**

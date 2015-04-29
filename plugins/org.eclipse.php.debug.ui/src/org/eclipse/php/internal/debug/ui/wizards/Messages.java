@@ -4,6 +4,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.ui.wizards.messages"; //$NON-NLS-1$
+	public static String DebuggerCommonSettingsSection_Port_is_already_in_use;
 	public static String DebuggerCompositeFragment_Configure_exe_debugger_settings;
 	public static String DebuggerCompositeFragment_Configure_server_debugger_settings;
 	public static String DebuggerCompositeFragment_Debugger;

@@ -20,7 +20,15 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
@@ -348,6 +356,51 @@ public final class PHPExeUtil {
 					&& module.getGroupName().equalsIgnoreCase(groupName))
 				return true;
 		return false;
+	}
+
+	/**
+	 * Finds and returns PHP exe item that corresponds to provided launch
+	 * configuration.
+	 * 
+	 * @param configuration
+	 * @return PHP exe item that corresponds to provided launch configuration
+	 * @throws CoreException
+	 */
+	public static PHPexeItem getPHPExeItem(ILaunchConfiguration configuration)
+			throws CoreException {
+		PHPexeItem item = null;
+		String path = configuration.getAttribute(PHPRuntime.PHP_CONTAINER,
+				(String) null);
+		if (path == null) {
+			IProject project = null;
+			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
+					.getRoot();
+			String projectName = configuration.getAttribute(
+					IPHPDebugConstants.PHP_Project, (String) null);
+			if (projectName != null) {
+				project = workspaceRoot.getProject(projectName);
+			} else {
+				String phpScriptString = configuration.getAttribute(
+						IPHPDebugConstants.ATTR_FILE, (String) null);
+				IPath filePath = new Path(phpScriptString);
+				IResource scriptRes = workspaceRoot.findMember(filePath);
+				if (scriptRes != null) {
+					project = scriptRes.getProject();
+				}
+			}
+			item = PHPDebugPlugin.getPHPexeItem(project);
+		} else {
+			IPath exePath = Path.fromPortableString(path);
+			org.eclipse.php.internal.core.PHPVersion version = PHPRuntime
+					.getPHPVersion(exePath);
+			if (version == null) {
+				String exeName = exePath.lastSegment();
+				item = PHPexes.getInstance().getItem(exeName);
+			} else {
+				item = PHPDebugPlugin.getPHPexeItem(version);
+			}
+		}
+		return item;
 	}
 
 	private static Matcher getConfigMatcher(String sapiType, Matcher m,
