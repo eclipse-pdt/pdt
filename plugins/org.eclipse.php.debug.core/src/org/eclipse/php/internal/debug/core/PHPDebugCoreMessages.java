@@ -142,7 +142,7 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebugConfigurationDialog_remoteSessionOption_localhost;
 	public static String XDebugConfigurationDialog_remoteSessionOption_any;
 	public static String XDebugConfigurationDialog_remoteSessionOption_prompt;
-	public static String XDebugConfigurationDialog_PortInUse;
+	public static String DebugConfigurationDialog_PortInUse;
 
 	// capture output
 	public static String XDebugConfigurationDialog_captureStdout;
@@ -197,7 +197,6 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebug_WebLaunchConfigurationDelegate_2;
 	public static String XDebug_WebLaunchConfigurationDelegate_3;
 	public static String XDebug_WebLaunchConfigurationDelegate_4;
-	public static String XDebug_WebLaunchConfigurationDelegate_PortInUse;
 
 	public static String XDebug_DBGpTarget_0;
 	public static String XDebug_DBGpTarget_1;
@@ -211,6 +210,9 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebug_DBGpVariable_1;
 	public static String XDebug_IDBGpModelConstants_0;
 	public static String XDebug_IDBGpModelConstants_1;
+
+	public static String ExeLaunchConfigurationDelegate_PortInUse;
+	public static String WebLaunchConfigurationDelegate_PortInUse;
 
 	public static String XDebugDebuggerConfiguration_XDebugNotEnabledError;
 

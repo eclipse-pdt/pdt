@@ -14,6 +14,7 @@ import static org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSett
 import static org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsConstants.PROP_CLIENT_PORT;
 import static org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsConstants.PROP_RESPONSE_TIMEOUT;
 
+import java.text.MessageFormat;
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -22,6 +23,7 @@ import org.eclipse.php.debug.ui.IDebugServerConnectionTest;
 import org.eclipse.php.internal.debug.core.PHPDebugUtil;
 import org.eclipse.php.internal.debug.core.daemon.AbstractDebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsWorkingCopy;
+import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsUtil;
@@ -124,6 +126,18 @@ public class ZendDebuggerServerSettingsSection implements
 					.setMessage(
 							Messages.ZendDebuggerServerSettingsSection_Response_timeout_is_missing,
 							IMessageProvider.ERROR);
+			return;
+		}
+		int port = Integer.valueOf(clientPort);
+		if (!PHPLaunchUtilities.isPortAvailable(port)
+				&& !PHPLaunchUtilities.isDebugDaemonActive(port,
+						DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
+			compositeFragment
+					.setMessage(
+							MessageFormat
+									.format(Messages.DebuggerCommonSettingsSection_Port_is_already_in_use,
+											clientPort),
+							IMessageProvider.WARNING);
 			return;
 		}
 	}

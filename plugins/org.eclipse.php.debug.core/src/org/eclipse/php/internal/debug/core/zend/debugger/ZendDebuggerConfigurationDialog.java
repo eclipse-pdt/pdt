@@ -28,9 +28,11 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.preferences.AbstractDebuggerConfigurationDialog;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Image;
@@ -239,6 +241,16 @@ public class ZendDebuggerConfigurationDialog extends
 					valid = false;
 					errorMessage = PHPDebugCoreMessages.DebuggerConfigurationDialog_invalidPort;
 				}
+				if (valid) {
+					if (!PHPLaunchUtilities.isPortAvailable(iValue)
+							&& !PHPLaunchUtilities
+									.isDebugDaemonActive(
+											iValue,
+											DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
+						valid = false;
+						errorMessage = PHPDebugCoreMessages.DebugConfigurationDialog_PortInUse;
+					}
+				}
 			} catch (NumberFormatException e1) {
 				valid = false;
 				errorMessage = PHPDebugCoreMessages.DebuggerConfigurationDialog_invalidPort;
@@ -246,7 +258,6 @@ public class ZendDebuggerConfigurationDialog extends
 				valid = false;
 				errorMessage = PHPDebugCoreMessages.DebuggerConfigurationDialog_invalidPort;
 			}
-
 			setErrorMessage(errorMessage);
 			Button bt = getButton(IDialogConstants.OK_ID);
 			if (bt != null) {

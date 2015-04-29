@@ -14,22 +14,19 @@
  */
 package org.eclipse.php.internal.debug.core.launching;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate2;
-import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.PHPRuntime;
+import org.eclipse.php.internal.debug.core.PHPExeUtil;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
-import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsUtil;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
@@ -168,37 +165,7 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 
 	private ILaunchConfiguration updatePHPExeAttributes(
 			ILaunchConfiguration configuration) throws CoreException {
-		PHPexeItem item = null;
-		String path = configuration.getAttribute(PHPRuntime.PHP_CONTAINER,
-				(String) null);
-		if (path == null) {
-			IProject project = null;
-			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
-					.getRoot();
-			String projectName = configuration.getAttribute(
-					IPHPDebugConstants.PHP_Project, (String) null);
-			if (projectName != null) {
-				project = workspaceRoot.getProject(projectName);
-			} else {
-				String phpScriptString = configuration.getAttribute(
-						IPHPDebugConstants.ATTR_FILE, (String) null);
-				IPath filePath = new Path(phpScriptString);
-				IResource scriptRes = workspaceRoot.findMember(filePath);
-				if (scriptRes != null) {
-					project = scriptRes.getProject();
-				}
-			}
-			item = PHPDebugPlugin.getPHPexeItem(project);
-		} else {
-			IPath exePath = Path.fromPortableString(path);
-			PHPVersion version = PHPRuntime.getPHPVersion(exePath);
-			if (version == null) {
-				String exeName = exePath.lastSegment();
-				item = PHPexes.getInstance().getItem(exeName);
-			} else {
-				item = PHPDebugPlugin.getPHPexeItem(version);
-			}
-		}
+		PHPexeItem item = PHPExeUtil.getPHPExeItem(configuration);
 		if (item != null) {
 			ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 			wc.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, item

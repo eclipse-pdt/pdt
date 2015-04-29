@@ -24,11 +24,12 @@ public interface ICommunicationDaemon {
 	public void init();
 
 	/**
-	 * Returns true if this daemon is listening for communication requests.
+	 * Returns true if this daemon is listening on given port for communication
+	 * requests.
 	 * 
 	 * @return True, if the daemon is listening; False, otherwise.
 	 */
-	public boolean isListening();
+	public boolean isListening(int port);
 
 	/**
 	 * Starts the listening thread for any incoming debug requests or responces.

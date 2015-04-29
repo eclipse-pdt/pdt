@@ -371,12 +371,11 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 	}
 
 	@Override
-	public boolean isListening() {
-		boolean allListening = true;
+	public boolean isListening(int port) {
 		for (ICommunicationDaemon daemon : daemons)
-			if (!daemon.isListening())
-				allListening = false;
-		return allListening;
+			if (daemon.isListening(port))
+				return true;
+		return false;
 	}
 
 	@Override
