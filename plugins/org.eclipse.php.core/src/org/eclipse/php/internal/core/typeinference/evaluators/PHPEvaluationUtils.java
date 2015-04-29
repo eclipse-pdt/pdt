@@ -29,6 +29,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 
 public class PHPEvaluationUtils {
 
@@ -180,7 +181,10 @@ public class PHPEvaluationUtils {
 					+ currentNamespace.getElementName()
 					+ NamespaceReference.NAMESPACE_SEPARATOR + typeName;
 		}
-		if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
+		IEvaluatedType simpleType = PHPSimpleTypes.fromStringCS(typeName);
+		if (simpleType != null) {
+			return simpleType;
+		} else if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
 				|| currentNamespace == null) {
 			return new PHPClassType(typeName);
 		} else {

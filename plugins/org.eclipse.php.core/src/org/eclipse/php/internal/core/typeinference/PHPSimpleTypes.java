@@ -70,7 +70,7 @@ public class PHPSimpleTypes {
 	}
 
 	/**
-	 * Case senitive version f
+	 * Case sensitive version
 	 * 
 	 * @param type
 	 * @return
