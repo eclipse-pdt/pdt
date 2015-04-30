@@ -14,7 +14,7 @@
 		style="css/whatsnew.css" alt-style="css/whatsnew.properties" path="whatsnew/@">
 		<group id="content-group" style-id="content-group">
 			<link label="PHP Development Tools"
-				url="https://wiki.eclipse.org/PDT/NewIn34"
+				url="https://wiki.eclipse.org/PDT/NewIn35"
 				id="pdt-noteworthy" style-id="content-link">
 				<text>
 					Find out what's new in the PHP Development Tools project
