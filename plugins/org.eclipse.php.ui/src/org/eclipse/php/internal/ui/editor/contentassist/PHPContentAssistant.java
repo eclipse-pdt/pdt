@@ -118,6 +118,11 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 			if (e.character == 0 && (e.keyCode & SWT.KEYCODE_BIT) == 0) {
 				return;
 			}
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=465917,
+			// ignore if with CMD/CTRL
+			if ((e.stateMask & SWT.MOD1) != 0) {
+				return;
+			}
 			if (!(e.character >= 0x20 && e.character != 0x7F && e.character != 0xFF)) {
 				return;
 			}
