@@ -1183,7 +1183,7 @@ public class DebugConnection {
 		debugResponseTimeout = Platform.getPreferencesService()
 				.getInt(PHPDebugPlugin.ID,
 						PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT,
-						10000, null);
+						60000, null);
 		int customResponseTimeout = ZendDebuggerSettingsUtil
 				.getResponseTimeout(startedNotification);
 		if (customResponseTimeout != -1)
