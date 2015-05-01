@@ -283,8 +283,18 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 				.computeAffectedNatures(resource);
 		RenameArguments fRenameArguments = new RenameArguments(
 				getNewElementName(), false);
-		return ParticipantManager.loadRenameParticipants(status, this,
-				identifier, fRenameArguments, null, affectedNatures,
-				sharedParticipants);
+		LinkedList<RefactoringParticipant> participants = new LinkedList<RefactoringParticipant>(
+				Arrays.asList(ParticipantManager.loadRenameParticipants(status,
+						this, identifier, fRenameArguments, null,
+						affectedNatures, sharedParticipants)));
+		for (IType type : types) {
+			participants.addAll(Arrays.asList(ParticipantManager
+					.loadRenameParticipants(status, this, type,
+							fRenameArguments, null, affectedNatures,
+							sharedParticipants)));
+		}
+
+		return participants.toArray(new RefactoringParticipant[participants
+				.size()]);
 	}
 }
