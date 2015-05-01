@@ -1,9 +1,8 @@
-#Wed May 25 10:58:25 BST 2011
+#Tue Jul 14 16:33:56 IDT 2009
 eclipse.preferences.version=1
 editor_save_participant_org.eclipse.jdt.ui.postsavelistener.cleanup=true
 formatter_profile=org.eclipse.jdt.ui.default.eclipse_profile
 formatter_settings_version=11
-internal.default.compliance=default
 org.eclipse.jdt.ui.ignorelowercasenames=true
 org.eclipse.jdt.ui.importorder=java;javax;org;com;
 org.eclipse.jdt.ui.ondemandthreshold=5
