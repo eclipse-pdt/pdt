@@ -23,6 +23,7 @@ import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.link.LinkedPosition;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.Geometry;
+import org.eclipse.jface.util.Util;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.refactoring.ui.RefactoringUIPlugin;
@@ -168,9 +169,9 @@ public class RenameInformationPopup implements IWidgetTokenKeeper,
 	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=219326 : Shell with custom
 	 * region and SWT.NO_TRIM still has border
 	 */
-	private static boolean CARBON = "carbon".equals(SWT.getPlatform()); //$NON-NLS-1$
+	private static boolean MAC = Util.isMac();//$NON-NLS-1$
 
-	private static final int WIDGET_PRIORITY = 1000;
+	private static final int WIDGET_PRIORITY = 15;
 
 	private static final String DIALOG_SETTINGS_SECTION = "PHP.RenameInformationPopup"; //$NON-NLS-1$
 	private static final String SNAP_POSITION_KEY = "snap_position"; //$NON-NLS-1$
@@ -207,6 +208,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper,
 	private final RenameLinkedMode fRenameLinkedMode;
 
 	private int fSnapPosition;
+	private boolean fSnapPositionChanged;
 	private Shell fPopup;
 	private GridLayout fPopupLayout;
 	private Region fRegion;
@@ -234,6 +236,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper,
 			// default:
 			fSnapPosition = SNAP_POSITION_UNDER_LEFT_FIELD;
 		}
+		fSnapPositionChanged = true;
 	}
 
 	private IDialogSettings getDialogSettings() {
@@ -282,7 +285,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper,
 			}
 		});
 
-		if (!CARBON) { // carbon draws its own border...
+		if (!MAC) { // carbon and cocoa draws its own border...
 			fPopup.addPaintListener(new PaintListener() {
 				public void paintControl(PaintEvent pe) {
 					pe.gc.drawPolygon(getPolygon(true));
@@ -562,6 +565,10 @@ public class RenameInformationPopup implements IWidgetTokenKeeper,
 	}
 
 	private void packPopup() {
+		if (!fSnapPositionChanged) {
+			return;
+		}
+		fSnapPositionChanged = false;
 		boolean isUnderLeft = fSnapPosition == SNAP_POSITION_UNDER_LEFT_FIELD;
 		boolean isOverLeft = fSnapPosition == SNAP_POSITION_OVER_LEFT_FIELD;
 		fPopupLayout.marginTop = isUnderLeft ? HAH : 0;
@@ -824,6 +831,12 @@ public class RenameInformationPopup implements IWidgetTokenKeeper,
 	}
 
 	public boolean requestWidgetToken(IWidgetTokenOwner owner, int priority) {
+		if (priority > WIDGET_PRIORITY) {
+			if (fPopup != null && !fPopup.isDisposed()) {
+				fPopup.setVisible(false);
+			}
+			return true;
+		}
 		return false;
 	}
 
