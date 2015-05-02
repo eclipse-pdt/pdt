@@ -799,22 +799,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			handleChars1(lastPosition, array[i].getStart(),
 					oldIndentationLevel != indentationLevel, indentGap);
 			array[i].accept(this);
-			if (array[i] instanceof FunctionInvocation) {
-				FunctionInvocation functionInvocation = (FunctionInvocation) array[i];
-				if (functionInvocation.getArrayDereferenceList() != null
-						&& !functionInvocation.getArrayDereferenceList()
-								.getDereferences().isEmpty()) {
-					lastPosition = functionInvocation
-							.getArrayDereferenceList()
-							.getDereferences()
-							.get(functionInvocation.getArrayDereferenceList()
-									.getDereferences().size() - 1).getEnd();
-				} else {
-					lastPosition = array[i].getEnd();
-				}
-			} else {
-				lastPosition = array[i].getEnd();
-			}
+			lastPosition = array[i].getEnd();
 
 			isFirst = false;
 		}
@@ -2358,14 +2343,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			appendToBuffer(CLOSE_BRACKET);
 		}
 
-		if (arrayCreation.getArrayDereferenceList() != null
-				&& !arrayCreation.getArrayDereferenceList().getDereferences()
-						.isEmpty()) {
-			lastPosition = formatDereference(lastPosition,
-					arrayCreation.getArrayDereferenceList());
-		} else {
-			handleChars(lastPosition, arrayCreation.getEnd());
-		}
+		handleChars(lastPosition, arrayCreation.getEnd());
 
 		return false;
 	}
@@ -3668,45 +3646,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		if (addParen) {
 			appendToBuffer(CLOSE_PARN);
 		}
-		if (functionInvocation.getArrayDereferenceList() != null
-				&& !functionInvocation.getArrayDereferenceList()
-						.getDereferences().isEmpty()) {
-			lastPosition = formatDereference(lastPosition,
-					functionInvocation.getArrayDereferenceList());
-		} else {
-			handleChars(lastPosition, functionInvocation.getEnd());
-		}
+		handleChars(lastPosition, functionInvocation.getEnd());
 
-	}
-
-	private int formatDereference(int lastPosition, PHPArrayDereferenceList list) {
-		handleChars(lastPosition, list.getDereferences().get(0).getStart());
-		lastPosition = list.getDereferences().get(0).getStart();
-		for (DereferenceNode dereferenceNode : list.getDereferences()) {
-
-			if (dereferenceNode.getName() instanceof Scalar) {
-				appendToBuffer(OPEN_BRACKET);
-				// handleChars(lastPosition, dereferenceNode.getStart());
-				Scalar scalar = (Scalar) dereferenceNode.getName();
-				appendToBuffer(scalar.getStringValue());
-				appendToBuffer(CLOSE_BRACKET);
-				handleChars(dereferenceNode.getStart(),
-						dereferenceNode.getEnd());
-			} else {
-				appendToBuffer(OPEN_BRACKET);
-				handleChars(lastPosition, dereferenceNode.getName().getStart());
-				dereferenceNode.getName().accept(this);
-				appendToBuffer(CLOSE_BRACKET);
-				handleChars(dereferenceNode.getName().getEnd(),
-						dereferenceNode.getEnd());
-			}
-
-			// handleChars(dereferenceNode.getEnd(),
-			// dereferenceNode.getEnd());
-			lastPosition = dereferenceNode.getEnd();
-		}
-
-		return lastPosition;
 	}
 
 	private void handlePrintCall(FunctionInvocation functionInvocation) {

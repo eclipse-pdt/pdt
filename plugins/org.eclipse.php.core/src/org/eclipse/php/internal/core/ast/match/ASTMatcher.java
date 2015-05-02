@@ -1004,25 +1004,6 @@ public class ASTMatcher {
 					node.lexicalVariables(), o.lexicalVariables()));
 	}
 
-	public boolean match(PHPArrayDereferenceList node, Object other) {
-		if (!(other instanceof PHPArrayDereferenceList)) {
-			return false;
-		}
-		PHPArrayDereferenceList o = (PHPArrayDereferenceList) other;
-
-		return (safeSubtreeListMatch(node.getDereferences(),
-				o.getDereferences()));
-	}
-
-	public boolean match(DereferenceNode node, Object other) {
-		if (!(other instanceof DereferenceNode)) {
-			return false;
-		}
-		DereferenceNode o = (DereferenceNode) other;
-
-		return safeSubtreeMatch(node.getName(), o.getName());
-	}
-
 	public boolean match(TraitUseStatement node, Object other) {
 		if (!(other instanceof TraitUseStatement)) {
 			return false;
@@ -1080,10 +1061,8 @@ public class ASTMatcher {
 		}
 		ChainingInstanceCall o = (ChainingInstanceCall) other;
 
-		return (safeSubtreeMatch(node.getArrayDereferenceList(),
-				o.getArrayDereferenceList()))
-				&& (safeSubtreeMatch(node.getChainingMethodOrProperty(),
-						o.getChainingMethodOrProperty()));
+		return safeSubtreeMatch(node.getChainingMethodOrProperty(),
+				o.getChainingMethodOrProperty());
 	}
 
 }

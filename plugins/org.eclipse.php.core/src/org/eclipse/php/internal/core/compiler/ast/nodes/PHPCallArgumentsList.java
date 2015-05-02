@@ -20,22 +20,12 @@ import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 public class PHPCallArgumentsList extends CallArgumentsList {
-	PHPArrayDereferenceList arrayDereferenceList;
 
 	public PHPCallArgumentsList() {
 	}
 
 	public PHPCallArgumentsList(int start, int end) {
 		super(start, end);
-	}
-
-	public PHPArrayDereferenceList getArrayDereferenceList() {
-		return arrayDereferenceList;
-	}
-
-	public void setArrayDereferenceList(
-			PHPArrayDereferenceList arrayDereferenceList) {
-		this.arrayDereferenceList = arrayDereferenceList;
 	}
 
 	/**
@@ -51,9 +41,6 @@ public class PHPCallArgumentsList extends CallArgumentsList {
 					ASTNode s = (ASTNode) iter.next();
 					s.traverse(visitor);
 				}
-			}
-			if (arrayDereferenceList != null) {
-				arrayDereferenceList.traverse(visitor);
 			}
 			visitor.endvisit(this);
 		}

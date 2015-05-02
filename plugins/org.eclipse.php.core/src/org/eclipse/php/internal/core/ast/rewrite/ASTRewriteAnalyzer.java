@@ -4028,18 +4028,9 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
 		}
-		rewriteRequiredNode(node, ChainingInstanceCall.ARRAY_DEREFERENCE_LIST);
 		// rewriteNodeList(node,
 		// ChainingInstanceCall.CHAINING_METHOD_OR_PROPERTY,
 		// node.getStart(), "", "");
-		return false;
-	}
-
-	public boolean visit(DereferenceNode node) {
-		if (!hasChildrenChanges(node)) {
-			return doVisitUnchangedChildren(node);
-		}
-		rewriteRequiredNode(node, ChainingInstanceCall.ARRAY_DEREFERENCE_LIST);
 		return false;
 	}
 
@@ -4050,15 +4041,6 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		rewriteRequiredNode(node, FullyQualifiedTraitMethodReference.CLASS_NAME);
 		rewriteRequiredNode(node,
 				FullyQualifiedTraitMethodReference.FUNCTION_NAME);
-		return false;
-	}
-
-	public boolean visit(PHPArrayDereferenceList node) {
-		if (!hasChildrenChanges(node)) {
-			return doVisitUnchangedChildren(node);
-		}
-		rewriteNodeList(node, PHPArrayDereferenceList.DEREFERENCES_PROPERTY,
-				node.getStart(), "", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		return false;
 	}
 

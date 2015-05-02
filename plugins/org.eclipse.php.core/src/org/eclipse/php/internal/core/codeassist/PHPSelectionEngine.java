@@ -32,8 +32,6 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.dltk.evaluation.types.AmbiguousType;
-import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRefElement;
@@ -930,20 +928,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					.resolveExpression(sourceModule, parsedUnit, context,
 							callExpression.getReceiver());
 			// (new class1())->avc2()[1][1]->avc1()
-			if ((receiverType instanceof MultiTypeType)
-					&& callExpression.getReceiver() instanceof PHPCallExpression) {
-				PHPCallExpression receiverCallExpression = (PHPCallExpression) callExpression
-						.getReceiver();
-				if (((PHPCallArgumentsList) receiverCallExpression.getArgs())
-						.getArrayDereferenceList() != null
-						&& !((PHPCallArgumentsList) receiverCallExpression
-								.getArgs()).getArrayDereferenceList()
-								.getChilds().isEmpty()) {
-					receiverType = new AmbiguousType(
-							((MultiTypeType) receiverType).getTypes().toArray(
-									new IEvaluatedType[0]));
-				}
-			}
+
 			if (receiverType != null) {
 				IModelElement[] elements = null;
 				if ((receiverType instanceof PHPClassType)

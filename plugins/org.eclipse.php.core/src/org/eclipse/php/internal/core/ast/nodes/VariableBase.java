@@ -12,8 +12,10 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 /**
- * This interface is base for all the PHP variables
- * including simple variable, function invocation, list, dispatch, etc.
+ * This interface is base for all the PHP variables including simple variable,
+ * function invocation, list, dispatch, etc.
+ * 
+ * This class is no longer used directly
  */
 public abstract class VariableBase extends Expression {
 

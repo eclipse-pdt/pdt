@@ -31,7 +31,6 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * array($a, $b=>foo(), 1=>$myClass->getFirst())[0]
  */
 public class ArrayCreation extends Expression implements Dereferencable {
-	private PHPArrayDereferenceList arrayDereferenceList;
 
 	private final List<ArrayElement> elements;
 
@@ -42,23 +41,10 @@ public class ArrayCreation extends Expression implements Dereferencable {
 		this.elements = elements;
 	}
 
-	public PHPArrayDereferenceList getArrayDereferenceList() {
-		return arrayDereferenceList;
-	}
-
-	public void setArrayDereferenceList(
-			PHPArrayDereferenceList arrayDereferenceList) {
-		this.arrayDereferenceList = arrayDereferenceList;
-	}
-
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
 			for (ArrayElement element : elements) {
 				element.traverse(visitor);
-			}
-
-			if (getArrayDereferenceList() != null) {
-				getArrayDereferenceList().traverse(visitor);
 			}
 		}
 

@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
 import java.util.ArrayList;
@@ -12,15 +23,11 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.ASTNodeKinds;
 
 public class ChainingInstanceCall extends Expression {
 
-	private PHPArrayDereferenceList arrayDereferenceList;
 	// private ASTNode.NodeList<VariableBase> chainingMethodOrProperty = new
 	// ASTNode.NodeList<VariableBase>(
 	// CHAINING_METHOD_OR_PROPERTY);
 	private List<VariableBase> chainingMethodOrProperty = new LinkedList<VariableBase>();
 
-	public static final ChildPropertyDescriptor ARRAY_DEREFERENCE_LIST = new ChildPropertyDescriptor(
-			ChainingInstanceCall.class,
-			"arrayDereferenceList", PHPArrayDereferenceList.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 	// public static final ChildListPropertyDescriptor
 	// CHAINING_METHOD_OR_PROPERTY = new ChildListPropertyDescriptor(
 	// ChainingInstanceCall.class,
@@ -35,28 +42,23 @@ public class ChainingInstanceCall extends Expression {
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
 				1);
-		propertyList.add(ARRAY_DEREFERENCE_LIST);
 		// propertyList.add(CHAINING_METHOD_OR_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
 	public ChainingInstanceCall(int start, int end, AST ast,
-			PHPArrayDereferenceList arrayDereferenceList,
 			List<VariableBase> chainingMethodOrProperty) {
 		super(start, end, ast);
 
-		this.arrayDereferenceList = arrayDereferenceList;
 		if (chainingMethodOrProperty != null) {
 			this.chainingMethodOrProperty.addAll(chainingMethodOrProperty);
 		}
 	}
 
 	public ChainingInstanceCall(AST ast,
-			PHPArrayDereferenceList arrayDereferenceList,
 			List<VariableBase> chainingMethodOrProperty) {
 		super(ast);
 
-		setArrayDereferenceList(arrayDereferenceList);
 		if (chainingMethodOrProperty != null) {
 			this.chainingMethodOrProperty.addAll(chainingMethodOrProperty);
 		}
@@ -69,18 +71,6 @@ public class ChainingInstanceCall extends Expression {
 	public void setChainingMethodOrProperty(
 			ASTNode.NodeList<VariableBase> chainingMethodOrProperty) {
 		this.chainingMethodOrProperty = chainingMethodOrProperty;
-	}
-
-	public void setArrayDereferenceList(
-			PHPArrayDereferenceList arrayDereferenceList) {
-		ASTNode oldChild = this.arrayDereferenceList;
-		preReplaceChild(oldChild, arrayDereferenceList, ARRAY_DEREFERENCE_LIST);
-		this.arrayDereferenceList = arrayDereferenceList;
-		postReplaceChild(oldChild, arrayDereferenceList, ARRAY_DEREFERENCE_LIST);
-	}
-
-	public PHPArrayDereferenceList getArrayDereferenceList() {
-		return arrayDereferenceList;
 	}
 
 	public int getKind() {
@@ -96,10 +86,6 @@ public class ChainingInstanceCall extends Expression {
 	}
 
 	public void childrenAccept(Visitor visitor) {
-		if (arrayDereferenceList != null) {
-
-			arrayDereferenceList.accept(visitor);
-		}
 		if (chainingMethodOrProperty != null) {
 			for (VariableBase variableBase : chainingMethodOrProperty) {
 				variableBase.accept(visitor);
@@ -110,10 +96,6 @@ public class ChainingInstanceCall extends Expression {
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		if (arrayDereferenceList != null) {
-
-			arrayDereferenceList.traverseTopDown(visitor);
-		}
 		if (chainingMethodOrProperty != null) {
 			for (VariableBase variableBase : chainingMethodOrProperty) {
 				variableBase.traverseTopDown(visitor);
@@ -122,10 +104,6 @@ public class ChainingInstanceCall extends Expression {
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		if (arrayDereferenceList != null) {
-
-			arrayDereferenceList.traverseBottomUp(visitor);
-		}
 		if (chainingMethodOrProperty != null) {
 			for (VariableBase variableBase : chainingMethodOrProperty) {
 				variableBase.traverseBottomUp(visitor);
@@ -139,13 +117,6 @@ public class ChainingInstanceCall extends Expression {
 		appendInterval(buffer);
 		buffer.append(">\n"); //$NON-NLS-1$
 		//		buffer.append(TAB).append(tab).append("<arrayDereferenceList>\n"); //$NON-NLS-1$
-		if (arrayDereferenceList != null) {
-			buffer.append(TAB).append(tab)
-					.append("<PHPArrayDereferenceList>\n"); //$NON-NLS-1$
-			arrayDereferenceList.toString(buffer, TAB + tab);
-			buffer.append("\n"); //$NON-NLS-1$
-			buffer.append(TAB).append(tab).append("</PHPArrayDereferenceList>"); //$NON-NLS-1$
-		}
 		if (chainingMethodOrProperty != null) {
 			buffer.append(TAB).append(tab)
 					.append("<ChainingMethodOrProperty>\n"); //$NON-NLS-1$
@@ -174,13 +145,11 @@ public class ChainingInstanceCall extends Expression {
 
 	@Override
 	ASTNode clone0(AST target) {
-		PHPArrayDereferenceList arrayDereferenceList = ASTNode.copySubtree(
-				target, getArrayDereferenceList());
 
 		final List<VariableBase> chainingMethodOrProperty = ASTNode
 				.copySubtrees(target, getChainingMethodOrProperty());
 		final ChainingInstanceCall result = new ChainingInstanceCall(
-				this.getStart(), this.getEnd(), target, arrayDereferenceList,
+				this.getStart(), this.getEnd(), target,
 				chainingMethodOrProperty);
 		return result;
 	}
@@ -204,14 +173,6 @@ public class ChainingInstanceCall extends Expression {
 
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
 			boolean get, ASTNode child) {
-		if (property == ARRAY_DEREFERENCE_LIST) {
-			if (get) {
-				return getArrayDereferenceList();
-			} else {
-				setArrayDereferenceList((PHPArrayDereferenceList) child);
-				return null;
-			}
-		}
 
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);

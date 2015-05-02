@@ -23,7 +23,6 @@ public class ReflectionCallExpression extends Expression implements
 	private Expression receiver;
 	private Expression name;
 	private CallArgumentsList args;
-	private PHPArrayDereferenceList arrayDereferenceList;
 
 	public ReflectionCallExpression(int start, int end, Expression receiver,
 			Expression name, CallArgumentsList args) {
@@ -52,9 +51,6 @@ public class ReflectionCallExpression extends Expression implements
 			}
 			name.traverse(visitor);
 			args.traverse(visitor);
-			if (getArrayDereferenceList() != null) {
-				getArrayDereferenceList().traverse(visitor);
-			}
 		}
 		visitor.endvisit(this);
 	}
@@ -75,15 +71,6 @@ public class ReflectionCallExpression extends Expression implements
 		assert receiver != null;
 		this.receiver = receiver;
 		setStart(receiver.sourceStart());
-	}
-
-	public PHPArrayDereferenceList getArrayDereferenceList() {
-		return arrayDereferenceList;
-	}
-
-	public void setArrayDereferenceList(
-			PHPArrayDereferenceList arrayDereferenceList) {
-		this.arrayDereferenceList = arrayDereferenceList;
 	}
 
 	/**

@@ -15,5 +15,5 @@ function data() {
 			'surname' => 'Ayuso' 
 	];
 }
-echo data ()['name'];
+echo data () ['name'];
 ?>

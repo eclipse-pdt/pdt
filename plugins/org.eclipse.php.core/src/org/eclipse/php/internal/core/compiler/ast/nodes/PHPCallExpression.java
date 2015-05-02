@@ -21,29 +21,14 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 public class PHPCallExpression extends CallExpression implements Dereferencable {
 
-	private PHPArrayDereferenceList arrayDereferenceList;
-
 	public PHPCallExpression(int start, int end, ASTNode receiver, String name,
 			CallArgumentsList args) {
 		super(start, end, receiver, name, args);
 	}
 
-	public PHPCallExpression(int start, int end, ASTNode receiver, String name,
-			CallArgumentsList args, PHPArrayDereferenceList arrayDereferenceList) {
-		super(start, end, receiver, name, args);
-		setArrayDereferenceList(arrayDereferenceList);
-	}
-
 	public PHPCallExpression(int start, int end, ASTNode receiver,
 			SimpleReference name, CallArgumentsList args) {
 		super(start, end, receiver, name, args);
-	}
-
-	public PHPCallExpression(int start, int end, ASTNode receiver,
-			SimpleReference name, CallArgumentsList args,
-			PHPArrayDereferenceList arrayDereferenceList) {
-		super(start, end, receiver, name, args);
-		setArrayDereferenceList(arrayDereferenceList);
 	}
 
 	public PHPCallExpression(ASTNode receiver, String name,
@@ -55,15 +40,6 @@ public class PHPCallExpression extends CallExpression implements Dereferencable 
 		this.receiver = receiver;
 	}
 
-	public PHPArrayDereferenceList getArrayDereferenceList() {
-		return arrayDereferenceList;
-	}
-
-	public void setArrayDereferenceList(
-			PHPArrayDereferenceList arrayDereferenceList) {
-		this.arrayDereferenceList = arrayDereferenceList;
-	}
-
 	public void traverse(ASTVisitor pVisitor) throws Exception {
 		if (pVisitor.visit(this)) {
 			if (receiver != null) {
@@ -72,9 +48,6 @@ public class PHPCallExpression extends CallExpression implements Dereferencable 
 			getCallName().traverse(pVisitor);
 			if (getArgs() != null) {
 				getArgs().traverse(pVisitor);
-			}
-			if (getArrayDereferenceList() != null) {
-				getArrayDereferenceList().traverse(pVisitor);
 			}
 			pVisitor.endvisit(this);
 		}

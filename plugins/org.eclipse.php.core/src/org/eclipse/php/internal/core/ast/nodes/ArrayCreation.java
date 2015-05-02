@@ -35,7 +35,6 @@ public class ArrayCreation extends VariableBase {
 			ELEMENTS_PROPERTY);
 	private boolean hasArrayKey;
 
-	private PHPArrayDereferenceList arrayDereferenceList;
 	/**
 	 * The "statements" structural property of this node type.
 	 */
@@ -45,9 +44,6 @@ public class ArrayCreation extends VariableBase {
 	public static final SimplePropertyDescriptor HAS_ARRAY_KEY = new SimplePropertyDescriptor(
 			LambdaFunctionDeclaration.class,
 			"hasArrayKey", Boolean.class, OPTIONAL); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor ARRAY_DEREFERENCE_LIST = new ChildPropertyDescriptor(
-			ArrayCreation.class,
-			"arrayDereferenceList", PHPArrayDereferenceList.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 	/**
 	 * A list of property descriptors (element type:
 	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
@@ -58,7 +54,6 @@ public class ArrayCreation extends VariableBase {
 				3);
 		properyList.add(ELEMENTS_PROPERTY);
 		properyList.add(HAS_ARRAY_KEY);
-		properyList.add(ARRAY_DEREFERENCE_LIST);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
@@ -67,7 +62,7 @@ public class ArrayCreation extends VariableBase {
 	}
 
 	private ArrayCreation(int start, int end, AST ast, ArrayElement[] elements,
-			boolean hasArrayKey, PHPArrayDereferenceList arrayDereferenceList) {
+			boolean hasArrayKey) {
 		super(start, end, ast);
 
 		if (elements == null) {
@@ -78,27 +73,20 @@ public class ArrayCreation extends VariableBase {
 			this.elements.add(arrayElement);
 		}
 		setHasArrayKey(hasArrayKey);
-		setArrayDereferenceList(arrayDereferenceList);
 	}
 
-	public ArrayCreation(int start, int end, AST ast, List elements) {
+	public ArrayCreation(int start, int end, AST ast,
+			List<ArrayElement> elements) {
 		this(start, end, ast, elements == null ? null
 				: (ArrayElement[]) elements.toArray(new ArrayElement[elements
-						.size()]), true, null);
+						.size()]), true);
 	}
 
-	public ArrayCreation(int start, int end, AST ast, List elements,
-			boolean hasArrayKey) {
+	public ArrayCreation(int start, int end, AST ast,
+			List<ArrayElement> elements, boolean hasArrayKey) {
 		this(start, end, ast, elements == null ? null
 				: (ArrayElement[]) elements.toArray(new ArrayElement[elements
-						.size()]), hasArrayKey, null);
-	}
-
-	public ArrayCreation(int start, int end, AST ast, List elements,
-			boolean hasArrayKey, PHPArrayDereferenceList arrayDereferenceList) {
-		this(start, end, ast, elements == null ? null
-				: (ArrayElement[]) elements.toArray(new ArrayElement[elements
-						.size()]), hasArrayKey, arrayDereferenceList);
+						.size()]), hasArrayKey);
 	}
 
 	public boolean isHasArrayKey() {
@@ -109,15 +97,6 @@ public class ArrayCreation extends VariableBase {
 		preValueChange(HAS_ARRAY_KEY);
 		this.hasArrayKey = hasArrayKey;
 		postValueChange(HAS_ARRAY_KEY);
-	}
-
-	public PHPArrayDereferenceList getArrayDereferenceList() {
-		return arrayDereferenceList;
-	}
-
-	public void setArrayDereferenceList(
-			PHPArrayDereferenceList arrayDereferenceList) {
-		this.arrayDereferenceList = arrayDereferenceList;
 	}
 
 	/*
@@ -139,14 +118,6 @@ public class ArrayCreation extends VariableBase {
 
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
 			boolean get, ASTNode child) {
-		if (property == ARRAY_DEREFERENCE_LIST) {
-			if (get) {
-				return getArrayDereferenceList();
-			} else {
-				setArrayDereferenceList((PHPArrayDereferenceList) child);
-				return null;
-			}
-		}
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
@@ -155,9 +126,6 @@ public class ArrayCreation extends VariableBase {
 		for (ASTNode node : this.elements) {
 			node.accept(visitor);
 		}
-		if (arrayDereferenceList != null) {
-			arrayDereferenceList.accept(visitor);
-		}
 	}
 
 	public void traverseTopDown(Visitor visitor) {
@@ -165,17 +133,11 @@ public class ArrayCreation extends VariableBase {
 		for (ASTNode node : this.elements) {
 			node.traverseTopDown(visitor);
 		}
-		if (arrayDereferenceList != null) {
-			arrayDereferenceList.traverseTopDown(visitor);
-		}
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
 		for (ASTNode node : this.elements) {
 			node.traverseBottomUp(visitor);
-		}
-		if (arrayDereferenceList != null) {
-			arrayDereferenceList.traverseBottomUp(visitor);
 		}
 		accept(visitor);
 	}
@@ -186,10 +148,6 @@ public class ArrayCreation extends VariableBase {
 		buffer.append(">\n"); //$NON-NLS-1$
 		for (ASTNode node : this.elements) {
 			node.toString(buffer, TAB + tab);
-			buffer.append("\n"); //$NON-NLS-1$
-		}
-		if (arrayDereferenceList != null) {
-			arrayDereferenceList.toString(buffer, TAB + TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(tab).append("</ArrayCreation>"); //$NON-NLS-1$
@@ -235,15 +193,11 @@ public class ArrayCreation extends VariableBase {
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
 	ASTNode clone0(AST target) {
-		final List elements = ASTNode.copySubtrees(target, elements());
-		PHPArrayDereferenceList newArrayDereferenceList = null;
-		if (arrayDereferenceList != null) {
-			newArrayDereferenceList = ASTNode.copySubtree(target,
-					arrayDereferenceList);
-		}
+		final List<ASTNode> elements = ASTNode.copySubtrees(target, elements());
 		final ArrayCreation result = new ArrayCreation(this.getStart(),
-				this.getEnd(), target, elements, isHasArrayKey(),
-				newArrayDereferenceList);
+				this.getEnd(), target,
+				elements.toArray(new ArrayElement[elements.size()]),
+				isHasArrayKey());
 		return result;
 	}
 
