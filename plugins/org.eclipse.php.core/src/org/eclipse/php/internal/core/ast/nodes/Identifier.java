@@ -22,27 +22,32 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 /**
  * Holds an identifier.<br>
  * uses for variable name, function name and class name.
- * <pre>e.g.<pre>  $variableName - variableName is the identifier,
+ * 
+ * <pre>e.g.
+ * 
+ * <pre>
+ * $variableName - variableName is the identifier,
  * foo() - foo is the identifier,
- * $myClass->fun() - myClass and fun are identifiers      
+ * $myClass->fun() - myClass and fun are identifiers
  */
-public class Identifier extends Expression {
+public class Identifier extends VariableBase {
 
 	private String name;
 
 	/**
 	 * The "identifier" structural property of this node type.
 	 */
-	public static final SimplePropertyDescriptor NAME_PROPERTY = new SimplePropertyDescriptor(Identifier.class, "name", String.class, MANDATORY); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor NAME_PROPERTY = new SimplePropertyDescriptor(
+			Identifier.class, "name", String.class, MANDATORY); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 	static {
-		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(1);
+		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(
+				1);
 		list.add(NAME_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(list);
 	}
@@ -87,9 +92,10 @@ public class Identifier extends Expression {
 
 	/**
 	 * Equality check for Identifier.<br>
-	 * Two identifiers are equal iff they have equal names 
-	 * (disregarding its offset and length) <br>
-	 * Note: The equality is checked by == since we {@link String#intern()} the name field. 
+	 * Two identifiers are equal iff they have equal names (disregarding its
+	 * offset and length) <br>
+	 * Note: The equality is checked by == since we {@link String#intern()} the
+	 * name field.
 	 */
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -110,7 +116,7 @@ public class Identifier extends Expression {
 		return name;
 	}
 
-	/* 
+	/*
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
@@ -120,19 +126,22 @@ public class Identifier extends Expression {
 
 	@Override
 	protected ASTNode clone0(AST target) {
-		Identifier result = new Identifier(this.getStart(), this.getEnd(), target, this.getName());
+		Identifier result = new Identifier(this.getStart(), this.getEnd(),
+				target, this.getName());
 		return result;
 	}
 
 	@Override
-	protected List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
+	protected List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
+			PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
+	/*
+	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
-	final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value) {
+	final Object internalGetSetObjectProperty(
+			SimplePropertyDescriptor property, boolean get, Object value) {
 		if (property == NAME_PROPERTY) {
 			if (get) {
 				return getName();
@@ -146,7 +155,7 @@ public class Identifier extends Expression {
 	}
 
 	public final void setName(String value) {
-		if (value == null/* || value.length() == 0*/) {
+		if (value == null/* || value.length() == 0 */) {
 			throw new IllegalArgumentException();
 		}
 
@@ -156,10 +165,10 @@ public class Identifier extends Expression {
 	}
 
 	/**
-	 * Resolves and returns the binding for the entity referred to by this name.	
+	 * Resolves and returns the binding for the entity referred to by this name.
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be 
-	 *    resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
 	 */
 	public final IBinding resolveBinding() {
 		return this.ast.getBindingResolver().resolveName(this);

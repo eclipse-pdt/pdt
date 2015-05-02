@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ 
+ *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -7,31 +16,22 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 public class ChainingInstanceCall extends Expression {
 
-	private PHPArrayDereferenceList arrayDereferenceList;
 	private ChainingMethodPropertyList chaining_method_or_property;
 
 	public ChainingInstanceCall(int start, int end,
-			PHPArrayDereferenceList arrayDereferenceList,
 			ChainingMethodPropertyList chaining_method_or_property) {
 		super(start, end);
 
-		this.arrayDereferenceList = arrayDereferenceList;
 		this.chaining_method_or_property = chaining_method_or_property;
 	}
 
-	public ChainingInstanceCall(PHPArrayDereferenceList arrayDereferenceList,
+	public ChainingInstanceCall(
 			ChainingMethodPropertyList chaining_method_or_property) {
-		this.arrayDereferenceList = arrayDereferenceList;
 		this.chaining_method_or_property = chaining_method_or_property;
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
-			if (arrayDereferenceList != null) {
-				for (Object arrayDereference : arrayDereferenceList.getChilds()) {
-					((DereferenceNode) arrayDereference).traverse(visitor);
-				}
-			}
 			if (chaining_method_or_property != null) {
 				for (Object method_or_property : chaining_method_or_property
 						.getChilds()) {
@@ -44,10 +44,6 @@ public class ChainingInstanceCall extends Expression {
 
 	public int getKind() {
 		return ASTNodeKinds.USE_STATEMENT;
-	}
-
-	public PHPArrayDereferenceList getArrayDereferenceList() {
-		return arrayDereferenceList;
 	}
 
 	public ChainingMethodPropertyList getChainingMethodPropertyList() {

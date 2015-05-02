@@ -30,7 +30,6 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * `
  */
 public class Scalar extends StringLiteral implements Dereferencable {
-	private PHPArrayDereferenceList arrayDereferenceList;
 	// 'int'
 	public static final int TYPE_INT = 0;
 	// 'real'
@@ -46,30 +45,15 @@ public class Scalar extends StringLiteral implements Dereferencable {
 
 	private final int scalarType;
 
-	public Scalar(int start, int end, String value, int type,
-			PHPArrayDereferenceList arrayDereference) {
+	public Scalar(int start, int end, String value, int type) {
 		super(start, end, value);
 		this.scalarType = type;
 	}
 
-	public Scalar(int start, int end, String value, int type) {
-		this(start, end, value, type, null);
-	}
-
-	public PHPArrayDereferenceList getArrayDereferenceList() {
-		return arrayDereferenceList;
-	}
-
-	public void setArrayDereferenceList(
-			PHPArrayDereferenceList arrayDereferenceList) {
-		this.arrayDereferenceList = arrayDereferenceList;
-	}
-
 	public void traverse(ASTVisitor visitor) throws Exception {
-		if (visitor.visit(this) && getArrayDereferenceList() != null) {
-			getArrayDereferenceList().traverse(visitor);
+		if (visitor.visit(this)) {
+			visitor.endvisit(this);
 		}
-		visitor.endvisit(this);
 	}
 
 	public String getType() {

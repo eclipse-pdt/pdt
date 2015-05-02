@@ -42,20 +42,20 @@ echo data()['name'];
 			</FunctionBody>
 		</FunctionDeclaration>
 		<EchoStatement start='83' length='20'>
-			<FunctionInvocation start='88' length='14'>
-				<FunctionName start='88' length='4'>
-					<NamespaceName start='88' length='4' global='false' current='false'>
-						<Identifier start='88' length='4' name='data'/>
-					</NamespaceName>
-				</FunctionName>
-				<Parameters>
-				</Parameters>
-					<PHPArrayDereferenceList start='-1' length='0'>
-						<DereferenceNode start='94' length='8'>
-							<Scalar start='95' length='6' type='string' value='&apos;name&apos;'/>
-						</DereferenceNode>
-					</PHPArrayDereferenceList>
-			</FunctionInvocation>
+			<ArrayAccess start='88' length='14' type='array'>
+				<FunctionInvocation start='88' length='6'>
+					<FunctionName start='88' length='4'>
+						<NamespaceName start='88' length='4' global='false' current='false'>
+							<Identifier start='88' length='4' name='data'/>
+						</NamespaceName>
+					</FunctionName>
+					<Parameters>
+					</Parameters>
+				</FunctionInvocation>
+				<Index>
+					<Scalar start='95' length='6' type='string' value='&apos;name&apos;'/>
+				</Index>
+			</ArrayAccess>
 		</EchoStatement>
 		<EmptyStatement start='104' length='2'/>
 	</Statements>

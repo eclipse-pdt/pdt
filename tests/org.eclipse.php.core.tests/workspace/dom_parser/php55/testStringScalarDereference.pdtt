@@ -6,22 +6,20 @@ String scalar dereference
 <Program start='0' length='34'>
 	<Statements>
 		<ExpressionStatement start='6' length='12'>
-			<Scalar start='6' length='11' type='string' value='"string"'>
-				<PHPArrayDereferenceList start='-1' length='0'>
-					<DereferenceNode start='14' length='3'>
-						<Scalar start='15' length='1' type='int' value='0'/>
-					</DereferenceNode>
-				</PHPArrayDereferenceList>
-			</Scalar>
+			<ArrayAccess start='6' length='11' type='array'>
+				<Scalar start='6' length='8' type='string' value='"string"'/>
+				<Index>
+					<Scalar start='15' length='1' type='int' value='0'/>
+				</Index>
+			</ArrayAccess>
 		</ExpressionStatement>
 		<ExpressionStatement start='19' length='12'>
-			<Scalar start='19' length='11' type='string' value='&apos;string&apos;'>
-				<PHPArrayDereferenceList start='-1' length='0'>
-					<DereferenceNode start='27' length='3'>
-						<Scalar start='28' length='1' type='int' value='0'/>
-					</DereferenceNode>
-				</PHPArrayDereferenceList>
-			</Scalar>
+			<ArrayAccess start='19' length='11' type='array'>
+				<Scalar start='19' length='8' type='string' value='&apos;string&apos;'/>
+				<Index>
+					<Scalar start='28' length='1' type='int' value='0'/>
+				</Index>
+			</ArrayAccess>
 		</ExpressionStatement>
 		<EmptyStatement start='32' length='2'/>
 	</Statements>

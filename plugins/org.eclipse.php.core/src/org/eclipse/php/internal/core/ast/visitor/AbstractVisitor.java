@@ -555,25 +555,11 @@ public abstract class AbstractVisitor implements Visitor {
 	public void endVisit(ChainingInstanceCall node) {
 	}
 
-	public boolean visit(DereferenceNode node) {
-		return true;
-	}
-
-	public void endVisit(DereferenceNode node) {
-	}
-
 	public boolean visit(FullyQualifiedTraitMethodReference node) {
 		return true;
 	}
 
 	public void endVisit(FullyQualifiedTraitMethodReference node) {
-	}
-
-	public boolean visit(PHPArrayDereferenceList node) {
-		return true;
-	}
-
-	public void endVisit(PHPArrayDereferenceList node) {
 	}
 
 	public boolean visit(TraitAlias node) {

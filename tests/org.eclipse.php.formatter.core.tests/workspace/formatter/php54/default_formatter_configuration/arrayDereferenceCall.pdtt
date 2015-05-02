@@ -8,6 +8,6 @@ return     data()[1];
 ?>
 --EXPECT--
 <?php
-data ()['name'];
-return data ()[1];
+data () ['name'];
+return data () [1];
 ?>

@@ -320,14 +320,11 @@ non terminal CompilerAstParser.ModifierDocPair trait_modifiers;
 non terminal CompilerAstParser.ModifierDocPair non_empty_trait_modifiers;
 
 non terminal ChainingMethodPropertyList chaining_method_or_property;
-non terminal PHPArrayDereferenceList chaining_dereference;
 non terminal ChainingInstanceCall chaining_instance_call;
 non terminal ChainingInstanceCall instance_call;
 non terminal ClassInstanceCreation new_expr;
 
 non terminal PHPCallArgumentsList method;
-non terminal PHPCallArgumentsList array_method_dereference;
-non terminal PHPArrayDereferenceList optional_dereference;
 
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
 precedence left T_COMMA;
@@ -2109,39 +2106,10 @@ chaining_method_or_property:chaining_method_or_property variable_property:vp
 :}
 ;
 
-chaining_dereference ::=
-chaining_dereference:arrayDereferenceList T_OPEN_RECT:start dim_offset:index T_CLOSE_RECT:end
-{:
-	DereferenceNode var = new DereferenceNode(index,startleft, endright);
-	arrayDereferenceList.addNode(var);
-	RESULT = arrayDereferenceList;
-:}
-
-|T_OPEN_RECT:start dim_offset:index T_CLOSE_RECT:end
-{:
-	PHPArrayDereferenceList arrayDereferenceList = new PHPArrayDereferenceList();
-	DereferenceNode var = new DereferenceNode(index,startleft, endright);
-	arrayDereferenceList.addNode(var);
-	RESULT = arrayDereferenceList;
-:}
-;
-
 chaining_instance_call ::=
-chaining_dereference:arrayDereferenceList chaining_method_or_property:chaining_method_or_property
+chaining_method_or_property:chaining_method_or_property
 {:
-	ChainingInstanceCall call = new ChainingInstanceCall(arrayDereferenceList,chaining_method_or_property);
-	RESULT = call;
-:}
-
-|	chaining_dereference:arrayDereferenceList
-{:
-	ChainingInstanceCall call = new ChainingInstanceCall(arrayDereferenceList,null);
-	RESULT = call;
-:}
-
-|	chaining_method_or_property:chaining_method_or_property
-{:
-	ChainingInstanceCall call = new ChainingInstanceCall(null,chaining_method_or_property);
+	ChainingInstanceCall call = new ChainingInstanceCall(chaining_method_or_property);
 	RESULT = call;
 :}
 ;
@@ -2691,24 +2659,24 @@ lexical_var_list:list T_COMMA T_VARIABLE:var
 ;
 
 function_call ::=
-namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end optional_dereference:dereference
+namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
-	RESULT = new PHPCallExpression(functionNameleft, dereference == null ? endright : dereferenceright, null, functionName, parameters, dereference);
+	RESULT = new PHPCallExpression(functionNameleft, endright, null, functionName, parameters);
 :}
 
-| T_NAMESPACE:namespace T_NS_SEPARATOR namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end optional_dereference:dereference
+| T_NAMESPACE:namespace T_NS_SEPARATOR namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
 	if (functionName.getNamespace() != null) {
 		functionName.getNamespace().setLocal(true);
 	}
-	RESULT = new PHPCallExpression(namespaceleft, dereference == null ? endright : dereferenceright, null, functionName, parameters, dereference);
+	RESULT = new PHPCallExpression(namespaceleft, endright, null, functionName, parameters);
 :}
 
-| T_NS_SEPARATOR:s namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end optional_dereference:dereference
+| T_NS_SEPARATOR:s namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
@@ -2720,10 +2688,10 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 	namespace.setGlobal(true);
 	namespace.setStart(sleft);
 	functionName.setStart(sleft);
-	RESULT = new PHPCallExpression(sleft, dereference == null ? endright : dereferenceright, null, functionName, parameters, dereference);
+	RESULT = new PHPCallExpression(sleft, endright, null, functionName, parameters);
 :}
 
-| class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end optional_dereference:dereference
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
@@ -2733,7 +2701,7 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 	}else{
 		name = new SimpleReference(functionNameleft, functionNameleft, "");
 	}
-	RESULT = new StaticMethodInvocation(classNameleft, dereference == null ? endright : dereferenceright, className, functionName,name, parameters, dereference);
+	RESULT = new StaticMethodInvocation(classNameleft, endright, className, functionName,name, parameters);
 :}
 
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:reflectionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
@@ -2744,7 +2712,7 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 	RESULT = functionInvocation;
 :}
 
-| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end optional_dereference:dereference
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
@@ -2754,7 +2722,7 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 	}else{
 		name = new SimpleReference(functionNameleft, functionNameleft, "");
 	}
-	RESULT = new StaticMethodInvocation(classNameleft, dereference == null ? endright : dereferenceright, className, functionName,name, parameters, dereference);
+	RESULT = new StaticMethodInvocation(classNameleft, endright, className, functionName,name, parameters);
 :}
 
 | variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:reflectionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
@@ -2770,6 +2738,15 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 	parameters.setEnd(endleft);
 	RESULT = new ReflectionCallExpression(reflectionNameleft, endright, null, reflectionName, parameters);
 :}
+| function_call:varName T_OPEN_RECT dim_offset:index T_CLOSE_RECT:end
+{:
+	if(varName.getKind() == ExpressionConstants.E_IDENTIFIER) { // VariableReference - $a
+		RESULT = new ArrayVariableReference(varNameleft, endright, ((SimpleReference)varName).getName(), index, ArrayVariableReference.VARIABLE_ARRAY);
+	} else {
+		RESULT = new ReflectionArrayVariableReference(varNameleft, endright, varName, index, ReflectionArrayVariableReference.VARIABLE_ARRAY);
+	}
+:}
+
 ;
 
 class_name ::=
@@ -3311,33 +3288,8 @@ T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHE
 :}
 ;
 
-array_method_dereference ::=
-array_method_dereference:dereference T_OPEN_RECT:start dim_offset:index T_CLOSE_RECT:end
-{:
-	DereferenceNode var = new DereferenceNode(index,startleft, endright);
-	dereference.getArrayDereferenceList().addNode(var);
-	RESULT = dereference;
-:}
-
-|method:method T_OPEN_RECT:start dim_offset:index T_CLOSE_RECT:end
-{:
-	PHPArrayDereferenceList arrayDereferenceList = new PHPArrayDereferenceList(method);
-	method.setArrayDereferenceList(arrayDereferenceList);
-	DereferenceNode var = new DereferenceNode( index,startleft, endright);
-	arrayDereferenceList.addNode(var);
-	RESULT = method;
-:}
-;
-
-
 method_or_not ::=
-array_method_dereference:dereference
-{:
-	//RESULT = (PHPCallArgumentsList)dereference.getParent();
-	RESULT = dereference;
-:}
-
-|method:method
+method:method
 {:
 	RESULT = method;
 :}
@@ -3384,16 +3336,6 @@ variable_class_name ::=
 reference_variable:var
 {:
 	RESULT = var;
-:}
-;
-
-optional_dereference ::=
-chaining_dereference:dereference
-{:
-    RESULT = dereference;
-:}
-| {: /* EMPTY */
-    RESULT = null;
 :}
 ;
 
