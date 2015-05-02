@@ -617,27 +617,11 @@ public abstract class ApplyAll extends AbstractVisitor {
 		endVisitNode(node);
 	}
 
-	public boolean visit(DereferenceNode node) {
-		return apply(node);
-	}
-
-	public void endVisit(DereferenceNode node) {
-		endVisitNode(node);
-	}
-
 	public boolean visit(FullyQualifiedTraitMethodReference node) {
 		return apply(node);
 	}
 
 	public void endVisit(FullyQualifiedTraitMethodReference node) {
-		endVisitNode(node);
-	}
-
-	public boolean visit(PHPArrayDereferenceList node) {
-		return apply(node);
-	}
-
-	public void endVisit(PHPArrayDereferenceList node) {
 		endVisitNode(node);
 	}
 

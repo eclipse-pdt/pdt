@@ -39,16 +39,9 @@ public class StaticMethodInvocation extends PHPCallExpression {
 
 	public StaticMethodInvocation(int start, int end, ASTNode receiver,
 			Expression functionName, SimpleReference name,
-			CallArgumentsList args, PHPArrayDereferenceList arrayDereferenceList) {
+			CallArgumentsList args) {
 		super(start, end, receiver, name, args);
 		this.functionName = functionName;
-		setArrayDereferenceList(arrayDereferenceList);
-	}
-
-	public StaticMethodInvocation(int start, int end, ASTNode receiver,
-			Expression functionName, SimpleReference name,
-			CallArgumentsList args) {
-		this(start, end, receiver, functionName, name, args, null);
 	}
 
 	public StaticMethodInvocation(int start, int end, ASTNode receiver,
@@ -57,20 +50,8 @@ public class StaticMethodInvocation extends PHPCallExpression {
 	}
 
 	public StaticMethodInvocation(int start, int end, ASTNode receiver,
-			SimpleReference name, CallArgumentsList args,
-			PHPArrayDereferenceList arrayDereferenceList) {
-		super(start, end, receiver, name, args, arrayDereferenceList);
-	}
-
-	public StaticMethodInvocation(int start, int end, ASTNode receiver,
 			String name, CallArgumentsList args) {
 		super(start, end, receiver, name, args);
-	}
-
-	public StaticMethodInvocation(int start, int end, ASTNode receiver,
-			String name, CallArgumentsList args,
-			PHPArrayDereferenceList arrayDereferenceList) {
-		super(start, end, receiver, name, args, arrayDereferenceList);
 	}
 
 	public void traverse(ASTVisitor pVisitor) throws Exception {
@@ -84,9 +65,6 @@ public class StaticMethodInvocation extends PHPCallExpression {
 				functionName.traverse(pVisitor);
 				if (getArgs() != null) {
 					getArgs().traverse(pVisitor);
-				}
-				if (getArrayDereferenceList() != null) {
-					getArrayDereferenceList().traverse(pVisitor);
 				}
 				pVisitor.endvisit(this);
 			}

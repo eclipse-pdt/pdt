@@ -2,7 +2,7 @@
 Test Abs Class
 --FILE--
 <?php 
-$f = [new Human("Gonzalo"), 'hello'][0];
+$f = [new Human("Gonzalo"), 'hello'] [0];
 echo $f();
 ?>
 --EXPECT--
@@ -10,6 +10,6 @@ echo $f();
 $f = [ 
 		new Human ( "Gonzalo" ),
 		'hello' 
-][0];
+] [0];
 echo $f ();
 ?>

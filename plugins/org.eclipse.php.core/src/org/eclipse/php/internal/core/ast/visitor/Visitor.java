@@ -344,17 +344,9 @@ public interface Visitor {
 
 	public void endVisit(ChainingInstanceCall node);
 
-	public boolean visit(DereferenceNode node);
-
-	public void endVisit(DereferenceNode node);
-
 	public boolean visit(FullyQualifiedTraitMethodReference node);
 
 	public void endVisit(FullyQualifiedTraitMethodReference node);
-
-	public boolean visit(PHPArrayDereferenceList node);
-
-	public void endVisit(PHPArrayDereferenceList node);
 
 	public boolean visit(TraitAlias node);
 

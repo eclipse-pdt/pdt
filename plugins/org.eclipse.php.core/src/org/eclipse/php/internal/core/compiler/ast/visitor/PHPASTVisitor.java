@@ -948,14 +948,8 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(ChainingMethodPropertyList.class)) {
 			return endvisit((ChainingMethodPropertyList) s);
 		}
-		if (nodeClass.equals(DereferenceNode.class)) {
-			return endvisit((DereferenceNode) s);
-		}
 		if (nodeClass.equals(FullyQualifiedTraitMethodReference.class)) {
 			return endvisit((FullyQualifiedTraitMethodReference) s);
-		}
-		if (nodeClass.equals(PHPArrayDereferenceList.class)) {
-			return endvisit((PHPArrayDereferenceList) s);
 		}
 		if (nodeClass.equals(TraitAlias.class)) {
 			return endvisit((TraitAlias) s);
@@ -1244,14 +1238,8 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(ChainingMethodPropertyList.class)) {
 			return visit((ChainingMethodPropertyList) s);
 		}
-		if (nodeClass.equals(DereferenceNode.class)) {
-			return visit((DereferenceNode) s);
-		}
 		if (nodeClass.equals(FullyQualifiedTraitMethodReference.class)) {
 			return visit((FullyQualifiedTraitMethodReference) s);
-		}
-		if (nodeClass.equals(PHPArrayDereferenceList.class)) {
-			return visit((PHPArrayDereferenceList) s);
 		}
 		if (nodeClass.equals(TraitAlias.class)) {
 			return visit((TraitAlias) s);
@@ -1283,15 +1271,7 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return visitGeneral(s);
 	}
 
-	public boolean visit(DereferenceNode s) throws Exception {
-		return visitGeneral(s);
-	}
-
 	public boolean visit(FullyQualifiedTraitMethodReference s) throws Exception {
-		return visitGeneral(s);
-	}
-
-	public boolean visit(PHPArrayDereferenceList s) throws Exception {
 		return visitGeneral(s);
 	}
 
@@ -1329,18 +1309,8 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return false;
 	}
 
-	public boolean endvisit(DereferenceNode s) throws Exception {
-		endvisitGeneral(s);
-		return false;
-	}
-
 	public boolean endvisit(FullyQualifiedTraitMethodReference s)
 			throws Exception {
-		endvisitGeneral(s);
-		return false;
-	}
-
-	public boolean endvisit(PHPArrayDereferenceList s) throws Exception {
 		endvisitGeneral(s);
 		return false;
 	}

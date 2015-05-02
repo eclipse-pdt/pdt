@@ -1,0 +1,33 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+echo $f->read()['item']->call();
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="43">
+	<EchoStatement start="7" end="39">
+		<PHPCallExpression start="12" end="38">
+			<FieldAccess start="12" end="30">
+				<VariableReference start="12" end="14" name="$f">
+				</VariableReference>
+				<ReflectionArrayVariableReference start="16" end="30">
+					<PHPCallExpression start="16" end="22">
+						<SimpleReference start="16" end="20" name="read">
+						</SimpleReference>
+						<PHPCallArgumentsList start="21" end="21">
+						</PHPCallArgumentsList>
+					</PHPCallExpression>
+					<Scalar start="23" end="29" type="string" value="&apos;item&apos;">
+					</Scalar>
+				</ReflectionArrayVariableReference>
+			</FieldAccess>
+			<SimpleReference start="32" end="36" name="call">
+			</SimpleReference>
+			<PHPCallArgumentsList start="37" end="37">
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</EchoStatement>
+	<EmptyStatement start="40" end="42">
+	</EmptyStatement>
+</ModuleDeclaration>

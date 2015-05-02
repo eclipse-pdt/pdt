@@ -6,69 +6,71 @@ Test Array Creation
 <Program start='0' length='70'>
 	<Statements>
 		<ExpressionStatement start='6' length='15'>
-			<ArrayCreation start='6' length='14'>
-				<ArrayElement start='12' length='1'>
-					<Key>
-					</Key>
-					<Value>
-						<Scalar start='12' length='1' type='int' value='1'/>
-					</Value>
-				</ArrayElement>
-				<ArrayElement start='15' length='1'>
-					<Key>
-					</Key>
-					<Value>
-						<Scalar start='15' length='1' type='int' value='2'/>
-					</Value>
-				</ArrayElement>
-					<PHPArrayDereferenceList start='-1' length='0'>
-						<DereferenceNode start='17' length='3'>
-							<Scalar start='18' length='1' type='int' value='0'/>
-						</DereferenceNode>
-					</PHPArrayDereferenceList>
-			</ArrayCreation>
+			<ArrayAccess start='6' length='14' type='array'>
+				<ArrayCreation start='6' length='11'>
+					<ArrayElement start='12' length='1'>
+						<Key>
+						</Key>
+						<Value>
+							<Scalar start='12' length='1' type='int' value='1'/>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='15' length='1'>
+						<Key>
+						</Key>
+						<Value>
+							<Scalar start='15' length='1' type='int' value='2'/>
+						</Value>
+					</ArrayElement>
+				</ArrayCreation>
+				<Index>
+					<Scalar start='18' length='1' type='int' value='0'/>
+				</Index>
+			</ArrayAccess>
 		</ExpressionStatement>
 		<ExpressionStatement start='22' length='18'>
-			<ArrayCreation start='22' length='17'>
-				<ArrayElement start='28' length='1'>
-					<Key>
-					</Key>
-					<Value>
-						<Scalar start='28' length='1' type='int' value='1'/>
-					</Value>
-				</ArrayElement>
-				<ArrayElement start='31' length='1'>
-					<Key>
-					</Key>
-					<Value>
-						<Scalar start='31' length='1' type='int' value='2'/>
-					</Value>
-				</ArrayElement>
-					<PHPArrayDereferenceList start='-1' length='0'>
-						<DereferenceNode start='33' length='3'>
-							<Scalar start='34' length='1' type='int' value='0'/>
-						</DereferenceNode>
-						<DereferenceNode start='36' length='3'>
-							<Scalar start='37' length='1' type='int' value='1'/>
-						</DereferenceNode>
-					</PHPArrayDereferenceList>
-			</ArrayCreation>
+			<ArrayAccess start='22' length='17' type='array'>
+				<ArrayAccess start='22' length='14' type='array'>
+					<ArrayCreation start='22' length='11'>
+						<ArrayElement start='28' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='28' length='1' type='int' value='1'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='31' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='31' length='1' type='int' value='2'/>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+					<Index>
+						<Scalar start='34' length='1' type='int' value='0'/>
+					</Index>
+				</ArrayAccess>
+				<Index>
+					<Scalar start='37' length='1' type='int' value='1'/>
+				</Index>
+			</ArrayAccess>
 		</ExpressionStatement>
 		<ExpressionStatement start='41' length='7'>
-			<ArrayCreation start='41' length='6'>
-				<ArrayElement start='42' length='1'>
-					<Key>
-					</Key>
-					<Value>
-						<Scalar start='42' length='1' type='int' value='0'/>
-					</Value>
-				</ArrayElement>
-					<PHPArrayDereferenceList start='-1' length='0'>
-						<DereferenceNode start='44' length='3'>
-							<Scalar start='45' length='1' type='int' value='0'/>
-						</DereferenceNode>
-					</PHPArrayDereferenceList>
-			</ArrayCreation>
+			<ArrayAccess start='41' length='6' type='array'>
+				<ArrayCreation start='41' length='3'>
+					<ArrayElement start='42' length='1'>
+						<Key>
+						</Key>
+						<Value>
+							<Scalar start='42' length='1' type='int' value='0'/>
+						</Value>
+					</ArrayElement>
+				</ArrayCreation>
+				<Index>
+					<Scalar start='45' length='1' type='int' value='0'/>
+				</Index>
+			</ArrayAccess>
 		</ExpressionStatement>
 		<ExpressionStatement start='49' length='18'>
 			<Assignment start='49' length='17' operator='='>
@@ -76,30 +78,32 @@ Test Array Creation
 					<Identifier start='50' length='1' name='a'/>
 				</Variable>
 				<Value>
-					<ArrayCreation start='54' length='12'>
-						<ArrayElement start='55' length='1'>
-							<Key>
-							</Key>
-							<Value>
-								<Scalar start='55' length='1' type='int' value='0'/>
-							</Value>
-						</ArrayElement>
-						<ArrayElement start='58' length='1'>
-							<Key>
-							</Key>
-							<Value>
-								<Scalar start='58' length='1' type='int' value='1'/>
-							</Value>
-						</ArrayElement>
-							<PHPArrayDereferenceList start='-1' length='0'>
-								<DereferenceNode start='60' length='3'>
-									<Scalar start='61' length='1' type='int' value='0'/>
-								</DereferenceNode>
-								<DereferenceNode start='63' length='3'>
-									<Scalar start='64' length='1' type='int' value='0'/>
-								</DereferenceNode>
-							</PHPArrayDereferenceList>
-					</ArrayCreation>
+					<ArrayAccess start='54' length='12' type='array'>
+						<ArrayAccess start='54' length='9' type='array'>
+							<ArrayCreation start='54' length='6'>
+								<ArrayElement start='55' length='1'>
+									<Key>
+									</Key>
+									<Value>
+										<Scalar start='55' length='1' type='int' value='0'/>
+									</Value>
+								</ArrayElement>
+								<ArrayElement start='58' length='1'>
+									<Key>
+									</Key>
+									<Value>
+										<Scalar start='58' length='1' type='int' value='1'/>
+									</Value>
+								</ArrayElement>
+							</ArrayCreation>
+							<Index>
+								<Scalar start='61' length='1' type='int' value='0'/>
+							</Index>
+						</ArrayAccess>
+						<Index>
+							<Scalar start='64' length='1' type='int' value='0'/>
+						</Index>
+					</ArrayAccess>
 				</Value>
 			</Assignment>
 		</ExpressionStatement>

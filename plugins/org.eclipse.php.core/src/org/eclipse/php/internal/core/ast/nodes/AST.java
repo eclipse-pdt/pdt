@@ -2882,33 +2882,12 @@ public class AST {
 
 	/************************* php5.4 starts ***************************/
 
-	public ChainingInstanceCall newChainingInstanceCall(
-			PHPArrayDereferenceList arrayDereferenceList,
-			List<VariableBase> chainingMethodOrProperty) {
-		ChainingInstanceCall lfDeclaration = new ChainingInstanceCall(this,
-				arrayDereferenceList, chainingMethodOrProperty);
-		return lfDeclaration;
-	}
-
-	public DereferenceNode newDereferenceNode(Expression indexName) {
-		DereferenceNode lfDeclaration = new DereferenceNode(this);
-		lfDeclaration.setName(indexName);
-		return lfDeclaration;
-	}
-
 	public FullyQualifiedTraitMethodReference newFullyQualifiedTraitMethodReference(
 			NamespaceName className, Identifier functionName) {
 		FullyQualifiedTraitMethodReference lfDeclaration = new FullyQualifiedTraitMethodReference(
 				this);
 		lfDeclaration.setClassName(className);
 		lfDeclaration.setFunctionName(functionName);
-		return lfDeclaration;
-	}
-
-	public PHPArrayDereferenceList newPHPArrayDereferenceList(
-			List<DereferenceNode> dereferences) {
-		PHPArrayDereferenceList lfDeclaration = new PHPArrayDereferenceList(
-				this, dereferences);
 		return lfDeclaration;
 	}
 
