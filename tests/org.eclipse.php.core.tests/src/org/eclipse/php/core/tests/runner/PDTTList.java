@@ -401,7 +401,8 @@ public class PDTTList extends AbstractPDTTRunner {
 		@Override
 		protected Description describeChild(FrameworkMethod method) {
 			return Description.createTestDescription(getTestClass().getName(),
-					method.getName() + "[" + fName + "]", fName + fIndex);
+					method.getName() + '[' + fName + ']', getTestClass()
+							.getName() + '#' + fName + fIndex);
 		}
 	}
 

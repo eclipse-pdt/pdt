@@ -51,27 +51,27 @@ echo T::f()[0];
 			</Block>
 		</ClassDeclaration>
 		<EchoStatement start='65' length='15'>
-			<StaticMethodInvocation start='70' length='9'>
-				<ClassName>
-					<NamespaceName start='70' length='1' global='false' current='false'>
-						<Identifier start='70' length='1' name='T'/>
-					</NamespaceName>
-				</ClassName>
-				<FunctionInvocation start='73' length='6'>
-					<FunctionName start='73' length='1'>
-						<Variable start='73' length='1' isDollared='false'>
-							<Identifier start='73' length='1' name='f'/>
-						</Variable>
-					</FunctionName>
-					<Parameters>
-					</Parameters>
-						<PHPArrayDereferenceList start='-1' length='0'>
-							<DereferenceNode start='76' length='3'>
-								<Scalar start='77' length='1' type='int' value='0'/>
-							</DereferenceNode>
-						</PHPArrayDereferenceList>
-				</FunctionInvocation>
-			</StaticMethodInvocation>
+			<ArrayAccess start='70' length='9' type='array'>
+				<StaticMethodInvocation start='70' length='6'>
+					<ClassName>
+						<NamespaceName start='70' length='1' global='false' current='false'>
+							<Identifier start='70' length='1' name='T'/>
+						</NamespaceName>
+					</ClassName>
+					<FunctionInvocation start='73' length='3'>
+						<FunctionName start='73' length='1'>
+							<Variable start='73' length='1' isDollared='false'>
+								<Identifier start='73' length='1' name='f'/>
+							</Variable>
+						</FunctionName>
+						<Parameters>
+						</Parameters>
+					</FunctionInvocation>
+				</StaticMethodInvocation>
+				<Index>
+					<Scalar start='77' length='1' type='int' value='0'/>
+				</Index>
+			</ArrayAccess>
 		</EchoStatement>
 		<EmptyStatement start='81' length='2'/>
 	</Statements>

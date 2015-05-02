@@ -183,10 +183,6 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 			return super.visit(s);
 		}
 
-		public boolean visit(PHPArrayDereferenceList s) throws Exception {
-			return super.visit(s);
-		}
-
 		public Set<String> getNames() {
 			return names;
 		}

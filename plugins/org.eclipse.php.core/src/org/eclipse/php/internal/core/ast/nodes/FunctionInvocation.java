@@ -35,7 +35,6 @@ public class FunctionInvocation extends VariableBase {
 	private FunctionName functionName;
 	private final ASTNode.NodeList<Expression> parameters = new ASTNode.NodeList<Expression>(
 			PARAMETERS_PROPERTY);
-	private PHPArrayDereferenceList arrayDereferenceList;
 	/**
 	 * The "expressions" structural property of this node type.
 	 */
@@ -45,9 +44,6 @@ public class FunctionInvocation extends VariableBase {
 	public static final ChildListPropertyDescriptor PARAMETERS_PROPERTY = new ChildListPropertyDescriptor(
 			FunctionInvocation.class,
 			"parameters", Expression.class, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor ARRAY_DEREFERENCE_LIST = new ChildPropertyDescriptor(
-			FunctionInvocation.class,
-			"arrayDereferenceList", PHPArrayDereferenceList.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -60,13 +56,11 @@ public class FunctionInvocation extends VariableBase {
 				2);
 		propertyList.add(FUNCTION_PROPERTY);
 		propertyList.add(PARAMETERS_PROPERTY);
-		propertyList.add(ARRAY_DEREFERENCE_LIST);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
 	private FunctionInvocation(int start, int end, AST ast,
-			FunctionName functionName, Expression[] parameters,
-			PHPArrayDereferenceList arrayDereferenceList) {
+			FunctionName functionName, Expression[] parameters) {
 		super(start, end, ast);
 
 		if (functionName == null || parameters == null) {
@@ -77,7 +71,6 @@ public class FunctionInvocation extends VariableBase {
 		for (Expression expression : parameters) {
 			this.parameters.add(expression);
 		}
-		this.arrayDereferenceList = arrayDereferenceList;
 	}
 
 	public FunctionInvocation(AST ast) {
@@ -88,15 +81,7 @@ public class FunctionInvocation extends VariableBase {
 			FunctionName functionName, List parameters) {
 		this(start, end, ast, functionName, parameters == null ? null
 				: (Expression[]) parameters.toArray(new Expression[parameters
-						.size()]), null);
-	}
-
-	public FunctionInvocation(int start, int end, AST ast,
-			FunctionName functionName, List parameters,
-			PHPArrayDereferenceList arrayDereferenceList) {
-		this(start, end, ast, functionName, parameters == null ? null
-				: (Expression[]) parameters.toArray(new Expression[parameters
-						.size()]), arrayDereferenceList);
+						.size()]));
 	}
 
 	public void accept0(Visitor visitor) {
@@ -112,9 +97,6 @@ public class FunctionInvocation extends VariableBase {
 		for (ASTNode node : parameters) {
 			node.accept(visitor);
 		}
-		if (arrayDereferenceList != null) {
-			arrayDereferenceList.accept(visitor);
-		}
 	}
 
 	public void traverseTopDown(Visitor visitor) {
@@ -123,18 +105,12 @@ public class FunctionInvocation extends VariableBase {
 		for (ASTNode node : parameters) {
 			node.traverseTopDown(visitor);
 		}
-		if (arrayDereferenceList != null) {
-			arrayDereferenceList.traverseTopDown(visitor);
-		}
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
 		functionName.traverseBottomUp(visitor);
 		for (ASTNode node : parameters) {
 			node.traverseBottomUp(visitor);
-		}
-		if (arrayDereferenceList != null) {
-			arrayDereferenceList.traverseBottomUp(visitor);
 		}
 		accept(visitor);
 	}
@@ -151,10 +127,6 @@ public class FunctionInvocation extends VariableBase {
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(TAB).append(tab).append("</Parameters>\n"); //$NON-NLS-1$
-		if (arrayDereferenceList != null) {
-			arrayDereferenceList.toString(buffer, TAB + TAB + tab);
-			buffer.append("\n"); //$NON-NLS-1$
-		}
 		buffer.append(tab).append("</FunctionInvocation>"); //$NON-NLS-1$
 	}
 
@@ -194,15 +166,6 @@ public class FunctionInvocation extends VariableBase {
 		postReplaceChild(oldChild, functionname, FUNCTION_PROPERTY);
 	}
 
-	public PHPArrayDereferenceList getArrayDereferenceList() {
-		return arrayDereferenceList;
-	}
-
-	public void setArrayDereferenceList(
-			PHPArrayDereferenceList arrayDereferenceList) {
-		this.arrayDereferenceList = arrayDereferenceList;
-	}
-
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
 			boolean get, ASTNode child) {
 		if (property == FUNCTION_PROPERTY) {
@@ -210,13 +173,6 @@ public class FunctionInvocation extends VariableBase {
 				return getFunctionName();
 			} else {
 				setFunctionName((FunctionName) child);
-				return null;
-			}
-		} else if (property == ARRAY_DEREFERENCE_LIST) {
-			if (get) {
-				return getArrayDereferenceList();
-			} else {
-				setArrayDereferenceList((PHPArrayDereferenceList) child);
 				return null;
 			}
 		}
@@ -259,13 +215,8 @@ public class FunctionInvocation extends VariableBase {
 		final FunctionName function = ASTNode.copySubtree(target,
 				getFunctionName());
 		final List params = ASTNode.copySubtrees(target, parameters());
-		PHPArrayDereferenceList newArrayDereferenceList = null;
-		if (arrayDereferenceList != null) {
-			newArrayDereferenceList = ASTNode.copySubtree(target,
-					arrayDereferenceList);
-		}
 		final FunctionInvocation result = new FunctionInvocation(getStart(),
-				getEnd(), target, function, params, newArrayDereferenceList);
+				getEnd(), target, function, params);
 		return result;
 	}
 

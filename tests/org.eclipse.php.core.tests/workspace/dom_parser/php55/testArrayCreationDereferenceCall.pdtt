@@ -8,27 +8,27 @@ Test Array Creation
 		<ExpressionStatement start='6' length='20'>
 			<MethodInvocation start='6' length='19'>
 				<Dispatcher>
-					<ArrayCreation start='6' length='14'>
-						<ArrayElement start='12' length='1'>
-							<Key>
-							</Key>
-							<Value>
-								<Scalar start='12' length='1' type='int' value='1'/>
-							</Value>
-						</ArrayElement>
-						<ArrayElement start='15' length='1'>
-							<Key>
-							</Key>
-							<Value>
-								<Scalar start='15' length='1' type='int' value='2'/>
-							</Value>
-						</ArrayElement>
-							<PHPArrayDereferenceList start='-1' length='0'>
-								<DereferenceNode start='17' length='3'>
-									<Scalar start='18' length='1' type='int' value='0'/>
-								</DereferenceNode>
-							</PHPArrayDereferenceList>
-					</ArrayCreation>
+					<ArrayAccess start='6' length='14' type='array'>
+						<ArrayCreation start='6' length='11'>
+							<ArrayElement start='12' length='1'>
+								<Key>
+								</Key>
+								<Value>
+									<Scalar start='12' length='1' type='int' value='1'/>
+								</Value>
+							</ArrayElement>
+							<ArrayElement start='15' length='1'>
+								<Key>
+								</Key>
+								<Value>
+									<Scalar start='15' length='1' type='int' value='2'/>
+								</Value>
+							</ArrayElement>
+						</ArrayCreation>
+						<Index>
+							<Scalar start='18' length='1' type='int' value='0'/>
+						</Index>
+					</ArrayAccess>
 				</Dispatcher>
 				<Property>
 					<FunctionInvocation start='22' length='3'>
@@ -46,27 +46,27 @@ Test Array Creation
 		<ExpressionStatement start='27' length='15'>
 			<MethodInvocation start='27' length='14'>
 				<Dispatcher>
-					<ArrayCreation start='27' length='9'>
-						<ArrayElement start='28' length='1'>
-							<Key>
-							</Key>
-							<Value>
-								<Scalar start='28' length='1' type='int' value='1'/>
-							</Value>
-						</ArrayElement>
-						<ArrayElement start='31' length='1'>
-							<Key>
-							</Key>
-							<Value>
-								<Scalar start='31' length='1' type='int' value='2'/>
-							</Value>
-						</ArrayElement>
-							<PHPArrayDereferenceList start='-1' length='0'>
-								<DereferenceNode start='33' length='3'>
-									<Scalar start='34' length='1' type='int' value='0'/>
-								</DereferenceNode>
-							</PHPArrayDereferenceList>
-					</ArrayCreation>
+					<ArrayAccess start='27' length='9' type='array'>
+						<ArrayCreation start='27' length='6'>
+							<ArrayElement start='28' length='1'>
+								<Key>
+								</Key>
+								<Value>
+									<Scalar start='28' length='1' type='int' value='1'/>
+								</Value>
+							</ArrayElement>
+							<ArrayElement start='31' length='1'>
+								<Key>
+								</Key>
+								<Value>
+									<Scalar start='31' length='1' type='int' value='2'/>
+								</Value>
+							</ArrayElement>
+						</ArrayCreation>
+						<Index>
+							<Scalar start='34' length='1' type='int' value='0'/>
+						</Index>
+					</ArrayAccess>
 				</Dispatcher>
 				<Property>
 					<FunctionInvocation start='38' length='3'>

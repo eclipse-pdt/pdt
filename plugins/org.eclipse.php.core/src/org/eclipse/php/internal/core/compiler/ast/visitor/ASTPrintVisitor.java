@@ -1096,12 +1096,6 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
-	public boolean visit(DereferenceNode s) throws Exception {
-		Map<String, String> parameters = createInitialParameters(s);
-		xmlWriter.startTag("DereferenceNode", parameters); //$NON-NLS-1$
-		return true;
-	}
-
 	public boolean visit(FullyQualifiedTraitMethodReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("functionName", s.getFunctionName()); //$NON-NLS-1$
@@ -1111,12 +1105,6 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		xmlWriter.endTag("className"); //$NON-NLS-1$
 		xmlWriter.endTag("FullyQualifiedTraitMethodReference"); //$NON-NLS-1$
 		return false;
-	}
-
-	public boolean visit(PHPArrayDereferenceList s) throws Exception {
-		Map<String, String> parameters = createInitialParameters(s);
-		xmlWriter.startTag("PHPArrayDereferenceList", parameters); //$NON-NLS-1$
-		return true;
 	}
 
 	public boolean visit(TraitAlias s) throws Exception {
@@ -1170,19 +1158,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return false;
 	}
 
-	public boolean endvisit(DereferenceNode s) throws Exception {
-		xmlWriter.endTag("DereferenceNode"); //$NON-NLS-1$
-		return false;
-	}
-
 	public boolean endvisit(FullyQualifiedTraitMethodReference s)
 			throws Exception {
 		xmlWriter.endTag("FullyQualifiedTraitMethodReference"); //$NON-NLS-1$
-		return false;
-	}
-
-	public boolean endvisit(PHPArrayDereferenceList s) throws Exception {
-		xmlWriter.endTag("PHPArrayDereferenceList"); //$NON-NLS-1$
 		return false;
 	}
 

@@ -1312,9 +1312,9 @@ public abstract class ASTNode implements Visitable {
 	 *            the list of nodes to copy (element type: <code>ASTNode</code>)
 	 * @return the list of copied subtrees (element type: <code>ASTNode</code>)
 	 */
-	public static List copySubtrees(AST target, List nodes) {
+	public static List copySubtrees(AST target, List<? extends ASTNode> nodes) {
 		List result = new ArrayList(nodes.size());
-		for (Iterator it = nodes.iterator(); it.hasNext();) {
+		for (Iterator<? extends ASTNode> it = nodes.iterator(); it.hasNext();) {
 			ASTNode oldNode = (ASTNode) it.next();
 			ASTNode newNode = oldNode.clone(target);
 			result.add(newNode);
