@@ -14,6 +14,8 @@
  */
 package org.eclipse.php.internal.debug.core.preferences;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -40,6 +42,30 @@ public abstract class AbstractDebuggerConfigurationDialog extends
 	 */
 	public AbstractDebuggerConfigurationDialog(Shell parentShell) {
 		super(parentShell);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.dialogs.TitleAreaDialog#setMessage(java.lang.String,
+	 * int)
+	 */
+	@Override
+	public void setMessage(String newMessage, int newType) {
+		super.setMessage(newMessage, newType);
+		boolean enableOK = true;
+		switch (newType) {
+		case IMessageProvider.ERROR:
+			enableOK = false;
+			break;
+		default:
+			break;
+		}
+		Button okButton = getButton(IDialogConstants.OK_ID);
+		if (okButton != null) {
+			okButton.setEnabled(enableOK);
+		}
 	}
 
 	/*

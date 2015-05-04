@@ -17,8 +17,9 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
@@ -41,8 +42,6 @@ import org.osgi.framework.Bundle;
  */
 public class XDebugConfigurationDialog extends
 		AbstractDebuggerConfigurationDialog {
-
-	private ComboListener comboListener;
 
 	// general options
 	private Text portTextBox;
@@ -99,12 +98,12 @@ public class XDebugConfigurationDialog extends
 	}
 
 	protected Control createDialogArea(Composite parent) {
-		comboListener = new ComboListener();
 		parent = (Composite) super.createDialogArea(parent);
 		GridData ptGridData = (GridData) parent.getLayoutData();
 		ptGridData.widthHint = convertWidthInCharsToPixels(120);
 		// Set dialog title. image, etc.
-		getShell().setText(PHPDebugCoreMessages.XDebugConfigurationDialog_Dialog_title);
+		getShell().setText(
+				PHPDebugCoreMessages.XDebugConfigurationDialog_Dialog_title);
 		setTitle(PHPDebugCoreMessages.XDebugConfigurationDialog_mainTitle);
 		setMessage(PHPDebugCoreMessages.XDebugConfigurationDialog_Dialog_description);
 		titleImage = getDialogImage();
@@ -118,8 +117,10 @@ public class XDebugConfigurationDialog extends
 			}
 		});
 		// Create main groups
-		Composite[] subsections = createSubsections(parent,
-				PHPDebugCoreMessages.XDebugConfigurationDialog_Connection_settings_group, PHPDebugCoreMessages.XDebugConfigurationDialog_General_settings_group);
+		Composite[] subsections = createSubsections(
+				parent,
+				PHPDebugCoreMessages.XDebugConfigurationDialog_Connection_settings_group,
+				PHPDebugCoreMessages.XDebugConfigurationDialog_General_settings_group);
 		// Connection settings
 		Composite connectionSettingsGroup = subsections[0];
 		addLabelControl(connectionSettingsGroup,
@@ -158,12 +159,10 @@ public class XDebugConfigurationDialog extends
 				XDebugPreferenceMgr.XDEBUG_PREF_PROXY);
 		proxyTextBox = addATextField(proxyGroup,
 				XDebugPreferenceMgr.XDEBUG_PREF_PROXY, 100, 2);
-		createNoteComposite(
-				connectionSettingsGroup.getFont(),
+		createNoteComposite(connectionSettingsGroup.getFont(),
 				connectionSettingsGroup,
 				PHPDebugCoreMessages.XDebugConfigurationDialog_Note_label,
-				PHPDebugCoreMessages.XDebugConfigurationDialog_Note_text,
-				3);
+				PHPDebugCoreMessages.XDebugConfigurationDialog_Note_text, 3);
 		// General settings
 		Composite generalSettingsGroup = subsections[1];
 		acceptRemoteSession = addComboField(generalSettingsGroup,
@@ -215,7 +214,12 @@ public class XDebugConfigurationDialog extends
 			int horizontalIndent, boolean isTimeout) {
 		Text text = super
 				.addTextField(parent, key, textLimit, horizontalIndent);
-		text.addModifyListener(new NumFieldValidateListener(isTimeout));
+		text.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				validate();
+			}
+		});
 		return text;
 	}
 
@@ -241,7 +245,6 @@ public class XDebugConfigurationDialog extends
 		data.grabExcessHorizontalSpace = true;
 		comboBox.setLayoutData(data);
 		comboBox.setItems(options);
-		comboBox.addSelectionListener(comboListener);
 		return comboBox;
 	}
 
@@ -393,91 +396,38 @@ public class XDebugConfigurationDialog extends
 		return spin;
 	}
 
-	class ComboListener implements SelectionListener {
-
-		public void widgetDefaultSelected(SelectionEvent e) {
-			// TODO Auto-generated method stub
-
-			Object source = e.getSource();
-			if (source == acceptRemoteSession) {
-
-			} else if (source == captureStdout) {
-
-			} else if (source == captureStderr) {
-
+	protected void validate() {
+		// Reset state
+		setMessage(PHPDebugCoreMessages.XDebugConfigurationDialog_Dialog_description);
+		String debugPort = portTextBox.getText();
+		Integer portNumber = null;
+		try {
+			portNumber = Integer.valueOf(debugPort);
+			int i = portNumber.intValue();
+			if (i < 1 || i > 65535) {
+				setMessage(
+						PHPDebugCoreMessages.DebugConfigurationDialog_invalidPortRange,
+						IMessageProvider.ERROR);
+				return;
 			}
-
+		} catch (NumberFormatException ex) {
+			setMessage(
+					PHPDebugCoreMessages.DebugConfigurationDialog_invalidPort,
+					IMessageProvider.ERROR);
+			return;
+		} catch (Exception e) {
+			setMessage(
+					PHPDebugCoreMessages.DebugConfigurationDialog_invalidPort,
+					IMessageProvider.ERROR);
+			return;
 		}
-
-		public void widgetSelected(SelectionEvent e) {
-			// TODO Auto-generated method stub
-			Object source = e.getSource();
-			if (source == acceptRemoteSession) {
-
-			} else if (source == captureStdout) {
-
-			} else if (source == captureStderr) {
-
-			}
-
-		}
-
-	}
-
-	/**
-	 * numeric field validator class
-	 * 
-	 */
-	class NumFieldValidateListener implements ModifyListener {
-
-		private boolean timeoutField;
-
-		NumFieldValidateListener(boolean isTimeout) {
-			timeoutField = isTimeout;
-		}
-
-		public void modifyText(ModifyEvent e) {
-			String errorMessage = null;
-			boolean valid = true;
-			String value = ((Text) e.widget).getText();
-			try {
-				Integer iValue = Integer.valueOf(value);
-				int i = iValue.intValue();
-				if (!timeoutField) {
-					if (i <= 0 || i > 65535) {
-						valid = false;
-						errorMessage = PHPDebugCoreMessages.XDebugConfigurationDialog_invalidPortRange;
-					}
-					if (valid) {
-						if (!PHPLaunchUtilities.isPortAvailable(iValue)
-								&& !PHPLaunchUtilities
-										.isDebugDaemonActive(
-												iValue,
-												XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID)) {
-							valid = false;
-							errorMessage = PHPDebugCoreMessages.DebugConfigurationDialog_PortInUse;
-						}
-					}
-				} else {
-					if (i < 10 || i > 100000) {
-						valid = false;
-						errorMessage = PHPDebugCoreMessages.XDebugConfigurationDialog_invalidTimeout;
-					}
-				}
-			} catch (NumberFormatException e1) {
-				valid = false;
-				if (!timeoutField) {
-					errorMessage = PHPDebugCoreMessages.DebuggerConfigurationDialog_invalidPort;
-				} else {
-					errorMessage = PHPDebugCoreMessages.XDebugConfigurationDialog_invalidTimeoutValue;
-				}
-			}
-
-			setErrorMessage(errorMessage);
-			Button bt = getButton(IDialogConstants.OK_ID);
-			if (bt != null) {
-				bt.setEnabled(valid);
-			}
+		// Check warnings
+		if (!PHPLaunchUtilities.isPortAvailable(portNumber)
+				&& !PHPLaunchUtilities.isDebugDaemonActive(portNumber,
+						XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID)) {
+			setMessage(NLS.bind(
+					PHPDebugCoreMessages.DebugConfigurationDialog_PortInUse,
+					debugPort), IMessageProvider.WARNING);
 		}
 	}
 

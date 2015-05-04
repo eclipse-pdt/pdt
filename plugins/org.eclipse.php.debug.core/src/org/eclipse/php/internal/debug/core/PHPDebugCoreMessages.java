@@ -85,8 +85,11 @@ public class PHPDebugCoreMessages extends NLS {
 
 	public static String PHPWebPageLaunchDelegate_serverNotFound;
 
+	public static String DebugConfigurationDialog_invalidPortRange;
+	public static String DebugConfigurationDialog_invalidPort;
+	public static String DebugConfigurationDialog_PortInUse;
+	
 	public static String DebuggerConfigurationDialog_debugPort;
-	public static String DebuggerConfigurationDialog_invalidPort;
 	public static String DebuggerConfigurationDialog_invalidPortRange;
 
 	public static String ServerDebugHandler_0;
@@ -135,14 +138,12 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebugConfigurationDialog_maxArrayDepth;
 	public static String XDebugConfigurationDialog_maxChildren;
 	public static String XDebugConfigurationDialog_showSuperGlobals;
-	public static String XDebugConfigurationDialog_invalidPortRange;
 	public static String XDebugConfigurationDialog_useMultisession;
 	public static String XDebugConfigurationDialog_remoteSession;
 	public static String XDebugConfigurationDialog_remoteSessionOption_off;
 	public static String XDebugConfigurationDialog_remoteSessionOption_localhost;
 	public static String XDebugConfigurationDialog_remoteSessionOption_any;
 	public static String XDebugConfigurationDialog_remoteSessionOption_prompt;
-	public static String DebugConfigurationDialog_PortInUse;
 
 	// capture output
 	public static String XDebugConfigurationDialog_captureStdout;
