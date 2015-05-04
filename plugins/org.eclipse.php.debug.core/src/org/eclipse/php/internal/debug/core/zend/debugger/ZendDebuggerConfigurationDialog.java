@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -138,7 +138,12 @@ public class ZendDebuggerConfigurationDialog extends
 				PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, 6, 2);
 		gridData = (GridData) fDebugTextBox.getLayoutData();
 		gridData.widthHint = convertWidthInCharsToPixels(80);
-		fDebugTextBox.addModifyListener(new DebugPortValidateListener());
+		fDebugTextBox.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				validate();
+			}
+		});
 		addLabelControl(
 				connectionSettingsGroup,
 				PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_debug_response_timeout,
@@ -147,8 +152,12 @@ public class ZendDebuggerConfigurationDialog extends
 				PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT, 0, 2);
 		gridData = (GridData) fDebugResponseTimeout.getLayoutData();
 		gridData.widthHint = convertWidthInCharsToPixels(80);
-		fDebugResponseTimeout
-				.addModifyListener(new DebugResponseTimeoutListener());
+		fDebugResponseTimeout.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				validate();
+			}
+		});
 		createNoteComposite(
 				connectionSettingsGroup.getFont(),
 				connectionSettingsGroup,
@@ -228,69 +237,58 @@ public class ZendDebuggerConfigurationDialog extends
 		super.okPressed();
 	}
 
-	public class DebugPortValidateListener implements ModifyListener {
-
-		public void modifyText(ModifyEvent e) {
-			String errorMessage = null;
-			boolean valid = true;
-			String value = ((Text) e.widget).getText();
-			try {
-				Integer iValue = Integer.valueOf(value);
-				int i = iValue.intValue();
-				if (i < 0 || i > 65535) {
-					valid = false;
-					errorMessage = PHPDebugCoreMessages.DebuggerConfigurationDialog_invalidPort;
-				}
-				if (valid) {
-					if (!PHPLaunchUtilities.isPortAvailable(iValue)
-							&& !PHPLaunchUtilities
-									.isDebugDaemonActive(
-											iValue,
-											DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
-						valid = false;
-						errorMessage = PHPDebugCoreMessages.DebugConfigurationDialog_PortInUse;
-					}
-				}
-			} catch (NumberFormatException e1) {
-				valid = false;
-				errorMessage = PHPDebugCoreMessages.DebuggerConfigurationDialog_invalidPort;
-			} catch (Exception e2) {
-				valid = false;
-				errorMessage = PHPDebugCoreMessages.DebuggerConfigurationDialog_invalidPort;
+	protected void validate() {
+		// Reset state
+		setMessage(PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_Dialog_description);
+		// Check errors
+		String debugPort = fDebugTextBox.getText();
+		Integer portNumber = null;
+		try {
+			portNumber = Integer.valueOf(debugPort);
+			int i = portNumber.intValue();
+			if (i < 0 || i > 65535) {
+				setMessage(
+						PHPDebugCoreMessages.DebugConfigurationDialog_invalidPortRange,
+						IMessageProvider.ERROR);
+				return;
 			}
-			setErrorMessage(errorMessage);
-			Button bt = getButton(IDialogConstants.OK_ID);
-			if (bt != null) {
-				bt.setEnabled(valid);
+		} catch (NumberFormatException ex) {
+			setMessage(
+					PHPDebugCoreMessages.DebugConfigurationDialog_invalidPort,
+					IMessageProvider.ERROR);
+			return;
+		} catch (Exception e) {
+			setMessage(
+					PHPDebugCoreMessages.DebugConfigurationDialog_invalidPort,
+					IMessageProvider.ERROR);
+			return;
+		}
+		String responseTime = fDebugResponseTimeout.getText();
+		Integer responseTimeout = null;
+		try {
+			responseTimeout = Integer.valueOf(responseTime);
+			int i = responseTimeout.intValue();
+			if (i < 5000) {
+				setMessage(
+						NLS.bind(
+								PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_invalid_response_time,
+								5000), IMessageProvider.ERROR);
+				return;
 			}
+		} catch (Exception exc) {
+			setMessage(
+					PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_invalid_response_time_exc,
+					IMessageProvider.ERROR);
+			return;
+		}
+		// Check warnings
+		if (!PHPLaunchUtilities.isPortAvailable(portNumber)
+				&& !PHPLaunchUtilities.isDebugDaemonActive(portNumber,
+						DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
+			setMessage(NLS.bind(
+					PHPDebugCoreMessages.DebugConfigurationDialog_PortInUse,
+					debugPort), IMessageProvider.WARNING);
 		}
 	}
 
-	public class DebugResponseTimeoutListener implements ModifyListener {
-
-		public void modifyText(ModifyEvent e) {
-			String errorMessage = null;
-			boolean valid = true;
-			String value = ((Text) e.widget).getText();
-			try {
-				Integer iValue = Integer.valueOf(value);
-				int i = iValue.intValue();
-				if (i < 5000) {
-					valid = false;
-					errorMessage = NLS
-							.bind(PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_invalid_response_time,
-									5000);
-				}
-			} catch (Exception exc) {
-				valid = false;
-				errorMessage = PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_invalid_response_time_exc;
-			}
-
-			setErrorMessage(errorMessage);
-			Button bt = getButton(IDialogConstants.OK_ID);
-			if (bt != null) {
-				bt.setEnabled(valid);
-			}
-		}
-	}
 }
