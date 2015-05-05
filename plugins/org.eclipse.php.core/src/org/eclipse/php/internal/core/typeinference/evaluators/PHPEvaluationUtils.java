@@ -139,7 +139,7 @@ public class PHPEvaluationUtils {
 			PHPDocTag docTag) {
 		String[] split = docTag.getValue().trim().split("\\s+"); //$NON-NLS-1$
 		if (split.length < 2) {
-			return null;
+			return Collections.emptyList();
 		}
 		if (split[1].equals(name)) {
 			if (Constants.STATIC.equals(split[0])) {
