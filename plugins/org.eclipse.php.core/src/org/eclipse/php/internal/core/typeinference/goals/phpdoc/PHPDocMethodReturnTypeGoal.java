@@ -23,6 +23,11 @@ public class PHPDocMethodReturnTypeGoal extends AbstractMethodReturnTypeGoal {
 		super(context, evaluatedType, methodName);
 	}
 
+	public PHPDocMethodReturnTypeGoal(IContext context,
+			IEvaluatedType evaluatedType, String methodName, String[] argNames) {
+		super(context, evaluatedType, methodName, argNames);
+	}
+
 	public PHPDocMethodReturnTypeGoal(IContext context, IType[] types,
 			String methodName) {
 		super(context, types, methodName);
