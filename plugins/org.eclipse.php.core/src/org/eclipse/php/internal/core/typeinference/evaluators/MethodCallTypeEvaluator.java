@@ -78,7 +78,8 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 		if (state == STATE_GOT_RECEIVER) {
 			state = STATE_WAITING_METHOD_PHPDOC;
 			return new PHPDocMethodReturnTypeGoal(typedGoal.getContext(),
-					receiverType, expression.getName());
+					receiverType, expression.getName(),
+					getFunctionCallArgs(expression));
 		}
 
 		// PHPDoc logic is done, start evaluating 'return' statements here:
@@ -94,22 +95,9 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 				}
 			}
 			state = STATE_WAITING_METHOD;
-			CallArgumentsList args = expression.getArgs();
-			String[] argNames = null;
-			if (args != null && args.getChilds() != null) {
-				List<ASTNode> childs = args.getChilds();
-				int i = 0;
-				argNames = new String[childs.size()];
-				for (ASTNode o : childs) {
-					if (o instanceof Scalar) {
-						Scalar arg = (Scalar) o;
-						argNames[i] = ASTUtils.stripQuotes(arg.getValue());
-					}
-					i++;
-				}
-			}
 			return new MethodElementReturnTypeGoal(typedGoal.getContext(),
-					receiverType, expression.getName(), argNames);
+					receiverType, expression.getName(),
+					getFunctionCallArgs(expression));
 		}
 
 		if (state == STATE_WAITING_METHOD) {
@@ -126,6 +114,24 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 			}
 		}
 		return null;
+	}
+
+	private String[] getFunctionCallArgs(CallExpression callExpression) {
+		CallArgumentsList args = callExpression.getArgs();
+		String[] argNames = null;
+		if (args != null && args.getChilds() != null) {
+			List<ASTNode> childs = args.getChilds();
+			int i = 0;
+			argNames = new String[childs.size()];
+			for (ASTNode o : childs) {
+				if (o instanceof Scalar) {
+					Scalar arg = (Scalar) o;
+					argNames[i] = ASTUtils.stripQuotes(arg.getValue());
+				}
+				i++;
+			}
+		}
+		return argNames;
 	}
 
 	public Object produceResult() {

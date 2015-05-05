@@ -281,7 +281,7 @@ public class CodeAssistUtils {
 		boolean usePhpDoc = (mask & USE_PHPDOC) != 0;
 		if (usePhpDoc) {
 			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(
-					context, types, method, offset);
+					context, types, method, argNames, offset);
 			evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal);
 
 			modelElements = PHPTypeInferenceUtils.getModelElements(
@@ -536,7 +536,7 @@ public class CodeAssistUtils {
 		boolean usePhpDoc = (mask & USE_PHPDOC) != 0;
 		if (usePhpDoc) {
 			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(
-					context, types, method);
+					context, types, method, argNames);
 			evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal);
 			List<IEvaluatedType> possibleTypes = null;
 			if (!PHPTypeInferenceUtils.isSimple(evaluatedType)) {
