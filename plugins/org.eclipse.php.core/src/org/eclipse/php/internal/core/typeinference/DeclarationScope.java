@@ -13,6 +13,7 @@
 package org.eclipse.php.internal.core.typeinference;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.statements.Statement;
@@ -212,11 +213,10 @@ public class DeclarationScope {
 	public String toString() {
 		StringBuilder buf = new StringBuilder("Variable Declarations (") //$NON-NLS-1$
 				.append(context).append("): \n\n"); //$NON-NLS-1$
-		Iterator<String> i = decls.keySet().iterator();
-		while (i.hasNext()) {
-			String varName = i.next();
+		for (Entry<String, LinkedList<Declaration>> entry : decls.entrySet()) {
+			String varName = entry.getKey();
 			buf.append(varName).append(" => { \n\n"); //$NON-NLS-1$
-			LinkedList<Declaration> varDecls = decls.get(varName);
+			LinkedList<Declaration> varDecls = entry.getValue();
 			if (varDecls != null) {
 				for (Declaration declNode : varDecls) {
 					buf.append(declNode.toString()).append(", \n\n"); //$NON-NLS-1$

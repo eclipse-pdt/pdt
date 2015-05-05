@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.ui.preferences;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -125,18 +126,16 @@ public class PHPEditorHoverConfigurationBlock implements
 
 	private StatusInfo fStatus;
 
-	private Map fCheckBoxes = new HashMap();
+	private Map<Button, String> fCheckBoxes = new HashMap<Button, String>();
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
-			fStore.setValue((String) fCheckBoxes.get(button),
-					button.getSelection());
+			fStore.setValue(fCheckBoxes.get(button), button.getSelection());
 		}
 
 		public void widgetSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
-			fStore.setValue((String) fCheckBoxes.get(button),
-					button.getSelection());
+			fStore.setValue(fCheckBoxes.get(button), button.getSelection());
 		}
 	};
 
@@ -391,11 +390,8 @@ public class PHPEditorHoverConfigurationBlock implements
 
 		fModifierEditor.setEnabled(false);
 
-		Iterator e = fCheckBoxes.keySet().iterator();
-		while (e.hasNext()) {
-			Button b = (Button) e.next();
-			String key = (String) fCheckBoxes.get(b);
-			b.setSelection(fStore.getBoolean(key));
+		for (Entry<Button, String> entry : fCheckBoxes.entrySet()) {
+			entry.getKey().setSelection(fStore.getBoolean(entry.getValue()));
 		}
 
 		for (int i = 0; i < fHoverConfigs.length; i++)

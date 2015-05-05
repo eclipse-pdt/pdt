@@ -14,7 +14,7 @@ package org.eclipse.php.internal.ui.util;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map.Entry;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -43,7 +43,7 @@ public class PHPPluginImages {
 
 	// The plug-in registry
 	private static ImageRegistry fgImageRegistry = null;
-	private static HashMap fgAvoidSWTErrorMap = null;
+	private static HashMap<String, ImageDescriptor> fgAvoidSWTErrorMap = null;
 
 	private static final String T_OBJ = "obj16"; //$NON-NLS-1$
 	private static final String T_OVR = "ovr16"; //$NON-NLS-1$
@@ -326,11 +326,9 @@ public class PHPPluginImages {
 	static ImageRegistry getImageRegistry() {
 		if (fgImageRegistry == null) {
 			fgImageRegistry = new ImageRegistry();
-			for (Iterator iter = fgAvoidSWTErrorMap.keySet().iterator(); iter
-					.hasNext();) {
-				String key = (String) iter.next();
-				fgImageRegistry.put(key,
-						(ImageDescriptor) fgAvoidSWTErrorMap.get(key));
+			for (Entry<String, ImageDescriptor> entry : fgAvoidSWTErrorMap
+					.entrySet()) {
+				fgImageRegistry.put(entry.getKey(), entry.getValue());
 			}
 			fgAvoidSWTErrorMap = null;
 		}
@@ -377,28 +375,9 @@ public class PHPPluginImages {
 				result = new PHPElementImageDescriptor(result, flags, size);
 			}
 			if (fgAvoidSWTErrorMap == null) {
-				fgAvoidSWTErrorMap = new HashMap();
+				fgAvoidSWTErrorMap = new HashMap<String, ImageDescriptor>();
 			}
 			fgAvoidSWTErrorMap.put(name, result);
-			if (fgImageRegistry != null) {
-				PHPUiPlugin.logErrorMessage("Image registry already defined"); //$NON-NLS-1$
-			}
-			return result;
-		} catch (MalformedURLException e) {
-			return ImageDescriptor.getMissingImageDescriptor();
-		}
-	}
-
-	private static ImageDescriptor createManaged(String prefix, String name,
-			String key) {
-		try {
-			ImageDescriptor result = ImageDescriptor
-					.createFromURL(makeIconFileURL(prefix,
-							name.substring(NAME_PREFIX_LENGTH)));
-			if (fgAvoidSWTErrorMap == null) {
-				fgAvoidSWTErrorMap = new HashMap();
-			}
-			fgAvoidSWTErrorMap.put(key, result);
 			if (fgImageRegistry != null) {
 				PHPUiPlugin.logErrorMessage("Image registry already defined"); //$NON-NLS-1$
 			}

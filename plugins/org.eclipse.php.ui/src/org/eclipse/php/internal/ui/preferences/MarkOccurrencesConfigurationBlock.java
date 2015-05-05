@@ -13,8 +13,8 @@ package org.eclipse.php.internal.ui.preferences;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -36,15 +36,14 @@ public class MarkOccurrencesConfigurationBlock implements
 
 	private OverlayPreferenceStore fStore;
 
-	private Map fCheckBoxes = new HashMap();
+	private Map<Button, String> fCheckBoxes = new HashMap<Button, String>();
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
 		public void widgetSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
-			fStore.setValue((String) fCheckBoxes.get(button), button
-					.getSelection());
+			fStore.setValue(fCheckBoxes.get(button), button.getSelection());
 		}
 	};
 
@@ -54,7 +53,7 @@ public class MarkOccurrencesConfigurationBlock implements
 	 * @see #createDependency(Button, String, Control)
 	 * @since 3.0
 	 */
-	private ArrayList fMasterSlaveListeners = new ArrayList();
+	private ArrayList<SelectionListener> fMasterSlaveListeners = new ArrayList<SelectionListener>();
 
 	private StatusInfo fStatus;
 
@@ -269,17 +268,12 @@ public class MarkOccurrencesConfigurationBlock implements
 
 	void initializeFields() {
 
-		Iterator iter = fCheckBoxes.keySet().iterator();
-		while (iter.hasNext()) {
-			Button b = (Button) iter.next();
-			String key = (String) fCheckBoxes.get(b);
-			b.setSelection(fStore.getBoolean(key));
+		for (Entry<Button, String> entry : fCheckBoxes.entrySet()) {
+			entry.getKey().setSelection(fStore.getBoolean(entry.getValue()));
 		}
 
 		// Update slaves
-		iter = fMasterSlaveListeners.iterator();
-		while (iter.hasNext()) {
-			SelectionListener listener = (SelectionListener) iter.next();
+		for (SelectionListener listener : fMasterSlaveListeners) {
 			listener.widgetSelected(null);
 		}
 

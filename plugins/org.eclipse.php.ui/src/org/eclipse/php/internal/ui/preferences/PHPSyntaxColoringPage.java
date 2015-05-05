@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.List;
 
 import org.eclipse.core.filesystem.EFS;
@@ -1053,14 +1054,13 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 			initHighlightingPositions();
 		}
 
-		for (Iterator iterator = highlightingPositionMap.keySet().iterator(); iterator
-				.hasNext();) {
-			String type = (String) iterator.next();
-			Position[] positions = highlightingPositionMap.get(type);
+		for (Entry<String, Position[]> entry : highlightingPositionMap
+				.entrySet()) {
+			Position[] positions = entry.getValue();
 			for (int i = 0; i < positions.length; i++) {
 				if (offset >= positions[i].offset
 						&& offset < positions[i].offset + positions[i].length) {
-					return type;
+					return entry.getKey();
 				}
 			}
 		}
