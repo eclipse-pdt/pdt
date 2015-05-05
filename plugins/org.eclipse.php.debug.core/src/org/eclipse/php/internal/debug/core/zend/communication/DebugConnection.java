@@ -107,6 +107,7 @@ public class DebugConnection {
 						// First debug message has arrived (SESSION STARTED)
 						if (incomingMessage instanceof DebugSessionStartedNotification) {
 							DebugSessionStartedNotification sessionStartedMessage = (DebugSessionStartedNotification) incomingMessage;
+							setResponseTimeout(sessionStartedMessage);
 							isDebugConnectionTest = sessionStartedMessage
 									.getQuery().indexOf("testConnection=true") != -1; //$NON-NLS-1$
 							// This is a connection test...
@@ -134,8 +135,7 @@ public class DebugConnection {
 							}
 							// START DEBUG (create debug target)
 							else {
-								hookDebugSession((DebugSessionStartedNotification) incomingMessage);
-								setResponseTimeout((DebugSessionStartedNotification) incomingMessage);
+								hookDebugSession(sessionStartedMessage);
 							}
 						}
 						// Creation of debug session has succeeded
@@ -193,6 +193,7 @@ public class DebugConnection {
 					}
 				} catch (Exception e) {
 					PHPDebugPlugin.log(e);
+					shutdown();
 				}
 			}
 		}
@@ -338,6 +339,7 @@ public class DebugConnection {
 					continue;
 				} catch (Exception e) {
 					PHPDebugPlugin.log(e);
+					shutdown();
 				}
 			}
 		}
