@@ -172,7 +172,7 @@ public static final String SETTING_UP_REMOTE_DEBUGGING = PREFIX + "setting_up_re
 
 public static final String SETTING_YOUR_ZEND_STUDIO_FOR_ECLIPSE_TO_BE_AN_ALLOWED_HOST = PREFIX + "setting_your_zend_studio_for_eclipse_to_be_an_allowed_host"; //$NON-NLS-1$ 024-tasks/152-debugging/048-troubleshooting_remote_debugging/008-setting_your_zend_studio_for_eclipse_to_be_an_allowed_host.md
 
-public static final String ENSURING_THE_PLACEMENT_OF_DUMMY_PHP = PREFIX + "ensuring_the_placement_of_dummy_php"; //$NON-NLS-1$ 024-tasks/152-debugging/048-troubleshooting_remote_debugging/016-ensuring_the_placement_of_dummy.php.md
+public static final String ENSURING_THE_PLACEMENT_OF_DUMMY_PHP = PREFIX + "ensuring_the_placement_of_dummy_php"; //$NON-NLS-1$ 024-tasks/152-debugging/048-troubleshooting_remote_debugging/016-ensuring_the_placement_of_dummy_php.md
 
 public static final String PHP_LIBRARIES_PREFERENCES = PREFIX + "php_libraries_preferences"; //$NON-NLS-1$ 024-tasks/160-php_libraries_preferences/000-index.md
 

@@ -20,7 +20,7 @@ To set up communication between PDT and the server on which you are debugging:
  2. Ensure the machine on which your PDT is installed is an allowed host for your debugger.   See [Setting your PDT to be an Allowed Host](008-setting_your_zend_studio_for_eclipse_to_be_an_allowed_host.md) for more information.
  3. In PDT , configure your server according to the instructions under [Adding Servers](../../../032-reference/032-preferences/080-php_servers.md#Adding_servers) in the [PHP Servers Preferences](../../../032-reference/032-preferences/080-php_servers.md).
  4. Ensure the correct settings are configured in your [Debug Preferences](../../../032-reference/032-preferences/032-debug/000-index.md) and [Installed Debuggers Preferences](../../../032-reference/032-preferences/032-debug/008-installed_debuggers.md) pages.
- 5. [Ensure you have a dummy.php file](016-ensuring_the_placement_of_dummy.php.md) in your remote server's document root.
+ 5. [Ensure you have a dummy.php file](016-ensuring_the_placement_of_dummy_php.md) in your remote server's document root.
 
 <!--ref-end-->
 

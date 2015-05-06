@@ -2,9 +2,9 @@
 
 <!--context:ensuring_the_placement_of_dummy_php-->
 
-In order for the remote server's debugger to communicate with PDT , a file called dummy.php must be located in your server's document root.
+In order for the remote server's debugger to communicate with PDT, a file called dummy.php must be located in your server's document root.
 
-With the default  installation , a dummy.php file will have been automatically placed in your server's document root folder.
+With the default  installation, a [dummy.php](resources/dummy.php) file will have been automatically placed in your server's document root folder.
 
 If you installed the standalone Zend Debugger, you must copy the dummy.php file from the Zend Debugger archive to your server's document root.
 
