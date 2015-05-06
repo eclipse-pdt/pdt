@@ -3085,35 +3085,6 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * .php.internal.core.ast.nodes.FormalParameter)
 	 */
 	public boolean visit(FormalParameter formalParameter) {
-		try {
-			if (formalParameter.getAST().apiLevel() == PHPVersion.PHP4
-					&& isChanged(formalParameter,
-							FormalParameter.IS_MANDATORY_PROPERTY)) {
-				if (formalParameter.getAST().apiLevel() == PHPVersion.PHP5) {
-					throw new CoreException(
-							new Status(IStatus.ERROR, PHPCorePlugin.ID,
-									"Could not set a FormalParameter 'isMandatory' property for PHP5 AST")); //$NON-NLS-1$
-				}
-				// Rewrite the isMandatory field
-				RewriteEvent event = getEvent(formalParameter,
-						FormalParameter.IS_MANDATORY_PROPERTY);
-				if (event != null
-						&& event.getChangeKind() == RewriteEvent.REPLACED) {
-					TextEditGroup editGroup = getEditGroup(event);
-					boolean isMandatory = (Boolean) event.getNewValue();
-					if (isMandatory) {
-						// remove the const from the start of the parameter (6
-						// characters including the space)
-						doTextRemove(formalParameter.getStart(), 6, editGroup);
-					} else {
-						doTextInsert(formalParameter.getStart(), "const ", //$NON-NLS-1$
-								editGroup);
-					}
-				}
-			}
-		} catch (Exception e) {
-			handleException(e);
-		}
 		rewriteFormalParameterVariadic(formalParameter);
 
 		// Rewrite the parameter type

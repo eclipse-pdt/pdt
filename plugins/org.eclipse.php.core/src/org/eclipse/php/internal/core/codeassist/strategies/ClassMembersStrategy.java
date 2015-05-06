@@ -134,321 +134,303 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 */
 	protected boolean isFiltered(IMember member, IType type,
 			ClassMemberContext context) throws ModelException {
+		/* check 0 */
+		int flags = member.getFlags();
+		if (PHPFlags.isConstant(member.getFlags())) {
+			if (context.getTriggerType() == Trigger.CLASS) {
+				return false; // 17:1-4
+			} else if (context.getTriggerType() == Trigger.OBJECT) {
+				return true;// 17:5-7
+			}
+			/* check 1 */
+		} else if (PHPFlags.isStatic(flags)) {
+			/* check 2 */
+			if (member instanceof IField) {
+				/* check 3 */
+				if (context.getTriggerType() == Trigger.CLASS
+						&& !isFunctionParameterContext) {
+					/* check 5 */
+					if (PHPFlags.isPrivate(flags)
+							&& (member.getDeclaringType().equals(type) || isTraitMember(
+									context.getPhpVersion(), type, member))) {
+						if (isParent(context)) { // is Parent
+							return true; // 1:1
+						} else if (isSelfKeyword(context)) {
+							return false;// 1:2
+						} else if (isStaticAccessFromInsideClass(context)) {
+							return false;// 1:3
+						} else if (isStaticAccessFromOutsideClass(context)) {
+							return true;// 1:4
+						}
+					} else if (PHPFlags.isProtected(flags)) {
+						if (isParent(context)) { // is Parent
+							return false; // 2:1
+						} else if (isSelfKeyword(context)) {
+							return false;// 2:2
+						} else if (isStaticAccessFromInsideClass(context)) {
+							return false;// 2:3
+						} else if (isStaticAccessFromOutsideClass(context)) {
+							return true;// 2:4
+						}
+					} else if (PHPFlags.isPublic(flags)) {
+						return false;
+					}
 
-		if (context.getPhpVersion() == PHPVersion.PHP4) {
-			if (!isVisible(member, context)) {
-				return true;
-			}
-			int flags = member.getFlags();
-			if (!showNonStaticMembers(context) && !PHPFlags.isStatic(flags)
-					&& !PHPFlags.isConstant(flags)) {
-				return true;
-			}
-			if (!showStaticMembers(context)
-					&& (PHPFlags.isStatic(flags) || PHPFlags.isConstant(flags))) {
-				return true;
-			}
-			return false;
-
-		} else if (context.getPhpVersion().isGreaterThan(PHPVersion.PHP4)) {
-			/* check 0 */
-			int flags = member.getFlags();
-			if (PHPFlags.isConstant(member.getFlags())) {
-				if (context.getTriggerType() == Trigger.CLASS) {
-					return false; // 17:1-4
 				} else if (context.getTriggerType() == Trigger.OBJECT) {
-					return true;// 17:5-7
+					if (PHPFlags.isPrivate(flags)
+							&& (member.getDeclaringType().equals(type) || isTraitMember(
+									context.getPhpVersion(), type, member))) {
+						if (isThisKeyWord(context) && showStrictOptions()) {
+							return false; // 1:5
+						} else if (isIndirectThis(context)) {
+							return true;// 1:6
+						} else if (isSimpleArrow(context)) {
+							return true;// 1:7
+						}
+					} else if (PHPFlags.isProtected(flags)) {
+						if (isThisKeyWord(context) && showStrictOptions()) {
+							return false; // 2:5
+						} else if (isIndirectThis(context)
+								&& isDirectThis(context)) {
+							return true;// 2:6
+						} else if (isSimpleArrow(context)) {
+							return true;// 2:7
+						}
+					} else if (PHPFlags.isPublic(flags)) {
+						if (isThisKeyWord(context) && showStrictOptions()) {
+							return false; // 3:5
+						} else if (isIndirectThis(context)
+								&& showStrictOptions()) {
+							return false;// 3:6
+						} else if (isSimpleArrow(context)
+								&& showStrictOptions()) {
+							return false;// 3:7
+						}
+					}
 				}
-				/* check 1 */
-			} else if (PHPFlags.isStatic(flags)) {
-				/* check 2 */
-				if (member instanceof IField) {
-					/* check 3 */
-					if (context.getTriggerType() == Trigger.CLASS
-							&& !isFunctionParameterContext) {
-						/* check 5 */
-						if (PHPFlags.isPrivate(flags)
-								&& (member.getDeclaringType().equals(type) || isTraitMember(
-										context.getPhpVersion(), type, member))) {
-							if (isParent(context)) { // is Parent
-								return true; // 1:1
-							} else if (isSelfKeyword(context)) {
-								return false;// 1:2
-							} else if (isStaticAccessFromInsideClass(context)) {
-								return false;// 1:3
-							} else if (isStaticAccessFromOutsideClass(context)) {
-								return true;// 1:4
-							}
-						} else if (PHPFlags.isProtected(flags)) {
-							if (isParent(context)) { // is Parent
-								return false; // 2:1
-							} else if (isSelfKeyword(context)) {
-								return false;// 2:2
-							} else if (isStaticAccessFromInsideClass(context)) {
-								return false;// 2:3
-							} else if (isStaticAccessFromOutsideClass(context)) {
-								return true;// 2:4
-							}
-						} else if (PHPFlags.isPublic(flags)) {
+
+			} else if (member instanceof IMethod) {
+				if (context.getTriggerType() == Trigger.CLASS
+						&& !isFunctionParameterContext) {
+					if (PHPFlags.isPrivate(flags)
+							&& (member.getDeclaringType().equals(type) || isTraitMember(
+									context.getPhpVersion(), type, member))) {
+						if (isParent(context)) {
+							return true; // 5:1
+						} else if (isSelfCall(context)) {
+							return false;// 5:2
+						} else if (!isThisCall(context)
+								&& !isParentCall(context)
+								&& isSelfCall(context)) {
+							return false;// 5:3
+						} else if (!isThisCall(context)
+								&& !isParentCall(context)
+								&& !isSelfCall(context)) {
+							return true;// 5:4
+						}
+					} else if (PHPFlags.isProtected(flags)) {
+						if (isParent(context)) {
+							return false; // 6:1
+						} else if (isSelfCall(context)) {
+							return false;// 6:2
+						} else if (!isThisCall(context)
+								&& !isParentCall(context)
+								&& isSelfCall(context)) {
+							return false;// 6:3
+						} else if (!isThisCall(context)
+								&& !isParentCall(context)
+								&& !isSelfCall(context)) {
+							return true;// 6:4
+						}
+					} else if (PHPFlags.isPublic(flags)) {
+						if (isParent(context)) {
+							return false; // 7:1
+						} else if (isSelfCall(context)) {
+							return false;// 7:2
+						} else if (!isThisCall(context)
+								&& !isParentCall(context)
+								&& isSelfCall(context)) {
+							return false;// 7:3
+						} else if (!isThisCall(context)
+								&& !isParentCall(context)) {
 							return false;
 						}
-
-					} else if (context.getTriggerType() == Trigger.OBJECT) {
-						if (PHPFlags.isPrivate(flags)
-								&& (member.getDeclaringType().equals(type) || isTraitMember(
-										context.getPhpVersion(), type, member))) {
-							if (isThisKeyWord(context) && showStrictOptions()) {
-								return false; // 1:5
-							} else if (isIndirectThis(context)) {
-								return true;// 1:6
-							} else if (isSimpleArrow(context)) {
-								return true;// 1:7
-							}
-						} else if (PHPFlags.isProtected(flags)) {
-							if (isThisKeyWord(context) && showStrictOptions()) {
-								return false; // 2:5
-							} else if (isIndirectThis(context)
-									&& isDirectThis(context)) {
-								return true;// 2:6
-							} else if (isSimpleArrow(context)) {
-								return true;// 2:7
-							}
-						} else if (PHPFlags.isPublic(flags)) {
-							if (isThisKeyWord(context) && showStrictOptions()) {
-								return false; // 3:5
-							} else if (isIndirectThis(context)
-									&& showStrictOptions()) {
-								return false;// 3:6
-							} else if (isSimpleArrow(context)
-									&& showStrictOptions()) {
-								return false;// 3:7
-							}
+					} else if (PHPFlags.isDefault(flags)) {
+						if (isParent(context)) {
+							return false; // 8:1
+						} else if (isSelfCall(context)) {
+							return false;// 8:2
+						} else if (!isThisCall(context)
+								&& !isParentCall(context)
+								&& isSelfCall(context)) {
+							return false;// 8:3
+						} else if (!isThisCall(context)
+								&& !isParentCall(context)) {
+							return false;
 						}
 					}
-
-				} else if (member instanceof IMethod) {
-					if (context.getTriggerType() == Trigger.CLASS
-							&& !isFunctionParameterContext) {
-						if (PHPFlags.isPrivate(flags)
-								&& (member.getDeclaringType().equals(type) || isTraitMember(
-										context.getPhpVersion(), type, member))) {
-							if (isParent(context)) {
-								return true; // 5:1
-							} else if (isSelfCall(context)) {
-								return false;// 5:2
-							} else if (!isThisCall(context)
-									&& !isParentCall(context)
-									&& isSelfCall(context)) {
-								return false;// 5:3
-							} else if (!isThisCall(context)
-									&& !isParentCall(context)
-									&& !isSelfCall(context)) {
-								return true;// 5:4
-							}
-						} else if (PHPFlags.isProtected(flags)) {
-							if (isParent(context)) {
-								return false; // 6:1
-							} else if (isSelfCall(context)) {
-								return false;// 6:2
-							} else if (!isThisCall(context)
-									&& !isParentCall(context)
-									&& isSelfCall(context)) {
-								return false;// 6:3
-							} else if (!isThisCall(context)
-									&& !isParentCall(context)
-									&& !isSelfCall(context)) {
-								return true;// 6:4
-							}
-						} else if (PHPFlags.isPublic(flags)) {
-							if (isParent(context)) {
-								return false; // 7:1
-							} else if (isSelfCall(context)) {
-								return false;// 7:2
-							} else if (!isThisCall(context)
-									&& !isParentCall(context)
-									&& isSelfCall(context)) {
-								return false;// 7:3
-							} else if (!isThisCall(context)
-									&& !isParentCall(context)) {
-								return false;
-							}
-						} else if (PHPFlags.isDefault(flags)) {
-							if (isParent(context)) {
-								return false; // 8:1
-							} else if (isSelfCall(context)) {
-								return false;// 8:2
-							} else if (!isThisCall(context)
-									&& !isParentCall(context)
-									&& isSelfCall(context)) {
-								return false;// 8:3
-							} else if (!isThisCall(context)
-									&& !isParentCall(context)) {
-								return false;
-							}
+				} else if (context.getTriggerType() == Trigger.OBJECT) {
+					if (PHPFlags.isPrivate(flags)
+							&& (member.getDeclaringType().equals(type) || isTraitMember(
+									context.getPhpVersion(), type, member))) {
+						if (isThisKeyWord(context)) {
+							return false; // 5:5
+						} else if (isIndirectThis(context)) {
+							return false;// 5:6
+						} else if (isSimpleArrow(context)) {
+							return true;// 5:7
 						}
-					} else if (context.getTriggerType() == Trigger.OBJECT) {
-						if (PHPFlags.isPrivate(flags)
-								&& (member.getDeclaringType().equals(type) || isTraitMember(
-										context.getPhpVersion(), type, member))) {
-							if (isThisKeyWord(context)) {
-								return false; // 5:5
-							} else if (isIndirectThis(context)) {
-								return false;// 5:6
-							} else if (isSimpleArrow(context)) {
-								return true;// 5:7
-							}
-						} else if (PHPFlags.isProtected(flags)) {
-							if (isThisKeyWord(context)) {
-								return false; // 6:5
-							} else if (isIndirectThis(context)) {
-								return false;// 6:6
-							} else if (isSimpleArrow(context)) {
-								return true;// 6:7
-							}
-						} else if (PHPFlags.isPublic(flags)) {
-							if (isThisKeyWord(context)) {
-								return false; // 7:5
-							} else if (isIndirectThis(context)) {
-								return false;// 7:6
-							} else if (isSimpleArrow(context)) {
-								return false;// 7:7
-							}
-						} else if (PHPFlags.isDefault(flags)) {
-							if (isThisKeyWord(context)) {
-								return false; // 8:5
-							} else if (isIndirectThis(context)) {
-								return false;// 8:6
-							} else if (isSimpleArrow(context)) {
-								return false;// 8:7
-							}
+					} else if (PHPFlags.isProtected(flags)) {
+						if (isThisKeyWord(context)) {
+							return false; // 6:5
+						} else if (isIndirectThis(context)) {
+							return false;// 6:6
+						} else if (isSimpleArrow(context)) {
+							return true;// 6:7
+						}
+					} else if (PHPFlags.isPublic(flags)) {
+						if (isThisKeyWord(context)) {
+							return false; // 7:5
+						} else if (isIndirectThis(context)) {
+							return false;// 7:6
+						} else if (isSimpleArrow(context)) {
+							return false;// 7:7
+						}
+					} else if (PHPFlags.isDefault(flags)) {
+						if (isThisKeyWord(context)) {
+							return false; // 8:5
+						} else if (isIndirectThis(context)) {
+							return false;// 8:6
+						} else if (isSimpleArrow(context)) {
+							return false;// 8:7
 						}
 					}
 				}
-			} else {
-				// not static
-				if (member instanceof IField) {
-					if (context.getTriggerType() == Trigger.CLASS
-							&& !isFunctionParameterContext) {
-						return true; // 9:1 - 12:4
-					} else if (context.getTriggerType() == Trigger.OBJECT) {
-						if (PHPFlags.isPrivate(flags)
-								&& (member.getDeclaringType().equals(type) || isTraitMember(
-										context.getPhpVersion(), type, member))) {
-							if (isThisKeyWord(context)) {
-								return false; // 9:5
-							} else if (isIndirectThis(context)) {
-								return false;// 9:6
-							} else if (isSimpleArrow(context)) {
-								return true;// 9:7
-							}
-						} else if (PHPFlags.isProtected(flags)) {
-							if (isThisKeyWord(context)) {
-								return false; // 10:5
-							} else if (isIndirectThis(context)) {
-								return false;// 10:6
-							} else if (isSimpleArrow(context)) {
-								return true;// 10:7
-							}
-						} else if (PHPFlags.isPublic(flags)) {
-							if (isThisKeyWord(context)) {
-								return false; // 11:5
-							} else if (isIndirectThis(context)) {
-								return false;// 11:6
-							} else if (isSimpleArrow(context)) {
-								return false;// 11:7
-							}
+			}
+		} else {
+			// not static
+			if (member instanceof IField) {
+				if (context.getTriggerType() == Trigger.CLASS
+						&& !isFunctionParameterContext) {
+					return true; // 9:1 - 12:4
+				} else if (context.getTriggerType() == Trigger.OBJECT) {
+					if (PHPFlags.isPrivate(flags)
+							&& (member.getDeclaringType().equals(type) || isTraitMember(
+									context.getPhpVersion(), type, member))) {
+						if (isThisKeyWord(context)) {
+							return false; // 9:5
+						} else if (isIndirectThis(context)) {
+							return false;// 9:6
+						} else if (isSimpleArrow(context)) {
+							return true;// 9:7
+						}
+					} else if (PHPFlags.isProtected(flags)) {
+						if (isThisKeyWord(context)) {
+							return false; // 10:5
+						} else if (isIndirectThis(context)) {
+							return false;// 10:6
+						} else if (isSimpleArrow(context)) {
+							return true;// 10:7
+						}
+					} else if (PHPFlags.isPublic(flags)) {
+						if (isThisKeyWord(context)) {
+							return false; // 11:5
+						} else if (isIndirectThis(context)) {
+							return false;// 11:6
+						} else if (isSimpleArrow(context)) {
+							return false;// 11:7
 						}
 					}
+				}
 
-				} else if (member instanceof IMethod) {
-					if (context.getTriggerType() == Trigger.CLASS
-							&& !isFunctionParameterContext) {
-						if (PHPFlags.isPrivate(flags)
-								&& (member.getDeclaringType().equals(type) || isTraitMember(
-										context.getPhpVersion(), type, member))) {
-							if (isParent(context)) {
-								return true; // 13:1
-							} else if (isSelfKeyword(context)) {
-								return false;// 13:2
-							} else if (isStaticAccessFromInsideClass(context)) {
-								return false;// 13:3
-							} else if (isStaticAccessFromOutsideClass(context)) {
-								return true;// 13:4
-							}
-						} else if (PHPFlags.isProtected(flags)) {
-							if (isParent(context)) {
-								return false; // 14:1
-							} else if (isSelfKeyword(context)) {
-								return false;// 14:2
-							} else if (isStaticAccessFromInsideClass(context)) {
-								return false;// 14:3
-							} else if (isStaticAccessFromOutsideClass(context)) {
-								return true;// 14:4
-							}
-						} else if (PHPFlags.isPublic(flags)) {
-							if (isParent(context)) {
-								return false; // 15:1
-							} else if (isSelfKeyword(context)) {
-								return false;// 15:2
-							} else if (isStaticAccessFromInsideClass(context)) {
-								return false;// 15:3
-							} else if (isStaticAccessFromOutsideClass(context)
-									&& showStrictOptions()) {
-								return false;// 15:4
-							}
-						} else if (PHPFlags.isDefault(flags)) {
-							if (isParent(context)) {
-								return false; // 16:1
-							} else if (isSelfKeyword(context)) {
-								return false;// 16:2
-							} else if (isStaticAccessFromInsideClass(context)) {
-								return false;// 16:3
-							} else if (isStaticAccessFromOutsideClass(context)
-									&& showStrictOptions()) {
-								return false;// 16:4
-							}
+			} else if (member instanceof IMethod) {
+				if (context.getTriggerType() == Trigger.CLASS
+						&& !isFunctionParameterContext) {
+					if (PHPFlags.isPrivate(flags)
+							&& (member.getDeclaringType().equals(type) || isTraitMember(
+									context.getPhpVersion(), type, member))) {
+						if (isParent(context)) {
+							return true; // 13:1
+						} else if (isSelfKeyword(context)) {
+							return false;// 13:2
+						} else if (isStaticAccessFromInsideClass(context)) {
+							return false;// 13:3
+						} else if (isStaticAccessFromOutsideClass(context)) {
+							return true;// 13:4
 						}
-					} else if (context.getTriggerType() == Trigger.OBJECT) {
-						if (PHPFlags.isPrivate(flags)
-								&& (member.getDeclaringType().equals(type) || isTraitMember(
-										context.getPhpVersion(), type, member))) {
-							if (isThisKeyWord(context)) {
-								return false; // 13:5
-							} else if (isIndirectThis(context)) {
-								return false;// 13:6
-							} else if (isSimpleArrow(context)) {
-								return true;// 13:7
-							}
-						} else if (PHPFlags.isProtected(flags)) {
-							if (isThisKeyWord(context)) {
-								return false; // 14:5
-							} else if (isIndirectThis(context)) {
-								return false;// 14:6
-							} else if (isSimpleArrow(context)) {
-								return true;// 14:7
-							}
-						} else if (PHPFlags.isPublic(flags)) {
-							if (isThisKeyWord(context)) {
-								return false; // 15:5
-							} else if (isIndirectThis(context)) {
-								return false;// 15:6
-							} else if (isSimpleArrow(context)) {
-								return false;// 15:7
-							}
-						} else if (PHPFlags.isDefault(flags)) {
-							if (isThisKeyWord(context)) {
-								return false; // 16:5
-							} else if (isIndirectThis(context)) {
-								return false;// 16:6
-							} else if (isSimpleArrow(context)) {
-								return false;// 16:7
-							}
+					} else if (PHPFlags.isProtected(flags)) {
+						if (isParent(context)) {
+							return false; // 14:1
+						} else if (isSelfKeyword(context)) {
+							return false;// 14:2
+						} else if (isStaticAccessFromInsideClass(context)) {
+							return false;// 14:3
+						} else if (isStaticAccessFromOutsideClass(context)) {
+							return true;// 14:4
+						}
+					} else if (PHPFlags.isPublic(flags)) {
+						if (isParent(context)) {
+							return false; // 15:1
+						} else if (isSelfKeyword(context)) {
+							return false;// 15:2
+						} else if (isStaticAccessFromInsideClass(context)) {
+							return false;// 15:3
+						} else if (isStaticAccessFromOutsideClass(context)
+								&& showStrictOptions()) {
+							return false;// 15:4
+						}
+					} else if (PHPFlags.isDefault(flags)) {
+						if (isParent(context)) {
+							return false; // 16:1
+						} else if (isSelfKeyword(context)) {
+							return false;// 16:2
+						} else if (isStaticAccessFromInsideClass(context)) {
+							return false;// 16:3
+						} else if (isStaticAccessFromOutsideClass(context)
+								&& showStrictOptions()) {
+							return false;// 16:4
 						}
 					}
-
+				} else if (context.getTriggerType() == Trigger.OBJECT) {
+					if (PHPFlags.isPrivate(flags)
+							&& (member.getDeclaringType().equals(type) || isTraitMember(
+									context.getPhpVersion(), type, member))) {
+						if (isThisKeyWord(context)) {
+							return false; // 13:5
+						} else if (isIndirectThis(context)) {
+							return false;// 13:6
+						} else if (isSimpleArrow(context)) {
+							return true;// 13:7
+						}
+					} else if (PHPFlags.isProtected(flags)) {
+						if (isThisKeyWord(context)) {
+							return false; // 14:5
+						} else if (isIndirectThis(context)) {
+							return false;// 14:6
+						} else if (isSimpleArrow(context)) {
+							return true;// 14:7
+						}
+					} else if (PHPFlags.isPublic(flags)) {
+						if (isThisKeyWord(context)) {
+							return false; // 15:5
+						} else if (isIndirectThis(context)) {
+							return false;// 15:6
+						} else if (isSimpleArrow(context)) {
+							return false;// 15:7
+						}
+					} else if (PHPFlags.isDefault(flags)) {
+						if (isThisKeyWord(context)) {
+							return false; // 16:5
+						} else if (isIndirectThis(context)) {
+							return false;// 16:6
+						} else if (isSimpleArrow(context)) {
+							return false;// 16:7
+						}
+					}
 				}
 
 			}
+
 		}
 		return true;
 	}

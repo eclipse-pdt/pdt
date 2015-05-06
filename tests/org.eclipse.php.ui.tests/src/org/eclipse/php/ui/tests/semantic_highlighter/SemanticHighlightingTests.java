@@ -73,8 +73,6 @@ public class SemanticHighlightingTests {
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS.put(PHPVersion.PHP4,
-				new String[] { "/workspace/semantic_highlighting/php4" });
 		TESTS.put(PHPVersion.PHP5,
 				new String[] { "/workspace/semantic_highlighting/php5" });
 		TESTS.put(PHPVersion.PHP5_3,

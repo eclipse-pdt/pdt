@@ -20,7 +20,6 @@ import java.util.Map;
  */
 public enum PHPVersion {
 
-	PHP4("php4"), //$NON-NLS-1$
 	PHP5("php5"), //$NON-NLS-1$
 
 	/**

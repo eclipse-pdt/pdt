@@ -29,9 +29,7 @@ public class PHPMagicMethods {
 	public static String[] getMethods(PHPVersion phpVersion) {
 		List<String> methods = new LinkedList<String>();
 		methods.addAll(Arrays.asList(MAGIC_METHODS));
-		if (phpVersion.isGreaterThan(PHPVersion.PHP4)) {
-			methods.addAll(Arrays.asList(MAGIC_METHODS_PHP5));
-		}
+		methods.addAll(Arrays.asList(MAGIC_METHODS_PHP5));
 		if (phpVersion.isGreaterThan(PHPVersion.PHP5)) {
 			methods.addAll(Arrays.asList(MAGIC_METHODS_PHP5_3));
 		}

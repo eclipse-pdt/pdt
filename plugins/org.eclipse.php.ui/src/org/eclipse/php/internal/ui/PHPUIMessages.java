@@ -165,7 +165,6 @@ public final class PHPUIMessages extends NLS {
 	public static String PHPCreationDataModelProvider_3;
 	public static String PHPCreationDataModelProvider_2;
 	public static String PHPCreationDataModelProvider_1;
-	public static String PHPCreationDataModelProvider_0;
 	public static String Search_FindHierarchyDeclarationsAction_tooltip;
 	public static String IncludePathVariablesPreferencePage_savechanges_title;
 	public static String IncludePathsBlock_tab_projects;

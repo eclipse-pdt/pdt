@@ -303,19 +303,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			stInScriptin = CompilerAstLexer.ST_IN_SCRIPTING; // save the initial
 			// state for reset
 			// operation
-		} else if (PHPVersion.PHP4.equals(phpVersion)) {
-			result = new org.eclipse.php.internal.core.compiler.ast.parser.php4.CompilerAstLexer(
-					reader);
-			((org.eclipse.php.internal.core.compiler.ast.parser.php4.CompilerAstLexer) result)
-					.setAST(new AST(reader, PHPVersion.PHP4, false,
-							useShortTags));
-			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php4.CompilerAstLexer.ST_IN_SCRIPTING; // save
-			// the
-			// initial
-			// state
-			// for
-			// reset
-			// operation
 		} else if (PHPVersion.PHP5_3.equals(phpVersion)) {
 			result = new org.eclipse.php.internal.core.compiler.ast.parser.php53.CompilerAstLexer(
 					reader);
