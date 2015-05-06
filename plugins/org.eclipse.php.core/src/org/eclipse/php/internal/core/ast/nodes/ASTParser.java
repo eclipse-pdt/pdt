@@ -271,17 +271,6 @@ public class ASTParser {
 				createEmptyLexer_5());
 	}
 
-	// php 4 analysis
-	private static org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer createEmptyLexer_4() {
-		return new org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer(
-				ASTParser.EMPTY_STRING_READER);
-	}
-
-	private static org.eclipse.php.internal.core.ast.scanner.php4.PhpAstParser createEmptyParser_4() {
-		return new org.eclipse.php.internal.core.ast.scanner.php4.PhpAstParser(
-				createEmptyLexer_4());
-	}
-
 	/**
 	 * @param phpCode
 	 *            String - represents the source code of the PHP program
@@ -417,11 +406,11 @@ public class ASTParser {
 			PHPVersion phpVersion, boolean aspTagsAsPhp, boolean useShortTags)
 			throws IOException {
 		if (PHPVersion.PHP4 == phpVersion) {
-			final org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer lexer4 = getLexer4(reader);
-			lexer4.setUseAspTagsAsPhp(aspTagsAsPhp);
-			lexer4.setUseShortTags(useShortTags);
-			lexer4.setAST(ast);
-			return lexer4;
+			final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer lexer5 = getLexer5(reader);
+			lexer5.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer5.setUseShortTags(useShortTags);
+			lexer5.setAST(ast);
+			return lexer5;
 		} else if (PHPVersion.PHP5 == phpVersion) {
 			final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer lexer5 = getLexer5(reader);
 			lexer5.setUseAspTagsAsPhp(aspTagsAsPhp);
@@ -461,7 +450,7 @@ public class ASTParser {
 	private static lr_parser getParser(PHPVersion phpVersion, AST ast)
 			throws IOException {
 		if (PHPVersion.PHP4 == phpVersion) {
-			org.eclipse.php.internal.core.ast.scanner.php4.PhpAstParser parser = createEmptyParser_4();
+			org.eclipse.php.internal.core.ast.scanner.php5.PhpAstParser parser = createEmptyParser_5();
 			parser.setAST(ast);
 			return parser;
 		} else if (PHPVersion.PHP5 == phpVersion) {
@@ -556,16 +545,4 @@ public class ASTParser {
 		return phpAstLexer5;
 	}
 
-	/**
-	 * @param reader
-	 * @return the singleton
-	 *         {@link org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer}
-	 */
-	private static org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer getLexer4(
-			Reader reader) throws IOException {
-		final org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer phpAstLexer4 = createEmptyLexer_4();
-		phpAstLexer4.yyreset(reader);
-		phpAstLexer4.resetCommentList();
-		return phpAstLexer4;
-	}
 }

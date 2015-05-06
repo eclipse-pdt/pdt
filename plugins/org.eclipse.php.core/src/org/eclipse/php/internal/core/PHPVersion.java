@@ -20,6 +20,10 @@ import java.util.Map;
  */
 public enum PHPVersion {
 
+	/**
+	 * @deprecated support for PHP4 is removed, PHP5 parser/lexer will be used
+	 *             for backward compatibility
+	 */
 	PHP4("php4"), //$NON-NLS-1$
 	PHP5("php5"), //$NON-NLS-1$
 
@@ -38,6 +42,9 @@ public enum PHPVersion {
 	PHP5_4("php5.4"), //$NON-NLS-1$
 	PHP5_5("php5.5"), //$NON-NLS-1$
 	PHP5_6("php5.6"); //$NON-NLS-1$
+
+	private static PHPVersion[] SUPPORTED_VERSIONS = new PHPVersion[] { PHP5_6,
+			PHP5_5, PHP5_4, PHP5 };
 
 	private String alias;
 

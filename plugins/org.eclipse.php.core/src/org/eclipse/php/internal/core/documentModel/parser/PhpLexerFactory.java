@@ -9,7 +9,7 @@ public class PhpLexerFactory {
 	public static AbstractPhpLexer createLexer(Reader reader,
 			PHPVersion phpVersion) {
 		if (phpVersion == PHPVersion.PHP4) {
-			return new org.eclipse.php.internal.core.documentModel.parser.php4.PhpLexer(
+			return new org.eclipse.php.internal.core.documentModel.parser.php5.PhpLexer(
 					reader);
 		}
 		if (phpVersion == PHPVersion.PHP5) {

@@ -53,12 +53,6 @@ public class FormalParameter extends ASTNode {
 
 	/**
 	 * A list of property descriptors (element type:
-	 * {@link StructuralPropertyDescriptor}), or null if uninitialized. FOR PHP4
-	 */
-	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP4;
-
-	/**
-	 * A list of property descriptors (element type:
 	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP5;
@@ -75,14 +69,12 @@ public class FormalParameter extends ASTNode {
 		properyList.add(PARAMETER_NAME_PROPERTY);
 		properyList.add(DEFAULT_VALUE_PROPERTY);
 		properyList.add(IS_MANDATORY_PROPERTY);
-		PROPERTY_DESCRIPTORS_PHP4 = Collections.unmodifiableList(properyList);
 	}
 
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
 			PHPVersion apiLevel) {
-		return apiLevel == PHPVersion.PHP4 ? PROPERTY_DESCRIPTORS_PHP4
-				: PROPERTY_DESCRIPTORS_PHP5;
+		return PROPERTY_DESCRIPTORS_PHP5;
 	}
 
 	public FormalParameter(AST ast) {

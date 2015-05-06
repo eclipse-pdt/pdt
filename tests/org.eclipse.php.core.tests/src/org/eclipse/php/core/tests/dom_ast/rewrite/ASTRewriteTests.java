@@ -928,23 +928,6 @@ public class ASTRewriteTests {
 	}
 
 	@Test
-	public void functionDeclarationPHP4() throws Exception {
-		String str = "<?php function foo() {} ?> ";
-		initialize(str, PHPVersion.PHP4);
-		List<FunctionDeclaration> declarations = getAllOfType(program,
-				FunctionDeclaration.class);
-		assertTrue("Unexpected list size.", declarations.size() == 1);
-		declarations.get(0).setFunctionName(ast.newIdentifier("bar"));
-		declarations
-				.get(0)
-				.formalParameters()
-				.add(ast.newFormalParameter(ast.newIdentifier("int"),
-						ast.newVariable("a"), null, true));
-		rewrite();
-		checkResult("<?php function bar(const int $a) {} ?> ");
-	}
-
-	@Test
 	public void functionDeclarationWithParam1() throws Exception {
 		String str = "<?php function foo( $a) {} ?> ";
 		initialize(str);
@@ -998,25 +981,6 @@ public class ASTRewriteTests {
 				.delete();
 		rewrite();
 		checkResult("<?php function foo( $a) {} ?> ");
-	}
-
-	@Test
-	public void functionDeclarationCreationPHP4() throws Exception {
-		String str = "<?php ?> ";
-		initialize(str, PHPVersion.PHP4);
-		Identifier name = ast.newIdentifier("foo");
-		List<FormalParameter> formalParameters = new ArrayList<FormalParameter>();
-		formalParameters.add(ast.newFormalParameter(null, ast.newVariable("a"),
-				ast.newScalar("5"), false));
-		formalParameters.add(ast.newFormalParameter(null, ast.newVariable("b"),
-				ast.newScalar("'boobo'"), true));
-		Block body = ast.newBlock();
-		program.statements()
-				.add(0,
-						ast.newFunctionDeclaration(name, formalParameters,
-								body, false));
-		rewrite();
-		checkResult("<?php function foo($a = 5, const $b = 'boobo'){\n}\n?> ");
 	}
 
 	@Test

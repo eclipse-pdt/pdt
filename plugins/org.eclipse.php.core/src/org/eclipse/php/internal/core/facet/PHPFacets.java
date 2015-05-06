@@ -104,10 +104,6 @@ public class PHPFacets {
 						.getProjectFacet(PHPFacetsConstants.PHP_COMPONENT);
 				final IProjectFacetVersion version = faceted
 						.getInstalledVersion(phpFacet);
-				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_4.equals(version
-						.getVersionString())) {
-					return PHPVersion.PHP4;
-				}
 				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_5.equals(version
 						.getVersionString())) {
 					return PHPVersion.PHP5;
@@ -147,9 +143,6 @@ public class PHPFacets {
 		IProjectFacet phpFacet = ProjectFacetsManager
 				.getProjectFacet(PHPFacetsConstants.PHP_COMPONENT);
 		switch (version) {
-		case PHP4:
-			return phpFacet
-					.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_4);
 		case PHP5:
 			return phpFacet
 					.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_5);

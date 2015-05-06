@@ -2,7 +2,7 @@
 
 <!--context:php_support-->
 
-PDT supports PHP versions 4, 5.1/5.2/5.3/5.4/5.5/5.6.
+PDT supports PHP versions 5.1/5.2/5.3/5.4/5.5/5.6.
 
 PHP version settings affect:
 
