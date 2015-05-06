@@ -35,7 +35,7 @@
 	<extension point="org.eclipse.wst.sse.core.formatProcessors">
 		<processor
 			class="org.eclipse.php.ui.format.PHPFormatProcessorProxy"
-			contentTypeId="org.eclipse.php.core.phpsource ">
+			contentTypeId="org.eclipse.php.core.phpsource">
 		</processor>
 	</extension>
 
@@ -2398,4 +2398,124 @@
               nature="org.eclipse.php.core.PHPNature">
         </provider>
     </extension>
+    
+    <extension
+       point="org.eclipse.ui.navigator.viewer">
+    <viewer viewerId="org.eclipse.ui.navigator.ProjectExplorer"/>
+    <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+       <includes>
+          <contentExtension pattern="org.eclipse.php.ui.phpContent"/>
+          <contentExtension pattern="org.eclipse.php.ui.navigator.filters.*"/>
+          <contentExtension pattern="org.eclipse.ui.navigator.resourceContent" />
+          <contentExtension pattern="org.eclipse.ui.navigator.resources.filters.*"/>
+          <contentExtension pattern="org.eclipse.ui.navigator.resources.linkHelper"/>
+       </includes>
+    </viewerContentBinding>
+    
+    <viewerActionBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+         <includes>
+             <actionExtension pattern="org.eclipse.ui.navigator.resources.*" />
+         </includes>
+    </viewerActionBinding>
+ </extension>
+ 
+ <extension
+       point="org.eclipse.ui.navigator.navigatorContent">
+    <navigatorContent
+          activeByDefault="true"
+          contentProvider="org.eclipse.php.internal.ui.navigator.PHPNavigatorContentProvider"
+          icon="icons/full/goto_phpRes_16.gif"
+          id="org.eclipse.php.ui.phpContent"
+          labelProvider="org.eclipse.php.internal.ui.navigator.PHPNavigatorLabelProvider"
+          name="PHP Elements"
+          priority="normal">			
+          
+          <triggerPoints>
+          		<or>
+					<adapt type="org.eclipse.core.resources.IFile">
+						<test property="org.eclipse.core.resources.contentTypeId " value="org.eclipse.php.core.phpsource"/>
+					</adapt>
+					<instanceof value="org.eclipse.dltk.core.IMember" />
+					<instanceof value="org.eclipse.dltk.internal.ui.model.ScriptModelProvider"/>
+				</or>
+			</triggerPoints>
+			<actionProvider 
+				class="org.eclipse.dltk.internal.ui.navigator.ScriptExplorerActionProvider"
+				id="org.eclipse.php.ui.navigator.actions.ViewActions">
+				<enablement>
+					<or>
+						<adapt type="org.eclipse.core.resources.IFile">
+							<test property="org.eclipse.core.resources.contentTypeId " value="org.eclipse.php.core.phpsource"/>
+						</adapt>
+						<instanceof value="org.eclipse.dltk.core.IMember" />
+						<instanceof value="org.eclipse.dltk.internal.ui.model.ScriptModelProvider"/>
+					</or>
+				</enablement>
+			</actionProvider>
+			<commonSorter
+					class="org.eclipse.dltk.ui.ModelElementSorter"
+					id="org.eclipse.dltk.ui.modelElementorg.eclipse.internal.ui.navigator.ScriptDropAssistanteAlwaysRegardlessOfSuppressedExt">
+					 <parentExpression>
+	               <or>
+						<adapt type="org.eclipse.core.resources.IFile">
+							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.phpsource"/>
+						</adapt>
+	                  <instanceof value="org.eclipse.dltk.core.IMember"/>
+	                  <instanceof value="org.eclipse.dltk.internal.ui.model.ScriptModelProvider"/>
+	               </or>
+	            </parentExpression>
+			</commonSorter>
+			<override
+               policy="InvokeAlwaysRegardlessOfSuppressedExt"
+               suppressedExtensionId="org.eclipse.team.ui.resourceContent"/>
+			<possibleChildren>
+				<instanceof	value="org.eclipse.dltk.core.IMember" />
+			</possibleChildren>
+		
+	    </navigatorContent>
+   		<commonFilter
+		        activeByDefault="false"
+		        class="org.eclipse.dltk.internal.ui.filters.EmptyPackageFilter"
+		        name="%HideEmptyPackages.label"
+		        description="%HideEmptyPackages.description"
+		        id="org.eclipse.php.ui.navigator.filters.HideEmptyPackages"/>
+  		<commonFilter
+		        activeByDefault="true"
+		        class="org.eclipse.dltk.internal.ui.filters.EmptyInnerPackageFilter"
+		        name="%HideEmptyInnerPackages.label"
+		        description="%HideEmptyInnerPackages.description"
+		        id="org.eclipse.php.ui.navigator.filters.HideEmptyInnerPackages"/>
+  		<commonFilter 
+		        class="org.eclipse.dltk.internal.ui.filters.FieldsFilter"
+		        name="%HideFields.label"
+		        description="%HideFields.description"
+		        id="org.eclipse.php.ui.navigator.filters.HideFields"/>
+  		<commonFilter 
+		        class="org.eclipse.dltk.internal.ui.filters.NonScriptElementFilter"
+		        name="%HideNonScriptElements.label"
+		        description="%HideNonScriptElements.description"
+		        id="org.eclipse.php.ui.navigator.filters.HideNonScriptElements"/>   		
+  		<commonFilter 
+		        class="org.eclipse.dltk.internal.ui.filters.NonScriptProjectsFilter"
+		        name="%HideNonScriptProjects.label"
+		        description="%HideNonScriptProjects.description"
+		        id="org.eclipse.php.ui.navigator.filters.HideNonJavaProjects"/>   
+  		<commonFilter 
+		        class="org.eclipse.dltk.internal.ui.filters.NonSharedProjectFilter"
+		        name="%HideNonSharedProjects.label"
+		        description="%HideNonSharedProjects.description"
+		        id="org.eclipse.php.ui.navigator.filters.HideNonSharedProjects"/>   
+  		<commonFilter 
+		        class="org.eclipse.dltk.internal.ui.filters.LibraryFilter"
+		        name="%HideReferencedLibraries.label"
+		        description="%HideReferencedLibraries.description"
+		        id="org.eclipse.php.ui.navigator.filters.HideReferencedLibraries"/>   
+		<commonFilter
+            name="%HideImportDeclarations.label"
+            activeByDefault="true"
+            description="%HideImportDeclarations.description"
+            class="org.eclipse.dltk.internal.ui.filters.ImportDeclarationFilter"
+            id="org.eclipse.php.ui.navigator.filtersr.ImportDeclarationFilter" />
+ 	</extension>
+ 
 </plugin>

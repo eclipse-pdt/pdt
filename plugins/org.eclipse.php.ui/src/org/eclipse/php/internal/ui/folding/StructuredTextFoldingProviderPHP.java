@@ -23,6 +23,8 @@ import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.corext.SourceRange;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
+import org.eclipse.dltk.ui.text.folding.IFoldingStructureProvider;
+import org.eclipse.dltk.ui.text.folding.IFoldingStructureProviderExtension;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
@@ -59,7 +61,8 @@ import org.w3c.dom.Node;
  * Updates the projection model of a structured model for JSP.
  */
 public class StructuredTextFoldingProviderPHP implements IProjectionListener,
-		IStructuredTextFoldingProvider {
+		IStructuredTextFoldingProvider, IFoldingStructureProviderExtension,
+		IFoldingStructureProvider {
 
 	/**
 	 * A context that contains the information needed to compute the folding
@@ -1926,5 +1929,17 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	 */
 	public void projectionEnabled() {
 		handleProjectionEnabled();
+	}
+
+	@Override
+	public void install(ITextEditor editor, ProjectionViewer viewer,
+			IPreferenceStore store) {
+		// ignore
+		install(viewer);
+	}
+
+	@Override
+	public void initialize(boolean isReinit) {
+		initialize(false);
 	}
 }
