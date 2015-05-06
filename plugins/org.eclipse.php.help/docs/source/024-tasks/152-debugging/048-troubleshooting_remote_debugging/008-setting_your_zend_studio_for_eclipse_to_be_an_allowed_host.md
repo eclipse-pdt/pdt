@@ -24,7 +24,7 @@ To configure your debugger to allow your PDT to debug:
 #### Related Links:
 
  * [Setting Up Remote Debugging](000-index.md)
- * [Ensuring the Placement of dummy.php](016-ensuring_the_placement_of_dummy.php.md)
+ * [Ensuring the Placement of dummy.php](016-ensuring_the_placement_of_dummy_php.md)
  * [Debugging a PHP Web Page](../../../024-tasks/152-debugging/032-debugging_a_php_web_page.md)
 
 <!--links-end-->
