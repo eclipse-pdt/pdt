@@ -3,11 +3,6 @@
 <plugin>
 	<extension
 		point="org.eclipse.mylyn.context.ui.bridges">
-		<uiBridge
-			class="org.eclipse.dltk.internal.mylyn.DLTKUiBridge"
-			contentType="php"
-			activeSearchIcon="icons/elcl16/edge-ref-java.gif"
-			activeSearchLabel="PHP Search" />
 		<preservedFilters
 			viewId="org.eclipse.php.ui.explorer">
 			<filter
@@ -20,6 +15,30 @@
 		<preservedFilters
 			viewId="org.eclipse.ui.navigator.ProjectExplorer">
 		</preservedFilters>
+	</extension>
+	<extension
+		point="org.eclipse.ui.navigator.viewer">
+		<viewerContentBinding
+			viewerId="org.eclipse.mylyn.context.ui.navigator.context">
+			<includes>
+				<contentExtension
+					pattern="org.eclipse.php.ui.phpContent" />
+			</includes>
+		</viewerContentBinding>
+		<viewerContentBinding
+			viewerId="org.eclipse.mylyn.context.ui.navigator.context.quick">
+			<includes>
+				<contentExtension
+					pattern="org.eclipse.php.ui.phpContent" />
+			</includes>
+		</viewerContentBinding>
+	</extension>
+	
+	<extension
+		point="org.eclipse.mylyn.context.ui.startup">
+		<startup
+			class="org.eclipse.php.mylyn.ui.PDTMylynPlugin$PDTUIBridgeStartup">
+		</startup>
 	</extension>
 
 	<extension

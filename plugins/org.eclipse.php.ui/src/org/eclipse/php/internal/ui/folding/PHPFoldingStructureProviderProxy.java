@@ -93,7 +93,7 @@ public class PHPFoldingStructureProviderProxy implements IProjectionListener,
 	}
 
 	// Returns the current IStructuredTextFoldingProvider
-	private IStructuredTextFoldingProvider getFoldingProvider() {
+	public IStructuredTextFoldingProvider getFoldingProvider() {
 		return currentFoldingProvider;
 	}
 
