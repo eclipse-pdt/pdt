@@ -311,13 +311,6 @@
          <label>PHP Facet</label>
          <description>PHP Facet</description>
       </project-facet>
-      <project-facet-version facet="php.component" version="4">
-         <constraint>
-             <and>
-                <requires facet="php.core.component" />
-             </and>
-         </constraint>
-      </project-facet-version>
       <project-facet-version facet="php.component" version="5">
          <constraint>
              <and>
@@ -357,9 +350,6 @@
       <action facet="php.core.component" version="1" type="install">
          <delegate class="org.eclipse.php.internal.core.facet.InstallActionDelegate" />
       </action>
-      <action facet="php.component" version="4" type="install">
-         <delegate class="org.eclipse.php.internal.core.facet.InstallActionDelegate" />
-      </action>
       <action facet="php.component" version="5" type="install">
          <delegate class="org.eclipse.php.internal.core.facet.InstallActionDelegate" />
       </action>
@@ -374,9 +364,6 @@
       </action>
       <action facet="php.component" version="5.6" type="install">
          <delegate class="org.eclipse.php.internal.core.facet.InstallActionDelegate" />
-      </action>
-      <action facet="php.component" version="4" type="version-change">
-         <delegate class="org.eclipse.php.internal.core.facet.VersionChangeActionDelegate" />
       </action>
       <action facet="php.component" version="5" type="version-change">
          <delegate class="org.eclipse.php.internal.core.facet.VersionChangeActionDelegate" />

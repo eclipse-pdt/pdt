@@ -113,7 +113,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		fragment = (WizardFragment) Platform.getAdapterManager().loadAdapter(
 				data, PHPProjectWizardFirstPage.class.getName());
 
-		fVersionGroup = new VersionGroup(composite, PHPVersion.PHP4);
+		fVersionGroup = new VersionGroup(composite, PHPVersion.PHP5);
 		fLayoutGroup = new LayoutGroup(composite);
 		fJavaScriptSupportGroup = new JavaScriptSupportGroup(composite, this);
 

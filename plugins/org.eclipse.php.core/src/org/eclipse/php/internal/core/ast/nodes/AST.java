@@ -187,10 +187,10 @@ public class AST {
 	private AstLexer getLexerInstance(Reader reader, PHPVersion phpVersion,
 			boolean aspTagsAsPhp, boolean useShortTags) throws IOException {
 		if (PHPVersion.PHP4 == phpVersion) {
-			final AstLexer lexer4 = getLexer4(reader);
-			lexer4.setUseAspTagsAsPhp(aspTagsAsPhp);
-			lexer4.setUseShortTags(useShortTags);
-			return lexer4;
+			final AstLexer lexer5 = getLexer5(reader);
+			lexer5.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer5.setUseShortTags(useShortTags);
+			return lexer5;
 		} else if (PHPVersion.PHP5 == phpVersion) {
 			final AstLexer lexer5 = getLexer5(reader);
 			lexer5.setUseAspTagsAsPhp(aspTagsAsPhp);
@@ -258,20 +258,8 @@ public class AST {
 		return phpAstLexer5;
 	}
 
-	private AstLexer getLexer4(Reader reader) throws IOException {
-		final org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer phpAstLexer4 = new org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer(
-				reader);
-		phpAstLexer4.setAST(this);
-		return phpAstLexer4;
-	}
-
 	private lr_parser getParserInstance(PHPVersion phpVersion, Scanner lexer) {
-		if (PHPVersion.PHP4 == phpVersion) {
-			final org.eclipse.php.internal.core.ast.scanner.php4.PhpAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php4.PhpAstParser(
-					lexer);
-			parser.setAST(this);
-			return parser;
-		} else if (PHPVersion.PHP5 == phpVersion) {
+		if (PHPVersion.PHP5 == phpVersion) {
 			final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php5.PhpAstParser(
 					lexer);
 			parser.setAST(this);
@@ -821,10 +809,6 @@ public class AST {
 	 * @since 3.0
 	 */
 	void unsupportedIn2() {
-		if (this.apiLevel == PHPVersion.PHP4) {
-			throw new UnsupportedOperationException(
-					"Operation not supported in JLS2 AST"); //$NON-NLS-1$
-		}
 	}
 
 	/**
@@ -835,10 +819,6 @@ public class AST {
 	 * @since 3.0
 	 */
 	void supportedOnlyIn2() {
-		if (this.apiLevel != PHPVersion.PHP4) {
-			throw new UnsupportedOperationException(
-					"Operation not supported in JLS2 AST"); //$NON-NLS-1$
-		}
 	}
 
 	/**
@@ -1771,8 +1751,6 @@ public class AST {
 	 * @param parameterName
 	 * @param defaultValue
 	 * @param isMandatory
-	 *            The mandatory field is only effective when the API level is
-	 *            AST.PHP4
 	 * @return A new FormalParameter.
 	 */
 	public FormalParameter newFormalParameter(Identifier type,
@@ -1782,9 +1760,6 @@ public class AST {
 		formalParameter.setParameterType(type);
 		formalParameter.setParameterName(parameterName);
 		formalParameter.setDefaultValue(defaultValue);
-		if (apiLevel() == PHPVersion.PHP4) {
-			formalParameter.setIsMandatory(isMandatory);
-		}
 		return formalParameter;
 	}
 

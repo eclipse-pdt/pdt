@@ -102,10 +102,8 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 
 		// Add constructors:
 		functions.add(declaringClass.getElementName());
-		if (phpVersion.isGreaterThan(PHPVersion.PHP4)) {
-			functions.add("__construct"); //$NON-NLS-1$
-			functions.add("__destruct"); //$NON-NLS-1$
-		}
+		functions.add("__construct"); //$NON-NLS-1$
+		functions.add("__destruct"); //$NON-NLS-1$
 
 		for (String function : functions) {
 			if (CodeAssistUtils.startsWithIgnoreCase(function, prefix)) {

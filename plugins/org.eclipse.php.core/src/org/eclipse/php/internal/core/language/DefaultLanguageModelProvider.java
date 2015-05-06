@@ -47,9 +47,6 @@ class DefaultLanguageModelProvider implements ILanguageModelProvider {
 
 	private String getLanguageLibraryPath(IScriptProject project,
 			PHPVersion phpVersion) {
-		if (phpVersion == PHPVersion.PHP4) {
-			return LANGUAGE_LIBRARY_PATH + "4"; //$NON-NLS-1$
-		}
 		if (phpVersion == PHPVersion.PHP5) {
 			return LANGUAGE_LIBRARY_PATH + "5"; //$NON-NLS-1$
 		}

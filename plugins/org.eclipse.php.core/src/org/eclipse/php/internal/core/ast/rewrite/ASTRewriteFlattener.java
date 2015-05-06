@@ -17,7 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 
@@ -566,11 +565,6 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(FormalParameter formalParameter) {
-		if (formalParameter.isMandatory()) {
-			if (formalParameter.getAST().apiLevel() == PHPVersion.PHP4) {
-				result.append("const "); // only for PHP 4 //$NON-NLS-1$
-			}
-		}
 		Expression paramType = formalParameter.getParameterType();
 		if (paramType != null /* && paramType.getLength() > 0 */) {
 			paramType.accept(this);

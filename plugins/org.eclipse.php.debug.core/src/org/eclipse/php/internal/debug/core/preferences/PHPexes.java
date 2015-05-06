@@ -848,9 +848,6 @@ public class PHPexes {
 
 	public PHPexeItem[] getCompatibleItems(PHPexeItem[] allItems,
 			PHPVersion version) {
-		if (version.equals(PHPVersion.PHP4)) {
-			return allItems;
-		}
 		String versionNumber = version.getAlias().substring(3);
 		PHPexeItem[] result;
 		List<PHPexeItem> list = new ArrayList<PHPexeItem>();
