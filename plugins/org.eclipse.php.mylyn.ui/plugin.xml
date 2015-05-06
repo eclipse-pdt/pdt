@@ -5,7 +5,7 @@
 		point="org.eclipse.mylyn.context.ui.bridges">
 		<uiBridge
 			class="org.eclipse.dltk.internal.mylyn.DLTKUiBridge"
-			contentType="java"
+			contentType="php"
 			activeSearchIcon="icons/elcl16/edge-ref-java.gif"
 			activeSearchLabel="PHP Search" />
 		<preservedFilters
