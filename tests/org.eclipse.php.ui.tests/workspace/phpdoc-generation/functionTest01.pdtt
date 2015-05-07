@@ -1,0 +1,15 @@
+--TEST--
+Tests phpDoc generation for function
+--FILE--
+<?php
+/**|
+function function_name($param) {
+}
+--EXPECT--
+<?php
+/**
+ * 
+ * @param unknown $param
+ */
+function function_name($param) {
+}

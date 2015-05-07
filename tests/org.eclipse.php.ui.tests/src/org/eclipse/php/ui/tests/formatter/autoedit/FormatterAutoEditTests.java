@@ -42,8 +42,14 @@ import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.ui.tests.PHPUiTests;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.junit.Test;
@@ -66,6 +72,8 @@ public class FormatterAutoEditTests {
 	static {
 		TESTS.put(PHPVersion.PHP5,
 				new String[] { "/workspace/formatter-autoedit" });
+		TESTS.put(PHPVersion.PHP5,
+				new String[] { "/workspace/phpdoc-generation" });
 	};
 
 	public FormatterAutoEditTests(PHPVersion version, String[] fileNames) {
@@ -141,6 +149,16 @@ public class FormatterAutoEditTests {
 					return false;
 				}
 			}, null);
+
+		IWorkbenchWindow window = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow();
+		if (window == null || window.getActivePage() == null) {
+			return;
+		}
+		IWorkbenchPage page = window.getActivePage();
+
+		IEditorPart part = null;
+
 		IStructuredModel modelForEdit = StructuredModelManager
 				.getModelManager().getModelForEdit(file);
 		try {
@@ -173,6 +191,9 @@ public class FormatterAutoEditTests {
 
 			document.set(data);
 
+			part = page.openEditor(new FileEditorInput(file),
+					PHPUiConstants.PHP_EDITOR_ID);
+
 			IAutoEditStrategy indentLineAutoEditStrategy = new MainAutoEditStrategy();
 
 			if (pdttFile.getOther() != null) {
@@ -201,6 +222,9 @@ public class FormatterAutoEditTests {
 		} finally {
 			if (modelForEdit != null) {
 				modelForEdit.releaseFromEdit();
+			}
+			if (part != null) {
+				page.closeEditor(part, false);
 			}
 		}
 	}

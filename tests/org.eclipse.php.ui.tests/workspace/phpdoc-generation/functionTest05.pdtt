@@ -1,0 +1,40 @@
+--TEST--
+Tests phpDoc generation for function
+--FILE--
+<?php
+namespace Boo{
+	
+	class SomeClass{
+	}
+}
+
+namespace Foo{
+	
+	use Boo\SomeClass;
+	
+	/**|
+	function function_name(SomeClass $param02) {
+		return null;
+	}
+}
+--EXPECT--
+<?php
+namespace Boo{
+	
+	class SomeClass{
+	}
+}
+
+namespace Foo{
+	
+	use Boo\SomeClass;
+	
+	/**
+	 * 
+	 * @param SomeClass $param02
+	 * @return NULL
+	 */
+	function function_name(SomeClass $param02) {
+		return null;
+	}
+}

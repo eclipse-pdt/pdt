@@ -1,0 +1,16 @@
+--TEST--
+Tests phpDoc generation for function
+--FILE--
+<?php
+/**|
+function function_name($param01 = 1, $param02 = "test") {
+}
+--EXPECT--
+<?php
+/**
+ * 
+ * @param number $param01
+ * @param string $param02
+ */
+function function_name($param01 = 1, $param02 = "test") {
+}

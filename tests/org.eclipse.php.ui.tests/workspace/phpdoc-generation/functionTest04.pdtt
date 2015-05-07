@@ -1,0 +1,25 @@
+--TEST--
+Tests phpDoc generation for function
+--FILE--
+<?php
+/**|
+function function_name(Exception $param01, LogicException $param02) {
+	if (true){
+		return $param01;
+	}
+	return $param02;
+}
+--EXPECT--
+<?php
+/**
+ * 
+ * @param Exception $param01
+ * @param LogicException $param02
+ * @return Exception|LogicException
+ */
+function function_name(Exception $param01, LogicException $param02) {
+	if (true){
+		return $param01;
+	}
+	return $param02;
+}
