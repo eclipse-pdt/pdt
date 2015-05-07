@@ -535,8 +535,10 @@ public class CodeGeneration {
 		Program program = null;
 
 		try {
+			// XXX: WAIT_NO (instead of WAIT_YES) due bug 466694 and until
+			// bug 438661 will be fixed
 			program = SharedASTProvider.getAST(method.getSourceModule(),
-					SharedASTProvider.WAIT_YES, new NullProgressMonitor());
+					SharedASTProvider.WAIT_NO, new NullProgressMonitor());
 		} catch (IOException e1) {
 		}
 
