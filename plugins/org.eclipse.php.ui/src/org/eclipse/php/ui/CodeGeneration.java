@@ -285,61 +285,70 @@ public class CodeGeneration {
 		String fieldName = field.getElementName();
 		String fieldType = null;
 		Boolean isVar = false;
+		Program program = null;
 
 		try {
-			Program program = SharedASTProvider.getAST(field.getSourceModule(),
-					SharedASTProvider.WAIT_YES, new NullProgressMonitor());
-			ASTNode elementAt = program.getElementAt(field.getSourceRange()
-					.getOffset());
-			ITypeBinding varType = null;
-			IVariableBinding resolvedBinding = null;
+			// XXX: WAIT_NO (instead of WAIT_YES) due bug 466694 and until
+			// bug 438661 will be fixed
+			program = SharedASTProvider.getAST(field.getSourceModule(),
+					SharedASTProvider.WAIT_NO, new NullProgressMonitor());
+		} catch (IOException e1) {
+		}
 
-			if (elementAt instanceof FieldsDeclaration) {
-				FieldsDeclaration fieldDeclaration = (FieldsDeclaration) elementAt;
-				resolvedBinding = fieldDeclaration.resolveTypeBinding();
+		if (program == null) {
+			program = generageProgram(field, null);
+			if (program == null) {
+				return null;
+			}
+		}
 
-				if (null != resolvedBinding) {
-					varType = resolvedBinding.getType();
-				}
-			} else if (elementAt instanceof Variable) {
-				isVar = true;
+		ASTNode elementAt = program.getElementAt(field.getSourceRange()
+				.getOffset());
+		ITypeBinding varType = null;
+		IVariableBinding resolvedBinding = null;
 
-				Variable varDeclaration = (Variable) elementAt;
-				if (varDeclaration.getParent() instanceof Assignment) {
-					Expression expression = ((Assignment) varDeclaration
-							.getParent()).getRightHandSide();
-					varType = expression.resolveTypeBinding();
-					if (expression instanceof Scalar) {
-						Scalar scalar = (Scalar) expression;
-						switch (scalar.getScalarType()) {
-						case Scalar.TYPE_INT:
-							fieldType = "integer"; //$NON-NLS-1$
-							break;
-						case Scalar.TYPE_STRING:
-							fieldType = "string"; //$NON-NLS-1$
-							break;
-						}
+		if (elementAt instanceof FieldsDeclaration) {
+			FieldsDeclaration fieldDeclaration = (FieldsDeclaration) elementAt;
+			resolvedBinding = fieldDeclaration.resolveTypeBinding();
+
+			if (null != resolvedBinding) {
+				varType = resolvedBinding.getType();
+			}
+		} else if (elementAt instanceof Variable) {
+			isVar = true;
+
+			Variable varDeclaration = (Variable) elementAt;
+			if (varDeclaration.getParent() instanceof Assignment) {
+				Expression expression = ((Assignment) varDeclaration
+						.getParent()).getRightHandSide();
+				varType = expression.resolveTypeBinding();
+				if (expression instanceof Scalar) {
+					Scalar scalar = (Scalar) expression;
+					switch (scalar.getScalarType()) {
+					case Scalar.TYPE_INT:
+						fieldType = "integer"; //$NON-NLS-1$
+						break;
+					case Scalar.TYPE_STRING:
+						fieldType = "string"; //$NON-NLS-1$
+						break;
 					}
-
-				} else {
-					varType = varDeclaration.resolveTypeBinding();
 				}
-			}
 
-			if (null == fieldType && null != varType) {
-				if (varType.isAmbiguous()) {
-					fieldType = "Ambiguous"; //$NON-NLS-1$
-				} else {
-					fieldType = varType.getName();
-				}
+			} else {
+				varType = varDeclaration.resolveTypeBinding();
 			}
+		}
 
-			if (null == fieldType) {
-				fieldType = UNKNOWN_TYPE;
+		if (null == fieldType && null != varType) {
+			if (varType.isAmbiguous()) {
+				fieldType = "Ambiguous"; //$NON-NLS-1$
+			} else {
+				fieldType = varType.getName();
 			}
+		}
 
-		} catch (IOException e) {
-			return null;
+		if (null == fieldType) {
+			fieldType = UNKNOWN_TYPE;
 		}
 		if (isVar) {
 			return StubUtility.getVarComment(sp, fieldType, fieldName,
@@ -535,8 +544,10 @@ public class CodeGeneration {
 		Program program = null;
 
 		try {
+			// XXX: WAIT_NO (instead of WAIT_YES) due bug 466694 and until
+			// bug 438661 will be fixed
 			program = SharedASTProvider.getAST(method.getSourceModule(),
-					SharedASTProvider.WAIT_YES, new NullProgressMonitor());
+					SharedASTProvider.WAIT_NO, new NullProgressMonitor());
 		} catch (IOException e1) {
 		}
 
@@ -719,8 +730,8 @@ public class CodeGeneration {
 				newExceptions);
 	}
 
-	private static Program generageProgram(IMethod method, Program program) {
-		ISourceModule source = method.getSourceModule();
+	private static Program generageProgram(IMember member, Program program) {
+		ISourceModule source = member.getSourceModule();
 		ASTParser parserForExpected = ASTParser.newParser(ProjectOptions
 				.getPhpVersion(source.getScriptProject().getProject()), source);
 		try {
