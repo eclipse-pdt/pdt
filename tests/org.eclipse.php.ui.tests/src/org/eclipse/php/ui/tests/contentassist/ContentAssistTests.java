@@ -141,22 +141,38 @@ public class ContentAssistTests {
 		pdttFile.applyPreferences();
 
 		String data = pdttFile.getFile();
-		int offset = data.lastIndexOf(OFFSET_CHAR);
+		final int offset = data.lastIndexOf(OFFSET_CHAR);
 
 		// replace the offset character
 		data = data.substring(0, offset) + data.substring(offset + 1);
-		createFile(new ByteArrayInputStream(data.getBytes()),
-				Long.toString(System.currentTimeMillis()),
-				prepareOtherStreams(pdttFile));
-		String result = executeAutoInsert(offset);
-		closeEditor();
-		if (!pdttFile.getExpected().trim().equals(result.trim())) {
-			StringBuilder errorBuf = new StringBuilder();
-			errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
-			errorBuf.append(pdttFile.getExpected());
-			errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
-			errorBuf.append(result);
-			fail(errorBuf.toString());
+		final ByteArrayInputStream stream = new ByteArrayInputStream(
+				data.getBytes());
+		final Exception[] err = new Exception[1];
+		Display.getDefault().syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					createFile(stream,
+							Long.toString(System.currentTimeMillis()),
+							prepareOtherStreams(pdttFile));
+					String result = executeAutoInsert(offset);
+					closeEditor();
+					if (!pdttFile.getExpected().trim().equals(result.trim())) {
+						StringBuilder errorBuf = new StringBuilder();
+						errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
+						errorBuf.append(pdttFile.getExpected());
+						errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
+						errorBuf.append(result);
+						fail(errorBuf.toString());
+					}
+				} catch (Exception e) {
+					err[0] = e;
+				}
+			}
+		});
+		if (err[0] != null) {
+			throw err[0];
 		}
 	}
 

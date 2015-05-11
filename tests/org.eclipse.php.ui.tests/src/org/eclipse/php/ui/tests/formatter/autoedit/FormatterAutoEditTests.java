@@ -44,7 +44,9 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
+import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.tests.PHPUiTests;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -70,10 +72,13 @@ public class FormatterAutoEditTests {
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS.put(PHPVersion.PHP5,
-				new String[] { "/workspace/formatter-autoedit" });
-		TESTS.put(PHPVersion.PHP5,
-				new String[] { "/workspace/phpdoc-generation" });
+		TESTS.put(PHPVersion.PHP5, new String[] {
+				"/workspace/formatter-autoedit",
+				"/workspace/phpdoc-generation/php5" });
+		TESTS.put(PHPVersion.PHP5_3, new String[] {
+				"/workspace/formatter-autoedit",
+				"/workspace/phpdoc-generation/php5",
+				"/workspace/phpdoc-generation/php53" });
 	};
 
 	public FormatterAutoEditTests(PHPVersion version, String[] fileNames) {
@@ -84,7 +89,7 @@ public class FormatterAutoEditTests {
 	@BeforeList
 	public void setUpSuite() throws Exception {
 		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("FormatterTests");
+				.getProject("FormatterTests" + phpVersion.name());
 		if (project.exists()) {
 			return;
 		}
@@ -112,8 +117,8 @@ public class FormatterAutoEditTests {
 		});
 
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
+		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 	}
 
 	@AfterList
@@ -131,7 +136,7 @@ public class FormatterAutoEditTests {
 	@Test
 	public void formatter(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(fileName);
-		IFile file = createFile(pdttFile.getFile().trim());
+		final IFile file = createFile(pdttFile.getFile().trim());
 		ISourceModule modelElement = (ISourceModule) DLTKCore.create(file);
 		if (ScriptModelUtil.isPrimary(modelElement))
 			modelElement.becomeWorkingCopy(new IProblemRequestor() {
@@ -150,19 +155,13 @@ public class FormatterAutoEditTests {
 				}
 			}, null);
 
-		IWorkbenchWindow window = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow();
-		if (window == null || window.getActivePage() == null) {
-			return;
-		}
-		IWorkbenchPage page = window.getActivePage();
-
-		IEditorPart part = null;
+		final Exception[] err = new Exception[1];
+		final IEditorPart[] part = new IEditorPart[1];
 
 		IStructuredModel modelForEdit = StructuredModelManager
 				.getModelManager().getModelForEdit(file);
 		try {
-			IDocument document = modelForEdit.getStructuredDocument();
+			final IDocument document = modelForEdit.getStructuredDocument();
 			String beforeFormat = document.get();
 			String data = document.get();
 			int firstOffset = data.indexOf(OFFSET_CHAR);
@@ -172,7 +171,7 @@ public class FormatterAutoEditTests {
 						"Offset character is not set");
 			}
 
-			DocumentCommand cmd = new DocumentCommand() {
+			final DocumentCommand cmd = new DocumentCommand() {
 			};
 
 			// replace the offset character(s)
@@ -188,30 +187,67 @@ public class FormatterAutoEditTests {
 				cmd.offset = firstOffset;
 				cmd.length = lastOffset - (firstOffset + 1);
 			}
+			final String newContent = data;
 
-			document.set(data);
+			Display.getDefault().syncExec(new Runnable() {
 
-			part = page.openEditor(new FileEditorInput(file),
-					PHPUiConstants.PHP_EDITOR_ID);
+				@Override
+				public void run() {
+					try {
+						IWorkbenchWindow window = PlatformUI.getWorkbench()
+								.getActiveWorkbenchWindow();
+						IWorkbenchPage page = window.getActivePage();
+						part[0] = page.openEditor(new FileEditorInput(file),
+								PHPUiConstants.PHP_EDITOR_ID);
+						part[0].setFocus();
 
-			IAutoEditStrategy indentLineAutoEditStrategy = new MainAutoEditStrategy();
-
-			if (pdttFile.getOther() != null) {
-				cmd.text = pdttFile.getOther();
-				if (cmd.text != null && cmd.text.trim().length() == 1) {
-					// support single (non-blank) character insertion
-					cmd.text = cmd.text.trim();
+						document.set(newContent);
+					} catch (Exception e) {
+						err[0] = e;
+					}
 				}
-			} else {
-				cmd.text = "\n";
+			});
+			if (err[0] != null) {
+				throw err[0];
 			}
+			// wait for initial reconcile
+			SharedASTProvider.getAST(modelElement, SharedASTProvider.WAIT_YES,
+					null);
 
-			cmd.doit = true;
-			cmd.shiftsCaret = true;
-			cmd.caretOffset = -1;
+			Display.getDefault().syncExec(new Runnable() {
 
-			indentLineAutoEditStrategy.customizeDocumentCommand(document, cmd);
-			document.replace(cmd.offset, cmd.length, cmd.text);
+				@Override
+				public void run() {
+					try {
+						IAutoEditStrategy indentLineAutoEditStrategy = new MainAutoEditStrategy();
+
+						if (pdttFile.getOther() != null) {
+							cmd.text = pdttFile.getOther();
+							if (cmd.text != null
+									&& cmd.text.trim().length() == 1) {
+								// support single (non-blank) character
+								// insertion
+								cmd.text = cmd.text.trim();
+							}
+						} else {
+							cmd.text = "\n";
+						}
+
+						cmd.doit = true;
+						cmd.shiftsCaret = true;
+						cmd.caretOffset = -1;
+
+						indentLineAutoEditStrategy.customizeDocumentCommand(
+								document, cmd);
+						document.replace(cmd.offset, cmd.length, cmd.text);
+					} catch (Exception e) {
+						err[0] = e;
+					}
+				}
+			});
+			if (err[0] != null) {
+				throw err[0];
+			}
 
 			PDTTUtils.assertContents(pdttFile.getExpected(), document.get());
 
@@ -223,8 +259,25 @@ public class FormatterAutoEditTests {
 			if (modelForEdit != null) {
 				modelForEdit.releaseFromEdit();
 			}
-			if (part != null) {
-				page.closeEditor(part, false);
+			if (part[0] != null) {
+				Display.getDefault().syncExec(new Runnable() {
+
+					@Override
+					public void run() {
+						try {
+							IWorkbenchWindow window = PlatformUI.getWorkbench()
+									.getActiveWorkbenchWindow();
+							IWorkbenchPage page = window.getActivePage();
+							page.closeEditor(part[0], false);
+						} catch (Exception e) {
+							err[0] = e;
+						}
+					}
+				});
+				if (err[0] != null) {
+					throw err[0];
+				}
+
 			}
 		}
 	}
