@@ -22,12 +22,16 @@
 					<testSuite>org.eclipse.php.ui.tests</testSuite>
 					<testClass>org.eclipse.php.ui.tests.AllTests</testClass>
 					<useUIHarness>true</useUIHarness>
-					<useUIThread>true</useUIThread>
+					<useUIThread>false</useUIThread>
 					<argLine>-Xmx512m -XX:MaxPermSize=256m ${test.vmargs} ${tycho.testArgLine}</argLine>
 					<dependencies>
 						<dependency>
 							<type>p2-installable-unit</type>
 							<artifactId>org.eclipse.dltk.core.index.sql.h2</artifactId>
+						</dependency>
+						<dependency>
+							<type>p2-installable-unit</type>
+							<artifactId>org.eclipse.platform.feature.group</artifactId>
 						</dependency>
 						<dependency>
 							<type>eclipse-feature</type>

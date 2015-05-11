@@ -558,8 +558,21 @@ public class CodeGeneration {
 			}
 		}
 
-		ASTNode elementAt = program.getElementAt(method.getSourceRange()
-				.getOffset());
+		ASTNode elementAt = null;
+		try {
+			elementAt = program.getElementAt(method.getSourceRange()
+					.getOffset());
+		} catch (IllegalArgumentException e) {
+			program = generageProgram(method, null);
+			if (program == null) {
+				return null;
+			}
+			elementAt = program.getElementAt(method.getSourceRange()
+					.getOffset());
+			if (elementAt == null) {
+				return null;
+			}
+		}
 
 		if (!(elementAt instanceof MethodDeclaration
 				|| elementAt instanceof FunctionDeclaration || elementAt

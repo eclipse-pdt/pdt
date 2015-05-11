@@ -28,6 +28,10 @@
 							<artifactId>org.eclipse.dltk.core.index.sql.h2</artifactId>
 						</dependency>
 						<dependency>
+							<type>p2-installable-unit</type>
+							<artifactId>org.eclipse.platform.feature.group</artifactId>
+						</dependency>
+						<dependency>
 							<type>eclipse-feature</type>
 							<artifactId>org.eclipse.e4.rcp</artifactId>
 							<version>0.0.0</version>
