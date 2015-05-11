@@ -1,0 +1,40 @@
+--TEST--
+Tests phpDoc generation for function
+--FILE--
+<?php
+namespace A;
+
+class Nuff {
+	/**
+	 *
+	 * @var string
+	 */
+	protected $string;
+	
+	/**|
+	 */
+	public function getString()
+	{
+		return $this->string;
+	}
+}
+--EXPECT--
+<?php
+namespace A;
+
+class Nuff {
+	/**
+	 *
+	 * @var string
+	 */
+	protected $string;
+	
+	/**
+	 * 
+	 * @return string
+	 */
+	public function getString()
+	{
+		return $this->string;
+	}
+}
