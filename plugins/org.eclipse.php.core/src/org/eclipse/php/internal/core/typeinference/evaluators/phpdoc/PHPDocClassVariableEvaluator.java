@@ -15,17 +15,13 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
@@ -43,8 +39,6 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 	public static final String BRACKETS = PHPEvaluationUtils.BRACKETS;
 
 	public final static Pattern ARRAY_TYPE_PATTERN = PHPEvaluationUtils.ARRAY_TYPE_PATTERN;
-
-	private static final String SPLASH = "\\"; //$NON-NLS-1$
 
 	private List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
 
@@ -106,70 +100,14 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 			IType currentNamespace = PHPModelUtils
 					.getCurrentNamespace(typeField);
 
+			IModelElement space = currentNamespace != null ? currentNamespace
+					: typeField.getSourceModule();
+
 			for (PHPDocTag tag : doc.getTags()) {
 				if (tag.getTagKind() == PHPDocTag.VAR) {
-					SimpleReference[] references = tag.getReferences();
-					for (SimpleReference ref : references) {
-						String typeName = ref.getName();
-
-						IEvaluatedType evaluatedType = PHPEvaluationUtils
-								.extractArrayType(typeName, currentNamespace,
-										tag.sourceStart());
-						if (evaluatedType != null) {
-							evaluated.add(evaluatedType);
-						} else {
-							if (currentNamespace != null) {
-								ModuleDeclaration moduleDeclaration = SourceParserUtil
-										.getModuleDeclaration(currentNamespace
-												.getSourceModule());
-								if (typeName.indexOf(SPLASH) > 0) {
-									// check if the first part is an
-									// alias,then get the full name
-									String prefix = typeName.substring(0,
-											typeName.indexOf(SPLASH));
-									final Map<String, UsePart> result = PHPModelUtils
-											.getAliasToNSMap(prefix,
-													moduleDeclaration,
-													doc.sourceStart(),
-													currentNamespace, true);
-									if (result.containsKey(prefix)) {
-										String fullName = result.get(prefix)
-												.getNamespace()
-												.getFullyQualifiedName();
-										typeName = typeName.replace(prefix,
-												fullName);
-										if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
-											typeName = NamespaceReference.NAMESPACE_SEPARATOR
-													+ typeName;
-										}
-									}
-								} else if (typeName.indexOf(SPLASH) < 0) {
-									String prefix = typeName;
-									final Map<String, UsePart> result = PHPModelUtils
-											.getAliasToNSMap(prefix,
-													moduleDeclaration,
-													doc.sourceStart(),
-													currentNamespace, true);
-									if (result.containsKey(prefix)) {
-										String fullName = result.get(prefix)
-												.getNamespace()
-												.getFullyQualifiedName();
-										typeName = fullName;
-										if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
-											typeName = NamespaceReference.NAMESPACE_SEPARATOR
-													+ typeName;
-										}
-									}
-								}
-							}
-							IEvaluatedType type = PHPEvaluationUtils
-									.getEvaluatedType(typeName,
-											currentNamespace);
-							if (type != null) {
-								evaluated.add(type);
-							}
-						}
-					}
+					evaluated.addAll(Arrays.asList(PHPEvaluationUtils
+							.evaluatePHPDocType(tag.getReferences(), space,
+									tag.sourceStart(), null)));
 				}
 			}
 		}
