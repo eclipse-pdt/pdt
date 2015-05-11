@@ -70,10 +70,13 @@ public class FormatterAutoEditTests {
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS.put(PHPVersion.PHP5,
-				new String[] { "/workspace/formatter-autoedit" });
-		TESTS.put(PHPVersion.PHP5,
-				new String[] { "/workspace/phpdoc-generation" });
+		TESTS.put(PHPVersion.PHP5, new String[] {
+				"/workspace/formatter-autoedit",
+				"/workspace/phpdoc-generation/php5" });
+		TESTS.put(PHPVersion.PHP5_3, new String[] {
+				"/workspace/formatter-autoedit",
+				"/workspace/phpdoc-generation/php5",
+				"/workspace/phpdoc-generation/php53" });
 	};
 
 	public FormatterAutoEditTests(PHPVersion version, String[] fileNames) {
@@ -84,7 +87,7 @@ public class FormatterAutoEditTests {
 	@BeforeList
 	public void setUpSuite() throws Exception {
 		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("FormatterTests");
+				.getProject("FormatterTests" + phpVersion.name());
 		if (project.exists()) {
 			return;
 		}
@@ -112,8 +115,8 @@ public class FormatterAutoEditTests {
 		});
 
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
+		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 	}
 
 	@AfterList
