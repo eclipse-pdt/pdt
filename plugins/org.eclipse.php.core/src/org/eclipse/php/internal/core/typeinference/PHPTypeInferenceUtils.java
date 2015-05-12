@@ -219,13 +219,17 @@ public class PHPTypeInferenceUtils {
 				try {
 					Class<?> expressionClass = evaluatedType.getClass();
 					if (expressionClass == PHPTraitType.class) {
+						PHPTraitType phpTraitType = (PHPTraitType) evaluatedType;
 						return PHPModelUtils.getTypes(
 								evaluatedType.getTypeName(), sourceModule,
-								offset, cache, null, false);
+								offset, cache, null, false,
+								phpTraitType.isGlobal());
 					} else {
+						PHPClassType phpClassType = (PHPClassType) evaluatedType;
 						return PHPModelUtils.getTypes(
 								evaluatedType.getTypeName(), sourceModule,
-								offset, cache, null);
+								offset, cache, null, true,
+								phpClassType.isGlobal());
 					}
 				} catch (ModelException e) {
 					if (DLTKCore.DEBUG) {
