@@ -1800,42 +1800,53 @@ public class PHPModelUtils {
 	public static IType[] getTypes(String typeName, ISourceModule sourceModule,
 			int offset, IModelAccessCache cache, IProgressMonitor monitor)
 			throws ModelException {
-		return getTypes(typeName, sourceModule, offset, cache, monitor, true);
+		return getTypes(typeName, sourceModule, offset, cache, monitor, true,
+				false);
 	}
 
 	public static IType[] getTypes(String typeName, ISourceModule sourceModule,
 			int offset, IModelAccessCache cache, IProgressMonitor monitor,
 			boolean isType) throws ModelException {
+		return getTypes(typeName, sourceModule, offset, cache, monitor, isType,
+				false);
+	}
+
+	public static IType[] getTypes(String typeName, ISourceModule sourceModule,
+			int offset, IModelAccessCache cache, IProgressMonitor monitor,
+			boolean isType, boolean isGlobal) throws ModelException {
 
 		if (typeName == null || typeName.length() == 0) {
 			return PhpModelAccess.NULL_TYPES;
 		}
 
-		String namespace = extractNamespaceName(typeName, sourceModule, offset);
-		typeName = extractElementName(typeName);
-		if (namespace != null) {
-			if (namespace.length() > 0) {
-				typeName = getRealName(typeName, sourceModule, offset, typeName);
+		if (!isGlobal) {
+			String namespace = extractNamespaceName(typeName, sourceModule,
+					offset);
+			typeName = extractElementName(typeName);
+			if (namespace != null) {
+				if (namespace.length() > 0) {
+					typeName = getRealName(typeName, sourceModule, offset,
+							typeName);
 
-				IType[] types = getNamespaceType(namespace, typeName, true,
-						sourceModule, cache, monitor, isType);
-				types = filterType(types, isType);
-				if (types.length > 0) {
-					return types;
+					IType[] types = getNamespaceType(namespace, typeName, true,
+							sourceModule, cache, monitor, isType);
+					if (types.length > 0) {
+						return types;
+					}
+					return PhpModelAccess.NULL_TYPES;
 				}
-				return PhpModelAccess.NULL_TYPES;
-			}
-			// it's a global reference: \A
-		} else {
-			// look for the element in current namespace:
-			IType currentNamespace = getCurrentNamespace(sourceModule, offset);
-			if (currentNamespace != null) {
-				namespace = currentNamespace.getElementName();
-				IType[] types = getNamespaceType(namespace, typeName, true,
-						sourceModule, cache, monitor, isType);
-				types = filterType(types, isType);
-				if (types.length > 0) {
-					return types;
+				// it's a global reference: \A
+			} else {
+				// look for the element in current namespace:
+				IType currentNamespace = getCurrentNamespace(sourceModule,
+						offset);
+				if (currentNamespace != null) {
+					namespace = currentNamespace.getElementName();
+					IType[] types = getNamespaceType(namespace, typeName, true,
+							sourceModule, cache, monitor, isType);
+					if (types.length > 0) {
+						return types;
+					}
 				}
 			}
 		}
@@ -1880,20 +1891,11 @@ public class PHPModelUtils {
 		return (IType[]) result.toArray(new IType[result.size()]);
 	}
 
-	private static IType[] filterType(IType[] types, boolean isType) {
-		// TODO Auto-generated method stub
-		if (isType) {
-
-		} else {
-
-		}
-		return types;
-	}
-
 	public static IType[] getTraits(String typeName,
 			ISourceModule sourceModule, int offset, IModelAccessCache cache,
 			IProgressMonitor monitor) throws ModelException {
-		return getTypes(typeName, sourceModule, offset, cache, monitor, false);
+		return getTypes(typeName, sourceModule, offset, cache, monitor, false,
+				false);
 	}
 
 	/**
