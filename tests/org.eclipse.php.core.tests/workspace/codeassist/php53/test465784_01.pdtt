@@ -1,0 +1,26 @@
+--TEST--
+Bug http://eclip.se/465784
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+namespace MyNamespace;
+
+class MyClass {
+	/**
+	 * @var \MyClass
+	 */
+	public $myproperty;
+
+	public function mymethod()
+	{
+		$this->myproperty->|
+	}
+}
+--FILE0--
+<?php
+class MyClass {
+	public function mynamespacemethod() {}
+}
+--EXPECT--
+method(mynamespacemethod)
