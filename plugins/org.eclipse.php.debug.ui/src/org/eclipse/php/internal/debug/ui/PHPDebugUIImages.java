@@ -49,6 +49,7 @@ public class PHPDebugUIImages {
 
 	public static final String IMG_OBJ_DEBUG_CONF = "IMG_OBJ_DEBUG_CONF"; //$NON-NLS-1$
 	public static final String IMG_OBJ_PHP_EXE = "IMG_OBJ_PHP_EXE"; //$NON-NLS-1$
+	public static final String IMG_OBJ_PHP_EXE_LAUNCH = "IMG_OBJ_PHP_EXE_LAUNCH"; //$NON-NLS-1$
 	public static final String IMG_OBJ_PATH_MAPPING = "IMG_OBJ_PATH_MAPPING"; //$NON-NLS-1$
 	public static final String IMG_OBJ_MEMBER_PUBLIC_ACCESS = "IMG_OBJ_MEMBER_PUBLIC_ACCESS"; //$NON-NLS-1$
 	public static final String IMG_OBJ_MEMBER_PROTECTED_ACCESS = "IMG_OBJ_MEMBER_PROTECTED_ACCESS"; //$NON-NLS-1$
@@ -114,6 +115,7 @@ public class PHPDebugUIImages {
 				+ "server_debug_wiz.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_DEBUG_CONF, T_OBJ + "debug_conf.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_PHP_EXE, T_OBJ + "php_exe.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_PHP_EXE_LAUNCH, T_OBJ + "php_exec.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_PATH_MAPPING, T_OBJ + "path_mapping.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_MEMBER_LOCAL, T_OBJ + "member_local.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_MEMBER_SUPER_GLOBAL, T_OBJ

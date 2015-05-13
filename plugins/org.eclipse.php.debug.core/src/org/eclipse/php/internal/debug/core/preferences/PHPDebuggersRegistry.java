@@ -22,6 +22,8 @@ import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
+import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
+import org.eclipse.php.internal.debug.core.debugger.NoneDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.daemon.communication.DaemonsRegistry;
 import org.eclipse.ui.IPluginContribution;
@@ -37,6 +39,7 @@ import org.eclipse.ui.activities.WorkbenchActivityHelper;
  */
 public class PHPDebuggersRegistry {
 
+	public static final String NONE_DEBUGGER_ID = "org.eclipse.php.debug.core.noneDebugger"; //$NON-NLS-1$
 	private static final String EXTENSION_POINT_NAME = "phpDebuggers"; //$NON-NLS-1$
 	private static final String DEBUGGER_TAG = "phpDebugger"; //$NON-NLS-1$
 	private static final String NAME_ATTRIBUTE = "name"; //$NON-NLS-1$
@@ -46,11 +49,13 @@ public class PHPDebuggersRegistry {
 	// Zend's debugger is the default for the PDT, however, this can be changed
 	// by calling the setDefaultDebuggerId() method.
 	private static String DEFAULT_DEBUGGER_ID = DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID;
+	private static final String NONE_DEBUGGER_NAME = "<none>"; //$NON-NLS-1$
 
 	private static PHPDebuggersRegistry instance;
 
 	private HashMap<String, String> debuggers = new HashMap<String, String>();
 	private HashMap<String, AbstractDebuggerConfiguration> configurations = new HashMap<String, AbstractDebuggerConfiguration>();
+	private IDebuggerConfiguration noneDebuggerConfiguration = new NoneDebuggerConfiguration();
 
 	private PHPDebuggersRegistry() {
 		loadDebuggers();
@@ -79,13 +84,20 @@ public class PHPDebuggersRegistry {
 	 * @return An AbstractDebuggerConfiguration, or null if no such debugger id
 	 *         exists.
 	 */
-	public static AbstractDebuggerConfiguration getDebuggerConfiguration(
+	public static IDebuggerConfiguration getDebuggerConfiguration(
 			String debuggerId) {
+		if (NONE_DEBUGGER_ID.equals(debuggerId))
+			return getInstance().noneDebuggerConfiguration;
 		return getInstance().configurations.get(debuggerId);
 	}
 
 	/**
-	 * Returns all the debuggers configurations.
+	 * <p>
+	 * Returns all debuggers configurations.
+	 * </p>
+	 * <p>
+	 * NOTE: 'none' mock debugger configuration is not returned by this method.
+	 * </p>
 	 * 
 	 * @return An array of all the loaded AbstractDebuggerConfiguration.
 	 */
@@ -135,6 +147,10 @@ public class PHPDebuggersRegistry {
 	 */
 	public static String getDebuggerName(String debuggerID) {
 		return getInstance().debuggers.get(debuggerID);
+	}
+
+	public static boolean isNoneDebugger(String debuggerID) {
+		return NONE_DEBUGGER_ID.equals(debuggerID);
 	}
 
 	// Load the debuggers into the map.
@@ -213,6 +229,7 @@ public class PHPDebuggersRegistry {
 			debuggers.put(configuration.getDebuggerId(),
 					configuration.getName());
 		}
+		debuggers.put(NONE_DEBUGGER_ID, NONE_DEBUGGER_NAME);
 	}
 
 }

@@ -212,6 +212,15 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebug_IDBGpModelConstants_0;
 	public static String XDebug_IDBGpModelConstants_1;
 
+	public static String NoneDebuggerConfiguration_Launching;
+	public static String NoneDebuggerConfiguration_PHP_executable_file_is_invalid;
+	public static String NoneDebuggerConfiguration_PHP_script_file_is_invalid;
+	public static String NoneDebuggerConfiguration_PHP_source_file_is_invalid;
+	public static String NoneDebuggerConfiguration_There_is_no_debugger_attached_for_PHP_executable;
+	public static String NoneDebuggerConfiguration_There_is_no_debugger_attached_for_PHP_server;
+	public static String NoneDebuggerConfiguration_There_is_no_PHP_runtime_environment;
+	public static String NoneDebuggerConfiguration_There_is_no_PHP_server_specified;
+
 	public static String ExeLaunchConfigurationDelegate_PortInUse;
 	public static String WebLaunchConfigurationDelegate_PortInUse;
 

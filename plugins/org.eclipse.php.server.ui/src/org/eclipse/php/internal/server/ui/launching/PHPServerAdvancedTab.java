@@ -13,6 +13,7 @@ package org.eclipse.php.internal.server.ui.launching;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -916,6 +917,22 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		launchConfiguration = launchConfig;
 		setMessage(null);
 		setErrorMessage(null);
+		Server server;
+		try {
+			server = PHPLaunchUtilities.getPHPServer(launchConfig);
+			if (server != null
+					&& isLaunchMode(ILaunchManager.DEBUG_MODE)
+					&& PHPDebuggersRegistry.NONE_DEBUGGER_ID.equals(server
+							.getDebuggerId())) {
+				setErrorMessage(MessageFormat
+						.format(PHPServerUIMessages
+								.getString("PHPServerAdvancedTab.60"), server
+								.getName()));
+				return false;
+			}
+		} catch (CoreException e) {
+			// ignore
+		}
 		if (debugThroughTunnel.getSelection()) {
 			boolean valid = userName.getText().trim().length() > 0;
 			testButton.setEnabled(valid);
@@ -950,6 +967,10 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	 */
 	protected boolean isValidExtension(ILaunchConfiguration launchConfig) {
 		return true;
+	}
+
+	protected boolean isLaunchMode(String mode) {
+		return mode.equals(getLaunchConfigurationDialog().getMode());
 	}
 
 	private void updateDebugServerTesters() {

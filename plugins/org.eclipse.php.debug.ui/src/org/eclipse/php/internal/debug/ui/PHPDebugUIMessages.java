@@ -104,10 +104,6 @@ public class PHPDebugUIMessages extends NLS {
 
 	public static String NewPHPsComboBlock_4;
 
-	public static String NewPHPsComboBlock_5;
-
-	public static String NewPHPsComboBlock_7;
-
 	public static String PHP_File;
 	public static String PHP_File_Not_Exist;
 	public static String PHP_Location_Message;
@@ -200,7 +196,13 @@ public class PHPDebugUIMessages extends NLS {
 
 	public static String PHPExecutableLaunchTab_argumentsWillNotBePassed;
 
+	public static String PHPExecutableLaunchTab_Debugger_group_name;
+
 	public static String PHPExecutableLaunchTab_isNotPHPFile;
+
+	public static String PHPExecutableLaunchTab_No_debugger_is_attached;
+
+	public static String PHPExecutableLaunchTab_PHP_debugger_type;
 
 	public static String PHPExecutableLaunchTab_scriptArguments;
 

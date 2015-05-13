@@ -37,7 +37,7 @@ import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
+import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.preferences.*;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
@@ -324,7 +324,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 		// Set the delegate class according to selected executable.
 		wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
 				defaultEXE.getDebuggerID());
-		AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
+		IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
 				.getDebuggerConfiguration(defaultEXE.getDebuggerID());
 		wc.setAttribute(
 				PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,

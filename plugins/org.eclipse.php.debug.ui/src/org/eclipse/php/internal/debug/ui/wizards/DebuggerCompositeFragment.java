@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.eclipse.debug.internal.ui.SWTFactory;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.php.internal.core.IUniqueIdentityElement;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.PHPExeUtil;
@@ -60,6 +61,41 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		public ValuesCache(ValuesCache cache) {
 			this.debuggerId = cache.debuggerId;
 		}
+	}
+
+	private class EmptySettingsSection implements IDebuggerSettingsSection {
+
+		private EmptySettingsSection(Composite settingsComposite) {
+			Composite empty = new Composite(settingsComposite, SWT.NONE);
+			empty.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		}
+
+		@Override
+		public boolean performOK() {
+			return true;
+		}
+
+		@Override
+		public boolean performCancel() {
+			return true;
+		}
+
+		@Override
+		public void validate() {
+			// Reset state
+			setMessage(getDescription(), IMessageProvider.NONE);
+		}
+
+		@Override
+		public boolean canTest() {
+			return false;
+		}
+
+		@Override
+		public void performTest() {
+			// ignore
+		}
+
 	}
 
 	private List<String> debuggersIds;
@@ -178,7 +214,10 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		debuggerSettingsComposite.setLayout(new GridLayout());
 		debuggerSettingsComposite.setLayoutData(new GridData(SWT.FILL,
 				SWT.FILL, true, true));
-		if (settings == null) {
+		if (PHPDebuggersRegistry.NONE_DEBUGGER_ID.equals(debuggerId)) {
+			debuggerSettingsSection = new EmptySettingsSection(
+					debuggerSettingsComposite);
+		} else if (settings == null) {
 			debuggerSettingsSection = new DebuggerUnsupportedSettingsSection(
 					this, debuggerSettingsComposite);
 		} else {
@@ -345,6 +384,8 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 						break;
 					}
 			}
+			if (detectedDebuggerId == null)
+				detectedDebuggerId = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
 		}
 	}
 

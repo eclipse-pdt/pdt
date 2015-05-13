@@ -182,7 +182,6 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 
 		init();
 		createFieldListeners();
-		updateItem();
 		fPHPExePath.setFocus();
 		Dialog.applyDialogFont(this);
 	}
@@ -278,6 +277,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 			fSapiTypes.setEnabled(phpExeItem.isEditable());
 			fSapiTypesLabel.setEnabled(phpExeItem.isEditable());
 		}
+		updateItem();
 	}
 
 	public void validate() {
