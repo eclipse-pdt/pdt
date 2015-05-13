@@ -137,7 +137,8 @@ public class FormatterAutoEditTests {
 	public void formatter(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(fileName);
 		final IFile file = createFile(pdttFile.getFile().trim());
-		ISourceModule modelElement = (ISourceModule) DLTKCore.create(file);
+		final ISourceModule modelElement = (ISourceModule) DLTKCore
+				.create(file);
 		if (ScriptModelUtil.isPrimary(modelElement))
 			modelElement.becomeWorkingCopy(new IProblemRequestor() {
 
@@ -202,6 +203,7 @@ public class FormatterAutoEditTests {
 						part[0].setFocus();
 
 						document.set(newContent);
+						modelElement.reconcile(true, null, null);
 					} catch (Exception e) {
 						err[0] = e;
 					}
@@ -210,7 +212,7 @@ public class FormatterAutoEditTests {
 			if (err[0] != null) {
 				throw err[0];
 			}
-			// wait for initial reconcile
+
 			SharedASTProvider.getAST(modelElement, SharedASTProvider.WAIT_YES,
 					null);
 
