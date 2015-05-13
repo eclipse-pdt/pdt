@@ -26,7 +26,10 @@ import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.debug.core.*;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
+import org.eclipse.php.internal.debug.core.Logger;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
@@ -54,7 +57,7 @@ public class XDebugExeLaunchConfigurationDelegate extends
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 			return;
 		}
-		PHPexeItem phpExeItem = PHPExeUtil.getPHPExeItem(configuration);
+		PHPexeItem phpExeItem = PHPLaunchUtilities.getPHPExe(configuration);
 		if (phpExeItem == null) {
 			Logger.log(Logger.ERROR,
 					"Launch configuration could not find PHP exe item"); //$NON-NLS-1$

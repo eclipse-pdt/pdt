@@ -15,6 +15,7 @@ import static org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSett
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsWorkingCopy;
@@ -95,6 +96,7 @@ public class ZendDebuggerExeSettingsSection implements IDebuggerSettingsSection 
 		compositeFragment.setMessage(compositeFragment.getDescription(),
 				IMessageProvider.NONE);
 		if (debuggerStatus == null) {
+			debuggerStatus = Status.OK_STATUS;
 			PHPexeItem phpExe = (PHPexeItem) compositeFragment.getData();
 			AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry
 					.getDebuggersConfigurations();

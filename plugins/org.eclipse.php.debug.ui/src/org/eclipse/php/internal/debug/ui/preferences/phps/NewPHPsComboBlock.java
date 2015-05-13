@@ -789,22 +789,17 @@ public class NewPHPsComboBlock {
 	}
 
 	private String getDisplayName(PHPexeItem item, boolean isDefault) {
-		String name = PHPDebugUIMessages.NewPHPsComboBlock_4; 
+		String name = PHPDebugUIMessages.NewPHPsComboBlock_4;
 		if (item != null) {
-			String debugger = PHPDebugUIMessages.NewPHPsComboBlock_5;
-			if (!"org.eclipse.php.debug.core.zendDebugger".equals(item //$NON-NLS-1$
-					.getDebuggerID())) {
-				debugger = PHPDebugUIMessages.NewPHPsComboBlock_7;
-			}
-			name = item.getName()
-					+ " (" + debugger + " " + item.getVersion() + " " + item.getSapiType() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			name = item.getName();
 		}
 		if (isDefault) {
 			String defaultPrefix = PHPDebugUIMessages.NewPHPsComboBlock_13;
 			if (project != null) {
 				defaultPrefix = PHPDebugUIMessages.NewPHPsComboBlock_14;
 			}
-			return defaultPrefix + PHPDebugUIMessages.NewPHPsComboBlock_15 + " " + name; //$NON-NLS-1$
+			return defaultPrefix + PHPDebugUIMessages.NewPHPsComboBlock_15
+					+ " " + name; //$NON-NLS-1$
 		}
 		return name;
 	}

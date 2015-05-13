@@ -31,7 +31,7 @@ import org.eclipse.php.internal.core.documentModel.provisional.contenttype.Conte
 import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
+import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
@@ -277,7 +277,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 		// configuration
 		String debuggerID = PHPDebugPlugin.getDebuggerId(server.getName());
 		wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerID);
-		AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
+		IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
 				.getDebuggerConfiguration(debuggerID);
 		wc.setAttribute(
 				PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
