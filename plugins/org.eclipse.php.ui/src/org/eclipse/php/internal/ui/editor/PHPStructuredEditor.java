@@ -2809,6 +2809,15 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				getOverviewRuler(), isOverviewRulerVisible(), styles);
 	}
 
+	/**
+	 * Resets the foldings structure according to the folding preferences.
+	 */
+	public void resetProjection() {
+		if (fProjectionModelUpdater != null) {
+			fProjectionModelUpdater.initialize();
+		}
+	}
+
 	/*
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#performSave(boolean,
 	 * org.eclipse.core.runtime.IProgressMonitor)

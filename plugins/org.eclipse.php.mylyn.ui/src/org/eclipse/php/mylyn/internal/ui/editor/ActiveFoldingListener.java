@@ -26,7 +26,6 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.mylyn.DLTKStructureBridge;
 import org.eclipse.dltk.internal.mylyn.DLTKUiBridgePlugin;
-import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.text.folding.IFoldingStructureProvider;
 import org.eclipse.dltk.ui.text.folding.IFoldingStructureProviderExtension;
@@ -107,8 +106,8 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	public void updateFolding() {
 		if (!enabled || !ContextCore.getContextManager().isContextActive()) {
-			if (editor instanceof ScriptEditor) {
-				((ScriptEditor) editor).resetProjection();
+			if (editor instanceof PHPStructuredEditor) {
+				((PHPStructuredEditor) editor).resetProjection();
 			}
 		} else if (editor.getEditorInput() == null) {
 			return;
