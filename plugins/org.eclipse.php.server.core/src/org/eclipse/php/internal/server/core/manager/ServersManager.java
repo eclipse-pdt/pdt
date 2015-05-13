@@ -464,7 +464,6 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	public static Server createServer(String name, String baseURL)
 			throws MalformedURLException {
 		Server server = new Server(name, "localhost", baseURL, ""); //$NON-NLS-1$ //$NON-NLS-2$
-		server.setDebuggerId("org.eclipse.php.debug.core.zendDebugger"); //$NON-NLS-1$
 		server = ServersManager.getServer(server);
 		addServer(server);
 		return server;

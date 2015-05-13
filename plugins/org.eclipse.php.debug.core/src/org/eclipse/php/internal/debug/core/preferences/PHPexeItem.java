@@ -63,6 +63,7 @@ public class PHPexeItem implements IUniqueIdentityElement, Cloneable {
 	 */
 	public PHPexeItem() {
 		createUniqueId();
+		this.debuggerID = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
 	}
 
 	/**
@@ -76,13 +77,13 @@ public class PHPexeItem implements IUniqueIdentityElement, Cloneable {
 	 */
 	public PHPexeItem(String name, File executable, File iniLocation,
 			String debuggerID, boolean editable) {
+		this();
 		this.name = name;
 		this.executable = executable;
 		this.config = iniLocation;
 		this.debuggerID = debuggerID;
 		this.editable = editable;
 		detectFromPHPExe();
-		createUniqueId();
 	}
 
 	/**
@@ -102,6 +103,7 @@ public class PHPexeItem implements IUniqueIdentityElement, Cloneable {
 	 */
 	public PHPexeItem(String name, String executable, String config,
 			String debuggerID, boolean loadDefaultINI) {
+		this();
 		this.name = name;
 		this.debuggerID = debuggerID;
 		this.executable = new File(executable);
@@ -110,7 +112,6 @@ public class PHPexeItem implements IUniqueIdentityElement, Cloneable {
 		}
 		this.loadDefaultINI = loadDefaultINI;
 		detectFromPHPExe();
-		createUniqueId();
 	}
 
 	private final void createUniqueId() {

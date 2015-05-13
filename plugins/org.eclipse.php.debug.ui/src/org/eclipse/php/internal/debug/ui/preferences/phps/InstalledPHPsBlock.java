@@ -447,15 +447,11 @@ public class InstalledPHPsBlock {
 		if (phpExe == null) {
 			return;
 		}
-		// Work on a simple copy
-		PHPexeItem phpExeToEdit = phpExe.makeCopy();
-		PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(),
-				phpExeToEdit, PHPexes.getInstance().getAllItems());
+		PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(), phpExe,
+				PHPexes.getInstance().getAllItems());
 		if (dialog.open() != Window.OK) {
 			return;
 		}
-		// Update original item
-		PHPexes.getInstance().updateItem(phpExe, phpExeToEdit);
 		fPHPExeList.refresh();
 		commitChanges();
 	}
@@ -727,6 +723,8 @@ public class InstalledPHPsBlock {
 									break;
 								}
 						}
+						if (phpExe.getDebuggerID() == null)
+							phpExe.setDebuggerID(PHPDebuggersRegistry.NONE_DEBUGGER_ID);
 						int i = 1;
 						// Check for duplicated names
 						duplicates: while (true) {

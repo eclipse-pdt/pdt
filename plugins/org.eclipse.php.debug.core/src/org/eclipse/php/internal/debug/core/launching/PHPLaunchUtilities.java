@@ -45,11 +45,8 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 import org.eclipse.php.internal.core.project.ProjectOptions;
-import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
-import org.eclipse.php.internal.debug.core.Logger;
-import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
-import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
+import org.eclipse.php.internal.debug.core.*;
+import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.preferences.*;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSettingsUtil;
@@ -794,6 +791,65 @@ public class PHPLaunchUtilities {
 		return env;
 	}
 
+	/**
+	 * Finds and returns PHP server that corresponds to provided launch
+	 * configuration.
+	 * 
+	 * @param configuration
+	 * @return PHP server that corresponds to provided launch configuration
+	 * @throws CoreException
+	 */
+	public static Server getPHPServer(ILaunchConfiguration configuration)
+			throws CoreException {
+		String serverName = configuration.getAttribute(Server.NAME, ""); //$NON-NLS-1$
+		return ServersManager.getServer(serverName);
+	}
+
+	/**
+	 * Finds and returns PHP exe item that corresponds to provided launch
+	 * configuration.
+	 * 
+	 * @param configuration
+	 * @return PHP exe item that corresponds to provided launch configuration
+	 * @throws CoreException
+	 */
+	public static PHPexeItem getPHPExe(ILaunchConfiguration configuration)
+			throws CoreException {
+		PHPexeItem item = null;
+		String path = configuration.getAttribute(PHPRuntime.PHP_CONTAINER,
+				(String) null);
+		if (path == null) {
+			IProject project = null;
+			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
+					.getRoot();
+			String projectName = configuration.getAttribute(
+					IPHPDebugConstants.PHP_Project, (String) null);
+			if (projectName != null) {
+				project = workspaceRoot.getProject(projectName);
+			} else {
+				String phpScriptString = configuration.getAttribute(
+						IPHPDebugConstants.ATTR_FILE, (String) null);
+				IPath filePath = new Path(phpScriptString);
+				IResource scriptRes = workspaceRoot.findMember(filePath);
+				if (scriptRes != null) {
+					project = scriptRes.getProject();
+				}
+			}
+			item = PHPDebugPlugin.getPHPexeItem(project);
+		} else {
+			IPath exePath = Path.fromPortableString(path);
+			org.eclipse.php.internal.core.PHPVersion version = PHPRuntime
+					.getPHPVersion(exePath);
+			if (version == null) {
+				String exeName = exePath.lastSegment();
+				item = PHPexes.getInstance().getItem(exeName);
+			} else {
+				item = PHPDebugPlugin.getPHPexeItem(version);
+			}
+		}
+		return item;
+	}
+
 	public static Map<String, String> getPHP54BuildinServerLaunchEnvironment(
 			String fileName, String query, String phpConfigDir,
 			String phpExeDir, String[] scriptArguments) {
@@ -1173,7 +1229,7 @@ public class PHPLaunchUtilities {
 			String debuggerID = launchConfiguration.getAttribute(
 					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
 					PHPDebugPlugin.getCurrentDebuggerId());
-			AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
+			IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
 					.getDebuggerConfiguration(debuggerID);
 			int port = debuggerConfiguration.getPort();
 			Server server = ServersManager.getServer(launchConfiguration
