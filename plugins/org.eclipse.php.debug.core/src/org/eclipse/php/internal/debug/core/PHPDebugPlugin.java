@@ -34,8 +34,8 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
-import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.debugger.DebuggerSettingsManager;
+import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.php.internal.debug.core.launching.XDebugLaunchListener;
 import org.eclipse.php.internal.debug.core.preferences.*;
@@ -268,7 +268,7 @@ public class PHPDebugPlugin extends Plugin {
 	 * @return The debug port, or -1.
 	 */
 	public static int getDebugPort(String debuggerId) {
-		AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
+		IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
 				.getDebuggerConfiguration(debuggerId);
 		if (debuggerConfiguration == null) {
 			return -1;

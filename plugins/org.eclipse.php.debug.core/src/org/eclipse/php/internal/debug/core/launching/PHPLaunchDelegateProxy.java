@@ -22,8 +22,7 @@ import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate2;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.PHPExeUtil;
-import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
+import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
@@ -165,7 +164,7 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 
 	private ILaunchConfiguration updatePHPExeAttributes(
 			ILaunchConfiguration configuration) throws CoreException {
-		PHPexeItem item = PHPExeUtil.getPHPExeItem(configuration);
+		PHPexeItem item = PHPLaunchUtilities.getPHPExe(configuration);
 		if (item != null) {
 			ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 			wc.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, item
@@ -173,7 +172,7 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 			String debuggerId = item.getDebuggerID();
 			wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
 					debuggerId);
-			AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
+			IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
 					.getDebuggerConfiguration(debuggerId);
 			wc.setAttribute(
 					PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,

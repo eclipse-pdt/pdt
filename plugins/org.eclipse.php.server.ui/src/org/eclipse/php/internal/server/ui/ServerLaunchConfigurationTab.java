@@ -27,7 +27,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
@@ -658,7 +657,7 @@ public class ServerLaunchConfigurationTab extends
 						(String) null);
 				debuggerID = PHPDebugPlugin.getDebuggerId(serverName);
 			}
-			AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
+			IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
 					.getDebuggerConfiguration(debuggerID);
 			configuration.setAttribute(
 					PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,

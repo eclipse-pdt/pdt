@@ -18,6 +18,7 @@ import static org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSett
 import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsWorkingCopy;
@@ -100,6 +101,7 @@ public class XDebugDebuggerExeSettingsSection implements
 		compositeFragment.setMessage(compositeFragment.getDescription(),
 				IMessageProvider.NONE);
 		if (debuggerStatus == null) {
+			debuggerStatus = Status.OK_STATUS;
 			PHPexeItem phpExe = (PHPexeItem) compositeFragment.getData();
 			AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry
 					.getDebuggersConfigurations();
