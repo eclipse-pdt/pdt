@@ -43,8 +43,6 @@ public class PHPDebugCorePreferenceNames {
 			+ "installedPHPInis"; //$NON-NLS-1$
 	public static final String INSTALLED_PHP_DEBUGGERS = Debug_ID
 			+ "installedPHPDebuggers"; //$NON-NLS-1$
-	public static final String INSTALLED_PHP_DEFAULTS = Debug_ID
-			+ "installedPHPDefaults"; //$NON-NLS-1$
 	public static final String INSTALLED_PHP_LOAD_DEFAULT_INIS = Debug_ID
 			+ "installedPHPLoadIniDefaults"; //$NON-NLS-1$
 

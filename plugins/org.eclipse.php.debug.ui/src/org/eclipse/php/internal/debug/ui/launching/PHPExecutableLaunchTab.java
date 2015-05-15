@@ -689,8 +689,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 					IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, ""); //$NON-NLS-1$
 			if (executableLocation.equals("")) { //$NON-NLS-1$
 				PHPexes phpExes = PHPexes.getInstance();
-				final PHPexeItem phpExeItem = phpExes
-						.getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId());
+				final PHPexeItem phpExeItem = phpExes.getDefaultItem();
 				if (phpExeItem == null)
 					return;
 				executableLocation = phpExeItem.getExecutable().toString();
@@ -826,18 +825,10 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		if (location != null && location.length() > 0) {
 			phpexe = exes.getItemForFile(location, iniPath);
 		} else {
-			phpexe = exes.getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId());
+			phpexe = exes.getDefaultItem();
 		}
-		// Check that this debugger still exists. If not, take the defaults.
-		if (!PHPDebuggersRegistry.getDebuggersIds().contains(debuggerID)) {
-			debuggerID = PHPDebugPlugin.getCurrentDebuggerId();
-			phpexe = exes.getDefaultItem(debuggerID);
-		}
-
 		if (!DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID.equals(debuggerID)) {
 			setEnableDebugInfoOption(false);
 		}
-		// phpsComboBlock.setDebugger(debuggerID);
-		// phpsComboBlock.setPHPexe(phpexe);
 	}
 }
