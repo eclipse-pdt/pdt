@@ -75,8 +75,6 @@ public class PHPexes {
 
 	// Hold a mapping from the debugger ID to a map of installed
 	private HashMap<String, HashMap<String, PHPexeItem>> items = new HashMap<String, HashMap<String, PHPexeItem>>();
-	// Hold a mapping to each debugger default PHPExeItem.
-	private HashMap<String, PHPexeItem> defaultItems = new HashMap<String, PHPexeItem>();
 	// Hold a mapping to each php version default PHPExeItem.
 	private HashMap<PHPVersion, PHPexeItem> defaultItemsForPHPVersion = new HashMap<PHPVersion, PHPexeItem>();
 	private final LinkedList<IPHPExesListener> listeners = new LinkedList<IPHPExesListener>();
@@ -129,15 +127,18 @@ public class PHPexes {
 	 * @see #getItem(String, String)
 	 */
 	public void addItem(PHPexeItem item) {
+		if (!hasItems()) {
+			setDefaultItem(item);
+		}
+		storeItem(item);
+	}
+
+	private void storeItem(PHPexeItem item) {
 		String debuggerId = item.getDebuggerID();
 		HashMap<String, PHPexeItem> map = items.get(debuggerId);
 		if (map == null) {
 			map = new HashMap<String, PHPexeItem>();
 			items.put(debuggerId, map);
-		}
-		// Set the first item in this map to be the default one.
-		if (map.isEmpty()) {
-			setDefaultItem(item);
 		}
 		map.put(item.getName(), item);
 		Iterator<IPHPExesListener> iter = listeners.iterator();
@@ -163,11 +164,7 @@ public class PHPexes {
 		}
 		if (!original.getDebuggerID().equals(copy.getDebuggerID())
 				&& removedItem != null && removedItem.isDefault()) {
-			defaultItems.remove(debuggerID);
-			Iterator<PHPexeItem> iterator = exes.values().iterator();
-			if (iterator.hasNext()) {
-				setDefaultItem(iterator.next());
-			}
+			detectDefaultItem();
 		}
 		// Update original item
 		original.setName(copy.getName());
@@ -190,13 +187,12 @@ public class PHPexes {
 	}
 
 	/**
-	 * Returns the default item for the specified debugger.
+	 * Returns the default workspace PHPexeItem.
 	 * 
-	 * @return The default PHPexeItem for the given debugger, or null if no such
-	 *         debugger exists.
+	 * @return The default workspace PHPexeItem.
 	 */
-	public PHPexeItem getDefaultItem(String debuggerId) {
-		return defaultItems.get(debuggerId);
+	public PHPexeItem getDefaultItem() {
+		return PHPDebugPlugin.getWorkspaceDefaultExe();
 	}
 
 	/**
@@ -551,24 +547,8 @@ public class PHPexes {
 							}
 						});
 				if (!filterItem) {
-					addItem(item);
+					storeItem(item);
 				}
-			}
-		}
-		// Load the defaults
-		String defaultsString = prefs
-				.getString(PHPDebugCorePreferenceNames.INSTALLED_PHP_DEFAULTS);
-		if (defaultsString == null) {
-			defaultsString = ""; //$NON-NLS-1$
-		}
-		// Apply the default items
-		final String[] defaults = defaultsString.length() > 0 ? defaultsString
-				.split(SEPARATOR) : new String[0];
-		for (String defaultExe : defaults) {
-			// Get a pair of a debugger id and its default executable
-			String[] debuggerDefault = defaultExe.split("="); //$NON-NLS-1$
-			if (debuggerDefault.length == 2) {
-				setDefaultItem(debuggerDefault[0], debuggerDefault[1]);
 			}
 		}
 		// Check if PHP exe items preferences need upgrade
@@ -650,7 +630,7 @@ public class PHPexes {
 							String uniqueID = "php-extension-exe-" //$NON-NLS-1$
 									+ file.getPath().toString();
 							newItem.setUniqueId(uniqueID);
-							addItem(newItem);
+							storeItem(newItem);
 							if (isDefault) {
 								setDefaultItem(newItem);
 							}
@@ -692,15 +672,8 @@ public class PHPexes {
 			removedItem = exes.remove(item.getName());
 		}
 		if (removedItem != null && removedItem.isDefault()) {
-			defaultItems.remove(debuggerID);
-			// Pick the next item from the exes list for this debugger to be the
-			// default one.
-			Iterator<PHPexeItem> iterator = exes.values().iterator();
-			if (iterator.hasNext()) {
-				setDefaultItem(iterator.next());
-			}
+			detectDefaultItem();
 		}
-
 		Iterator<IPHPExesListener> iter = listeners.iterator();
 		while (iter.hasNext()) {
 			PHPExesEvent phpExesEvent = new PHPExesEvent(item);
@@ -714,30 +687,22 @@ public class PHPexes {
 	 * @param defaultItem
 	 */
 	public void setDefaultItem(PHPexeItem defaultItem) {
-		String debuggerID = defaultItem.getDebuggerID();
-		// Remove any item that was previously set as default.
-		PHPexeItem oldDefault = defaultItems.get(debuggerID);
-		if (oldDefault == defaultItem) {
-			return;
-		}
-		if (oldDefault != null) {
-			oldDefault.setDefault(false);
-		}
-		defaultItem.setDefault(true);
-		defaultItems.put(debuggerID, defaultItem);
+		PHPProjectPreferences.getModelPreferences().setValue(
+				PHPDebugCorePreferenceNames.DEFAULT_PHP, defaultItem.getName());
+		PHPDebugPlugin.getDefault().savePluginPreferences();
 	}
 
-	/**
-	 * Sets a default exe item for the given debugger.
-	 * 
-	 * @param debuggerID
-	 * @param defaultItem
-	 */
-	public void setDefaultItem(String debuggerID, String defaultItemName) {
-		PHPexeItem item = getItem(debuggerID, defaultItemName);
-		if (item != null) {
-			setDefaultItem(item);
-		}
+	private void detectDefaultItem() {
+		PHPexeItem[] allItems = getAllItems();
+		Comparator<PHPexeItem> sorter = new Comparator<PHPexeItem>() {
+			@Override
+			public int compare(PHPexeItem a, PHPexeItem b) {
+				return b.getVersion().compareTo(a.getVersion());
+			}
+		};
+		Arrays.sort(allItems, sorter);
+		if (allItems.length > 0)
+			setDefaultItem(allItems[0]);
 	}
 
 	/**
@@ -802,21 +767,6 @@ public class PHPexes {
 		prefs.setValue(
 				PHPDebugCorePreferenceNames.INSTALLED_PHP_LOAD_DEFAULT_INIS,
 				loadIniDefaultString.toString());
-		// save the default executables per debugger id
-		final StringBuffer defaultsString = new StringBuffer();
-		Iterator<PHPexeItem> iterator = defaultItems.values().iterator();
-		while (iterator.hasNext()) {
-			PHPexeItem exeItem = iterator.next();
-			defaultsString.append(exeItem.getDebuggerID());
-			defaultsString.append('=');
-			defaultsString.append(exeItem.getName());
-			if (iterator.hasNext()) {
-				defaultsString.append(SEPARATOR);
-			}
-		}
-		prefs.setValue(PHPDebugCorePreferenceNames.INSTALLED_PHP_DEFAULTS,
-				defaultsString.toString());
-
 		PHPDebugPlugin.getDefault().savePluginPreferences();
 	}
 

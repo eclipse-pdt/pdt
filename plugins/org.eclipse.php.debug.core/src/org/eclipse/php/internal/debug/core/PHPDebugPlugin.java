@@ -515,18 +515,6 @@ public class PHPDebugPlugin extends Plugin {
 				return PHPexes.getInstance().getItem(exeName);
 			}
 		}
-		PHPexeItem item = PHPexes.getInstance().getDefaultItem(
-				getCurrentDebuggerId());
-		if (item == null) {
-			PHPexeItem[] items = PHPexes.getInstance().getAllItems();
-			for (PHPexeItem phpExeItem : items) {
-				if (phpExeItem.isDefault()) {
-					return phpExeItem;
-				}
-			}
-		} else {
-			return item;
-		}
 		return null;
 	}
 

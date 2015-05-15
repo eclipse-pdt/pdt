@@ -778,7 +778,7 @@ public class NewPHPsComboBlock {
 			names = new String[] { PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined };
 		}
 		fExecutablesCombo.setItems(names);
-		PHPexeItem defaultExe = exes.getDefaultItem(getSelectedDebuggerId());
+		PHPexeItem defaultExe = exes.getDefaultItem();
 		if (defaultExe != null) {
 			String defaultName = defaultExe.getName()
 					+ " (" + defaultExe.getExecutable().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$

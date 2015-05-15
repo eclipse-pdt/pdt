@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
@@ -158,8 +157,7 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements
 	}
 
 	private void initDefaultPHP() {
-		PHPexeItem realDefault = PHPexes.getInstance().getDefaultItem(
-				PHPDebugPlugin.getCurrentDebuggerId());
+		PHPexeItem realDefault = PHPexes.getInstance().getDefaultItem();
 		if (realDefault != null) {
 			PHPexeItem[] phps = fPHPBlock.getPHPs();
 			for (PHPexeItem fakePHP : phps) {

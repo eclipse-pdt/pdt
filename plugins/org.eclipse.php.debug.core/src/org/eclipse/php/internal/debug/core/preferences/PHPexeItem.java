@@ -51,7 +51,6 @@ public class PHPexeItem implements IUniqueIdentityElement, Cloneable {
 	protected boolean editable = true;
 	protected boolean loadDefaultINI = false;
 	protected String debuggerID;
-	protected boolean isDefault;
 
 	private String uniqueId;
 	/**
@@ -354,7 +353,8 @@ public class PHPexeItem implements IUniqueIdentityElement, Cloneable {
 	 * @return if this item is the default item.
 	 */
 	public boolean isDefault() {
-		return isDefault;
+		return name.equals(PHPProjectPreferences.getModelPreferences()
+				.getString(PHPDebugCorePreferenceNames.DEFAULT_PHP));
 	}
 
 	/**
@@ -371,16 +371,6 @@ public class PHPexeItem implements IUniqueIdentityElement, Cloneable {
 	 */
 	public void setLoadDefaultINI(boolean loadDefaultINI) {
 		this.loadDefaultINI = loadDefaultINI;
-	}
-
-	/**
-	 * Set or un-set this item to be the default php executable item.
-	 * 
-	 * @param isDefault
-	 *            the value to set
-	 */
-	public void setDefault(boolean isDefault) {
-		this.isDefault = isDefault;
 	}
 
 	public void setDefaultForPHPVersion(PHPexes phpexes, PHPVersion phpVersion) {
@@ -455,7 +445,6 @@ public class PHPexeItem implements IUniqueIdentityElement, Cloneable {
 		copy.editable = editable;
 		copy.loadDefaultINI = loadDefaultINI;
 		copy.debuggerID = debuggerID;
-		copy.isDefault = isDefault;
 		copy.defaultForPHPVersionList = new ArrayList<PHPVersion>(
 				defaultForPHPVersionList);
 		return copy;
