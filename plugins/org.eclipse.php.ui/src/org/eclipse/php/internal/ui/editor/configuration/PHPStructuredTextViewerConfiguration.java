@@ -438,14 +438,6 @@ public class PHPStructuredTextViewerConfiguration extends
 			ISourceViewer sourceViewer, String contentType) {
 		final IAutoEditStrategy[] autoEditStrategies = super
 				.getAutoEditStrategies(sourceViewer, contentType);
-		for (int i = 0; i < autoEditStrategies.length; i++) {
-			if (autoEditStrategies[i] instanceof org.eclipse.wst.html.ui.internal.autoedit.AutoEditStrategyForTabs
-			// ||
-			// org.eclipse.wst.jsdt.web.ui.internal.autoedit.AutoEditStrategyForTabs
-			) {
-				autoEditStrategies[i] = indentLineAutoEditStrategy;
-			}
-		}
 		final int length = autoEditStrategies.length;
 		final IAutoEditStrategy[] augAutoEditStrategies = new IAutoEditStrategy[length + 1];
 		System.arraycopy(autoEditStrategies, 0, augAutoEditStrategies, 0,

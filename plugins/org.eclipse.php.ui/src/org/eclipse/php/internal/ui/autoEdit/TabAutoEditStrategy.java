@@ -18,6 +18,7 @@ import org.eclipse.php.internal.core.format.IFormatterCommonPrferences;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 /**
@@ -56,7 +57,9 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 			// and let JavaAutoIndentStrategy do all the job...
 			String partitionType = FormatterUtils.getPartitionType(
 					(IStructuredDocument) document, command.offset, true);
-			if (FormatterUtils.PARTITION_JS_SCRIPT.equals(partitionType)) {
+			if (FormatterUtils.PARTITION_JS_SCRIPT.equals(partitionType)
+					|| IHTMLPartitions.HTML_DEFAULT.equals(partitionType)
+					|| IHTMLPartitions.SCRIPT.equals(partitionType)) {
 				return;
 			}
 
