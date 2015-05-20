@@ -5123,8 +5123,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		if (tabs == 0) {
 			return ""; //$NON-NLS-1$
 		}
-		StringBuffer buffer = new StringBuffer(tabs);
-		for (int i = 0; i < tabs; i++) {
+
+		StringBuffer buffer = new StringBuffer(tabs
+				* preferences.indentationSize);
+		for (int i = 0; i < tabs * preferences.indentationSize; i++) {
 			buffer.append(preferences.indentationChar);
 		}
 		return buffer.toString();

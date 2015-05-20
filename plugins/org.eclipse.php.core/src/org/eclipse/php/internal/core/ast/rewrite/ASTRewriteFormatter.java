@@ -130,14 +130,14 @@ import org.eclipse.text.edits.*;
 	private final NodeInfoStore placeholders;
 	private final RewriteEventStore eventStore;
 
-	private final Map options;
+	private final Map<?, ?> options;
 	private IDocument document;
 	private PHPVersion phpVersion;
 	private boolean useShortTags;
 
 	public ASTRewriteFormatter(IDocument document, NodeInfoStore placeholders,
-			RewriteEventStore eventStore, Map options, String lineDelimiter,
-			PHPVersion version, boolean useShortTags) {
+			RewriteEventStore eventStore, Map<?, ?> options,
+			String lineDelimiter, PHPVersion version, boolean useShortTags) {
 		this.document = document;
 		this.placeholders = placeholders;
 		this.eventStore = eventStore;
@@ -293,7 +293,7 @@ import org.eclipse.text.edits.*;
 		return new MultiTextEdit();
 	}
 
-	private ICodeFormattingProcessor createCodeFormatter(Map options,
+	private ICodeFormattingProcessor createCodeFormatter(Map<?, ?> options,
 			IRegion region, IDocument document) throws Exception {
 		if (getContentFomatter() != null) {
 			return contentFormatter.getCodeFormattingProcessor(document,
@@ -355,8 +355,8 @@ import org.eclipse.text.edits.*;
 		// formatter.
 		// Every node is created with a <?php prefix and, optionally, some more
 		// prefix string that is needed for the formatting.
-		int code;
-		String prefix = "<?php "; //$NON-NLS-1$
+		String indent = createIndentString(Math.max(0, indentationLevel - 1));
+		String prefix = indent + "<?php "; //$NON-NLS-1$
 		String suffix = ""; //$NON-NLS-1$
 		if (node instanceof Statement) {
 			if (node.getType() == ASTNode.SWITCH_CASE) {
@@ -519,30 +519,6 @@ import org.eclipse.text.edits.*;
 		}
 	}
 
-	private class FormattingPrefix implements Prefix {
-		private int kind;
-		private String string;
-		private int start;
-		private int length;
-
-		public FormattingPrefix(String string, String sub, int kind) {
-			this.start = string.indexOf(sub);
-			this.length = sub.length();
-			this.string = string;
-			this.kind = kind;
-		}
-
-		public String getPrefix(int indent) {
-			Position pos = new Position(this.start, this.length);
-			String str = this.string;
-			TextEdit res = formatString(this.kind, str, 0, str.length(), indent);
-			if (res != null) {
-				str = evaluateFormatterEdit(str, res, new Position[] { pos });
-			}
-			return str.substring(pos.offset + 1, pos.offset + pos.length - 1);
-		}
-	}
-
 	private class BlockFormattingPrefix implements BlockContext {
 		private String prefix;
 		private int start;
@@ -559,11 +535,11 @@ import org.eclipse.text.edits.*;
 			Position pos = new Position(this.start, this.prefix.length() + 1
 					- this.start);
 
-			TextEdit res = null; // formatString(CodeFormatter.K_STATEMENTS,
-									// str, 0, str.length(), indent);
-			if (res != null) {
-				str = evaluateFormatterEdit(str, res, new Position[] { pos });
-			}
+			// TextEdit res = null; // formatString(CodeFormatter.K_STATEMENTS,
+			// str, 0, str.length(), indent);
+			// if (res != null) {
+			// str = evaluateFormatterEdit(str, res, new Position[] { pos });
+			// }
 			return new String[] {
 					str.substring(pos.offset + 1, pos.offset + pos.length - 1),
 					"" }; //$NON-NLS-1$
@@ -593,12 +569,12 @@ import org.eclipse.text.edits.*;
 			Position pos1 = new Position(this.start, nodeStart + 1 - this.start);
 			Position pos2 = new Position(nodeEnd, 2);
 
-			TextEdit res = null; // formatString(CodeFormatter.K_STATEMENTS,
-									// str, 0, str.length(), indent);
-			if (res != null) {
-				str = evaluateFormatterEdit(str, res, new Position[] { pos1,
-						pos2 });
-			}
+			// TextEdit res = null; // formatString(CodeFormatter.K_STATEMENTS,
+			// str, 0, str.length(), indent);
+			// if (res != null) {
+			// str = evaluateFormatterEdit(str, res, new Position[] { pos1,
+			// pos2 });
+			// }
 			return new String[] {
 					str.substring(pos1.offset + 1, pos1.offset + pos1.length
 							- 1),
