@@ -34,7 +34,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.contexts.IContextService;
 
 /**
  * Project Outline for the php perspective, it is based on the
@@ -44,6 +43,7 @@ import org.eclipse.ui.contexts.IContextService;
  * @author Roy, 2008
  * @version 2.0 (by NirC, 2008)
  */
+@SuppressWarnings("restriction")
 public class ProjectOutlinePart extends ScriptExplorerPart implements
 		IPartListener {
 
@@ -93,18 +93,18 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements
 		getSite().getPage().addPartListener(this);
 
 		selectProject(null);
-		activateContext();
+		// activateContext();
 	}
 
-	/**
-	 * Activate a context that this view uses. It will be tied to this view
-	 * activation events and will be removed when the view is disposed.
-	 */
-	private void activateContext() {
-		IContextService contextService = (IContextService) getSite()
-				.getService(IContextService.class);
-		contextService.activateContext("org.eclipse.php.ui.contexts.window"); //$NON-NLS-1$
-	}
+	// /**
+	// * Activate a context that this view uses. It will be tied to this view
+	// * activation events and will be removed when the view is disposed.
+	// */
+	// private void activateContext() {
+	// IContextService contextService = (IContextService) getSite()
+	// .getService(IContextService.class);
+	//		contextService.activateContext("org.eclipse.php.ui.contexts.window"); //$NON-NLS-1$
+	// }
 
 	@Override
 	protected void setComparator() {
