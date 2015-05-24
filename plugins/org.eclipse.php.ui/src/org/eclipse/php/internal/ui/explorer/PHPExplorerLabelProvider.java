@@ -22,6 +22,7 @@ import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
@@ -34,6 +35,7 @@ import org.eclipse.swt.graphics.Image;
  * @author apeled, nirc
  * 
  */
+@SuppressWarnings("restriction")
 public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 
 	public PHPExplorerLabelProvider(ScriptExplorerContentProvider cp,
@@ -153,7 +155,23 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 	 */
 	@Override
 	public String getText(Object element) {
+		String label = doGetText(element);
+		if (label != null) {
+			return label;
+		}
+		return super.getText(element);
+	}
 
+	@Override
+	public StyledString getStyledText(Object element) {
+		String label = doGetText(element);
+		if (label != null) {
+			return new StyledString(label);
+		}
+		return super.getStyledText(element);
+	}
+
+	private String doGetText(Object element) {
 		if (element instanceof ExternalProjectFragment) {
 			ExternalProjectFragment fragment = (ExternalProjectFragment) element;
 			String name = LanguageModelInitializer
@@ -216,8 +234,7 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 				}
 			}
 		}
-
-		return super.getText(element);
+		return null;
 	}
 
 	/**

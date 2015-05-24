@@ -17,6 +17,7 @@ package org.eclipse.php.internal.ui.projectoutlineview;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -25,6 +26,7 @@ import org.eclipse.swt.graphics.Image;
  * @author nir.c
  * 
  */
+@SuppressWarnings("restriction")
 public class ProjectOutlineLabelProvider extends ScriptExplorerLabelProvider {
 
 	public ProjectOutlineLabelProvider(ScriptExplorerContentProvider cp,
@@ -47,6 +49,14 @@ public class ProjectOutlineLabelProvider extends ScriptExplorerLabelProvider {
 			return ((ProjectOutlineGroups) element).getText();
 		}
 		return super.getText(element);
+	}
+
+	@Override
+	public StyledString getStyledText(Object element) {
+		if (element instanceof ProjectOutlineGroups) {
+			return new StyledString(((ProjectOutlineGroups) element).getText());
+		}
+		return super.getStyledText(element);
 	}
 
 }
