@@ -2943,11 +2943,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 	}
 
 	public boolean visit(ClassInstanceCreation classInstanceCreation) {
-		if (classInstanceCreation.getChainingInstanceCall() != null
-				&& !classInstanceCreation.getChainingInstanceCall()
-						.getChainingMethodOrProperty().isEmpty()) {
-			appendToBuffer(OPEN_PARN);
-		}
 		// insertSpace();
 		appendToBuffer("new "); //$NON-NLS-1$
 		// lineWidth += 3; // the 'new' word
@@ -2990,11 +2985,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			insertSpace();
 		}
 		appendToBuffer(CLOSE_PARN);
-		if (classInstanceCreation.getChainingInstanceCall() != null
-				&& !classInstanceCreation.getChainingInstanceCall()
-						.getChainingMethodOrProperty().isEmpty()) {
-			appendToBuffer(CLOSE_PARN);
-		}
 		handleChars(lastPosition, classInstanceCreation.getEnd());
 		return false;
 	}

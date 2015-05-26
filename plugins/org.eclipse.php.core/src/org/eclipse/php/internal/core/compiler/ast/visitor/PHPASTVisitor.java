@@ -942,9 +942,6 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 
 		// php5.4
-		if (nodeClass.equals(ChainingInstanceCall.class)) {
-			return endvisit((ChainingInstanceCall) s);
-		}
 		if (nodeClass.equals(ChainingMethodPropertyList.class)) {
 			return endvisit((ChainingMethodPropertyList) s);
 		}
@@ -1232,9 +1229,6 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 
 		// php5.4
-		if (nodeClass.equals(ChainingInstanceCall.class)) {
-			return visit((ChainingInstanceCall) s);
-		}
 		if (nodeClass.equals(ChainingMethodPropertyList.class)) {
 			return visit((ChainingMethodPropertyList) s);
 		}
@@ -1263,10 +1257,6 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	}
 
 	// php5.4 starts
-	public boolean visit(ChainingInstanceCall s) throws Exception {
-		return visitGeneral(s);
-	}
-
 	public boolean visit(ChainingMethodPropertyList s) throws Exception {
 		return visitGeneral(s);
 	}
@@ -1297,11 +1287,6 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 
 	public boolean visit(TraitDeclaration s) throws Exception {
 		return visitGeneral(s);
-	}
-
-	public boolean endvisit(ChainingInstanceCall s) throws Exception {
-		endvisitGeneral(s);
-		return false;
 	}
 
 	public boolean endvisit(ChainingMethodPropertyList s) throws Exception {

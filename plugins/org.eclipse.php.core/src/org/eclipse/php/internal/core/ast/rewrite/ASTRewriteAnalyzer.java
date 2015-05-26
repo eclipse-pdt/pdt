@@ -2109,12 +2109,6 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				handleException(e);
 			}
 		}
-		if (isChanged(node,
-				ClassInstanceCreation.CHAINING_INSTANCE_CALL_PROPERTY)) {
-
-			rewriteRequiredNodeVisit(node,
-					ClassInstanceCreation.CHAINING_INSTANCE_CALL_PROPERTY);
-		}
 		return false;
 	}
 
@@ -3994,16 +3988,6 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	}
 
 	// php5.4 starts
-
-	public boolean visit(ChainingInstanceCall node) {
-		if (!hasChildrenChanges(node)) {
-			return doVisitUnchangedChildren(node);
-		}
-		// rewriteNodeList(node,
-		// ChainingInstanceCall.CHAINING_METHOD_OR_PROPERTY,
-		// node.getStart(), "", "");
-		return false;
-	}
 
 	public boolean visit(FullyQualifiedTraitMethodReference node) {
 		if (!hasChildrenChanges(node)) {

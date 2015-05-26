@@ -10,16 +10,18 @@ echo (new Human("Gonzalo"))->hello();
 		<EchoStatement start='7' length='37'>
 			<MethodInvocation start='12' length='31'>
 				<Dispatcher>
-					<ClassInstanceCreation start='12' length='21'>
-						<ClassName start='17' length='5'>
-							<NamespaceName start='17' length='5' global='false' current='false'>
-								<Identifier start='17' length='5' name='Human'/>
-							</NamespaceName>
-						</ClassName>
-						<ConstructorParameters>
-							<Scalar start='23' length='9' type='string' value='"Gonzalo"'/>
-						</ConstructorParameters>
-					</ClassInstanceCreation>
+					<ParenthesisExpression start='12' length='22'>
+						<ClassInstanceCreation start='13' length='20'>
+							<ClassName start='17' length='5'>
+								<NamespaceName start='17' length='5' global='false' current='false'>
+									<Identifier start='17' length='5' name='Human'/>
+								</NamespaceName>
+							</ClassName>
+							<ConstructorParameters>
+								<Scalar start='23' length='9' type='string' value='"Gonzalo"'/>
+							</ConstructorParameters>
+						</ClassInstanceCreation>
+					</ParenthesisExpression>
 				</Dispatcher>
 				<Property>
 					<FunctionInvocation start='36' length='7'>

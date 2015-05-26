@@ -1055,14 +1055,4 @@ public class ASTMatcher {
 				&& node.getFunctionName().equals(o.getFunctionName());
 	}
 
-	public boolean match(ChainingInstanceCall node, Object other) {
-		if (!(other instanceof ChainingInstanceCall)) {
-			return false;
-		}
-		ChainingInstanceCall o = (ChainingInstanceCall) other;
-
-		return safeSubtreeMatch(node.getChainingMethodOrProperty(),
-				o.getChainingMethodOrProperty());
-	}
-
 }

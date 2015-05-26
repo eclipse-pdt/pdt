@@ -1084,12 +1084,6 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	// php5.4 starts
 	Map<String, String> EMPTY_MAP = new HashMap<String, String>();
 
-	public boolean visit(ChainingInstanceCall s) throws Exception {
-		Map<String, String> parameters = createInitialParameters(s);
-		xmlWriter.startTag("ChainingInstanceCall", parameters); //$NON-NLS-1$
-		return true;
-	}
-
 	public boolean visit(ChainingMethodPropertyList s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ChainingMethodPropertyList", parameters); //$NON-NLS-1$
@@ -1146,11 +1140,6 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		parameters.put("name", s.getName()); //$NON-NLS-1$
 		xmlWriter.startTag("TraitDeclaration", parameters); //$NON-NLS-1$
 		return true;
-	}
-
-	public boolean endvisit(ChainingInstanceCall s) throws Exception {
-		xmlWriter.endTag("ChainingInstanceCall"); //$NON-NLS-1$
-		return false;
 	}
 
 	public boolean endvisit(ChainingMethodPropertyList s) throws Exception {

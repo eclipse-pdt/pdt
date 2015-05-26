@@ -609,14 +609,6 @@ public abstract class ApplyAll extends AbstractVisitor {
 
 	// php5.4 starts
 
-	public boolean visit(ChainingInstanceCall node) {
-		return apply(node);
-	}
-
-	public void endVisit(ChainingInstanceCall node) {
-		endVisitNode(node);
-	}
-
 	public boolean visit(FullyQualifiedTraitMethodReference node) {
 		return apply(node);
 	}

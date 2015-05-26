@@ -548,13 +548,6 @@ public abstract class AbstractVisitor implements Visitor {
 
 	// php5.4 starts
 
-	public boolean visit(ChainingInstanceCall node) {
-		return true;
-	}
-
-	public void endVisit(ChainingInstanceCall node) {
-	}
-
 	public boolean visit(FullyQualifiedTraitMethodReference node) {
 		return true;
 	}
