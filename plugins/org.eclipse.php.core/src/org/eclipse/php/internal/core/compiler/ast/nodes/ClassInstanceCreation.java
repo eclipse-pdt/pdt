@@ -32,7 +32,6 @@ public class ClassInstanceCreation extends Expression {
 
 	private final Expression className;
 	private final CallArgumentsList ctorParams;
-	private ChainingInstanceCall chainingInstanceCall;
 
 	public ClassInstanceCreation(int start, int end, Expression className,
 			CallArgumentsList ctorParams) {
@@ -66,15 +65,6 @@ public class ClassInstanceCreation extends Expression {
 
 	public CallArgumentsList getCtorParams() {
 		return ctorParams;
-	}
-
-	public ChainingInstanceCall getChainingInstanceCall() {
-		return chainingInstanceCall;
-	}
-
-	public void setChainingInstanceCall(
-			ChainingInstanceCall chainingInstanceCall) {
-		this.chainingInstanceCall = chainingInstanceCall;
 	}
 
 	/**

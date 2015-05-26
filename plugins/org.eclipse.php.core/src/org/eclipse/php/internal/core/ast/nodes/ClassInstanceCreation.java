@@ -35,7 +35,6 @@ public class ClassInstanceCreation extends VariableBase {
 	private ClassName className;
 	private ASTNode.NodeList<Expression> ctorParams = new ASTNode.NodeList<Expression>(
 			CTOR_PARAMS_PROPERTY);
-	private ChainingInstanceCall chainingInstanceCall;
 	/**
 	 * The structural property of this node type.
 	 */
@@ -45,9 +44,6 @@ public class ClassInstanceCreation extends VariableBase {
 	public static final ChildListPropertyDescriptor CTOR_PARAMS_PROPERTY = new ChildListPropertyDescriptor(
 			ClassInstanceCreation.class,
 			"ctorParams", Expression.class, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor CHAINING_INSTANCE_CALL_PROPERTY = new ChildPropertyDescriptor(
-			ClassInstanceCreation.class,
-			"className", ClassName.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -60,7 +56,6 @@ public class ClassInstanceCreation extends VariableBase {
 				2);
 		propertyList.add(CLASSNAME_PROPERTY);
 		propertyList.add(CTOR_PARAMS_PROPERTY);
-		propertyList.add(CHAINING_INSTANCE_CALL_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
@@ -182,15 +177,6 @@ public class ClassInstanceCreation extends VariableBase {
 		postReplaceChild(oldChild, classname, CLASSNAME_PROPERTY);
 	}
 
-	public ChainingInstanceCall getChainingInstanceCall() {
-		return chainingInstanceCall;
-	}
-
-	public void setChainingInstanceCall(
-			ChainingInstanceCall chainingInstanceCall) {
-		this.chainingInstanceCall = chainingInstanceCall;
-	}
-
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
 			boolean get, ASTNode child) {
 		if (property == CLASSNAME_PROPERTY) {
@@ -198,13 +184,6 @@ public class ClassInstanceCreation extends VariableBase {
 				return getClassName();
 			} else {
 				setClassName((ClassName) child);
-				return null;
-			}
-		} else if (property == CHAINING_INSTANCE_CALL_PROPERTY) {
-			if (get) {
-				return getChainingInstanceCall();
-			} else {
-				setChainingInstanceCall((ChainingInstanceCall) child);
 				return null;
 			}
 		}
