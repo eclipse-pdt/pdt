@@ -1053,16 +1053,19 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 		if (highlightingPositionMap == null) {
 			initHighlightingPositions();
 		}
-
+		String found = null;
 		for (Entry<String, Position[]> entry : highlightingPositionMap
 				.entrySet()) {
 			Position[] positions = entry.getValue();
 			for (int i = 0; i < positions.length; i++) {
 				if (offset >= positions[i].offset
 						&& offset < positions[i].offset + positions[i].length) {
-					return entry.getKey();
+					found = entry.getKey();
 				}
 			}
+		}
+		if (found != null) {
+			return found;
 		}
 
 		IStructuredDocumentRegion documentRegion = fDocument

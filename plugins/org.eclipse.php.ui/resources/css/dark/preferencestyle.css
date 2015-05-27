@@ -21,7 +21,7 @@ IEclipsePreferences#org-eclipse-php-ui {
         'editorColorPHPDocComment=#626262 | null | false | false | false | false'
         'editorColorPhpdoc=#9a8c7c | null | true | false | false | false'
         'editorColorString=#17C6A3 | null | null | true | null | null'
-        'editorColorTask=#626262 | null | true | null | null | null'
+        'editorColorTask=#9a8c7c | null | true | false | false | false'
         'editorColorVariable=#FFBF26 | null | null | null | null | null'
         'editorColorKeywordPublic=#66cc66 | null | true | false | false | false'
         'editorColorKeywordProtected=#fccd76 | null | true | false | false | false'
