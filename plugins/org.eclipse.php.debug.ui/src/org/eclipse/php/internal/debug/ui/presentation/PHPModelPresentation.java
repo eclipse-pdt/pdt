@@ -295,6 +295,9 @@ public class PHPModelPresentation extends LabelProvider implements
 			} else if (resource instanceof IWorkspaceRoot) {
 				fileName = (String) marker
 						.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
+				if (fileName == null) {
+					return null;
+				}
 				IPath path = Path.fromPortableString(fileName);
 				if ((path.getDevice() == null)
 						&& (path.toString().startsWith("org.eclipse.dltk"))) { //$NON-NLS-1$
