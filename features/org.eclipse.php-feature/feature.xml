@@ -32,8 +32,8 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.dltk.core" version="5.0.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.dltk.core.index" version="5.0.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.dltk.core" version="5.1.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.dltk.core.index" version="5.1.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
