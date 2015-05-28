@@ -15,7 +15,7 @@
       label="%featureName"
       version="3.5.0.qualifier"
       provider-name="%providerName"
-      plugin="org.eclipse.php"
+      plugin="org.eclipse.php.ui"
       license-feature="org.eclipse.license"
       license-feature-version="0.0.0">
 

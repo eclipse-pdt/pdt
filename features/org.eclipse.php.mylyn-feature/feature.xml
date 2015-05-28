@@ -15,6 +15,7 @@
       label="%featureName"
       version="3.5.0.qualifier"
       provider-name="%providerName"
+      plugin="org.eclipse.php.mylyn.ui"
       license-feature="org.eclipse.license"
       license-feature-version="0.0.0">
 
@@ -22,13 +23,13 @@
       %description
    </description>
 
-   <license url="%licenseURL">
-      %license
-   </license>
-
    <copyright>
       %copyright
    </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
 
    <requires>
       <import feature="org.eclipse.dltk.mylyn"/>

@@ -17,7 +17,7 @@ Require-Bundle: org.junit;bundle-version="4.11.0",
  org.eclipse.core.filesystem
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: Eclipse PDT
 Export-Package: org.eclipse.php.core.tests,
  org.eclipse.php.core.tests.codeassist,
  org.eclipse.php.core.tests.compiler_ast.parser,

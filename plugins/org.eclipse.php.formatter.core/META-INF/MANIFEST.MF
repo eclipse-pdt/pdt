@@ -4,7 +4,7 @@ Bundle-Name: Code Formatter Core Plug-in
 Bundle-SymbolicName: org.eclipse.php.formatter.core;singleton:=true
 Bundle-Version: 3.5.0.qualifier
 Bundle-Activator: org.eclipse.php.formatter.core.FormatterCorePlugin
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: Eclipse PDT
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.php.core.parser,
  org.eclipse.php.core,
