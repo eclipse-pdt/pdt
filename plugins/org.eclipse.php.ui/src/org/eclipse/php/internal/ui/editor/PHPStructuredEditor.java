@@ -2469,7 +2469,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			}
 		}
 
-		if (required == IFoldingStructureProvider.class) {
+		if (required == IFoldingStructureProvider.class
+				&& fProjectionModelUpdater != null) {
 			IStructuredTextFoldingProvider foldingProvider = fProjectionModelUpdater
 					.getFoldingProvider();
 			if (foldingProvider instanceof IFoldingStructureProvider) {
