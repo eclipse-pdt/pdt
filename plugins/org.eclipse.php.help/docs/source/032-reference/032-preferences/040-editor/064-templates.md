@@ -8,7 +8,7 @@ Templates are shortcuts used to insert a pre-defined framework of code. The purp
 
 To insert a template into your code, enter the first few letters of its name and press Ctrl+Space to activate the Content Assist function and open the content assist list. Select the required template from the list. Templates are marked with a ![template_icon.png](images/template_icon.png "template_icon.png") icon. For more on using the content assist function, see [Working with Content Assist](../../../008-getting_started/016-basic_tutorial/016-working_with_code_assist.md).
 
-The Templates Preferences page is accessed from **Window | Preferences | PHP | Templates**.
+The Templates Preferences page is accessed from **Window | Preferences | PHP | Editor | Templates**.
 
 ![Template Preferences Page](images/template_preferences_pdt.png "Template Preferences Page")
 
