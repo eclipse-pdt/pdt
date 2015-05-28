@@ -951,7 +951,6 @@ Export-Package: org.eclipse.php.core.codeassist,
    org.eclipse.php.ui.tests,
    org.eclipse.php.formatter.core,
    org.eclipse.php.formatter.ui"
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: Eclipse PDT
 Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-

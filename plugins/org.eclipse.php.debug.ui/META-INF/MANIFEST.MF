@@ -51,5 +51,5 @@ Export-Package: org.eclipse.php.debug.ui,
  org.eclipse.php.internal.debug.ui.views.variables;x-internal:=true,
  org.eclipse.php.internal.debug.ui.watch;x-internal:=true,
  org.eclipse.php.internal.debug.ui.wizards;x-internal:=true
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: Eclipse PDT
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
