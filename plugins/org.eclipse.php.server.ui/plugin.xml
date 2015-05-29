@@ -12,6 +12,7 @@
  -->
 
 <plugin>
+   <extension-point id="serverTypeDescriptor" name="Server Type Descriptor" schema="schema/serverTypeDescriptor.exsd"/>
 
 	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
 		<launchConfigurationTypeImage
@@ -82,21 +83,21 @@
 	
 	<extension point="org.eclipse.php.ui.wizardAndCompositeFragments">
 		<wizardAndCompositeFragment
-			class="org.eclipse.php.internal.server.ui.wizard.BasicCompositeFragmentFactory"
+			class="org.eclipse.php.server.ui.wizards.BasicCompositeFragmentFactory"
 			fragmentsGroupID="org.eclipse.php.server.ui.serverWizardAndComposite"
 			id="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory"
 			name="Basic Factory" />
   <wizardAndCompositeFragment
-        class="org.eclipse.php.internal.debug.ui.wizards.DebuggerCompositeFragmentFactory"
+        class="org.eclipse.php.debug.ui.wizards.DebuggerCompositeFragmentFactory"
         fragmentsGroupID="org.eclipse.php.server.ui.serverWizardAndComposite"
         id="org.eclipse.php.debug.ui.wizards.DebuggerCompositeFragmentFactory"
         name="Debugger Fragment"
         placeAfter="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory">
   </wizardAndCompositeFragment>
 		<wizardAndCompositeFragment
-			class="org.eclipse.php.internal.server.ui.PathMapperFragmentFactory"
+			class="org.eclipse.php.server.ui.wizards.PathMapperFragmentFactory"
 			fragmentsGroupID="org.eclipse.php.server.ui.serverWizardAndComposite"
-			id="org.eclipse.php.internal.server.ui.PathMapperFragmentFactory"
+			id="org.eclipse.php.server.ui.PathMapperFragmentFactory"
 			name="Path Mapper Fragment" placeAfter="org.eclipse.php.debug.ui.wizards.DebuggerCompositeFragmentFactory">
 		</wizardAndCompositeFragment>
 	</extension>
@@ -114,5 +115,37 @@
 			debuggerTypeName="Zend Debugger" id="org.eclipse.php.server.ui.defaultZendDebugServerTest">
 		</debugServerTest>
 	</extension>
+ <extension
+       point="org.eclipse.php.server.ui.serverTypeDescriptor">
+    <descriptor
+          icon16="icons/full/obj16/server.png"
+          icon32="icons/full/obj32/server.png"
+          iconWizard="icons/full/wizban/server_wiz.png"
+          id="org.eclipse.php.server.ui.genericServerTypeDescriptor"
+          serverTypeId="org.eclipse.php.server.core.genericServerType">
+       <wizard>
+          <fragment
+                id="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory">
+          </fragment>
+          <fragment
+                id="org.eclipse.php.debug.ui.wizards.DebuggerCompositeFragmentFactory">
+          </fragment>
+          <fragment
+                id="org.eclipse.php.server.ui.PathMapperFragmentFactory">
+          </fragment>
+       </wizard>
+       <editor>
+          <fragment
+                id="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory">
+          </fragment>
+          <fragment
+                id="org.eclipse.php.debug.ui.wizards.DebuggerCompositeFragmentFactory">
+          </fragment>
+          <fragment
+                id="org.eclipse.php.server.ui.PathMapperFragmentFactory">
+          </fragment>
+       </editor>
+    </descriptor>
+ </extension>
 	
 </plugin>

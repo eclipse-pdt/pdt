@@ -8,8 +8,10 @@
  * Contributors:
  *     Zend Technologies - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.internal.debug.ui.wizards;
+package org.eclipse.php.debug.ui.wizards;
 
+import org.eclipse.php.internal.debug.ui.wizards.DebuggerCompositeFragment;
+import org.eclipse.php.internal.debug.ui.wizards.DebuggerWizardFragment;
 import org.eclipse.php.internal.ui.wizards.CompositeFragment;
 import org.eclipse.php.internal.ui.wizards.IControlHandler;
 import org.eclipse.php.internal.ui.wizards.WizardFragment;

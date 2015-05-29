@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.server.ui.wizard;
+package org.eclipse.php.server.ui.wizards;
 
 import org.eclipse.php.internal.server.ui.ServerCompositeFragment;
 import org.eclipse.php.internal.server.ui.ServerWizardFragment;

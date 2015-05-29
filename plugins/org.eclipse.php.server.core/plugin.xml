@@ -12,7 +12,16 @@
  -->
 
 <plugin>
+   <extension-point id="serverType" name="Server Type" schema="schema/serverType.exsd"/>
    <extension point="org.eclipse.core.runtime.preferences">
       <initializer class="org.eclipse.php.internal.server.core.preferences.ServersPreferencesInitializer"/>
+   </extension>
+   <extension
+         point="org.eclipse.php.server.core.serverType">
+      <type
+            description="Creates a generic PHP server instance."
+            id="org.eclipse.php.server.core.genericServerType"
+            name="Generic PHP Server">
+      </type>
    </extension>
 </plugin>

@@ -9,8 +9,9 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.server.ui;
+package org.eclipse.php.server.ui.wizards;
 
+import org.eclipse.php.internal.server.ui.PathMapperCompositeFragment;
 import org.eclipse.php.internal.server.ui.wizard.PathMapperWizardFragment;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.wizards.CompositeFragment;
