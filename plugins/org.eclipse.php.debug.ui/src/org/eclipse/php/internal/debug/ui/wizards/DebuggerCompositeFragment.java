@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.wizards;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,12 +20,10 @@ import org.eclipse.debug.internal.ui.SWTFactory;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.php.internal.core.IUniqueIdentityElement;
-import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.PHPExeUtil;
 import org.eclipse.php.internal.debug.core.PHPExeUtil.PHPModuleInfo;
 import org.eclipse.php.internal.debug.core.debugger.*;
-import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
-import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
+import org.eclipse.php.internal.debug.core.preferences.*;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.ui.wizards.CompositeFragment;
@@ -98,9 +97,56 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 
 	}
 
+	private class PHPExeDebuggerDetector implements IPHPexeItemListener {
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.php.internal.debug.core.preferences.IPHPexeItemListener#
+		 * phpExeChanged
+		 * (org.eclipse.php.internal.debug.core.preferences.PHPexeItemEvent)
+		 */
+		@Override
+		public void phpExeChanged(PHPexeItemEvent event) {
+			if (event.getProperty().equals(
+					IPHPexeItemProperties.PROP_EXE_LOCATION)) {
+				File exeFile = ((PHPexeItem) event.getSource()).getExecutable();
+				if (exeFile == null || !exeFile.exists() || !exeFile.isFile())
+					return;
+			} else if (event.getProperty().equals(
+					IPHPexeItemProperties.PROP_INI_LOCATION)) {
+				File iniFile = ((PHPexeItem) event.getSource())
+						.getINILocation();
+				if (iniFile == null || !iniFile.exists() || !iniFile.isFile())
+					return;
+			} else if (!event.getProperty().equals(
+					IPHPexeItemProperties.PROP_USE_DEFAULT_INI)) {
+				return;
+			}
+			detectDebugger();
+		}
+
+		String getDebuggerId(PHPexeItem exeItem) {
+			List<PHPModuleInfo> modules = PHPExeUtil.getModules(exeItem);
+			AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry
+					.getDebuggersConfigurations();
+			for (AbstractDebuggerConfiguration debugger : debuggers) {
+				for (PHPModuleInfo module : modules)
+					if (module.getName().equalsIgnoreCase(
+							debugger.getModuleId())) {
+						return debugger.getDebuggerId();
+					}
+			}
+			return null;
+		}
+
+	}
+
 	private List<String> debuggersIds;
 	private Combo debuggerCombo;
 	private Button debuggerTest;
+	private PHPExeDebuggerDetector phpExeDebuggerDetector;
 	private ValuesCache originalValuesCache = new ValuesCache();
 	private ValuesCache modifiedValuesCache;
 	private IDebuggerSettingsSection debuggerSettingsSection;
@@ -190,10 +236,29 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			throw new IllegalArgumentException(
 					"The given object is not a PHP Server or Executable"); //$NON-NLS-1$
 		}
+		if (debuggerOwner instanceof PHPexeItem) {
+			phpExeDebuggerDetector = new PHPExeDebuggerDetector();
+			((PHPexeItem) debuggerOwner)
+					.addPHPexeListener(phpExeDebuggerDetector);
+		}
 		createDescription(debuggerOwner);
 		super.setData(debuggerOwner);
 		init();
 		validate();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.swt.widgets.Widget#dispose()
+	 */
+	@Override
+	public void dispose() {
+		if (phpExeDebuggerDetector != null) {
+			((PHPexeItem) getData())
+					.removePHPexeListener(phpExeDebuggerDetector);
+		}
+		super.dispose();
 	}
 
 	public IUniqueIdentityElement getDebuggerOwner() {
@@ -345,27 +410,25 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	private void setDebugger() {
 		String debuggerId = null;
 		// Check if owner has debugger ID set already
-		if (modifiedValuesCache.debuggerId != null) {
+		if (modifiedValuesCache.debuggerId != null
+				&& !modifiedValuesCache.debuggerId
+						.equals(PHPDebuggersRegistry.NONE_DEBUGGER_ID)) {
 			debuggerId = modifiedValuesCache.debuggerId;
+			// Set combo to appropriate debugger ID
+			String name = PHPDebuggersRegistry.getDebuggerName(debuggerId);
+			String[] values = debuggerCombo.getItems();
+			for (int i = 0; i < values.length; i++) {
+				if (values[i].equals(name)) {
+					debuggerCombo.select(i);
+					break;
+				}
+			}
 		}
 		// If owner doesn't have debugger ID, detect one or set default
 		else {
 			detectDebugger();
-			if (detectedDebuggerId == null)
-				debuggerId = PHPDebugPlugin.getCurrentDebuggerId();
-			else
-				debuggerId = modifiedValuesCache.debuggerId = detectedDebuggerId;
-		}
-		// Set combo to appropriate debugger ID
-		String name = PHPDebuggersRegistry.getDebuggerName(debuggerId);
-		String[] values = debuggerCombo.getItems();
-		for (int i = 0; i < values.length; i++) {
-			if (values[i].equals(name)) {
-				debuggerCombo.select(i);
-				break;
-			}
-		}
 
+		}
 	}
 
 	private void detectDebugger() {
@@ -373,19 +436,22 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		// Check if debugger module is installed on top of PHP executable
 		if (data instanceof PHPexeItem) {
 			PHPexeItem exeItem = (PHPexeItem) data;
-			List<PHPModuleInfo> modules = PHPExeUtil.getModules(exeItem);
-			AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry
-					.getDebuggersConfigurations();
-			for (AbstractDebuggerConfiguration debugger : debuggers) {
-				for (PHPModuleInfo module : modules)
-					if (module.getName().equalsIgnoreCase(
-							debugger.getModuleId())) {
-						detectedDebuggerId = debugger.getDebuggerId();
-						break;
-					}
+			modifiedValuesCache.debuggerId = detectedDebuggerId = phpExeDebuggerDetector
+					.getDebuggerId(exeItem);
+		}
+		if (detectedDebuggerId == null)
+			detectedDebuggerId = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
+		else {
+			// Set combo to appropriate debugger ID
+			String name = PHPDebuggersRegistry
+					.getDebuggerName(detectedDebuggerId);
+			String[] values = debuggerCombo.getItems();
+			for (int i = 0; i < values.length; i++) {
+				if (values[i].equals(name)) {
+					debuggerCombo.select(i);
+					break;
+				}
 			}
-			if (detectedDebuggerId == null)
-				detectedDebuggerId = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
 		}
 	}
 
