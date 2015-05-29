@@ -31,6 +31,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ltk.core.refactoring
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.debug.ui,
+ org.eclipse.php.debug.ui.wizards,
  org.eclipse.php.internal.debug.ui;x-internal:=true,
  org.eclipse.php.internal.debug.ui.PropertyTesters;x-internal:=true,
  org.eclipse.php.internal.debug.ui.actions;x-internal:=true,

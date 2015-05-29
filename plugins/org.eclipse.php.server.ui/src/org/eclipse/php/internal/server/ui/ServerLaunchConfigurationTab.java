@@ -25,6 +25,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
@@ -296,7 +297,8 @@ public class ServerLaunchConfigurationTab extends
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 				.getShell();
 		NullProgressMonitor monitor = new NullProgressMonitor();
-		ServerEditDialog dialog = new ServerEditDialog(shell, server);
+		WizardDialog dialog = new WizardDialog(shell,
+				new ServerEditWizard(server));
 		if (dialog.open() == Window.CANCEL) {
 			monitor.setCanceled(true);
 			return;
@@ -701,6 +703,12 @@ public class ServerLaunchConfigurationTab extends
 						}
 					}
 					return false;
+				} else {
+					if (ServersManager.isNoneServer(server)) {
+						setErrorMessage(PHPServerUIMessages
+								.getString("ServerTab.noSelectedServerError")); //$NON-NLS-1$
+						return false;
+					}
 				}
 			}
 

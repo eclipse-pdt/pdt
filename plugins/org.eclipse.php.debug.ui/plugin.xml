@@ -524,7 +524,7 @@
 			name="Basic Fragment">
 		</wizardAndCompositeFragment>
   <wizardAndCompositeFragment
-        class="org.eclipse.php.internal.debug.ui.wizards.DebuggerCompositeFragmentFactory"
+        class="org.eclipse.php.debug.ui.wizards.DebuggerCompositeFragmentFactory"
         fragmentsGroupID="org.eclipse.php.debug.ui.phpExeWizardCompositeFragment"
         id="org.eclipse.php.debug.ui.wizards.DebuggerCompositeFragmentFactory"
         name="Debugger Fragment"

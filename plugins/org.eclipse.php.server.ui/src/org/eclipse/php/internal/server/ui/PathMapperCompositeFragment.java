@@ -37,7 +37,7 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 		super(parent, handler, isForEditing);
 		createDescription();
 		if (isForEditing) {
-			setData(((ServerEditDialog) controlHandler).getServer());
+			setData(((ServerEditPage) controlHandler).getServer());
 		}
 	}
 
