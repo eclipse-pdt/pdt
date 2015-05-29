@@ -367,18 +367,6 @@ public class ServerCompositeFragment extends CompositeFragment {
 	 * Saves the IServerWorkingCopy.
 	 */
 	public boolean performOk() {
-		try {
-			Server server = getServer();
-			Server originalServer = ServersManager.findServer(server
-					.getUniqueId());
-			// Server exists, update it
-			if (originalServer != null) {
-				originalServer.update(server);
-			}
-		} catch (Throwable e) {
-			Logger.logException("Error while saving the server settings", e); //$NON-NLS-1$
-			return false;
-		}
 		return true;
 	}
 

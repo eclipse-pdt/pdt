@@ -14,7 +14,6 @@ package org.eclipse.php.internal.server.ui.launching;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
-import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.ui.launching.LaunchUtil;
 import org.eclipse.php.internal.server.ui.ServerLaunchConfigurationTab;
 import org.eclipse.swt.widgets.Composite;
@@ -48,7 +47,6 @@ public class PHPWebPageLaunchConfigurationTab extends
 	}
 
 	protected void createServerSelectionControl(Composite parent) {
-		PHPDebugPlugin.createDefaultPHPServer();
 		super.createServerSelectionControl(parent);
 	}
 

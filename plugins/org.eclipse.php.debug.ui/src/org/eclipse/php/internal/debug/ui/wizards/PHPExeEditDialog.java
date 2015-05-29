@@ -11,12 +11,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.wizards;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
@@ -86,9 +86,11 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 	protected Control createDialogArea(Composite parent) {
 		// Create a tabbed container that will hold all the fragments
 		tabs = SWTUtil.createTabFolder(parent);
-		ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry
+		Map<String, ICompositeFragmentFactory> factories = WizardFragmentsFactoryRegistry
 				.getFragmentsFactories(FRAGMENT_GROUP_ID);
-		for (ICompositeFragmentFactory element : factories) {
+		Collection<ICompositeFragmentFactory> factoriesList = factories
+				.values();
+		for (ICompositeFragmentFactory element : factoriesList) {
 			CTabItem tabItem = new CTabItem(tabs, SWT.BORDER);
 			CompositeFragment fragment = element.createComposite(tabs, this);
 			fragment.setData(phpExeItem);
@@ -173,6 +175,13 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 	@Override
 	public Kind getKind() {
 		return Kind.EDITOR;
+	}
+
+	@Override
+	public void run(boolean fork, boolean cancelable,
+			IRunnableWithProgress runnable) throws InvocationTargetException,
+			InterruptedException {
+		// not supported
 	}
 
 	private void setSelect(String id) {

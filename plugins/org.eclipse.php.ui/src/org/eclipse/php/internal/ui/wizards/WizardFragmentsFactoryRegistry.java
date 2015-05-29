@@ -11,10 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.jface.util.SafeRunnable;
@@ -38,38 +35,25 @@ public class WizardFragmentsFactoryRegistry {
 	// creation of the fragments.
 	// This structure will be deleted from the memory once all the factories
 	// were created.
-	private HashMap fragments;
+	private Map<String, List<FragmentsFactory>> fragments;
 
 	private static WizardFragmentsFactoryRegistry instance;
 
-	private HashMap factories;
+	private Map<String, Map<String, ICompositeFragmentFactory>> factories;
 
-	// private ICompositeFragmentFactory[] factories;
-
-	/**
-	 * Returns an array on newly initialized WizardFragments that complies to
-	 * the given server type id. The returned fragments array contains a union
-	 * of the server specific fragments and the global fragments that can be
-	 * defined by adding a fragments extention with a visibility of 'Always'.
-	 * 
-	 * @param serverType
-	 *            The id of the server.
-	 * @return An array of ICompositeFragmentFactory.
-	 */
-	public static ICompositeFragmentFactory[] getFragmentsFactories(
+	public static Map<String, ICompositeFragmentFactory> getFragmentsFactories(
 			String fragmentsGroupID) {
 		WizardFragmentsFactoryRegistry registry = getInstance();
-		ICompositeFragmentFactory[] factories = (ICompositeFragmentFactory[]) registry.factories
+		Map<String, ICompositeFragmentFactory> factories = registry.factories
 				.get(fragmentsGroupID);
 		if (factories == null) {
-			List fragments = (List) registry.fragments.get(fragmentsGroupID);
-			List factoriesList = new ArrayList();
+			factories = new LinkedHashMap<String, ICompositeFragmentFactory>();
+			List<FragmentsFactory> fragments = registry.fragments
+					.get(fragmentsGroupID);
 			for (int i = 0; i < fragments.size(); i++) {
 				FragmentsFactory factory = (FragmentsFactory) fragments.get(i);
-				factoriesList.add(factory.createFragmentFactory());
+				factories.put(factory.getID(), factory.createFragmentFactory());
 			}
-			factories = new ICompositeFragmentFactory[factoriesList.size()];
-			factoriesList.toArray(factories);
 			registry.factories.put(fragmentsGroupID, factories);
 			// Clear the fragments mapping, since it is no longer needed.
 			registry.fragments.remove(fragmentsGroupID);
@@ -78,8 +62,8 @@ public class WizardFragmentsFactoryRegistry {
 	}
 
 	private WizardFragmentsFactoryRegistry() {
-		factories = new HashMap(4);
-		fragments = new HashMap(5);
+		factories = new HashMap<String, Map<String, ICompositeFragmentFactory>>();
+		fragments = new HashMap<String, List<FragmentsFactory>>();
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] elements = registry
 				.getConfigurationElementsFor(PHPUiPlugin.ID,
@@ -91,9 +75,9 @@ public class WizardFragmentsFactoryRegistry {
 				String id = element.getAttribute(ID_ATTRIBUTE);
 				String groupID = element.getAttribute(FRAGMENTS_GROUP_ID);
 				String placeAfter = element.getAttribute(PLACE_AFTER_ATTRIBUTE);
-				ArrayList list = (ArrayList) fragments.get(groupID);
+				List<FragmentsFactory> list = fragments.get(groupID);
 				if (list == null) {
-					list = new ArrayList(5);
+					list = new ArrayList<WizardFragmentsFactoryRegistry.FragmentsFactory>();
 					fragments.put(groupID, list);
 				}
 				if (element.getNamespaceIdentifier().equals(PHPUiPlugin.ID)) {
@@ -107,19 +91,19 @@ public class WizardFragmentsFactoryRegistry {
 			}
 		}
 		// Sort all the fragment groups
-		Iterator keys = fragments.keySet().iterator();
+		Iterator<String> keys = fragments.keySet().iterator();
 		while (keys.hasNext()) {
-			sortFragmentsByPlace((ArrayList) fragments.get(keys.next()));
+			sortFragmentsByPlace(fragments.get(keys.next()));
 		}
 	}
 
 	// Sort the fragments according to the 'place-after' attribute
-	private void sortFragmentsByPlace(ArrayList fragments) {
+	private void sortFragmentsByPlace(List<FragmentsFactory> fragments) {
 		// Scan the fragments and separate the fragments that lacks the
 		// place-after property from
 		// those that have it.
-		ArrayList rootsFragments = new ArrayList(fragments.size());
-		ArrayList nonRootFragments = new ArrayList(fragments.size());
+		List<List<FragmentsFactory>> rootsFragments = new ArrayList<List<FragmentsFactory>>();
+		List<List<FragmentsFactory>> nonRootFragments = new ArrayList<List<FragmentsFactory>>();
 		for (int i = 0; i < fragments.size(); i++) {
 			FragmentsFactory factory = (FragmentsFactory) fragments.get(i);
 			if (factory.getPlaceAfter() == null
@@ -132,7 +116,7 @@ public class WizardFragmentsFactoryRegistry {
 
 		// Traverse over the non-root fragments and position them.
 		for (int i = 0; i < nonRootFragments.size(); i++) {
-			ArrayList fragmentsGroup = (ArrayList) nonRootFragments.get(i);
+			List<FragmentsFactory> fragmentsGroup = nonRootFragments.get(i);
 			// try to move it to the roots fragments first (order is important).
 			boolean moved = placeFragment(rootsFragments, fragmentsGroup);
 			if (!moved) {
@@ -159,21 +143,22 @@ public class WizardFragmentsFactoryRegistry {
 		// sorted.
 		fragments.clear();
 		for (int i = 0; i < rootsFragments.size(); i++) {
-			List list = (List) rootsFragments.get(i);
+			List<FragmentsFactory> list = rootsFragments.get(i);
 			for (int j = 0; j < list.size(); j++) {
 				fragments.add(list.get(j));
 			}
 		}
 	}
 
-	private boolean placeFragment(List targetFactories, ArrayList factoriesGroup) {
+	private boolean placeFragment(List<List<FragmentsFactory>> targetFactories,
+			List<FragmentsFactory> factoriesGroup) {
 		if (factoriesGroup == null || factoriesGroup.size() == 0) {
 			return true;
 		}
 		FragmentsFactory factory = (FragmentsFactory) factoriesGroup.get(0);
 		String placeAfter = factory.getPlaceAfter();
 		for (int i = 0; i < targetFactories.size(); i++) {
-			List list = (List) targetFactories.get(i);
+			List<FragmentsFactory> list = targetFactories.get(i);
 			for (int j = 0; j < list.size(); j++) {
 				FragmentsFactory nextFactory = (FragmentsFactory) list.get(j);
 				if (nextFactory.getID().equals(placeAfter)) {
@@ -191,14 +176,16 @@ public class WizardFragmentsFactoryRegistry {
 		return false;
 	}
 
-	private FragmentsFactory getFactory(List nonRootFragments, int i) {
-		List list = (List) nonRootFragments.get(i);
-		return (FragmentsFactory) list.get(0);
+	private FragmentsFactory getFactory(
+			List<List<FragmentsFactory>> nonRootFragments, int i) {
+		List<FragmentsFactory> list = nonRootFragments.get(i);
+		return list.get(0);
 	}
 
 	// add an element to a List by wrapping it in another List.
-	private void addAsList(List target, Object element) {
-		List list = new ArrayList(3);
+	private void addAsList(List<List<FragmentsFactory>> target,
+			FragmentsFactory element) {
+		List<FragmentsFactory> list = new ArrayList<FragmentsFactory>();
 		list.add(element);
 		target.add(list);
 	}
@@ -244,4 +231,5 @@ public class WizardFragmentsFactoryRegistry {
 			return placeAfter;
 		}
 	}
+	
 }

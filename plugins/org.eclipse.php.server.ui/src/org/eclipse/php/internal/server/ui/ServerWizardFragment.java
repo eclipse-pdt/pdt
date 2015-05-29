@@ -48,13 +48,12 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 	public void enter() {
 		if (comp != null) {
 			try {
-
 				Server server = (Server) getWizardModel().getObject(
 						WizardModel.SERVER);
 				if (server == null) {
 					server = new Server();
-					comp.setData(server);
 				}
+				comp.setData(server);
 			} catch (Exception e) {
 				Logger.logException(e);
 			}
@@ -72,7 +71,7 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 	 */
 	public boolean isComplete() {
 		if (comp == null) {
-			return super.isComplete();
+			return false;
 		}
 		return super.isComplete() && comp.isComplete();
 	}
@@ -97,11 +96,12 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 	 * org.eclipse.php.internal.server.ui.wizard.WizardFragment#performFinish
 	 * (org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public void performFinish(IProgressMonitor monitor) throws CoreException {
-		super.performFinish(monitor);
+	public boolean performFinish(IProgressMonitor monitor) throws CoreException {
+		boolean result = super.performFinish(monitor);
 		if (comp != null) {
-			comp.performOk();
+			result = comp.performOk();
 		}
+		return result;
 	}
 
 	/*
