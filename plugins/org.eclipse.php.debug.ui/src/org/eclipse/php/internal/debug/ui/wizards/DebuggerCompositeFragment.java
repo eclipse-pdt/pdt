@@ -19,7 +19,6 @@ import org.eclipse.debug.internal.ui.SWTFactory;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.php.internal.core.IUniqueIdentityElement;
-import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.PHPExeUtil;
 import org.eclipse.php.internal.debug.core.PHPExeUtil.PHPModuleInfo;
 import org.eclipse.php.internal.debug.core.debugger.*;
@@ -345,16 +344,15 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	private void setDebugger() {
 		String debuggerId = null;
 		// Check if owner has debugger ID set already
-		if (modifiedValuesCache.debuggerId != null) {
+		if (modifiedValuesCache.debuggerId != null
+				&& !modifiedValuesCache.debuggerId
+						.equals(PHPDebuggersRegistry.NONE_DEBUGGER_ID)) {
 			debuggerId = modifiedValuesCache.debuggerId;
 		}
 		// If owner doesn't have debugger ID, detect one or set default
 		else {
 			detectDebugger();
-			if (detectedDebuggerId == null)
-				debuggerId = PHPDebugPlugin.getCurrentDebuggerId();
-			else
-				debuggerId = modifiedValuesCache.debuggerId = detectedDebuggerId;
+			debuggerId = modifiedValuesCache.debuggerId = detectedDebuggerId;
 		}
 		// Set combo to appropriate debugger ID
 		String name = PHPDebuggersRegistry.getDebuggerName(debuggerId);
@@ -384,9 +382,9 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 						break;
 					}
 			}
-			if (detectedDebuggerId == null)
-				detectedDebuggerId = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
 		}
+		if (detectedDebuggerId == null)
+			detectedDebuggerId = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
 	}
 
 	private void updateItem() {
