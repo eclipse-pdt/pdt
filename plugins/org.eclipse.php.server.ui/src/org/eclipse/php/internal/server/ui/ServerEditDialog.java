@@ -118,7 +118,7 @@ public class ServerEditDialog extends TitleAreaDialog implements
 				setTitle(fragment.getTitle());
 				setDescription(fragment.getDescription());
 				setImageDescriptor(fragment.getImageDescriptor());
-				fragment.validate();
+				fragment.setData(server);
 			}
 		});
 		getShell().setText(
