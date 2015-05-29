@@ -109,7 +109,7 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 				setTitle(fragment.getTitle());
 				setDescription(fragment.getDescription());
 				setImageDescriptor(fragment.getImageDescriptor());
-				fragment.validate();
+				fragment.setData(phpExeItem);
 			}
 		});
 		getShell().setText(Messages.PHPExeEditDialog_1);

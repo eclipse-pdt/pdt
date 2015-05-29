@@ -19,27 +19,25 @@ import org.eclipse.debug.internal.ui.SWTFactory;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.php.internal.core.IUniqueIdentityElement;
-import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.PHPExeUtil;
 import org.eclipse.php.internal.debug.core.PHPExeUtil.PHPModuleInfo;
 import org.eclipse.php.internal.debug.core.debugger.*;
-import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
-import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
+import org.eclipse.php.internal.debug.core.preferences.*;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.ui.wizards.CompositeFragment;
 import org.eclipse.php.internal.ui.wizards.IControlHandler;
+import org.eclipse.php.internal.ui.wizards.IControlHandler.Kind;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.*;
 
 /**
  * Debugger settings composite fragment.
@@ -98,15 +96,41 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 
 	}
 
+	private class PHPExeListener implements IPHPexeItemListener {
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.php.internal.debug.core.preferences.IPHPexeItemListener#
+		 * phpExeChanged
+		 * (org.eclipse.php.internal.debug.core.preferences.PHPexeItemEvent)
+		 */
+		@Override
+		public void phpExeChanged(PHPexeItemEvent event) {
+			if (event.getProperty().equals(
+					IPHPexeItemProperties.PROP_EXE_LOCATION)
+					|| event.getProperty().equals(
+							IPHPexeItemProperties.PROP_INI_LOCATION)
+					|| event.getProperty().equals(
+							IPHPexeItemProperties.PROP_USE_DEFAULT_INI)) {
+				detectDebugger = true;
+			}
+		}
+
+	}
+
 	private List<String> debuggersIds;
 	private Combo debuggerCombo;
 	private Button debuggerTest;
+	private PHPExeListener phpExeListener;
 	private ValuesCache originalValuesCache = new ValuesCache();
 	private ValuesCache modifiedValuesCache;
 	private IDebuggerSettingsSection debuggerSettingsSection;
 	private IDebuggerSettingsWorkingCopy debuggerSettingsWC;
 	private Map<String, IDebuggerSettingsWorkingCopy> settingsWCBuffer = new HashMap<String, IDebuggerSettingsWorkingCopy>();
 	private String detectedDebuggerId = null;
+	private boolean detectDebugger;
 	private Composite debuggerSettingsComposite;
 	private Composite mainComposite;
 
@@ -120,6 +144,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	public DebuggerCompositeFragment(Composite parent, IControlHandler handler,
 			boolean isForEditing) {
 		super(parent, handler, isForEditing);
+		this.detectDebugger = handler.getKind() == Kind.WIZARD;
 	}
 
 	@Override
@@ -134,6 +159,10 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	 */
 	@Override
 	public boolean performOk() {
+		if (detectDebugger) {
+			detectDebugger();
+			detectDebugger = false;
+		}
 		if (debuggerSettingsSection != null) {
 			boolean isOK = debuggerSettingsSection.performOK();
 			if (!isOK)
@@ -190,10 +219,27 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			throw new IllegalArgumentException(
 					"The given object is not a PHP Server or Executable"); //$NON-NLS-1$
 		}
+		if (phpExeListener == null && debuggerOwner instanceof PHPexeItem) {
+			phpExeListener = new PHPExeListener();
+			((PHPexeItem) debuggerOwner).addPHPexeListener(phpExeListener);
+		}
 		createDescription(debuggerOwner);
 		super.setData(debuggerOwner);
 		init();
 		validate();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.swt.widgets.Widget#dispose()
+	 */
+	@Override
+	public void dispose() {
+		if (phpExeListener != null) {
+			((PHPexeItem) getData()).removePHPexeListener(phpExeListener);
+		}
+		super.dispose();
 	}
 
 	public IUniqueIdentityElement getDebuggerOwner() {
@@ -206,16 +252,16 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			return;
 		IDebuggerSettings settings = DebuggerSettingsManager.INSTANCE
 				.findSettings(debuggerOwner.getUniqueId(), debuggerId);
-		boolean pack = false;
+		boolean repaint = false;
 		if (debuggerSettingsSection != null) {
 			debuggerSettingsComposite.dispose();
-			pack = true;
+			repaint = true;
 		}
 		// Rebuild settings composite
 		debuggerSettingsComposite = new Composite(mainComposite, SWT.NONE);
 		debuggerSettingsComposite.setLayout(new GridLayout());
-		debuggerSettingsComposite.setLayoutData(new GridData(SWT.FILL,
-				SWT.FILL, true, true));
+		GridData dscData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		debuggerSettingsComposite.setLayoutData(dscData);
 		if (PHPDebuggersRegistry.NONE_DEBUGGER_ID.equals(debuggerId)) {
 			debuggerSettingsSection = new EmptySettingsSection(
 					debuggerSettingsComposite);
@@ -236,8 +282,8 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		else
 			debuggerTest.setVisible(true);
 		this.getParent().layout(true, true);
-		if (pack) {
-			this.getShell().pack(true);
+		if (repaint) {
+			repaint();
 		}
 	}
 
@@ -348,29 +394,21 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	}
 
 	private void setDebugger() {
-		String debuggerId = null;
-		// Check if owner has debugger ID set already
-		if (modifiedValuesCache.debuggerId != null) {
-			debuggerId = modifiedValuesCache.debuggerId;
-		}
-		// If owner doesn't have debugger ID, detect one or set default
-		else {
+		if (detectDebugger) {
 			detectDebugger();
-			if (detectedDebuggerId == null)
-				debuggerId = PHPDebugPlugin.getCurrentDebuggerId();
-			else
-				debuggerId = modifiedValuesCache.debuggerId = detectedDebuggerId;
-		}
-		// Set combo to appropriate debugger ID
-		String name = PHPDebuggersRegistry.getDebuggerName(debuggerId);
-		String[] values = debuggerCombo.getItems();
-		for (int i = 0; i < values.length; i++) {
-			if (values[i].equals(name)) {
-				debuggerCombo.select(i);
-				break;
+			detectDebugger = false;
+		} else {
+			String debuggerId = modifiedValuesCache.debuggerId;
+			// Set combo to appropriate debugger ID
+			String name = PHPDebuggersRegistry.getDebuggerName(debuggerId);
+			String[] values = debuggerCombo.getItems();
+			for (int i = 0; i < values.length; i++) {
+				if (values[i].equals(name)) {
+					debuggerCombo.select(i);
+					break;
+				}
 			}
 		}
-
 	}
 
 	private void detectDebugger() {
@@ -378,20 +416,34 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		// Check if debugger module is installed on top of PHP executable
 		if (data instanceof PHPexeItem) {
 			PHPexeItem exeItem = (PHPexeItem) data;
-			List<PHPModuleInfo> modules = PHPExeUtil.getModules(exeItem);
-			AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry
-					.getDebuggersConfigurations();
-			for (AbstractDebuggerConfiguration debugger : debuggers) {
-				for (PHPModuleInfo module : modules)
-					if (module.getName().equalsIgnoreCase(
-							debugger.getModuleId())) {
-						detectedDebuggerId = debugger.getDebuggerId();
-						break;
-					}
-			}
-			if (detectedDebuggerId == null)
-				detectedDebuggerId = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
+			modifiedValuesCache.debuggerId = detectedDebuggerId = fetchDebugger(exeItem);
 		}
+		if (detectedDebuggerId == null
+				&& (modifiedValuesCache.debuggerId == null || modifiedValuesCache.debuggerId
+						.equals(PHPDebuggersRegistry.NONE_DEBUGGER_ID)))
+			detectedDebuggerId = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
+		// Set combo to appropriate debugger ID
+		String name = PHPDebuggersRegistry.getDebuggerName(detectedDebuggerId);
+		String[] values = debuggerCombo.getItems();
+		for (int i = 0; i < values.length; i++) {
+			if (values[i].equals(name)) {
+				debuggerCombo.select(i);
+				break;
+			}
+		}
+	}
+
+	private String fetchDebugger(PHPexeItem exeItem) {
+		List<PHPModuleInfo> modules = PHPExeUtil.getModules(exeItem);
+		AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry
+				.getDebuggersConfigurations();
+		for (AbstractDebuggerConfiguration debugger : debuggers) {
+			for (PHPModuleInfo module : modules)
+				if (module.getName().equalsIgnoreCase(debugger.getModuleId())) {
+					return debugger.getDebuggerId();
+				}
+		}
+		return null;
 	}
 
 	private void updateItem() {
@@ -402,6 +454,28 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		} else if (debuggerOwner instanceof PHPexeItem) {
 			((PHPexeItem) debuggerOwner)
 					.setDebuggerID(modifiedValuesCache.debuggerId);
+		}
+	}
+
+	private void repaint() {
+		Shell shell = this.getShell();
+		Point previousSize = new Point(shell.getSize().x, shell.getSize().y);
+		Rectangle previousClientArea = shell.getClientArea();
+		shell.layout(true, true);
+		final Point computedSize = shell.computeSize(previousClientArea.width,
+				SWT.DEFAULT, false);
+		boolean resize = computedSize.y > previousSize.y;
+		if (resize) {
+			shell.setSize(shell.computeSize(previousClientArea.width,
+					computedSize.y, true));
+		} else {
+			// Workaround for incorrect redrawing in GTK 3
+			shell.setRedraw(false);
+			shell.setSize(shell.computeSize(previousClientArea.width + 1,
+					previousClientArea.height, true));
+			shell.setRedraw(true);
+			shell.setSize(shell.computeSize(previousClientArea.width,
+					previousClientArea.height, true));
 		}
 	}
 
