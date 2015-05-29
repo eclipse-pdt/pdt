@@ -27,7 +27,6 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.mylyn.DLTKStructureBridge;
 import org.eclipse.dltk.internal.mylyn.DLTKUiBridgePlugin;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
-import org.eclipse.dltk.ui.text.folding.IFoldingStructureProvider;
 import org.eclipse.dltk.ui.text.folding.IFoldingStructureProviderExtension;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
@@ -43,8 +42,6 @@ import org.eclipse.ui.IEditorPart;
 public class ActiveFoldingListener extends AbstractContextListener {
 
 	private final IEditorPart editor;
-
-	private IFoldingStructureProviderExtension updater;
 
 	private static DLTKStructureBridge bridge = (DLTKStructureBridge) ContextCore
 			.getStructureBridge(DLTKStructureBridge.CONTENT_TYPE);
@@ -73,24 +70,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 		enabled = DLTKUiBridgePlugin.getDefault().getPreferenceStore()
 				.getBoolean(DLTKUiBridgePlugin.AUTO_FOLDING_ENABLED);
-		try {
-			Object adapter = editor.getAdapter(IFoldingStructureProvider.class);
-			if (adapter instanceof IFoldingStructureProviderExtension) {
-				updater = (IFoldingStructureProviderExtension) adapter;
-			} else {
-				StatusHandler
-						.log(new Status(
-								IStatus.ERROR,
-								DLTKUiBridgePlugin.ID_PLUGIN,
-								"Could not install active folding on provider: " + adapter + ", must extend " //$NON-NLS-1$ //$NON-NLS-2$
-										+ IFoldingStructureProviderExtension.class
-												.getName()));
-			}
-		} catch (Exception e) {
-			StatusHandler.log(new Status(IStatus.ERROR,
-					DLTKUiBridgePlugin.ID_PLUGIN,
-					"Could not install auto folding, reflection denied", e)); //$NON-NLS-1$
-		}
+
 		updateFolding();
 	}
 
@@ -134,6 +114,8 @@ public class ActiveFoldingListener extends AbstractContextListener {
 						}
 					}
 				}
+				IFoldingStructureProviderExtension updater = (IFoldingStructureProviderExtension) editor
+						.getAdapter(IFoldingStructureProviderExtension.class);
 				if (updater != null) {
 					updater.collapseComments();
 					updater.collapseMembers();
@@ -164,6 +146,8 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	}
 
 	public void updateFolding(List<IInteractionElement> elements) {
+		IFoldingStructureProviderExtension updater = (IFoldingStructureProviderExtension) editor
+				.getAdapter(IFoldingStructureProviderExtension.class);
 		for (IInteractionElement element : elements) {
 			if (updater == null || !enabled) {
 				return;
