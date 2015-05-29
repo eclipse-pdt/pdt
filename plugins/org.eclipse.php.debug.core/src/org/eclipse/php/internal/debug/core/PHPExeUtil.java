@@ -129,6 +129,8 @@ public final class PHPExeUtil {
 		}
 
 		private void build(String version) {
+			if (version == null)
+				return;
 			String[] parts = version.split("\\."); //$NON-NLS-1$
 			try {
 				major = Integer.valueOf(parts[0]);

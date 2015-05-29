@@ -397,7 +397,8 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		}
 		// Set up PHP exe item.
 		phpExeItem.setLoadDefaultINI(fLoadDefaultPHPIni.getSelection());
-		phpExeItem.setExecutable(new File(fPHPExePath.getText()));
+		phpExeItem.setExecutable(fPHPExePath.getText().isEmpty() ? null
+				: new File(fPHPExePath.getText()));
 		phpExeItem.setName(fPHPexeName.getText());
 		phpExeItem.setINILocation(fPHPIni.getText().isEmpty() ? null
 				: new File(fPHPIni.getText()));
