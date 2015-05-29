@@ -15,10 +15,8 @@ import java.beans.PropertyChangeListener;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
@@ -374,6 +372,14 @@ public class Server implements IXMLPreferencesStorable, IAdaptable,
 				continue;
 			helper.setAttribute(key, copy.helper.map.get(key));
 		}
+		// Remove the attributes that were removed in a copy
+		List<String> attributesToRemove = new ArrayList<String>();
+		for (String key : helper.map.keySet()) {
+			if (!copy.helper.map.containsKey(key))
+				attributesToRemove.add(key);
+		}
+		for (String key : attributesToRemove)
+			helper.removeAttribute(key);
 	}
 
 }
