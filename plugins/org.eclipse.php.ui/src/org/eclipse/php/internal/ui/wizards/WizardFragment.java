@@ -129,11 +129,13 @@ public abstract class WizardFragment {
 	 * @param monitor
 	 *            a progress monitor, or <code>null</code> if progress reporting
 	 *            and cancellation are not desired
+	 * @return <code>true</code> if page was finished successfully; otherwise
+	 *         return <code>false</code>
 	 * @throws CoreException
 	 *             if something goes wrong
 	 */
-	public void performFinish(IProgressMonitor monitor) throws CoreException {
-		// do nothing
+	public boolean performFinish(IProgressMonitor monitor) throws CoreException {
+		return true;
 	}
 
 	/**

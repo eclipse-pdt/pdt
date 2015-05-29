@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
@@ -93,6 +96,18 @@ public class WizardControlWrapper implements IControlHandler {
 	 */
 	public Kind getKind() {
 		return Kind.WIZARD;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.php.internal.ui.wizards.IControlHandler#run(boolean,
+	 * boolean, org.eclipse.jface.operation.IRunnableWithProgress)
+	 */
+	public void run(boolean fork, boolean cancelable,
+			IRunnableWithProgress runnable) throws InvocationTargetException,
+			InterruptedException {
+		wizard.run(fork, cancelable, runnable);
 	}
 
 }
