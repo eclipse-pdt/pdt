@@ -1,0 +1,227 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.php.server.ui" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.php.server.ui" id="serverTypeDescriptor" name="Server Types Descriptor"/>
+      </appInfo>
+      <documentation>
+         This extension point allows to register UI model representation for corresponding server type. Please take a look at &lt;code&gt;org.eclipse.php.server.core.serverType&lt;/code&gt; extension point description to see how to register a server type.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="descriptor"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="descriptor">
+      <annotation>
+         <documentation>
+            Server type descriptor.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="wizard"/>
+            <element ref="editor"/>
+         </sequence>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Server type descriptor unique ID.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="serverTypeId" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Corresponding server type unique ID.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="icon16" type="string" use="required">
+            <annotation>
+               <documentation>
+                  16x16 size icon.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="resource"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="icon32" type="string" use="required">
+            <annotation>
+               <documentation>
+                  32x32 size icon.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="resource"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="iconWizard" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Wizard banner icon.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="resource"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="wizard">
+      <annotation>
+         <documentation>
+            Creation wizard fragments group.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="fragment"/>
+         </sequence>
+      </complexType>
+   </element>
+
+   <element name="editor">
+      <annotation>
+         <documentation>
+            Editor wizard fragments group.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="fragment"/>
+         </sequence>
+      </complexType>
+   </element>
+
+   <element name="fragment">
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Related composite fragment factory unique ID.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         3.6.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         &lt;p&gt;
+&lt;pre&gt;
+&lt;extension
+       point=&quot;org.eclipse.php.server.ui.serverTypeDescriptor&quot;&gt;
+    &lt;descriptor
+          icon16=&quot;icons/full/obj16/server.png&quot;
+          icon32=&quot;icons/full/obj32/server.png&quot;
+          iconWizard=&quot;icons/full/wizban/server_wiz.png&quot;
+          id=&quot;org.eclipse.php.server.ui.genericServerTypeDescriptor&quot;
+          serverTypeId=&quot;org.eclipse.php.server.core.genericServerType&quot;&gt;
+       &lt;wizard&gt;
+          &lt;fragment
+                id=&quot;org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory&quot;&gt;
+          &lt;/fragment&gt;
+          &lt;fragment
+                id=&quot;org.eclipse.php.debug.ui.wizards.DebuggerCompositeFragmentFactory&quot;&gt;
+          &lt;/fragment&gt;
+          &lt;fragment
+                id=&quot;org.eclipse.php.internal.server.ui.PathMapperFragmentFactory&quot;&gt;
+          &lt;/fragment&gt;
+       &lt;/wizard&gt;
+       &lt;editor&gt;
+          &lt;fragment
+                id=&quot;org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory&quot;&gt;
+          &lt;/fragment&gt;
+          &lt;fragment
+                id=&quot;org.eclipse.php.debug.ui.wizards.DebuggerCompositeFragmentFactory&quot;&gt;
+          &lt;/fragment&gt;
+          &lt;fragment
+                id=&quot;org.eclipse.php.internal.server.ui.PathMapperFragmentFactory&quot;&gt;
+          &lt;/fragment&gt;
+       &lt;/editor&gt;
+    &lt;/descriptor&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
+&lt;/p&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiinfo"/>
+      </appInfo>
+      <documentation>
+         Please take a look at &lt;code&gt;org.eclipse.php.server.core.serverType&lt;/code&gt; extension point to see how to register a server type.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2015 IBM Corporation and others.&lt;br&gt;
+All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
+      </documentation>
+   </annotation>
+
+</schema>
