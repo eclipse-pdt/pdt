@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 
 public interface IControlHandler {
@@ -69,5 +72,44 @@ public interface IControlHandler {
 	 * @return kind of control handler
 	 */
 	public Kind getKind();
+
+	/**
+	 * Runs the given IRunnableWithProgress in this context. It may not be
+	 * supported by all implementors.
+	 * 
+	 * If fork is false, the current thread is used to run the runnable. Note
+	 * that if fork is true, it is unspecified whether or not this method blocks
+	 * until the runnable has been run. Implementers should document whether the
+	 * runnable is run synchronously (blocking) or asynchronously
+	 * (non-blocking), or if no assumption can be made about the blocking
+	 * behaviour.
+	 * 
+	 * Parameters: fork - true if the runnable should be run in a separate
+	 * thread, and false to run in the same thread cancelable - true to enable
+	 * the cancelation, and false to make the operation uncancellable runnable -
+	 * the runnable to run Throws: InvocationTargetException - wraps any
+	 * exception or error which occurs while running the runnable
+	 * InterruptedException - propagated by the context if the runnable
+	 * acknowledges cancelation by throwing this exception. This should not be
+	 * thrown if cancelable is false.
+	 * 
+	 * @param fork
+	 *            - <code>true</code> if the runnable should be run in a
+	 *            separate thread, and false to run in the same thread
+	 * @param cancelable
+	 *            - <code>true</code> to enable the cancelation, and false to
+	 *            make the operation uncancellable
+	 * @param runnable
+	 *            - the runnable to run
+	 * @throws InvocationTargetException
+	 *             - wraps any exception or error which occurs while running the
+	 *             runnable
+	 * @throws InterruptedException
+	 *             - propagated by the context if the runnable acknowledges
+	 *             cancelation by throwing this exception. This should not be
+	 *             thrown if cancelable is <code>false</code>.
+	 */
+	void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable)
+			throws InvocationTargetException, InterruptedException;
 
 }

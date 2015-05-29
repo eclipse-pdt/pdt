@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,9 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.server.ui;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.*;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -98,6 +102,39 @@ public class Activator extends AbstractUIPlugin implements ISelectionListener {
 	 */
 	public static Activator getDefault() {
 		return plugin;
+	}
+
+	public Image getImage(String path) {
+		Image image = getImageRegistry().get(path);
+		if (image == null) {
+			getImageRegistry().put(path, getImageDescriptor(path));
+			image = getImageRegistry().get(path);
+		}
+
+		return image;
+	}
+
+	/**
+	 * Returns an image descriptor for the image file at the given plug-in
+	 * relative path
+	 * 
+	 * @param path
+	 *            the path
+	 * @return the image descriptor
+	 */
+	public ImageDescriptor getImageDescriptor(String path) {
+		ImageDescriptor descriptor = getImageRegistry().getDescriptor(path);
+		if (descriptor == null) {
+			getImageRegistry().put(path,
+					imageDescriptorFromPlugin(PLUGIN_ID, path));
+			descriptor = getImageRegistry().getDescriptor(path);
+		}
+		return descriptor;
+	}
+
+	public static void logError(Throwable e) {
+		getDefault().getLog().log(
+				new Status(IStatus.ERROR, PLUGIN_ID, e.getMessage(), e));
 	}
 
 }

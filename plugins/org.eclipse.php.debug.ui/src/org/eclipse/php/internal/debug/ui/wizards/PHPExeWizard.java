@@ -12,6 +12,8 @@
 package org.eclipse.php.internal.debug.ui.wizards;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
@@ -56,15 +58,19 @@ public class PHPExeWizard extends FragmentedWizard implements INewWizard {
 					loadChildren(children, list);
 					return;
 				}
-				ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry
+				Map<String, ICompositeFragmentFactory> factories = WizardFragmentsFactoryRegistry
 						.getFragmentsFactories(FRAGMENT_GROUP_ID);
-				children = new WizardFragment[factories.length];
-				for (int i = 0; i < factories.length; i++) {
-					children[i] = factories[i].createWizardFragment();
-					if (children[i] instanceof IPHPExeCompositeFragment) {
-						((IPHPExeCompositeFragment) children[i])
+				children = new WizardFragment[factories.size()];
+				Set<String> factoryIds = factories.keySet();
+				int index = 0;
+				for (String factoryId : factoryIds) {
+					children[index] = factories.get(factoryId)
+							.createWizardFragment();
+					if (children[index] instanceof IPHPExeCompositeFragment) {
+						((IPHPExeCompositeFragment) children[index])
 								.setExistingItems(existingItems);
 					}
+					index++;
 				}
 				loadChildren(children, list);
 			}

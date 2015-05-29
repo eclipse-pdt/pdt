@@ -29,6 +29,7 @@ import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.debug.ui.IDebugServerConnectionTest;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
@@ -44,7 +45,7 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.server.core.tunneling.TunnelTester;
 import org.eclipse.php.internal.server.ui.Logger;
 import org.eclipse.php.internal.server.ui.PixelConverter;
-import org.eclipse.php.internal.server.ui.ServerEditDialog;
+import org.eclipse.php.internal.server.ui.ServerEditWizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.CLabel;
@@ -448,8 +449,8 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getShell();
 			NullProgressMonitor monitor = new NullProgressMonitor();
-			ServerEditDialog dialog = new ServerEditDialog(shell, server,
-					DebuggerCompositeFragment.ID);
+			WizardDialog dialog = new WizardDialog(shell, new ServerEditWizard(
+					server, DebuggerCompositeFragment.ID));
 			if (dialog.open() == Window.CANCEL) {
 				monitor.setCanceled(true);
 				return;

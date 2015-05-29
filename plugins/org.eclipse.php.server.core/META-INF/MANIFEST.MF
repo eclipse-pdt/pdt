@@ -16,5 +16,6 @@ Export-Package: org.eclipse.php.internal.server.core;x-internal:=true,
  org.eclipse.php.internal.server.core.deploy;x-internal:=true,
  org.eclipse.php.internal.server.core.manager;x-internal:=true,
  org.eclipse.php.internal.server.core.preferences;x-internal:=true,
- org.eclipse.php.internal.server.core.tunneling
+ org.eclipse.php.internal.server.core.tunneling,
+ org.eclipse.php.internal.server.core.types
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

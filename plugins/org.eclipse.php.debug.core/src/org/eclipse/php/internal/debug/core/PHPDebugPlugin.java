@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core;
 
-import java.net.MalformedURLException;
 import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IProject;
@@ -109,8 +108,6 @@ public class PHPDebugPlugin extends Plugin {
 			preferenceStore
 					.addPropertyChangeListener(new AutoRemoveOldLaunchesListener());
 			org.eclipse.php.internal.server.core.Activator.getDefault();
-			// Create default server
-			createDefaultPHPServer();
 			XDebugPreferenceMgr.setDefaults();
 			XDebugLaunchListener.getInstance();
 			DaemonPlugin.getDefault();
@@ -126,7 +123,6 @@ public class PHPDebugPlugin extends Plugin {
 
 	// The shared instance.
 	private static PHPDebugPlugin plugin;
-	private static final String BASE_URL = "http://localhost"; //$NON-NLS-1$
 	private static boolean fIsSupportingMultipleDebugAllPages = true;
 	private boolean fInitialAutoRemoveLaunches;
 	private static boolean fLaunchChangedAutoRemoveLaunches;
@@ -292,24 +288,6 @@ public class PHPDebugPlugin extends Plugin {
 		return serverPrefs
 				.getString(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);
 
-	}
-
-	/**
-	 * Creates a default server in case the ServersManager does not hold any
-	 * defined server.
-	 */
-	public static void createDefaultPHPServer() {
-		if (ServersManager.getServers().length == 0) {
-			Server server = null;
-			try {
-				server = ServersManager.createServer(
-						IPHPDebugConstants.Default_Server_Name, BASE_URL);
-			} catch (MalformedURLException e) {
-				// safe - no exception
-			}
-			ServersManager.save();
-			ServersManager.setDefaultServer(null, server);
-		}
 	}
 
 	public static void log(IStatus status) {
