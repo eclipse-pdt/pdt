@@ -14,7 +14,6 @@ package org.eclipse.php.internal.ui.wizards;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -26,7 +25,6 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.WorkspaceRunnableAdapter;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
@@ -54,6 +52,8 @@ public class FragmentedWizard implements IWizard {
 
 	private WizardFragment rootFragment;
 	private WizardFragment currentFragment;
+
+	private IStatus status;
 
 	/**
 	 * Create a new TaskWizard with the given title and root fragment.
@@ -192,9 +192,11 @@ public class FragmentedWizard implements IWizard {
 
 		final WizardFragment cFragment = currentFragment;
 
+		status = Status.OK_STATUS;
+
 		final List list = getAllWizardFragments();
-		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
-			public void run(IProgressMonitor monitor) throws CoreException {
+		IRunnableWithProgress runnable = new IRunnableWithProgress() {
+			public void run(IProgressMonitor monitor) {
 				// enter & exit the remaining pages
 				int index = list.indexOf(cFragment);
 				while (index > 0 && index < list.size() - 1) {
@@ -248,8 +250,17 @@ public class FragmentedWizard implements IWizard {
 				} else {
 					Iterator iterator = list.iterator();
 					while (iterator.hasNext())
-						executeTask((WizardFragment) iterator.next(), FINISH,
-								monitor);
+						try {
+							WizardFragment fragment = (WizardFragment) iterator
+									.next();
+							if (!executeTask(fragment, FINISH, monitor)) {
+								status = new Status(IStatus.ERROR,
+										PHPUiPlugin.ID,
+										"error during wizard page execution");
+							}
+						} catch (CoreException e) {
+							PHPUiPlugin.log(e);
+						}
 				}
 			}
 		};
@@ -257,10 +268,12 @@ public class FragmentedWizard implements IWizard {
 		Throwable t = null;
 		try {
 			if (getContainer() != null)
-				getContainer().run(true, true,
-						new WorkspaceRunnableAdapter(runnable));
+				getContainer().run(true, true, runnable);
 			else
 				runnable.run(new NullProgressMonitor());
+			if (status.getSeverity() != IStatus.OK) {
+				return false;
+			}
 			return true;
 		} catch (InvocationTargetException te) {
 			PHPUiPlugin.log(new Status(IStatus.ERROR, PHPUiPlugin.ID, 0,
@@ -286,15 +299,17 @@ public class FragmentedWizard implements IWizard {
 		page.setWizard(this);
 	}
 
-	protected void executeTask(WizardFragment fragment, byte type,
+	protected boolean executeTask(WizardFragment fragment, byte type,
 			IProgressMonitor monitor) throws CoreException {
-		if (fragment == null)
-			return;
-
-		if (type == FINISH)
-			fragment.performFinish(monitor);
-		else if (type == CANCEL)
+		if (fragment == null) {
+			return true;
+		}
+		if (type == FINISH) {
+			return fragment.performFinish(monitor);
+		} else if (type == CANCEL) {
 			fragment.performCancel(monitor);
+		}
+		return true;
 	}
 
 	protected WizardFragment getCurrentWizardFragment() {

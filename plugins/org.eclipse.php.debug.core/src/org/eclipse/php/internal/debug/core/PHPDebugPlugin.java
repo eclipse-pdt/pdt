@@ -123,7 +123,6 @@ public class PHPDebugPlugin extends Plugin {
 
 	// The shared instance.
 	private static PHPDebugPlugin plugin;
-	private static final String BASE_URL = "http://localhost"; //$NON-NLS-1$
 	private static boolean fIsSupportingMultipleDebugAllPages = true;
 	private boolean fInitialAutoRemoveLaunches;
 	private static boolean fLaunchChangedAutoRemoveLaunches;

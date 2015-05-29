@@ -76,6 +76,14 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 
 	}
 
+	private static final class NoneServer extends Server {
+
+		private NoneServer() throws MalformedURLException {
+			super("<none>", "<none>", "http://<none>", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		}
+
+	}
+
 	/** Servers preferences key */
 	public static final String SERVERS_PREFERENCES_KEY = "phpServers"; //$NON-NLS-1$
 	/** Default server name preferences key */
@@ -87,16 +95,16 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	// be mapped to a server (the workspace server).
 	private Map<IProject, Server> defaultServersMap = new HashMap<IProject, Server>();
 	// Holds a server name to Server instance mapping.
-	private HashMap<String, Server> servers;
+	private Map<String, Server> servers;
 	private List<IServersManagerListener> listeners;
 
 	private static ServersManager instance;
 	private static final String NODE_QUALIFIER = Activator.PLUGIN_ID
 			+ ".phpServersPrefs"; //$NON-NLS-1$
 	private static final String BASE_URL = "http://localhost"; //$NON-NLS-1$
-	public static final String Default_Server_Name = "Default PHP Web Server"; //$NON-NLS-1$
+	public static final String DEFAULT_SERVER_NAME = "Default PHP Web Server"; //$NON-NLS-1$
 
-	public static ServersManager getInstance() {
+	public static final synchronized ServersManager getInstance() {
 		if (instance == null) {
 			instance = new ServersManager();
 		}
@@ -104,7 +112,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	}
 
 	private ServersManager() {
-		servers = new HashMap<String, Server>();
+		servers = new LinkedHashMap<String, Server>();
 		listeners = new ArrayList<IServersManagerListener>();
 		loadServers();
 	}
@@ -172,6 +180,17 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	}
 
 	/**
+	 * Check if specified PHP server is a 'none' server.
+	 * 
+	 * @param server
+	 * @return <code>true</code> if specified server is 'none'; otherwise return
+	 *         <code>false</code>
+	 */
+	public static boolean isNoneServer(Server server) {
+		return server instanceof NoneServer;
+	}
+
+	/**
 	 * Removes a Server from the manager. In case that that given server is set
 	 * to be the default server for a project, the project will be set with the
 	 * workspace default server.
@@ -220,11 +239,13 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			}
 		}
 
-		// Fire the event for the removal
-		removedServer.removePropertyChangeListener(manager);
-		ServerManagerEvent event = new ServerManagerEvent(
-				ServerManagerEvent.MANAGER_EVENT_REMOVED, removedServer);
-		manager.fireEvent(event);
+		if (removedServer != null) {
+			// Fire the event for the removal
+			removedServer.removePropertyChangeListener(manager);
+			ServerManagerEvent event = new ServerManagerEvent(
+					ServerManagerEvent.MANAGER_EVENT_REMOVED, removedServer);
+			manager.fireEvent(event);
+		}
 		return removedServer;
 	}
 
@@ -291,6 +312,8 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			// may not exists - ignore
 		}
 		for (Server server : getServers()) {
+			if (isNoneServer(server))
+				continue;
 			URL serverURL;
 			try {
 				serverURL = new URL(server.getBaseURL());
@@ -392,8 +415,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 				// Create a default server and hook it as a workspace and the
 				// project server (can be the same).
 				try {
-					server = createServer(Default_Server_Name, BASE_URL);
-
+					server = createServer(DEFAULT_SERVER_NAME, BASE_URL);
 				} catch (MalformedURLException e) {
 					// safe server creation
 				}
@@ -473,11 +495,17 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	 * Save the listed servers into the preferences.
 	 */
 	public static void save() {
-		IXMLPreferencesStorable[] servers = getServers();
+		List<IXMLPreferencesStorable> serversToSave = new ArrayList<IXMLPreferencesStorable>();
+		for (Server server : getServers()) {
+			// <none> server only in memory
+			if (isNoneServer(server))
+				continue;
+			serversToSave.add(server);
+		}
 		IEclipsePreferences preferences = InstanceScope.INSTANCE
 				.getNode(Activator.PLUGIN_ID);
 		XMLPreferencesWriter.write(preferences, SERVERS_PREFERENCES_KEY,
-				Arrays.asList(servers));
+				serversToSave);
 	}
 
 	/**
@@ -582,6 +610,12 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 
 	// Loads the servers from the preferences store.
 	private void loadServers() {
+		// Add <none> dummy server first
+		try {
+			Server noneServer = new NoneServer();
+			servers.put(noneServer.getName(), noneServer);
+		} catch (MalformedURLException e) {
+		}
 		// Read all the configurations of the servers from the preferences and
 		// place them into the
 		// servers hash (map name to Server instance).
@@ -601,18 +635,20 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			server.addPropertyChangeListener(this);
 			upgrader.check(serverMap);
 		}
+		// Perform upgrade if necessary
 		upgrader.perform();
-		// Create default server if there is no one
+		// Create default server if there is no any
 		createDefaultPHPServer();
 	}
 
 	private void createDefaultPHPServer() {
 		Collection<Server> loaded = servers.values();
-		if (loaded.size() == 0) {
+		if (loaded.size() == 1 && isNoneServer(loaded.iterator().next())) {
 			Server defaultWebServer = null;
 			try {
-				defaultWebServer = new Server(Default_Server_Name, "localhost", //$NON-NLS-1$
-						BASE_URL, ""); //$NON-NLS-1$
+				defaultWebServer = new Server(DEFAULT_SERVER_NAME, "localhost", //$NON-NLS-1$
+						BASE_URL,
+						"");
 				servers.put(defaultWebServer.getName(), defaultWebServer);
 			} catch (MalformedURLException e) {
 			}
@@ -622,6 +658,9 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			// Save configurations
 			List<IXMLPreferencesStorable> serversToSave = new ArrayList<IXMLPreferencesStorable>();
 			for (Server toSave : servers.values()) {
+				// <none> server only in memory
+				if (isNoneServer(toSave))
+					continue;
 				serversToSave.add(toSave);
 			}
 			IEclipsePreferences preferences = InstanceScope.INSTANCE

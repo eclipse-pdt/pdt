@@ -107,13 +107,14 @@ public class DebuggerWizardFragment extends CompositeWizardFragment {
 	 * eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public void performFinish(IProgressMonitor monitor) throws CoreException {
+	public boolean performFinish(IProgressMonitor monitor) throws CoreException {
 		try {
 			if (compositeFragment != null) {
-				compositeFragment.performOk();
+				return compositeFragment.performOk();
 			}
 		} catch (Exception e) {
 		}
+		return false;
 	}
 
 }
