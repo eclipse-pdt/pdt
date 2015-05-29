@@ -15,17 +15,30 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -140,12 +153,58 @@ public final class PHPExeUtil {
 
 	}
 
+	private static class ErrorDialog extends MessageDialog {
+
+		private final String linkMessage;
+
+		public ErrorDialog(String linkMessage) {
+			super(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getShell(), Messages.PHPExeUtil_PHP_executable_error,
+					null, null, MessageDialog.ERROR, new String[] { "OK" }, 0); //$NON-NLS-1$
+			this.linkMessage = linkMessage;
+		}
+
+		protected Control createMessageArea(Composite composite) {
+			Image image = getImage();
+			if (image != null) {
+				imageLabel = new Label(composite, SWT.NULL);
+				image.setBackground(imageLabel.getBackground());
+				imageLabel.setImage(image);
+				GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING)
+						.applyTo(imageLabel);
+			}
+			// create message
+			Composite labelComposite = new Composite(composite, SWT.NULL);
+			labelComposite.setLayout(new GridLayout(1, true));
+			Link message = new Link(labelComposite, SWT.WRAP);
+			message.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			message.setText(linkMessage);
+			message.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					linkClicked();
+				};
+			});
+			GridDataFactory
+					.fillDefaults()
+					.align(SWT.FILL, SWT.BEGINNING)
+					.grab(true, false)
+					.hint(convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH),
+							SWT.DEFAULT).applyTo(message);
+			return composite;
+		}
+
+		protected void linkClicked() {
+		};
+
+	}
+
 	private static final Pattern PATTERN_PHP_VERSION = Pattern
 			.compile("PHP (\\d\\.\\d\\.\\d+).*? \\((.*?)\\)"); //$NON-NLS-1$
 	private static final Pattern PATTERN_PHP_CLI_CONFIG = Pattern
 			.compile("Configuration File \\(php.ini\\) Path => (.*)"); //$NON-NLS-1$
 	private static final Pattern PATTERN_PHP_CGI_CONFIG = Pattern
 			.compile("Configuration File \\(php.ini\\) Path </td><td class=\"v\">(.*?)</td>"); //$NON-NLS-1$
+	private static final String WIN_VC_DOWNLOAD = "http://www.microsoft.com/en-us/download/details.aspx?id=30679"; //$NON-NLS-1$
 
 	private static final Map<File, PHPExeInfo> phpInfos = new HashMap<File, PHPExeInfo>();
 	private static final List<File> installErrors = new ArrayList<File>();
@@ -386,16 +445,20 @@ public final class PHPExeUtil {
 					if (installErrors.contains(executableFile))
 						return;
 					installErrors.add(executableFile);
-					MessageDialog
-							.openError(
-									PlatformUI.getWorkbench()
-											.getActiveWorkbenchWindow()
-											.getShell(),
-									Messages.PHPExeUtil_PHP_executable_error,
-									MessageFormat
-											.format(Messages.PHPExeUtil_PHP_installation_details_could_not_be_obtained,
-													executableFile
-															.getAbsolutePath()));
+					MessageDialog errorDialog = new ErrorDialog(
+							MessageFormat
+									.format(Messages.PHPExeUtil_PHP_exe_could_not_be_verified,
+											executableFile.getAbsolutePath())) {
+						protected void linkClicked() {
+							try {
+								PlatformUI.getWorkbench().getBrowserSupport()
+										.getExternalBrowser()
+										.openURL(new URL(WIN_VC_DOWNLOAD));
+							} catch (Exception ex) {
+							}
+						}
+					};
+					errorDialog.open();
 					installErrors.remove(executableFile);
 				}
 			});

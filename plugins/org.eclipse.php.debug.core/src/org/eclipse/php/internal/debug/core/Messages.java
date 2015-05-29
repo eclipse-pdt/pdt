@@ -18,7 +18,7 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.core.messages"; //$NON-NLS-1$
 	public static String PHPExeUtil_PHP_executable_error;
-	public static String PHPExeUtil_PHP_installation_details_could_not_be_obtained;
+	public static String PHPExeUtil_PHP_exe_could_not_be_verified;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
