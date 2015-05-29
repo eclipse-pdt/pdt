@@ -24,5 +24,6 @@ Export-Package: org.eclipse.php.internal.server;x-internal:=true,
  org.eclipse.php.internal.server.ui;x-internal:=true,
  org.eclipse.php.internal.server.ui.launching;x-internal:=true,
  org.eclipse.php.internal.server.ui.launching.zend;x-internal:=true,
+ org.eclipse.php.internal.server.ui.types,
  org.eclipse.php.internal.server.ui.wizard;x-internal:=true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

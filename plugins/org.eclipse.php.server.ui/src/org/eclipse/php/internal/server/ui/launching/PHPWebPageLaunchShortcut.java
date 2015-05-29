@@ -110,7 +110,6 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 
 				Server defaultServer = ServersManager.getDefaultServer(project);
 				if (defaultServer == null) {
-					PHPDebugPlugin.createDefaultPHPServer();
 					defaultServer = ServersManager.getDefaultServer(project);
 					if (defaultServer == null) {
 						// Sould not happen
