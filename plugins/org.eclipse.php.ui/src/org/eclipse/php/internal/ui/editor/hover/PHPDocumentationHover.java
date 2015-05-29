@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
-import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.dltk.ui.viewsupport.BasicElementLabels;
@@ -44,6 +43,7 @@ import org.eclipse.php.internal.ui.documentation.PHPDocumentationContentAccess;
 import org.eclipse.php.internal.ui.documentation.PHPElementLinks;
 import org.eclipse.php.internal.ui.util.Messages;
 import org.eclipse.php.internal.ui.util.OpenBrowserUtil;
+import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
@@ -166,7 +166,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		public OpenDeclarationAction(BrowserInformationControl infoControl) {
 			fInfoControl = infoControl;
 			setText(PHPHoverMessages.JavadocHover_openDeclaration);
-			DLTKPluginImages.setLocalImageDescriptors(this, "goto_input.gif"); //$NON-NLS-1$ //TODO: better images
+			PHPPluginImages.setLocalImageDescriptors(this, "goto_input.png"); //$NON-NLS-1$ //TODO: better images
 		}
 
 		/*
