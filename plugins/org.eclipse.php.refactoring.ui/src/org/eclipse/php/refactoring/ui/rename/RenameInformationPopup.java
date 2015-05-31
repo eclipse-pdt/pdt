@@ -661,7 +661,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper,
 		fMenuImage = RefactoringUIPlugin
 				.getDefault()
 				.imageDescriptorFromPlugin(RefactoringUIPlugin.PLUGIN_ID,
-						"icons/full/elcl16/view_menu.gif").createImage(); //$NON-NLS-1$
+						"icons/full/elcl16/view_menu.png").createImage(); //$NON-NLS-1$
 		menuButton.setImage(fMenuImage);
 		menuButton.setToolTipText(Messages.RenameInformationPopup_3);
 		fToolBar.addMouseListener(new MouseAdapter() {

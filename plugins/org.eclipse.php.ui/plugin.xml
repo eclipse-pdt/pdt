@@ -42,7 +42,7 @@
 	<!--PHP Perspective Definition:-->
 	<extension point="org.eclipse.ui.perspectives">
 		<perspective class="org.eclipse.php.internal.ui.PHPPerspectiveFactory"
-			icon="icons/full/obj16/php_perspective.gif" id="org.eclipse.php.perspective"
+			icon="icons/full/obj16/php_perspective.png" id="org.eclipse.php.perspective"
 			name="%perspective.name.0" />
 	</extension>
 
@@ -98,16 +98,16 @@
         <view
         	category="org.eclipse.php.ui.views"
 	        class="org.eclipse.php.internal.ui.explorer.PHPExplorerPart"
-        	icon="icons/full/obj16/php_explorer.gif"
+        	icon="icons/full/obj16/php_explorer.png"
         	id="org.eclipse.php.ui.explorer"
         	name="%view.name.0">
         </view>
 		<view name="%view.name.1" category="org.eclipse.php.ui.views"
-			class="org.eclipse.php.internal.ui.functions.PHPFunctionsPart" icon="icons/full/obj16/phpfile.gif"
+			class="org.eclipse.php.internal.ui.functions.PHPFunctionsPart" icon="icons/full/obj16/phpfile.png"
 			id="org.eclipse.php.ui.functions" />
 		<view name="%view.name.2" category="org.eclipse.php.ui.views"
 			class="org.eclipse.php.internal.ui.projectoutlineview.ProjectOutlinePart"
-			id="org.eclipse.php.ui.projectOutline" icon="icons/full/obj16/php_project_outline.gif" />
+			id="org.eclipse.php.ui.projectOutline" icon="icons/full/obj16/php_project_outline.png" />
 	</extension>
 
 	<!--Wizards:-->
@@ -122,7 +122,7 @@
 		<wizard id="org.eclipse.php.ui.wizards.PHPProjectCreationWizard"
 			category="org.eclipse.php.project.ui"
 			class="org.eclipse.php.internal.ui.wizards.PHPProjectCreationWizard"
-			name="%PHPProject.name" icon="icons/full/obj16/add_php_project.gif"
+			name="%PHPProject.name" icon="icons/full/obj16/add_php_project.png"
 			finalPerspective="org.eclipse.php.perspective" preferredPerspectives="org.eclipse.php.perspective"
 			project="true">
 			<description>%PHPProject.description</description>
@@ -130,10 +130,10 @@
 		</wizard>
 		<wizard id="org.eclipse.php.ui.wizards.PHPFileCreationWizard"
 			category="org.eclipse.php.project.ui" class="org.eclipse.php.internal.ui.wizards.PHPFileCreationWizard"
-			name="%wizard.name.0" icon="icons/full/obj16/add_php_file.gif" />
+			name="%wizard.name.0" icon="icons/full/obj16/add_php_file.png" />
 		<wizard id="org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard"
 			category="org.eclipse.php.project.ui" class="org.eclipse.php.internal.ui.wizards.UntitledPHPDocumentWizard"
-			name="%wizard.name.2" icon="icons/full/obj16/add_php_file.gif" 
+			name="%wizard.name.2" icon="icons/full/obj16/add_php_file.png" 
 			canFinishEarly="true"
             hasPages="false"/>
         <primaryWizard id="org.eclipse.ui.wizards.new.folder" />
@@ -151,13 +151,13 @@
 	<extension point="org.eclipse.ui.editors">
 		<editor class="org.eclipse.php.internal.ui.editor.PHPStructuredEditor"
 			contributorClass="org.eclipse.php.internal.ui.editor.ActionContributorForPhp"
-			default="true" icon="icons/full/obj16/phpfile.gif" id="org.eclipse.php.editor"
+			default="true" icon="icons/full/obj16/phpfile.png" id="org.eclipse.php.editor"
 			name="%editor.name.0" symbolicFontName="org.eclipse.wst.sse.ui.textfont">
 			<contentTypeBinding contentTypeId="org.eclipse.php.core.phpsource" />
 		</editor>
 	<editor
         class="org.eclipse.php.internal.ui.editor.UntitledPHPEditor"
-        icon="icons/full/obj16/phpfile.gif"
+        icon="icons/full/obj16/phpfile.png"
         id="org.eclipse.php.untitledPhpEditor"
         name="%editor.name.1"
         symbolicFontName="org.eclipse.wst.sse.ui.textfont">
@@ -252,7 +252,7 @@
             annotationImageProvider="org.eclipse.dltk.internal.ui.editor.ScriptAnnotationImageProvider">
         </specification>
 		<specification annotationType="org.eclipse.php.ui.occurrences"
-			label="%ReadOccurrenceAnnotation.label" icon="icons/full/obj16/searchm_obj.gif"
+			label="%ReadOccurrenceAnnotation.label" icon="icons/full/obj16/searchm_obj.png"
 			textPreferenceKey="PHPReadOccurrenceIndication" textPreferenceValue="false"
 			highlightPreferenceKey="PHPReadOccurrenceHighlighting"
 			highlightPreferenceValue="true" contributesToHeader="false"
@@ -271,7 +271,7 @@
 		<specification annotationType="org.eclipse.php.ui.occurrences.write"
 			colorPreferenceKey="PHPWriteOccurrenceIndicationColor"
 			colorPreferenceValue="240,216,168" highlightPreferenceKey="PHPWriteOccurrenceHighlighting"
-			highlightPreferenceValue="true" icon="icons/full/obj16/searchm_obj.gif"
+			highlightPreferenceValue="true" icon="icons/full/obj16/searchm_obj.png"
 			label="%WriteOccurrenceAnnotation.label" overviewRulerPreferenceKey="PHPWriteOccurrenceIndicationInOverviewRuler"
 			overviewRulerPreferenceValue="true" textPreferenceKey="PHPWriteOccurrenceIndication"
 			textPreferenceValue="false" textStylePreferenceKey="PHPWriteOccurrenceTextStyle"
@@ -280,7 +280,7 @@
 			verticalRulerPreferenceValue="false">
 		</specification>
 		<specification annotationType="org.eclipse.php.ui.overrideIndicator"
-			label="%OverrideIndicator.label" icon="icons/full/ovr16/over_co.gif"
+			label="%OverrideIndicator.label" icon="icons/full/ovr16/over_co.png"
 			annotationImageProvider="org.eclipse.php.internal.ui.editor.OverrideIndicatorImageProvider"
 			textPreferenceKey="overrideIndicatorForPHP" textPreferenceValue="false"
 			highlightPreferenceKey="overrideIndicatorHighlightingForPHP"
@@ -889,8 +889,8 @@
 			visible="false" id="org.eclipse.php.ui.text.php.actionSet.presentation">
 			<action allowLabelUpdate="true"
 				definitionId="org.eclipse.php.ui.edit.text.toggleMarkOccurrences"
-				disabledIcon="icons/full/dtool16/mark_occurrences.gif"
-				helpContextId="toggle_mark_occurrences_action_context" icon="icons/full/etool16/mark_occurrences.gif"
+				disabledIcon="icons/full/dtool16/mark_occurrences.png"
+				helpContextId="toggle_mark_occurrences_action_context" icon="icons/full/etool16/mark_occurrences.png"
 				id="org.eclipse.php.ui.edit.text.toggleMarkOccurrences" label="%toggleMarkOccurrences.label"
 				retarget="true" style="toggle"
 				toolbarPath="org.eclipse.ui.edit.text.actionSet.presentation/Presentation"
@@ -908,13 +908,13 @@
 				menubarPath="navigate/open.ext2" tooltip="%OpenTypeInHierarchyAction.tooltip">
 			</action>
 			<action class="org.eclipse.php.internal.ui.actions.OpenTypeAction"
-				definitionId="org.eclipse.php.ui.navigate.open.type" disabledIcon="icons/full/dtool16/opentype.gif"
-				icon="icons/full/etool16/opentype.gif" id="openType"
+				definitionId="org.eclipse.php.ui.navigate.open.type" disabledIcon="icons/full/dtool16/opentype.png"
+				icon="icons/full/etool16/opentype.png" id="openType"
 				label="%OpenTypeAction.label" menubarPath="navigate/open.ext2"
 				tooltip="%OpenTypeAction.tooltip" />
 			<action class="org.eclipse.php.internal.ui.actions.OpenMethodAction"
-				definitionId="org.eclipse.php.ui.navigate.open.method" disabledIcon="icons/full/dtool16/openmethod.gif"
-				icon="icons/full/etool16/openmethod.gif" id="openMethod"
+				definitionId="org.eclipse.php.ui.navigate.open.method" disabledIcon="icons/full/dtool16/openmethod.png"
+				icon="icons/full/etool16/openmethod.png" id="openMethod"
 				label="%OpenMethodAction.label" menubarPath="navigate/open.ext2"
 				tooltip="%OpenMethodAction.tooltip" />
 		</actionSet>
@@ -943,7 +943,7 @@
 			<!-- dialog group  -->
 	        <action
 				label="%openPHPSearchPageAction.label"
-				icon="$nl$/icons/full/obj16/php_search_obj.gif"
+				icon="$nl$/icons/full/obj16/php_search_obj.png"
 				helpContextId="org.eclipse.pdt.ui.php_search_action_context"
 				class="org.eclipse.php.internal.ui.search.OpenPHPSearchPageAction"
 				menubarPath="org.eclipse.search.menu/dialogGroup"
@@ -1572,7 +1572,7 @@
 		<workingSet name="%PHPWorkingSetPage.name"
 			pageClass="org.eclipse.php.internal.ui.workingset.PhpWorkingSetPage"
 			updaterClass="org.eclipse.dltk.internal.ui.workingsets.ScriptWorkingSetUpdater"
-			icon="icons/full/obj16/php_project_obj.gif" id="org.eclipse.php.ui.workingset.PHPWorkingSetPage" />
+			icon="icons/full/obj16/php_project_obj.png" id="org.eclipse.php.ui.workingset.PHPWorkingSetPage" />
 	</extension>
 
 	<!--Filter Support:-->
@@ -1595,7 +1595,7 @@
 	<extension point="org.eclipse.search.searchPages">
 		<page canSearchEnclosingProjects="true"
 			class="org.eclipse.php.internal.ui.search.PHPSearchPage" extensions="php:90, inc:90"
-			icon="icons/full/obj16/php_search_obj.gif" id="org.eclipse.php.ui.PHPSearchPage"
+			icon="icons/full/obj16/php_search_obj.png" id="org.eclipse.php.ui.PHPSearchPage"
 			label="%PHPSearchPage.label" showScopeSection="true" sizeHint="460,160" />
 	</extension>
 
@@ -1665,7 +1665,7 @@
          class="org.eclipse.search.internal.ui.OpenSearchDialogAction"
          definitionId="org.eclipse.search.ui.openSearchDialog"
          helpContextId="open_search_dialog_action_context"
-         icon="icons/full/etool16/search.gif"
+         icon="icons/full/etool16/search.png"
          id="org.eclipse.php.ui.actions.Search"
          label="%openSearchDialogAction.label"
          menubarPath="additions"
@@ -1787,7 +1787,7 @@
 
 	<!--PHP Working Set:-->
 	<extension point="org.eclipse.ui.ide.projectNatureImages">
-		<image icon="icons/full/ovr16/php_ovr.gif" id="org.eclipse.php.ui.PHPProjectNatureImage"
+		<image icon="icons/full/ovr16/php_ovr.png" id="org.eclipse.php.ui.PHPProjectNatureImage"
 			natureId="org.eclipse.php.core.PHPNature" />
 	</extension>
 
@@ -2022,7 +2022,7 @@
             id="org.eclipse.php.ui.export" 
             name="%wizard.name"
             class="org.eclipse.php.internal.ui.phar.wizard.PharPackageWizard" 
-            icon="$nl$/icons/full/etool16/exportjar_wiz.gif"
+            icon="$nl$/icons/full/etool16/exportjar_wiz.png"
             category="org.eclipse.php.ui.PHP">
          <description> 
             %jarExportWizard.description
@@ -2036,7 +2036,7 @@
          point="org.eclipse.ui.importWizards">
       <wizard
             name="%wizard.name.1"
-            icon="$nl$/icons/full/etool16/exportjar_wiz.gif"
+            icon="$nl$/icons/full/etool16/exportjar_wiz.png"
             category="org.eclipse.php.ui.PHP"            
             class="org.eclipse.php.internal.ui.phar.wizard.PharFileImportWizard"
             id="org.eclipse.ui.wizards.import.ZipFile">
@@ -2144,7 +2144,7 @@
           name="%extension.name.0"
           point="org.eclipse.dltk.ui.scriptCompletionProposalComputer">
        <proposalCategory
-             icon="icons/full/elcl16/phpdocprop_co.gif"></proposalCategory>
+             icon="icons/full/elcl16/phpdocprop_co.png"></proposalCategory>
     </extension>     
     <extension point="org.eclipse.dltk.ui.completion">
        <proposalLabelProvider nature="org.eclipse.php.core.PHPNature"
@@ -2424,7 +2424,7 @@
     <navigatorContent
           activeByDefault="true"
           contentProvider="org.eclipse.php.internal.ui.navigator.PHPNavigatorContentProvider"
-          icon="icons/full/goto_phpRes_16.gif"
+          icon="icons/full/goto_phpRes_16.png"
           id="org.eclipse.php.ui.phpContent"
           labelProvider="org.eclipse.php.internal.ui.navigator.PHPNavigatorLabelProvider"
           name="PHP Elements"

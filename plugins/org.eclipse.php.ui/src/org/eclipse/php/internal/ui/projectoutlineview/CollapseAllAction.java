@@ -33,7 +33,7 @@ public class CollapseAllAction extends Action {
 
 		fPackageExplorer = part;
 		if (DLTKCore.DEBUG) {
-			System.err.println("Add help support here..."); //$NON-NLS-1$ 
+			System.err.println("Add help support here..."); //$NON-NLS-1$
 		}
 	}
 
