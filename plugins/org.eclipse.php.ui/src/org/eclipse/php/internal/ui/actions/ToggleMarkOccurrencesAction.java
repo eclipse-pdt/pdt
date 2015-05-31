@@ -42,7 +42,7 @@ public class ToggleMarkOccurrencesAction extends TextEditorAction implements
 	public ToggleMarkOccurrencesAction(ResourceBundle resourceBundle) {
 		super(resourceBundle,
 				"ToggleMarkOccurrencesAction.", null, IAction.AS_CHECK_BOX); //$NON-NLS-1$
-		PHPPluginImages.setToolImageDescriptors(this, "mark_occurrences.gif"); //$NON-NLS-1$
+		PHPPluginImages.setToolImageDescriptors(this, "mark_occurrences.png"); //$NON-NLS-1$
 		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
 		// IPHPHelpContextIds.TOGGLE_MARK_OCCURRENCES_ACTION); // TODO - Add
 		// Help

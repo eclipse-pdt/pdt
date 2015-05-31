@@ -29,10 +29,10 @@ public class ShowGroupsAction extends Action {
 	private IPropertyChangeListener propertyChangeListener;
 
 	public ShowGroupsAction(String label, TreeViewer treeViewer) {
-		super(label, AS_CHECK_BOX); 
+		super(label, AS_CHECK_BOX);
 		this.treeViewer = treeViewer;
-		PHPPluginImages.setLocalImageDescriptors(this, "showGroups.gif"); //$NON-NLS-1$
-		setToolTipText(PHPUIMessages.ShowGroupsAction_1); 
+		PHPPluginImages.setLocalImageDescriptors(this, "showGroups.png"); //$NON-NLS-1$
+		setToolTipText(PHPUIMessages.ShowGroupsAction_1);
 
 		propertyChangeListener = new IPropertyChangeListener() {
 
@@ -47,7 +47,7 @@ public class ShowGroupsAction extends Action {
 		PHPUiPlugin.getDefault().getPreferenceStore()
 				.addPropertyChangeListener(propertyChangeListener);
 		boolean show = PHPUiPlugin.getDefault().getPreferenceStore()
-				.getBoolean(PREF_SHOW_GROUPS); 
+				.getBoolean(PREF_SHOW_GROUPS);
 		setChecked(show);
 	}
 
@@ -63,8 +63,8 @@ public class ShowGroupsAction extends Action {
 			// phpContentProvider.setShowGroups(isChecked());
 			treeViewer.refresh(false);
 			treeViewer.expandToLevel(2);
-			PHPUiPlugin.getDefault().getPreferenceStore().setValue(
-					PREF_SHOW_GROUPS, isChecked());
+			PHPUiPlugin.getDefault().getPreferenceStore()
+					.setValue(PREF_SHOW_GROUPS, isChecked());
 		}
 	}
 

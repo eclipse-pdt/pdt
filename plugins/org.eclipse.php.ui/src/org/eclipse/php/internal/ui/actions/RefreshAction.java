@@ -50,7 +50,7 @@ public class RefreshAction extends SelectionDispatchAction {
 		super(site);
 		setText(PHPUIMessages.RefreshAction_label);
 		setToolTipText(PHPUIMessages.RefreshAction_toolTip);
-		PHPPluginImages.setLocalImageDescriptors(this, "refresh_nav.gif"); //$NON-NLS-1$
+		PHPPluginImages.setLocalImageDescriptors(this, "refresh_nav.png"); //$NON-NLS-1$
 		PlatformUI.getWorkbench().getHelpSystem()
 				.setHelp(this, IIDEHelpContextIds.REFRESH_ACTION);
 	}

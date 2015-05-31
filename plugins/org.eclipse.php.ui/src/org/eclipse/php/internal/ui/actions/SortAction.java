@@ -72,7 +72,7 @@ public class SortAction extends Action {
 		PlatformUI.getWorkbench().getHelpSystem()
 				.setHelp(this, IPHPHelpContextIds.OUTLINE_VIEW);
 		setText(PHPUIMessages.PHPOutlinePage_Sort_label);
-		PHPPluginImages.setLocalImageDescriptors(this, "alphab_sort_co.gif"); //$NON-NLS-1$
+		PHPPluginImages.setLocalImageDescriptors(this, "alphab_sort_co.png"); //$NON-NLS-1$
 		setToolTipText(PHPUIMessages.PHPOutlinePage_Sort_tooltip);
 		setDescription(PHPUIMessages.PHPOutlinePage_Sort_description);
 

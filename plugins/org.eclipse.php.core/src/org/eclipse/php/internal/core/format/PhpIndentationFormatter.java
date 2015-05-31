@@ -182,15 +182,6 @@ public class PhpIndentationFormatter {
 				}
 			}
 
-			/*
-			 * if (firstTokenInLine.getStart() + sdRegion.getStartOffset() <
-			 * originalLineInfo.getOffset() || firstTokenInLine.getType() ==
-			 * PHPRegionTypes.WHITESPACE) { //meaning we got previos line last
-			 * token firstTokenInLine =
-			 * sdRegion.getRegionAtCharacterOffset(sdRegion.getStartOffset() +
-			 * firstTokenInLine.getEnd()); }
-			 */
-
 			// if the next char is not from this line
 			if (firstTokenInLine == null)
 				return;

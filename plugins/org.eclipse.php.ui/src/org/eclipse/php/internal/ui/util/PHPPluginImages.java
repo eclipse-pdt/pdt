@@ -50,97 +50,90 @@ public class PHPPluginImages {
 	public static final String T_WIZBAN = "wizban"; //$NON-NLS-1$
 	private static final String T_ELCL = "elcl16"; //$NON-NLS-1$
 	private static final String T_DLCL = "dlcl16"; //$NON-NLS-1$
-	private static final String T_ETOOL = "etool16"; //$NON-NLS-1$
-	private static final String T_EVIEW = "eview16"; //$NON-NLS-1$
 	private static final String CLASS_BROWSER = "classBrowser"; //$NON-NLS-1$
 
 	public static final String IMG_MISC_PUBLIC = NAME_PREFIX
-			+ "phpfunctiondata_pub.gif"; //$NON-NLS-1$
+			+ "phpfunctiondata_pub.png"; //$NON-NLS-1$
 	public static final String IMG_MISC_PROTECTED = NAME_PREFIX
-			+ "phpfunctiondata_pro.gif"; //$NON-NLS-1$
+			+ "phpfunctiondata_pro.png"; //$NON-NLS-1$
 	public static final String IMG_MISC_PRIVATE = NAME_PREFIX
-			+ "phpfunctiondata_pri.gif"; //$NON-NLS-1$
+			+ "phpfunctiondata_pri.png"; //$NON-NLS-1$
 	public static final String IMG_MISC_DEFAULT = NAME_PREFIX
-			+ "phpfunctiondata_pub.gif"; //$NON-NLS-1$
+			+ "phpfunctiondata_pub.png"; //$NON-NLS-1$
 
 	public static final String IMG_FIELD_PUBLIC = NAME_PREFIX
-			+ "phpuservar_pub.gif"; //$NON-NLS-1$
+			+ "phpuservar_pub.png"; //$NON-NLS-1$
 	public static final String IMG_FIELD_PROTECTED = NAME_PREFIX
-			+ "phpuservar_pro.gif"; //$NON-NLS-1$
+			+ "phpuservar_pro.png"; //$NON-NLS-1$
 	public static final String IMG_FIELD_PRIVATE = NAME_PREFIX
-			+ "phpuservar_pri.gif"; //$NON-NLS-1$
+			+ "phpuservar_pri.png"; //$NON-NLS-1$
 	public static final String IMG_FIELD_DEFAULT = NAME_PREFIX
-			+ "phpuservar_pub.gif"; //$NON-NLS-1$
-	public static final String IMG_OBJS_GHOST = NAME_PREFIX + "ghost.gif"; //$NON-NLS-1$
+			+ "phpuservar_pub.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_CLASS = NAME_PREFIX
-			+ "phpclassdata.gif"; //$NON-NLS-1$
+			+ "phpclassdata.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_METHOD = NAME_PREFIX
-			+ "methpub_obj.gif"; //$NON-NLS-1$
+			+ "methpub_obj.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_CLASSALT = NAME_PREFIX
-			+ "phpclassdata.gif"; //$NON-NLS-1$
+			+ "phpclassdata.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_CLASS_DEFAULT = NAME_PREFIX
-			+ "phpclassdata.gif"; //$NON-NLS-1$
+			+ "phpclassdata.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_INTERFACE = NAME_PREFIX
-			+ "phpinterfacedata.gif"; //$NON-NLS-1$
+			+ "phpinterfacedata.png"; //$NON-NLS-1$
 	public static final String IMG_CONSTANT = NAME_PREFIX
-			+ "phpconstantdata.gif"; //$NON-NLS-1$
-	public static final String IMG_KEYWORD = NAME_PREFIX + "phpkeyword.gif"; //$NON-NLS-1$
-	public static final String IMG_OBJS_CUNIT = NAME_PREFIX + "phpfile.gif"; //$NON-NLS-1$
+			+ "phpconstantdata.png"; //$NON-NLS-1$
+	public static final String IMG_KEYWORD = NAME_PREFIX + "phpkeyword.png"; //$NON-NLS-1$
+	public static final String IMG_OBJS_CUNIT = NAME_PREFIX + "phpfile.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_INCLUDE = NAME_PREFIX
-			+ "include_file.gif"; //$NON-NLS-1$
+			+ "include_file.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_CUNIT_RESOURCE = NAME_PREFIX
-			+ "php_resource_obj.gif"; //$NON-NLS-1$
+			+ "php_resource_obj.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_PHP_FOLDER = NAME_PREFIX
-			+ "folder_opened.gif"; //$NON-NLS-1$
-	public static final String IMG_OBJS_PHP_FILE = NAME_PREFIX + "phpfile.gif"; //$NON-NLS-1$
+			+ "folder_opened.png"; //$NON-NLS-1$
+	public static final String IMG_OBJS_PHP_FILE = NAME_PREFIX + "phpfile.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_EMPTY_PACK_RESOURCE = NAME_PREFIX
 			+ "empty_pack_fldr_obj.gif"; //$NON-NLS-1$
-	public static final String IMG_OBJS_EMPTY_PHP_FOLDER = NAME_PREFIX
-			+ "empty_pack_obj.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_PHPFOLDER_ROOT = NAME_PREFIX
-			+ "folderroot_obj.gif"; //$NON-NLS-1$
+			+ "folderroot_obj.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_MISSING_PHPFOLDER_ROOT = NAME_PREFIX
-			+ "folderroot_nonexist_obj.gif"; //$NON-NLS-1$
+			+ "folderroot_nonexist_obj.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_PHP_LIBFOLDER = NAME_PREFIX
-			+ "libfolder_obj.gif"; //$NON-NLS-1$
-	public static final String IMG_OBJS_PHP_MODEL = NAME_PREFIX
-			+ "script_model_obj.gif"; //$NON-NLS-1$
+			+ "libfolder_obj.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_UNKNOWN = NAME_PREFIX
-			+ "unknown_obj.gif"; //$NON-NLS-1$
+			+ "unknown_obj.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_ADD_PHP_PROJECT = NAME_PREFIX
-			+ "add_php_project.gif"; //$NON-NLS-1$
+			+ "add_php_project.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_ADD_PHP_FILE = NAME_PREFIX
-			+ "add_php_file.gif"; //$NON-NLS-1$
+			+ "add_php_file.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_ADD_PHP_APP = NAME_PREFIX
-			+ "add_php_app.gif"; //$NON-NLS-1$
+			+ "add_php_app.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_PHP_SEARCH = NAME_PREFIX
-			+ "php_search_obj.gif"; //$NON-NLS-1$
-	public static final String IMG_OBJS_PHP_APP = NAME_PREFIX + "php_app.gif"; //$NON-NLS-1$
+			+ "php_search_obj.png"; //$NON-NLS-1$
+	public static final String IMG_OBJS_PHP_APP = NAME_PREFIX + "php_app.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_PHP_PROJECT = NAME_PREFIX
-			+ "php_project_obj.gif"; //$NON-NLS-1$
+			+ "php_project_obj.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_PHP_CLASSES_GROUP = NAME_PREFIX
-			+ "class_group.gif"; //$NON-NLS-1$
+			+ "class_group.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_PHP_CONSTANTS_GROUP = NAME_PREFIX
-			+ "const_group.gif"; //$NON-NLS-1$
+			+ "const_group.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_PHP_FUNCTIONS_GROUP = NAME_PREFIX
-			+ "func_group.gif"; //$NON-NLS-1$
+			+ "func_group.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_PHP_NAMESPACES_GROUP = NAME_PREFIX
-			+ "namespace_group.gif"; //$NON-NLS-1$
+			+ "namespace_group.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_OCCURRENCES = NAME_PREFIX
-			+ "searchm_obj.gif"; //$NON-NLS-1$
+			+ "searchm_obj.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_TRAIT = NAME_PREFIX + "trait_obj.png"; //$NON-NLS-1$
 
-	public static final String IMG_OBJS_ZIP = NAME_PREFIX + "zip_obj.gif"; //$NON-NLS-1$
-	public static final String IMG_OBJS_EXTZIP = NAME_PREFIX + "zip_l_obj.gif"; //$NON-NLS-1$
+	public static final String IMG_OBJS_ZIP = NAME_PREFIX + "zip_obj.png"; //$NON-NLS-1$
+	public static final String IMG_OBJS_EXTZIP = NAME_PREFIX + "zip_l_obj.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_ENV_VAR = NAME_PREFIX
-			+ "envvar_obj.gif"; //$NON-NLS-1$
+			+ "envvar_obj.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_MISSING_ENV_VAR = NAME_PREFIX
-			+ "envvar_nonexist_obj.gif"; //$NON-NLS-1$
+			+ "envvar_nonexist_obj.png"; //$NON-NLS-1$
 	public static final String IMG_OBJS_LIBRARY = NAME_PREFIX
-			+ "library_obj.gif"; //$NON-NLS-1$
+			+ "library_obj.png"; //$NON-NLS-1$
 
-	public static final String IMG_TEMPLATE = NAME_PREFIX + "phptpldata16.gif"; //$NON-NLS-1$
-	public static final String IMG_OBJS_EXTJAR = NAME_PREFIX + "jar_l_obj.gif"; //$NON-NLS-1$
+	public static final String IMG_TEMPLATE = NAME_PREFIX + "phptpldata16.png"; //$NON-NLS-1$
+	public static final String IMG_OBJS_EXTJAR = NAME_PREFIX + "jar_l_obj.png"; //$NON-NLS-1$
 
 	public static final ImageDescriptor DESC_MISC_PUBLIC = createManaged(T_OBJ,
 			IMG_MISC_PUBLIC);
@@ -159,8 +152,6 @@ public class PHPPluginImages {
 			T_OBJ, IMG_FIELD_PRIVATE);
 	public static final ImageDescriptor DESC_FIELD_DEFAULT = createManaged(
 			T_OBJ, IMG_FIELD_DEFAULT);
-	public static final ImageDescriptor DESC_OBJS_GHOST = createManaged(T_OBJ,
-			IMG_OBJS_GHOST);
 	public static final ImageDescriptor DESC_OBJS_CUNIT = createManaged(T_OBJ,
 			IMG_OBJS_CUNIT);
 	public static final ImageDescriptor DESC_OBJS_INCLUDE = createManaged(
@@ -171,16 +162,12 @@ public class PHPPluginImages {
 			T_OBJ, IMG_OBJS_PHP_FOLDER);
 	public static final ImageDescriptor DESC_OBJS_EMPTY_PHP_FOLDER_RESOURCES = createManaged(
 			T_OBJ, IMG_OBJS_EMPTY_PACK_RESOURCE);
-	public static final ImageDescriptor DESC_OBJS_EMPTY_PHP_FOLDER = createManaged(
-			T_OBJ, IMG_OBJS_EMPTY_PHP_FOLDER);
 	public static final ImageDescriptor DESC_OBJS_PHPFOLDER_ROOT = createManaged(
 			T_OBJ, IMG_OBJS_PHPFOLDER_ROOT);
 	public static final ImageDescriptor DESC_OBJS_MISSING_PHPFOLDER_ROOT = createManaged(
 			T_OBJ, IMG_OBJS_MISSING_PHPFOLDER_ROOT);
 	public static final ImageDescriptor DESC_OBJS_PHP_LIBFOLDER = createManaged(
 			T_OBJ, IMG_OBJS_PHP_LIBFOLDER);
-	public static final ImageDescriptor DESC_OBJS_PHP_MODEL = createManaged(
-			T_OBJ, IMG_OBJS_PHP_MODEL);
 	public static final ImageDescriptor DESC_OBJ_PHP_CLASSES_GROUP = createManaged(
 			T_OBJ, IMG_OBJS_PHP_CLASSES_GROUP);
 	public static final ImageDescriptor DESC_OBJ_PHP_CONSTANTS_GROUP = createManaged(
@@ -209,29 +196,25 @@ public class PHPPluginImages {
 	public static final ImageDescriptor DESC_OBJS_UNKNOWN = createManaged(
 			T_OBJ, IMG_OBJS_UNKNOWN);
 	public static final ImageDescriptor DESC_OBJS_WARNING = create(T_OBJ,
-			"warning_obj.gif"); //$NON-NLS-1$
+			"warning_obj.png"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_RUN = create(T_OVR,
 			"run_co.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_WARNING = create(T_OVR,
-			"warning_co.gif"); //$NON-NLS-1$
+			"warning_co.png"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_ERROR = create(T_OVR,
-			"error_co.gif"); //$NON-NLS-1$
+			"error_co.png"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_OVERRIDES = create(T_OVR,
-			"over_co.gif"); //$NON-NLS-1$
+			"over_co.png"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_IMPLEMENTS = create(T_OVR,
-			"implm_co.gif"); //$NON-NLS-1$
-	public static final ImageDescriptor DESC_OVR_CONSTRUCTOR = create(T_OVR,
-			"constr_ovr.gif"); //$NON-NLS-1$
-	public static final ImageDescriptor DESC_OVR_DEPRECATED = create(T_OVR,
-			"deprecated.gif"); //$NON-NLS-1$
+			"implm_co.png"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_CONSTANT = create(T_OVR,
-			"constant_co.gif"); //$NON-NLS-1$
+			"constant_co.png"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_ABSTRACT = create(T_OVR,
-			"abstract_co.gif"); //$NON-NLS-1$
+			"abstract_co.png"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_FINAL = create(T_OVR,
-			"final_co.gif"); //$NON-NLS-1$
+			"final_co.png"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_STATIC = create(T_OVR,
-			"static_co.gif"); //$NON-NLS-1$
+			"static_co.png"); //$NON-NLS-1$
 
 	public static final ImageDescriptor DESC_OBJS_ZIP = createManaged(T_OBJ,
 			IMG_OBJS_ZIP);
@@ -258,23 +241,21 @@ public class PHPPluginImages {
 			T_OBJ, IMG_OBJS_PHP_PROJECT);
 
 	public static final ImageDescriptor DESC_OBJ_OVERRIDES = create(T_OBJ,
-			"over_co.gif"); //$NON-NLS-1$
+			"over_co.png"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OBJ_IMPLEMENTS = create(T_OBJ,
-			"implm_co.gif"); //$NON-NLS-1$
+			"implm_co.png"); //$NON-NLS-1$
 
 	public static final ImageDescriptor DESC_ELCL_FILTER = create(T_ELCL,
-			"filter_ps.gif"); //$NON-NLS-1$
+			"filter_ps.png"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_DLCL_FILTER = create(T_DLCL,
-			"filter_ps.gif"); //$NON-NLS-1$
+			"filter_ps.png"); //$NON-NLS-1$
 
-	public static final ImageDescriptor DESC_WIZBAN_ADD_LIBRARY = create(
-			T_WIZBAN, "addlibrary_wiz.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_WIZBAN_ADD_PHP_PROJECT = create(
-			T_WIZBAN, "newphpprj_wiz.gif"); //$NON-NLS-1$
+			T_WIZBAN, "newphpprj_wiz.png"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_WIZBAN_ADD_PHP_FILE = create(
-			T_WIZBAN, "newpfile_wiz.gif"); //$NON-NLS-1$
+			T_WIZBAN, "newpfile_wiz.png"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_TOOL_INCLUDEPATH_ORDER = create(
-			T_OBJ, "cp_order_obj.gif"); //$NON-NLS-1$
+			T_OBJ, "cp_order_obj.png"); //$NON-NLS-1$
 
 	public static final ImageDescriptor DESC_TEMPLATE = createManaged(
 			CLASS_BROWSER, IMG_TEMPLATE);
