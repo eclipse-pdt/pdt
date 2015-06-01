@@ -17,12 +17,8 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceReference;
 import org.eclipse.dltk.internal.ui.filters.FilterMessages;
-import org.eclipse.dltk.ui.DLTKPluginImages;
-import org.eclipse.dltk.ui.DLTKUIPlugin;
-import org.eclipse.dltk.ui.ScriptElementImageProvider;
-import org.eclipse.dltk.ui.ScriptElementLabels;
+import org.eclipse.dltk.ui.*;
 import org.eclipse.dltk.ui.viewsupport.AppearanceAwareLabelProvider;
-import org.eclipse.dltk.ui.viewsupport.DecoratingModelLabelProvider;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ContributionItem;
@@ -35,6 +31,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.typeinference.UseStatementElement;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -150,7 +147,7 @@ public class PHPContentOutlineConfiguration extends
 			combinedItems[items.length + 2] = filtersItem;
 			items = combinedItems;
 		}
-		if (changeOutlineModeActionHTML.isChecked()) {
+		if (changeOutlineModeActionHTML.isChecked() && sortAction != null) {
 			sortAction.setEnabled(false);
 		}
 		return items;
@@ -203,6 +200,7 @@ public class PHPContentOutlineConfiguration extends
 			changeOutlineModeActionHTML
 					.removePropertyChangeListener(propertyChangeListener);
 		}
+
 		super.unconfigure(viewer);
 	}
 
@@ -274,25 +272,25 @@ public class PHPContentOutlineConfiguration extends
 	}
 
 	public ILabelProvider getLabelProvider(final TreeViewer viewer) {
-
 		if (fLabelProvider == null) {
-			fLabelProvider = new DecoratingModelLabelProvider(
-					new PHPAppearanceAwareLabelProvider(
-							AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS
-									| ScriptElementLabels.F_APP_TYPE_SIGNATURE
-									| ScriptElementLabels.ALL_CATEGORY,
-							AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS,
-							fStore));
+			fLabelProvider = new PHPAppearanceAwareLabelProvider(
+					AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS
+							| ScriptElementLabels.F_APP_TYPE_SIGNATURE
+							| ScriptElementLabels.ALL_CATEGORY,
+					AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS, fStore);
 		}
 
+		if (fLabelProviderHTML == null) {
+			fLabelProviderHTML = new PHPOutlineLabelProvider(fLabelProvider);
+			fLabelProviderHTML.fShowAttributes = fShowAttributes;
+		}
 		if (MODE_PHP == mode) {
-			viewer.setLabelProvider(fLabelProvider);
+			return new PHPStyledDecoratingModelLabelProvider(
+					(IStyledLabelProvider) fLabelProvider,
+					new ProblemsLabelDecorator());
 		} else if (MODE_HTML == mode) {
-			if (fLabelProviderHTML == null) {
-				fLabelProviderHTML = new PHPOutlineLabelProvider(fLabelProvider);
-				fLabelProviderHTML.fShowAttributes = fShowAttributes;
-			}
-			viewer.setLabelProvider(fLabelProviderHTML);
+			return new PHPStyledDecoratingModelLabelProvider(
+					(IStyledLabelProvider) fLabelProviderHTML, null);
 		}
 		return (ILabelProvider) viewer.getLabelProvider();
 	}
@@ -411,6 +409,20 @@ public class PHPContentOutlineConfiguration extends
 		}
 	}
 
+	class PHPStyledDecoratingModelLabelProvider extends
+			DecoratingStyledCellLabelProvider implements ILabelProvider {
+
+		public PHPStyledDecoratingModelLabelProvider(
+				IStyledLabelProvider labelProvider, ILabelDecorator decorator) {
+			super(labelProvider, decorator, null);
+		}
+
+		public String getText(Object element) {
+			return getStyledText(element).toString();
+		}
+
+	}
+
 	class PHPAppearanceAwareLabelProvider extends AppearanceAwareLabelProvider {
 
 		public PHPAppearanceAwareLabelProvider(IPreferenceStore store) {
@@ -445,6 +457,7 @@ public class PHPContentOutlineConfiguration extends
 			}
 			return super.getText(element);
 		}
+
 	}
 
 	/**
