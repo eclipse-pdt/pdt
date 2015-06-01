@@ -109,9 +109,8 @@ public abstract class AbstractClassInstantiationStrategy extends
 				nextChar = abstractContext.getNextChar();
 			} else {
 				ISourceRange replacementRange = getReplacementRange(abstractContext);
-				nextChar = abstractContext.getDocument().getChar(
-						replacementRange.getOffset()
-								+ replacementRange.getLength());
+				nextChar = abstractContext.getChar(replacementRange.getOffset()
+						+ replacementRange.getLength());
 			}
 
 		} catch (BadLocationException e) {

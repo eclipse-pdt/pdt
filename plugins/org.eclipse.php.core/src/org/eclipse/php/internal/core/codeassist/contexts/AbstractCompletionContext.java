@@ -669,12 +669,23 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Returns next word after the cursor position
+	 * Returns next character after the cursor position (or ' ' if cursor
+	 * position is at end of document)
 	 * 
 	 * @throws BadLocationException
 	 */
 	public char getNextChar() throws BadLocationException {
-		// if the current location is the end of the document,we return ' ' to
+		return getChar(offset);
+	}
+
+	/**
+	 * Returns character at the given offset (or ' ' if offset is at end of
+	 * document)
+	 * 
+	 * @throws BadLocationException
+	 */
+	public char getChar(int offset) throws BadLocationException {
+		// if the location is the end of the document, we return ' ' to
 		// avoid the BadLocationException
 		if (document.getLength() == offset) {
 			return ' ';
