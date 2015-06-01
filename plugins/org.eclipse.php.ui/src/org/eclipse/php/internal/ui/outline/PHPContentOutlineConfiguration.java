@@ -17,12 +17,8 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceReference;
 import org.eclipse.dltk.internal.ui.filters.FilterMessages;
-import org.eclipse.dltk.ui.DLTKPluginImages;
-import org.eclipse.dltk.ui.DLTKUIPlugin;
-import org.eclipse.dltk.ui.ScriptElementImageProvider;
-import org.eclipse.dltk.ui.ScriptElementLabels;
+import org.eclipse.dltk.ui.*;
 import org.eclipse.dltk.ui.viewsupport.AppearanceAwareLabelProvider;
-import org.eclipse.dltk.ui.viewsupport.DecoratingModelLabelProvider;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ContributionItem;
@@ -276,13 +272,13 @@ public class PHPContentOutlineConfiguration extends
 	public ILabelProvider getLabelProvider(final TreeViewer viewer) {
 
 		if (fLabelProvider == null) {
-			fLabelProvider = new DecoratingModelLabelProvider(
+			fLabelProvider = new DecoratingLabelProvider(
 					new PHPAppearanceAwareLabelProvider(
 							AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS
 									| ScriptElementLabels.F_APP_TYPE_SIGNATURE
 									| ScriptElementLabels.ALL_CATEGORY,
 							AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS,
-							fStore));
+							fStore), new ProblemsLabelDecorator());
 		}
 
 		if (MODE_PHP == mode) {
