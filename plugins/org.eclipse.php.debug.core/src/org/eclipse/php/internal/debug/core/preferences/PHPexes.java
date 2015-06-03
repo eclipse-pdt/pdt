@@ -160,11 +160,7 @@ public class PHPexes {
 		HashMap<String, PHPexeItem> exes = items.get(debuggerID);
 		PHPexeItem removedItem = null;
 		if (exes != null) {
-			removedItem = exes.remove(original.getName());
-		}
-		if (!original.getDebuggerID().equals(copy.getDebuggerID())
-				&& removedItem != null && removedItem.isDefault()) {
-			detectDefaultItem();
+			exes.remove(original.getName());
 		}
 		// Update original item
 		original.setName(copy.getName());
@@ -179,9 +175,6 @@ public class PHPexes {
 		if (exes == null) {
 			exes = new HashMap<String, PHPexeItem>();
 			items.put(debuggerID, exes);
-		}
-		if (exes.isEmpty()) {
-			setDefaultItem(original);
 		}
 		exes.put(original.getName(), original);
 	}
