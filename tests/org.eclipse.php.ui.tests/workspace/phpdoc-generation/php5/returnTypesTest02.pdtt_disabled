@@ -1,0 +1,17 @@
+--TEST--
+Bug 467151 - PHPDoc shouldn't produce "multitype: TypeA TypeB"
+--FILE--
+<?php
+/**|
+function test() {
+	return [new DateTime(), new DateInterval()];
+}
+--EXPECT--
+<?php
+/**
+ * 
+ * @return DateTime[]|DateInterval[]
+ */
+function test() {
+	return [new DateTime(), new DateInterval()];
+}

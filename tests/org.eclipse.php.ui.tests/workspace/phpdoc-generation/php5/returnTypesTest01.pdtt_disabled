@@ -1,0 +1,33 @@
+--TEST--
+Bug 467148 - PHPDoc shouldn't produce "Ambiguous <Type1, Type2, ...>"
+--CONFIG--
+cursor: _
+--FILE--
+<?php
+/**
+ * @return DateTime|DateInterval
+ */
+function foo()
+{
+}
+
+/**_
+function test() {
+	return foo();
+}
+--EXPECT--
+<?php
+/**
+ * @return DateTime|DateInterval
+ */
+function foo()
+{
+}
+
+/**
+ * 
+ * @return DateTime|DateInterval
+ */
+function test() {
+	return foo();
+}

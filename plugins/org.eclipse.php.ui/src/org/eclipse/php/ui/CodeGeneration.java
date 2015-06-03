@@ -17,6 +17,8 @@ import java.util.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.evaluation.types.AmbiguousType;
+import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.ast.nodes.*;
@@ -681,6 +683,22 @@ public class CodeGeneration {
 						returnTypeBuffer.append("null").append("|"); //$NON-NLS-1$ //$NON-NLS-2$
 					} else if (returnType.isAmbiguous()) {
 						returnTypeBuffer.append("Ambiguous").append("|"); //$NON-NLS-1$ //$NON-NLS-2$
+					} else if (returnType.getEvaluatedType() instanceof AmbiguousType) {
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=467148
+						IEvaluatedType[] allPossibleTypes = ((AmbiguousType) returnType
+								.getEvaluatedType()).getPossibleTypes();
+						for (IEvaluatedType possibleType : allPossibleTypes) {
+							returnTypeBuffer.append(possibleType.getTypeName())
+									.append("|"); //$NON-NLS-1$
+						}
+					} else if (returnType.getEvaluatedType() instanceof MultiTypeType) {
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=467151
+						List<IEvaluatedType> allPossibleTypes = ((MultiTypeType) returnType
+								.getEvaluatedType()).getTypes();
+						for (IEvaluatedType possibleType : allPossibleTypes) {
+							returnTypeBuffer.append(possibleType.getTypeName())
+									.append("[]").append("|"); //$NON-NLS-1$ //$NON-NLS-2$
+						}
 					} else {
 						returnTypeBuffer.append(returnType.getName()).append(
 								"|"); //$NON-NLS-1$
