@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.ti.types.IEvaluatedType;
 
 /**
  * A type binding represents fully-resolved type. There are a number of
@@ -249,6 +250,13 @@ public interface ITypeBinding extends IBinding {
 	 * @see #getQualifiedName()
 	 */
 	public String getName();
+
+	/**
+	 * Returns the type associated with this binding.
+	 * 
+	 * @return the type
+	 */
+	public IEvaluatedType getEvaluatedType();
 
 	/**
 	 * Returns the binding for the package in which this type is declared.

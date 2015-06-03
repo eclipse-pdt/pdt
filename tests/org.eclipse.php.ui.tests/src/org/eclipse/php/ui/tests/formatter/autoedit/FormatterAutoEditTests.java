@@ -61,7 +61,7 @@ import org.osgi.framework.Bundle;
 @RunWith(PDTTList.class)
 public class FormatterAutoEditTests {
 
-	protected static final char OFFSET_CHAR = '|';
+	protected static final String DEFAULT_CURSOR = "|";
 
 	protected IProject project;
 	protected int count;
@@ -133,9 +133,16 @@ public class FormatterAutoEditTests {
 		return PHPUiTests.getDefault().getBundle();
 	}
 
+	private static String getCursor(PdttFile pdttFile) {
+		Map<String, String> config = pdttFile.getConfig();
+		return config.get("cursor");
+	}
+
 	@Test
 	public void formatter(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(fileName);
+		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile)
+				: DEFAULT_CURSOR;
 		final IFile file = createFile(pdttFile.getFile().trim());
 		final ISourceModule modelElement = (ISourceModule) DLTKCore
 				.create(file);
@@ -165,8 +172,8 @@ public class FormatterAutoEditTests {
 			final IDocument document = modelForEdit.getStructuredDocument();
 			String beforeFormat = document.get();
 			String data = document.get();
-			int firstOffset = data.indexOf(OFFSET_CHAR);
-			int lastOffset = data.lastIndexOf(OFFSET_CHAR);
+			int firstOffset = data.indexOf(cursor);
+			int lastOffset = data.lastIndexOf(cursor);
 			if (lastOffset == -1) {
 				throw new IllegalArgumentException(
 						"Offset character is not set");
@@ -178,15 +185,16 @@ public class FormatterAutoEditTests {
 			// replace the offset character(s)
 			if (firstOffset == lastOffset) {
 				data = data.substring(0, lastOffset)
-						+ data.substring(lastOffset + 1);
+						+ data.substring(lastOffset + cursor.length());
 				cmd.offset = lastOffset;
 				cmd.length = 0;
 			} else {
 				data = data.substring(0, firstOffset)
-						+ data.substring(firstOffset + 1, lastOffset)
-						+ data.substring(lastOffset + 1);
+						+ data.substring(firstOffset + cursor.length(),
+								lastOffset)
+						+ data.substring(lastOffset + cursor.length());
 				cmd.offset = firstOffset;
-				cmd.length = lastOffset - (firstOffset + 1);
+				cmd.length = lastOffset - (firstOffset + cursor.length());
 			}
 			final String newContent = data;
 

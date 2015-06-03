@@ -404,6 +404,15 @@ public class TypeBinding implements ITypeBinding {
 		return isUnknown() ? null : this.type.getTypeName();
 	}
 
+	/**
+	 * Returns the type associated with this binding.
+	 * 
+	 * @return the type
+	 */
+	public IEvaluatedType getEvaluatedType() {
+		return type;
+	}
+
 	protected IType[] getSuperTypes() {
 		if (superTypes == null) {
 			if (elements != null && elements.length > 0) {
@@ -899,7 +908,7 @@ public class TypeBinding implements ITypeBinding {
 	/*
 	 * (non-Java)
 	 * 
-	 * @see ITypeBinding#isAmbiguous()
+	 * @see ITypeBinding#isUnknown()
 	 */
 	public boolean isUnknown() {
 		return this.elements == null && !(this.type instanceof SimpleType);
