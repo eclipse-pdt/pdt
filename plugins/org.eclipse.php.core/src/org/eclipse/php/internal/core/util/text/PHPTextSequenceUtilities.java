@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -78,6 +79,47 @@ public class PHPTextSequenceUtilities {
 	 */
 	public static TextSequence getStatement(int offset,
 			IStructuredDocumentRegion sdRegion, boolean removeComments) {
+
+		Region statementRegion = getStatementRegion(offset, sdRegion, true);
+
+		TextSequence textSequence = TextSequenceUtilities.createTextSequence(
+				sdRegion, statementRegion.getOffset(),
+				offset - statementRegion.getOffset());
+
+		if (removeComments) {
+			textSequence = removeComments(textSequence);
+		}
+
+		// remove spaces from start.
+		textSequence = textSequence.subTextSequence(
+				readForwardSpaces(textSequence, 0), textSequence.length());
+		return textSequence;
+	}
+
+	/**
+	 * <p>
+	 * This function returns statement region depending on the current offset.
+	 * It searches backwards (starting from offset - 1) until it finds ';', '{'
+	 * or '}'.
+	 * </p>
+	 * <p>
+	 * <b> Be careful, empty region can be returned (i.e. region's length is 0)
+	 * when no statement was found. In this case, the offset from the returned
+	 * region has no special meaning.
+	 * </p>
+	 * </b>
+	 * 
+	 * @param offset
+	 *            The absolute offset in the document
+	 * @param sdRegion
+	 *            Structured document region of the offset
+	 * @param ignoreStartComments
+	 *            move start offset to no-comment region
+	 * 
+	 * @return text sequence region, cannot be null
+	 */
+	public static Region getStatementRegion(int offset,
+			IStructuredDocumentRegion sdRegion, boolean ignoreStartComments) {
 		int documentOffset = offset;
 		if (documentOffset == sdRegion.getEndOffset()) {
 			documentOffset -= 1;
@@ -135,25 +177,27 @@ public class PHPTextSequenceUtilities {
 							.getPhpToken(startTokenRegion.getStart() - 1);
 				}
 
-				TextSequence textSequence = TextSequenceUtilities
-						.createTextSequence(sdRegion, startOffset, offset
-								- startOffset);
-
-				// remove comments
-				if (removeComments) {
-					textSequence = removeComments(textSequence);
+				if (ignoreStartComments) {
+					ITextRegion textRegion = phpScriptRegion
+							.getPhpToken(startOffset);
+					while (textRegion.getType() == PHPRegionTypes.PHP_COMMENT
+							|| textRegion.getType() == PHPRegionTypes.PHP_COMMENT_START
+							|| textRegion.getType() == PHPRegionTypes.PHP_COMMENT_END) {
+						textRegion = phpScriptRegion.getPhpToken(textRegion
+								.getEnd());
+						startOffset = textRegion.getEnd();
+					}
 				}
 
-				// remove spaces from start.
-				textSequence = textSequence.subTextSequence(
-						readForwardSpaces(textSequence, 0),
-						textSequence.length());
-				return textSequence;
+				startOffset = readForwardSpaces(sdRegion.getParentDocument(),
+						startOffset, offset);
+
+				return new Region(startOffset, offset - startOffset);
 			} catch (BadLocationException e) {
 			}
 		}
 
-		return TextSequenceUtilities.createTextSequence(sdRegion, 0, 0);
+		return new Region(0, 0);
 	}
 
 	private static TextSequence removeComments(TextSequence textSequence) {
@@ -478,6 +522,17 @@ public class PHPTextSequenceUtilities {
 		int rv = startPosition;
 		for (; rv > 0; rv--) {
 			if (!Character.isWhitespace(textSequence.charAt(rv - 1))) {
+				break;
+			}
+		}
+		return rv;
+	}
+
+	public static int readForwardSpaces(IDocument document, int startPosition,
+			int endPosition) throws BadLocationException {
+		int rv = startPosition;
+		for (; rv < endPosition; rv++) {
+			if (!Character.isWhitespace(document.getChar(rv))) {
 				break;
 			}
 		}
