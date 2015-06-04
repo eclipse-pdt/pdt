@@ -1,0 +1,26 @@
+--TEST--
+Tests formatting pasted method.
+--FILE--
+<?php
+|
+--OTHER--
+$expectedArray = array ( "Apigility",
+						           "composer",
+						 "drupal",
+					            	 "laravel",
+                         "magento",
+                         "symfony",
+                               "WordPress",
+                         "zf1",
+                         "zf2");
+--EXPECT--
+<?php
+$expectedArray = array ( "Apigility",
+		"composer",
+		"drupal",
+		"laravel",
+		"magento",
+		"symfony",
+		"WordPress",
+		"zf1",
+		"zf2");
