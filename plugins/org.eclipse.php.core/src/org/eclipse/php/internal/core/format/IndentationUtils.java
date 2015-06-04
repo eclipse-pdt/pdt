@@ -41,21 +41,22 @@ public class IndentationUtils {
 	 * Check if the line contains any non blank chars.
 	 */
 	public static boolean isBlanks(final IStructuredDocument document,
-			final int startOffset, final int endOffset, final int currentOffset)
+			final int startOffset, final int endOffset)
 			throws BadLocationException {
-		return document.get(startOffset, endOffset - startOffset).trim()
-				.length() == 0
-				|| document.get(startOffset, currentOffset - startOffset)
-						.trim().length() == 0;
+		for (int i = startOffset; i < endOffset; i++) {
+			if (!Character.isWhitespace(document.getChar(i))) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public static int moveLineStartToNonBlankChar(IStructuredDocument document,
 			int lineStart, int currLineIndex, boolean moveAfterNonBlankChar) {
 		try {
-			char[] line = document.get(lineStart,
-					document.getLineLength(currLineIndex)).toCharArray();
-			for (int i = 0; i < line.length; i++) {
-				char c = line[i];
+			int lineLength = document.getLineLength(currLineIndex);
+			for (int i = 0; i < lineLength; i++) {
+				char c = document.getChar(lineStart + i);
 				if (Character.isWhitespace(c)) {
 				} else {
 					// move line start to first non blank char

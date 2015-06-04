@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -154,6 +155,86 @@ public class PHPTextSequenceUtilities {
 		}
 
 		return TextSequenceUtilities.createTextSequence(sdRegion, 0, 0);
+	}
+
+	public static Region getStatementRegion(int offset,
+			IStructuredDocumentRegion sdRegion) {
+		int documentOffset = offset;
+		if (documentOffset == sdRegion.getEndOffset()) {
+			documentOffset -= 1;
+		}
+		ITextRegion tRegion = sdRegion
+				.getRegionAtCharacterOffset(documentOffset);
+
+		ITextRegionCollection container = sdRegion;
+
+		if (tRegion instanceof ITextRegionContainer) {
+			container = (ITextRegionContainer) tRegion;
+			tRegion = container.getRegionAtCharacterOffset(offset);
+		}
+		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CLOSE) {
+			tRegion = container.getRegionAtCharacterOffset(container
+					.getStartOffset() + tRegion.getStart() - 1);
+		}
+
+		// This text region must be of type PhpScriptRegion:
+		if (tRegion != null
+				&& tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
+
+			try {
+				// Set default starting position to the beginning of the
+				// PhpScriptRegion:
+				int startOffset = container.getStartOffset()
+						+ phpScriptRegion.getStart();
+
+				// Now, search backwards for the statement start (in this
+				// PhpScriptRegion):
+				ITextRegion startTokenRegion;
+				if (documentOffset == startOffset) {
+					startTokenRegion = phpScriptRegion.getPhpToken(0);
+				} else {
+					startTokenRegion = phpScriptRegion.getPhpToken(offset
+							- startOffset - 1);
+				}
+				while (true) {
+					// If statement start is at the beginning of the PHP script
+					// region:
+					if (startTokenRegion.getStart() == 0) {
+						break;
+					}
+					if (startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_CLOSE
+							|| startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_OPEN
+							|| startTokenRegion.getType() == PHPRegionTypes.PHP_SEMICOLON
+					/* || startTokenRegion.getType() == PHPRegionTypes.PHP_IF */) {
+						// Calculate starting position of the statement (it
+						// should go right after this startTokenRegion):
+						startOffset += startTokenRegion.getEnd();
+						break;
+					}
+					startTokenRegion = phpScriptRegion
+							.getPhpToken(startTokenRegion.getStart() - 1);
+				}
+
+				ITextRegion textRegion = phpScriptRegion
+						.getPhpToken(startOffset);
+				while (textRegion.getType() == PHPRegionTypes.PHP_COMMENT
+						|| textRegion.getType() == PHPRegionTypes.PHP_COMMENT_START
+						|| textRegion.getType() == PHPRegionTypes.PHP_COMMENT_END) {
+					textRegion = phpScriptRegion.getPhpToken(textRegion
+							.getEnd() + 1);
+					startOffset = textRegion.getEnd();
+				}
+
+				startOffset = readForwardSpaces(sdRegion.getParentDocument(),
+						startOffset);
+
+				return new Region(startOffset, offset - startOffset);
+			} catch (BadLocationException e) {
+			}
+		}
+
+		return new Region(0, 0);
 	}
 
 	private static TextSequence removeComments(TextSequence textSequence) {
@@ -478,6 +559,17 @@ public class PHPTextSequenceUtilities {
 		int rv = startPosition;
 		for (; rv > 0; rv--) {
 			if (!Character.isWhitespace(textSequence.charAt(rv - 1))) {
+				break;
+			}
+		}
+		return rv;
+	}
+
+	public static int readForwardSpaces(IDocument document, int startPosition)
+			throws BadLocationException {
+		int rv = startPosition;
+		for (; rv < document.getLength(); rv++) {
+			if (!Character.isWhitespace(document.getChar(rv))) {
 				break;
 			}
 		}

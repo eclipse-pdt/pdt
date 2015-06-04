@@ -299,9 +299,8 @@ public class PairCurlyBracketAutoEditStrategy implements
 			}
 			buffer.append(document.getLineDelimiter());
 			IndentationBaseDetector indentationDetector = new IndentationBaseDetector(
-					document);
-			int baseline = indentationDetector.getIndentationBaseLine(
-					document.getLineOfOffset(offset), offset, true);
+					document, document.getLineOfOffset(offset), offset);
+			int baseline = indentationDetector.getIndentationBaseLine(true);
 			lineInfo = document.getLineInformation(baseline);
 			String blanks = FormatterUtils.getLineBlanks(document, lineInfo);
 			buffer.append(blanks);
