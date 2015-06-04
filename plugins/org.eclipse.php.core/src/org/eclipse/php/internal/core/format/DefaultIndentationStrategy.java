@@ -413,32 +413,25 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					StringBuffer newBuffer = new StringBuffer(newblanks);
 					pairArrayParen = false;
 
-					String trimed = document.get(offset,
-							region.getOffset() + region.getLength() - offset)
-							.trim();
-					if (enterKeyPressed
-							|| !(trimed.startsWith(BLANK
-									+ PHPHeuristicScanner.RPAREN) || trimed
-										.startsWith(BLANK
-												+ PHPHeuristicScanner.RBRACKET))) {
-						if (isArray) {
-							region = document
-									.getLineInformationOfOffset(offset);
+					if (isArray) {
+						String trimed = document.get(
+								offset,
+								region.getOffset() + region.getLength()
+										- offset).trim();
+						if (enterKeyPressed
+								|| !(trimed.startsWith(BLANK
+										+ PHPHeuristicScanner.RPAREN) || trimed
+											.startsWith(BLANK
+													+ PHPHeuristicScanner.RBRACKET))) {
 							int arrayBracket = scanner.nextToken(offset,
 									region.getOffset() + region.getLength());
-							if (arrayBracket == PHPHeuristicScanner.TokenRPAREN
-									|| arrayBracket == PHPHeuristicScanner.TokenRBRACKET) {
+							if (enterKeyPressed
+									&& (arrayBracket == PHPHeuristicScanner.TokenRPAREN || arrayBracket == PHPHeuristicScanner.TokenRBRACKET)) {
 								int prev = scanner.previousToken(offset - 1,
 										PHPHeuristicScanner.UNBOUND);
-								if ((isAssignment
-										&& arrayBracket == PHPHeuristicScanner.TokenRPAREN && prev != PHPHeuristicScanner.TokenLPAREN)
-										|| (isAssignment
-												&& arrayBracket == PHPHeuristicScanner.TokenRBRACKET && prev != PHPHeuristicScanner.TokenLBRACKET)) {
-									indent(document, newBuffer, 0,
-											indentationObject
-													.getIndentationChar(),
-											indentationObject
-													.getIndentationSize());
+								if (isAssignment
+										&& ((arrayBracket == PHPHeuristicScanner.TokenRPAREN && prev != PHPHeuristicScanner.TokenLPAREN) || (arrayBracket == PHPHeuristicScanner.TokenRBRACKET && prev != PHPHeuristicScanner.TokenLBRACKET))) {
+									// no additional indentation
 								} else {
 									indent(document,
 											newBuffer,
@@ -472,7 +465,6 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 						pairArrayOffset = offset + result.length();
 						result.append(Util.getLineSeparator(null, null));
 						result.append(blanks);
-
 					}
 					return true;
 				}
