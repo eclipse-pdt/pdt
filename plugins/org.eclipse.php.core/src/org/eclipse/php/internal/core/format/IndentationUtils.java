@@ -43,10 +43,22 @@ public class IndentationUtils {
 	public static boolean isBlanks(final IStructuredDocument document,
 			final int startOffset, final int endOffset, final int currentOffset)
 			throws BadLocationException {
-		return document.get(startOffset, endOffset - startOffset).trim()
-				.length() == 0
-				|| document.get(startOffset, currentOffset - startOffset)
-						.trim().length() == 0;
+		if (endOffset - startOffset == 0 || currentOffset - startOffset == 0) {
+			return true;
+		}
+		for (int i = startOffset; i <= endOffset; i++) {
+			if (!Character.isWhitespace(document.getChar(i))) {
+				return false;
+			}
+		}
+		if (currentOffset != endOffset) {
+			for (int i = startOffset; i <= currentOffset; i++) {
+				if (!Character.isWhitespace(document.getChar(i))) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	public static int moveLineStartToNonBlankChar(IStructuredDocument document,
