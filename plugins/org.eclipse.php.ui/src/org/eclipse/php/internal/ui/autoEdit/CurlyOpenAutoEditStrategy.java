@@ -56,7 +56,6 @@ public class CurlyOpenAutoEditStrategy extends IndentLineAutoEditStrategy
 			int lineNumber = document.getLineOfOffset(startOffset);
 
 			if (IndentationUtils.isBlanks(document, startlineInfo.getOffset(),
-					endlineInfo.getOffset() + endlineInfo.getLength(),
 					startOffset)) {
 				placeMatchingBlanks(document, helpBuffer, lineNumber,
 						startOffset);

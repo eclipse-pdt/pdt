@@ -14,12 +14,12 @@ package org.eclipse.php.internal.core.format;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.Region;
 import org.eclipse.php.internal.core.ast.util.Util;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
-import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -140,16 +140,17 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		int lineOfOffset = document.getLineOfOffset(forOffset);
 		IRegion lineInformationOfOffset = document
 				.getLineInformation(lineOfOffset);
-		final String lineText = document.get(
-				lineInformationOfOffset.getOffset(),
-				lineInformationOfOffset.getLength());
 
 		int lastNonEmptyLineIndex;
 		final int indentationBaseLineIndex;
 		final int newForOffset;
 
 		// code for not formatting comments
-		if (lineText.trim().startsWith("//") && enterKeyPressed) { //$NON-NLS-1$
+		if (enterKeyPressed
+				&& document
+						.get(lineInformationOfOffset.getOffset(),
+								lineInformationOfOffset.getLength()).trim()
+						.startsWith("//")) { //$NON-NLS-1$
 			lastNonEmptyLineIndex = lineOfOffset;
 			indentationBaseLineIndex = lineOfOffset;
 			int i = lineInformationOfOffset.getOffset();
@@ -158,17 +159,16 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					&& document.getChar(i) != '/'; i++)
 				;
 			newForOffset = (i < forOffset) ? i : forOffset;
-
 		}
 		// end
 		else {
 			newForOffset = forOffset;
 			IndentationBaseDetector indentationDetector = new IndentationBaseDetector(
-					document);
-			lastNonEmptyLineIndex = indentationDetector.getIndentationBaseLine(
-					lineNumber, newForOffset, false);
+					document, lineNumber, newForOffset);
+			lastNonEmptyLineIndex = indentationDetector
+					.getIndentationBaseLine(false);
 			indentationBaseLineIndex = indentationDetector
-					.getIndentationBaseLine(lineNumber, newForOffset, true);
+					.getIndentationBaseLine(true);
 		}
 
 		final IRegion lastNonEmptyLine = document
@@ -310,12 +310,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 	private static void indent(final IStructuredDocument document,
 			final StringBuffer result, int indentationChar, int indentationSize) {
-		// final int indentationSize = FormatPreferencesSupport.getInstance()
-		// .getIndentationSize(document);
-		// final char indentationChar = FormatPreferencesSupport.getInstance()
-		// .getIndentationChar(document);
-		for (int i = 0; i < indentationSize; i++)
+		for (int i = 0; i < indentationSize; i++) {
 			result.append((char) indentationChar);
+		}
 	}
 
 	private static boolean indentMultiLineCase(IStructuredDocument document,
@@ -330,7 +327,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					region.getOffset() + region.getLength() - offset);
 			PHPHeuristicScanner scanner = PHPHeuristicScanner
 					.createHeuristicScanner(document, offset, true);
-			if (content.trim().startsWith("//") && enterKeyPressed) { //$NON-NLS-1$
+			if (enterKeyPressed && content.trim().startsWith("//")) { //$NON-NLS-1$
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=457701
 				return true;
 			} else if (IndentationUtils.inBracelessBlock(scanner, document,
@@ -507,35 +504,34 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 	private static boolean inMultiLine(PHPHeuristicScanner scanner,
 			IStructuredDocument document, int lineNumber, int offset) {
-		int lineStart = offset;
+		int lineStartOffset = offset;
 		try {
 			IRegion region = document.getLineInformation(lineNumber);
-			char[] line = document.get(lineStart,
-					region.getOffset() + region.getLength() - lineStart)
-					.toCharArray();
-			for (int i = 0; i < line.length; i++) {
-				char c = line[i];
-				if (Character.isWhitespace(c)) {
+			int start = lineStartOffset;
+			int end = region.getOffset() + region.getLength() - lineStartOffset;
+			for (int i = start; i < end; i++) {
+				if (Character.isWhitespace(document.getChar(i))) {
 				} else {
 					// move line start to first non blank char
 					// and do + 1 to adjust offset of
 					// PHPTextSequenceUtilities.getStatement(...)
-					lineStart += i + 1;
+					lineStartOffset += i + 1;
 					break;
 				}
 			}
 		} catch (BadLocationException e) {
 		}
-		TextSequence textSequence = PHPTextSequenceUtilities
-				.getStatement(lineStart,
-						document.getRegionAtCharacterOffset(lineStart), true);
-		if (textSequence.length() == 0) {
+
+		Region textSequenceRegion = PHPTextSequenceUtilities
+				.getStatementRegion(lineStartOffset,
+						document.getRegionAtCharacterOffset(lineStartOffset));
+		if (textSequenceRegion.getLength() == 0) {
 			return false;
 		}
 		String regionType = FormatterUtils.getRegionType(document,
-				textSequence.getOriginalOffset(0));
+				textSequenceRegion.getOffset());
 		if (IndentationUtils.isRegionTypeAllowedMultiline(regionType)) {
-			int statementStart = textSequence.getOriginalOffset(0);
+			int statementStart = textSequenceRegion.getOffset();
 			// we only search for opening pear in textSequence
 			int bound = statementStart;
 			int parenPeer = scanner.findOpeningPeer(offset - 1, bound,
@@ -573,20 +569,6 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			}
 		} catch (BadLocationException e) {
 		}
-
-		// Program program = null;
-		// try {
-		// final Reader reader = new StringReader(document.get());
-		// program = ASTParser.newParser(reader, PHPVersion.PHP5_4, true)
-		// .createAST(new NullProgressMonitor());
-		// ASTNode node = NodeFinder.perform(program, offset, 0);
-		// if (node != null && node.getType() == ASTNode.SCALAR
-		// && ((Scalar) node).getScalarType() == Scalar.TYPE_STRING
-		// && document.getLineOfOffset(node.getStart()) < lineNumber) {
-		// return document.getLineOfOffset(node.getStart());
-		// }
-		// } catch (Exception e) {
-		// }
 
 		return -1;
 	}
