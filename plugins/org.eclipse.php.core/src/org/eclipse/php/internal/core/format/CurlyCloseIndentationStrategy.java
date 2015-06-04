@@ -32,11 +32,10 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 			return;
 		}
 		IndentationBaseDetector indentationDetector = new IndentationBaseDetector(
-				document);
+				document, document.getLineOfOffset(curlyOpenLine.getOffset()),
+				forOffset);
 		int indentationBaseLineIndex = indentationDetector
-				.getIndentationBaseLine(
-						document.getLineOfOffset(curlyOpenLine.getOffset()),
-						forOffset, true);
+				.getIndentationBaseLine(true);
 		final IRegion indentationBaseLine = document
 				.getLineInformation(indentationBaseLineIndex);
 		String blanks = ""; //$NON-NLS-1$
@@ -44,8 +43,8 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 			blanks = FormatterUtils
 					.getLineBlanks(document, indentationBaseLine);
 		} else { // if no matching bracket was found leaving the bracket as is.
-			blanks = FormatterUtils.getLineBlanks(document, document
-					.getLineInformationOfOffset(forOffset));
+			blanks = FormatterUtils.getLineBlanks(document,
+					document.getLineInformationOfOffset(forOffset));
 		}
 		result.append(blanks);
 	}
@@ -94,8 +93,7 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 						curlyCount--;
 						if (curlyCount < 0) {
 							return document.getLineInformationOfOffset(tRegion
-									.getStart()
-									+ regionStart);
+									.getStart() + regionStart);
 						}
 					} else if (token == PHPRegionTypes.PHP_CURLY_CLOSE) {
 						curlyCount++;
@@ -113,8 +111,8 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 			// looking for the previous php block, maybe the '{' is in it
 			// (https://bugs.eclipse.org/bugs/show_bug.cgi?id=201648)
 			while ((sdRegion = sdRegion.getPrevious()) != null) {
-				if (sdRegion.getFirstRegion().getType().equals(
-						PHPRegionContext.PHP_OPEN)) {
+				if (sdRegion.getFirstRegion().getType()
+						.equals(PHPRegionContext.PHP_OPEN)) {
 					tRegion = sdRegion.getRegions().get(1);
 					regionStart = sdRegion.getStartOffset(tRegion);
 					offset = sdRegion.getEndOffset(tRegion);
