@@ -94,8 +94,13 @@ public class PHPDebugPropertyPreferencePage extends
 
 		});
 
-		PlatformUI.getWorkbench().getHelpSystem()
-				.setHelp(parent, IPHPHelpContextIds.DEBUG_PREFERENCES);
+		PlatformUI
+				.getWorkbench()
+				.getHelpSystem()
+				.setHelp(
+						getControl(),
+						getProject() != null ? IPHPHelpContextIds.PHP_DEBUG_PROPERTIES
+								: IPHPHelpContextIds.DEBUG_PREFERENCES);
 		return comp;
 	}
 

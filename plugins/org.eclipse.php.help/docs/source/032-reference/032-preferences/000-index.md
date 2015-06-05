@@ -79,7 +79,7 @@ To access this menu, go to Window menu and select **Preferences | PHP**.
 
 <td>Set the font color for different elements.</td></tr>
 
-<tr><td>[Task Tags](../../032-reference/032-preferences/040-editor/056-task_tags.md)</td>
+<tr><td>[Task Tags](../../032-reference/032-preferences/096-validation/008-task_tags.md)</td>
 
 <td>Add and edit tasks tags.</td></tr>
 
@@ -95,7 +95,7 @@ To access this menu, go to Window menu and select **Preferences | PHP**.
 
 <td>Configure the default project layout for new PHP projects.</td></tr>
 
-<tr><td>[PHP Executables](056-php_executables.md)</td>
+<tr><td>[PHP Executables](056-php_executables/000-index.md)</td>
 
 <td>Add, remove or edit PHP executables definitions.</td></tr>
 

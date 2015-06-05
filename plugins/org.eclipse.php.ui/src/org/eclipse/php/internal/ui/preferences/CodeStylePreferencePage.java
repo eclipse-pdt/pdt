@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 
 public class CodeStylePreferencePage extends AbstractEmptyPreferencePage {
 
@@ -30,6 +31,16 @@ public class CodeStylePreferencePage extends AbstractEmptyPreferencePage {
 	@Override
 	public String getBodyText() {
 		return PreferencesMessages.CodeStylePreferencePage_0;
+	}
+
+	@Override
+	protected String getPreferenceHelpId() {
+		return IPHPHelpContextIds.CODE_STYLE_PREFERENCES;
+	}
+
+	@Override
+	protected String getPropertiesHelpId() {
+		return IPHPHelpContextIds.CODE_STYLE_PROPERTIES;
 	}
 
 }

@@ -25,6 +25,6 @@ The selected projects are now specified as referenced by your project.
 
  * [Include Paths](../../016-concepts/144-include_paths.md)
  * [PHP Task Tags Properties](064-php_task_tags_properties.md)
- * [Save Actions Properties](096-save_actions_properties.md)
+ * [Save Actions Properties](096-editor/008-save_actions_properties.md)
 
 <!--links-end-->

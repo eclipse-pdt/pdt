@@ -22,6 +22,6 @@ Task Tag properties for PHP projects should be configured from the [PHP Task Tag
 
  * [PHP Task Tags Properties](064-php_task_tags_properties.md)
  * [Project References Properties](072-project_references_properties.md)
- * [Save Actions Properties](096-save_actions_properties.md)
+ * [Save Actions Properties](096-editor/008-save_actions_properties.md)
 
 <!--links-end-->

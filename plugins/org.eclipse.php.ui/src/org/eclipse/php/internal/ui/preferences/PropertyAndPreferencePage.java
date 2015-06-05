@@ -126,8 +126,8 @@ public abstract class PropertyAndPreferencePage extends PreferencePage
 				fChangeWorkspaceSettings.setLayoutData(new GridData(SWT.END,
 						SWT.CENTER, false, false));
 			} else {
-				LayoutUtil.setHorizontalSpan(fUseProjectSettings
-						.getSelectionButton(null), 2);
+				LayoutUtil.setHorizontalSpan(
+						fUseProjectSettings.getSelectionButton(null), 2);
 			}
 
 			Label horizontalLine = new Label(composite, SWT.SEPARATOR

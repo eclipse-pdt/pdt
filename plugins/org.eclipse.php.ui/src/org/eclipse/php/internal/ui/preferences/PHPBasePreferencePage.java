@@ -18,6 +18,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.SWT;
@@ -26,6 +27,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 
 /*
  * The page for setting general DLTK plugin preferences.
@@ -150,6 +152,13 @@ public class PHPBasePreferencePage extends PreferencePage implements
 
 		PHPUiPlugin.getDefault().savePluginPreferences();
 		return super.performOk();
+	}
+
+	@Override
+	public void performHelp() {
+		PlatformUI.getWorkbench().getHelpSystem()
+				.setHelp(getControl(), IPHPHelpContextIds.PREFERENCES);
+		super.performHelp();
 	}
 
 }

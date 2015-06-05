@@ -34,7 +34,7 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	private PHPCodeTemplateBlock fCodeTemplateConfigurationBlock;
 
 	public PHPCodeTemplatePreferencePage() {
-		setDescription(PHPUIMessages.CodeTemplatesPreferencePage_title); 
+		setDescription(PHPUIMessages.CodeTemplatesPreferencePage_title);
 	}
 
 	/*
@@ -46,9 +46,18 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 				getNewStatusChangedListener(), getProject(), container);
 
 		super.createControl(parent);
-		// FIXME - HELP -
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
-				IPHPHelpContextIds.TEMPLATES_PREFERENCES);
+	}
+
+	@Override
+	public void performHelp() {
+		PlatformUI
+				.getWorkbench()
+				.getHelpSystem()
+				.setHelp(
+						getControl(),
+						isProjectPreferencePage() ? IPHPHelpContextIds.CODE_TEMPLATES_PROPERTIES
+								: IPHPHelpContextIds.CODE_TEMPLATES_PREFERENCES);
+		super.performHelp();
 	}
 
 	/*

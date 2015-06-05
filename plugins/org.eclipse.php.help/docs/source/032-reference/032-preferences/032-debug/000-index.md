@@ -14,7 +14,7 @@ Default Settings
 
  * PHP Debugger - Select which debugger will be used by default.
  * Server - Choose which server the debugger will use by default. Click the "PHP Servers" category to be taken to the PHP Servers management page. For more on this, see [PHP Servers.](../../../032-reference/032-preferences/080-php_servers.md)
- * PHP Executable - Choose the required default PHP version. Click the "PHP Executables" category to be taken to the PHP Executables management page. For more on this, see [PHP Executables.](../../../032-reference/032-preferences/056-php_executables.md)
+ * PHP Executable - Choose the required default PHP version. Click the "PHP Executables" category to be taken to the PHP Executables management page. For more on this, see [PHP Executables.](../../../032-reference/032-preferences/056-php_executables/000-index.md)
 
 Encoding Settings
 

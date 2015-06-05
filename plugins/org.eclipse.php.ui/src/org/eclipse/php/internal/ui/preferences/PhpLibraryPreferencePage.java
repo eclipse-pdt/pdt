@@ -39,12 +39,14 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.ui.preferences.IPHPLibraryButtonHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Preference page for user libraries
@@ -60,6 +62,16 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 	private BuildpathAttributeConfigurationDescriptors fAttributeDescriptors;
 
 	private static List<IPHPLibraryButtonHandler> handlers;
+
+	@Override
+	public void performHelp() {
+		PlatformUI
+				.getWorkbench()
+				.getHelpSystem()
+				.setHelp(getControl(),
+						IPHPHelpContextIds.PHP_LIBRARIES_PREFERENCES);
+		super.performHelp();
+	}
 
 	private class NewButtonHandler implements IPHPLibraryButtonHandler {
 

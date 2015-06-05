@@ -14,6 +14,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.refactoring.ui.RefactoringUIPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -24,6 +25,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 
 public class PHPCodeRefactorPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {
@@ -66,6 +68,12 @@ public class PHPCodeRefactorPreferencePage extends PreferencePage implements
 				PreferenceConstants.REFACTOR_LIGHTWEIGHT));
 
 		Dialog.applyDialogFont(result);
+
+		PlatformUI
+				.getWorkbench()
+				.getHelpSystem()
+				.setHelp(getControl(),
+						IPHPHelpContextIds.CODE_REFACTOR_PREFERENCES);
 		return result;
 	}
 

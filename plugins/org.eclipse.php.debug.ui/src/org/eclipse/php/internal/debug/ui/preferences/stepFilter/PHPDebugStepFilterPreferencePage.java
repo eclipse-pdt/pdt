@@ -31,6 +31,7 @@ import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.preferences.stepFilters.*;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -111,7 +112,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements
 				.getWorkbench()
 				.getHelpSystem()
 				.setHelp(getControl(),
-						PREFIX + "php_step_filter_preference_page_context"); //$NON-NLS-1$
+						IPHPHelpContextIds.STEP_FILTERING_PREFERENCES); //$NON-NLS-1$
 		// The main composite
 		Composite composite = SWTFactory.createComposite(parent,
 				parent.getFont(), 1, 1, GridData.FILL_BOTH, 0, 0);

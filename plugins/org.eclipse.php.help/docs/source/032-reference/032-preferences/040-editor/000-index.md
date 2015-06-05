@@ -38,7 +38,7 @@ More editor settings can be accessed by clicking the "Text Editors" link.
  * [Folding Preferences](016-folding.md)
  * [Hovers Preferences](024-hovers.md)
  * [Syntax Coloring Preferences](048-syntax_coloring.md)
- * [Task Tags Preferences](056-task_tags.md)
+ * [Task Tags Preferences](../096-validation/008-task_tags.md)
  * [Typing Preferences](072-typing.md)
 
 <!--links-end-->

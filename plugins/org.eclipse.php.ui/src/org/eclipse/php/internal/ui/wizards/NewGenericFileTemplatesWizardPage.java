@@ -291,15 +291,21 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 		configureTableResizing(innerParent, table, column1, column2);
 
-		String helpId = getNewFileWizardTemplatePageHelpId();
-		if (helpId != null) {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, helpId);
-		}
 		resetTableViewerInput();
 		Dialog.applyDialogFont(parent);
 		PlatformUI.getWorkbench().getHelpSystem()
-				.setHelp(parent, IPHPHelpContextIds.NEW);
+				.setHelp(getControl(), IPHPHelpContextIds.NEW);
 		setControl(parent);
+	}
+
+	@Override
+	public void performHelp() {
+		String helpId = getNewFileWizardTemplatePageHelpId();
+		if (helpId == null) {
+			helpId = IPHPHelpContextIds.CREATING_A_PHP_FILE_WITHIN_A_PROJECT;
+		}
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), helpId);
+		super.performHelp();
 	}
 
 	public void resetTableViewerInput() {

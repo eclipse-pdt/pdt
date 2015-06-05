@@ -10,7 +10,7 @@ The properties available will depend on the resource selected. The following pro
 
  * [Resource Properties](008-resource_properties.md)
  * [Builders Properties](016-builders_properties.md)
- * Code Style Properties
+ * [Code Style Properties](024-code_style_properties/000-index.md)
  * [Code Templates Properties](../../032-reference/040-php_project_properties/024-code_style_properties/008-code_templates_properties.md)
  * [Formatter Properties](../../032-reference/040-php_project_properties/024-code_style_properties/016-formatter_properties.md)
  * [PHP Build Path Properties](032-php_build_path_properties.md)
@@ -20,11 +20,10 @@ The properties available will depend on the resource selected. The following pro
  * [PHP Task Tags Properties](064-php_task_tags_properties.md)
  * [Project References Properties](072-project_references_properties.md)
  * [Run/Debug Settings Properties](088-run_debug_settings_properties.md)
- * [Save Actions Properties](096-save_actions_properties.md)
+ * [Editor Properties](096-editor/000-index.md)
  * Task Repository - For more information see the [Mylyn User Guide](http://wiki.eclipse.org/index.php/Mylyn_User_Guide).
  * Commit Template
- * [Task Tags Properties](104-task_tags_properties.md)
- * [Validation Properties](112-validation_properties.md)
+ * [Validation Properties](112-validation_properties/000-index.md)
  * HTML Syntax
  * XSLT Validation
  * WikiText

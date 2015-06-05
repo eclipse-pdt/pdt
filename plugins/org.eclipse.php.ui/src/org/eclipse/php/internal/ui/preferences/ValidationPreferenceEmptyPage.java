@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 
 public class ValidationPreferenceEmptyPage extends AbstractEmptyPreferencePage {
 
@@ -30,6 +31,16 @@ public class ValidationPreferenceEmptyPage extends AbstractEmptyPreferencePage {
 	@Override
 	public String getBodyText() {
 		return PreferencesMessages.ValidationPreferencePage_body_text;
+	}
+
+	@Override
+	protected String getPropertiesHelpId() {
+		return IPHPHelpContextIds.VALIDATION_PROPERTIES;
+	}
+
+	@Override
+	protected String getPreferenceHelpId() {
+		return IPHPHelpContextIds.VALIDATION_PREFERENCES;
 	}
 
 }

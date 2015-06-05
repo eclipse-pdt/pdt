@@ -15,7 +15,7 @@ See
 To configure Code Templates Properties for the project:
 
  1. Mark the 'Enable project specific settings' checkbox.
- 2. Configure the settings according to your preferences.  See [Task Tags Preferences](../../../032-reference/032-preferences/040-editor/056-task_tags.md) for more information on the settings available.
+ 2. Configure the settings according to your preferences.  See [Task Tags Preferences](../../../032-reference/032-preferences/096-validation/008-task_tags.md) for more information on the settings available.
  3. Click OK to apply your settings.
 
 <!--ref-end-->

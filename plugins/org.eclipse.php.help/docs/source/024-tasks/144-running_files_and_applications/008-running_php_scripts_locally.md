@@ -11,7 +11,7 @@ To locally run a PHP Script:
  1. Click the arrow next to the Run button ![run_icon.png](images/run_icon.png "run_icon.png") on the toolbar and select Run Configurations -or- go to Run | Run Configurations.  A Run dialog will open.
  2. Double-click the PHP Script option to create a new run configuration.
  3. Enter a name for the new configuration.
- 4. Select the required PHP executable.   If no PHP Executables are listed, click the PHP Executable link and add a PHP Executable in the [PHP Executable Preferences](../../032-reference/032-preferences/056-php_executables.md) page. The PHP Executables must match the Debugger type.
+ 4. Select the required PHP executable.   If no PHP Executables are listed, click the PHP Executable link and add a PHP Executable in the [PHP Executable Preferences](../../032-reference/032-preferences/056-php_executables/000-index.md) page. The PHP Executables must match the Debugger type.
  5. Under PHP File, click Browse and select your file
  6. Marking the 'Display debug information when running' checkbox will cause debug views to be displayed.
  7. If necessary, you can add arguments in the PHP Script Arguments tab to simulate command line inputs.

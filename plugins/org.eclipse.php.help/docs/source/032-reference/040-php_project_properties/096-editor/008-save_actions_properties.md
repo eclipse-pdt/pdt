@@ -22,9 +22,9 @@ Default Save Actions Properties for all projects can be set in the Save Actions 
 
 #### Related Links:
 
- * [Save Actions Preferences](../../032-reference/032-preferences/040-editor/040-save_actions.md)
- * [Formatting Code](../../024-tasks/048-formatting_code.md)
- * [PHP Task Tags Properties](064-php_task_tags_properties.md)
- * [Project References Properties](072-project_references_properties.md)
+ * [Save Actions Preferences](../../../032-reference/032-preferences/040-editor/040-save_actions.md)
+ * [Formatting Code](../../../024-tasks/048-formatting_code.md)
+ * [PHP Task Tags Properties](../064-php_task_tags_properties.md)
+ * [Project References Properties](../072-project_references_properties.md)
 
 <!--links-end-->

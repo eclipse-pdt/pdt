@@ -74,12 +74,18 @@ public class PHPFileCreationWizardPage extends WizardNewFileCreationPage {
 	public void createControl(final Composite parent) {
 		super.createControl(parent);
 		setFileName(computeDefaultFileName());
+
+		setPageComplete(validatePage());
+	}
+
+	@Override
+	public void performHelp() {
 		PlatformUI
 				.getWorkbench()
 				.getHelpSystem()
-				.setHelp(parent,
+				.setHelp(getControl(),
 						IPHPHelpContextIds.CREATING_A_PHP_FILE_WITHIN_A_PROJECT);
-		setPageComplete(validatePage());
+		super.performHelp();
 	}
 
 	/**

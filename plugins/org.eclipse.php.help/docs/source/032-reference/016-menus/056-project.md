@@ -81,7 +81,7 @@ This is only available if automatic build is not selected (see below).</td></tr>
 
 <td></td>
 
-<td>Opens the project's properties dialog which allows you to view and configure various settings for the project, including project info, Builders, [Formatter](../../032-reference/032-preferences/024-code_style_preferences/016-formatter.md) , [PHP Debug](../../032-reference/032-preferences/032-debug/000-index.md) , PHP Include Path, [PHP Interpreter](../../032-reference/032-preferences/064-php_interpreter.md) ,   [PHP Task Tags](../../032-reference/032-preferences/040-editor/056-task_tags.md) , Profile Compliance and Validation, Project References, Refactoring History, Run/Debug Settings, Server, Task Tags and Validation.</td></tr>
+<td>Opens the project's properties dialog which allows you to view and configure various settings for the project, including project info, Builders, [Formatter](../../032-reference/032-preferences/024-code_style_preferences/016-formatter.md) , [PHP Debug](../../032-reference/032-preferences/032-debug/000-index.md) , PHP Include Path, [PHP Interpreter](../../032-reference/032-preferences/064-php_interpreter.md) ,   [PHP Task Tags](../../032-reference/032-preferences/096-validation/008-task_tags.md) , Profile Compliance and Validation, Project References, Refactoring History, Run/Debug Settings, Server, Task Tags and Validation.</td></tr>
 
 </table>
 

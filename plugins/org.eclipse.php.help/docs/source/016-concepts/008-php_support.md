@@ -12,7 +12,7 @@ PHP version settings affect:
 
 PHP version settings can be configured from the following places:
 
- * PHP Executables can be added and edited from the [PHP Executables Preferences](../032-reference/032-preferences/056-php_executables.md) page.
+ * PHP Executables can be added and edited from the [PHP Executables Preferences](../032-reference/032-preferences/056-php_executables/000-index.md) page.
  * The default PHP executable used for new projects can be set in the [PHP Interpreter Preferences](../032-reference/032-preferences/064-php_interpreter.md) page. Through this page you can also set the PHP version for specific projects.  In addition, you can select which PHP Version should be used when creating a new PHP project by marking the Enable Project Settings checkbox in the New PHP Project dialog.
 
 ![New Project Settings](images/new_php_project_pdt.png "New Project Settings") 
@@ -34,7 +34,7 @@ In order to minimize errors, the PHP Executable used for debugging should match 
 #### Related Links:
 
  * [PHP Interpreter Preferences](../032-reference/032-preferences/064-php_interpreter.md)
- * [PHP Executables Preferences](../032-reference/032-preferences/056-php_executables.md)
+ * [PHP Executables Preferences](../032-reference/032-preferences/056-php_executables/000-index.md)
  * [Debugging](../024-tasks/152-debugging/000-index.md)
 
 <!--links-end-->

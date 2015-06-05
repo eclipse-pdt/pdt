@@ -1,6 +1,6 @@
 # Keymap
 
-<!--context:keymap--><!--context:phpexe_env_preferences--><!--context:pharpackager_wizard_page--><!--context:phar_file_import_wizard_page-->
+<!--context:keymap--><!--context:pharpackager_wizard_page--><!--context:phar_file_import_wizard_page-->
 
 The following table displays a list of commonly used keyboard shortcuts which can be printed for quick access.
 

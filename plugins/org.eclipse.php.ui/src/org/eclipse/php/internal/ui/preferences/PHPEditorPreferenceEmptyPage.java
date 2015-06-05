@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 
 public class PHPEditorPreferenceEmptyPage extends AbstractEmptyPreferencePage {
 
@@ -30,6 +31,16 @@ public class PHPEditorPreferenceEmptyPage extends AbstractEmptyPreferencePage {
 	@Override
 	public String getBodyText() {
 		return PreferencesMessages.PHPEditorPreferencePage_body_text;
+	}
+
+	@Override
+	protected String getPreferenceHelpId() {
+		return IPHPHelpContextIds.EDITOR_PREFERENCES;
+	}
+
+	@Override
+	protected String getPropertiesHelpId() {
+		return IPHPHelpContextIds.EDITOR_PROPERTIES;
 	}
 
 }

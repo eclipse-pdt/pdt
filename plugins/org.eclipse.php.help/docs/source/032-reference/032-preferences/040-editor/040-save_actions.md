@@ -1,6 +1,6 @@
 # Save Actions Preferences
 
-<!--context:save_actions-->
+<!--context:save_actions_preferences-->
 
 The Save Actions Preferences page lets you remove trailing whitespace from a file each time you save it.
 

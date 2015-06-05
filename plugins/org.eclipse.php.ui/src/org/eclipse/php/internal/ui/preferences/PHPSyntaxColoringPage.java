@@ -283,7 +283,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 		PlatformUI
 				.getWorkbench()
 				.getHelpSystem()
-				.setHelp(pageComponent,
+				.setHelp(getControl(),
 						IPHPHelpContextIds.SYNTAX_COLORING_PREFERENCES);
 
 		Link link = new Link(pageComponent, SWT.WRAP);

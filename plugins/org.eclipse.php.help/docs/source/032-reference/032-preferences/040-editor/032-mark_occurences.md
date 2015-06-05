@@ -1,6 +1,6 @@
 # Mark Occurrences Preferences
 
-<!--context:mark_occurences-->
+<!--context:mark_occurrences_preferences-->
 
 The Mark Occurrences Preferences page allows you to configure for which types of elements the [Mark Occurrences](../../../016-concepts/048-mark_occurrences.md) feature will be enabled.
 

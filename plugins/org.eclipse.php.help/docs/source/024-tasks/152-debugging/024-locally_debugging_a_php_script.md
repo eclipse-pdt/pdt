@@ -2,13 +2,13 @@
 
 <!--context:locally_debugging_a_php_script-->
 
-This procedure describes how to debug a PHP Script from your workspace using an internal [PHP Executable](../../032-reference/032-preferences/056-php_executables.md).
+This procedure describes how to debug a PHP Script from your workspace using an internal [PHP Executable](../../032-reference/032-preferences/056-php_executables/000-index.md).
 
 <!--note-start-->
 
 #### Note:
 
-You must configure your PHP Executable through the [PHP Executables Preferences page](../../032-reference/032-preferences/056-php_executables.md) before you can debug locally.
+You must configure your PHP Executable through the [PHP Executables Preferences page](../../032-reference/032-preferences/056-php_executables/000-index.md) before you can debug locally.
 
 <!--note-end-->
 
@@ -21,7 +21,7 @@ To locally debug a PHP Script:
  3. Click the arrow next to the debug button ![debug_icon.png](images/debug_icon.png "debug_icon.png") on the toolbar and select Debug Configurations... -or- select **Run | Debug Configurations....**  A Debug dialog will open.
  4. Double-click the PHP Script option to create a new debug configuration. <br />![New Debug Configuration](images/debug_phpscript_configuration.png "New Debug Configuration")
  5. Enter a name for the new configuration.
- 6. S elect the required PHP executable.   If no PHP Executables are listed, click the PHP Executable link and add a PHP Executable in the [PHP Executable Preferences](../../032-reference/032-preferences/056-php_executables.md) page. The PHP Executables must match the Debugger type.
+ 6. S elect the required PHP executable.   If no PHP Executables are listed, click the PHP Executable link and add a PHP Executable in the [PHP Executable Preferences](../../032-reference/032-preferences/056-php_executables/000-index.md) page. The PHP Executables must match the Debugger type.
  7. Select the PHP Debugger to be used. PDT supports both the Zend Debugger and XDebug.
  8. Enter your PHP file in the "PHP File" text field, or click **Browse** and select your file
  9. Marking the "Breakpoint" checkbox will result in the debugging process pausing at the first line of code.

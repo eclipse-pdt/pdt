@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 
 abstract public class AbstractEmptyPreferencePage extends
 		PropertyAndPreferencePage implements IWorkbenchPreferencePage {
@@ -40,6 +41,10 @@ abstract public class AbstractEmptyPreferencePage extends
 	public void init(IWorkbench workbench) {
 	}
 
+	protected abstract String getPreferenceHelpId();
+
+	protected abstract String getPropertiesHelpId();
+
 	abstract public String getBodyText();
 
 	@Override
@@ -52,6 +57,14 @@ abstract public class AbstractEmptyPreferencePage extends
 
 		Label descLabel = new Label(comp, SWT.NONE);
 		descLabel.setText(getBodyText());
+
+		PlatformUI
+				.getWorkbench()
+				.getHelpSystem()
+				.setHelp(
+						getControl(),
+						getProject() != null ? getPropertiesHelpId()
+								: getPreferenceHelpId());
 
 		return comp;
 	}

@@ -51,8 +51,13 @@ public class TodoTaskPreferencePage extends PropertyAndPreferencePage {
 
 		super.createControl(parent);
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.TASK_TAGS_PREFERENCES);
+		PlatformUI
+				.getWorkbench()
+				.getHelpSystem()
+				.setHelp(
+						getControl(),
+						getProject() != null ? IPHPHelpContextIds.TASK_TAGS_PROPERTIES
+								: IPHPHelpContextIds.TASK_TAGS_PREFERENCES);
 	}
 
 	/*

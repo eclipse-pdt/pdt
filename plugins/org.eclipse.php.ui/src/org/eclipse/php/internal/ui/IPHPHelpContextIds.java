@@ -312,13 +312,11 @@ public static final String FOLDING_PREFERENCES = PREFIX + "folding_preferences";
 
 public static final String HOVERS_PREFERENCES = PREFIX + "hovers_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/040-editor/024-hovers.md
 
-public static final String MARK_OCCURENCES = PREFIX + "mark_occurences"; //$NON-NLS-1$ 032-reference/032-preferences/040-editor/032-mark_occurences.md
+public static final String MARK_OCCURRENCES_PREFERENCES = PREFIX + "mark_occurrences_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/040-editor/032-mark_occurences.md
 
-public static final String SAVE_ACTIONS = PREFIX + "save_actions"; //$NON-NLS-1$ 032-reference/032-preferences/040-editor/040-save_actions.md
+public static final String SAVE_ACTIONS_PREFERENCES = PREFIX + "save_actions_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/040-editor/040-save_actions.md
 
 public static final String SYNTAX_COLORING_PREFERENCES = PREFIX + "syntax_coloring_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/040-editor/048-syntax_coloring.md
-
-public static final String TASK_TAGS_PREFERENCES = PREFIX + "task_tags_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/040-editor/056-task_tags.md
 
 public static final String TEMPLATES_PREFERENCES = PREFIX + "templates_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/040-editor/064-templates.md
 
@@ -326,9 +324,11 @@ public static final String TYPING_PREFERENCES = PREFIX + "typing_preferences"; /
 
 public static final String NEW_PROJECT_LAYOUT_PREFERENCES = PREFIX + "new_project_layout_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/048-new_project_layout_preferences.md
 
-public static final String PHP_EXECUTABLES = PREFIX + "php_executables"; //$NON-NLS-1$ 032-reference/032-preferences/056-php_executables.md
+public static final String PHP_EXECUTABLES = PREFIX + "php_executables"; //$NON-NLS-1$ 032-reference/032-preferences/056-php_executables/000-index.md
 
-public static final String PHP_EXECUTABLES_PREFERENCES = PREFIX + "php_executables_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/056-php_executables.md
+public static final String PHP_EXECUTABLES_PREFERENCES = PREFIX + "php_executables_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/056-php_executables/000-index.md
+
+public static final String PHPEXE_ENV_PREFERENCES = PREFIX + "phpexe_env_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/056-php_executables/008-php-execution-environment.md
 
 public static final String PHP_INTERPRETER_PREFERENCES = PREFIX + "php_interpreter_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/064-php_interpreter.md
 
@@ -339,6 +339,10 @@ public static final String PHP_MANUAL_PREFERENCES = PREFIX + "php_manual_prefere
 public static final String PHP_SERVERS_PREFERENCES = PREFIX + "php_servers_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/080-php_servers.md
 
 public static final String CONFIGURING_TUNNELING_DEBUG_PREFERENCES = PREFIX + "configuring_tunneling_debug_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/088-configuring_tunneling_debug_preferences.md
+
+public static final String VALIDATION_PREFERENCES = PREFIX + "validation_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/096-validation/000-index.md
+
+public static final String TASK_TAGS_PREFERENCES = PREFIX + "task_tags_preferences"; //$NON-NLS-1$ 032-reference/032-preferences/096-validation/008-task_tags.md
 
 public static final String PHP_PROJECT_PROPERTIES = PREFIX + "php_project_properties"; //$NON-NLS-1$ 032-reference/040-php_project_properties/000-index.md
 
@@ -366,17 +370,17 @@ public static final String PROJECT_REFERENCES_PROPERTIES = PREFIX + "project_ref
 
 public static final String RUN_DEBUG_SETTINGS_PROPERTIES = PREFIX + "run_debug_settings_properties"; //$NON-NLS-1$ 032-reference/040-php_project_properties/088-run_debug_settings_properties.md
 
-public static final String SAVE_ACTIONS_PROPERTIES = PREFIX + "save_actions_properties"; //$NON-NLS-1$ 032-reference/040-php_project_properties/096-save_actions_properties.md
+public static final String EDITOR_PROPERTIES = PREFIX + "editor_properties"; //$NON-NLS-1$ 032-reference/040-php_project_properties/096-editor/000-index.md
 
-public static final String TASK_TAGS_PROPERTIES = PREFIX + "task_tags_properties"; //$NON-NLS-1$ 032-reference/040-php_project_properties/104-task_tags_properties.md
+public static final String SAVE_ACTIONS_PROPERTIES = PREFIX + "save_actions_properties"; //$NON-NLS-1$ 032-reference/040-php_project_properties/096-editor/008-save_actions_properties.md
 
-public static final String VALIDATION_PROPERTIES = PREFIX + "validation_properties"; //$NON-NLS-1$ 032-reference/040-php_project_properties/112-validation_properties.md
+public static final String VALIDATION_PROPERTIES = PREFIX + "validation_properties"; //$NON-NLS-1$ 032-reference/040-php_project_properties/112-validation_properties/000-index.md
+
+public static final String TASK_TAGS_PROPERTIES = PREFIX + "task_tags_properties"; //$NON-NLS-1$ 032-reference/040-php_project_properties/112-validation_properties/008-task_tags_properties.md
 
 public static final String PHP_ICONS = PREFIX + "php_icons"; //$NON-NLS-1$ 032-reference/048-php_icons.md
 
 public static final String KEYMAP = PREFIX + "keymap"; //$NON-NLS-1$ 032-reference/056-keymap.md
-
-public static final String PHPEXE_ENV_PREFERENCES = PREFIX + "phpexe_env_preferences"; //$NON-NLS-1$ 032-reference/056-keymap.md
 
 public static final String PHARPACKAGER_WIZARD_PAGE = PREFIX + "pharpackager_wizard_page"; //$NON-NLS-1$ 032-reference/056-keymap.md
 

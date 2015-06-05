@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
 public class PHPFoldingPreferencePage extends
@@ -22,7 +23,7 @@ public class PHPFoldingPreferencePage extends
 	}
 
 	protected String getHelpId() {
-		return null;
+		return IPHPHelpContextIds.FOLDING_PREFERENCES;
 	}
 
 	protected void setDescription() {

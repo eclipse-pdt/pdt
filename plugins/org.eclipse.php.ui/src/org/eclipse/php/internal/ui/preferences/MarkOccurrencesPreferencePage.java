@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.widgets.Composite;
@@ -28,7 +29,7 @@ public final class MarkOccurrencesPreferencePage extends
 	 * AbstractConfigureationBlockPreferencePage#getHelpId()
 	 */
 	protected String getHelpId() {
-		return null;
+		return IPHPHelpContextIds.MARK_OCCURRENCES_PREFERENCES;
 	}
 
 	/*
@@ -37,7 +38,7 @@ public final class MarkOccurrencesPreferencePage extends
 	 * #setDescription()
 	 */
 	protected void setDescription() {
-		setDescription(PHPUIMessages.MarkOccurrencesConfigurationBlock_title); 
+		setDescription(PHPUIMessages.MarkOccurrencesConfigurationBlock_title);
 	}
 
 	/*

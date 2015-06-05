@@ -10,8 +10,9 @@
  *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
-import org.eclipse.jface.resource.ImageDescriptor;
 
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 
 public class PHPBasePreferenceEmptyPage extends AbstractEmptyPreferencePage {
 
@@ -30,6 +31,16 @@ public class PHPBasePreferenceEmptyPage extends AbstractEmptyPreferencePage {
 	@Override
 	public String getBodyText() {
 		return PreferencesMessages.PHPBasePreferencePage_body_text;
+	}
+
+	@Override
+	protected String getPropertiesHelpId() {
+		return IPHPHelpContextIds.PHP_PROJECT_PROPERTIES;
+	}
+
+	@Override
+	protected String getPreferenceHelpId() {
+		return IPHPHelpContextIds.PREFERENCES;
 	}
 
 }

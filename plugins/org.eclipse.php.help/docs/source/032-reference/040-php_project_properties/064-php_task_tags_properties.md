@@ -11,7 +11,7 @@ To access the PHP Task Tags Properties page, right-click a PHP project in PHP Ex
 To configure PHP Task Tags Properties for the project:
 
  1. Mark the 'Enable project specific settings' checkbox.
- 2. Configure the settings according to your preferences.  See [Task Tags Preferences](../../032-reference/032-preferences/040-editor/056-task_tags.md) for more information on the settings available.
+ 2. Configure the settings according to your preferences.  See [Task Tags Preferences](../../032-reference/032-preferences/096-validation/008-task_tags.md) for more information on the settings available.
  3. Click OK to apply your settings.
 
 <!--ref-end-->
@@ -22,8 +22,8 @@ Default PHP Task Tags Properties for all projects can be set in the Task Tags Pr
 
 #### Related Links:
 
- * [Task Tags Preferences](../../032-reference/032-preferences/040-editor/056-task_tags.md)
+ * [Task Tags Preferences](../../032-reference/032-preferences/096-validation/008-task_tags.md)
  * [Project References Properties](072-project_references_properties.md)
- * [Save Actions Properties](096-save_actions_properties.md)
+ * [Save Actions Properties](096-editor/008-save_actions_properties.md)
 
 <!--links-end-->

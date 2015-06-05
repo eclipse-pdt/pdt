@@ -52,11 +52,13 @@ If a PHP executable is not found in the specified directory, select a different 
 
 <!--ref-end-->
 
+<!--toc-->
+
 <!--links-start-->
 
 #### Related Links:
 
- * [PHP Support](../../016-concepts/008-php_support.md)
- * [PHP Interpreter Preferences](064-php_interpreter.md)
+ * [PHP Support](../../../016-concepts/008-php_support.md)
+ * [PHP Interpreter Preferences](../064-php_interpreter.md)
 
 <!--links-end-->

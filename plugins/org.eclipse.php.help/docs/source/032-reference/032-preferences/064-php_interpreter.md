@@ -38,7 +38,7 @@ To use a different PHP Interpreter for a specific project:
 #### Related Links:
 
  * [PHP Support](../../016-concepts/008-php_support.md)
- * [PHP Executables Preferences](056-php_executables.md)
+ * [PHP Executables Preferences](056-php_executables/000-index.md)
  * [PHP Preferences](000-index.md)
 
 <!--links-end-->
