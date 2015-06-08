@@ -12,7 +12,9 @@
 package org.eclipse.php.internal.ui.outline;
 
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -24,7 +26,8 @@ import org.eclipse.swt.graphics.Image;
  * from pioneering adopters on the understanding that any code that uses this
  * API will almost certainly be broken (repeatedly) as the API evolves.
  */
-public class PHPOutlineLabelProvider extends XMLLabelProvider {
+public class PHPOutlineLabelProvider extends XMLLabelProvider implements
+		IStyledLabelProvider {
 
 	private ILabelProvider modelElementLabelProvider;
 
@@ -44,5 +47,10 @@ public class PHPOutlineLabelProvider extends XMLLabelProvider {
 			return modelElementLabelProvider.getText(o);
 		}
 		return super.getText(o);
+	}
+
+	@Override
+	public StyledString getStyledText(Object element) {
+		return new StyledString(getText(element));
 	}
 }
