@@ -293,9 +293,10 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 		resetTableViewerInput();
 		Dialog.applyDialogFont(parent);
+		setControl(parent);
+
 		PlatformUI.getWorkbench().getHelpSystem()
 				.setHelp(getControl(), IPHPHelpContextIds.NEW);
-		setControl(parent);
 	}
 
 	@Override
