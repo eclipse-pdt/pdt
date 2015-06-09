@@ -20,11 +20,11 @@ import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 
 public abstract class AbstractPHPSourceParser extends AbstractSourceParser
 		implements ISourceParser {
-	private static boolean DEBUG = false;
 	private String fileName;
 
 	public AbstractPHPSourceParser(String fileName) {
@@ -38,14 +38,13 @@ public abstract class AbstractPHPSourceParser extends AbstractSourceParser
 	public IModuleDeclaration parse(IModuleSource input,
 			IProblemReporter reporter) {
 		try {
-			return parse(new CharArrayReader(input.getContentsAsCharArray()),
-					reporter, ProjectOptions.useShortTags(input
-							.getModelElement().getScriptProject().getProject()));
+			return parse(
+					new CharArrayReader(input.getContentsAsCharArray()),
+					reporter,
+					ProjectOptions.useShortTags(input.getModelElement()
+							.getScriptProject().getProject()));
 		} catch (Exception e) {
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=316077
-			if (DEBUG) {
-				e.printStackTrace();
-			}
+			Logger.logException(e);
 			// XXX: add recovery
 			return new ModuleDeclaration(0);
 		}
@@ -60,10 +59,7 @@ public abstract class AbstractPHPSourceParser extends AbstractSourceParser
 		try {
 			parser.parse();
 		} catch (Exception e) {
-			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=316077
-			if (DEBUG) {
-				e.printStackTrace();
-			}
+			Logger.logException(e);
 			// XXX: add recovery
 			return new ModuleDeclaration(0);
 		}
