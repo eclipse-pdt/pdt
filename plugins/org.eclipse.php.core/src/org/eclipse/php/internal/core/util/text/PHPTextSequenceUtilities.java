@@ -200,6 +200,7 @@ public class PHPTextSequenceUtilities {
 					}
 				} else if (startCommentString.equals(START_LINE_COMMENT)) {
 					// we are inside line comment.
+					start = commentStartPosition + 2;
 					for (int commentEndPosition = commentStartPosition + 2; commentEndPosition < textSequence
 							.length(); commentEndPosition++) {
 						if (textSequence.charAt(commentEndPosition) == END_LINE) {
@@ -210,7 +211,6 @@ public class PHPTextSequenceUtilities {
 							break;
 						}
 					}
-					start = commentStartPosition + 2;
 				} else {
 					start = commentStartPosition + 1;
 				}
