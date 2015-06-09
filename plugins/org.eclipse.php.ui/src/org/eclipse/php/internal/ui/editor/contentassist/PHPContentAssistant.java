@@ -166,7 +166,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 					activated = contains(activation, e.character);
 				} else
 				// just '>' or just '-' will not trigger proposal pop-up
-				if ((e.character == '>' && document.getChar(pos - 1) != '-')
+				if ((pos > 0 && e.character == '>' && document.getChar(pos - 1) != '-')
 						|| (e.character == '-')) {
 					stop();
 					return;
@@ -174,7 +174,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 				} else
 				// Bug 458285 - do not run auto assist with empty identifier
 				if (Character.isWhitespace(e.character)
-						|| (e.character == '\\' && Character
+						|| (pos > 0 && e.character == '\\' && Character
 								.isWhitespace(document.getChar(pos - 1)))
 						|| e.character == ',' || e.character == '('
 						|| e.character == ')' || e.character == '{'

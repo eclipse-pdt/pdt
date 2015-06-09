@@ -91,7 +91,7 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 		// and we do need completion
 		// (can't check region type since it is wrong)
 		if (document.getLength() == offset) {
-			if (document.getChar(offset - 2) == '?'
+			if (offset >= 2 && document.getChar(offset - 2) == '?'
 					&& document.getChar(offset - 1) == '>')
 				return false;
 			else
