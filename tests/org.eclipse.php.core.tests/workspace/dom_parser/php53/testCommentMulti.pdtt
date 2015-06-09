@@ -1,0 +1,42 @@
+--TEST--
+Bug 469662 - false PHPDoc messes up parsing
+--FILE--
+<?php
+/**//**/
+$a = 1;
+var_dump($a);
+?>
+--EXPECT--
+<Program start='0' length='39'>
+	<Statements>
+		<ExpressionStatement start='15' length='7'>
+			<Assignment start='15' length='6' operator='='>
+				<Variable start='15' length='2' isDollared='true'>
+					<Identifier start='16' length='1' name='a'/>
+				</Variable>
+				<Value>
+					<Scalar start='20' length='1' type='int' value='1'/>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='23' length='13'>
+			<FunctionInvocation start='23' length='12'>
+				<FunctionName start='23' length='8'>
+					<NamespaceName start='23' length='8' global='false' current='false'>
+						<Identifier start='23' length='8' name='var_dump'/>
+					</NamespaceName>
+				</FunctionName>
+				<Parameters>
+					<Variable start='32' length='2' isDollared='true'>
+						<Identifier start='33' length='1' name='a'/>
+					</Variable>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<EmptyStatement start='37' length='2'/>
+	</Statements>
+	<Comments>
+		<Comment start='6' length='4' commentType='multiLine'/>
+		<Comment start='10' length='4' commentType='multiLine'/>
+	</Comments>
+</Program>

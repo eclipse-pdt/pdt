@@ -84,14 +84,22 @@ import org.eclipse.php.internal.core.PHPVersion;
 		commentList.clear();
 	}
 
+	/**
+	 * Will only be filled when ast != null
+	 */
 	public LinkedList getCommentList() {
 		return commentList;
 	}
 
+	/**
+	 * Will only be added when ast != null
+	 */
 	protected void addComment(int type) {
-		int leftPosition = getTokenStartPosition();
-		Comment comment = new Comment(commentStartPosition, leftPosition + getTokenLength(), ast, type);
-		commentList.add(comment);
+		if (ast != null) {
+			int leftPosition = getTokenStartPosition();
+			Comment comment = new Comment(commentStartPosition, leftPosition + getTokenLength(), ast, type);
+			commentList.add(comment);
+		}
 	}
 
 	public void setUseAspTagsAsPhp(boolean useAspTagsAsPhp) {
@@ -934,6 +942,11 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
     //return createFullSymbol(ParserConstants.T_VAR_COMMENT);
 }
 
+<ST_IN_SCRIPTING>"/**/" {
+	handleCommentStart();
+	handleMultilineCommentEnd();
+}
+
 <ST_IN_SCRIPTING>"/**" {
 if (parsePHPDoc()) {
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=316077
@@ -962,10 +975,6 @@ if (parsePHPDoc()) {
 }
 
 <ST_DOCBLOCK>{ANY_CHAR} {
-}
-
-<ST_IN_SCRIPTING>"/**/" {
-	handleCommentStart();
 }
 
 <ST_IN_SCRIPTING>"/*" {
