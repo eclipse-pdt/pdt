@@ -1,0 +1,16 @@
+--TEST--
+Bug 469662 - false PHPDoc messes up parsing
+Test formatting for comments
+--FILE--
+<?php
+/**//**/
+$a = 1;
+var_dump($a);
+?>
+--EXPECT--
+<?php
+/* */
+/* */
+$a = 1;
+var_dump($a);
+?>
