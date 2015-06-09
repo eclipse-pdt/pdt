@@ -84,15 +84,23 @@ import org.eclipse.php.internal.core.PHPVersion;
 		commentList.clear();
 	}
 	
+	/**
+	 * Will only be filled when ast != null
+	 */
 	public LinkedList getCommentList() {
 		return commentList;
-	}	
+	}
 	
+	/**
+	 * Will only be added when ast != null
+	 */
 	protected void addComment(int type) {
-		int leftPosition = getTokenStartPosition();
-		Comment comment = new Comment(commentStartPosition, leftPosition + getTokenLength(), ast, type);
-		commentList.add(comment);
-	}	
+		if (ast != null) {
+			int leftPosition = getTokenStartPosition();
+			Comment comment = new Comment(commentStartPosition, leftPosition + getTokenLength(), ast, type);
+			commentList.add(comment);
+		}
+	}
 	
 	public void setUseAspTagsAsPhp(boolean useAspTagsAsPhp) {
 		asp_tags = useAspTagsAsPhp;
@@ -918,12 +926,17 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 	    handleLineCommentEnd();
         yypushback(yylength());
 		yybegin(ST_IN_SCRIPTING);
-	} 
+	}
 }
 
 <ST_IN_SCRIPTING>"/*"{WHITESPACE}*"@var"{WHITESPACE}("$"?){LABEL}{WHITESPACE}(("\\"|{LABEL}"[]"?|"|")+)*{WHITESPACE}?"*/" {
     handleVarComment();
     //return createFullSymbol(ParserConstants.T_VAR_COMMENT);
+}
+
+<ST_IN_SCRIPTING>"/**/" {
+	handleCommentStart();
+	handleMultilineCommentEnd();
 }
 
 <ST_IN_SCRIPTING>"/**" {
@@ -954,10 +967,6 @@ if (parsePHPDoc()) {
 }
 
 <ST_DOCBLOCK>{ANY_CHAR} {
-}
-
-<ST_IN_SCRIPTING>"/**/" {
-	handleCommentStart();
 }
 
 <ST_IN_SCRIPTING>"/*" {
@@ -1118,7 +1127,7 @@ if (parsePHPDoc()) {
         return createSymbol(ParserConstants.T_END_HEREDOC);
     }
     else {
-    	yybegin(ST_NOWDOC); 
+    	yybegin(ST_NOWDOC);
     }
 }
 

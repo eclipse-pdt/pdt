@@ -611,6 +611,11 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
     return PHP_LINE_COMMENT;
 }
 
+<ST_PHP_IN_SCRIPTING>"/**/" {
+    yypushback(2);
+    pushState(ST_PHP_COMMENT);
+    return PHP_COMMENT_START;
+}
 
 <ST_PHP_IN_SCRIPTING>"/**" {
     pushState(ST_PHP_DOC_COMMENT);
