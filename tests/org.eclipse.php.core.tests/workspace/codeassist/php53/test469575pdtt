@@ -1,0 +1,17 @@
+--TEST--
+Bug http://eclip.se/469575
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php 
+
+class Test {
+
+	public function mytest()
+	{
+		//////
+		$this->|
+	}
+}
+--EXPECT--
+method(mytest)

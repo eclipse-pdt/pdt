@@ -200,7 +200,8 @@ public class PHPTextSequenceUtilities {
 					}
 				} else if (startCommentString.equals(START_LINE_COMMENT)) {
 					// we are inside line comment.
-					for (int commentEndPosition = commentStartPosition + 2; commentEndPosition < textSequence
+					start = commentStartPosition + 2;
+					for (int commentEndPosition = start; commentEndPosition < textSequence
 							.length(); commentEndPosition++) {
 						if (textSequence.charAt(commentEndPosition) == END_LINE) {
 							IRegion range = new Region(commentStartPosition,
@@ -210,7 +211,6 @@ public class PHPTextSequenceUtilities {
 							break;
 						}
 					}
-					start = commentStartPosition + 2;
 				} else {
 					start = commentStartPosition + 1;
 				}
