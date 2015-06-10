@@ -66,26 +66,30 @@ public class PathMappingComposite extends Composite {
 
 		GridLayout layout = new GridLayout();
 		setLayout(layout);
-		setLayoutData(new GridData(GridData.FILL_BOTH));
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		PixelConverter conv = new PixelConverter(this);
 
 		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(
 				this, SWT.V_SCROLL | SWT.H_SCROLL);
 		scrolledCompositeImpl.setLayout(layout);
-		scrolledCompositeImpl.setLayoutData(new GridData(GridData.FILL_BOTH));
+		scrolledCompositeImpl
+				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		Composite composite = new Composite(scrolledCompositeImpl, SWT.NONE);
 		layout = new GridLayout();
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
+		layout.marginHeight = 5;
+		layout.marginWidth = 5;
 		layout.numColumns = 2;
 		composite.setLayout(layout);
 		scrolledCompositeImpl.setContent(composite);
 		scrolledCompositeImpl.setFont(getFont());
 
-		GridData data = new GridData(GridData.FILL_BOTH);
+		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
 		data.widthHint = conv.convertWidthInCharsToPixels(50);
+		data.heightHint = 200;
 		Control listControl = fMapList.getListControl(composite);
 		listControl.setLayoutData(data);
 

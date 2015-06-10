@@ -206,8 +206,10 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			return;
 		IDebuggerSettings settings = DebuggerSettingsManager.INSTANCE
 				.findSettings(debuggerOwner.getUniqueId(), debuggerId);
+		boolean pack = false;
 		if (debuggerSettingsSection != null) {
 			debuggerSettingsComposite.dispose();
+			pack = true;
 		}
 		// Rebuild settings composite
 		debuggerSettingsComposite = new Composite(mainComposite, SWT.NONE);
@@ -234,6 +236,9 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		else
 			debuggerTest.setVisible(true);
 		this.getParent().layout(true, true);
+		if (pack) {
+			this.getShell().pack(true);
+		}
 	}
 
 	IDebuggerSettingsWorkingCopy getSettingsWC(String debuggerId,
