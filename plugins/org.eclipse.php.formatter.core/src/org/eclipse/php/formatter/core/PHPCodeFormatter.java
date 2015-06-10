@@ -15,11 +15,8 @@ import java.util.*;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
@@ -33,6 +30,7 @@ import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
@@ -213,8 +211,9 @@ public class PHPCodeFormatter implements IContentFormatter,
 			fCodeFormatterPreferences.new_line_before_close_array_parenthesis_array = true;
 		}
 		ICodeFormattingProcessor codeFormattingProcessor = new CodeFormatterVisitor(
-				document, fCodeFormatterPreferences, getLineSeparator(project),
-				phpVersion, useShortTags, region);
+				document, fCodeFormatterPreferences,
+				PHPModelUtils.getLineSeparator(project), phpVersion,
+				useShortTags, region);
 
 		if (isPasting) {
 			fCodeFormatterPreferences.comment_line_length = oldCommentLength;
@@ -224,24 +223,6 @@ public class PHPCodeFormatter implements IContentFormatter,
 			fCodeFormatterPreferences.new_line_before_close_array_parenthesis_array = insertNewLineBeforeCloseArray;
 		}
 		return codeFormattingProcessor;
-	}
-
-	private String getLineSeparator(IProject project) {
-		String lineSeparator = null;
-		if (project != null) {
-			lineSeparator = Platform.getPreferencesService().getString(
-					Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null,
-					new IScopeContext[] { new ProjectScope(project) });
-		}
-		if (lineSeparator == null) {
-			lineSeparator = Platform.getPreferencesService().getString(
-					Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null,
-					new IScopeContext[] { InstanceScope.INSTANCE });
-		}
-		if (lineSeparator == null) {
-			lineSeparator = System.getProperty(Platform.PREF_LINE_SEPARATOR);
-		}
-		return lineSeparator;
 	}
 
 	private IProject getProject(IDocument document) {
