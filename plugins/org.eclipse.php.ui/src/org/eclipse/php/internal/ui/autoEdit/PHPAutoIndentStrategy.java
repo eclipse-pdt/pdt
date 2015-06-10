@@ -161,8 +161,8 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				new PhpSourceParser());
 		String start = "<?php"; //$NON-NLS-1$
 		newdocument.set(start + newline + tempsb.toString());
-		PhpIndentationFormatter formatter = new PhpIndentationFormatter(0, newdocument.getLength(),
-				indentationObject);
+		PhpIndentationFormatter formatter = new PhpIndentationFormatter(0,
+				newdocument.getLength(), indentationObject);
 		formatter.format(newdocument.getFirstStructuredDocumentRegion());
 
 		List<String> list = new ArrayList<String>();
@@ -181,10 +181,13 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		}
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < startingEmptyLines; i++) {
-			String lineDelimiter = newline;
+			String lineDelimiter = null;
 			try {
 				lineDelimiter = tempdocument.getLineDelimiter(i);
 			} catch (BadLocationException e) {
+			}
+			if (lineDelimiter == null) {
+				lineDelimiter = newline;
 			}
 			sb.append(lineDelimiter);
 		}
@@ -195,11 +198,14 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 			sb.append(list.get(i));
 			if (i == list.size() - 1) {
 			} else {
-				String lineDelimiter = newline;
+				String lineDelimiter = null;
 				try {
 					lineDelimiter = tempdocument
 							.getLineDelimiter(startingEmptyLines + i);
 				} catch (BadLocationException e) {
+				}
+				if (lineDelimiter == null) {
+					lineDelimiter = newline;
 				}
 				sb.append(lineDelimiter);
 			}
@@ -213,7 +219,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 	 * @return project from document
 	 */
 	private final static IProject getProject(DOMModelForPHP doModelForPHP) {
-		final String id = doModelForPHP.getId();
+		final String id = doModelForPHP != null ? doModelForPHP.getId() : null;
 		if (id != null) {
 			final IFile file = getFile(id);
 			if (file != null) {

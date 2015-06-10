@@ -431,9 +431,14 @@ public class AddDescriptionAction extends Action implements
 				} else if (phpScriptRegion != null) {
 					// File's content starts with '<?php' tag
 					textRegion = phpScriptRegion.getPhpToken(0);
-					int lineDelimiterLength = document.getLineDelimiter(
-							document.getLineOfOffset(textRegion.getStart()))
-							.length();
+					String lineDelimiter = document.getLineDelimiter(document
+							.getLineOfOffset(textRegion.getStart()));
+					if (lineDelimiter == null) {
+						// XXX : should we add a newline before inserting
+						// docBlock?
+						lineDelimiter = ""; //$NON-NLS-1$
+					}
+					int lineDelimiterLength = lineDelimiter.length();
 					offset = textRegion.getStart() + sdRegion.getStartOffset()
 							+ phpScriptRegion.getStart() + lineDelimiterLength;
 				} else {

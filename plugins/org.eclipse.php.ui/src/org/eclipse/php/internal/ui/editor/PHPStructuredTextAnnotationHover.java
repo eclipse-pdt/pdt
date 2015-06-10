@@ -26,6 +26,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.ISourceViewerExtension2;
 import org.eclipse.jface.text.source.projection.AnnotationBag;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.ast.util.Util;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
@@ -181,6 +182,9 @@ public class PHPStructuredTextAnnotationHover extends
 			lineDelim = sourceViewer.getDocument().getLineDelimiter(0);
 		} catch (org.eclipse.jface.text.BadLocationException exception) {
 			// skip, just use default
+		}
+		if (lineDelim == null) {
+			lineDelim = Util.getLineSeparator(text, null);
 		}
 		Display display = sourceViewer.getTextWidget().getDisplay();
 
