@@ -21,7 +21,6 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ScriptModelUtil;
-import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.IPreferenceNode;
@@ -113,7 +112,7 @@ public class ConfigurePHPIncludePathAction extends Action implements
 		} else if (firstElement instanceof IncludePath) {
 			return ((IncludePath) firstElement).getProject();
 		} else if (firstElement instanceof IncludePathContainer) {
-			return ((BuildPathContainer) firstElement).getScriptProject()
+			return ((IncludePathContainer) firstElement).getScriptProject()
 					.getProject();
 		} else if (firstElement instanceof IAdaptable) {
 			IResource res = (IResource) ((IAdaptable) firstElement)
