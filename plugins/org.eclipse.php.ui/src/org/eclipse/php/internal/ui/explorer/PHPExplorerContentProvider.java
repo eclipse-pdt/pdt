@@ -26,8 +26,11 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.*;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
+import org.eclipse.dltk.internal.ui.navigator.ProjectFragmentContainer;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
+import org.eclipse.dltk.ui.DLTKPluginImages;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -470,11 +473,11 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		return DLTKCore.newContainerEntry(parent.getPath());
 	}
 
-	public class IncludePathContainer extends BuildPathContainer {
+	public class IncludePathContainer extends ProjectFragmentContainer {
 		private IncludePath[] fIncludePath;
 
 		public IncludePathContainer(IScriptProject parent, IncludePath[] entries) {
-			super(parent, PHPExplorerContentProvider.getBuildpathEntry(parent));
+			super(parent);
 			fIncludePath = entries;
 		}
 
@@ -513,6 +516,16 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 
 		private PHPExplorerContentProvider getOuterType() {
 			return PHPExplorerContentProvider.this;
+		}
+
+		@Override
+		public IProjectFragment[] getProjectFragments() {
+			return null;
+		}
+
+		@Override
+		public ImageDescriptor getImageDescriptor() {
+			return DLTKPluginImages.DESC_OBJS_LIBRARY;
 		}
 	}
 
