@@ -48,7 +48,7 @@ public class RenameGlobalConstant extends AbstractRename {
 	// caseSensitive = functionInvocation.getParameters()[2];
 	// if (expression.getType() == ASTNode.SCALAR) {
 	// String value = ((Scalar) caseSensitive).getStringValue();
-	//						if ("true".equals(value)) { //$NON-NLS-1$
+	//						if ("true".equalsIgnoreCase(value)) { //$NON-NLS-1$
 	// isCaseSenstive = false;
 	// }
 	// }
