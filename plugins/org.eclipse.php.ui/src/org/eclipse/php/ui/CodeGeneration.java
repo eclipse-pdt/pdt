@@ -331,7 +331,16 @@ public class CodeGeneration {
 						fieldType = "integer"; //$NON-NLS-1$
 						break;
 					case Scalar.TYPE_STRING:
-						fieldType = "string"; //$NON-NLS-1$
+						if (!expression.isNullExpression()) {
+							fieldType = "string"; //$NON-NLS-1$
+						} else {
+							// we don't want to use varType to describe
+							// null values (because varType.isAmbiguous() will
+							// return true and varType.getName() will return
+							// "NULL"), but preferably UNKNOWN_TYPE when
+							// fieldType is null
+							varType = null;
+						}
 						break;
 					}
 				}
@@ -652,7 +661,9 @@ public class CodeGeneration {
 					parameterTypes[i++] = typeName;
 				} else {
 					if (formalParameter.getDefaultValue() != null
-							&& formalParameter.getDefaultValue() instanceof Scalar) {
+							&& formalParameter.getDefaultValue() instanceof Scalar
+							&& !formalParameter.getDefaultValue()
+									.isNullExpression()) {
 						Scalar scalar = (Scalar) formalParameter
 								.getDefaultValue();
 						IEvaluatedType simpleType = PHPSimpleTypes
@@ -680,7 +691,11 @@ public class CodeGeneration {
 				List<ITypeBinding> returnTypesList = removeDuplicateTypes(returnTypes);
 				for (ITypeBinding returnType : returnTypesList) {
 					if (returnType.isUnknown()) {
-						returnTypeBuffer.append("null").append("|"); //$NON-NLS-1$ //$NON-NLS-2$
+						// show unknown types as if they were null types, even
+						// if looking for returnType.isUnknown() is not the same
+						// as looking for returnType.isNullType()
+						returnTypeBuffer.append(
+								PHPSimpleTypes.NULL.getTypeName()).append("|"); //$NON-NLS-1$
 					} else if (returnType.isAmbiguous()) {
 						returnTypeBuffer.append("Ambiguous").append("|"); //$NON-NLS-1$ //$NON-NLS-2$
 					} else if (returnType.getEvaluatedType() instanceof AmbiguousType) {
