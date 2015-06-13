@@ -45,11 +45,10 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 			String value = scalar.getStringValue();
 			if ((scalar.getScalarType() == Scalar.TYPE_STRING && !isInQuote || scalar
 					.getScalarType() == Scalar.TYPE_SYSTEM)
-					&& !"null".equals(value) //$NON-NLS-1$
-					&& !"false".equals(value) //$NON-NLS-1$
-					&& !"true".equals(value) //$NON-NLS-1$
-					&& value.charAt(0) != '\''
-					&& value.charAt(0) != '"') {
+					&& !"null".equalsIgnoreCase(value) //$NON-NLS-1$
+					&& !"false".equalsIgnoreCase(value) //$NON-NLS-1$
+					&& !"true".equalsIgnoreCase(value) //$NON-NLS-1$
+					&& value.charAt(0) != '\'' && value.charAt(0) != '"') {
 				highlight(scalar);
 			} else if (scalar.getParent() instanceof FunctionInvocation) {// for
 																			// define

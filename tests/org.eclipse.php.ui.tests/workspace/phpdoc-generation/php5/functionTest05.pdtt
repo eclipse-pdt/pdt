@@ -1,0 +1,16 @@
+--TEST--
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=466735
+Tests phpDoc generation for function
+--FILE--
+<?php
+/**|
+function test($param = null) {
+}
+--EXPECT--
+<?php
+/**
+ * 
+ * @param unknown $param
+ */
+function test($param = null) {
+}

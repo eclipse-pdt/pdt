@@ -64,8 +64,10 @@ public class NameSuggestVisitor extends AbstractVisitor {
 		case Scalar.TYPE_STRING:
 			// boolean strings will get "bool" as a name, other strings will get
 			// "str"
-			if (scalar.getStringValue().equals("true") || scalar.getStringValue().equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (scalar.getStringValue().equalsIgnoreCase("true") || scalar.getStringValue().equalsIgnoreCase("false")) { //$NON-NLS-1$ //$NON-NLS-2$
 				value = "bool"; //$NON-NLS-1$
+				// } else if (scalar.getStringValue().equalsIgnoreCase("null")) { //$NON-NLS-1$
+				// value = "unknown"; //$NON-NLS-1$
 			} else {
 				value = "str"; //$NON-NLS-1$
 			}
