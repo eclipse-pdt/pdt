@@ -1799,7 +1799,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		String tag = ""; //$NON-NLS-1$
 		// int indentLength = 0;
 		if (phpDocTag != null) {
-			tag = "@" + PHPDocTag.getTagKind(phpDocTag.getTagKind()); //$NON-NLS-1$
+			if (phpDocTag.isInlineTag()) {
+				tag = "{@" + PHPDocTag.getTagKind(phpDocTag.getTagKind()) + "}"; //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				tag = "@" + PHPDocTag.getTagKind(phpDocTag.getTagKind()); //$NON-NLS-1$
+			}
 			// if (indentationLevelDesending) {
 			// for (int i = 0; i < preferences.indentationSize; i++) {
 			// indentLength += (preferences.indentationChar ==
