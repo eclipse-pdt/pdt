@@ -1,0 +1,17 @@
+--TEST--
+Bug 467151 - PHPDoc shouldn't produce "multitype: TypeA TypeB"
+--FILE--
+<?php
+/**|
+function test() {
+    return [[new DateTime()], [[new FooClass(), new FooClass2()]], new FooClass(), [[new FooClass()]], [[new FooClass()]]];
+}
+--EXPECT--
+<?php
+/**
+ * 
+ * @return FooClass[]|DateTime[][]|FooClass[][][]|FooClass2[][][]
+ */
+function test() {
+    return [[new DateTime()], [[new FooClass(), new FooClass2()]], new FooClass(), [[new FooClass()]], [[new FooClass()]]];
+}

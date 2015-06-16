@@ -698,23 +698,8 @@ public class CodeGeneration {
 								PHPSimpleTypes.NULL.getTypeName()).append("|"); //$NON-NLS-1$
 					} else if (returnType.isAmbiguous()) {
 						returnTypeBuffer.append("Ambiguous").append("|"); //$NON-NLS-1$ //$NON-NLS-2$
-					} else if (returnType.getEvaluatedType() instanceof AmbiguousType) {
-						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=467148
-						IEvaluatedType[] allPossibleTypes = ((AmbiguousType) returnType
-								.getEvaluatedType()).getPossibleTypes();
-						for (IEvaluatedType possibleType : allPossibleTypes) {
-							returnTypeBuffer.append(possibleType.getTypeName())
-									.append("|"); //$NON-NLS-1$
-						}
-					} else if (returnType.getEvaluatedType() instanceof MultiTypeType) {
-						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=467151
-						List<IEvaluatedType> allPossibleTypes = ((MultiTypeType) returnType
-								.getEvaluatedType()).getTypes();
-						for (IEvaluatedType possibleType : allPossibleTypes) {
-							returnTypeBuffer.append(possibleType.getTypeName())
-									.append("[]").append("|"); //$NON-NLS-1$ //$NON-NLS-2$
-						}
-					} else {
+					} else if (!appendAllPossibleTypes(
+							returnType.getEvaluatedType(), returnTypeBuffer)) {
 						returnTypeBuffer.append(returnType.getName()).append(
 								"|"); //$NON-NLS-1$
 					}
@@ -801,6 +786,68 @@ public class CodeGeneration {
 			}
 		}
 		return types;
+	}
+
+	/**
+	 * Checks if the parameter "type" is a type container object (whose class is
+	 * AmbiguousType or MultiTypeType) and prints its content recursively in
+	 * "buffer". If "type" is not a type container class, no data will be
+	 * printed in "buffer" and false will be returned.
+	 * 
+	 * When (non-empty) data is printed, last character will always be '|'.
+	 *
+	 * @param type
+	 * @param buffer
+	 * @return true if "type" is a type container class, false otherwise
+	 */
+	private static boolean appendAllPossibleTypes(IEvaluatedType type,
+			StringBuilder buffer) {
+		List<String> foundTypes = new ArrayList<String>();
+		if (findAllPossibleTypes(type, foundTypes, 0, true)) {
+			for (String foundType : foundTypes) {
+				buffer.append(foundType).append("|"); //$NON-NLS-1$
+			}
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean findAllPossibleTypes(IEvaluatedType type,
+			List<String> foundTypes, int level, boolean firstCall) {
+		if (type instanceof AmbiguousType) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=467148
+			IEvaluatedType[] allPossibleTypes = ((AmbiguousType) type)
+					.getPossibleTypes();
+			// XXX : allPossibleTypes should not be empty
+			for (IEvaluatedType possibleType : allPossibleTypes) {
+				findAllPossibleTypes(possibleType, foundTypes, level, false);
+			}
+			return true;
+		}
+		if (type instanceof MultiTypeType) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=467151
+			List<IEvaluatedType> allPossibleTypes = ((MultiTypeType) type)
+					.getTypes();
+			// XXX : allPossibleTypes should not be empty
+			for (IEvaluatedType possibleType : allPossibleTypes) {
+				findAllPossibleTypes(possibleType, foundTypes, level + 1, false);
+			}
+			return true;
+		}
+		if (!firstCall) {
+			StringBuilder buffer = new StringBuilder();
+			buffer.append(type.getTypeName());
+			for (int i = 1; i <= level; i++) {
+				buffer.append("[]"); //$NON-NLS-1$
+			}
+			String foundType = buffer.toString();
+			// Do not insert duplicates
+			if (!foundTypes.contains(foundType)) {
+				foundTypes.add(foundType);
+			}
+			return true;
+		}
+		return false;
 	}
 
 	// /**
