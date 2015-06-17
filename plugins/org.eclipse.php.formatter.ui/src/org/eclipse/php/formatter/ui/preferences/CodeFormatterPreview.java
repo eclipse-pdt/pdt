@@ -20,10 +20,10 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.php.formatter.core.CodeFormatterPreferences;
 import org.eclipse.php.formatter.core.CodeFormatterVisitor;
-import org.eclipse.php.formatter.core.ReplaceEdit;
 import org.eclipse.php.formatter.ui.Logger;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.text.edits.ReplaceEdit;
 
 public class CodeFormatterPreview extends PhpPreview {
 
@@ -72,8 +72,8 @@ public class CodeFormatterPreview extends PhpPreview {
 		StringBuffer result = new StringBuffer(content);
 		for (int i = changes.size() - 1; i >= 0; i--) {
 			ReplaceEdit replace = (ReplaceEdit) changes.get(i);
-			result = result.replace(replace.offset, replace.getEnd(),
-					replace.content);
+			result = result.replace(replace.getOffset(),
+					replace.getExclusiveEnd(), replace.getText());
 		}
 		return result.toString();
 	}

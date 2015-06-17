@@ -33,6 +33,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpTokenNames;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.text.edits.MultiTextEdit;
+import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
@@ -5134,7 +5135,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		MultiTextEdit rootEdit = new MultiTextEdit();
 		for (ReplaceEdit edit : allChanges) {
 			TextEdit textEdit = new org.eclipse.text.edits.ReplaceEdit(
-					edit.offset, edit.length, edit.content);
+					edit.getOffset(), edit.getLength(), edit.getText());
 			rootEdit.addChild(textEdit);
 		}
 		return rootEdit;
@@ -5143,9 +5144,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 	private boolean isInSingleLine(ReplaceEdit edit, IRegion[] partitions) {
 		for (int i = 0; i < partitions.length; i++) {
 			IRegion iTypedRegion = partitions[i];
-			if (edit.offset >= iTypedRegion.getOffset()
-					&& edit.offset + edit.length <= iTypedRegion.getOffset()
-							+ iTypedRegion.getLength()) {
+			if (edit.getOffset() >= iTypedRegion.getOffset()
+					&& edit.getOffset() + edit.getLength() <= iTypedRegion
+							.getOffset() + iTypedRegion.getLength()) {
 				return true;
 			}
 		}

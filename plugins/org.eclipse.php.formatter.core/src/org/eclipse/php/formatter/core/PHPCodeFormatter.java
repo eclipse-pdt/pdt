@@ -32,6 +32,7 @@ import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -267,7 +268,8 @@ public class PHPCodeFormatter implements IContentFormatter,
 		StringBuffer buffer = new StringBuffer(document.get());
 		for (int i = changes.size() - 1; i >= 0; i--) {
 			ReplaceEdit replace = (ReplaceEdit) changes.get(i);
-			buffer.replace(replace.offset, replace.getEnd(), replace.content);
+			buffer.replace(replace.getOffset(), replace.getExclusiveEnd(),
+					replace.getText());
 		}
 		document.set(buffer.toString());
 
