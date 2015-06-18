@@ -48,6 +48,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
     private ArrayList<PHPDocTag> tagList = null;
     private int currTagId = 0;
     private int tagPosition = 0;
+    private String matchedTag = "";
     private StringBuffer sBuffer = null;
     private int numOfLines = 0;
 	private List<Scalar> textList;
@@ -105,13 +106,15 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		hendleDesc();
 		currTagId = firstState;
 		tagPosition = findTagPosition();
+		matchedTag = tagPosition >= 0 ? new String(zzBuffer, tagPosition,
+				zzMarkedPos - (tagPosition + _zzPushbackPos)) : "";
 		sBuffer = new StringBuffer();
 		yybegin(ST_IN_TAGS);
 	}
 
 	private int findTagPosition() {
 		for (int i = zzStartRead; i < zzMarkedPos; i++) {
-			if (zzBuffer[i] == '@') {
+			if (zzBuffer[i] == '@' || zzBuffer[i] == '{') {
 				return i - _zzPushbackPos;
 			}
 		}
@@ -125,6 +128,8 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		sBuffer = new StringBuffer();
 		currTagId = newTag;
 		tagPosition = findTagPosition();
+		matchedTag = tagPosition >= 0 ? new String(zzBuffer, tagPosition,
+				zzMarkedPos - (tagPosition + _zzPushbackPos)) : "";
 	}
 
 	private void setTagValue() {
@@ -136,7 +141,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 		}
 
 		PHPDocTag basicPHPDocTag = new PHPDocTag(tagPosition, zzStartRead
-				- _zzPushbackPos, currTagId, value, getTexts(tagPosition,
+				- _zzPushbackPos, currTagId, matchedTag, value, getTexts(tagPosition,
 				zzStartRead, true));
 		tagList.add(basicPHPDocTag);
 	}
