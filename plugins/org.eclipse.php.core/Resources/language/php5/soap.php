@@ -13,9 +13,9 @@ class SoapClient  {
 	/**
 	 * Calls a SOAP function (deprecated)
 	 * @link http://www.php.net/manual/en/soapclient.call.php
-	 * @param function_name string 
-	 * @param arguments string 
-	 * @return mixed 
+	 * @param function_name string
+	 * @param arguments string
+	 * @return mixed
 	 */
 	public function __call ($function_name, $arguments) {}
 
@@ -117,7 +117,7 @@ class SoapClient  {
 	 * The SOAP version.
 	 * </p>
 	 * @param one_way int[optional] <p>
-	 * If one_way is set to 1, this method returns nothing. 
+	 * If one_way is set to 1, this method returns nothing.
 	 * Use this where a response is not expected.
 	 * </p>
 	 * @return string The XML SOAP response.
@@ -133,7 +133,7 @@ class SoapClient  {
 	 * @param value string[optional] <p>
 	 * The value of the cookie. If not specified, the cookie will be deleted.
 	 * </p>
-	 * @return void 
+	 * @return void
 	 */
 	public function __setCookie ($name, $value = null) {}
 
@@ -191,7 +191,7 @@ class SoapServer  {
 	 * <p>
 	 * SOAP_PERSISTENCE_SESSION - persist the object for the duration of a session.
 	 * </p>
-	 * @return void 
+	 * @return void
 	 */
 	public function setPersistence ($mode) {}
 
@@ -203,9 +203,9 @@ class SoapServer  {
 	 * </p>
 	 * @param args string[optional] <p>
 	 * These optional parameters will be passed to the default class constructor
-	 * during object creation. 
+	 * during object creation.
 	 * </p>
-	 * @return void 
+	 * @return void
 	 */
 	public function setClass ($class_name, $args = null) {}
 
@@ -215,7 +215,7 @@ class SoapServer  {
 	 * @param object string <p>
 	 * The object to handle the requests.
 	 * </p>
-	 * @return void 
+	 * @return void
 	 */
 	public function setObject ($object) {}
 
@@ -238,7 +238,7 @@ class SoapServer  {
 	 * as arguments) and return one or more values. To return several values they must
 	 * return an array with named output parameters.
 	 * </p>
-	 * @return void 
+	 * @return void
 	 */
 	public function addFunction ($functions) {}
 
@@ -256,7 +256,7 @@ class SoapServer  {
 	 * The SOAP request. If this argument is omitted, the request is assumed to be
 	 * in the raw POST data of the HTTP request.
 	 * </p>
-	 * @return void 
+	 * @return void
 	 */
 	public function handle ($soap_request = null) {}
 
@@ -278,7 +278,7 @@ class SoapServer  {
 	 * @param name string[optional] <p>
 	 * The name of the fault. This can be used to select a name from a WSDL file.
 	 * </p>
-	 * @return void 
+	 * @return void
 	 */
 	public function fault ($code, $string, $actor = null, $details = null, $name = null) {}
 
@@ -288,7 +288,7 @@ class SoapServer  {
 	 * @param object SoapHeader <p>
 	 * The header to be returned.
 	 * </p>
-	 * @return void 
+	 * @return void
 	 */
 	public function addSoapHeader (SoapHeader $object) {}
 
@@ -304,8 +304,14 @@ class SoapFault extends Exception  {
 	/**
 	 * SoapFault constructor
 	 * @link http://www.php.net/manual/en/soapfault.soapfault.php
+	 * @param faultcode
+	 * @param faultstring
+	 * @param faultactor[optional]
+	 * @param detail[optional]
+	 * @param faultname[optional]
+	 * @param headerfault[optional]
 	 */
-	public function SoapFault () {}
+	 public function SoapFault ($faultcode, $faultstring, $faultactor, $detail, $faultname, $headerfault) {}
 
 	/**
 	 * Obtain a string representation of a SoapFault
