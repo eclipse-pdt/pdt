@@ -153,7 +153,7 @@ public class PHPInterpreterExecutionConfigurationBlock {
 		fProfilesViewer
 				.setLabelProvider(new ExecutionEnvironmentsLabelProvider());
 		fProfilesViewer.setComparator(new ViewerComparator());
-		fProfilesViewer.setInput(PHPVersion.values());
+		fProfilesViewer.setInput(PHPVersion.supportedVersions());
 
 		Composite jreContainer = new Composite(container, SWT.NONE);
 		layout = new GridLayout();

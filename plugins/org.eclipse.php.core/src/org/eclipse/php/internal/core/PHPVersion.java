@@ -74,6 +74,10 @@ public enum PHPVersion {
 		return Aliases.map.values();
 	}
 
+	public static PHPVersion[] supportedVersions() {
+		return new PHPVersion[] { PHP5, PHP5_3, PHP5_4, PHP5_5, PHP5_6 };
+	}
+
 	/**
 	 * 
 	 * @return
