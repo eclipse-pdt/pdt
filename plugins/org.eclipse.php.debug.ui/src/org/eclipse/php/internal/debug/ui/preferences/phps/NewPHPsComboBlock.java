@@ -475,7 +475,7 @@ public class NewPHPsComboBlock {
 	 */
 	protected void fillWithWorkspaceProfiles() {
 		fEnvironments.clear();
-		PHPVersion[] environments = PHPVersion.values();
+		PHPVersion[] environments = PHPVersion.supportedVersions();
 		for (int i = 0; i < environments.length; i++) {
 			fEnvironments.add(environments[i]);
 		}
