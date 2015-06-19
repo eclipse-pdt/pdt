@@ -4,6 +4,10 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.ui.preferences.phps.messages"; //$NON-NLS-1$
+	public static String PHPExeVerifier_PHP_executable_verification;
+	public static String PHPExeVerifier_Unable_to_verify_PHP_exe_error_message;
+	public static String PHPExeVerifier_Unable_to_verify_PHP_exe_reason_message;
+	public static String PHPExeVerifier_Verifying_PHP_exes;
 	public static String PHPInterpreterExecutionConfigurationBlock_0;
 	public static String PHPInterpreterExecutionConfigurationBlock_1;
 	public static String PHPInterpreterExecutionPreferencePage_0;

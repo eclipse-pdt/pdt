@@ -646,5 +646,11 @@
             phpDebuggerSettingsProviderId="org.eclipse.php.debug.core.xdebugDebuggerSettingsProvider">
       </phpDebuggerSettingsSectionBuilder>
    </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.eclipse.php.debug.ui.DebugEarlyStartup">
+      </startup>
+   </extension>
    
 </plugin>
