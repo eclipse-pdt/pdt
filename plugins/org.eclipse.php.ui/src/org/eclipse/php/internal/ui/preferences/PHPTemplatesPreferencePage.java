@@ -20,11 +20,13 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
 
 public class PHPTemplatesPreferencePage extends TemplatePreferencePage {
@@ -82,5 +84,14 @@ public class PHPTemplatesPreferencePage extends TemplatePreferencePage {
 			viewer.configure(configuration);
 			return viewer;
 		}
+	}
+
+	@Override
+	public void performHelp() {
+		PlatformUI
+				.getWorkbench()
+				.getHelpSystem()
+				.setHelp(getControl(), IPHPHelpContextIds.TEMPLATES_PREFERENCES);
+		super.performHelp();
 	}
 }
