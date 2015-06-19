@@ -35,6 +35,7 @@ import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguratio
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandlersManager;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
@@ -788,6 +789,9 @@ public class InstalledPHPsBlock {
 				fPHPexes.add(item);
 				PHPexes.getInstance().addItem(item);
 				PHPexes.getInstance().save();
+				DBGpProxyHandlersManager.INSTANCE.registerHandler(item
+						.getUniqueId());
+				PHPExeVerifier.verify(PHPexes.getInstance().getAllItems());
 			}
 			fPHPExeList.refresh();
 		} else {
