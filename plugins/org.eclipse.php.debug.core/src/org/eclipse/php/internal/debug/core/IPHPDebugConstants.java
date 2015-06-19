@@ -43,7 +43,6 @@ public interface IPHPDebugConstants {
 	public static final String OPEN_IN_BROWSER = ID_PHP_DEBUG_CORE
 			+ ".OpenInBrowser"; //$NON-NLS-1$
 
-	public static final String Default_Server_Name = PHPDebugCoreMessages.IPHPDebugConstants_0;
 	public static final String PHPEXELaunchType = "org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"; //$NON-NLS-1$
 	public static final String PHPServerLaunchType = "org.eclipse.php.debug.core.launching.webPageLaunch"; //$NON-NLS-1$
 	// public static final String USE_INTERNAL_BROWSER = ID_PHP_DEBUG_CORE
