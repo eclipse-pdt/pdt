@@ -202,6 +202,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	 */
 	@Override
 	public void validate() {
+		setComplete(true);
 		// Delegate validation to settings composite
 		if (debuggerSettingsSection != null)
 			debuggerSettingsSection.validate();
