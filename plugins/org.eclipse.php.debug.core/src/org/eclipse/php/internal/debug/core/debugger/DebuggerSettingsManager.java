@@ -15,11 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.debug.core.preferences.IPHPExesListener;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
@@ -42,7 +38,7 @@ public enum DebuggerSettingsManager {
 	 */
 	INSTANCE;
 
-	private class EventNotifier extends Job {
+	private class EventNotifier {
 
 		private static final int ADDED = 0x01;
 		private static final int REMOVED = 0x02;
@@ -52,17 +48,7 @@ public enum DebuggerSettingsManager {
 		private int kind;
 		private IDebuggerSettings settings;
 
-		/**
-		 * @param name
-		 */
-		public EventNotifier() {
-			super(""); //$NON-NLS-1$
-			setSystem(true);
-			setUser(false);
-		}
-
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
+		private void fireEvent() {
 			switch (kind) {
 			case ADDED: {
 				for (Object listener : listeners.getListeners())
@@ -85,26 +71,25 @@ public enum DebuggerSettingsManager {
 			default:
 				break;
 			}
-			return Status.OK_STATUS;
 		}
 
 		void fireChanged(List<PropertyChangeEvent> events) {
 			kind = CHANGED;
 			this.events = events
 					.toArray(new PropertyChangeEvent[events.size()]);
-			schedule();
+			fireEvent();
 		}
 
 		void fireAdded(IDebuggerSettings settings) {
 			kind = ADDED;
 			this.settings = settings;
-			schedule();
+			fireEvent();
 		}
 
 		void fireRemoved(IDebuggerSettings settings) {
 			kind = REMOVED;
 			this.settings = settings;
-			schedule();
+			fireEvent();
 		}
 
 	}

@@ -107,6 +107,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		servers = new HashMap<String, Server>();
 		listeners = new ArrayList<IServersManagerListener>();
 		loadServers();
+		createDefaultPHPServer();
 	}
 
 	/**
@@ -602,6 +603,24 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			upgrader.check(serverMap);
 		}
 		upgrader.perform();
+	}
+
+	/**
+	 * Creates a default server in case the ServersManager does not hold any
+	 * defined server.
+	 */
+	private void createDefaultPHPServer() {
+		if (ServersManager.getServers().length == 0) {
+			Server server = null;
+			try {
+				server = ServersManager.createServer(Default_Server_Name,
+						BASE_URL);
+			} catch (MalformedURLException e) {
+				// safe - no exception
+			}
+			ServersManager.save();
+			ServersManager.setDefaultServer(null, server);
+		}
 	}
 
 	private void fireAddEvent(ServerManagerEvent event,
