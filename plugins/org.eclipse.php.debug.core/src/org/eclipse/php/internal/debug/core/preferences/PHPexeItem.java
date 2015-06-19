@@ -375,6 +375,8 @@ public class PHPexeItem implements IUniqueIdentityElement,
 		PHPExeInfo phpInfo;
 		try {
 			phpInfo = PHPExeUtil.getPHPInfo(getExecutable(), false);
+			if (phpInfo == null)
+				return;
 		} catch (PHPExeException e) {
 			Logger.logException("Could not obtain PHP executable info.", //$NON-NLS-1$
 					e);
