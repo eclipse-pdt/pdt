@@ -1,0 +1,171 @@
+--TEST--
+Test Object Dim List
+--FILE--
+<?php $obj = new StdClass(); $obj->foo = "bar"; print $obj->foo{2}()[2]->el; print $obj->foo{2}[0]->call()[2]; $obj->selectIntoArray()[0]; ?>
+--EXPECT--
+<Program start='0' length='141'>
+	<Statements>
+		<ExpressionStatement start='6' length='22'>
+			<Assignment start='6' length='21' operator='='>
+				<Variable start='6' length='4' isDollared='true'>
+					<Identifier start='7' length='3' name='obj'/>
+				</Variable>
+				<Value>
+					<ClassInstanceCreation start='13' length='14'>
+						<ClassName start='17' length='8'>
+							<NamespaceName start='17' length='8' global='false' current='false'>
+								<Identifier start='17' length='8' name='StdClass'/>
+							</NamespaceName>
+						</ClassName>
+						<ConstructorParameters>
+						</ConstructorParameters>
+					</ClassInstanceCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='29' length='18'>
+			<Assignment start='29' length='17' operator='='>
+				<FieldAccess start='29' length='9'>
+					<Dispatcher>
+						<Variable start='29' length='4' isDollared='true'>
+							<Identifier start='30' length='3' name='obj'/>
+						</Variable>
+					</Dispatcher>
+					<Property>
+						<Variable start='35' length='3' isDollared='false'>
+							<Identifier start='35' length='3' name='foo'/>
+						</Variable>
+					</Property>
+				</FieldAccess>
+				<Value>
+					<Scalar start='41' length='5' type='string' value='"bar"'/>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='48' length='28'>
+			<FunctionInvocation start='48' length='27'>
+				<FunctionName start='48' length='5'>
+					<Identifier start='48' length='5' name='print'/>
+				</FunctionName>
+				<Parameters>
+					<FieldAccess start='54' length='21'>
+						<Dispatcher>
+							<ArrayAccess start='54' length='17' type='array'>
+								<FunctionInvocation start='54' length='14'>
+									<FunctionName start='54' length='12'>
+										<ArrayAccess start='54' length='12' type='hashtable'>
+											<FieldAccess start='54' length='9'>
+												<Dispatcher>
+													<Variable start='54' length='4' isDollared='true'>
+														<Identifier start='55' length='3' name='obj'/>
+													</Variable>
+												</Dispatcher>
+												<Property>
+													<Variable start='60' length='3' isDollared='false'>
+														<Identifier start='60' length='3' name='foo'/>
+													</Variable>
+												</Property>
+											</FieldAccess>
+											<Index>
+												<Scalar start='64' length='1' type='int' value='2'/>
+											</Index>
+										</ArrayAccess>
+									</FunctionName>
+									<Parameters>
+									</Parameters>
+								</FunctionInvocation>
+								<Index>
+									<Scalar start='69' length='1' type='int' value='2'/>
+								</Index>
+							</ArrayAccess>
+						</Dispatcher>
+						<Property>
+							<Variable start='73' length='2' isDollared='false'>
+								<Identifier start='73' length='2' name='el'/>
+							</Variable>
+						</Property>
+					</FieldAccess>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='77' length='33'>
+			<FunctionInvocation start='77' length='32'>
+				<FunctionName start='77' length='5'>
+					<Identifier start='77' length='5' name='print'/>
+				</FunctionName>
+				<Parameters>
+					<ArrayAccess start='83' length='26' type='array'>
+						<MethodInvocation start='83' length='23'>
+							<Dispatcher>
+								<ArrayAccess start='83' length='15' type='array'>
+									<ArrayAccess start='83' length='12' type='hashtable'>
+										<FieldAccess start='83' length='9'>
+											<Dispatcher>
+												<Variable start='83' length='4' isDollared='true'>
+													<Identifier start='84' length='3' name='obj'/>
+												</Variable>
+											</Dispatcher>
+											<Property>
+												<Variable start='89' length='3' isDollared='false'>
+													<Identifier start='89' length='3' name='foo'/>
+												</Variable>
+											</Property>
+										</FieldAccess>
+										<Index>
+											<Scalar start='93' length='1' type='int' value='2'/>
+										</Index>
+									</ArrayAccess>
+									<Index>
+										<Scalar start='96' length='1' type='int' value='0'/>
+									</Index>
+								</ArrayAccess>
+							</Dispatcher>
+							<Property>
+								<FunctionInvocation start='100' length='6'>
+									<FunctionName start='100' length='4'>
+										<Variable start='100' length='4' isDollared='false'>
+											<Identifier start='100' length='4' name='call'/>
+										</Variable>
+									</FunctionName>
+									<Parameters>
+									</Parameters>
+								</FunctionInvocation>
+							</Property>
+						</MethodInvocation>
+						<Index>
+							<Scalar start='107' length='1' type='int' value='2'/>
+						</Index>
+					</ArrayAccess>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='111' length='27'>
+			<ArrayAccess start='111' length='26' type='array'>
+				<MethodInvocation start='111' length='23'>
+					<Dispatcher>
+						<Variable start='111' length='4' isDollared='true'>
+							<Identifier start='112' length='3' name='obj'/>
+						</Variable>
+					</Dispatcher>
+					<Property>
+						<FunctionInvocation start='117' length='17'>
+							<FunctionName start='117' length='15'>
+								<Variable start='117' length='15' isDollared='false'>
+									<Identifier start='117' length='15' name='selectIntoArray'/>
+								</Variable>
+							</FunctionName>
+							<Parameters>
+							</Parameters>
+						</FunctionInvocation>
+					</Property>
+				</MethodInvocation>
+				<Index>
+					<Scalar start='135' length='1' type='int' value='0'/>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+		<EmptyStatement start='139' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

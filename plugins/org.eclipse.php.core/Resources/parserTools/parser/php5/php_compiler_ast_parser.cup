@@ -30,17 +30,32 @@ parser code {:
 
 	public Expression createDispatch(Expression dispatcher, Expression property) {
 
-		if (property.getKind() == ASTNodeKinds.REFLECTION_CALL_EXPRESSION) {
-			((ReflectionCallExpression) property).setReceiver (dispatcher);
-			dispatcher = property;
-		} else if (property.getKind() == ASTNodeKinds.METHOD_INVOCATION) {
+		if (property.getKind() == ASTNodeKinds.METHOD_INVOCATION) {
 			PHPCallExpression callExpression = (PHPCallExpression) property;
 			dispatcher = new PHPCallExpression(dispatcher.sourceStart(), callExpression.sourceEnd(), dispatcher, callExpression.getCallName(), callExpression.getArgs());
 		} else {
 			dispatcher =  new FieldAccess(dispatcher.sourceStart(), property.sourceEnd(), dispatcher, property);
-		}
+		} 
 
 		return dispatcher;
+	}
+
+    protected Expression createDispatch(Expression dispatcher, ObjectDimList dimList) {
+		return resolveDimList(this.createDispatch(dispatcher, dimList.variable), dimList.list);
+	}
+	
+	protected Expression resolveDimList(Expression variable, DimList list) {
+		if (list == null) {
+			return variable;
+		}
+		for (DimList.Element el : list) {
+			if(variable.getKind() == ExpressionConstants.E_IDENTIFIER) { // VariableReference - $a
+				variable = new ArrayVariableReference(variable.start(), el.right, ((SimpleReference)variable).getName(), el.index, el.type);
+			} else {
+				variable = new ReflectionArrayVariableReference(variable.start(), el.right, variable, el.index, el.type);
+			}
+		}
+		return variable;
 	}
 
 	protected String getTokenName(int token) {
@@ -216,8 +231,7 @@ non terminal Expression expr;
 non terminal Expression reference_variable;
 non terminal Expression compound_variable;
 non terminal Expression dim_offset;
-non terminal Expression object_property;
-non terminal Expression object_dim_list;
+non terminal ObjectDimList object_dim_list;
 non terminal Expression variable_name;
 non terminal Integer simple_indirect_reference;
 non terminal List assignment_list;
@@ -240,8 +254,6 @@ non terminal CompilerAstParser.ModifierDocPair method_modifiers;
 non terminal Statement method_body;
 non terminal List non_empty_member_modifiers;
 non terminal CompilerAstParser.ModifierDocPair member_modifier;
-non terminal PHPCallArgumentsList method_or_not;
-non terminal List variable_properties;
 non terminal PHPMethodDeclaration function_declaration_statement;
 non terminal Statement class_declaration_statement;
 non terminal Expression variable;
@@ -259,7 +271,6 @@ non terminal Expression r_variable;
 non terminal CompilerAstParser.ModifierDocPair variable_modifiers;
 non terminal Expression rw_variable;
 non terminal Expression variable_without_objects;
-non terminal Expression variable_property;
 non terminal StaticFieldAccess static_member;
 non terminal PHPCallArgumentsList isset_variables;
 non terminal VariableReference tracked_variable;
@@ -268,7 +279,6 @@ non terminal Expression class_name_reference;
 non terminal StaticConstantAccess class_constant;
 non terminal Expression dynamic_class_name_reference;
 non terminal Expression base_variable;
-non terminal List dynamic_class_name_variable_properties;
 non terminal Expression dynamic_class_name_variable_property;
 non terminal StaticConstantAccess static_class_constant;
 non terminal Expression base_variable_with_function_calls;
@@ -2110,47 +2120,26 @@ T_STRING:className
 ;
 
 dynamic_class_name_reference ::=
-base_variable:var T_OBJECT_OPERATOR object_property:firstVarProperty dynamic_class_name_variable_properties:propertyList
+dynamic_class_name_variable_property:expr
 {:
-	// then get the aggregated list of properties (->...->...->...)
-	LinkedList list = (LinkedList) propertyList;
-	list.addFirst(firstVarProperty);
-	
-	// now create the dispatch(es) nodes 
-	Expression dispatcher = var;
-
-	Iterator listIt = list.iterator();
-	while (listIt.hasNext()) {
-		Expression property = (Expression)listIt.next();
-		dispatcher = parser.createDispatch(dispatcher, property);
-	}	
-	
-	RESULT = dispatcher;
-:}
-
-| base_variable:var 
-{:
-	 RESULT = var;
-:}
-;
-
-dynamic_class_name_variable_properties ::=
-dynamic_class_name_variable_properties:variables dynamic_class_name_variable_property:var
-{:
-	variables.add(var);
-	RESULT = variables;	
-:}
-
-| /* empty */
-{:
-	RESULT = new LinkedList();
+	RESULT = expr;
 :}
 ;
 
 dynamic_class_name_variable_property ::=
-T_OBJECT_OPERATOR object_property:var
+base_variable:var
 {:
-	RESULT = var;
+    RESULT = var;
+:}
+
+| dynamic_class_name_variable_property:ch T_OBJECT_OPERATOR variable_without_objects:var
+{:
+	RESULT = parser.createDispatch(ch,var);
+:}
+
+| dynamic_class_name_variable_property:ch T_OBJECT_OPERATOR object_dim_list:var
+{:
+	RESULT = parser.createDispatch(ch, var);
 :}
 ;
 
@@ -2399,83 +2388,51 @@ variable:var
 ;
 
 variable ::=
-base_variable_with_function_calls:var T_OBJECT_OPERATOR object_property:memberProperty method_or_not:paramsList variable_properties:propertyList
+base_variable_with_function_calls:var
 {:
-	// get the last property 
-	Expression firstVarProperty = null;
-	if (paramsList == null) {
-		firstVarProperty = memberProperty;
-	} else {
-		if (memberProperty.getClass().equals(SimpleReference.class)) {
-			firstVarProperty = new PHPCallExpression(memberPropertyleft, paramsListright, null, (SimpleReference)memberProperty, paramsList);
-		} else {
-			firstVarProperty = new ReflectionCallExpression(memberPropertyleft, paramsListright, null, memberProperty, paramsList);
-		}
-	}
-
-	// then get the aggregated list of properties (->...->...->...)
-	LinkedList list = (LinkedList) propertyList;
-	list.addFirst(firstVarProperty);
-	
-	// now create the dispatch(es) nodes 
-	Expression dispatcher = var;
-	
-	Iterator listIt = list.iterator();
-	while (listIt.hasNext()) {
-		Expression property = (Expression)listIt.next();
-		dispatcher = parser.createDispatch(dispatcher, property);
-	}
-
-	RESULT = dispatcher;
+	RESULT = var;
 :}
-
-| base_variable_with_function_calls:var
-{: 
-	RESULT = var; 
-:}
-;
-
-variable_properties ::=
-variable_properties:variables variable_property:variableProperty
+| variable:ch T_OBJECT_OPERATOR variable_without_objects:var
 {:
-	variables.add(variableProperty);
-	RESULT = variables;	
+	RESULT = parser.createDispatch(ch,var);
 :}
 
-| /* empty */
+| variable:ch T_OBJECT_OPERATOR object_dim_list:var
 {:
-	RESULT = new LinkedList();
+	RESULT = parser.createDispatch(ch, var);
 :}
-;
 
-variable_property ::=
-T_OBJECT_OPERATOR object_property:memberProperty method_or_not:paramsList
-{:
-	Expression result = null;
-	if (paramsList == null) {
-		result = memberProperty;
-	} else {
-		if (memberProperty.getClass().equals(SimpleReference.class)) {
-			result = new PHPCallExpression(memberPropertyleft, paramsListright, null, (SimpleReference)memberProperty, paramsList);
-		} else {
-			result = new ReflectionCallExpression(memberPropertyleft, paramsListright, null, memberProperty, paramsList);
-		}
-	}
-	RESULT = result;
-:}
-;
-
-method_or_not ::=
-T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end
+| variable:ch T_OBJECT_OPERATOR variable_without_objects:memberProperty T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end
 {:
 	paramsList.setStart(startright);
 	paramsList.setEnd(endleft);
-	RESULT = paramsList;	
+
+	if (memberProperty.getClass().equals(SimpleReference.class)) {
+		RESULT = new PHPCallExpression(chleft, endright, ch, (SimpleReference)memberProperty, paramsList);
+	} else {
+		RESULT = new ReflectionCallExpression(chleft, endright, ch, memberProperty, paramsList);
+	}
+
 :}
 
-| /* empty */
+| variable:ch T_OBJECT_OPERATOR object_dim_list:memberProperty T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end
 {:
-	RESULT = null;
+	paramsList.setStart(startright);
+	paramsList.setEnd(endleft);
+	if (memberProperty.list != null) {
+		Expression dispatch = parser.createDispatch(ch, memberProperty);
+		if (dispatch.getClass().equals(SimpleReference.class)) {
+			RESULT = new PHPCallExpression(chleft, endright, null, (SimpleReference)dispatch, paramsList);
+		} else {
+			RESULT = new ReflectionCallExpression(chleft, endright, null, dispatch, paramsList);
+		}
+	} else {
+		if (memberProperty.variable.getClass().equals(SimpleReference.class)) {
+			RESULT = new PHPCallExpression(chleft, endright, ch, (SimpleReference)memberProperty.variable, paramsList);
+		} else {
+			RESULT = new ReflectionCallExpression(chleft, endright, ch, memberProperty.variable, paramsList);
+		}
+	}
 :}
 ;
 
@@ -2586,43 +2543,21 @@ dim_offset ::=
 :}
 ;
 
-object_property ::=
-object_dim_list:var
-{: 
-	RESULT = var; 
-:}
-
-| variable_without_objects:var
-{:
-	RESULT = var;
-:}
-;
-
 object_dim_list ::=
 object_dim_list:var T_OPEN_RECT dim_offset:index T_CLOSE_RECT:end
 {:
-	Expression varArray;
-	if(var.getKind() == ExpressionConstants.E_IDENTIFIER) { // VariableReference - $a
-		varArray = new ArrayVariableReference(varleft, endright, ((SimpleReference)var).getName(), index, ArrayVariableReference.VARIABLE_ARRAY);
-	} else {
-		varArray = new ReflectionArrayVariableReference(varleft, endright, var, index, ReflectionArrayVariableReference.VARIABLE_ARRAY);
-	}
-	RESULT = varArray;	
+	var.add(index, ArrayVariableReference.VARIABLE_HASHTABLE, endright);
+	RESULT = var;
 :}
 
 | object_dim_list:var T_CURLY_OPEN expr:index T_CURLY_CLOSE:end
 {:
-	Expression varArray;
-	if(var.getKind() == ExpressionConstants.E_IDENTIFIER) { // VariableReference - $a
-		varArray = new ArrayVariableReference(varleft, endright, ((SimpleReference)var).getName(), index, ArrayVariableReference.VARIABLE_HASHTABLE);
-	} else {
-		varArray = new ReflectionArrayVariableReference(varleft, endright, var, index, ReflectionArrayVariableReference.VARIABLE_HASHTABLE);
-	}
-	RESULT = varArray;	
+	var.add(index, ArrayVariableReference.VARIABLE_HASHTABLE, endright);
+	RESULT = var;
 :}
 
 | variable_name:var
-{: RESULT = var; :}
+{: RESULT = new ObjectDimList(var); :}
 ;
 
 variable_name ::=

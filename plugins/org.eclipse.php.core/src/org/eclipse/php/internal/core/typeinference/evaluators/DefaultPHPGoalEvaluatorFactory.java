@@ -142,7 +142,8 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (expressionClass == ArrayCreation.class) {
 			return new ArrayCreationEvaluator(exprGoal);
 		}
-		if (expressionClass == ArrayVariableReference.class) {
+		if (expressionClass == ArrayVariableReference.class
+				|| expressionClass == ReflectionArrayVariableReference.class) {
 			return new ArrayVariableReferenceEvaluator(exprGoal);
 		}
 		if (expressionClass == FieldAccess.class

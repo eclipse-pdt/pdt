@@ -1,0 +1,109 @@
+--TEST--
+Test Object Dim List
+--FILE--
+<?php $obj = new StdClass(); $obj->foo = "bar"; print $obj->foo{2}()[2]->el; print $obj->foo{2}[0]->call()[2]; $obj->selectIntoArray()[0]; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="142">
+	<ExpressionStatement start="6" end="28">
+		<Assignment start="6" end="27" operator="=">
+			<VariableReference start="6" end="10" name="$obj">
+			</VariableReference>
+			<ClassInstanceCreation start="13" end="27">
+				<FullyQualifiedReference start="17" end="25" name="StdClass">
+				</FullyQualifiedReference>
+				<PHPCallArgumentsList start="26" end="26">
+				</PHPCallArgumentsList>
+			</ClassInstanceCreation>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="29" end="47">
+		<Assignment start="29" end="46" operator="=">
+			<FieldAccess start="29" end="38">
+				<VariableReference start="29" end="33" name="$obj">
+				</VariableReference>
+				<SimpleReference start="35" end="38" name="foo">
+				</SimpleReference>
+			</FieldAccess>
+			<Scalar start="41" end="46" type="string" value="&quot;bar&quot;">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="48" end="76">
+		<PHPCallExpression start="48" end="75">
+			<SimpleReference start="48" end="53" name="print">
+			</SimpleReference>
+			<PHPCallArgumentsList start="54" end="75">
+				<FieldAccess start="54" end="75">
+					<ReflectionArrayVariableReference start="54" end="71">
+						<ReflectionCallExpression start="54" end="68">
+							<ReflectionArrayVariableReference start="54" end="66">
+								<FieldAccess start="54" end="63">
+									<VariableReference start="54" end="58" name="$obj">
+									</VariableReference>
+									<SimpleReference start="60" end="63" name="foo">
+									</SimpleReference>
+								</FieldAccess>
+								<Scalar start="64" end="65" type="int" value="2">
+								</Scalar>
+							</ReflectionArrayVariableReference>
+							<PHPCallArgumentsList start="67" end="67">
+							</PHPCallArgumentsList>
+						</ReflectionCallExpression>
+						<Scalar start="69" end="70" type="int" value="2">
+						</Scalar>
+					</ReflectionArrayVariableReference>
+					<SimpleReference start="73" end="75" name="el">
+					</SimpleReference>
+				</FieldAccess>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="77" end="110">
+		<PHPCallExpression start="77" end="109">
+			<SimpleReference start="77" end="82" name="print">
+			</SimpleReference>
+			<PHPCallArgumentsList start="83" end="109">
+				<ReflectionArrayVariableReference start="83" end="109">
+					<PHPCallExpression start="83" end="106">
+						<ReflectionArrayVariableReference start="83" end="98">
+							<ReflectionArrayVariableReference start="83" end="95">
+								<FieldAccess start="83" end="92">
+									<VariableReference start="83" end="87" name="$obj">
+									</VariableReference>
+									<SimpleReference start="89" end="92" name="foo">
+									</SimpleReference>
+								</FieldAccess>
+								<Scalar start="93" end="94" type="int" value="2">
+								</Scalar>
+							</ReflectionArrayVariableReference>
+							<Scalar start="96" end="97" type="int" value="0">
+							</Scalar>
+						</ReflectionArrayVariableReference>
+						<SimpleReference start="100" end="104" name="call">
+						</SimpleReference>
+						<PHPCallArgumentsList start="105" end="105">
+						</PHPCallArgumentsList>
+					</PHPCallExpression>
+					<Scalar start="107" end="108" type="int" value="2">
+					</Scalar>
+				</ReflectionArrayVariableReference>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="111" end="138">
+		<ReflectionArrayVariableReference start="111" end="137">
+			<PHPCallExpression start="111" end="134">
+				<VariableReference start="111" end="115" name="$obj">
+				</VariableReference>
+				<SimpleReference start="117" end="132" name="selectIntoArray">
+				</SimpleReference>
+				<PHPCallArgumentsList start="133" end="133">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+			<Scalar start="135" end="136" type="int" value="0">
+			</Scalar>
+		</ReflectionArrayVariableReference>
+	</ExpressionStatement>
+	<EmptyStatement start="139" end="141">
+	</EmptyStatement>
+</ModuleDeclaration>
