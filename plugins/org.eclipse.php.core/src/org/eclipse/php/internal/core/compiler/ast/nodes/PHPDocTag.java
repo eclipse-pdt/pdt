@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,53 +25,60 @@ import org.eclipse.dltk.ast.references.VariableReference;
 public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 
 	public static final String ERROR = "ERROR!!!"; //$NON-NLS-1$
-	public static final String THROWS_NAME = "throws"; //$NON-NLS-1$
-	public static final String VERSION_NAME = "version"; //$NON-NLS-1$
-	public static final String USES_NAME = "uses"; //$NON-NLS-1$
-	public static final String TUTORIAL_NAME = "tutorial"; //$NON-NLS-1$
-	public static final String SUBPACKAGE_NAME = "subpackage"; //$NON-NLS-1$
-	public static final String SINCE_NAME = "since"; //$NON-NLS-1$
-	public static final String LINK_NAME = "link"; //$NON-NLS-1$
-	public static final String LICENSE_NAME = "license"; //$NON-NLS-1$
-	public static final String INTERNAL_NAME = "internal"; //$NON-NLS-1$
-	public static final String IGNORE_NAME = "ignore"; //$NON-NLS-1$
-	public static final String FILESOURCE_NAME = "filesource"; //$NON-NLS-1$
-	public static final String EXAMPLE_NAME = "example"; //$NON-NLS-1$
-	public static final String DESC_NAME = "desc"; //$NON-NLS-1$
-	public static final String COPYRIGHT_NAME = "copyright"; //$NON-NLS-1$
-	public static final String CATEGORY_NAME = "category"; //$NON-NLS-1$
-	public static final String ACCESS_NAME = "access"; //$NON-NLS-1$
-	public static final String PACKAGE_NAME = "package"; //$NON-NLS-1$
-	public static final String VAR_NAME = "var"; //$NON-NLS-1$
-	public static final String TODO_NAME = "todo"; //$NON-NLS-1$
-	public static final String STATICVAR_NAME = "staticvar"; //$NON-NLS-1$
-	public static final String STATIC_NAME = "static"; //$NON-NLS-1$
-	public static final String SEE_NAME = "see"; //$NON-NLS-1$
-	public static final String PARAM_NAME = "param"; //$NON-NLS-1$
-	public static final String RETURN_NAME = "return"; //$NON-NLS-1$
-	public static final String NAME_NAME = "name"; //$NON-NLS-1$
-	public static final String GLOBAL_NAME = "global"; //$NON-NLS-1$
-	public static final String FINAL_NAME = "final"; //$NON-NLS-1$
-	public static final String DEPRECATED_NAME = "deprecated"; //$NON-NLS-1$
-	public static final String AUTHOR_NAME = "author"; //$NON-NLS-1$
+
+	// Tag names are defined here in the same order as their associated tag
+	// kinds from class PHPDocTagKinds:
+
 	public static final String ABSTRACT_NAME = "abstract"; //$NON-NLS-1$
+	public static final String AUTHOR_NAME = "author"; //$NON-NLS-1$
+	public static final String DEPRECATED_NAME = "deprecated"; //$NON-NLS-1$
+	public static final String FINAL_NAME = "final"; //$NON-NLS-1$
+	public static final String GLOBAL_NAME = "global"; //$NON-NLS-1$
+	public static final String NAME_NAME = "name"; //$NON-NLS-1$
+	public static final String RETURN_NAME = "return"; //$NON-NLS-1$
+	public static final String PARAM_NAME = "param"; //$NON-NLS-1$
+	public static final String SEE_NAME = "see"; //$NON-NLS-1$
+	public static final String STATIC_NAME = "static"; //$NON-NLS-1$
+	public static final String STATICVAR_NAME = "staticvar"; //$NON-NLS-1$
+	public static final String TODO_NAME = "todo"; //$NON-NLS-1$
+	public static final String VAR_NAME = "var"; //$NON-NLS-1$
+	public static final String PACKAGE_NAME = "package"; //$NON-NLS-1$
+	public static final String ACCESS_NAME = "access"; //$NON-NLS-1$
+	public static final String CATEGORY_NAME = "category"; //$NON-NLS-1$
+	public static final String COPYRIGHT_NAME = "copyright"; //$NON-NLS-1$
+	public static final String DESC_NAME = "desc"; //$NON-NLS-1$
+	public static final String EXAMPLE_NAME = "example"; //$NON-NLS-1$
+	public static final String FILESOURCE_NAME = "filesource"; //$NON-NLS-1$
+	public static final String IGNORE_NAME = "ignore"; //$NON-NLS-1$
+	public static final String INTERNAL_NAME = "internal"; //$NON-NLS-1$
+	public static final String LICENSE_NAME = "license"; //$NON-NLS-1$
+	public static final String LINK_NAME = "link"; //$NON-NLS-1$
+	public static final String SINCE_NAME = "since"; //$NON-NLS-1$
+	public static final String SUBPACKAGE_NAME = "subpackage"; //$NON-NLS-1$
+	public static final String TUTORIAL_NAME = "tutorial"; //$NON-NLS-1$
+	public static final String USES_NAME = "uses"; //$NON-NLS-1$
+	public static final String VERSION_NAME = "version"; //$NON-NLS-1$
+	public static final String THROWS_NAME = "throws"; //$NON-NLS-1$
 	public static final String PROPERTY_NAME = "property"; //$NON-NLS-1$
 	public static final String PROPERTY_READ_NAME = "property-read"; //$NON-NLS-1$
 	public static final String PROPERTY_WRITE_NAME = "property-write"; //$NON-NLS-1$
 	public static final String METHOD_NAME = "method"; //$NON-NLS-1$
 	public static final String NAMESPACE_NAME = "namespace"; //$NON-NLS-1$
+	public static final String INHERITDOC_NAME = "inheritdoc"; //$NON-NLS-1$
 
 	private static final SimpleReference[] EMPTY = {};
 	private final int tagKind;
+	private final String matchedTag;
 	private String value;
 	private SimpleReference[] references;
 	private SimpleReference[] referencesWithOrigOrder;
 	private List<Scalar> texts;
 
-	public PHPDocTag(int start, int end, int tagKind, String value,
-			List<Scalar> texts) {
+	public PHPDocTag(int start, int end, int tagKind, String matchedTag,
+			String value, List<Scalar> texts) {
 		super(start, end);
 		this.tagKind = tagKind;
+		this.matchedTag = matchedTag;
 		this.value = value;
 		updateReferences(start, end);
 		this.texts = texts;
@@ -283,6 +290,10 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		return this.tagKind;
 	}
 
+	public String getMatchedTag() {
+		return this.matchedTag;
+	}
+
 	public String getValue() {
 		return value;
 	}
@@ -372,6 +383,8 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 			return METHOD_NAME;
 		case NAMESPACE:
 			return NAMESPACE_NAME;
+		case INHERITDOC:
+			return INHERITDOC_NAME;
 		}
 		return ERROR;
 	}
