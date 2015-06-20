@@ -1,0 +1,51 @@
+--TEST--
+Bug 469402 - Formatting @inheritdoc turns it into @ERROR!!!
+Test formatting for comments
+--FILE--
+<?php
+class Father {
+    /**
+     * Resizes current image and returns self
+     *
+     * @param BoxInterface $size
+     *
+     * @throws RuntimeException
+     *
+     * @return ManipulatorInterface
+     */
+    public function resize(BoxInterface $size)
+    {}
+}
+class Child extends Father {
+    /**
+     * {@inheritdoc}
+     */
+    final public function resize(BoxInterface $size)
+    {}
+}
+?>
+--EXPECT--
+<?php
+class Father
+{
+    /**
+     * Resizes current image and returns self
+     *
+     * @param BoxInterface $size
+     *
+     * @throws RuntimeException
+     *
+     * @return ManipulatorInterface
+     */
+    public function resize (BoxInterface $size)
+    {}
+}
+class Child extends Father
+{
+    /**
+     * {@inheritdoc}
+     */
+    final public function resize (BoxInterface $size)
+    {}
+}
+?>

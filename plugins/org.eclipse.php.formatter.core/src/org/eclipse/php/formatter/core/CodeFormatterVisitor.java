@@ -1800,7 +1800,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		String tag = ""; //$NON-NLS-1$
 		// int indentLength = 0;
 		if (phpDocTag != null) {
-			tag = "@" + PHPDocTag.getTagKind(phpDocTag.getTagKind()); //$NON-NLS-1$
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=469402
+			tag = phpDocTag.getMatchedTag();
 			// if (indentationLevelDesending) {
 			// for (int i = 0; i < preferences.indentationSize; i++) {
 			// indentLength += (preferences.indentationChar ==
