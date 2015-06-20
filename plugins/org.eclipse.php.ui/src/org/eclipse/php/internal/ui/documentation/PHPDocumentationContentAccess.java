@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2013, 2014 IBM Corporation and others.
+ * Copyright (c) 2009, 2013, 2014, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,6 @@ import org.eclipse.dltk.internal.core.util.MethodOverrideTester;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Constants;
-import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
@@ -227,6 +226,10 @@ public class PHPDocumentationContentAccess {
 					IMethod method, String name) {
 				return null;
 			}
+
+			public List<PHPDocTag> getInheritedExceptions(IMethod method) {
+				return null;
+			}
 		};
 
 		private static interface DescriptionGetter {
@@ -239,8 +242,7 @@ public class PHPDocumentationContentAccess {
 			 * @throws ModelException
 			 *             unexpected problem
 			 */
-			CharSequence getDescription(
-					PHPDocumentationContentAccess contentAccess)
+			Object getDescription(PHPDocumentationContentAccess contentAccess)
 					throws ModelException;
 		}
 
@@ -266,12 +268,13 @@ public class PHPDocumentationContentAccess {
 		 *         none could be found
 		 */
 		public CharSequence getInheritedMainDescription(IMethod method) {
-			return getInheritedDescription(method, new DescriptionGetter() {
-				public CharSequence getDescription(
-						PHPDocumentationContentAccess contentAccess) {
-					return contentAccess.getMainDescription();
-				}
-			});
+			return (CharSequence) getInheritedDescription(method,
+					new DescriptionGetter() {
+						public Object getDescription(
+								PHPDocumentationContentAccess contentAccess) {
+							return contentAccess.getMainDescription();
+						}
+					});
 		}
 
 		/**
@@ -288,14 +291,15 @@ public class PHPDocumentationContentAccess {
 		 */
 		public CharSequence getInheritedParamDescription(IMethod method,
 				final int paramIndex) {
-			return getInheritedDescription(method, new DescriptionGetter() {
-				public CharSequence getDescription(
-						PHPDocumentationContentAccess contentAccess)
-						throws ModelException {
-					return contentAccess
-							.getInheritedParamDescription(paramIndex);
-				}
-			});
+			return (CharSequence) getInheritedDescription(method,
+					new DescriptionGetter() {
+						public Object getDescription(
+								PHPDocumentationContentAccess contentAccess)
+								throws ModelException {
+							return contentAccess
+									.getInheritedParamDescription(paramIndex);
+						}
+					});
 		}
 
 		/**
@@ -312,13 +316,15 @@ public class PHPDocumentationContentAccess {
 		 */
 		public CharSequence getInheritedParamType(IMethod method,
 				final int paramIndex) {
-			return getInheritedDescription(method, new DescriptionGetter() {
-				public CharSequence getDescription(
-						PHPDocumentationContentAccess contentAccess)
-						throws ModelException {
-					return contentAccess.getInheritedParamType(paramIndex);
-				}
-			});
+			return (CharSequence) getInheritedDescription(method,
+					new DescriptionGetter() {
+						public Object getDescription(
+								PHPDocumentationContentAccess contentAccess)
+								throws ModelException {
+							return contentAccess
+									.getInheritedParamType(paramIndex);
+						}
+					});
 		}
 
 		/**
@@ -332,12 +338,13 @@ public class PHPDocumentationContentAccess {
 		 *         none could be found
 		 */
 		public CharSequence getInheritedReturnDescription(IMethod method) {
-			return getInheritedDescription(method, new DescriptionGetter() {
-				public CharSequence getDescription(
-						PHPDocumentationContentAccess contentAccess) {
-					return contentAccess.getReturnDescription();
-				}
-			});
+			return (CharSequence) getInheritedDescription(method,
+					new DescriptionGetter() {
+						public Object getDescription(
+								PHPDocumentationContentAccess contentAccess) {
+							return contentAccess.getReturnDescription();
+						}
+					});
 		}
 
 		/**
@@ -354,18 +361,40 @@ public class PHPDocumentationContentAccess {
 		 */
 		public CharSequence getInheritedExceptionDescription(IMethod method,
 				final String simpleName) {
-			return getInheritedDescription(method, new DescriptionGetter() {
-				public CharSequence getDescription(
-						PHPDocumentationContentAccess contentAccess) {
-					return contentAccess.getExceptionDescription(simpleName);
-				}
-			});
+			return (CharSequence) getInheritedDescription(method,
+					new DescriptionGetter() {
+						public Object getDescription(
+								PHPDocumentationContentAccess contentAccess) {
+							return contentAccess
+									.getExceptionDescription(simpleName);
+						}
+					});
 		}
 
-		private CharSequence getInheritedDescription(final IMethod method,
+		/**
+		 * For the given method, returns all the @throws/@exception tags from an
+		 * overridden method.
+		 * 
+		 * @param method
+		 *            a method
+		 * @return all the exceptions that replace the
+		 *         <code>{&#64;inheritDoc}</code> tag, or <code>null</code> if
+		 *         none could be found
+		 */
+		public List<PHPDocTag> getInheritedExceptions(IMethod method) {
+			return (List<PHPDocTag>) getInheritedDescription(method,
+					new DescriptionGetter() {
+						public Object getDescription(
+								PHPDocumentationContentAccess contentAccess) {
+							return contentAccess.getExceptions();
+						}
+					});
+		}
+
+		private Object getInheritedDescription(final IMethod method,
 				final DescriptionGetter descriptionGetter) {
 			try {
-				return (CharSequence) new InheritDocVisitor() {
+				return new InheritDocVisitor() {
 					public Object visit(IType currType) throws ModelException {
 						IMethod overridden = getOverrideTester()
 								.findOverriddenMethodInType(currType, method);
@@ -383,7 +412,7 @@ public class PHPDocumentationContentAccess {
 							return InheritDocVisitor.CONTINUE;
 						}
 
-						CharSequence overriddenDescription = descriptionGetter
+						Object overriddenDescription = descriptionGetter
 								.getDescription(contentAccess);
 						if (overriddenDescription != null)
 							return overriddenDescription;
@@ -461,6 +490,7 @@ public class PHPDocumentationContentAccess {
 	private StringBuffer[] fParamDescriptions;
 	private StringBuffer[] fParamTypes;
 	private HashMap<String, StringBuffer> fExceptionDescriptions;
+	private List<PHPDocTag> fExceptions;
 
 	private PHPDocumentationContentAccess(IMethod method, PHPDocBlock javadoc,
 			JavadocLookup lookup) {
@@ -890,6 +920,15 @@ public class PHPDocumentationContentAccess {
 					.getInheritedReturnDescription(fMethod);
 		boolean hasReturnTag = returnTag != null || returnDescription != null;
 
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=418890
+		// http://phpdoc.org/docs/latest/guides/inheritance.html
+		if (fMethod != null && exceptions.size() == 0) {
+			List<PHPDocTag> inheritedExceptions = fJavadocLookup
+					.getInheritedExceptions(fMethod);
+			if (inheritedExceptions != null) {
+				exceptions.addAll(inheritedExceptions);
+			}
+		}
 		CharSequence[] exceptionDescriptions = new CharSequence[exceptionNames
 				.size()];
 		boolean hasInheritedExceptions = inheritExceptionDescriptions(
@@ -1142,43 +1181,54 @@ public class PHPDocumentationContentAccess {
 
 	CharSequence getExceptionDescription(String simpleName) {
 		if (fMethod != null) {
-			if (fExceptionDescriptions == null) {
-				fExceptionDescriptions = new HashMap();
-			} else {
-				StringBuffer description = (StringBuffer) fExceptionDescriptions
-						.get(simpleName);
-				if (description != null) {
-					return description.length() > 0 ? description : null;
-				}
-			}
+			cacheAllNewExceptionsAndDescriptions();
 
-			StringBuffer description = new StringBuffer();
-			fExceptionDescriptions.put(simpleName, description);
-			fBuf = description;
+			StringBuffer description = fExceptionDescriptions.get(simpleName);
+			return description != null && description.length() > 0 ? description
+					: null;
+		}
+		return null;
+	}
 
-			List tags = Arrays.asList(fJavadoc.getTags());
-			for (Iterator iter = tags.iterator(); iter.hasNext();) {
-				PHPDocTag tag = (PHPDocTag) iter.next();
-				if (PHPDocTag.THROWS == tag.getTagKind()) {
-					List fragments = Arrays.asList(tag.getReferences());
-					if (fragments.size() > 0) {
-						Object first = fragments.get(0);
-						if (first instanceof Identifier) {
-							String name = ((Identifier) first).getName();
-							if (name.equals(simpleName)) {
-								if (fragments.size() > 1)
-									handleContentElements(tag);
-								break;
-							}
+	List<PHPDocTag> getExceptions() {
+		if (fMethod != null) {
+			cacheAllNewExceptionsAndDescriptions();
+
+			return fExceptions != null && fExceptions.size() > 0 ? fExceptions
+					: null;
+		}
+		return null;
+	}
+
+	void cacheAllNewExceptionsAndDescriptions() {
+		if (fExceptionDescriptions != null) {
+			return;
+		}
+		fExceptionDescriptions = new HashMap<String, StringBuffer>();
+		fExceptions = new ArrayList<PHPDocTag>();
+
+		List tags = Arrays.asList(fJavadoc.getTags());
+		for (Iterator iter = tags.iterator(); iter.hasNext();) {
+			PHPDocTag tag = (PHPDocTag) iter.next();
+			if (PHPDocTag.THROWS == tag.getTagKind()) {
+				fExceptions.add(tag);
+				SimpleReference[] fragments = tag.getReferences();
+				if (fragments.length > 0) {
+					Object first = fragments[0];
+					if (first instanceof TypeReference) {
+						String name = ((TypeReference) first).getName();
+						// keep the first found match
+						if (!fExceptionDescriptions.containsKey(name)) {
+							StringBuffer description = new StringBuffer();
+							fExceptionDescriptions.put(name, description);
+							fBuf = description;
+							handleContentElements(tag);
+							fBuf = null;
 						}
 					}
 				}
 			}
-
-			fBuf = null;
-			return description.length() > 0 ? description : null;
 		}
-		return null;
 	}
 
 	private void handleContentElements(PHPDocTag tag) {
@@ -1297,8 +1347,7 @@ public class PHPDocumentationContentAccess {
 
 	private void handleThrowsTag(PHPDocTag tag) {
 		List<SimpleReference> fragments = Arrays.asList(tag.getReferences());
-		int size = fragments.size();
-		if (size > 0) {
+		if (fragments.size() > 0) {
 			String exceptionName = ""; //$NON-NLS-1$
 			if (fragments.get(0) instanceof TypeReference) {
 				exceptionName = fragments.get(0).getName().trim();
@@ -1531,7 +1580,7 @@ public class PHPDocumentationContentAccess {
 		return false;
 	}
 
-	// Work aorund for Bug 320709
+	// Work around for Bug 320709
 	// PHPDoc tooltips are not sized according to their contents
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=320709
 	private void doWorkAround() {
