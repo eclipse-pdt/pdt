@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
@@ -23,6 +24,8 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayVariableReference;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ReflectionArrayVariableReference;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 
 public class ArrayVariableReferenceEvaluator extends GoalEvaluator {
 
@@ -34,11 +37,15 @@ public class ArrayVariableReferenceEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
-		ArrayVariableReference reference = (ArrayVariableReference) typedGoal
-				.getExpression();
+
+		ASTNode expr = typedGoal.getExpression();
+		if (expr instanceof ReflectionArrayVariableReference) {
+			return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
+					((ReflectionArrayVariableReference) expr).getExpression()) };
+		}
 		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
-				new VariableReference(reference.sourceStart(),
-						reference.sourceEnd(), reference.getName())) };
+				new VariableReference(expr.sourceStart(), expr.sourceEnd(),
+						((ArrayVariableReference) expr).getName())) };
 	}
 
 	public Object produceResult() {
@@ -60,8 +67,14 @@ public class ArrayVariableReferenceEvaluator extends GoalEvaluator {
 		} else if (result instanceof MultiTypeType) {
 			MultiTypeType multiTypeType = (MultiTypeType) result;
 			List<IEvaluatedType> types = multiTypeType.getTypes();
-			result = new AmbiguousType(types.toArray(new IEvaluatedType[types
-					.size()]));
+			if (types.size() == 1) {
+				result = types.get(0);
+			} else if (types.size() == 0) {
+				result = PHPSimpleTypes.MIXED;
+			} else {
+				result = new AmbiguousType(
+						types.toArray(new IEvaluatedType[types.size()]));
+			}
 		}
 		this.result = (IEvaluatedType) result;
 		return IGoal.NO_GOALS;

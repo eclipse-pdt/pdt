@@ -38,6 +38,20 @@ parser code {:
 		return dispatch;
 	}
 
+	protected VariableBase createDispatch(VariableBase dispatcher, ObjectDimList dimList) {
+		return resolveDimList(this.createDispatch(dispatcher, dimList.variable), dimList.list);
+	}
+
+	protected VariableBase resolveDimList(VariableBase variable, DimList list) {
+		if (list == null) {
+			return variable;
+		}
+		for (DimList.Element el : list) {
+			variable = new ArrayAccess(variable.getStart(), el.right, ast, variable, el.index, el.type);
+		}
+		return variable;
+	}
+
     /** Report a non fatal error (or warning).  This method takes a message 
      *  string and an additional object (to be used by specializations 
      *  implemented in subclasses).  Here in the base class a very simple 
@@ -258,8 +272,8 @@ non terminal Variable reference_variable;
 non terminal Variable variable_class_name;
 non terminal Variable compound_variable;
 non terminal Expression dim_offset;
-non terminal VariableBase object_property;
-non terminal VariableBase object_dim_list;
+non terminal ObjectDimList object_dim_list;
+non terminal DimList dim_list;
 non terminal VariableBase variable_name;
 non terminal Integer simple_indirect_reference;
 non terminal List assignment_list;
@@ -284,7 +298,6 @@ non terminal Integer method_modifiers;
 non terminal Block method_body;
 non terminal List non_empty_member_modifiers;
 non terminal Integer member_modifier;
-non terminal List variable_properties;
 non terminal FunctionDeclaration function_declaration_statement;
 non terminal Statement class_declaration_statement;
 non terminal VariableBase variable;
@@ -302,7 +315,6 @@ non terminal VariableBase r_variable;
 non terminal Integer variable_modifiers;
 non terminal VariableBase rw_variable;
 non terminal Variable variable_without_objects;
-non terminal VariableBase variable_property;
 non terminal VariableBase static_member;
 non terminal List isset_variables;
 non terminal Variable tracked_variable;
@@ -311,7 +323,6 @@ non terminal ClassName class_name_reference;
 non terminal StaticConstantAccess class_constant;
 non terminal ClassName dynamic_class_name_reference;
 non terminal VariableBase base_variable;
-non terminal List dynamic_class_name_variable_properties;
 non terminal VariableBase dynamic_class_name_variable_property;
 non terminal StaticConstantAccess static_class_constant;
 non terminal VariableBase base_variable_with_function_calls;
@@ -330,11 +341,8 @@ non terminal FullyQualifiedTraitMethodReference trait_method_reference_fully_qua
 non terminal TraitAlias trait_alias;
 non terminal Integer trait_modifiers;
 
-non terminal List chaining_method_or_property;
-non terminal List instance_call;
+non terminal VariableBase chain_instance_call;
 non terminal ClassInstanceCreation new_expr;
-
-non terminal VariableBase object_method;
 
 //php5.5
 non terminal FinallyClause finally_clause;
@@ -1836,32 +1844,37 @@ non_empty_for_expr:exprList T_COMMA expr:expr
 :}
 ;
 
-chaining_method_or_property ::=
-chaining_method_or_property:chaining_method_or_property variable_property:vp
+chain_instance_call ::=
+T_OPEN_PARENTHESE:open new_expr:expr T_CLOSE_PARENTHESE:end
 {:
-	chaining_method_or_property.add(vp);
-	RESULT = chaining_method_or_property;
+	RESULT = new ParenthesisExpression(openleft, endright, parser.ast, expr);
+:}
+| chain_instance_call:ch T_OBJECT_OPERATOR variable_without_objects:var
+{:
+	RESULT = parser.createDispatch(ch,var);
 :}
 
-|variable_property:vp
+| chain_instance_call:ch T_OBJECT_OPERATOR object_dim_list:var
 {:
-	List<VariableBase> chaining_method_or_property = new LinkedList<VariableBase>();
-	chaining_method_or_property.add(vp);
-	RESULT = chaining_method_or_property;
-:}
-;
-
-
-
-instance_call ::=
-/* empty */
-{:
-	RESULT = null;
+	RESULT = parser.createDispatch(ch, var);
 :}
 
-|chaining_method_or_property:call
+| chain_instance_call:ch T_OBJECT_OPERATOR variable_without_objects:memberProperty T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end dim_list:list
 {:
-	RESULT = call;
+	RESULT = parser.resolveDimList(new MethodInvocation(chleft, endright, parser.ast, ch, new FunctionInvocation(memberPropertyleft, endright, parser.ast,
+				new FunctionName(memberPropertyleft, memberPropertyright, parser.ast, memberProperty), paramsList)), list);
+:}
+
+| chain_instance_call:ch T_OBJECT_OPERATOR object_dim_list:memberProperty T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end dim_list:list
+{:
+	if (memberProperty.list != null) {
+		RESULT = new FunctionInvocation(chleft, endright, parser.ast,
+				new FunctionName(chleft, memberPropertyright, parser.ast, parser.createDispatch(ch, memberProperty)), paramsList);
+	} else {
+		RESULT = new MethodInvocation(chleft, endright, parser.ast, ch, new FunctionInvocation(memberPropertyleft, endright, parser.ast,
+				new FunctionName(memberPropertyleft, memberPropertyright, parser.ast, memberProperty.variable), paramsList));
+	}
+	RESULT = parser.resolveDimList(RESULT, list);
 :}
 ;
 
@@ -2136,24 +2149,9 @@ T_LIST:s T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close T_EQ
 	RESULT = new ParenthesisExpression(startleft, endright, parser.ast, expr);
 :}
 
-| T_OPEN_PARENTHESE:open new_expr:expr T_CLOSE_PARENTHESE:end instance_call:list
+| chain_instance_call:chain
 {:
-	VariableBase dispatcher = new ParenthesisExpression(openleft, endright, parser.ast, expr);
-
-	// then get the aggregated list of properties (->...->...->...)
-	if (list!=null && !list.isEmpty()) {
-
-		// now create the dispatch(es) nodes
-		Dispatch dispatch = null;
-
-		Iterator listIt = list.iterator();
-		while (listIt.hasNext()) {
-			VariableBase property = (VariableBase)listIt.next();
-			dispatch = parser.createDispatch(dispatcher, property);
-			dispatcher = dispatch;
-		}
-	}
-	RESULT = dispatcher;
+   RESULT = chain;
 :}
 
 | expr:cond T_QUESTION_MARK expr:ifTrue T_NEKUDOTAIM expr:ifFalse
@@ -2445,49 +2443,26 @@ class_name:className
 ;
 
 dynamic_class_name_reference ::=
-base_variable:var T_OBJECT_OPERATOR object_property:firstVarProperty dynamic_class_name_variable_properties:propertyList
-{:
-	// then get the aggregated list of properties (->...->...->...)
-	LinkedList list = (LinkedList) propertyList;
-	list.addFirst(firstVarProperty);
-
-	// now create the dispatch(es) nodes
-	Dispatch dispatch = null;
-	VariableBase dispatcher = var;
-	Iterator listIt = list.iterator();
-	while (listIt.hasNext()) {
-		VariableBase property = (VariableBase)listIt.next();
-		dispatch = parser.createDispatch(dispatcher, property);
-		dispatcher = dispatch;
-	}
-
-	// create class name from the dispatch
-	RESULT = new ClassName(varleft, propertyListright, parser.ast, dispatch);
-:}
-
-| base_variable:var
+dynamic_class_name_variable_property:var
 {:
 	 RESULT = new ClassName(varleft, varright, parser.ast, var);
 :}
 ;
 
-dynamic_class_name_variable_properties ::=
-dynamic_class_name_variable_properties:variables dynamic_class_name_variable_property:var
-{:
-	variables.add(var);
-	RESULT = variables;
-:}
-
-| /* empty */
-{:
-	RESULT = new LinkedList();
-:}
-;
-
 dynamic_class_name_variable_property ::=
-T_OBJECT_OPERATOR object_property:var
+base_variable:var
 {:
-	RESULT = var;
+    RESULT = var;
+:}
+
+| dynamic_class_name_variable_property:ch T_OBJECT_OPERATOR variable_without_objects:var
+{:
+	RESULT = parser.createDispatch(ch,var);
+:}
+
+| dynamic_class_name_variable_property:ch T_OBJECT_OPERATOR object_dim_list:var
+{:
+	RESULT = parser.createDispatch(ch, var);
 :}
 ;
 
@@ -2860,68 +2835,39 @@ variable:var
 ;
 
 variable ::=
-base_variable_with_function_calls:var variable_property:firstVarProperty variable_properties:propertyList
+base_variable_with_function_calls:var
 {:
-	// then get the aggregated list of properties (->...->...->...)
-	LinkedList list = (LinkedList) propertyList;
-	list.addFirst(firstVarProperty);
+    RESULT = var;
+:}
 
-	// now create the dispatch(es) nodes
-	Dispatch dispatch = null;
-	VariableBase dispatcher = var;
-	Iterator listIt = list.iterator();
-	while (listIt.hasNext()) {
-		VariableBase property = (VariableBase)listIt.next();
-		dispatch = parser.createDispatch(dispatcher, property);
-		dispatcher = dispatch;
+| variable:ch T_OBJECT_OPERATOR variable_without_objects:var
+{:
+	RESULT = parser.createDispatch(ch,var);
+:}
+
+| variable:ch T_OBJECT_OPERATOR object_dim_list:var
+{:
+	RESULT = parser.createDispatch(ch, var);
+:}
+
+| variable:ch T_OBJECT_OPERATOR variable_without_objects:memberProperty T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end dim_list:list
+{:
+	RESULT = parser.resolveDimList(new MethodInvocation(chleft, endright, parser.ast, ch, new FunctionInvocation(memberPropertyleft, endright, parser.ast,
+				new FunctionName(memberPropertyleft, memberPropertyright, parser.ast, memberProperty), paramsList)), list);
+:}
+
+| variable:ch T_OBJECT_OPERATOR object_dim_list:memberProperty T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end dim_list:list
+{:
+	if (memberProperty.list != null) {
+		RESULT = new FunctionInvocation(chleft, endright, parser.ast,
+				new FunctionName(chleft, memberPropertyright, parser.ast, parser.createDispatch(ch, memberProperty)), paramsList);
+	} else {
+		RESULT = new MethodInvocation(chleft, endright, parser.ast, ch, new FunctionInvocation(memberPropertyleft, endright, parser.ast,
+				new FunctionName(memberPropertyleft, memberPropertyright, parser.ast, memberProperty.variable), paramsList));
 	}
-	RESULT = dispatch;
-:}
-
-| base_variable_with_function_calls:var
-{:
-	RESULT = var;
+	RESULT = parser.resolveDimList(RESULT, list);
 :}
 ;
-
-variable_properties ::=
-variable_properties:variables variable_property:variableProperty
-{:
-	variables.add(variableProperty);
-	RESULT = variables;
-:}
-
-| /* empty */
-{:
-	RESULT = new LinkedList();
-:}
-;
-
-variable_property ::=
-T_OBJECT_OPERATOR object_property:memberProperty
-{:
-	RESULT = memberProperty;
-:}
-
-| T_OBJECT_OPERATOR object_method:memberProperty
-{:
-	RESULT = memberProperty;
-:}
-;
-
-object_method ::=
-object_property:memberProperty T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end
-{:
-	RESULT = new FunctionInvocation(memberPropertyleft, endright, parser.ast,
-				new FunctionName(memberPropertyleft, memberPropertyright, parser.ast, memberProperty), paramsList);
-:}
-
-| object_method:method T_OPEN_RECT dim_offset:expr T_CLOSE_RECT:e
-{:
-   RESULT = new ArrayAccess(methodleft, eright, parser.ast, method, expr, ArrayAccess.VARIABLE_ARRAY);
-:}
-;
-
 
 variable_without_objects ::=
 reference_variable:var
@@ -3035,31 +2981,38 @@ dim_offset ::=
 :}
 ;
 
-object_property ::=
-object_dim_list:var
+dim_list ::=
+/* empty */
 {:
-	RESULT = var;
+	RESULT = null;
 :}
-
-| variable_without_objects:var
+| dim_list:list T_OPEN_RECT dim_offset:index T_CLOSE_RECT:e
 {:
-	RESULT = var;
+	if (list == null) {
+		list = new DimList();
+	}
+	list.add(index, ArrayAccess.VARIABLE_ARRAY, eright);
+	RESULT = list;
 :}
 ;
 
 object_dim_list ::=
 object_dim_list:var T_OPEN_RECT dim_offset:index T_CLOSE_RECT:e
 {:
-	RESULT = new ArrayAccess(varleft, eright, parser.ast, var, index, ArrayAccess.VARIABLE_ARRAY);
+	var.add(index, ArrayAccess.VARIABLE_ARRAY, eright);
+	RESULT = var;
 :}
 
 | object_dim_list:var T_CURLY_OPEN expr:index T_CURLY_CLOSE:e
 {:
-	RESULT = new ArrayAccess(varleft, eright, parser.ast, var, index, ArrayAccess.VARIABLE_HASHTABLE);
+	var.add(index, ArrayAccess.VARIABLE_HASHTABLE, eright);
+	RESULT = var;
 :}
 
 | variable_name:var
-{: RESULT = var; :}
+{: 
+	RESULT = new ObjectDimList(var); 
+:}
 ;
 
 variable_name ::=
