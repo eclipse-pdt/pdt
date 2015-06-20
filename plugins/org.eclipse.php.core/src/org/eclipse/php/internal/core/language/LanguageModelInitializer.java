@@ -262,6 +262,9 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 			IBuildpathContainer container = DLTKCore.getBuildpathContainer(
 					Path.fromPortableString(CONTAINER_PATH),
 					DLTKCore.create(project));
+			if (container == null) {
+				continue;
+			}
 			for (IBuildpathEntry entry : container.getBuildpathEntries()) {
 				inUse.add(entry.getPath());
 			}
