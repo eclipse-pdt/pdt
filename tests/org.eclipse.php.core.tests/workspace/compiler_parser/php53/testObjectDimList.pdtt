@@ -33,14 +33,16 @@ Test Object Dim List
 			<SimpleReference start="48" end="53" name="print">
 			</SimpleReference>
 			<PHPCallArgumentsList start="54" end="66">
-				<FieldAccess start="54" end="66">
-					<VariableReference start="54" end="58" name="$obj">
-					</VariableReference>
-					<ArrayVariableReference start="60" end="66" type="hashtable" name="foo">
-						<Scalar start="64" end="65" type="int" value="2">
-						</Scalar>
-					</ArrayVariableReference>
-				</FieldAccess>
+				<ReflectionArrayVariableReference start="54" end="66">
+					<FieldAccess start="54" end="63">
+						<VariableReference start="54" end="58" name="$obj">
+						</VariableReference>
+						<SimpleReference start="60" end="63" name="foo">
+						</SimpleReference>
+					</FieldAccess>
+					<Scalar start="64" end="65" type="int" value="2">
+					</Scalar>
+				</ReflectionArrayVariableReference>
 			</PHPCallArgumentsList>
 		</PHPCallExpression>
 	</ExpressionStatement>
@@ -49,14 +51,16 @@ Test Object Dim List
 			<SimpleReference start="68" end="73" name="print">
 			</SimpleReference>
 			<PHPCallArgumentsList start="74" end="86">
-				<FieldAccess start="74" end="86">
-					<VariableReference start="74" end="78" name="$obj">
-					</VariableReference>
-					<ArrayVariableReference start="80" end="86" type="array" name="foo">
-						<Scalar start="84" end="85" type="int" value="2">
-						</Scalar>
-					</ArrayVariableReference>
-				</FieldAccess>
+				<ReflectionArrayVariableReference start="74" end="86">
+					<FieldAccess start="74" end="83">
+						<VariableReference start="74" end="78" name="$obj">
+						</VariableReference>
+						<SimpleReference start="80" end="83" name="foo">
+						</SimpleReference>
+					</FieldAccess>
+					<Scalar start="84" end="85" type="int" value="2">
+					</Scalar>
+				</ReflectionArrayVariableReference>
 			</PHPCallArgumentsList>
 		</PHPCallExpression>
 	</ExpressionStatement>
