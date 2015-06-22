@@ -308,8 +308,9 @@ public class StubUtility {
 			Program program = SharedASTProvider.getAST(
 					overridden.getSourceModule(), SharedASTProvider.WAIT_YES,
 					new NullProgressMonitor());
-			ASTNode elementAt = program.getElementAt(overridden
-					.getSourceRange().getOffset());
+			ASTNode elementAt = program != null ? program
+					.getElementAt(overridden.getSourceRange().getOffset())
+					: null;
 			IFunctionBinding resolvedBinding = null;
 
 			if (elementAt instanceof MethodDeclaration) {

@@ -287,12 +287,14 @@ public class AddDescriptionAction extends Action implements
 	 * @throws CoreException
 	 */
 	public String createPHPScopeFileDocBlock(IScriptProject scriptProject) {
-		String fileComment;
+		String fileComment = null;
 		try {
 			fileComment = CodeGeneration.getFileComment(scriptProject,
 					lineDelim);
 		} catch (CoreException e) {
 			Logger.logException(e);
+		}
+		if (fileComment == null) {
 			fileComment = createDefaultComment(lineDelim);
 		}
 		return PHP_BLOCK_OPEN_TAG + lineDelim + fileComment
@@ -402,7 +404,10 @@ public class AddDescriptionAction extends Action implements
 					} catch (CoreException e) {
 						Logger.logException(
 								"Generating default phpdoc comment", e); //$NON-NLS-1$
-						docBlock = createDefaultComment(null);
+					}
+					if (docBlock == null) {
+						// XXX : should we insert newlines?
+						docBlock = createDefaultComment("");
 					}
 					break;
 				}
