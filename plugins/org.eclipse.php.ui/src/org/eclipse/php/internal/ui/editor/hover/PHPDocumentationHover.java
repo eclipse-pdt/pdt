@@ -658,8 +658,9 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 				Program unit = SharedASTProvider.getAST(
 						field.getSourceModule(), SharedASTProvider.WAIT_YES,
 						null);
-				ASTNode node = NodeFinder.perform(unit, field.getNameRange()
-						.getOffset(), field.getNameRange().getLength());
+				ASTNode node = unit != null ? NodeFinder.perform(unit, field
+						.getNameRange().getOffset(), field.getNameRange()
+						.getLength()) : null;
 				if (node != null) {
 					if (node instanceof Identifier
 							&& node.getParent() instanceof ConstantDeclaration) {
