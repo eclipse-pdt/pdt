@@ -99,7 +99,8 @@ public class TestBuildpathInitializer extends BuildpathContainerInitializer {
 					Logger.logException(e);
 				}
 			}
-			return buildPathEntries;
+			return buildPathEntries != null ? buildPathEntries
+					: new IBuildpathEntry[0];
 		}
 
 		public String getDescription() {

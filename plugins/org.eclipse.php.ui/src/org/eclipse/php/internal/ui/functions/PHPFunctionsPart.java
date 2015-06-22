@@ -204,6 +204,15 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 										new Path(
 												LanguageModelInitializer.CONTAINER_PATH),
 										scriptProject);
+						if (languageContainer == null) {
+							Logger.log(
+									Logger.ERROR,
+									"project \""
+											+ scriptProject.getProject()
+													.getName()
+											+ "\" has php nature but has no language container"); //$NON-NLS-1$ //$NON-NLS-2$
+							return Status.CANCEL_STATUS;
+						}
 						IBuildpathEntry[] buildpathEntries = languageContainer
 								.getBuildpathEntries();
 						List<IProjectFragment> fragments = new LinkedList<IProjectFragment>();

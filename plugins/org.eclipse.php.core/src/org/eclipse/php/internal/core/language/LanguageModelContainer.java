@@ -85,7 +85,8 @@ public class LanguageModelContainer implements IBuildpathContainer {
 				Logger.logException(e);
 			}
 		}
-		return buildPathEntries;
+		return buildPathEntries != null ? buildPathEntries
+				: new IBuildpathEntry[0];
 	}
 
 	protected IPath copyToInstanceLocation(ILanguageModelProvider provider,
