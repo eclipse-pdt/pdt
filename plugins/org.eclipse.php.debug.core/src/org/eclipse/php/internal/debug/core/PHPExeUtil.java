@@ -356,6 +356,11 @@ public final class PHPExeUtil {
 		List<PHPModuleInfo> modules = new ArrayList<PHPExeUtil.PHPModuleInfo>();
 		String result;
 		File iniFile = phpExeItem.getINILocation();
+		if (iniFile == null) {
+			// Try to locate an php.ini that may exist next to the executable.
+			iniFile = PHPINIUtil
+					.findPHPIni(phpExeItem.getExecutable().getAbsolutePath());
+		}
 		PHPVersion phpVersion = new PHPVersion(phpExeItem);
 		try {
 			if (iniFile != null) {
