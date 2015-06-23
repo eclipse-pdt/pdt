@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.preference.PreferenceDialog;
@@ -98,8 +99,8 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		boolean enableCLIDebug = prefs
 				.getBoolean(PHPDebugCorePreferenceNames.ENABLE_CLI_DEBUG);
 		String serverName = ServersManager.getDefaultServer(null).getName();
-		String phpExeName = prefs
-				.getString(PHPDebugCorePreferenceNames.DEFAULT_PHP);
+		String phpExeName = InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
+				.get(PHPDebugCorePreferenceNames.DEFAULT_PHP, null);
 		if (phpExeName == null || phpExeName.isEmpty()) {
 			phpExeName = PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined;
 		}

@@ -19,10 +19,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.php.internal.core.IUniqueIdentityElement;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.UniqueIdentityElementUtil;
 import org.eclipse.php.internal.debug.core.Logger;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.PHPExeException;
 import org.eclipse.php.internal.debug.core.PHPExeUtil;
 import org.eclipse.php.internal.debug.core.PHPExeUtil.PHPExeInfo;
@@ -313,9 +315,9 @@ public class PHPexeItem implements IUniqueIdentityElement,
 	 * @return if this item is the default item.
 	 */
 	public boolean isDefault() {
-		return getName().equals(
-				PHPProjectPreferences.getModelPreferences().getString(
-						PHPDebugCorePreferenceNames.DEFAULT_PHP));
+		return getName()
+				.equals(InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
+						.get(PHPDebugCorePreferenceNames.DEFAULT_PHP, null));
 	}
 
 	/**

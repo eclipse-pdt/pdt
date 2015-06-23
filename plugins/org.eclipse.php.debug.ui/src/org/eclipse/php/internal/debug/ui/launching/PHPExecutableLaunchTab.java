@@ -835,7 +835,14 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			return;
 		}
 		PHPexeItem exeItem = phpsComboBlock.getPHPexe();
-		String debuggerID = exeItem.getDebuggerID();
+		String debuggerID;
+		if (exeItem != null) {
+			debuggerID = exeItem.getDebuggerID();
+			configureDebugger.setEnabled(true);
+		} else {
+			debuggerID = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
+			configureDebugger.setEnabled(false);
+		}
 		if (PHPDebuggersRegistry.isNoneDebugger(debuggerID)) {
 			breakOnFirstLine.setEnabled(false);
 		} else {

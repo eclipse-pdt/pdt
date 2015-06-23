@@ -21,12 +21,15 @@ import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileInfo;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.ui.IPluginContribution;
 import org.eclipse.ui.activities.WorkbenchActivityHelper;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * A managing class for all the registered PHP executables. As of PDT 1.0 this
@@ -669,6 +672,9 @@ public class PHPexes {
 		if (removedItem != null && removedItem.isDefault()) {
 			detectDefaultItem();
 		}
+		if (getAllItems().length == 0) {
+			setDefaultItem(null);
+		}
 		Iterator<IPHPExesListener> iter = listeners.iterator();
 		while (iter.hasNext()) {
 			PHPExesEvent phpExesEvent = new PHPExesEvent(item);
@@ -682,9 +688,19 @@ public class PHPexes {
 	 * @param defaultItem
 	 */
 	public void setDefaultItem(PHPexeItem defaultItem) {
-		PHPProjectPreferences.getModelPreferences().setValue(
-				PHPDebugCorePreferenceNames.DEFAULT_PHP, defaultItem.getName());
-		PHPDebugPlugin.getDefault().savePluginPreferences();
+		IEclipsePreferences preferences = InstanceScope.INSTANCE
+				.getNode(PHPDebugPlugin.ID);
+		if (defaultItem != null) {
+			preferences.put(PHPDebugCorePreferenceNames.DEFAULT_PHP,
+					defaultItem.getName());
+		} else {
+			preferences.remove(PHPDebugCorePreferenceNames.DEFAULT_PHP);
+		}
+		try {
+			preferences.flush();
+		} catch (BackingStoreException e) {
+			Logger.logException(e);
+		}
 	}
 
 	private void detectDefaultItem() {

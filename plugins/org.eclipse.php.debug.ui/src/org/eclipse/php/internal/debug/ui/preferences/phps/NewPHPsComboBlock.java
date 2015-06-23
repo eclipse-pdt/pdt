@@ -11,7 +11,10 @@
 package org.eclipse.php.internal.debug.ui.preferences.phps;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -616,7 +619,7 @@ public class NewPHPsComboBlock {
 		}
 		if (fSpecificButton.getSelection()) {
 			int index = fExecutablesCombo.getSelectionIndex();
-			if (index >= 0) {
+			if (index >= 0 && !phpExecutables.isEmpty()) {
 				PHPexeItem vm = phpExecutables.get(index);
 				return PHPRuntime.newPHPContainerPath(vm);
 			}

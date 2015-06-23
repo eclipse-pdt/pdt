@@ -507,10 +507,9 @@ public class PHPDebugPlugin extends Plugin {
 	}
 
 	public static PHPexeItem getWorkspaceDefaultExe() {
-		Preferences prefs = PHPProjectPreferences.getModelPreferences();
+		IEclipsePreferences prefs = InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID);
 		if (prefs != null) {
-			String exeName = prefs
-					.getString(PHPDebugCorePreferenceNames.DEFAULT_PHP);
+			String exeName = prefs.get(PHPDebugCorePreferenceNames.DEFAULT_PHP, null);
 			if (exeName != null && !exeName.isEmpty()) {
 				return PHPexes.getInstance().getItem(exeName);
 			}
