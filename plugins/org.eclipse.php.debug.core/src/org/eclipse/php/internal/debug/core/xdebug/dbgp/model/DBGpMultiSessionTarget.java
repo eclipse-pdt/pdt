@@ -352,7 +352,8 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 			// they terminate when complete and don't hang around waiting for
 			// another session they won't receive.
 			DBGpTarget target = new DBGpTarget(this.launch, this.scriptName,
-					this.ideKey, this.sessionID, this.stopAtStart);
+					this.stopDebugURL, this.ideKey, this.sessionID,
+					this.stopAtStart);
 			target.setMultiSessionManaged(true);
 			target.setPathMapper(pathMapper);
 			accepted = target.SessionCreated(session);
@@ -449,8 +450,9 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 				URLConnection connection = url.openConnection();
 				connection.connect();
 			} catch (IOException e) {
-				DBGpLogger.logException(
-						"Failed to send stop XDebug session URL: " + stopDebugURL, this, e); //$NON-NLS-1$
+				DBGpLogger
+						.logException(
+								"Failed to send stop XDebug session URL: " + stopDebugURL, this, e); //$NON-NLS-1$
 			}
 		} catch (MalformedURLException e) {
 			// Should not happen
