@@ -60,6 +60,7 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements
 	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
+		PHPExeVerifier.verify(PHPexes.getInstance().getAllItems());
 	}
 
 	protected Preferences getModelPreferences() {
@@ -96,19 +97,6 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements
 				PHPDebugCorePreferenceNames.DIALOG_COLUMN_WIDTH);
 
 		initDefaultPHP();
-		// fPHPBlock.addSelectionChangedListener(new ISelectionChangedListener()
-		// {
-		// public void selectionChanged(SelectionChangedEvent event) {
-		// PHPexeItem phpexe = getCurrentDefaultPHP();
-		// if (phpexe == null) {
-		// setValid(false);
-		//					setErrorMessage(PHPDebugUIMessages.PHPsPreferencePage_13); 
-		// } else {
-		// setValid(true);
-		// setErrorMessage(null);
-		// }
-		// }
-		// });
 		applyDialogFont(ancestor);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(ancestor,
 				IPHPHelpContextIds.PHP_EXECUTABLES_PREFERENCES);

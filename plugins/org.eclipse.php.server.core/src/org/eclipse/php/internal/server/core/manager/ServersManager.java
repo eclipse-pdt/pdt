@@ -602,6 +602,33 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			upgrader.check(serverMap);
 		}
 		upgrader.perform();
+		// Create default server if there is no one
+		createDefaultPHPServer();
+	}
+
+	private void createDefaultPHPServer() {
+		Collection<Server> loaded = servers.values();
+		if (loaded.size() == 0) {
+			Server defaultWebServer = null;
+			try {
+				defaultWebServer = new Server(Default_Server_Name, "localhost", //$NON-NLS-1$
+						BASE_URL, ""); //$NON-NLS-1$
+				servers.put(defaultWebServer.getName(), defaultWebServer);
+			} catch (MalformedURLException e) {
+			}
+			// Set as workspace default
+			defaultServersMap.put(null, defaultWebServer);
+			innerSaveDefaultServer(null, defaultWebServer);
+			// Save configurations
+			List<IXMLPreferencesStorable> serversToSave = new ArrayList<IXMLPreferencesStorable>();
+			for (Server toSave : servers.values()) {
+				serversToSave.add(toSave);
+			}
+			IEclipsePreferences preferences = InstanceScope.INSTANCE
+					.getNode(Activator.PLUGIN_ID);
+			XMLPreferencesWriter.write(preferences, SERVERS_PREFERENCES_KEY,
+					serversToSave);
+		}
 	}
 
 	private void fireAddEvent(ServerManagerEvent event,

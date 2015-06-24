@@ -45,8 +45,6 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String Debugger_Error_Crash_Message;
 	public static String Debugger_Incompatible_Protocol;
 
-	public static String IPHPDebugConstants_0;
-
 	public static String PHPDebugPlugin_PerformingPostStartupOperations;
 
 	public static String PHPDebugPlugin_PostStartup;
