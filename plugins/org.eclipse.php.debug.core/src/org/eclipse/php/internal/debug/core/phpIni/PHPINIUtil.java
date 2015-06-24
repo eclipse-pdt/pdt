@@ -29,12 +29,14 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 
+@SuppressWarnings("restriction")
 public class PHPINIUtil {
 
 	private static final String PHP_INI_FILE = "php.ini"; //$NON-NLS-1$
 	private static final String INCLUDE_PATH = "include_path"; //$NON-NLS-1$
 	private static final String ZEND_EXTENSION = "zend_extension"; //$NON-NLS-1$
 	private static final String ZEND_EXTENSION_TS = "zend_extension_ts"; //$NON-NLS-1$
+	private static final String MEMORY_LIMIT = "memory_limit"; //$NON-NLS-1$
 
 	private static void modifyIncludePath(File phpIniFile, String[] includePath) {
 		try {
@@ -190,7 +192,7 @@ public class PHPINIUtil {
 	}
 
 	/**
-	 * Make some preparations before debug session:
+	 * Make some preparations before PHP CLI launch session:
 	 * <ul>
 	 * <li>Adds include path
 	 * <li>Modifies Zend Debugger path in the PHP configuration file
@@ -204,7 +206,7 @@ public class PHPINIUtil {
 	 *            Current project
 	 * @return created temporary PHP configuration file
 	 */
-	public static File prepareBeforeDebug(File phpIniFile, String phpExePath,
+	public static File prepareBeforeLaunch(File phpIniFile, String phpExePath,
 			IProject project) {
 		File tempIniFile = createTemporaryPHPINIFile(phpIniFile);
 
@@ -268,7 +270,7 @@ public class PHPINIUtil {
 		try {
 			// Create temporary directory:
 			File tempDir = new File(
-					System.getProperty("java.io.tmpdir"), "zend_debug"); //$NON-NLS-1$ //$NON-NLS-2$
+					System.getProperty("java.io.tmpdir"), "php-ini"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (!tempDir.exists()) {
 				tempDir.mkdir();
 				tempDir.deleteOnExit();
@@ -298,16 +300,21 @@ public class PHPINIUtil {
 
 	private static void appendDefaultPHPIniContent(File phpIniFile)
 			throws IOException {
-
+		try {
+			INIFileModifier m = new INIFileModifier(phpIniFile);
+			if (!m.hasEntry(MEMORY_LIMIT)) {
+				m.addEntry(MEMORY_LIMIT, "256M"); //$NON-NLS-1$
+				m.close();
+			}
+		} catch (IOException e) {
+			PHPDebugPlugin.log(e);
+		}
 		FileWriter fw = new FileWriter(phpIniFile, true);
-
 		// TODO expose default php.ini in PHP properties
 		fw.append("\ndate.timezone= \"") //$NON-NLS-1$
 				.append(Calendar.getInstance().getTimeZone().getID())
 				.append("\"\n"); //$NON-NLS-1$
-		fw.append("memory_limit = \"256M\"\n"); //$NON-NLS-1$
 		fw.close();
-
 	}
 
 	/**
