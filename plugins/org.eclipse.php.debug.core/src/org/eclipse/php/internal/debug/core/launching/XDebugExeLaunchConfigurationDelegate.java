@@ -138,7 +138,7 @@ public class XDebugExeLaunchConfigurationDelegate extends
 		// try to locate an ini that exists next to the executable.
 		File phpIni = (phpIniString != null && new File(phpIniString).exists()) ? new File(
 				phpIniString) : PHPINIUtil.findPHPIni(phpExeString);
-		File tempIni = PHPINIUtil.prepareBeforeDebug(phpIni, phpExeString,
+		File tempIni = PHPINIUtil.prepareBeforeLaunch(phpIni, phpExeString,
 				project);
 		launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION,
 				tempIni.getAbsolutePath());

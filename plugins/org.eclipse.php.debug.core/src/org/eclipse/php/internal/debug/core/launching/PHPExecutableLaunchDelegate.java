@@ -160,7 +160,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		// try to locate an php.ini that exists next to the executable.
 		File phpIni = (phpIniPath != null && new File(phpIniPath).exists()) ? new File(
 				phpIniPath) : PHPINIUtil.findPHPIni(phpExeString);
-		File tempIni = PHPINIUtil.prepareBeforeDebug(phpIni, phpExeString,
+		File tempIni = PHPINIUtil.prepareBeforeLaunch(phpIni, phpExeString,
 				project);
 		launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION,
 				tempIni.getAbsolutePath());

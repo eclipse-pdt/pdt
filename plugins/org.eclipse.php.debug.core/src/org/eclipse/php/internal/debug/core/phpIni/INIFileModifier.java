@@ -164,21 +164,6 @@ public class INIFileModifier {
 	}
 
 	/**
-	 * Puts quotes around the given string
-	 * 
-	 * @param str
-	 *            String
-	 * @return result string
-	 */
-	private String quoteString(String str) {
-		if (str.startsWith("\"") && str.endsWith("\"") || str.startsWith("'") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				&& str.endsWith("'")) { //$NON-NLS-1$
-			return str;
-		}
-		return '"' + str + '"';
-	}
-
-	/**
 	 * Removes entry from the INI file from the global section.
 	 * 
 	 * @param name
@@ -342,6 +327,39 @@ public class INIFileModifier {
 	}
 
 	/**
+	 * Checks if the entry with given key name exists in any of available
+	 * sections.
+	 * 
+	 * @param sectionName
+	 * @return <code>true</code> if entry already exists, <code>false</code>
+	 *         otherwise
+	 */
+	public boolean hasEntry(String name) {
+		for (INIFileSection section : sections) {
+			if (hasEntry(section, name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Checks if the entry with given key name exists in the named section.
+	 * 
+	 * @param sectionName
+	 * @param name
+	 * @return
+	 */
+	public boolean hasEntry(String sectionName, String name) {
+		for (INIFileSection section : sections) {
+			if (section.name.equals(sectionName) && hasEntry(section, name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Writes all changes to the INI configuration file
 	 * 
 	 * @throws IOException
@@ -390,5 +408,32 @@ public class INIFileModifier {
 			}
 		}
 		w.close();
+	}
+
+	/**
+	 * Puts quotes around the given string
+	 * 
+	 * @param str
+	 *            String
+	 * @return result string
+	 */
+	private String quoteString(String str) {
+		if (str.startsWith("\"") && str.endsWith("\"") || str.startsWith("'") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				&& str.endsWith("'")) { //$NON-NLS-1$
+			return str;
+		}
+		return '"' + str + '"';
+	}
+
+	private boolean hasEntry(INIFileSection section, String name) {
+		for (int i = 0; i < section.lines.size(); ++i) {
+			Matcher m = NAME_VAL_PATTERN.matcher(section.lines.get(i));
+			if (m.matches()) {
+				String entryName = m.group(1);
+				if (entryName.equals(name))
+					return true;
+			}
+		}
+		return false;
 	}
 }
