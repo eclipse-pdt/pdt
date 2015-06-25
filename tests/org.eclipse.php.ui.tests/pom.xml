@@ -19,7 +19,6 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<testSuite>org.eclipse.php.ui.tests</testSuite>
 					<testClass>org.eclipse.php.ui.tests.AllTests</testClass>
 					<useUIHarness>true</useUIHarness>
 					<useUIThread>false</useUIThread>

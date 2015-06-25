@@ -20,7 +20,6 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<testSuite>org.eclipse.php.core.tests</testSuite>
 					<testClass>org.eclipse.php.core.tests.AllTests</testClass>
 					<dependencies>
 						<dependency>

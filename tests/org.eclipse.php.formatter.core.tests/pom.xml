@@ -37,7 +37,6 @@
 							<version>0.0.0</version>
 						</dependency>
 					</dependencies>
-					<testSuite>org.eclipse.php.formatter.core.tests</testSuite>
 					<testClass>org.eclipse.php.formatter.core.tests.AllTests</testClass>
 					<testFailureIgnore>false</testFailureIgnore>
 					<skip>false</skip>
