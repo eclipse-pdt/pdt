@@ -84,7 +84,6 @@ public class PHPProjectPreferences {
 	}
 
 	public static String getDefaultBasePath(IProject project) {
-
 		String basePath = null;
 		if (project != null && getElementSettingsForProject(project)) {
 			IScopeContext projectScope = getProjectScope(project);
@@ -92,18 +91,24 @@ public class PHPProjectPreferences {
 					PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, basePath);
 		}
 		if (project != null && basePath == null) {
-			return "/" + project.getName(); //$NON-NLS-1$
+			basePath = '/' + project.getName();
+		}
+		if (basePath != null && !basePath.startsWith("/")) { //$NON-NLS-1$
+			basePath = '/' + basePath;
 		}
 		return basePath;
 	}
 
-	public static void setDefaultBasePath(IProject project, String value) {
+	public static void setDefaultBasePath(IProject project, String basePath) {
+		if (basePath != null && !basePath.startsWith("/")) { //$NON-NLS-1$
+			basePath = '/' + basePath;
+		}
 		Preferences prefs = getModelPreferences();
-		prefs.setValue(PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, value);
+		prefs.setValue(PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, basePath);
 		if (project != null && getElementSettingsForProject(project)) {
 			IScopeContext projectScope = getProjectScope(project);
 			projectScope.getNode(getPreferenceNodeQualifier()).put(
-					PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, value);
+					PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, basePath);
 		}
 	}
 
