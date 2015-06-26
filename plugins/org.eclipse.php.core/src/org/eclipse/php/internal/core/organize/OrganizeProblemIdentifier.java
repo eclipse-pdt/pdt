@@ -8,23 +8,24 @@
  * Contributors:
  *     Zend Technologies - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.internal.core.compiler.ast.parser;
+package org.eclipse.php.internal.core.organize;
 
 import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
 import org.eclipse.dltk.compiler.problem.IProblemIdentifierExtension;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 
 /**
- * Class provides "PHP Syntax Error" marker type for DLTK problem mechanism.
+ * Class provides "Organize Syntax Error" marker type for DLTK problem
+ * mechanism.
  * 
- * @author Michal Niewrzal
+ * @author Yannick de Lange
  */
-public enum PhpProblemIdentifier
+public enum OrganizeProblemIdentifier
 	implements IProblemIdentifier,IProblemIdentifierExtension {
 
-	SYNTAX;
+	USE_STATEMENTS;
 
-	public static final String MARKER_TYPE_ID = "org.eclipse.php.core.phpproblemmarker"; //$NON-NLS-1$
+	public static final String MARKER_TYPE_ID = "org.eclipse.php.core.organizeproblemmarker"; //$NON-NLS-1$
 
 	@Override
 	public String contributor() {
