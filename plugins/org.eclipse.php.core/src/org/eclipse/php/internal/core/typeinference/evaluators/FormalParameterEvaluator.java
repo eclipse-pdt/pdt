@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
@@ -112,41 +113,36 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 					}
 					if (docBlock != null) {
 						for (PHPDocTag tag : docBlock.getTags()) {
-							if (tag.getTagKind() != PHPDocTag.PARAM) {
+							if (!tag.isValidParamTag()) {
 								continue;
 							}
-							SimpleReference[] references = tag.getReferences();
-							if (references.length == 2) {
-								String parameterName = parameter.getName();
-								if (parameter.isVariadic()) {
-									parameterName = ELLIPSIS + parameterName;
+							String parameterName = parameter.getName();
+							if (parameter.isVariadic()) {
+								parameterName = ELLIPSIS + parameterName;
+							}
+							if (tag.getVariableReference().getName()
+									.equals(parameterName)) {
+								MultiTypeType multiType = new MultiTypeType();
+								for (TypeReference paramType : tag
+										.getTypeReferences()) {
+									String typeName = paramType.getName();
+
+									typeName = PHPEvaluationUtils
+											.removeArrayBrackets(typeName);
+
+									multiType.addType(PHPClassType
+											.fromTypeName(typeName,
+													sourceModule,
+													paramType.sourceStart()));
 								}
-								if (references[0].getName().equals(
-										parameterName)) {
-
-									int offset = references[1].sourceStart();
-									String[] typeNames = references[1]
-											.getName().split("\\|"); //$NON-NLS-1$
-									MultiTypeType multiType = new MultiTypeType();
-									for (String typeName : typeNames) {
-										if (typeName.trim().isEmpty()) {
-											continue;
-										}
-
-										typeName = PHPEvaluationUtils
-												.removeArrayBrackets(typeName);
-
-										multiType.addType(PHPClassType
-												.fromTypeName(typeName,
-														sourceModule, offset));
-									}
-									// when it is not true multi type
-									if (multiType.size() == 1) {
-										result = multiType.get(0);
-									} else if (multiType.size() > 1) {
-										result = multiType;
-									}
+								// when it is not true multi type
+								if (multiType.size() == 1) {
+									result = multiType.get(0);
+								} else if (multiType.size() > 1) {
+									result = multiType;
 								}
+
+								break;
 							}
 						}
 					}

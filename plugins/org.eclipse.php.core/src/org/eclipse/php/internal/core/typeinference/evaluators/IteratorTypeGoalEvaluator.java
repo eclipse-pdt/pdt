@@ -1,10 +1,20 @@
+/*******************************************************************************
+ * Copyright (c) 2015 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
@@ -194,14 +204,12 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 				PHPDocTag[] tags = docBlocks[i].getTags();
 				for (int j = 0; j < tags.length; j++) {
 					PHPDocTag tag = tags[j];
-					if (tag.getTagKind() == PHPDocTag.PARAM) {
-						SimpleReference[] refs = tag.getReferences();
-						if (refs != null
-								&& refs.length > 1
-								&& refs[1].getName().equals(
-										type.getElementName() + PHPEvaluationUtils.BRACKETS)) {
-							return true;
-						}
+					if (tag.isValidParamTag()
+							&& tag.getSingleTypeReference()
+									.getName()
+									.equals(type.getElementName()
+											+ PHPEvaluationUtils.BRACKETS)) {
+						return true;
 					}
 				}
 			}

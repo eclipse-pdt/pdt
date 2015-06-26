@@ -43,23 +43,28 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 
 
 %{
-    private String shortDesc = null;
-    private String longDesc = null;
-    private ArrayList<PHPDocTag> tagList = null;
-    private int currTagId = 0;
-    private int tagPosition = 0;
-    private String matchedTag = "";
-    private StringBuffer sBuffer = null;
-    private int numOfLines = 0;
+    private String shortDesc;
+    private String longDesc;
+    private ArrayList<PHPDocTag> tagList;
+    private int currTagId;
+    private int tagPosition;
+    private String matchedTag;
+    private StringBuffer sBuffer;
+    private int numOfLines;
 	private List<Scalar> textList;
 
 	public PHPDocBlock parse() {
-		int start = zzStartRead - _zzPushbackPos;
+		shortDesc = "";
 		longDesc = "";
 		tagList = new ArrayList<PHPDocTag>();
-		textList = new ArrayList<Scalar>();
+		currTagId = 0;
+		tagPosition = 0;
+		matchedTag = "";
 		sBuffer = new StringBuffer();
 		numOfLines = 1;
+		textList = new ArrayList<Scalar>();
+
+		int start = zzStartRead - _zzPushbackPos;
 
 		// start parsing
 		try {

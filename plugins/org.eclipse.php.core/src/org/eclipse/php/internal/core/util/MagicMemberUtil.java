@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation and others.
+ * Copyright (c) 2012, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,8 @@
 package org.eclipse.php.internal.core.util;
 
 import java.util.regex.Pattern;
+
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 
 public class MagicMemberUtil {
 	public static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+"); //$NON-NLS-1$
@@ -129,9 +131,8 @@ public class MagicMemberUtil {
 				mi.parameterNames = paramName;
 				mi.parameterTypes = paramType;
 				mi.parameterInitializers = paramValue;
-				if (docValue.length() > endIndex) {
-					mi.desc = docValue.substring(endIndex + 1);
-				}
+				mi.desc = docValue.length() > endIndex ? docValue
+						.substring(endIndex + 1) : ""; //$NON-NLS-1$
 			} else {
 				mi.desc = docValue;
 			}
@@ -140,25 +141,14 @@ public class MagicMemberUtil {
 		}
 	}
 
-	public static MagicField getMagicField(String docValue) {
-		docValue = docValue.trim();
-		final String[] split = WHITESPACE_SEPERATOR.split(docValue);
-		if (split.length < 2) {
+	public static MagicField getMagicPropertiesField(PHPDocTag tag) {
+		if (!tag.isValidPropertiesTag()) {
 			return null;
 		}
 		MagicField info = new MagicField();
-		try {
-			info.name = split[1];
-			info.type = split[0];
-			if (split.length > 2) {
-				for (int i = 0; i < 2; i++) {
-					docValue = docValue.substring(split[i].length()).trim();
-				}
-				info.desc = docValue;
-			}
-		} catch (Exception e) {
-			info = null;
-		}
+		info.name = tag.getVariableReference().getName();
+		info.type = tag.getSingleTypeReference().getName();
+		info.desc = tag.getRawDescText();
 		return info;
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corporation and others.
+ * Copyright (c) 2014, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
@@ -41,7 +41,7 @@ public class PHPEvaluationUtils {
 
 	private final static String SELF_RETURN_TYPE = "self"; //$NON-NLS-1$
 
-	public final static String BRACKETS_PATTERN = "\\[.*\\]";
+	public final static String BRACKETS_PATTERN = "\\[.*\\]"; //$NON-NLS-1$
 
 	private final static IEvaluatedType[] EMPTY_LIST = new IEvaluatedType[0];
 
@@ -343,14 +343,14 @@ public class PHPEvaluationUtils {
 	}
 
 	public static IEvaluatedType[] evaluatePHPDocType(
-			SimpleReference[] typeNames, IModelElement space, int offset,
+			List<TypeReference> typeNames, IModelElement space, int offset,
 			IType[] types) {
-		if (typeNames == null || typeNames.length == 0) {
+		if (typeNames == null || typeNames.isEmpty()) {
 			return EMPTY_LIST;
 		}
-		String[] tmp = new String[typeNames.length];
-		for (int i = 0; i < typeNames.length; i++) {
-			tmp[i] = typeNames[i].getName();
+		String[] tmp = new String[typeNames.size()];
+		for (int i = 0; i < typeNames.size(); i++) {
+			tmp[i] = typeNames.get(i).getName();
 		}
 		return evaluatePHPDocType(tmp, space, offset, types);
 	}

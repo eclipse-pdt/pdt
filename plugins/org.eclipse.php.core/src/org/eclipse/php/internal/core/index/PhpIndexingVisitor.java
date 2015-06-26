@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -158,7 +158,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						info.put("d", null); //$NON-NLS-1$
 					} else if (tag.getTagKind() == PHPDocTag.RETURN) {
 						StringBuilder buf = new StringBuilder();
-						for (SimpleReference ref : tag.getReferences()) {
+						for (TypeReference ref : tag.getTypeReferences()) {
 							String type = ref.getName().replaceAll(",", "~"); //$NON-NLS-1$ //$NON-NLS-2$
 							if (buf.length() > 0) {
 								buf.append(',');
@@ -167,12 +167,12 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						}
 						info.put("r", buf.toString()); //$NON-NLS-1$
 					} else if (tag.getTagKind() == PHPDocTag.VAR) {
-						SimpleReference[] references = tag.getReferences();
-						if (references.length > 0) {
-							info.put("v", //$NON-NLS-1$
-									PHPModelUtils
-											.extractElementName(references[0]
-													.getName()));
+						if (tag.getTypeReferences().size() > 0) {
+							info.put(
+									"v", //$NON-NLS-1$
+									PHPModelUtils.extractElementName(tag
+											.getTypeReferences().get(0)
+											.getName()));
 						}
 					}
 				}
@@ -388,21 +388,17 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		String result = defaultType;
 		if (docBlock != null) {
 			for (PHPDocTag tag : docBlock.getTags()) {
-				if (tag.getTagKind() == PHPDocTag.PARAM) {
-					SimpleReference[] references = tag.getReferences();
-					if (references.length == 2) {
-						if (references[0].getName().equals(paramName)) {
-							String typeName = references[1].getName();
-							if (typeName
-									.endsWith(PHPDocClassVariableEvaluator.BRACKETS)) {
-								typeName = typeName.substring(0,
-										typeName.length() - 2);
-							}
-							result = typeName.replace(
-									Constants.TYPE_SEPERATOR_CHAR,
-									Constants.DOT);
-						}
+				if (tag.isValidParamTag()
+						&& tag.getVariableReference().getName()
+								.equals(paramName)) {
+					String typeName = tag.getSingleTypeReference().getName();
+					if (typeName
+							.endsWith(PHPDocClassVariableEvaluator.BRACKETS)) {
+						typeName = typeName.substring(0, typeName.length() - 2);
 					}
+					result = typeName.replace(Constants.TYPE_SEPERATOR_CHAR,
+							Constants.DOT);
+					break;
 				}
 			}
 		}
