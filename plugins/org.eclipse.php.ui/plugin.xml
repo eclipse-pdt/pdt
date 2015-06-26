@@ -981,6 +981,13 @@
 	              label="%action.label.4"
 	              menubarPath="org.eclipse.pdt.ui.refactoring.menu/reorgGroup">
 	        </action>
+	        <action
+	              class="org.eclipse.php.internal.ui.actions.OrganizeUseStatementsAction"
+	              definitionId="org.eclipse.php.ui.editor.organize.use.statements"
+	              id="org.eclipse.php.ui.actions.organizeUseStatements"
+	              label="%action.label.9"
+	              menubarPath="org.eclipse.pdt.ui.refactoring.menu/reorgGroup">
+	        </action>
 	    </actionSet>
      <actionSet
            id="org.eclipse.pdt.ui.SourceActionsSet"
@@ -1121,6 +1128,9 @@
 			categoryId="org.eclipse.ui.category.edit" id="org.eclipse.php.ui.edit.text.add.objectoperator" />
 		<command name="%toggleMarkOccurrences.label" description="%toggleMarkOccurrences.description"
 			categoryId="org.eclipse.php.ui.category.source" id="org.eclipse.php.ui.edit.text.toggleMarkOccurrences" />
+		<command name="%ActionDefinition.organizeUseStatements.name" description="%ActionDefinition.organizeUseStatements.description"
+			categoryId="org.eclipse.php.ui.category.source" id="org.eclipse.php.ui.editor.organize.use.statements" />
+		
 		<!-- perspectives -->
 		<command name="%PerspectiveCommand.php.name" description="%PerspectiveCommand.php.description"
 			categoryId="org.eclipse.ui.category.perspectives" id="org.eclipse.php.perspective" />
@@ -1145,7 +1155,6 @@
 		<command categoryId="org.eclipse.ui.category.navigate"
 			description="%ActionDefinition.gotoMatchingBracket.description" id="org.eclipse.php.ui.editor.goto.matching.bracket"
 			name="%ActionDefinition.gotoMatchingBracket.name" />
-		
 
 		<!-- navigate -->
 		<command name="%ActionDefinition.openTypeHierarchy.name"
@@ -1443,6 +1452,12 @@
             sequence="CTRL+SHIFT+ARROW_DOWN"
             contextId="org.eclipse.php.ui.phpEditorScope"
             commandId="org.eclipse.pdt.ui.edit.text.select.last"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            platform="carbon"
+            sequence="CTRL+SHIFT+O"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId="org.eclipse.php.ui.editor.organize.use.statements"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
             
     <scheme
