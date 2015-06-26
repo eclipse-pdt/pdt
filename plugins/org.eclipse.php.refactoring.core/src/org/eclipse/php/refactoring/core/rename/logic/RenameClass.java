@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.ast.nodes.*;
@@ -188,11 +187,9 @@ public class RenameClass extends AbstractRename {
 			}
 			PHPDocTag[] tags = doc.getTags();
 			for (PHPDocTag tag : tags) {
-				SimpleReference[] references = tag.getReferences();
-				List<SimpleReference> matchRefs = new ArrayList<SimpleReference>();
-				for (SimpleReference ref : references) {
-					if (ref instanceof TypeReference
-							&& ref.getName().equals(oldName)) {
+				List<TypeReference> matchRefs = new ArrayList<TypeReference>();
+				for (TypeReference ref : tag.getTypeReferences()) {
+					if (ref.getName().equals(oldName)) {
 						IType[] elements = ModelUtils.getTypes(oldName, sm,
 								doc.sourceStart(), currentNamespace);
 						for (int i = 0; i < elements.length; i++) {
@@ -202,10 +199,9 @@ public class RenameClass extends AbstractRename {
 								}
 							}
 						}
-
 					}
 				}
-				for (SimpleReference ref : matchRefs) {
+				for (TypeReference ref : matchRefs) {
 					addChange(ref.sourceStart(), getRenameDescription());
 				}
 			}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -389,11 +389,12 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 					parameterType[a] = type.getName();
 				} else if (docBlock != null) {
 					for (PHPDocTag tag : docBlock.getTags(PHPDocTag.PARAM)) {
-						SimpleReference[] refs = tag.getReferences();
-						if (refs.length == 2) {
-							if (refs[0].getName().equals(arg.getName())) {
-								parameterType[a] = refs[1].getName();
-							}
+						if (tag.isValidParamTag()
+								&& tag.getVariableReference().getName()
+										.equals(arg.getName())) {
+							parameterType[a] = tag.getSingleTypeReference()
+									.getName();
+							break;
 						}
 					}
 				}
@@ -408,9 +409,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		String type = VOID_RETURN_TYPE;
 		if (docBlock != null) {
 			for (PHPDocTag tag : docBlock.getTags(PHPDocTag.RETURN)) {
-				for (SimpleReference reference : tag.getReferences()) {
-					return PHPModelUtils
-							.extractElementName(reference.getName());
+				if (tag.getTypeReferences().size() > 0) {
+					return PHPModelUtils.extractElementName(tag
+							.getTypeReferences().get(0).getName());
 				}
 			}
 		}
@@ -571,7 +572,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 						int index = docTagValue.indexOf('(');
 						if (index != -1) {
 							String[] split = WHITESPACE_SEPERATOR
-									.split(docTagValue.substring(0, index));
+									.split(docTagValue.substring(0, index)
+											.trim());
 							if (split.length == 1) {
 								docTagValue = new StringBuilder(
 										VOID_RETURN_TYPE)
@@ -674,11 +676,20 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		PHPDocBlock doc = declaration.getPHPDoc();
 		if (doc != null) {
 			for (PHPDocTag tag : doc.getTags(PHPDocTag.VAR)) {
-				SimpleReference[] references = tag.getReferences();
-				if (references.length > 0) {
-					info.type = PHPModelUtils.extractElementName(references[0]
-							.getName());
-					// info.type = references[0].getName();
+				// do it like for
+				// PHPDocumentationContentAccess#handleBlockTags(List tags):
+				// variable name can be optional, but if present keep only
+				// the good ones
+				if (tag.getVariableReference() != null
+						&& !tag.getVariableReference().getName()
+								.equals(declaration.getName())) {
+					continue;
+				}
+
+				if (tag.getTypeReferences().size() > 0) {
+					info.type = PHPModelUtils.extractElementName(tag
+							.getTypeReferences().get(0).getName());
+					break;
 				}
 			}
 		}

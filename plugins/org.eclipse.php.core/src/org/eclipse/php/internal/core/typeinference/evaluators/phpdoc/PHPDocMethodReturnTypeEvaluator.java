@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
@@ -93,7 +93,7 @@ public class PHPDocMethodReturnTypeEvaluator extends
 		PHPDocTag[] tags = docBlock.getTags(PHPDocTagKinds.RETURN);
 		PHPDocTag[] inherit = docBlock.getTags(PHPDocTagKinds.INHERITDOC);
 
-		if (inherit != null && inherit.length == 1) {
+		if (inherit.length == 1) {
 			IType type = method.getDeclaringType();
 
 			if (type != null) {
@@ -128,17 +128,9 @@ public class PHPDocMethodReturnTypeEvaluator extends
 			}
 		}
 
-		if (tags != null && tags.length > 0) {
-			for (PHPDocTag phpDocTag : tags) {
-				if (phpDocTag.getReferences() != null
-						&& phpDocTag.getReferences().length > 0) {
-					for (SimpleReference ref : phpDocTag.getReferences()) {
-						String type = ref.getName();
-						if (type != null) {
-							returnTypeList.add(type);
-						}
-					}
-				}
+		for (PHPDocTag phpDocTag : tags) {
+			for (TypeReference ref : phpDocTag.getTypeReferences()) {
+				returnTypeList.add(ref.getName());
 			}
 		}
 	}

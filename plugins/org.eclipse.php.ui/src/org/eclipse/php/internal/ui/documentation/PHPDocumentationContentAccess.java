@@ -18,7 +18,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.*;
@@ -742,7 +741,7 @@ public class PHPDocumentationContentAccess {
 				int index = docTagValue.indexOf('('); //$NON-NLS-1$
 				if (index != -1) {
 					String[] split = WHITESPACE_SEPERATOR.split(docTagValue
-							.substring(0, index));
+							.substring(0, index).trim());
 					if (split.length == 1) {
 						docTagValue = new StringBuilder(
 								MagicMemberUtil.VOID_RETURN_TYPE)
@@ -761,7 +760,7 @@ public class PHPDocumentationContentAccess {
 				if (split.length < 2) {
 					continue;
 				}
-				if (Constants.STATIC.equals(split[0].trim())) {
+				if (Constants.STATIC.equals(split[0])) {
 					if (split.length < 3) {
 						break;
 					}
@@ -776,13 +775,13 @@ public class PHPDocumentationContentAccess {
 						member.getElementName())) {
 					return MagicMemberUtil.getMagicMethod2(docTagValue);
 				}
-			} else if (member instanceof IField
-					&& (tagKind == PHPDocTag.PROPERTY
-							|| tagKind == PHPDocTag.PROPERTY_READ || tagKind == PHPDocTag.PROPERTY_WRITE)) {
+			} else if (member instanceof IField) {
 				// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.property.pkg.html
 				final MagicField magicField = MagicMemberUtil
-						.getMagicField(docTag.getValue());
+						.getMagicPropertiesField(docTag);
 				if (magicField == null) {
+					// it's not a @property, @property-read or @property-write
+					// tag
 					continue;
 				}
 
@@ -838,20 +837,14 @@ public class PHPDocumentationContentAccess {
 		for (PHPDocTag tag : tags) {
 			if (PHPDocTag.PARAM == tag.getTagKind()) {
 				parameters.add(tag);
-				SimpleReference[] fragments = tag.getReferences();
-				if (fragments.length == 0) {
+				if (!tag.isValidParamTag()) {
 					if (parameterNames.size() > parameters.indexOf(tag))
 						parameterNames.set(parameters.indexOf(tag), null);
-				}
-				for (SimpleReference reference : fragments) {
-					String name = reference.getName();
-					if (reference instanceof TypeReference) {
-						// parameterTypes.add(name);
-					} else if (reference instanceof VariableReference) {
-						int paramIndex = parameterNames.indexOf(name);
-						if (paramIndex != -1) {
-							parameterNames.set(paramIndex, null);
-						}
+				} else {
+					int paramIndex = parameterNames.indexOf(tag
+							.getVariableReference().getName());
+					if (paramIndex != -1) {
+						parameterNames.set(paramIndex, null);
 					}
 				}
 			} else if (PHPDocTag.RETURN == tag.getTagKind()) {
@@ -865,12 +858,9 @@ public class PHPDocumentationContentAccess {
 
 			} else if (PHPDocTag.THROWS == tag.getTagKind()) {
 				exceptions.add(tag);
-				SimpleReference[] fragments = tag.getReferences();
-				if (fragments.length > 0) {
-					Object first = fragments[0];
-					if (first instanceof TypeReference) {
-						exceptionNames.add(((TypeReference) first).getName());
-					}
+				List<TypeReference> fragments = tag.getTypeReferences();
+				if (fragments.size() > 0) {
+					exceptionNames.add(fragments.get(0).getName());
 				}
 
 			} else if (PHPDocTag.SINCE == tag.getTagKind()) {
@@ -1212,19 +1202,16 @@ public class PHPDocumentationContentAccess {
 			PHPDocTag tag = (PHPDocTag) iter.next();
 			if (PHPDocTag.THROWS == tag.getTagKind()) {
 				fExceptions.add(tag);
-				SimpleReference[] fragments = tag.getReferences();
-				if (fragments.length > 0) {
-					Object first = fragments[0];
-					if (first instanceof TypeReference) {
-						String name = ((TypeReference) first).getName();
-						// keep the first found match
-						if (!fExceptionDescriptions.containsKey(name)) {
-							StringBuffer description = new StringBuffer();
-							fExceptionDescriptions.put(name, description);
-							fBuf = description;
-							handleContentElements(tag);
-							fBuf = null;
-						}
+				List<TypeReference> fragments = tag.getTypeReferences();
+				if (fragments.size() > 0) {
+					String name = fragments.get(0).getName();
+					// keep the first found match
+					if (!fExceptionDescriptions.containsKey(name)) {
+						StringBuffer description = new StringBuffer();
+						fExceptionDescriptions.put(name, description);
+						fBuf = description;
+						handleContentElements(tag);
+						fBuf = null;
 					}
 				}
 			}
@@ -1244,7 +1231,7 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private void handleBlockTags(String title, List tags) {
-		if (tags.isEmpty())
+		if (tags.size() == 0)
 			return;
 
 		handleBlockTagTitle(title);
@@ -1296,6 +1283,15 @@ public class PHPDocumentationContentAccess {
 			if (tag.getTagKind() == PHPDocTag.INHERITDOC) {
 				continue;
 			} else if (tag.getTagKind() == PHPDocTag.VAR) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=454140
+				// only print @var tags having empty variable name or
+				// having variable name matching the field description
+				if (fMethod == null
+						&& tag.getVariableReference() != null
+						&& !tag.getVariableReference().getName()
+								.equals(fMember.getElementName())) {
+					continue;
+				}
 				handleBlockTagTitle("Type"); //$NON-NLS-1$
 			} else {
 				handleBlockTagTitle(PHPDocTag.getTagKind(tag.getTagKind()));
@@ -1346,13 +1342,10 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private void handleThrowsTag(PHPDocTag tag) {
-		List<SimpleReference> fragments = Arrays.asList(tag.getReferences());
+		List<TypeReference> fragments = tag.getTypeReferences();
 		if (fragments.size() > 0) {
-			String exceptionName = ""; //$NON-NLS-1$
-			if (fragments.get(0) instanceof TypeReference) {
-				exceptionName = fragments.get(0).getName().trim();
-				fBuf.append(exceptionName);
-			}
+			String exceptionName = fragments.get(0).getName().trim();
+			fBuf.append(exceptionName);
 			String value = tag.getValue().trim();
 			String description = value.substring(exceptionName.length());
 			if (description.length() > 0) {
@@ -1397,7 +1390,7 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private void handleParamTag(PHPDocTag tag) {
-		if (tag.getReferences().length == 0) {
+		if (tag.getTypeReferences().size() == 0) {
 			fBuf.append(BlOCK_TAG_ENTRY_START);
 			fBuf.append(tag.getValue());
 			fBuf.append(BlOCK_TAG_ENTRY_END);
@@ -1429,62 +1422,59 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private void handleSeeTag(PHPDocTag tag) {
-		fBuf.append(handleLinks(Arrays.asList(tag.getReferences())));
+		fBuf.append(handleLinks(tag.getTypeReferences()));
 	}
 
-	private StringBuffer handleLinks(List<? extends SimpleReference> fragments) {
+	private StringBuffer handleLinks(List<? extends TypeReference> fragments) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < fragments.size(); i++) {
-			SimpleReference reference = fragments.get(i);
+			TypeReference reference = fragments.get(i);
 			sb.append(handleLink(reference));
 			if (i < (fragments.size() - 1)) {
-				sb.append(", ");
+				sb.append(", "); //$NON-NLS-1$
 			}
 		}
 		return sb;
 	}
 
-	private StringBuffer handleLink(SimpleReference fragment) {
+	private StringBuffer handleLink(TypeReference type) {
 		StringBuffer sb = new StringBuffer();
 
 		String refTypeName = null;
 		String refMemberName = null;
 		String[] refMethodParamTypes = null;
-		if (fragment instanceof TypeReference) {
-			TypeReference type = (TypeReference) fragment;
-			String name = type.getName();
+		String name = type.getName();
 
-			int typeNameEnd = name.indexOf("::"); //$NON-NLS-1$
-			if (typeNameEnd == -1) {
-				refTypeName = name;
+		int typeNameEnd = name.indexOf("::"); //$NON-NLS-1$
+		if (typeNameEnd == -1) {
+			refTypeName = name;
+		} else {
+			refTypeName = name.substring(0, typeNameEnd);
+
+			int argsListStart = name.indexOf('(', typeNameEnd);
+			if (argsListStart == -1) {
+				refMemberName = name.substring(typeNameEnd + "::".length()); //$NON-NLS-1$
 			} else {
-				refTypeName = name.substring(0, typeNameEnd);
+				refMemberName = name.substring(
+						typeNameEnd + "::".length(), argsListStart); //$NON-NLS-1$
 
-				int argsListStart = name.indexOf('(', typeNameEnd);
-				if (argsListStart == -1) {
-					refMemberName = name.substring(typeNameEnd + "::".length()); //$NON-NLS-1$
+				int argsListEnd = name.indexOf(')', argsListStart);
+				if (argsListEnd == -1) {
+					refMethodParamTypes = new String[0];
 				} else {
-					refMemberName = name.substring(
-							typeNameEnd + "::".length(), argsListStart); //$NON-NLS-1$
-
-					int argsListEnd = name.indexOf(')', argsListStart);
-					if (argsListEnd == -1) {
-						refMethodParamTypes = new String[0];
-					} else {
-						String argsList = name.substring(
-								argsListStart + ")".length(), argsListEnd); //$NON-NLS-1$
-						List<String> args = new ArrayList<String>();
-						StringTokenizer tokenizer = new StringTokenizer(
-								argsList, ","); //$NON-NLS-1$
-						while (tokenizer.hasMoreElements()) {
-							args.add(tokenizer.nextToken().trim());
-						}
-						refMethodParamTypes = args.toArray(new String[0]);
+					String argsList = name.substring(
+							argsListStart + ")".length(), argsListEnd); //$NON-NLS-1$
+					List<String> args = new ArrayList<String>();
+					StringTokenizer tokenizer = new StringTokenizer(argsList,
+							","); //$NON-NLS-1$
+					while (tokenizer.hasMoreElements()) {
+						args.add(tokenizer.nextToken().trim());
 					}
+					refMethodParamTypes = args.toArray(new String[0]);
 				}
 			}
-
 		}
+
 		if (refTypeName != null) {
 			sb.append("<a href='"); //$NON-NLS-1$
 			try {
@@ -1540,22 +1530,12 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private String getParameterInfo(PHPDocTag tag, int infoType) {
-		if (tag.getTagKind() != PHPDocTag.PARAM) {
+		if (!tag.isValidParamTag()) {
 			return null;
 		}
-		SimpleReference typeRef = null;
-		SimpleReference variableRef = null;
+		TypeReference typeRef = tag.getSingleTypeReference();
+		VariableReference variableRef = tag.getVariableReference();
 		String value = tag.getValue();
-		if (tag.getReferences().length != 2) {
-			return null;
-		}
-		for (SimpleReference reference : tag.getReferences()) {
-			if (reference instanceof TypeReference) {
-				typeRef = reference;
-			} else if (reference instanceof VariableReference) {
-				variableRef = reference;
-			}
-		}
 		if (infoType == PARAMETER_DESCRIPTION_TYPE) {
 			int typeRefIndex = value.indexOf(typeRef.getName());
 			int variableRefIndex = value.indexOf(variableRef.getName());

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009,2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -561,31 +561,23 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		for (PHPDocTag phpDocTag : tags) {
 			if (phpDocTag.sourceStart() <= offset
 					&& phpDocTag.sourceEnd() >= end) {
-				SimpleReference[] references = phpDocTag.getReferences();
-				if (references != null) {
-					for (SimpleReference simpleReference : references) {
-						if (simpleReference instanceof TypeReference) {
-							TypeReference typeReference = (TypeReference) simpleReference;
-							if (typeReference.sourceStart() <= offset
-									&& typeReference.sourceEnd() >= end) {
-								String name = typeReference.getName();
+				for (TypeReference typeReference : phpDocTag
+						.getTypeReferences()) {
+					if (typeReference.sourceStart() <= offset
+							&& typeReference.sourceEnd() >= end) {
+						String name = typeReference.getName();
 
-								// remove additional end elements like '[]'
-								if (typeReference.sourceEnd() > end) {
-									int startShift = offset
-											- typeReference.sourceStart();
-									name = typeReference.getName().substring(
-											startShift,
-											(end - offset) + startShift);
-								}
-
-								IType[] types = filterNS(PHPModelUtils
-										.getTypes(name, sourceModule, offset,
-												cache, null));
-								return types;
-
-							}
+						// remove additional end elements like '[]'
+						if (typeReference.sourceEnd() > end) {
+							int startShift = offset
+									- typeReference.sourceStart();
+							name = typeReference.getName().substring(
+									startShift, (end - offset) + startShift);
 						}
+
+						IType[] types = filterNS(PHPModelUtils.getTypes(name,
+								sourceModule, offset, cache, null));
+						return types;
 					}
 				}
 			}
