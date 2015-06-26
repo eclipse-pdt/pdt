@@ -770,6 +770,7 @@ Export-Package: org.eclipse.php.core.codeassist,
    org.eclipse.php.formatter.ui,
    org.eclipse.php.refactoring.core,
    org.eclipse.php.refactoring.ui",
+ org.eclipse.php.internal.core.organize,
  org.eclipse.php.internal.core.phar;
   x-friends:="org.eclipse.php.refactoring.core.tests,
    org.eclipse.php.refactoring.core,
