@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?><!--
-    Copyright (c) 2009 IBM Corporation and others.
+    Copyright (c) 2009, 2015 IBM Corporation and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
     Contributors:
         IBM Corporation - initial API and implementation
         Zend Technologies
+        Yannick de Lange <yannickl88@gmail.com>
 -->
 
 <plugin>
@@ -155,6 +156,13 @@
 			id="org.eclipse.php.core.buildParticipant.parser"
 			name="%parserBuildParticipant.name"
 			nature="org.eclipse.php.core.PHPNature">
+		</buildParticipant>
+		<buildParticipant
+			class="org.eclipse.php.internal.core.builder.OrganizeBuildParticipantFactory"
+			id="org.eclipse.php.core.buildParticipant.organizeUseStatements"
+			name="%organizeBuildParticipant.name"
+			nature="org.eclipse.php.core.PHPNature">
+			<requires id="org.eclipse.php.core.buildParticipant.parser" />
 		</buildParticipant>
 	</extension>
 
