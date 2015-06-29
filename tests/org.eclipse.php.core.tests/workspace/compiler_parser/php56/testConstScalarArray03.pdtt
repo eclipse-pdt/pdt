@@ -1,0 +1,132 @@
+--TEST--
+Test constant scalar expressions
+--FILE--
+<?php
+'Foo' [$var->abc()] [$this->call()];
+"Boo" [$var->abc()] [$this->call()];
+Test [self::$var] [MyClass::TEST] [parent::$var];
+\Boo\Test02 [callA()] [callB()];
+\Boo\Test03::STATICFIELD [$var01] [$var02] [$var03];
+--EXPECT--
+<ModuleDeclaration start="0" end="216">
+	<ExpressionStatement start="6" end="42">
+		<ReflectionArrayVariableReference start="6" end="41">
+			<ReflectionArrayVariableReference start="6" end="25">
+				<Scalar start="6" end="11" type="string" value="&apos;Foo&apos;">
+				</Scalar>
+				<PHPCallExpression start="13" end="24">
+					<VariableReference start="13" end="17" name="$var">
+					</VariableReference>
+					<SimpleReference start="19" end="22" name="abc">
+					</SimpleReference>
+					<PHPCallArgumentsList start="23" end="23">
+					</PHPCallArgumentsList>
+				</PHPCallExpression>
+			</ReflectionArrayVariableReference>
+			<PHPCallExpression start="27" end="40">
+				<VariableReference start="27" end="32" name="$this">
+				</VariableReference>
+				<SimpleReference start="34" end="38" name="call">
+				</SimpleReference>
+				<PHPCallArgumentsList start="39" end="39">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+		</ReflectionArrayVariableReference>
+	</ExpressionStatement>
+	<ExpressionStatement start="43" end="79">
+		<ReflectionArrayVariableReference start="43" end="78">
+			<ReflectionArrayVariableReference start="43" end="62">
+				<Scalar start="43" end="48" type="string" value="&quot;Boo&quot;">
+				</Scalar>
+				<PHPCallExpression start="50" end="61">
+					<VariableReference start="50" end="54" name="$var">
+					</VariableReference>
+					<SimpleReference start="56" end="59" name="abc">
+					</SimpleReference>
+					<PHPCallArgumentsList start="60" end="60">
+					</PHPCallArgumentsList>
+				</PHPCallExpression>
+			</ReflectionArrayVariableReference>
+			<PHPCallExpression start="64" end="77">
+				<VariableReference start="64" end="69" name="$this">
+				</VariableReference>
+				<SimpleReference start="71" end="75" name="call">
+				</SimpleReference>
+				<PHPCallArgumentsList start="76" end="76">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+		</ReflectionArrayVariableReference>
+	</ExpressionStatement>
+	<ExpressionStatement start="80" end="129">
+		<ReflectionArrayVariableReference start="80" end="128">
+			<ReflectionArrayVariableReference start="80" end="113">
+				<ReflectionArrayVariableReference start="80" end="97">
+					<FullyQualifiedReference start="80" end="84" name="Test">
+					</FullyQualifiedReference>
+					<StaticFieldAccess start="86" end="96">
+						<FullyQualifiedReference start="86" end="90" name="self">
+						</FullyQualifiedReference>
+						<VariableReference start="92" end="96" name="$var">
+						</VariableReference>
+					</StaticFieldAccess>
+				</ReflectionArrayVariableReference>
+				<StaticConstantAccess start="99" end="112">
+					<FullyQualifiedReference start="99" end="106" name="MyClass">
+					</FullyQualifiedReference>
+					<ConstantReference start="108" end="112" name="TEST">
+					</ConstantReference>
+				</StaticConstantAccess>
+			</ReflectionArrayVariableReference>
+			<StaticFieldAccess start="115" end="127">
+				<FullyQualifiedReference start="115" end="121" name="parent">
+				</FullyQualifiedReference>
+				<VariableReference start="123" end="127" name="$var">
+				</VariableReference>
+			</StaticFieldAccess>
+		</ReflectionArrayVariableReference>
+	</ExpressionStatement>
+	<ExpressionStatement start="130" end="162">
+		<ReflectionArrayVariableReference start="130" end="161">
+			<ReflectionArrayVariableReference start="130" end="151">
+				<FullyQualifiedReference start="130" end="141" name="\Boo\Test02">
+					<NamespaceReference start="130" end="134" name="\Boo" global="true" local="false">
+					</NamespaceReference>
+				</FullyQualifiedReference>
+				<PHPCallExpression start="143" end="150">
+					<FullyQualifiedReference start="143" end="148" name="callA">
+					</FullyQualifiedReference>
+					<PHPCallArgumentsList start="149" end="149">
+					</PHPCallArgumentsList>
+				</PHPCallExpression>
+			</ReflectionArrayVariableReference>
+			<PHPCallExpression start="153" end="160">
+				<FullyQualifiedReference start="153" end="158" name="callB">
+				</FullyQualifiedReference>
+				<PHPCallArgumentsList start="159" end="159">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+		</ReflectionArrayVariableReference>
+	</ExpressionStatement>
+	<ExpressionStatement start="163" end="215">
+		<ReflectionArrayVariableReference start="163" end="214">
+			<ReflectionArrayVariableReference start="163" end="205">
+				<ReflectionArrayVariableReference start="163" end="196">
+					<StaticConstantAccess start="163" end="187">
+						<FullyQualifiedReference start="163" end="174" name="\Boo\Test03">
+							<NamespaceReference start="163" end="167" name="\Boo" global="true" local="false">
+							</NamespaceReference>
+						</FullyQualifiedReference>
+						<ConstantReference start="176" end="187" name="STATICFIELD">
+						</ConstantReference>
+					</StaticConstantAccess>
+					<VariableReference start="189" end="195" name="$var01">
+					</VariableReference>
+				</ReflectionArrayVariableReference>
+				<VariableReference start="198" end="204" name="$var02">
+				</VariableReference>
+			</ReflectionArrayVariableReference>
+			<VariableReference start="207" end="213" name="$var03">
+			</VariableReference>
+		</ReflectionArrayVariableReference>
+	</ExpressionStatement>
+</ModuleDeclaration>

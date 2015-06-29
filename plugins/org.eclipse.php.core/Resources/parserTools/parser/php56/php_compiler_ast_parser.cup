@@ -357,7 +357,8 @@ non terminal ArrayCreation static_array_creation;
 non terminal ReflectionArrayVariableReference static_array_creation_dereference;
 
 non terminal ReflectionArrayVariableReference string_dereference;
-non terminal ReflectionArrayVariableReference static_string_dereference; 
+non terminal ReflectionArrayVariableReference static_string_dereference;
+non terminal ReflectionArrayVariableReference constant_dereference; 
 
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
 precedence left T_COMMA;
@@ -3381,6 +3382,23 @@ T_CONSTANT_ENCAPSED_STRING:scalar T_OPEN_RECT static_scalar:index T_CLOSE_RECT:e
 :}
 ;
 
+constant_dereference ::=
+class_name:constant T_OPEN_RECT expr:index T_CLOSE_RECT:end
+{:
+	RESULT = new ReflectionArrayVariableReference(constantleft, endright, constant, index, ReflectionArrayVariableReference.VARIABLE_ARRAY);
+:}
+
+| static_class_constant:constant T_OPEN_RECT expr:index T_CLOSE_RECT:end
+{:
+	RESULT = new ReflectionArrayVariableReference(constantleft, endright, constant, index, ReflectionArrayVariableReference.VARIABLE_ARRAY);
+:}
+
+| constant_dereference:constant T_OPEN_RECT expr:index T_CLOSE_RECT:end
+{:
+	RESULT = new ReflectionArrayVariableReference(constantleft, endright, constant, index, ReflectionArrayVariableReference.VARIABLE_ARRAY);
+:}
+;
+
 static_scalar ::=  /* compile-time evaluated scalars */
 common_scalar:scalar
 {:
@@ -3512,7 +3530,12 @@ T_STRING_VARNAME:scalar
 
 | string_dereference:ref
 {:
-   RESULT = ref;
+	RESULT = ref;
+:}
+
+| constant_dereference:ref
+{:
+	RESULT = ref;
 :}
 ;
 
