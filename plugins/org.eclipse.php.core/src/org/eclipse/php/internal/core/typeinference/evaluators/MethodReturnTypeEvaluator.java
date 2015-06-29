@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -149,28 +149,25 @@ public class MethodReturnTypeEvaluator extends
 			return;
 		}
 		IType currentNamespace = PHPModelUtils.getCurrentNamespace(type);
-		for (PHPDocTag tag : docBlock.getTags()) {
-			final int tagKind = tag.getTagKind();
-			if (tagKind == PHPDocTag.METHOD) {
-				final Collection<String> typeNames = PHPEvaluationUtils
-						.getTypeBinding(methodName, tag);
-				for (String typeName : typeNames) {
-					if (typeName.trim().isEmpty()) {
-						continue;
+		for (PHPDocTag tag : docBlock.getTags(PHPDocTag.METHOD)) {
+			final Collection<String> typeNames = PHPEvaluationUtils
+					.getTypeBinding(methodName, tag);
+			for (String typeName : typeNames) {
+				if (typeName.trim().isEmpty()) {
+					continue;
+				}
+				IEvaluatedType evaluatedType = PHPEvaluationUtils
+						.extractArrayType(typeName, currentNamespace,
+								tag.sourceStart());
+				if (evaluatedType != null) {
+					evaluated.add(evaluatedType);
+				} else {
+					IEvaluatedType resolved = PHPSimpleTypes
+							.fromString(typeName);
+					if (resolved == null) {
+						resolved = new PHPClassType(typeName);
 					}
-					IEvaluatedType evaluatedType = PHPEvaluationUtils
-							.extractArrayType(typeName, currentNamespace,
-									tag.sourceStart());
-					if (evaluatedType != null) {
-						evaluated.add(evaluatedType);
-					} else {
-						IEvaluatedType resolved = PHPSimpleTypes
-								.fromString(typeName);
-						if (resolved == null) {
-							resolved = new PHPClassType(typeName);
-						}
-						evaluated.add(resolved);
-					}
+					evaluated.add(resolved);
 				}
 			}
 		}

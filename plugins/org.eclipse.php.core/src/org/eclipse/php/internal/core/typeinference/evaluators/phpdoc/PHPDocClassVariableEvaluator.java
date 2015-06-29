@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,6 @@ package org.eclipse.php.internal.core.typeinference.evaluators.phpdoc;
 
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
@@ -31,14 +30,10 @@ import org.eclipse.php.internal.core.typeinference.evaluators.PHPEvaluationUtils
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 
 /**
- * This evaluator finds class field declartion either using "var" or in method
+ * This evaluator finds class field declaration either using "var" or in method
  * body using field access.
  */
 public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
-
-	public static final String BRACKETS = PHPEvaluationUtils.BRACKETS;
-
-	public final static Pattern ARRAY_TYPE_PATTERN = PHPEvaluationUtils.ARRAY_TYPE_PATTERN;
 
 	private List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
 
@@ -56,14 +51,14 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		IType[] types = PHPTypeInferenceUtils.getModelElements(
 				context.getInstanceType(), context, offset, cache);
 		Map<PHPDocBlock, IField> docs = new HashMap<PHPDocBlock, IField>();
-		if (types != null) {
-			// remove array index from field name
-			if (variableName.endsWith("]")) { //$NON-NLS-1$
-				int index = variableName.indexOf("["); //$NON-NLS-1$
-				if (index != -1) {
-					variableName = variableName.substring(0, index);
-				}
+		// remove array index from field name
+		if (variableName.endsWith("]")) { //$NON-NLS-1$
+			int index = variableName.indexOf("["); //$NON-NLS-1$
+			if (index != -1) {
+				variableName = variableName.substring(0, index);
 			}
+		}
+		if (types != null) {
 			for (IType type : types) {
 				try {
 					// we look in whole hiearchy
@@ -103,12 +98,20 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 			IModelElement space = currentNamespace != null ? currentNamespace
 					: typeField.getSourceModule();
 
-			for (PHPDocTag tag : doc.getTags()) {
-				if (tag.getTagKind() == PHPDocTag.VAR) {
-					evaluated.addAll(Arrays.asList(PHPEvaluationUtils
-							.evaluatePHPDocType(tag.getReferences(), space,
-									tag.sourceStart(), null)));
+			for (PHPDocTag tag : doc.getTags(PHPDocTag.VAR)) {
+				// do it like for
+				// PHPDocumentationContentAccess#handleBlockTags(List tags):
+				// variable name can be optional, but if present keep only
+				// the good ones
+				if (tag.getVariableReference() != null
+						&& !tag.getVariableReference().getName()
+								.equals(variableName)) {
+					continue;
 				}
+
+				evaluated.addAll(Arrays.asList(PHPEvaluationUtils
+						.evaluatePHPDocType(tag.getTypeReferences(), space,
+								tag.sourceStart(), null)));
 			}
 		}
 
