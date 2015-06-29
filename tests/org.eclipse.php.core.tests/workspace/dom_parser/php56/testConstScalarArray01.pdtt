@@ -1,0 +1,71 @@
+--TEST--
+Test constant scalar expressions
+--FILE--
+<?php
+'Foo' [0];
+"Boo" [1];
+Test [1];
+\Boo\Test02 ['key'];
+\Boo\Test03::STATICFIELD [OTHERCONST];
+--EXPECT--
+<Program start='0' length='97'>
+	<Statements>
+		<ExpressionStatement start='6' length='10'>
+			<ArrayAccess start='6' length='9' type='array'>
+				<Scalar start='6' length='5' type='string' value='&apos;Foo&apos;'/>
+				<Index>
+					<Scalar start='13' length='1' type='int' value='0'/>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+		<ExpressionStatement start='17' length='10'>
+			<ArrayAccess start='17' length='9' type='array'>
+				<Scalar start='17' length='5' type='string' value='"Boo"'/>
+				<Index>
+					<Scalar start='24' length='1' type='int' value='1'/>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+		<ExpressionStatement start='28' length='9'>
+			<ArrayAccess start='28' length='8' type='array'>
+				<NamespaceName start='28' length='4' global='false' current='false'>
+					<Identifier start='28' length='4' name='Test'/>
+				</NamespaceName>
+				<Index>
+					<Scalar start='34' length='1' type='int' value='1'/>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+		<ExpressionStatement start='38' length='20'>
+			<ArrayAccess start='38' length='19' type='array'>
+				<NamespaceName start='38' length='11' global='true' current='false'>
+					<Identifier start='39' length='3' name='Boo'/>
+					<Identifier start='43' length='6' name='Test02'/>
+				</NamespaceName>
+				<Index>
+					<Scalar start='51' length='5' type='string' value='&apos;key&apos;'/>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+		<ExpressionStatement start='59' length='38'>
+			<ArrayAccess start='59' length='37' type='array'>
+				<StaticConstantAccess start='59' length='24'>
+					<ClassName>
+						<NamespaceName start='59' length='11' global='true' current='false'>
+							<Identifier start='60' length='3' name='Boo'/>
+							<Identifier start='64' length='6' name='Test03'/>
+						</NamespaceName>
+					</ClassName>
+					<Constant>
+						<Identifier start='72' length='11' name='STATICFIELD'/>
+					</Constant>
+				</StaticConstantAccess>
+				<Index>
+					<Scalar start='85' length='10' type='string' value='OTHERCONST'/>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

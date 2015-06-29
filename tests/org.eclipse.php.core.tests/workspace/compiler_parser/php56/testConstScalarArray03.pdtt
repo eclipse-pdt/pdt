@@ -1,0 +1,22 @@
+--TEST--
+Test invalid constant scalar expressions
+--FILE--
+<?php
+456[1];
+--EXPECT--
+<ModuleDeclaration start="0" end="14">
+	<ASTError start="6" end="9">
+	</ASTError>
+	<ExpressionStatement start="9" end="13">
+		<ArrayCreation start="9" end="12">
+			<ArrayElement start="10" end="11">
+				<Scalar start="10" end="11" type="int" value="1">
+				</Scalar>
+			</ArrayElement>
+		</ArrayCreation>
+	</ExpressionStatement>
+	<Errors>
+		<ASTError start="9" end="10">
+		</ASTError>
+	</Errors>
+</ModuleDeclaration>
