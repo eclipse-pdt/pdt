@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,7 +46,6 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 
 /**
  * PHP indexing visitor for H2 database
@@ -158,7 +157,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						info.put("d", null); //$NON-NLS-1$
 					} else if (tag.getTagKind() == PHPDocTag.RETURN) {
 						StringBuilder buf = new StringBuilder();
-						for (SimpleReference ref : tag.getReferences()) {
+						for (TypeReference ref : tag.getTypeReferences()) {
 							String type = ref.getName().replaceAll(",", "~"); //$NON-NLS-1$ //$NON-NLS-2$
 							if (buf.length() > 0) {
 								buf.append(',');
@@ -167,12 +166,15 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						}
 						info.put("r", buf.toString()); //$NON-NLS-1$
 					} else if (tag.getTagKind() == PHPDocTag.VAR) {
-						SimpleReference[] references = tag.getReferences();
-						if (references.length > 0) {
-							info.put("v", //$NON-NLS-1$
-									PHPModelUtils
-											.extractElementName(references[0]
-													.getName()));
+						if (tag.getTypeReferences().size() > 0) {
+							String typeNames = PHPModelUtils
+									.appendTypeReferenceNames(tag
+											.getTypeReferences());
+							typeNames = typeNames.replace(
+									Constants.TYPE_SEPERATOR_CHAR,
+									Constants.DOT);
+
+							info.put("v", typeNames); //$NON-NLS-1$
 						}
 					}
 				}
@@ -387,22 +389,14 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			String defaultType) {
 		String result = defaultType;
 		if (docBlock != null) {
-			for (PHPDocTag tag : docBlock.getTags()) {
-				if (tag.getTagKind() == PHPDocTag.PARAM) {
-					SimpleReference[] references = tag.getReferences();
-					if (references.length == 2) {
-						if (references[0].getName().equals(paramName)) {
-							String typeName = references[1].getName();
-							if (typeName
-									.endsWith(PHPDocClassVariableEvaluator.BRACKETS)) {
-								typeName = typeName.substring(0,
-										typeName.length() - 2);
-							}
-							result = typeName.replace(
-									Constants.TYPE_SEPERATOR_CHAR,
-									Constants.DOT);
-						}
-					}
+			for (PHPDocTag tag : docBlock.getTags(PHPDocTag.PARAM)) {
+				if (tag.isValidParamTag()
+						&& tag.getVariableReference().getName()
+								.equals(paramName)) {
+					String typeNames = tag.getSingleTypeReference().getName();
+					result = typeNames.replace(Constants.TYPE_SEPERATOR_CHAR,
+							Constants.DOT);
+					break;
 				}
 			}
 		}
@@ -554,8 +548,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			IPHPDocAwareDeclaration declaration = (IPHPDocAwareDeclaration) type;
 			final PHPDocBlock doc = declaration.getPHPDoc();
 			if (doc != null) {
-				final PHPDocTag[] tags = doc.getTags();
-				for (PHPDocTag docTag : tags) {
+				for (PHPDocTag docTag : doc.getTags()) {
 					final int tagKind = docTag.getTagKind();
 					if (tagKind == PHPDocTag.PROPERTY
 							|| tagKind == PHPDocTag.PROPERTY_READ

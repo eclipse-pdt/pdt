@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -170,7 +170,10 @@ public class PhpElementResolver implements IElementResolver {
 		public String getType() throws ModelException {
 			Map<String, String> info = decodeDocInfo(doc);
 			if (info != null) {
-				return info.get("v"); //$NON-NLS-1$
+				String types = info.get("v"); //$NON-NLS-1$
+				types = types.replace(Constants.DOT,
+						Constants.TYPE_SEPERATOR_CHAR);
+				return types;
 			}
 			return null;
 		}
@@ -179,8 +182,6 @@ public class PhpElementResolver implements IElementResolver {
 	private static class IndexMethod extends SourceMethod implements
 			IPHPDocAwareElement {
 
-		private final static Pattern ARRAY_TYPE_PATTERN = Pattern
-				.compile("array\\[.*\\]"); //$NON-NLS-1$
 		private int flags;
 		private ISourceRange sourceRange;
 		private ISourceRange nameRange;

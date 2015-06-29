@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,9 +15,10 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
@@ -63,15 +64,12 @@ public class FunctionBinding implements IFunctionBinding {
 	 */
 	public ITypeBinding[] getExceptionTypes() {
 		// Get an array of PHPDocFields
-		ArrayList<ITypeBinding> exeptions = new ArrayList<ITypeBinding>();
+		ArrayList<ITypeBinding> exceptions = new ArrayList<ITypeBinding>();
 		PHPDocBlock docBlock = PHPModelUtils.getDocBlock(modelElement);
-		PHPDocTag[] docTags = docBlock.getTags();
-		for (PHPDocTag tag : docTags) {
-			if (tag.getTagKind() == PHPDocTag.THROWS) {
-				SimpleReference[] references = tag.getReferences();
-				// TODO - create ITypeBinding array from this SimpleReference
-				// array
-			}
+		for (PHPDocTag tag : docBlock.getTags(PHPDocTag.THROWS)) {
+			List<TypeReference> references = tag.getTypeReferences();
+			// TODO - create ITypeBinding array from this TypeReference
+			// array
 		}
 		return null;
 	}
