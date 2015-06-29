@@ -47,12 +47,9 @@ public class ServerTypeWizardFragment extends CompositeWizardFragment {
 	public void enter() {
 		if (comp != null) {
 			try {
-				Server server = (Server) getWizardModel().getObject(
-						WizardModel.SERVER);
-				if (server == null) {
-					server = new Server();
-					comp.setData(server);
-				}
+				// Always set up new server when entering type choice
+				Server server = new Server();
+				comp.setData(server);
 			} catch (Exception e) {
 				Logger.logException(e);
 			}

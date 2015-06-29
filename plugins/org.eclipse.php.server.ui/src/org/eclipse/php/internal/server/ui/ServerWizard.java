@@ -118,4 +118,18 @@ public class ServerWizard extends FragmentedWizard implements INewWizard {
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		// Do nothing
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.php.internal.ui.wizards.FragmentedWizard#canFinish()
+	 */
+	@Override
+	public boolean canFinish() {
+		if (getCurrentWizardFragment() != null
+				&& getCurrentWizardFragment().equals(serverTypeWizardFragment))
+			return false;
+		return super.canFinish();
+	}
+
 }

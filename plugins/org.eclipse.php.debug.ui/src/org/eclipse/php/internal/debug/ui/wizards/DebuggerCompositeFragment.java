@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.wizards;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,10 +31,7 @@ import org.eclipse.php.internal.ui.wizards.CompositeFragment;
 import org.eclipse.php.internal.ui.wizards.IControlHandler;
 import org.eclipse.php.internal.ui.wizards.IControlHandler.Kind;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -47,7 +46,7 @@ import org.eclipse.swt.widgets.*;
 @SuppressWarnings("restriction")
 public class DebuggerCompositeFragment extends CompositeFragment {
 
-	public static final String ID = "org.eclipse.php.internal.ui.fragments.debuggerCompositeFragment"; //$NON-NLS-1$
+	public static final String ID = "org.eclipse.php.debug.ui.fragments.debuggerCompositeFragment"; //$NON-NLS-1$
 
 	// A class used as a local original IServerWorkingCopy values cache.
 	private class ValuesCache {
@@ -98,14 +97,6 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 
 	private class PHPExeListener implements IPHPexeItemListener {
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.eclipse.php.internal.debug.core.preferences.IPHPexeItemListener#
-		 * phpExeChanged
-		 * (org.eclipse.php.internal.debug.core.preferences.PHPexeItemEvent)
-		 */
 		@Override
 		public void phpExeChanged(PHPexeItemEvent event) {
 			if (event.getProperty().equals(
@@ -115,6 +106,23 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 					|| event.getProperty().equals(
 							IPHPexeItemProperties.PROP_USE_DEFAULT_INI)) {
 				detectDebugger = true;
+			} else if (!updatingDebuggerId && event.getProperty()
+					.equals(IPHPexeItemProperties.PROP_DEBUGGER_ID)) {
+				modifiedValuesCache.debuggerId = (String) event.getNewValue();
+				setDebugger();
+			}
+		}
+
+	}
+
+	private class PHPServerListener implements PropertyChangeListener {
+
+		@Override
+		public void propertyChange(PropertyChangeEvent event) {
+			if (!updatingDebuggerId
+					&& event.getPropertyName().equals(Server.DEBUGGER)) {
+				modifiedValuesCache.debuggerId = (String) event.getNewValue();
+				setDebugger();
 			}
 		}
 
@@ -124,6 +132,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	private Combo debuggerCombo;
 	private Button debuggerTest;
 	private PHPExeListener phpExeListener;
+	private PHPServerListener phpServerListener;
 	private ValuesCache originalValuesCache = new ValuesCache();
 	private ValuesCache modifiedValuesCache;
 	private IDebuggerSettingsSection debuggerSettingsSection;
@@ -133,6 +142,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	private boolean detectDebugger;
 	private Composite debuggerSettingsComposite;
 	private Composite mainComposite;
+	private boolean updatingDebuggerId = false;
 
 	/**
 	 * Creates new debugger composite fragment.
@@ -145,6 +155,13 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			boolean isForEditing) {
 		super(parent, handler, isForEditing);
 		this.detectDebugger = handler.getKind() == Kind.WIZARD;
+		addDisposeListener(new DisposeListener() {
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				unregisterListeners();
+				removeDisposeListener(this);
+			}
+		});
 	}
 
 	@Override
@@ -220,27 +237,11 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			throw new IllegalArgumentException(
 					"The given object is not a PHP Server or Executable"); //$NON-NLS-1$
 		}
-		if (phpExeListener == null && debuggerOwner instanceof PHPexeItem) {
-			phpExeListener = new PHPExeListener();
-			((PHPexeItem) debuggerOwner).addPHPexeListener(phpExeListener);
-		}
+		registerListeners(debuggerOwner);
 		createDescription(debuggerOwner);
 		super.setData(debuggerOwner);
 		init();
 		validate();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.swt.widgets.Widget#dispose()
-	 */
-	@Override
-	public void dispose() {
-		if (phpExeListener != null) {
-			((PHPexeItem) getData()).removePHPexeListener(phpExeListener);
-		}
-		super.dispose();
 	}
 
 	public IUniqueIdentityElement getDebuggerOwner() {
@@ -423,6 +424,9 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 				&& (modifiedValuesCache.debuggerId == null || modifiedValuesCache.debuggerId
 						.equals(PHPDebuggersRegistry.NONE_DEBUGGER_ID)))
 			detectedDebuggerId = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
+		else if (modifiedValuesCache.debuggerId != null) {
+			detectedDebuggerId = modifiedValuesCache.debuggerId;
+		}
 		// Set combo to appropriate debugger ID
 		String name = PHPDebuggersRegistry.getDebuggerName(detectedDebuggerId);
 		String[] values = debuggerCombo.getItems();
@@ -448,6 +452,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	}
 
 	private void updateItem() {
+		updatingDebuggerId = true;
 		IUniqueIdentityElement debuggerOwner = getDebuggerOwner();
 		if (debuggerOwner instanceof Server) {
 			((Server) debuggerOwner)
@@ -456,6 +461,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			((PHPexeItem) debuggerOwner)
 					.setDebuggerID(modifiedValuesCache.debuggerId);
 		}
+		updatingDebuggerId = false;
 	}
 
 	private void repaint() {
@@ -477,6 +483,28 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			shell.setRedraw(true);
 			shell.setSize(shell.computeSize(previousClientArea.width,
 					previousClientArea.height, true));
+		}
+	}
+
+	private void registerListeners(Object debuggerOwner) {
+		if (phpExeListener == null && debuggerOwner instanceof PHPexeItem) {
+			phpExeListener = new PHPExeListener();
+			((PHPexeItem) debuggerOwner).addPHPexeListener(phpExeListener);
+		}
+		if (phpServerListener == null && debuggerOwner instanceof Server) {
+			phpServerListener = new PHPServerListener();
+			((Server) debuggerOwner)
+					.addPropertyChangeListener(phpServerListener);
+		}
+	}
+
+	private void unregisterListeners() {
+		if (phpExeListener != null) {
+			((PHPexeItem) getData()).removePHPexeListener(phpExeListener);
+		}
+		if (phpServerListener != null) {
+			((Server) getData())
+					.removePropertyChangeListener(phpServerListener);
 		}
 	}
 
