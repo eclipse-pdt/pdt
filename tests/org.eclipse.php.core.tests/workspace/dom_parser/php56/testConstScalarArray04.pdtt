@@ -1,0 +1,115 @@
+--TEST--
+Test constant scalar expressions
+--FILE--
+<?php
+const MYCONST = foo [0];
+class foo {
+	const item = foo [1] + bar ['key'];
+	const item2 = "bar" [1] + MyClass::FIELD [0];
+	const item3 = \Test\MyClass::FIELD [0];
+}
+--EXPECT--
+<Program start='0' length='169'>
+	<Statements>
+		<ConstantDeclaration start='6' length='24'>
+			<VariableName>
+				<Identifier start='12' length='7' name='MYCONST'/>
+			</VariableName>
+			<InitialValue>
+				<ArrayAccess start='22' length='7' type='array'>
+					<Scalar start='22' length='3' type='string' value='foo'/>
+					<Index>
+						<Scalar start='27' length='1' type='int' value='0'/>
+					</Index>
+				</ArrayAccess>
+			</InitialValue>
+		</ConstantDeclaration>
+		<ClassDeclaration start='31' length='138' modifier=''>
+			<ClassName>
+				<Identifier start='37' length='3' name='foo'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='41' length='128' isCurly='true'>
+				<ConstantDeclaration start='44' length='35'>
+					<VariableName>
+						<Identifier start='50' length='4' name='item'/>
+					</VariableName>
+					<InitialValue>
+						<InfixExpression start='57' length='21' operator='+'>
+							<ArrayAccess start='57' length='7' type='array'>
+								<Scalar start='57' length='3' type='string' value='foo'/>
+								<Index>
+									<Scalar start='62' length='1' type='int' value='1'/>
+								</Index>
+							</ArrayAccess>
+							<ArrayAccess start='67' length='11' type='array'>
+								<Scalar start='67' length='3' type='string' value='bar'/>
+								<Index>
+									<Scalar start='72' length='5' type='string' value='&apos;key&apos;'/>
+								</Index>
+							</ArrayAccess>
+						</InfixExpression>
+					</InitialValue>
+				</ConstantDeclaration>
+				<ConstantDeclaration start='81' length='45'>
+					<VariableName>
+						<Identifier start='87' length='5' name='item2'/>
+					</VariableName>
+					<InitialValue>
+						<InfixExpression start='95' length='30' operator='+'>
+							<ArrayAccess start='95' length='9' type='array'>
+								<Scalar start='95' length='5' type='string' value='"bar"'/>
+								<Index>
+									<Scalar start='102' length='1' type='int' value='1'/>
+								</Index>
+							</ArrayAccess>
+							<ArrayAccess start='107' length='18' type='array'>
+								<StaticConstantAccess start='107' length='14'>
+									<ClassName>
+										<NamespaceName start='107' length='7' global='false' current='false'>
+											<Identifier start='107' length='7' name='MyClass'/>
+										</NamespaceName>
+									</ClassName>
+									<Constant>
+										<Identifier start='116' length='5' name='FIELD'/>
+									</Constant>
+								</StaticConstantAccess>
+								<Index>
+									<Scalar start='123' length='1' type='int' value='0'/>
+								</Index>
+							</ArrayAccess>
+						</InfixExpression>
+					</InitialValue>
+				</ConstantDeclaration>
+				<ConstantDeclaration start='128' length='39'>
+					<VariableName>
+						<Identifier start='134' length='5' name='item3'/>
+					</VariableName>
+					<InitialValue>
+						<ArrayAccess start='142' length='24' type='array'>
+							<StaticConstantAccess start='142' length='20'>
+								<ClassName>
+									<NamespaceName start='142' length='13' global='true' current='false'>
+										<Identifier start='143' length='4' name='Test'/>
+										<Identifier start='148' length='7' name='MyClass'/>
+									</NamespaceName>
+								</ClassName>
+								<Constant>
+									<Identifier start='157' length='5' name='FIELD'/>
+								</Constant>
+							</StaticConstantAccess>
+							<Index>
+								<Scalar start='164' length='1' type='int' value='0'/>
+							</Index>
+						</ArrayAccess>
+					</InitialValue>
+				</ConstantDeclaration>
+			</Block>
+		</ClassDeclaration>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

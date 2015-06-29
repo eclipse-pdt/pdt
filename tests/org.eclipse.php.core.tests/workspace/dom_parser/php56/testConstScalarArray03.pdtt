@@ -1,0 +1,223 @@
+--TEST--
+Test constant scalar expressions
+--FILE--
+<?php
+'Foo' [$var->abc()] [$this->call()];
+"Boo" [$var->abc()] [$this->call()];
+Test [self::$var] [MyClass::TEST] [parent::$var];
+\Boo\Test02 [callA()] [callB()];
+\Boo\Test03::STATICFIELD [$var01] [$var02] [$var03];
+--EXPECT--
+<Program start='0' length='215'>
+	<Statements>
+		<ExpressionStatement start='6' length='36'>
+			<ArrayAccess start='6' length='35' type='array'>
+				<ArrayAccess start='6' length='19' type='array'>
+					<Scalar start='6' length='5' type='string' value='&apos;Foo&apos;'/>
+					<Index>
+						<MethodInvocation start='13' length='11'>
+							<Dispatcher>
+								<Variable start='13' length='4' isDollared='true'>
+									<Identifier start='14' length='3' name='var'/>
+								</Variable>
+							</Dispatcher>
+							<Property>
+								<FunctionInvocation start='19' length='5'>
+									<FunctionName start='19' length='3'>
+										<Variable start='19' length='3' isDollared='false'>
+											<Identifier start='19' length='3' name='abc'/>
+										</Variable>
+									</FunctionName>
+									<Parameters>
+									</Parameters>
+								</FunctionInvocation>
+							</Property>
+						</MethodInvocation>
+					</Index>
+				</ArrayAccess>
+				<Index>
+					<MethodInvocation start='27' length='13'>
+						<Dispatcher>
+							<Variable start='27' length='5' isDollared='true'>
+								<Identifier start='28' length='4' name='this'/>
+							</Variable>
+						</Dispatcher>
+						<Property>
+							<FunctionInvocation start='34' length='6'>
+								<FunctionName start='34' length='4'>
+									<Variable start='34' length='4' isDollared='false'>
+										<Identifier start='34' length='4' name='call'/>
+									</Variable>
+								</FunctionName>
+								<Parameters>
+								</Parameters>
+							</FunctionInvocation>
+						</Property>
+					</MethodInvocation>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+		<ExpressionStatement start='43' length='36'>
+			<ArrayAccess start='43' length='35' type='array'>
+				<ArrayAccess start='43' length='19' type='array'>
+					<Scalar start='43' length='5' type='string' value='"Boo"'/>
+					<Index>
+						<MethodInvocation start='50' length='11'>
+							<Dispatcher>
+								<Variable start='50' length='4' isDollared='true'>
+									<Identifier start='51' length='3' name='var'/>
+								</Variable>
+							</Dispatcher>
+							<Property>
+								<FunctionInvocation start='56' length='5'>
+									<FunctionName start='56' length='3'>
+										<Variable start='56' length='3' isDollared='false'>
+											<Identifier start='56' length='3' name='abc'/>
+										</Variable>
+									</FunctionName>
+									<Parameters>
+									</Parameters>
+								</FunctionInvocation>
+							</Property>
+						</MethodInvocation>
+					</Index>
+				</ArrayAccess>
+				<Index>
+					<MethodInvocation start='64' length='13'>
+						<Dispatcher>
+							<Variable start='64' length='5' isDollared='true'>
+								<Identifier start='65' length='4' name='this'/>
+							</Variable>
+						</Dispatcher>
+						<Property>
+							<FunctionInvocation start='71' length='6'>
+								<FunctionName start='71' length='4'>
+									<Variable start='71' length='4' isDollared='false'>
+										<Identifier start='71' length='4' name='call'/>
+									</Variable>
+								</FunctionName>
+								<Parameters>
+								</Parameters>
+							</FunctionInvocation>
+						</Property>
+					</MethodInvocation>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+		<ExpressionStatement start='80' length='49'>
+			<ArrayAccess start='80' length='48' type='array'>
+				<ArrayAccess start='80' length='33' type='array'>
+					<ArrayAccess start='80' length='17' type='array'>
+						<NamespaceName start='80' length='4' global='false' current='false'>
+							<Identifier start='80' length='4' name='Test'/>
+						</NamespaceName>
+						<Index>
+							<StaticFieldAccess start='86' length='10'>
+								<ClassName>
+									<NamespaceName start='86' length='4' global='false' current='false'>
+										<Identifier start='86' length='4' name='self'/>
+									</NamespaceName>
+								</ClassName>
+								<Variable start='92' length='4' isDollared='true'>
+									<Identifier start='93' length='3' name='var'/>
+								</Variable>
+							</StaticFieldAccess>
+						</Index>
+					</ArrayAccess>
+					<Index>
+						<StaticConstantAccess start='99' length='13'>
+							<ClassName>
+								<NamespaceName start='99' length='7' global='false' current='false'>
+									<Identifier start='99' length='7' name='MyClass'/>
+								</NamespaceName>
+							</ClassName>
+							<Constant>
+								<Identifier start='108' length='4' name='TEST'/>
+							</Constant>
+						</StaticConstantAccess>
+					</Index>
+				</ArrayAccess>
+				<Index>
+					<StaticFieldAccess start='115' length='12'>
+						<ClassName>
+							<NamespaceName start='115' length='6' global='false' current='false'>
+								<Identifier start='115' length='6' name='parent'/>
+							</NamespaceName>
+						</ClassName>
+						<Variable start='123' length='4' isDollared='true'>
+							<Identifier start='124' length='3' name='var'/>
+						</Variable>
+					</StaticFieldAccess>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+		<ExpressionStatement start='130' length='32'>
+			<ArrayAccess start='130' length='31' type='array'>
+				<ArrayAccess start='130' length='21' type='array'>
+					<NamespaceName start='130' length='11' global='true' current='false'>
+						<Identifier start='131' length='3' name='Boo'/>
+						<Identifier start='135' length='6' name='Test02'/>
+					</NamespaceName>
+					<Index>
+						<FunctionInvocation start='143' length='7'>
+							<FunctionName start='143' length='5'>
+								<NamespaceName start='143' length='5' global='false' current='false'>
+									<Identifier start='143' length='5' name='callA'/>
+								</NamespaceName>
+							</FunctionName>
+							<Parameters>
+							</Parameters>
+						</FunctionInvocation>
+					</Index>
+				</ArrayAccess>
+				<Index>
+					<FunctionInvocation start='153' length='7'>
+						<FunctionName start='153' length='5'>
+							<NamespaceName start='153' length='5' global='false' current='false'>
+								<Identifier start='153' length='5' name='callB'/>
+							</NamespaceName>
+						</FunctionName>
+						<Parameters>
+						</Parameters>
+					</FunctionInvocation>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+		<ExpressionStatement start='163' length='52'>
+			<ArrayAccess start='163' length='51' type='array'>
+				<ArrayAccess start='163' length='42' type='array'>
+					<ArrayAccess start='163' length='33' type='array'>
+						<StaticConstantAccess start='163' length='24'>
+							<ClassName>
+								<NamespaceName start='163' length='11' global='true' current='false'>
+									<Identifier start='164' length='3' name='Boo'/>
+									<Identifier start='168' length='6' name='Test03'/>
+								</NamespaceName>
+							</ClassName>
+							<Constant>
+								<Identifier start='176' length='11' name='STATICFIELD'/>
+							</Constant>
+						</StaticConstantAccess>
+						<Index>
+							<Variable start='189' length='6' isDollared='true'>
+								<Identifier start='190' length='5' name='var01'/>
+							</Variable>
+						</Index>
+					</ArrayAccess>
+					<Index>
+						<Variable start='198' length='6' isDollared='true'>
+							<Identifier start='199' length='5' name='var02'/>
+						</Variable>
+					</Index>
+				</ArrayAccess>
+				<Index>
+					<Variable start='207' length='6' isDollared='true'>
+						<Identifier start='208' length='5' name='var03'/>
+					</Variable>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

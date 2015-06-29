@@ -1,0 +1,100 @@
+--TEST--
+Test constant scalar expressions
+--FILE--
+<?php
+'Foo' [0] [1] [2];
+"Boo" [1] [0] [1];
+Test [1] ['x'] [3];
+\Boo\Test02 ['key'] ['a'] ['b'];
+\Boo\Test03::STATICFIELD [OTHERCONST] [A] [B];
+--EXPECT--
+<ModuleDeclaration start="0" end="144">
+	<ExpressionStatement start="6" end="24">
+		<ReflectionArrayVariableReference start="6" end="23">
+			<ReflectionArrayVariableReference start="6" end="19">
+				<ReflectionArrayVariableReference start="6" end="15">
+					<Scalar start="6" end="11" type="string" value="&apos;Foo&apos;">
+					</Scalar>
+					<Scalar start="13" end="14" type="int" value="0">
+					</Scalar>
+				</ReflectionArrayVariableReference>
+				<Scalar start="17" end="18" type="int" value="1">
+				</Scalar>
+			</ReflectionArrayVariableReference>
+			<Scalar start="21" end="22" type="int" value="2">
+			</Scalar>
+		</ReflectionArrayVariableReference>
+	</ExpressionStatement>
+	<ExpressionStatement start="25" end="43">
+		<ReflectionArrayVariableReference start="25" end="42">
+			<ReflectionArrayVariableReference start="25" end="38">
+				<ReflectionArrayVariableReference start="25" end="34">
+					<Scalar start="25" end="30" type="string" value="&quot;Boo&quot;">
+					</Scalar>
+					<Scalar start="32" end="33" type="int" value="1">
+					</Scalar>
+				</ReflectionArrayVariableReference>
+				<Scalar start="36" end="37" type="int" value="0">
+				</Scalar>
+			</ReflectionArrayVariableReference>
+			<Scalar start="40" end="41" type="int" value="1">
+			</Scalar>
+		</ReflectionArrayVariableReference>
+	</ExpressionStatement>
+	<ExpressionStatement start="44" end="63">
+		<ReflectionArrayVariableReference start="44" end="62">
+			<ReflectionArrayVariableReference start="44" end="58">
+				<ReflectionArrayVariableReference start="44" end="52">
+					<FullyQualifiedReference start="44" end="48" name="Test">
+					</FullyQualifiedReference>
+					<Scalar start="50" end="51" type="int" value="1">
+					</Scalar>
+				</ReflectionArrayVariableReference>
+				<Scalar start="54" end="57" type="string" value="&apos;x&apos;">
+				</Scalar>
+			</ReflectionArrayVariableReference>
+			<Scalar start="60" end="61" type="int" value="3">
+			</Scalar>
+		</ReflectionArrayVariableReference>
+	</ExpressionStatement>
+	<ExpressionStatement start="64" end="96">
+		<ReflectionArrayVariableReference start="64" end="95">
+			<ReflectionArrayVariableReference start="64" end="89">
+				<ReflectionArrayVariableReference start="64" end="83">
+					<FullyQualifiedReference start="64" end="75" name="\Boo\Test02">
+						<NamespaceReference start="64" end="68" name="\Boo" global="true" local="false">
+						</NamespaceReference>
+					</FullyQualifiedReference>
+					<Scalar start="77" end="82" type="string" value="&apos;key&apos;">
+					</Scalar>
+				</ReflectionArrayVariableReference>
+				<Scalar start="85" end="88" type="string" value="&apos;a&apos;">
+				</Scalar>
+			</ReflectionArrayVariableReference>
+			<Scalar start="91" end="94" type="string" value="&apos;b&apos;">
+			</Scalar>
+		</ReflectionArrayVariableReference>
+	</ExpressionStatement>
+	<ExpressionStatement start="97" end="143">
+		<ReflectionArrayVariableReference start="97" end="142">
+			<ReflectionArrayVariableReference start="97" end="138">
+				<ReflectionArrayVariableReference start="97" end="134">
+					<StaticConstantAccess start="97" end="121">
+						<FullyQualifiedReference start="97" end="108" name="\Boo\Test03">
+							<NamespaceReference start="97" end="101" name="\Boo" global="true" local="false">
+							</NamespaceReference>
+						</FullyQualifiedReference>
+						<ConstantReference start="110" end="121" name="STATICFIELD">
+						</ConstantReference>
+					</StaticConstantAccess>
+					<Scalar start="123" end="133" type="string" value="OTHERCONST">
+					</Scalar>
+				</ReflectionArrayVariableReference>
+				<Scalar start="136" end="137" type="string" value="A">
+				</Scalar>
+			</ReflectionArrayVariableReference>
+			<Scalar start="140" end="141" type="string" value="B">
+			</Scalar>
+		</ReflectionArrayVariableReference>
+	</ExpressionStatement>
+</ModuleDeclaration>

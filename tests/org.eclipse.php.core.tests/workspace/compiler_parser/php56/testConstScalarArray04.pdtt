@@ -1,0 +1,81 @@
+--TEST--
+Test constant scalar expressions
+--FILE--
+<?php
+const MYCONST = foo [0];
+class foo {
+	const item = foo [1] + bar ['key'];
+	const item2 = "bar" [1] + MyClass::FIELD [0];
+	const item3 = \Test\MyClass::FIELD [0];
+}
+--EXPECT--
+<ModuleDeclaration start="0" end="170">
+	<ConstantDeclaration start="6" end="29" modifiers="">
+		<ConstantReference start="12" end="19" name="MYCONST">
+		</ConstantReference>
+		<ReflectionArrayVariableReference start="22" end="29">
+			<Scalar start="22" end="25" type="string" value="foo">
+			</Scalar>
+			<Scalar start="27" end="28" type="int" value="0">
+			</Scalar>
+		</ReflectionArrayVariableReference>
+	</ConstantDeclaration>
+	<ClassDeclaration start="31" end="169" modifiers="" name="foo">
+		<ConstantDeclaration start="44" end="78" modifiers="">
+			<ConstantReference start="50" end="54" name="item">
+			</ConstantReference>
+			<InfixExpression start="57" end="78" operator="+">
+				<ReflectionArrayVariableReference start="57" end="64">
+					<Scalar start="57" end="60" type="string" value="foo">
+					</Scalar>
+					<Scalar start="62" end="63" type="int" value="1">
+					</Scalar>
+				</ReflectionArrayVariableReference>
+				<ReflectionArrayVariableReference start="67" end="78">
+					<Scalar start="67" end="70" type="string" value="bar">
+					</Scalar>
+					<Scalar start="72" end="77" type="string" value="&apos;key&apos;">
+					</Scalar>
+				</ReflectionArrayVariableReference>
+			</InfixExpression>
+		</ConstantDeclaration>
+		<ConstantDeclaration start="81" end="125" modifiers="">
+			<ConstantReference start="87" end="92" name="item2">
+			</ConstantReference>
+			<InfixExpression start="95" end="125" operator="+">
+				<ReflectionArrayVariableReference start="95" end="104">
+					<Scalar start="95" end="100" type="string" value="&quot;bar&quot;">
+					</Scalar>
+					<Scalar start="102" end="103" type="int" value="1">
+					</Scalar>
+				</ReflectionArrayVariableReference>
+				<ReflectionArrayVariableReference start="107" end="125">
+					<StaticConstantAccess start="107" end="121">
+						<FullyQualifiedReference start="107" end="114" name="MyClass">
+						</FullyQualifiedReference>
+						<ConstantReference start="116" end="121" name="FIELD">
+						</ConstantReference>
+					</StaticConstantAccess>
+					<Scalar start="123" end="124" type="int" value="0">
+					</Scalar>
+				</ReflectionArrayVariableReference>
+			</InfixExpression>
+		</ConstantDeclaration>
+		<ConstantDeclaration start="128" end="166" modifiers="">
+			<ConstantReference start="134" end="139" name="item3">
+			</ConstantReference>
+			<ReflectionArrayVariableReference start="142" end="166">
+				<StaticConstantAccess start="142" end="162">
+					<FullyQualifiedReference start="142" end="155" name="\Test\MyClass">
+						<NamespaceReference start="142" end="147" name="\Test" global="true" local="false">
+						</NamespaceReference>
+					</FullyQualifiedReference>
+					<ConstantReference start="157" end="162" name="FIELD">
+					</ConstantReference>
+				</StaticConstantAccess>
+				<Scalar start="164" end="165" type="int" value="0">
+				</Scalar>
+			</ReflectionArrayVariableReference>
+		</ConstantDeclaration>
+	</ClassDeclaration>
+</ModuleDeclaration>
