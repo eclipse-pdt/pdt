@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Zend Techologies Ltd.
+ * Copyright (c) 2013, 2015 Zend Techologies Ltd.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.jface.text.*;
+import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
@@ -32,6 +33,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerParserCon
 import org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpTokenNames;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
+import org.eclipse.php.internal.core.util.MagicMemberUtil;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
@@ -81,8 +83,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 	private static final char SPACE = ' ';
 	private static final char COMMA = ',';
 	private static final char QUESTION_MARK = '?';
-	private static final char PHPDOC_CLASS_SEPARATOR = '|';
-	private static final String ELLIPSIS = "...";
+	private static final String ELLIPSIS = "..."; //$NON-NLS-1$
 	private String lineSeparator;
 
 	private CodeFormatterPreferences preferences;
@@ -999,7 +1000,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					}
 					int commentTokLen = commentContent.startsWith("#") ? 1 : 2;//$NON-NLS-1$
 					commentWords = Arrays.asList(commentContent
-							.substring(commentTokLen).trim().split("[ \t]")); //$NON-NLS-1$
+							.substring(commentTokLen).trim()
+							.split("[ \\t\\v\\f]")); //$NON-NLS-1$
 					commentWords = removeEmptyString(commentWords);
 					commentContent = join(commentWords, " "); //$NON-NLS-1$
 					commentContent = commentContent.trim();
@@ -1162,7 +1164,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 						for (int i = 0; i < tags.length; i++) {
 							PHPDocTag phpDocTag = tags[i];
 							boolean insertTag = true;
-							String[] words = phpDocTag.getDescTexts();
+							String[] words = phpDocTag.getDescTexts().toArray(
+									new String[0]);
 
 							if ((i == tags.length - 1)
 									&& !this.preferences.comment_new_lines_at_javadoc_boundaries) {
@@ -1172,7 +1175,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 
 							if (getNonblankWords(words).length == 0) {
 								boolean hasRefs = phpDocTag
-										.getReferencesWithOrigOrder().length != 0;
+										.getAllReferencesWithOrigOrder().size() != 0;
 								int nbLines = words.length;
 								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=433938
 								if (!hasRefs && nbLines > 1) {
@@ -1232,7 +1235,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					// indent all lines, even empty lines
 					for (int i = 1; i < lines.size(); i++) {
 						insertNewLineForPHPDoc(false);
-						appendToBuffer(lines.get(i).replaceFirst("^[ \t]+", "")); //$NON-NLS-1$
+						appendToBuffer(lines.get(i).replaceFirst(
+								"^[ \\t\\v\\f]+", "")); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					handleCharsWithoutComments(comment.sourceStart() + offset,
 							comment.sourceEnd() + offset, true);
@@ -1511,7 +1515,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					for (int i = 1; i < lines.size(); i++) {
 						insertNewLineForPHPBlockComment(indentLengthForComment,
 								indentStringForComment, false);
-						appendToBuffer(lines.get(i).replaceFirst("^[ \t]+", "")); //$NON-NLS-1$
+						appendToBuffer(lines.get(i).replaceFirst(
+								"^[ \\t\\v\\f]+", "")); //$NON-NLS-1$  //$NON-NLS-2$
 					}
 					handleCharsWithoutComments(comment.sourceStart() + offset,
 							comment.sourceEnd() + offset, true);
@@ -1756,7 +1761,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 	private void initCommentWords() {
 		String commentContent = join(commentWords, " "); //$NON-NLS-1$
 		commentContent = commentContent.trim();
-		commentWords = Arrays.asList(commentContent.split("[ \t\r\n]")); //$NON-NLS-1$
+		commentWords = Arrays.asList(MagicMemberUtil.WHITESPACE_SEPERATOR
+				.split(commentContent));
 		commentWords = removeEmptyString(commentWords);
 	}
 
@@ -1857,13 +1863,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 	}
 
 	private String getTagReference(PHPDocTag phpDocTag) {
-		SimpleReference[] reference = phpDocTag.getReferencesWithOrigOrder();
+		SimpleReference[] reference = phpDocTag.getAllReferencesWithOrigOrder()
+				.toArray(new SimpleReference[0]);
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < reference.length; i++) {
 			if (i > 0 && reference[i - 1] instanceof TypeReference
 					&& reference[i] instanceof TypeReference) {
-				sb.append(PHPDOC_CLASS_SEPARATOR)
-						.append(reference[i].getName()); //$NON-NLS-1$
+				sb.append(Constants.TYPE_SEPERATOR_CHAR).append(
+						reference[i].getName()); //$NON-NLS-1$
 			} else {
 				sb.append(" ").append(reference[i].getName()); //$NON-NLS-1$
 			}
@@ -5184,7 +5191,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		// Tag "?>" is optional to end a PHP region.
 		// If this tag is missing at the very end of a PHP region,
 		// this region will not be considered as a single line.
-		return "?>".equals(document.get(start + length - endTagLength,
+		return "?>".equals(document.get(start + length - endTagLength, //$NON-NLS-1$
 				endTagLength));
 	}
 

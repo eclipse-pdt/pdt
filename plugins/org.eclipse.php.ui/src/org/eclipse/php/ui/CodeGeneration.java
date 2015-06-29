@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,12 +21,14 @@ import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.scanner.php56.ParserConstants;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpTokenNames;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
+import org.eclipse.php.internal.core.typeinference.evaluators.PHPEvaluationUtils;
 import org.eclipse.php.internal.ui.corext.codemanipulation.StubUtility;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
 import org.eclipse.php.ui.editor.SharedASTProvider;
@@ -695,13 +697,15 @@ public class CodeGeneration {
 						// if looking for returnType.isUnknown() is not the same
 						// as looking for returnType.isNullType()
 						returnTypeBuffer.append(
-								PHPSimpleTypes.NULL.getTypeName()).append("|"); //$NON-NLS-1$
+								PHPSimpleTypes.NULL.getTypeName()).append(
+								Constants.TYPE_SEPERATOR_CHAR);
 					} else if (returnType.isAmbiguous()) {
-						returnTypeBuffer.append("Ambiguous").append("|"); //$NON-NLS-1$ //$NON-NLS-2$
+						returnTypeBuffer
+								.append("Ambiguous").append(Constants.TYPE_SEPERATOR_CHAR); //$NON-NLS-1$
 					} else if (!appendAllPossibleTypes(
 							returnType.getEvaluatedType(), returnTypeBuffer)) {
 						returnTypeBuffer.append(returnType.getName()).append(
-								"|"); //$NON-NLS-1$
+								Constants.TYPE_SEPERATOR_CHAR);
 					}
 				}
 				if (returnTypeBuffer.length() > 0) {
@@ -806,7 +810,7 @@ public class CodeGeneration {
 		List<String> foundTypes = new ArrayList<String>();
 		if (findAllPossibleTypes(type, foundTypes, 0, true)) {
 			for (String foundType : foundTypes) {
-				buffer.append(foundType).append("|"); //$NON-NLS-1$
+				buffer.append(foundType).append(Constants.TYPE_SEPERATOR_CHAR);
 			}
 			return true;
 		}
@@ -839,7 +843,7 @@ public class CodeGeneration {
 			StringBuilder buffer = new StringBuilder();
 			buffer.append(type.getTypeName());
 			for (int i = 1; i <= level; i++) {
-				buffer.append("[]"); //$NON-NLS-1$
+				buffer.append(PHPEvaluationUtils.BRACKETS);
 			}
 			String foundType = buffer.toString();
 			// do not insert duplicates
