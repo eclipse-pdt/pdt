@@ -1,0 +1,12 @@
+--TEST--
+Test constant scalar array formatting
+--FILE--
+<?php
+		Test[1];
+\Boo\Test02		 ['key'];
+\Boo \ Test03 :: STATICFIELD[OTHERCONST];
+--EXPECT--
+<?php
+Test [1];
+\Boo\Test02 ['key'];
+\Boo\Test03::STATICFIELD [OTHERCONST];

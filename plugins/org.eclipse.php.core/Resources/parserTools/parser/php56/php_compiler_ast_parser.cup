@@ -3514,6 +3514,11 @@ T_STRING_VARNAME:scalar
 {:
    RESULT = ref;
 :}
+
+| scalar:scalar T_OPEN_RECT dim_offset:index T_CLOSE_RECT:end
+{:
+   RESULT = new ReflectionArrayVariableReference(scalarleft, endright, scalar, index, ReflectionArrayVariableReference.VARIABLE_ARRAY);
+:}
 ;
 
 static_array_pair_list ::=

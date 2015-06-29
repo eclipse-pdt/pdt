@@ -2988,6 +2988,12 @@ T_STRING_VARNAME:scalar
 {:
 	RESULT = ref;
 :}
+
+| scalar:scalar T_OPEN_RECT dim_offset:expr T_CLOSE_RECT:e
+{:
+	RESULT = new ArrayAccess(scalarleft, eright, parser.ast, (VariableBase)scalar, expr, ArrayAccess.VARIABLE_ARRAY);
+:}
+
 ;
 
 static_array_pair_list ::=
