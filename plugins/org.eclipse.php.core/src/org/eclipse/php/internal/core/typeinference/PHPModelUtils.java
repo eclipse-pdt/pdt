@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,6 +27,7 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
@@ -38,10 +39,7 @@ import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.internal.core.SourceRefElement;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.*;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.NamespaceName;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
@@ -62,6 +60,27 @@ public class PHPModelUtils {
 			new char[] { NamespaceReference.NAMESPACE_SEPARATOR }); //$NON-NLS-1$
 
 	private static final IType[] EMPTY_TYPES = new IType[0];
+
+	/**
+	 * Concatenates all type names (without their namespace prefixes) together
+	 * 
+	 * @param references
+	 *            list of type references
+	 * @return concatenated type names
+	 */
+	public static String appendTypeReferenceNames(List<TypeReference> references) {
+		StringBuilder sb = new StringBuilder();
+		boolean firstTime = true;
+		for (TypeReference reference : references) {
+			if (!firstTime) {
+				sb.append(Constants.TYPE_SEPERATOR_CHAR);
+			}
+			sb.append(PHPModelUtils.extractElementName(reference.getName()));
+			firstTime = false;
+		}
+
+		return sb.toString();
+	}
 
 	/**
 	 * Extracts the element name from the given fully qualified name

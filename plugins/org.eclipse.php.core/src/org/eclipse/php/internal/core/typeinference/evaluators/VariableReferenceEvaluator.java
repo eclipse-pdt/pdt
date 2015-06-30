@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,11 +33,9 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.ArrayDeclaration;
 import org.eclipse.php.internal.core.typeinference.Declaration;
-import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
-import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.goals.ArrayDeclarationGoal;
 import org.eclipse.php.internal.core.typeinference.goals.ForeachStatementGoal;
@@ -60,10 +58,6 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		final VariableReference variableReference = (VariableReference) ((ExpressionTypeGoal) goal)
 				.getExpression();
 		IContext context = goal.getContext();
-		IModelAccessCache cache = null;
-		if (context instanceof IModelCacheContext) {
-			cache = ((IModelCacheContext) context).getCache();
-		}
 		// Handle $this variable reference
 		if (variableReference.getName().equals("$this")) { //$NON-NLS-1$
 			if (context instanceof MethodContext) {
@@ -167,22 +161,16 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 					}
 
 					for (PHPDocTag tag : block.getTags(PHPDocTagKinds.VAR)) {
-						String value = tag.getValue().trim();
-						if (value.length() < 5 || value.charAt(0) != '$') {
-							continue;
-						}
-						String[] split = value.split("\\s+"); //$NON-NLS-1$
-						if (split.length > 1
-								&& split[0].equals(variableReference.getName())) {
+						if (tag.isValidVarTag()
+								&& tag.getVariableReference() != null
+								&& tag.getVariableReference().getName()
+										.equals(variableReference.getName())) {
 							List<IGoal> goals = new LinkedList<IGoal>();
-							for (String name : split[1].split("\\|")) { //$NON-NLS-1$
-								if (name.trim().length() > 0) {
-									goals.add(new ExpressionTypeGoal(context,
-											new TypeReference(
-													tag.sourceStart(), tag
-															.sourceEnd(), name
-															.trim())));
-								}
+							for (TypeReference type : tag.getTypeReferences()) {
+								goals.add(new ExpressionTypeGoal(
+										context,
+										new TypeReference(tag.sourceStart(),
+												tag.sourceEnd(), type.getName())));
 							}
 							return (IGoal[]) goals.toArray(new IGoal[goals
 									.size()]);

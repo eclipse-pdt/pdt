@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ti.IContext;
+import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
@@ -62,27 +63,21 @@ public class ASTUtils {
 			int typeStart = varEnd + m.group(3).length();
 			String types = m.group(4);
 
-			int pipeIdx = types.indexOf('|'); //$NON-NLS-1$
+			int pipeIdx = types.indexOf(Constants.TYPE_SEPERATOR_CHAR);
 			while (pipeIdx >= 0) {
 				String typeName = types.substring(0, pipeIdx);
 				int typeEnd = typeStart + typeName.length();
 				if (typeName.length() > 0) {
-					if (typeName.endsWith("[]")) {
-						typeName = typeName.substring(0, typeName.length() - 2); //$NON-NLS-1$
-					}
 					typeReferences.add(new TypeReference(typeStart, typeEnd,
 							typeName));
 				}
 				types = types.substring(pipeIdx + 1);
 				typeStart += pipeIdx + 1;
-				pipeIdx = types.indexOf('|'); //$NON-NLS-1$
+				pipeIdx = types.indexOf(Constants.TYPE_SEPERATOR_CHAR);
 			}
 			String typeName = types;
 			int typeEnd = typeStart + typeName.length();
 			if (typeName.length() > 0) {
-				if (typeName.endsWith("[]")) {
-					typeName = typeName.substring(0, typeName.length() - 2); //$NON-NLS-1$
-				}
 				typeReferences.add(new TypeReference(typeStart, typeEnd,
 						typeName));
 			}

@@ -13,8 +13,6 @@ package org.eclipse.php.refactoring.core.rename.logic;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.dltk.ast.references.SimpleReference;
-import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
@@ -57,13 +55,13 @@ public class RenameLocalVariable extends AbstractRename {
 			if (doc != null) {
 				PHPDocTag[] tags = doc.getTags();
 				for (PHPDocTag tag : tags) {
-					SimpleReference[] references = tag.getReferences();
-					for (SimpleReference ref : references) {
-						if (ref instanceof VariableReference
-								&& ref.getName().equals("$" + oldName)) { //$NON-NLS-1$
-							addChange(ref.sourceStart() + 1,
-									getRenameDescription());
-						}
+					if (tag.isValidMethodDescriptorTag()
+							&& tag.getVariableReference().getName()
+									.equals("$" + oldName)) { //$NON-NLS-1$
+						// add all variable references, even if they are
+						// duplicated in this PHPDocBlock
+						addChange(tag.getVariableReference().sourceStart() + 1,
+								getRenameDescription());
 					}
 				}
 			}

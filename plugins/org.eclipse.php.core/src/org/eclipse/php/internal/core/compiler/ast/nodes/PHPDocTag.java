@@ -13,7 +13,6 @@ package org.eclipse.php.internal.core.compiler.ast.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTNode;
@@ -21,6 +20,8 @@ import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
+import org.eclipse.php.internal.core.Constants;
+import org.eclipse.php.internal.core.util.MagicMemberUtil;
 
 public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 
@@ -66,13 +67,16 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	public static final String NAMESPACE_NAME = "namespace"; //$NON-NLS-1$
 	public static final String INHERITDOC_NAME = "inheritdoc"; //$NON-NLS-1$
 
-	private static final SimpleReference[] EMPTY = {};
 	private final int tagKind;
 	private final String matchedTag;
 	private String value;
-	private SimpleReference[] references;
-	private SimpleReference[] referencesWithOrigOrder;
 	private List<Scalar> texts;
+	private VariableReference variableReference;
+	private TypeReference singleTypeReference;
+	private List<TypeReference> typeReferences;
+	private List<SimpleReference> allReferencesWithOrigOrder;
+	private List<String> descTexts;
+	private String trimmedDescText;
 
 	public PHPDocTag(int start, int end, int tagKind, String matchedTag,
 			String value, List<Scalar> texts) {
@@ -80,56 +84,69 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		this.tagKind = tagKind;
 		this.matchedTag = matchedTag;
 		this.value = value;
-		updateReferences(start, end);
 		this.texts = texts;
+		updateReferences(start, end);
 	}
 
+	/**
+	 * Never null.
+	 */
 	public List<Scalar> getTexts() {
 		return texts;
 	}
 
-	public String[] getDescTexts() {
-		// For all unsupported tags
-		int wordSize = 0;
-		if (referencesWithOrigOrder.length == 0) {
-			// No references were found
-			wordSize = 0;
-		} else if (tagKind == RETURN || tagKind == VAR || tagKind == THROWS
-				|| tagKind == SEE) {
-			// The word following the tag name was splitted into several
-			// references
-			wordSize = 1;
-		} else if (tagKind == PARAM || tagKind == PROPERTY
-				|| tagKind == PROPERTY_READ || tagKind == PROPERTY_WRITE) {
-			// The two words following the tag name were splitted into two
-			// references
-			wordSize = 2;
+	/**
+	 * Never null.
+	 */
+	public List<String> getDescTexts() {
+		return descTexts;
+	}
+
+	/**
+	 * Never null.
+	 */
+	public String getTrimmedDescText() {
+		return trimmedDescText;
+	}
+
+	private String getTrimmedDescText(int wordsToSkip) {
+		String text = value.trim();
+		if (wordsToSkip == 0) {
+			return text;
 		}
+		String[] split = MagicMemberUtil.WHITESPACE_SEPERATOR.split(text);
+		for (int i = 0; i < wordsToSkip; i++) {
+			int index = text.indexOf(split[i]);
+			text = text.substring(split[i].length() + index);
+		}
+		return text.trim();
+	}
+
+	private List<String> getDescTexts(int wordsToSkip) {
 		List<String> result = new ArrayList<String>();
 		for (int i = 0; i < texts.size(); i++) {
 			String text = texts.get(i).getValue();
-			if (wordSize <= 0) {
+			if (wordsToSkip <= 0) {
 				result.add(text);
 			} else {
 				if (text.trim().length() == 0) {
 					continue;
 				}
-				List<String> commentWords = Arrays.asList(text.trim().split(
-						"[ \r\n]")); //$NON-NLS-1$
+				List<String> commentWords = Arrays
+						.asList(MagicMemberUtil.WHITESPACE_SEPERATOR.split(text
+								.trim()));
 				commentWords = removeEmptyString(commentWords);
-				if (commentWords.size() <= wordSize) {
-					wordSize = wordSize - commentWords.size();
+				if (commentWords.size() <= wordsToSkip) {
+					wordsToSkip = wordsToSkip - commentWords.size();
 				} else {
-					text = removeFirstWords(text, commentWords, wordSize);
+					text = removeFirstWords(text, commentWords, wordsToSkip);
 					result.add(text);
-					wordSize = 0;
+					wordsToSkip = 0;
 				}
 			}
 
 		}
-		String[] texts = new String[result.size()];
-		result.toArray(texts);
-		return texts;
+		return result;
 	}
 
 	public static List<String> removeEmptyString(List<String> commentWords) {
@@ -176,7 +193,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	private static int getClassStartIndex(String line, int startIndex) {
 		int i = startIndex;
 		for (; i < line.length(); ++i) {
-			if (line.charAt(i) != '|') {
+			if (line.charAt(i) != Constants.TYPE_SEPERATOR_CHAR) {
 				return i;
 			}
 		}
@@ -186,42 +203,83 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	private static int getClassEndIndex(String line, int startIndex) {
 		int i = startIndex;
 		for (; i < line.length(); ++i) {
-			if (line.charAt(i) == '|') {
+			if (line.charAt(i) == Constants.TYPE_SEPERATOR_CHAR) {
 				return i;
 			}
 		}
 		return i;
 	}
 
-	private void updateReferences(int start, int end) {
+	private void splitSingleTypeReference(TypeReference reference,
+			List<TypeReference> types) {
+		String word = reference.getName();
+		int valueStart = reference.sourceStart();
+		int classStart = getClassStartIndex(word, 0);
+		int classEnd = getClassEndIndex(word, classStart);
 
-		int valueStart = start + getTagKind(tagKind).length() + 1;
+		while (classStart < classEnd) {
+			String className = word.substring(classStart, classEnd);
+			types.add(new TypeReference(valueStart + classStart, valueStart
+					+ classEnd, className));
+
+			classStart = getClassStartIndex(word, classEnd);
+			classEnd = getClassEndIndex(word, classStart);
+		}
+	}
+
+	private void updateReferences(int start, int end) {
+		// (re)set references
+		variableReference = null;
+		singleTypeReference = null;
+		typeReferences = new ArrayList<TypeReference>();
+		allReferencesWithOrigOrder = new ArrayList<SimpleReference>();
+		descTexts = new ArrayList<String>();
+
+		int valueStart = start + matchedTag.length();
+		// For all unsupported tags
+		int wordsToSkip = 0;
 
 		if (tagKind == RETURN || tagKind == VAR || tagKind == THROWS
 				|| tagKind == SEE) {
 
+			// Read first word
 			int wordStart = getNonWhitespaceIndex(value, 0);
 			int wordEnd = getWhitespaceIndex(value, wordStart);
+
+			if (tagKind == VAR && wordStart < wordEnd) {
+
+				String word = value.substring(wordStart, wordEnd);
+				if (word.charAt(0) == '$') {
+					variableReference = new VariableReference(valueStart
+							+ wordStart, valueStart + wordEnd, word);
+					allReferencesWithOrigOrder.add(variableReference);
+					wordsToSkip++;
+					// Read next word
+					wordStart = getNonWhitespaceIndex(value, wordEnd);
+					wordEnd = getWhitespaceIndex(value, wordStart);
+				}
+			}
 			if (wordStart < wordEnd) {
 
 				String word = value.substring(wordStart, wordEnd);
+				singleTypeReference = new TypeReference(valueStart + wordStart,
+						valueStart + wordEnd, word);
+				splitSingleTypeReference(singleTypeReference, typeReferences);
+				allReferencesWithOrigOrder.addAll(typeReferences);
+				wordsToSkip++;
+				// Read next word
+				wordStart = getNonWhitespaceIndex(value, wordEnd);
+				wordEnd = getWhitespaceIndex(value, wordStart);
+			}
+			if (tagKind == VAR && variableReference == null
+					&& wordStart < wordEnd) {
 
-				int classStart = getClassStartIndex(word, 0);
-				int classEnd = getClassEndIndex(word, classStart);
-				List<TypeReference> types = new LinkedList<TypeReference>();
-
-				while (classStart < classEnd) {
-					String className = word.substring(classStart, classEnd);
-					types.add(new TypeReference(valueStart + wordStart
-							+ classStart, valueStart + wordStart + classEnd,
-							className));
-
-					classStart = getClassStartIndex(word, classEnd);
-					classEnd = getClassEndIndex(word, classStart);
-				}
-				if (types.size() > 0) {
-					references = types.toArray(new TypeReference[types.size()]);
-					referencesWithOrigOrder = references;
+				String word = value.substring(wordStart, wordEnd);
+				if (word.charAt(0) == '$') {
+					variableReference = new VariableReference(valueStart
+							+ wordStart, valueStart + wordEnd, word);
+					allReferencesWithOrigOrder.add(variableReference);
+					wordsToSkip++;
 				}
 			}
 		} else if (tagKind == PARAM || tagKind == PROPERTY
@@ -239,43 +297,49 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 							firstWordEnd);
 					String secondWord = value.substring(secondWordStart,
 							secondWordEnd);
-					if (firstWord.charAt(0) == '$') {
-						references = new SimpleReference[2];
-						references[0] = new VariableReference(valueStart
+					if (firstWord.charAt(0) == '$'
+							|| firstWord.startsWith("...$")) { //$NON-NLS-1$
+						variableReference = new VariableReference(valueStart
 								+ firstWordStart, valueStart + firstWordEnd,
 								firstWord);
-						references[1] = new TypeReference(valueStart
+						singleTypeReference = new TypeReference(valueStart
 								+ secondWordStart, valueStart + secondWordEnd,
 								secondWord);
-						referencesWithOrigOrder = references;
+						splitSingleTypeReference(singleTypeReference,
+								typeReferences);
+						allReferencesWithOrigOrder.add(variableReference);
+						allReferencesWithOrigOrder.addAll(typeReferences);
+						// The two words following the tag name were splitted
+						// into two references
+						wordsToSkip = 2;
 					} else if (secondWord.charAt(0) == '$'
-							|| secondWord.startsWith("...$")) {
-						references = new SimpleReference[2];
-						references[0] = new VariableReference(valueStart
+							|| secondWord.startsWith("...$")) { //$NON-NLS-1$
+						variableReference = new VariableReference(valueStart
 								+ secondWordStart, valueStart + secondWordEnd,
 								secondWord);
-						references[1] = new TypeReference(valueStart
+						singleTypeReference = new TypeReference(valueStart
 								+ firstWordStart, valueStart + firstWordEnd,
 								firstWord);
-						referencesWithOrigOrder = new SimpleReference[2];
-						referencesWithOrigOrder[0] = references[1];
-						referencesWithOrigOrder[1] = references[0];
+						splitSingleTypeReference(singleTypeReference,
+								typeReferences);
+						allReferencesWithOrigOrder.addAll(typeReferences);
+						allReferencesWithOrigOrder.add(variableReference);
+						// The two words following the tag name were splitted
+						// into two references
+						wordsToSkip = 2;
 					}
 				}
 			}
 		}
-		if (references == null) {
-			references = EMPTY;
-		}
-		if (referencesWithOrigOrder == null) {
-			referencesWithOrigOrder = EMPTY;
-		}
+
+		descTexts = getDescTexts(wordsToSkip);
+		trimmedDescText = getTrimmedDescText(wordsToSkip);
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
 		boolean visit = visitor.visit(this);
 		if (visit) {
-			for (SimpleReference ref : references) {
+			for (SimpleReference ref : allReferencesWithOrigOrder) {
 				ref.traverse(visitor);
 			}
 		}
@@ -287,23 +351,70 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	}
 
 	public int getTagKind() {
-		return this.tagKind;
+		return tagKind;
 	}
 
 	public String getMatchedTag() {
-		return this.matchedTag;
+		return matchedTag;
 	}
 
 	public String getValue() {
 		return value;
 	}
 
-	public SimpleReference[] getReferences() {
-		return references;
+	/**
+	 * Variable reference, whose name is never empty or blank
+	 * 
+	 * @return variable reference (if present), null otherwise
+	 */
+	public VariableReference getVariableReference() {
+		return variableReference;
 	}
 
-	public SimpleReference[] getReferencesWithOrigOrder() {
-		return referencesWithOrigOrder;
+	/**
+	 * Type reference, whose name is never empty or blank
+	 * 
+	 * @return type reference (not splitted), null otherwise
+	 */
+	public TypeReference getSingleTypeReference() {
+		return singleTypeReference;
+	}
+
+	/**
+	 * Type references, whose names are never empty or blank
+	 * 
+	 * @return all type references, empty list otherwise
+	 */
+	public List<TypeReference> getTypeReferences() {
+		return typeReferences;
+	}
+
+	/**
+	 * All references, whose names are never empty or blank
+	 * 
+	 * @return all references, empty list otherwise
+	 */
+	public List<SimpleReference> getAllReferencesWithOrigOrder() {
+		return allReferencesWithOrigOrder;
+	}
+
+	public boolean isValidMethodDescriptorTag() {
+		return isValidParamTag() || isValidPropertiesTag();
+	}
+
+	public boolean isValidPropertiesTag() {
+		return (tagKind == PROPERTY || tagKind == PROPERTY_READ || tagKind == PROPERTY_WRITE)
+				&& singleTypeReference != null && variableReference != null;
+	}
+
+	public boolean isValidParamTag() {
+		return tagKind == PARAM && singleTypeReference != null
+				&& variableReference != null;
+	}
+
+	public boolean isValidVarTag() {
+		// NB: the variable reference is optional for @var tags
+		return tagKind == VAR && singleTypeReference != null;
 	}
 
 	public void adjustStart(int start) {

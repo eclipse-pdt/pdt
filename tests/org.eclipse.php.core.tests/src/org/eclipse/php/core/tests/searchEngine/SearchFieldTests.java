@@ -51,7 +51,7 @@ import org.junit.runner.RunWith;
 @RunWith(PDTTList.class)
 public class SearchFieldTests {
 
-	// protected static final char SELECTION_CsHAR = '|';
+	// protected static final char SELECTION_CHAR = '|';
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
