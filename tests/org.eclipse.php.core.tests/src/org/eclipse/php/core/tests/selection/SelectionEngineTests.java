@@ -62,6 +62,10 @@ public class SelectionEngineTests {
 				"/workspace/selection/php5", "/workspace/selection/php53",
 				"/workspace/selection/php54", "/workspace/selection/php55",
 				"/workspace/selection/php56" });
+		TESTS.put(PHPVersion.PHP7, new String[] {
+				"/workspace/selection/php5", "/workspace/selection/php53",
+				"/workspace/selection/php54", "/workspace/selection/php55",
+				"/workspace/selection/php56" });
 	};
 
 	protected IProject project;

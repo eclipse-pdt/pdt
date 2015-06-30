@@ -63,22 +63,28 @@ public class ContentAssistTests {
 	protected IFile testFile;
 	protected IFile[] otherFiles = new IFile[0];
 	protected PHPVersion phpVersion;
-	// protected static PHPVersion phpVersion;
 	protected PHPStructuredEditor fEditor;
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
-		// TESTS.put(PHPVersion.PHP4, "/workspace/codeassist/php4");
 		TESTS.put(PHPVersion.PHP5,
 				new String[] { "/workspace/codeassist/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] {
-				"/workspace/codeassist/php5", "/workspace/codeassist/php53",
-				"/workspace/codeassist/php53/classExclusive" });
-		TESTS.put(PHPVersion.PHP5_6, new String[] {
-				"/workspace/codeassist/php5", "/workspace/codeassist/php53",
-				"/workspace/codeassist/php56" });
+		TESTS.put(PHPVersion.PHP5_3,
+				new String[] { "/workspace/codeassist/php5",
+						"/workspace/codeassist/php53",
+						"/workspace/codeassist/php53/classExclusive" });
+		TESTS.put(PHPVersion.PHP5_6,
+				new String[] { "/workspace/codeassist/php5",
+						"/workspace/codeassist/php53",
+						"/workspace/codeassist/php56" });
+		TESTS.put(PHPVersion.PHP7,
+				new String[] { "/workspace/codeassist/php5",
+						"/workspace/codeassist/php53",
+						"/workspace/codeassist/php56" });
 	};
+
 	protected static final char OFFSET_CHAR = '|';
 
 	@Context
@@ -136,8 +142,8 @@ public class ContentAssistTests {
 
 	@Test
 	public void assist(String fileName) throws Exception {
-		final PdttFile pdttFile = new PdttFile(PHPUiTests.getDefault()
-				.getBundle(), fileName);
+		final PdttFile pdttFile = new PdttFile(
+				PHPUiTests.getDefault().getBundle(), fileName);
 		pdttFile.applyPreferences();
 
 		String data = pdttFile.getFile();
@@ -160,9 +166,11 @@ public class ContentAssistTests {
 					closeEditor();
 					if (!pdttFile.getExpected().trim().equals(result.trim())) {
 						StringBuilder errorBuf = new StringBuilder();
-						errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
+						errorBuf.append(
+								"\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
 						errorBuf.append(pdttFile.getExpected());
-						errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
+						errorBuf.append(
+								"\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
 						errorBuf.append(result);
 						fail(errorBuf.toString());
 					}

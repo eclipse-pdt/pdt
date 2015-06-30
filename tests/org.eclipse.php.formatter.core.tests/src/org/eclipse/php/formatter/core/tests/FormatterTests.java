@@ -61,8 +61,10 @@ public class FormatterTests {
 
 	@Parameters(recursive = true)
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
-		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/formatter/php5" });
+		TESTS.put(PHPVersion.PHP5,
+				new String[] { "/workspace/formatter/php5" });
 		TESTS.put(PHPVersion.PHP5_3,
 				new String[] { "/workspace/formatter/php53" });
 		TESTS.put(PHPVersion.PHP5_4,
@@ -71,7 +73,10 @@ public class FormatterTests {
 				new String[] { "/workspace/formatter/php55" });
 		TESTS.put(PHPVersion.PHP5_6,
 				new String[] { "/workspace/formatter/php56" });
+		TESTS.put(PHPVersion.PHP7,
+				new String[] { "/workspace/formatter/php7" });
 	};
+
 	protected static int suiteCounter = 0;
 
 	@Context
@@ -97,8 +102,8 @@ public class FormatterTests {
 		if (fileNames.length > 0) {
 			IPath path = new Path(fileNames[0]);
 			path = path.removeLastSegments(1);
-			String[] formatterConfigurationFile = PDTTUtils.getFiles(
-					path.toString(), bundle, ".xml");
+			String[] formatterConfigurationFile = PDTTUtils
+					.getFiles(path.toString(), bundle, ".xml");
 
 			if (formatterConfigurationFile.length > 0) {
 				xmlFile = formatterConfigurationFile[0];
@@ -168,7 +173,8 @@ public class FormatterTests {
 				profiles = ProfileStore.readProfilesFromFile(file);
 			} catch (CoreException e) {
 				Logger.logException(
-						"Error while reading profile configuration xml file", e);
+						"Error while reading profile configuration xml file",
+						e);
 			}
 
 			// should be only one profile in file
@@ -198,8 +204,8 @@ public class FormatterTests {
 	public void formatter(String fileName) throws Exception {
 		IFile file = files.get(fileName);
 
-		IStructuredModel modelForEdit = StructuredModelManager
-				.getModelManager().getModelForEdit(file);
+		IStructuredModel modelForEdit = StructuredModelManager.getModelManager()
+				.getModelForEdit(file);
 		try {
 			IDocument document = modelForEdit.getStructuredDocument();
 			String beforeFormat = document.get();
@@ -226,9 +232,10 @@ public class FormatterTests {
 	private static void setDefaultFormatter(IScopeContext scopeContext,
 			ProfileManager profileManager) {
 		profileManager.clearAllSettings(scopeContext);
-		if (profileManager.getSelected().getID() != ProfileManager.PHP_PROFILE) {
-			profileManager.setSelected(profileManager
-					.getProfile(ProfileManager.PHP_PROFILE));
+		if (profileManager.getSelected()
+				.getID() != ProfileManager.PHP_PROFILE) {
+			profileManager.setSelected(
+					profileManager.getProfile(ProfileManager.PHP_PROFILE));
 		}
 		profileManager.commitChanges(scopeContext);
 	}

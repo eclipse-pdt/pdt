@@ -32,6 +32,10 @@ public class PhpLexerFactory {
 			return new org.eclipse.php.internal.core.documentModel.parser.php56.PhpLexer(
 					reader);
 		}
+		if (phpVersion == PHPVersion.PHP7) {
+			return new org.eclipse.php.internal.core.documentModel.parser.php7.PhpLexer(
+					reader);
+		}
 		throw new IllegalArgumentException("Unknown PHP version"); //$NON-NLS-1$
 	}
 }

@@ -1,0 +1,254 @@
+--TEST--
+Test spaceship operator
+--FILE--
+<?php
+1 <=> 1;
+1.5 <=> 1.5;
+'a' <=> 'a';
+"a" <=> "a";
+[] <=> [];
+[1, 2, 3] <=> [1, 2, 3];
+[1,2][0] <=> [3,4][0];
+$a <=> $b;
+$a[0] <=> $b['key'];
+MyClass::FIELD <=> CONSTANT;
+MyClass::FIELD[OTHERCONST] <=> CONSTANT[OTHERCONST];
+$this->callA() <=> callB();
+--EXPECT--
+<Program start='0' length='254'>
+	<Statements>
+		<ExpressionStatement start='6' length='8'>
+			<InfixExpression start='6' length='7' operator='&lt;=&gt;'>
+				<Scalar start='6' length='1' type='int' value='1'/>
+				<Scalar start='12' length='1' type='int' value='1'/>
+			</InfixExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='15' length='12'>
+			<InfixExpression start='15' length='11' operator='&lt;=&gt;'>
+				<Scalar start='15' length='3' type='real' value='1.5'/>
+				<Scalar start='23' length='3' type='real' value='1.5'/>
+			</InfixExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='28' length='12'>
+			<InfixExpression start='28' length='11' operator='&lt;=&gt;'>
+				<Scalar start='28' length='3' type='string' value='&apos;a&apos;'/>
+				<Scalar start='36' length='3' type='string' value='&apos;a&apos;'/>
+			</InfixExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='41' length='12'>
+			<InfixExpression start='41' length='11' operator='&lt;=&gt;'>
+				<Scalar start='41' length='3' type='string' value='"a"'/>
+				<Scalar start='49' length='3' type='string' value='"a"'/>
+			</InfixExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='54' length='10'>
+			<InfixExpression start='54' length='9' operator='&lt;=&gt;'>
+				<ArrayCreation start='54' length='2'>
+				</ArrayCreation>
+				<ArrayCreation start='61' length='2'>
+				</ArrayCreation>
+			</InfixExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='65' length='24'>
+			<InfixExpression start='65' length='23' operator='&lt;=&gt;'>
+				<ArrayCreation start='65' length='9'>
+					<ArrayElement start='66' length='1'>
+						<Key>
+						</Key>
+						<Value>
+							<Scalar start='66' length='1' type='int' value='1'/>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='69' length='1'>
+						<Key>
+						</Key>
+						<Value>
+							<Scalar start='69' length='1' type='int' value='2'/>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='72' length='1'>
+						<Key>
+						</Key>
+						<Value>
+							<Scalar start='72' length='1' type='int' value='3'/>
+						</Value>
+					</ArrayElement>
+				</ArrayCreation>
+				<ArrayCreation start='79' length='9'>
+					<ArrayElement start='80' length='1'>
+						<Key>
+						</Key>
+						<Value>
+							<Scalar start='80' length='1' type='int' value='1'/>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='83' length='1'>
+						<Key>
+						</Key>
+						<Value>
+							<Scalar start='83' length='1' type='int' value='2'/>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='86' length='1'>
+						<Key>
+						</Key>
+						<Value>
+							<Scalar start='86' length='1' type='int' value='3'/>
+						</Value>
+					</ArrayElement>
+				</ArrayCreation>
+			</InfixExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='90' length='22'>
+			<InfixExpression start='90' length='21' operator='&lt;=&gt;'>
+				<ArrayAccess start='90' length='8' type='array'>
+					<ArrayCreation start='90' length='5'>
+						<ArrayElement start='91' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='91' length='1' type='int' value='1'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='93' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='93' length='1' type='int' value='2'/>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+					<Index>
+						<Scalar start='96' length='1' type='int' value='0'/>
+					</Index>
+				</ArrayAccess>
+				<ArrayAccess start='103' length='8' type='array'>
+					<ArrayCreation start='103' length='5'>
+						<ArrayElement start='104' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='104' length='1' type='int' value='3'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='106' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='106' length='1' type='int' value='4'/>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+					<Index>
+						<Scalar start='109' length='1' type='int' value='0'/>
+					</Index>
+				</ArrayAccess>
+			</InfixExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='113' length='10'>
+			<InfixExpression start='113' length='9' operator='&lt;=&gt;'>
+				<Variable start='113' length='2' isDollared='true'>
+					<Identifier start='114' length='1' name='a'/>
+				</Variable>
+				<Variable start='120' length='2' isDollared='true'>
+					<Identifier start='121' length='1' name='b'/>
+				</Variable>
+			</InfixExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='124' length='20'>
+			<InfixExpression start='124' length='19' operator='&lt;=&gt;'>
+				<ArrayAccess start='124' length='5' type='array'>
+					<Variable start='124' length='2' isDollared='true'>
+						<Identifier start='125' length='1' name='a'/>
+					</Variable>
+					<Index>
+						<Scalar start='127' length='1' type='int' value='0'/>
+					</Index>
+				</ArrayAccess>
+				<ArrayAccess start='134' length='9' type='array'>
+					<Variable start='134' length='2' isDollared='true'>
+						<Identifier start='135' length='1' name='b'/>
+					</Variable>
+					<Index>
+						<Scalar start='137' length='5' type='string' value='&apos;key&apos;'/>
+					</Index>
+				</ArrayAccess>
+			</InfixExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='145' length='28'>
+			<InfixExpression start='145' length='27' operator='&lt;=&gt;'>
+				<StaticConstantAccess start='145' length='14'>
+					<ClassName>
+						<NamespaceName start='145' length='7' global='false' current='false'>
+							<Identifier start='145' length='7' name='MyClass'/>
+						</NamespaceName>
+					</ClassName>
+					<Constant>
+						<Identifier start='154' length='5' name='FIELD'/>
+					</Constant>
+				</StaticConstantAccess>
+				<Scalar start='164' length='8' type='string' value='CONSTANT'/>
+			</InfixExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='174' length='52'>
+			<InfixExpression start='174' length='51' operator='&lt;=&gt;'>
+				<ArrayAccess start='174' length='26' type='array'>
+					<StaticConstantAccess start='174' length='14'>
+						<ClassName>
+							<NamespaceName start='174' length='7' global='false' current='false'>
+								<Identifier start='174' length='7' name='MyClass'/>
+							</NamespaceName>
+						</ClassName>
+						<Constant>
+							<Identifier start='183' length='5' name='FIELD'/>
+						</Constant>
+					</StaticConstantAccess>
+					<Index>
+						<Scalar start='189' length='10' type='string' value='OTHERCONST'/>
+					</Index>
+				</ArrayAccess>
+				<ArrayAccess start='205' length='20' type='array'>
+					<NamespaceName start='205' length='8' global='false' current='false'>
+						<Identifier start='205' length='8' name='CONSTANT'/>
+					</NamespaceName>
+					<Index>
+						<Scalar start='214' length='10' type='string' value='OTHERCONST'/>
+					</Index>
+				</ArrayAccess>
+			</InfixExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='227' length='27'>
+			<InfixExpression start='227' length='26' operator='&lt;=&gt;'>
+				<MethodInvocation start='227' length='14'>
+					<Dispatcher>
+						<Variable start='227' length='5' isDollared='true'>
+							<Identifier start='228' length='4' name='this'/>
+						</Variable>
+					</Dispatcher>
+					<Property>
+						<FunctionInvocation start='234' length='7'>
+							<FunctionName start='234' length='5'>
+								<Variable start='234' length='5' isDollared='false'>
+									<Identifier start='234' length='5' name='callA'/>
+								</Variable>
+							</FunctionName>
+							<Parameters>
+							</Parameters>
+						</FunctionInvocation>
+					</Property>
+				</MethodInvocation>
+				<FunctionInvocation start='246' length='7'>
+					<FunctionName start='246' length='5'>
+						<NamespaceName start='246' length='5' global='false' current='false'>
+							<Identifier start='246' length='5' name='callB'/>
+						</NamespaceName>
+					</FunctionName>
+					<Parameters>
+					</Parameters>
+				</FunctionInvocation>
+			</InfixExpression>
+		</ExpressionStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

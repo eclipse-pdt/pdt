@@ -78,6 +78,8 @@ public class InfixExpression extends Expression {
 	public static final int OP_SR = 23;
 	// '**'
 	public static final int OP_POW = 24;
+	// '<=>'
+	public static final int OP_SPACESHIP = 25;
 
 	private Expression left;
 	private int operator;
@@ -87,13 +89,13 @@ public class InfixExpression extends Expression {
 	 * The structural property of this node type.
 	 */
 	public static final ChildPropertyDescriptor LEFT_OPERAND_PROPERTY = new ChildPropertyDescriptor(
-			InfixExpression.class,
-			"left", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+			InfixExpression.class, "left", Expression.class, MANDATORY, //$NON-NLS-1$
+			CYCLE_RISK);
 	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(
 			InfixExpression.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor RIGHT_OPERAND_PROPERTY = new ChildPropertyDescriptor(
-			InfixExpression.class,
-			"right", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+			InfixExpression.class, "right", Expression.class, MANDATORY, //$NON-NLS-1$
+			CYCLE_RISK);
 
 	/**
 	 * A list of property descriptors (element type:
@@ -179,6 +181,8 @@ public class InfixExpression extends Expression {
 			return ">>"; //$NON-NLS-1$
 		case OP_POW:
 			return "**"; //$NON-NLS-1$
+		case OP_SPACESHIP:
+			return "<=>"; //$NON-NLS-1$
 		default:
 			throw new IllegalArgumentException();
 		}
@@ -212,7 +216,9 @@ public class InfixExpression extends Expression {
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<InfixExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" operator='").append(getXmlStringValue(getOperator(operator))).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(" operator='") //$NON-NLS-1$
+				.append(getXmlStringValue(getOperator(operator)))
+				.append("'>\n"); //$NON-NLS-1$
 		left.toString(buffer, TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
 		right.toString(buffer, TAB + tab);
