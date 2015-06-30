@@ -1,0 +1,25 @@
+--TEST--
+Test short echo syntax
+--FILE--
+<?=$var1, $var2, "string", 123, call(); ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="43">
+	<EchoStatement start="3" end="39">
+		<VariableReference start="3" end="8" name="$var1">
+		</VariableReference>
+		<VariableReference start="10" end="15" name="$var2">
+		</VariableReference>
+		<Scalar start="17" end="25" type="string" value="&quot;string&quot;">
+		</Scalar>
+		<Scalar start="27" end="30" type="int" value="123">
+		</Scalar>
+		<PHPCallExpression start="32" end="38">
+			<FullyQualifiedReference start="32" end="36" name="call">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="37" end="37">
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</EchoStatement>
+	<EmptyStatement start="40" end="42">
+	</EmptyStatement>
+</ModuleDeclaration>
