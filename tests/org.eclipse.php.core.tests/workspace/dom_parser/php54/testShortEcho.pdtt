@@ -1,0 +1,31 @@
+--TEST--
+Test short echo syntax
+--FILE--
+<?=$var1, $var2, "string", 123, call(); ?>
+--EXPECT--
+<Program start='0' length='42'>
+	<Statements>
+		<EchoStatement start='3' length='36'>
+			<Variable start='3' length='5' isDollared='true'>
+				<Identifier start='4' length='4' name='var1'/>
+			</Variable>
+			<Variable start='10' length='5' isDollared='true'>
+				<Identifier start='11' length='4' name='var2'/>
+			</Variable>
+			<Scalar start='17' length='8' type='string' value='"string"'/>
+			<Scalar start='27' length='3' type='int' value='123'/>
+			<FunctionInvocation start='32' length='6'>
+				<FunctionName start='32' length='4'>
+					<NamespaceName start='32' length='4' global='false' current='false'>
+						<Identifier start='32' length='4' name='call'/>
+					</NamespaceName>
+				</FunctionName>
+				<Parameters>
+				</Parameters>
+			</FunctionInvocation>
+		</EchoStatement>
+		<EmptyStatement start='40' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

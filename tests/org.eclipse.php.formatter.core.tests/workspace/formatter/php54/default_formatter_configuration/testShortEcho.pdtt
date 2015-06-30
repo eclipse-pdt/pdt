@@ -1,0 +1,8 @@
+--TEST--
+Test short echo syntax
+--FILE--
+<?=     $var1,        $var2,
+"string",123,
+call(); ?>
+--EXPECT--
+<?=$var1, $var2, "string", 123, call ();?>

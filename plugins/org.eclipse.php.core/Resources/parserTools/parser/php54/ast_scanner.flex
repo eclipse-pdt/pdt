@@ -805,7 +805,7 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
     if ((text.charAt(1)=='%' && asp_tags)
         || (text.charAt(1)=='?')) {
         yybegin(ST_IN_SCRIPTING);
-        //return T_OPEN_TAG_WITH_ECHO;
+        return createSymbol(ParserConstants.T_OPEN_TAG_WITH_ECHO);
     } else {
         return createSymbol(ParserConstants.T_INLINE_HTML);
     }

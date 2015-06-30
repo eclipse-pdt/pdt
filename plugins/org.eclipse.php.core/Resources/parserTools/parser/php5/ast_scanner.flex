@@ -761,7 +761,7 @@ HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDO
     if ((text.charAt(1)=='%' && asp_tags)
         || (text.charAt(1)=='?' && short_tags_allowed)) {
         yybegin(ST_IN_SCRIPTING);
-        //return T_OPEN_TAG_WITH_ECHO;
+        return createSymbol(ParserConstants.T_OPEN_TAG_WITH_ECHO);
     } else {
         return createSymbol(ParserConstants.T_INLINE_HTML);
     }

@@ -106,6 +106,7 @@ terminal  T_INLINE_HTML;
 terminal  String T_CHARACTER;
 terminal  String T_ENCAPSED_AND_WHITESPACE;
 terminal  String T_CONSTANT_ENCAPSED_STRING;
+terminal  T_OPEN_TAG_WITH_ECHO;
 terminal  T_ECHO;
 terminal  T_DO;
 terminal  T_WHILE;
@@ -636,6 +637,11 @@ T_CURLY_OPEN:catchBlockStart inner_statement_list:catchList T_CURLY_CLOSE:catchB
 | T_VAR_COMMENT:varComment unticked_statement:statement
 {:
 	RESULT = statement;
+:}
+
+| T_OPEN_TAG_WITH_ECHO:s echo_expr_list:exprList T_SEMICOLON:e
+{:
+	RESULT = new EchoStatement(exprListleft, eright, parser.ast, exprList);
 :}
 ;
 
