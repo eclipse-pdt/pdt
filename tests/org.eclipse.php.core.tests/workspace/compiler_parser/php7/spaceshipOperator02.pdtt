@@ -1,0 +1,72 @@
+--TEST--
+Test spaceship operator
+--FILE--
+<?php
+const TEST = VARR <=> 1;
+class MyClass {
+	const FOO = 10 <=> 1.5 * 10;
+	const FOO = 'Bar' [0] <=> "Foo" [0] <=> MyClass::ABC [0] [1];
+}
+--EXPECT--
+<ModuleDeclaration start="0" end="142">
+	<ConstantDeclaration start="6" end="29" modifiers="">
+		<ConstantReference start="12" end="16" name="TEST">
+		</ConstantReference>
+		<InfixExpression start="19" end="29" operator="&lt;=&gt;">
+			<Scalar start="19" end="23" type="string" value="VARR">
+			</Scalar>
+			<Scalar start="28" end="29" type="int" value="1">
+			</Scalar>
+		</InfixExpression>
+	</ConstantDeclaration>
+	<ClassDeclaration start="31" end="141" modifiers="" name="MyClass">
+		<ConstantDeclaration start="48" end="75" modifiers="">
+			<ConstantReference start="54" end="57" name="FOO">
+			</ConstantReference>
+			<InfixExpression start="60" end="75" operator="&lt;=&gt;">
+				<Scalar start="60" end="62" type="int" value="10">
+				</Scalar>
+				<InfixExpression start="67" end="75" operator="*">
+					<Scalar start="67" end="70" type="real" value="1.5">
+					</Scalar>
+					<Scalar start="73" end="75" type="int" value="10">
+					</Scalar>
+				</InfixExpression>
+			</InfixExpression>
+		</ConstantDeclaration>
+		<ConstantDeclaration start="78" end="138" modifiers="">
+			<ConstantReference start="84" end="87" name="FOO">
+			</ConstantReference>
+			<InfixExpression start="90" end="138" operator="&lt;=&gt;">
+				<InfixExpression start="90" end="113" operator="&lt;=&gt;">
+					<ReflectionArrayVariableReference start="90" end="99">
+						<Scalar start="90" end="95" type="string" value="&apos;Bar&apos;">
+						</Scalar>
+						<Scalar start="97" end="98" type="int" value="0">
+						</Scalar>
+					</ReflectionArrayVariableReference>
+					<ReflectionArrayVariableReference start="104" end="113">
+						<Scalar start="104" end="109" type="string" value="&quot;Foo&quot;">
+						</Scalar>
+						<Scalar start="111" end="112" type="int" value="0">
+						</Scalar>
+					</ReflectionArrayVariableReference>
+				</InfixExpression>
+				<ReflectionArrayVariableReference start="118" end="138">
+					<ReflectionArrayVariableReference start="118" end="134">
+						<StaticConstantAccess start="118" end="130">
+							<FullyQualifiedReference start="118" end="125" name="MyClass">
+							</FullyQualifiedReference>
+							<ConstantReference start="127" end="130" name="ABC">
+							</ConstantReference>
+						</StaticConstantAccess>
+						<Scalar start="132" end="133" type="int" value="0">
+						</Scalar>
+					</ReflectionArrayVariableReference>
+					<Scalar start="136" end="137" type="int" value="1">
+					</Scalar>
+				</ReflectionArrayVariableReference>
+			</InfixExpression>
+		</ConstantDeclaration>
+	</ClassDeclaration>
+</ModuleDeclaration>

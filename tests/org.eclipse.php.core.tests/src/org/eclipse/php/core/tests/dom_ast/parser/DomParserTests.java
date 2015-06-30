@@ -47,6 +47,10 @@ public class DomParserTests {
 		TESTS.put(PHPVersion.PHP5_6, new String[] {
 				"/workspace/dom_parser/php53", "/workspace/dom_parser/php54",
 				"/workspace/dom_parser/php55", "/workspace/dom_parser/php56" });
+		TESTS.put(PHPVersion.PHP7_0, new String[] {
+				"/workspace/dom_parser/php53", "/workspace/dom_parser/php54",
+				"/workspace/dom_parser/php55", "/workspace/dom_parser/php56",
+				"/workspace/dom_parser/php7"  });
 	};
 
 	private ASTParser parser;

@@ -1,0 +1,193 @@
+--TEST--
+Test spaceship operator
+--FILE--
+<?php
+1 <=> 1;
+1.5 <=> 1.5;
+'a' <=> 'a';
+"a" <=> "a";
+[] <=> [];
+[1, 2, 3] <=> [1, 2, 3];
+[1,2][0] <=> [3,4][0];
+$a <=> $b;
+$a[0] <=> $b['key'];
+MyClass::FIELD <=> CONSTANT;
+MyClass::FIELD[OTHERCONST] <=> CONSTANT[OTHERCONST];
+$this->callA() <=> callB();
+--EXPECT--
+<ModuleDeclaration start="0" end="255">
+	<ExpressionStatement start="6" end="14">
+		<InfixExpression start="6" end="13" operator="&lt;=&gt;">
+			<Scalar start="6" end="7" type="int" value="1">
+			</Scalar>
+			<Scalar start="12" end="13" type="int" value="1">
+			</Scalar>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="15" end="27">
+		<InfixExpression start="15" end="26" operator="&lt;=&gt;">
+			<Scalar start="15" end="18" type="real" value="1.5">
+			</Scalar>
+			<Scalar start="23" end="26" type="real" value="1.5">
+			</Scalar>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="28" end="40">
+		<InfixExpression start="28" end="39" operator="&lt;=&gt;">
+			<Scalar start="28" end="31" type="string" value="&apos;a&apos;">
+			</Scalar>
+			<Scalar start="36" end="39" type="string" value="&apos;a&apos;">
+			</Scalar>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="41" end="53">
+		<InfixExpression start="41" end="52" operator="&lt;=&gt;">
+			<Scalar start="41" end="44" type="string" value="&quot;a&quot;">
+			</Scalar>
+			<Scalar start="49" end="52" type="string" value="&quot;a&quot;">
+			</Scalar>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="54" end="64">
+		<InfixExpression start="54" end="63" operator="&lt;=&gt;">
+			<ArrayCreation start="54" end="56">
+			</ArrayCreation>
+			<ArrayCreation start="61" end="63">
+			</ArrayCreation>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="65" end="89">
+		<InfixExpression start="65" end="88" operator="&lt;=&gt;">
+			<ArrayCreation start="65" end="74">
+				<ArrayElement start="66" end="67">
+					<Scalar start="66" end="67" type="int" value="1">
+					</Scalar>
+				</ArrayElement>
+				<ArrayElement start="69" end="70">
+					<Scalar start="69" end="70" type="int" value="2">
+					</Scalar>
+				</ArrayElement>
+				<ArrayElement start="72" end="73">
+					<Scalar start="72" end="73" type="int" value="3">
+					</Scalar>
+				</ArrayElement>
+			</ArrayCreation>
+			<ArrayCreation start="79" end="88">
+				<ArrayElement start="80" end="81">
+					<Scalar start="80" end="81" type="int" value="1">
+					</Scalar>
+				</ArrayElement>
+				<ArrayElement start="83" end="84">
+					<Scalar start="83" end="84" type="int" value="2">
+					</Scalar>
+				</ArrayElement>
+				<ArrayElement start="86" end="87">
+					<Scalar start="86" end="87" type="int" value="3">
+					</Scalar>
+				</ArrayElement>
+			</ArrayCreation>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="90" end="112">
+		<InfixExpression start="90" end="111" operator="&lt;=&gt;">
+			<ReflectionArrayVariableReference start="90" end="98">
+				<ArrayCreation start="90" end="95">
+					<ArrayElement start="91" end="92">
+						<Scalar start="91" end="92" type="int" value="1">
+						</Scalar>
+					</ArrayElement>
+					<ArrayElement start="93" end="94">
+						<Scalar start="93" end="94" type="int" value="2">
+						</Scalar>
+					</ArrayElement>
+				</ArrayCreation>
+				<Scalar start="96" end="97" type="int" value="0">
+				</Scalar>
+			</ReflectionArrayVariableReference>
+			<ReflectionArrayVariableReference start="103" end="111">
+				<ArrayCreation start="103" end="108">
+					<ArrayElement start="104" end="105">
+						<Scalar start="104" end="105" type="int" value="3">
+						</Scalar>
+					</ArrayElement>
+					<ArrayElement start="106" end="107">
+						<Scalar start="106" end="107" type="int" value="4">
+						</Scalar>
+					</ArrayElement>
+				</ArrayCreation>
+				<Scalar start="109" end="110" type="int" value="0">
+				</Scalar>
+			</ReflectionArrayVariableReference>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="113" end="123">
+		<InfixExpression start="113" end="122" operator="&lt;=&gt;">
+			<VariableReference start="113" end="115" name="$a">
+			</VariableReference>
+			<VariableReference start="120" end="122" name="$b">
+			</VariableReference>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="124" end="144">
+		<InfixExpression start="124" end="143" operator="&lt;=&gt;">
+			<ArrayVariableReference start="124" end="129" type="array" name="$a">
+				<Scalar start="127" end="128" type="int" value="0">
+				</Scalar>
+			</ArrayVariableReference>
+			<ArrayVariableReference start="134" end="143" type="array" name="$b">
+				<Scalar start="137" end="142" type="string" value="&apos;key&apos;">
+				</Scalar>
+			</ArrayVariableReference>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="145" end="173">
+		<InfixExpression start="145" end="172" operator="&lt;=&gt;">
+			<StaticConstantAccess start="145" end="159">
+				<FullyQualifiedReference start="145" end="152" name="MyClass">
+				</FullyQualifiedReference>
+				<ConstantReference start="154" end="159" name="FIELD">
+				</ConstantReference>
+			</StaticConstantAccess>
+			<Scalar start="164" end="172" type="string" value="CONSTANT">
+			</Scalar>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="174" end="226">
+		<InfixExpression start="174" end="225" operator="&lt;=&gt;">
+			<ReflectionArrayVariableReference start="174" end="200">
+				<StaticConstantAccess start="174" end="188">
+					<FullyQualifiedReference start="174" end="181" name="MyClass">
+					</FullyQualifiedReference>
+					<ConstantReference start="183" end="188" name="FIELD">
+					</ConstantReference>
+				</StaticConstantAccess>
+				<Scalar start="189" end="199" type="string" value="OTHERCONST">
+				</Scalar>
+			</ReflectionArrayVariableReference>
+			<ReflectionArrayVariableReference start="205" end="225">
+				<FullyQualifiedReference start="205" end="213" name="CONSTANT">
+				</FullyQualifiedReference>
+				<Scalar start="214" end="224" type="string" value="OTHERCONST">
+				</Scalar>
+			</ReflectionArrayVariableReference>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="227" end="254">
+		<InfixExpression start="227" end="253" operator="&lt;=&gt;">
+			<PHPCallExpression start="227" end="241">
+				<VariableReference start="227" end="232" name="$this">
+				</VariableReference>
+				<SimpleReference start="234" end="239" name="callA">
+				</SimpleReference>
+				<PHPCallArgumentsList start="240" end="240">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+			<PHPCallExpression start="246" end="253">
+				<FullyQualifiedReference start="246" end="251" name="callB">
+				</FullyQualifiedReference>
+				<PHPCallArgumentsList start="252" end="252">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+		</InfixExpression>
+	</ExpressionStatement>
+</ModuleDeclaration>

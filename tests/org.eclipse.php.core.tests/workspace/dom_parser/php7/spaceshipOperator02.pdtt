@@ -1,0 +1,95 @@
+--TEST--
+Test spaceship operator
+--FILE--
+<?php
+const TEST = VARR <=> 1;
+class MyClass {
+	const FOO = 10 <=> 1.5 * 10;
+	const FOO = 'Bar' [0] <=> "Foo" [0] <=> MyClass::ABC [0] [1];
+}
+--EXPECT--
+<Program start='0' length='141'>
+	<Statements>
+		<ConstantDeclaration start='6' length='24'>
+			<VariableName>
+				<Identifier start='12' length='4' name='TEST'/>
+			</VariableName>
+			<InitialValue>
+				<InfixExpression start='19' length='10' operator='&lt;=&gt;'>
+					<Scalar start='19' length='4' type='string' value='VARR'/>
+					<Scalar start='28' length='1' type='int' value='1'/>
+				</InfixExpression>
+			</InitialValue>
+		</ConstantDeclaration>
+		<ClassDeclaration start='31' length='110' modifier=''>
+			<ClassName>
+				<Identifier start='37' length='7' name='MyClass'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='45' length='96' isCurly='true'>
+				<ConstantDeclaration start='48' length='28'>
+					<VariableName>
+						<Identifier start='54' length='3' name='FOO'/>
+					</VariableName>
+					<InitialValue>
+						<InfixExpression start='60' length='15' operator='&lt;=&gt;'>
+							<Scalar start='60' length='2' type='int' value='10'/>
+							<InfixExpression start='67' length='8' operator='*'>
+								<Scalar start='67' length='3' type='real' value='1.5'/>
+								<Scalar start='73' length='2' type='int' value='10'/>
+							</InfixExpression>
+						</InfixExpression>
+					</InitialValue>
+				</ConstantDeclaration>
+				<ConstantDeclaration start='78' length='61'>
+					<VariableName>
+						<Identifier start='84' length='3' name='FOO'/>
+					</VariableName>
+					<InitialValue>
+						<InfixExpression start='90' length='48' operator='&lt;=&gt;'>
+							<InfixExpression start='90' length='23' operator='&lt;=&gt;'>
+								<ArrayAccess start='90' length='9' type='array'>
+									<Scalar start='90' length='5' type='string' value='&apos;Bar&apos;'/>
+									<Index>
+										<Scalar start='97' length='1' type='int' value='0'/>
+									</Index>
+								</ArrayAccess>
+								<ArrayAccess start='104' length='9' type='array'>
+									<Scalar start='104' length='5' type='string' value='"Foo"'/>
+									<Index>
+										<Scalar start='111' length='1' type='int' value='0'/>
+									</Index>
+								</ArrayAccess>
+							</InfixExpression>
+							<ArrayAccess start='118' length='20' type='array'>
+								<ArrayAccess start='118' length='16' type='array'>
+									<StaticConstantAccess start='118' length='12'>
+										<ClassName>
+											<NamespaceName start='118' length='7' global='false' current='false'>
+												<Identifier start='118' length='7' name='MyClass'/>
+											</NamespaceName>
+										</ClassName>
+										<Constant>
+											<Identifier start='127' length='3' name='ABC'/>
+										</Constant>
+									</StaticConstantAccess>
+									<Index>
+										<Scalar start='132' length='1' type='int' value='0'/>
+									</Index>
+								</ArrayAccess>
+								<Index>
+									<Scalar start='136' length='1' type='int' value='1'/>
+								</Index>
+							</ArrayAccess>
+						</InfixExpression>
+					</InitialValue>
+				</ConstantDeclaration>
+			</Block>
+		</ClassDeclaration>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

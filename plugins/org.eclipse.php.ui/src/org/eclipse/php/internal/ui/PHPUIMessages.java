@@ -165,6 +165,8 @@ public final class PHPUIMessages extends NLS {
 	public static String PHPCreationDataModelProvider_3;
 	public static String PHPCreationDataModelProvider_2;
 	public static String PHPCreationDataModelProvider_1;
+
+	public static String PHPCreationDataModelProvider_6;
 	public static String Search_FindHierarchyDeclarationsAction_tooltip;
 	public static String IncludePathVariablesPreferencePage_savechanges_title;
 	public static String IncludePathsBlock_tab_projects;
@@ -908,6 +910,7 @@ public final class PHPUIMessages extends NLS {
 	public static String IncludePathTreeContent_Node_Name;
 	public static String DropAdapter_alreadyExists;
 	public static String PHPVersionConfigurationBlock_needsfullbuild_message;
+
 	public static String AddBlockComment_tooltip;
 	public static String MarkOccurrencesConfigurationBlock_link_tooltip;
 	public static String PHPElementAction_operationUnavailable_generic;

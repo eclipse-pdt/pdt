@@ -54,6 +54,12 @@ public class CompilerParserTests {
 				"/workspace/compiler_parser/php54",
 				"/workspace/compiler_parser/php55",
 				"/workspace/compiler_parser/php56" });
+		TESTS.put(PHPVersion.PHP7_0, new String[] {
+				"/workspace/compiler_parser/php53",
+				"/workspace/compiler_parser/php54",
+				"/workspace/compiler_parser/php55",
+				"/workspace/compiler_parser/php56",
+				"/workspace/compiler_parser/php7"});
 	};
 
 	private AbstractPHPSourceParser parser;

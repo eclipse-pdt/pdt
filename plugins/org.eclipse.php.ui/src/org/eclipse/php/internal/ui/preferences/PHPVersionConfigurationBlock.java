@@ -34,24 +34,27 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 /**
  * PHP version configuration block preferences page.
  */
-public class PHPVersionConfigurationBlock extends
-		PHPCoreOptionsConfigurationBlock {
+public class PHPVersionConfigurationBlock
+		extends PHPCoreOptionsConfigurationBlock {
 
 	public static final String[] PHP_VERSION_VALUES = {
-			PHPVersion.PHP5.getAlias(), PHPVersion.PHP5_3.getAlias(),
-			PHPVersion.PHP5_4.getAlias(), PHPVersion.PHP5_5.getAlias(),
-			PHPVersion.PHP5_6.getAlias() };
+			PHPVersion.PHP7_0.getAlias(), PHPVersion.PHP5_6.getAlias(),
+			PHPVersion.PHP5_5.getAlias(), PHPVersion.PHP5_4.getAlias(),
+			PHPVersion.PHP5_3.getAlias(), PHPVersion.PHP5.getAlias() };
 
 	public static final String[] PHP_VERSION_DESCRIPTIONS = {
-			PHPUIMessages.PHPCreationDataModelProvider_1,
-			PHPUIMessages.PHPCreationDataModelProvider_2,
-			PHPUIMessages.PHPCreationDataModelProvider_3,
+			PHPUIMessages.PHPCreationDataModelProvider_6,
+			PHPUIMessages.PHPCreationDataModelProvider_5,
 			PHPUIMessages.PHPCreationDataModelProvider_4,
-			PHPUIMessages.PHPCreationDataModelProvider_5 };
+			PHPUIMessages.PHPCreationDataModelProvider_3,
+			PHPUIMessages.PHPCreationDataModelProvider_2,
+			PHPUIMessages.PHPCreationDataModelProvider_1 };
 
 	private static final Key PREF_PHP_VERSION = getPHPCoreKey(Keys.PHP_VERSION);
-	private static final Key PREF_ASP_TAGS = getPHPCoreKey(Keys.EDITOR_USE_ASP_TAGS);
-	private static final Key PREF_SHORT_TAGS = getPHPCoreKey(Keys.EDITOR_USE_SHORT_TAGS);
+	private static final Key PREF_ASP_TAGS = getPHPCoreKey(
+			Keys.EDITOR_USE_ASP_TAGS);
+	private static final Key PREF_SHORT_TAGS = getPHPCoreKey(
+			Keys.EDITOR_USE_SHORT_TAGS);
 	private IStatus fTaskTagsStatus;
 	protected ValuedCombo versionCombo;
 	protected Button useShortTagsButton;
@@ -109,12 +112,12 @@ public class PHPVersionConfigurationBlock extends
 
 	private void createUseShortTagsContent(Composite composite) {
 		useShortTagsButton = new Button(composite, SWT.CHECK | SWT.RIGHT);
-		useShortTagsButton
-				.setText(PHPUIMessages.Preferences_php_editor_useShortTagsAsPhp_label);
+		useShortTagsButton.setText(
+				PHPUIMessages.Preferences_php_editor_useShortTagsAsPhp_label);
 		useShortTagsButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				setUseShortTagsValue(Boolean.toString(useShortTagsButton
-						.getSelection()));
+				setUseShortTagsValue(
+						Boolean.toString(useShortTagsButton.getSelection()));
 			}
 		});
 
@@ -191,8 +194,8 @@ public class PHPVersionConfigurationBlock extends
 		ArrayList entryList = new ArrayList();
 		for (int i = 0; i < PHP_VERSION_DESCRIPTIONS.length; i++) {
 			if (minimumVersion != null
-					&& PHPVersion.byAlias(PHP_VERSION_VALUES[i]).isLessThan(
-							minimumVersion)) {
+					&& PHPVersion.byAlias(PHP_VERSION_VALUES[i])
+							.isLessThan(minimumVersion)) {
 				continue;
 			}
 			String description = PHP_VERSION_DESCRIPTIONS[i];

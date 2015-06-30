@@ -20,8 +20,8 @@ import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 
-public class PHPSourceParserFactory extends AbstractSourceParser implements
-		ISourceParserFactory, ISourceParser {
+public class PHPSourceParserFactory extends AbstractSourceParser
+		implements ISourceParserFactory, ISourceParser {
 
 	public ISourceParser createSourceParser() {
 		return this;
@@ -84,6 +84,10 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements
 			return new org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpSourceParser(
 					fileName);
 		}
+		if (PHPVersion.PHP7_0 == phpVersion) {
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php7.PhpSourceParser(
+					fileName);
+		}
 		return null;
 	}
 
@@ -112,6 +116,9 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements
 		}
 		if (PHPVersion.PHP5_6 == phpVersion) {
 			return new org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpSourceParser();
+		}
+		if (PHPVersion.PHP7_0 == phpVersion) {
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php7.PhpSourceParser();
 		}
 		return null;
 	}
