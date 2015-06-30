@@ -135,6 +135,8 @@ public class PHPKeywords {
 					instance = new PHPKeywords(new KeywordInitializerPHP_5_5());
 				} else if (PHPVersion.PHP5_6 == version) {
 					instance = new PHPKeywords(new KeywordInitializerPHP_5_6());
+				} else if (PHPVersion.PHP7 == version) {
+					instance = new PHPKeywords(new KeywordInitializerPHP_7());
 				} else {
 					throw new IllegalArgumentException(Messages.PHPKeywords_0);
 				}
@@ -156,9 +158,8 @@ public class PHPKeywords {
 			return result;
 		}
 		for (KeywordData data : keywordData) {
-			if (data.name.startsWith(prefix)
-					|| (data.ignoreCase && data.name.toLowerCase().startsWith(
-							prefix.toLowerCase()))) {
+			if (data.name.startsWith(prefix) || (data.ignoreCase && data.name
+					.toLowerCase().startsWith(prefix.toLowerCase()))) {
 				result.add(data);
 			}
 		}
@@ -177,9 +178,8 @@ public class PHPKeywords {
 			return result;
 		}
 		for (KeywordData data : keywordData) {
-			if (data.name.startsWith(prefix)
-					|| (data.ignoreCase && data.name.toLowerCase().startsWith(
-							prefix.toLowerCase()))) {
+			if (data.name.startsWith(prefix) || (data.ignoreCase && data.name
+					.toLowerCase().startsWith(prefix.toLowerCase()))) {
 				result.add(data.name);
 			}
 		}

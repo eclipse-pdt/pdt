@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="plugins/org.eclipse.php.core.parser/java"/>
+	<classpathentry kind="src" path="plugins/org.eclipse.php.debug.core/src"/>
+	<classpathentry kind="src" path="plugins/org.eclipse.php.core.parser/src"/>
+	<classpathentry kind="src" path="tests/org.eclipse.php.core.tests/src"/>
+	<classpathentry kind="src" path="tests/org.eclipse.php.formatter.core.tests/src"/>
+	<classpathentry kind="src" path="plugins/org.eclipse.php.astview/src"/>
+	<classpathentry kind="src" path="examples/org.eclipse.php.examples.xss/src"/>
+	<classpathentry kind="src" path="tests/org.eclipse.php.ui.tests/src"/>
+	<classpathentry kind="src" path="tests/org.eclipse.test.performance.ui/src"/>
+	<classpathentry kind="src" path="plugins/org.eclipse.php.formatter.core/src"/>
+	<classpathentry kind="src" path="plugins/org.eclipse.php.mylyn.ui/src"/>
+	<classpathentry kind="src" path="plugins/org.eclipse.php.ui/src"/>
+	<classpathentry kind="src" path="plugins/org.eclipse.php.debug.daemon/src"/>
+	<classpathentry kind="src" path="plugins/org.eclipse.php.formatter.ui/src"/>
+	<classpathentry kind="src" path="tests/org.eclipse.php.core.performance.tests/src"/>
+	<classpathentry kind="src" path="tests/org.eclipse.test.performance/src"/>
+	<classpathentry kind="src" path="plugins/org.eclipse.php.refactoring.core/src"/>
+	<classpathentry kind="src" path="plugins/org.eclipse.php.core/src"/>
+	<classpathentry kind="src" path="plugins/org.eclipse.php.refactoring.ui/src"/>
+	<classpathentry kind="src" path="plugins/org.eclipse.php.server.core/src"/>
+	<classpathentry kind="src" path="plugins/org.eclipse.php.debug.ui/src"/>
+	<classpathentry kind="src" path="plugins/org.eclipse.php.help/src"/>
+	<classpathentry kind="src" path="plugins/org.eclipse.php.server.ui/src"/>
+	<classpathentry kind="src" path="tests/org.eclipse.php.refactoring.core.tests/src"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

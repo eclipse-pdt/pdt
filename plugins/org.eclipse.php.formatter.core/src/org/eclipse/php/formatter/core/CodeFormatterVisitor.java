@@ -357,6 +357,19 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			// for
 			// reset
 			// operation
+		} else if (PHPVersion.PHP7.equals(phpVersion)) {
+			result = new org.eclipse.php.internal.core.compiler.ast.parser.php7.CompilerAstLexer(
+					reader);
+			((org.eclipse.php.internal.core.compiler.ast.parser.php7.CompilerAstLexer) result)
+					.setAST(new AST(reader, PHPVersion.PHP7, false,
+							useShortTags));
+			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php7.CompilerAstLexer.ST_IN_SCRIPTING; // save
+			// the
+			// initial
+			// state
+			// for
+			// reset
+			// operation
 		} else {
 			throw new IllegalArgumentException("unrecognized version " //$NON-NLS-1$
 					+ phpVersion);
@@ -999,9 +1012,9 @@ public class CodeFormatterVisitor extends AbstractVisitor
 						}
 					}
 					int commentTokLen = commentContent.startsWith("#") ? 1 : 2;//$NON-NLS-1$
-					commentWords = Arrays.asList(commentContent
-							.substring(commentTokLen).trim()
-							.split("[ \\t\\v\\f]")); //$NON-NLS-1$
+					commentWords = Arrays
+							.asList(commentContent.substring(commentTokLen)
+									.trim().split("[ \\t\\v\\f]")); //$NON-NLS-1$
 					commentWords = removeEmptyString(commentWords);
 					commentContent = join(commentWords, " "); //$NON-NLS-1$
 					commentContent = commentContent.trim();
@@ -1164,8 +1177,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 						for (int i = 0; i < tags.length; i++) {
 							PHPDocTag phpDocTag = tags[i];
 							boolean insertTag = true;
-							String[] words = phpDocTag.getDescTexts().toArray(
-									new String[0]);
+							String[] words = phpDocTag.getDescTexts()
+									.toArray(new String[0]);
 
 							if ((i == tags.length - 1)
 									&& !this.preferences.comment_new_lines_at_javadoc_boundaries) {
@@ -1175,7 +1188,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 							if (getNonblankWords(words).length == 0) {
 								boolean hasRefs = phpDocTag
-										.getAllReferencesWithOrigOrder().size() != 0;
+										.getAllReferencesWithOrigOrder()
+										.size() != 0;
 								int nbLines = words.length;
 								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=433938
 								if (!hasRefs && nbLines > 1) {
@@ -1236,8 +1250,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					// indent all lines, even empty lines
 					for (int i = 1; i < lines.size(); i++) {
 						insertNewLineForPHPDoc(false);
-						appendToBuffer(lines.get(i).replaceFirst(
-								"^[ \\t\\v\\f]+", "")); //$NON-NLS-1$ //$NON-NLS-2$
+						appendToBuffer(lines.get(i)
+								.replaceFirst("^[ \\t\\v\\f]+", "")); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					handleCharsWithoutComments(comment.sourceStart() + offset,
 							comment.sourceEnd() + offset, true);
@@ -1517,8 +1531,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					for (int i = 1; i < lines.size(); i++) {
 						insertNewLineForPHPBlockComment(indentLengthForComment,
 								indentStringForComment, false);
-						appendToBuffer(lines.get(i).replaceFirst(
-								"^[ \\t\\v\\f]+", "")); //$NON-NLS-1$  //$NON-NLS-2$
+						appendToBuffer(lines.get(i)
+								.replaceFirst("^[ \\t\\v\\f]+", "")); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					handleCharsWithoutComments(comment.sourceStart() + offset,
 							comment.sourceEnd() + offset, true);
@@ -1766,8 +1780,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	private void initCommentWords() {
 		String commentContent = join(commentWords, " "); //$NON-NLS-1$
 		commentContent = commentContent.trim();
-		commentWords = Arrays.asList(MagicMemberUtil.WHITESPACE_SEPERATOR
-				.split(commentContent));
+		commentWords = Arrays.asList(
+				MagicMemberUtil.WHITESPACE_SEPERATOR.split(commentContent));
 		commentWords = removeEmptyString(commentWords);
 	}
 
@@ -1876,8 +1890,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		for (int i = 0; i < reference.length; i++) {
 			if (i > 0 && reference[i - 1] instanceof TypeReference
 					&& reference[i] instanceof TypeReference) {
-				sb.append(Constants.TYPE_SEPERATOR_CHAR).append(
-						reference[i].getName());
+				sb.append(Constants.TYPE_SEPERATOR_CHAR)
+						.append(reference[i].getName());
 			} else {
 				sb.append(" ").append(reference[i].getName()); //$NON-NLS-1$
 			}

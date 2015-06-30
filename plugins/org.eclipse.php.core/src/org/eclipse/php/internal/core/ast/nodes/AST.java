@@ -19,15 +19,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import java_cup.runtime.Scanner;
-import java_cup.runtime.lr_parser;
-
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.text.edits.TextEdit;
+
+import java_cup.runtime.Scanner;
+import java_cup.runtime.lr_parser;
 
 /**
  * Umbrella owner and abstract syntax tree node factory. An <code>AST</code>
@@ -216,11 +216,23 @@ public class AST {
 			lexer56.setUseAspTagsAsPhp(aspTagsAsPhp);
 			lexer56.setUseShortTags(useShortTags);
 			return lexer56;
+		} else if (PHPVersion.PHP7 == phpVersion) {
+			final AstLexer lexer7 = getLexer7(reader);
+			lexer7.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer7.setUseShortTags(useShortTags);
+			return lexer7;
 		} else {
 			throw new IllegalArgumentException(
 					CoreMessages.getString("ASTParser_1") //$NON-NLS-1$
 							+ phpVersion);
 		}
+	}
+
+	private AstLexer getLexer7(Reader reader) throws IOException {
+		final org.eclipse.php.internal.core.ast.scanner.php7.PhpAstLexer phpAstLexer = new org.eclipse.php.internal.core.ast.scanner.php7.PhpAstLexer(
+				reader);
+		phpAstLexer.setAST(this);
+		return phpAstLexer;
 	}
 
 	private AstLexer getLexer56(Reader reader) throws IOException {
@@ -281,6 +293,11 @@ public class AST {
 			return parser;
 		} else if (PHPVersion.PHP5_6 == phpVersion) {
 			final org.eclipse.php.internal.core.ast.scanner.php56.PhpAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php56.PhpAstParser(
+					lexer);
+			parser.setAST(this);
+			return parser;
+		} else if (PHPVersion.PHP7 == phpVersion) {
+			final org.eclipse.php.internal.core.ast.scanner.php7.PhpAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php7.PhpAstParser(
 					lexer);
 			parser.setAST(this);
 			return parser;
@@ -1206,7 +1223,8 @@ public class AST {
 	 *            - List of {@link Expression}
 	 * @return A new BackTickExpression.
 	 */
-	public BackTickExpression newBackTickExpression(List<Expression> expressions) {
+	public BackTickExpression newBackTickExpression(
+			List<Expression> expressions) {
 		BackTickExpression backTickExpression = new BackTickExpression(this);
 		backTickExpression.expressions().addAll(expressions);
 		return backTickExpression;
@@ -1280,7 +1298,8 @@ public class AST {
 	 * @param castType
 	 * @return A new CastExpression.
 	 */
-	public CastExpression newCastExpression(Expression expression, int castType) {
+	public CastExpression newCastExpression(Expression expression,
+			int castType) {
 		CastExpression castExpression = new CastExpression(this);
 		castExpression.setExpression(expression);
 		castExpression.setCastingType(castType);
@@ -1550,9 +1569,8 @@ public class AST {
 	 * @param body
 	 * @return A new DeclareStatement.
 	 */
-	public DeclareStatement newDeclareStatement(
-			List<Identifier> directiveNames, List<Expression> directiveValues,
-			Statement body) {
+	public DeclareStatement newDeclareStatement(List<Identifier> directiveNames,
+			List<Expression> directiveValues, Statement body) {
 		DeclareStatement declareStatement = new DeclareStatement(this);
 		declareStatement.directiveNames().addAll(directiveNames);
 		declareStatement.directiveValues().addAll(directiveValues);
@@ -2182,7 +2200,8 @@ public class AST {
 	 * @param expression
 	 * @return A new ParenthesisExpression.
 	 */
-	public ParenthesisExpression newParenthesisExpression(Expression expression) {
+	public ParenthesisExpression newParenthesisExpression(
+			Expression expression) {
 		ParenthesisExpression parenthesisExpression = new ParenthesisExpression(
 				this);
 		parenthesisExpression.setExpression(expression);
@@ -2600,7 +2619,8 @@ public class AST {
 	 * @param body
 	 * @return A new SwitchStatement.
 	 */
-	public SwitchStatement newSwitchStatement(Expression expression, Block body) {
+	public SwitchStatement newSwitchStatement(Expression expression,
+			Block body) {
 		SwitchStatement switchStatement = new SwitchStatement(this);
 		switchStatement.setExpression(expression);
 		switchStatement.setBody(body);
@@ -2671,7 +2691,8 @@ public class AST {
 	 * @param operator
 	 * @return A new UnaryOperation.
 	 */
-	public UnaryOperation newUnaryOperation(Expression expression, int operator) {
+	public UnaryOperation newUnaryOperation(Expression expression,
+			int operator) {
 		UnaryOperation unaryOperation = new UnaryOperation(this);
 		unaryOperation.setExpression(expression);
 		unaryOperation.setOperator(operator);
@@ -2738,7 +2759,8 @@ public class AST {
 	 * @param body
 	 * @return A new WhileStatement.
 	 */
-	public WhileStatement newWhileStatement(Expression condition, Statement body) {
+	public WhileStatement newWhileStatement(Expression condition,
+			Statement body) {
 		WhileStatement whileStatement = new WhileStatement(this);
 		whileStatement.setCondition(condition);
 		whileStatement.setBody(body);
@@ -2755,9 +2777,8 @@ public class AST {
 	 *            - Whether the namespace has a 'namespace' prefix
 	 * @return A new NamespaceName.
 	 */
-	public NamespaceName newNamespaceName(
-			final Collection<Identifier> segments, final boolean isglobal,
-			final boolean iscurrent) {
+	public NamespaceName newNamespaceName(final Collection<Identifier> segments,
+			final boolean isglobal, final boolean iscurrent) {
 		NamespaceName namespaceName = new NamespaceName(this);
 		namespaceName.segments().addAll(segments);
 		namespaceName.setGlobal(isglobal);
@@ -2933,8 +2954,8 @@ public class AST {
 		return lfDeclaration;
 	}
 
-	public TraitUseStatement newTraitUseStatement(
-			List<NamespaceName> traitList, List<TraitStatement> tsList) {
+	public TraitUseStatement newTraitUseStatement(List<NamespaceName> traitList,
+			List<TraitStatement> tsList) {
 		TraitUseStatement lfDeclaration = new TraitUseStatement(this);
 		lfDeclaration.setTraitList(traitList);
 		lfDeclaration.setTsList(tsList);
