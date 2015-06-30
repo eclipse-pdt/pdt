@@ -38,8 +38,12 @@ import org.eclipse.php.internal.core.typeinference.context.FileContext;
 
 public class ASTUtils {
 
-	private static final Pattern VAR_COMMENT_PATTERN = Pattern
-			.compile("(.*)(\\$[^\\s]+)(\\s+)([^\\s]+).*"); //$NON-NLS-1$
+	private static final Pattern VAR_COMMENT_PATTERN1 = Pattern.compile(
+			"(.*?@var\\s+)([$][^$\\s]+)(\\s+)([^$\\s]+).*", //$NON-NLS-1$
+			Pattern.CASE_INSENSITIVE);
+	private static final Pattern VAR_COMMENT_PATTERN2 = Pattern.compile(
+			"(.*?@var\\s+)([^$\\s]+)(\\s+)([$][^$\\s]+).*", //$NON-NLS-1$
+			Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * Parses @@var comment using regular expressions
@@ -53,15 +57,29 @@ public class ASTUtils {
 	 * @return {@link VarComment}
 	 */
 	public static VarComment parseVarComment(String content, int start, int end) {
-		Matcher m = VAR_COMMENT_PATTERN.matcher(content);
-		if (m.matches()) {
-			int varStart = start + m.group(1).length();
-			String varName = m.group(2);
-			int varEnd = varStart + varName.length();
+		Matcher m = null;
+		String types = null, varName = null;
+		int typeStart = -1, varStart = -1, varEnd = -1;
+		boolean foundMatch = false;
 
+		if ((m = VAR_COMMENT_PATTERN1.matcher(content)).matches()) {
+			types = m.group(4);
+			varName = m.group(2);
+			varStart = start + m.group(1).length();
+			varEnd = varStart + varName.length();
+			typeStart = varEnd + m.group(3).length();
+			foundMatch = true;
+		} else if ((m = VAR_COMMENT_PATTERN2.matcher(content)).matches()) {
+			types = m.group(2);
+			varName = m.group(4);
+			typeStart = start + m.group(1).length();
+			varStart = typeStart + types.length() + m.group(3).length();
+			varEnd = varStart + varName.length();
+			foundMatch = true;
+		}
+
+		if (foundMatch) {
 			List<TypeReference> typeReferences = new LinkedList<TypeReference>();
-			int typeStart = varEnd + m.group(3).length();
-			String types = m.group(4);
 
 			int pipeIdx = types.indexOf(Constants.TYPE_SEPERATOR_CHAR);
 			while (pipeIdx >= 0) {

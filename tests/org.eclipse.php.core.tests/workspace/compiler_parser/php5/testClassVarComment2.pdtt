@@ -1,0 +1,11 @@
+--TEST--
+Test Class Var Comment
+--FILE--
+<?php class gadi {/* @var MyClass $a */} ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="44">
+	<ClassDeclaration start="6" end="40" modifiers="" name="gadi">
+	</ClassDeclaration>
+	<EmptyStatement start="41" end="43">
+	</EmptyStatement>
+</ModuleDeclaration>
