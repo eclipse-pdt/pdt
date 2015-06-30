@@ -118,7 +118,7 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * if the elementName is a class alias for a namespace class,we get its
+	 * if the elementName is a class alias for a namespace class, we get its
 	 * original name from its alias
 	 * 
 	 * @param elementName
@@ -207,7 +207,9 @@ public class PHPModelUtils {
 				if ("namespace".equalsIgnoreCase(namespace)) { //$NON-NLS-1$
 					IType currentNamespace = PHPModelUtils.getCurrentNamespace(
 							sourceModule, offset);
-					return currentNamespace.getElementName();
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=470673
+					return currentNamespace != null ? currentNamespace
+							.getElementName() : null;
 				}
 
 				// 2. it can be an alias - try to find relevant USE statement
