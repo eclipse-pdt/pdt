@@ -32,16 +32,18 @@ public class PHPFacets {
 	 * @param project
 	 * @return the status of setting the version
 	 */
-	public static IStatus setFacetedVersion(IProject project, PHPVersion version) {
+	public static IStatus setFacetedVersion(IProject project,
+			PHPVersion version) {
 		if (isFacetedProject(project)) {
 			try {
-				final IProjectFacetVersion facetedVersion = convertToFacetVersion(version);
+				final IProjectFacetVersion facetedVersion = convertToFacetVersion(
+						version);
 				final IProjectFacet phpFacet = ProjectFacetsManager
 						.getProjectFacet(PHPFacetsConstants.PHP_COMPONENT);
 				final IFacetedProject faceted = ProjectFacetsManager
 						.create(project);
-				if (!facetedVersion.equals(faceted
-						.getInstalledVersion(phpFacet))) {
+				if (!facetedVersion
+						.equals(faceted.getInstalledVersion(phpFacet))) {
 					final Set<IFacetedProject.Action> actions = new HashSet<IFacetedProject.Action>();
 					actions.add(new IFacetedProject.Action(
 							IFacetedProject.Action.Type.VERSION_CHANGE,
@@ -104,25 +106,29 @@ public class PHPFacets {
 						.getProjectFacet(PHPFacetsConstants.PHP_COMPONENT);
 				final IProjectFacetVersion version = faceted
 						.getInstalledVersion(phpFacet);
-				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_5.equals(version
-						.getVersionString())) {
+				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_5
+						.equals(version.getVersionString())) {
 					return PHPVersion.PHP5;
 				}
-				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_5_3.equals(version
-						.getVersionString())) {
+				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_5_3
+						.equals(version.getVersionString())) {
 					return PHPVersion.PHP5_3;
 				}
-				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_5_4.equals(version
-						.getVersionString())) {
+				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_5_4
+						.equals(version.getVersionString())) {
 					return PHPVersion.PHP5_4;
 				}
-				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_5_5.equals(version
-						.getVersionString())) {
+				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_5_5
+						.equals(version.getVersionString())) {
 					return PHPVersion.PHP5_5;
 				}
-				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_5_6.equals(version
-						.getVersionString())) {
+				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_5_6
+						.equals(version.getVersionString())) {
 					return PHPVersion.PHP5_6;
+				}
+				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_7
+						.equals(version.getVersionString())) {
+					return PHPVersion.PHP7_0;
 				}
 			}
 		} catch (CoreException ex) {
@@ -139,7 +145,8 @@ public class PHPFacets {
 	 *            php version
 	 * @return the php facets version
 	 */
-	public static IProjectFacetVersion convertToFacetVersion(PHPVersion version) {
+	public static IProjectFacetVersion convertToFacetVersion(
+			PHPVersion version) {
 		IProjectFacet phpFacet = ProjectFacetsManager
 				.getProjectFacet(PHPFacetsConstants.PHP_COMPONENT);
 		switch (version) {
@@ -156,9 +163,12 @@ public class PHPFacets {
 			return phpFacet
 					.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_5_5);
 		case PHP5_6:
-		default:
 			return phpFacet
 					.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_5_6);
+		case PHP7_0:
+		default:
+			return phpFacet
+					.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_7);
 		}
 	}
 
@@ -174,9 +184,9 @@ public class PHPFacets {
 	 */
 	public static void createFacetedProject(IProject project,
 			PHPVersion phpVersion, IProgressMonitor monitor)
-			throws CoreException {
-		final IFacetedProject facetedProject = ProjectFacetsManager.create(
-				project, true, monitor);
+					throws CoreException {
+		final IFacetedProject facetedProject = ProjectFacetsManager
+				.create(project, true, monitor);
 
 		// set the fixed facets (they will not be removable by the user)
 		// the php.component facet will be set to the correct version

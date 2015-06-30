@@ -58,6 +58,8 @@ public class ModelStructureTests {
 				new String[] { "/workspace/model_structure/php53" });
 		TESTS.put(PHPVersion.PHP5_6,
 				new String[] { "/workspace/model_structure/php53" });
+		TESTS.put(PHPVersion.PHP7_0,
+				new String[] { "/workspace/model_structure/php53" });
 	};
 
 	protected IProject project;

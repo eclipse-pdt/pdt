@@ -49,6 +49,10 @@ public class DocumentLexerTests {
 				"/workspace/document_lexer/php53",
 				"/workspace/document_lexer/php54",
 				"/workspace/document_lexer/php56" });
+		TESTS.put(PHPVersion.PHP7_0, new String[] {
+				"/workspace/document_lexer/php53",
+				"/workspace/document_lexer/php54",
+				"/workspace/document_lexer/php56" });
 	};
 
 	private final PHPVersion version;

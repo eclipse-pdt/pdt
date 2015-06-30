@@ -80,6 +80,11 @@ public class MarkOccurrenceTests {
 				"/workspace/markoccurrence/php53",
 				"/workspace/markoccurrence/php54",
 				"/workspace/markoccurrence/php56" });
+		TESTS.put(PHPVersion.PHP7_0, new String[] {
+				"/workspace/markoccurrence/php5",
+				"/workspace/markoccurrence/php53",
+				"/workspace/markoccurrence/php54",
+				"/workspace/markoccurrence/php56" });
 	};
 
 	protected IProject project;

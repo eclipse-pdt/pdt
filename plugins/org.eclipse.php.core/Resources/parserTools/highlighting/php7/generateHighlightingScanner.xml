@@ -1,0 +1,37 @@
+<!--
+    Copyright (c) 2015 IBM Corporation and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+
+    Contributors:
+        IBM Corporation - initial API and implementation
+        Zend Technologies
+ -->
+<project name="Generating highlighting scanner for PHP 7" default="generateScanner" basedir=".">
+
+	<import file="../../jflex/build.xml" />
+
+	<target name="checkUpToDate">
+		<uptodate
+			property="upToDate"
+			targetfile="../../../../src/org/eclipse/php/internal/core/documentModel/parser/php7/PhpLexer.java">
+			<srcfiles dir="." includes="highlighting_scanner.jflex" />
+			<srcfiles dir="../../jflex" includes="common.skeleton" />
+		</uptodate>
+	</target>
+
+	<target name="generateScanner" depends="checkUpToDate,getJFlexJar" unless="upToDate">
+		<java jar="${jflexJar}" fork="true">
+			<arg value="--legacydot" />
+			<arg value="-d" />
+			<arg value="../../../../src/org/eclipse/php/internal/core/documentModel/parser/php7" />
+			<arg value="-skel" />
+			<arg value="../../jflex/common.skeleton" />
+			<arg value="-nobak" />
+			<arg value="highlighting_scanner.jflex" />
+		</java>
+	</target>
+
+</project>
