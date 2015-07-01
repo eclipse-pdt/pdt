@@ -885,7 +885,12 @@ HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDO
 	}
 }
 
-<ST_IN_SCRIPTING>"/*"{WHITESPACE}*"@var"{WHITESPACE}("$"?){LABEL}{WHITESPACE}(({LABEL}"[]"?|"|")+)*{WHITESPACE}?"*/" {
+<ST_IN_SCRIPTING>"/*"{WHITESPACE}*"@var"{WHITESPACE}+"$"{LABEL}{WHITESPACE}+({LABEL}|"["|"]"|"|")+{WHITESPACE}*"*/" {
+    handleVarComment();
+    //return createFullSymbol(ParserConstants.T_VAR_COMMENT);
+}
+
+<ST_IN_SCRIPTING>"/*"{WHITESPACE}*"@var"{WHITESPACE}+({LABEL}|"["|"]"|"|")+{WHITESPACE}+"$"{LABEL}{WHITESPACE}*"*/" {
     handleVarComment();
     //return createFullSymbol(ParserConstants.T_VAR_COMMENT);
 }
