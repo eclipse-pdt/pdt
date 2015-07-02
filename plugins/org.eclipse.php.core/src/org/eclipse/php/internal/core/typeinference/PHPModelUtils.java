@@ -106,7 +106,7 @@ public class PHPModelUtils {
 	 *            Element name
 	 * @return namespace prefix
 	 */
-	public static String extractNameSapceName(String element) {
+	public static String extractNameSpaceName(String element) {
 		String nameSpaceName = null;
 		if (element != null) {
 			int i = element.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
@@ -999,7 +999,7 @@ public class PHPModelUtils {
 								prefix.toLowerCase())) {
 
 					IField field = (IField) child;
-					if (!isSameFileExisiting(elements, field)) {
+					if (!isSameFileExisting(elements, field)) {
 						elements.add((IField) child);
 						processedVars.add(elementName);
 					}
@@ -1018,7 +1018,7 @@ public class PHPModelUtils {
 				&& method.getParent().getParent() instanceof IMethod;
 	};
 
-	private static boolean isSameFileExisiting(List<IField> elements,
+	private static boolean isSameFileExisting(List<IField> elements,
 			IField field) {
 
 		for (IField current : elements) {

@@ -101,7 +101,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 						// result.add(method);
 						reporter.reportMethod((IMethod) method, "", //$NON-NLS-1$
 								replaceRange, ProposalExtraInfo.METHOD_ONLY);
-					} else if ((!isConstructor(method) || inConstructor
+					} else if ((!PHPModelUtils.isConstructor(method) || inConstructor
 							&& isSuperConstructor(method, type, concreteContext))
 							&& !isFiltered(method, type, concreteContext)) {
 						if (magicMethods.contains(method.getElementName())) {
@@ -126,7 +126,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		try {
 			for (int i = 0; i < methods.length; i++) {
 				IMethod method = methods[i];
-				if (isConstructor(method)
+				if (PHPModelUtils.isConstructor(method)
 						&& method.getDeclaringType().equals(type)) {
 					ISourceRange construtorRange = method.getSourceRange();
 					if (concreteContext.getOffset() > construtorRange
@@ -144,7 +144,8 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 
 	private boolean isSuperConstructor(IMethod method, IType type,
 			ClassMemberContext context) {
-		if (isConstructor(method) && context.getTriggerType() == Trigger.CLASS
+		if (PHPModelUtils.isConstructor(method)
+				&& context.getTriggerType() == Trigger.CLASS
 				&& isParent(context) && !method.getDeclaringType().equals(type)) {
 			return true;
 		}
@@ -162,20 +163,10 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 				&& isDirectParentCall(context);
 	}
 
-	private boolean isConstructor(IMethod method) {
-		String methodName = method.getElementName();
-		if (methodName.equals("__construct") //$NON-NLS-1$
-				|| methodName
-						.equals(method.getDeclaringType().getElementName())) {
-			return true;
-		}
-		return false;
-	}
-
 	// private IMethod getConstructor(IType type, IMethod[] methods) {
 	// for (int i = 0; i < methods.length; i++) {
 	// IMethod method = methods[i];
-	// if (isConstructor(method)) {
+	// if (PHPModelUtils.isConstructor(method)) {
 	// return method;
 	// }
 	// }
