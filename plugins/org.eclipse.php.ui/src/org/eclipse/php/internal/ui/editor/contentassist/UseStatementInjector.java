@@ -157,8 +157,10 @@ public class UseStatementInjector {
 								parser.setSource(document.get().toCharArray());
 								Program program = parser.createAST(null);
 
-								// Don't insert USE statement for current namespace.
-								// "program != null" is a workaround for bug 465687.
+								// Don't insert USE statement for current
+								// namespace.
+								// "program != null" is a workaround for bug
+								// 465687.
 								if (program != null
 										&& isSameNamespace(namespaceName,
 												program, sourceModule, offset)) {

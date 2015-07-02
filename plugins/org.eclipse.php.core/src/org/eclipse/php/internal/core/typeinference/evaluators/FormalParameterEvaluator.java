@@ -62,7 +62,7 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 					String fullName = PHPModelUtils.getFullName(typeName,
 							methodContext.getSourceModule(), parameter.start());
 					typeName = PHPModelUtils.extractElementName(fullName);
-					namespace = PHPModelUtils.extractNameSapceName(fullName);
+					namespace = PHPModelUtils.extractNameSpaceName(fullName);
 				}
 				if (namespace != null) {
 					result = new PHPClassType(namespace, typeName);
