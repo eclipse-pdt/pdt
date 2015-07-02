@@ -37,6 +37,7 @@ public class PHPINIUtil {
 	private static final String ZEND_EXTENSION = "zend_extension"; //$NON-NLS-1$
 	private static final String ZEND_EXTENSION_TS = "zend_extension_ts"; //$NON-NLS-1$
 	private static final String MEMORY_LIMIT = "memory_limit"; //$NON-NLS-1$
+	private static final String DATE_TIMEZONE = "date.timezone"; //$NON-NLS-1$
 
 	private static void modifyIncludePath(File phpIniFile, String[] includePath) {
 		try {
@@ -304,17 +305,14 @@ public class PHPINIUtil {
 			INIFileModifier m = new INIFileModifier(phpIniFile);
 			if (!m.hasEntry(MEMORY_LIMIT)) {
 				m.addEntry(MEMORY_LIMIT, "256M"); //$NON-NLS-1$
-				m.close();
 			}
+			if (!m.hasEntry(DATE_TIMEZONE)) {
+				m.addEntry(DATE_TIMEZONE, Calendar.getInstance().getTimeZone().getID());
+			}
+			m.close();
 		} catch (IOException e) {
 			PHPDebugPlugin.log(e);
 		}
-		FileWriter fw = new FileWriter(phpIniFile, true);
-		// TODO expose default php.ini in PHP properties
-		fw.append("\ndate.timezone= \"") //$NON-NLS-1$
-				.append(Calendar.getInstance().getTimeZone().getID())
-				.append("\"\n"); //$NON-NLS-1$
-		fw.close();
 	}
 
 	/**
