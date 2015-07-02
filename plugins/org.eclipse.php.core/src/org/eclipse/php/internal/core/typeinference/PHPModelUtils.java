@@ -106,7 +106,7 @@ public class PHPModelUtils {
 	 *            Element name
 	 * @return namespace prefix
 	 */
-	public static String extractNameSapceName(String element) {
+	public static String extractNameSpaceName(String element) {
 		String nameSpaceName = null;
 		if (element != null) {
 			int i = element.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);

@@ -284,7 +284,7 @@ public class ASTUtils {
 	 * @param sourceModule
 	 *            Source module element
 	 * @param unit
-	 *            Module decalaration AST node
+	 *            Module declaration AST node
 	 * @param target
 	 *            AST node to find context for
 	 */

@@ -447,7 +447,7 @@ public class TypeBinding implements ITypeBinding {
 						String typeName = PHPModelUtils
 								.extractElementName(superTypeName);
 						String nameSpace = PHPModelUtils
-								.extractNameSapceName(superTypeName);
+								.extractNameSpaceName(superTypeName);
 						Collection<IType> types = resolver
 								.getModelAccessCache()
 								.getClassesOrInterfaces(sourceModule, typeName,
