@@ -17,7 +17,6 @@ package org.eclipse.php.internal.core.ast.nodes;
 import java.util.*;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.PHPFlags;
@@ -243,7 +242,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		try {
 			return bindingUtil.getType(offset, length);
 		} catch (ModelException e) {
-			Logger.log(IStatus.ERROR, e.toString());
+			Logger.logException(e);
 			return null;
 		}
 	}
@@ -282,7 +281,7 @@ public class DefaultBindingResolver extends BindingResolver {
 			return bindingUtil.getModelElement(offset, length, filter,
 					getModelAccessCache());
 		} catch (ModelException e) {
-			Logger.log(IStatus.ERROR, e.toString());
+			Logger.logException(e);
 			return null;
 		}
 	}
@@ -435,7 +434,7 @@ public class DefaultBindingResolver extends BindingResolver {
 					fieldDeclaration.getStart(), fieldDeclaration.getLength(),
 					getModelAccessCache());
 		} catch (ModelException e) {
-			Logger.log(IStatus.ERROR, e.toString());
+			Logger.logException(e);
 			return null;
 		}
 
@@ -495,7 +494,7 @@ public class DefaultBindingResolver extends BindingResolver {
 			modelElements = sourceModule.codeSelect(expression.getStart(),
 					expression.getLength());
 		} catch (ModelException e) {
-			Logger.log(IStatus.ERROR, e.toString());
+			Logger.logException(e);
 			return null;
 		}
 
@@ -601,7 +600,7 @@ public class DefaultBindingResolver extends BindingResolver {
 			modelElements = sourceModule.codeSelect(functionName.getStart(),
 					functionName.getLength());
 		} catch (ModelException e) {
-			Logger.log(IStatus.ERROR, e.toString());
+			Logger.logException(e);
 			return null;
 		}
 		if (modelElements != null && modelElements.length > 0) {
@@ -629,7 +628,7 @@ public class DefaultBindingResolver extends BindingResolver {
 			modelElements = sourceModule.codeSelect(functionName.getStart(),
 					functionName.getLength());
 		} catch (ModelException e) {
-			Logger.log(IStatus.ERROR, e.toString());
+			Logger.logException(e);
 			return null;
 		}
 		if (modelElements != null && modelElements.length > 0) {
@@ -657,7 +656,7 @@ public class DefaultBindingResolver extends BindingResolver {
 			modelElements = sourceModule.codeSelect(functionName.getStart(),
 					functionName.getLength());
 		} catch (ModelException e) {
-			Logger.log(IStatus.ERROR, e.toString());
+			Logger.logException(e);
 			return null;
 		}
 		if (modelElements != null && modelElements.length > 0) {
@@ -685,7 +684,7 @@ public class DefaultBindingResolver extends BindingResolver {
 			modelElements = sourceModule.codeSelect(functionName.getStart(),
 					functionName.getLength());
 		} catch (ModelException e) {
-			Logger.log(IStatus.ERROR, e.toString());
+			Logger.logException(e);
 			return null;
 		}
 		if (modelElements != null && modelElements.length > 0) {
@@ -714,7 +713,7 @@ public class DefaultBindingResolver extends BindingResolver {
 					.getStart(), type.getName().getLength(),
 					getModelAccessCache());
 		} catch (ModelException e) {
-			Logger.log(IStatus.ERROR, e.toString());
+			Logger.logException(e);
 			return null;
 		}
 
@@ -771,9 +770,9 @@ public class DefaultBindingResolver extends BindingResolver {
 			modelElements = bindingUtil.getFieldByPosition(variable.getStart(),
 					variable.getLength());
 		} catch (ModelException e) {
-			Logger.log(IStatus.ERROR, e.toString());
+			Logger.logException(e);
 		} catch (Exception e) {
-			Logger.log(IStatus.ERROR, e.toString());
+			Logger.logException(e);
 		}
 
 		if (modelElements != null) {
