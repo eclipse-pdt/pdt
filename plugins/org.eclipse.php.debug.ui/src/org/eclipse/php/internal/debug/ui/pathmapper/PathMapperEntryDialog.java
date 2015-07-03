@@ -149,6 +149,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		fWorkspacePathText.setLayoutData(layoutData);
 		fWorkspacePathText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
+		        fWorkspacePathText.setData(Type.WORKSPACE);
 				validate();
 			}
 		});
