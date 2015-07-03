@@ -7,7 +7,7 @@ Test constant scalar expressions Operation
 	<ConstantDeclaration start="6" end="28" modifiers="">
 		<ConstantReference start="12" end="13" name="A">
 		</ConstantReference>
-		<ConditionalExpression start="16" end="28">
+		<ConditionalExpression start="16" end="28" operatorType="0">
 			<Condition>
 				<Scalar start="16" end="20" type="string" value="true">
 				</Scalar>
@@ -25,7 +25,7 @@ Test constant scalar expressions Operation
 	<ConstantDeclaration start="30" end="50" modifiers="">
 		<ConstantReference start="36" end="37" name="B">
 		</ConstantReference>
-		<ConditionalExpression start="40" end="50">
+		<ConditionalExpression start="40" end="50" operatorType="0">
 			<Condition>
 				<Scalar start="40" end="45" type="string" value="false">
 				</Scalar>

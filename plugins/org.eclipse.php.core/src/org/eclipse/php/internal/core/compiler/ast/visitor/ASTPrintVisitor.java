@@ -96,10 +96,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 				buf.append(",static"); //$NON-NLS-1$
 			}
 			String modifiers = buf.toString();
-			parameters
-					.put("modifiers", //$NON-NLS-1$
-							modifiers.length() > 0 ? modifiers.substring(1)
-									: modifiers);
+			parameters.put("modifiers", //$NON-NLS-1$
+					modifiers.length() > 0 ? modifiers.substring(1)
+							: modifiers);
 		}
 
 		return parameters;
@@ -589,24 +588,34 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(ConditionalExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("operatorType", String.valueOf(s.getOperatorType())); //$NON-NLS-1$
 		xmlWriter.startTag("ConditionalExpression", parameters); //$NON-NLS-1$
 
 		xmlWriter.startTag("Condition", new HashMap<String, String>()); //$NON-NLS-1$
 		s.getCondition().traverse(this);
 		xmlWriter.endTag("Condition"); //$NON-NLS-1$
 
-		Expression ifTrue = s.getIfTrue();
-		if (ifTrue != null) {
-			xmlWriter.startTag("IfTrue", new HashMap<String, String>()); //$NON-NLS-1$
-			ifTrue.traverse(this);
-			xmlWriter.endTag("IfTrue"); //$NON-NLS-1$
-		}
+		if (s.getOperatorType() == ConditionalExpression.OP_TERNARY) {
+			Expression ifTrue = s.getIfTrue();
+			if (ifTrue != null) {
+				xmlWriter.startTag("IfTrue", new HashMap<String, String>()); //$NON-NLS-1$
+				ifTrue.traverse(this);
+				xmlWriter.endTag("IfTrue"); //$NON-NLS-1$
+			}
 
-		Expression falseExp = s.getIfFalse();
-		if (falseExp != null) {
-			xmlWriter.startTag("IfFalse", new HashMap<String, String>()); //$NON-NLS-1$
-			falseExp.traverse(this);
-			xmlWriter.endTag("IfFalse"); //$NON-NLS-1$
+			Expression falseExp = s.getIfFalse();
+			if (falseExp != null) {
+				xmlWriter.startTag("IfFalse", new HashMap<String, String>()); //$NON-NLS-1$
+				falseExp.traverse(this);
+				xmlWriter.endTag("IfFalse"); //$NON-NLS-1$
+			}
+		} else if (s.getOperatorType() == ConditionalExpression.OP_COALESCE) {
+			Expression ifTrue = s.getIfTrue();
+			if (ifTrue != null) {
+				xmlWriter.startTag("IfNull", new HashMap<String, String>()); //$NON-NLS-1$
+				ifTrue.traverse(this);
+				xmlWriter.endTag("IfNull"); //$NON-NLS-1$
+			}
 		}
 
 		return false;
@@ -1084,7 +1093,8 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	// php5.4 starts
 	Map<String, String> EMPTY_MAP = new HashMap<String, String>();
 
-	public boolean visit(FullyQualifiedTraitMethodReference s) throws Exception {
+	public boolean visit(FullyQualifiedTraitMethodReference s)
+			throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("functionName", s.getFunctionName()); //$NON-NLS-1$
 		xmlWriter.startTag("FullyQualifiedTraitMethodReference", parameters); //$NON-NLS-1$

@@ -34,7 +34,7 @@ Test constant scalar expressions Operation
 		<FormalParameter start="59" end="74" modifiers="" isMandatory="false">
 			<VariableReference start="59" end="61" name="$c">
 			</VariableReference>
-			<ConditionalExpression start="64" end="74">
+			<ConditionalExpression start="64" end="74" operatorType="0">
 				<Condition>
 					<Scalar start="64" end="67" type="string" value="BAR">
 					</Scalar>

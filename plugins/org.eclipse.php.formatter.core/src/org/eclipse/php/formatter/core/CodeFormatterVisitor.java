@@ -3049,7 +3049,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	}
 
 	public boolean visit(ConditionalExpression conditionalExpression) {
-
+		boolean isTernaryOperator = conditionalExpression
+				.getOperatorType() == ConditionalExpression.OP_TERNARY;
 		// start
 		// condition ? true : false
 		conditionalExpression.getCondition().accept(this);
@@ -3057,7 +3058,11 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		if (this.preferences.insert_space_before_conditional_question_mark) {
 			insertSpace();
 		}
+
 		appendToBuffer(QUESTION_MARK);
+		if (!isTernaryOperator) {
+			appendToBuffer(QUESTION_MARK);
+		}
 		if (this.preferences.insert_space_after_conditional_question_mark) {
 			insertSpace();
 		}
@@ -3085,23 +3090,26 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		if (this.preferences.insert_space_before_conditional_colon) {
 			insertSpace();
 		}
-		appendToBuffer(COLON);
+		if (isTernaryOperator) {
+			appendToBuffer(COLON);
 
-		if (this.preferences.insert_space_after_conditional_colon) {
-			insertSpace();
-		}
-
-		if (ifTrue != null && ifFalse != null) {
-			handleChars(ifTrue.getEnd(),
-					conditionalExpression.getIfFalse().getStart());
-		} else if (ifTrue == null && ifFalse != null) {
-			handleChars(colonOffset,
-					conditionalExpression.getIfFalse().getStart());
-		} else if (ifTrue != null && ifFalse == null) {
+			if (this.preferences.insert_space_after_conditional_colon) {
+				insertSpace();
+			}
+			if (ifTrue != null && ifFalse != null) {
+				handleChars(ifTrue.getEnd(),
+						conditionalExpression.getIfFalse().getStart());
+			} else if (ifTrue == null && ifFalse != null) {
+				handleChars(colonOffset,
+						conditionalExpression.getIfFalse().getStart());
+			} else if (ifTrue != null && ifFalse == null) {
+				handleChars(ifTrue.getEnd(), colonOffset);
+			}
+		} else {
 			handleChars(ifTrue.getEnd(), colonOffset);
 		}
 
-		if (ifFalse != null) {
+		if (ifFalse != null && isTernaryOperator) {
 			ifFalse.accept(this);
 		}
 		// end

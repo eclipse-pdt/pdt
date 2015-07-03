@@ -5,7 +5,7 @@ Test Conditional Expression
 --EXPECT--
 <ModuleDeclaration start="0" end="26">
 	<ExpressionStatement start="6" end="23">
-		<ConditionalExpression start="6" end="22">
+		<ConditionalExpression start="6" end="22" operatorType="0">
 			<Condition>
 				<CastExpression start="6" end="14" type="bool">
 					<VariableReference start="12" end="14" name="$a">

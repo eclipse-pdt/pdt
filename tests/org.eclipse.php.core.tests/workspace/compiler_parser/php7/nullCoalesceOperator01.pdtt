@@ -1,0 +1,241 @@
+--TEST--
+Test Null Coalesce Operator
+--FILE--
+<?php
+1 ?? 1;
+1.5 ?? 1.5;
+'a' ?? 'a';
+"a" ?? "a";
+[] ?? [];
+[1, 2, 3] ?? [1, 2, 3];
+[1,2][0] ?? [3,4][0];
+$a ?? $b;
+$a[0] ?? $b['key'];
+MyClass::FIELD ?? CONSTANT;
+MyClass::FIELD[OTHERCONST] ?? CONSTANT[OTHERCONST];
+$this->callA() ?? callB();
+--EXPECT--
+<ModuleDeclaration start="0" end="243">
+	<ExpressionStatement start="6" end="13">
+		<ConditionalExpression start="6" end="12" operatorType="1">
+			<Condition>
+				<Scalar start="6" end="7" type="int" value="1">
+				</Scalar>
+			</Condition>
+			<IfNull>
+				<Scalar start="11" end="12" type="int" value="1">
+				</Scalar>
+			</IfNull>
+		</ConditionalExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="14" end="25">
+		<ConditionalExpression start="14" end="24" operatorType="1">
+			<Condition>
+				<Scalar start="14" end="17" type="real" value="1.5">
+				</Scalar>
+			</Condition>
+			<IfNull>
+				<Scalar start="21" end="24" type="real" value="1.5">
+				</Scalar>
+			</IfNull>
+		</ConditionalExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="26" end="37">
+		<ConditionalExpression start="26" end="36" operatorType="1">
+			<Condition>
+				<Scalar start="26" end="29" type="string" value="&apos;a&apos;">
+				</Scalar>
+			</Condition>
+			<IfNull>
+				<Scalar start="33" end="36" type="string" value="&apos;a&apos;">
+				</Scalar>
+			</IfNull>
+		</ConditionalExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="38" end="49">
+		<ConditionalExpression start="38" end="48" operatorType="1">
+			<Condition>
+				<Scalar start="38" end="41" type="string" value="&quot;a&quot;">
+				</Scalar>
+			</Condition>
+			<IfNull>
+				<Scalar start="45" end="48" type="string" value="&quot;a&quot;">
+				</Scalar>
+			</IfNull>
+		</ConditionalExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="50" end="59">
+		<ConditionalExpression start="50" end="58" operatorType="1">
+			<Condition>
+				<ArrayCreation start="50" end="52">
+				</ArrayCreation>
+			</Condition>
+			<IfNull>
+				<ArrayCreation start="56" end="58">
+				</ArrayCreation>
+			</IfNull>
+		</ConditionalExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="60" end="83">
+		<ConditionalExpression start="60" end="82" operatorType="1">
+			<Condition>
+				<ArrayCreation start="60" end="69">
+					<ArrayElement start="61" end="62">
+						<Scalar start="61" end="62" type="int" value="1">
+						</Scalar>
+					</ArrayElement>
+					<ArrayElement start="64" end="65">
+						<Scalar start="64" end="65" type="int" value="2">
+						</Scalar>
+					</ArrayElement>
+					<ArrayElement start="67" end="68">
+						<Scalar start="67" end="68" type="int" value="3">
+						</Scalar>
+					</ArrayElement>
+				</ArrayCreation>
+			</Condition>
+			<IfNull>
+				<ArrayCreation start="73" end="82">
+					<ArrayElement start="74" end="75">
+						<Scalar start="74" end="75" type="int" value="1">
+						</Scalar>
+					</ArrayElement>
+					<ArrayElement start="77" end="78">
+						<Scalar start="77" end="78" type="int" value="2">
+						</Scalar>
+					</ArrayElement>
+					<ArrayElement start="80" end="81">
+						<Scalar start="80" end="81" type="int" value="3">
+						</Scalar>
+					</ArrayElement>
+				</ArrayCreation>
+			</IfNull>
+		</ConditionalExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="84" end="105">
+		<ConditionalExpression start="84" end="104" operatorType="1">
+			<Condition>
+				<ReflectionArrayVariableReference start="84" end="92">
+					<ArrayCreation start="84" end="89">
+						<ArrayElement start="85" end="86">
+							<Scalar start="85" end="86" type="int" value="1">
+							</Scalar>
+						</ArrayElement>
+						<ArrayElement start="87" end="88">
+							<Scalar start="87" end="88" type="int" value="2">
+							</Scalar>
+						</ArrayElement>
+					</ArrayCreation>
+					<Scalar start="90" end="91" type="int" value="0">
+					</Scalar>
+				</ReflectionArrayVariableReference>
+			</Condition>
+			<IfNull>
+				<ReflectionArrayVariableReference start="96" end="104">
+					<ArrayCreation start="96" end="101">
+						<ArrayElement start="97" end="98">
+							<Scalar start="97" end="98" type="int" value="3">
+							</Scalar>
+						</ArrayElement>
+						<ArrayElement start="99" end="100">
+							<Scalar start="99" end="100" type="int" value="4">
+							</Scalar>
+						</ArrayElement>
+					</ArrayCreation>
+					<Scalar start="102" end="103" type="int" value="0">
+					</Scalar>
+				</ReflectionArrayVariableReference>
+			</IfNull>
+		</ConditionalExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="106" end="115">
+		<ConditionalExpression start="106" end="114" operatorType="1">
+			<Condition>
+				<VariableReference start="106" end="108" name="$a">
+				</VariableReference>
+			</Condition>
+			<IfNull>
+				<VariableReference start="112" end="114" name="$b">
+				</VariableReference>
+			</IfNull>
+		</ConditionalExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="116" end="135">
+		<ConditionalExpression start="116" end="134" operatorType="1">
+			<Condition>
+				<ArrayVariableReference start="116" end="121" type="array" name="$a">
+					<Scalar start="119" end="120" type="int" value="0">
+					</Scalar>
+				</ArrayVariableReference>
+			</Condition>
+			<IfNull>
+				<ArrayVariableReference start="125" end="134" type="array" name="$b">
+					<Scalar start="128" end="133" type="string" value="&apos;key&apos;">
+					</Scalar>
+				</ArrayVariableReference>
+			</IfNull>
+		</ConditionalExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="136" end="163">
+		<ConditionalExpression start="136" end="162" operatorType="1">
+			<Condition>
+				<StaticConstantAccess start="136" end="150">
+					<FullyQualifiedReference start="136" end="143" name="MyClass">
+					</FullyQualifiedReference>
+					<ConstantReference start="145" end="150" name="FIELD">
+					</ConstantReference>
+				</StaticConstantAccess>
+			</Condition>
+			<IfNull>
+				<Scalar start="154" end="162" type="string" value="CONSTANT">
+				</Scalar>
+			</IfNull>
+		</ConditionalExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="164" end="215">
+		<ConditionalExpression start="164" end="214" operatorType="1">
+			<Condition>
+				<ReflectionArrayVariableReference start="164" end="190">
+					<StaticConstantAccess start="164" end="178">
+						<FullyQualifiedReference start="164" end="171" name="MyClass">
+						</FullyQualifiedReference>
+						<ConstantReference start="173" end="178" name="FIELD">
+						</ConstantReference>
+					</StaticConstantAccess>
+					<Scalar start="179" end="189" type="string" value="OTHERCONST">
+					</Scalar>
+				</ReflectionArrayVariableReference>
+			</Condition>
+			<IfNull>
+				<ReflectionArrayVariableReference start="194" end="214">
+					<FullyQualifiedReference start="194" end="202" name="CONSTANT">
+					</FullyQualifiedReference>
+					<Scalar start="203" end="213" type="string" value="OTHERCONST">
+					</Scalar>
+				</ReflectionArrayVariableReference>
+			</IfNull>
+		</ConditionalExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="216" end="242">
+		<ConditionalExpression start="216" end="241" operatorType="1">
+			<Condition>
+				<PHPCallExpression start="216" end="230">
+					<VariableReference start="216" end="221" name="$this">
+					</VariableReference>
+					<SimpleReference start="223" end="228" name="callA">
+					</SimpleReference>
+					<PHPCallArgumentsList start="229" end="229">
+					</PHPCallArgumentsList>
+				</PHPCallExpression>
+			</Condition>
+			<IfNull>
+				<PHPCallExpression start="234" end="241">
+					<FullyQualifiedReference start="234" end="239" name="callB">
+					</FullyQualifiedReference>
+					<PHPCallArgumentsList start="240" end="240">
+					</PHPCallArgumentsList>
+				</PHPCallExpression>
+			</IfNull>
+		</ConditionalExpression>
+	</ExpressionStatement>
+</ModuleDeclaration>

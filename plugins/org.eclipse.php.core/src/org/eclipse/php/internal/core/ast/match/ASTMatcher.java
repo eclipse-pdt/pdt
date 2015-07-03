@@ -437,8 +437,9 @@ public class ASTMatcher {
 		ConditionalExpression o = (ConditionalExpression) other;
 
 		return (safeSubtreeMatch(node.getCondition(), o.getCondition())
-				&& safeSubtreeMatch(node.getIfTrue(), o.getIfTrue()) && safeSubtreeMatch(
-					node.getIfFalse(), o.getIfFalse()));
+				&& safeSubtreeMatch(node.getIfTrue(), o.getIfTrue())
+				&& safeSubtreeMatch(node.getIfFalse(), o.getIfFalse()))
+				&& node.getOperatorType() == o.getOperatorType();
 	}
 
 	public boolean match(ContinueStatement node, Object other) {
