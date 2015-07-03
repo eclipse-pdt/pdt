@@ -696,6 +696,10 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 	return createSymbol(ParserConstants.T_SPACESHIP);
 }
 
+<ST_IN_SCRIPTING>"??" {
+	return createSymbol(ParserConstants.T_COALESCE);
+}
+
 // TOKENS
 <ST_IN_SCRIPTING> {
     ";"                     {return createSymbol(ParserConstants.T_SEMICOLON);}

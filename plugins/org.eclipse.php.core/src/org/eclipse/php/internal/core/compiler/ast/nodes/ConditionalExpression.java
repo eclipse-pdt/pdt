@@ -17,25 +17,53 @@ import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
- * Represents conditional expression
- * Holds the condition, if true expression and if false expression
- * each on e can be any expression
- * <pre>e.g.<pre> (bool) $a ? 3 : 4
- * $a > 0 ? $a : -$a
+ * Represents conditional expression Holds the condition, if true expression and
+ * if false expression each on e can be any expression
+ * 
+ * <pre>
+ * e.g.
+ * 
+ * <pre>
+ * (bool) $a ? 3 : 4, $a > 0 ? $a : -$a, $a ?? 0;
  */
 public class ConditionalExpression extends Expression {
+
+	// ?:
+	public static final int OP_TERNARY = 0;
+	// ??
+	public static final int OP_COALESCE = 1;
 
 	private final Expression condition;
 	private final Expression ifTrue;
 	private final Expression ifFalse;
+	private final int operatorType;
 
-	public ConditionalExpression(int start, int end, Expression condition, Expression ifTrue, Expression ifFalse) {
+	/**
+	 * Constructor for Ternary Operator
+	 */
+	public ConditionalExpression(int start, int end, Expression condition,
+			Expression ifTrue, Expression ifFalse) {
 		super(start, end);
 
 		assert condition != null && ifFalse != null;
 		this.condition = condition;
 		this.ifTrue = ifTrue;
 		this.ifFalse = ifFalse;
+		this.operatorType = OP_TERNARY;
+	}
+
+	/**
+	 * Constructor for Null Coalesce Operator
+	 */
+	public ConditionalExpression(int start, int end, Expression condition,
+			Expression ifNull) {
+		super(start, end);
+
+		assert condition != null && ifNull != null;
+		this.condition = condition;
+		this.ifTrue = ifNull;
+		this.ifFalse = null;
+		this.operatorType = OP_COALESCE;
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
@@ -45,7 +73,9 @@ public class ConditionalExpression extends Expression {
 			if (ifTrue != null) {
 				ifTrue.traverse(visitor);
 			}
-			ifFalse.traverse(visitor);
+			if (ifFalse != null) {
+				ifFalse.traverse(visitor);
+			}
 		}
 		visitor.endvisit(this);
 	}
@@ -59,11 +89,18 @@ public class ConditionalExpression extends Expression {
 	}
 
 	public Expression getIfFalse() {
+		if (getOperatorType() == OP_COALESCE) {
+			return condition;
+		}
 		return ifFalse;
 	}
 
 	public Expression getIfTrue() {
 		return ifTrue;
+	}
+
+	public int getOperatorType() {
+		return operatorType;
 	}
 
 	/**

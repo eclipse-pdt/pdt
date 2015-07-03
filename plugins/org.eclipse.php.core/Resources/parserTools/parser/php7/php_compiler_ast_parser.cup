@@ -199,6 +199,7 @@ terminal T_ELLIPSIS;
 
 //php 7
 terminal T_SPACESHIP;
+terminal T_COALESCE;
 
 /* Non terminals */
 
@@ -372,6 +373,7 @@ precedence left T_LOGICAL_AND;
 precedence right T_PRINT;
 precedence left T_EQUAL, T_PLUS_EQUAL,T_MINUS_EQUAL,T_MUL_EQUAL,T_DIV_EQUAL,T_CONCAT_EQUAL,T_MOD_EQUAL,T_AND_EQUAL,T_OR_EQUAL,T_XOR_EQUAL,T_SL_EQUAL,T_SR_EQUAL,T_POW_EQUAL;
 precedence left T_QUESTION_MARK,T_SEMICOLON;
+precedence right T_COALESCE;
 precedence left T_BOOLEAN_OR;
 precedence left T_BOOLEAN_AND;
 precedence left T_OR;
@@ -2678,6 +2680,11 @@ list_variable:vars T_EQUAL expr:expr
 | expr:condition T_QUESTION_MARK T_NEKUDOTAIM expr:ifFalse
 {:
 	RESULT = new ConditionalExpression(conditionleft, ifFalseright, condition , null, ifFalse);
+:}
+
+| expr:expr1 T_COALESCE expr:expr2
+{:
+	RESULT = new ConditionalExpression(expr1left, expr2right, expr1 , expr2);
 :}
 
 | internal_functions_in_yacc:expr

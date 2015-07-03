@@ -1,0 +1,302 @@
+--TEST--
+Test Null Coalesce Operator
+--FILE--
+<?php
+1 ?? 1;
+1.5 ?? 1.5;
+'a' ?? 'a';
+"a" ?? "a";
+[] ?? [];
+[1, 2, 3] ?? [1, 2, 3];
+[1,2][0] ?? [3,4][0];
+$a ?? $b;
+$a[0] ?? $b['key'];
+MyClass::FIELD ?? CONSTANT;
+MyClass::FIELD[OTHERCONST] ?? CONSTANT[OTHERCONST];
+$this->callA() ?? callB();
+--EXPECT--
+<Program start='0' length='242'>
+	<Statements>
+		<ExpressionStatement start='6' length='7'>
+			<ConditionalExpression start='6' length='6' operatorType='1'>
+				<Condition>
+					<Scalar start='6' length='1' type='int' value='1'/>
+				</Condition>
+				<IfNull>
+					<Scalar start='11' length='1' type='int' value='1'/>
+				</IfNull>
+			</ConditionalExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='14' length='11'>
+			<ConditionalExpression start='14' length='10' operatorType='1'>
+				<Condition>
+					<Scalar start='14' length='3' type='real' value='1.5'/>
+				</Condition>
+				<IfNull>
+					<Scalar start='21' length='3' type='real' value='1.5'/>
+				</IfNull>
+			</ConditionalExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='26' length='11'>
+			<ConditionalExpression start='26' length='10' operatorType='1'>
+				<Condition>
+					<Scalar start='26' length='3' type='string' value='&apos;a&apos;'/>
+				</Condition>
+				<IfNull>
+					<Scalar start='33' length='3' type='string' value='&apos;a&apos;'/>
+				</IfNull>
+			</ConditionalExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='38' length='11'>
+			<ConditionalExpression start='38' length='10' operatorType='1'>
+				<Condition>
+					<Scalar start='38' length='3' type='string' value='"a"'/>
+				</Condition>
+				<IfNull>
+					<Scalar start='45' length='3' type='string' value='"a"'/>
+				</IfNull>
+			</ConditionalExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='50' length='9'>
+			<ConditionalExpression start='50' length='8' operatorType='1'>
+				<Condition>
+					<ArrayCreation start='50' length='2'>
+					</ArrayCreation>
+				</Condition>
+				<IfNull>
+					<ArrayCreation start='56' length='2'>
+					</ArrayCreation>
+				</IfNull>
+			</ConditionalExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='60' length='23'>
+			<ConditionalExpression start='60' length='22' operatorType='1'>
+				<Condition>
+					<ArrayCreation start='60' length='9'>
+						<ArrayElement start='61' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='61' length='1' type='int' value='1'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='64' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='64' length='1' type='int' value='2'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='67' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='67' length='1' type='int' value='3'/>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Condition>
+				<IfNull>
+					<ArrayCreation start='73' length='9'>
+						<ArrayElement start='74' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='74' length='1' type='int' value='1'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='77' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='77' length='1' type='int' value='2'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='80' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='80' length='1' type='int' value='3'/>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</IfNull>
+			</ConditionalExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='84' length='21'>
+			<ConditionalExpression start='84' length='20' operatorType='1'>
+				<Condition>
+					<ArrayAccess start='84' length='8' type='array'>
+						<ArrayCreation start='84' length='5'>
+							<ArrayElement start='85' length='1'>
+								<Key>
+								</Key>
+								<Value>
+									<Scalar start='85' length='1' type='int' value='1'/>
+								</Value>
+							</ArrayElement>
+							<ArrayElement start='87' length='1'>
+								<Key>
+								</Key>
+								<Value>
+									<Scalar start='87' length='1' type='int' value='2'/>
+								</Value>
+							</ArrayElement>
+						</ArrayCreation>
+						<Index>
+							<Scalar start='90' length='1' type='int' value='0'/>
+						</Index>
+					</ArrayAccess>
+				</Condition>
+				<IfNull>
+					<ArrayAccess start='96' length='8' type='array'>
+						<ArrayCreation start='96' length='5'>
+							<ArrayElement start='97' length='1'>
+								<Key>
+								</Key>
+								<Value>
+									<Scalar start='97' length='1' type='int' value='3'/>
+								</Value>
+							</ArrayElement>
+							<ArrayElement start='99' length='1'>
+								<Key>
+								</Key>
+								<Value>
+									<Scalar start='99' length='1' type='int' value='4'/>
+								</Value>
+							</ArrayElement>
+						</ArrayCreation>
+						<Index>
+							<Scalar start='102' length='1' type='int' value='0'/>
+						</Index>
+					</ArrayAccess>
+				</IfNull>
+			</ConditionalExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='106' length='9'>
+			<ConditionalExpression start='106' length='8' operatorType='1'>
+				<Condition>
+					<Variable start='106' length='2' isDollared='true'>
+						<Identifier start='107' length='1' name='a'/>
+					</Variable>
+				</Condition>
+				<IfNull>
+					<Variable start='112' length='2' isDollared='true'>
+						<Identifier start='113' length='1' name='b'/>
+					</Variable>
+				</IfNull>
+			</ConditionalExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='116' length='19'>
+			<ConditionalExpression start='116' length='18' operatorType='1'>
+				<Condition>
+					<ArrayAccess start='116' length='5' type='array'>
+						<Variable start='116' length='2' isDollared='true'>
+							<Identifier start='117' length='1' name='a'/>
+						</Variable>
+						<Index>
+							<Scalar start='119' length='1' type='int' value='0'/>
+						</Index>
+					</ArrayAccess>
+				</Condition>
+				<IfNull>
+					<ArrayAccess start='125' length='9' type='array'>
+						<Variable start='125' length='2' isDollared='true'>
+							<Identifier start='126' length='1' name='b'/>
+						</Variable>
+						<Index>
+							<Scalar start='128' length='5' type='string' value='&apos;key&apos;'/>
+						</Index>
+					</ArrayAccess>
+				</IfNull>
+			</ConditionalExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='136' length='27'>
+			<ConditionalExpression start='136' length='26' operatorType='1'>
+				<Condition>
+					<StaticConstantAccess start='136' length='14'>
+						<ClassName>
+							<NamespaceName start='136' length='7' global='false' current='false'>
+								<Identifier start='136' length='7' name='MyClass'/>
+							</NamespaceName>
+						</ClassName>
+						<Constant>
+							<Identifier start='145' length='5' name='FIELD'/>
+						</Constant>
+					</StaticConstantAccess>
+				</Condition>
+				<IfNull>
+					<Scalar start='154' length='8' type='string' value='CONSTANT'/>
+				</IfNull>
+			</ConditionalExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='164' length='51'>
+			<ConditionalExpression start='164' length='50' operatorType='1'>
+				<Condition>
+					<ArrayAccess start='164' length='26' type='array'>
+						<StaticConstantAccess start='164' length='14'>
+							<ClassName>
+								<NamespaceName start='164' length='7' global='false' current='false'>
+									<Identifier start='164' length='7' name='MyClass'/>
+								</NamespaceName>
+							</ClassName>
+							<Constant>
+								<Identifier start='173' length='5' name='FIELD'/>
+							</Constant>
+						</StaticConstantAccess>
+						<Index>
+							<Scalar start='179' length='10' type='string' value='OTHERCONST'/>
+						</Index>
+					</ArrayAccess>
+				</Condition>
+				<IfNull>
+					<ArrayAccess start='194' length='20' type='array'>
+						<NamespaceName start='194' length='8' global='false' current='false'>
+							<Identifier start='194' length='8' name='CONSTANT'/>
+						</NamespaceName>
+						<Index>
+							<Scalar start='203' length='10' type='string' value='OTHERCONST'/>
+						</Index>
+					</ArrayAccess>
+				</IfNull>
+			</ConditionalExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='216' length='26'>
+			<ConditionalExpression start='216' length='25' operatorType='1'>
+				<Condition>
+					<MethodInvocation start='216' length='14'>
+						<Dispatcher>
+							<Variable start='216' length='5' isDollared='true'>
+								<Identifier start='217' length='4' name='this'/>
+							</Variable>
+						</Dispatcher>
+						<Property>
+							<FunctionInvocation start='223' length='7'>
+								<FunctionName start='223' length='5'>
+									<Variable start='223' length='5' isDollared='false'>
+										<Identifier start='223' length='5' name='callA'/>
+									</Variable>
+								</FunctionName>
+								<Parameters>
+								</Parameters>
+							</FunctionInvocation>
+						</Property>
+					</MethodInvocation>
+				</Condition>
+				<IfNull>
+					<FunctionInvocation start='234' length='7'>
+						<FunctionName start='234' length='5'>
+							<NamespaceName start='234' length='5' global='false' current='false'>
+								<Identifier start='234' length='5' name='callB'/>
+							</NamespaceName>
+						</FunctionName>
+						<Parameters>
+						</Parameters>
+					</FunctionInvocation>
+				</IfNull>
+			</ConditionalExpression>
+		</ExpressionStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

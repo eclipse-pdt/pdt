@@ -1,0 +1,7 @@
+--TEST--
+Test Null Coalesce Operator
+--FILE--
+<?php
+const BAR = $var1 ?? $this->field;
+--EXPECT--
+[line=2, start=18, end=23] syntax error, unexpected '$var1'

@@ -6,7 +6,7 @@ Test Conditional Expression
 <Program start='0' length='25'>
 	<Statements>
 		<ExpressionStatement start='6' length='17'>
-			<ConditionalExpression start='6' length='16'>
+			<ConditionalExpression start='6' length='16' operatorType='0'>
 				<Condition>
 					<CastExpression start='6' length='8' castType='bool'>
 						<Variable start='12' length='2' isDollared='true'>

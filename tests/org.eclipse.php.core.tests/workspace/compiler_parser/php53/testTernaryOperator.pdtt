@@ -8,7 +8,7 @@ Test Ternary Operator
 		<Assignment start="6" end="38" operator="=">
 			<VariableReference start="6" end="8" name="$a">
 			</VariableReference>
-			<ConditionalExpression start="11" end="38">
+			<ConditionalExpression start="11" end="38" operatorType="0">
 				<Condition>
 					<VariableReference start="11" end="20" name="$newValue">
 					</VariableReference>

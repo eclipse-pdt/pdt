@@ -84,7 +84,7 @@ public class CodeAssistTests {
 		TESTS.put(PHPVersion.PHP7_0, new String[] {
 				"/workspace/codeassist/php5", "/workspace/codeassist/php53",
 				"/workspace/codeassist/php54", "/workspace/codeassist/php55",
-				"/workspace/codeassist/php56" });
+				"/workspace/codeassist/php56", "/workspace/codeassist/php7" });
 	};
 
 	protected IProject project;
