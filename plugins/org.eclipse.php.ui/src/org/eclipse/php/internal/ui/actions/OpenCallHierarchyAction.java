@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -170,7 +170,9 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	 * is a TYPE (e.g. Class or Interface).
 	 */
 	private boolean isEnabled(ITextSelection selection) {
-		if (fEditor == null || selection == null)
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=471729
+		// exclude selection having selection.getLength() <= 0
+		if (fEditor == null || selection == null || selection.getLength() <= 0)
 			return false;
 		if (fEditor.getModelElement() instanceof ISourceModule) {
 			ISourceModule sourceModule = (ISourceModule) fEditor
