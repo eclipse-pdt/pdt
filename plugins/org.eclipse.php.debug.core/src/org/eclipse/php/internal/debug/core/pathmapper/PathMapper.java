@@ -171,7 +171,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 			}
 			path.removeLastSegment();
 		}
-		return null;
+		return localToPathEntryType.get(path);
 	}
 
 	/**
