@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -90,10 +90,13 @@ public class PHPInformationHierarchyProvider implements IInformationProvider,
 
 		if (fUseCodeResolve) {
 			IModelElement inputModelElement = fEditor.getModelElement();
-			if (inputModelElement instanceof ISourceModule && subject != null) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=471729
+			// exclude subject having subject.getLength() == 0
+			if (inputModelElement instanceof ISourceModule && subject != null
+					&& subject.getLength() > 0) {
 				ISourceModule sourceModule = (ISourceModule) inputModelElement;
-				IModelElement modelElement = getSelectionModelElement(subject
-						.getOffset(), subject.getLength(), sourceModule);
+				IModelElement modelElement = getSelectionModelElement(
+						subject.getOffset(), subject.getLength(), sourceModule);
 
 				if (modelElement != null) {
 					if (modelElement instanceof ISourceType) {
@@ -128,7 +131,8 @@ public class PHPInformationHierarchyProvider implements IInformationProvider,
 					SharedASTProvider.WAIT_NO, null);
 			if (ast != null) {
 				ASTNode selectedNode = NodeFinder.perform(ast, offset, length);
-				if (selectedNode.getType() == ASTNode.IDENTIFIER) {
+				if (selectedNode != null
+						&& selectedNode.getType() == ASTNode.IDENTIFIER) {
 					element = ((Identifier) selectedNode).resolveBinding()
 							.getPHPElement();
 				}
