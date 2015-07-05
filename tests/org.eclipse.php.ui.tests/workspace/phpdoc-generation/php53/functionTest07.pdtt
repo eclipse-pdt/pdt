@@ -1,0 +1,40 @@
+--TEST--
+Tests phpDoc generation for function
+--FILE--
+<?php
+namespace AAA\buspacex {
+	class Onetx {}
+}
+
+namespace AAA\myspace {
+	use AAA\buspacex\Onetx;
+
+	class Onetx2 {}
+
+	/**|
+	function function_name($param) {
+	    $a = 5;
+		return $a ? new Onetx2() : new Onetx();
+	}
+}
+--EXPECT--
+<?php
+namespace AAA\buspacex {
+	class Onetx {}
+}
+
+namespace AAA\myspace {
+	use AAA\buspacex\Onetx;
+
+	class Onetx2 {}
+
+	/**
+	 * 
+	 * @param unknown $param
+	 * @return Onetx2|\AAA\buspacex\Onetx
+	 */
+	function function_name($param) {
+	    $a = 5;
+		return $a ? new Onetx2() : new Onetx();
+	}
+}
