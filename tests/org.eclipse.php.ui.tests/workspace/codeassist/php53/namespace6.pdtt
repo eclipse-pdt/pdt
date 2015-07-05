@@ -1,0 +1,31 @@
+--TEST--
+Bug 469377 - Content assist inserts incorrect use statement
+--FILE--
+<?php
+namespace Foo {
+class A {
+   public function __construct($foo) {
+   }
+}
+class BBB extends A {}
+}
+
+namespace Foo2 {
+$b = new BBB|;
+}
+?>
+--EXPECT--
+<?php
+namespace Foo {
+class A {
+   public function __construct($foo) {
+   }
+}
+class BBB extends A {}
+}
+
+namespace Foo2 {
+use Foo\BBB;
+$b = new BBB($foo);
+}
+?>

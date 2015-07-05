@@ -55,6 +55,7 @@ public final class ParameterGuessingProposal extends
 	protected static final String COMMA = ", "; //$NON-NLS-1$
 	private CompletionProposal fProposal;
 	private IMethod method;
+	private IMethod guessingMethod;
 	private final boolean fFillBestGuess;
 	private boolean fReplacementStringComputed = false;
 	private Object extraInfo;
@@ -79,6 +80,7 @@ public final class ParameterGuessingProposal extends
 				completionProposal);
 		this.fProposal = proposal;
 		method = (IMethod) fProposal.getModelElement();
+		guessingMethod = method;
 		this.fFillBestGuess = fillBestGuess;
 		this.extraInfo = extraInfo;
 		this.document = document;
@@ -134,17 +136,8 @@ public final class ParameterGuessingProposal extends
 					}
 				} else {
 					LinkedPositionGroup group = new LinkedPositionGroup();
-					int insideBracketsOffset = 0;
-					int leftBracketsOffset = replacement.lastIndexOf('(');
-					if (leftBracketsOffset != -1) {
-						insideBracketsOffset = baseOffset + leftBracketsOffset
-								+ 1;
-					} else {
-						insideBracketsOffset = baseOffset
-								+ replacement.length() - 1;
-					}
 					group.addPosition(new LinkedPosition(document,
-							insideBracketsOffset, 0,
+							getReplacementOffset() + getCursorPosition(), 0,
 							LinkedPositionGroup.NO_STOP));
 					model.addGroup(group);
 				}
@@ -360,7 +353,7 @@ public final class ParameterGuessingProposal extends
 		fReplacementStringComputed = true;
 		try {
 			// we should get the real constructor here
-			method = getProperMethod(method);
+			method = getProperMethod(guessingMethod);
 			if (alias != null || (hasParameters() && hasArgumentList())) {
 				return computeGuessingCompletion(prefix);
 			}
@@ -422,19 +415,16 @@ public final class ParameterGuessingProposal extends
 		initAlias();
 		String replacementString = null;
 		if (alias != null) {
-			replacementString = getAlias();
+			replacementString = alias + LPAREN + RPAREN;
 		} else {
 			replacementString = super.getReplacementString();
 		}
 		return isPrefix(prefix, replacementString);
 	}
 
-	public String getAlias() {
-		return alias + LPAREN + RPAREN;
-	}
-
 	@SuppressWarnings("restriction")
 	private void initAlias() {
+		alias = null;
 		if (method instanceof FakeConstructor) {
 			FakeConstructor fc = (FakeConstructor) method;
 			if (fc.getParent() instanceof AliasType) {
@@ -703,7 +693,9 @@ public final class ParameterGuessingProposal extends
 
 	@Override
 	public IModelElement getModelElement() {
-		return method;
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=469377
+		// be sure to return the "unchanged" method
+		return guessingMethod;
 	}
 
 	public Object getExtraInfo() {
