@@ -25,8 +25,10 @@ import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.scanner.php56.ParserConstants;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.parser.php56.PhpTokenNames;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPEvaluationUtils;
 import org.eclipse.php.internal.ui.corext.codemanipulation.StubUtility;
@@ -616,6 +618,9 @@ public class CodeGeneration {
 		String[] typeParameterNames = null;
 		String[] parameterTypes = null;
 		Program program = null;
+		IType currentNamespaceType = PHPModelUtils.getCurrentNamespace(method);
+		String currentNamespace = currentNamespaceType != null ? currentNamespaceType
+				.getElementName() : null;
 
 		try {
 			// XXX: WAIT_NO (instead of WAIT_YES) due bug 466694 and until
@@ -765,8 +770,11 @@ public class CodeGeneration {
 						returnTypeBuffer
 								.append("Ambiguous").append(Constants.TYPE_SEPERATOR_CHAR); //$NON-NLS-1$
 					} else if (!appendAllPossibleTypes(
-							returnType.getEvaluatedType(), returnTypeBuffer)) {
-						returnTypeBuffer.append(returnType.getName()).append(
+							returnType.getEvaluatedType(), currentNamespace,
+							returnTypeBuffer)) {
+						returnTypeBuffer.append(
+								getTypeNameWithoutNS(returnType,
+										currentNamespace)).append(
 								Constants.TYPE_SEPERATOR_CHAR);
 					}
 				}
@@ -854,6 +862,43 @@ public class CodeGeneration {
 		return types;
 	}
 
+	private static String getTypeNameWithoutNS(ITypeBinding type,
+			String currentNamespace) {
+		if (currentNamespace == null) {
+			return type.getName();
+		}
+		String name = PHPModelUtils.extractElementName(type.getName());
+		String namespace = PHPModelUtils.extractNameSpaceName(type.getName());
+		if (namespace != null
+				&& namespace.length() > 0
+				&& namespace.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			namespace = namespace.substring(1);
+		}
+		if (currentNamespace.equals(namespace)) {
+			return name;
+		}
+		return type.getName();
+	}
+
+	private static String getTypeNameWithoutNS(IEvaluatedType type,
+			String currentNamespace) {
+		if (currentNamespace == null) {
+			return type.getTypeName();
+		}
+		String name = PHPModelUtils.extractElementName(type.getTypeName());
+		String namespace = PHPModelUtils.extractNameSpaceName(type
+				.getTypeName());
+		if (namespace != null
+				&& namespace.length() > 0
+				&& namespace.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			namespace = namespace.substring(1);
+		}
+		if (currentNamespace.equals(namespace)) {
+			return name;
+		}
+		return type.getTypeName();
+	}
+
 	/**
 	 * Checks if the parameter "type" is a type container object (whose class is
 	 * AmbiguousType or MultiTypeType) and prints its content recursively in
@@ -864,13 +909,15 @@ public class CodeGeneration {
 	 * always be '|'.
 	 *
 	 * @param type
+	 * @param currentNamespace
+	 *            (can be null)
 	 * @param buffer
 	 * @return true if "type" is a type container object, false otherwise
 	 */
 	private static boolean appendAllPossibleTypes(IEvaluatedType type,
-			StringBuilder buffer) {
+			String currentNamespace, StringBuilder buffer) {
 		List<String> foundTypes = new ArrayList<String>();
-		if (findAllPossibleTypes(type, foundTypes, 0, true)) {
+		if (findAllPossibleTypes(type, currentNamespace, foundTypes, 0, true)) {
 			for (String foundType : foundTypes) {
 				buffer.append(foundType).append(Constants.TYPE_SEPERATOR_CHAR);
 			}
@@ -880,14 +927,16 @@ public class CodeGeneration {
 	}
 
 	private static boolean findAllPossibleTypes(IEvaluatedType type,
-			List<String> foundTypes, int level, boolean firstCall) {
+			String currentNamespace, List<String> foundTypes, int level,
+			boolean firstCall) {
 		if (type instanceof AmbiguousType) {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=467148
 			IEvaluatedType[] allPossibleTypes = ((AmbiguousType) type)
 					.getPossibleTypes();
 			// XXX: allPossibleTypes should not be empty
 			for (IEvaluatedType possibleType : allPossibleTypes) {
-				findAllPossibleTypes(possibleType, foundTypes, level, false);
+				findAllPossibleTypes(possibleType, currentNamespace,
+						foundTypes, level, false);
 			}
 			return true;
 		}
@@ -897,13 +946,14 @@ public class CodeGeneration {
 					.getTypes();
 			// XXX: allPossibleTypes should not be empty
 			for (IEvaluatedType possibleType : allPossibleTypes) {
-				findAllPossibleTypes(possibleType, foundTypes, level + 1, false);
+				findAllPossibleTypes(possibleType, currentNamespace,
+						foundTypes, level + 1, false);
 			}
 			return true;
 		}
 		if (!firstCall) {
 			StringBuilder buffer = new StringBuilder();
-			buffer.append(type.getTypeName());
+			buffer.append(getTypeNameWithoutNS(type, currentNamespace));
 			for (int i = 1; i <= level; i++) {
 				buffer.append(PHPEvaluationUtils.BRACKETS);
 			}
