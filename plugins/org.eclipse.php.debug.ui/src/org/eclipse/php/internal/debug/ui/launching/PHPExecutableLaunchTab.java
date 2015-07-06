@@ -38,8 +38,6 @@ import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.PHPRuntime;
-import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
-import org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
@@ -410,7 +408,6 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		configuration.setAttribute(
 				IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS,
 				scriptArguments.length() > 0 ? scriptArguments : null);
-		applyLaunchDelegateConfiguration(configuration);
 	}
 
 	/*
@@ -442,7 +439,6 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 				configuration.setAttribute(
 						IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 						PHPDebugPlugin.getStopAtFirstLine());
-				applyLaunchDelegateConfiguration(configuration);
 			}
 			configuration.setAttribute(
 					IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS,
@@ -491,33 +487,6 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			argumentVariablesButton.setVisible(enabled);
 		if (debugFileTextField != null)
 			debugFileTextField.setVisible(enabled);
-	}
-
-	/**
-	 * Apply the launch configuration delegate class that will be used when
-	 * using this launch with the {@link PHPLaunchDelegateProxy}. This method
-	 * sets the class name of the launch delegate that is associated with the
-	 * debugger that was defined to this launch configuration. The class name is
-	 * retrieved from the debugger's {@link IDebuggerConfiguration}.
-	 * 
-	 * @param configuration
-	 *            A ILaunchConfigurationWorkingCopy
-	 */
-	protected void applyLaunchDelegateConfiguration(
-			final ILaunchConfigurationWorkingCopy configuration) {
-		String debuggerID = null;
-		try {
-			debuggerID = configuration.getAttribute(
-					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-					PHPDebugPlugin.getCurrentDebuggerId());
-			IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
-					.getDebuggerConfiguration(debuggerID);
-			configuration.setAttribute(
-					PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
-					debuggerConfiguration.getScriptLaunchDelegateClass());
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
 	}
 
 	/**
