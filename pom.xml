@@ -209,7 +209,7 @@
 		<repository>
 			<id>dltk-tests</id>
 			<layout>p2</layout>
-			<url>https://hudson.eclipse.org/dltk/job/dltk-nightly/lastSuccessfulBuild/artifact/org.eclipse.dltk.releng/build/update.site/target/repository/</url>
+			<url>http://download.eclipse.org/technology/dltk/updates-dev/latest-nightly</url>
 		</repository>
 		<repository>
 			<id>eclipse-tests</id>
