@@ -28,10 +28,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
-import org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy;
-import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
-import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.launching.LaunchUtilities;
@@ -635,39 +631,8 @@ public class ServerLaunchConfigurationTab extends
 			}
 			saveWorkingCopy = false;
 		}
-		applyLaunchDelegateConfiguration(configuration);
 	}
 
-	/**
-	 * Apply the launch configuration delegate class that will be used when
-	 * using this launch with the {@link PHPLaunchDelegateProxy}. This method
-	 * sets the class name of the launch delegate that is associated with the
-	 * debugger that was defined to this launch configuration. The class name is
-	 * retrieved from the debugger's {@link IDebuggerConfiguration}.
-	 * 
-	 * @param configuration
-	 *            A ILaunchConfigurationWorkingCopy
-	 */
-	protected void applyLaunchDelegateConfiguration(
-			final ILaunchConfigurationWorkingCopy configuration) {
-		String debuggerID = null;
-		try {
-			debuggerID = configuration.getAttribute(
-					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, (String) null);
-			if (debuggerID == null) {
-				String serverName = configuration.getAttribute(Server.NAME,
-						(String) null);
-				debuggerID = PHPDebugPlugin.getDebuggerId(serverName);
-			}
-			IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
-					.getDebuggerConfiguration(debuggerID);
-			configuration.setAttribute(
-					PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
-					debuggerConfiguration.getWebLaunchDelegateClass());
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
-	}
 
 	protected void applyExtension(ILaunchConfigurationWorkingCopy configuration) {
 		return;

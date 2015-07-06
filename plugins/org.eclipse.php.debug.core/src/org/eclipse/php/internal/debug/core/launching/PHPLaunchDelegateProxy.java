@@ -26,7 +26,6 @@ import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
-import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsUtil;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 
@@ -184,11 +183,6 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 				wc.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION,
 						(String) null);
 			}
-			// Set up custom port from exe configuration
-			int debugPort = ZendDebuggerSettingsUtil.getDebugPort(item
-					.getUniqueId());
-			if (debugPort != -1)
-				wc.setAttribute(IPHPDebugConstants.PHP_Port, debugPort);
 			configuration = wc.doSave();
 		}
 		return configuration;
@@ -197,14 +191,19 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 	private ILaunchConfiguration updatePHPServerAttributes(
 			ILaunchConfiguration configuration) throws CoreException {
 		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
-		Server server = ServersManager.getServer(configuration.getAttribute(
-				Server.NAME, "")); //$NON-NLS-1$
-		// Set up custom port from server configuration
-		int debugPort = ZendDebuggerSettingsUtil.getDebugPort(server
-				.getUniqueId());
-		if (debugPort != -1)
-			wc.setAttribute(IPHPDebugConstants.PHP_Port, debugPort);
-		configuration = wc.doSave();
+		Server server = ServersManager
+				.getServer(configuration.getAttribute(Server.NAME, "")); //$NON-NLS-1$
+		if (server != null) {
+			String debuggerId = server.getDebuggerId();
+			wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
+					debuggerId);
+			IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
+					.getDebuggerConfiguration(debuggerId);
+			wc.setAttribute(
+					PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
+					debuggerConfiguration.getWebLaunchDelegateClass());
+			configuration = wc.doSave();
+		}
 		return configuration;
 	}
 

@@ -95,7 +95,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	private Button configureDebugger;
 	private Button breakOnFirstLine;
 	public boolean isTextModificationChange;
-
+	private boolean saveWorkingCopy;
 	private IDebugServerConnectionTest[] debugTesters = new IDebugServerConnectionTest[0];
 
 	/**
@@ -343,7 +343,6 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		label.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.19")); //$NON-NLS-1$
 
 		debuggerName = new Label(debuggerServerComp, SWT.NONE);
-		//		debuggerName.setFont(JFaceResources.getFontRegistry().getBold("")); //$NON-NLS-1$
 
 		Label separator = new Label(debuggerServerComp, SWT.NONE);
 		data = new GridData(SWT.BEGINNING);
@@ -355,18 +354,8 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		validateDebuggerBtn.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				updateDebugServerTesters();
-				String serverName = null;
-				try {
-					serverName = launchConfiguration.getAttribute(Server.NAME,
-							(String) null);
-				} catch (CoreException e) {
-					// TODO handle
-				}
-				if (serverName != null) {
-					Server server = ServersManager.getServer(serverName);
-					for (IDebugServerConnectionTest debugServerTester : debugTesters) {
-						debugServerTester.testConnection(server, getShell());
-					}
+				for (IDebugServerConnectionTest debugServerTester : debugTesters) {
+					debugServerTester.testConnection(getServer(), getShell());
 				}
 			}
 		});
@@ -381,8 +370,6 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 			}
 		});
 
-		// initialize the debuggers list
-		// fillDebuggers();
 	}
 
 	private Server getServer() {
@@ -437,31 +424,20 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	}
 
 	protected void handleConfigureDebuggerSelected() {
-		String serverName = null;
-		try {
-			serverName = launchConfiguration.getAttribute(Server.NAME,
-					(String) null);
-		} catch (CoreException e) {
-			// TODO handle
+		Server server = getServer();
+		if (server == null || ServersManager.isNoneServer(server))
+			return;
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				.getShell();
+		NullProgressMonitor monitor = new NullProgressMonitor();
+		WizardDialog dialog = new WizardDialog(shell,
+				new ServerEditWizard(server, DebuggerCompositeFragment.ID));
+		if (dialog.open() == Window.CANCEL) {
+			monitor.setCanceled(true);
+			return;
 		}
-		if (serverName != null) {
-			Server server = ServersManager.getServer(serverName);
-			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getShell();
-			NullProgressMonitor monitor = new NullProgressMonitor();
-			WizardDialog dialog = new WizardDialog(shell, new ServerEditWizard(
-					server, DebuggerCompositeFragment.ID));
-			if (dialog.open() == Window.CANCEL) {
-				monitor.setCanceled(true);
-				return;
-			}
-			ServersManager.save();
-			String previousDebuggerId = debuggerId;
-			debuggerId = server.getDebuggerId();
-			if (!debuggerId.equals(previousDebuggerId))
-				setDebugger();
-		}
-
+		ServersManager.save();
+		setDebugger();
 	}
 
 	/**
@@ -472,9 +448,14 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		if (server == null) {
 			server = ServersManager.getDefaultServer(null);
 		}
+		String previousDebuggerId = debuggerId;
 		debuggerId = server.getDebuggerId();
-		debuggerName.setText(PHPDebuggersRegistry.getDebuggerName(debuggerId));
-		handleDebuggerChanged();
+		if (!debuggerId.equals(previousDebuggerId)) {
+			debuggerName
+					.setText(PHPDebuggersRegistry.getDebuggerName(debuggerId));
+			saveWorkingCopy = true;
+			handleDebuggerChanged();
+		}
 	}
 
 	/**
@@ -674,6 +655,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		launchConfiguration = configuration;
 		initializeDebuggerControl(configuration);
+		configureDebugger.setEnabled(!ServersManager.isNoneServer(getServer()));
 		boolean isXdebugger = isXdebug();
 		try {
 			boolean isUsingTunnel = configuration.getAttribute(
@@ -882,6 +864,13 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		applyExtension(configuration);
 		isTextModificationChange = false; // reset this flag here.
 		updateDebugServerTesters();
+		if (saveWorkingCopy) {
+			try {
+				configuration.doSave();
+			} catch (CoreException e) {
+			}
+			saveWorkingCopy = false;
+		}
 	}
 
 	/**
