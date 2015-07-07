@@ -39,31 +39,36 @@ public class LambdaFunctionDeclaration extends Expression {
 	private final ASTNode.NodeList<Expression> lexicalVariables = new ASTNode.NodeList<Expression>(
 			LEXICAL_VARIABLES_PROPERTY);
 	private Block body;
+	private Expression returnType;
 
 	/**
 	 * The structural property of this node type.
 	 */
 	public static final SimplePropertyDescriptor IS_REFERENCE_PROPERTY = new SimplePropertyDescriptor(
-			LambdaFunctionDeclaration.class,
-			"isReference", Boolean.class, OPTIONAL); //$NON-NLS-1$
+			LambdaFunctionDeclaration.class, "isReference", Boolean.class, //$NON-NLS-1$
+			OPTIONAL);
 	public static final SimplePropertyDescriptor IS_STATIC = new SimplePropertyDescriptor(
-			LambdaFunctionDeclaration.class,
-			"isStatic", Boolean.class, OPTIONAL); //$NON-NLS-1$
+			LambdaFunctionDeclaration.class, "isStatic", Boolean.class, //$NON-NLS-1$
+			OPTIONAL);
 	public static final ChildListPropertyDescriptor FORMAL_PARAMETERS_PROPERTY = new ChildListPropertyDescriptor(
-			LambdaFunctionDeclaration.class,
-			"formalParameters", FormalParameter.class, NO_CYCLE_RISK); //$NON-NLS-1$
+			LambdaFunctionDeclaration.class, "formalParameters", //$NON-NLS-1$
+			FormalParameter.class, NO_CYCLE_RISK);
 	public static final ChildListPropertyDescriptor LEXICAL_VARIABLES_PROPERTY = new ChildListPropertyDescriptor(
-			LambdaFunctionDeclaration.class,
-			"lexicalVariables", Expression.class, NO_CYCLE_RISK); //$NON-NLS-1$
+			LambdaFunctionDeclaration.class, "lexicalVariables", //$NON-NLS-1$
+			Expression.class, NO_CYCLE_RISK);
 	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(
-			LambdaFunctionDeclaration.class,
-			"body", Block.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+			LambdaFunctionDeclaration.class, "body", Block.class, OPTIONAL, //$NON-NLS-1$
+			CYCLE_RISK);
+	public static final ChildPropertyDescriptor RETURN_TYPE_PROPERTY = new ChildPropertyDescriptor(
+			LambdaFunctionDeclaration.class, "returnType", Expression.class, //$NON-NLS-1$
+			OPTIONAL, CYCLE_RISK);
 
 	/**
 	 * A list of property descriptors (element type:
 	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
 				4);
@@ -72,6 +77,7 @@ public class LambdaFunctionDeclaration extends Expression {
 		propertyList.add(FORMAL_PARAMETERS_PROPERTY);
 		propertyList.add(LEXICAL_VARIABLES_PROPERTY);
 		propertyList.add(BODY_PROPERTY);
+		propertyList.add(RETURN_TYPE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
@@ -84,7 +90,16 @@ public class LambdaFunctionDeclaration extends Expression {
 
 	public LambdaFunctionDeclaration(int start, int end, AST ast,
 			List formalParameters, List lexicalVars, Block body,
-			final boolean isReference, final boolean isStatic, int staticStart) {
+			final boolean isReference, final boolean isStatic,
+			int staticStart) {
+		this(start, end, ast, formalParameters, lexicalVars, body, isReference,
+				isStatic, staticStart, null);
+	}
+
+	public LambdaFunctionDeclaration(int start, int end, AST ast,
+			List formalParameters, List lexicalVars, Block body,
+			final boolean isReference, final boolean isStatic, int staticStart,
+			Expression returnType) {
 		super(start, end, ast);
 
 		if (formalParameters == null) {
@@ -108,6 +123,7 @@ public class LambdaFunctionDeclaration extends Expression {
 		}
 		setStatic(isStatic);
 		this.staticStart = staticStart;
+		this.returnType = returnType;
 	}
 
 	public LambdaFunctionDeclaration(AST ast) {
@@ -182,6 +198,13 @@ public class LambdaFunctionDeclaration extends Expression {
 		}
 		buffer.append(TAB).append(tab).append("</LexicalVariables>\n"); //$NON-NLS-1$
 
+		if (getReturnType() != null) {
+			buffer.append(TAB).append(tab).append("<ReturnType>\n"); //$NON-NLS-1$
+			getReturnType().toString(buffer, TAB + TAB + tab);
+			buffer.append("\n"); //$NON-NLS-1$
+			buffer.append(TAB).append(tab).append("</ReturnType>\n"); //$NON-NLS-1$
+		}
+
 		buffer.append(TAB).append(tab).append("<FunctionBody>\n"); //$NON-NLS-1$
 		if (body != null) {
 			body.toString(buffer, TAB + TAB + tab);
@@ -213,9 +236,9 @@ public class LambdaFunctionDeclaration extends Expression {
 	 * @exception IllegalArgumentException
 	 *                if:
 	 *                <ul>
-	 *                <li>the node belongs to a different AST</li> <li>the node
-	 *                already has a parent</li> <li>a cycle in would be created
-	 *                </li>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
 	 *                </ul>
 	 */
 	public void setBody(Block body) {
@@ -284,6 +307,28 @@ public class LambdaFunctionDeclaration extends Expression {
 		postValueChange(IS_STATIC);
 	}
 
+	/**
+	 * Gets lambda return type (PHP7)
+	 * 
+	 * @return return type Expression, can be null
+	 */
+	public Expression getReturnType() {
+		return returnType;
+	}
+
+	/**
+	 * Sets if lambda declaration has defined return type (PHP7)
+	 * 
+	 * @param returnType
+	 *            return type Expression, can be null
+	 */
+	public void setReturnType(Expression returnType) {
+		ASTNode oldChild = this.returnType;
+		preReplaceChild(oldChild, returnType, RETURN_TYPE_PROPERTY);
+		this.returnType = returnType;
+		postReplaceChild(oldChild, returnType, RETURN_TYPE_PROPERTY);
+	}
+
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
@@ -318,11 +363,20 @@ public class LambdaFunctionDeclaration extends Expression {
 				return null;
 			}
 		}
+		if (property == RETURN_TYPE_PROPERTY) {
+			if (get) {
+				return getReturnType();
+			} else {
+				setReturnType((Expression) child);
+				return null;
+			}
+		}
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	final List internalGetChildListProperty(
+			ChildListPropertyDescriptor property) {
 		if (property == FORMAL_PARAMETERS_PROPERTY) {
 			return formalParameters();
 		}
@@ -349,10 +403,11 @@ public class LambdaFunctionDeclaration extends Expression {
 		final List lexicalVars = ASTNode.copySubtrees(target,
 				lexicalVariables());
 		final boolean isRef = isReference();
-
+		final Expression returnType = ASTNode.copySubtree(target,
+				getReturnType());
 		final LambdaFunctionDeclaration result = new LambdaFunctionDeclaration(
 				getStart(), getEnd(), target, formalParams, lexicalVars, body,
-				isRef, isStatic(), this.staticStart);
+				isRef, isStatic(), this.staticStart, returnType);
 		return result;
 	}
 

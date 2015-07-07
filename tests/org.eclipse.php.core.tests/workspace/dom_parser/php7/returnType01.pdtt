@@ -1,0 +1,62 @@
+--TEST--
+Test return type
+--FILE--
+<?php
+function foo(): array {
+}
+function foo(): callable {
+}
+function foo(): \Test\Exception {
+}
+--EXPECT--
+<Program start='0' length='96'>
+	<Statements>
+		<FunctionDeclaration start='6' length='25' isReference='false'>
+			<FunctionName>
+				<Identifier start='15' length='3' name='foo'/>
+			</FunctionName>
+			<FormalParameters>
+			</FormalParameters>
+			<ReturnType>
+				<Identifier start='22' length='5' name='array'/>
+			</ReturnType>
+			<FunctionBody>
+				<Block start='28' length='3' isCurly='true'>
+				</Block>
+			</FunctionBody>
+		</FunctionDeclaration>
+		<FunctionDeclaration start='32' length='28' isReference='false'>
+			<FunctionName>
+				<Identifier start='41' length='3' name='foo'/>
+			</FunctionName>
+			<FormalParameters>
+			</FormalParameters>
+			<ReturnType>
+				<Identifier start='48' length='8' name='callable'/>
+			</ReturnType>
+			<FunctionBody>
+				<Block start='57' length='3' isCurly='true'>
+				</Block>
+			</FunctionBody>
+		</FunctionDeclaration>
+		<FunctionDeclaration start='61' length='35' isReference='false'>
+			<FunctionName>
+				<Identifier start='70' length='3' name='foo'/>
+			</FunctionName>
+			<FormalParameters>
+			</FormalParameters>
+			<ReturnType>
+				<NamespaceName start='77' length='15' global='true' current='false'>
+					<Identifier start='78' length='4' name='Test'/>
+					<Identifier start='83' length='9' name='Exception'/>
+				</NamespaceName>
+			</ReturnType>
+			<FunctionBody>
+				<Block start='93' length='3' isCurly='true'>
+				</Block>
+			</FunctionBody>
+		</FunctionDeclaration>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

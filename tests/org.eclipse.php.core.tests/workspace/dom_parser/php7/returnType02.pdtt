@@ -1,0 +1,110 @@
+--TEST--
+Test return type
+--FILE--
+<?php
+interface B {
+	public function bar(): Exception;
+}
+class C {
+	static function foo($var1): string {
+	}
+}
+$foo = function (): MySpace\Test {
+};
+--EXPECT--
+<Program start='0' length='147'>
+	<Statements>
+		<InterfaceDeclaration start='6' length='50'>
+			<InterfaceName>
+				<Identifier start='16' length='1' name='B'/>
+			</InterfaceName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='18' length='38' isCurly='true'>
+				<MethodDeclaration start='21' length='33' modifier='public'>
+					<FunctionDeclaration start='28' length='26' isReference='false'>
+						<FunctionName>
+							<Identifier start='37' length='3' name='bar'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<ReturnType>
+							<NamespaceName start='44' length='9' global='false' current='false'>
+								<Identifier start='44' length='9' name='Exception'/>
+							</NamespaceName>
+						</ReturnType>
+						<FunctionBody>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</InterfaceDeclaration>
+		<ClassDeclaration start='57' length='52' modifier=''>
+			<ClassName>
+				<Identifier start='63' length='1' name='C'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='65' length='44' isCurly='true'>
+				<MethodDeclaration start='68' length='39' modifier='public static'>
+					<FunctionDeclaration start='75' length='32' isReference='false'>
+						<FunctionName>
+							<Identifier start='84' length='3' name='foo'/>
+						</FunctionName>
+						<FormalParameters>
+							<FormalParameter start='88' length='5' isMandatory='false'>
+								<Type>
+								</Type>
+								<ParameterName>
+									<Variable start='88' length='5' isDollared='true'>
+										<Identifier start='89' length='4' name='var1'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<ReturnType>
+							<NamespaceName start='96' length='6' global='false' current='false'>
+								<Identifier start='96' length='6' name='string'/>
+							</NamespaceName>
+						</ReturnType>
+						<FunctionBody>
+							<Block start='103' length='4' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<ExpressionStatement start='110' length='37'>
+			<Assignment start='110' length='36' operator='='>
+				<Variable start='110' length='4' isDollared='true'>
+					<Identifier start='111' length='3' name='foo'/>
+				</Variable>
+				<Value>
+					<LambdaFunctionDeclaration start='117' length='29' isReference='false'>
+						<FormalParameters>
+						</FormalParameters>
+						<LexicalVariables>
+						</LexicalVariables>
+						<ReturnType>
+							<NamespaceName start='130' length='12' global='false' current='false'>
+								<Identifier start='130' length='7' name='MySpace'/>
+								<Identifier start='138' length='4' name='Test'/>
+							</NamespaceName>
+						</ReturnType>
+						<FunctionBody>
+							<Block start='143' length='3' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</LambdaFunctionDeclaration>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

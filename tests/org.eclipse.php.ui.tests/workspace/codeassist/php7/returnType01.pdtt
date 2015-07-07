@@ -1,0 +1,29 @@
+--TEST--
+Test function return type
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+namespace Boo {
+
+	class XYZ {
+	}
+}
+namespace Foo {
+
+	function test(): XY| {
+	}
+}
+--EXPECT--
+<?php
+namespace Boo {
+
+	class XYZ {
+	}
+}
+namespace Foo {
+
+	use Boo\XYZ;
+	function test(): XYZ {
+	}
+}

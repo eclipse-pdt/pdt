@@ -82,7 +82,8 @@ public class ContentAssistTests {
 		TESTS.put(PHPVersion.PHP7_0,
 				new String[] { "/workspace/codeassist/php5",
 						"/workspace/codeassist/php53",
-						"/workspace/codeassist/php56" });
+						"/workspace/codeassist/php56",
+						"/workspace/codeassist/php7" });
 	};
 
 	protected static final char OFFSET_CHAR = '|';

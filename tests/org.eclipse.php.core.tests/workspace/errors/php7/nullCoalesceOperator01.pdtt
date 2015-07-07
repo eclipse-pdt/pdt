@@ -4,4 +4,4 @@ Test Null Coalesce Operator
 <?php
 const BAR = $var1 ?? $this->field;
 --EXPECT--
-[line=2, start=18, end=23] syntax error, unexpected '$var1'
+[line=2, start=18, end=23] syntax error, unexpected '$var1', expecting '::'
