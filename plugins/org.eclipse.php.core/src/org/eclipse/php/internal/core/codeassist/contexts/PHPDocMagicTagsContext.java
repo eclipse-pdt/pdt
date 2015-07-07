@@ -19,26 +19,28 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 
 /**
- * This context represents the state when staying after 'return' tag in PHPDoc
- * block <br/>
+ * This context represents the state when staying after 'magic tags like
+ * 'property' or 'method' tag in PHPDoc block <br/>
  * Examples:
  * 
  * <pre>
  *   1. /**
- *       * @return |
+ *       * @property |
  *   2. /**
- *       * @return Ty|
+ *       * @method Ty|
  * </pre>
  * 
  * @author michael
  */
-public class PHPDocPropertyTagContext extends PHPDocTagContext {
+public class PHPDocMagicTagsContext extends PHPDocTagContext {
 
 	public static final Set<String> TAGS = new HashSet<String>();
+
 	static {
 		TAGS.add("property"); //$NON-NLS-1$
 		TAGS.add("property-read"); //$NON-NLS-1$
 		TAGS.add("property-write"); //$NON-NLS-1$
+		TAGS.add("method"); //$NON-NLS-1$
 	}
 
 	public boolean isValid(ISourceModule sourceModule, int offset,
