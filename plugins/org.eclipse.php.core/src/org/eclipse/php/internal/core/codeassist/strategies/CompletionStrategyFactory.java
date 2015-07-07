@@ -118,7 +118,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 					context) };
 		}
 		if (contextClass == PHPDocReturnTagContext.class
-				|| contextClass == PHPDocPropertyTagContext.class) {
+				|| contextClass == PHPDocMagicTagsContext.class) {
 			return new ICompletionStrategy[] { new PHPDocReturnTypeStrategy(
 					context) };
 		}

@@ -1,0 +1,20 @@
+--TEST--
+Test PHPDoc @method tag
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+/**
+ * 
+ * @method IteratorA| getSomething() description
+ */
+class Test{
+}
+--EXPECT--
+<?php
+/**
+ * 
+ * @method IteratorAggregate getSomething() description
+ */
+class Test{
+}

@@ -1,0 +1,20 @@
+--TEST--
+Test CA for @property tag
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=false
+--FILE--
+<?php
+/**
+ * 
+ * @property IteratorA| $field description
+ */
+class Test{
+}
+--EXPECT--
+<?php
+/**
+ * 
+ * @property IteratorAggregate $field description
+ */
+class Test{
+}
