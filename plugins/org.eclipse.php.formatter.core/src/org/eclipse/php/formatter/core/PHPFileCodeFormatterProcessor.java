@@ -35,10 +35,10 @@ import org.w3c.dom.Node;
  * @author guy.g
  * 
  */
-public class PHPFileCodeFormatterProcessor implements
-		IStructuredFormatProcessor {
+public class PHPFileCodeFormatterProcessor
+		implements IStructuredFormatProcessor {
 
-	PHPCodeFormatterProxy formatter = new PHPCodeFormatterProxy();
+	PHPCodeFormatter formatter = new PHPCodeFormatter();
 
 	public void formatDocument(IDocument document, int start, int length)
 			throws IOException, CoreException {

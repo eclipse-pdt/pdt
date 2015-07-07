@@ -28,6 +28,7 @@ import org.eclipse.jface.text.formatter.IFormattingStrategy;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
+import org.eclipse.php.internal.core.format.IContentFormatter2;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -44,7 +45,7 @@ import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
  * 
  * @author moshe, 2007
  */
-public class PHPCodeFormatter implements IContentFormatter,
+public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 		IFormatterProcessorFactory {
 
 	private CodeFormatterPreferences fCodeFormatterPreferences = CodeFormatterPreferences
@@ -66,9 +67,8 @@ public class PHPCodeFormatter implements IContentFormatter,
 
 		Map<String, Object> p = new HashMap<String, Object>(
 				defaultPrefrencesValues);
-		if (node != null
-				&& node.keys().length > 0
-				&& node.get(PreferenceConstants.FORMATTER_PROFILE, null) != null) {
+		if (node != null && node.keys().length > 0 && node
+				.get(PreferenceConstants.FORMATTER_PROFILE, null) != null) {
 			Set<String> propetiesNames = p.keySet();
 			for (Iterator<String> iter = propetiesNames.iterator(); iter
 					.hasNext();) {
@@ -198,7 +198,8 @@ public class PHPCodeFormatter implements IContentFormatter,
 	private ICodeFormattingProcessor getCodeFormattingProcessor(
 			IProject project, IDocument document, PHPVersion phpVersion,
 			boolean useShortTags, IRegion region) throws Exception {
-		CodeFormatterPreferences fCodeFormatterPreferences = getPreferences(project);
+		CodeFormatterPreferences fCodeFormatterPreferences = getPreferences(
+				project);
 		int oldCommentLength = fCodeFormatterPreferences.comment_line_length;
 		boolean forceSplit = fCodeFormatterPreferences.line_wrap_expressions_in_array_init_force_split;
 		boolean insertSpaceAfterComma = fCodeFormatterPreferences.insert_space_after_list_comma_in_array;
@@ -295,8 +296,8 @@ public class PHPCodeFormatter implements IContentFormatter,
 							.getBreakpoint(marker);
 					if (breakpoint != null) {
 						IMarker createdMarker = file.createMarker(markerType);
-						createdMarker.setAttributes(breakpoint.getMarker()
-								.getAttributes());
+						createdMarker.setAttributes(
+								breakpoint.getMarker().getAttributes());
 						breakpointManager.removeBreakpoint(breakpoint, true);
 						breakpoint.setMarker(createdMarker);
 						breakpointManager.addBreakpoint(breakpoint);

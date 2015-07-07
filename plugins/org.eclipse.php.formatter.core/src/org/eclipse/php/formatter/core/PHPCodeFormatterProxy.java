@@ -10,38 +10,21 @@
  *******************************************************************************/
 package org.eclipse.php.formatter.core;
 
-import java.util.HashMap;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.IFormattingStrategy;
-import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.format.DefaultCodeFormattingProcessor;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.php.internal.core.format.IContentFormatter2;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
-import org.eclipse.wst.html.core.text.IHTMLPartitions;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 
+@Deprecated
 public class PHPCodeFormatterProxy implements IContentFormatter,
 		IContentFormatter2, IFormatterProcessorFactory {
 
-	private IContentFormatter formatter;
-
-	public PHPCodeFormatterProxy() {
-		final boolean licensed = true;
-		if (licensed) {
-			formatter = new PHPCodeFormatter();
-		} else {
-			formatter = new MultiPassContentFormatter(
-					IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING,
-					IHTMLPartitions.HTML_DEFAULT);
-		}
-
-	}
+	private PHPCodeFormatter formatter = new PHPCodeFormatter();
 
 	public void format(IDocument document, IRegion region) {
 		formatter.format(document, region);
@@ -55,34 +38,21 @@ public class PHPCodeFormatterProxy implements IContentFormatter,
 	public ICodeFormattingProcessor getCodeFormattingProcessor(
 			IDocument document, PHPVersion phpVersion, boolean useShortTags,
 			IRegion region) throws Exception {
-		if (formatter instanceof IFormatterProcessorFactory) {
-			return ((IFormatterProcessorFactory) formatter)
-					.getCodeFormattingProcessor(document, phpVersion,
-							useShortTags, region);
-		}
-		return new DefaultCodeFormattingProcessor(new HashMap());
+		return formatter.getCodeFormattingProcessor(document, phpVersion,
+				useShortTags, region);
 	}
 
 	public void setDefaultProject(IProject project) {
-		if (formatter instanceof IFormatterProcessorFactory) {
-			((IFormatterProcessorFactory) formatter).setDefaultProject(project);
-		}
+		formatter.setDefaultProject(project);
 	}
 
 	public void setIsPasting(boolean isPasting) {
-		if (formatter instanceof IFormatterProcessorFactory) {
-			((IFormatterProcessorFactory) formatter).setIsPasting(isPasting);
-		}
+		formatter.setIsPasting(isPasting);
 	}
 
-	public void format(IDocument document, IRegion region, PHPVersion phpVersion) {
-		// TODO Auto-generated method stub
-		if (formatter instanceof PHPCodeFormatter) {
-			PHPCodeFormatter phpCodeFormatter = (PHPCodeFormatter) formatter;
-			phpCodeFormatter.format(document, region, phpVersion);
-		} else {
-			formatter.format(document, region);
-		}
+	public void format(IDocument document, IRegion region,
+			PHPVersion phpVersion) {
+		formatter.format(document, region, phpVersion);
 	}
 
 }
