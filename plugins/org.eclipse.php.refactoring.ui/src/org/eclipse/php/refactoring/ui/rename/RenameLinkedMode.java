@@ -24,9 +24,12 @@ import org.eclipse.dltk.core.ScriptModelUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.text.*;
-import org.eclipse.jface.text.link.*;
+import org.eclipse.jface.text.link.ILinkedModeListener;
+import org.eclipse.jface.text.link.LinkedModeModel;
 import org.eclipse.jface.text.link.LinkedModeUI.ExitFlags;
 import org.eclipse.jface.text.link.LinkedModeUI.IExitPolicy;
+import org.eclipse.jface.text.link.LinkedPosition;
+import org.eclipse.jface.text.link.LinkedPositionGroup;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
@@ -69,7 +72,8 @@ public class RenameLinkedMode {
 			return false;
 		}
 
-		public boolean isOriginator(DocumentEvent event, IRegion subjectRegion) {
+		public boolean isOriginator(DocumentEvent event,
+				IRegion subjectRegion) {
 			return false; // leave on external modification outside positions
 		}
 
@@ -103,8 +107,8 @@ public class RenameLinkedMode {
 			fShowPreview = (event.stateMask & SWT.CTRL) != 0
 					&& (event.character == SWT.CR || event.character == SWT.LF);
 
-			if (length == 0
-					&& (event.character == SWT.BS || event.character == SWT.DEL)) {
+			if (length == 0 && (event.character == SWT.BS
+					|| event.character == SWT.DEL)) {
 				LinkedPosition position = model
 						.findPosition(new PHPElementLinkedPosition(fDocument,
 								offset, 0, LinkedPositionGroup.NO_STOP));
@@ -114,7 +118,7 @@ public class RenameLinkedMode {
 							// skip backspace at beginning of linked position
 							event.doit = false;
 						}
-					} else /* event.character == SWT.DEL */{
+					} else /* event.character == SWT.DEL */ {
 						if (offset + 1 > position.getOffset()
 								+ position.getLength()) {
 							// skip delete at end of linked position
@@ -131,7 +135,7 @@ public class RenameLinkedMode {
 	private static RenameLinkedMode fgActiveLinkedMode;
 
 	private final PHPStructuredEditor fEditor;
-	private final IModelElement fJavaElement;
+	// private final IModelElement fJavaElement;
 
 	private RenameInformationPopup fInfoPopup;
 
@@ -151,7 +155,7 @@ public class RenameLinkedMode {
 	public RenameLinkedMode(IModelElement element, PHPStructuredEditor editor) {
 		Assert.isNotNull(editor);
 		fEditor = editor;
-		fJavaElement = element;
+		// fJavaElement = element;
 		fFocusEditingSupport = new FocusEditingSupport();
 	}
 
@@ -196,7 +200,7 @@ public class RenameLinkedMode {
 
 		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
 
-		if (!(sourceModule instanceof ISourceModule)) {
+		if (sourceModule == null) {
 			MessageDialog.openError(fEditor.getEditorSite().getShell(),
 					Messages.RenameLinkedMode_1, Messages.RenameLinkedMode_2);
 			return;
@@ -208,7 +212,7 @@ public class RenameLinkedMode {
 			fLinkedPositionGroup = new LinkedPositionGroup();
 			selectedNode = NodeFinder.perform(root, fOriginalSelection.x,
 					fOriginalSelection.y);
-			if (!(selectedNode instanceof ASTNode)) {
+			if (selectedNode == null) {
 				MessageDialog.openError(fEditor.getEditorSite().getShell(),
 						Messages.RenameLinkedMode_1,
 						Messages.RenameLinkedMode_4);
@@ -223,8 +227,9 @@ public class RenameLinkedMode {
 					if (!namespaceName.segments()
 							.get(namespaceName.segments().size() - 1)
 							.equals(selectedNode)) {
-						MessageDialog.openError(fEditor.getEditorSite()
-								.getShell(), Messages.RenameLinkedMode_1,
+						MessageDialog.openError(
+								fEditor.getEditorSite().getShell(),
+								Messages.RenameLinkedMode_1,
 								Messages.RenameLinkedMode_4);
 						return;
 					}
@@ -240,10 +245,10 @@ public class RenameLinkedMode {
 
 			// TODO: copied from LinkedNamesAssistProposal#apply(..):
 			// sort for iteration order, starting with the node @ offset
-			Arrays.sort(sameNodes, new Comparator() {
-				public int compare(Object o1, Object o2) {
-					return rank((OccurrenceLocation) o1)
-							- rank((OccurrenceLocation) o2);
+			Arrays.sort(sameNodes, new Comparator<OccurrenceLocation>() {
+				public int compare(OccurrenceLocation o1,
+						OccurrenceLocation o2) {
+					return rank(o1) - rank(o2);
 				}
 
 				/**
@@ -276,12 +281,12 @@ public class RenameLinkedMode {
 						.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 				if (index > 0) {
 					linkedPosition = new PHPElementLinkedPosition(document,
-							elem.getOffset() + (index + 1), elem.getLength()
-									- (index + 1), i);
+							elem.getOffset() + (index + 1),
+							elem.getLength() - (index + 1), i);
 				} else if (index == 0) {
 					linkedPosition = new PHPElementLinkedPosition(document,
-							elem.getOffset() + (index + 1), elem.getLength()
-									- (index + 1), i);
+							elem.getOffset() + (index + 1),
+							elem.getLength() - (index + 1), i);
 				} else {
 					linkedPosition = new PHPElementLinkedPosition(document,
 							elem.getOffset(), elem.getLength(), i);
@@ -300,9 +305,8 @@ public class RenameLinkedMode {
 			fLinkedModeModel = new LinkedModeModel();
 			fLinkedModeModel.addGroup(fLinkedPositionGroup);
 			fLinkedModeModel.forceInstall();
-			fLinkedModeModel
-					.addLinkingListener(new EditorHighlightingSynchronizer(
-							fEditor));
+			fLinkedModeModel.addLinkingListener(
+					new EditorHighlightingSynchronizer(fEditor));
 			fLinkedModeModel.addLinkingListener(new EditorSynchronizer());
 
 			EditorLinkedModeUI ui = new EditorLinkedModeUI(fLinkedModeModel,
@@ -355,8 +359,8 @@ public class RenameLinkedMode {
 			throws BadLocationException {
 
 		IDocument document = fEditor.getDocument();
-		String name = document
-				.get(linkedPosition.offset, linkedPosition.length);
+		String name = document.get(linkedPosition.offset,
+				linkedPosition.length);
 		return name;
 	}
 
@@ -414,8 +418,8 @@ public class RenameLinkedMode {
 				// undoAndCreateRenameSupport(..)
 				executed = renameSupport.openDialog(shell);
 			} else {
-				renameSupport.perform(shell, fEditor.getSite()
-						.getWorkbenchWindow());
+				renameSupport.perform(shell,
+						fEditor.getSite().getWorkbenchWindow());
 				executed = true;
 			}
 			if (executed) {
@@ -456,7 +460,8 @@ public class RenameLinkedMode {
 			LinkedPosition[] positions = fLinkedPositionGroup.getPositions();
 			for (int i = 0; i < positions.length; i++) {
 				LinkedPosition position = positions[i];
-				if (!position.isDeleted() && position.includes(originalOffset)) {
+				if (!position.isDeleted()
+						&& position.includes(originalOffset)) {
 					fEditor.getTextViewer().setSelectedRange(position.offset,
 							position.length);
 					return;
@@ -473,8 +478,8 @@ public class RenameLinkedMode {
 
 		try {
 			if (!fOriginalName.equals(newName)) {
-				fEditor.getSite().getWorkbenchWindow()
-						.run(false, true, new IRunnableWithProgress() {
+				fEditor.getSite().getWorkbenchWindow().run(false, true,
+						new IRunnableWithProgress() {
 							public void run(IProgressMonitor monitor)
 									throws InvocationTargetException,
 									InterruptedException {
@@ -490,9 +495,9 @@ public class RenameLinkedMode {
 						});
 			}
 		} catch (InvocationTargetException e) {
-			throw new CoreException(new Status(IStatus.ERROR,
-					RefactoringUIPlugin.PLUGIN_ID, Messages.RenameLinkedMode_0,
-					e));
+			throw new CoreException(
+					new Status(IStatus.ERROR, RefactoringUIPlugin.PLUGIN_ID,
+							Messages.RenameLinkedMode_0, e));
 		} catch (InterruptedException e) {
 			// canceling is OK
 			return null;
@@ -513,9 +518,10 @@ public class RenameLinkedMode {
 		viewer.setSelectedRange(fOriginalSelection.x, fOriginalSelection.y);
 
 		final int elementType = PhpElementConciliator.concile(selectedNode);
-		RenameSupport renameSupport = RenameSupport.create(selectedNode
-				.getProgramRoot().getSourceModule().getResource(), elementType,
-				selectedNode, newName, RenameSupport.UPDATE_REFERENCES);
+		RenameSupport renameSupport = RenameSupport.create(
+				selectedNode.getProgramRoot().getSourceModule().getResource(),
+				elementType, selectedNode, newName,
+				RenameSupport.UPDATE_REFERENCES);
 		return renameSupport;
 	}
 

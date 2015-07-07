@@ -4,9 +4,9 @@
    <extension
          point="org.eclipse.php.ui.phpFormatterProcessor">
          <processor
-	        class="org.eclipse.php.formatter.core.PHPCodeFormatterProxy"
+	        class="org.eclipse.php.formatter.core.PHPCodeFormatter"
 	        id="org.eclipse.php.formatter.core.PHPCodeFormatter"
-	        name="PHP Code Formatter"/>     
+	        name="PHP Code Formatter"/>
    </extension>
    <extension
          point="org.eclipse.php.core.phpFormatterCommonPreferences">
