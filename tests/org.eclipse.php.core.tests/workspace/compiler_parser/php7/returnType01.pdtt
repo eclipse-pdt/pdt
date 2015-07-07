@@ -1,0 +1,33 @@
+--TEST--
+Test return type
+--FILE--
+<?php
+function foo(): array {
+}
+function foo(): callable {
+}
+function foo(): \Test\Exception {
+}
+--EXPECT--
+<ModuleDeclaration start="0" end="97">
+	<PHPMethodDeclaration start="6" end="31" modifiers="" name="foo">
+		<ReturnType>
+			<TypeReference start="22" end="27" name="array">
+			</TypeReference>
+		</ReturnType>
+	</PHPMethodDeclaration>
+	<PHPMethodDeclaration start="32" end="60" modifiers="" name="foo">
+		<ReturnType>
+			<TypeReference start="48" end="56" name="callable">
+			</TypeReference>
+		</ReturnType>
+	</PHPMethodDeclaration>
+	<PHPMethodDeclaration start="61" end="96" modifiers="" name="foo">
+		<ReturnType>
+			<FullyQualifiedReference start="77" end="92" name="\Test\Exception">
+				<NamespaceReference start="77" end="82" name="\Test" global="true" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+		</ReturnType>
+	</PHPMethodDeclaration>
+</ModuleDeclaration>

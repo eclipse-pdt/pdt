@@ -37,11 +37,29 @@ public class LambdaFunctionDeclaration extends Expression {
 	private final List<? extends Expression> lexicalVars;
 	protected List<FormalParameter> arguments = new LinkedList<FormalParameter>();
 	private Block body = new Block();
+	private Expression returnType;
+
+	public LambdaFunctionDeclaration(int start, int end,
+			List<FormalParameter> formalParameters,
+			List<? extends Expression> lexicalVars, Block body,
+			final boolean isReference) {
+		this(start, end, formalParameters, lexicalVars, body, isReference,
+				false);
+	}
 
 	public LambdaFunctionDeclaration(int start, int end,
 			List<FormalParameter> formalParameters,
 			List<? extends Expression> lexicalVars, Block body,
 			final boolean isReference, boolean isStatic) {
+		this(start, end, formalParameters, lexicalVars, body, isReference,
+				isStatic, null);
+	}
+
+	public LambdaFunctionDeclaration(int start, int end,
+			List<FormalParameter> formalParameters,
+			List<? extends Expression> lexicalVars, Block body,
+			final boolean isReference, boolean isStatic,
+			Expression returnType) {
 		super(start, end);
 
 		if (formalParameters != null) {
@@ -52,14 +70,7 @@ public class LambdaFunctionDeclaration extends Expression {
 		this.lexicalVars = lexicalVars;
 		this.isReference = isReference;
 		this.isStatic = isStatic;
-	}
-
-	public LambdaFunctionDeclaration(int start, int end,
-			List<FormalParameter> formalParameters,
-			List<? extends Expression> lexicalVars, Block body,
-			final boolean isReference) {
-		this(start, end, formalParameters, lexicalVars, body, isReference,
-				false);
+		this.returnType = returnType;
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
@@ -100,6 +111,14 @@ public class LambdaFunctionDeclaration extends Expression {
 
 	public boolean isStatic() {
 		return isStatic;
+	}
+
+	public Expression getReturnType() {
+		return returnType;
+	}
+
+	public void setReturnType(Expression returnType) {
+		this.returnType = returnType;
 	}
 
 	/**

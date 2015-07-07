@@ -283,6 +283,9 @@ non terminal List interface_extends_list;
 
 non terminal Expression w_variable;
 non terminal Expression class_name;
+non terminal Expression name;
+non terminal Expression type;
+non terminal Expression return_type;
 non terminal TypeReference fully_qualified_class_name;
 non terminal List class_variable_declaration;
 non terminal List constant_declaration;
@@ -455,6 +458,34 @@ namespace_name_list:list T_NS_SEPARATOR string_st:name
 {:
 	list.add(name);
 	RESULT = list;
+:}
+;
+
+name ::=
+| namespace_name:name
+{:
+	RESULT = name;
+:}
+
+| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:name
+{:
+	if (name.getNamespace() != null) {
+		name.getNamespace().setLocal(true);
+	}
+	RESULT = name;
+:}
+
+| T_NS_SEPARATOR:s namespace_name:name
+{:
+	NamespaceReference namespace = name.getNamespace();
+	if (namespace == null) {
+		namespace = new NamespaceReference(sleft, sright, "");
+		name.setNamespace(namespace);
+	}
+	namespace.setGlobal(true);
+	namespace.setStart(sleft);
+	name.setStart(sleft);
+	RESULT = name;
 :}
 ;
 
@@ -1095,6 +1126,11 @@ T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE:closeParenthese
 	PHPMethodDeclaration functionDeclaration = (PHPMethodDeclaration)parser.declarations.peek();
 	functionDeclaration.acceptArguments(paramList);
 	functionDeclaration.setEnd(closeParentheseright);
+:}
+return_type:returnType
+{:
+	PHPMethodDeclaration functionDeclaration = (PHPMethodDeclaration)parser.declarations.peek();
+	functionDeclaration.setReturnType(returnType);
 :}
 function_body:body
 {:
@@ -1792,6 +1828,36 @@ expr_without_variable:var
 :}
 ;
 
+type ::=
+T_ARRAY:array
+{:
+	TypeReference reference = new TypeReference(arrayleft, arrayright, "array");
+	RESULT = reference;
+:}
+
+| T_CALLABLE:callable
+{:
+	TypeReference reference = new TypeReference(callableleft, callableright, "callable");
+	RESULT = reference;
+:}
+
+| name:name
+{:
+	RESULT = name;
+:}
+;
+
+return_type ::=
+/* empty */
+{:
+	RESULT = null;
+:}
+| T_NEKUDOTAIM type:type
+{:
+	RESULT = type;
+:}
+;
+
 global_var_list ::=
 global_var_list:list T_COMMA global_var:var
 {:
@@ -1921,6 +1987,11 @@ T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE:closeParenthese
 	PHPMethodDeclaration functionDeclaration = (PHPMethodDeclaration)parser.declarations.peek();
 	functionDeclaration.acceptArguments(paramList);
 	functionDeclaration.setEnd(closeParentheseright);
+:}
+return_type:returnType
+{:
+	PHPMethodDeclaration functionDeclaration = (PHPMethodDeclaration)parser.declarations.peek();
+	functionDeclaration.setReturnType(returnType);
 :}
 method_body:body
 {:
@@ -2782,18 +2853,18 @@ list_variable:vars T_EQUAL expr:expr
 :}
 
 | T_FUNCTION:s is_reference:isReference
-T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList
+T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList return_type:returnType
 T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
 {:
 	RESULT = new LambdaFunctionDeclaration(sleft, blockEndright, paramList, varsList,
-		new Block(blockStartleft, blockEndright, list), isReference.booleanValue());
+		new Block(blockStartleft, blockEndright, list), isReference.booleanValue(), false, returnType);
 :}
 | T_STATIC T_FUNCTION:s is_reference:isReference
-T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList
+T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList return_type:returnType
 T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
 {:
 	RESULT = new LambdaFunctionDeclaration(sleft, blockEndright, paramList, varsList,
-		new Block(blockStartleft, blockEndright, list), isReference.booleanValue(),true);
+		new Block(blockStartleft, blockEndright, list), isReference.booleanValue(), true, returnType);
 :}
 ;
 
@@ -2960,29 +3031,8 @@ T_STATIC:s
 	RESULT = new FullyQualifiedReference(sleft, sright, "static", null);
 :}
 
-| namespace_name:name
+| name:name
 {:
-	RESULT = name;
-:}
-
-| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:name
-{:
-	if (name.getNamespace() != null) {
-		name.getNamespace().setLocal(true);
-	}
-	RESULT = name;
-:}
-
-| T_NS_SEPARATOR:s namespace_name:name
-{:
-	NamespaceReference namespace = name.getNamespace();
-	if (namespace == null) {
-		namespace = new NamespaceReference(sleft, sright, "");
-		name.setNamespace(namespace);
-	}
-	namespace.setGlobal(true);
-	namespace.setStart(sleft);
-	name.setStart(sleft);
 	RESULT = name;
 :}
 ;

@@ -33,8 +33,8 @@ import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 
-public class MethodReturnTypeEvaluator extends
-		AbstractMethodReturnTypeEvaluator {
+public class MethodReturnTypeEvaluator
+		extends AbstractMethodReturnTypeEvaluator {
 
 	private final List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
 	private final List<IEvaluatedType> yieldEvaluated = new LinkedList<IEvaluatedType>();
@@ -70,8 +70,8 @@ public class MethodReturnTypeEvaluator extends
 			}
 			// final boolean found[] = new boolean[1];
 			if (decl != null) {
-				final IContext innerContext = ASTUtils.findContext(
-						sourceModule, module, decl);
+				final IContext innerContext = ASTUtils.findContext(sourceModule,
+						module, decl);
 				if (innerContext instanceof MethodContext) {
 					MethodContext mc = (MethodContext) innerContext;
 					mc.setCurrentType(mat.types[i]);
@@ -84,14 +84,22 @@ public class MethodReturnTypeEvaluator extends
 				}
 
 				final MethodDeclaration topDeclaration = decl;
-
+				if (topDeclaration instanceof PHPMethodDeclaration) {
+					PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration) topDeclaration;
+					if (methodDeclaration.getReturnType() != null) {
+						subGoals.add(new ExpressionTypeGoal(innerContext,
+								methodDeclaration.getReturnType()));
+						continue;
+					}
+				}
 				ASTVisitor visitor = new ASTVisitor() {
 					public boolean visitGeneral(ASTNode node) throws Exception {
 						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=464921
 						// do not evaluate content of inner lambda functions
 						if (node instanceof LambdaFunctionDeclaration
-						// but never exclude top node (even if this case cannot
-						// happen here)
+								// but never exclude top node (even if this case
+								// cannot
+								// happen here)
 								&& node != topDeclaration) {
 							return false;
 						}
@@ -137,7 +145,8 @@ public class MethodReturnTypeEvaluator extends
 	/**
 	 * Resolve magic methods defined by the @method tag
 	 */
-	private void resolveMagicMethodDeclaration(IMethod method, String methodName) {
+	private void resolveMagicMethodDeclaration(IMethod method,
+			String methodName) {
 		final IModelElement parent = method.getParent();
 		if (parent.getElementType() != IModelElement.TYPE) {
 			return;

@@ -3568,6 +3568,16 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		}
 		appendToBuffer(CLOSE_PARN);
 
+		if (functionDeclaration.getReturnType() != null) {
+			appendToBuffer(COLON);
+			insertSpace();
+			handleChars(lastPosition,
+					functionDeclaration.getReturnType().getStart());
+			functionDeclaration.getReturnType().accept(this);
+
+			lastPosition = functionDeclaration.getReturnType().getEnd();
+		}
+
 		// handle function body
 		if (functionDeclaration.getBody() != null) {
 			boolean isIndentationAdded = handleBlockOpenBrace(
@@ -5125,6 +5135,16 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			}
 
 			appendToBuffer(CLOSE_PARN);
+		}
+
+		if (lambdaFunctionDeclaration.getReturnType() != null) {
+			appendToBuffer(COLON);
+			insertSpace();
+			handleChars(lastPosition,
+					lambdaFunctionDeclaration.getReturnType().getStart());
+			lambdaFunctionDeclaration.getReturnType().accept(this);
+
+			lastPosition = lambdaFunctionDeclaration.getReturnType().getEnd();
 		}
 
 		// handle function body
