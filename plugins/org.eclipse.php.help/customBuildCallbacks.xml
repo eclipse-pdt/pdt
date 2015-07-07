@@ -28,7 +28,7 @@
 		<antcall target="build.index"/>		
 	</target>
 
-	<target name="build.index" description="Builds search index for the plug-in: org.eclipse.rse.doc.user." if="eclipse.running">
+	<target name="build.index" description="Builds search index for the plug-in: org.eclipse.php.help." if="eclipse.running">
 		<help.buildHelpIndex manifest="plugin.xml" destination="."/>
 	</target>
 
