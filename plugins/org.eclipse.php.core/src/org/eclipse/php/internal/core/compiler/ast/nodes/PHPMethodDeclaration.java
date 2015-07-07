@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
+import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
@@ -23,7 +24,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 /**
  * Represents a function declaration
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
  * function foo() {}
@@ -33,32 +35,16 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * function foo($a, int $b, $c = 5, int $d = 6) {}
  * 
  * function foo(); -abstract function in class declaration
+ * 
+ * function foo() : MyClass;
  */
-public class PHPMethodDeclaration extends MethodDeclaration implements
-		IPHPDocAwareDeclaration {
+public class PHPMethodDeclaration extends MethodDeclaration
+		implements IPHPDocAwareDeclaration {
 
 	private static final List<FormalParameter> EMPTY_PARAMETERS = new LinkedList<FormalParameter>();
 	private final boolean isReference;
 	private PHPDocBlock phpDoc;
-
-	public PHPMethodDeclaration(int start, int end, int nameStart, int nameEnd,
-			String functionName, int modifiers,
-			List<FormalParameter> formalParameters, Block body,
-			final boolean isReference, PHPDocBlock phpDoc) {
-		super(functionName, nameStart, nameEnd, start, end);
-
-		setModifiers(modifiers);
-		acceptArguments(formalParameters == null ? EMPTY_PARAMETERS
-				: formalParameters);
-		acceptBody(body);
-
-		this.isReference = isReference;
-		this.phpDoc = phpDoc;
-	}
-
-	public PHPDocBlock getPHPDoc() {
-		return phpDoc;
-	}
+	private TypeReference returnType;
 
 	public PHPMethodDeclaration(int start, int end, int nameStart, int nameEnd,
 			String functionName, List<FormalParameter> formalParameters,
@@ -67,8 +53,45 @@ public class PHPMethodDeclaration extends MethodDeclaration implements
 				formalParameters, body, isReference, phpDoc);
 	}
 
+	public PHPMethodDeclaration(int start, int end, int nameStart, int nameEnd,
+			String functionName, int modifiers,
+			List<FormalParameter> formalParameters, Block body,
+			final boolean isReference, PHPDocBlock phpDoc) {
+		this(start, end, nameStart, nameEnd, functionName, modifiers,
+				formalParameters, body, isReference, phpDoc, null);
+	}
+
+	public PHPMethodDeclaration(int start, int end, int nameStart, int nameEnd,
+			String functionName, int modifiers,
+			List<FormalParameter> formalParameters, Block body,
+			final boolean isReference, PHPDocBlock phpDoc,
+			TypeReference returnType) {
+		super(functionName, nameStart, nameEnd, start, end);
+
+		setModifiers(modifiers);
+		acceptArguments(
+				formalParameters == null ? EMPTY_PARAMETERS : formalParameters);
+		acceptBody(body);
+
+		this.isReference = isReference;
+		this.phpDoc = phpDoc;
+		this.returnType = returnType;
+	}
+
+	public PHPDocBlock getPHPDoc() {
+		return phpDoc;
+	}
+
 	public boolean isReference() {
 		return isReference;
+	}
+
+	public TypeReference getReturnType() {
+		return returnType;
+	}
+
+	public void setReturnType(TypeReference returnType) {
+		this.returnType = returnType;
 	}
 
 	/**

@@ -1,0 +1,12 @@
+--TEST--
+Test function return type
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+function test(): DateTime {
+}
+
+test()->mod|
+--EXPECT--
+method(modify)

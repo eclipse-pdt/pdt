@@ -301,6 +301,9 @@ non terminal List interface_extends_list;
 
 non terminal VariableBase w_variable;
 non terminal Expression class_name;
+non terminal Identifier name;
+non terminal Identifier type;
+non terminal Identifier return_type;
 non terminal NamespaceName fully_qualified_class_name;
 non terminal List class_variable_declaration;
 non terminal List constant_declaration;
@@ -435,6 +438,23 @@ namespace_name:list T_NS_SEPARATOR T_STRING:n
 	List list = new LinkedList();
 	list.add(new Identifier(nleft, nright, parser.ast, n));
 	RESULT = list;
+:}
+;
+
+name ::=
+namespace_name:list
+{:
+	RESULT = new NamespaceName(listleft, listright, parser.ast, list, false, false);
+:}
+
+| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:list
+{:
+	RESULT = new NamespaceName(sleft, listright, parser.ast, list, false, true);
+:}
+
+| T_NS_SEPARATOR:s namespace_name:list
+{:
+	RESULT = new NamespaceName(sleft, listright, parser.ast, list, true, false);
 :}
 ;
 
@@ -936,12 +956,12 @@ is_reference ::=
 
 unticked_function_declaration_statement ::=
 T_FUNCTION:s is_reference:isReference string_st:fn
-T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
+T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE return_type:returnType
 T_CURLY_OPEN:blockStart inner_statement_list:sList T_CURLY_CLOSE:blockEnd
 {:
 	RESULT = new FunctionDeclaration(sleft, blockEndright, parser.ast,
 		new Identifier(fnleft, fnright, parser.ast, fn), paramList,
-		new Block(blockStartleft, blockEndright, parser.ast, sList), isReference.booleanValue());
+		new Block(blockStartleft, blockEndright, parser.ast, sList), isReference.booleanValue(), returnType);
 :}
 ;
 
@@ -1470,6 +1490,35 @@ expr_without_variable:var
 :}
 ;
 
+type ::=
+T_ARRAY:array
+{:
+	RESULT = new Identifier(arrayleft, arrayright, parser.ast, "array");
+:}
+
+| T_CALLABLE:callable
+{:
+	RESULT =  new Identifier(callableleft, callableright, parser.ast, "callable");
+:}
+
+| name:name
+{:
+	RESULT = name;
+:}
+;
+
+return_type ::=
+/* empty */
+{:
+	RESULT = null;
+:}
+| T_NEKUDOTAIM type:type
+{:
+	RESULT = type;
+:}
+;
+
+
 global_var_list ::=
 global_var_list:list T_COMMA global_var:var
 {:
@@ -1561,13 +1610,13 @@ variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON:e
 :}
 
 | method_modifiers:modifier T_FUNCTION:s is_reference:isReference string_st:fn
-T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
+T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE return_type:returnType
 method_body:body
 {:
 	int methodStart = modifier == null ? sleft : modifierleft;
 	modifier = modifier == null ? PhpAstParser.PUBLIC : modifier;
 	Identifier functionId = new Identifier(fnleft, fnright, parser.ast, fn);
-	FunctionDeclaration functionDeclaration = new FunctionDeclaration(sleft, bodyright, parser.ast, functionId, paramList, body, isReference.booleanValue());
+	FunctionDeclaration functionDeclaration = new FunctionDeclaration(sleft, bodyright, parser.ast, functionId, paramList, body, isReference.booleanValue(), returnType);
 	RESULT = new MethodDeclaration(methodStart, bodyright, parser.ast, modifier.intValue(), functionDeclaration, true);
 :}
 
@@ -2339,19 +2388,19 @@ T_LIST:s T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close T_EQ
 :}
 
 | T_FUNCTION:s is_reference:isReference
-T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList
+T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList return_type:returnType
 T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
 {:
 	RESULT = new LambdaFunctionDeclaration(sleft, blockEndright, parser.ast, paramList, varsList,
-		new Block(blockStartleft, blockEndright, parser.ast, list), isReference.booleanValue());
+		new Block(blockStartleft, blockEndright, parser.ast, list), isReference.booleanValue(), false, -1, returnType);
 :}
 
 | T_STATIC:st T_FUNCTION:s is_reference:isReference
-T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList
+T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList return_type:returnType
 T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
 {:
 	RESULT = new LambdaFunctionDeclaration(sleft, blockEndright, parser.ast, paramList, varsList,
-		new Block(blockStartleft, blockEndright, parser.ast, list), isReference.booleanValue(),true,stleft);
+		new Block(blockStartleft, blockEndright, parser.ast, list), isReference.booleanValue(), true, stleft, returnType);
 :}
 ;
 
@@ -2489,19 +2538,9 @@ T_STATIC:s
 	RESULT = new Identifier(sleft, sright, parser.ast, "static");
 :}
 
-| namespace_name:list
+| name:name
 {:
-	RESULT = new NamespaceName(listleft, listright, parser.ast, list, false, false);
-:}
-
-| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:list
-{:
-	RESULT = new NamespaceName(sleft, listright, parser.ast, list, false, true);
-:}
-
-| T_NS_SEPARATOR:s namespace_name:list
-{:
-	RESULT = new NamespaceName(sleft, listright, parser.ast, list, true, false);
+	RESULT = name;
 :}
 ;
 

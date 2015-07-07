@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
@@ -37,11 +38,29 @@ public class LambdaFunctionDeclaration extends Expression {
 	private final List<? extends Expression> lexicalVars;
 	protected List<FormalParameter> arguments = new LinkedList<FormalParameter>();
 	private Block body = new Block();
+	private TypeReference returnType;
+
+	public LambdaFunctionDeclaration(int start, int end,
+			List<FormalParameter> formalParameters,
+			List<? extends Expression> lexicalVars, Block body,
+			final boolean isReference) {
+		this(start, end, formalParameters, lexicalVars, body, isReference,
+				false);
+	}
 
 	public LambdaFunctionDeclaration(int start, int end,
 			List<FormalParameter> formalParameters,
 			List<? extends Expression> lexicalVars, Block body,
 			final boolean isReference, boolean isStatic) {
+		this(start, end, formalParameters, lexicalVars, body, isReference,
+				isStatic, null);
+	}
+
+	public LambdaFunctionDeclaration(int start, int end,
+			List<FormalParameter> formalParameters,
+			List<? extends Expression> lexicalVars, Block body,
+			final boolean isReference, boolean isStatic,
+			TypeReference returnType) {
 		super(start, end);
 
 		if (formalParameters != null) {
@@ -52,14 +71,7 @@ public class LambdaFunctionDeclaration extends Expression {
 		this.lexicalVars = lexicalVars;
 		this.isReference = isReference;
 		this.isStatic = isStatic;
-	}
-
-	public LambdaFunctionDeclaration(int start, int end,
-			List<FormalParameter> formalParameters,
-			List<? extends Expression> lexicalVars, Block body,
-			final boolean isReference) {
-		this(start, end, formalParameters, lexicalVars, body, isReference,
-				false);
+		this.returnType = returnType;
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
@@ -100,6 +112,14 @@ public class LambdaFunctionDeclaration extends Expression {
 
 	public boolean isStatic() {
 		return isStatic;
+	}
+
+	public TypeReference getReturnType() {
+		return returnType;
+	}
+
+	public void setReturnType(TypeReference returnType) {
+		this.returnType = returnType;
 	}
 
 	/**

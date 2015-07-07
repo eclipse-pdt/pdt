@@ -30,9 +30,11 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.dltk.compiler.*;
+import org.eclipse.dltk.compiler.IElementRequestor;
 import org.eclipse.dltk.compiler.IElementRequestor.ImportInfo;
 import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
+import org.eclipse.dltk.compiler.ISourceElementRequestor;
+import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.Flags;
 import org.eclipse.php.core.compiler.IPHPModifiers;
@@ -107,9 +109,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				Logger.logException(e);
 			}
 		}
-		extensions = requestors
-				.toArray(new PHPSourceElementRequestorExtension[requestors
-						.size()]);
+		extensions = requestors.toArray(
+				new PHPSourceElementRequestorExtension[requestors.size()]);
 	}
 
 	protected IElementRequestor getRequestor() {
@@ -375,7 +376,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 	}
 
-	private String[] processParameterTypes(MethodDeclaration methodDeclaration) {
+	private String[] processParameterTypes(
+			MethodDeclaration methodDeclaration) {
 		List<?> args = methodDeclaration.getArguments();
 		PHPDocBlock docBlock = ((PHPMethodDeclaration) methodDeclaration)
 				.getPHPDoc();
@@ -389,9 +391,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 					parameterType[a] = type.getName();
 				} else if (docBlock != null) {
 					for (PHPDocTag tag : docBlock.getTags(PHPDocTag.PARAM)) {
-						if (tag.isValidParamTag()
-								&& tag.getVariableReference().getName()
-										.equals(arg.getName())) {
+						if (tag.isValidParamTag() && tag.getVariableReference()
+								.getName().equals(arg.getName())) {
 							parameterType[a] = tag.getSingleTypeReference()
 									.getName();
 							break;
@@ -404,14 +405,16 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	private String processReturnType(MethodDeclaration methodDeclaration) {
-		PHPDocBlock docBlock = ((PHPMethodDeclaration) methodDeclaration)
-				.getPHPDoc();
+		PHPMethodDeclaration phpMethodDeclaration = (PHPMethodDeclaration) methodDeclaration;
+		PHPDocBlock docBlock = phpMethodDeclaration.getPHPDoc();
 		String type = VOID_RETURN_TYPE;
-		if (docBlock != null) {
+		if (phpMethodDeclaration.getReturnType() != null) {
+			return phpMethodDeclaration.getReturnType().getName();
+		} else if (docBlock != null) {
 			for (PHPDocTag tag : docBlock.getTags(PHPDocTag.RETURN)) {
 				if (tag.getTypeReferences().size() > 0) {
-					return PHPModelUtils.appendTypeReferenceNames(tag
-							.getTypeReferences());
+					return PHPModelUtils
+							.appendTypeReferenceNames(tag.getTypeReferences());
 				}
 			}
 		}
@@ -468,23 +471,25 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 							.getName();
 
 					String subnamespace = ""; //$NON-NLS-1$
-					if (namespace.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR
-							&& namespace
-									.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
-						int firstNSLocation = namespace
-								.indexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+					if (namespace
+							.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR
+							&& namespace.indexOf(
+									NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
+						int firstNSLocation = namespace.indexOf(
+								NamespaceReference.NAMESPACE_SEPARATOR);
 						subnamespace = namespace.substring(firstNSLocation);
 						namespace = namespace.substring(0, firstNSLocation);
 					}
-					if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+					if (name.charAt(
+							0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 						name = name.substring(1);
 					} else if (fLastUseParts.containsKey(namespace)) {
 						name = new StringBuilder(fLastUseParts.get(namespace)
 								.getNamespace().getFullyQualifiedName())
-								.append(subnamespace)
-								.append(NamespaceReference.NAMESPACE_SEPARATOR)
-								.append(fullyQualifiedName.getName())
-								.toString();
+										.append(subnamespace)
+										.append(NamespaceReference.NAMESPACE_SEPARATOR)
+										.append(fullyQualifiedName.getName())
+										.toString();
 					} else if (fLastNamespace != null) {
 						name = new StringBuilder(fLastNamespace.getName())
 								.append(NamespaceReference.NAMESPACE_SEPARATOR)
@@ -493,7 +498,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				} else if (fLastUseParts.containsKey(name)) {
 					name = fLastUseParts.get(name).getNamespace()
 							.getFullyQualifiedName();
-					if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+					if (name.charAt(
+							0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 						name = name.substring(1);
 					}
 				} else {
@@ -511,7 +517,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return (String[]) result.toArray(new String[result.size()]);
 	}
 
-	protected void modifyClassInfo(TypeDeclaration typeDeclaration, TypeInfo ti) {
+	protected void modifyClassInfo(TypeDeclaration typeDeclaration,
+			TypeInfo ti) {
 		// check whether this is a namespace
 		if (typeDeclaration instanceof NamespaceDeclaration) {
 			ti.modifiers |= Modifiers.AccNameSpace;
@@ -571,20 +578,19 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 						String docTagValue = docTag.getValue().trim();
 						int index = docTagValue.indexOf('(');
 						if (index != -1) {
-							String[] split = WHITESPACE_SEPERATOR
-									.split(docTagValue.substring(0, index)
-											.trim());
+							String[] split = WHITESPACE_SEPERATOR.split(
+									docTagValue.substring(0, index).trim());
 							if (split.length == 1) {
 								docTagValue = new StringBuilder(
 										VOID_RETURN_TYPE)
-										.append(Constants.SPACE)
-										.append(docTagValue).toString();
+												.append(Constants.SPACE)
+												.append(docTagValue).toString();
 							} else if (split.length == 2
 									&& Constants.STATIC.equals(split[0])) {
 								StringBuilder sb = new StringBuilder(
 										Constants.STATIC);
-								sb.append(Constants.SPACE).append(
-										VOID_RETURN_TYPE);
+								sb.append(Constants.SPACE)
+										.append(VOID_RETURN_TYPE);
 								sb.append(docTagValue.substring(6));
 								docTagValue = sb.toString();
 							}
@@ -687,8 +693,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				}
 
 				if (tag.getTypeReferences().size() > 0) {
-					info.type = PHPModelUtils.appendTypeReferenceNames(tag
-							.getTypeReferences());
+					info.type = PHPModelUtils
+							.appendTypeReferenceNames(tag.getTypeReferences());
 					break;
 				}
 			}
@@ -764,7 +770,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
-	public boolean endvisit(ForEachStatement foreachStatement) throws Exception {
+	public boolean endvisit(ForEachStatement foreachStatement)
+			throws Exception {
 		return true;
 	}
 
@@ -791,9 +798,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			if (args != null && args.getChilds() != null) {
 				argsCount = args.getChilds().size();
 			}
-			fRequestor.acceptMethodReference(call.getName(), argsCount, call
-					.getCallName().sourceStart(), call.getCallName()
-					.sourceEnd());
+			fRequestor.acceptMethodReference(call.getName(), argsCount,
+					call.getCallName().sourceStart(),
+					call.getCallName().sourceEnd());
 		}
 		return true;
 	}
@@ -833,8 +840,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (left instanceof FieldAccess) { // class variable ($this->a = .)
 			FieldAccess fieldAccess = (FieldAccess) left;
 			Expression dispatcher = fieldAccess.getDispatcher();
-			if (dispatcher instanceof VariableReference
-					&& "$this".equals(((VariableReference) dispatcher).getName())) { //$NON-NLS-1$
+			if (dispatcher instanceof VariableReference && "$this" //$NON-NLS-1$
+					.equals(((VariableReference) dispatcher).getName())) {
 				Expression field = fieldAccess.getField();
 				if (field instanceof SimpleReference) {
 					SimpleReference ref = (SimpleReference) field;
@@ -852,8 +859,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			if (!declarations.empty()) {
 				Declaration parentDeclaration = declarations.peek();
 				if (parentDeclaration instanceof MethodDeclaration
-						&& methodGlobalVars.peek().contains(
-								((VariableReference) left).getName())
+						&& methodGlobalVars.peek()
+								.contains(((VariableReference) left).getName())
 						|| parentDeclaration == fLastNamespace) {
 					deferredDeclarations.add(assignment);
 					return false;
@@ -943,8 +950,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 					var = ((ReferenceExpression) var).getVariable();
 				}
 				if (var instanceof SimpleReference) {
-					methodGlobalVars.peek().add(
-							((SimpleReference) var).getName());
+					methodGlobalVars.peek()
+							.add(((SimpleReference) var).getName());
 				}
 			}
 		}
@@ -1053,7 +1060,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			visitor.endvisit(declaration);
 		}
 
-		while (deferredDeclarations != null && !deferredDeclarations.isEmpty()) {
+		while (deferredDeclarations != null
+				&& !deferredDeclarations.isEmpty()) {
 			final ASTNode[] declarations = deferredDeclarations
 					.toArray(new ASTNode[deferredDeclarations.size()]);
 			deferredDeclarations.clear();

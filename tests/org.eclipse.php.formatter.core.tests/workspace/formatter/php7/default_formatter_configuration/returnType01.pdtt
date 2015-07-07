@@ -1,0 +1,34 @@
+--TEST--
+Test return type
+--FILE--
+<?php
+function foo	()                 :\Test   \     Exception {
+}
+function &foo	()                 : Test   \     Exception {
+}
+interface A {
+	function make(): A;
+}
+
+class 	B {
+	public  	function make()     : Boo {
+	}
+}
+
+$foo = function ()		:		 \MySpace\Test {};
+--EXPECT--
+<?php
+function foo(): \Test\Exception {
+}
+function &foo(): Test\Exception {
+}
+interface A {
+	function make(): A;
+}
+class B {
+	public function make(): Boo {
+	}
+}
+
+$foo = function (): \MySpace\Test {
+};

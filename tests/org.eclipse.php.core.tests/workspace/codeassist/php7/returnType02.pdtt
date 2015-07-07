@@ -1,0 +1,22 @@
+--TEST--
+Test function return type
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+namespace Test
+{
+    class AA
+    {
+        function foo(): \Exception
+        {}
+    }
+}
+namespace Boo
+{
+    use Test\AA;
+    $v = new AA();
+    $v->foo()->getL|
+}
+--EXPECT--
+method(getLine)

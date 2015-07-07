@@ -829,6 +829,11 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName()); //$NON-NLS-1$
 		xmlWriter.startTag("PHPMethodDeclaration", parameters); //$NON-NLS-1$
+		if (s.getReturnType() != null) {
+			xmlWriter.startTag("ReturnType", new HashMap<String, String>()); //$NON-NLS-1$
+			s.getReturnType().traverse(this);
+			xmlWriter.endTag("ReturnType"); //$NON-NLS-1$
+		}
 		return true;
 	}
 
@@ -1083,6 +1088,12 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 				var.traverse(this);
 			}
 			xmlWriter.endTag("LexicalVars"); //$NON-NLS-1$
+		}
+
+		if (s.getReturnType() != null) {
+			xmlWriter.startTag("ReturnType", new HashMap<String, String>()); //$NON-NLS-1$
+			s.getReturnType().traverse(this);
+			xmlWriter.endTag("ReturnType"); //$NON-NLS-1$
 		}
 
 		s.getBody().traverse(this);

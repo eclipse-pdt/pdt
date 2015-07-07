@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,7 +23,8 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 /**
  * Represents a function declaration
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
  * function foo() {}
@@ -32,6 +34,8 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  * function foo($a, int $b, $c = 5, int $d = 6) {}
  * 
  * function foo(); -abstract function in class declaration
+ * 
+ * function foo() : MyType {};
  */
 public class FunctionDeclaration extends Statement {
 
@@ -40,6 +44,7 @@ public class FunctionDeclaration extends Statement {
 	private final ASTNode.NodeList<FormalParameter> formalParameters = new ASTNode.NodeList<FormalParameter>(
 			FORMAL_PARAMETERS_PROPERTY);
 	private Block body;
+	private Identifier returnType;
 
 	/**
 	 * The structural property of this node type.
@@ -47,20 +52,24 @@ public class FunctionDeclaration extends Statement {
 	public static final SimplePropertyDescriptor IS_REFERENCE_PROPERTY = new SimplePropertyDescriptor(
 			FunctionDeclaration.class, "isReference", Boolean.class, OPTIONAL); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(
-			FunctionDeclaration.class,
-			"name", Identifier.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
+			FunctionDeclaration.class, "name", Identifier.class, MANDATORY, //$NON-NLS-1$
+			NO_CYCLE_RISK);
 	public static final ChildListPropertyDescriptor FORMAL_PARAMETERS_PROPERTY = new ChildListPropertyDescriptor(
-			FunctionDeclaration.class,
-			"formalParameters", FormalParameter.class, NO_CYCLE_RISK); //$NON-NLS-1$
+			FunctionDeclaration.class, "formalParameters", //$NON-NLS-1$
+			FormalParameter.class, NO_CYCLE_RISK);
 	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(
-			FunctionDeclaration.class,
-			"body", Block.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+			FunctionDeclaration.class, "body", Block.class, OPTIONAL, //$NON-NLS-1$
+			CYCLE_RISK);
+	public static final ChildPropertyDescriptor RETURN_TYPE_PROPERTY = new ChildPropertyDescriptor(
+			FunctionDeclaration.class, "returnType", Identifier.class, //$NON-NLS-1$
+			OPTIONAL, CYCLE_RISK);
 
 	/**
 	 * A list of property descriptors (element type:
 	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
 				4);
@@ -68,12 +77,22 @@ public class FunctionDeclaration extends Statement {
 		propertyList.add(NAME_PROPERTY);
 		propertyList.add(FORMAL_PARAMETERS_PROPERTY);
 		propertyList.add(BODY_PROPERTY);
+		propertyList.add(RETURN_TYPE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
-	private FunctionDeclaration(int start, int end, AST ast,
-			Identifier functionName, FormalParameter[] formalParameters,
-			Block body, final boolean isReference) {
+	public FunctionDeclaration(int start, int end, AST ast,
+			Identifier functionName, List<?> formalParameters, Block body,
+			final boolean isReference) {
+		this(start, end, ast, functionName,
+				(FormalParameter[]) formalParameters
+						.toArray(new FormalParameter[formalParameters.size()]),
+				body, isReference);
+	}
+
+	public FunctionDeclaration(int start, int end, AST ast,
+			Identifier functionName, List formalParameters, Block body,
+			final boolean isReference, Identifier returnType) {
 		super(start, end, ast);
 
 		if (functionName == null || formalParameters == null) {
@@ -82,21 +101,21 @@ public class FunctionDeclaration extends Statement {
 
 		setIsReference(isReference);
 		setFunctionName(functionName);
-		for (FormalParameter formalParameter : formalParameters) {
+		for (Object obj : formalParameters) {
+			FormalParameter formalParameter = (FormalParameter) obj;
 			this.formalParameters.add(formalParameter);
 		}
 		if (body != null) {
 			setBody(body);
 		}
+		this.returnType = returnType;
 	}
 
-	public FunctionDeclaration(int start, int end, AST ast,
-			Identifier functionName, List formalParameters, Block body,
-			final boolean isReference) {
-		this(start, end, ast, functionName,
-				(FormalParameter[]) formalParameters
-						.toArray(new FormalParameter[formalParameters.size()]),
-				body, isReference);
+	private FunctionDeclaration(int start, int end, AST ast,
+			Identifier functionName, FormalParameter[] formalParameters,
+			Block body, final boolean isReference) {
+		this(start, end, ast, functionName, Arrays.asList(formalParameters),
+				body, isReference, null);
 	}
 
 	public FunctionDeclaration(AST ast) {
@@ -158,6 +177,12 @@ public class FunctionDeclaration extends Statement {
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(TAB).append(tab).append("</FormalParameters>\n"); //$NON-NLS-1$
+		if (getReturnType() != null) {
+			buffer.append(TAB).append(tab).append("<ReturnType>\n"); //$NON-NLS-1$
+			getReturnType().toString(buffer, TAB + TAB + tab);
+			buffer.append("\n"); //$NON-NLS-1$
+			buffer.append(TAB).append(tab).append("</ReturnType>\n"); //$NON-NLS-1$
+		}
 		buffer.append(TAB).append(tab).append("<FunctionBody>\n"); //$NON-NLS-1$
 		if (body != null) {
 			body.toString(buffer, TAB + TAB + tab);
@@ -189,9 +214,9 @@ public class FunctionDeclaration extends Statement {
 	 * @exception IllegalArgumentException
 	 *                if:
 	 *                <ul>
-	 *                <li>the node belongs to a different AST</li> <li>the node
-	 *                already has a parent</li> <li>a cycle in would be created
-	 *                </li>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
 	 *                </ul>
 	 */
 	public void setBody(Block body) {
@@ -282,6 +307,28 @@ public class FunctionDeclaration extends Statement {
 		postValueChange(IS_REFERENCE_PROPERTY);
 	}
 
+	/**
+	 * Gets function return type (PHP7)
+	 * 
+	 * @return return type Identifier, can be null
+	 */
+	public Identifier getReturnType() {
+		return returnType;
+	}
+
+	/**
+	 * Sets if function declaration has defined return type (PHP7)
+	 * 
+	 * @param returnType
+	 *            return type Identifier, can be null
+	 */
+	public void setReturnType(Identifier returnType) {
+		ASTNode oldChild = this.returnType;
+		preReplaceChild(oldChild, returnType, RETURN_TYPE_PROPERTY);
+		this.returnType = returnType;
+		postReplaceChild(oldChild, returnType, RETURN_TYPE_PROPERTY);
+	}
+
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
@@ -317,11 +364,20 @@ public class FunctionDeclaration extends Statement {
 				return null;
 			}
 		}
+		if (property == RETURN_TYPE_PROPERTY) {
+			if (get) {
+				return getReturnType();
+			} else {
+				setReturnType((Identifier) child);
+				return null;
+			}
+		}
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	final List internalGetChildListProperty(
+			ChildListPropertyDescriptor property) {
 		if (property == FORMAL_PARAMETERS_PROPERTY) {
 			return formalParameters();
 		}
@@ -342,12 +398,14 @@ public class FunctionDeclaration extends Statement {
 		final Block body = ASTNode.copySubtree(target, getBody());
 		final Identifier function = ASTNode.copySubtree(target,
 				getFunctionName());
-		final List formalParams = ASTNode.copySubtrees(target,
+		final List<?> formalParams = ASTNode.copySubtrees(target,
 				formalParameters());
 		final boolean isRef = isReference();
-
+		final Identifier returnType = ASTNode.copySubtree(target,
+				getReturnType());
 		final FunctionDeclaration result = new FunctionDeclaration(getStart(),
-				getEnd(), target, function, formalParams, body, isRef);
+				getEnd(), target, function, formalParams, body, isRef,
+				returnType);
 		return result;
 	}
 

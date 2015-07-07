@@ -1,0 +1,52 @@
+--TEST--
+Test return type
+--FILE--
+<?php
+interface B {
+	public function bar(): Exception;
+}
+class C {
+	static function foo($var1): string {
+	}
+}
+$foo = function (): MySpace\Test {
+};
+--EXPECT--
+<ModuleDeclaration start="0" end="148">
+	<InterfaceDeclaration start="6" end="56" modifiers="" name="B">
+		<PHPMethodDeclaration start="21" end="54" modifiers="public" name="bar">
+			<ReturnType>
+				<FullyQualifiedReference start="44" end="53" name="Exception">
+				</FullyQualifiedReference>
+			</ReturnType>
+		</PHPMethodDeclaration>
+	</InterfaceDeclaration>
+	<ClassDeclaration start="57" end="109" modifiers="" name="C">
+		<PHPMethodDeclaration start="68" end="107" modifiers="static" name="foo">
+			<ReturnType>
+				<FullyQualifiedReference start="96" end="102" name="string">
+				</FullyQualifiedReference>
+			</ReturnType>
+			<FormalParameter start="88" end="93" modifiers="" isMandatory="true">
+				<VariableReference start="88" end="93" name="$var1">
+				</VariableReference>
+			</FormalParameter>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<ExpressionStatement start="110" end="147">
+		<Assignment start="110" end="146" operator="=">
+			<VariableReference start="110" end="114" name="$foo">
+			</VariableReference>
+			<LambdaFunctionDeclaration start="117" end="146" isReference="false">
+				<Arguments>
+				</Arguments>
+				<ReturnType>
+					<FullyQualifiedReference start="130" end="142" name="MySpace\Test">
+						<NamespaceReference start="130" end="137" name="MySpace" global="false" local="false">
+						</NamespaceReference>
+					</FullyQualifiedReference>
+				</ReturnType>
+			</LambdaFunctionDeclaration>
+		</Assignment>
+	</ExpressionStatement>
+</ModuleDeclaration>
