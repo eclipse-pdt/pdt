@@ -75,7 +75,6 @@
 					<artifactId>tycho-p2-plugin</artifactId>
 					<version>${tycho-version}</version>
 				</plugin>
-
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -181,13 +180,9 @@
 					<name>!eclipseNext</name>
 				</property>
 			</activation>
-			<repositories>
-				<repository>
-					<id>eclipse-current</id>
-					<layout>p2</layout>
-					<url>http://download.eclipse.org/releases/luna</url>
-				</repository>
-			</repositories>
+			<properties>
+				<eclipse.name>luna</eclipse.name>
+			</properties>
 		</profile>
 		<profile>
 			<id>eclipse-next</id>
@@ -196,13 +191,9 @@
 					<name>eclipseNext</name>
 				</property>
 			</activation>
-			<repositories>
-				<repository>
-					<id>eclipse-next</id>
-					<layout>p2</layout>
-					<url>http://download.eclipse.org/releases/mars</url>
-				</repository>
-			</repositories>
+			<properties>
+				<eclipse.name>mars</eclipse.name>
+			</properties>
 		</profile>
 	</profiles>
 	<repositories>
@@ -225,6 +216,11 @@
 			<id>mylyn</id>
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/mylyn/releases/3.5/</url>
+		</repository>
+		<repository>
+			<id>eclipse</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/releases/${eclipse.name}</url>
 		</repository>
 	</repositories>
 
