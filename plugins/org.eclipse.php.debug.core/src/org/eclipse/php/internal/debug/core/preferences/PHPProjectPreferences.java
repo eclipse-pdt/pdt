@@ -57,20 +57,6 @@ public class PHPProjectPreferences {
 
 	}
 
-	public static boolean isEnableCLIDebug(IProject project) {
-		Preferences prefs = getModelPreferences();
-		boolean enableCLIDebug = prefs
-				.getBoolean(PHPDebugCorePreferenceNames.ENABLE_CLI_DEBUG);
-		if (project != null && getElementSettingsForProject(project)) {
-			IScopeContext projectScope = getProjectScope(project);
-			enableCLIDebug = projectScope.getNode(getPreferenceNodeQualifier())
-					.getBoolean(PHPDebugCorePreferenceNames.ENABLE_CLI_DEBUG,
-							enableCLIDebug);
-		}
-		return enableCLIDebug;
-
-	}
-
 	public static boolean isSortByName() {
 		Preferences prefs = getModelPreferences();
 		return prefs.getBoolean(PHPDebugCorePreferenceNames.SORT_BY_NAME);

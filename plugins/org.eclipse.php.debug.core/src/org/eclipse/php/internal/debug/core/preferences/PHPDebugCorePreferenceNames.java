@@ -69,6 +69,5 @@ public class PHPDebugCorePreferenceNames {
 
 	public static final String DEFAULT_BASE_PATH = "DefaultProjectBasePath"; //$NON-NLS-1$
 
-	public static final String ENABLE_CLI_DEBUG = Debug_ID + "enable_cli_debug"; //$NON-NLS-1$
 	public static final String SORT_BY_NAME = Debug_ID + "sort_by_name"; //$NON-NLS-1$
 }
