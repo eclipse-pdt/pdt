@@ -72,7 +72,6 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 	private final boolean isPropertyPage;
 	private String defaultBasePath;
 	private IPageValidator pageValidator = null;
-	private Button fEnableCLIDebug;
 	private Label fServerDebugger;
 	private Label fCLIDebugger;
 
@@ -96,8 +95,6 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		IProject project = getProject(propertyPage);
 		boolean stopAtFirstLine = prefs
 				.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE);
-		boolean enableCLIDebug = prefs
-				.getBoolean(PHPDebugCorePreferenceNames.ENABLE_CLI_DEBUG);
 		String serverName = ServersManager.getDefaultServer(null).getName();
 		String phpExeName = InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
 				.get(PHPDebugCorePreferenceNames.DEFAULT_PHP, null);
@@ -127,9 +124,6 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 					stopAtFirstLine = node.getBoolean(
 							PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE,
 							stopAtFirstLine);
-					enableCLIDebug = node.getBoolean(
-							PHPDebugCorePreferenceNames.ENABLE_CLI_DEBUG,
-							enableCLIDebug);
 					transferEncoding = node.get(
 							PHPDebugCorePreferenceNames.TRANSFER_ENCODING,
 							transferEncoding);
@@ -151,7 +145,6 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 			loadPHPExes(fDefaultPHPExe, PHPexes.getInstance().getAllItems());
 		}
 		fStopAtFirstLine.setSelection(stopAtFirstLine);
-		fEnableCLIDebug.setSelection(enableCLIDebug);
 		fDefaultServer.select(fDefaultServer.indexOf(serverName));
 		fServerDebugger.setText(PHPDebuggersRegistry
 				.getDebuggerName(serverDebuggerId));
@@ -236,11 +229,8 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 	public void performDefaults() {
 		Preferences prefs = PHPProjectPreferences.getModelPreferences();
 		fStopAtFirstLine
-				.setSelection(prefs
-						.getDefaultBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE));
-		fEnableCLIDebug
-				.setSelection(prefs
-						.getDefaultBoolean(PHPDebugCorePreferenceNames.ENABLE_CLI_DEBUG));
+			.setSelection(prefs
+					.getDefaultBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE));
 		loadServers(fDefaultServer);
 		String serverDebuggerId = PHPDebugPlugin.getDebuggerId(fDefaultServer
 				.getText());
@@ -326,18 +316,6 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		gd.horizontalIndent = 2;
 		fCLIDebugger.setLayoutData(gd);
 
-		new Label(defultCLIGroup, SWT.NONE); // dummy label
-		new Label(defultCLIGroup, SWT.NONE); // dummy label
-		fEnableCLIDebug = new Button(defultCLIGroup, SWT.CHECK);
-		fEnableCLIDebug.setText(PHPDebugUIMessages.PhpDebugPreferencePage_13);
-
-		gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		gd.horizontalIndent = 1;
-		gd.horizontalSpan = 2;
-
-		fEnableCLIDebug.setLayoutData(gd);
-		fEnableCLIDebug.setData(PHPDebugCorePreferenceNames.ENABLE_CLI_DEBUG);
-
 		new Label(composite, SWT.NONE); // dummy label
 
 		Group encodingGroup = new Group(composite, SWT.NONE);
@@ -376,8 +354,6 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		new Label(composite, SWT.NONE); // dummy label
 		if (isPropertyPage())
 			createBaseURLGroup(composite);
-
-		new Label(composite, SWT.NONE); // dummy label
 
 		fStopAtFirstLine = addCheckBox(composite,
 				PHPDebugUIMessages.PhpDebugPreferencePage_1,
@@ -623,9 +599,6 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 			debugUINode.putBoolean(
 					PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE,
 					fStopAtFirstLine.getSelection());
-			debugUINode.putBoolean(
-					PHPDebugCorePreferenceNames.ENABLE_CLI_DEBUG,
-					fEnableCLIDebug.getSelection());
 			if (!PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined
 					.equals(phpExe)) {
 				debugUINode
@@ -644,8 +617,6 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 				// Workspace settings
 				prefs.setValue(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE,
 						fStopAtFirstLine.getSelection());
-				prefs.setValue(PHPDebugCorePreferenceNames.ENABLE_CLI_DEBUG,
-						fEnableCLIDebug.getSelection());
 				prefs.setValue(PHPDebugCorePreferenceNames.TRANSFER_ENCODING,
 						fDebugEncodingSettings.getText());
 				prefs.setValue(PHPDebugCorePreferenceNames.OUTPUT_ENCODING,
@@ -662,8 +633,6 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 					// Removed a project specific
 					debugUINode
 							.remove(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE);
-					debugUINode
-							.remove(PHPDebugCorePreferenceNames.ENABLE_CLI_DEBUG);
 					debugUINode.remove(PHPDebugCorePreferenceNames.DEFAULT_PHP);
 					ServersManager.setDefaultServer(project, (Server) null);
 					debugUINode
