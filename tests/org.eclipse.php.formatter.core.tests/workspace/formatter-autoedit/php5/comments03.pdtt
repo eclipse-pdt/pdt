@@ -1,0 +1,11 @@
+--TEST--
+Tests formatting array statements.
+--FILE--
+/*
+ * Comment
+ */|
+--EXPECT--
+/*
+ * Comment
+ */
+

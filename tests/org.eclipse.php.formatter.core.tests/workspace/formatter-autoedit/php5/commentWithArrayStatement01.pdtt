@@ -1,0 +1,16 @@
+--TEST--
+Tests indentation
+--FILE--
+<?php
+/*
+ * Comment
+ */
+$x = [|];
+--EXPECT--
+<?php
+/*
+ * Comment
+ */
+$x = [
+		
+];
