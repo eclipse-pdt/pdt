@@ -141,6 +141,7 @@ public abstract class PhpTokenNames {
 		// PHP7
 		token2Name.put(CompilerParserConstants.T_SPACESHIP, "<=>"); //$NON-NLS-1$
 		token2Name.put(CompilerParserConstants.T_COALESCE, "??"); //$NON-NLS-1$
+		token2Name.put(CompilerParserConstants.T_YIELD_FROM, "yield from"); //$NON-NLS-1$
 	}
 
 	/**

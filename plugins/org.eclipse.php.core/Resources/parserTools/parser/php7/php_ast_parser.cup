@@ -132,6 +132,7 @@ terminal  T_FUNCTION;
 terminal  T_CONST;
 terminal  T_RETURN;
 terminal  T_YIELD;
+terminal  T_YIELD_FROM;
 terminal  T_TRY;
 terminal  T_CATCH;
 terminal  T_THROW;
@@ -392,6 +393,7 @@ precedence left T_OR;
 precedence left T_KOVA;
 precedence left T_REFERENCE;
 precedence left T_ELLIPSIS;
+precedence right T_YIELD_FROM;
 
 precedence nonassoc T_IS_EQUAL,T_IS_NOT_EQUAL,T_IS_IDENTICAL,T_IS_NOT_IDENTICAL;
 precedence nonassoc T_RGREATER,T_IS_SMALLER_OR_EQUAL,T_LGREATER,T_IS_GREATER_OR_EQUAL;
@@ -731,11 +733,6 @@ T_CURLY_OPEN:token inner_statement_list:sList T_CURLY_CLOSE:e
 | T_RETURN:token variable:expr T_SEMICOLON:e
 {:
 	RESULT = new ReturnStatement(tokenleft, eright, parser.ast, expr);
-:}
-
-| yield_expr:expr T_SEMICOLON:e
-{:
-	RESULT = new ExpressionStatement(exprleft, eright, parser.ast, expr);
 :}
 
 | T_GLOBAL:s global_var_list:list T_SEMICOLON:e
@@ -2280,9 +2277,9 @@ T_LIST:s T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close T_EQ
 	RESULT = expr;
 :}
 
-| T_OPEN_PARENTHESE:start yield_expr:expr T_CLOSE_PARENTHESE:end
+| yield_expr:yield 
 {:
-	RESULT = new ParenthesisExpression(startleft, endright, parser.ast, expr);
+	RESULT = yield;
 :}
 
 | chain_instance_call:chain
@@ -3672,5 +3669,10 @@ T_YIELD:token
 | T_YIELD:token yield_arg:key T_DOUBLE_ARROW yield_arg:expr
 {:
 	RESULT = new YieldExpression(tokenleft, exprright, parser.ast, key, expr);
+:}
+
+| T_YIELD_FROM:token yield_arg:expr
+{:
+	RESULT = new YieldExpression(tokenleft, exprright, parser.ast, expr, YieldExpression.OP_FROM);
 :}
 ;

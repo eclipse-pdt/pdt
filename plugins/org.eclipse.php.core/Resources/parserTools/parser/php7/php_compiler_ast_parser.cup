@@ -111,6 +111,7 @@ terminal  PHPDocBlock T_FUNCTION;
 terminal  PHPDocBlock T_CONST;
 terminal  T_RETURN;
 terminal  T_YIELD;
+terminal  T_YIELD_FROM;
 terminal  T_TRY;
 terminal  T_CATCH;
 terminal  T_THROW;
@@ -383,6 +384,7 @@ precedence left T_OR;
 precedence left T_KOVA;
 precedence left T_REFERENCE;
 precedence left T_ELLIPSIS;
+precedence right T_YIELD_FROM;
 
 precedence nonassoc T_IS_EQUAL,T_IS_NOT_EQUAL,T_IS_IDENTICAL,T_IS_NOT_IDENTICAL;
 precedence nonassoc T_RGREATER,T_IS_SMALLER_OR_EQUAL,T_LGREATER,T_IS_GREATER_OR_EQUAL;
@@ -891,21 +893,6 @@ inner_statement_list:statementList T_CURLY_CLOSE:end
 | T_RETURN:token variable:expr T_SEMICOLON:end
 {:
 	RESULT = new ReturnStatement(tokenleft, endright, expr);
-:}
-
-| yield_expr:yield T_SEMICOLON:end
-{:
-	boolean found = false;
-	ListIterator<Statement> it = parser.declarations.listIterator(parser.declarations.size());
-	while (!found && it.hasPrevious()) {
-		found = (it.previous() instanceof PHPMethodDeclaration);
-	}
-	if (parser.declarations.isEmpty() || !found) {
-		parser.reportError(new ASTError(yieldleft, yieldright), "syntax error, the yield expression can only be used inside a function");
-		parser.pendingStatement = yield;
-	}
-
-	RESULT = new ExpressionStatement(yieldleft, endright, yield);
 :}
 
 | T_GLOBAL:start global_var_list:list T_SEMICOLON:end
@@ -2724,7 +2711,7 @@ list_variable:vars T_EQUAL expr:expr
 	RESULT = expr;
 :}
 
-| T_OPEN_PARENTHESE yield_expr:yield T_CLOSE_PARENTHESE
+| yield_expr:yield
 {:
 	boolean found = false;
 	ListIterator<Statement> it = parser.declarations.listIterator(parser.declarations.size());
@@ -4264,5 +4251,10 @@ T_YIELD:token
 | T_YIELD:token yield_arg:key T_DOUBLE_ARROW yield_arg:expr
 {:
 	RESULT = new YieldExpression(tokenleft, exprright, key,  expr);
+:}
+
+| T_YIELD_FROM:token yield_arg:expr
+{:
+	RESULT = new YieldExpression(tokenleft, exprright, expr, YieldExpression.OP_FROM);
 :}
 ;
