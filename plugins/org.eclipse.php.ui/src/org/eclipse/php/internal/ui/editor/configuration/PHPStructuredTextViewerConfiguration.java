@@ -425,6 +425,9 @@ public class PHPStructuredTextViewerConfiguration extends
 						|| !(strategy instanceof IAutoEditStrategy)) {
 					continue;
 				}
+				if (strategy instanceof DefaultIndentLineAutoEditStrategy) {
+					continue;
+				}
 				strategies.add(strategy);
 			}
 
