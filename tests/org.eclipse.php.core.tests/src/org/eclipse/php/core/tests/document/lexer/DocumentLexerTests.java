@@ -33,26 +33,28 @@ public class DocumentLexerTests {
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
 		TESTS.put(PHPVersion.PHP5,
 				new String[] { "/workspace/document_lexer/php5" });
 		TESTS.put(PHPVersion.PHP5_3,
 				new String[] { "/workspace/document_lexer/php53" });
-		TESTS.put(PHPVersion.PHP5_4, new String[] {
-				"/workspace/document_lexer/php53",
-				"/workspace/document_lexer/php54" });
-		TESTS.put(PHPVersion.PHP5_5, new String[] {
-				"/workspace/document_lexer/php53",
-				"/workspace/document_lexer/php54",
-				"/workspace/document_lexer/php55" });
-		TESTS.put(PHPVersion.PHP5_6, new String[] {
-				"/workspace/document_lexer/php53",
-				"/workspace/document_lexer/php54",
-				"/workspace/document_lexer/php56" });
-		TESTS.put(PHPVersion.PHP7_0, new String[] {
-				"/workspace/document_lexer/php53",
-				"/workspace/document_lexer/php54",
-				"/workspace/document_lexer/php56" });
+		TESTS.put(PHPVersion.PHP5_4,
+				new String[] { "/workspace/document_lexer/php53",
+						"/workspace/document_lexer/php54" });
+		TESTS.put(PHPVersion.PHP5_5,
+				new String[] { "/workspace/document_lexer/php53",
+						"/workspace/document_lexer/php54",
+						"/workspace/document_lexer/php55" });
+		TESTS.put(PHPVersion.PHP5_6,
+				new String[] { "/workspace/document_lexer/php53",
+						"/workspace/document_lexer/php54",
+						"/workspace/document_lexer/php56" });
+		TESTS.put(PHPVersion.PHP7_0,
+				new String[] { "/workspace/document_lexer/php53",
+						"/workspace/document_lexer/php54",
+						"/workspace/document_lexer/php56",
+						"/workspace/document_lexer/php7" });
 	};
 
 	private final PHPVersion version;
@@ -63,12 +65,13 @@ public class DocumentLexerTests {
 
 	@Test
 	public void test(String fileName) throws Exception {
-		final PdttFile pdttFile = new PdttFile(PHPCoreTests.getDefault()
-				.getBundle(), fileName, "UTF-8");
+		final PdttFile pdttFile = new PdttFile(
+				PHPCoreTests.getDefault().getBundle(), fileName, "UTF-8");
 		AbstractPhpLexer lexer = PhpLexerFactory
-				.createLexer(new InputStreamReader(new ByteArrayInputStream(
-						pdttFile.getFile().trim().getBytes("UTF-8")), "UTF-8"),
-						version);
+				.createLexer(new InputStreamReader(
+						new ByteArrayInputStream(
+								pdttFile.getFile().trim().getBytes("UTF-8")),
+						"UTF-8"), version);
 		int inScriptingState = lexer.getClass().getField("ST_PHP_IN_SCRIPTING")
 				.getInt(lexer); // different lexers have
 								// different state codes
