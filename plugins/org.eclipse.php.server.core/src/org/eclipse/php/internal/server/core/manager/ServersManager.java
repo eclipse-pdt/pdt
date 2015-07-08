@@ -168,8 +168,11 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			ServerManagerEvent event = new ServerManagerEvent(
 					ServerManagerEvent.MANAGER_EVENT_REMOVED, oldValue);
 			manager.fireEvent(event);
-		} else {
-
+		}
+		Server defaultServer = getDefaultServer(null);
+		if (defaultServer == null || isNoneServer(defaultServer)) {
+			// Set workspace default if there is no any
+			setDefaultServer(null, server);
 		}
 		ServerManagerEvent event = new ServerManagerEvent(
 				ServerManagerEvent.MANAGER_EVENT_ADDED, server);
@@ -205,30 +208,24 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		// replace the default to the
 		// first in the list.
 		ServersManager manager = ServersManager.getInstance();
-		Server removedServer = (Server) manager.servers.remove(serverName);
 		Server workspaceDefault = getDefaultServer(null);
-		// if (workspaceDefault == null) {
-		// // Should not happen
-		// Logger.log(IStatus.ERROR,
-		// "There is no defined default server for the workspace.");
-		// return null;
-		// }
+		Server removedServer = (Server) manager.servers.remove(serverName);
 		if (removedServer == null) {
 			// if the name is not existing, just quit.
 			return null;
 		}
-
 		if (workspaceDefault == removedServer) {
 			// If the workspace default server is the same as the one we wish to
 			// remove,
 			// we should replace it.
 			Server[] servers = getServers();
-			if (servers.length > 0) {
-				workspaceDefault = servers[0];
-				setDefaultServer(null, workspaceDefault);
+			if (servers.length == 1) {
+				setDefaultServer(null, servers[0]);
+			} else if (servers.length > 1) {
+				// Take second one as first one is '<none>'
+				setDefaultServer(null, servers[1]);
 			}
 		}
-
 		// Check that if any one of the mapped projects holds a reference to the
 		// removed server.
 		// If so, replace it with the new default server.
@@ -238,7 +235,6 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 				setDefaultServer((IProject) element, workspaceDefault);
 			}
 		}
-
 		if (removedServer != null) {
 			// Fire the event for the removal
 			removedServer.removePropertyChangeListener(manager);
@@ -360,16 +356,18 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	 */
 	public static Server getDefaultServer(IProject project) {
 		ServersManager manager = getInstance();
-		// First, try to get it from the memory.
+		// Try to get it from the memory first.
 		Server server = (Server) manager.defaultServersMap.get(project);
 		if (project != null) {
-			// In case that the project is not null, check that we have
-			// project-specific settings for it.
-			// Otherwise, map it to the workspace default server.
+			/*
+			 * In case that the project is not null, check that we have
+			 * project-specific settings for it. Otherwise, map it to the
+			 * workspace default server.
+			 */
 			IScopeContext[] preferenceScopes = createPreferenceScopes(project);
-			String projectSpecificServer = preferenceScopes[0].getNode(
-					NODE_QUALIFIER).get(DEFAULT_SERVER_PREFERENCES_KEY,
-					(String) null);
+			String projectSpecificServer = preferenceScopes[0]
+					.getNode(NODE_QUALIFIER)
+					.get(DEFAULT_SERVER_PREFERENCES_KEY, (String) null);
 			if (projectSpecificServer == null) {
 				// We do not have a project specific setting for this project.
 				// Map it to the default workspace server.
@@ -378,54 +376,41 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 				server = (Server) manager.defaultServersMap.get(null);
 			}
 		}
-		// If the server was no found in our hash, try to load it from the
-		// preferences.
-		// This part of code should only happen one time when the first call for
-		// the
-		// getDefaultServer. Once it's done, there is no reason to re-load the
-		// servers definitions
-		// from the preferences (XML).
+		/*
+		 * If the server was no found in our hash, try to load it from the
+		 * preferences. This part of code should only happen one time when the
+		 * first call for the getDefaultServer. Once it's done, there is no
+		 * reason to re-load the servers definitions from the preferences (XML).
+		 */
 		if (server == null) {
+			IEclipsePreferences preferences = InstanceScope.INSTANCE
+					.getNode(Activator.PLUGIN_ID);
 			String serverName = null;
 			if (project == null) {
 				// Get the default workspace server.
-				Preferences prefs = Activator.getDefault()
-						.getPluginPreferences();
-				serverName = prefs.getString(DEFAULT_SERVER_PREFERENCES_KEY);
+				serverName = preferences.get(DEFAULT_SERVER_PREFERENCES_KEY,
+						null);
 			} else {
 				// Get the projects' default server
-				IScopeContext[] preferenceScopes = createPreferenceScopes(project);
-				serverName = preferenceScopes[0].getNode(NODE_QUALIFIER).get(
-						DEFAULT_SERVER_PREFERENCES_KEY, (String) null);
+				IScopeContext[] preferenceScopes = createPreferenceScopes(
+						project);
+				serverName = preferenceScopes[0].getNode(NODE_QUALIFIER)
+						.get(DEFAULT_SERVER_PREFERENCES_KEY, null);
 				if (serverName == null) {
-					// Take the workspace Server and make it the project's
-					// default server
-					Preferences prefs = Activator.getDefault()
-							.getPluginPreferences();
-					serverName = prefs
-							.getString(DEFAULT_SERVER_PREFERENCES_KEY);
+					// No project server - take the workspace one
+					serverName = preferences.get(DEFAULT_SERVER_PREFERENCES_KEY,
+							null);
 				}
 			}
 			if (serverName != null && !"".equals(serverName)) { //$NON-NLS-1$
 				server = (Server) manager.servers.get(serverName);
-				// Map this server as the default for the project (if not null)
-				// or for the workspace (when the project is null).
+				/*
+				 * Map this server as the default for the project (if not null)
+				 * or for the workspace (when the project is null).
+				 */
 				manager.defaultServersMap.put(project, server);
-			} else {
-				// Create a default server and hook it as a workspace and the
-				// project server (can be the same).
-				try {
-					server = createServer(DEFAULT_SERVER_NAME, BASE_URL);
-				} catch (MalformedURLException e) {
-					// safe server creation
-				}
-				manager.defaultServersMap.put(null, server);
-				manager.defaultServersMap.put(project, server);
-				manager.innerSaveDefaultServer(project, server);
-				ServersManager.save();
 			}
 		}
-
 		// fixed bug 197579 - in case of no default server mark the first server
 		// as default
 		if (server == null) {
@@ -449,15 +434,16 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	 */
 	public static void setDefaultServer(IProject project, Server server) {
 		ServersManager manager = getInstance();
-		// Get the default server for the given project.
-		// In case that we need to set a new server for the project, make sure
-		// we save it as well.
+		/*
+		 * Get the default server for the given project. In case that we need to
+		 * set a new server for the project, make sure we save it as well.
+		 */
 		Server defaultProjectServer = (Server) manager.defaultServersMap
 				.get(project);
 		if (server != defaultProjectServer) {
 			manager.defaultServersMap.put(project, server);
-			manager.innerSaveDefaultServer(project, server);
 		}
+		manager.innerSaveDefaultServer(project, server);
 	}
 
 	/**
@@ -549,6 +535,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		fireEvent(event);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		return null;
 	}
@@ -584,18 +571,21 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	}
 
 	private void innerSaveDefaultServer(IProject project, Server server) {
-		Preferences prefs = Activator.getDefault().getPluginPreferences();
+		IEclipsePreferences preferences = InstanceScope.INSTANCE
+				.getNode(Activator.PLUGIN_ID);
+		// Preferences prefs = Activator.getDefault().getPluginPreferences();
 		if (project == null && server != null) {
-			prefs.setValue(DEFAULT_SERVER_PREFERENCES_KEY, server.getName());
-			Activator.getDefault().savePluginPreferences();
+			preferences.put(DEFAULT_SERVER_PREFERENCES_KEY, server.getName());
+			try {
+				preferences.flush();
+			} catch (BackingStoreException e) {
+				Logger.logException(e);
+			}
 		} else if (project != null) {
-			String defaultWorkspaceServer = prefs
-					.getString(DEFAULT_SERVER_PREFERENCES_KEY);
 			IScopeContext[] scopeContexts = createPreferenceScopes(project);
 			IEclipsePreferences prefsNode = scopeContexts[0]
 					.getNode(NODE_QUALIFIER);
-			if (server != null
-					&& !defaultWorkspaceServer.equals(server.getName())) {
+			if (server != null) {
 				prefsNode.put(DEFAULT_SERVER_PREFERENCES_KEY, server.getName());
 			} else {
 				prefsNode.remove(DEFAULT_SERVER_PREFERENCES_KEY);
@@ -647,8 +637,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			Server defaultWebServer = null;
 			try {
 				defaultWebServer = new Server(DEFAULT_SERVER_NAME, "localhost", //$NON-NLS-1$
-						BASE_URL,
-						"");
+						BASE_URL, ""); //$NON-NLS-1$
 				servers.put(defaultWebServer.getName(), defaultWebServer);
 			} catch (MalformedURLException e) {
 			}

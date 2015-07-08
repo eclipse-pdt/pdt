@@ -17,6 +17,8 @@ import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.preferences.AbstractPHPPropertyPreferencePage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -76,6 +78,9 @@ public class PHPDebugPropertyPreferencePage extends
 				getProject() == null);
 
 		debugPreferencesBlock.setCompositeAddon(comp);
+		debugPreferencesBlock
+				.setIsProjectSpecific(fEnableProjectSettings != null
+						&& fEnableProjectSettings.getSelection());
 		debugPreferencesBlock.initializeValues(this);
 
 		debugPreferencesBlock.setValidator(new IPageValidator() {
@@ -93,6 +98,19 @@ public class PHPDebugPropertyPreferencePage extends
 			}
 
 		});
+
+		if (fEnableProjectSettings != null) {
+			fEnableProjectSettings.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					debugPreferencesBlock
+							.setIsProjectSpecific(fEnableProjectSettings != null
+									&& fEnableProjectSettings.getSelection());
+					debugPreferencesBlock.initializeValues(
+							PHPDebugPropertyPreferencePage.this);
+				}
+			});
+		}
 
 		PlatformUI
 				.getWorkbench()
