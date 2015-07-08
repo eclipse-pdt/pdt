@@ -19,32 +19,46 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 /**
  * Represent a yield statement
  * 
- * <pre>e.g.
+ * <pre>
+ * e.g.
  * 
  * <pre>
  * yield;
  * yield $a;
  * yield $k => $b;
+ * yield from $a;
+ * </pre>
  */
 public class YieldExpression extends Expression {
 
+	// yield $a or yield $k => $a
+	public static final int OP_NONE = 0;
+	// yield from $k
+	public static final int OP_FROM = 1;
+
 	private final Expression key;
 	private final Expression expr;
+	private int operator;
 
 	public YieldExpression(int start, int end) {
 		this(start, end, null);
 	}
 
 	public YieldExpression(int start, int end, Expression expr) {
-		super(start, end);
-		this.expr = expr;
-		this.key = null;
+		this(start, end, null, expr);
 	}
 
-	public YieldExpression(int start, int end, Expression key, Expression expr) {
+	public YieldExpression(int start, int end, Expression key,
+			Expression expr) {
 		super(start, end);
 		this.expr = expr;
 		this.key = key;
+		this.operator = OP_NONE;
+	}
+
+	public YieldExpression(int start, int end, Expression expr, int operator) {
+		this(start, end, expr, null);
+		this.operator = operator;
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
@@ -70,6 +84,10 @@ public class YieldExpression extends Expression {
 
 	public Expression getKey() {
 		return key;
+	}
+
+	public int getOperatorType() {
+		return operator;
 	}
 
 	/**

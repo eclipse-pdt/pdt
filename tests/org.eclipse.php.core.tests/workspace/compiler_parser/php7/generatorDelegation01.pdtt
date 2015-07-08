@@ -1,0 +1,85 @@
+--TEST--
+Test generator delegation
+--FILE--
+<?php
+function g2() {
+  yield from g1();
+}
+function g3() {
+  yield from $var;
+}
+function g4() {
+  yield from [2, 3, 4];
+}
+function g5() {
+  yield from new ArrayIterator([2, 3, 4]);
+}
+--EXPECT--
+<ModuleDeclaration start="0" end="183">
+	<PHPMethodDeclaration start="6" end="42" modifiers="" name="g2">
+		<ExpressionStatement start="24" end="40">
+			<YieldExpression start="24" end="39" operator="1">
+				<PHPCallExpression start="35" end="39">
+					<FullyQualifiedReference start="35" end="37" name="g1">
+					</FullyQualifiedReference>
+					<PHPCallArgumentsList start="38" end="38">
+					</PHPCallArgumentsList>
+				</PHPCallExpression>
+			</YieldExpression>
+		</ExpressionStatement>
+	</PHPMethodDeclaration>
+	<PHPMethodDeclaration start="43" end="79" modifiers="" name="g3">
+		<ExpressionStatement start="61" end="77">
+			<YieldExpression start="61" end="76" operator="1">
+				<VariableReference start="72" end="76" name="$var">
+				</VariableReference>
+			</YieldExpression>
+		</ExpressionStatement>
+	</PHPMethodDeclaration>
+	<PHPMethodDeclaration start="80" end="121" modifiers="" name="g4">
+		<ExpressionStatement start="98" end="119">
+			<YieldExpression start="98" end="118" operator="1">
+				<ArrayCreation start="109" end="118">
+					<ArrayElement start="110" end="111">
+						<Scalar start="110" end="111" type="int" value="2">
+						</Scalar>
+					</ArrayElement>
+					<ArrayElement start="113" end="114">
+						<Scalar start="113" end="114" type="int" value="3">
+						</Scalar>
+					</ArrayElement>
+					<ArrayElement start="116" end="117">
+						<Scalar start="116" end="117" type="int" value="4">
+						</Scalar>
+					</ArrayElement>
+				</ArrayCreation>
+			</YieldExpression>
+		</ExpressionStatement>
+	</PHPMethodDeclaration>
+	<PHPMethodDeclaration start="122" end="182" modifiers="" name="g5">
+		<ExpressionStatement start="140" end="180">
+			<YieldExpression start="140" end="179" operator="1">
+				<ClassInstanceCreation start="151" end="179">
+					<FullyQualifiedReference start="155" end="168" name="ArrayIterator">
+					</FullyQualifiedReference>
+					<PHPCallArgumentsList start="169" end="178">
+						<ArrayCreation start="169" end="178">
+							<ArrayElement start="170" end="171">
+								<Scalar start="170" end="171" type="int" value="2">
+								</Scalar>
+							</ArrayElement>
+							<ArrayElement start="173" end="174">
+								<Scalar start="173" end="174" type="int" value="3">
+								</Scalar>
+							</ArrayElement>
+							<ArrayElement start="176" end="177">
+								<Scalar start="176" end="177" type="int" value="4">
+								</Scalar>
+							</ArrayElement>
+						</ArrayCreation>
+					</PHPCallArgumentsList>
+				</ClassInstanceCreation>
+			</YieldExpression>
+		</ExpressionStatement>
+	</PHPMethodDeclaration>
+</ModuleDeclaration>

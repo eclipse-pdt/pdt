@@ -896,6 +896,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(YieldExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		if (s.getOperatorType() != YieldExpression.OP_NONE) {
+			parameters.put("operator", String.valueOf(s.getOperatorType()));
+		}
 		xmlWriter.startTag("YieldExpression", parameters); //$NON-NLS-1$
 		return true;
 	}

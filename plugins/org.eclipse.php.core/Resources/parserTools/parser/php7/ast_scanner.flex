@@ -283,6 +283,10 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 	return createSymbol(ParserConstants.T_YIELD);
 }
 
+<ST_IN_SCRIPTING>"yield"{WHITESPACE}+"from" {
+	return createSymbol(ParserConstants.T_YIELD_FROM);
+}
+
 <ST_IN_SCRIPTING>"try" {
 	return createSymbol(ParserConstants.T_TRY);
 }

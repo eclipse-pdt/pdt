@@ -22,31 +22,42 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 /**
  * Represent a yield expression
  * 
- * <pre>e.g.
+ * e.g.
  * 
  * <pre>
  * yield
  * yield $a
  * yield $k => $a
+ * yield from $k
+ * </pre>
  */
 public class YieldExpression extends Expression {
 
+	// yield $a or yield $k => $a
+	public static final int OP_NONE = 0;
+	// yield from $k
+	public static final int OP_FROM = 1;
+
 	private Expression key;
 	private Expression expression;
+	private int operator;
 
 	/**
 	 * The "expression" structural property of this node type.
 	 */
 	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(
-			YieldExpression.class,
-			"expression", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+			YieldExpression.class, "expression", Expression.class, OPTIONAL, //$NON-NLS-1$
+			CYCLE_RISK);
 
 	/**
 	 * The "key" structural property of this node type.
 	 */
 	public static final ChildPropertyDescriptor KEY_PROPERTY = new ChildPropertyDescriptor(
-			YieldExpression.class,
-			"key", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+			YieldExpression.class, "key", Expression.class, OPTIONAL, //$NON-NLS-1$
+			CYCLE_RISK);
+
+	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(
+			YieldExpression.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -59,6 +70,7 @@ public class YieldExpression extends Expression {
 				2);
 		propertyList.add(EXPRESSION_PROPERTY);
 		propertyList.add(KEY_PROPERTY);
+		propertyList.add(OPERATOR_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
@@ -71,11 +83,7 @@ public class YieldExpression extends Expression {
 	}
 
 	public YieldExpression(int start, int end, AST ast, Expression expr) {
-		super(start, end, ast);
-
-		if (expr != null) {
-			setExpression(expr);
-		}
+		this(start, end, ast, expr, OP_NONE);
 	}
 
 	public YieldExpression(int start, int end, AST ast, Expression key,
@@ -87,6 +95,17 @@ public class YieldExpression extends Expression {
 		if (expr != null) {
 			setExpression(expr);
 		}
+		this.operator = OP_NONE;
+	}
+
+	public YieldExpression(int start, int end, AST ast, Expression expr,
+			int operator) {
+		super(start, end, ast);
+
+		if (expr != null) {
+			setExpression(expr);
+		}
+		this.operator = operator;
 	}
 
 	public void accept0(Visitor visitor) {
@@ -129,6 +148,9 @@ public class YieldExpression extends Expression {
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<YieldExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
+		if (getOperator() != OP_NONE) {
+			buffer.append(" operator='" + operator + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		buffer.append(">\n"); //$NON-NLS-1$
 		if (key != null) {
 			key.toString(buffer, TAB + tab);
@@ -205,6 +227,16 @@ public class YieldExpression extends Expression {
 		return key;
 	}
 
+	public void setOperator(int operator) {
+		preValueChange(OPERATOR_PROPERTY);
+		this.operator = operator;
+		postValueChange(OPERATOR_PROPERTY);
+	}
+
+	public int getOperator() {
+		return operator;
+	}
+
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
 			boolean get, ASTNode child) {
 		if (property == EXPRESSION_PROPERTY) {
@@ -226,6 +258,20 @@ public class YieldExpression extends Expression {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property,
+			boolean get, int value) {
+		if (property == OPERATOR_PROPERTY) {
+			if (get) {
+				return getOperator();
+			} else {
+				setOperator(value);
+				return 0;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetIntProperty(property, get, value);
+	}
+
 	/*
 	 * Method declared on ASTNode.
 	 */
@@ -240,6 +286,7 @@ public class YieldExpression extends Expression {
 		final Expression expr = ASTNode.copySubtree(target, getExpression());
 		final YieldExpression result = new YieldExpression(this.getStart(),
 				this.getEnd(), target, key, expr);
+		result.setOperator(operator);
 		return result;
 	}
 

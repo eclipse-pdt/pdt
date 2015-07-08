@@ -84,6 +84,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	private static final char COMMA = ',';
 	private static final char QUESTION_MARK = '?';
 	private static final String ELLIPSIS = "..."; //$NON-NLS-1$
+	private static final String FROM = "from"; //$NON-NLS-1$
 	private String lineSeparator;
 
 	private CodeFormatterPreferences preferences;
@@ -4654,6 +4655,10 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				insertSpace();
 			}
 			lastPosition = yieldExpression.getKey().getEnd();
+		} else if (yieldExpression.getOperator() == YieldExpression.OP_FROM) {
+			insertSpace();
+			appendToBuffer(FROM);
+			insertSpace();
 		}
 		handleChars(lastPosition, yieldExpression.getExpression().getStart());
 		yieldExpression.getExpression().accept(this);

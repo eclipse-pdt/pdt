@@ -1,0 +1,34 @@
+--TEST--
+Test spaceship operator
+--FILE--
+<?php
+function g2() {
+	return yield from g1 ();
+}
+--EXPECT--
+PHP_TOKEN|<|2
+PHP_TOKEN|?|2
+PHP_LABEL|php|2
+WHITESPACE|
+|2
+PHP_FUNCTION|function|2
+WHITESPACE| |2
+PHP_LABEL|g2|2
+PHP_TOKEN|(|2
+PHP_TOKEN|)|2
+WHITESPACE| |2
+PHP_CURLY_OPEN|{|2
+WHITESPACE|
+	|2
+PHP_RETURN|return|2
+WHITESPACE| |2
+PHP_YIELD|yield from|2
+WHITESPACE| |2
+PHP_LABEL|g1|2
+WHITESPACE| |2
+PHP_TOKEN|(|2
+PHP_TOKEN|)|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+|2
+PHP_CURLY_CLOSE|}|2
