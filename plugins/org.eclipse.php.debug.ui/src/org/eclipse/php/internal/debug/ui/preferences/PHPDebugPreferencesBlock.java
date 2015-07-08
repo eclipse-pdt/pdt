@@ -75,6 +75,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 	private Button fEnableCLIDebug;
 	private Label fServerDebugger;
 	private Label fCLIDebugger;
+	private boolean isProjectSpecific;
 
 	public boolean isPropertyPage() {
 		return isPropertyPage;
@@ -112,7 +113,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		String serverDebuggerId = PHPDebugPlugin.getDebuggerId(serverName);
 		boolean exeLoaded = false;
 		// Update the values in case we have a project-specific settings.
-		if (preferenceScopes[0] instanceof ProjectScope) {
+		if (preferenceScopes[0] instanceof ProjectScope && isProjectSpecific) {
 			IEclipsePreferences node = preferenceScopes[0]
 					.getNode(getPreferenceNodeQualifier());
 			if (node != null && project != null) {
@@ -731,6 +732,10 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 
 	public void setValidator(IPageValidator pageValidator) {
 		this.pageValidator = pageValidator;
+	}
+
+	void setIsProjectSpecific(boolean isProjectSpecific) {
+		this.isProjectSpecific = isProjectSpecific;
 	}
 
 }
