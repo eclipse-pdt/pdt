@@ -1,0 +1,8 @@
+--TEST--
+Tests formatting array statements.
+--FILE--
+<?php
+// Comment|
+--EXPECT--
+<?php
+// Comment
