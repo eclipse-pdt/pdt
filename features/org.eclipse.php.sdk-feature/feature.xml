@@ -22,20 +22,31 @@
       %description
    </description>
 
-   <license url="%licenseURL">
-      %license
-   </license>
-
    <copyright>
       %copyright
    </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
 
    <includes
          id="org.eclipse.php"
          version="0.0.0"/>
 
    <includes
+         id="org.eclipse.php.mylyn"
+         version="0.0.0"/>
+
+   <includes
          id="org.eclipse.php.source"
          version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.php.astview"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
