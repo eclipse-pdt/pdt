@@ -122,12 +122,13 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 
 				// html format
 				HTMLFormatProcessorImpl htmlFormatter = new HtmlFormatterForPhpCode();
-
 				try {
-					htmlFormatter.formatDocument(document);
+					htmlFormatter.formatDocument(document, region.getOffset(),
+							region.getLength());
 				} catch (Exception e) {
-					// TODO: handle exception
+					Logger.logException(e);
 				}
+
 				// php format
 				PHPVersion version = ProjectOptions.getPhpVersion(project);
 				boolean useShortTags = ProjectOptions.useShortTags(project);
