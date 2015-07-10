@@ -24,6 +24,8 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.internal.core.ModelManager;
+import org.eclipse.dltk.internal.core.UserLibrary;
 import org.eclipse.dltk.internal.core.UserLibraryManager;
 import org.eclipse.dltk.internal.ui.IUIConstants;
 import org.eclipse.dltk.internal.ui.wizards.BuildpathAttributeConfiguration;
@@ -35,6 +37,7 @@ import org.eclipse.dltk.ui.preferences.PreferencesMessages;
 import org.eclipse.dltk.ui.preferences.UserLibraryPreferencePage;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
+import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
@@ -46,6 +49,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.ui.IDecoratorManager;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -53,7 +57,13 @@ import org.eclipse.ui.PlatformUI;
  */
 public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 
-	private static final String BTN_HANDLERS_EXTENSION_POINT = "libraryButtonHandlers";
+	/**
+	 * User libraries with such attribute should be treated as non removable and
+	 * non editable
+	 */
+	private static final String BUILTIN_ATTRIBUTE = "builtin"; //$NON-NLS-1$
+
+	private static final String BTN_HANDLERS_EXTENSION_POINT = "libraryButtonHandlers"; //$NON-NLS-1$
 
 	private static final String ID_TEMPLATE = "org.eclipse.dltk.{0}.preferences.UserLibraryPreferencePage"; //$NON-NLS-1$
 
@@ -324,8 +334,11 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 			buttonLabels[i] = handlers.get(i).getLabel();
 		}
 
+		IDecoratorManager decoratorManager = PlatformUI.getWorkbench()
+				.getDecoratorManager();
 		fLibraryList = new TreeListDialogField(adapter, buttonLabels,
-				new BPListLabelProvider());
+				new DecoratingLabelProvider(new BPListLabelProvider(),
+						decoratorManager));
 		fLibraryList
 				.setLabelText(PreferencesMessages.UserLibraryPreferencePage_libraries_label);
 
@@ -333,18 +346,25 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 		ArrayList elements = new ArrayList();
 
 		for (int i = 0; i < names.length; i++) {
-			IPath path = new Path(DLTKCore.USER_LIBRARY_CONTAINER_ID)
-					.append(UserLibraryManager.makeLibraryName(names[i],
-							getLanguageToolkit()));
-			try {
-				IBuildpathContainer container = DLTKCore.getBuildpathContainer(
-						path, fDummyProject);
-				elements.add(new BPUserLibraryElement(names[i], container,
-						fDummyProject));
-			} catch (ModelException e) {
-				DLTKUIPlugin.log(e);
-				// ignore
+			UserLibrary lib = ModelManager.getUserLibraryManager()
+					.getUserLibrary(names[i], getLanguageToolkit());
+
+			if (lib != null) {
+				IPath path = new Path(DLTKCore.USER_LIBRARY_CONTAINER_ID)
+						.append(UserLibraryManager.makeLibraryName(names[i],
+								getLanguageToolkit()));
+
+				try {
+					IBuildpathContainer container = DLTKCore
+							.getBuildpathContainer(path, fDummyProject);
+					elements.add(new BPUserLibraryElement(names[i], container,
+							fDummyProject, lib.getAttributes()));
+				} catch (ModelException e) {
+					DLTKUIPlugin.log(e);
+					// ignore
+				}
 			}
+
 		}
 		fLibraryList.setElements(elements);
 		fLibraryList.setViewerSorter(new BPListElementSorter());
@@ -599,17 +619,59 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 		dialog.open();
 	}
 
+	protected void doDoubleClicked(TreeListDialogField field) {
+		List selected = field.getSelectedElements();
+		if (canEdit(selected)) {
+			doEdit(field.getSelectedElements());
+		}
+	}
+
+	protected boolean canAdd(List list) {
+		if (getSingleSelectedLibrary(list) == null) {
+			return false;
+		}
+		Object firstElement = list.get(0);
+		if (firstElement instanceof BPUserLibraryElement) {
+			BPUserLibraryElement lib = (BPUserLibraryElement) firstElement;
+			if (isBuiltIn(lib)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	private boolean canEdit(List list) {
 		if (list.size() != 1)
 			return false;
 
 		Object firstElement = list.get(0);
+		if (firstElement instanceof BPUserLibraryElement) {
+			BPUserLibraryElement lib = (BPUserLibraryElement) firstElement;
+			if (isBuiltIn(lib)) {
+				return false;
+			}
+		}
+		if (firstElement instanceof BPListElement) {
+			BPListElement listElem = (BPListElement) firstElement;
+			Object parent = listElem.getParentContainer();
+			if (parent instanceof BPUserLibraryElement) {
+				BPUserLibraryElement lib = (BPUserLibraryElement) parent;
+				if (isBuiltIn(lib)) {
+					return false;
+				}
+			}
+		}
 		if (firstElement instanceof IAccessRule) {
 			return false;
 		}
 		if (firstElement instanceof BPListElementAttribute) {
 			BPListElementAttribute attrib = (BPListElementAttribute) firstElement;
-			if (!attrib.isBuiltIn()) {
+			if (attrib.getParent().getParentContainer() instanceof BPUserLibraryElement) {
+				if (isBuiltIn((BPUserLibraryElement) attrib.getParent()
+						.getParentContainer())) {
+					return false;
+				}
+			} else if (!attrib.isBuiltIn()) {
 				BuildpathAttributeConfiguration config = fAttributeDescriptors
 						.get(attrib.getKey());
 				return config != null
@@ -647,14 +709,38 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 					}
 				}
 			} else if (elem instanceof BPListElement) {
-				// ok to remove
+				BPListElement listElem = (BPListElement) elem;
+				Object parent = listElem.getParentContainer();
+				if (parent instanceof BPUserLibraryElement) {
+					BPUserLibraryElement lib = (BPUserLibraryElement) parent;
+					if (isBuiltIn(lib)) {
+						return false;
+					}
+				}
 			} else if (elem instanceof BPUserLibraryElement) {
-				// ok to remove
+				BPUserLibraryElement lib = (BPUserLibraryElement) elem;
+				if (isBuiltIn(lib)) {
+					return false;
+				}
 			} else { // unknown element
 				return false;
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Checks if user library contains addional attribute 'builtin'.
+	 * 
+	 * @param element
+	 * @return true if user library is marked as built-in
+	 */
+	protected boolean isBuiltIn(BPUserLibraryElement element) {
+		String value = element.getAttribute(BUILTIN_ATTRIBUTE);
+		if (value == null) {
+			return false;
+		}
+		return Boolean.parseBoolean(value);
 	}
 
 	private BPUserLibraryElement getCommonParent(List list) {
