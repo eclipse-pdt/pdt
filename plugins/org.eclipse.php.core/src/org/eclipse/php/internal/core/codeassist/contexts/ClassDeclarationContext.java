@@ -36,9 +36,9 @@ public abstract class ClassDeclarationContext extends TypeDeclarationContext {
 		int typeEnd = getTypeEnd();
 		if (typeEnd >= 6) {
 			TextSequence statementText = getStatementText();
-			String typeString = statementText.subSequence(typeEnd - 6,
-					typeEnd - 1).toString();
-			if ("class".equals(typeString)) { //$NON-NLS-1$
+			String typeString = statementText
+					.subSequence(typeEnd - 6, typeEnd - 1).toString();
+			if ("class".equalsIgnoreCase(typeString)) { //$NON-NLS-1$
 				return true;
 			}
 		}

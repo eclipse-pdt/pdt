@@ -1,0 +1,17 @@
+--TEST--
+Bug http://eclip.se/472405
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+namespace parentspace {
+	Class MyParent {
+	}
+}
+
+namespace childspace {
+
+	Use parentspace\MyPar|
+}
+--EXPECT--
+type(MyParent)

@@ -43,9 +43,10 @@ public abstract class UseStatementContext extends StatementContext {
 				requestor);
 		TextSequence statementText = getStatementText();
 		if (statementText.length() >= 4) {
-			if ("use".equals(statementText.subSequence(0, 3).toString()) //$NON-NLS-1$
-					&& Character.isWhitespace(statementText.subSequence(3, 4)
-							.charAt(0))) {
+			if ("use".equalsIgnoreCase( //$NON-NLS-1$
+					statementText.subSequence(0, 3).toString())
+					&& Character.isWhitespace(
+							statementText.subSequence(3, 4).charAt(0))) {
 				return true;
 			}
 		}
