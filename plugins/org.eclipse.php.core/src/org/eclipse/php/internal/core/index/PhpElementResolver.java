@@ -29,6 +29,8 @@ import org.eclipse.php.internal.core.model.IncludeField;
 
 public class PhpElementResolver implements IElementResolver {
 
+	private static final String SPLIT_STR = ";"; //$NON-NLS-1$
+	private static final Pattern SPLIT_METADATA = Pattern.compile(SPLIT_STR);
 	private static final Pattern SEPARATOR_PATTERN = Pattern.compile(","); //$NON-NLS-1$
 	private static final String[] EMPTY = new String[0];
 
@@ -37,39 +39,76 @@ public class PhpElementResolver implements IElementResolver {
 			String metadata, String doc, String qualifier, String parent,
 			ISourceModule sourceModule) {
 
+		int occurrenceCount = 1;
+		String metadataToDecode = null;
+
+		if (metadata != null) {
+			if (metadata.indexOf(SPLIT_STR) == -1) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=448895
+				// H2 wasn't updated after resolution of bug 448895,
+				// it hasn't occurrence count for this element
+				metadataToDecode = metadata;
+			} else {
+				String[] split = SPLIT_METADATA.split(metadata);
+				if (split.length >= 1) {
+					try {
+						occurrenceCount = Integer.parseInt(split[0]);
+					} catch (NumberFormatException e) {
+						// should never happen
+						Logger.logException(e);
+					}
+				}
+				if (split.length >= 2) {
+					metadataToDecode = split[1];
+				}
+			}
+		}
+
 		ModelElement parentElement = (ModelElement) sourceModule;
 		if (qualifier != null) {
 			// namespace:
 			parentElement = new IndexType(parentElement, qualifier,
-					Modifiers.AccNameSpace, 0, 0, 0, 0, null, doc);
+					Modifiers.AccNameSpace, 0, 0, 0, 0, null, doc,
+					occurrenceCount);
 		}
 		if (parent != null) {
 			parentElement = new SourceType(parentElement, parent);
 		}
 
+		String[] superClassNames = null;
+
 		switch (elementType) {
 		case IModelElement.PACKAGE_DECLARATION:
+			if (metadataToDecode != null) {
+				superClassNames = SEPARATOR_PATTERN.split(metadataToDecode);
+			}
+			// a namespace cannot have a nested namespace otherwise
+			// occurrenceCount will be applied to both!
+			assert qualifier == null;
+			return new IndexType(parentElement, elementName, flags, offset,
+					length, nameOffset, nameLength, superClassNames, doc,
+					occurrenceCount);
+
 		case IModelElement.TYPE:
-			String[] superClassNames = null;
-			if (metadata != null) {
-				superClassNames = SEPARATOR_PATTERN.split(metadata);
+			if (metadataToDecode != null) {
+				superClassNames = SEPARATOR_PATTERN.split(metadataToDecode);
 			}
 			return new IndexType(parentElement, elementName, flags, offset,
-					length, nameOffset, nameLength, superClassNames, doc);
+					length, nameOffset, nameLength, superClassNames, doc, 1);
 
 		case IModelElement.METHOD:
 			String[] parameters;
-			if (metadata != null) {
-				parameters = SEPARATOR_PATTERN.split(metadata);
+			if (metadataToDecode != null) {
+				parameters = SEPARATOR_PATTERN.split(metadataToDecode);
 			} else {
 				parameters = EMPTY;
 			}
 			return new IndexMethod(parentElement, elementName, flags, offset,
-					length, nameOffset, nameLength, parameters, doc);
+					length, nameOffset, nameLength, parameters, doc, 1);
 
 		case IModelElement.FIELD:
 			return new IndexField(parentElement, elementName, flags, offset,
-					length, nameOffset, nameLength, doc);
+					length, nameOffset, nameLength, doc, 1);
 
 		case IModelElement.IMPORT_DECLARATION:
 			// XXX: replace with import declaration element
@@ -133,12 +172,13 @@ public class PhpElementResolver implements IElementResolver {
 
 		public IndexField(ModelElement parent, String name, int flags,
 				int offset, int length, int nameOffset, int nameLength,
-				String doc) {
+				String doc, int occurrenceCount) {
 			super(parent, name);
 			this.flags = flags;
 			this.sourceRange = new SourceRange(offset, length);
 			this.nameRange = new SourceRange(nameOffset, nameLength);
 			this.doc = doc;
+			this.occurrenceCount = occurrenceCount;
 		}
 
 		public int getFlags() throws ModelException {
@@ -190,7 +230,7 @@ public class PhpElementResolver implements IElementResolver {
 
 		public IndexMethod(ModelElement parent, String name, int flags,
 				int offset, int length, int nameOffset, int nameLength,
-				String[] parameterNames, String doc) {
+				String[] parameterNames, String doc, int occurrenceCount) {
 
 			super(parent, name);
 			this.flags = flags;
@@ -226,6 +266,7 @@ public class PhpElementResolver implements IElementResolver {
 				}
 			}
 			this.doc = doc;
+			this.occurrenceCount = occurrenceCount;
 		}
 
 		public int getFlags() throws ModelException {
@@ -290,13 +331,14 @@ public class PhpElementResolver implements IElementResolver {
 
 		public IndexType(ModelElement parent, String name, int flags,
 				int offset, int length, int nameOffset, int nameLength,
-				String[] superClassNames, String doc) {
+				String[] superClassNames, String doc, int occurrenceCount) {
 			super(parent, name);
 			this.flags = flags;
 			this.sourceRange = new SourceRange(offset, length);
 			this.nameRange = new SourceRange(nameOffset, nameLength);
 			this.superClassNames = superClassNames;
 			this.doc = doc;
+			this.occurrenceCount = occurrenceCount;
 		}
 
 		public int getFlags() throws ModelException {

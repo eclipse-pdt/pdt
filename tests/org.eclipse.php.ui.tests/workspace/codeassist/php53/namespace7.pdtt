@@ -1,0 +1,48 @@
+--TEST--
+Bug 448895 - Namespace doubled in file breaks CA
+--FILE--
+<?
+namespace Foo\Bar {
+	class ClassFoox {
+		function fooBarFooFromClass() {
+		}
+	}
+}
+
+namespace Foo\Bar {
+
+	function goo() {
+		 	methodFoo()->|;
+	}
+
+	/**
+	 *
+	 * @return \Foo\Bar\ClassFoox
+	 */
+	function methodFoo() {
+	}
+}
+?>
+--EXPECT--
+<?
+namespace Foo\Bar {
+	class ClassFoox {
+		function fooBarFooFromClass() {
+		}
+	}
+}
+
+namespace Foo\Bar {
+
+	function goo() {
+		 	methodFoo()->fooBarFooFromClass();
+	}
+
+	/**
+	 *
+	 * @return \Foo\Bar\ClassFoox
+	 */
+	function methodFoo() {
+	}
+}
+?>

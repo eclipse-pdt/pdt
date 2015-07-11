@@ -96,8 +96,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 					PHPCorePlugin.ID, EXTENSION_POINT);
 
 	protected NamespaceDeclaration fCurrentNamespace;
-	protected Map<String, UsePart> fLastUseParts = new HashMap<String, UsePart>();;
+	protected Map<String, UsePart> fLastUseParts = new HashMap<String, UsePart>();
 	protected String fCurrentQualifier;
+	protected Map<String, Integer> fCurrentQualifierCounts = new HashMap<String, Integer>();
 	protected String fCurrentParent;
 	protected Stack<ASTNode> fNodes = new Stack<ASTNode>();
 
@@ -305,6 +306,10 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		modifiers = markAsDeprecated(modifiers, method);
 
 		StringBuilder metadata = new StringBuilder();
+		if (fCurrentQualifier != null) {
+			metadata.append(fCurrentQualifierCounts.get(fCurrentQualifier));
+			metadata.append(";"); //$NON-NLS-1$
+		}
 		List<Argument> arguments = method.getArguments();
 		if (arguments != null) {
 			Iterator<Argument> i = arguments.iterator();
@@ -415,15 +420,24 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 			int modifiers = type.getModifiers() | Modifiers.AccNameSpace;
 			fCurrentQualifier = type.getName();
+			Integer count = fCurrentQualifierCounts.get(fCurrentQualifier);
+			count = count != null ? count + 1 : 1;
+			fCurrentQualifierCounts.put(fCurrentQualifier, count);
 
 			modifiers = markAsDeprecated(modifiers, type);
+			StringBuilder metadata = new StringBuilder();
+			if (fCurrentQualifier != null) {
+				metadata.append(fCurrentQualifierCounts.get(fCurrentQualifier));
+				metadata.append(";"); //$NON-NLS-1$
+			}
 			modifyDeclaration(
 					type,
 					new DeclarationInfo(IModelElement.PACKAGE_DECLARATION,
 							modifiers, type.sourceStart(), type.sourceEnd()
 									- type.sourceStart(), type.getNameStart(),
 							type.getNameEnd() - type.getNameStart(), type
-									.getName(), null, encodeDocInfo(type),
+									.getName(), metadata.length() == 0 ? null
+									: metadata.toString(), encodeDocInfo(type),
 							null, null));
 		} else {
 			Declaration parentDeclaration = null;
@@ -451,6 +465,10 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 			String[] superClasses = processSuperClasses(type);
 			StringBuilder metadata = new StringBuilder();
+			if (fCurrentQualifier != null) {
+				metadata.append(fCurrentQualifierCounts.get(fCurrentQualifier));
+				metadata.append(";"); //$NON-NLS-1$
+			}
 			for (int i = 0; i < superClasses.length; ++i) {
 				metadata.append(superClasses[i]);
 				if (i < superClasses.length - 1) {
@@ -567,11 +585,21 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						Map<String, String> info = new HashMap<String, String>();
 						info.put("v", split[0]); //$NON-NLS-1$
 
-						modifyDeclaration(null, new DeclarationInfo(
-								IModelElement.FIELD, Modifiers.AccPublic,
-								offset, length, offset, length, name, null,
-								encodeDocInfo(info), fCurrentQualifier,
-								fCurrentParent));
+						StringBuilder metadata = new StringBuilder();
+						if (fCurrentQualifier != null) {
+							metadata.append(fCurrentQualifierCounts
+									.get(fCurrentQualifier));
+							metadata.append(";"); //$NON-NLS-1$
+						}
+
+						modifyDeclaration(null,
+								new DeclarationInfo(IModelElement.FIELD,
+										Modifiers.AccPublic, offset, length,
+										offset, length, name,
+										metadata.length() == 0 ? null
+												: metadata.toString(),
+										encodeDocInfo(info), fCurrentQualifier,
+										fCurrentParent));
 
 					} else if (tagKind == PHPDocTag.METHOD) {
 						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
@@ -599,11 +627,21 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						Map<String, String> info = new HashMap<String, String>();
 						info.put("r", split[0]); //$NON-NLS-1$
 
-						modifyDeclaration(null, new DeclarationInfo(
-								IModelElement.METHOD, methodModifiers, offset,
-								length, offset, length, name, null,
-								encodeDocInfo(info), fCurrentQualifier,
-								fCurrentParent));
+						StringBuilder metadata = new StringBuilder();
+						if (fCurrentQualifier != null) {
+							metadata.append(fCurrentQualifierCounts
+									.get(fCurrentQualifier));
+							metadata.append(";"); //$NON-NLS-1$
+						}
+
+						modifyDeclaration(null,
+								new DeclarationInfo(IModelElement.METHOD,
+										methodModifiers, offset, length,
+										offset, length, name,
+										metadata.length() == 0 ? null
+												: metadata.toString(),
+										encodeDocInfo(info), fCurrentQualifier,
+										fCurrentParent));
 					}
 				}
 			}
@@ -660,12 +698,19 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		// This is variable declaration:
 		int modifiers = markAsDeprecated(decl.getModifiers(), decl);
 
+		StringBuilder metadata = new StringBuilder();
+		if (fCurrentQualifier != null) {
+			metadata.append(fCurrentQualifierCounts.get(fCurrentQualifier));
+			metadata.append(";"); //$NON-NLS-1$
+		}
+
 		modifyDeclaration(
 				decl,
 				new DeclarationInfo(IModelElement.FIELD, modifiers, decl
 						.sourceStart(), decl.sourceEnd() - decl.sourceStart(),
 						decl.getNameStart(), decl.getNameEnd()
-								- decl.getNameStart(), decl.getName(), null,
+								- decl.getNameStart(), decl.getName(), metadata
+								.length() == 0 ? null : metadata.toString(),
 						encodeDocInfo(decl), fCurrentQualifier, fCurrentParent));
 
 		return visitGeneral(decl);
@@ -750,11 +795,17 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		ConstantReference constantName = declaration.getConstantName();
 		int offset = constantName.sourceStart();
 		int length = constantName.sourceEnd();
+		StringBuilder metadata = new StringBuilder();
+		if (fCurrentQualifier != null) {
+			metadata.append(fCurrentQualifierCounts.get(fCurrentQualifier));
+			metadata.append(";"); //$NON-NLS-1$
+		}
 		modifyDeclaration(
 				declaration,
 				new DeclarationInfo(IModelElement.FIELD, modifiers, offset,
 						length, offset, length, ASTUtils
-								.stripQuotes(constantName.getName()), null,
+								.stripQuotes(constantName.getName()), metadata
+								.length() == 0 ? null : metadata.toString(),
 						encodeDocInfo(declaration), fCurrentQualifier,
 						fCurrentParent));
 		return visitGeneral(declaration);
@@ -778,10 +829,20 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 					int modifiers = Modifiers.AccPublic;
 					int offset = var.sourceStart();
 					int length = var.sourceEnd() - offset;
-					modifyDeclaration(assignment, new DeclarationInfo(
-							IModelElement.FIELD, modifiers, offset, length,
-							offset, length, '$' + var.getName(), null, null,
-							fCurrentQualifier, fCurrentParent));
+					StringBuilder metadata = new StringBuilder();
+					if (fCurrentQualifier != null) {
+						metadata.append(fCurrentQualifierCounts
+								.get(fCurrentQualifier));
+						metadata.append(";"); //$NON-NLS-1$
+					}
+					modifyDeclaration(
+							assignment,
+							new DeclarationInfo(IModelElement.FIELD, modifiers,
+									offset, length, offset, length, '$' + var
+											.getName(),
+									metadata.length() == 0 ? null : metadata
+											.toString(), null,
+									fCurrentQualifier, fCurrentParent));
 				}
 			}
 		} else if (left instanceof VariableReference) {
