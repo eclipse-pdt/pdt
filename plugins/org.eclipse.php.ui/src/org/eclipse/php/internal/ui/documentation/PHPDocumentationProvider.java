@@ -70,11 +70,12 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		if (element instanceof FakeConstructor) {
 			IType type = (IType) element.getParent();
 			if (type instanceof AliasType) {
-				if (type.getParent() instanceof IType) {
-					type = (IType) type.getParent();
-				}
-				element = FakeConstructor.createFakeConstructor(null, type,
-						false);
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=469779
+				// if (type.getParent() instanceof IType) {
+				// type = (IType) type.getParent();
+				// }
+				// element = FakeConstructor.createFakeConstructor(null, type,
+				// false);
 			}
 			IMethod[] ctors = FakeConstructor.getConstructors(type, true);
 			if (ctors != null && ctors.length == 2) {
@@ -83,9 +84,10 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 				}
 			}
 		} else if (element instanceof AliasType) {
-			if (element.getParent() instanceof IType) {
-				element = (IType) element.getParent();
-			}
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=469779
+			// if (element.getParent() instanceof IType) {
+			// element = (IType) element.getParent();
+			// }
 		}
 		StringBuffer buffer = new StringBuffer();
 		String constantValue = null;
