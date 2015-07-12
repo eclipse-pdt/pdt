@@ -22,6 +22,7 @@ import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.util.MagicMemberUtil;
+import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 
 public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 
@@ -170,26 +171,6 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		return text.trim();
 	}
 
-	private static int getNonWhitespaceIndex(String line, int startIndex) {
-		int i = startIndex;
-		for (; i < line.length(); ++i) {
-			if (!Character.isWhitespace(line.charAt(i))) {
-				return i;
-			}
-		}
-		return i;
-	}
-
-	private static int getWhitespaceIndex(String line, int startIndex) {
-		int i = startIndex;
-		for (; i < line.length(); ++i) {
-			if (Character.isWhitespace(line.charAt(i))) {
-				return i;
-			}
-		}
-		return i;
-	}
-
 	private static int getClassStartIndex(String line, int startIndex) {
 		int i = startIndex;
 		for (; i < line.length(); ++i) {
@@ -243,8 +224,10 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 				|| tagKind == SEE) {
 
 			// Read first word
-			int wordStart = getNonWhitespaceIndex(value, 0);
-			int wordEnd = getWhitespaceIndex(value, wordStart);
+			int wordStart = PHPTextSequenceUtilities
+					.readForwardSpaces(value, 0);
+			int wordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(
+					value, wordStart);
 
 			if (tagKind == VAR && wordStart < wordEnd) {
 
@@ -255,8 +238,10 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 					allReferencesWithOrigOrder.add(variableReference);
 					wordsToSkip++;
 					// Read next word
-					wordStart = getNonWhitespaceIndex(value, wordEnd);
-					wordEnd = getWhitespaceIndex(value, wordStart);
+					wordStart = PHPTextSequenceUtilities.readForwardSpaces(
+							value, wordEnd);
+					wordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(
+							value, wordStart);
 				}
 			}
 			if (wordStart < wordEnd) {
@@ -268,8 +253,10 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 				allReferencesWithOrigOrder.addAll(typeReferences);
 				wordsToSkip++;
 				// Read next word
-				wordStart = getNonWhitespaceIndex(value, wordEnd);
-				wordEnd = getWhitespaceIndex(value, wordStart);
+				wordStart = PHPTextSequenceUtilities.readForwardSpaces(value,
+						wordEnd);
+				wordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(
+						value, wordStart);
 			}
 			if (tagKind == VAR && variableReference == null
 					&& wordStart < wordEnd) {
@@ -285,12 +272,16 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		} else if (tagKind == PARAM || tagKind == PROPERTY
 				|| tagKind == PROPERTY_READ || tagKind == PROPERTY_WRITE) {
 
-			int firstWordStart = getNonWhitespaceIndex(value, 0);
-			int firstWordEnd = getWhitespaceIndex(value, firstWordStart);
+			int firstWordStart = PHPTextSequenceUtilities.readForwardSpaces(
+					value, 0);
+			int firstWordEnd = PHPTextSequenceUtilities.readForwardUntilSpaces(
+					value, firstWordStart);
 			if (firstWordStart < firstWordEnd) {
 
-				int secondWordStart = getNonWhitespaceIndex(value, firstWordEnd);
-				int secondWordEnd = getWhitespaceIndex(value, secondWordStart);
+				int secondWordStart = PHPTextSequenceUtilities
+						.readForwardSpaces(value, firstWordEnd);
+				int secondWordEnd = PHPTextSequenceUtilities
+						.readForwardUntilSpaces(value, secondWordStart);
 				if (secondWordStart < secondWordEnd) {
 
 					String firstWord = value.substring(firstWordStart,

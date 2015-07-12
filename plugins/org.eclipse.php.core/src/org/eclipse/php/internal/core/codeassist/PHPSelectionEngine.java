@@ -757,6 +757,13 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								startPosition).toString();
 					}
 
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=471764
+					// use first word of statement, not "prevWord"
+					int firstWordEnd = PHPTextSequenceUtilities
+							.readForwardUntilSpaces(statement, 0);
+					String firstWord = statement.subSequence(0, firstWordEnd)
+							.toString();
+
 					// If this is variable:
 					if (elementName.charAt(0) == '$'
 							&& !PAAMAYIM_NEKUDOTAIM.equals(trigger)) {
@@ -776,11 +783,11 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 						// If we are in var definition:
 						if (containerType != null) {
-							if (VAR.equalsIgnoreCase(prevWord)
-									|| PRIVATE.equalsIgnoreCase(prevWord)
-									|| STATIC.equalsIgnoreCase(prevWord)
-									|| PUBLIC.equalsIgnoreCase(prevWord)
-									|| PROTECTED.equalsIgnoreCase(prevWord)) {
+							if (VAR.equalsIgnoreCase(firstWord)
+									|| PRIVATE.equalsIgnoreCase(firstWord)
+									|| STATIC.equalsIgnoreCase(firstWord)
+									|| PUBLIC.equalsIgnoreCase(firstWord)
+									|| PROTECTED.equalsIgnoreCase(firstWord)) {
 								return PHPModelUtils.getTypeField(
 										containerType, elementName, true);
 							}
@@ -795,7 +802,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 					// If we are at class constant definition:
 					if (containerType != null) {
-						if (CONST.equalsIgnoreCase(prevWord)) {
+						if (CONST.equalsIgnoreCase(firstWord)) {
 							return PHPModelUtils.getTypeField(containerType,
 									elementName, true);
 						}
