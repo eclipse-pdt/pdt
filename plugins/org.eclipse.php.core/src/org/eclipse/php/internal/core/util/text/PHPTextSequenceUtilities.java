@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -92,10 +92,9 @@ public class PHPTextSequenceUtilities {
 			container = (ITextRegionContainer) tRegion;
 			tRegion = container.getRegionAtCharacterOffset(offset);
 		}
-		if (tRegion != null
-				&& tRegion.getType() == PHPRegionContext.PHP_CLOSE) {
-			tRegion = container.getRegionAtCharacterOffset(
-					container.getStartOffset() + tRegion.getStart() - 1);
+		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CLOSE) {
+			tRegion = container.getRegionAtCharacterOffset(container
+					.getStartOffset() + tRegion.getStart() - 1);
 		}
 
 		// This text region must be of type PhpScriptRegion:
@@ -115,8 +114,8 @@ public class PHPTextSequenceUtilities {
 				if (documentOffset == startOffset) {
 					startTokenRegion = phpScriptRegion.getPhpToken(0);
 				} else {
-					startTokenRegion = phpScriptRegion
-							.getPhpToken(offset - startOffset - 1);
+					startTokenRegion = phpScriptRegion.getPhpToken(offset
+							- startOffset - 1);
 				}
 				while (true) {
 					// If statement start is at the beginning of the PHP script
@@ -124,12 +123,9 @@ public class PHPTextSequenceUtilities {
 					if (startTokenRegion.getStart() == 0) {
 						break;
 					}
-					if (startTokenRegion
-							.getType() == PHPRegionTypes.PHP_CURLY_CLOSE
-							|| startTokenRegion
-									.getType() == PHPRegionTypes.PHP_CURLY_OPEN
-							|| startTokenRegion
-									.getType() == PHPRegionTypes.PHP_SEMICOLON
+					if (startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_CLOSE
+							|| startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_OPEN
+							|| startTokenRegion.getType() == PHPRegionTypes.PHP_SEMICOLON
 					/* || startTokenRegion.getType() == PHPRegionTypes.PHP_IF */) {
 						// Calculate starting position of the statement (it
 						// should go right after this startTokenRegion):
@@ -141,8 +137,8 @@ public class PHPTextSequenceUtilities {
 				}
 
 				TextSequence textSequence = TextSequenceUtilities
-						.createTextSequence(sdRegion, startOffset,
-								offset - startOffset);
+						.createTextSequence(sdRegion, startOffset, offset
+								- startOffset);
 
 				// remove comments
 				if (removeComments) {
@@ -185,7 +181,8 @@ public class PHPTextSequenceUtilities {
 	 */
 	public static Region getStatementRegion(int offset,
 			IStructuredDocumentRegion sdRegion, boolean ignoreStartComments) {
-		// temporary workaround to fix https://bugs.eclipse.org/bugs/show_bug.cgi?id=472197
+		// temporary workaround to fix
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=472197
 		TextSequence textSequence = getStatement(offset, sdRegion,
 				ignoreStartComments);
 		return new Region(textSequence.getOriginalOffset(0),
@@ -536,6 +533,17 @@ public class PHPTextSequenceUtilities {
 		int rv = startPosition;
 		for (; rv < textSequence.length(); rv++) {
 			if (!Character.isWhitespace(textSequence.charAt(rv))) {
+				break;
+			}
+		}
+		return rv;
+	}
+
+	public static int readForwardUntilSpaces(CharSequence textSequence,
+			int startPosition) {
+		int rv = startPosition;
+		for (; rv < textSequence.length(); rv++) {
+			if (Character.isWhitespace(textSequence.charAt(rv))) {
 				break;
 			}
 		}
