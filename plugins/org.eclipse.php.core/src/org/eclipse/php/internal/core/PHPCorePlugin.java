@@ -103,7 +103,7 @@ public class PHPCorePlugin extends Plugin {
 					log(e);
 				}
 
-				rebuildProjects();
+				checkStructureVersionAndReindex();
 
 				return Status.OK_STATUS;
 			}
@@ -154,42 +154,13 @@ public class PHPCorePlugin extends Plugin {
 				try {
 					if (source instanceof IProject) {
 						IProject project = (IProject) source;
-						ProjectIndexerManager.removeProject(project
-								.getFullPath());
+						ProjectIndexerManager
+								.removeProject(project.getFullPath());
 						ProjectIndexerManager.indexProject(project);
 
 					} else if (source instanceof IWorkspace) {
 						IWorkspace workspace = (IWorkspace) source;
-						IProject[] projects = workspace.getRoot().getProjects();
-
-						// remove from index:
-						for (IProject project : projects) {
-							if (!project.isAccessible()) {
-								continue;
-							}
-							IScriptProject scriptProject = DLTKCore
-									.create(project);
-							if (scriptProject.isOpen()) {
-								IProjectFragment[] projectFragments = scriptProject
-										.getProjectFragments();
-								for (IProjectFragment projectFragment : projectFragments) {
-									ProjectIndexerManager
-											.removeProjectFragment(
-													scriptProject,
-													projectFragment.getPath());
-								}
-								ProjectIndexerManager.removeProject(project
-										.getFullPath());
-							}
-						}
-
-						// add to index:
-						for (IProject project : projects) {
-							if (!project.isAccessible()) {
-								continue;
-							}
-							ProjectIndexerManager.indexProject(project);
-						}
+						reindexAllProjects(workspace);
 					}
 				} catch (CoreException e) {
 					Logger.logException(e);
@@ -199,14 +170,14 @@ public class PHPCorePlugin extends Plugin {
 	}
 
 	/**
-	 * Check if model version is changed and rebuild PHP projects if necessary.
+	 * Check if model version is changed and re-index PHP projects if necessary.
 	 * 
 	 * @see PHPCoreConstants.STRUCTURE_VERSION
 	 */
-	private void rebuildProjects() {
+	private void checkStructureVersionAndReindex() {
 		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(ID);
-		String modelVersion = preferences.get(
-				PHPCoreConstants.STRUCTURE_VERSION_PREFERENCE, null);
+		String modelVersion = preferences
+				.get(PHPCoreConstants.STRUCTURE_VERSION_PREFERENCE, null);
 		if (PHPCoreConstants.STRUCTURE_VERSION.equals(modelVersion)) {
 			return;
 		}
@@ -220,18 +191,40 @@ public class PHPCorePlugin extends Plugin {
 		}
 
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		try {
+			reindexAllProjects(workspace);
+		} catch (ModelException e) {
+			PHPCorePlugin.log(e);
+		}
+	}
+
+	private void reindexAllProjects(IWorkspace workspace)
+			throws ModelException {
 		IProject[] projects = workspace.getRoot().getProjects();
-		if (workspace.isAutoBuilding()) {
-			try {
-				for (IProject project : projects) {
-					if (PHPToolkitUtil.isPhpProject(project)) {
-						project.build(IncrementalProjectBuilder.CLEAN_BUILD,
-								null);
-					}
-				}
-			} catch (CoreException e) {
-				Logger.logException(e);
+
+		// remove from index:
+		for (IProject project : projects) {
+			if (!project.isAccessible()) {
+				continue;
 			}
+			IScriptProject scriptProject = DLTKCore.create(project);
+			if (scriptProject.isOpen()) {
+				IProjectFragment[] projectFragments = scriptProject
+						.getProjectFragments();
+				for (IProjectFragment projectFragment : projectFragments) {
+					ProjectIndexerManager.removeProjectFragment(scriptProject,
+							projectFragment.getPath());
+				}
+				ProjectIndexerManager.removeProject(project.getFullPath());
+			}
+		}
+
+		// add to index:
+		for (IProject project : projects) {
+			if (!project.isAccessible()) {
+				continue;
+			}
+			ProjectIndexerManager.indexProject(project);
 		}
 	}
 
@@ -279,8 +272,8 @@ public class PHPCorePlugin extends Plugin {
 	/*
 	 * Do the actual modifications on the project
 	 */
-	private void modifyProject(IProject project) throws CoreException,
-			ModelException {
+	private void modifyProject(IProject project)
+			throws CoreException, ModelException {
 		final PHPNature phpNature = new PHPNature();
 
 		// add the required builders and build paths as defined in the new PHP
@@ -329,11 +322,11 @@ public class PHPCorePlugin extends Plugin {
 
 		super.stop(context);
 
-		ResourcesPlugin.getWorkspace().removeResourceChangeListener(
-				projectConvertListener);
+		ResourcesPlugin.getWorkspace()
+				.removeResourceChangeListener(projectConvertListener);
 
-		ResourcesPlugin.getWorkspace().removeResourceChangeListener(
-				reindexOperationListener);
+		ResourcesPlugin.getWorkspace()
+				.removeResourceChangeListener(reindexOperationListener);
 
 		plugin = null;
 	}
@@ -359,6 +352,7 @@ public class PHPCorePlugin extends Plugin {
 	}
 
 	public static final boolean isDebugMode;
+
 	static {
 		String value = Platform.getDebugOption("org.eclipse.php.core/debug"); //$NON-NLS-1$
 		isDebugMode = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
@@ -455,7 +449,8 @@ public class PHPCorePlugin extends Plugin {
 			try {
 				LanguageModelInitializer.cleanup(monitor);
 				if (monitor != null) {
-					monitor.subTask(CoreMessages.PHPCorePlugin_initializingSearchEngine);
+					monitor.subTask(
+							CoreMessages.PHPCorePlugin_initializingSearchEngine);
 					monitor.worked(25);
 				}
 
