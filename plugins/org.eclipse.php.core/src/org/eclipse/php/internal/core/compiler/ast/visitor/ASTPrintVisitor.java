@@ -1036,6 +1036,12 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		}
 		xmlWriter.startTag("UseStatement", parameters); //$NON-NLS-1$
 
+		if (s.getNamespace() != null) {
+			xmlWriter.startTag("Namespace", new HashMap<String, String>()); //$NON-NLS-1$
+			s.getNamespace().traverse(this);
+			xmlWriter.endTag("Namespace"); //$NON-NLS-1$
+		}
+
 		xmlWriter.startTag("Parts", new HashMap<String, String>()); //$NON-NLS-1$
 		for (UsePart p : s.getParts()) {
 			p.traverse(this);
@@ -1047,6 +1053,10 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(UsePart s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		if (s.getStatementType() != UseStatement.T_NONE) {
+			parameters.put("statementType",
+					String.valueOf(s.getStatementType()));
+		}
 		xmlWriter.startTag("UsePart", parameters); //$NON-NLS-1$
 		s.getNamespace().traverse(this);
 		if (s.getAlias() != null) {

@@ -10,15 +10,25 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.parser;
 
+import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * AST visitor for finding use statements by alias.
  * 
  * @author Kaloyan Raev
  */
-public class FindUseStatementByAliasASTVisitor extends
-		AbstractUseStatementASTVisitor {
+public class FindUseStatementByAliasASTVisitor
+		extends AbstractUseStatementASTVisitor {
+
+	/**
+	 * Current use statement, used to detect group use statements.
+	 */
+	private UseStatement currentUseStatement;
 
 	/**
 	 * The alias to look for.
@@ -47,11 +57,25 @@ public class FindUseStatementByAliasASTVisitor extends
 	 * Returns the found {@link UsePart} node that corresponds to the specified
 	 * alias name.
 	 * 
-	 * @return a <code>UsePart</code> node, or
-	 *         <code>null<code> if there is not use statement for the specified alias name.
+	 * @return a <code>UsePart</code> node, or <code>null<code> if there is not
+	 *         use statement for the specified alias name.
 	 */
 	public UsePart getResult() {
 		return result;
+	}
+
+	@Override
+	protected void visit(UseStatement s) throws Exception {
+		this.currentUseStatement = s;
+		super.visit(s);
+	}
+
+	@Override
+	public boolean endvisit(Statement s) throws Exception {
+		if (s instanceof UseStatement) {
+			currentUseStatement = null;
+		}
+		return super.endvisit(s);
 	}
 
 	/**
@@ -70,11 +94,41 @@ public class FindUseStatementByAliasASTVisitor extends
 		}
 
 		if (aliasName.equalsIgnoreCase(alias)) {
-			result = usePart;
+			if (currentUseStatement == null
+					|| currentUseStatement.getNamespace() == null) {
+				result = usePart;
+			} else {
+				FullyQualifiedReference fqn = createCombinedFQN(usePart);
+
+				result = new UsePart(fqn, usePart.getAlias(),
+						Math.max(currentUseStatement.getStatementType(),
+								usePart.getStatementType()));
+			}
 			return false;
 		}
 
 		return true;
+	}
+
+	/**
+	 * Creates fake FQN hat combines use statement namespace and use part
+	 * namespace.
+	 * 
+	 * @param usePart
+	 * @return
+	 */
+	private FullyQualifiedReference createCombinedFQN(UsePart usePart) {
+		String firstNamespace = currentUseStatement.getNamespace()
+				.getFullyQualifiedName();
+		String name = PHPModelUtils.extractElementName(
+				usePart.getNamespace().getFullyQualifiedName());
+		String secondNamespace = PHPModelUtils.extractNameSpaceName(
+				usePart.getNamespace().getFullyQualifiedName());
+
+		String fqn = PHPModelUtils.concatFullyQualifiedNames(firstNamespace,
+				secondNamespace);
+		return new FullyQualifiedReference(0, 0, name,
+				new NamespaceReference(0, 0, fqn));
 	}
 
 }

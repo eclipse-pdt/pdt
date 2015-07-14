@@ -1,0 +1,38 @@
+--TEST--
+Test group use statement
+--FILE--
+<?php
+use Test\Boo\ {
+	Foo, 
+	FooX as MyAlias
+};
+--EXPECT--
+<Program start='0' length='48'>
+	<Statements>
+		<UseStatement start='6' length='42'>
+			<NamespaceName start='10' length='9' global='false' current='false'>
+				<Identifier start='10' length='4' name='Test'/>
+				<Identifier start='15' length='3' name='Boo'/>
+			</NamespaceName>
+			<UseStatementPart start='23' length='3'>
+				<Name>
+					<NamespaceName start='23' length='3' global='false' current='false'>
+						<Identifier start='23' length='3' name='Foo'/>
+					</NamespaceName>
+				</Name>
+			</UseStatementPart>
+			<UseStatementPart start='30' length='15'>
+				<Name>
+					<NamespaceName start='30' length='4' global='false' current='false'>
+						<Identifier start='30' length='4' name='FooX'/>
+					</NamespaceName>
+				</Name>
+				<Alias>
+					<Identifier start='38' length='7' name='MyAlias'/>
+				</Alias>
+			</UseStatementPart>
+		</UseStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

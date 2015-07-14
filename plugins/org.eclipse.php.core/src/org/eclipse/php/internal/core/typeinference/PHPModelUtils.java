@@ -131,6 +131,30 @@ public class PHPModelUtils {
 	}
 
 	/**
+	 * Concatenate FQN parameters into one string e.g. 'A\B' + 'C\D' = 'A\B\C\D'
+	 * 
+	 * @param fqns
+	 *            names to concat
+	 * @return concatenated names
+	 */
+	public static String concatFullyQualifiedNames(String... fqns) {
+		StringBuilder builder = new StringBuilder();
+		for (String fqn : fqns) {
+			if (fqn != null) {
+				if (builder.length() != 0
+						&& builder.charAt(builder.length()
+								- 1) != NamespaceReference.NAMESPACE_SEPARATOR
+						&& !fqn.isEmpty() && fqn.charAt(
+								0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+					builder.append(NamespaceReference.NAMESPACE_SEPARATOR);
+				}
+				builder.append(fqn);
+			}
+		}
+		return builder.toString();
+	}
+	
+	/**
 	 * if the elementName is a class alias for a namespace class, we get its
 	 * original name from its alias
 	 * 
