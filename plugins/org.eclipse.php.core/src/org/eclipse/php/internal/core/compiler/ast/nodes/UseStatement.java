@@ -21,10 +21,15 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represent a 'use' statement.
- * <pre>e.g.<pre>
+ * 
+ * e.g.
+ * 
+ * <pre>
  * use A;
  * use A as B;
  * use \A\B as C;
+ * use A\B\ { C };
+ * </pre>
  */
 public class UseStatement extends Statement {
 
@@ -37,18 +42,30 @@ public class UseStatement extends Statement {
 
 	private List<UsePart> parts;
 	private int statementType;
-
-	public UseStatement(int start, int end, List<UsePart> parts,
-			int statementType) {
-		super(start, end);
-
-		assert parts != null;
-		this.parts = parts;
-		this.statementType = statementType;
-	}
+	private FullyQualifiedReference namespace;
 
 	public UseStatement(int start, int end, List<UsePart> parts) {
 		this(start, end, parts, T_NONE);
+	}
+
+	public UseStatement(int start, int end, List<UsePart> parts,
+			int statementType) {
+		this(start, end, null, parts, statementType);
+	}
+
+	public UseStatement(int start, int end, FullyQualifiedReference namespace,
+			List<UsePart> parts) {
+		this(start, end, namespace, parts, UseStatement.T_NONE);
+	}
+
+	public UseStatement(int start, int end, FullyQualifiedReference namespace,
+			List<UsePart> parts, int statementType) {
+		super(start, end);
+
+		assert parts != null;
+		this.namespace = namespace;
+		this.parts = parts;
+		this.statementType = statementType;
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
@@ -68,8 +85,20 @@ public class UseStatement extends Statement {
 		return parts;
 	}
 
+	public void setStatementType(int statementType) {
+		this.statementType = statementType;
+	}
+
 	public int getStatementType() {
 		return statementType;
+	}
+
+	public void setNamespace(FullyQualifiedReference namespace) {
+		this.namespace = namespace;
+	}
+
+	public FullyQualifiedReference getNamespace() {
+		return namespace;
 	}
 
 	/**

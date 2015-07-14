@@ -1,0 +1,31 @@
+--TEST--
+Test group use statement
+--FILE--
+<?php use foo\math\ { Math, const PI, function sin as TestSin };
+--EXPECT--
+<ModuleDeclaration start="0" end="65">
+	<UseStatement start="6" end="64">
+		<Namespace>
+			<FullyQualifiedReference start="10" end="18" name="foo\math">
+				<NamespaceReference start="10" end="13" name="foo" global="false" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+		</Namespace>
+		<Parts>
+			<UsePart start="0" end="0">
+				<FullyQualifiedReference start="22" end="26" name="Math">
+				</FullyQualifiedReference>
+			</UsePart>
+			<UsePart start="0" end="0" statementType="2">
+				<FullyQualifiedReference start="34" end="36" name="PI">
+				</FullyQualifiedReference>
+			</UsePart>
+			<UsePart start="0" end="0" statementType="1">
+				<FullyQualifiedReference start="47" end="50" name="sin">
+				</FullyQualifiedReference>
+				<SimpleReference start="54" end="61" name="TestSin">
+				</SimpleReference>
+			</UsePart>
+		</Parts>
+	</UseStatement>
+</ModuleDeclaration>

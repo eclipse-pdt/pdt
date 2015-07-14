@@ -1,0 +1,41 @@
+--TEST--
+Test group use statement
+--FILE--
+<?php
+use function Test\Boo\ { 
+	FooX
+};
+use const Test\Boo\ { 
+	FooX
+};
+--EXPECT--
+<ModuleDeclaration start="0" end="73">
+	<UseStatement start="6" end="40" statementType="1">
+		<Namespace>
+			<FullyQualifiedReference start="19" end="27" name="Test\Boo">
+				<NamespaceReference start="19" end="23" name="Test" global="false" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+		</Namespace>
+		<Parts>
+			<UsePart start="0" end="0">
+				<FullyQualifiedReference start="33" end="37" name="FooX">
+				</FullyQualifiedReference>
+			</UsePart>
+		</Parts>
+	</UseStatement>
+	<UseStatement start="41" end="72" statementType="2">
+		<Namespace>
+			<FullyQualifiedReference start="51" end="59" name="Test\Boo">
+				<NamespaceReference start="51" end="55" name="Test" global="false" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+		</Namespace>
+		<Parts>
+			<UsePart start="0" end="0">
+				<FullyQualifiedReference start="65" end="69" name="FooX">
+				</FullyQualifiedReference>
+			</UsePart>
+		</Parts>
+	</UseStatement>
+</ModuleDeclaration>

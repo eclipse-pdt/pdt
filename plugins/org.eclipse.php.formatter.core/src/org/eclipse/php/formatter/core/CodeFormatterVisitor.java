@@ -75,7 +75,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	private static final char OPEN_PARN = '(';
 	private static final char CLOSE_PARN = ')';
 	private static final char OPEN_CURLY = '{';
-	// private static final char CLOSE_CURLY = '}';
+	private static final char CLOSE_CURLY = '}';
 	private static final char OPEN_BRACKET = '[';
 	private static final char CLOSE_BRACKET = ']';
 	private static final char COLON = ':';
@@ -5027,14 +5027,23 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		lineWidth += 3;// the word 'use'
 		insertSpace();
 
-		if (useStatement.getStatementType() == UseStatement.T_FUNCTION) {
-			appendToBuffer(
-					PhpTokenNames.getName(CompilerParserConstants.T_FUNCTION)
-							+ SPACE);
-		} else if (useStatement.getStatementType() == UseStatement.T_CONST) {
-			appendToBuffer(
-					PhpTokenNames.getName(CompilerParserConstants.T_CONST)
-							+ SPACE);
+		appendStatementType(useStatement.getStatementType());
+
+		int lineWrapPolicy = NO_LINE_WRAP;
+		int indentationGap = NO_LINE_WRAP_INDENT;
+		boolean forceSplit = false;
+		if (useStatement.getNamespace() != null) {
+			insertSpace();
+			handleChars(lastPosition, useStatement.getNamespace().getStart());
+			useStatement.getNamespace().accept(this);
+
+			lastPosition = useStatement.getNamespace().getEnd();
+			insertSpace();
+			appendToBuffer(OPEN_CURLY);
+
+			lineWrapPolicy = WRAP_ALL_ELEMENTS;
+			forceSplit = true;
+			indentationGap = this.preferences.indentationSize;
 		}
 
 		List<UseStatementPart> parts = useStatement.parts();
@@ -5042,13 +5051,21 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				lastPosition,
 				this.preferences.insert_space_before_comma_in_global,
 				this.preferences.insert_space_after_comma_in_global,
-				NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
+				lineWrapPolicy, indentationGap, forceSplit);
+
+		if (useStatement.getNamespace() != null) {
+			insertNewLine();
+			indent();
+			appendToBuffer(CLOSE_CURLY);
+		}
 
 		handleSemicolon(lastPosition, useStatement.getEnd());
 		return false;
 	}
 
 	public boolean visit(UseStatementPart useStatementPart) {
+		appendStatementType(useStatementPart.getStatementType());
+
 		useStatementPart.getName().accept(this);
 		Identifier alias = useStatementPart.getAlias();
 		if (alias != null) {
@@ -5059,6 +5076,18 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			alias.accept(this);
 		}
 		return false;
+	}
+
+	private void appendStatementType(int statementType) {
+		if (statementType == UseStatement.T_FUNCTION) {
+			appendToBuffer(
+					PhpTokenNames.getName(CompilerParserConstants.T_FUNCTION));
+			insertSpace();
+		} else if (statementType == UseStatement.T_CONST) {
+			appendToBuffer(
+					PhpTokenNames.getName(CompilerParserConstants.T_CONST));
+			insertSpace();
+		}
 	}
 
 	public boolean visit(LambdaFunctionDeclaration lambdaFunctionDeclaration) {

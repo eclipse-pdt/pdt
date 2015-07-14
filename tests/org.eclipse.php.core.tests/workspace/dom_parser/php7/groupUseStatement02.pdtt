@@ -1,0 +1,43 @@
+--TEST--
+Test group use statement
+--FILE--
+<?php
+use function Test\Boo\ { 
+	FooX
+};
+use const Test\Boo\ { 
+	FooX
+};
+--EXPECT--
+<Program start='0' length='72'>
+	<Statements>
+		<UseStatement start='6' length='34' statementType='1'>
+			<NamespaceName start='19' length='9' global='false' current='false'>
+				<Identifier start='19' length='4' name='Test'/>
+				<Identifier start='24' length='3' name='Boo'/>
+			</NamespaceName>
+			<UseStatementPart start='33' length='4'>
+				<Name>
+					<NamespaceName start='33' length='4' global='false' current='false'>
+						<Identifier start='33' length='4' name='FooX'/>
+					</NamespaceName>
+				</Name>
+			</UseStatementPart>
+		</UseStatement>
+		<UseStatement start='41' length='31' statementType='2'>
+			<NamespaceName start='51' length='9' global='false' current='false'>
+				<Identifier start='51' length='4' name='Test'/>
+				<Identifier start='56' length='3' name='Boo'/>
+			</NamespaceName>
+			<UseStatementPart start='65' length='4'>
+				<Name>
+					<NamespaceName start='65' length='4' global='false' current='false'>
+						<Identifier start='65' length='4' name='FooX'/>
+					</NamespaceName>
+				</Name>
+			</UseStatementPart>
+		</UseStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

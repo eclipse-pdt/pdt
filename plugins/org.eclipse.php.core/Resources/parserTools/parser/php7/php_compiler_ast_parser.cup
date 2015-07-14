@@ -208,7 +208,13 @@ non terminal ModuleDeclaration thestart;
 non terminal FullyQualifiedReference namespace_name;
 non terminal List namespace_name_list;
 non terminal UsePart use_declaration;
+non terminal FullyQualifiedReference use_namespace_name;
+non terminal UseStatement mixed_group_use_declaration;
+non terminal UseStatement group_use_declaration;
+non terminal List inline_use_declarations;
+non terminal UsePart inline_use_declaration;
 non terminal List use_declarations;
+non terminal Integer use_type;
 non terminal top_statement_list;
 non terminal List namespace_statement_list;
 non terminal Statement top_statement;
@@ -580,19 +586,29 @@ namespace_body:body
 	RESULT = body;
 :}
 
+| T_USE:start mixed_group_use_declaration:useStatement T_SEMICOLON:end
+{:
+	useStatement.setStart(startleft);
+	useStatement.setEnd(endright);
+	parser.declarations.push(useStatement);
+:}
+
+| T_USE:start use_type:useType group_use_declaration:useStatement T_SEMICOLON:end
+{:
+	useStatement.setStart(startleft);
+	useStatement.setEnd(endright);
+	useStatement.setStatementType(useType);
+	parser.declarations.push(useStatement);
+:}
+
 | T_USE:start use_declarations:useDeclList T_SEMICOLON:end
 {:
 	parser.declarations.push(new UseStatement(startleft, endright, useDeclList));
 :}
 
-| T_USE:start T_FUNCTION use_declarations:useDeclList T_SEMICOLON:end
+| T_USE:start use_type:useType use_declarations:useDeclList T_SEMICOLON:end
 {:
-	parser.declarations.push(new UseStatement(startleft, endright, useDeclList, UseStatement.T_FUNCTION));
-:}
-
-| T_USE:start T_CONST use_declarations:useDeclList T_SEMICOLON:end
-{:
-	parser.declarations.push(new UseStatement(startleft, endright, useDeclList, UseStatement.T_CONST));
+	parser.declarations.push(new UseStatement(startleft, endright, useDeclList, useType));
 :}
 
 | constant_declaration:decList T_SEMICOLON
@@ -659,6 +675,57 @@ T_CURLY_OPEN:start namespace_statement_list:statementList T_CURLY_CLOSE:end
 :}
 ;
 
+use_type ::=
+T_FUNCTION
+{:
+	RESULT = UseStatement.T_FUNCTION;
+:} 
+| T_CONST
+{:
+	RESULT = UseStatement.T_CONST;
+:}
+;
+
+group_use_declaration ::=
+use_namespace_name:namespaceName T_CURLY_OPEN use_declarations:useDeclList T_CURLY_CLOSE:end
+{:
+	RESULT = new UseStatement(namespaceNameleft, endright, namespaceName, useDeclList);
+:}
+;
+
+mixed_group_use_declaration ::=
+use_namespace_name:namespaceName T_CURLY_OPEN inline_use_declarations:useDeclList T_CURLY_CLOSE:end
+{:
+	RESULT = new UseStatement(namespaceNameleft, endright, namespaceName, useDeclList);
+:}
+;
+
+inline_use_declarations ::=
+inline_use_declarations:useDeclList T_COMMA inline_use_declaration:useDecl
+{:
+	useDeclList.add(useDecl);
+	RESULT = useDeclList;
+:}
+| inline_use_declaration:useDecl
+{:
+	List useDeclList = new LinkedList();
+	useDeclList.add(useDecl);
+	RESULT = useDeclList;
+:}
+;
+
+inline_use_declaration ::=
+use_declaration:useDeclaration
+{:
+	RESULT = useDeclaration;
+:}
+
+| use_type:useType use_declaration:useDeclaration
+{:
+	useDeclaration.setStatementType(useType);
+	RESULT = useDeclaration;
+:}
+;
 
 use_declarations ::=
 use_declarations:useDeclList T_COMMA use_declaration:useDecl
@@ -718,6 +785,29 @@ namespace_name:name
 	UsePart usePart = new UsePart(name,
 		new SimpleReference(aliasNameleft, aliasNameright, aliasName));
 	RESULT = usePart;
+:}
+;
+
+use_namespace_name ::=
+namespace_name_list:list T_NS_SEPARATOR
+{:
+	StringBuilder namespaceNameBuf = new StringBuilder();
+	FullyQualifiedReference fullyQualifiedName = null;
+	Iterator i = list.iterator();
+	while (i.hasNext()) {
+		String s = (String) i.next();
+		if (i.hasNext()) {
+			if (namespaceNameBuf.length() != 0) {
+				namespaceNameBuf.append('\\');
+			}
+			namespaceNameBuf.append(s);
+		} else {
+			NamespaceReference namespaceRef = (namespaceNameBuf.length() != 0) ?
+				new NamespaceReference(listleft, listright - s.length() - 1, namespaceNameBuf.toString()) : null;
+			fullyQualifiedName = new FullyQualifiedReference(listleft, listright, s, namespaceRef);
+		}
+	}
+	RESULT = fullyQualifiedName;
 :}
 ;
 
