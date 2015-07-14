@@ -227,7 +227,13 @@ terminal T_COALESCE;
 non terminal Program thestart;
 non terminal List namespace_name;
 non terminal UseStatementPart use_declaration;
-non terminal List use_declarations;
+non terminal NamespaceName use_namespace_name;
+non terminal UseStatement mixed_group_use_declaration;
+non terminal UseStatement group_use_declaration;
+non terminal List<UseStatementPart> inline_use_declarations;
+non terminal UseStatementPart inline_use_declaration;
+non terminal List<UseStatementPart> use_declarations;
+non terminal Integer use_type;
 non terminal List top_statement_list;
 non terminal Statement top_statement;
 non terminal Statement statement;
@@ -526,24 +532,84 @@ statement:statement
 		new Block(tokenleft, eright, parser.ast, sList), true);
 :}
 
+| T_USE:s mixed_group_use_declaration:useStatement T_SEMICOLON:e
+{:
+	useStatement.setSourceRange(sleft, eright - sleft);
+	RESULT = useStatement;
+:}
+
+| T_USE:s use_type:useType group_use_declaration:useStatement T_SEMICOLON:e
+{:
+	useStatement.setSourceRange(sleft, eright - sleft);
+	useStatement.setStatementType(useType);
+	RESULT = useStatement;
+:}
+
 | T_USE:s use_declarations:list T_SEMICOLON:e
 {:
 	RESULT = new UseStatement(sleft, eright, parser.ast, list);
 :}
 
-| T_USE:s T_FUNCTION use_declarations:list T_SEMICOLON:e
+| T_USE:s use_type:useType use_declarations:list T_SEMICOLON:e
 {:
-	RESULT = new UseStatement(sleft, eright, parser.ast, list, UseStatement.T_FUNCTION);
-:}
-
-| T_USE:s T_CONST use_declarations:list T_SEMICOLON:e
-{:
-	RESULT = new UseStatement(sleft, eright, parser.ast, list, UseStatement.T_CONST);
+	RESULT = new UseStatement(sleft, eright, parser.ast, list, useType);
 :}
 
 | constant_declaration:list T_SEMICOLON:e
 {:
 	RESULT = new ConstantDeclaration(listleft, eright, parser.ast, list);
+:}
+;
+
+use_type ::=
+T_FUNCTION
+{:
+	RESULT = UseStatement.T_FUNCTION;
+:} 
+| T_CONST
+{:
+	RESULT = UseStatement.T_CONST;
+:}
+;
+
+group_use_declaration ::=
+use_namespace_name:ns T_CURLY_OPEN use_declarations:useDeclList T_CURLY_CLOSE:end
+{:
+	RESULT = new UseStatement(nsleft, endright, parser.ast, ns, useDeclList);
+:}
+;
+
+mixed_group_use_declaration ::=
+use_namespace_name:ns T_CURLY_OPEN inline_use_declarations:useDeclList T_CURLY_CLOSE:end
+{:
+	RESULT = new UseStatement(nsleft, endright, parser.ast, ns, useDeclList);
+:}
+;
+
+inline_use_declarations ::=
+inline_use_declarations:useDeclList T_COMMA inline_use_declaration:useDecl
+{:
+	useDeclList.add(useDecl);
+	RESULT = useDeclList;
+:}
+| inline_use_declaration:useDecl
+{:
+	List<UseStatementPart> useDeclList = new LinkedList<UseStatementPart>();
+	useDeclList.add(useDecl);
+	RESULT = useDeclList;
+:}
+;
+
+inline_use_declaration ::=
+use_declaration:useDeclaration
+{:
+	RESULT = useDeclaration;
+:}
+
+| use_type:useType use_declaration:useDeclaration
+{:
+	useDeclaration.setStatementType(useType);
+	RESULT = useDeclaration;
 :}
 ;
 
@@ -560,9 +626,7 @@ use_declarations:list T_COMMA use_declaration:useDecl
 	list.add(useDecl);
 	RESULT = list;
 :}
-
 ;
-
 
 use_declaration ::=
 namespace_name:list
@@ -590,7 +654,13 @@ namespace_name:list
 		new NamespaceName(sleft, listright, parser.ast, list, true, false),
 		new Identifier(aliasNameleft, aliasNameright, parser.ast, aliasName));
 :}
+;
 
+use_namespace_name ::=
+namespace_name:nnList T_NS_SEPARATOR:end
+{:
+	RESULT = new NamespaceName(nnListleft, endright, parser.ast, nnList, false, false);
+:}
 ;
 
 inner_statement_list ::=

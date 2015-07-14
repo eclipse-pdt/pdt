@@ -23,12 +23,13 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 /**
  * Represents namespace name:
  * 
- * <pre>e.g.
+ * e.g.
  * 
  * <pre>
- * MyNamespace;
- * MyProject\Sub\Level;
+ * MyNamespace; 
+ * MyProject\Sub\Level; 
  * namespace\MyProject\Sub\Level;
+ * </pre>
  */
 public class NamespaceName extends Identifier {
 
@@ -53,18 +54,19 @@ public class NamespaceName extends Identifier {
 	public static final ChildListPropertyDescriptor ELEMENTS_PROPERTY = new ChildListPropertyDescriptor(
 			NamespaceName.class, "segments", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
 	public static final SimplePropertyDescriptor GLOBAL_PROPERTY = new SimplePropertyDescriptor(
-			UseStatementPart.class, "global", Boolean.class, MANDATORY); //$NON-NLS-1$
+			NamespaceName.class, "global", Boolean.class, MANDATORY); //$NON-NLS-1$
 	public static final SimplePropertyDescriptor CURRENT_PROPERTY = new SimplePropertyDescriptor(
-			UseStatementPart.class, "current", Boolean.class, MANDATORY); //$NON-NLS-1$
+			NamespaceName.class, "current", Boolean.class, MANDATORY); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
 	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(
-				2);
+				4);
 		properyList.add(NAME_PROPERTY);
 		properyList.add(ELEMENTS_PROPERTY);
 		properyList.add(GLOBAL_PROPERTY);
@@ -90,14 +92,11 @@ public class NamespaceName extends Identifier {
 
 	public NamespaceName(int start, int end, AST ast, List segments,
 			boolean global, boolean current) {
-		super(
-				start,
-				end,
-				ast,
+		super(start, end, ast,
 				buildName(
-						(Identifier[]) segments
-								.toArray(new Identifier[getSegmentSize(segments)]),
-						global, current));
+						(Identifier[]) segments.toArray(
+								new Identifier[getSegmentSize(segments)]),
+				global, current));
 
 		Iterator<Identifier> it = segments.iterator();
 		while (it.hasNext()) {
@@ -271,11 +270,13 @@ public class NamespaceName extends Identifier {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	final List internalGetChildListProperty(
+			ChildListPropertyDescriptor property) {
 		if (property == ELEMENTS_PROPERTY) {
 			return segments();
 		}
 		// allow default implementation to flag the error
 		return super.internalGetChildListProperty(property);
 	}
+
 }

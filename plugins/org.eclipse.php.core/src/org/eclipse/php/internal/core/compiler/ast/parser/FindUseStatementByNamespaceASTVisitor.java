@@ -10,15 +10,25 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.parser;
 
+import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * AST visitor for finding use statements by namespace.
  * 
  * @author Kaloyan Raev
  */
-public class FindUseStatementByNamespaceASTVisitor extends
-		AbstractUseStatementASTVisitor {
+public class FindUseStatementByNamespaceASTVisitor
+		extends AbstractUseStatementASTVisitor {
+
+	/**
+	 * Current use statement, used to detect group use statements.
+	 */
+	private UseStatement currentUseStatement;
 
 	/**
 	 * The namespace to look for.
@@ -29,6 +39,20 @@ public class FindUseStatementByNamespaceASTVisitor extends
 	 * The found {@link UsePart} node to return as result.
 	 */
 	private UsePart result;
+
+	@Override
+	protected void visit(UseStatement s) throws Exception {
+		this.currentUseStatement = s;
+		super.visit(s);
+	}
+
+	@Override
+	public boolean endvisit(Statement s) throws Exception {
+		if (s instanceof UseStatement) {
+			currentUseStatement = null;
+		}
+		return super.endvisit(s);
+	}
 
 	/**
 	 * Constructor of the visitor.
@@ -47,8 +71,8 @@ public class FindUseStatementByNamespaceASTVisitor extends
 	 * Returns the found {@link UsePart} node that corresponds to the specified
 	 * namespace.
 	 * 
-	 * @return a <code>UsePart</code> node, or
-	 *         <code>null<code> if there is not use statement for the specified namespace.
+	 * @return a <code>UsePart</code> node, or <code>null<code> if there is not
+	 *         use statement for the specified namespace.
 	 */
 	public UsePart getResult() {
 		return result;
@@ -62,12 +86,49 @@ public class FindUseStatementByNamespaceASTVisitor extends
 	protected boolean visit(UsePart usePart) {
 		String ns = usePart.getNamespace().getFullyQualifiedName();
 
+		boolean isGroupStatement = currentUseStatement != null
+				&& currentUseStatement.getNamespace() != null;
+		if (isGroupStatement) {
+			String curentFQN = currentUseStatement.getNamespace()
+					.getFullyQualifiedName();
+			ns = PHPModelUtils.concatFullyQualifiedNames(curentFQN, ns);
+		}
+
 		if (namespace.equalsIgnoreCase(ns)) {
-			result = usePart;
+			if (isGroupStatement) {
+				FullyQualifiedReference fqn = createCombinedFQN(usePart);
+
+				result = new UsePart(fqn, usePart.getAlias(),
+						Math.max(currentUseStatement.getStatementType(),
+								usePart.getStatementType()));
+			} else {
+				result = usePart;
+			}
 			return false;
 		}
 
 		return true;
+	}
+
+	/**
+	 * Creates fake FQN hat combines use statement namespace and use part
+	 * namespace.
+	 * 
+	 * @param usePart
+	 * @return
+	 */
+	private FullyQualifiedReference createCombinedFQN(UsePart usePart) {
+		String firstNamespace = currentUseStatement.getNamespace()
+				.getFullyQualifiedName();
+		String name = PHPModelUtils.extractElementName(
+				usePart.getNamespace().getFullyQualifiedName());
+		String secondNamespace = PHPModelUtils.extractNameSpaceName(
+				usePart.getNamespace().getFullyQualifiedName());
+
+		String fqn = PHPModelUtils.concatFullyQualifiedNames(firstNamespace,
+				secondNamespace);
+		return new FullyQualifiedReference(0, 0, name,
+				new NamespaceReference(0, 0, fqn));
 	}
 
 }

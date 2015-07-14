@@ -973,7 +973,8 @@ public class ASTMatcher {
 		}
 		UseStatementPart o = (UseStatementPart) other;
 		return safeSubtreeMatch(node.getName(), o.getName())
-				&& safeSubtreeMatch(node.getAlias(), o.getAlias());
+				&& safeSubtreeMatch(node.getAlias(), o.getAlias())
+				&& node.getStatementType() == o.getStatementType();
 	}
 
 	public boolean match(UseStatement node, Object other) {
@@ -982,7 +983,8 @@ public class ASTMatcher {
 		}
 		UseStatement o = (UseStatement) other;
 		return safeSubtreeListMatch(node.parts(), o.parts())
-				&& safeEquals(node.getStatementType(), o.getStatementType());
+				&& safeEquals(node.getStatementType(), o.getStatementType())
+				&& safeSubtreeMatch(node.getNamespace(), o.getNamespace());
 	}
 
 	public boolean match(GotoLabel node, Object other) {

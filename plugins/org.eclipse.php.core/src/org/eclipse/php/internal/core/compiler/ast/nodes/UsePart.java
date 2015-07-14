@@ -16,23 +16,34 @@ import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.references.SimpleReference;
 
 /**
- * Represent a 'use' part statement.
- * <pre>e.g.<pre>
+ * Represent a 'use' part statement. e.g.
+ * 
+ * <pre>
  * A as B;
  * \A\B as C;
+ * const \A\B as C;
+ * </pre>
  */
 public class UsePart extends ASTNode {
-	
+
 	private FullyQualifiedReference namespace;
 	private SimpleReference alias;
-	
+	private int statementType;
+
 	public UsePart(FullyQualifiedReference namespace, SimpleReference alias) {
+		this(namespace, alias, UseStatement.T_NONE);
+	}
+
+	public UsePart(FullyQualifiedReference namespace, SimpleReference alias,
+			int statementType) {
 		this.setNamespace(namespace);
 		this.setAlias(alias);
+		this.statementType = statementType;
 	}
 
 	public String toString() {
-		StringBuilder buf = new StringBuilder("[USE: ").append(getNamespace().getFullyQualifiedName()); //$NON-NLS-1$
+		StringBuilder buf = new StringBuilder("[USE: ") //$NON-NLS-1$
+				.append(getNamespace().getFullyQualifiedName());
 		if (getAlias() != null) {
 			buf.append(" AS ").append(getAlias().getName()); //$NON-NLS-1$
 		}
@@ -64,5 +75,13 @@ public class UsePart extends ASTNode {
 
 	public FullyQualifiedReference getNamespace() {
 		return namespace;
+	}
+
+	public void setStatementType(int statementType) {
+		this.statementType = statementType;
+	}
+
+	public int getStatementType() {
+		return statementType;
 	}
 }

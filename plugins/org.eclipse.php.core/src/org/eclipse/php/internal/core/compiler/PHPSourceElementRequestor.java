@@ -910,7 +910,13 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				containerName = fLastNamespace.getName();
 			}
 			info.containerName = containerName;
-			info.name = part.getNamespace().getFullyQualifiedName();
+			if (declaration.getNamespace() == null) {
+				info.name = part.getNamespace().getFullyQualifiedName();
+			} else {
+				info.name = PHPModelUtils.concatFullyQualifiedNames(
+						declaration.getNamespace().getFullyQualifiedName(),
+						part.getNamespace().getFullyQualifiedName());
+			}
 			info.sourceStart = part.getNamespace().sourceStart();
 			info.sourceEnd = part.getNamespace().sourceEnd();
 			fRequestor.acceptImport(info);
