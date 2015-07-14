@@ -43,24 +43,17 @@ public class PhpElementResolver implements IElementResolver {
 		String metadataToDecode = null;
 
 		if (metadata != null) {
-			if (metadata.indexOf(SPLIT_STR) == -1) {
-				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=448895
-				// H2 wasn't updated after resolution of bug 448895,
-				// it hasn't occurrence count for this element
-				metadataToDecode = metadata;
-			} else {
-				String[] split = SPLIT_METADATA.split(metadata);
-				if (split.length >= 1) {
-					try {
-						occurrenceCount = Integer.parseInt(split[0]);
-					} catch (NumberFormatException e) {
-						// should never happen
-						Logger.logException(e);
-					}
+			String[] split = SPLIT_METADATA.split(metadata);
+			if (split.length >= 1) {
+				try {
+					occurrenceCount = Integer.parseInt(split[0]);
+				} catch (NumberFormatException e) {
+					// should never happen
+					Logger.logException(e);
 				}
-				if (split.length >= 2) {
-					metadataToDecode = split[1];
-				}
+			}
+			if (split.length >= 2) {
+				metadataToDecode = split[1];
 			}
 		}
 
