@@ -306,10 +306,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		modifiers = markAsDeprecated(modifiers, method);
 
 		StringBuilder metadata = new StringBuilder();
-		if (fCurrentQualifier != null) {
-			metadata.append(fCurrentQualifierCounts.get(fCurrentQualifier));
-			metadata.append(";"); //$NON-NLS-1$
-		}
+		metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts
+				.get(fCurrentQualifier) : 1);
+		metadata.append(";"); //$NON-NLS-1$
 		List<Argument> arguments = method.getArguments();
 		if (arguments != null) {
 			Iterator<Argument> i = arguments.iterator();
@@ -426,10 +425,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 			modifiers = markAsDeprecated(modifiers, type);
 			StringBuilder metadata = new StringBuilder();
-			if (fCurrentQualifier != null) {
-				metadata.append(fCurrentQualifierCounts.get(fCurrentQualifier));
-				metadata.append(";"); //$NON-NLS-1$
-			}
+			metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts
+					.get(fCurrentQualifier) : 1);
+			metadata.append(";"); //$NON-NLS-1$
 			modifyDeclaration(
 					type,
 					new DeclarationInfo(IModelElement.PACKAGE_DECLARATION,
@@ -465,10 +463,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 			String[] superClasses = processSuperClasses(type);
 			StringBuilder metadata = new StringBuilder();
-			if (fCurrentQualifier != null) {
-				metadata.append(fCurrentQualifierCounts.get(fCurrentQualifier));
-				metadata.append(";"); //$NON-NLS-1$
-			}
+			metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts
+					.get(fCurrentQualifier) : 1);
+			metadata.append(";"); //$NON-NLS-1$
 			for (int i = 0; i < superClasses.length; ++i) {
 				metadata.append(superClasses[i]);
 				if (i < superClasses.length - 1) {
@@ -586,11 +583,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						info.put("v", split[0]); //$NON-NLS-1$
 
 						StringBuilder metadata = new StringBuilder();
-						if (fCurrentQualifier != null) {
-							metadata.append(fCurrentQualifierCounts
-									.get(fCurrentQualifier));
-							metadata.append(";"); //$NON-NLS-1$
-						}
+						metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts
+								.get(fCurrentQualifier) : 1);
+						metadata.append(";"); //$NON-NLS-1$
 
 						modifyDeclaration(null,
 								new DeclarationInfo(IModelElement.FIELD,
@@ -628,11 +623,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						info.put("r", split[0]); //$NON-NLS-1$
 
 						StringBuilder metadata = new StringBuilder();
-						if (fCurrentQualifier != null) {
-							metadata.append(fCurrentQualifierCounts
-									.get(fCurrentQualifier));
-							metadata.append(";"); //$NON-NLS-1$
-						}
+						metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts
+								.get(fCurrentQualifier) : 1);
+						metadata.append(";"); //$NON-NLS-1$
 
 						modifyDeclaration(null,
 								new DeclarationInfo(IModelElement.METHOD,
@@ -699,10 +692,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		int modifiers = markAsDeprecated(decl.getModifiers(), decl);
 
 		StringBuilder metadata = new StringBuilder();
-		if (fCurrentQualifier != null) {
-			metadata.append(fCurrentQualifierCounts.get(fCurrentQualifier));
-			metadata.append(";"); //$NON-NLS-1$
-		}
+		metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts
+				.get(fCurrentQualifier) : 1);
+		metadata.append(";"); //$NON-NLS-1$
 
 		modifyDeclaration(
 				decl,
@@ -796,10 +788,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		int offset = constantName.sourceStart();
 		int length = constantName.sourceEnd();
 		StringBuilder metadata = new StringBuilder();
-		if (fCurrentQualifier != null) {
-			metadata.append(fCurrentQualifierCounts.get(fCurrentQualifier));
-			metadata.append(";"); //$NON-NLS-1$
-		}
+		metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts
+				.get(fCurrentQualifier) : 1);
+		metadata.append(";"); //$NON-NLS-1$
 		modifyDeclaration(
 				declaration,
 				new DeclarationInfo(IModelElement.FIELD, modifiers, offset,
@@ -830,11 +821,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 					int offset = var.sourceStart();
 					int length = var.sourceEnd() - offset;
 					StringBuilder metadata = new StringBuilder();
-					if (fCurrentQualifier != null) {
-						metadata.append(fCurrentQualifierCounts
-								.get(fCurrentQualifier));
-						metadata.append(";"); //$NON-NLS-1$
-					}
+					metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts
+							.get(fCurrentQualifier) : 1);
+					metadata.append(";"); //$NON-NLS-1$
 					modifyDeclaration(
 							assignment,
 							new DeclarationInfo(IModelElement.FIELD, modifiers,
