@@ -1,0 +1,19 @@
+--TEST--
+Test namespace duplicate
+--FILE--
+<?php
+namespace A {
+    use DateTime;
+}
+namespace A {
+    use DateDiff;
+}
+?>
+--EXPECT--
+FILE: test.php
+	NAMESPACE: A
+	IMPORTS:
+		DateTime
+	NAMESPACE: A
+	IMPORTS:
+		DateDiff

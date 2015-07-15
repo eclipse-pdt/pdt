@@ -49,6 +49,7 @@ public class ModelStructureTests {
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
 		TESTS.put(PHPVersion.PHP5_3,
 				new String[] { "/workspace/model_structure/php53" });
@@ -164,16 +165,21 @@ public class ModelStructureTests {
 				} else if (element.getElementType() == IModelElement.METHOD) {
 					IMethod method = (IMethod) element;
 					IType declaringType = method.getDeclaringType();
-					if (declaringType == null
-							|| (declaringType.getFlags() & Modifiers.AccNameSpace) != 0) {
+					if (declaringType == null || (declaringType.getFlags()
+							& Modifiers.AccNameSpace) != 0) {
 						stream.print("FUNCTION: ");
 					} else {
 						stream.print("METHOD: ");
 					}
 				} else if (element.getElementType() == IModelElement.FIELD) {
 					stream.print("VARIABLE: ");
-				} else if (element.getElementType() == IModelElement.SOURCE_MODULE) {
+				} else if (element
+						.getElementType() == IModelElement.SOURCE_MODULE) {
 					stream.print("FILE: ");
+				} else if (element
+						.getElementType() == IModelElement.IMPORT_CONTAINER) {
+					stream.println("IMPORTS:");
+					return true;
 				}
 
 				stream.println(element.getElementName());

@@ -87,6 +87,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 	protected NamespaceDeclaration fLastNamespace;
 	protected Map<String, UsePart> fLastUseParts = new HashMap<String, UsePart>();
+	protected Map<String, Integer> fContainerOccurence = new HashMap<String, Integer>();
 
 	public PHPSourceElementRequestor(ISourceElementRequestor requestor,
 			IModuleSource sourceModule) {
@@ -426,6 +427,13 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
 			fLastNamespace = namespaceDecl;
 			fLastUseParts.clear();
+			String containerName = fLastNamespace.getName();
+			if (fContainerOccurence.containsKey(containerName)) {
+				fContainerOccurence.put(containerName,
+						fContainerOccurence.get(containerName) + 1);
+			} else {
+				fContainerOccurence.put(containerName, 1);
+			}
 			if (namespaceDecl.isGlobal()) {
 				return true;
 			}
@@ -909,7 +917,12 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			} else {
 				containerName = fLastNamespace.getName();
 			}
+			int occurence = 1;
+			if (fContainerOccurence.containsKey(containerName)) {
+				occurence = fContainerOccurence.get(containerName);
+			}
 			info.containerName = containerName;
+			info.containerOccurence = occurence;
 			info.name = part.getNamespace().getFullyQualifiedName();
 			info.sourceStart = part.getNamespace().sourceStart();
 			info.sourceEnd = part.getNamespace().sourceEnd();
