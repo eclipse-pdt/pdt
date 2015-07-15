@@ -207,8 +207,8 @@ public class PHPCorePlugin extends Plugin {
 			if (!project.isAccessible()) {
 				continue;
 			}
-			IScriptProject scriptProject = DLTKCore.create(project);
-			if (scriptProject.isOpen()) {
+			if (project.isOpen()) {
+				IScriptProject scriptProject = DLTKCore.create(project);
 				IProjectFragment[] projectFragments = scriptProject
 						.getProjectFragments();
 				for (IProjectFragment projectFragment : projectFragments) {
