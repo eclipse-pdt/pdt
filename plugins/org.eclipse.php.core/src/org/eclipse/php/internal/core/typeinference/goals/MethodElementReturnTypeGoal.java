@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,18 +18,9 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 public class MethodElementReturnTypeGoal extends AbstractMethodReturnTypeGoal {
 
 	public MethodElementReturnTypeGoal(IContext context,
-			IEvaluatedType evaluatedType, String methodName, String[] argNames) {
-		super(context, evaluatedType, methodName, argNames);
-	}
-
-	public MethodElementReturnTypeGoal(IContext context, IType[] types,
-			String methodName) {
-		super(context, types, methodName);
-	}
-
-	public MethodElementReturnTypeGoal(IContext context, IType[] types,
-			String methodName, String[] argNames) {
-		super(context, types, methodName, argNames);
+			IEvaluatedType evaluatedType, String methodName, String[] argNames,
+			int offset) {
+		super(context, evaluatedType, methodName, argNames, offset);
 	}
 
 	public MethodElementReturnTypeGoal(IContext context, IType[] types,

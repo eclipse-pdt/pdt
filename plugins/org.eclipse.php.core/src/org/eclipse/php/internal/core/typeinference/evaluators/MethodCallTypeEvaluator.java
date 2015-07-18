@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -79,7 +79,7 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 			state = STATE_WAITING_METHOD_PHPDOC;
 			return new PHPDocMethodReturnTypeGoal(typedGoal.getContext(),
 					receiverType, expression.getName(),
-					getFunctionCallArgs(expression));
+					getFunctionCallArgs(expression), expression.sourceStart());
 		}
 
 		// PHPDoc logic is done, start evaluating 'return' statements here:
@@ -97,7 +97,7 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 			state = STATE_WAITING_METHOD;
 			return new MethodElementReturnTypeGoal(typedGoal.getContext(),
 					receiverType, expression.getName(),
-					getFunctionCallArgs(expression));
+					getFunctionCallArgs(expression), expression.sourceStart());
 		}
 
 		if (state == STATE_WAITING_METHOD) {
