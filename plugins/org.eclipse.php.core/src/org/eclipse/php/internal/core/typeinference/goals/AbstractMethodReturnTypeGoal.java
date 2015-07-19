@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,20 +33,12 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 	private int offset;
 
 	public AbstractMethodReturnTypeGoal(IContext context,
-			IEvaluatedType evaluatedType, String methodName) {
+			IEvaluatedType evaluatedType, String methodName, int offset) {
 		super(context);
 		Assert.isNotNull(methodName);
 		this.methodName = methodName;
 		this.evaluatedType = evaluatedType;
-	}
-
-	public AbstractMethodReturnTypeGoal(IContext context, IType[] types,
-			String methodName, String[] argNames) {
-		super(context);
-		Assert.isNotNull(methodName);
-		this.methodName = methodName;
-		this.types = types;
-		this.argNames = argNames;
+		this.offset = offset;
 	}
 
 	public AbstractMethodReturnTypeGoal(IContext context, IType[] types,
@@ -60,18 +52,14 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 	}
 
 	public AbstractMethodReturnTypeGoal(IContext context, IType[] types,
-			String methodName) {
-		this(context, types, methodName, null);
-	}
-
-	public AbstractMethodReturnTypeGoal(IContext context, IType[] types,
 			String methodName, int offset) {
 		this(context, types, methodName, null, offset);
 	}
 
 	public AbstractMethodReturnTypeGoal(IContext context,
-			IEvaluatedType evaluatedType, String methodName, String[] argNames) {
-		this(context, evaluatedType, methodName);
+			IEvaluatedType evaluatedType, String methodName, String[] argNames,
+			int offset) {
+		this(context, evaluatedType, methodName, offset);
 		this.argNames = argNames;
 	}
 

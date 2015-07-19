@@ -84,6 +84,8 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 					PHPClassType classType = (PHPClassType) result;
 					List<IGoal> subGoals = new LinkedList<IGoal>();
 					try {
+						// XXX: offset is 0 here but it should still work,
+						// because classType already contains the namespace part
 						IType[] types = PHPModelUtils.getTypes(
 								classType.getTypeName(), sourceModule, 0,
 								cache, null);
@@ -110,10 +112,12 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 							if (isImplementedIterator(superTypes)) {
 								subGoals.add(new MethodElementReturnTypeGoal(
 										subgoal.getContext(),
-										new IType[] { type }, "current")); //$NON-NLS-1$
+										new IType[] { type },
+										"current", new String[0], type.getSourceRange().getOffset())); //$NON-NLS-1$
 								subGoals.add(new PHPDocMethodReturnTypeGoal(
 										subgoal.getContext(),
-										new IType[] { type }, "current")); //$NON-NLS-1$
+										new IType[] { type },
+										"current", new String[0], type.getSourceRange().getOffset())); //$NON-NLS-1$
 							}
 						}
 						if (subGoals.size() == 0) {
