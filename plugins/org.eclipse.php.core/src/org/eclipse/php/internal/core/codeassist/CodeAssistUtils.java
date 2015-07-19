@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -536,7 +536,7 @@ public class CodeAssistUtils {
 		boolean usePhpDoc = (mask & USE_PHPDOC) != 0;
 		if (usePhpDoc) {
 			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(
-					context, types, method, argNames);
+					context, types, method, argNames, offset);
 			evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal);
 			List<IEvaluatedType> possibleTypes = null;
 			if (!PHPTypeInferenceUtils.isSimple(evaluatedType)) {

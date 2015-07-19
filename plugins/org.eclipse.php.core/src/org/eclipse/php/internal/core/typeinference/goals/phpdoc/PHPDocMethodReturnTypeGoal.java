@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,23 +19,9 @@ import org.eclipse.php.internal.core.typeinference.goals.AbstractMethodReturnTyp
 public class PHPDocMethodReturnTypeGoal extends AbstractMethodReturnTypeGoal {
 
 	public PHPDocMethodReturnTypeGoal(IContext context,
-			IEvaluatedType evaluatedType, String methodName) {
-		super(context, evaluatedType, methodName);
-	}
-
-	public PHPDocMethodReturnTypeGoal(IContext context,
-			IEvaluatedType evaluatedType, String methodName, String[] argNames) {
-		super(context, evaluatedType, methodName, argNames);
-	}
-
-	public PHPDocMethodReturnTypeGoal(IContext context, IType[] types,
-			String methodName) {
-		super(context, types, methodName);
-	}
-
-	public PHPDocMethodReturnTypeGoal(IContext context, IType[] types,
-			String methodName, String[] argNames) {
-		super(context, types, methodName, argNames);
+			IEvaluatedType evaluatedType, String methodName, String[] argNames,
+			int offset) {
+		super(context, evaluatedType, methodName, argNames, offset);
 	}
 
 	public PHPDocMethodReturnTypeGoal(IContext context, IType[] types,

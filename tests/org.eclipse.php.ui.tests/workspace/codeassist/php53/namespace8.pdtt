@@ -1,0 +1,42 @@
+--TEST--
+Bug 472721 - Hyperlink is not working for method invocation called by function result
+--FILE--
+<?php
+namespace ns1 {
+}
+namespace ns2 {
+class MyClass implements \Iterator {
+     public function current () { return new \DateTime(); }
+     public function next () {}
+     public function key () {}
+     public function valid () {}
+     public function rewind () {}
+}
+}
+namespace ns2 {
+    $i = new MyClass();
+    foreach ($i as $date) {
+        $date->getTimez|;
+    }
+}
+?>
+--EXPECT--
+<?php
+namespace ns1 {
+}
+namespace ns2 {
+class MyClass implements \Iterator {
+     public function current () { return new \DateTime(); }
+     public function next () {}
+     public function key () {}
+     public function valid () {}
+     public function rewind () {}
+}
+}
+namespace ns2 {
+    $i = new MyClass();
+    foreach ($i as $date) {
+        $date->getTimezone();
+    }
+}
+?>
