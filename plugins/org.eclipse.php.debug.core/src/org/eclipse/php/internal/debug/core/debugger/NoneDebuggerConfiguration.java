@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Shell;
  * @author Bartlomiej Laczkowski
  */
 @SuppressWarnings("restriction")
-public class NoneDebuggerConfiguration implements IDebuggerConfiguration {
+public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 
 	public static final String ID = "org.eclipse.php.debug.core.noneDebugger"; //$NON-NLS-1$
 	private static final String NAME = "<none>"; //$NON-NLS-1$
@@ -489,6 +489,52 @@ public class NoneDebuggerConfiguration implements IDebuggerConfiguration {
 	@Override
 	public void save() {
 		// Not supported
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration#setPort(int)
+	 */
+	@Override
+	public void setPort(int port) {
+		// Not supported
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration#getModuleId()
+	 */
+	@Override
+	public String getModuleId() {
+		// Not supported
+		return NAME;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration#applyDefaults()
+	 */
+	@Override
+	public void applyDefaults() {
+		// Not supported
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration#validate(PHPexeItem)
+	 */
+	@Override
+	public IStatus validate(PHPexeItem item) {
+		// Not supported
+		return Status.OK_STATUS;
 	}
 
 	private static void displayError(final String message) {

@@ -55,7 +55,7 @@ public class PHPDebuggersRegistry {
 
 	private HashMap<String, String> debuggers = new HashMap<String, String>();
 	private HashMap<String, AbstractDebuggerConfiguration> configurations = new HashMap<String, AbstractDebuggerConfiguration>();
-	private IDebuggerConfiguration noneDebuggerConfiguration = new NoneDebuggerConfiguration();
+	private AbstractDebuggerConfiguration noneDebuggerConfiguration = new NoneDebuggerConfiguration();
 
 	private PHPDebuggersRegistry() {
 		loadDebuggers();
@@ -84,7 +84,7 @@ public class PHPDebuggersRegistry {
 	 * @return An AbstractDebuggerConfiguration, or null if no such debugger id
 	 *         exists.
 	 */
-	public static IDebuggerConfiguration getDebuggerConfiguration(
+	public static AbstractDebuggerConfiguration getDebuggerConfiguration(
 			String debuggerId) {
 		if (NONE_DEBUGGER_ID.equals(debuggerId))
 			return getInstance().noneDebuggerConfiguration;
