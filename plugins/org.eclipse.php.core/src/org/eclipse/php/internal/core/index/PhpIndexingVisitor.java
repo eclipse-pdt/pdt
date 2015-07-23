@@ -761,6 +761,12 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			if (idx != -1) {
 				lastSegment = lastSegment.substring(idx + 1);
 			}
+			StringBuilder metadata = new StringBuilder();
+			// Fake occurrenceCount, because we do always need one
+			// when metadata != null to make PhpElementResolver#resolve() happy
+			metadata.append(1);
+			metadata.append(";"); //$NON-NLS-1$
+			metadata.append(fullPath);
 			modifyDeclaration(
 					include,
 					new DeclarationInfo(IModelElement.IMPORT_DECLARATION, 0,
@@ -768,7 +774,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 									- include.sourceStart(), filePath
 									.sourceStart(), filePath.sourceEnd()
 									- filePath.sourceStart(), lastSegment,
-							fullPath, null, null, null));
+							metadata.toString(), null, null, null));
 		}
 
 		return visitGeneral(include);
