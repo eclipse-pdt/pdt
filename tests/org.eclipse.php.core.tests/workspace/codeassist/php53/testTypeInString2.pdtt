@@ -1,0 +1,13 @@
+--TEST--
+Should complete My\NS;
+--FILE--
+<?php
+namespace My\NS {
+  interface testInterface {}
+  class testClass {}
+} 
+namespace OtherNS {
+  $x = "My\|";
+} ?>
+--EXPECT--
+type(My\NS)

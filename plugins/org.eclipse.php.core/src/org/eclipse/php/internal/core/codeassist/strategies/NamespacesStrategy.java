@@ -30,6 +30,7 @@ public class NamespacesStrategy extends GlobalTypesStrategy {
 		super(context, 0, 0);
 	}
 
+	@Deprecated
 	public NamespacesStrategy(ICompletionContext context,
 			boolean addClassInNamespace) {
 		super(context, 0, 0, addClassInNamespace);

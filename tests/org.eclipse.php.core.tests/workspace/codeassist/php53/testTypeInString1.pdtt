@@ -1,0 +1,15 @@
+--TEST--
+Should complete type names
+--FILE--
+<?php
+namespace NS {
+  interface testInterface {}
+  class testClass {}
+}
+namespace OtherNS {
+  $x = "test|";
+}
+?>
+--EXPECT--
+type(testClass)
+type(testInterface)
