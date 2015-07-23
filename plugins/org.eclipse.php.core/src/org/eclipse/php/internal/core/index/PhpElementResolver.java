@@ -105,7 +105,7 @@ public class PhpElementResolver implements IElementResolver {
 
 		case IModelElement.IMPORT_DECLARATION:
 			// XXX: replace with import declaration element
-			return new IncludeField(parentElement, metadata);
+			return new IncludeField(parentElement, metadataToDecode);
 
 		default:
 			Logger.log(Logger.WARNING, PhpElementResolver.class.getName()
