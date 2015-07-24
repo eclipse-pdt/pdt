@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,7 @@ import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 public class PHPSearchActionGroup extends ActionGroup {
 	private OpenSearchDialogAction action;
 	private OccurrencesSearchGroup fOccurrencesGroup;
+	private ReferencesSearchGroup fReferencesGroup;
 	private final PHPStructuredEditor fEditor;
 
 	/**
@@ -44,6 +45,7 @@ public class PHPSearchActionGroup extends ActionGroup {
 
 		action = new OpenSearchDialogAction();
 		fOccurrencesGroup = new OccurrencesSearchGroup(editor);
+		fReferencesGroup = new ReferencesSearchGroup(fEditor);
 	}
 
 	/**
@@ -55,23 +57,25 @@ public class PHPSearchActionGroup extends ActionGroup {
 		fEditor = null;
 		action = new OpenSearchDialogAction();
 		fOccurrencesGroup = new OccurrencesSearchGroup(site);
+		fReferencesGroup = new ReferencesSearchGroup(site);
 	}
 
 	@Override
 	public void setContext(ActionContext context) {
 		fOccurrencesGroup.setContext(context);
+		fReferencesGroup.setContext(context);
 		super.setContext(context);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.actions.ActionGroup#fillActionBars(org.eclipse.ui.IActionBars
-	 * )
+	 * @see org.eclipse.ui.actions.ActionGroup#fillActionBars(org.eclipse.ui.
+	 * IActionBars )
 	 */
 	public void fillActionBars(IActionBars actionBar) {
 		fOccurrencesGroup.fillActionBars(actionBar);
+		fReferencesGroup.fillActionBars(actionBar);
 		super.fillActionBars(actionBar);
 	}
 
@@ -84,18 +88,19 @@ public class PHPSearchActionGroup extends ActionGroup {
 	 */
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
-		if (!PreferenceConstants.getPreferenceStore().getBoolean(
-				PreferenceConstants.SEARCH_USE_REDUCED_MENU)) {
+		if (!PreferenceConstants.getPreferenceStore()
+				.getBoolean(PreferenceConstants.SEARCH_USE_REDUCED_MENU)) {
 			IMenuManager target = menu;
 			IMenuManager searchSubMenu = null;
 			if (fEditor != null) {
 				String groupName = "SearchMessages.group_search"; //$NON-NLS-1$
 				searchSubMenu = new MenuManager(groupName,
 						ITextEditorActionConstants.GROUP_FIND);
-				searchSubMenu.add(new GroupMarker(
-						ITextEditorActionConstants.GROUP_FIND));
+				searchSubMenu.add(
+						new GroupMarker(ITextEditorActionConstants.GROUP_FIND));
 				target = searchSubMenu;
 			}
+			fReferencesGroup.fillContextMenu(target);
 
 			if (searchSubMenu != null) {
 				fOccurrencesGroup.fillContextMenu(target);
@@ -107,6 +112,8 @@ public class PHPSearchActionGroup extends ActionGroup {
 				menu.appendToGroup(ITextEditorActionConstants.GROUP_FIND,
 						searchSubMenu);
 			}
+		} else {
+			fReferencesGroup.fillContextMenu(menu);
 		}
 
 		IContributionItem item = menu.find(IContextMenuConstants.GROUP_OPEN);
@@ -118,6 +125,7 @@ public class PHPSearchActionGroup extends ActionGroup {
 	@Override
 	public void dispose() {
 		fOccurrencesGroup.dispose();
+		fReferencesGroup.dispose();
 		super.dispose();
 	}
 
