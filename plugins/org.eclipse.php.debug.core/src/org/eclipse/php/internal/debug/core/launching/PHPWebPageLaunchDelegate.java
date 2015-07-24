@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
-	private static final String ILAUNCH_LISTENER_EXTENTION_ID = "org.eclipse.php.debug.core.phpLaunchDelegateListener"; //$NON-NLS-1$
+	private static final String LAUNCH_LISTENERS_EXTENSION_ID = "org.eclipse.php.debug.core.phpLaunchDelegateListener"; //$NON-NLS-1$
 	protected Job runDispatch;
 	protected ILaunch launch;
 	protected IDebuggerInitializer debuggerInitializer;
@@ -61,18 +61,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	/*
 	 * list of registered ILaunchDelegateListeners
 	 */
-	List<ILaunchDelegateListener> launchListeners = new ArrayList<ILaunchDelegateListener>();
-
-	/**
-	 * register new a LaunchDelegateListener
-	 * 
-	 * @param listener
-	 *            - ILaunchDelegateListener listener instance
-	 */
-	private void addLaunchDelegateListener(ILaunchDelegateListener listener) {
-		Assert.isNotNull(listener);
-		launchListeners.add(listener);
-	}
+	private List<ILaunchDelegateListener> preLaunchListeners = new ArrayList<ILaunchDelegateListener>();
 
 	/*
 	 * notify all registered ILaunchDelegateListener listeners launch is about
@@ -86,7 +75,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 */
 	protected int notifyPreLaunch(ILaunchConfiguration configuration,
 			String mode, ILaunch launch, IProgressMonitor monitor) {
-		for (ILaunchDelegateListener listener : launchListeners) {
+		for (ILaunchDelegateListener listener : preLaunchListeners) {
 			int returnCode = listener.preLaunch(configuration, mode, launch,
 					monitor);
 			if (returnCode != 0) {
@@ -101,30 +90,27 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 */
 	private void registerLaunchListeners() {
 		IConfigurationElement[] config = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(ILAUNCH_LISTENER_EXTENTION_ID);
+				.getConfigurationElementsFor(LAUNCH_LISTENERS_EXTENSION_ID);
 		try {
 			for (IConfigurationElement e : config) {
-
 				final Object o = e.createExecutableExtension("class"); //$NON-NLS-1$
 				if (o instanceof ILaunchDelegateListener) {
 					ISafeRunnable runnable = new ISafeRunnable() {
-
 						public void run() throws Exception {
 							ILaunchDelegateListener listener = (ILaunchDelegateListener) o;
-							addLaunchDelegateListener(listener);
+							Assert.isNotNull(listener);
+							preLaunchListeners.add(listener);
 						}
 
 						public void handleException(Throwable exception) {
-							System.out.println("One of the" //$NON-NLS-1$
-									+ ILAUNCH_LISTENER_EXTENTION_ID
-									+ "extensions fail"); //$NON-NLS-1$
+							Logger.logException(exception);
 						}
 					};
 					SafeRunner.run(runnable);
 				}
 			}
 		} catch (CoreException ex) {
-			System.out.println(ex.getMessage());
+			Logger.logException(ex);
 		}
 	}
 
@@ -147,10 +133,9 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 */
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
-
-		// notify all listeners of a preLaunch event.
-		int rc = notifyPreLaunch(configuration, mode, launch, monitor);
-		if (rc != 0) { // cancel launch
+		// Notify all listeners of a preLaunch event.
+		int resultCode = notifyPreLaunch(configuration, mode, launch, monitor);
+		if (resultCode != 0) { // cancel launch
 			monitor.setCanceled(true);
 			monitor.done();
 			return; // canceled
@@ -234,7 +219,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			PHPLaunchUtilities
 					.showLaunchErrorMessage(NLS
 							.bind(PHPDebugCoreMessages.WebLaunchConfigurationDelegate_PortInUse,
-									requestPort, server.getName()));
+					requestPort, server.getName()));
 			monitor.setCanceled(true);
 			monitor.done();
 			return;
@@ -265,11 +250,11 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 				public void run() {
 					MessageDialog
 							.openWarning(
-									Display.getDefault().getActiveShell(),
-									PHPDebugCoreMessages.PHPLaunchUtilities_phpLaunchTitle,
-									NLS.bind(
-											PHPDebugCoreMessages.PHPWebPageLaunchDelegate_serverNotFound,
-											new String[] { serverName }));
+							Display.getDefault().getActiveShell(),
+							PHPDebugCoreMessages.PHPLaunchUtilities_phpLaunchTitle,
+							NLS.bind(
+									PHPDebugCoreMessages.PHPWebPageLaunchDelegate_serverNotFound,
+									new String[] { serverName }));
 					PHPLaunchUtilities.openLaunchConfigurationDialog(
 							configuration, mode);
 				}

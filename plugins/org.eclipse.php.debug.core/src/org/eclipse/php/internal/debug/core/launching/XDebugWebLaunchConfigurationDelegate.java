@@ -11,16 +11,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.launching;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.debug.core.debugger.launching.ILaunchDelegateListener;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.*;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
@@ -46,9 +47,26 @@ import org.eclipse.swt.widgets.Display;
 public class XDebugWebLaunchConfigurationDelegate extends
 		LaunchConfigurationDelegate {
 
+	private static final String LAUNCH_LISTENERS_EXTENSION_ID = "org.eclipse.php.debug.core.phpLaunchDelegateListener"; //$NON-NLS-1$
+
+	/*
+	 * list of registered ILaunchDelegateListeners
+	 */
+	private List<ILaunchDelegateListener> preLaunchListeners = new ArrayList<ILaunchDelegateListener>();
+
+	public XDebugWebLaunchConfigurationDelegate() {
+		registerLaunchListeners();
+	}
+
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
-		String debuggerId = XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID;
+		// Notify all listeners of a pre-launch event.
+		int resultCode = notifyPreLaunch(configuration, mode, launch, monitor);
+		if (resultCode != 0) { // cancel launch
+			monitor.setCanceled(true);
+			monitor.done();
+			return; // canceled
+		}
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 			if (XDebugLaunchListener.getInstance().isWebLaunchActive()) {
 				displayErrorMessage(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_0);
@@ -121,7 +139,7 @@ public class XDebugWebLaunchConfigurationDelegate extends
 				ideKey = proxyHandler.getCurrentIdeKey();
 				if (proxyHandler.registerWithProxy() == false) {
 					displayErrorMessage(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_2
-							+ proxyHandler.getErrorMsg());
+									+ proxyHandler.getErrorMsg());
 					DebugPlugin.getDefault().getLaunchManager()
 							.removeLaunch(launch);
 					return;
@@ -156,7 +174,7 @@ public class XDebugWebLaunchConfigurationDelegate extends
 				PHPLaunchUtilities
 						.showLaunchErrorMessage(NLS
 								.bind(PHPDebugCoreMessages.WebLaunchConfigurationDelegate_PortInUse,
-										requestPort, server.getName()));
+						requestPort, server.getName()));
 				monitor.setCanceled(true);
 				monitor.done();
 				return;
@@ -251,6 +269,47 @@ public class XDebugWebLaunchConfigurationDelegate extends
 						PHPDebugCoreMessages.XDebugMessage_debugError, message);
 			}
 		});
+	}
+
+	protected int notifyPreLaunch(ILaunchConfiguration configuration,
+			String mode, ILaunch launch, IProgressMonitor monitor) {
+		for (ILaunchDelegateListener listener : preLaunchListeners) {
+			int returnCode = listener.preLaunch(configuration, mode, launch,
+					monitor);
+			if (returnCode != 0) {
+				return returnCode;
+			}
+		}
+		return 0;
+	}
+
+	/**
+	 * Registers all pre-launch listeners.
+	 */
+	private void registerLaunchListeners() {
+		IConfigurationElement[] config = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(LAUNCH_LISTENERS_EXTENSION_ID);
+		try {
+			for (IConfigurationElement e : config) {
+				final Object o = e.createExecutableExtension("class"); //$NON-NLS-1$
+				if (o instanceof ILaunchDelegateListener) {
+					ISafeRunnable runnable = new ISafeRunnable() {
+						public void run() throws Exception {
+							ILaunchDelegateListener listener = (ILaunchDelegateListener) o;
+							Assert.isNotNull(listener);
+							preLaunchListeners.add(listener);
+						}
+
+						public void handleException(Throwable exception) {
+							Logger.logException(exception);
+						}
+					};
+					SafeRunner.run(runnable);
+				}
+			}
+		} catch (CoreException ex) {
+			Logger.logException(ex);
+		}
 	}
 
 }
