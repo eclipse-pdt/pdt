@@ -751,6 +751,10 @@
              	</reference>
              </enabledWhen>
        </handler>
+        <handler
+            class="org.eclipse.php.internal.ui.actions.InsertVarCommentAction"
+            commandId="org.eclipse.php.ui.insertVarComment">
+        </handler>
 	</extension>
 
 	<!--Adapters:-->
@@ -1068,6 +1072,11 @@
 						<reference definitionId="org.eclipse.php.ui.phpContentType.definition"></reference>
 					</visibleWhen>
 				</command>
+				<command commandId="org.eclipse.php.ui.insertVarComment" id="InsertVarComment" style="push">
+					<visibleWhen checkEnabled="false">
+						<reference definitionId="org.eclipse.php.ui.phpContentType.definition"></reference>
+					</visibleWhen>
+				</command>
 				<separator name="format" visible="true"></separator>
 		</menuContribution>
 	    <menuContribution
@@ -1185,6 +1194,13 @@
             description="%command.newWizard.description"
             id="org.eclipse.php.ui.newWizard"
             name="%command.newWizard.name">
+      </command>
+
+      <command
+            categoryId="org.eclipse.php.ui.category.source"
+		    name="%command.insertVarComment.name"
+		    description="%commandDefinition.insertVarComment.description"
+			id="org.eclipse.php.ui.insertVarComment">
       </command>
       
 <!-- edit -->
@@ -2517,5 +2533,13 @@
             class="org.eclipse.dltk.internal.ui.filters.ImportDeclarationFilter"
             id="org.eclipse.php.ui.navigator.filtersr.ImportDeclarationFilter" />
  	</extension>
+ 
+	<extension point="org.eclipse.php.ui.quickAssistProcessors">
+		<quickAssistProcessor
+			id="org.eclipse.php.ui.quickassist.varCommentQuickAssistProcessor"
+			name="%varCommentQuickAssistProcessor.name"
+			class="org.eclipse.php.internal.ui.quickassist.VarCommentQuickAssistProcessor">
+		</quickAssistProcessor>
+	</extension>
  
 </plugin>
