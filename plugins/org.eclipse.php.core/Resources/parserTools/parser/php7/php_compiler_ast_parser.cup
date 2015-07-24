@@ -242,6 +242,7 @@ non terminal Statement new_else_single;
 non terminal List parameter_list;
 non terminal List lexical_vars;
 non terminal List lexical_var_list;
+non terminal Expression lexical_var;
 non terminal List non_empty_parameter_list;
 non terminal FormalParameter parameter;
 non terminal PHPCallArgumentsList function_call_parameter_list;
@@ -255,6 +256,7 @@ non terminal Boolean is_reference;
 non terminal List echo_expr_list;
 non terminal List for_expr;
 non terminal List non_empty_for_expr;
+non terminal Expression argument;
 non terminal Expression expr_without_variable;
 non terminal Expression function_call;
 non terminal Expression exit_expr;
@@ -353,7 +355,7 @@ non terminal CompilerAstParser.ModifierDocPair non_empty_trait_modifiers;
 
 non terminal Expression chain_instance_call;
 non terminal ClassInstanceCreation new_expr;
-
+non terminal ClassDeclaration anonymous_class;
 
 //php5.5
 non terminal FinallyClause finally_clause;
@@ -362,7 +364,6 @@ non terminal ListVariable list_variable;
 non terminal Expression foreach_expr;
 non terminal Expression foreach_value;
 
-non terminal Expression yield_arg;
 non terminal YieldExpression yield_expr;
 
 non terminal ArrayCreation array_creation;
@@ -390,6 +391,8 @@ precedence left T_OR;
 precedence left T_KOVA;
 precedence left T_REFERENCE;
 precedence left T_ELLIPSIS;
+precedence right T_YIELD;
+precedence right T_DOUBLE_ARROW;
 precedence right T_YIELD_FROM;
 
 precedence nonassoc T_IS_EQUAL,T_IS_NOT_EQUAL,T_IS_IDENTICAL,T_IS_NOT_IDENTICAL;
@@ -1810,43 +1813,14 @@ non_empty_function_call_parameter_list:paramsList
 ;
 
 non_empty_function_call_parameter_list ::=
-expr_without_variable:var
+argument:argument
 {:
 	PHPCallArgumentsList paramsList = new PHPCallArgumentsList();
-	paramsList.addNode(var);
+	paramsList.addNode(argument);
 	RESULT = paramsList;
 :}
 
-| variable:var
-{:
-	PHPCallArgumentsList paramsList = new PHPCallArgumentsList();
-	paramsList.addNode(var);
-	RESULT = paramsList;
-:}
-
-| T_ELLIPSIS:ell variable:var
-{:
-	PHPCallArgumentsList paramsList = new PHPCallArgumentsList();
-	paramsList.addNode(new PrefixExpression(ellleft, varright, var, PrefixExpression.OP_UNPACK));
-	RESULT = paramsList;
-:}
-
-| T_ELLIPSIS:ell expr_without_variable:var
-{:
-	PHPCallArgumentsList paramsList = new PHPCallArgumentsList();
-	paramsList.addNode(new PrefixExpression(ellleft, varright, var, PrefixExpression.OP_UNPACK));
-	RESULT = paramsList;
-:}
-
-| T_REFERENCE:start w_variable:var
-{:
-	PHPCallArgumentsList paramsList = new PHPCallArgumentsList();
-	Expression var_ref = new ReferenceExpression(startleft, varright, var);
-	paramsList.addNode(var_ref);
-	RESULT = paramsList;
-:}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA expr_without_variable:var
+| non_empty_function_call_parameter_list:paramsList T_COMMA argument:var
 {:
 	paramsList.addNode(var);
 	if (paramsList.getChilds().size() > 1){
@@ -1860,48 +1834,16 @@ expr_without_variable:var
     }
 	RESULT = paramsList;
 :}
+;
 
-| non_empty_function_call_parameter_list:paramsList T_COMMA variable:var
+argument ::=
+expr:expr
 {:
-	paramsList.addNode(var);
-	if (paramsList.getChilds().size() > 1){
-    	ASTNode previousNode = paramsList.getChilds().get((paramsList.getChilds().size() - 2));
-    	if (!(var instanceof PrefixExpression) && previousNode instanceof PrefixExpression){
-    		PrefixExpression pExpression = (PrefixExpression) previousNode;
-    		if (pExpression.getOperatorType() == PrefixExpression.OP_UNPACK){
-    			parser.reportError(new ASTError(var.start(), var.end()), "Cannot use positional argument after argument unpacking");
-    		}
-    	}
-    }
-	RESULT = paramsList;
+	RESULT = expr;
 :}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA T_ELLIPSIS:ell variable:var
+| T_ELLIPSIS:ell expr:expr
 {:
-	paramsList.addNode(new PrefixExpression(ellleft, varright, var, PrefixExpression.OP_UNPACK));
-	RESULT = paramsList;
-:}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA T_ELLIPSIS:ell expr_without_variable:var
-{:
-	paramsList.addNode(new PrefixExpression(ellleft, varright, var, PrefixExpression.OP_UNPACK));
-	RESULT = paramsList;
-:}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA T_REFERENCE:start w_variable:var
-{:
-	Expression var_ref = new ReferenceExpression(startleft, varright, var);
-	paramsList.addNode(var_ref);
-	if (paramsList.getChilds().size() > 1){
-    	ASTNode previousNode = paramsList.getChilds().get((paramsList.getChilds().size() - 2));
-    	if (!(var instanceof PrefixExpression) && previousNode instanceof PrefixExpression){
-    		PrefixExpression pExpression = (PrefixExpression) previousNode;
-    		if (pExpression.getOperatorType() == PrefixExpression.OP_UNPACK){
-    			parser.reportError(new ASTError(var_ref.start(), var_ref.end()), "Cannot use positional argument after argument unpacking");
-    		}
-    	}
-    }
-	RESULT = paramsList;
+	RESULT = new PrefixExpression(ellleft, exprright, expr, PrefixExpression.OP_UNPACK);
 :}
 ;
 
@@ -2512,6 +2454,19 @@ for_expr ::=
 :}
 ;
 
+anonymous_class ::=
+T_CLASS:tclass ctor_arguments:ctor extends_from:superClass implements_list:interfaces T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEnd
+{:	
+	ClassDeclaration classDeclaration = new ClassDeclaration(blockStartleft ,blockEndright,
+			0, 0, 0, "anonymous", null, null, new Block(blockStartleft,blockEndright,null), null);
+
+	//classDeclaration.setRecovered(true);
+	parser.addDeclarationStatement(classDeclaration);
+	parser.declarations.push(classDeclaration);
+	RESULT = classDeclaration;
+:}
+;
+
 new_expr ::=
 T_NEW:start class_name_reference:className ctor_arguments:ctor
 {:
@@ -2521,6 +2476,10 @@ T_NEW:start class_name_reference:className ctor_arguments:ctor
 	}
 	ClassInstanceCreation classInstanceCreation = new ClassInstanceCreation(startleft, ctorright, className, ctor);
 	RESULT = classInstanceCreation;
+:}
+| T_NEW:start anonymous_class:ac
+{:
+	RESULT = new ClassInstanceCreation(startleft, acright, new Scalar(0, 0, "test", Scalar.TYPE_STRING), new CallArgumentsList());
 :}
 ;
 
@@ -2983,31 +2942,29 @@ lexical_vars ::=
 ;
 
 lexical_var_list ::=
-lexical_var_list:list T_COMMA T_VARIABLE:var
+lexical_var_list:list T_COMMA lexical_var:var
 {:
-	VariableReference v = new VariableReference(varleft, varright, var);
-	list.add(v);
+	list.add(var);
 	RESULT = list;
 :}
 
-| lexical_var_list:list T_COMMA T_REFERENCE:ref T_VARIABLE:var
-{:
-	list.add(new ReferenceExpression (refleft, varright, new VariableReference(varleft, varright, var)));
-	RESULT = list;
-:}
-
-| T_VARIABLE:var
+| lexical_var:var
 {:
 	List list = new LinkedList();
-	list.add(new VariableReference(varleft, varright, var));
+	list.add(var);
 	RESULT = list;
+:}
+;
+
+lexical_var ::=
+T_VARIABLE:var
+{:
+	RESULT = new VariableReference(varleft, varright, var);
 :}
 
 | T_REFERENCE:ref T_VARIABLE:var
 {:
-	List list = new LinkedList();
-	list.add(new ReferenceExpression (refleft, varright, new VariableReference(varleft, varright, var)));
-	RESULT = list;
+	RESULT = new ReferenceExpression(refleft, varright, new VariableReference(varleft, varright, var));
 :}
 ;
 
@@ -4316,34 +4273,23 @@ T_STRING:value
 {: RESULT = value; :}
 ;
 
-yield_arg ::=
-variable:expr
-{:
-	RESULT = expr;
-:}
-| expr_without_variable:expr
-{:
-	RESULT = expr;
-:}
-;
-
 yield_expr ::=
 T_YIELD:token
 {:
 	RESULT = new YieldExpression(tokenleft, tokenright);
 :}
 
-| T_YIELD:token yield_arg:expr
+| T_YIELD:token expr:expr
 {:
 	RESULT = new YieldExpression(tokenleft, exprright, expr);
 :}
 
-| T_YIELD:token yield_arg:key T_DOUBLE_ARROW yield_arg:expr
+| T_YIELD:token expr:key T_DOUBLE_ARROW expr:expr
 {:
 	RESULT = new YieldExpression(tokenleft, exprright, key,  expr);
 :}
 
-| T_YIELD_FROM:token yield_arg:expr
+| T_YIELD_FROM:token expr:expr
 {:
 	RESULT = new YieldExpression(tokenleft, exprright, expr, YieldExpression.OP_FROM);
 :}
