@@ -211,6 +211,10 @@ public abstract class AbstractVisitor implements Visitor {
 		return true;
 	}
 
+	public boolean visit(AnonymousClassDeclaration anonymousClassDeclaration) {
+		return true;
+	}
+
 	public boolean visit(ListVariable listVariable) {
 		return true;
 	}
@@ -451,6 +455,9 @@ public abstract class AbstractVisitor implements Visitor {
 	}
 
 	public void endVisit(LambdaFunctionDeclaration lambdaFunctionDeclaration) {
+	}
+
+	public void endVisit(AnonymousClassDeclaration anonymousClassDeclaration) {
 	}
 
 	public void endVisit(ListVariable listVariable) {

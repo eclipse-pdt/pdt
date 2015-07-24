@@ -489,6 +489,11 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	public boolean endvisit(AnonymousClassDeclaration s) throws Exception {
+		xmlWriter.endTag("AnonymousClassDeclaration"); //$NON-NLS-1$
+		return true;
+	}
+
 	public boolean visit(ArrayCreation s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ArrayCreation", parameters); //$NON-NLS-1$
@@ -1111,6 +1116,27 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 		s.getBody().traverse(this);
 
+		return false;
+	}
+
+	public boolean visit(AnonymousClassDeclaration s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("AnonymousClassDeclaration", parameters); //$NON-NLS-1$
+		if (s.getSuperClass() != null) {
+			xmlWriter.startTag("SuperClass", new HashMap<String, String>()); //$NON-NLS-1$
+			s.getSuperClass().traverse(this);
+			xmlWriter.endTag("SuperClass"); //$NON-NLS-1$
+		}
+		if (s.getInterfaceList() != null) {
+			xmlWriter.startTag("Interfaces", new HashMap<String, String>()); //$NON-NLS-1$
+			for (TypeReference interfacee : s.getInterfaceList()) {
+				interfacee.traverse(this);
+			}
+			xmlWriter.endTag("Interfaces"); //$NON-NLS-1$
+		}
+		xmlWriter.startTag("Body", new HashMap<String, String>()); //$NON-NLS-1$
+		s.getBody().traverse(this);
+		xmlWriter.endTag("Body"); //$NON-NLS-1$
 		return false;
 	}
 

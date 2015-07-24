@@ -15,11 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-import java_cup.runtime.Scanner;
-import java_cup.runtime.Symbol;
-import java_cup.runtime.SymbolFactory;
-import java_cup.runtime.lr_parser;
-
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.statements.Block;
@@ -29,6 +24,11 @@ import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+
+import java_cup.runtime.Scanner;
+import java_cup.runtime.Symbol;
+import java_cup.runtime.SymbolFactory;
+import java_cup.runtime.lr_parser;
 
 abstract public class AbstractASTParser extends lr_parser {
 
@@ -89,7 +89,8 @@ abstract public class AbstractASTParser extends lr_parser {
 	}
 
 	protected void reportError(IProblemReporter problemReporter,
-			String fileName, int start, int end, int lineNumber, String message) {
+			String fileName, int start, int end, int lineNumber,
+			String message) {
 		DefaultProblem problem = new DefaultProblem(fileName, message,
 				PhpProblemIdentifier.SYNTAX, new String[0],
 				ProblemSeverities.Error, start, end, lineNumber, -1);
@@ -220,13 +221,14 @@ abstract public class AbstractASTParser extends lr_parser {
 
 		// current token can be either null, string or phpdoc - according to
 		// this resolve:
-		String currentText = cur_token.value instanceof String ? (String) cur_token.value
-				: null;
+		String currentText = cur_token.value instanceof String
+				? (String) cur_token.value : null;
 		if (currentText == null || currentText.length() == 0) {
 			currentText = getTokenName(cur_token.sym);
 		}
 		if (currentText != null && currentText.length() > 0) {
-			if (currentText.equals(";")) { // This means EOF, since it's //$NON-NLS-1$
+			if (currentText.equals(";")) { // This means EOF, //$NON-NLS-1$
+											// since it's
 				// substituted by the lexer
 				// explicitly.
 				currentText = "EOF"; //$NON-NLS-1$
@@ -259,7 +261,9 @@ abstract public class AbstractASTParser extends lr_parser {
 
 	public void report_fatal_error(String message, Object info)
 			throws java.lang.Exception {
-		/* stop parsing (not really necessary since we throw an exception, but) */
+		/*
+		 * stop parsing (not really necessary since we throw an exception, but)
+		 */
 		done_parsing();
 
 		/* use the normal error message reporting to put out the message */
@@ -275,7 +279,8 @@ abstract public class AbstractASTParser extends lr_parser {
 						&& !metUnbracketedNSDecl) {
 					boolean justDeclarationNodes = true;
 					for (Object statement : program.getStatements()) {
-						if (((Statement) statement).getKind() != ASTNodeKinds.DECLARE_STATEMENT) {
+						if (((Statement) statement)
+								.getKind() != ASTNodeKinds.DECLARE_STATEMENT) {
 							justDeclarationNodes = false;
 							break;
 						}
@@ -299,6 +304,8 @@ abstract public class AbstractASTParser extends lr_parser {
 			block = ((MethodDeclaration) node).getBody();
 		} else if (node instanceof Block) {
 			block = (Block) node;
+		} else if (node instanceof AnonymousClassDeclaration) {
+			block = ((AnonymousClassDeclaration) node).getBody();
 		}
 		if (block == null) {
 			return;

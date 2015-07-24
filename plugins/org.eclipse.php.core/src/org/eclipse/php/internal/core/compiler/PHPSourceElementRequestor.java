@@ -141,6 +141,22 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
+	public boolean endvisit(AnonymousClassDeclaration anonymousClassDeclaration)
+			throws Exception {
+
+		// methodGlobalVars.pop();
+		this.fInClass = false;
+
+		if (!fNodes.isEmpty() && fNodes.peek() == anonymousClassDeclaration) {
+			fRequestor.exitType(anonymousClassDeclaration.sourceEnd() - 1);
+			fNodes.pop();
+		}
+		for (PHPSourceElementRequestorExtension visitor : extensions) {
+			visitor.endvisit(anonymousClassDeclaration);
+		}
+		return true;
+	}
+
 	public boolean endvisit(MethodDeclaration method) throws Exception {
 		methodGlobalVars.pop();
 		declarations.pop();
@@ -249,6 +265,77 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			fRequestor.enterField(info);
 			fRequestor.exitField(arg.sourceEnd() - 1);
 		}
+
+		return true;
+	}
+
+	public boolean visit(AnonymousClassDeclaration anonymousClassDeclaration)
+			throws Exception {
+
+		fNodes.push(anonymousClassDeclaration);
+		// methodGlobalVars.add(new HashSet<String>());
+
+		// Declaration parentDeclaration = null;
+		// if (!declarations.empty()
+		// && declarations.peek() instanceof MethodDeclaration) {
+		// parentDeclaration = declarations.peek();
+		// // In case we are entering a nested element - just add to the
+		// // deferred list and get out of the nested element visiting process
+		// deferredDeclarations.add(lambdaMethod);
+		// return visitGeneral(lambdaMethod);
+		// }
+
+		// Collection<FormalParameter> arguments = lambdaMethod.getArguments();
+		// StringBuilder metadata = new StringBuilder();
+		// String[] parameters;
+		// if (arguments != null) {
+		// parameters = new String[arguments.size()];
+		// Iterator<FormalParameter> i = arguments.iterator();
+		// int indx = 0;
+		// while (i.hasNext()) {
+		// Argument arg = (Argument) i.next();
+		// metadata.append(arg.getName());
+		// parameters[indx] = arg.getName();
+		// indx++;
+		// if (i.hasNext()) {
+		// metadata.append(","); //$NON-NLS-1$
+		// }
+		// }
+		// } else {
+		// parameters = new String[0];
+		// }
+
+		// Add method declaration:
+		for (PHPSourceElementRequestorExtension visitor : extensions) {
+			visitor.visit(anonymousClassDeclaration);
+		}
+
+		ISourceElementRequestor.TypeInfo mi = new ISourceElementRequestor.TypeInfo();
+		// mi.parameterNames = parameters;
+		mi.name = PHPCoreConstants.ANONYMOUS;
+		mi.modifiers = Modifiers.AccPublic;
+		// if (lambdaMethod.isStatic()) {
+		// mi.modifiers |= Modifiers.AccStatic;
+		// }
+		mi.nameSourceStart = anonymousClassDeclaration.sourceStart();
+		mi.nameSourceEnd = anonymousClassDeclaration.sourceEnd();
+		mi.declarationStart = mi.nameSourceStart;
+		// mi.isConstructor = false;
+
+		this.fRequestor.enterType(mi);
+		this.fInClass = true;
+
+		// for (Argument arg : arguments) {
+		// ISourceElementRequestor.FieldInfo info = new
+		// ISourceElementRequestor.FieldInfo();
+		// info.name = arg.getName();
+		// info.modifiers = Modifiers.AccPublic;
+		// info.nameSourceStart = arg.getNameStart();
+		// info.nameSourceEnd = arg.getNameEnd() - 1;
+		// info.declarationStart = arg.sourceStart();
+		// fRequestor.enterField(info);
+		// fRequestor.exitField(arg.sourceEnd() - 1);
+		// }
 
 		return true;
 	}
@@ -1042,6 +1129,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (node instanceof LambdaFunctionDeclaration) {
 			return visit((LambdaFunctionDeclaration) node);
 		}
+		if (node instanceof AnonymousClassDeclaration) {
+			return visit((AnonymousClassDeclaration) node);
+		}
 		return true;
 	}
 
@@ -1057,6 +1147,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		if (node instanceof LambdaFunctionDeclaration) {
 			return endvisit((LambdaFunctionDeclaration) node);
+		}
+		if (node instanceof AnonymousClassDeclaration) {
+			return endvisit((AnonymousClassDeclaration) node);
 		}
 		return true;
 	}

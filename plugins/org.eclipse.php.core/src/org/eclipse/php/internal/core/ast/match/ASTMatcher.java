@@ -1019,6 +1019,17 @@ public class ASTMatcher {
 				&& safeSubtreeMatch(node.getReturnType(), o.getReturnType()));
 	}
 
+	public boolean match(AnonymousClassDeclaration node, Object other) {
+		if (!(other instanceof AnonymousClassDeclaration)) {
+			return false;
+		}
+		AnonymousClassDeclaration o = (AnonymousClassDeclaration) other;
+
+		return (safeSubtreeMatch(node.getBody(), o.getBody())
+				&& safeSubtreeListMatch(node.getInterfaces(), o.getInterfaces())
+				&& safeSubtreeMatch(node.getSuperClass(), o.getSuperClass()));
+	}
+
 	public boolean match(TraitUseStatement node, Object other) {
 		if (!(other instanceof TraitUseStatement)) {
 			return false;
