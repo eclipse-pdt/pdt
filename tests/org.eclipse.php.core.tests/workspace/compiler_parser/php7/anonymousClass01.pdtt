@@ -1,0 +1,51 @@
+--TEST--
+Test anonymous class
+--FILE--
+<?php
+new class($var) extends SuperClass01 implements Interface01, Interface02 {
+	const TEST = 1;
+	protected $field;
+	private function function_name($param) {
+	}
+};
+--EXPECT--
+<ModuleDeclaration start="0" end="165">
+	<ExpressionStatement start="6" end="164">
+		<ClassInstanceCreation start="6" end="163">
+			<PHPCallArgumentsList start="16" end="20">
+				<VariableReference start="16" end="20" name="$var">
+				</VariableReference>
+			</PHPCallArgumentsList>
+			<AnonymousClassDeclaration start="22" end="163">
+				<SuperClass>
+					<FullyQualifiedReference start="30" end="42" name="SuperClass01">
+					</FullyQualifiedReference>
+				</SuperClass>
+				<Interfaces>
+					<FullyQualifiedReference start="54" end="65" name="Interface01">
+					</FullyQualifiedReference>
+					<FullyQualifiedReference start="67" end="78" name="Interface02">
+					</FullyQualifiedReference>
+				</Interfaces>
+				<Body>
+					<ConstantDeclaration start="82" end="96" modifiers="">
+						<ConstantReference start="88" end="92" name="TEST">
+						</ConstantReference>
+						<Scalar start="95" end="96" type="int" value="1">
+						</Scalar>
+					</ConstantDeclaration>
+					<PHPFieldDeclaration start="109" end="115" modifiers="protected">
+						<SimpleReference start="109" end="115" name="$field">
+						</SimpleReference>
+					</PHPFieldDeclaration>
+					<PHPMethodDeclaration start="118" end="161" modifiers="private" name="function_name">
+						<FormalParameter start="149" end="155" modifiers="" isMandatory="true">
+							<VariableReference start="149" end="155" name="$param">
+							</VariableReference>
+						</FormalParameter>
+					</PHPMethodDeclaration>
+				</Body>
+			</AnonymousClassDeclaration>
+		</ClassInstanceCreation>
+	</ExpressionStatement>
+</ModuleDeclaration>

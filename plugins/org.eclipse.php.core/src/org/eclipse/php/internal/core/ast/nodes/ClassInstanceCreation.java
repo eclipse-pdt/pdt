@@ -23,27 +23,32 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  * Represents a class instantiation. This class holds the class name as an
  * expression and array of constructor parameters
  * 
- * <pre>e.g.
+ * e.g.
  * 
  * <pre>
  * new MyClass(),
  * new $a('start'),
  * new foo()(1, $a)
+ * </pre>
  */
 public class ClassInstanceCreation extends VariableBase {
 
 	private ClassName className;
 	private ASTNode.NodeList<Expression> ctorParams = new ASTNode.NodeList<Expression>(
 			CTOR_PARAMS_PROPERTY);
+	private AnonymousClassDeclaration anonymousClassDeclaration;
 	/**
 	 * The structural property of this node type.
 	 */
 	public static final ChildPropertyDescriptor CLASSNAME_PROPERTY = new ChildPropertyDescriptor(
-			ClassInstanceCreation.class,
-			"className", ClassName.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+			ClassInstanceCreation.class, "className", ClassName.class, //$NON-NLS-1$
+			MANDATORY, CYCLE_RISK);
 	public static final ChildListPropertyDescriptor CTOR_PARAMS_PROPERTY = new ChildListPropertyDescriptor(
-			ClassInstanceCreation.class,
-			"ctorParams", Expression.class, CYCLE_RISK); //$NON-NLS-1$
+			ClassInstanceCreation.class, "ctorParams", Expression.class, //$NON-NLS-1$
+			CYCLE_RISK);
+	public static final ChildPropertyDescriptor ANONYMOUS_CLASS_PROPERTY = new ChildPropertyDescriptor(
+			ClassInstanceCreation.class, "anonymousClass", //$NON-NLS-1$
+			AnonymousClassDeclaration.class, OPTIONAL, CYCLE_RISK);
 
 	/**
 	 * A list of property descriptors (element type:
@@ -53,9 +58,10 @@ public class ClassInstanceCreation extends VariableBase {
 
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
-				2);
+				3);
 		propertyList.add(CLASSNAME_PROPERTY);
 		propertyList.add(CTOR_PARAMS_PROPERTY);
+		propertyList.add(ANONYMOUS_CLASS_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
@@ -67,6 +73,20 @@ public class ClassInstanceCreation extends VariableBase {
 		}
 
 		setClassName(className);
+		for (Expression expression : ctorParams) {
+			this.ctorParams.add(expression);
+		}
+	}
+
+	public ClassInstanceCreation(int start, int end, AST ast,
+			AnonymousClassDeclaration anonymousClassDeclaration,
+			Expression[] ctorParams) {
+		super(start, end, ast);
+		if (anonymousClassDeclaration == null || ctorParams == null) {
+			throw new IllegalArgumentException();
+		}
+
+		setAnonymousClassDeclaration(anonymousClassDeclaration);
 		for (Expression expression : ctorParams) {
 			this.ctorParams.add(expression);
 		}
@@ -86,40 +106,56 @@ public class ClassInstanceCreation extends VariableBase {
 
 	public ClassInstanceCreation(int start, int end, AST ast,
 			ClassName className, List ctorParams) {
-		this(start, end, ast, className, ctorParams == null ? null
-				: (Expression[]) ctorParams.toArray(new Expression[ctorParams
-						.size()]));
+		this(start, end, ast, className,
+				ctorParams == null ? null
+						: (Expression[]) ctorParams
+								.toArray(new Expression[ctorParams.size()]));
+	}
+
+	public ClassInstanceCreation(int start, int end, AST ast,
+			AnonymousClassDeclaration anonymousClassDeclaration,
+			List ctorParams) {
+		this(start, end, ast, anonymousClassDeclaration,
+				ctorParams == null ? null
+						: (Expression[]) ctorParams
+								.toArray(new Expression[ctorParams.size()]));
 	}
 
 	public void childrenAccept(Visitor visitor) {
-		className.accept(visitor);
+		if (className != null) {
+			className.accept(visitor);
+		}
 		for (ASTNode node : this.ctorParams) {
 			node.accept(visitor);
 		}
-		// if (chainingInstanceCall != null) {
-		// chainingInstanceCall.accept(visitor);
-		// }
+		if (anonymousClassDeclaration != null) {
+			anonymousClassDeclaration.childrenAccept(visitor);
+		}
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		className.traverseTopDown(visitor);
+		if (className != null) {
+			className.traverseTopDown(visitor);
+		}
 		for (ASTNode node : this.ctorParams) {
 			node.traverseTopDown(visitor);
 		}
-		// if (chainingInstanceCall != null) {
-		// chainingInstanceCall.traverseTopDown(visitor);
-		// }
+		if (anonymousClassDeclaration != null) {
+			anonymousClassDeclaration.traverseTopDown(visitor);
+		}
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		className.traverseBottomUp(visitor);
+		if (className != null) {
+			className.traverseBottomUp(visitor);
+		}
 		for (ASTNode node : this.ctorParams) {
 			node.traverseBottomUp(visitor);
 		}
-		// if (chainingInstanceCall != null) {
-		// chainingInstanceCall.traverseBottomUp(visitor);
-		// }
+		if (anonymousClassDeclaration != null) {
+			anonymousClassDeclaration.traverseBottomUp(visitor);
+		}
 		accept(visitor);
 	}
 
@@ -127,17 +163,20 @@ public class ClassInstanceCreation extends VariableBase {
 		buffer.append(tab).append("<ClassInstanceCreation"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(">\n"); //$NON-NLS-1$
-		className.toString(buffer, TAB + tab);
-		buffer.append("\n").append(TAB).append(tab).append("<ConstructorParameters>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (className != null) {
+			className.toString(buffer, TAB + tab);
+		}
+		buffer.append("\n").append(TAB).append(tab) //$NON-NLS-1$
+				.append("<ConstructorParameters>\n"); //$NON-NLS-1$
 		for (ASTNode node : this.ctorParams) {
 			node.toString(buffer, TAB + TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(TAB).append(tab).append("</ConstructorParameters>\n"); //$NON-NLS-1$
-		// if (chainingInstanceCall != null) {
-		// chainingInstanceCall.toString(buffer, TAB + tab);
-		//			buffer.append("\n"); //$NON-NLS-1$
-		// }
+		if (getAnonymousClassDeclaration() != null) {
+			getAnonymousClassDeclaration().toString(buffer, TAB + tab);
+			buffer.append("\n"); //$NON-NLS-1$
+		}
 		buffer.append(tab).append("</ClassInstanceCreation>"); //$NON-NLS-1$
 	}
 
@@ -177,6 +216,23 @@ public class ClassInstanceCreation extends VariableBase {
 		postReplaceChild(oldChild, classname, CLASSNAME_PROPERTY);
 	}
 
+	public AnonymousClassDeclaration getAnonymousClassDeclaration() {
+		return anonymousClassDeclaration;
+	}
+
+	public void setAnonymousClassDeclaration(
+			AnonymousClassDeclaration anonymousClassDeclaration) {
+		if (anonymousClassDeclaration == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.anonymousClassDeclaration;
+		preReplaceChild(oldChild, anonymousClassDeclaration,
+				ANONYMOUS_CLASS_PROPERTY);
+		this.anonymousClassDeclaration = anonymousClassDeclaration;
+		postReplaceChild(oldChild, anonymousClassDeclaration,
+				ANONYMOUS_CLASS_PROPERTY);
+	}
+
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
 			boolean get, ASTNode child) {
 		if (property == CLASSNAME_PROPERTY) {
@@ -184,6 +240,14 @@ public class ClassInstanceCreation extends VariableBase {
 				return getClassName();
 			} else {
 				setClassName((ClassName) child);
+				return null;
+			}
+		}
+		if (property == ANONYMOUS_CLASS_PROPERTY) {
+			if (get) {
+				return getAnonymousClassDeclaration();
+			} else {
+				setAnonymousClassDeclaration((AnonymousClassDeclaration) child);
 				return null;
 			}
 		}
@@ -226,10 +290,16 @@ public class ClassInstanceCreation extends VariableBase {
 	@Override
 	ASTNode clone0(AST target) {
 		final List params = ASTNode.copySubtrees(target, ctorParams());
+
+		if (getAnonymousClassDeclaration() != null) {
+			AnonymousClassDeclaration acd = ASTNode.copySubtree(target,
+					getAnonymousClassDeclaration());
+			return new ClassInstanceCreation(this.getStart(), this.getEnd(),
+					target, acd, params);
+		}
 		final ClassName cn = ASTNode.copySubtree(target, getClassName());
-		final ClassInstanceCreation result = new ClassInstanceCreation(
-				this.getStart(), this.getEnd(), target, cn, params);
-		return result;
+		return new ClassInstanceCreation(this.getStart(), this.getEnd(), target,
+				cn, params);
 	}
 
 	public ClassInstanceCreation cloneWithNewStart(int offset) {

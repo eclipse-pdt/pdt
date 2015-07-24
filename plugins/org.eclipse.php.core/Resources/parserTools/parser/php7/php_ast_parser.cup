@@ -260,6 +260,7 @@ non terminal Statement new_else_single;
 non terminal List parameter_list;
 non terminal List lexical_vars;
 non terminal List lexical_var_list;
+non terminal Expression lexical_var;
 non terminal List non_empty_parameter_list;
 non terminal FormalParameter parameter;
 non terminal List function_call_parameter_list;
@@ -273,6 +274,7 @@ non terminal Boolean is_reference;
 non terminal List echo_expr_list;
 non terminal List for_expr;
 non terminal List non_empty_for_expr;
+non terminal Expression argument;
 non terminal Expression expr_without_variable;
 non terminal VariableBase function_call;
 non terminal Expression exit_expr;
@@ -363,6 +365,7 @@ non terminal Integer trait_modifiers;
 
 non terminal VariableBase chain_instance_call;
 non terminal ClassInstanceCreation new_expr;
+non terminal AnonymousClassDeclaration anonymous_class;
 
 //php5.5
 non terminal FinallyClause finally_clause;
@@ -371,7 +374,6 @@ non terminal ListVariable list_variable;
 non terminal Expression foreach_expr;
 non terminal Expression foreach_value;
 
-non terminal Expression yield_arg;
 non terminal YieldExpression yield_expr;
 
 non terminal ArrayCreation array_creation;
@@ -399,6 +401,8 @@ precedence left T_OR;
 precedence left T_KOVA;
 precedence left T_REFERENCE;
 precedence left T_ELLIPSIS;
+precedence right T_YIELD;
+precedence right T_DOUBLE_ARROW;
 precedence right T_YIELD_FROM;
 
 precedence nonassoc T_IS_EQUAL,T_IS_NOT_EQUAL,T_IS_IDENTICAL,T_IS_NOT_IDENTICAL;
@@ -1488,72 +1492,28 @@ non_empty_function_call_parameter_list:paramsList
 ;
 
 non_empty_function_call_parameter_list ::=
-expr_without_variable:var
+argument:argument
 {:
 	List paramsList = new LinkedList();
-	paramsList.add(var);
+	paramsList.add(argument);
 	RESULT = paramsList;
 :}
 
-| variable:var
-{:
-	List paramsList = new LinkedList();
-	paramsList.add(var);
-	RESULT = paramsList;
-:}
-
-| T_ELLIPSIS:ell variable:var
-{:
-	List paramsList = new LinkedList();
-	paramsList.add(new PrefixExpression(ellleft, varright, parser.ast, var, PrefixExpression.OP_UNPACK));
-	RESULT = paramsList;
-:}
-
-| T_ELLIPSIS:ell expr_without_variable:var
-{:
-	List paramsList = new LinkedList();
-	paramsList.add(new PrefixExpression(ellleft, varright, parser.ast, var, PrefixExpression.OP_UNPACK));
-	RESULT = paramsList;
-:}
-
-| T_REFERENCE:s w_variable:var
-{:
-	List paramsList = new LinkedList();
-	Expression var_ref = new Reference(sleft, varright, parser.ast, var);
-	paramsList.add(var_ref);
-	RESULT = paramsList;
-:}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA expr_without_variable:var
+| non_empty_function_call_parameter_list:paramsList T_COMMA argument:var
 {:
 	paramsList.add(var);
 	RESULT = paramsList;
 :}
+;
 
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA variable:var
+argument ::=
+expr:expr
 {:
-	paramsList.add(var);
-	RESULT = paramsList;
+	RESULT = expr;
 :}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA T_ELLIPSIS:ell variable:var
+| T_ELLIPSIS:ell expr:expr
 {:
-	paramsList.add(new PrefixExpression(ellleft, varright, parser.ast, var, PrefixExpression.OP_UNPACK));
-	RESULT = paramsList;
-:}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA T_ELLIPSIS:ell expr_without_variable:var
-{:
-	paramsList.add(new PrefixExpression(ellleft, varright, parser.ast, var, PrefixExpression.OP_UNPACK));
-	RESULT = paramsList;
-:}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA T_REFERENCE:s w_variable:var
-{:
-	Expression var_ref = new Reference(sleft, varright, parser.ast, var);
-	paramsList.add(var_ref);
-	RESULT = paramsList;
+	RESULT = new PrefixExpression(ellleft, exprright, parser.ast, expr, PrefixExpression.OP_UNPACK);
 :}
 ;
 
@@ -2066,10 +2026,24 @@ T_OPEN_PARENTHESE:open new_expr:expr T_CLOSE_PARENTHESE:end
 :}
 ;
 
+anonymous_class ::=
+extends_from:superClass implements_list:interfaces
+T_CURLY_OPEN:blockStart class_statement_list:sList T_CURLY_CLOSE:blockEnd
+{:
+	Block body = new Block(blockStartleft, blockEndright, parser.ast, sList);
+	RESULT = new AnonymousClassDeclaration(superClassleft, blockEndright, parser.ast, superClass, interfaces, body);
+:}
+;
+
 new_expr ::=
 T_NEW:s class_name_reference:className ctor_arguments:ctor
 {:
 	RESULT = new ClassInstanceCreation(sleft, ctorright, parser.ast, className, ctor);
+:}
+
+| T_NEW:start T_CLASS:tclass ctor_arguments:ctor anonymous_class:ac
+{:
+	RESULT = new ClassInstanceCreation(startleft, acright, parser.ast, ac, ctor);
 :}
 ;
 
@@ -2507,31 +2481,29 @@ lexical_vars ::=
 ;
 
 lexical_var_list ::=
-lexical_var_list:list T_COMMA T_VARIABLE:var
+lexical_var_list:list T_COMMA lexical_var:var
 {:
-	Variable v = new Variable(varleft, varright, parser.ast, var);
-	list.add(v);
+	list.add(var);
 	RESULT = list;
 :}
 
-| lexical_var_list:list T_COMMA T_REFERENCE:ref T_VARIABLE:var
-{:
-	list.add(new Reference (refleft, varright, parser.ast, new Variable(varleft, varright, parser.ast, var)));
-	RESULT = list;
-:}
-
-| T_VARIABLE:var
+| lexical_var:var
 {:
 	List list = new LinkedList();
-	list.add(new Variable(varleft, varright, parser.ast, var));
+	list.add(var);
 	RESULT = list;
+:}
+;
+
+lexical_var ::=
+T_VARIABLE:var
+{:
+	RESULT = new Variable(varleft, varright, parser.ast, var);
 :}
 
 | T_REFERENCE:ref T_VARIABLE:var
 {:
-	List list = new LinkedList();
-	list.add(new Reference (refleft, varright, parser.ast, new Variable(varleft, varright, parser.ast, var)));
-	RESULT = list;
+	RESULT = new Reference(refleft, varright, parser.ast, new Variable(varleft, varright, parser.ast, var));
 :}
 ;
 
@@ -3714,34 +3686,23 @@ T_STRING:value
 {: RESULT = value; :}
 ;
 
-yield_arg ::=
-variable:expr
-{:
-	RESULT = expr;
-:}
-| expr_without_variable:expr
-{:
-	RESULT = expr;
-:}
-;
-
 yield_expr ::=
 T_YIELD:token
 {:
 	RESULT = new YieldExpression(tokenleft, tokenright, parser.ast);
 :}
 
-| T_YIELD:token yield_arg:expr
+| T_YIELD:token expr:expr
 {:
 	RESULT = new YieldExpression(tokenleft, exprright, parser.ast, expr);
 :}
 
-| T_YIELD:token yield_arg:key T_DOUBLE_ARROW yield_arg:expr
+| T_YIELD:token expr:key T_DOUBLE_ARROW expr:expr
 {:
 	RESULT = new YieldExpression(tokenleft, exprright, parser.ast, key, expr);
 :}
 
-| T_YIELD_FROM:token yield_arg:expr
+| T_YIELD_FROM:token expr:expr
 {:
 	RESULT = new YieldExpression(tokenleft, exprright, parser.ast, expr, YieldExpression.OP_FROM);
 :}
