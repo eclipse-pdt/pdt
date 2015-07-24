@@ -143,8 +143,8 @@ public final class PHPExeUtil {
 			.compile("PHP (\\d\\.\\d\\.\\d+).*? \\((.*?)\\)"); //$NON-NLS-1$
 	private static final Pattern PATTERN_PHP_CLI_CONFIG = Pattern
 			.compile("Configuration File \\(php.ini\\) Path => (.*)"); //$NON-NLS-1$
-	private static final Pattern PATTERN_PHP_CGI_CONFIG = Pattern
-			.compile("Configuration File \\(php.ini\\) Path </td><td class=\"v\">(.*?)</td>"); //$NON-NLS-1$
+	private static final Pattern PATTERN_PHP_CGI_CONFIG = Pattern.compile(
+			"Configuration File \\(php.ini\\) Path </td><td class=\"v\">(.*?)</td>"); //$NON-NLS-1$
 
 	private static final Map<File, PHPExeInfo> phpInfos = new HashMap<File, PHPExeInfo>();
 
@@ -167,8 +167,8 @@ public final class PHPExeUtil {
 		}
 
 		Process p = Runtime.getRuntime().exec(cmd, envParams);
-		BufferedReader r = new BufferedReader(new InputStreamReader(
-				p.getInputStream()));
+		BufferedReader r = new BufferedReader(
+				new InputStreamReader(p.getInputStream()));
 		StringBuilder buf = new StringBuilder();
 		String l;
 		while ((l = r.readLine()) != null) {
@@ -211,9 +211,9 @@ public final class PHPExeUtil {
 				output = fetchVersion(executableFile, tempPHPIni, false);
 				m = PATTERN_PHP_VERSION.matcher(output);
 				if (!m.find()) {
-					throw new PHPExeException(
-							MessageFormat
-									.format("Cannot determine version of the PHP executable ({0}).", exePath)); //$NON-NLS-1$
+					throw new PHPExeException(MessageFormat.format(
+							"Cannot determine version of the PHP executable ({0}).", //$NON-NLS-1$
+							exePath));
 				}
 			}
 			// Fetch version
@@ -226,9 +226,9 @@ public final class PHPExeUtil {
 			} else if (sType.startsWith("cli")) { //$NON-NLS-1$
 				sapiType = PHPexeItem.SAPI_CLI;
 			} else {
-				throw new PHPExeException(
-						MessageFormat
-								.format("Cannot determine type of the PHP executable ({0}).", exePath)); //$NON-NLS-1$
+				throw new PHPExeException(MessageFormat.format(
+						"Cannot determine type of the PHP executable ({0}).", //$NON-NLS-1$
+						exePath));
 			}
 			// Fetch default name
 			name = "PHP " + version + " (" + sapiType + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -240,9 +240,9 @@ public final class PHPExeUtil {
 				output = fetchInfo(executableFile, tempPHPIni, false);
 				m = getConfigMatcher(sapiType, m, output);
 				if (!m.find()) {
-					throw new PHPExeException(
-							MessageFormat
-									.format("Cannot determine php.ini location of the PHP executable ({0}).", exePath)); //$NON-NLS-1$
+					throw new PHPExeException(MessageFormat.format(
+							"Cannot determine php.ini location of the PHP executable ({0}).", //$NON-NLS-1$
+							exePath));
 				}
 			}
 			String configDir = m.group(1);
@@ -251,8 +251,8 @@ public final class PHPExeUtil {
 				configFile = null;
 			}
 		} catch (IOException e) {
-			throw new PHPExeException(MessageFormat.format(
-					"Invalid PHP executable: {0}.", exePath)); //$NON-NLS-1$
+			throw new PHPExeException(MessageFormat
+					.format("Invalid PHP executable: {0}.", exePath)); //$NON-NLS-1$
 		}
 		phpInfo = new PHPExeInfo(name, version, sapiType, executableFile,
 				configFile);
@@ -280,17 +280,17 @@ public final class PHPExeUtil {
 		try {
 			if (iniFile != null) {
 				if (phpVersion.getMajor() >= 5)
-					result = PHPExeUtil
-							.exec(phpExeItem.getExecutable().getAbsolutePath(),
-									phpExeItem.isLoadDefaultINI() ? "" : "-n", "-c", iniFile //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-											.getAbsolutePath(), "-m"); //$NON-NLS-1$
+					result = PHPExeUtil.exec(
+							phpExeItem.getExecutable().getAbsolutePath(), "-m", //$NON-NLS-1$
+							phpExeItem.isLoadDefaultINI() ? "" : "-n", "-c", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							iniFile.getAbsolutePath());
 				else
-					result = PHPExeUtil.exec(phpExeItem.getExecutable()
-							.getAbsolutePath(), "-c", iniFile //$NON-NLS-1$
-							.getAbsolutePath(), "-m"); //$NON-NLS-1$
+					result = PHPExeUtil.exec(
+							phpExeItem.getExecutable().getAbsolutePath(), "-c", //$NON-NLS-1$
+							iniFile.getAbsolutePath(), "-m"); //$NON-NLS-1$
 			} else {
-				result = PHPExeUtil.exec(phpExeItem.getExecutable()
-						.getAbsolutePath(), "-m"); //$NON-NLS-1$
+				result = PHPExeUtil.exec(
+						phpExeItem.getExecutable().getAbsolutePath(), "-m"); //$NON-NLS-1$
 			}
 		} catch (IOException e) {
 			// empty list
@@ -358,16 +358,16 @@ public final class PHPExeUtil {
 
 	private static String fetchVersion(File exec, File tmpIni,
 			boolean skipSystemIni) throws IOException {
-		return PHPExeUtil
-				.exec(exec.getAbsolutePath(),
-						skipSystemIni ? "" : "-n", "-c", tmpIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		return PHPExeUtil.exec(exec.getAbsolutePath(),
+				skipSystemIni ? "" : "-n", "-c", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				tmpIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$
 	}
 
 	private static String fetchInfo(File exec, File tmpIni,
 			boolean skipSystemIni) throws IOException {
-		return PHPExeUtil
-				.exec(exec.getAbsolutePath(),
-						skipSystemIni ? "" : "-n", "-c", tmpIni.getParentFile().getAbsolutePath(), "-i"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		return PHPExeUtil.exec(exec.getAbsolutePath(),
+				skipSystemIni ? "" : "-n", "-c", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				tmpIni.getParentFile().getAbsolutePath(), "-i"); //$NON-NLS-1$
 	}
 
 }
