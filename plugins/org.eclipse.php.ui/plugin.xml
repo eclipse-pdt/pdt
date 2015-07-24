@@ -1068,6 +1068,14 @@
 						<reference definitionId="org.eclipse.php.ui.phpContentType.definition"></reference>
 					</visibleWhen>
 				</command>
+				<command commandId="org.eclipse.php.ui.insertVarComment" id="InsertVarComment" style="push">
+					<visibleWhen checkEnabled="false">
+					    <and>
+							<reference definitionId="org.eclipse.php.ui.phpContentType.definition"></reference>
+							<test property="org.eclipse.php.ui.text.correction.hasCorrection" args="org.eclipse.php.ui.insertVarComment"/>
+						</and>
+				    </visibleWhen>
+				</command>
 				<separator name="format" visible="true"></separator>
 		</menuContribution>
 	    <menuContribution
@@ -2518,4 +2526,23 @@
             id="org.eclipse.php.ui.navigator.filtersr.ImportDeclarationFilter" />
  	</extension>
  
+	<extension point="org.eclipse.core.expressions.propertyTesters">
+	    <propertyTester
+	      id="org.eclipse.php.ui.text.correction.CorrectionCommandPropertyTester"
+	      type="java.lang.Object"
+	      namespace="org.eclipse.php.ui.text.correction"
+	      properties="hasCorrection"
+	      class="org.eclipse.php.internal.ui.text.correction.CorrectionCommandPropertyTester">
+	    </propertyTester>
+	</extension> 
+
+	<extension point="org.eclipse.php.ui.quickAssistProcessors">
+		<quickAssistProcessor
+			id="org.eclipse.php.ui.quickassist.varCommentQuickAssistProcessor"
+			name="%varCommentQuickAssistProcessor.name"
+			class="org.eclipse.php.internal.ui.quickassist.VarCommentQuickAssistProcessor">
+			<command id="org.eclipse.php.ui.insertVarComment"/>
+		</quickAssistProcessor>
+	</extension>
+
 </plugin>
