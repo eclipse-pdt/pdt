@@ -260,6 +260,7 @@ non terminal Statement new_else_single;
 non terminal List parameter_list;
 non terminal List lexical_vars;
 non terminal List lexical_var_list;
+non terminal Expression lexical_var;
 non terminal List non_empty_parameter_list;
 non terminal FormalParameter parameter;
 non terminal List function_call_parameter_list;
@@ -273,6 +274,7 @@ non terminal Boolean is_reference;
 non terminal List echo_expr_list;
 non terminal List for_expr;
 non terminal List non_empty_for_expr;
+non terminal Expression argument;
 non terminal Expression expr_without_variable;
 non terminal VariableBase function_call;
 non terminal Expression exit_expr;
@@ -363,6 +365,7 @@ non terminal Integer trait_modifiers;
 
 non terminal VariableBase chain_instance_call;
 non terminal ClassInstanceCreation new_expr;
+non terminal Expression anonymous_class;
 
 //php5.5
 non terminal FinallyClause finally_clause;
@@ -1488,72 +1491,28 @@ non_empty_function_call_parameter_list:paramsList
 ;
 
 non_empty_function_call_parameter_list ::=
-expr_without_variable:var
+argument:argument
 {:
 	List paramsList = new LinkedList();
-	paramsList.add(var);
+	paramsList.add(argument);
 	RESULT = paramsList;
 :}
 
-| variable:var
-{:
-	List paramsList = new LinkedList();
-	paramsList.add(var);
-	RESULT = paramsList;
-:}
-
-| T_ELLIPSIS:ell variable:var
-{:
-	List paramsList = new LinkedList();
-	paramsList.add(new PrefixExpression(ellleft, varright, parser.ast, var, PrefixExpression.OP_UNPACK));
-	RESULT = paramsList;
-:}
-
-| T_ELLIPSIS:ell expr_without_variable:var
-{:
-	List paramsList = new LinkedList();
-	paramsList.add(new PrefixExpression(ellleft, varright, parser.ast, var, PrefixExpression.OP_UNPACK));
-	RESULT = paramsList;
-:}
-
-| T_REFERENCE:s w_variable:var
-{:
-	List paramsList = new LinkedList();
-	Expression var_ref = new Reference(sleft, varright, parser.ast, var);
-	paramsList.add(var_ref);
-	RESULT = paramsList;
-:}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA expr_without_variable:var
+| non_empty_function_call_parameter_list:paramsList T_COMMA argument:var
 {:
 	paramsList.add(var);
 	RESULT = paramsList;
 :}
+;
 
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA variable:var
+argument ::=
+expr:expr
 {:
-	paramsList.add(var);
-	RESULT = paramsList;
+	RESULT = expr;
 :}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA T_ELLIPSIS:ell variable:var
+| T_ELLIPSIS:ell expr:expr
 {:
-	paramsList.add(new PrefixExpression(ellleft, varright, parser.ast, var, PrefixExpression.OP_UNPACK));
-	RESULT = paramsList;
-:}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA T_ELLIPSIS:ell expr_without_variable:var
-{:
-	paramsList.add(new PrefixExpression(ellleft, varright, parser.ast, var, PrefixExpression.OP_UNPACK));
-	RESULT = paramsList;
-:}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA T_REFERENCE:s w_variable:var
-{:
-	Expression var_ref = new Reference(sleft, varright, parser.ast, var);
-	paramsList.add(var_ref);
-	RESULT = paramsList;
+	RESULT = new PrefixExpression(ellleft, exprright, parser.ast, expr, PrefixExpression.OP_UNPACK);
 :}
 ;
 
@@ -2066,10 +2025,22 @@ T_OPEN_PARENTHESE:open new_expr:expr T_CLOSE_PARENTHESE:end
 :}
 ;
 
+anonymous_class ::=
+T_CLASS:tclass ctor_arguments:ctor extends_from:superClass implements_list:interfaces T_CURLY_OPEN:blockStart class_statement_list:statementList T_CURLY_CLOSE:blockEnd
+{:
+	RESULT = new Scalar(tclassleft, tclassright, parser.ast, "class", Scalar.TYPE_STRING);
+:}
+;
+
 new_expr ::=
 T_NEW:s class_name_reference:className ctor_arguments:ctor
 {:
 	RESULT = new ClassInstanceCreation(sleft, ctorright, parser.ast, className, ctor);
+:}
+
+| T_NEW:start anonymous_class:ac
+{:
+	RESULT = new ClassInstanceCreation(startleft, acright, parser.ast, new ClassName(0, 0, parser.ast, ac), new Expression[0]);
 :}
 ;
 
@@ -2507,31 +2478,29 @@ lexical_vars ::=
 ;
 
 lexical_var_list ::=
-lexical_var_list:list T_COMMA T_VARIABLE:var
+lexical_var_list:list T_COMMA lexical_var:var
 {:
-	Variable v = new Variable(varleft, varright, parser.ast, var);
-	list.add(v);
+	list.add(var);
 	RESULT = list;
 :}
 
-| lexical_var_list:list T_COMMA T_REFERENCE:ref T_VARIABLE:var
-{:
-	list.add(new Reference (refleft, varright, parser.ast, new Variable(varleft, varright, parser.ast, var)));
-	RESULT = list;
-:}
-
-| T_VARIABLE:var
+| lexical_var:var
 {:
 	List list = new LinkedList();
-	list.add(new Variable(varleft, varright, parser.ast, var));
+	list.add(var);
 	RESULT = list;
+:}
+;
+
+lexical_var ::=
+T_VARIABLE:var
+{:
+	RESULT = new Variable(varleft, varright, parser.ast, var);
 :}
 
 | T_REFERENCE:ref T_VARIABLE:var
 {:
-	List list = new LinkedList();
-	list.add(new Reference (refleft, varright, parser.ast, new Variable(varleft, varright, parser.ast, var)));
-	RESULT = list;
+	RESULT = new Reference(refleft, varright, parser.ast, new Variable(varleft, varright, parser.ast, var));
 :}
 ;
 
