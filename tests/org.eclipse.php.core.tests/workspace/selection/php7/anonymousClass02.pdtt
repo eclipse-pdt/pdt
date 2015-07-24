@@ -1,0 +1,11 @@
+--TEST--
+Test group use statement
+--FILE--
+<?php
+new class () extends \Exception implements \Iterator {
+	private function cfunction_name($param) {
+		$this->|getMessage|();
+	}
+};
+--EXPECT--
+method(getMessage)

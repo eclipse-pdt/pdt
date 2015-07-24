@@ -11,10 +11,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
-import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
@@ -22,7 +26,8 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 /**
- * This context represents state when staying in a class member completion. <br/>
+ * This context represents state when staying in a class member completion.
+ * <br/>
  * Examples:
  * 
  * <pre>
@@ -42,7 +47,7 @@ public abstract class ClassMemberContext extends StatementContext {
 		/** Class trigger type: '::' */
 		CLASS("::"), //$NON-NLS-1$
 		/** Object trigger type: '->' */
-		OBJECT("->"), ; //$NON-NLS-1$
+		OBJECT("->"),; //$NON-NLS-1$
 
 		String name;
 
@@ -74,19 +79,19 @@ public abstract class ClassMemberContext extends StatementContext {
 		// .getOriginalOffset(0) - 2);
 		// statementText1.toString();
 		int totalLength = statementText.length();
-		elementStart = PHPTextSequenceUtilities.readBackwardSpaces(
-				statementText, totalLength);
-		elementStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-				statementText, elementStart, true);
-		elementStart = PHPTextSequenceUtilities.readBackwardSpaces(
-				statementText, elementStart);
+		elementStart = PHPTextSequenceUtilities
+				.readBackwardSpaces(statementText, totalLength);
+		elementStart = PHPTextSequenceUtilities
+				.readIdentifierStartIndex(statementText, elementStart, true);
+		elementStart = PHPTextSequenceUtilities
+				.readBackwardSpaces(statementText, elementStart);
 		if (elementStart <= 2) { // there's no trigger of length less than 2
 			// characters
 			return false;
 		}
 
-		String triggerText = statementText.subSequence(elementStart - 2,
-				elementStart).toString();
+		String triggerText = statementText
+				.subSequence(elementStart - 2, elementStart).toString();
 		if (triggerText.equals("->")) { //$NON-NLS-1$
 			triggerType = Trigger.OBJECT;
 		} else if (triggerText.equals("::")) { //$NON-NLS-1$
@@ -95,7 +100,24 @@ public abstract class ClassMemberContext extends StatementContext {
 			return false;
 		}
 
-		types = getCompanion().getLeftHandType(this, !isInUseTraitStatement());
+		// to support anonymous classes fields/methods CA
+		List<IType> tmpTypes = new ArrayList<IType>();
+		try {
+			IModelElement enclosingElement = sourceModule.getElementAt(offset);
+			while (enclosingElement instanceof IMethod) {
+				enclosingElement = enclosingElement.getParent();
+			}
+			if (enclosingElement instanceof IType && PHPFlags
+					.isAnonymous(((IType) enclosingElement).getFlags())) {
+				tmpTypes.add((IType) enclosingElement);
+			}
+		} catch (ModelException e) {
+			PHPCorePlugin.log(e);
+		}
+
+		tmpTypes.addAll(Arrays.asList(getCompanion().getLeftHandType(this,
+				!isInUseTraitStatement())));
+		types = tmpTypes.toArray(new IType[0]);
 		return true;
 	}
 
@@ -134,16 +156,17 @@ public abstract class ClassMemberContext extends StatementContext {
 
 	public int getPrefixEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
-		if (phpToken.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR
-				|| phpToken.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM) {
+		if (phpToken.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR || phpToken
+				.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM) {
 			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
-			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken
-					.getEnd());
+			ITextRegion nextRegion = phpScriptRegion
+					.getPhpToken(phpToken.getEnd());
 
 			if (phpToken.getTextLength() == phpToken.getLength()) {
 				int addOffset = 0;
 				if (nextRegion.getType() == PHPRegionTypes.PHP_TOKEN
-						|| nextRegion.getType() == PHPRegionTypes.PHP_SEMICOLON) {
+						|| nextRegion
+								.getType() == PHPRegionTypes.PHP_SEMICOLON) {
 					addOffset = phpToken.getEnd();
 				} else {
 					addOffset = nextRegion.getTextEnd();

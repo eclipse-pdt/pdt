@@ -21,17 +21,19 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * Represents a class instanciation. This class holds the class name as an
  * expression and array of constructor parameters
  * 
- * <pre>e.g.
+ * e.g.
  * 
  * <pre>
- * new MyClass(),
- * new $a('start'),
+ * new MyClass(), 
+ * new $a('start'), 
  * new foo()(1, $a)
+ * </pre>
  */
 public class ClassInstanceCreation extends Expression {
 
 	private final Expression className;
 	private final CallArgumentsList ctorParams;
+	private final AnonymousClassDeclaration anonymousClassDeclaration;
 
 	public ClassInstanceCreation(int start, int end, Expression className,
 			CallArgumentsList ctorParams) {
@@ -41,16 +43,31 @@ public class ClassInstanceCreation extends Expression {
 
 		this.className = className;
 		this.ctorParams = ctorParams;
+		this.anonymousClassDeclaration = null;
+	}
+
+	public ClassInstanceCreation(int start, int end,
+			AnonymousClassDeclaration anonymousClass,
+			CallArgumentsList ctorParams) {
+		super(start, end);
+
+		assert anonymousClass != null && ctorParams != null;
+
+		this.className = null;
+		this.ctorParams = ctorParams;
+		this.anonymousClassDeclaration = anonymousClass;
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
-			className.traverse(visitor);
+			if (className != null) {
+				className.traverse(visitor);
+			}
 			ctorParams.traverse(visitor);
-			// if (chainingInstanceCall != null) {
-			// chainingInstanceCall.traverse(visitor);
-			// }
+			if (anonymousClassDeclaration != null) {
+				anonymousClassDeclaration.traverse(visitor);
+			}
 		}
 		visitor.endvisit(this);
 	}
@@ -65,6 +82,10 @@ public class ClassInstanceCreation extends Expression {
 
 	public CallArgumentsList getCtorParams() {
 		return ctorParams;
+	}
+
+	public AnonymousClassDeclaration getAnonymousClassDeclaration() {
+		return anonymousClassDeclaration;
 	}
 
 	/**

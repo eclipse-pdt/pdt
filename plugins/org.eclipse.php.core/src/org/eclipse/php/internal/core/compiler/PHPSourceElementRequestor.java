@@ -60,11 +60,12 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	private static final String VOID_RETURN_TYPE = MagicMemberUtil.VOID_RETURN_TYPE;
 	private static final String GLOBAL_NAMESPACE_CONTAINER_NAME = "global namespace"; //$NON-NLS-1$
 	private static final String DEFAULT_VALUE = " "; //$NON-NLS-1$
+	private static final String ANONYMOUS_CLASS_TEMPLATE = "new %s() {...}"; //$NON-NLS-1$
 	/**
 	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
 	 * since in php the type declarations can be nested.
 	 */
-	protected Stack<Declaration> declarations = new Stack<Declaration>();
+	protected Stack<ASTNode> declarations = new Stack<ASTNode>();
 	private PHPSourceElementRequestorExtension[] extensions;
 
 	/**
@@ -118,7 +119,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public MethodDeclaration getCurrentMethod() {
-		Declaration currDecleration = declarations.peek();
+		ASTNode currDecleration = declarations.peek();
 		if (currDecleration instanceof MethodDeclaration) {
 			return (MethodDeclaration) currDecleration;
 		}
@@ -137,6 +138,20 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.endvisit(lambdaMethod);
+		}
+		return true;
+	}
+
+	public boolean endvisit(AnonymousClassDeclaration anonymousClassDeclaration)
+			throws Exception {
+		this.fInClass = false;
+
+		if (!fNodes.isEmpty() && fNodes.peek() == anonymousClassDeclaration) {
+			fRequestor.exitType(anonymousClassDeclaration.sourceEnd() - 1);
+			fNodes.pop();
+		}
+		for (PHPSourceElementRequestorExtension visitor : extensions) {
+			visitor.endvisit(anonymousClassDeclaration);
 		}
 		return true;
 	}
@@ -253,11 +268,85 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
+	public boolean visit(AnonymousClassDeclaration anonymousClassDeclaration)
+			throws Exception {
+
+		fNodes.push(anonymousClassDeclaration);
+
+		ASTNode parentDeclaration = null;
+		if (!declarations.empty()) {
+			parentDeclaration = declarations.peek();
+		}
+
+		if (parentDeclaration instanceof MethodDeclaration) {
+			if (fLastNamespace == null) {
+				deferredDeclarations.add(anonymousClassDeclaration);
+			} else {
+				deferredNamespacedDeclarations.add(anonymousClassDeclaration);
+			}
+			return false;
+		}
+
+		declarations.push(anonymousClassDeclaration);
+
+		for (PHPSourceElementRequestorExtension visitor : extensions) {
+			visitor.visit(anonymousClassDeclaration);
+		}
+
+		List<String> superClasses = new ArrayList<String>();
+		String name = null;
+		if (anonymousClassDeclaration.getSuperClass() != null) {
+			name = String.format(ANONYMOUS_CLASS_TEMPLATE,
+					anonymousClassDeclaration.getSuperClass().getName());
+
+			String superClass = processNameNode(
+					anonymousClassDeclaration.getSuperClass());
+			if (superClass != null) {
+				superClasses.add(superClass);
+			}
+		}
+		if (anonymousClassDeclaration.getInterfaceList() != null
+				&& !anonymousClassDeclaration.getInterfaceList().isEmpty()) {
+			if (name == null) {
+				name = String.format(ANONYMOUS_CLASS_TEMPLATE,
+						anonymousClassDeclaration.getInterfaceList().get(0)
+								.getName());
+			}
+
+			for (TypeReference reference : anonymousClassDeclaration
+					.getInterfaceList()) {
+				String interfaceName = processNameNode(reference);
+				if (interfaceName != null) {
+					superClasses.add(interfaceName);
+				}
+			}
+		}
+		if (name == null) {
+			name = String.format(ANONYMOUS_CLASS_TEMPLATE,
+					PHPCoreConstants.ANONYMOUS);
+		}
+
+		ISourceElementRequestor.TypeInfo mi = new ISourceElementRequestor.TypeInfo();
+		mi.name = name;
+		mi.modifiers = Modifiers.AccPrivate | IPHPModifiers.AccAnonymous;
+
+		mi.nameSourceStart = anonymousClassDeclaration.sourceStart();
+		mi.nameSourceEnd = anonymousClassDeclaration.sourceEnd();
+		mi.declarationStart = mi.nameSourceStart;
+
+		mi.superclasses = superClasses.toArray(new String[0]);
+
+		this.fRequestor.enterType(mi);
+		this.fInClass = true;
+
+		return true;
+	}
+
 	public boolean visit(MethodDeclaration method) throws Exception {
 
 		methodGlobalVars.add(new HashSet<String>());
 
-		Declaration parentDeclaration = null;
+		ASTNode parentDeclaration = null;
 		if (!declarations.empty()) {
 			parentDeclaration = declarations.peek();
 		}
@@ -345,7 +434,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 	protected void modifyMethodInfo(MethodDeclaration methodDeclaration,
 			ISourceElementRequestor.MethodInfo mi) {
-		Declaration parentDeclaration = null;
+		ASTNode parentDeclaration = null;
 
 		// find declaration that was before this method:
 		declarations.pop();
@@ -460,61 +549,64 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		List<String> result = new ArrayList<String>(superClassNames.size());
 		Iterator<ASTNode> iterator = superClassNames.iterator();
 		while (iterator.hasNext()) {
-			ASTNode nameNode = iterator.next();
-
-			String name;
-			if (nameNode instanceof FullyQualifiedReference) {
-				FullyQualifiedReference fullyQualifiedName = (FullyQualifiedReference) nameNode;
-				name = fullyQualifiedName.getFullyQualifiedName();
-				if (fullyQualifiedName.getNamespace() != null) {
-					String namespace = fullyQualifiedName.getNamespace()
-							.getName();
-
-					String subnamespace = ""; //$NON-NLS-1$
-					if (namespace
-							.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR
-							&& namespace.indexOf(
-									NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
-						int firstNSLocation = namespace.indexOf(
-								NamespaceReference.NAMESPACE_SEPARATOR);
-						subnamespace = namespace.substring(firstNSLocation);
-						namespace = namespace.substring(0, firstNSLocation);
-					}
-					if (name.charAt(
-							0) == NamespaceReference.NAMESPACE_SEPARATOR) {
-						name = name.substring(1);
-					} else if (fLastUseParts.containsKey(namespace)) {
-						name = new StringBuilder(fLastUseParts.get(namespace)
-								.getNamespace().getFullyQualifiedName())
-										.append(subnamespace)
-										.append(NamespaceReference.NAMESPACE_SEPARATOR)
-										.append(fullyQualifiedName.getName())
-										.toString();
-					} else if (fLastNamespace != null) {
-						name = new StringBuilder(fLastNamespace.getName())
-								.append(NamespaceReference.NAMESPACE_SEPARATOR)
-								.append(name).toString();
-					}
-				} else if (fLastUseParts.containsKey(name)) {
-					name = fLastUseParts.get(name).getNamespace()
-							.getFullyQualifiedName();
-					if (name.charAt(
-							0) == NamespaceReference.NAMESPACE_SEPARATOR) {
-						name = name.substring(1);
-					}
-				} else {
-					if (fLastNamespace != null) {
-						name = new StringBuilder(fLastNamespace.getName())
-								.append(NamespaceReference.NAMESPACE_SEPARATOR)
-								.append(name).toString();
-					}
-				}
+			String name = processNameNode(iterator.next());
+			if (name != null) {
 				result.add(name);
-			} else if (nameNode instanceof SimpleReference) {
-				result.add(((SimpleReference) nameNode).getName());
 			}
 		}
 		return (String[]) result.toArray(new String[result.size()]);
+	}
+
+	private String processNameNode(ASTNode nameNode) {
+		if (nameNode instanceof FullyQualifiedReference) {
+			String name;
+			FullyQualifiedReference fullyQualifiedName = (FullyQualifiedReference) nameNode;
+			name = fullyQualifiedName.getFullyQualifiedName();
+			if (fullyQualifiedName.getNamespace() != null) {
+				String namespace = fullyQualifiedName.getNamespace().getName();
+
+				String subnamespace = ""; //$NON-NLS-1$
+				if (namespace
+						.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR
+						&& namespace.indexOf(
+								NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
+					int firstNSLocation = namespace
+							.indexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+					subnamespace = namespace.substring(firstNSLocation);
+					namespace = namespace.substring(0, firstNSLocation);
+				}
+				if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+					name = name.substring(1);
+				} else if (fLastUseParts.containsKey(namespace)) {
+					name = new StringBuilder(fLastUseParts.get(namespace)
+							.getNamespace().getFullyQualifiedName())
+									.append(subnamespace)
+									.append(NamespaceReference.NAMESPACE_SEPARATOR)
+									.append(fullyQualifiedName.getName())
+									.toString();
+				} else if (fLastNamespace != null) {
+					name = new StringBuilder(fLastNamespace.getName())
+							.append(NamespaceReference.NAMESPACE_SEPARATOR)
+							.append(name).toString();
+				}
+			} else if (fLastUseParts.containsKey(name)) {
+				name = fLastUseParts.get(name).getNamespace()
+						.getFullyQualifiedName();
+				if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+					name = name.substring(1);
+				}
+			} else {
+				if (fLastNamespace != null) {
+					name = new StringBuilder(fLastNamespace.getName())
+							.append(NamespaceReference.NAMESPACE_SEPARATOR)
+							.append(name).toString();
+				}
+			}
+			return name;
+		} else if (nameNode instanceof SimpleReference) {
+			return ((SimpleReference) nameNode).getName();
+		}
+		return null;
 	}
 
 	protected void modifyClassInfo(TypeDeclaration typeDeclaration,
@@ -857,7 +949,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			}
 		} else if (left instanceof VariableReference) {
 			if (!declarations.empty()) {
-				Declaration parentDeclaration = declarations.peek();
+				ASTNode parentDeclaration = declarations.peek();
 				if (parentDeclaration instanceof MethodDeclaration
 						&& methodGlobalVars.peek()
 								.contains(((VariableReference) left).getName())
@@ -1042,6 +1134,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (node instanceof LambdaFunctionDeclaration) {
 			return visit((LambdaFunctionDeclaration) node);
 		}
+		if (node instanceof AnonymousClassDeclaration) {
+			return visit((AnonymousClassDeclaration) node);
+		}
 		return true;
 	}
 
@@ -1057,6 +1152,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		if (node instanceof LambdaFunctionDeclaration) {
 			return endvisit((LambdaFunctionDeclaration) node);
+		}
+		if (node instanceof AnonymousClassDeclaration) {
+			return endvisit((AnonymousClassDeclaration) node);
 		}
 		return true;
 	}
