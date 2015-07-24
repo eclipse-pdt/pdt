@@ -89,5 +89,6 @@ public interface ASTNodeKinds {
 	public static final int LAMBDA_FUNCTION = 73;
 	public static final int YIELD_STATEMENT = 74;
 	public static final int FINALLY_CLAUSE = 75;
+	public static final int ANONYMOUS_CLASS_DECLARATION = 76;
 
 }

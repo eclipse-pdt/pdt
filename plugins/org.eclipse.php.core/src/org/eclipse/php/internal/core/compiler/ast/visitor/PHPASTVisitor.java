@@ -407,6 +407,11 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return false;
 	}
 
+	public boolean endvisit(AnonymousClassDeclaration s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
 	public boolean visit(ArrayCreation s) throws Exception {
 		return visitGeneral(s);
 	}
@@ -712,6 +717,10 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return visitGeneral(s);
 	}
 
+	public boolean visit(AnonymousClassDeclaration s) throws Exception {
+		return visitGeneral(s);
+	}
+
 	public boolean endvisit(ASTNode s) throws Exception {
 		Class<? extends ASTNode> nodeClass = s.getClass();
 		if (nodeClass.equals(ArrayCreation.class)) {
@@ -939,6 +948,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 		if (nodeClass.equals(LambdaFunctionDeclaration.class)) {
 			return endvisit((LambdaFunctionDeclaration) s);
+		}
+		if (nodeClass.equals(AnonymousClassDeclaration.class)) {
+			return endvisit((AnonymousClassDeclaration) s);
 		}
 
 		// php5.4
@@ -1224,6 +1236,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(LambdaFunctionDeclaration.class)) {
 			return visit((LambdaFunctionDeclaration) s);
 		}
+		if (nodeClass.equals(AnonymousClassDeclaration.class)) {
+			return visit((AnonymousClassDeclaration) s);
+		}
 
 		// php5.4
 		if (nodeClass.equals(FullyQualifiedTraitMethodReference.class)) {
@@ -1252,7 +1267,8 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 
 	// php5.4 starts
 
-	public boolean visit(FullyQualifiedTraitMethodReference s) throws Exception {
+	public boolean visit(FullyQualifiedTraitMethodReference s)
+			throws Exception {
 		return visitGeneral(s);
 	}
 
