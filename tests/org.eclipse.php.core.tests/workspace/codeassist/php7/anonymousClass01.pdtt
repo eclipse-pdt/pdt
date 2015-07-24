@@ -1,0 +1,15 @@
+--TEST--
+Test anonymous class
+--FILE--
+<?php
+new class () extends \Exception implements \Iterator {
+	protected $cfield;
+	private function cfunction_name($param) {
+		$this->c| 
+	}
+};
+--EXPECT--
+field($cfield)
+field($code)
+method(current)
+method(cfunction_name)

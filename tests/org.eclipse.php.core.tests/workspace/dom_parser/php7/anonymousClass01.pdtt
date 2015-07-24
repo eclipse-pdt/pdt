@@ -1,0 +1,89 @@
+--TEST--
+Test anonymous class
+--FILE--
+<?php
+new class($var) extends SuperClass01 implements Interface01, Interface02 {
+	const TEST = 1;
+	protected $field;
+	private function function_name($param) {
+	}
+};
+--EXPECT--
+<Program start='0' length='164'>
+	<Statements>
+		<ExpressionStatement start='6' length='158'>
+			<ClassInstanceCreation start='6' length='157'>
+				<ClassName start='10' length='5'>
+					<Identifier start='10' length='5' name='class'/>
+				</ClassName>
+				<ConstructorParameters>
+					<Variable start='16' length='4' isDollared='true'>
+						<Identifier start='17' length='3' name='var'/>
+					</Variable>
+				</ConstructorParameters>
+				<AnonymousClassDeclaration start='22' length='141''>
+					<SuperClass>
+						<NamespaceName start='30' length='12' global='false' current='false'>
+							<Identifier start='30' length='12' name='SuperClass01'/>
+						</NamespaceName>
+					<SuperClass>
+					<Interfaces>
+						<NamespaceName start='54' length='11' global='false' current='false'>
+							<Identifier start='54' length='11' name='Interface01'/>
+						</NamespaceName>
+						<NamespaceName start='67' length='11' global='false' current='false'>
+							<Identifier start='67' length='11' name='Interface02'/>
+						</NamespaceName>
+					<Interfaces>
+					<Body>
+						<Block start='79' length='84' isCurly='true'>
+							<ConstantDeclaration start='82' length='15'>
+								<VariableName>
+									<Identifier start='88' length='4' name='TEST'/>
+								</VariableName>
+								<InitialValue>
+									<Scalar start='95' length='1' type='int' value='1'/>
+								</InitialValue>
+							</ConstantDeclaration>
+							<FieldsDeclaration start='99' length='17' modifier='protected'>
+								<VariableName>
+									<Variable start='109' length='6' isDollared='true'>
+										<Identifier start='110' length='5' name='field'/>
+									</Variable>
+								</VariableName>
+								<InitialValue>
+								</InitialValue>
+							</FieldsDeclaration>
+							<MethodDeclaration start='118' length='43' modifier='private'>
+								<FunctionDeclaration start='126' length='35' isReference='false'>
+									<FunctionName>
+										<Identifier start='135' length='13' name='function_name'/>
+									</FunctionName>
+									<FormalParameters>
+										<FormalParameter start='149' length='6' isMandatory='false'>
+											<Type>
+											</Type>
+											<ParameterName>
+												<Variable start='149' length='6' isDollared='true'>
+													<Identifier start='150' length='5' name='param'/>
+												</Variable>
+											</ParameterName>
+											<DefaultValue>
+											</DefaultValue>
+										</FormalParameter>
+									</FormalParameters>
+									<FunctionBody>
+										<Block start='157' length='4' isCurly='true'>
+										</Block>
+									</FunctionBody>
+								</FunctionDeclaration>
+							</MethodDeclaration>
+						</Block>
+					<Body>
+				</AnonymousClassDeclaration>
+			</ClassInstanceCreation>
+		</ExpressionStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

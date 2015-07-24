@@ -112,6 +112,7 @@ public abstract class ASTNode implements Visitable {
 	public static final int TRAIT_ALIAS = 74;
 	public static final int YIELD_STATEMENT = 75;
 	public static final int FINALLY_CLAUSE = 76;
+	public static final int ANONYMOUS_CLASS_DECLARATION = 77;
 
 	/**
 	 * Internal convenience constant indicating that there is definite risk of
@@ -417,7 +418,8 @@ public abstract class ASTNode implements Visitable {
 					(ChildPropertyDescriptor) property, true, null);
 		}
 		if (property instanceof ChildListPropertyDescriptor) {
-			return internalGetChildListProperty((ChildListPropertyDescriptor) property);
+			return internalGetChildListProperty(
+					(ChildListPropertyDescriptor) property);
 		}
 		throw new IllegalArgumentException();
 	}
@@ -539,7 +541,8 @@ public abstract class ASTNode implements Visitable {
 	 *            the new parent of this node, or <code>null</code> if none
 	 * @see #getParent
 	 */
-	public void setParent(ASTNode parent, StructuralPropertyDescriptor location) {
+	public void setParent(ASTNode parent,
+			StructuralPropertyDescriptor location) {
 		this.parent = parent;
 		this.location = location;
 	}
@@ -726,7 +729,8 @@ public abstract class ASTNode implements Visitable {
 	 * Appends the start, length parameters to the buffer
 	 */
 	protected void appendInterval(StringBuffer buffer) {
-		buffer.append(" start='").append(start).append("' length='").append(length).append("'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		buffer.append(" start='").append(start).append("' length='") //$NON-NLS-1$ //$NON-NLS-2$
+				.append(length).append("'"); //$NON-NLS-1$
 	}
 
 	/**
@@ -1054,7 +1058,8 @@ public abstract class ASTNode implements Visitable {
 	 *            relationship between node and child
 	 * @since 3.0
 	 */
-	final void postLazyInit(ASTNode newChild, ChildPropertyDescriptor property) {
+	final void postLazyInit(ASTNode newChild,
+			ChildPropertyDescriptor property) {
 		// IMPORTANT: this method is called by readers
 		// ASTNode.this is locked at this point
 		// newChild is brand new (so no chance of concurrent access)
@@ -1166,8 +1171,8 @@ public abstract class ASTNode implements Visitable {
 			// check for just one property left
 			if (m.size() == 1) {
 				// convert to more efficient representation
-				Map.Entry[] entries = (Map.Entry[]) m.entrySet().toArray(
-						new Map.Entry[1]);
+				Map.Entry[] entries = (Map.Entry[]) m.entrySet()
+						.toArray(new Map.Entry[1]);
 				this.property1 = entries[0].getKey();
 				this.property2 = entries[0].getValue();
 			}

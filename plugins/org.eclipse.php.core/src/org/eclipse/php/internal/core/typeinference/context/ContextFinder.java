@@ -20,12 +20,16 @@ import org.eclipse.dltk.ast.declarations.Argument;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.compiler.ast.nodes.AnonymousClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.TraitDeclaration;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
@@ -86,7 +90,8 @@ public abstract class ContextFinder extends ASTVisitor {
 					.peek();
 			PHPClassType instanceType;
 			if (parentContext instanceof INamespaceContext
-					&& ((INamespaceContext) parentContext).getNamespace() != null) {
+					&& ((INamespaceContext) parentContext)
+							.getNamespace() != null) {
 				if (node instanceof TraitDeclaration) {
 					instanceType = new PHPTraitType(
 							((INamespaceContext) parentContext).getNamespace(),
@@ -98,10 +103,9 @@ public abstract class ContextFinder extends ASTVisitor {
 				}
 			} else {
 				if (node instanceof TraitDeclaration) {
-					if (declaringType != null
-							&& realType != null
-							&& declaringType.getElementName().equals(
-									node.getName())) {
+					if (declaringType != null && realType != null
+							&& declaringType.getElementName()
+									.equals(node.getName())) {
 						if (realType.getParent() instanceof IType) {
 							IType ns = (IType) realType.getParent();
 							instanceType = new PHPThisClassType(
@@ -128,6 +132,25 @@ public abstract class ContextFinder extends ASTVisitor {
 			return visitGeneral;
 		}
 
+		return visitGeneral(node);
+	}
+
+	public boolean visit(AnonymousClassDeclaration node) throws Exception {
+		ISourceModuleContext parentContext = (ISourceModuleContext) contextStack
+				.peek();
+
+		MultiTypeType multiTypeType = new MultiTypeType();
+		if (node.getSuperClass() != null) {
+			multiTypeType.addType(
+					PHPClassType.fromSimpleReference(node.getSuperClass()));
+		}
+		if (node.getInterfaceList() != null) {
+			for (TypeReference typeReference : node.getInterfaceList()) {
+				multiTypeType.addType(
+						PHPClassType.fromSimpleReference(typeReference));
+			}
+		}
+		contextStack.push(new TypeContext(parentContext, multiTypeType));
 		return visitGeneral(node);
 	}
 
@@ -173,5 +196,27 @@ public abstract class ContextFinder extends ASTVisitor {
 		contextStack.pop();
 		endvisitGeneral(node);
 		return true;
+	}
+
+	public boolean endvisit(AnonymousClassDeclaration node) throws Exception {
+		contextStack.pop();
+		endvisitGeneral(node);
+		return true;
+	}
+
+	@Override
+	public boolean visit(Expression s) throws Exception {
+		if (s instanceof AnonymousClassDeclaration) {
+			return visit((AnonymousClassDeclaration) s);
+		}
+		return super.visit(s);
+	}
+
+	@Override
+	public boolean endvisit(Expression s) throws Exception {
+		if (s instanceof AnonymousClassDeclaration) {
+			return endvisit((AnonymousClassDeclaration) s);
+		}
+		return super.endvisit(s);
 	}
 }

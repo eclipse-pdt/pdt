@@ -1,0 +1,30 @@
+--TEST--
+Test anonymous class
+--FILE--
+<?php
+$anonClass = new class {
+    use Foo;
+};
+--EXPECT--
+<ModuleDeclaration start="0" end="47">
+	<ExpressionStatement start="6" end="46">
+		<Assignment start="6" end="45" operator="=">
+			<VariableReference start="6" end="16" name="$anonClass">
+			</VariableReference>
+			<ClassInstanceCreation start="19" end="45">
+				<PHPCallArgumentsList start="0" end="-1">
+				</PHPCallArgumentsList>
+				<AnonymousClassDeclaration start="28" end="45">
+					<Interfaces>
+					</Interfaces>
+					<Body>
+						<TraitUseStatement start="35" end="43">
+							<FullyQualifiedReference start="39" end="42" name="Foo">
+							</FullyQualifiedReference>
+						</TraitUseStatement>
+					</Body>
+				</AnonymousClassDeclaration>
+			</ClassInstanceCreation>
+		</Assignment>
+	</ExpressionStatement>
+</ModuleDeclaration>

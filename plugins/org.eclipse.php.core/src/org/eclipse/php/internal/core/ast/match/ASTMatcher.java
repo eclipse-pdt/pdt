@@ -407,7 +407,9 @@ public class ASTMatcher {
 		ClassInstanceCreation o = (ClassInstanceCreation) other;
 
 		return (safeSubtreeMatch(node.getClassName(), o.getClassName())
-				&& safeSubtreeListMatch(node.ctorParams(), o.ctorParams()));
+				&& safeSubtreeListMatch(node.ctorParams(), o.ctorParams())
+				&& safeSubtreeMatch(node.getAnonymousClassDeclaration(),
+						o.getAnonymousClassDeclaration()));
 	}
 
 	public boolean match(ClassName node, Object other) {
@@ -1017,6 +1019,17 @@ public class ASTMatcher {
 				&& safeSubtreeListMatch(node.lexicalVariables(),
 						o.lexicalVariables())
 				&& safeSubtreeMatch(node.getReturnType(), o.getReturnType()));
+	}
+
+	public boolean match(AnonymousClassDeclaration node, Object other) {
+		if (!(other instanceof AnonymousClassDeclaration)) {
+			return false;
+		}
+		AnonymousClassDeclaration o = (AnonymousClassDeclaration) other;
+
+		return (safeSubtreeMatch(node.getBody(), o.getBody())
+				&& safeSubtreeListMatch(node.getInterfaces(), o.getInterfaces())
+				&& safeSubtreeMatch(node.getSuperClass(), o.getSuperClass()));
 	}
 
 	public boolean match(TraitUseStatement node, Object other) {

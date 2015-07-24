@@ -132,4 +132,8 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	public static boolean isDeprecated(int flags) {
 		return (flags & AccDeprecated) != 0;
 	}
+
+	public static boolean isAnonymous(int flags) {
+		return (flags & AccAnonymous) != 0;
+	}
 }

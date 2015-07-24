@@ -1,0 +1,47 @@
+--TEST--
+Test anonymous class
+--FILE--
+<?php
+$anonClass = new class {
+    use Foo;
+};
+--EXPECT--
+<Program start='0' length='46'>
+	<Statements>
+		<ExpressionStatement start='6' length='40'>
+			<Assignment start='6' length='39' operator='='>
+				<Variable start='6' length='10' isDollared='true'>
+					<Identifier start='7' length='9' name='anonClass'/>
+				</Variable>
+				<Value>
+					<ClassInstanceCreation start='19' length='26'>
+						<ClassName start='23' length='5'>
+							<Identifier start='23' length='5' name='class'/>
+						</ClassName>
+						<ConstructorParameters>
+						</ConstructorParameters>
+						<AnonymousClassDeclaration start='28' length='17''>
+							<SuperClass>
+							<SuperClass>
+							<Interfaces>
+							<Interfaces>
+							<Body>
+								<Block start='29' length='16' isCurly='true'>
+									<TraitUseStatement start='35' length='8'>
+										<TraitNameList>
+											<NamespaceName start='39' length='3' global='false' current='false'>
+												<Identifier start='39' length='3' name='Foo'/>
+											</NamespaceName>
+										</TraitNameList>
+									</TraitUseStatement>
+								</Block>
+							<Body>
+						</AnonymousClassDeclaration>
+					</ClassInstanceCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -3024,6 +3024,43 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			insertSpace();
 		}
 		appendToBuffer(CLOSE_PARN);
+		if (classInstanceCreation.getAnonymousClassDeclaration() != null) {
+			AnonymousClassDeclaration acd = classInstanceCreation
+					.getAnonymousClassDeclaration();
+			if (acd.getSuperClass() != null) {
+				appendToBuffer(" extends "); //$NON-NLS-1$
+				handleChars(lastPosition, acd.getSuperClass().getStart());
+				acd.getSuperClass().accept(this);
+				lastPosition = acd.getSuperClass().getEnd();
+			}
+
+			if (acd.getInterfaces() != null && acd.getInterfaces().size() > 0) {
+				appendToBuffer(" implements "); //$NON-NLS-1$
+
+				indentationGap = calculateIndentGap(
+						this.preferences.line_wrap_superinterfaces_in_type_declaration_indent_policy,
+						this.preferences.line_wrap_wrapped_lines_indentation);
+				ASTNode[] nodes = acd.getInterfaces().toArray(new ASTNode[0]);
+				lastPosition = handleCommaList(nodes, lastPosition,
+						this.preferences.insert_space_before_comma_in_implements,
+						this.preferences.insert_space_after_comma_in_implements,
+						this.preferences.line_wrap_superinterfaces_in_type_declaration_line_wrap_policy,
+						indentationGap,
+						this.preferences.line_wrap_superinterfaces_in_type_declaration_force_split);
+			}
+
+			boolean isIndentationAdded = handleBlockOpenBrace(
+					this.preferences.brace_position_for_lambda_function,
+					this.preferences.insert_space_before_opening_brace_in_function);
+			handleChars(lastPosition, acd.getBody().getStart());
+
+			acd.getBody().accept(this);
+			if (isIndentationAdded) {
+				indentationLevel--;
+				indentationLevelDesending = true;
+			}
+			lastPosition = acd.getBody().getEnd();
+		}
 		handleChars(lastPosition, classInstanceCreation.getEnd());
 		return false;
 	}
