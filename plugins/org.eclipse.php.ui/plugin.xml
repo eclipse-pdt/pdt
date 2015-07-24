@@ -2518,4 +2518,13 @@
             id="org.eclipse.php.ui.navigator.filtersr.ImportDeclarationFilter" />
  	</extension>
  
+	<extension point="org.eclipse.php.ui.quickAssistProcessors">
+		<quickAssistProcessor
+			id="org.eclipse.php.ui.quickassist.varCommentQuickAssistProcessor"
+			name="%varCommentQuickAssistProcessor.name"
+			class="org.eclipse.php.internal.ui.quickassist.VarCommentQuickAssistProcessor">
+			<command id="org.eclipse.php.ui.insertVarComment"/>
+		</quickAssistProcessor>
+	</extension>
+
 </plugin>
