@@ -15,7 +15,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
@@ -26,6 +28,7 @@ import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.php.debug.core.debugger.launching.ILaunchDelegateListener;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.*;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
@@ -69,7 +72,7 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 			if (phpExeItem == null) {
 				displayError(MessageFormat
 						.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_There_is_no_PHP_runtime_environment,
-								configuration.getName()));
+						configuration.getName()));
 				return false;
 			}
 			String phpExeString = configuration.getAttribute(
@@ -77,7 +80,7 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 			if (phpExeString == null || !(new File(phpExeString)).exists()) {
 				displayError(MessageFormat
 						.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_PHP_executable_file_is_invalid,
-								configuration.getName()));
+						configuration.getName()));
 				return false;
 			}
 			String fileName = configuration.getAttribute(
@@ -85,13 +88,13 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 			if (fileName == null || !(new File(fileName)).exists()) {
 				displayError(MessageFormat
 						.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_PHP_script_file_is_invalid,
-								configuration.getName()));
+						configuration.getName()));
 				return false;
 			}
 			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 				displayError(MessageFormat
 						.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_There_is_no_debugger_attached_for_PHP_executable,
-								configuration.getName(), phpExeItem.getName()));
+						configuration.getName(), phpExeItem.getName()));
 				return false;
 			}
 			return true;
@@ -132,7 +135,7 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 				} else {
 					String projectName = configuration
 							.getAttribute(IPHPDebugConstants.ATTR_PROJECT_NAME,
-									(String) null);
+							(String) null);
 					if (projectName != null) {
 						IProject resolved = ResourcesPlugin.getWorkspace()
 								.getRoot().getProject(projectName);
@@ -226,7 +229,7 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 										.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_Launching,
 												new Object[] { configuration
 														.getName() }),
-								IProgressMonitor.UNKNOWN);
+						IProgressMonitor.UNKNOWN);
 				runtimeProcess = DebugPlugin.newProcess(launch, process,
 						phpExe.toOSString(), processAttributes);
 				if (runtimeProcess == null) {
@@ -309,6 +312,14 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 
 		}
 
+		private static final String LAUNCH_LISTENERS_EXTENSION_ID = "org.eclipse.php.debug.core.phpLaunchDelegateListener"; //$NON-NLS-1$
+
+		private List<ILaunchDelegateListener> preLaunchListeners = new ArrayList<ILaunchDelegateListener>();
+
+		public WebLaunchDelegate() {
+			registerLaunchListeners();
+		}
+
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -324,7 +335,7 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 			if (server == null) {
 				displayError(MessageFormat
 						.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_There_is_no_PHP_server_specified,
-								configuration.getName()));
+						configuration.getName()));
 				return false;
 			}
 			String fileName = configuration.getAttribute(Server.FILE_NAME,
@@ -332,7 +343,7 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 			if (fileName == null) {
 				displayError(MessageFormat
 						.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_PHP_source_file_is_invalid,
-								configuration.getName()));
+						configuration.getName()));
 				return false;
 			}
 			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
@@ -340,7 +351,7 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 						.getPHPServer(configuration);
 				displayError(MessageFormat
 						.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_There_is_no_debugger_attached_for_PHP_server,
-								configuration.getName(), phpServer.getName()));
+						configuration.getName(), phpServer.getName()));
 				return false;
 			}
 			return true;
@@ -358,6 +369,14 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 		@Override
 		public void launch(ILaunchConfiguration configuration, String mode,
 				ILaunch launch, IProgressMonitor monitor) throws CoreException {
+			// Notify all listeners of a pre-launch event.
+			int resultCode = notifyPreLaunch(configuration, mode, launch,
+					monitor);
+			if (resultCode != 0) { // cancel launch
+				monitor.setCanceled(true);
+				monitor.done();
+				return; // canceled
+			}
 			// Check for previous launches
 			if (!PHPLaunchUtilities.notifyPreviousLaunches(launch)) {
 				monitor.setCanceled(true);
@@ -388,12 +407,53 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 			wc.doSave();
 			final String launchURL = new String(configuration.getAttribute(
 					Server.BASE_URL, "") //$NON-NLS-1$
-					.getBytes());
+							.getBytes());
 			launch.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER,
 					Boolean.toString(true));
 			launch.setAttribute(IDebugParametersKeys.ORIGINAL_URL, launchURL);
 			DebugPlugin.newProcess(launch, new MockProcess(launchURL),
 					launchURL, new HashMap<String, String>());
+		}
+
+		protected int notifyPreLaunch(ILaunchConfiguration configuration,
+				String mode, ILaunch launch, IProgressMonitor monitor) {
+			for (ILaunchDelegateListener listener : preLaunchListeners) {
+				int returnCode = listener.preLaunch(configuration, mode, launch,
+						monitor);
+				if (returnCode != 0) {
+					return returnCode;
+				}
+			}
+			return 0;
+		}
+
+		/**
+		 * Registers all pre-launch listeners.
+		 */
+		private void registerLaunchListeners() {
+			IConfigurationElement[] config = Platform.getExtensionRegistry()
+					.getConfigurationElementsFor(LAUNCH_LISTENERS_EXTENSION_ID);
+			try {
+				for (IConfigurationElement e : config) {
+					final Object o = e.createExecutableExtension("class"); //$NON-NLS-1$
+					if (o instanceof ILaunchDelegateListener) {
+						ISafeRunnable runnable = new ISafeRunnable() {
+							public void run() throws Exception {
+								ILaunchDelegateListener listener = (ILaunchDelegateListener) o;
+								Assert.isNotNull(listener);
+								preLaunchListeners.add(listener);
+							}
+
+							public void handleException(Throwable exception) {
+								Logger.logException(exception);
+							}
+						};
+						SafeRunner.run(runnable);
+					}
+				}
+			} catch (CoreException ex) {
+				Logger.logException(ex);
+			}
 		}
 
 	}
