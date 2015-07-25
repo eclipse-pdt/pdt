@@ -37,8 +37,7 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 		protected boolean createReturnFlowInfo(ReturnStatement node) {
 			// Make sure that the whole return statement is selected or located
 			// before the selection.
-			return node.getStart() + node.getLength() <= fSelection
-					.getExclusiveEnd();
+			return node.getEnd() <= fSelection.getExclusiveEnd();
 		}
 
 		protected ASTNode getLoopNode() {
@@ -145,8 +144,7 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 	}
 
 	protected boolean traverseNode(ASTNode node) {
-		return node.getStart() + node.getLength() > fSelection
-				.getInclusiveEnd();
+		return node.getEnd() > fSelection.getInclusiveEnd();
 	}
 
 	protected boolean createReturnFlowInfo(ReturnStatement node) {

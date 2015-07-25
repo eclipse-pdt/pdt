@@ -45,8 +45,7 @@ public class LineCommentEndOffsets {
 					Object curr = this.commentList.get(i);
 					if (isLineComment(curr)) {
 						Comment comment = (Comment) curr;
-						this.offsets[k++] = comment.getStart()
-								+ comment.getLength();
+						this.offsets[k++] = comment.getEnd();
 					}
 				}
 			} else {

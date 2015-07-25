@@ -86,7 +86,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 */
 	public final String getPhpTokenType(int offset) throws BadLocationException {
 		final ITextRegion tokenForOffset = getPhpToken(offset);
-		return tokenForOffset == null ? null : tokenForOffset.getType();
+		return tokenForOffset.getType();
 	}
 
 	/**
@@ -359,9 +359,8 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			try {
 				final ITextRegion token = tokensContaier.getToken(tokenStart
 						.getStart() - 1);
-				return token != null
-						&& (token.getType() == PHPRegionTypes.PHP_OPERATOR && token
-								.getLength() == 2);
+				return token.getType() == PHPRegionTypes.PHP_OPERATOR
+						&& token.getLength() == 2;
 			} catch (BadLocationException e) {
 				// never happens
 				assert false;

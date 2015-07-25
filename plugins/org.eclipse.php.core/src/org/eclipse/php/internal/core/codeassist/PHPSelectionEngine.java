@@ -190,6 +190,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							- container.getStartOffset()
 							- phpScriptRegion.getStart());
 				} catch (BadLocationException e) {
+					tRegion = null;
 				}
 				if (tRegion != null) {
 					// Determine element name:
@@ -622,9 +623,6 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				tRegion = phpScriptRegion.getPhpToken(offset
 						- container.getStartOffset()
 						- phpScriptRegion.getStart());
-				if (tRegion == null) {
-					return EMPTY;
-				}
 				// Determine element name:
 				int elementStart = container.getStartOffset()
 						+ phpScriptRegion.getStart() + tRegion.getStart();

@@ -892,8 +892,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 						startTokenRegion = phpScriptRegion
 								.getPhpToken(startTokenRegion.getStart()
 										- statementText1.length());
-						if (startTokenRegion != null
-								&& startTokenRegion.getType() == PHPRegionTypes.PHP_USE) {
+						if (startTokenRegion.getType() == PHPRegionTypes.PHP_USE) {
 							String[] types = statementText1.toString().trim()
 									.substring(3).trim().split(","); //$NON-NLS-1$
 							useTypes = new ArrayList<String>();

@@ -101,8 +101,7 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 						int regionTextLength = tRegion.getTextLength();
 						if (regionTextLength != regionLength
 								&& startOffset > getRegionStart(sdRegion,
-										startOffset)
-										+ regionTextLength
+										startOffset) + regionTextLength
 								&& shouldAddClosingBracket(document, endOffset,
 										true)) {
 							command.text = command.text + insertedChar;
@@ -277,8 +276,7 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 				tRegion = scriptRegion.getPhpToken(offset - regionStart);
 
-				if (tRegion == null
-						|| tRegion.getType() != PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
+				if (tRegion.getType() != PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
 					return;
 				}
 

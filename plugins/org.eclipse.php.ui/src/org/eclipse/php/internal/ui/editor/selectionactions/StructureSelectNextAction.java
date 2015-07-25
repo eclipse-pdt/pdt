@@ -112,8 +112,8 @@ public class StructureSelectNextAction extends StructureSelectionAction {
 		if (nextNode == parent)
 			return getSelectedNodeSourceRange(sr, first.getParent());
 		int offset = oldSourceRange.getOffset();
-		int end = Math.min(sr.getSourceRange().getLength(), nextNode.getStart()
-				+ nextNode.getLength() - 1);
+		int end = Math.min(sr.getSourceRange().getLength(),
+				nextNode.getEnd() - 1);
 		return createSourceRange(offset, end);
 	}
 

@@ -848,7 +848,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 							SymbolsProvider.getSymbol(
 									SymbolsProvider.OBJECT_OP_SYMBOL_ID,
 									scanner.getPHPVersion()),
-							node.getStart() + node.getLength());
+							node.getEnd());
 					doTextRemoveAndVisit(startPos, dotEnd - startPos, node,
 							editGroup);
 					return dotEnd;
@@ -2173,7 +2173,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 								scanner.getPHPVersion()),
 						pos);
 				ASTNode body = (ASTNode) event.getOriginalValue();
-				int bodyEnd = body.getStart() + body.getLength();
+				int bodyEnd = body.getEnd();
 				int endPos = getScanner().getTokenStartOffset(
 						SymbolsProvider.getSymbol(SymbolsProvider.WHILE_ID,
 								scanner.getPHPVersion()),
@@ -2396,8 +2396,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					endPos = getScanner().getTokenStartOffset(
 							SymbolsProvider.getSymbol(SymbolsProvider.ELSE_ID,
 									scanner.getPHPVersion()),
-							thenStatement.getStart()
-									+ thenStatement.getLength()); // else
+							thenStatement.getEnd()); // else
 					// keyword
 				}
 				if (elseStatement == null

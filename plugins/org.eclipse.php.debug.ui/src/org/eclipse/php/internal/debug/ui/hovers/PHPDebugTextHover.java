@@ -86,8 +86,7 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 					try {
 						ITextRegion prevPhpToken = phpScriptRegion
 								.getPhpToken(region.getStart() - 1);
-						if (prevPhpToken != null
-								&& prevPhpToken.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM) {
+						if (prevPhpToken.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM) {
 							prevPhpToken = phpScriptRegion
 									.getPhpToken(prevPhpToken.getStart() - 1);
 							varLength += varOffset - prevPhpToken.getStart();

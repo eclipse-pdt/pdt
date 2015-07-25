@@ -81,9 +81,6 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 			tRegion = scriptRegion.getPhpToken(offset - regionStart);
 
-			if (tRegion == null)
-				return null;
-
 			// go backward over the region to find a region (not comment nor
 			// whitespace)
 			// in the same line
@@ -622,8 +619,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 						&& document.getChar(regionStart + token.getStart()) == '.') {
 					token = ((IPhpScriptRegion) scriptRegion).getPhpToken(token
 							.getStart() - 1);
-					if (token != null
-							&& token.getType() == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
+					if (token.getType() == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
 						boolean isToken = true;
 						int currentOffset = regionStart + token.getStart() - 1;
 						while (currentOffset >= lineInfo.getOffset()) {
