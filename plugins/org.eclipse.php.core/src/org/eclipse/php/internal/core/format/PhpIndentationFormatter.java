@@ -156,9 +156,7 @@ public class PhpIndentationFormatter {
 				scriptRegionLength = scriptRegion.getStart();
 				firstTokenInLine = scriptRegion.getPhpToken(formattedLineStart
 						- regionStart);
-				if (firstTokenInLine != null
-						&& firstTokenInLine.getStart()
-								+ sdRegion.getStartOffset() < orginalLineStart
+				if (firstTokenInLine.getStart() + sdRegion.getStartOffset() < orginalLineStart
 						&& firstTokenInLine.getType() == PHPRegionTypes.WHITESPACE) {
 					firstTokenInLine = scriptRegion
 							.getPhpToken(formattedLineStart - regionStart
@@ -168,10 +166,8 @@ public class PhpIndentationFormatter {
 
 					lastTokenInLine = scriptRegion.getPhpToken(formattedTextEnd
 							- regionStart - 1);
-					if (lastTokenInLine != null
-							&& lastTokenInLine.getEnd()
-									+ sdRegion.getStartOffset() > orginalLineStart
-									+ originalLineLength
+					if (lastTokenInLine.getEnd() + sdRegion.getStartOffset() > orginalLineStart
+							+ originalLineLength
 							&& lastTokenInLine.getType() == PHPRegionTypes.WHITESPACE) {
 						lastTokenInLine = scriptRegion
 								.getPhpToken(formattedTextEnd - regionStart - 1

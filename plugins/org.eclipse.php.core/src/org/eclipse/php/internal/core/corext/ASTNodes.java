@@ -120,11 +120,11 @@ public class ASTNodes {
 	}
 
 	public static int getExclusiveEnd(ASTNode node) {
-		return node.getStart() + node.getLength();
+		return node.getEnd();
 	}
 
 	public static int getInclusiveEnd(ASTNode node) {
-		return node.getStart() + node.getLength() - 1;
+		return node.getEnd() - 1;
 	}
 
 	private static int computeIterations(int flags) {

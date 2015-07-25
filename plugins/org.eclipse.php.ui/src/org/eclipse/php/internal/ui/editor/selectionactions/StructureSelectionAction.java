@@ -149,7 +149,7 @@ public abstract class StructureSelectionAction extends Action {
 			ISourceReference sr, ASTNode nodeToSelect) throws ModelException {
 		int offset = nodeToSelect.getStart();
 		int end = Math.min(sr.getSourceRange().getLength(),
-				nodeToSelect.getStart() + nodeToSelect.getLength() - 1);
+				nodeToSelect.getEnd() - 1);
 		return createSourceRange(offset, end);
 	}
 

@@ -137,15 +137,13 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements
 	private static boolean rangeStartsBetween(ISourceRange range,
 			ASTNode first, ASTNode next) {
 		int pos = range.getOffset();
-		return first.getStart() + first.getLength() <= pos
-				&& pos <= next.getStart();
+		return first.getEnd() <= pos && pos <= next.getStart();
 	}
 
 	private static boolean rangeEndsBetween(ISourceRange range, ASTNode first,
 			ASTNode next) {
 		int pos = Util.getEndExclusive(range);
-		return first.getStart() + first.getLength() <= pos
-				&& pos <= next.getStart();
+		return first.getEnd() <= pos && pos <= next.getStart();
 	}
 
 	private static boolean rangeIncludesExtraNonWhitespace(ISourceRange range,
@@ -158,8 +156,8 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements
 	private static SourceRange getRangeOfOperands(List/* <Expression> */operands) {
 		Expression first = (Expression) operands.get(0);
 		Expression last = (Expression) operands.get(operands.size() - 1);
-		return new SourceRange(first.getStart(), last.getStart()
-				+ last.getLength() - first.getStart());
+		return new SourceRange(first.getStart(), last.getEnd()
+				- first.getStart());
 	}
 
 	public IASTFragment[] getMatchingFragmentsWithNode(ASTNode node) {
@@ -413,7 +411,7 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements
 	private int getEndPositionExclusive() {
 		List operands = getOperands();
 		ASTNode lastNode = (ASTNode) operands.get(operands.size() - 1);
-		return lastNode.getStart() + lastNode.getLength();
+		return lastNode.getEnd();
 	}
 
 	public int getStartPosition() {

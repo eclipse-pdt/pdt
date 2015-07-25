@@ -87,7 +87,7 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 				// region
 				// in this case is the same indentation
 				// other case if look for the '{' of the 'switch' region
-				while (tRegion != null) {
+				while (true) {
 					String token = tRegion.getType();
 					if (token == PHPRegionTypes.PHP_CURLY_OPEN) {
 						curlyCount--;

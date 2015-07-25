@@ -59,7 +59,7 @@ public class PhpTokenContainer implements Cloneable {
 	 * find token for a given location
 	 * 
 	 * @param offset
-	 * @return
+	 * @return token (will never be null)
 	 * @throws BadLocationException
 	 *             - if the offset is out of bound
 	 */
@@ -67,7 +67,8 @@ public class PhpTokenContainer implements Cloneable {
 			throws BadLocationException {
 		assert tokensIterator != null;
 		if (phpTokens.isEmpty()) {
-			return null;
+			throw new BadLocationException(
+					"offset " + offset + " cannot be contained in an empty region"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		// we have at least one region...
@@ -110,7 +111,7 @@ public class PhpTokenContainer implements Cloneable {
 		List<ITextRegion> result = new ArrayList<ITextRegion>(); // list of
 		// ITextRegion
 
-		ITextRegion token = getToken(offset);
+		ITextRegion token = phpTokens.isEmpty() ? null : getToken(offset);
 		if (token != null) {
 			result.add(token);
 		}
@@ -154,14 +155,13 @@ public class PhpTokenContainer implements Cloneable {
 
 	/**
 	 * @param offset
-	 * @return the partition type of the given offset
+	 * @return the partition type of the given offset (will never be null)
 	 * @throws BadLocationException
 	 */
 	public synchronized String getPartitionType(int offset)
 			throws BadLocationException {
 		ITextRegion token = getToken(offset);
-		while (token != null
-				&& PHPRegionTypes.PHPDOC_TODO.equals(token.getType())
+		while (PHPRegionTypes.PHPDOC_TODO.equals(token.getType())
 				&& token.getStart() - 1 >= 0) {
 			token = getToken(token.getStart() - 1);
 		}

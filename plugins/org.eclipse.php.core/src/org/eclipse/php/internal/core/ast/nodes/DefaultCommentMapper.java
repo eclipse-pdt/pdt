@@ -166,7 +166,7 @@ public class DefaultCommentMapper {
 	 * Returns the extended end position of the given node.
 	 */
 	public int getExtendedEnd(ASTNode node) {
-		int end = node.getStart() + node.getLength();
+		int end = node.getEnd();
 		if (this.trailingPtr >= 0) {
 			long range = -1;
 			for (int i = 0; range < 0 && i <= this.trailingPtr; i++) {
@@ -175,7 +175,7 @@ public class DefaultCommentMapper {
 			}
 			if (range >= 0) {
 				Comment lastComment = this.comments[(int) range];
-				end = lastComment.getStart() + lastComment.getLength();
+				end = lastComment.getEnd();
 			}
 		}
 		return end - 1;
@@ -458,7 +458,7 @@ public class DefaultCommentMapper {
 			int[] parentLineRange) {
 
 		// Init extended position
-		int nodeEnd = node.getStart() + node.getLength() - 1;
+		int nodeEnd = node.getEnd() - 1;
 		if (nodeEnd == nextStart) {
 			// special case for last child of its parent
 			if (++this.trailingPtr == 0) {
@@ -565,8 +565,7 @@ public class DefaultCommentMapper {
 			long nodeRange = (((long) startIdx) << 32) + endIdx;
 			this.trailingIndexes[this.trailingPtr] = nodeRange;
 			// Compute new extended end
-			extended = this.comments[endIdx].getStart()
-					+ this.comments[endIdx].getLength() - 1;
+			extended = this.comments[endIdx].getEnd() - 1;
 			// Look for children unresolved extended end
 			ASTNode previousNode = node;
 			int ptr = this.trailingPtr - 1; // children extended end were stored
@@ -690,8 +689,7 @@ public class DefaultCommentMapper {
 					: null;
 			if (sibling != null) {
 				try {
-					storeTrailingComments(sibling,
-							node.getStart() + node.getLength() - 1, true,
+					storeTrailingComments(sibling, node.getEnd() - 1, true,
 							this.parentLineRange[this.siblingPtr]);
 				} catch (Exception ex) {
 					// Give up extended ranges at this level if unexpected

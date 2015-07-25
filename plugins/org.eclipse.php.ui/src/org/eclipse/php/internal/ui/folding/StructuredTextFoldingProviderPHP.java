@@ -1516,24 +1516,21 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		try {
 			ITextRegion phpToken = textRegion.getPhpToken(0);
 			i = 0;
-			while (phpToken != null
-					&& phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_START
+			while (phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_START
 					&& i++ < 3) {
 				phpToken = textRegion.getPhpToken(phpToken.getEnd());
 			}
-			if (phpToken == null
-					|| phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_START) {
+			if (phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_START) {
 				return null;
 			}
 			int start = phpToken.getStart();
 			ITextRegion lastToken = null;
-			while (lastToken != phpToken && phpToken != null
+			while (lastToken != phpToken
 					&& phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_END) {
 				phpToken = textRegion.getPhpToken(phpToken.getEnd());
 			}
 
-			if (phpToken != null
-					&& phpToken.getType() == PHPRegionTypes.PHPDOC_COMMENT_END) {
+			if (phpToken.getType() == PHPRegionTypes.PHPDOC_COMMENT_END) {
 				int end = phpToken.getEnd();
 				return new Region(sdRegion.getStartOffset()
 						+ textRegion.getStart() + start, end - start);

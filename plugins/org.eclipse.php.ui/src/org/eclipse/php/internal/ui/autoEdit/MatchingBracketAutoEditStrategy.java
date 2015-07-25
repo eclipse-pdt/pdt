@@ -178,7 +178,7 @@ public class MatchingBracketAutoEditStrategy extends
 					tRegion = scriptRegion
 							.getPhpToken(currOffset - regionStart);
 
-					while (tRegion != null) {
+					while (true) {
 						String regionType = tRegion.getType();
 						if (regionType == PHPRegionTypes.PHP_TOKEN) {
 							char token = document.getChar(regionStart
@@ -272,8 +272,7 @@ public class MatchingBracketAutoEditStrategy extends
 				tRegion = scriptRegion.getPhpToken(offset
 						- sdRegion.getStartOffset(scriptRegion));
 
-				if (tRegion == null
-						|| tRegion.getType() != PHPRegionTypes.PHP_TOKEN) {
+				if (tRegion.getType() != PHPRegionTypes.PHP_TOKEN) {
 					return;
 				}
 

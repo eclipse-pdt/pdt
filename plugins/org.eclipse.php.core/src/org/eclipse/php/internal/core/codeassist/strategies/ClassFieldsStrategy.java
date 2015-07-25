@@ -117,14 +117,13 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 				ITextRegion phpToken = concreteContext.getPhpScriptRegion()
 						.getPhpToken(
 								concreteContext.getPHPToken().getStart() - 1);
-				if (phpToken != null
-						&& PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM
-								.equals(phpToken.getType())) {
+				if (PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM.equals(phpToken
+						.getType())) {
 					phpToken = concreteContext
 							.getPHPToken(phpToken.getStart() - 1);
 				}
 
-				if (phpToken != null && isStaticCall(phpToken.getType())) {
+				if (isStaticCall(phpToken.getType())) {
 					result.add(new FakeField(new FakeType(
 							(ModelElement) concreteContext.getSourceModule(),
 							STD_CLASS), CLASS_KEYWORD, Modifiers.AccConstant

@@ -73,8 +73,7 @@ public class SelectionAnalyzer extends ApplyAll {
 		ASTNode firstNode = fSelectedNodes.get(0);
 		ASTNode lastNode = fSelectedNodes.get(fSelectedNodes.size() - 1);
 		int start = firstNode.getStart();
-		return new Region(start, lastNode.getStart() + lastNode.getLength()
-				- start);
+		return new Region(start, lastNode.getEnd() - start);
 	}
 
 	public ASTNode getLastCoveringNode() {

@@ -89,8 +89,8 @@ public class PhpSourceParser extends XMLSourceParser {
 					// multiple block texts indicated embedded containers; no
 					// new IStructuredDocumentRegion
 					currentNode.addRegion(region);
-					currentNode.setLength(region.getStart()
-							+ region.getLength() - currentNode.getStart());
+					currentNode.setLength(region.getEnd()
+							- currentNode.getStart());
 					region.adjustStart(-currentNode.getStart());
 					// DW 4/16/2003 regions no longer have parents
 					// region.setParent(currentNode);
@@ -118,8 +118,8 @@ public class PhpSourceParser extends XMLSourceParser {
 					currentNode.setPrevious(lastNode);
 					currentNode.setStart(region.getStart());
 					currentNode.setLength(region.getLength());
-					// currentNode.setLength(region.getStart() +
-					// region.getLength() - currentNode.getStart());
+					// currentNode.setLength(region.getEnd()
+					// - currentNode.getStart());
 					currentNode.setEnded(true);
 					region.adjustStart(-currentNode.getStart());
 					currentNode.addRegion(region);
@@ -159,8 +159,7 @@ public class PhpSourceParser extends XMLSourceParser {
 				currentNode.setPrevious(lastNode);
 				currentNode.setStart(region.getStart());
 				currentNode.addRegion(region);
-				currentNode.setLength(region.getStart() + region.getLength()
-						- currentNode.getStart());
+				currentNode.setLength(region.getEnd() - currentNode.getStart());
 				region.adjustStart(-currentNode.getStart());
 				// DW 4/16/2003 regions no longer have parents
 				// region.setParent(currentNode);
@@ -179,8 +178,7 @@ public class PhpSourceParser extends XMLSourceParser {
 					|| (type == DOMRegionContext.XML_DOCTYPE_INTERNAL_SUBSET)
 					|| (type == PHPRegionContext.PHP_CONTENT)) {
 				currentNode.addRegion(region);
-				currentNode.setLength(region.getStart() + region.getLength()
-						- currentNode.getStart());
+				currentNode.setLength(region.getEnd() - currentNode.getStart());
 				region.adjustStart(-currentNode.getStart());
 				// DW 4/16/2003 regions no longer have parents
 				// region.setParent(currentNode);
@@ -198,8 +196,7 @@ public class PhpSourceParser extends XMLSourceParser {
 					|| (type == DOMRegionContext.XML_DECLARATION_CLOSE)
 					|| (type == DOMRegionContext.XML_CDATA_CLOSE)) {
 				currentNode.setEnded(true);
-				currentNode.setLength(region.getStart() + region.getLength()
-						- currentNode.getStart());
+				currentNode.setLength(region.getEnd() - currentNode.getStart());
 				currentNode.addRegion(region);
 				region.adjustStart(-currentNode.getStart());
 				// DW 4/16/2003 regions no longer have parents
@@ -243,8 +240,8 @@ public class PhpSourceParser extends XMLSourceParser {
 				// previous wasn't undefined
 				else {
 					currentNode.addRegion(region);
-					currentNode.setLength(region.getStart()
-							+ region.getLength() - currentNode.getStart());
+					currentNode.setLength(region.getEnd()
+							- currentNode.getStart());
 					region.adjustStart(-currentNode.getStart());
 				}
 			} else {
@@ -255,8 +252,7 @@ public class PhpSourceParser extends XMLSourceParser {
 					currentNode.setStart(region.getStart());
 				}
 				currentNode.addRegion(region);
-				currentNode.setLength(region.getStart() + region.getLength()
-						- currentNode.getStart());
+				currentNode.setLength(region.getEnd() - currentNode.getStart());
 				region.adjustStart(-currentNode.getStart());
 				// DW 4/16/2003 regions no longer have parents
 				// region.setParent(currentNode);

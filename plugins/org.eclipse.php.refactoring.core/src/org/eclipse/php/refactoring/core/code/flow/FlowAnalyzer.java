@@ -285,7 +285,7 @@ abstract class FlowAnalyzer extends ApplyAll {
 			} else {
 				info.merge(getFlowInfo(statement), fFlowContext);
 			}
-			end = statement.getStart() + statement.getLength() - 1;
+			end = statement.getEnd() - 1;
 		}
 		result.add(new Region(start, end - start + 1), info);
 		return result;

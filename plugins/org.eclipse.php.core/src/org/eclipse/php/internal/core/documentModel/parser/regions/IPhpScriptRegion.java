@@ -43,10 +43,11 @@ public interface IPhpScriptRegion extends ITextRegion {
 	public int getUpdatedTokensLength();
 
 	/**
-	 * Returns a single php token that lay in the given offset
+	 * Returns a single php token that lay in the given offset. If offset is
+	 * equal to getEnd(), the last php token from the region will be returned.
 	 * 
 	 * @param offset
-	 * @return
+	 * @return region (will never be null)
 	 * @throws BadLocationException
 	 */
 	public abstract ITextRegion getPhpToken(int offset)
@@ -71,6 +72,7 @@ public interface IPhpScriptRegion extends ITextRegion {
 	 * Please refer {@link PHPRegionTypes} for list of php token types
 	 * 
 	 * @param offset
+	 * @return php token type (will never be null)
 	 * @throws BadLocationException
 	 */
 	public abstract String getPhpTokenType(int offset)

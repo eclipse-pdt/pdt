@@ -74,7 +74,7 @@ public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 			// go backward over the region to find a 'case' or 'default' region
 			// in this case is the same indentation
 			// other case if look for the '{' of the 'switch' region
-			while (tRegion != null) {
+			while (true) {
 				String token = tRegion.getType();
 				if (token == PHPRegionTypes.PHP_CURLY_OPEN) {
 					curlyCount--;
