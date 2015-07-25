@@ -37,8 +37,8 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 
 							try {
 								if (ModelUtils.isDeprecated(element)) {
-									highlight(((IMember) element)
-											.getNameRange());
+									highlight(
+											((IMember) element).getNameRange());
 								}
 							} catch (ModelException e) {
 								Logger.logException(e);
@@ -142,6 +142,9 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 			IField field = ModelUtils.getField(fieldAccess);
 			if (field != null && ModelUtils.isDeprecated(field)) {
 				highlight(fieldAccess.getMember());
+			} else if (field != null && field.getParent() instanceof IType
+					&& ModelUtils.isDeprecated(field.getParent())) {
+				highlight(fieldAccess.getMember());
 			}
 			return true;
 		}
@@ -150,6 +153,9 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 		public boolean visit(MethodInvocation methodInv) {
 			IMethod method = ModelUtils.getMethod(methodInv);
 			if (method != null && ModelUtils.isDeprecated(method)) {
+				highlight(methodInv.getMethod().getFunctionName());
+			} else if (method != null && method.getParent() instanceof IType
+					&& ModelUtils.isDeprecated(method.getParent())) {
 				highlight(methodInv.getMethod().getFunctionName());
 			}
 			return true;
@@ -177,8 +183,8 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 				IModelAccessCache cache = funcInv.getAST().getBindingResolver()
 						.getModelAccessCache();
 				if (cache != null) {
-					String functionName = ModelUtils.getFunctionName(funcInv
-							.getFunctionName());
+					String functionName = ModelUtils
+							.getFunctionName(funcInv.getFunctionName());
 					// functionName will be null if the function call looks like
 					// ${func}(&$this),the ${func} is type of ReflectionVariable
 					if (functionName != null) {
