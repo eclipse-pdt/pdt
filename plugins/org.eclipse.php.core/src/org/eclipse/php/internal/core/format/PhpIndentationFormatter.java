@@ -150,8 +150,7 @@ public class PhpIndentationFormatter {
 			int scriptRegionLength = 0;
 			if (firstTokenInLine instanceof IPhpScriptRegion) {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) firstTokenInLine;
-				if (scriptRegion.getStart() + scriptRegion.getLength() < formattedLineStart
-						- regionStart) {
+				if (scriptRegion.getEnd() <= formattedLineStart) {
 					return;
 				}
 				scriptRegionLength = scriptRegion.getStart();
@@ -165,8 +164,7 @@ public class PhpIndentationFormatter {
 							.getPhpToken(formattedLineStart - regionStart
 									+ firstTokenInLine.getLength());
 				}
-				if (scriptRegion.getStart() + scriptRegion.getLength() >= formattedTextEnd
-						- regionStart - 1) {
+				if (formattedTextEnd <= scriptRegion.getEnd()) {
 
 					lastTokenInLine = scriptRegion.getPhpToken(formattedTextEnd
 							- regionStart - 1);
