@@ -240,13 +240,14 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 						continue;
 					}
 
-					IType[] typesOfNS = elements[i].getTypes();
+					IType[] typesOfNS = namespaces[i].getTypes();
 
 					for (int j = 0; j < typesOfNS.length; j++) {
 						reportAlias(reporter, scope, module, replacementRange,
 								typesOfNS[j],
-								elementName + SPLASH
-										+ typesOfNS[j].getElementName(),
+								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=469779
+								// elementName + SPLASH +
+								typesOfNS[j].getElementName(),
 								(elementName + SPLASH
 										+ typesOfNS[j].getElementName())
 												.replace(fullName, name),

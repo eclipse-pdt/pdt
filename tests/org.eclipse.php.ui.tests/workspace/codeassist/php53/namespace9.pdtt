@@ -1,0 +1,48 @@
+--TEST--
+Bug 461030 - Strange results and performance bottleneck inside strings 
+--FILE--
+<?php
+namespace class_space
+{
+	class MyClass
+	{
+		function __construct(MyObject $object)
+		{
+		}
+	}
+	
+	class MyObject
+	{
+	}
+}
+
+namespace test_space
+{
+    use class_space as Alias;
+	
+	new Alias\MyCl|;
+}
+?>
+--EXPECT--
+<?php
+namespace class_space
+{
+	class MyClass
+	{
+		function __construct(MyObject $object)
+		{
+		}
+	}
+	
+	class MyObject
+	{
+	}
+}
+
+namespace test_space
+{
+    use class_space as Alias;
+	
+	new Alias\MyClass($object);
+}
+?>
