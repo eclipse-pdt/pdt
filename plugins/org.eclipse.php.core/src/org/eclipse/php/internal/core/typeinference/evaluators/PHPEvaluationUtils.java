@@ -261,6 +261,7 @@ public class PHPEvaluationUtils {
 				evaluated.add(evaluatedType);
 			} else {
 				boolean isMulti = false;
+				// XX: also treat AmbiguousType?
 				Matcher multi = MULTITYPE_PATTERN.matcher(typeName);
 				if (multi.find()) {
 					isMulti = true;
