@@ -254,6 +254,10 @@ public class StubUtility {
 		} catch (TemplateException e) {
 			throw new CoreException(Status.CANCEL_STATUS);
 		}
+		if (buffer == null) {
+			return null;
+		}
+
 		String str = buffer.getString();
 		if (Strings.containsOnlyWhitespaces(str)) {
 			return null;
@@ -479,6 +483,7 @@ public class StubUtility {
 		if (Strings.containsOnlyWhitespaces(str)) {
 			return null;
 		}
+
 		TemplateVariable position = findVariable(buffer,
 				CodeTemplateContextType.TAGS); // look if PHPDoc tags have to
 		// be added
@@ -487,7 +492,6 @@ public class StubUtility {
 		}
 
 		IDocument document = new Document(str);
-
 		int[] tagOffsets = position.getOffsets();
 		for (int i = tagOffsets.length - 1; i >= 0; i--) { // from last to first
 			try {
@@ -495,8 +499,8 @@ public class StubUtility {
 						paramNames, retTypeSig, typeParameterNames, false,
 						lineDelimiter, newExceptions);
 			} catch (BadLocationException e) {
-				throw new CoreException(new Status(IStatus.ERROR,
-						PHPUiPlugin.ID, e.getClass().getName(), e));
+				throw new CoreException(DLTKUIStatus.createError(IStatus.ERROR,
+						e));
 			}
 		}
 		return document.get();
@@ -729,13 +733,13 @@ public class StubUtility {
 			}
 			buf.append("@return ").append(returnType); //$NON-NLS-1$
 		}
-
 		if (isDeprecated) {
 			if (buf.length() > 0) {
 				buf.append(lineDelimiter).append(lineStart);
 			}
 			buf.append("@deprecated"); //$NON-NLS-1$
 		}
+
 		if (buf.length() == 0 && isAllCommentWhitespace(lineStart)) {
 			int prevLine = textBuffer.getLineOfOffset(offset) - 1;
 			if (prevLine > 0) {
