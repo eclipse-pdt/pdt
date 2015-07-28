@@ -1,0 +1,16 @@
+--TEST--
+Bug 326225 - Variable type in phpDoc comment isn't recognized correctly, when default value for variable is array
+Tests phpDoc generation for function
+--FILE--
+<?php
+/**|
+function test($param = array()) {
+}
+--EXPECT--
+<?php
+/**
+ * 
+ * @param array $param
+ */
+function test($param = array()) {
+}

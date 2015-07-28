@@ -1,0 +1,24 @@
+--TEST--
+Bug 326225 - Variable type in phpDoc comment isn't recognized correctly, when default value for variable is array
+Tests phpDoc generation for class field
+--FILE--
+<?php
+class foo
+{
+  /**|
+  private $_tmp = array();
+
+  function __construct() {}
+}
+--EXPECT--
+<?php
+class foo
+{
+  /**
+   * 
+   * @var array
+   */
+  private $_tmp = array();
+
+  function __construct() {}
+}

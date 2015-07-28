@@ -308,52 +308,62 @@ public class CodeGeneration {
 
 		ASTNode elementAt = program.getElementAt(field.getSourceRange()
 				.getOffset());
+		Variable varDeclaration = null;
+		Expression expression = null;
 		ITypeBinding varType = null;
-		IVariableBinding resolvedBinding = null;
 
-		if (elementAt instanceof FieldsDeclaration) {
-			FieldsDeclaration fieldDeclaration = (FieldsDeclaration) elementAt;
-			resolvedBinding = fieldDeclaration.resolveTypeBinding();
-
-			if (null != resolvedBinding) {
-				varType = resolvedBinding.getType();
-			}
-		} else if (elementAt instanceof Variable) {
+		if (elementAt instanceof Variable) {
 			isVar = true;
-
-			Variable varDeclaration = (Variable) elementAt;
+			varDeclaration = (Variable) elementAt;
 			if (varDeclaration.getParent() instanceof Assignment) {
-				Expression expression = ((Assignment) varDeclaration
-						.getParent()).getRightHandSide();
+				expression = ((Assignment) varDeclaration.getParent())
+						.getRightHandSide();
 				varType = expression.resolveTypeBinding();
-				if (expression instanceof Scalar) {
-					Scalar scalar = (Scalar) expression;
-					switch (scalar.getScalarType()) {
-					case Scalar.TYPE_INT:
-						fieldType = "integer"; //$NON-NLS-1$
-						break;
-					case Scalar.TYPE_STRING:
-						if (!expression.isNullExpression()) {
-							fieldType = "string"; //$NON-NLS-1$
-						} else {
-							// we don't want to use varType to describe
-							// null values (because varType.isAmbiguous() will
-							// return true and varType.getName() will return
-							// "NULL"), but preferably UNKNOWN_TYPE when
-							// fieldType is null
-							varType = null;
-						}
-						break;
-					}
-				}
-
 			} else {
+				varType = varDeclaration.resolveTypeBinding();
+			}
+		} else if (elementAt instanceof FieldsDeclaration) {
+			FieldsDeclaration fieldDeclaration = (FieldsDeclaration) elementAt;
+			Variable[] variables = fieldDeclaration.getVariableNames();
+			Expression[] values = fieldDeclaration.getInitialValues();
+			if (variables.length > 0) {
+				assert values.length == variables.length;
+				// XXX: treat all field declarations (variables.length > 1),
+				// not only the first one.
+				// Example: "private $field1 = array(), $field2 = 5;"
+				varDeclaration = variables[0];
+				expression = values[0];
 				varType = varDeclaration.resolveTypeBinding();
 			}
 		}
 
+		if (expression instanceof ArrayCreation) {
+			fieldType = "array"; //$NON-NLS-1$
+		} else if (expression instanceof Scalar) {
+			Scalar scalar = (Scalar) expression;
+			switch (scalar.getScalarType()) {
+			case Scalar.TYPE_INT:
+				fieldType = "integer"; //$NON-NLS-1$
+				break;
+			case Scalar.TYPE_STRING:
+				if (!expression.isNullExpression()) {
+					fieldType = "string"; //$NON-NLS-1$
+				} else {
+					// we don't want to use varType to describe
+					// null values (because varType.isAmbiguous() will
+					// return true and varType.getName() will return
+					// "NULL"), but preferably UNKNOWN_TYPE when
+					// fieldType is null
+					varType = null;
+				}
+				break;
+			}
+		}
+
 		if (null == fieldType && null != varType) {
-			if (varType.isAmbiguous()) {
+			if (varType.isArray()) {
+				fieldType = "array"; //$NON-NLS-1$
+			} else if (varType.isAmbiguous()) {
 				fieldType = "Ambiguous"; //$NON-NLS-1$
 			} else {
 				fieldType = varType.getName();
@@ -661,28 +671,29 @@ public class CodeGeneration {
 				if (parameterType != null) {
 					String typeName = ((Identifier) parameterType).getName();
 					parameterTypes[i++] = typeName;
-				} else {
-					if (formalParameter.getDefaultValue() != null
-							&& formalParameter.getDefaultValue() instanceof Scalar
-							&& !formalParameter.getDefaultValue()
-									.isNullExpression()) {
-						Scalar scalar = (Scalar) formalParameter
-								.getDefaultValue();
-						IEvaluatedType simpleType = PHPSimpleTypes
-								.fromString(Scalar.getType(scalar
-										.getScalarType()));
-						if (simpleType == null) {
-							parameterTypes[i++] = Scalar.getType(scalar
-									.getScalarType());
-						} else {
-							parameterTypes[i++] = simpleType.getTypeName();
-						}
-
-					} else {
-						parameterTypes[i++] = UNKNOWN_TYPE;
-					}
-
+					continue;
 				}
+				if (formalParameter.getDefaultValue() != null
+						&& formalParameter.getDefaultValue() instanceof Scalar
+						&& !formalParameter.getDefaultValue()
+								.isNullExpression()) {
+					Scalar scalar = (Scalar) formalParameter.getDefaultValue();
+					IEvaluatedType simpleType = PHPSimpleTypes
+							.fromString(Scalar.getType(scalar.getScalarType()));
+					if (simpleType == null) {
+						parameterTypes[i++] = Scalar.getType(scalar
+								.getScalarType());
+					} else {
+						parameterTypes[i++] = simpleType.getTypeName();
+					}
+					continue;
+				}
+				if (formalParameter.getDefaultValue() != null
+						&& formalParameter.getDefaultValue() instanceof ArrayCreation) {
+					parameterTypes[i++] = "array"; //$NON-NLS-1$
+					continue;
+				}
+				parameterTypes[i++] = UNKNOWN_TYPE;
 			}
 		}
 
