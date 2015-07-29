@@ -11,8 +11,20 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.dltk.ui.actions.DeclarationsSearchGroup;
+import org.eclipse.dltk.ui.actions.ReferencesSearchGroup;
 import org.eclipse.jface.action.*;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.ui.IContextMenuConstants;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -31,7 +43,77 @@ import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 public class PHPSearchActionGroup extends ActionGroup {
 	private OpenSearchDialogAction action;
 	private OccurrencesSearchGroup fOccurrencesGroup;
+	private ReferencesSearchGroup fReferencesGroup;
+	private DeclarationsSearchGroup fDeclarationsGroup;
 	private final PHPStructuredEditor fEditor;
+	private ProxySelectionProvider proxySelectionProvider;
+
+	class ProxySelectionProvider
+			implements ISelectionProvider, ISelectionChangedListener {
+		Set<ISelectionChangedListener> listeners = new HashSet<ISelectionChangedListener>();
+		private ISelectionProvider parentProvider;
+
+		public ProxySelectionProvider(ISelectionProvider parentProvider) {
+			this.parentProvider = parentProvider;
+		}
+
+		@Override
+		public void setSelection(ISelection selection) {
+			parentProvider.setSelection(selection);
+		}
+
+		@Override
+		public void removeSelectionChangedListener(
+				ISelectionChangedListener listener) {
+			listeners.remove(listener);
+
+		}
+
+		@Override
+		public ISelection getSelection() {
+			return transformSelection(parentProvider.getSelection());
+		}
+
+		@Override
+		public void addSelectionChangedListener(
+				ISelectionChangedListener listener) {
+			listeners.add(listener);
+		}
+
+		@Override
+		public void selectionChanged(SelectionChangedEvent event) {
+			ISelection sel = transformSelection(event.getSelection());
+			SelectionChangedEvent newEvent = new SelectionChangedEvent(this,
+					sel);
+			for (ISelectionChangedListener listener : listeners) {
+				listener.selectionChanged(newEvent);
+			}
+		}
+
+		/**
+		 * Force TextSelection instead of WTP StructuredTextSelection
+		 * 
+		 * @param selection
+		 * @return
+		 */
+		protected ISelection transformSelection(ISelection selection) {
+			if (selection instanceof ITextSelection) {
+				selection = new TextSelection(
+						((ITextSelection) selection).getOffset(),
+						((ITextSelection) selection).getLength());
+				return selection;
+			}
+			return selection;
+		}
+
+		public void dispose() {
+			this.parentProvider.removeSelectionChangedListener(this);
+		}
+
+		public void register() {
+			this.parentProvider.addSelectionChangedListener(this);
+		}
+	}
 
 	/**
 	 * Constructs the class.
@@ -44,6 +126,15 @@ public class PHPSearchActionGroup extends ActionGroup {
 
 		action = new OpenSearchDialogAction();
 		fOccurrencesGroup = new OccurrencesSearchGroup(editor);
+		fReferencesGroup = new ReferencesSearchGroup(editor,
+				PHPLanguageToolkit.getDefault());
+		final ISelectionProvider parentProvider = fEditor
+				.getSelectionProvider();
+		proxySelectionProvider = new ProxySelectionProvider(parentProvider);
+		fReferencesGroup.setSpecialSelectionProvider(proxySelectionProvider);
+		fDeclarationsGroup = new DeclarationsSearchGroup(editor,
+				PHPLanguageToolkit.getDefault());
+		fDeclarationsGroup.setSpecialSelectionProvider(proxySelectionProvider);
 	}
 
 	/**
@@ -55,23 +146,30 @@ public class PHPSearchActionGroup extends ActionGroup {
 		fEditor = null;
 		action = new OpenSearchDialogAction();
 		fOccurrencesGroup = new OccurrencesSearchGroup(site);
+		fReferencesGroup = new ReferencesSearchGroup(site,
+				PHPLanguageToolkit.getDefault());
+		fDeclarationsGroup = new DeclarationsSearchGroup(site,
+				PHPLanguageToolkit.getDefault());
 	}
 
 	@Override
 	public void setContext(ActionContext context) {
 		fOccurrencesGroup.setContext(context);
+		fReferencesGroup.setContext(context);
+		fDeclarationsGroup.setContext(context);
 		super.setContext(context);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.actions.ActionGroup#fillActionBars(org.eclipse.ui.IActionBars
-	 * )
+	 * @see org.eclipse.ui.actions.ActionGroup#fillActionBars(org.eclipse.ui.
+	 * IActionBars )
 	 */
 	public void fillActionBars(IActionBars actionBar) {
 		fOccurrencesGroup.fillActionBars(actionBar);
+		fReferencesGroup.fillActionBars(actionBar);
+		fDeclarationsGroup.fillActionBars(actionBar);
 		super.fillActionBars(actionBar);
 	}
 
@@ -84,16 +182,16 @@ public class PHPSearchActionGroup extends ActionGroup {
 	 */
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
-		if (!PreferenceConstants.getPreferenceStore().getBoolean(
-				PreferenceConstants.SEARCH_USE_REDUCED_MENU)) {
+		if (!PreferenceConstants.getPreferenceStore()
+				.getBoolean(PreferenceConstants.SEARCH_USE_REDUCED_MENU)) {
 			IMenuManager target = menu;
 			IMenuManager searchSubMenu = null;
 			if (fEditor != null) {
 				String groupName = "SearchMessages.group_search"; //$NON-NLS-1$
 				searchSubMenu = new MenuManager(groupName,
 						ITextEditorActionConstants.GROUP_FIND);
-				searchSubMenu.add(new GroupMarker(
-						ITextEditorActionConstants.GROUP_FIND));
+				searchSubMenu.add(
+						new GroupMarker(ITextEditorActionConstants.GROUP_FIND));
 				target = searchSubMenu;
 			}
 
@@ -107,6 +205,12 @@ public class PHPSearchActionGroup extends ActionGroup {
 				menu.appendToGroup(ITextEditorActionConstants.GROUP_FIND,
 						searchSubMenu);
 			}
+
+			fReferencesGroup.fillContextMenu(target);
+			fDeclarationsGroup.fillContextMenu(target);
+		} else {
+			fReferencesGroup.fillContextMenu(menu);
+			fDeclarationsGroup.fillContextMenu(menu);
 		}
 
 		IContributionItem item = menu.find(IContextMenuConstants.GROUP_OPEN);
@@ -118,6 +222,12 @@ public class PHPSearchActionGroup extends ActionGroup {
 	@Override
 	public void dispose() {
 		fOccurrencesGroup.dispose();
+		fReferencesGroup.dispose();
+		fDeclarationsGroup.dispose();
+		if (proxySelectionProvider != null) {
+			proxySelectionProvider.dispose();
+			proxySelectionProvider = null;
+		}
 		super.dispose();
 	}
 
