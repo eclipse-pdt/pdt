@@ -286,8 +286,6 @@ public class CodeGeneration {
 	 */
 	public static String getFieldComment(IScriptProject sp, IField field,
 			String lineDelimiter) throws CoreException {
-		String fieldName = field.getElementName();
-		String fieldType = null;
 		Boolean isVar = false;
 		Program program = null;
 
@@ -308,77 +306,115 @@ public class CodeGeneration {
 
 		ASTNode elementAt = program.getElementAt(field.getSourceRange()
 				.getOffset());
-		Variable varDeclaration = null;
-		Expression expression = null;
-		ITypeBinding varType = null;
+		// we need at least one entry (even if content is null)
+		Expression[] expressions = new Expression[1];
+		ITypeBinding[] varTypes = new ITypeBinding[1];
+		String[] fieldNames = new String[] { field.getElementName() };
 
 		if (elementAt instanceof Variable) {
 			isVar = true;
-			varDeclaration = (Variable) elementAt;
+			Variable varDeclaration = (Variable) elementAt;
 			if (varDeclaration.getParent() instanceof Assignment) {
-				expression = ((Assignment) varDeclaration.getParent())
+				expressions[0] = ((Assignment) varDeclaration.getParent())
 						.getRightHandSide();
-				varType = expression.resolveTypeBinding();
+				varTypes[0] = expressions[0].resolveTypeBinding();
 			} else {
-				varType = varDeclaration.resolveTypeBinding();
+				varTypes[0] = varDeclaration.resolveTypeBinding();
 			}
 		} else if (elementAt instanceof FieldsDeclaration) {
 			FieldsDeclaration fieldDeclaration = (FieldsDeclaration) elementAt;
-			Variable[] variables = fieldDeclaration.getVariableNames();
-			Expression[] values = fieldDeclaration.getInitialValues();
-			if (variables.length > 0) {
-				assert values.length == variables.length;
-				// XXX: treat all field declarations (variables.length > 1),
-				// not only the first one.
-				// Example: "private $field1 = array(), $field2 = 5;"
-				varDeclaration = variables[0];
-				expression = values[0];
-				varType = varDeclaration.resolveTypeBinding();
-			}
-		}
+			Variable[] varDeclarations = fieldDeclaration.getVariableNames();
+			if (varDeclarations.length > 0) {
+				expressions = fieldDeclaration.getInitialValues();
+				assert varDeclarations.length == expressions.length;
 
-		if (expression instanceof ArrayCreation) {
-			fieldType = "array"; //$NON-NLS-1$
-		} else if (expression instanceof Scalar) {
-			Scalar scalar = (Scalar) expression;
-			switch (scalar.getScalarType()) {
-			case Scalar.TYPE_INT:
-				fieldType = "integer"; //$NON-NLS-1$
-				break;
-			case Scalar.TYPE_STRING:
-				if (!expression.isNullExpression()) {
-					fieldType = "string"; //$NON-NLS-1$
-				} else {
-					// we don't want to use varType to describe
-					// null values (because varType.isAmbiguous() will
-					// return true and varType.getName() will return
-					// "NULL"), but preferably UNKNOWN_TYPE when
-					// fieldType is null
-					varType = null;
+				varTypes = new ITypeBinding[varDeclarations.length];
+				fieldNames = new String[varDeclarations.length];
+				for (int i = 0; i < varDeclarations.length; i++) {
+					varTypes[i] = varDeclarations[i].resolveTypeBinding();
+					fieldNames[i] = getVarName(varDeclarations[i]);
 				}
-				break;
 			}
 		}
 
-		if (null == fieldType && null != varType) {
-			if (varType.isArray()) {
-				fieldType = "array"; //$NON-NLS-1$
-			} else if (varType.isAmbiguous()) {
-				fieldType = "Ambiguous"; //$NON-NLS-1$
-			} else {
-				fieldType = varType.getName();
-			}
-		}
+		String[] fieldTypes = getFieldTypes(varTypes, expressions);
 
-		if (null == fieldType) {
-			fieldType = UNKNOWN_TYPE;
-		}
 		if (isVar) {
-			return StubUtility.getVarComment(sp, fieldType, fieldName,
+			return StubUtility.getVarComment(sp, fieldTypes[0], fieldNames[0],
 					lineDelimiter);
 		}
-		return StubUtility.getFieldComment(sp, fieldType, fieldName,
+		if (fieldTypes.length > 1) {
+			return StubUtility.getMultipleFieldsComment(sp, fieldTypes,
+					fieldNames, lineDelimiter);
+		}
+		return StubUtility.getFieldComment(sp, fieldTypes[0], fieldNames[0],
 				lineDelimiter);
+	}
+
+	private static String getVarName(Variable varDeclaration) {
+		if (varDeclaration.getName() instanceof Identifier) {
+			Identifier id = (Identifier) varDeclaration.getName();
+			return varDeclaration.isDollared() ? '$' + id.getName() : id
+					.getName();
+		}
+		return ""; //$NON-NLS-1$
+	}
+
+	/**
+	 * 
+	 * @param varTypes
+	 *            (can have null entries)
+	 * @param expressions
+	 *            (can have null entries)
+	 * @return non-null field types
+	 */
+	public static String[] getFieldTypes(ITypeBinding[] varTypes,
+			Expression[] expressions) {
+		String[] fieldTypes = new String[expressions.length];
+
+		for (int i = 0; i < expressions.length; i++) {
+			Expression expression = expressions[i];
+			ITypeBinding varType = varTypes[i];
+
+			if (expression instanceof ArrayCreation) {
+				fieldTypes[i] = "array"; //$NON-NLS-1$
+			} else if (expression instanceof Scalar) {
+				Scalar scalar = (Scalar) expression;
+				switch (scalar.getScalarType()) {
+				case Scalar.TYPE_INT:
+					fieldTypes[i] = "integer"; //$NON-NLS-1$
+					break;
+				case Scalar.TYPE_STRING:
+					if (!expression.isNullExpression()) {
+						fieldTypes[i] = "string"; //$NON-NLS-1$
+					} else {
+						// we don't want to use varType to describe
+						// null values (because varType.isAmbiguous() will
+						// return true and varType.getName() will return
+						// "NULL"), but preferably UNKNOWN_TYPE when
+						// fieldType is null
+						varType = null;
+					}
+					break;
+				}
+			}
+
+			if (null == fieldTypes[i] && null != varType) {
+				if (varType.isArray()) {
+					fieldTypes[i] = "array"; //$NON-NLS-1$
+				} else if (varType.isAmbiguous()) {
+					fieldTypes[i] = "Ambiguous"; //$NON-NLS-1$
+				} else {
+					fieldTypes[i] = varType.getName();
+				}
+			}
+
+			if (null == fieldTypes[i]) {
+				fieldTypes[i] = UNKNOWN_TYPE;
+			}
+		}
+
+		return fieldTypes;
 	}
 
 	/**

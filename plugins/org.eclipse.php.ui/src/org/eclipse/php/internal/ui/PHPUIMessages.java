@@ -691,6 +691,8 @@ public final class PHPUIMessages extends NLS {
 	public static String PHPManualConfigurationBlock_edit;
 	public static String PHPStructuredTextViewer_0;
 	public static String CodeTemplateBlock_fieldcomment_label;
+	public static String CodeTemplateBlock_multifieldcomment_label;
+	public static String CodeTemplateBlock_varcomment_label;
 	public static String Search_FindDeclarationsInWorkingSetAction_label;
 	public static String PHPSearchResultPage_groupby_type_tooltip;
 	public static String CopyToClipboardAction_desc;
