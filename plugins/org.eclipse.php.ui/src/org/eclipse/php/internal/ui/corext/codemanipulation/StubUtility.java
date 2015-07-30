@@ -562,8 +562,61 @@ public class StubUtility {
 		return evaluateTemplate(context, template);
 	}
 
-	public static String getVarComment(IScriptProject sp, String fieldType,
-			String fieldName, String lineDelimiter) throws CoreException {
+	/*
+	 * Don't use this method directly, use CodeGeneration.
+	 */
+	public static String getMultipleFieldsComment(IScriptProject sp,
+			String[] fieldTypes, String[] fieldNames, String lineDelim)
+			throws CoreException {
+		Template template = getCodeTemplate(
+				CodeTemplateContextType.MULTIFIELDCOMMENT_ID, sp);
+		if (template == null) {
+			return null;
+		}
+		CodeTemplateContext context = new CodeTemplateContext(
+				template.getContextTypeId(), sp, lineDelim);
+		// context.setCompilationUnitVariables(sp);
+
+		TemplateBuffer buffer;
+		try {
+			buffer = context.evaluate(template);
+		} catch (BadLocationException e) {
+			throw new CoreException(Status.CANCEL_STATUS);
+		} catch (TemplateException e) {
+			throw new CoreException(Status.CANCEL_STATUS);
+		}
+		if (buffer == null) {
+			return null;
+		}
+
+		String str = buffer.getString();
+		if (Strings.containsOnlyWhitespaces(str)) {
+			return null;
+		}
+
+		TemplateVariable position = findVariable(buffer,
+				CodeTemplateContextType.TAGS); // look if PHPDoc tags have to
+		// be added
+		if (position == null) {
+			return str;
+		}
+
+		IDocument document = new Document(str);
+		int[] tagOffsets = position.getOffsets();
+		for (int i = tagOffsets.length - 1; i >= 0; i--) { // from last to first
+			try {
+				insertVarTags(document, tagOffsets[i], position.getLength(),
+						fieldNames, fieldTypes, lineDelim);
+			} catch (BadLocationException e) {
+				throw new CoreException(DLTKUIStatus.createError(IStatus.ERROR,
+						e));
+			}
+		}
+		return document.get();
+	}
+
+	public static String getVarComment(IScriptProject sp, String varType,
+			String varName, String lineDelimiter) throws CoreException {
 		Template template = getCodeTemplate(
 				CodeTemplateContextType.VARCOMMENT_ID, sp);
 		if (template == null) {
@@ -571,8 +624,9 @@ public class StubUtility {
 		}
 		CodeTemplateContext context = new CodeTemplateContext(
 				template.getContextTypeId(), sp, lineDelimiter);
-		context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldType);
-		context.setVariable(CodeTemplateContextType.FIELD, fieldName);
+		// context.setCompilationUnitVariables(sp);
+		context.setVariable(CodeTemplateContextType.VAR_TYPE, varType);
+		context.setVariable(CodeTemplateContextType.VAR, varName);
 
 		return evaluateTemplate(context, template);
 	}
@@ -644,8 +698,10 @@ public class StubUtility {
 		} catch (TemplateException e) {
 			throw new CoreException(Status.CANCEL_STATUS);
 		}
-		if (buffer == null)
+		if (buffer == null) {
 			return null;
+		}
+
 		String str = buffer.getString();
 		if (Strings.containsOnlyWhitespaces(str)) {
 			return null;
@@ -658,8 +714,10 @@ public class StubUtility {
 		TemplateBuffer buffer;
 		try {
 			buffer = context.evaluate(template);
-			if (buffer == null)
+			if (buffer == null) {
 				return null;
+			}
+
 			String str = fixEmptyVariables(buffer, fullLineVariables);
 			if (Strings.containsOnlyWhitespaces(str)) {
 				return null;
@@ -688,6 +746,39 @@ public class StubUtility {
 			}
 		}
 		return null;
+	}
+
+	private static void insertVarTags(IDocument textBuffer, int offset,
+			int length, String[] fieldNames, String[] fieldTypes,
+			String lineDelimiter) throws BadLocationException {
+		IRegion region = textBuffer.getLineInformationOfOffset(offset);
+		if (region == null) {
+			return;
+		}
+		String lineStart = textBuffer.get(region.getOffset(),
+				offset - region.getOffset());
+
+		StringBuffer buf = new StringBuffer();
+		for (int i = 0; i < fieldNames.length; i++) {
+			if (buf.length() > 0) {
+				buf.append(lineDelimiter).append(lineStart);
+			}
+			buf.append("@var ").append(fieldNames[i]).append(' ').append(fieldTypes[i]); //$NON-NLS-1$
+		}
+
+		if (buf.length() == 0 && isAllCommentWhitespace(lineStart)) {
+			int prevLine = textBuffer.getLineOfOffset(offset) - 1;
+			if (prevLine > 0) {
+				IRegion prevRegion = textBuffer.getLineInformation(prevLine);
+				int prevLineEnd = prevRegion.getOffset()
+						+ prevRegion.getLength();
+				// clear full line
+				textBuffer.replace(prevLineEnd, offset + length - prevLineEnd,
+						""); //$NON-NLS-1$
+				return;
+			}
+		}
+		textBuffer.replace(offset, length, buf.toString());
 	}
 
 	private static void insertTag(IDocument textBuffer, int offset, int length,
