@@ -95,8 +95,8 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		public Object getParent(TreeListDialogField field, Object element) {
 			if (element instanceof TemplatePersistenceData) {
 				TemplatePersistenceData data = (TemplatePersistenceData) element;
-				if (data.getTemplate().getName().endsWith(
-						CodeTemplateContextType.COMMENT_SUFFIX)) {
+				if (data.getTemplate().getName()
+						.endsWith(CodeTemplateContextType.COMMENT_SUFFIX)) {
 					return COMMENT_NODE;
 				}
 				return CODE_NODE;
@@ -159,18 +159,22 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 				return 2;
 			} else if (CodeTemplateContextType.FIELDCOMMENT_ID.equals(id)) {
 				return 3;
-			} else if (CodeTemplateContextType.CONSTRUCTORCOMMENT_ID.equals(id)) {
+			} else if (CodeTemplateContextType.MULTIFIELDCOMMENT_ID.equals(id)) {
 				return 4;
-			} else if (CodeTemplateContextType.METHODCOMMENT_ID.equals(id)) {
+			} else if (CodeTemplateContextType.VARCOMMENT_ID.equals(id)) {
 				return 5;
-			} else if (CodeTemplateContextType.OVERRIDECOMMENT_ID.equals(id)) {
+			} else if (CodeTemplateContextType.CONSTRUCTORCOMMENT_ID.equals(id)) {
 				return 6;
-			} else if (CodeTemplateContextType.DELEGATECOMMENT_ID.equals(id)) {
+			} else if (CodeTemplateContextType.METHODCOMMENT_ID.equals(id)) {
 				return 7;
-			} else if (CodeTemplateContextType.GETTERCOMMENT_ID.equals(id)) {
+			} else if (CodeTemplateContextType.OVERRIDECOMMENT_ID.equals(id)) {
 				return 8;
-			} else if (CodeTemplateContextType.SETTERCOMMENT_ID.equals(id)) {
+			} else if (CodeTemplateContextType.DELEGATECOMMENT_ID.equals(id)) {
 				return 9;
+			} else if (CodeTemplateContextType.GETTERCOMMENT_ID.equals(id)) {
+				return 10;
+			} else if (CodeTemplateContextType.SETTERCOMMENT_ID.equals(id)) {
+				return 11;
 			}
 			return 1000;
 		}
@@ -228,6 +232,10 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 				return PreferencesMessages.CodeTemplateBlock_typecomment_label;
 			} else if (CodeTemplateContextType.FIELDCOMMENT_ID.equals(id)) {
 				return PreferencesMessages.CodeTemplateBlock_fieldcomment_label;
+			} else if (CodeTemplateContextType.MULTIFIELDCOMMENT_ID.equals(id)) {
+				return PreferencesMessages.CodeTemplateBlock_multifieldcomment_label;
+			} else if (CodeTemplateContextType.VARCOMMENT_ID.equals(id)) {
+				return PreferencesMessages.CodeTemplateBlock_varcomment_label;
 			} else if (CodeTemplateContextType.METHODCOMMENT_ID.equals(id)) {
 				return PreferencesMessages.CodeTemplateBlock_methodcomment_label;
 			} else if (CodeTemplateContextType.OVERRIDECOMMENT_ID.equals(id)) {
@@ -366,7 +374,8 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		// JobSafeStructuredDocument document= new JobSafeStructuredDocument();
 		// IDocumentPartitioner partitioner= new PHPStructuredTextPartitioner();
 		//
-		//		//document.setDocumentPartitioner("org.eclipse.wst.sse.core.default_structured_text_partitioning", partitioner); 
+		// //document.setDocumentPartitioner("org.eclipse.wst.sse.core.default_structured_text_partitioning",
+		// partitioner);
 		// document.setDocumentPartitioner( partitioner);
 		//
 		// IPreferenceStore store=
@@ -385,7 +394,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		// viewer.setEditable(false);
 		// viewer.setDocument(document);
 		//
-		//		Font font= JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont"); 		
+		// Font font= JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont");
 		// viewer.getTextWidget().setFont(font);
 		// new PHPSourcePreviewerUpdater(viewer, configuration, store);
 		//
@@ -445,8 +454,8 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		TemplatePersistenceData[] templates = fTemplateStore.getTemplateData();
 		for (int i = 0; i < templates.length; i++) {
 			TemplatePersistenceData curr = templates[i];
-			if (isComment == curr.getTemplate().getName().endsWith(
-					CodeTemplateContextType.COMMENT_SUFFIX)) {
+			if (isComment == curr.getTemplate().getName()
+					.endsWith(CodeTemplateContextType.COMMENT_SUFFIX)) {
 				res.add(curr);
 			}
 		}
@@ -470,8 +479,8 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 					.get(0);
 			Template template = data.getTemplate();
 			TemplateContextType type = PHPUiPlugin.getDefault()
-					.getCodeTemplateContextRegistry().getContextType(
-							template.getContextTypeId());
+					.getCodeTemplateContextRegistry()
+					.getContextType(template.getContextTypeId());
 			fTemplateProcessor.setContextType(type);
 			fPatternViewer.getDocument().set(template.getPattern());
 		} else {
@@ -576,8 +585,8 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 	private void export(TemplatePersistenceData[] templates) {
 		FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
 		dialog.setText(Messages.format(
-				PreferencesMessages.CodeTemplateBlock_export_title, String
-						.valueOf(templates.length)));
+				PreferencesMessages.CodeTemplateBlock_export_title,
+				String.valueOf(templates.length)));
 		dialog.setFilterExtensions(new String[] { PreferencesMessages.CodeTemplateBlock_export_extension });
 		dialog.setFileName(PreferencesMessages.CodeTemplateBlock_export_filename);
 		String path = dialog.open();

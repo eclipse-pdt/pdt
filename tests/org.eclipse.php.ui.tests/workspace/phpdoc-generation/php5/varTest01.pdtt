@@ -1,0 +1,21 @@
+--TEST--
+Bug 326225 - Variable type in phpDoc comment isn't recognized correctly, when default value for variable is array
+Bug 437792 - Inline definition of var type (@var) is not standard
+Tests phpDoc generation for function
+--FILE--
+<?php
+function test($param = array())
+{
+    /**|
+    $a = array();
+}
+--EXPECT--
+<?php
+function test($param = array())
+{
+    /**
+     * 
+     * @var $a array
+     */
+    $a = array();
+}

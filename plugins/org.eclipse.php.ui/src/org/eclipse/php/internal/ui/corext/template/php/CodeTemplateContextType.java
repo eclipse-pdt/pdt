@@ -51,6 +51,10 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 			+ "typecomment_context"; //$NON-NLS-1$
 	public static final String FIELDCOMMENT_CONTEXTTYPE = PHP_PREFIX
 			+ "fieldcomment_context"; //$NON-NLS-1$
+	public static final String MULTIFIELDCOMMENT_CONTEXTTYPE = PHP_PREFIX
+			+ "multifieldcomment_context"; //$NON-NLS-1$
+	public static final String VARCOMMENT_CONTEXTTYPE = PHP_PREFIX
+			+ "varcomment_context"; //$NON-NLS-1$
 	public static final String METHODCOMMENT_CONTEXTTYPE = PHP_PREFIX
 			+ "methodcomment_context"; //$NON-NLS-1$
 	public static final String CONSTRUCTORCOMMENT_CONTEXTTYPE = PHP_PREFIX
@@ -80,8 +84,8 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 	public static final String CATCHBLOCK_ID = CODETEMPLATES_PREFIX
 			+ "catchblock"; //$NON-NLS-1$
 	public static final String METHODSTUB_ID = CODETEMPLATES_PREFIX
-			+ "methodbody"; 	 //$NON-NLS-1$
-	public static final String NEWTYPE_ID = CODETEMPLATES_PREFIX + "newtype"; 	 //$NON-NLS-1$
+			+ "methodbody"; //$NON-NLS-1$
+	public static final String NEWTYPE_ID = CODETEMPLATES_PREFIX + "newtype"; //$NON-NLS-1$
 	public static final String CONSTRUCTORSTUB_ID = CODETEMPLATES_PREFIX
 			+ "constructorbody"; //$NON-NLS-1$
 	public static final String GETTERSTUB_ID = CODETEMPLATES_PREFIX
@@ -101,6 +105,8 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 			+ "annotationbody"; //$NON-NLS-1$
 	public static final String FIELDCOMMENT_ID = CODETEMPLATES_PREFIX
 			+ "field" + COMMENT_SUFFIX; //$NON-NLS-1$
+	public static final String MULTIFIELDCOMMENT_ID = CODETEMPLATES_PREFIX
+			+ "multifield" + COMMENT_SUFFIX; //$NON-NLS-1$
 	public static final String VARCOMMENT_ID = CODETEMPLATES_PREFIX
 			+ "var" + COMMENT_SUFFIX; //$NON-NLS-1$
 	public static final String METHODCOMMENT_ID = CODETEMPLATES_PREFIX
@@ -124,6 +130,8 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 	public static final String BODY_STATEMENT = "body_statement"; //$NON-NLS-1$
 	public static final String FIELD = "field"; //$NON-NLS-1$
 	public static final String FIELD_TYPE = "field_type"; //$NON-NLS-1$
+	public static final String VAR = "var"; //$NON-NLS-1$
+	public static final String VAR_TYPE = "var_type"; //$NON-NLS-1$
 	public static final String BARE_FIELD_NAME = "bare_field_name"; //$NON-NLS-1$
 
 	public static final String PARAM = "param"; //$NON-NLS-1$
@@ -184,8 +192,7 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 	 * protected static class Todo extends TemplateVariableResolver {
 	 * 
 	 * public Todo() { super("todo",
-	 * PhpTemplateMessages.CodeTemplateContextType_variable_description_todo);
-	 * }
+	 * PhpTemplateMessages.CodeTemplateContextType_variable_description_todo); }
 	 * 
 	 * protected String resolve(TemplateContext context) { String todoTaskTag=
 	 * StubUtility.getTodoTaskTag(((CodeTemplateContext)
@@ -312,6 +319,19 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 			addResolver(new CodeTemplateVariableResolver(
 					FIELD,
 					PhpTemplateMessages.CodeTemplateContextType_variable_description_fieldname));
+			addCompilationUnitVariables();
+			fIsComment = true;
+		} else if (MULTIFIELDCOMMENT_CONTEXTTYPE.equals(contextName)) {
+			addResolver(new TagsVariableResolver());
+			addCompilationUnitVariables();
+			fIsComment = true;
+		} else if (VARCOMMENT_CONTEXTTYPE.equals(contextName)) {
+			addResolver(new CodeTemplateVariableResolver(
+					VAR_TYPE,
+					PhpTemplateMessages.CodeTemplateContextType_variable_description_vartype));
+			addResolver(new CodeTemplateVariableResolver(
+					VAR,
+					PhpTemplateMessages.CodeTemplateContextType_variable_description_varname));
 			addCompilationUnitVariables();
 			fIsComment = true;
 		} else if (METHODCOMMENT_CONTEXTTYPE.equals(contextName)) {
@@ -473,6 +493,10 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 				CodeTemplateContextType.TYPECOMMENT_CONTEXTTYPE));
 		registry.addContextType(new CodeTemplateContextType(
 				CodeTemplateContextType.FIELDCOMMENT_CONTEXTTYPE));
+		registry.addContextType(new CodeTemplateContextType(
+				CodeTemplateContextType.MULTIFIELDCOMMENT_CONTEXTTYPE));
+		registry.addContextType(new CodeTemplateContextType(
+				CodeTemplateContextType.VARCOMMENT_CONTEXTTYPE));
 		registry.addContextType(new CodeTemplateContextType(
 				CodeTemplateContextType.METHODCOMMENT_CONTEXTTYPE));
 		registry.addContextType(new CodeTemplateContextType(

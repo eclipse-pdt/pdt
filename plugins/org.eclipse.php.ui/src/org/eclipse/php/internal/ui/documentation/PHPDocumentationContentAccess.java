@@ -1283,8 +1283,11 @@ public class PHPDocumentationContentAccess {
 				// having variable name matching the field description
 				if (fMethod == null
 						&& tag.getVariableReference() != null
-						&& !tag.getVariableReference().getName()
-								.equals(fMember.getElementName())) {
+						&& !(tag.getVariableReference().getName()
+								.equals(fMember.getElementName()) ||
+						// also handle static variables (never prefixed by '$')
+						tag.getVariableReference().getName()
+								.equals('$' + fMember.getElementName()))) {
 					continue;
 				}
 				handleBlockTagTitle("Type"); //$NON-NLS-1$

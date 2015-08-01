@@ -42,6 +42,8 @@ final class PhpTemplateMessages extends NLS {
 	public static String CodeTemplateContextType_variable_description_getterfieldtype;
 	public static String CodeTemplateContextType_variable_description_fieldname;
 	public static String CodeTemplateContextType_variable_description_fieldtype;
+	public static String CodeTemplateContextType_variable_description_varname;
+	public static String CodeTemplateContextType_variable_description_vartype;
 	public static String CodeTemplateContextType_variable_description_barefieldname;
 	public static String CodeTemplateContextType_variable_description_param;
 	public static String CodeTemplateContextType_variable_description_typecomment;
