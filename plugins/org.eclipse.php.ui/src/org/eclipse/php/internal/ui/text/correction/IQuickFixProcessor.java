@@ -14,23 +14,22 @@ package org.eclipse.php.internal.ui.text.correction;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
-import org.eclipse.wst.jsdt.internal.compiler.env.ICompilationUnit;
 
 /**
  * Interface to be implemented by contributors to the extension point
- * <code>org.eclipse.jdt.ui.quickFixProcessors</code>.
+ * <code>org.eclipse.php.ui.quickFixProcessors</code>.
  * <p>
  * Since 3.2, each extension specifies the marker types it can handle, and
- * {@link #hasCorrections(ICompilationUnit, int)} and
+ * {@link #hasCorrections(ISourceModule, int)} and
  * {@link #getCorrections(IInvocationContext, IProblemLocation[])} are called if
  * (and only if) quick fix is required for a problem of these types.
  * </p>
  * <p>
  * Note, if a extension does not specify marker types it will be only called for
- * problem of type <code>org.eclipse.jdt.core.problem</code>,
- * <code>org.eclipse.jdt.core.buildpath_problem</code> and
- * <code>org.eclipse.jdt.core.task</code>; compatible with the behavior prior to
- * 3.2
+ * problem of type <code>org.eclipse.dltk.core.problem</code>,
+ * <code>org.eclipse.dltk.core.buildpath_problem</code> and
+ * <code>org.eclipse.dltk.core.task</code>; compatible with the behavior prior
+ * to 3.2
  * </p>
  * 
  * @since 3.0

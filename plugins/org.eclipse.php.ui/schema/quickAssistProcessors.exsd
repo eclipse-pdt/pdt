@@ -2,9 +2,9 @@
 <!-- Schema file written by PDE -->
 <schema targetNamespace="org.eclipse.php.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appInfo>
+      <appinfo>
          <meta.schema plugin="org.eclipse.php.ui" id="quickAssistProcessors" name="Quick Assist Processor"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          This extension point allows to add a Quick Assist processor to offer new Quick Assists in the Java editor.
 This extension point supports the &lt;code&gt;enablement&lt;/code&gt; tag. Properties to test on are:
@@ -21,9 +21,9 @@ This extension point supports the &lt;code&gt;enablement&lt;/code&gt; tag. Prope
 
    <element name="extension">
       <annotation>
-         <appInfo>
+         <appinfo>
             <meta.element />
-         </appInfo>
+         </appinfo>
       </annotation>
       <complexType>
          <sequence>
@@ -48,9 +48,9 @@ This extension point supports the &lt;code&gt;enablement&lt;/code&gt; tag. Prope
                <documentation>
                   an optional name of the extension instance
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute translatable="true"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -58,6 +58,9 @@ This extension point supports the &lt;code&gt;enablement&lt;/code&gt; tag. Prope
 
    <element name="quickAssistProcessor">
       <complexType>
+         <sequence>
+            <element ref="command" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
@@ -70,9 +73,9 @@ This extension point supports the &lt;code&gt;enablement&lt;/code&gt; tag. Prope
                <documentation>
                   a localized name of the Quick Assist processor
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute translatable="true"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="class" type="string">
@@ -83,38 +86,46 @@ class must be public and implement
 &lt;samp&gt;com.zend.php.semanticanalysis.internal.ui.text.correction.IQuickAssistProcessor&lt;/samp&gt;
 with a public 0-argument constructor.
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="java" basedOn=":com.zend.php.semanticanalysis.internal.ui.text.correction.IQuickAssistProcessor"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="since"/>
-      </appInfo>
-      <documentation>
-         7.0
-      </documentation>
-   </annotation>
+   <element name="command">
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="identifier" basedOn="org.eclipse.ui.commands/command/@id"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="examples"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          The following is an example of a Quick Assist processor contribution:
 
 &lt;p&gt;
 &lt;pre&gt;
- &lt;extension point=&quot;com.zend.php.semanticanalysis.ui.quickAssistProcessors&quot;&gt;
+ &lt;extension point=&quot;org.eclipse.php.ui.quickAssistProcessors&quot;&gt;
   &lt;quickAssistProcessor
    id=&quot;AdvancedQuickAssistProcessor&quot;
    name=&quot;Advanced Quick Assist Processor&quot;
    requiredSourceLevel=&quot;1.5&quot;  
    class=&quot;com.example.AdvancedQuickAssistProcessor&quot;&gt;
+   &lt;command id=&quot;org.example.advanceQuickFixCommand&quot; /&gt; &lt;!--If your IScriptCompletionProposals implement org.eclipse.php.internal.ui.text.correction.ICommandAccess --&gt;
   &lt;/quickAssistProcessor&gt;
    &lt;enablement&gt;
       &lt;with variable=&quot;projectNatures&quot;&gt;
@@ -130,21 +141,21 @@ with a public 0-argument constructor.
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="apiInfo"/>
-      </appInfo>
+      </appinfo>
       <documentation>
-         The contributed class must implement &lt;code&gt;com.zend.php.semanticanalysis.ui.text.IQuickAssistProcessor&lt;/code&gt;
+         The contributed class must implement &lt;code&gt;org.eclipse.php.ui.text.IQuickAssistProcessor&lt;/code&gt;
       </documentation>
    </annotation>
 
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="copyright"/>
-      </appInfo>
+      </appinfo>
       <documentation>
-         Copyright (c) 2001, 2009 Zend Technologies Ltd
+         Copyright (c) 2001, 2015 Zend Technologies Ltd and others
       </documentation>
    </annotation>
 

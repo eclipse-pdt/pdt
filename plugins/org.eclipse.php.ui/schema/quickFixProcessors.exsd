@@ -2,9 +2,9 @@
 <!-- Schema file written by PDE -->
 <schema targetNamespace="org.eclipse.php.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appInfo>
+      <appinfo>
          <meta.schema plugin="org.eclipse.php.ui" id="quickFixProcessors" name="Quick Fix Processor"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          This extension point allows to add a Quick Fix processor to offer new Quick Fixes on PHP problems.
 &lt;p&gt;
@@ -27,9 +27,9 @@ This extension point supports the &lt;code&gt;enablement&lt;/code&gt; tag. Prope
 
    <element name="extension">
       <annotation>
-         <appInfo>
+         <appinfo>
             <meta.element />
-         </appInfo>
+         </appinfo>
       </annotation>
       <complexType>
          <sequence>
@@ -54,9 +54,9 @@ This extension point supports the &lt;code&gt;enablement&lt;/code&gt; tag. Prope
                <documentation>
                   an optional name of the extension instance
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute translatable="true"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -66,6 +66,7 @@ This extension point supports the &lt;code&gt;enablement&lt;/code&gt; tag. Prope
       <complexType>
          <sequence>
             <element ref="handledMarkerTypes" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="command" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
@@ -79,9 +80,9 @@ This extension point supports the &lt;code&gt;enablement&lt;/code&gt; tag. Prope
                <documentation>
                   a localized name of the Quick Fix processor
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute translatable="true"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
@@ -92,9 +93,9 @@ class must be public and implement
 &lt;samp&gt;org.eclipse.php.internal.ui.text.correction.IQuickFixProcessor&lt;/samp&gt;
 with a public 0-argument constructor.
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="java" basedOn=":org.eclipse.php.internal.ui.text.correction.IQuickFixProcessor"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -121,27 +122,42 @@ If no handled marker type are specified, the processor will get problems of type
                <documentation>
                   the marker type id of the marker type that can be handled by this processor. The processor will not handle marker subtypes.
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="identifier" basedOn="org.eclipse.core.resources.markers/@id"/>
-               </appInfo>
+               </appinfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="command">
+      <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="identifier" basedOn="org.eclipse.ui.commands/command/@id"/>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="since"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          7.0
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="examples"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          The following is an example of a Quick Fix processor contribution:
 
@@ -163,6 +179,7 @@ If no handled marker type are specified, the processor will get problems of type
          &lt;/iterate&gt;
       &lt;/with&gt;
    &lt;/enablement&gt;
+   &lt;command id=&quot;com.example.advanceQuickFixProcessorCommand&quot; /&gt;&lt;!--If your IScriptCompletionProposals implement org.eclipse.php.internal.ui.text.correction.ICommandAccess --&gt;
   &lt;/quickFixProcessor&gt;
  &lt;/extension&gt;
 &lt;/pre&gt;
@@ -171,21 +188,23 @@ If no handled marker type are specified, the processor will get problems of type
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="apiInfo"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          The contributed class must implement &lt;code&gt;org.eclipse.php.internal.ui.text.correction.IQuickFixProcessor&lt;/code&gt;
+
+Optionally can implement &lt;code&gt;org.eclipse.php.internal.ui.text.correction.IQuickFixProcessorExtension&lt;/code&gt; to access IProblemIdentifier
       </documentation>
    </annotation>
 
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="copyright"/>
-      </appInfo>
+      </appinfo>
       <documentation>
-         Copyright (c) 2001, 2009 Zend Technologies Ltd
+         Copyright (c) 2001, 2015 Zend Technologies Ltd and others
       </documentation>
    </annotation>
 

@@ -40,6 +40,7 @@ import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderRegistry;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.text.PHPTextTools;
+import org.eclipse.php.internal.ui.text.correction.CorrectionCommandInstaller;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.internal.ui.util.ElementCreationProxy;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
@@ -139,6 +140,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 * @param context
 	 */
 	void initializeAfterStart(final BundleContext context) {
+		CorrectionCommandInstaller.registerCommands();
 		Job job = new Job("") { //$NON-NLS-1$
 			protected IStatus run(IProgressMonitor monitor) {
 
@@ -219,6 +221,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
+		
+		CorrectionCommandInstaller.unregisterCommands();
 
 		if (libraryFolderChangeListener != null) {
 			LibraryFolderManager.getInstance().removeListener(
@@ -226,8 +230,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			libraryFolderChangeListener = null;
 		}
 
-		Platform.getJobManager().cancel(OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME);
-		Platform.getJobManager().cancel(OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME);
+		Job.getJobManager().cancel(OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME);
+		Job.getJobManager().cancel(OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME);
 		fASTProvider = null;
 		plugin = null;
 	}
