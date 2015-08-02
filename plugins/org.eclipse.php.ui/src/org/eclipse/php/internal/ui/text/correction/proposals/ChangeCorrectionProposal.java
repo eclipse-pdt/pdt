@@ -22,6 +22,7 @@ import org.eclipse.jface.text.link.LinkedModeModel;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.ltk.core.refactoring.*;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.text.correction.CorrectionCommandHandler;
 import org.eclipse.php.internal.ui.text.correction.CorrectionMessages;
 import org.eclipse.php.internal.ui.text.correction.ICommandAccess;
 import org.eclipse.php.internal.ui.util.ExceptionHandler;
@@ -36,9 +37,9 @@ import org.eclipse.ui.IEditorPart;
  * 
  * @since 3.2
  */
-public class ChangeCorrectionProposal implements IScriptCompletionProposal,
-		ICommandAccess, ICompletionProposalExtension5,
-		ICompletionProposalExtension6 {
+public class ChangeCorrectionProposal
+		implements IScriptCompletionProposal, ICommandAccess,
+		ICompletionProposalExtension5, ICompletionProposalExtension6 {
 
 	private Change fChange;
 	private String fName;
@@ -64,7 +65,8 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal,
 	public ChangeCorrectionProposal(String name, Change change, int relevance,
 			Image image) {
 		if (name == null) {
-			throw new IllegalArgumentException(CorrectionMessages.ChangeCorrectionProposal_0); 
+			throw new IllegalArgumentException(
+					CorrectionMessages.ChangeCorrectionProposal_0);
 		}
 		fName = name;
 		fChange = change;
@@ -121,12 +123,9 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal,
 				RefactoringStatus valid = change
 						.isValid(new NullProgressMonitor());
 				if (valid.hasFatalError()) {
-					IStatus status = new Status(
-							IStatus.ERROR,
-							PHPUiPlugin.ID,
-							IStatus.ERROR,
-							valid
-									.getMessageMatchingSeverity(RefactoringStatus.FATAL),
+					IStatus status = new Status(IStatus.ERROR, PHPUiPlugin.ID,
+							IStatus.ERROR, valid.getMessageMatchingSeverity(
+									RefactoringStatus.FATAL),
 							null);
 					throw new CoreException(status);
 				} else {
@@ -141,8 +140,8 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal,
 						manager.changePerformed(change, successful);
 					}
 					if (undoChange != null) {
-						undoChange
-								.initializeValidationData(new NullProgressMonitor());
+						undoChange.initializeValidationData(
+								new NullProgressMonitor());
 						manager.addUndo(getName(), undoChange);
 					}
 				}
@@ -187,8 +186,7 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal,
 				return null;
 			}
 		} catch (CoreException e) {
-			buf
-					.append(CorrectionMessages.ChangeCorrectionProposal_2); 
+			buf.append(CorrectionMessages.ChangeCorrectionProposal_2);
 			buf.append(e.getLocalizedMessage());
 			buf.append("</pre>"); //$NON-NLS-1$
 		}
@@ -207,14 +205,8 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal,
 	 * @see ICompletionProposal#getDisplayString()
 	 */
 	public String getDisplayString() {
-		// String shortCutString=
-		// CorrectionCommandHandler.getShortCutString(getCommandId());
-		// if (shortCutString != null) {
-		// return
-		// NLS.bind(CorrectionMessages.ChangeCorrectionProposal_name_with_shortcut,
-		// new String[] { getName(), shortCutString });
-		// }
-		return getName();
+		return CorrectionCommandHandler.appendShortcut(getName(),
+				this.getCommandId());
 	}
 
 	/*
@@ -224,17 +216,8 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal,
 	 * getStyledDisplayString()
 	 */
 	public StyledString getStyledDisplayString() {
-		StyledString str = new StyledString(getName());
-		// String shortCutString=
-		// CorrectionCommandHandler.getShortCutString(getCommandId());
-		// if (shortCutString != null) {
-		// String decorated=
-		// NLS.bind(CorrectionMessages.ChangeCorrectionProposal_name_with_shortcut,
-		// new String[] { getName(), shortCutString });
-		// return StyledCellLabelProvider.styleDecoratedString(decorated,
-		// StyledString.QUALIFIER_STYLER, str);
-		// }
-		return str;
+		return CorrectionCommandHandler.styleWithShortcut(getName(),
+				this.getCommandId());
 	}
 
 	/**
@@ -305,7 +288,8 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal,
 	 */
 	public void setDisplayName(String name) {
 		if (name == null) {
-			throw new IllegalArgumentException(CorrectionMessages.ChangeCorrectionProposal_5); 
+			throw new IllegalArgumentException(
+					CorrectionMessages.ChangeCorrectionProposal_5);
 		}
 		fName = name;
 	}
@@ -332,9 +316,8 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal,
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.ui.text.correction.IShortcutProposal#getProposalId
-	 * ()
+	 * @see org.eclipse.jdt.internal.ui.text.correction.IShortcutProposal#
+	 * getProposalId ()
 	 */
 	public String getCommandId() {
 		return fCommandId;

@@ -16,7 +16,7 @@ import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
 
 /**
  * Interface to be implemented by contributors to the extension point
- * <code>org.eclipse.jdt.ui.quickAssistProcessors</code>.
+ * <code>org.eclipse.php.ui.quickAssistProcessors</code>.
  * 
  * @since 3.0
  */

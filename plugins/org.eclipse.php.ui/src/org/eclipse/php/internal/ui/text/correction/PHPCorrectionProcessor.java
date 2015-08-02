@@ -50,8 +50,8 @@ import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.SimpleMarkerAnnotation;
 
-public class PHPCorrectionProcessor implements
-		org.eclipse.jface.text.quickassist.IQuickAssistProcessor,
+public class PHPCorrectionProcessor
+		implements org.eclipse.jface.text.quickassist.IQuickAssistProcessor,
 		IScriptCorrectionProcessor {
 
 	private static final String QUICKFIX_PROCESSOR_CONTRIBUTION_ID = "quickFixProcessors"; //$NON-NLS-1$
@@ -80,7 +80,7 @@ public class PHPCorrectionProcessor implements
 				.toArray(new ContributedProcessorDescriptor[res.size()]);
 	}
 
-	private static ContributedProcessorDescriptor[] getCorrectionProcessors() {
+	static ContributedProcessorDescriptor[] getCorrectionProcessors() {
 		if (fgContributedCorrectionProcessors == null) {
 			fgContributedCorrectionProcessors = getProcessorDescriptors(
 					QUICKFIX_PROCESSOR_CONTRIBUTION_ID, true);
@@ -88,7 +88,7 @@ public class PHPCorrectionProcessor implements
 		return fgContributedCorrectionProcessors;
 	}
 
-	private static ContributedProcessorDescriptor[] getAssistProcessors() {
+	static ContributedProcessorDescriptor[] getAssistProcessors() {
 		if (fgContributedAssistProcessors == null) {
 			fgContributedAssistProcessors = getProcessorDescriptors(
 					QUICKASSIST_PROCESSOR_CONTRIBUTION_ID, false);
@@ -112,7 +112,8 @@ public class PHPCorrectionProcessor implements
 	}
 
 	public static boolean isQuickFixableType(Annotation annotation) {
-		return (annotation instanceof IScriptAnnotation || annotation instanceof SimpleMarkerAnnotation)
+		return (annotation instanceof IScriptAnnotation
+				|| annotation instanceof SimpleMarkerAnnotation)
 				&& !annotation.isMarkedDeleted();
 	}
 
@@ -127,8 +128,8 @@ public class PHPCorrectionProcessor implements
 
 		}
 		if (annotation instanceof SimpleMarkerAnnotation) {
-			return hasCorrections(((SimpleMarkerAnnotation) annotation)
-					.getMarker());
+			return hasCorrections(
+					((SimpleMarkerAnnotation) annotation).getMarker());
 		}
 		return false;
 	}
@@ -201,17 +202,17 @@ public class PHPCorrectionProcessor implements
 					if (key == null)
 						return CorrectionMessages.JavaCorrectionProcessor_go_to_original_using_menu;
 					else
-						return NLS
-								.bind(CorrectionMessages.JavaCorrectionProcessor_go_to_original_using_key,
-										key);
+						return NLS.bind(
+								CorrectionMessages.JavaCorrectionProcessor_go_to_original_using_key,
+								key);
 				} else if (fAssistant.isProblemLocationAvailable()) {
 					String key = getQuickAssistBinding();
 					if (key == null)
 						return CorrectionMessages.JavaCorrectionProcessor_go_to_closest_using_menu;
 					else
-						return NLS
-								.bind(CorrectionMessages.JavaCorrectionProcessor_go_to_closest_using_key,
-										key);
+						return NLS.bind(
+								CorrectionMessages.JavaCorrectionProcessor_go_to_closest_using_key,
+								key);
 				} else
 					return ""; //$NON-NLS-1$
 			}
@@ -219,8 +220,8 @@ public class PHPCorrectionProcessor implements
 			private String getQuickAssistBinding() {
 				final IBindingService bindingSvc = (IBindingService) PlatformUI
 						.getWorkbench().getAdapter(IBindingService.class);
-				return bindingSvc
-						.getBestActiveBindingFormattedFor(ITextEditorActionDefinitionIds.QUICK_ASSIST);
+				return bindingSvc.getBestActiveBindingFormattedFor(
+						ITextEditorActionDefinitionIds.QUICK_ASSIST);
 			}
 		});
 	}
@@ -243,8 +244,8 @@ public class PHPCorrectionProcessor implements
 
 			IEditorPart part = fAssistant.getEditor();
 
-			ISourceModule cu = DLTKUIPlugin.getEditorInputModelElement(part
-					.getEditorInput());
+			ISourceModule cu = DLTKUIPlugin
+					.getEditorInputModelElement(part.getEditorInput());
 			IAnnotationModel model = DLTKUIPlugin.getDocumentProvider()
 					.getAnnotationModel(part.getEditorInput());
 
@@ -281,7 +282,8 @@ public class PHPCorrectionProcessor implements
 
 	public static IStatus collectProposals(IInvocationContext context,
 			IAnnotationModel model, Annotation[] annotations,
-			boolean addQuickFixes, boolean addQuickAssists, Collection proposals) {
+			boolean addQuickFixes, boolean addQuickAssists,
+			Collection proposals) {
 		ArrayList problems = new ArrayList();
 
 		// collect problem locations and corrections from marker annotations
@@ -297,7 +299,8 @@ public class PHPCorrectionProcessor implements
 			}
 			if (problemLocation == null && addQuickFixes
 					&& curr instanceof SimpleMarkerAnnotation) {
-				collectMarkerProposals((SimpleMarkerAnnotation) curr, proposals);
+				collectMarkerProposals((SimpleMarkerAnnotation) curr,
+						proposals);
 			}
 		}
 		MultiStatus resStatus = null;
@@ -308,9 +311,7 @@ public class PHPCorrectionProcessor implements
 			IStatus status = collectCorrections(context, problemLocations,
 					proposals);
 			if (!status.isOK()) {
-				resStatus = new MultiStatus(
-						PHPUiPlugin.ID,
-						IStatus.ERROR,
+				resStatus = new MultiStatus(PHPUiPlugin.ID, IStatus.ERROR,
 						CorrectionMessages.JavaCorrectionProcessor_error_quickfix_message,
 						null);
 				resStatus.add(status);
@@ -321,9 +322,7 @@ public class PHPCorrectionProcessor implements
 					proposals);
 			if (!status.isOK()) {
 				if (resStatus == null) {
-					resStatus = new MultiStatus(
-							PHPUiPlugin.ID,
-							IStatus.ERROR,
+					resStatus = new MultiStatus(PHPUiPlugin.ID, IStatus.ERROR,
 							CorrectionMessages.JavaCorrectionProcessor_error_quickassist_message,
 							null);
 				}
@@ -355,8 +354,8 @@ public class PHPCorrectionProcessor implements
 	private static void collectMarkerProposals(
 			SimpleMarkerAnnotation annotation, Collection proposals) {
 		IMarker marker = annotation.getMarker();
-		IMarkerResolution[] res = IDE.getMarkerHelpRegistry().getResolutions(
-				marker);
+		IMarkerResolution[] res = IDE.getMarkerHelpRegistry()
+				.getResolutions(marker);
 		if (res.length > 0) {
 			for (int i = 0; i < res.length; i++) {
 				proposals.add(new MarkerResolutionProposal(res[i], marker));
@@ -364,8 +363,8 @@ public class PHPCorrectionProcessor implements
 		}
 	}
 
-	private static abstract class SafeCorrectionProcessorAccess implements
-			ISafeRunnable {
+	private static abstract class SafeCorrectionProcessorAccess
+			implements ISafeRunnable {
 		private MultiStatus fMulti = null;
 		private ContributedProcessorDescriptor fDescriptor;
 
@@ -385,21 +384,19 @@ public class PHPCorrectionProcessor implements
 			safeRun(fDescriptor);
 		}
 
-		protected abstract void safeRun(ContributedProcessorDescriptor processor)
-				throws Exception;
+		protected abstract void safeRun(
+				ContributedProcessorDescriptor processor) throws Exception;
 
 		public void handleException(Throwable exception) {
 			if (fMulti == null) {
-				fMulti = new MultiStatus(
-						PHPUiPlugin.ID,
-						IStatus.OK,
+				fMulti = new MultiStatus(PHPUiPlugin.ID, IStatus.OK,
 						CorrectionMessages.JavaCorrectionProcessor_error_status,
 						null);
 			}
-			fMulti.merge(new Status(IStatus.ERROR, PHPUiPlugin.ID,
-					IStatus.ERROR,
-					CorrectionMessages.JavaCorrectionProcessor_error_status,
-					exception));
+			fMulti.merge(
+					new Status(IStatus.ERROR, PHPUiPlugin.ID, IStatus.ERROR,
+							CorrectionMessages.JavaCorrectionProcessor_error_status,
+							exception));
 		}
 
 		public IStatus getStatus() {
@@ -411,8 +408,8 @@ public class PHPCorrectionProcessor implements
 
 	}
 
-	private static class SafeCorrectionCollector extends
-			SafeCorrectionProcessorAccess {
+	private static class SafeCorrectionCollector
+			extends SafeCorrectionProcessorAccess {
 		private final IInvocationContext fContext;
 		private final Collection fProposals;
 		private IProblemLocation[] fLocations;
@@ -443,8 +440,8 @@ public class PHPCorrectionProcessor implements
 		}
 	}
 
-	private static class SafeAssistCollector extends
-			SafeCorrectionProcessorAccess {
+	private static class SafeAssistCollector
+			extends SafeCorrectionProcessorAccess {
 		private final IInvocationContext fContext;
 		private final IProblemLocation[] fLocations;
 		private final Collection fProposals;
@@ -497,8 +494,8 @@ public class PHPCorrectionProcessor implements
 		}
 	}
 
-	private static class SafeHasCorrections extends
-			SafeCorrectionProcessorAccess {
+	private static class SafeHasCorrections
+			extends SafeCorrectionProcessorAccess {
 		private final ISourceModule fCu;
 		private final int fProblemId;
 		private final IProblemIdentifier fIdentifier;
@@ -513,6 +510,7 @@ public class PHPCorrectionProcessor implements
 			} else {
 				fProblemId = -1;
 			}
+			problemScanner.close();
 			this.fIdentifier = identifier;
 
 			fHasCorrections = false;
@@ -526,7 +524,8 @@ public class PHPCorrectionProcessor implements
 				throws Exception {
 			IQuickFixProcessor processor = (IQuickFixProcessor) desc
 					.getProcessor(fCu, IQuickFixProcessor.class);
-			if (processor != null && processor.hasCorrections(fCu, fProblemId)) {
+			if (processor != null
+					&& processor.hasCorrections(fCu, fProblemId)) {
 				fHasCorrections = true;
 			} else if (processor != null
 					&& processor instanceof IQuickFixProcessorExtension
@@ -540,8 +539,8 @@ public class PHPCorrectionProcessor implements
 	public static IStatus collectCorrections(IInvocationContext context,
 			IProblemLocation[] locations, Collection proposals) {
 		ContributedProcessorDescriptor[] processors = getCorrectionProcessors();
-		SafeCorrectionCollector collector = new SafeCorrectionCollector(
-				context, proposals);
+		SafeCorrectionCollector collector = new SafeCorrectionCollector(context,
+				proposals);
 		for (int i = 0; i < processors.length; i++) {
 			ContributedProcessorDescriptor curr = processors[i];
 			IProblemLocation[] handled = getHandledProblems(locations, curr);
@@ -606,9 +605,8 @@ public class PHPCorrectionProcessor implements
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.quickassist.IQuickAssistProcessor#canFix(org.eclipse
-	 * .jface.text.source.Annotation)
+	 * @see org.eclipse.jface.text.quickassist.IQuickAssistProcessor#canFix(org.
+	 * eclipse .jface.text.source.Annotation)
 	 * 
 	 * @since 3.2
 	 */
