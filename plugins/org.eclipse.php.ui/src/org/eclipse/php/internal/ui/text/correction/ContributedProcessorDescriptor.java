@@ -11,16 +11,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text.correction;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.expressions.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.dltk.core.IScriptModelMarker;
+import org.eclipse.dltk.core.IModelMarker;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -41,13 +39,15 @@ public final class ContributedProcessorDescriptor {
 
 	private static final String HANDLED_MARKER_TYPES = "handledMarkerTypes"; //$NON-NLS-1$
 	private static final String MARKER_TYPE = "markerType"; //$NON-NLS-1$
+	private static final String COMMAND = "command"; //$NON-NLS-1$
 
 	public ContributedProcessorDescriptor(IConfigurationElement element,
 			boolean testMarkerTypes) {
 		fConfigurationElement = element;
 		fProcessorInstance = null;
 		fStatus = null; // undefined
-		if (fConfigurationElement.getChildren(ExpressionTagNames.ENABLEMENT).length == 0) {
+		if (fConfigurationElement
+				.getChildren(ExpressionTagNames.ENABLEMENT).length == 0) {
 			fStatus = Boolean.TRUE;
 		}
 		// fRequiredSourceLevel= element.getAttribute(REQUIRED_SOURCE_LEVEL);
@@ -70,9 +70,9 @@ public final class ContributedProcessorDescriptor {
 			}
 		}
 		if (map.isEmpty()) {
-			map.add(IScriptModelMarker.DLTK_MODEL_PROBLEM_MARKER);
-			map.add(IScriptModelMarker.BUILDPATH_PROBLEM_MARKER);
-			map.add(IScriptModelMarker.TASK_MARKER);
+			map.add(IModelMarker.SCRIPT_MODEL_PROBLEM_MARKER);
+			map.add(IModelMarker.BUILDPATH_PROBLEM_MARKER);
+			map.add(IModelMarker.TASK_MARKER);
 		}
 		return map;
 	}
@@ -114,11 +114,12 @@ public final class ContributedProcessorDescriptor {
 				IScriptProject javaProject = cunit.getScriptProject();
 				String[] natures = javaProject.getProject().getDescription()
 						.getNatureIds();
-				evalContext.addVariable(
-						"projectNatures", Arrays.asList(natures)); //$NON-NLS-1$
+				evalContext.addVariable("projectNatures", //$NON-NLS-1$
+						Arrays.asList(natures));
 				// evalContext.addVariable("sourceLevel",
 				// javaProject.getOption(JavaCore.COMPILER_SOURCE, true));
-				return expression.evaluate(evalContext) == EvaluationResult.TRUE;
+				return expression
+						.evaluate(evalContext) == EvaluationResult.TRUE;
 			} catch (CoreException e) {
 				PHPUiPlugin.log(e);
 			}
@@ -140,8 +141,9 @@ public final class ContributedProcessorDescriptor {
 						String message = Messages.ContributedProcessorDescriptor_8
 								+ fConfigurationElement.getName()
 								+ Messages.ContributedProcessorDescriptor_9
-								+ expectedType.getName()
-								+ "'." + fConfigurationElement.getContributor().getName(); //$NON-NLS-1$
+								+ expectedType.getName() + "'." //$NON-NLS-1$
+								+ fConfigurationElement.getContributor()
+										.getName();
 						PHPUiPlugin.log(new Status(IStatus.ERROR,
 								PHPUiPlugin.ID, message));
 						fStatus = Boolean.FALSE;
@@ -161,6 +163,19 @@ public final class ContributedProcessorDescriptor {
 	public boolean canHandleMarkerType(String markerType) {
 		return fHandledMarkerTypes == null
 				|| fHandledMarkerTypes.contains(markerType);
+	}
+
+	public String[] getSupportedCommands() {
+		List<String> result = new LinkedList<String>();
+		for (IConfigurationElement el : fConfigurationElement
+				.getChildren(COMMAND)) {
+			String id = el.getAttribute(ID);
+			if (id != null) {
+				result.add(id);
+			}
+		}
+
+		return result.toArray(new String[result.size()]);
 	}
 
 }

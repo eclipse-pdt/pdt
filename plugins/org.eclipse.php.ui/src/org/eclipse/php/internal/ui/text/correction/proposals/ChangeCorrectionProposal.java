@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,43 +8,36 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła - integration with CorrectionCommandInstaller
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text.correction.proposals;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRewriteTarget;
-import org.eclipse.jface.text.contentassist.ICompletionProposalExtension5;
-import org.eclipse.jface.text.contentassist.ICompletionProposalExtension6;
-import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.link.LinkedModeModel;
-import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.ltk.core.refactoring.*;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.correction.CorrectionMessages;
-import org.eclipse.php.internal.ui.text.correction.ICommandAccess;
 import org.eclipse.php.internal.ui.util.ExceptionHandler;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IEditorPart;
 
 /**
- * Implementation of a Java completion proposal to be used for quick fix and
+ * Implementation of a PHP completion proposal to be used for quick fix and
  * quick assist proposals that invoke a {@link Change}. The proposal offers a
  * proposal information but no context information.
  * 
  * @since 3.2
  */
-public class ChangeCorrectionProposal implements IScriptCompletionProposal,
-		ICommandAccess, ICompletionProposalExtension5,
-		ICompletionProposalExtension6 {
+public class ChangeCorrectionProposal extends AbstractCorrectionProposal {
 
 	private Change fChange;
-	private String fName;
-	private int fRelevance;
-	private Image fImage;
-	private String fCommandId;
+
+	public ChangeCorrectionProposal(String name, Change change, int relevance,
+			Image image) {
+		this(name, change, relevance, image, null);
+	}
 
 	/**
 	 * Constructs a change correction proposal.
@@ -60,22 +53,17 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal,
 	 * @param image
 	 *            The image that is displayed for this proposal or
 	 *            <code>null</code> if no image is desired.
+	 * @param commandId
+	 * 
+	 * @since 3.6
 	 */
 	public ChangeCorrectionProposal(String name, Change change, int relevance,
-			Image image) {
-		if (name == null) {
-			throw new IllegalArgumentException(CorrectionMessages.ChangeCorrectionProposal_0); 
-		}
-		fName = name;
+			Image image, String commandId) {
+		super(name, relevance, image, commandId);
 		fChange = change;
-		fRelevance = relevance;
-		fImage = image;
-		fCommandId = null;
 	}
 
-	/*
-	 * @see ICompletionProposal#apply(IDocument)
-	 */
+	@Override
 	public void apply(IDocument document) {
 		try {
 			performChange(PHPUiPlugin.getActivePage().getActiveEditor(),
@@ -121,12 +109,9 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal,
 				RefactoringStatus valid = change
 						.isValid(new NullProgressMonitor());
 				if (valid.hasFatalError()) {
-					IStatus status = new Status(
-							IStatus.ERROR,
-							PHPUiPlugin.ID,
-							IStatus.ERROR,
-							valid
-									.getMessageMatchingSeverity(RefactoringStatus.FATAL),
+					IStatus status = new Status(IStatus.ERROR, PHPUiPlugin.ID,
+							IStatus.ERROR, valid.getMessageMatchingSeverity(
+									RefactoringStatus.FATAL),
 							null);
 					throw new CoreException(status);
 				} else {
@@ -141,8 +126,8 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal,
 						manager.changePerformed(change, successful);
 					}
 					if (undoChange != null) {
-						undoChange
-								.initializeValidationData(new NullProgressMonitor());
+						undoChange.initializeValidationData(
+								new NullProgressMonitor());
 						manager.addUndo(getName(), undoChange);
 					}
 				}
@@ -158,19 +143,15 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal,
 		}
 	}
 
-	/*
-	 * @see ICompletionProposal#getAdditionalProposalInfo()
-	 */
+	@Override
 	public String getAdditionalProposalInfo() {
 		Object info = getAdditionalProposalInfo(new NullProgressMonitor());
 		return info == null ? null : info.toString();
 	}
 
-	/*
-	 * @seeorg.eclipse.jface.text.contentassist.ICompletionProposalExtension5#
-	 * getAdditionalProposalInfo(org.eclipse.core.runtime.IProgressMonitor)
-	 * 
-	 * @since 3.5
+	/**
+	 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension5#
+	 *      getAdditionalProposalInfo(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public Object getAdditionalProposalInfo(IProgressMonitor monitor) {
 		StringBuffer buf = new StringBuffer();
@@ -187,87 +168,12 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal,
 				return null;
 			}
 		} catch (CoreException e) {
-			buf
-					.append(CorrectionMessages.ChangeCorrectionProposal_2); 
+			buf.append(CorrectionMessages.ChangeCorrectionProposal_2);
 			buf.append(e.getLocalizedMessage());
 			buf.append("</pre>"); //$NON-NLS-1$
 		}
 		buf.append("</p>"); //$NON-NLS-1$
 		return buf.toString();
-	}
-
-	/*
-	 * @see ICompletionProposal#getContextInformation()
-	 */
-	public IContextInformation getContextInformation() {
-		return null;
-	}
-
-	/*
-	 * @see ICompletionProposal#getDisplayString()
-	 */
-	public String getDisplayString() {
-		// String shortCutString=
-		// CorrectionCommandHandler.getShortCutString(getCommandId());
-		// if (shortCutString != null) {
-		// return
-		// NLS.bind(CorrectionMessages.ChangeCorrectionProposal_name_with_shortcut,
-		// new String[] { getName(), shortCutString });
-		// }
-		return getName();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.jface.text.contentassist.ICompletionProposalExtension6#
-	 * getStyledDisplayString()
-	 */
-	public StyledString getStyledDisplayString() {
-		StyledString str = new StyledString(getName());
-		// String shortCutString=
-		// CorrectionCommandHandler.getShortCutString(getCommandId());
-		// if (shortCutString != null) {
-		// String decorated=
-		// NLS.bind(CorrectionMessages.ChangeCorrectionProposal_name_with_shortcut,
-		// new String[] { getName(), shortCutString });
-		// return StyledCellLabelProvider.styleDecoratedString(decorated,
-		// StyledString.QUALIFIER_STYLER, str);
-		// }
-		return str;
-	}
-
-	/**
-	 * Returns the name of the proposal.
-	 * 
-	 * @return return the name of the proposal
-	 */
-	public String getName() {
-		return fName;
-	}
-
-	/*
-	 * @see ICompletionProposal#getImage()
-	 */
-	public Image getImage() {
-		return fImage;
-	}
-
-	/*
-	 * @see ICompletionProposal#getSelection(IDocument)
-	 */
-	public Point getSelection(IDocument document) {
-		return null;
-	}
-
-	/**
-	 * Sets the proposal's image or <code>null</code> if no image is desired.
-	 * 
-	 * @param image
-	 *            the desired image.
-	 */
-	public void setImage(Image image) {
-		fImage = image;
 	}
 
 	/**
@@ -295,60 +201,5 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal,
 	 */
 	protected Change createChange() throws CoreException {
 		return new NullChange();
-	}
-
-	/**
-	 * Sets the display name.
-	 * 
-	 * @param name
-	 *            the name to set
-	 */
-	public void setDisplayName(String name) {
-		if (name == null) {
-			throw new IllegalArgumentException(CorrectionMessages.ChangeCorrectionProposal_5); 
-		}
-		fName = name;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jdt.ui.text.java.IJavaCompletionProposal#getRelevance()
-	 */
-	public int getRelevance() {
-		return fRelevance;
-	}
-
-	/**
-	 * Sets the relevance.
-	 * 
-	 * @param relevance
-	 *            the relevance to set
-	 */
-	public void setRelevance(int relevance) {
-		fRelevance = relevance;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.ui.text.correction.IShortcutProposal#getProposalId
-	 * ()
-	 */
-	public String getCommandId() {
-		return fCommandId;
-	}
-
-	/**
-	 * Set the proposal id to allow assigning a shortcut to the correction
-	 * proposal.
-	 * 
-	 * @param commandId
-	 *            The proposal id for this proposal or <code>null</code> if no
-	 *            command should be assigned to this proposal.
-	 */
-	public void setCommandId(String commandId) {
-		fCommandId = commandId;
 	}
 }
