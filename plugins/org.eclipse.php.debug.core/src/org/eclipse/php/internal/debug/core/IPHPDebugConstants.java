@@ -87,6 +87,10 @@ public interface IPHPDebugConstants {
 	public static final String DEBUGGING_START_FROM = "debugFrom"; //$NON-NLS-1$
 	public static final String DEBUGGING_SHOULD_CONTINUE = "debugFromURL"; //$NON-NLS-1$
 	public static final String DEBUGGING_START_FROM_URL = "debugContinue"; //$NON-NLS-1$
+	public static final String DEBUGGING_NO_REMOTE = "no_remote"; //$NON-NLS-1$
+	public static final String DEBUGGING_DEBUG_NO_REMOTE = "debugNoRemote"; //$NON-NLS-1$
+	public static final String DEBUGGING_GET_FILE_CONTENT = "get_file_content"; //$NON-NLS-1$
+	public static final String DEBUGGING_LINE_NUMBER = "line_number"; //$NON-NLS-1$
 
 	public static final String PREF_STEP_FILTERS_LIST = ID_PHP_DEBUG_CORE
 			+ ".pref_step_filters_list"; //$NON-NLS-1$

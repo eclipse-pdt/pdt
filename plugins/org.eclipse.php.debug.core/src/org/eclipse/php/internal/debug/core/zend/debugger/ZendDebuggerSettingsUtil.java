@@ -51,29 +51,30 @@ public class ZendDebuggerSettingsUtil {
 		String debugQuery = startedNotification.getQuery();
 		String originalURLTrigger = "&original_url="; //$NON-NLS-1$
 		int originalURLStart = debugQuery.indexOf(originalURLTrigger);
-		String originalURL = debugQuery.substring(originalURLStart
-				+ originalURLTrigger.length());
+		String originalURL = debugQuery
+				.substring(originalURLStart + originalURLTrigger.length());
 		int responseTimeout = -1;
 		try {
 			URL url = new URL(originalURL);
-			Server server = ServersManager.findServer(url, false);
-			if (server != null) {
-				IDebuggerSettings debuggerSettings = DebuggerSettingsManager.INSTANCE
-						.findSettings(server.getUniqueId(),
-								ZendDebuggerConfiguration.ID);
-				String debugClientPort = null;
-				if (debuggerSettings instanceof ZendDebuggerServerSettings) {
-					debugClientPort = debuggerSettings
-							.getAttribute(ZendDebuggerSettingsConstants.PROP_RESPONSE_TIMEOUT);
-				}
-				try {
-					responseTimeout = Integer.valueOf(debugClientPort);
-				} catch (Exception e) {
-					// ignore
-				}
+		} catch (MalformedURLException ex) {
+			// Is not valid URL - might be open file request
+			return responseTimeout;
+		}
+		Server server = ServersManager.findByURL(originalURL);
+		if (server != null) {
+			IDebuggerSettings debuggerSettings = DebuggerSettingsManager.INSTANCE
+					.findSettings(server.getUniqueId(),
+							ZendDebuggerConfiguration.ID);
+			String debugClientPort = null;
+			if (debuggerSettings instanceof ZendDebuggerServerSettings) {
+				debugClientPort = debuggerSettings.getAttribute(
+						ZendDebuggerSettingsConstants.PROP_RESPONSE_TIMEOUT);
 			}
-		} catch (MalformedURLException e) {
-			// ignore
+			try {
+				responseTimeout = Integer.valueOf(debugClientPort);
+			} catch (Exception e) {
+				// ignore
+			}
 		}
 		return responseTimeout;
 	}
