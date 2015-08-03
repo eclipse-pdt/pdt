@@ -22,6 +22,7 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathContainer;
@@ -36,11 +37,12 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
-import org.eclipse.php.internal.core.util.*;
+import org.eclipse.php.internal.core.util.PHPSearchEngine;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ExternalFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
+import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.*;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
@@ -51,7 +53,6 @@ import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicat
 import org.eclipse.php.internal.debug.core.zend.communication.ResponseHandler;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.*;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
-import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -211,6 +212,28 @@ public class RemoteDebugger implements IRemoteDebugger {
 			cachedCWD = getCWDOld();
 		}
 		return cachedCWD;
+	}
+
+	/**
+	 * Requesting file content from the Server
+	 * 
+	 * @param fileName
+	 * @return byte array of the file content
+	 */
+	public byte[] getFileContent(String fileName) {
+		try {
+			FileContentRequest request = new FileContentRequest();
+			request.setFileName(fileName);
+			IDebugResponseMessage response = sendCustomRequest(request);
+			byte[] content = null;
+			if (response != null && response instanceof FileContentResponse) {
+				content = ((FileContentResponse) response).getContent();
+			}
+			return content;
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		return null;
 	}
 
 	/**
@@ -891,9 +914,9 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	public static void warnOlderDebugVersion() {
-		boolean dontShowWarning = PHPDebugPlugin.getDefault()
-				.getPluginPreferences()
-				.getBoolean("DontShowOlderDebuggerWarning"); //$NON-NLS-1$
+		boolean dontShowWarning = Platform.getPreferencesService().getBoolean(
+				PHPDebugPlugin.ID, "DontShowOlderDebuggerWarning", false, //$NON-NLS-1$
+				null);
 		if (!dontShowWarning) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {

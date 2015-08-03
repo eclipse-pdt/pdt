@@ -364,7 +364,7 @@ public class PHPDebugPlugin extends Plugin {
 					.getDefault()
 					.getPreferenceStore()
 					.setValue(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES,
-							!disableAutoRemoveLaunches);
+					!disableAutoRemoveLaunches);
 		}
 	}
 
@@ -505,4 +505,31 @@ public class PHPDebugPlugin extends Plugin {
 		return new IScopeContext[] { InstanceScope.INSTANCE,
 				DefaultScope.INSTANCE };
 	}
+
+	/**
+	 * Returns if the current file name is actually a dummy file.
+	 */
+	public static boolean isDummyFile(String fileName) {
+		if (fileName != null) {
+			String dummyFile = Platform.getPreferencesService().getString(
+					PHPDebugPlugin.ID,
+					PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE, "", //$NON-NLS-1$
+					null);
+			int idx = Math.max(dummyFile.lastIndexOf('/'),
+					dummyFile.lastIndexOf('\\'));
+			if (idx != -1) {
+				dummyFile = dummyFile.substring(idx + 1);
+			}
+
+			idx = Math.max(fileName.lastIndexOf('/'),
+					fileName.lastIndexOf('\\'));
+			if (idx != -1) {
+				fileName = fileName.substring(idx + 1); // strip everything but
+														// last segment
+			}
+			return fileName.equals(dummyFile);
+		}
+		return false;
+	}
+
 }

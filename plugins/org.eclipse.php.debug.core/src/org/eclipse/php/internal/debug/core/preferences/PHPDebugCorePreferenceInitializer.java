@@ -60,6 +60,10 @@ public class PHPDebugCorePreferenceInitializer extends
 		node.putBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, true);
 		node.putBoolean(PHPDebugCorePreferenceNames.ZEND_NEW_PROTOCOL, true);
 		node.putInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, 10137);
+		node.putInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT,
+				20080);
+		node.put(PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE,
+				"dummy.php"); //$NON-NLS-1$
 		node.putInt(PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT, 60000); // 60
 																				// seconds
 		node.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, "UTF-8"); //$NON-NLS-1$

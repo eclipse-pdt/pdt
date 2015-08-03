@@ -288,16 +288,23 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	}
 
 	/**
-	 * Tries to find and return a server that corresponds to given URL. If
-	 * perfect match flag is set to <code>false</code> then only host address is
-	 * being used to find the server, otherwise a port and protocol are being
-	 * taken into account to find appropriate match.
+	 * Tries to find and return a server that corresponds to given URL
 	 * 
-	 * @param url
-	 * @param perfectMatch
-	 * @return server that corresponds to given URL
+	 * @param urlString
+	 *            URL text form
+	 * @return server that corresponds to given URL or <code>null</code> if
+	 *         there is no match
 	 */
-	public static Server findServer(URL url, boolean perfectMatch) {
+	public static Server findByURL(String urlString) {
+		List<Server> matches = null;
+		URL url;
+		try {
+			url = new URL(urlString);
+		} catch (MalformedURLException ex) {
+			Logger.logException("Find server match by URL error: Invalid URL.", //$NON-NLS-1$
+					ex);
+			return null;
+		}
 		String urlHostAddress = url.getHost();
 		try {
 			InetAddress urlHostInetAddress = InetAddress
@@ -307,33 +314,45 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		} catch (UnknownHostException e) {
 			// may not exists - ignore
 		}
+		// Find all servers that match given URL host address
+		List<Server> matchedByHost = new ArrayList<Server>();
 		for (Server server : getServers()) {
 			if (isNoneServer(server))
 				continue;
-			URL serverURL;
-			try {
-				serverURL = new URL(server.getBaseURL());
-			} catch (MalformedURLException ex) {
-				// Should not happen
-				continue;
-			}
-			String serverHost = serverURL.getHost();
+			String serverHost = server.getHost();
 			try {
 				InetAddress serverHostAddress = InetAddress
 						.getByName(serverHost);
 				if (urlHostAddress.equals(serverHostAddress.getHostAddress())) {
-					if (!perfectMatch)
-						return server;
-					if (url.getPort() == serverURL.getPort()
-							&& url.getProtocol()
-									.equals(serverURL.getProtocol()))
-						return server;
+					matchedByHost.add(server);
 				}
 			} catch (UnknownHostException e) {
 				// ignore
 			}
 		}
-		return null;
+		matches = matchedByHost;
+		if (matches.isEmpty())
+			return null;
+		// Filter out the servers by URL protocol
+		List<Server> matchedByProtocol = new ArrayList<Server>();
+		for (Server server : matches) {
+			if (url.getProtocol().equals(server.getRootURL().getProtocol())) {
+				matchedByProtocol.add(server);
+			}
+		}
+		if (!matchedByProtocol.isEmpty())
+			matches = matchedByProtocol;
+		// Filter out the servers by URL port
+		List<Server> matchedByPort = new ArrayList<Server>();
+		for (Server server : matches) {
+			if (url.getPort() == server.getPort()) {
+				matchedByPort.add(server);
+			}
+		}
+		if (!matchedByPort.isEmpty())
+			matches = matchedByPort;
+		// Return first match
+		return matches.get(0);
 	}
 
 	/**
