@@ -24,6 +24,7 @@
    <extension-point id="pathEntryFilters" name="PHP Path Entry Filters" schema="schema/pathEntryFilters.exsd"/>
    <extension-point id="phpDebugStepFilters" name="PHP Debug Step Filters" schema="schema/phpDebugStepFilters.exsd"/>
    <extension-point id="phpLaunchDelegateListener" name="phpLaunchDelegateListener" schema="schema/phpLaunchDelegateListener.exsd"/>
+   <extension-point id="phpLocalFileSearchFilters" name="PHP Local File Search Results Filters" schema="schema/phpLocalFileSearchFilters.exsd"/>
     
    <extension
          point="org.eclipse.debug.core.sourceLocators">
@@ -372,6 +373,23 @@
             id="org.eclipse.php.internal.debug.core.zend.debugger.messages.IniAlteredNotification"
             name="Ini Altered Notification">
       </message>
+      <message
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.FileContentRequest"
+            handler="org.eclipse.php.internal.debug.core.zend.debugger.handlers.FileContentRequestHandlerProxy"
+            id="org.eclipse.php.debug.core.debugger.messages.FileContentRequest"
+            name="File Content Request">
+      </message>
+      <message
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.FileContentResponse"
+            id="org.eclipse.php.debug.core.debugger.messages.FileContentResponse"
+            name="File Content Response">
+      </message>
+      <message
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.FileContentExtendedRequest"
+            handler="org.eclipse.php.internal.debug.core.zend.debugger.handlers.FileContentRequestHandlerProxy"
+            id="org.eclipse.php.debug.core.debugger.messages.FileContentExtendedRequest"
+            name="File Content Extended Request">
+      </message>
 
   </extension>
   <extension
@@ -392,6 +410,11 @@
            class="org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon"
            id="org.eclipse.php.debug.core.BasicXDebugDaemon"
            name="Basic XDebug Debug Daemon">
+     </daemon>
+     <daemon
+           class="org.eclipse.php.internal.debug.core.zend.communication.BroadcastDaemon"
+           id="org.eclipse.php.debug.core.BroadcastDaemon"
+           name="Zend Debug Broadcast Daemon">
      </daemon>
   </extension>
   
@@ -422,5 +445,17 @@
             name="XDebug Debugger Settings Provider"
             provider="org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSettingsProvider">
       </phpDebuggerSettingsProvider>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="org.eclipse.php.internal.debug.core.launching.PHPRemoteLaunchConfigurationDelegate"
+            id="org.eclipse.php.debug.core.remoteZendLaunchConfigurationType"
+            modes="debug"
+            name="Remote PHP Launch"
+            public="false"
+            sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
+            sourcePathComputerId="org.eclipse.php.debug.core.sourcePathComputer.php">
+      </launchConfigurationType>
    </extension>
 </plugin>
