@@ -136,7 +136,6 @@ public class PathEntrySelectionDialog extends TrayDialog {
 		layoutData = new GridData(GridData.FILL_BOTH);
 		layoutData.horizontalSpan = 2;
 		layoutData.verticalIndent = convertHeightInCharsToPixels(1);
-		layoutData.horizontalIndent = convertWidthInCharsToPixels(2);
 		layoutData.heightHint = convertHeightInCharsToPixels(20);
 		layoutData.widthHint = convertWidthInCharsToPixels(70);
 		entriesViewer.getControl().setLayoutData(layoutData);

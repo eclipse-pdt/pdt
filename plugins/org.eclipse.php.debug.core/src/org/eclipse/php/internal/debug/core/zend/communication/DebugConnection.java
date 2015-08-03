@@ -11,12 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.communication;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.URLDecoder;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -28,6 +26,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.internal.core.LaunchManager;
+import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugMessageHandler;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugRequestHandler;
@@ -42,6 +42,7 @@ import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.launching.DebugSessionIdGenerator;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
@@ -50,6 +51,7 @@ import org.eclipse.php.internal.debug.core.zend.debugger.DebugMessagesRegistry;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
 import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsUtil;
+import org.eclipse.php.internal.debug.core.zend.debugger.handlers.FileContentDebugHandler;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.*;
 import org.eclipse.php.internal.debug.core.zend.debugger.parameters.AbstractDebugParametersInitializer;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
@@ -57,6 +59,7 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPMultiDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.testConnection.DebugServerTestController;
 import org.eclipse.php.internal.debug.core.zend.testConnection.DebugServerTestEvent;
 import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.swt.widgets.Display;
 
 import com.ibm.icu.text.MessageFormat;
@@ -109,7 +112,8 @@ public class DebugConnection {
 							DebugSessionStartedNotification sessionStartedMessage = (DebugSessionStartedNotification) incomingMessage;
 							setResponseTimeout(sessionStartedMessage);
 							isDebugConnectionTest = sessionStartedMessage
-									.getQuery().indexOf("testConnection=true") != -1; //$NON-NLS-1$
+									.getQuery()
+									.indexOf("testConnection=true") != -1; //$NON-NLS-1$
 							// This is a connection test...
 							if (isDebugConnectionTest) {
 								String sourceHost = DebugConnection.this.socket
@@ -118,15 +122,13 @@ public class DebugConnection {
 								if (verifyProtocolID(sessionStartedMessage
 										.getServerProtocolID())) {
 									sendRequest(new StartRequest());
-									DebugServerTestController
-											.getInstance()
+									DebugServerTestController.getInstance()
 											.notifyTestListener(
 													new DebugServerTestEvent(
 															sourceHost,
 															DebugServerTestEvent.TEST_SUCCEEDED));
 								} else {
-									DebugServerTestController
-											.getInstance()
+									DebugServerTestController.getInstance()
 											.notifyTestListener(
 													new DebugServerTestEvent(
 															sourceHost,
@@ -141,7 +143,8 @@ public class DebugConnection {
 						// Creation of debug session has succeeded
 						if (debugTarget != null) {
 							// Try to find relevant handler for the message:
-							IDebugMessageHandler messageHandler = createMessageHandler(incomingMessage);
+							IDebugMessageHandler messageHandler = createMessageHandler(
+									incomingMessage);
 							if (messageHandler != null) {
 								Logger.debugMSG("CREATING MESSAGE HANDLER: " //$NON-NLS-1$
 										+ messageHandler.getClass().getName()
@@ -308,10 +311,11 @@ public class DebugConnection {
 						 * WAITING FOR THE REQUEST
 						 */
 						// Find the handler.
-						ResponseHandler handler = responseHandlers.get(Integer
-								.valueOf(messageId));
+						ResponseHandler handler = responseHandlers
+								.get(Integer.valueOf(messageId));
 						if (handler == null) {
-							responseTable.put(/* requestId */messageId, message);
+							responseTable.put(/* requestId */messageId,
+									message);
 							// Find the request.
 							IDebugRequestMessage request = (IDebugRequestMessage) requestsTable
 									.remove(messageId);
@@ -381,8 +385,9 @@ public class DebugConnection {
 			DebugPlugin.log(status);
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openError(Display.getDefault()
-							.getActiveShell(), "Debugger Error", errorMessage); //$NON-NLS-1$
+					MessageDialog.openError(
+							Display.getDefault().getActiveShell(),
+							"Debugger Error", errorMessage); //$NON-NLS-1$
 				}
 			});
 		}
@@ -418,8 +423,8 @@ public class DebugConnection {
 			Iterator<String> i = parameters.iterator();
 			while (i.hasNext()) {
 				String parameter = i.next();
-				if (parameter
-						.startsWith(AbstractDebugParametersInitializer.DEBUG_SESSION_ID)) {
+				if (parameter.startsWith(
+						AbstractDebugParametersInitializer.DEBUG_SESSION_ID)) {
 					int idx = parameter.indexOf('=');
 					Integer parsedId = parseInt(parameter.substring(idx + 1));
 					if (parsedId != null)
@@ -459,6 +464,9 @@ public class DebugConnection {
 
 	}
 
+	// Launch configuration type for handling an external launch triggers.
+	public static final String REMOTE_LAUNCH_TYPE_ID = "org.eclipse.php.debug.core.remoteZendLaunchConfigurationType"; //$NON-NLS-1$
+	public static final String REMOTE_DEBUG_LAUNCH_NAME = "PHP Debug"; //$NON-NLS-1$
 	private static final Lock HOOK_LOCK = new ReentrantLock(true);
 	private static final long HOOK_TIMEOUT = 10000;
 
@@ -630,7 +638,8 @@ public class DebugConnection {
 				 * peerResponseTimeout.
 				 */
 				if (response == null && isConnected()) {
-					Logger.debugMSG("COMMUNICATION PROBLEMS (response is null)"); //$NON-NLS-1$
+					Logger.debugMSG(
+							"COMMUNICATION PROBLEMS (response is null)"); //$NON-NLS-1$
 					// Handle time out will stop the communication if needed.
 					if (waitedTime < debugResponseTimeout - timeoutTick) {
 						waitedTime += timeoutTick;
@@ -684,7 +693,8 @@ public class DebugConnection {
 			}
 		} catch (Exception e) {
 			// Return null for any exception
-			String message = "Exception for request NO." + theMsg.getType() + e.toString(); //$NON-NLS-1$
+			String message = "Exception for request NO." + theMsg.getType() //$NON-NLS-1$
+					+ e.toString();
 			Logger.debugMSG(message);
 			Logger.logException(e);
 			responseHandler.handleResponse(request, null);
@@ -697,7 +707,8 @@ public class DebugConnection {
 	 * 
 	 * @param admin
 	 */
-	public void setCommunicationAdministrator(CommunicationAdministrator admin) {
+	public void setCommunicationAdministrator(
+			CommunicationAdministrator admin) {
 		communicationAdministrator = admin;
 	}
 
@@ -759,23 +770,23 @@ public class DebugConnection {
 		ILaunchConfiguration launchConfiguration = launch
 				.getLaunchConfiguration();
 		IProject project = getProject(launchConfiguration);
-		messageReceiver.setTransferEncoding(launchConfiguration.getAttribute(
-				IDebugParametersKeys.TRANSFER_ENCODING, "")); //$NON-NLS-1$
-		messageReceiver.setOutputEncoding(launchConfiguration.getAttribute(
-				IDebugParametersKeys.OUTPUT_ENCODING, "")); //$NON-NLS-1$
+		messageReceiver.setTransferEncoding(launchConfiguration
+				.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, "")); //$NON-NLS-1$
+		messageReceiver.setOutputEncoding(launchConfiguration
+				.getAttribute(IDebugParametersKeys.OUTPUT_ENCODING, "")); //$NON-NLS-1$
 		String URL = launchConfiguration.getAttribute(Server.BASE_URL, ""); //$NON-NLS-1$
 		boolean stopAtFirstLine = project == null ? true
 				: PHPProjectPreferences.getStopAtFirstLine(project);
 		int requestPort = PHPDebugPlugin
 				.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 		try {
-			requestPort = Integer.valueOf(launch
-					.getAttribute(IDebugParametersKeys.PORT));
+			requestPort = Integer
+					.valueOf(launch.getAttribute(IDebugParametersKeys.PORT));
 		} catch (Exception e) {
 			// should not happen
 		}
-		boolean runWithDebug = launchConfiguration.getAttribute(
-				IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
+		boolean runWithDebug = launchConfiguration
+				.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
 		if (launch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE)) {
 			runWithDebug = false;
 		}
@@ -798,20 +809,20 @@ public class DebugConnection {
 			SessionDescriptor sessionDescriptor) throws CoreException {
 		ILaunchConfiguration launchConfiguration = launch
 				.getLaunchConfiguration();
-		messageReceiver.setTransferEncoding(launchConfiguration.getAttribute(
-				IDebugParametersKeys.TRANSFER_ENCODING, "")); //$NON-NLS-1$
-		messageReceiver.setOutputEncoding(launchConfiguration.getAttribute(
-				IDebugParametersKeys.OUTPUT_ENCODING, "")); //$NON-NLS-1$
+		messageReceiver.setTransferEncoding(launchConfiguration
+				.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, "")); //$NON-NLS-1$
+		messageReceiver.setOutputEncoding(launchConfiguration
+				.getAttribute(IDebugParametersKeys.OUTPUT_ENCODING, "")); //$NON-NLS-1$
 		String phpExeString = launchConfiguration.getAttribute(
 				IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
-		String fileNameString = launchConfiguration.getAttribute(
-				IPHPDebugConstants.ATTR_FILE, (String) null);
-		boolean runWithDebugInfo = launchConfiguration.getAttribute(
-				IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
+		String fileNameString = launchConfiguration
+				.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
+		boolean runWithDebugInfo = launchConfiguration
+				.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		IProject project = null;
-		String file = launchConfiguration.getAttribute(
-				IPHPDebugConstants.ATTR_FILE, (String) null);
+		String file = launchConfiguration
+				.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
 		if (file != null) {
 			IResource resource = workspaceRoot.findMember(file);
 			if (resource != null) {
@@ -833,8 +844,8 @@ public class DebugConnection {
 		int requestPort = PHPDebugPlugin
 				.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 		try {
-			requestPort = Integer.valueOf(launch
-					.getAttribute(IDebugParametersKeys.PORT));
+			requestPort = Integer
+					.valueOf(launch.getAttribute(IDebugParametersKeys.PORT));
 		} catch (Exception e) {
 			// should not happen
 		}
@@ -845,6 +856,48 @@ public class DebugConnection {
 				runWithDebugInfo, stopAtFirstLine, project);
 		// Bind debug target to the launch
 		bindTarget(launch);
+	}
+
+	/**
+	 * Hook a session that should handle a file content request only when the
+	 * Zend Platform GUI is asking to display the source code of the script that
+	 * caused an event.
+	 * 
+	 * @param fileName
+	 *            The requested file.
+	 * @param lineNumber
+	 *            Line number
+	 */
+	protected void hookFileContentSession(
+			DebugSessionStartedNotification notification, String fileName,
+			int lineNumber) {
+		try {
+			FileContentDebugHandler handler = new FileContentDebugHandler(this);
+			RemoteDebugger debugger = (RemoteDebugger) handler
+					.getRemoteDebugger();
+			if (!debugger.isActive()) {
+				throw new IllegalStateException(
+						"Could not read the content of the file. The debugger is not connected."); //$NON-NLS-1$
+			}
+			try {
+				debugger.setProtocol(RemoteDebugger.PROTOCOL_ID_LATEST);
+				try {
+					fileName = URLDecoder.decode(fileName, "UTF-8"); //$NON-NLS-1$
+				} catch (UnsupportedEncodingException e) {
+				}
+				byte[] content = debugger.getFileContent(fileName);
+				if (content == null) {
+					content = new byte[0];
+				}
+				IFileContentRequestor requester = new OpenRemoteFileRequestor(
+						notification);
+				requester.fileContentReceived(content, fileName, lineNumber);
+			} finally {
+				debugger.closeDebugSession();
+			}
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
 	}
 
 	/**
@@ -859,34 +912,79 @@ public class DebugConnection {
 	 * @return True, if the error was fixed in this method; False, otherwise.
 	 */
 	protected void hookError(Object cause) {
-		if (cause != null) {
-			Logger.log(Logger.ERROR, cause.toString());
-		} else {
-			Logger.log(Logger.ERROR, "Debug hook error"); //$NON-NLS-1$
-		}
+		// Nothing to hook yet
 	}
 
 	protected ILaunch fetchLaunch(SessionDescriptor sessionDescriptor)
 			throws CoreException {
-		// TODO - this one should be done better in the future...
-		/*
-		 * We cannot find a launch the we can associate to the given session id
-		 * (if any) Try to take the first launch that is terminated and has a
-		 * 'Debug all Pages' attribute.
-		 */
-		ILaunch[] launchs = DebugPlugin.getDefault().getLaunchManager()
-				.getLaunches();
-		for (ILaunch aLaunch : launchs) {
-			String debugType = aLaunch
-					.getAttribute(IPHPDebugConstants.DEBUGGING_PAGES);
-			if (aLaunch.isTerminated()
-					&& (IPHPDebugConstants.DEBUGGING_ALL_PAGES
-							.equals(debugType) || IPHPDebugConstants.DEBUGGING_START_FROM
-							.equals(debugType))) {
-				return aLaunch;
-			}
+		final String query = sessionDescriptor.getStartedNotification()
+				.getQuery();
+		String additionalOptions = sessionDescriptor.getStartedNotification()
+				.getOptions();
+		int sessionID = sessionDescriptor.getId();
+		// Check for a file content request session.
+		String fileContentRequestFile = getFileContentRequestPath(query);
+		if (fileContentRequestFile != null) {
+			hookFileContentSession(sessionDescriptor.getStartedNotification(),
+					fileContentRequestFile, getLineNumber(query));
+			return null;
 		}
-		return null;
+		/*
+		 * First, find out if the session ID is not an older one that was sent
+		 * because the browser cached a cookie which is no longer valid for us.
+		 */
+		if (sessionID > 0
+				&& sessionID <= DebugSessionIdGenerator.getLastGenerated()) {
+			if (PHPDebugPlugin.DEBUG) {
+				Logger.log(Logger.ERROR,
+						"Terminating a requested session.\nThe session id received is lower than the last generated."); //$NON-NLS-1$
+			}
+			return null;
+		}
+		/*
+		 * In this case we can assume that the launch is similar to a web server
+		 * debug or profile session.
+		 */
+		ILaunchConfigurationType lcType = DebugPlugin.getDefault()
+				.getLaunchManager()
+				.getLaunchConfigurationType(REMOTE_LAUNCH_TYPE_ID);
+		DebugUITools.setLaunchPerspective(lcType, LaunchManager.DEBUG_MODE, // $NON-NLS-1$
+				"org.eclipse.debug.ui.DebugPerspective"); //$NON-NLS-1$
+		ILaunchConfigurationWorkingCopy wc = lcType.newInstance(null,
+				REMOTE_DEBUG_LAUNCH_NAME);
+		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
+		if (additionalOptions != null && additionalOptions
+				.indexOf(IPHPDebugConstants.DEBUGGING_NO_REMOTE + "=1") > -1) { //$NON-NLS-1$
+			wc.setAttribute(IPHPDebugConstants.DEBUGGING_DEBUG_NO_REMOTE, true);
+		}
+		String originalURL = getOriginalURL(additionalOptions);
+		if (originalURL == null) {
+			// Use the URI instead
+			originalURL = sessionDescriptor.getStartedNotification().getUri();
+		}
+		wc.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER,
+				Boolean.toString(true));
+		wc.setAttribute(Server.BASE_URL, originalURL);
+		// Try to find related server configuration
+		Server serverLookup = ServersManager.findByURL(originalURL);
+		if (serverLookup != null)
+			wc.setAttribute(Server.NAME, serverLookup.getName());
+		wc.doSave();
+		ILaunch launch = DebugUITools.buildAndLaunch(wc,
+				ILaunchManager.DEBUG_MODE, new NullProgressMonitor());
+		/*
+		 * In case we got here, we need to update the PHPSessionLaunchMapper
+		 * with the new launch and the acquired launch id. This is a case when
+		 * we get a launch id from the toolbar or from the Platform.
+		 */
+		if (sessionID < 0)
+			sessionID = DebugSessionIdGenerator.generateSessionID();
+		PHPSessionLaunchMapper.put(sessionID, launch);
+		if (PHPDebugPlugin.DEBUG)
+			System.out.println(
+					"Added a remote launch mapping to session with ID: " //$NON-NLS-1$
+							+ sessionID);
+		return launch;
 	}
 
 	/**
@@ -898,7 +996,7 @@ public class DebugConnection {
 	protected IDebugTarget createDebugTarget(DebugConnection thread,
 			ILaunch launch, String url, int requestPort, PHPProcess process,
 			boolean runWithDebug, boolean stopAtFirstLine, IProject project)
-			throws CoreException {
+					throws CoreException {
 		return new PHPDebugTarget(thread, launch, url, requestPort, process,
 				runWithDebug, stopAtFirstLine, project);
 	}
@@ -927,8 +1025,8 @@ public class DebugConnection {
 	 */
 	protected IProject getProject(ILaunchConfiguration configuration)
 			throws CoreException {
-		String projectName = configuration.getAttribute(
-				IPHPDebugConstants.PHP_Project, (String) null);
+		String projectName = configuration
+				.getAttribute(IPHPDebugConstants.PHP_Project, (String) null);
 		if (projectName != null) {
 			return ResourcesPlugin.getWorkspace().getRoot()
 					.getProject(projectName);
@@ -988,7 +1086,7 @@ public class DebugConnection {
 	 */
 	private void hookDebugSession(
 			DebugSessionStartedNotification debugSessionStartedNotification)
-			throws CoreException {
+					throws CoreException {
 		/*
 		 * Try to hook (debug session -> launch) only one at a time, just to
 		 * avoid an ugly mess with debug events.
@@ -1182,14 +1280,92 @@ public class DebugConnection {
 	private void setResponseTimeout(
 			DebugSessionStartedNotification startedNotification) {
 		// Set default from preferences first
-		debugResponseTimeout = Platform.getPreferencesService()
-				.getInt(PHPDebugPlugin.ID,
-						PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT,
-						60000, null);
+		debugResponseTimeout = Platform.getPreferencesService().getInt(
+				PHPDebugPlugin.ID,
+				PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT, 60000,
+				null);
 		int customResponseTimeout = ZendDebuggerSettingsUtil
 				.getResponseTimeout(startedNotification);
 		if (customResponseTimeout != -1)
 			debugResponseTimeout = customResponseTimeout;
+	}
+
+	/**
+	 * Parse and return the original_url string from the debugger additional
+	 * options.
+	 * 
+	 * @param additionalOptions
+	 * 
+	 * @return The original_url string
+	 */
+	protected String getOriginalURL(String additionalOptions) {
+		if (additionalOptions == null || additionalOptions.equals("")) { //$NON-NLS-1$
+			return null;
+		}
+		String optionKey = "&" + AbstractDebugParametersInitializer.ORIGINAL_URL //$NON-NLS-1$
+				+ "="; //$NON-NLS-1$
+		int startIndex = additionalOptions.indexOf(optionKey);
+		if (startIndex < 0) {
+			return null;
+		}
+		additionalOptions = additionalOptions
+				.substring(startIndex + optionKey.length());
+		int endIndex = additionalOptions.indexOf('&');
+		if (endIndex > -1) {
+			additionalOptions = additionalOptions.substring(0, endIndex);
+		}
+		return additionalOptions;
+	}
+
+	/**
+	 * Check for the get_file_content string in the query string. If exist, then
+	 * the session should display the file content in the editor as a result to
+	 * a Platform request.
+	 * 
+	 * @param query
+	 *            The original query string arrived with the
+	 *            DebugSessionStartedNotification message.
+	 * 
+	 * @return The file content request path, or null, if non was found.
+	 */
+	protected String getFileContentRequestPath(String query) {
+		return extractParameterFromQuery(query,
+				IPHPDebugConstants.DEBUGGING_GET_FILE_CONTENT);
+	}
+
+	/**
+	 * Retrieves line_number from the query string
+	 */
+	protected int getLineNumber(String query) {
+		try {
+			return Integer.parseInt(extractParameterFromQuery(query,
+					IPHPDebugConstants.DEBUGGING_LINE_NUMBER));
+		} catch (NumberFormatException e) {
+		}
+		return 0;
+	}
+
+	/**
+	 * Extracts parameter value from the query string
+	 * 
+	 * @param query
+	 *            The original query string
+	 * @param parameter
+	 *            Parameter name
+	 * @return parameter value
+	 */
+	protected String extractParameterFromQuery(String query, String parameter) {
+		int queryStartIndex = query.indexOf(parameter + "="); //$NON-NLS-1$
+		if (queryStartIndex > -1) {
+			String value = query
+					.substring(queryStartIndex + parameter.length() + 1);
+			int paramSeparatorIndex = value.indexOf('&');
+			if (paramSeparatorIndex > -1) {
+				value = value.substring(0, paramSeparatorIndex);
+			}
+			return value;
+		}
+		return null;
 	}
 
 }

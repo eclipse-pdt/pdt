@@ -90,6 +90,42 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 		preferences.setValue(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, port);
 	}
 
+	/**
+	 * @return port for broadcasting Studio settings to the ToolBar or Zend GUI
+	 */
+	public int getBroadcastPort() {
+		return preferences
+				.getInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT);
+	}
+
+	/**
+	 * @param broadcastPort
+	 *            Port for broadcasting Studio settings to the ToolBar or Zend
+	 *            GUI
+	 */
+	public void setBroadcastPort(int broadcastPort) {
+		preferences.setValue(
+				PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT,
+				broadcastPort);
+	}
+
+	/**
+	 * @return dummy PHP file name
+	 */
+	public String getDummyFile() {
+		return preferences
+				.getString(PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE);
+	}
+
+	/**
+	 * @param dummyFile
+	 *            dummy PHP file name
+	 */
+	public void setDummyFile(String dummyFile) {
+		preferences.setValue(PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE,
+				dummyFile);
+	}
+
 	public boolean isUseNewProtocol() {
 		return preferences
 				.getBoolean(PHPDebugCorePreferenceNames.ZEND_NEW_PROTOCOL);
@@ -130,11 +166,13 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	public void applyDefaults() {
 		setPort(preferences
 				.getDefaultInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT));
-		preferences
-				.setValue(
-						PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO,
-						preferences
-								.getDefaultBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO));
+		preferences.setValue(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO,
+				preferences.getDefaultBoolean(
+						PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO));
+		setBroadcastPort(preferences.getDefaultInt(
+				PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT));
+		setDummyFile(preferences.getDefaultString(
+				PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE));
 		save();
 	}
 

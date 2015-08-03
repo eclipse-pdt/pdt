@@ -96,6 +96,8 @@ public class PHPDebugCoreMessages extends NLS {
 
 	public static String ZendDebuggerConfigurationDialog_AutoMode;
 
+	public static String ZendDebuggerConfigurationDialog_Broadcast_port;
+
 	public static String ZendDebuggerConfigurationDialog_client_host_ip;
 
 	public static String ZendDebuggerConfigurationDialog_Connection_settings_group;
@@ -105,6 +107,8 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String ZendDebuggerConfigurationDialog_Dialog_description;
 
 	public static String ZendDebuggerConfigurationDialog_Dialog_title;
+
+	public static String ZendDebuggerConfigurationDialog_Dummy_file_name;
 
 	public static String ZendDebuggerConfigurationDialog_General_settings_group;
 
