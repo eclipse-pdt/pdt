@@ -296,10 +296,12 @@ public class TraitUtils {
 					IMethod alias = new MethodWrapper(method,
 							tao.newMethodVisibility, tao.newMethodName, type);
 					result.add(alias);
-					if (methodName.equals(tao.newMethodName)
-							|| tao.newMethodName == null) {
-						changeVisibility = true;
-					}
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=474016
+					// In all cases we should change the visibility:
+					// if (methodName.equals(tao.newMethodName)
+					// || tao.newMethodName == null) {
+					changeVisibility = true;
+					// }
 				}
 				if (tpo != null) {
 					if (!fullName.equals(tpo.traitName)) {

@@ -1,0 +1,36 @@
+--TEST--
+Bug 474016 - Wrong CA for trait aliased method
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+namespace space\traitImplementation2;
+
+trait TA {
+    public function firstMethod() {}
+}
+
+class A  {
+    use TA {
+        TA::firstMethod as secondMethod;
+    }
+}
+
+$x = new A;
+$x->|
+--EXPECT--
+<?php
+namespace space\traitImplementation2;
+
+trait TA {
+    public function firstMethod() {}
+}
+
+class A  {
+    use TA {
+        TA::firstMethod as secondMethod;
+    }
+}
+
+$x = new A;
+$x->secondMethod()
