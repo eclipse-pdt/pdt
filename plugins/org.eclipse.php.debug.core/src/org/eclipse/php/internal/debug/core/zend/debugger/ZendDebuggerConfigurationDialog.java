@@ -26,13 +26,16 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.preferences.AbstractDebuggerConfigurationDialog;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.core.zend.communication.BroadcastDaemon;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
+import org.eclipse.php.internal.debug.daemon.communication.DaemonsRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Image;
@@ -55,6 +58,8 @@ public class ZendDebuggerConfigurationDialog extends
 	protected Text fDebugResponseTimeout;
 	protected Button fUseNewProtocol;
 	protected ZendDebuggerConfiguration zendDebuggerConfiguration;
+	protected Text fBroadcastPortText;
+	protected Text fDummyFileText;
 	private Button autoModeButton;
 	private Button manualModeButton;
 	private Image titleImage;
@@ -168,8 +173,26 @@ public class ZendDebuggerConfigurationDialog extends
 		Composite generalSettingsGroup = createSubsection(
 				parent,
 				PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_General_settings_group);
-		fRunWithDebugInfo = addCheckBox(
-				generalSettingsGroup,
+
+		addLabelControl(generalSettingsGroup,
+				PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_Broadcast_port,
+				PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT);
+		fBroadcastPortText = addTextField(generalSettingsGroup,
+				PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT, 6, 2);
+		gridData = (GridData) fBroadcastPortText.getLayoutData();
+		gridData.widthHint = convertWidthInCharsToPixels(100);
+		fBroadcastPortText.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent event) {
+				validate();
+			}
+		});
+		addLabelControl(generalSettingsGroup,
+				PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_Dummy_file_name,
+				PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE);
+		fDummyFileText = addTextField(generalSettingsGroup,
+				PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE, 20, 2);
+		fRunWithDebugInfo = addCheckBox(generalSettingsGroup,
 				PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_runWithDebugInfo,
 				PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, 0);
 		fUseNewProtocol = addCheckBox(
@@ -213,6 +236,10 @@ public class ZendDebuggerConfigurationDialog extends
 				.getInt(PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT)));
 		fUseNewProtocol.setSelection(prefs
 				.getBoolean(PHPDebugCorePreferenceNames.ZEND_NEW_PROTOCOL));
+		fBroadcastPortText.setText(Integer.toString(prefs.getInt(
+				PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT)));
+		fDummyFileText.setText(prefs
+				.getString(PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE));
 	}
 
 	protected void okPressed() {
@@ -221,6 +248,10 @@ public class ZendDebuggerConfigurationDialog extends
 				fRunWithDebugInfo.getSelection());
 		prefs.setValue(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT,
 				fDebugTextBox.getText());
+		prefs.setValue(PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT,
+				Integer.parseInt(fBroadcastPortText.getText()));
+		prefs.setValue(PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE,
+				fDummyFileText.getText().trim());
 		IEclipsePreferences instanceScope = InstanceScope.INSTANCE
 				.getNode(PHPDebugPlugin.ID);
 		if (autoModeButton.getSelection()) {
@@ -239,13 +270,36 @@ public class ZendDebuggerConfigurationDialog extends
 
 	protected void validate() {
 		// Reset state
-		setMessage(PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_Dialog_description);
+		setMessage(
+				PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_Dialog_description);
 		// Check errors
 		String debugPort = fDebugTextBox.getText();
-		Integer portNumber = null;
+		Integer debugPortNumber = null;
 		try {
-			portNumber = Integer.valueOf(debugPort);
-			int i = portNumber.intValue();
+			debugPortNumber = Integer.valueOf(debugPort);
+			int i = debugPortNumber.intValue();
+			if (i < 1 || i > 65535) {
+				setMessage(
+						PHPDebugCoreMessages.DebugConfigurationDialog_invalidPortRange,
+						IMessageProvider.ERROR);
+				return;
+			}
+		} catch (NumberFormatException ex) {
+			setMessage(
+					PHPDebugCoreMessages.DebugConfigurationDialog_invalidPort,
+					IMessageProvider.ERROR);
+			return;
+		} catch (Exception e) {
+			setMessage(
+					PHPDebugCoreMessages.DebugConfigurationDialog_invalidPort,
+					IMessageProvider.ERROR);
+			return;
+		}
+		String broadcastPort = fBroadcastPortText.getText();
+		Integer broadcastPortNumber = null;
+		try {
+			broadcastPortNumber = Integer.valueOf(broadcastPort);
+			int i = broadcastPortNumber.intValue();
 			if (i < 1 || i > 65535) {
 				setMessage(
 						PHPDebugCoreMessages.DebugConfigurationDialog_invalidPortRange,
@@ -282,12 +336,23 @@ public class ZendDebuggerConfigurationDialog extends
 			return;
 		}
 		// Check warnings
-		if (!PHPLaunchUtilities.isPortAvailable(portNumber)
-				&& !PHPLaunchUtilities.isDebugDaemonActive(portNumber,
+		if (!PHPLaunchUtilities.isPortAvailable(debugPortNumber)
+				&& !PHPLaunchUtilities.isDebugDaemonActive(debugPortNumber,
 						DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
 			setMessage(NLS.bind(
 					PHPDebugCoreMessages.DebugConfigurationDialog_PortInUse,
 					debugPort), IMessageProvider.WARNING);
+		}
+		if (!PHPLaunchUtilities.isPortAvailable(broadcastPortNumber)) {
+			for (ICommunicationDaemon daemon : DaemonsRegistry.getDaemons()) {
+				if (daemon instanceof BroadcastDaemon
+						&& !((BroadcastDaemon) daemon)
+								.isListening(broadcastPortNumber)) {
+					setMessage(NLS.bind(
+							PHPDebugCoreMessages.DebugConfigurationDialog_PortInUse,
+							broadcastPort), IMessageProvider.WARNING);
+				}
+			}
 		}
 	}
 

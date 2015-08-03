@@ -652,5 +652,19 @@
             class="org.eclipse.php.debug.ui.DebugEarlyStartup">
       </startup>
    </extension>
-   
+   <extension
+         point="org.eclipse.php.debug.core.phpLocalFileSearchFilters">
+      <filter
+            class="org.eclipse.php.internal.debug.ui.pathmapper.OpenLocalFileSearchFilter"
+            id="org.eclipse.php.debug.openLocalFileSearchFilter">
+      </filter>
+   </extension>
+   <extension
+       point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+    <launchConfigurationTypeImage
+          configTypeID="org.eclipse.php.debug.core.remoteZendLaunchConfigurationType"
+          icon="icon/full/obj16/remote_launch.png"
+          id="org.eclipse.php.debug.core.remoteZendLaunchConfigurationTypeImage">
+    </launchConfigurationTypeImage>
+   </extension>
 </plugin>
