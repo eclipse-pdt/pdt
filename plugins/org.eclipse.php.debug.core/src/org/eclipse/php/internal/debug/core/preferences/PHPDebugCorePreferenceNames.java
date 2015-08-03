@@ -26,6 +26,10 @@ public class PHPDebugCorePreferenceNames {
 	public static final String STOP_AT_FIRST_LINE = Debug_ID
 			+ "stop_at_first_line_string"; //$NON-NLS-1$
 	public static final String ZEND_DEBUG_PORT = Debug_ID + "zend_debug_port"; //$NON-NLS-1$
+	public static final String ZEND_DEBUG_BROADCAST_PORT = Debug_ID
+			+ "zend_debug_broadcast_port"; //$NON-NLS-1$
+	public static final String ZEND_DEBUG_DUMMY_FILE = Debug_ID
+			+ "zend_debug_dummy_file"; //$NON-NLS-1$
 	public static final String ZEND_NEW_PROTOCOL = Debug_ID
 			+ "zend_new_protocol"; //$NON-NLS-1$
 	public static final String CLIENT_IP = Debug_ID + "client_ip"; //$NON-NLS-1$

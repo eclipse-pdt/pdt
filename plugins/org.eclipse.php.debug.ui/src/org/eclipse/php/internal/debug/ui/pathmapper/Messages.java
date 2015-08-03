@@ -4,6 +4,9 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.ui.pathmapper.messages"; //$NON-NLS-1$
+	public static String OpenLocalFileSearchFilter_External_files;
+	public static String OpenLocalFileSearchFilter_Open_file_request;
+	public static String OpenLocalFileSearchFilter_Select_the_local_resource_match;
 	public static String PathEntrySelectionDialog_0;
 	public static String PathEntrySelectionDialog_1;
 	public static String PathEntrySelectionDialog_2;
@@ -35,6 +38,7 @@ public class Messages extends NLS {
 	public static String PathMappingComposite_2;
 	public static String PathMappingComposite_3;
 	public static String PathMappingComposite_4;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
