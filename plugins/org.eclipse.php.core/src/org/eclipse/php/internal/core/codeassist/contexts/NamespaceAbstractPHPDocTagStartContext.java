@@ -120,7 +120,7 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends
 				if (sourceModule.getElementAt(offset) != null) {
 					IType type = (IType) sourceModule.getElementAt(offset)
 							.getAncestor(IModelElement.TYPE);
-					if (type.getParent() instanceof IType) {
+					if (type != null && type.getParent() instanceof IType) {
 						type = (IType) type.getParent();
 					}
 					if (type != null && (PHPFlags.isNamespace(type.getFlags()))) {

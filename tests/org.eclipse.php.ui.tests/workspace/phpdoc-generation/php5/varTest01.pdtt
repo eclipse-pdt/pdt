@@ -15,7 +15,7 @@ function test($param = array())
 {
     /**
      * 
-     * @var $a array
+     * @var array $a
      */
     $a = array();
 }
