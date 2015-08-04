@@ -764,7 +764,7 @@ public class StubUtility {
 			if (buf.length() > 0) {
 				buf.append(lineDelimiter).append(lineStart);
 			}
-			buf.append("@var ").append(fieldNames[i]).append(' ').append(fieldTypes[i]); //$NON-NLS-1$
+			buf.append("@var ").append(fieldTypes[i]).append(' ').append(fieldNames[i]); //$NON-NLS-1$
 		}
 
 		if (buf.length() == 0 && isAllCommentWhitespace(lineStart)) {

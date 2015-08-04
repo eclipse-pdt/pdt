@@ -37,7 +37,7 @@
  */</template>
  
 <template name="fieldcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.fieldcomment" description="%CodeTemplates.fieldcomment" context="php_fieldcomment_context" enabled="true">/**
- * @var ${field} ${field_type}
+ * @var ${field_type} ${field}
  */</template>
  
 <template name="multifieldcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.multifieldcomment" description="%CodeTemplates.multifieldcomment" context="php_multifieldcomment_context" enabled="true">/**
