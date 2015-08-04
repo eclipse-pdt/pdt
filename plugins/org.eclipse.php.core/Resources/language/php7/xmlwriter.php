@@ -1,13 +1,13 @@
 <?php
 
-// Start of xmlwriter v.0.1
+// Start of xmlwriter v.7.0.0-dev
 
 class XMLWriter  {
 
 	/**
 	 * Create new xmlwriter using source uri for output
 	 * @link http://www.php.net/manual/en/function.xmlwriter-open-uri.php
-	 * @param uri string <p>
+	 * @param string $uri <p>
 	 * The URI of the resource for the output.
 	 * </p>
 	 * @return bool Object oriented style: Returns true on success or false on failure
@@ -32,7 +32,7 @@ class XMLWriter  {
 	/**
 	 * Toggle indentation on/off
 	 * @link http://www.php.net/manual/en/function.xmlwriter-set-indent.php
-	 * @param indent bool <p>
+	 * @param bool $indent <p>
 	 * Whether indentation is enabled.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -42,7 +42,7 @@ class XMLWriter  {
 	/**
 	 * Set string used for indenting
 	 * @link http://www.php.net/manual/en/function.xmlwriter-set-indent-string.php
-	 * @param indentString string <p>
+	 * @param string $indentString <p>
 	 * The indentation string.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -66,7 +66,7 @@ class XMLWriter  {
 	/**
 	 * Create start attribute
 	 * @link http://www.php.net/manual/en/function.xmlwriter-start-attribute.php
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The attribute name.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -83,10 +83,10 @@ class XMLWriter  {
 	/**
 	 * Write full attribute
 	 * @link http://www.php.net/manual/en/function.xmlwriter-write-attribute.php
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The name of the attribute.
 	 * </p>
-	 * @param value string <p>
+	 * @param string $value <p>
 	 * The value of the attribute.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -96,13 +96,13 @@ class XMLWriter  {
 	/**
 	 * Create start namespaced attribute
 	 * @link http://www.php.net/manual/en/function.xmlwriter-start-attribute-ns.php
-	 * @param prefix string <p>
+	 * @param string $prefix <p>
 	 * The namespace prefix.
 	 * </p>
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The attribute name.
 	 * </p>
-	 * @param uri string <p>
+	 * @param string $uri <p>
 	 * The namespace URI.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -112,16 +112,16 @@ class XMLWriter  {
 	/**
 	 * Write full namespaced attribute
 	 * @link http://www.php.net/manual/en/function.xmlwriter-write-attribute-ns.php
-	 * @param prefix string <p>
+	 * @param string $prefix <p>
 	 * The namespace prefix.
 	 * </p>
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The attribute name.
 	 * </p>
-	 * @param uri string <p>
+	 * @param string $uri <p>
 	 * The namespace URI.
 	 * </p>
-	 * @param content string <p>
+	 * @param string $content <p>
 	 * The attribute value.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -131,7 +131,7 @@ class XMLWriter  {
 	/**
 	 * Create start element tag
 	 * @link http://www.php.net/manual/en/function.xmlwriter-start-element.php
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The element name.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -155,13 +155,13 @@ class XMLWriter  {
 	/**
 	 * Create start namespaced element tag
 	 * @link http://www.php.net/manual/en/function.xmlwriter-start-element-ns.php
-	 * @param prefix string <p>
+	 * @param string $prefix <p>
 	 * The namespace prefix.
 	 * </p>
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The element name.
 	 * </p>
-	 * @param uri string <p>
+	 * @param string $uri <p>
 	 * The namespace URI.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -171,10 +171,10 @@ class XMLWriter  {
 	/**
 	 * Write full element tag
 	 * @link http://www.php.net/manual/en/function.xmlwriter-write-element.php
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The element name.
 	 * </p>
-	 * @param content string[optional] <p>
+	 * @param string $content [optional] <p>
 	 * The element contents.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -184,16 +184,16 @@ class XMLWriter  {
 	/**
 	 * Write full namespaced element tag
 	 * @link http://www.php.net/manual/en/function.xmlwriter-write-element-ns.php
-	 * @param prefix string <p>
+	 * @param string $prefix <p>
 	 * The namespace prefix.
 	 * </p>
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The element name.
 	 * </p>
-	 * @param uri string <p>
+	 * @param string $uri <p>
 	 * The namespace URI.
 	 * </p>
-	 * @param content string[optional] <p>
+	 * @param string $content [optional] <p>
 	 * The element contents.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -203,7 +203,7 @@ class XMLWriter  {
 	/**
 	 * Create start PI tag
 	 * @link http://www.php.net/manual/en/function.xmlwriter-start-pi.php
-	 * @param target string <p>
+	 * @param string $target <p>
 	 * The target of the processing instruction.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -220,10 +220,10 @@ class XMLWriter  {
 	/**
 	 * Writes a PI
 	 * @link http://www.php.net/manual/en/function.xmlwriter-write-pi.php
-	 * @param target string <p>
+	 * @param string $target <p>
 	 * The target of the processing instruction.
 	 * </p>
-	 * @param content string <p>
+	 * @param string $content <p>
 	 * The content of the processing instruction.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -247,7 +247,7 @@ class XMLWriter  {
 	/**
 	 * Write full CDATA tag
 	 * @link http://www.php.net/manual/en/function.xmlwriter-write-cdata.php
-	 * @param content string <p>
+	 * @param string $content <p>
 	 * The contents of the CDATA.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -257,7 +257,7 @@ class XMLWriter  {
 	/**
 	 * Write text
 	 * @link http://www.php.net/manual/en/function.xmlwriter-text.php
-	 * @param content string <p>
+	 * @param string $content <p>
 	 * The contents of the text.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -267,7 +267,7 @@ class XMLWriter  {
 	/**
 	 * Write a raw XML text
 	 * @link http://www.php.net/manual/en/function.xmlwriter-write-raw.php
-	 * @param content string <p>
+	 * @param string $content <p>
 	 * The text string to write.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -277,13 +277,13 @@ class XMLWriter  {
 	/**
 	 * Create document tag
 	 * @link http://www.php.net/manual/en/function.xmlwriter-start-document.php
-	 * @param version string[optional] <p>
+	 * @param string $version [optional] <p>
 	 * The version number of the document as part of the XML declaration. 
 	 * </p>
-	 * @param encoding string[optional] <p>
+	 * @param string $encoding [optional] <p>
 	 * The encoding of the document as part of the XML declaration.
 	 * </p>
-	 * @param standalone string[optional] <p>
+	 * @param string $standalone [optional] <p>
 	 * yes or no.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -300,7 +300,7 @@ class XMLWriter  {
 	/**
 	 * Write full comment tag
 	 * @link http://www.php.net/manual/en/function.xmlwriter-write-comment.php
-	 * @param content string <p>
+	 * @param string $content <p>
 	 * The contents of the comment.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -310,13 +310,13 @@ class XMLWriter  {
 	/**
 	 * Create start DTD tag
 	 * @link http://www.php.net/manual/en/function.xmlwriter-start-dtd.php
-	 * @param qualifiedName string <p>
+	 * @param string $qualifiedName <p>
 	 * The qualified name of the document type to create.
 	 * </p>
-	 * @param publicId string[optional] <p>
+	 * @param string $publicId [optional] <p>
 	 * The external subset public identifier.
 	 * </p>
-	 * @param systemId string[optional] <p>
+	 * @param string $systemId [optional] <p>
 	 * The external subset system identifier.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -333,16 +333,16 @@ class XMLWriter  {
 	/**
 	 * Write full DTD tag
 	 * @link http://www.php.net/manual/en/function.xmlwriter-write-dtd.php
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The DTD name.
 	 * </p>
-	 * @param publicId string[optional] <p>
+	 * @param string $publicId [optional] <p>
 	 * The external subset public identifier.
 	 * </p>
-	 * @param systemId string[optional] <p>
+	 * @param string $systemId [optional] <p>
 	 * The external subset system identifier.
 	 * </p>
-	 * @param subset string[optional] <p>
+	 * @param string $subset [optional] <p>
 	 * The content of the DTD.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -352,7 +352,7 @@ class XMLWriter  {
 	/**
 	 * Create start DTD element
 	 * @link http://www.php.net/manual/en/function.xmlwriter-start-dtd-element.php
-	 * @param qualifiedName string <p>
+	 * @param string $qualifiedName <p>
 	 * The qualified name of the document type to create.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -369,10 +369,10 @@ class XMLWriter  {
 	/**
 	 * Write full DTD element tag
 	 * @link http://www.php.net/manual/en/function.xmlwriter-write-dtd-element.php
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The name of the DTD element.
 	 * </p>
-	 * @param content string <p>
+	 * @param string $content <p>
 	 * The content of the element.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -382,7 +382,7 @@ class XMLWriter  {
 	/**
 	 * Create start DTD AttList
 	 * @link http://www.php.net/manual/en/function.xmlwriter-start-dtd-attlist.php
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The attribute list name.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -399,10 +399,10 @@ class XMLWriter  {
 	/**
 	 * Write full DTD AttList tag
 	 * @link http://www.php.net/manual/en/function.xmlwriter-write-dtd-attlist.php
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The name of the DTD attribute list.
 	 * </p>
-	 * @param content string <p>
+	 * @param string $content <p>
 	 * The content of the DTD attribute list.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -412,10 +412,10 @@ class XMLWriter  {
 	/**
 	 * Create start DTD Entity
 	 * @link http://www.php.net/manual/en/function.xmlwriter-start-dtd-entity.php
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The name of the entity.
 	 * </p>
-	 * @param isparam bool <p>
+	 * @param bool $isparam <p>
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
@@ -431,16 +431,16 @@ class XMLWriter  {
 	/**
 	 * Write full DTD Entity tag
 	 * @link http://www.php.net/manual/en/function.xmlwriter-write-dtd-entity.php
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The name of the entity.
 	 * </p>
-	 * @param content string <p>
+	 * @param string $content <p>
 	 * The content of the entity.
 	 * </p>
-	 * @param pe bool 
-	 * @param pubid string 
-	 * @param sysid string 
-	 * @param ndataid string 
+	 * @param bool $pe 
+	 * @param string $pubid 
+	 * @param string $sysid 
+	 * @param string $ndataid 
 	 * @return bool true on success or false on failure
 	 */
 	public function writeDtdEntity ($name, $content, $pe, $pubid, $sysid, $ndataid) {}
@@ -448,7 +448,7 @@ class XMLWriter  {
 	/**
 	 * Returns current buffer
 	 * @link http://www.php.net/manual/en/function.xmlwriter-output-memory.php
-	 * @param flush bool[optional] <p>
+	 * @param bool $flush [optional] <p>
 	 * Whether to flush the output buffer or not. Default is true.
 	 * </p>
 	 * @return string the current buffer as a string.
@@ -458,7 +458,7 @@ class XMLWriter  {
 	/**
 	 * Flush current buffer
 	 * @link http://www.php.net/manual/en/function.xmlwriter-flush.php
-	 * @param empty bool[optional] <p>
+	 * @param bool $empty [optional] <p>
 	 * Whether to empty the buffer or not. Default is true.
 	 * </p>
 	 * @return mixed If you opened the writer in memory, this function returns the generated XML buffer,
@@ -470,261 +470,261 @@ class XMLWriter  {
 }
 
 /**
- * @param uri
+ * @param $uri
  */
 function xmlwriter_open_uri ($uri) {}
 
 function xmlwriter_open_memory () {}
 
 /**
- * @param xmlwriter
- * @param indent
+ * @param $xmlwriter
+ * @param $indent
  */
 function xmlwriter_set_indent ($xmlwriter, $indent) {}
 
 /**
- * @param xmlwriter
- * @param indentString
+ * @param $xmlwriter
+ * @param $indentString
  */
 function xmlwriter_set_indent_string ($xmlwriter, $indentString) {}
 
 /**
- * @param xmlwriter
+ * @param $xmlwriter
  */
 function xmlwriter_start_comment ($xmlwriter) {}
 
 /**
- * @param xmlwriter
+ * @param $xmlwriter
  */
 function xmlwriter_end_comment ($xmlwriter) {}
 
 /**
- * @param xmlwriter
- * @param name
+ * @param $xmlwriter
+ * @param $name
  */
 function xmlwriter_start_attribute ($xmlwriter, $name) {}
 
 /**
- * @param xmlwriter
+ * @param $xmlwriter
  */
 function xmlwriter_end_attribute ($xmlwriter) {}
 
 /**
- * @param xmlwriter
- * @param name
- * @param value
+ * @param $xmlwriter
+ * @param $name
+ * @param $value
  */
 function xmlwriter_write_attribute ($xmlwriter, $name, $value) {}
 
 /**
- * @param xmlwriter
- * @param prefix
- * @param name
- * @param uri
+ * @param $xmlwriter
+ * @param $prefix
+ * @param $name
+ * @param $uri
  */
 function xmlwriter_start_attribute_ns ($xmlwriter, $prefix, $name, $uri) {}
 
 /**
- * @param xmlwriter
- * @param prefix
- * @param name
- * @param uri
- * @param content
+ * @param $xmlwriter
+ * @param $prefix
+ * @param $name
+ * @param $uri
+ * @param $content
  */
 function xmlwriter_write_attribute_ns ($xmlwriter, $prefix, $name, $uri, $content) {}
 
 /**
- * @param xmlwriter
- * @param name
+ * @param $xmlwriter
+ * @param $name
  */
 function xmlwriter_start_element ($xmlwriter, $name) {}
 
 /**
- * @param xmlwriter
+ * @param $xmlwriter
  */
 function xmlwriter_end_element ($xmlwriter) {}
 
 /**
- * @param xmlwriter
+ * @param $xmlwriter
  */
 function xmlwriter_full_end_element ($xmlwriter) {}
 
 /**
- * @param xmlwriter
- * @param prefix
- * @param name
- * @param uri
+ * @param $xmlwriter
+ * @param $prefix
+ * @param $name
+ * @param $uri
  */
 function xmlwriter_start_element_ns ($xmlwriter, $prefix, $name, $uri) {}
 
 /**
- * @param xmlwriter
- * @param name
- * @param content[optional]
+ * @param $xmlwriter
+ * @param $name
+ * @param $content [optional]
  */
 function xmlwriter_write_element ($xmlwriter, $name, $content = null) {}
 
 /**
- * @param xmlwriter
- * @param prefix
- * @param name
- * @param uri
- * @param content[optional]
+ * @param $xmlwriter
+ * @param $prefix
+ * @param $name
+ * @param $uri
+ * @param $content [optional]
  */
 function xmlwriter_write_element_ns ($xmlwriter, $prefix, $name, $uri, $content = null) {}
 
 /**
- * @param xmlwriter
- * @param target
+ * @param $xmlwriter
+ * @param $target
  */
 function xmlwriter_start_pi ($xmlwriter, $target) {}
 
 /**
- * @param xmlwriter
+ * @param $xmlwriter
  */
 function xmlwriter_end_pi ($xmlwriter) {}
 
 /**
- * @param xmlwriter
- * @param target
- * @param content
+ * @param $xmlwriter
+ * @param $target
+ * @param $content
  */
 function xmlwriter_write_pi ($xmlwriter, $target, $content) {}
 
 /**
- * @param xmlwriter
+ * @param $xmlwriter
  */
 function xmlwriter_start_cdata ($xmlwriter) {}
 
 /**
- * @param xmlwriter
+ * @param $xmlwriter
  */
 function xmlwriter_end_cdata ($xmlwriter) {}
 
 /**
- * @param xmlwriter
- * @param content
+ * @param $xmlwriter
+ * @param $content
  */
 function xmlwriter_write_cdata ($xmlwriter, $content) {}
 
 /**
- * @param xmlwriter
- * @param content
+ * @param $xmlwriter
+ * @param $content
  */
 function xmlwriter_text ($xmlwriter, $content) {}
 
 /**
- * @param xmlwriter
- * @param content
+ * @param $xmlwriter
+ * @param $content
  */
 function xmlwriter_write_raw ($xmlwriter, $content) {}
 
 /**
- * @param xmlwriter
- * @param version[optional]
- * @param encoding[optional]
- * @param standalone[optional]
+ * @param $xmlwriter
+ * @param $version [optional]
+ * @param $encoding [optional]
+ * @param $standalone [optional]
  */
 function xmlwriter_start_document ($xmlwriter, $version = null, $encoding = null, $standalone = null) {}
 
 /**
- * @param xmlwriter
+ * @param $xmlwriter
  */
 function xmlwriter_end_document ($xmlwriter) {}
 
 /**
- * @param xmlwriter
- * @param content
+ * @param $xmlwriter
+ * @param $content
  */
 function xmlwriter_write_comment ($xmlwriter, $content) {}
 
 /**
- * @param xmlwriter
- * @param qualifiedName
- * @param publicId[optional]
- * @param systemId[optional]
+ * @param $xmlwriter
+ * @param $qualifiedName
+ * @param $publicId [optional]
+ * @param $systemId [optional]
  */
 function xmlwriter_start_dtd ($xmlwriter, $qualifiedName, $publicId = null, $systemId = null) {}
 
 /**
- * @param xmlwriter
+ * @param $xmlwriter
  */
 function xmlwriter_end_dtd ($xmlwriter) {}
 
 /**
- * @param xmlwriter
- * @param name
- * @param publicId[optional]
- * @param systemId[optional]
- * @param subset[optional]
+ * @param $xmlwriter
+ * @param $name
+ * @param $publicId [optional]
+ * @param $systemId [optional]
+ * @param $subset [optional]
  */
 function xmlwriter_write_dtd ($xmlwriter, $name, $publicId = null, $systemId = null, $subset = null) {}
 
 /**
- * @param xmlwriter
- * @param qualifiedName
+ * @param $xmlwriter
+ * @param $qualifiedName
  */
 function xmlwriter_start_dtd_element ($xmlwriter, $qualifiedName) {}
 
 /**
- * @param xmlwriter
+ * @param $xmlwriter
  */
 function xmlwriter_end_dtd_element ($xmlwriter) {}
 
 /**
- * @param xmlwriter
- * @param name
- * @param content
+ * @param $xmlwriter
+ * @param $name
+ * @param $content
  */
 function xmlwriter_write_dtd_element ($xmlwriter, $name, $content) {}
 
 /**
- * @param xmlwriter
- * @param name
+ * @param $xmlwriter
+ * @param $name
  */
 function xmlwriter_start_dtd_attlist ($xmlwriter, $name) {}
 
 /**
- * @param xmlwriter
+ * @param $xmlwriter
  */
 function xmlwriter_end_dtd_attlist ($xmlwriter) {}
 
 /**
- * @param xmlwriter
- * @param name
- * @param content
+ * @param $xmlwriter
+ * @param $name
+ * @param $content
  */
 function xmlwriter_write_dtd_attlist ($xmlwriter, $name, $content) {}
 
 /**
- * @param xmlwriter
- * @param name
- * @param isparam
+ * @param $xmlwriter
+ * @param $name
+ * @param $isparam
  */
 function xmlwriter_start_dtd_entity ($xmlwriter, $name, $isparam) {}
 
 /**
- * @param xmlwriter
+ * @param $xmlwriter
  */
 function xmlwriter_end_dtd_entity ($xmlwriter) {}
 
 /**
- * @param xmlwriter
- * @param name
- * @param content
+ * @param $xmlwriter
+ * @param $name
+ * @param $content
  */
 function xmlwriter_write_dtd_entity ($xmlwriter, $name, $content) {}
 
 /**
- * @param xmlwriter
- * @param flush[optional]
+ * @param $xmlwriter
+ * @param $flush [optional]
  */
 function xmlwriter_output_memory ($xmlwriter, $flush = null) {}
 
 /**
- * @param xmlwriter
- * @param empty[optional]
+ * @param $xmlwriter
+ * @param $empty [optional]
  */
 function xmlwriter_flush ($xmlwriter, $empty = null) {}
 
-// End of xmlwriter v.0.1
+// End of xmlwriter v.7.0.0-dev

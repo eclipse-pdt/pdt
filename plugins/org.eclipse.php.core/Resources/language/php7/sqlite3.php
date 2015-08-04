@@ -7,17 +7,17 @@ class SQLite3  {
 	/**
 	 * Opens an SQLite database
 	 * @link http://www.php.net/manual/en/sqlite3.open.php
-	 * @param filename string <p>
+	 * @param string $filename <p>
 	 * Path to the SQLite database, or :memory: to use in-memory database.
 	 * </p>
-	 * @param flags int[optional] <p>
+	 * @param int $flags [optional] <p>
 	 * Optional flags used to determine how to open the SQLite database. By
 	 * default, open uses SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE.
 	 * <p>
 	 * SQLITE3_OPEN_READONLY: Open the database for
 	 * reading only.
 	 * </p>
-	 * @param encryption_key string[optional] <p>
+	 * @param string $encryption_key [optional] <p>
 	 * An optional encryption key used when encrypting and decrypting an
 	 * SQLite database.
 	 * </p>
@@ -35,7 +35,7 @@ class SQLite3  {
 	/**
 	 * Executes a result-less query against a given database
 	 * @link http://www.php.net/manual/en/sqlite3.exec.php
-	 * @param query string <p>
+	 * @param string $query <p>
 	 * The SQL query to execute (typically an INSERT, UPDATE, or DELETE
 	 * query).
 	 * </p>
@@ -76,7 +76,7 @@ class SQLite3  {
 	/**
 	 * Sets the busy connection handler
 	 * @link http://www.php.net/manual/en/sqlite3.busytimeout.php
-	 * @param msecs int <p>
+	 * @param int $msecs <p>
 	 * The milliseconds to sleep. Setting this value to a value less than
 	 * or equal to zero, will turn off an already set timeout handler.
 	 * </p>
@@ -87,7 +87,7 @@ class SQLite3  {
 	/**
 	 * Attempts to load an SQLite extension library
 	 * @link http://www.php.net/manual/en/sqlite3.loadextension.php
-	 * @param shared_library string <p>
+	 * @param string $shared_library <p>
 	 * The name of the library to load. The library must be located in the
 	 * directory specified in the configure option sqlite3.extension_dir.
 	 * </p>
@@ -108,7 +108,7 @@ class SQLite3  {
 	/**
 	 * Returns a string that has been properly escaped
 	 * @link http://www.php.net/manual/en/sqlite3.escapestring.php
-	 * @param value string <p>
+	 * @param string $value <p>
 	 * The string to be escaped.
 	 * </p>
 	 * @return string a properly escaped string that may be used safely in an SQL
@@ -119,7 +119,7 @@ class SQLite3  {
 	/**
 	 * Prepares an SQL statement for execution
 	 * @link http://www.php.net/manual/en/sqlite3.prepare.php
-	 * @param query string <p>
+	 * @param string $query <p>
 	 * The SQL query to prepare.
 	 * </p>
 	 * @return SQLite3Stmt an SQLite3Stmt object on success or false on failure.
@@ -129,7 +129,7 @@ class SQLite3  {
 	/**
 	 * Executes an SQL query
 	 * @link http://www.php.net/manual/en/sqlite3.query.php
-	 * @param query string <p>
+	 * @param string $query <p>
 	 * The SQL query to execute.
 	 * </p>
 	 * @return SQLite3Result an SQLite3Result object if the query returns results. Otherwise,
@@ -140,10 +140,10 @@ class SQLite3  {
 	/**
 	 * Executes a query and returns a single result
 	 * @link http://www.php.net/manual/en/sqlite3.querysingle.php
-	 * @param query string <p>
+	 * @param string $query <p>
 	 * The SQL query to execute.
 	 * </p>
-	 * @param entire_row bool[optional] <p>
+	 * @param bool $entire_row [optional] <p>
 	 * By default, querySingle returns the value of the
 	 * first column returned by the query. If
 	 * entire_row is true, then it returns an array
@@ -165,14 +165,14 @@ class SQLite3  {
 	/**
 	 * Registers a PHP function for use as an SQL scalar function
 	 * @link http://www.php.net/manual/en/sqlite3.createfunction.php
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * Name of the SQL function to be created or redefined.
 	 * </p>
-	 * @param callback mixed <p>
+	 * @param mixed $callback <p>
 	 * The name of a PHP function or user-defined function to apply as a
 	 * callback, defining the behavior of the SQL function.
 	 * </p>
-	 * @param argument_count int[optional] <p>
+	 * @param int $argument_count [optional] <p>
 	 * The number of arguments that the SQL function takes. If
 	 * this parameter is negative, then the SQL function may take
 	 * any number of arguments.
@@ -184,18 +184,18 @@ class SQLite3  {
 	/**
 	 * Registers a PHP function for use as an SQL aggregate function
 	 * @link http://www.php.net/manual/en/sqlite3.createaggregate.php
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * Name of the SQL aggregate to be created or redefined.
 	 * </p>
-	 * @param step_callback mixed <p>
+	 * @param mixed $step_callback <p>
 	 * The name of a PHP function or user-defined function to apply as a
 	 * callback for every item in the aggregate.
 	 * </p>
-	 * @param final_callback mixed <p>
+	 * @param mixed $final_callback <p>
 	 * The name of a PHP function or user-defined function to apply as a
 	 * callback at the end of the aggregate data.
 	 * </p>
-	 * @param argument_count int[optional] <p>
+	 * @param int $argument_count [optional] <p>
 	 * The number of arguments that the SQL aggregate takes. If
 	 * this parameter is negative, then the SQL aggregate may take
 	 * any number of arguments.
@@ -208,10 +208,10 @@ class SQLite3  {
 	/**
 	 * Registers a PHP function for use as an SQL collating function
 	 * @link http://www.php.net/manual/en/sqlite3.createcollation.php
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * Name of the SQL collating function to be created or redefined
 	 * </p>
-	 * @param callback callable <p>
+	 * @param callable $callback <p>
 	 * The name of a PHP function or user-defined function to apply as a
 	 * callback, defining the behavior of the collation. It should accept two
 	 * strings and return as strcmp does, i.e. it should
@@ -223,26 +223,26 @@ class SQLite3  {
 	public function createCollation ($name, $callback) {}
 
 	/**
-	 * @param table
-	 * @param column
-	 * @param rowid
-	 * @param dbname[optional]
+	 * @param $table
+	 * @param $column
+	 * @param $rowid
+	 * @param $dbname [optional]
 	 */
 	public function openBlob ($table, $column, $rowid, $dbname = null) {}
 
 	/**
-	 * @param enableExceptions
+	 * @param $enableExceptions
 	 */
 	public function enableExceptions ($enableExceptions) {}
 
 	/**
 	 * Instantiates an SQLite3 object and opens an SQLite 3 database
 	 * @link http://www.php.net/manual/en/sqlite3.construct.php
-	 * @param filename
-	 * @param flags
-	 * @param encryption_key
+	 * @param $filename
+	 * @param $flags [optional]
+	 * @param $encryption_key [optional]
 	 */
-	public function __construct ($filename, $flags, $encryption_key) {}
+	public function __construct ($filename, $flags = null, $encryption_key = null) {}
 
 }
 
@@ -288,14 +288,14 @@ class SQLite3Stmt  {
 	/**
 	 * Binds a parameter to a statement variable
 	 * @link http://www.php.net/manual/en/sqlite3stmt.bindparam.php
-	 * @param sql_param string <p>
+	 * @param string $sql_param <p>
 	 * An string identifying the statement variable to which the
 	 * parameter should be bound.
 	 * </p>
-	 * @param param mixed <p>
+	 * @param mixed $param <p>
 	 * The parameter to bind to a statement variable.
 	 * </p>
-	 * @param type int[optional] <p>
+	 * @param int $type [optional] <p>
 	 * The data type of the parameter to bind.
 	 * <p>
 	 * SQLITE3_INTEGER: The value is a signed integer,
@@ -310,14 +310,14 @@ class SQLite3Stmt  {
 	/**
 	 * Binds the value of a parameter to a statement variable
 	 * @link http://www.php.net/manual/en/sqlite3stmt.bindvalue.php
-	 * @param sql_param string <p>
+	 * @param string $sql_param <p>
 	 * An string identifying the statement variable to which the
 	 * value should be bound.
 	 * </p>
-	 * @param value mixed <p>
+	 * @param mixed $value <p>
 	 * The value to bind to a statement variable.
 	 * </p>
-	 * @param type int[optional] <p>
+	 * @param int $type [optional] <p>
 	 * The data type of the value to bind.
 	 * <p>
 	 * SQLITE3_INTEGER: The value is a signed integer,
@@ -332,7 +332,7 @@ class SQLite3Stmt  {
 	public function readOnly () {}
 
 	/**
-	 * @param sqlite3
+	 * @param $sqlite3
 	 */
 	private function __construct ($sqlite3) {}
 
@@ -350,7 +350,7 @@ class SQLite3Result  {
 	/**
 	 * Returns the name of the nth column
 	 * @link http://www.php.net/manual/en/sqlite3result.columnname.php
-	 * @param column_number int <p>
+	 * @param int $column_number <p>
 	 * The numeric zero-based index of the column.
 	 * </p>
 	 * @return string the string name of the column identified by
@@ -361,7 +361,7 @@ class SQLite3Result  {
 	/**
 	 * Returns the type of the nth column
 	 * @link http://www.php.net/manual/en/sqlite3result.columntype.php
-	 * @param column_number int <p>
+	 * @param int $column_number <p>
 	 * The numeric zero-based index of the column.
 	 * </p>
 	 * @return int the data type index of the column identified by
@@ -375,7 +375,7 @@ class SQLite3Result  {
 	/**
 	 * Fetches a result row as an associative or numerically indexed array or both
 	 * @link http://www.php.net/manual/en/sqlite3result.fetcharray.php
-	 * @param mode int[optional] <p>
+	 * @param int $mode [optional] <p>
 	 * Controls how the next row will be returned to the caller. This value
 	 * must be one of either SQLITE3_ASSOC,
 	 * SQLITE3_NUM, or SQLITE3_BOTH.
@@ -406,78 +406,16 @@ class SQLite3Result  {
 	private function __construct () {}
 
 }
-
-/**
- * Specifies that the Sqlite3Result::fetchArray
- * method shall return an array indexed by column name as returned in the
- * corresponding result set.
- * @link http://www.php.net/manual/en/sqlite3.constants.php
- */
 define ('SQLITE3_ASSOC', 1);
-
-/**
- * Specifies that the Sqlite3Result::fetchArray
- * method shall return an array indexed by column number as returned in the
- * corresponding result set, starting at column 0.
- * @link http://www.php.net/manual/en/sqlite3.constants.php
- */
 define ('SQLITE3_NUM', 2);
-
-/**
- * Specifies that the Sqlite3Result::fetchArray
- * method shall return an array indexed by both column name and number as
- * returned in the corresponding result set, starting at column 0.
- * @link http://www.php.net/manual/en/sqlite3.constants.php
- */
 define ('SQLITE3_BOTH', 3);
-
-/**
- * Represents the SQLite3 INTEGER storage class.
- * @link http://www.php.net/manual/en/sqlite3.constants.php
- */
 define ('SQLITE3_INTEGER', 1);
-
-/**
- * Represents the SQLite3 REAL (FLOAT) storage class.
- * @link http://www.php.net/manual/en/sqlite3.constants.php
- */
 define ('SQLITE3_FLOAT', 2);
-
-/**
- * Represents the SQLite3 TEXT storage class.
- * @link http://www.php.net/manual/en/sqlite3.constants.php
- */
 define ('SQLITE3_TEXT', 3);
-
-/**
- * Represents the SQLite3 BLOB storage class.
- * @link http://www.php.net/manual/en/sqlite3.constants.php
- */
 define ('SQLITE3_BLOB', 4);
-
-/**
- * Represents the SQLite3 NULL storage class.
- * @link http://www.php.net/manual/en/sqlite3.constants.php
- */
 define ('SQLITE3_NULL', 5);
-
-/**
- * Specifies that the SQLite3 database be opened for reading only.
- * @link http://www.php.net/manual/en/sqlite3.constants.php
- */
 define ('SQLITE3_OPEN_READONLY', 1);
-
-/**
- * Specifies that the SQLite3 database be opened for reading and writing.
- * @link http://www.php.net/manual/en/sqlite3.constants.php
- */
 define ('SQLITE3_OPEN_READWRITE', 2);
-
-/**
- * Specifies that the SQLite3 database be created if it does not already
- * exist.
- * @link http://www.php.net/manual/en/sqlite3.constants.php
- */
 define ('SQLITE3_OPEN_CREATE', 4);
 
 // End of sqlite3 v.0.7-dev

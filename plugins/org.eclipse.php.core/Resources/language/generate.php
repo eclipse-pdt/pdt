@@ -281,17 +281,22 @@ function parse_phpdoc_classes ($phpdocDir) {
 		$xml = load_xml ($xml_file);
 		if (preg_match ('@xml:id=["\'](.*?)["\']@', $xml, $match)) {
 			$id = $match[1];
-			if (preg_match_all ('@<title><classname>(.*?)</classname></title>@', $xml, $match)) {
+			if (preg_match_all ('@<titleabbrev>(.*?)</titleabbrev>@', $xml, $match)) {
 				for ($i = 0; $i < count($match[0]); ++$i) {
 					$class = $match[1][$i];
 					$refname = strtolower ($class);
 					$classesDoc[$refname]['id'] = $id;
 					$classesDoc[$refname]['name'] = $class;
 
-					if (preg_match ("@<title><classname>{$class}</classname></title>\s*<para>(.*?)</para>@s", $xml, $match2)) {
-						$classesDoc[$refname]['doc'] = xml_to_phpdoc($match2[1]);
+					if (preg_match ( "@<section(?:\s+[^>]+)?>(.*?)</section>@s", $xml, $match2 )) {
+						if (preg_match_all ( "@<para>(.*?)</para>@s",  $match2 [1], $match3 )) {
+							$doc =  xml_to_phpdoc ( $match3 [1][0] );
+							for($i = 1; $i < count ( $match3 [1] ); ++ $i) {
+								$doc .= "\n<p>" . xml_to_phpdoc ( $match3 [1][$i] ) . "</p>";
+							}
+						}
+						$classesDoc [$refname] ['doc'] = $doc;
 					}
-
 					//pass over class fields here
 					$fields_xml_file = array_merge (
 						glob ("{$phpdocDir}/reference/*/" . $refname . ".xml")
@@ -818,9 +823,9 @@ function print_doccomment ($ref, $tabs = 0) {
 			if ($parameters) {
 				foreach ($parameters as $parameter) {
 					print_tabs ($tabs);
-					print " * @param {$parameter['name']} {$parameter['type']}";
+					print " * @param {$parameter['type']} {$parameter['name']}";
 					if (@$parameter['isoptional']) {
-						print "[optional]";
+						print " [optional]";
 					}
                     $paramdoc = newline_to_phpdoc (@$parameter['paramdoc'], $tabs);
                     print " {$paramdoc}";
@@ -831,15 +836,16 @@ function print_doccomment ($ref, $tabs = 0) {
 				foreach ($paramsRef as $paramRef) {
 					print_tabs ($tabs);
 					$name = $paramRef->getName() ? $paramRef->getName() : "var".++$i;
-					print " * @param {$name}";
+					print " * @param";
 					if ($className = get_parameter_classname($paramRef)) {
 						print " {$className}";
 						if ($paramRef->isArray()) {
 							print "[]";
 						}
 					}
+					print " \${$name}";
 					if ($paramRef->isOptional()) {
-						print "[optional]";
+						print " [optional]";
 					}
 					print "\n";
 				}
