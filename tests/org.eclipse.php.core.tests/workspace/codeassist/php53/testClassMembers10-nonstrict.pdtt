@@ -6,17 +6,14 @@ org.eclipse.php.core/contentAssistShowStrictOptions=false
 <?
 class Foo{
 	/**
-	 * @var \LogicException
+	 * @var \Iterator
 	 */
-	public static $Exception;
+	public static $Iterator;
 } 
-Foo::$Exception->| ?>
+Foo::$Iterator->| ?>
 --EXPECT--
-method(__toString)
-method(getCode)
-method(getFile)
-method(getLine)
-method(getMessage)
-method(getPrevious)
-method(getTrace)
-method(getTraceAsString)
+method(current)
+method(next)
+method(key)
+method(valid)
+method(rewind)

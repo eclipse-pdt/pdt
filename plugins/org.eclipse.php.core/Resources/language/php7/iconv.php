@@ -1,14 +1,14 @@
 <?php
 
-// Start of iconv v.
+// Start of iconv v.7.0.0-dev
 
 /**
  * Convert string to requested character encoding
  * @link http://www.php.net/manual/en/function.iconv.php
- * @param in_charset string <p>
+ * @param string $in_charset <p>
  * The input charset.
  * </p>
- * @param out_charset string <p>
+ * @param string $out_charset <p>
  * The output charset.
  * </p>
  * <p>
@@ -18,10 +18,10 @@
  * it can be approximated through one or several similarly looking
  * characters. If you append the string //IGNORE,
  * characters that cannot be represented in the target charset are silently
- * discarded. Otherwise, str is cut from the first
- * illegal character and an E_NOTICE is generated.
+ * discarded. Otherwise, E_NOTICE is generated and the function
+ *  will return false.
  * </p>
- * @param str string <p>
+ * @param string $str <p>
  * The string to be converted.
  * </p>
  * @return string the converted string or false on failure.
@@ -31,7 +31,7 @@ function iconv ($in_charset, $out_charset, $str) {}
 /**
  * Retrieve internal configuration variables of iconv extension
  * @link http://www.php.net/manual/en/function.iconv-get-encoding.php
- * @param type string[optional] <p>
+ * @param string $type [optional] <p>
  * The value of the optional type can be:
  * all
  * input_encoding
@@ -51,13 +51,13 @@ function iconv_get_encoding ($type = null) {}
 /**
  * Set current setting for character encoding conversion
  * @link http://www.php.net/manual/en/function.iconv-set-encoding.php
- * @param type string <p>
+ * @param string $type <p>
  * The value of type can be any one of these:
  * input_encoding
  * output_encoding
  * internal_encoding
  * </p>
- * @param charset string <p>
+ * @param string $charset <p>
  * The character set.
  * </p>
  * @return bool true on success or false on failure
@@ -67,10 +67,10 @@ function iconv_set_encoding ($type, $charset) {}
 /**
  * Returns the character count of string
  * @link http://www.php.net/manual/en/function.iconv-strlen.php
- * @param str string <p>
+ * @param string $str <p>
  * The string.
  * </p>
- * @param charset string[optional] <p>
+ * @param string $charset [optional] <p>
  * If charset parameter is omitted,
  * str is assumed to be encoded in
  * iconv.internal_encoding.
@@ -82,10 +82,10 @@ function iconv_strlen ($str, $charset = null) {}
 /**
  * Cut out part of a string
  * @link http://www.php.net/manual/en/function.iconv-substr.php
- * @param str string <p>
+ * @param string $str <p>
  * The original string.
  * </p>
- * @param offset int <p>
+ * @param int $offset <p>
  * If offset is non-negative,
  * iconv_substr cuts the portion out of
  * str beginning at offset'th
@@ -97,7 +97,7 @@ function iconv_strlen ($str, $charset = null) {}
  * at the position, offset characters
  * away from the end of str.
  * </p>
- * @param length int[optional] <p>
+ * @param int $length [optional] <p>
  * If length is given and is positive, the return
  * value will contain at most length characters
  * of the portion that begins at offset
@@ -112,7 +112,7 @@ function iconv_strlen ($str, $charset = null) {}
  * In case offset is also negative, the start position
  * is calculated beforehand according to the rule explained above.
  * </p>
- * @param charset string[optional] <p>
+ * @param string $charset [optional] <p>
  * If charset parameter is omitted,
  * string are assumed to be encoded in
  * iconv.internal_encoding.
@@ -136,17 +136,17 @@ function iconv_substr ($str, $offset, $length = null, $charset = null) {}
 /**
  * Finds position of first occurrence of a needle within a haystack
  * @link http://www.php.net/manual/en/function.iconv-strpos.php
- * @param haystack string <p>
+ * @param string $haystack <p>
  * The entire string.
  * </p>
- * @param needle string <p>
+ * @param string $needle <p>
  * The searched substring.
  * </p>
- * @param offset int[optional] <p>
+ * @param int $offset [optional] <p>
  * The optional offset parameter specifies
  * the position from which the search should be performed.
  * </p>
- * @param charset string[optional] <p>
+ * @param string $charset [optional] <p>
  * If charset parameter is omitted,
  * string are assumed to be encoded in
  * iconv.internal_encoding.
@@ -163,13 +163,13 @@ function iconv_strpos ($haystack, $needle, $offset = null, $charset = null) {}
 /**
  * Finds the last occurrence of a needle within a haystack
  * @link http://www.php.net/manual/en/function.iconv-strrpos.php
- * @param haystack string <p>
+ * @param string $haystack <p>
  * The entire string.
  * </p>
- * @param needle string <p>
+ * @param string $needle <p>
  * The searched substring.
  * </p>
- * @param charset string[optional] <p>
+ * @param string $charset [optional] <p>
  * If charset parameter is omitted,
  * string are assumed to be encoded in
  * iconv.internal_encoding.
@@ -186,13 +186,13 @@ function iconv_strrpos ($haystack, $needle, $charset = null) {}
 /**
  * Composes a <literal>MIME</literal> header field
  * @link http://www.php.net/manual/en/function.iconv-mime-encode.php
- * @param field_name string <p>
+ * @param string $field_name <p>
  * The field name.
  * </p>
- * @param field_value string <p>
+ * @param string $field_value <p>
  * The field value.
  * </p>
- * @param preferences array[optional] <p>
+ * @param array $preferences [optional] <p>
  * You can control the behaviour of iconv_mime_encode
  * by specifying an associative array that contains configuration items
  * to the optional third parameter preferences.
@@ -286,10 +286,10 @@ function iconv_mime_encode ($field_name, $field_value, array $preferences = null
 /**
  * Decodes a <literal>MIME</literal> header field
  * @link http://www.php.net/manual/en/function.iconv-mime-decode.php
- * @param encoded_header string <p>
+ * @param string $encoded_header <p>
  * The encoded header, as a string.
  * </p>
- * @param mode int[optional] <p>
+ * @param int $mode [optional] <p>
  * mode determines the behaviour in the event
  * iconv_mime_decode encounters a malformed
  * MIME header field. You can specify any combination
@@ -323,7 +323,7 @@ function iconv_mime_encode ($field_name, $field_value, array $preferences = null
  * </tr>
  * </table>
  * </p>
- * @param charset string[optional] <p>
+ * @param string $charset [optional] <p>
  * The optional charset parameter specifies the
  * character set to represent the result by. If omitted,
  * iconv.internal_encoding
@@ -337,10 +337,10 @@ function iconv_mime_decode ($encoded_header, $mode = null, $charset = null) {}
 /**
  * Decodes multiple <literal>MIME</literal> header fields at once
  * @link http://www.php.net/manual/en/function.iconv-mime-decode-headers.php
- * @param encoded_headers string <p>
+ * @param string $encoded_headers <p>
  * The encoded headers, as a string.
  * </p>
- * @param mode int[optional] <p>
+ * @param int $mode [optional] <p>
  * mode determines the behaviour in the event
  * iconv_mime_decode_headers encounters a malformed
  * MIME header field. You can specify any combination
@@ -374,7 +374,7 @@ function iconv_mime_decode ($encoded_header, $mode = null, $charset = null) {}
  * </tr>
  * </table>
  * </p>
- * @param charset string[optional] <p>
+ * @param string $charset [optional] <p>
  * The optional charset parameter specifies the
  * character set to represent the result by. If omitted,
  * iconv.internal_encoding
@@ -394,29 +394,9 @@ function iconv_mime_decode ($encoded_header, $mode = null, $charset = null) {}
  */
 function iconv_mime_decode_headers ($encoded_headers, $mode = null, $charset = null) {}
 
-
-/**
- * string
- * @link http://www.php.net/manual/en/iconv.constants.php
- */
 define ('ICONV_IMPL', "glibc");
-
-/**
- * string
- * @link http://www.php.net/manual/en/iconv.constants.php
- */
-define ('ICONV_VERSION', 2.19);
-
-/**
- * integer
- * @link http://www.php.net/manual/en/iconv.constants.php
- */
+define ('ICONV_VERSION', 2.21);
 define ('ICONV_MIME_DECODE_STRICT', 1);
-
-/**
- * integer
- * @link http://www.php.net/manual/en/iconv.constants.php
- */
 define ('ICONV_MIME_DECODE_CONTINUE_ON_ERROR', 2);
 
-// End of iconv v.
+// End of iconv v.7.0.0-dev

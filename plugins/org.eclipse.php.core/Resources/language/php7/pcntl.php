@@ -1,6 +1,6 @@
 <?php
 
-// Start of pcntl v.
+// Start of pcntl v.7.0.0-dev
 
 /**
  * Forks the currently running process
@@ -16,7 +16,7 @@ function pcntl_fork () {}
 /**
  * Waits on or returns the status of a forked child
  * @link http://www.php.net/manual/en/function.pcntl-waitpid.php
- * @param pid int <p>
+ * @param int $pid <p>
  * The value of pid can be one of the following:
  * <table>
  * possible values for pid
@@ -55,7 +55,7 @@ function pcntl_fork () {}
  * equivalent to the functionality pcntl_wait provides
  * (minus options).
  * </p>
- * @param status int <p>
+ * @param int $status <p>
  * pcntl_waitpid will store status information
  * in the status parameter which can be
  * evaluated using the following functions:
@@ -66,7 +66,7 @@ function pcntl_fork () {}
  * pcntl_wtermsig and
  * pcntl_wstopsig.
  * </p>
- * @param options int[optional] <p>
+ * @param int $options [optional] <p>
  * The value of options is the value of zero
  * or more of the following two global constants
  * OR'ed together:
@@ -96,7 +96,7 @@ function pcntl_waitpid ($pid, &$status, $options = null) {}
 /**
  * Waits on or returns the status of a forked child
  * @link http://www.php.net/manual/en/function.pcntl-wait.php
- * @param status int <p>
+ * @param int $status <p>
  * pcntl_wait will store status information
  * in the status parameter which can be
  * evaluated using the following functions:
@@ -107,7 +107,7 @@ function pcntl_waitpid ($pid, &$status, $options = null) {}
  * pcntl_wtermsig and
  * pcntl_wstopsig.
  * </p>
- * @param options int[optional] <p>
+ * @param int $options [optional] <p>
  * If wait3 is available on your system (mostly BSD-style systems), you can
  * provide the optional options parameter. If this
  * parameter is not provided, wait will be used for the system call. If
@@ -141,10 +141,10 @@ function pcntl_wait (&$status, $options = null) {}
 /**
  * Installs a signal handler
  * @link http://www.php.net/manual/en/function.pcntl-signal.php
- * @param signo int <p>
+ * @param int $signo <p>
  * The signal number.
  * </p>
- * @param handler callable|int <p>
+ * @param callable|int $handler <p>
  * The signal handler. This may be either a callable, which
  * will be invoked to handle the signal, or either of the two global
  * constants SIG_IGN or SIG_DFL,
@@ -160,7 +160,7 @@ function pcntl_wait (&$status, $options = null) {}
  * intsigno
  * signo
  * The signal being handled.
- * @param restart_syscalls bool[optional] <p>
+ * @param bool $restart_syscalls [optional] <p>
  * Specifies whether system call restarting should be used when this
  * signal arrives.
  * </p>
@@ -178,7 +178,7 @@ function pcntl_signal_dispatch () {}
 /**
  * Checks if status code represents a normal exit
  * @link http://www.php.net/manual/en/function.pcntl-wifexited.php
- * @param status int &pcntl.parameter.status;
+ * @param int $status &pcntl.parameter.status;
  * @return bool true if the child status code represents a normal exit, false
  * otherwise.
  */
@@ -187,7 +187,7 @@ function pcntl_wifexited ($status) {}
 /**
  * Checks whether the child process is currently stopped
  * @link http://www.php.net/manual/en/function.pcntl-wifstopped.php
- * @param status int &pcntl.parameter.status;
+ * @param int $status &pcntl.parameter.status;
  * @return bool true if the child process which caused the return is
  * currently stopped, false otherwise.
  */
@@ -196,7 +196,7 @@ function pcntl_wifstopped ($status) {}
 /**
  * Checks whether the status code represents a termination due to a signal
  * @link http://www.php.net/manual/en/function.pcntl-wifsignaled.php
- * @param status int &pcntl.parameter.status;
+ * @param int $status &pcntl.parameter.status;
  * @return bool true if the child process exited because of a signal which was
  * not caught, false otherwise.
  */
@@ -205,7 +205,7 @@ function pcntl_wifsignaled ($status) {}
 /**
  * Returns the return code of a terminated child
  * @link http://www.php.net/manual/en/function.pcntl-wexitstatus.php
- * @param status int &pcntl.parameter.status;
+ * @param int $status &pcntl.parameter.status;
  * @return int the return code, as an integer.
  */
 function pcntl_wexitstatus ($status) {}
@@ -213,7 +213,7 @@ function pcntl_wexitstatus ($status) {}
 /**
  * Returns the signal which caused the child to terminate
  * @link http://www.php.net/manual/en/function.pcntl-wtermsig.php
- * @param status int &pcntl.parameter.status;
+ * @param int $status &pcntl.parameter.status;
  * @return int the signal number, as an integer.
  */
 function pcntl_wtermsig ($status) {}
@@ -221,7 +221,7 @@ function pcntl_wtermsig ($status) {}
 /**
  * Returns the signal which caused the child to stop
  * @link http://www.php.net/manual/en/function.pcntl-wstopsig.php
- * @param status int &pcntl.parameter.status;
+ * @param int $status &pcntl.parameter.status;
  * @return int the signal number.
  */
 function pcntl_wstopsig ($status) {}
@@ -229,30 +229,30 @@ function pcntl_wstopsig ($status) {}
 /**
  * Executes specified program in current process space
  * @link http://www.php.net/manual/en/function.pcntl-exec.php
- * @param path string <p>
+ * @param string $path <p>
  * path must be the path to a binary executable or a
  * script with a valid path pointing to an executable in the shebang (
  * #!/usr/local/bin/perl for example) as the first line. See your system's
  * man execve(2) page for additional information.
  * </p>
- * @param args array[optional] <p>
+ * @param array $args [optional] <p>
  * args is an array of argument strings passed to the
  * program.
  * </p>
- * @param envs array[optional] <p>
+ * @param array $envs [optional] <p>
  * envs is an array of strings which are passed as
  * environment to the program. The array is in the format of name => value,
  * the key being the name of the environmental variable and the value being
  * the value of that variable.
  * </p>
- * @return void false on error and does not return on success.
+ * @return bool false on error and does not return on success.
  */
 function pcntl_exec ($path, array $args = null, array $envs = null) {}
 
 /**
  * Set an alarm clock for delivery of a signal
  * @link http://www.php.net/manual/en/function.pcntl-alarm.php
- * @param seconds int <p>
+ * @param int $seconds <p>
  * The number of seconds to wait. If seconds is
  * zero, no new alarm is created.
  * </p>
@@ -278,7 +278,7 @@ function pcntl_errno () {}
 /**
  * Retrieve the system error message associated with the given errno
  * @link http://www.php.net/manual/en/function.pcntl-strerror.php
- * @param errno int <p>
+ * @param int $errno <p>
  * </p>
  * @return string error description on success or false on failure.
  */
@@ -287,10 +287,10 @@ function pcntl_strerror ($errno) {}
 /**
  * Get the priority of any process
  * @link http://www.php.net/manual/en/function.pcntl-getpriority.php
- * @param pid int[optional] <p>
+ * @param int $pid [optional] <p>
  * If not specified, the pid of the current process is used.
  * </p>
- * @param process_identifier int[optional] <p>
+ * @param int $process_identifier [optional] <p>
  * One of PRIO_PGRP, PRIO_USER
  * or PRIO_PROCESS.
  * </p>
@@ -303,7 +303,7 @@ function pcntl_getpriority ($pid = null, $process_identifier = null) {}
 /**
  * Change the priority of any process
  * @link http://www.php.net/manual/en/function.pcntl-setpriority.php
- * @param priority int <p>
+ * @param int $priority <p>
  * priority is generally a value in the range
  * -20 to 20. The default priority
  * is 0 while a lower numerical value causes more
@@ -311,10 +311,10 @@ function pcntl_getpriority ($pid = null, $process_identifier = null) {}
  * system types and kernel versions, please see your system's setpriority(2)
  * man page for specific details.
  * </p>
- * @param pid int[optional] <p>
+ * @param int $pid [optional] <p>
  * If not specified, the pid of the current process is used.
  * </p>
- * @param process_identifier int[optional] <p>
+ * @param int $process_identifier [optional] <p>
  * One of PRIO_PGRP, PRIO_USER
  * or PRIO_PROCESS.
  * </p>
@@ -325,7 +325,7 @@ function pcntl_setpriority ($priority, $pid = null, $process_identifier = null) 
 /**
  * Sets and retrieves blocked signals
  * @link http://www.php.net/manual/en/function.pcntl-sigprocmask.php
- * @param how int <p>
+ * @param int $how <p>
  * Sets the behavior of pcntl_sigprocmask. Possible
  * values: 
  * SIG_BLOCK: Add the signals to the
@@ -335,10 +335,10 @@ function pcntl_setpriority ($priority, $pid = null, $process_identifier = null) 
  * SIG_SETMASK: Replace the currently
  * blocked signals by the given list of signals.
  * </p>
- * @param set array <p>
+ * @param array $set <p>
  * List of signals.
  * </p>
- * @param oldset array[optional] <p>
+ * @param array $oldset [optional] <p>
  * The oldset parameter is set to an array
  * containing the list of the previously blocked signals.
  * </p>
@@ -349,10 +349,10 @@ function pcntl_sigprocmask ($how, array $set, array &$oldset = null) {}
 /**
  * Waits for signals
  * @link http://www.php.net/manual/en/function.pcntl-sigwaitinfo.php
- * @param set array <p>
+ * @param array $set <p>
  * Array of signals to wait for.
  * </p>
- * @param siginfo array[optional] <p>
+ * @param array $siginfo [optional] <p>
  * The siginfo parameter is set to an array containing
  * informations about the signal.
  * </p>
@@ -389,26 +389,32 @@ function pcntl_sigwaitinfo (array $set, array &$siginfo = null) {}
 /**
  * Waits for signals, with a timeout
  * @link http://www.php.net/manual/en/function.pcntl-sigtimedwait.php
- * @param set array <p>
+ * @param array $set <p>
  * Array of signals to wait for.
  * </p>
- * @param siginfo array[optional] <p>
+ * @param array $siginfo [optional] <p>
  * The siginfo is set to an array containing
  * informations about the signal. See
  * pcntl_sigwaitinfo.
  * </p>
- * @param seconds int[optional] <p>
+ * @param int $seconds [optional] <p>
  * Timeout in seconds.
  * </p>
- * @param nanoseconds int[optional] <p>
+ * @param int $nanoseconds [optional] <p>
  * Timeout in nanoseconds.
  * </p>
  * @return int On success, pcntl_sigtimedwait returns a signal number.
  */
 function pcntl_sigtimedwait (array $set, array &$siginfo = null, $seconds = null, $nanoseconds = null) {}
 
+/**
+ * @param $status
+ */
+function pcntl_wifcontinued ($status) {}
+
 define ('WNOHANG', 1);
 define ('WUNTRACED', 2);
+define ('WCONTINUED', 8);
 define ('SIG_IGN', 1);
 define ('SIG_DFL', 0);
 define ('SIG_ERR', -1);
@@ -450,276 +456,51 @@ define ('SIGBABY', 31);
 define ('PRIO_PGRP', 1);
 define ('PRIO_USER', 2);
 define ('PRIO_PROCESS', 0);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('SIG_BLOCK', 0);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('SIG_UNBLOCK', 1);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('SIG_SETMASK', 2);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('SI_USER', 0);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('SI_KERNEL', 128);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('SI_QUEUE', -1);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('SI_TIMER', -2);
 define ('SI_MESGQ', -3);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('SI_ASYNCIO', -4);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('SI_SIGIO', -5);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('SI_TKILL', -6);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('CLD_EXITED', 1);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('CLD_KILLED', 2);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('CLD_DUMPED', 3);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('CLD_TRAPPED', 4);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('CLD_STOPPED', 5);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('CLD_CONTINUED', 6);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('TRAP_BRKPT', 1);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('TRAP_TRACE', 2);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('POLL_IN', 1);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('POLL_OUT', 2);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('POLL_MSG', 3);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('POLL_ERR', 4);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('POLL_PRI', 5);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('POLL_HUP', 6);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('ILL_ILLOPC', 1);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('ILL_ILLOPN', 2);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('ILL_ILLADR', 3);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('ILL_ILLTRP', 4);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('ILL_PRVOPC', 5);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('ILL_PRVREG', 6);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('ILL_COPROC', 7);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('ILL_BADSTK', 8);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('FPE_INTDIV', 1);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('FPE_INTOVF', 2);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('FPE_FLTDIV', 3);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('FPE_FLTOVF', 4);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('FPE_FLTUND', 7);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('FPE_FLTRES', 6);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('FPE_FLTINV', 7);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('FPE_FLTSUB', 8);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('SEGV_MAPERR', 1);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('SEGV_ACCERR', 2);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('BUS_ADRALN', 1);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('BUS_ADRERR', 2);
-
-/**
- * Available since PHP 5.3.0.
- * @link http://www.php.net/manual/en/pcntl.constants.php
- */
 define ('BUS_OBJERR', 3);
 define ('PCNTL_EINTR', 4);
 define ('PCNTL_ECHILD', 10);
@@ -743,4 +524,4 @@ define ('PCNTL_ENOEXEC', 8);
 define ('PCNTL_ENOTDIR', 20);
 define ('PCNTL_ETXTBSY', 26);
 
-// End of pcntl v.
+// End of pcntl v.7.0.0-dev

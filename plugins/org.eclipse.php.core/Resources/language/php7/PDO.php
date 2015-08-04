@@ -1,8 +1,8 @@
 <?php
 
-// Start of PDO v.1.0.4dev
+// Start of PDO v.7.0.0-dev
 
-class PDOException extends RuntimeException  {
+class PDOException extends RuntimeException implements Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -13,11 +13,13 @@ class PDOException extends RuntimeException  {
 	final private function __clone () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 * @param previous[optional]
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
 	 */
 	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
 
 	final public function getMessage () {}
 
@@ -111,42 +113,38 @@ class PDO  {
 	const MYSQL_ATTR_USE_BUFFERED_QUERY = 1000;
 	const MYSQL_ATTR_LOCAL_INFILE = 1001;
 	const MYSQL_ATTR_INIT_COMMAND = 1002;
-	const MYSQL_ATTR_COMPRESS = 1003;
-	const MYSQL_ATTR_DIRECT_QUERY = 1004;
-	const MYSQL_ATTR_FOUND_ROWS = 1005;
-	const MYSQL_ATTR_IGNORE_SPACE = 1006;
-	const MYSQL_ATTR_SSL_KEY = 1007;
-	const MYSQL_ATTR_SSL_CERT = 1008;
-	const MYSQL_ATTR_SSL_CA = 1009;
-	const MYSQL_ATTR_SSL_CAPATH = 1010;
-	const MYSQL_ATTR_SSL_CIPHER = 1011;
-	const MYSQL_ATTR_SERVER_PUBLIC_KEY = 1012;
-	const PGSQL_ATTR_DISABLE_NATIVE_PREPARED_STATEMENT = 1000;
-	const PGSQL_ATTR_DISABLE_PREPARES = 1001;
-	const PGSQL_TRANSACTION_IDLE = 0;
-	const PGSQL_TRANSACTION_ACTIVE = 1;
-	const PGSQL_TRANSACTION_INTRANS = 2;
-	const PGSQL_TRANSACTION_INERROR = 3;
-	const PGSQL_TRANSACTION_UNKNOWN = 4;
+	const MYSQL_ATTR_MAX_BUFFER_SIZE = 1005;
+	const MYSQL_ATTR_READ_DEFAULT_FILE = 1003;
+	const MYSQL_ATTR_READ_DEFAULT_GROUP = 1004;
+	const MYSQL_ATTR_COMPRESS = 1006;
+	const MYSQL_ATTR_DIRECT_QUERY = 1007;
+	const MYSQL_ATTR_FOUND_ROWS = 1008;
+	const MYSQL_ATTR_IGNORE_SPACE = 1009;
+	const MYSQL_ATTR_SSL_KEY = 1010;
+	const MYSQL_ATTR_SSL_CERT = 1011;
+	const MYSQL_ATTR_SSL_CA = 1012;
+	const MYSQL_ATTR_SSL_CAPATH = 1013;
+	const MYSQL_ATTR_SSL_CIPHER = 1014;
+	const MYSQL_ATTR_MULTI_STATEMENTS = 1015;
 
 
 	/**
 	 * Creates a PDO instance representing a connection to a database
 	 * @link http://www.php.net/manual/en/pdo.construct.php
-	 * @param dsn
-	 * @param username[optional]
-	 * @param passwd[optional]
-	 * @param options[optional]
+	 * @param $dsn
+	 * @param $username [optional]
+	 * @param $passwd [optional]
+	 * @param $options [optional]
 	 */
 	public function __construct ($dsn, $username = null, $passwd = null, $options = null) {}
 
 	/**
 	 * Prepares a statement for execution and returns a statement object
 	 * @link http://www.php.net/manual/en/pdo.prepare.php
-	 * @param statement string <p>
-	 * This must be a valid SQL statement for the target database server.
+	 * @param string $statement <p>
+	 * This must be a valid SQL statement template for the target database server.
 	 * </p>
-	 * @param driver_options array[optional] <p>
+	 * @param array $driver_options [optional] <p>
 	 * This array holds one or more key=&gt;value pairs to set
 	 * attribute values for the PDOStatement object that this method
 	 * returns. You would most commonly use this to set the
@@ -199,8 +197,8 @@ class PDO  {
 	/**
 	 * Set an attribute
 	 * @link http://www.php.net/manual/en/pdo.setattribute.php
-	 * @param attribute int 
-	 * @param value mixed 
+	 * @param int $attribute 
+	 * @param mixed $value 
 	 * @return bool true on success or false on failure
 	 */
 	public function setAttribute ($attribute, $value) {}
@@ -208,7 +206,7 @@ class PDO  {
 	/**
 	 * Execute an SQL statement and return the number of affected rows
 	 * @link http://www.php.net/manual/en/pdo.exec.php
-	 * @param statement string <p>
+	 * @param string $statement <p>
 	 * The SQL statement to prepare and execute.
 	 * </p>
 	 * <p>
@@ -232,7 +230,7 @@ class PDO  {
 	/**
 	 * Executes an SQL statement, returning a result set as a PDOStatement object
 	 * @link http://www.php.net/manual/en/pdo.query.php
-	 * @param statement string <p>
+	 * @param string $statement <p>
 	 * The SQL statement to prepare and execute.
 	 * </p>
 	 * <p>
@@ -246,7 +244,7 @@ class PDO  {
 	/**
 	 * Returns the ID of the last inserted row or sequence value
 	 * @link http://www.php.net/manual/en/pdo.lastinsertid.php
-	 * @param name string[optional] <p>
+	 * @param string $name [optional] <p>
 	 * Name of the sequence object from which the ID should be returned.
 	 * </p>
 	 * @return string If a sequence name was not specified for the name
@@ -337,7 +335,7 @@ class PDO  {
 	/**
 	 * Retrieve a database connection attribute
 	 * @link http://www.php.net/manual/en/pdo.getattribute.php
-	 * @param attribute int <p>
+	 * @param int $attribute <p>
 	 * One of the PDO::ATTR_* constants. The constants that
 	 * apply to database connections are as follows:
 	 * PDO::ATTR_AUTOCOMMIT
@@ -361,10 +359,10 @@ class PDO  {
 	/**
 	 * Quotes a string for use in a query.
 	 * @link http://www.php.net/manual/en/pdo.quote.php
-	 * @param string string <p>
+	 * @param string $string <p>
 	 * The string to be quoted.
 	 * </p>
-	 * @param parameter_type int[optional] <p>
+	 * @param int $parameter_type [optional] <p>
 	 * Provides a data type hint for drivers that have alternate quoting styles.
 	 * </p>
 	 * @return string a quoted string that is theoretically safe to pass into an
@@ -394,7 +392,7 @@ class PDOStatement implements Traversable {
 	/**
 	 * Executes a prepared statement
 	 * @link http://www.php.net/manual/en/pdostatement.execute.php
-	 * @param input_parameters array[optional] <p>
+	 * @param array $input_parameters [optional] <p>
 	 * An array of values with as many elements as there are bound
 	 * parameters in the SQL statement being executed.
 	 * All values are treated as PDO::PARAM_STR.
@@ -417,7 +415,7 @@ class PDOStatement implements Traversable {
 	/**
 	 * Fetches the next row from a result set
 	 * @link http://www.php.net/manual/en/pdostatement.fetch.php
-	 * @param fetch_style int[optional] <p>
+	 * @param int $fetch_style [optional] <p>
 	 * Controls how the next row will be returned to the caller. This value
 	 * must be one of the PDO::FETCH_* constants,
 	 * defaulting to value of PDO::ATTR_DEFAULT_FETCH_MODE
@@ -426,7 +424,7 @@ class PDOStatement implements Traversable {
 	 * PDO::FETCH_ASSOC: returns an array indexed by column
 	 * name as returned in your result set
 	 * </p>
-	 * @param cursor_orientation int[optional] <p>
+	 * @param int $cursor_orientation [optional] <p>
 	 * For a PDOStatement object representing a scrollable cursor, this
 	 * value determines which row will be returned to the caller. This value
 	 * must be one of the PDO::FETCH_ORI_* constants,
@@ -436,7 +434,7 @@ class PDOStatement implements Traversable {
 	 * PDO::CURSOR_SCROLL when you prepare the SQL
 	 * statement with PDO::prepare.
 	 * </p>
-	 * @param cursor_offset int[optional] 
+	 * @param int $cursor_offset [optional] 
 	 * @return mixed The return value of this function on success depends on the fetch type. In
 	 * all cases, false is returned on failure.
 	 */
@@ -445,29 +443,29 @@ class PDOStatement implements Traversable {
 	/**
 	 * Binds a parameter to the specified variable name
 	 * @link http://www.php.net/manual/en/pdostatement.bindparam.php
-	 * @param parameter mixed <p>
+	 * @param mixed $parameter <p>
 	 * Parameter identifier. For a prepared statement using named
 	 * placeholders, this will be a parameter name of the form
 	 * :name. For a prepared statement using
 	 * question mark placeholders, this will be the 1-indexed position of
 	 * the parameter. 
 	 * </p>
-	 * @param variable mixed <p>
+	 * @param mixed $variable <p>
 	 * Name of the PHP variable to bind to the SQL statement parameter.
 	 * </p>
-	 * @param data_type int[optional] <p>
+	 * @param int $data_type [optional] <p>
 	 * Explicit data type for the parameter using the PDO::PARAM_*
 	 * constants.
 	 * To return an INOUT parameter from a stored procedure, 
 	 * use the bitwise OR operator to set the PDO::PARAM_INPUT_OUTPUT bits
 	 * for the data_type parameter.
 	 * </p>
-	 * @param length int[optional] <p>
+	 * @param int $length [optional] <p>
 	 * Length of the data type. To indicate that a parameter is an OUT
 	 * parameter from a stored procedure, you must explicitly set the
 	 * length.
 	 * </p>
-	 * @param driver_options mixed[optional] <p>
+	 * @param mixed $driver_options [optional] <p>
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
@@ -476,22 +474,22 @@ class PDOStatement implements Traversable {
 	/**
 	 * Bind a column to a PHP variable
 	 * @link http://www.php.net/manual/en/pdostatement.bindcolumn.php
-	 * @param column mixed <p>
+	 * @param mixed $column <p>
 	 * Number of the column (1-indexed) or name of the column in the result set.
 	 * If using the column name, be aware that the name should match the
 	 * case of the column, as returned by the driver.
 	 * </p>
-	 * @param param mixed <p>
+	 * @param mixed $param <p>
 	 * Name of the PHP variable to which the column will be bound.
 	 * </p>
-	 * @param type int[optional] <p>
+	 * @param int $type [optional] <p>
 	 * Data type of the parameter, specified by the PDO::PARAM_*
 	 * constants.
 	 * </p>
-	 * @param maxlen int[optional] <p>
+	 * @param int $maxlen [optional] <p>
 	 * A hint for pre-allocation.
 	 * </p>
-	 * @param driverdata mixed[optional] <p>
+	 * @param mixed $driverdata [optional] <p>
 	 * Optional parameter(s) for the driver.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -501,17 +499,17 @@ class PDOStatement implements Traversable {
 	/**
 	 * Binds a value to a parameter
 	 * @link http://www.php.net/manual/en/pdostatement.bindvalue.php
-	 * @param parameter mixed <p>
+	 * @param mixed $parameter <p>
 	 * Parameter identifier. For a prepared statement using named
 	 * placeholders, this will be a parameter name of the form
 	 * :name. For a prepared statement using
 	 * question mark placeholders, this will be the 1-indexed position of
 	 * the parameter. 
 	 * </p>
-	 * @param value mixed <p>
+	 * @param mixed $value <p>
 	 * The value to bind to the parameter.
 	 * </p>
-	 * @param data_type int[optional] <p>
+	 * @param int $data_type [optional] <p>
 	 * Explicit data type for the parameter using the PDO::PARAM_*
 	 * constants.
 	 * </p>
@@ -529,12 +527,12 @@ class PDOStatement implements Traversable {
 	/**
 	 * Returns a single column from the next row of a result set
 	 * @link http://www.php.net/manual/en/pdostatement.fetchcolumn.php
-	 * @param column_number int[optional] <p>
+	 * @param int $column_number [optional] <p>
 	 * 0-indexed number of the column you wish to retrieve from the row. If
 	 * no value is supplied, PDOStatement::fetchColumn
 	 * fetches the first column.
 	 * </p>
-	 * @return string PDOStatement::fetchColumn returns a single column
+	 * @return mixed PDOStatement::fetchColumn returns a single column
 	 * in the next row of a result set.
 	 * </p>
 	 * <p>
@@ -546,7 +544,7 @@ class PDOStatement implements Traversable {
 	/**
 	 * Returns an array containing all of the result set rows
 	 * @link http://www.php.net/manual/en/pdostatement.fetchall.php
-	 * @param fetch_style int[optional] <p>
+	 * @param int $fetch_style [optional] <p>
 	 * Controls the contents of the returned array as documented in
 	 * PDOStatement::fetch.
 	 * Defaults to value of PDO::ATTR_DEFAULT_FETCH_MODE
@@ -556,7 +554,7 @@ class PDOStatement implements Traversable {
 	 * To return an array consisting of all values of a single column from
 	 * the result set, specify PDO::FETCH_COLUMN. You
 	 * can specify which column you want with the
-	 * column-index parameter.
+	 * fetch_argument parameter.
 	 * </p>
 	 * <p>
 	 * To fetch only the unique values of a single column from the result set,
@@ -568,14 +566,14 @@ class PDOStatement implements Traversable {
 	 * column, bitwise-OR PDO::FETCH_COLUMN with
 	 * PDO::FETCH_GROUP.
 	 * </p>
-	 * @param fetch_argument mixed[optional] <p>
-	 * This argument have a different meaning depending on the value of 
+	 * @param mixed $fetch_argument [optional] <p>
+	 * This argument has a different meaning depending on the value of 
 	 * the fetch_style parameter:
 	 * <p>
 	 * PDO::FETCH_COLUMN: Returns the indicated 0-indexed 
 	 * column.
 	 * </p>
-	 * @param ctor_args array[optional] <p>
+	 * @param array $ctor_args [optional] <p>
 	 * Arguments of custom class constructor when the fetch_style 
 	 * parameter is PDO::FETCH_CLASS.
 	 * </p>
@@ -598,10 +596,10 @@ class PDOStatement implements Traversable {
 	/**
 	 * Fetches the next row and returns it as an object.
 	 * @link http://www.php.net/manual/en/pdostatement.fetchobject.php
-	 * @param class_name string[optional] <p>
+	 * @param string $class_name [optional] <p>
 	 * Name of the created class.
 	 * </p>
-	 * @param ctor_args array[optional] <p>
+	 * @param array $ctor_args [optional] <p>
 	 * Elements of this array are passed to the constructor.
 	 * </p>
 	 * @return mixed an instance of the required class with property names that
@@ -647,8 +645,8 @@ class PDOStatement implements Traversable {
 	/**
 	 * Set a statement attribute
 	 * @link http://www.php.net/manual/en/pdostatement.setattribute.php
-	 * @param attribute int 
-	 * @param value mixed 
+	 * @param int $attribute 
+	 * @param mixed $value 
 	 * @return bool true on success or false on failure
 	 */
 	public function setAttribute ($attribute, $value) {}
@@ -656,7 +654,7 @@ class PDOStatement implements Traversable {
 	/**
 	 * Retrieve a statement attribute
 	 * @link http://www.php.net/manual/en/pdostatement.getattribute.php
-	 * @param attribute int 
+	 * @param int $attribute 
 	 * @return mixed the attribute value.
 	 */
 	public function getAttribute ($attribute) {}
@@ -673,7 +671,7 @@ class PDOStatement implements Traversable {
 	/**
 	 * Returns metadata for a column in a result set
 	 * @link http://www.php.net/manual/en/pdostatement.getcolumnmeta.php
-	 * @param column int <p>
+	 * @param int $column <p>
 	 * The 0-indexed column in the result set.
 	 * </p>
 	 * @return array an associative array containing the following values representing
@@ -735,7 +733,7 @@ class PDOStatement implements Traversable {
 	/**
 	 * Set the default fetch mode for this statement
 	 * @link http://www.php.net/manual/en/pdostatement.setfetchmode.php
-	 * @param mode int <p>
+	 * @param int $mode <p>
 	 * The fetch mode must be one of the PDO::FETCH_* constants.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -774,4 +772,4 @@ final class PDORow  {
 
 function pdo_drivers () {}
 
-// End of PDO v.1.0.4dev
+// End of PDO v.7.0.0-dev
