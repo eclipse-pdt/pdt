@@ -1,8 +1,8 @@
 <?php
 
-// Start of SPL v.0.2
+// Start of SPL v.7.0.0-dev
 
-class LogicException extends Exception  {
+class LogicException extends Exception implements Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -12,11 +12,13 @@ class LogicException extends Exception  {
 	final private function __clone () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 * @param previous[optional]
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
 	 */
 	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
 
 	final public function getMessage () {}
 
@@ -36,7 +38,7 @@ class LogicException extends Exception  {
 
 }
 
-class BadFunctionCallException extends LogicException  {
+class BadFunctionCallException extends LogicException implements Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -46,11 +48,13 @@ class BadFunctionCallException extends LogicException  {
 	final private function __clone () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 * @param previous[optional]
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
 	 */
 	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
 
 	final public function getMessage () {}
 
@@ -70,7 +74,7 @@ class BadFunctionCallException extends LogicException  {
 
 }
 
-class BadMethodCallException extends BadFunctionCallException  {
+class BadMethodCallException extends BadFunctionCallException implements Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -80,11 +84,13 @@ class BadMethodCallException extends BadFunctionCallException  {
 	final private function __clone () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 * @param previous[optional]
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
 	 */
 	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
 
 	final public function getMessage () {}
 
@@ -104,7 +110,7 @@ class BadMethodCallException extends BadFunctionCallException  {
 
 }
 
-class DomainException extends LogicException  {
+class DomainException extends LogicException implements Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -114,11 +120,13 @@ class DomainException extends LogicException  {
 	final private function __clone () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 * @param previous[optional]
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
 	 */
 	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
 
 	final public function getMessage () {}
 
@@ -138,7 +146,7 @@ class DomainException extends LogicException  {
 
 }
 
-class InvalidArgumentException extends LogicException  {
+class InvalidArgumentException extends LogicException implements Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -148,11 +156,13 @@ class InvalidArgumentException extends LogicException  {
 	final private function __clone () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 * @param previous[optional]
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
 	 */
 	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
 
 	final public function getMessage () {}
 
@@ -172,7 +182,7 @@ class InvalidArgumentException extends LogicException  {
 
 }
 
-class LengthException extends LogicException  {
+class LengthException extends LogicException implements Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -182,11 +192,13 @@ class LengthException extends LogicException  {
 	final private function __clone () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 * @param previous[optional]
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
 	 */
 	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
 
 	final public function getMessage () {}
 
@@ -206,7 +218,7 @@ class LengthException extends LogicException  {
 
 }
 
-class OutOfRangeException extends LogicException  {
+class OutOfRangeException extends LogicException implements Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -216,11 +228,13 @@ class OutOfRangeException extends LogicException  {
 	final private function __clone () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 * @param previous[optional]
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
 	 */
 	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
 
 	final public function getMessage () {}
 
@@ -240,7 +254,7 @@ class OutOfRangeException extends LogicException  {
 
 }
 
-class RuntimeException extends Exception  {
+class RuntimeException extends Exception implements Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -250,11 +264,13 @@ class RuntimeException extends Exception  {
 	final private function __clone () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 * @param previous[optional]
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
 	 */
 	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
 
 	final public function getMessage () {}
 
@@ -274,7 +290,7 @@ class RuntimeException extends Exception  {
 
 }
 
-class OutOfBoundsException extends RuntimeException  {
+class OutOfBoundsException extends RuntimeException implements Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -284,11 +300,13 @@ class OutOfBoundsException extends RuntimeException  {
 	final private function __clone () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 * @param previous[optional]
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
 	 */
 	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
 
 	final public function getMessage () {}
 
@@ -308,7 +326,7 @@ class OutOfBoundsException extends RuntimeException  {
 
 }
 
-class OverflowException extends RuntimeException  {
+class OverflowException extends RuntimeException implements Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -318,11 +336,13 @@ class OverflowException extends RuntimeException  {
 	final private function __clone () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 * @param previous[optional]
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
 	 */
 	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
 
 	final public function getMessage () {}
 
@@ -342,7 +362,7 @@ class OverflowException extends RuntimeException  {
 
 }
 
-class RangeException extends RuntimeException  {
+class RangeException extends RuntimeException implements Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -352,11 +372,13 @@ class RangeException extends RuntimeException  {
 	final private function __clone () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 * @param previous[optional]
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
 	 */
 	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
 
 	final public function getMessage () {}
 
@@ -376,7 +398,7 @@ class RangeException extends RuntimeException  {
 
 }
 
-class UnderflowException extends RuntimeException  {
+class UnderflowException extends RuntimeException implements Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -386,11 +408,13 @@ class UnderflowException extends RuntimeException  {
 	final private function __clone () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 * @param previous[optional]
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
 	 */
 	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
 
 	final public function getMessage () {}
 
@@ -410,7 +434,7 @@ class UnderflowException extends RuntimeException  {
 
 }
 
-class UnexpectedValueException extends RuntimeException  {
+class UnexpectedValueException extends RuntimeException implements Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -420,11 +444,13 @@ class UnexpectedValueException extends RuntimeException  {
 	final private function __clone () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 * @param previous[optional]
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
 	 */
 	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
 
 	final public function getMessage () {}
 
@@ -482,9 +508,9 @@ class RecursiveIteratorIterator implements Iterator, Traversable, OuterIterator 
 	/**
 	 * Construct a RecursiveIteratorIterator
 	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.construct.php
-	 * @param iterator Traversable
-	 * @param mode[optional]
-	 * @param flags[optional]
+	 * @param Traversable $iterator
+	 * @param $mode [optional]
+	 * @param $flags [optional]
 	 */
 	public function __construct (Traversable $iterator, $mode = null, $flags = null) {}
 
@@ -533,7 +559,7 @@ class RecursiveIteratorIterator implements Iterator, Traversable, OuterIterator 
 	/**
 	 * The current active sub iterator
 	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.getsubiterator.php
-	 * @param level int[optional] <p>
+	 * @param int $level [optional] <p>
 	 * </p>
 	 * @return RecursiveIterator The current active sub iterator.
 	 */
@@ -598,7 +624,7 @@ class RecursiveIteratorIterator implements Iterator, Traversable, OuterIterator 
 	/**
 	 * Set max depth
 	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.setmaxdepth.php
-	 * @param max_depth string[optional] <p>
+	 * @param string $max_depth [optional] <p>
 	 * The maximum allowed depth. -1 is used
 	 * for any depth.
 	 * </p>
@@ -641,7 +667,7 @@ class IteratorIterator implements Iterator, Traversable, OuterIterator {
 	/**
 	 * Create an iterator from anything that is traversable
 	 * @link http://www.php.net/manual/en/iteratoriterator.construct.php
-	 * @param iterator Traversable
+	 * @param Traversable $iterator
 	 */
 	public function __construct (Traversable $iterator) {}
 
@@ -694,7 +720,7 @@ class FilterIterator extends IteratorIterator implements OuterIterator, Traversa
 	/**
 	 * Construct a filterIterator
 	 * @link http://www.php.net/manual/en/filteriterator.construct.php
-	 * @param iterator Iterator
+	 * @param Iterator $iterator
 	 */
 	public function __construct (Iterator $iterator) {}
 
@@ -754,7 +780,7 @@ class RecursiveFilterIterator extends FilterIterator implements Iterator, Traver
 	/**
 	 * Create a RecursiveFilterIterator from a RecursiveIterator
 	 * @link http://www.php.net/manual/en/recursivefilteriterator.construct.php
-	 * @param iterator RecursiveIterator
+	 * @param RecursiveIterator $iterator
 	 */
 	public function __construct (RecursiveIterator $iterator) {}
 
@@ -828,8 +854,8 @@ class CallbackFilterIterator extends FilterIterator implements Iterator, Travers
 	/**
 	 * Create a filtered iterator from another iterator
 	 * @link http://www.php.net/manual/en/callbackfilteriterator.construct.php
-	 * @param iterator Iterator
-	 * @param callback
+	 * @param Iterator $iterator
+	 * @param $callback
 	 */
 	public function __construct (Iterator $iterator, $callback) {}
 
@@ -889,8 +915,8 @@ class RecursiveCallbackFilterIterator extends CallbackFilterIterator implements 
 	/**
 	 * Create a RecursiveCallbackFilterIterator from a RecursiveIterator
 	 * @link http://www.php.net/manual/en/recursivecallbackfilteriterator.construct.php
-	 * @param iterator RecursiveIterator
-	 * @param callback
+	 * @param RecursiveIterator $iterator
+	 * @param $callback
 	 */
 	public function __construct (RecursiveIterator $iterator, $callback) {}
 
@@ -965,7 +991,7 @@ class ParentIterator extends RecursiveFilterIterator implements RecursiveIterato
 	/**
 	 * Constructs a ParentIterator
 	 * @link http://www.php.net/manual/en/parentiterator.construct.php
-	 * @param iterator RecursiveIterator
+	 * @param RecursiveIterator $iterator
 	 */
 	public function __construct (RecursiveIterator $iterator) {}
 
@@ -1039,19 +1065,12 @@ interface Countable  {
 	/**
 	 * Count elements of an object
 	 * @link http://www.php.net/manual/en/countable.count.php
-	 * @param mode int[optional] <p>
-	 * The optional mode parameter will be set to
-	 * COUNT_NORMAL or COUNT_RECURSIVE, depending 
-	 * on what value was passed to the second parameter of count.
-	 * This is particularly useful for counting all the elements of
-	 * a multidimensional array/Countable combination.
-	 * </p>
 	 * @return int The custom count as an integer.
 	 * </p>
 	 * <p>
 	 * The return value is cast to an integer.
 	 */
-	abstract public function count ($mode = null) {}
+	abstract public function count () {}
 
 }
 
@@ -1060,7 +1079,7 @@ interface SeekableIterator extends Iterator, Traversable {
 	/**
 	 * Seeks to a position
 	 * @link http://www.php.net/manual/en/seekableiterator.seek.php
-	 * @param position int <p>
+	 * @param int $position <p>
 	 * The position to seek to.
 	 * </p>
 	 * @return void 
@@ -1084,9 +1103,9 @@ class LimitIterator extends IteratorIterator implements OuterIterator, Traversab
 	/**
 	 * Construct a LimitIterator
 	 * @link http://www.php.net/manual/en/limititerator.construct.php
-	 * @param iterator Iterator
-	 * @param offset[optional]
-	 * @param count[optional]
+	 * @param Iterator $iterator
+	 * @param $offset [optional]
+	 * @param $count [optional]
 	 */
 	public function __construct (Iterator $iterator, $offset = null, $count = null) {}
 
@@ -1128,7 +1147,7 @@ class LimitIterator extends IteratorIterator implements OuterIterator, Traversab
 	/**
 	 * Seek to the given position
 	 * @link http://www.php.net/manual/en/limititerator.seek.php
-	 * @param position int <p>
+	 * @param int $position <p>
 	 * The position to seek to.
 	 * </p>
 	 * @return int the offset position after seeking.
@@ -1163,8 +1182,8 @@ class CachingIterator extends IteratorIterator implements OuterIterator, Travers
 	/**
 	 * Construct a new CachingIterator object for the iterator.
 	 * @link http://www.php.net/manual/en/cachingiterator.construct.php
-	 * @param iterator Iterator
-	 * @param flags[optional]
+	 * @param Iterator $iterator
+	 * @param $flags [optional]
 	 */
 	public function __construct (Iterator $iterator, $flags = null) {}
 
@@ -1234,7 +1253,7 @@ class CachingIterator extends IteratorIterator implements OuterIterator, Travers
 	/**
 	 * The setFlags purpose
 	 * @link http://www.php.net/manual/en/cachingiterator.setflags.php
-	 * @param flags bitmask <p>
+	 * @param bitmask $flags <p>
 	 * Bitmask of the flags to set.
 	 * </p>
 	 * @return void 
@@ -1244,7 +1263,7 @@ class CachingIterator extends IteratorIterator implements OuterIterator, Travers
 	/**
 	 * The offsetGet purpose
 	 * @link http://www.php.net/manual/en/cachingiterator.offsetget.php
-	 * @param index string <p>
+	 * @param string $index <p>
 	 * Description...
 	 * </p>
 	 * @return void Description...
@@ -1254,10 +1273,10 @@ class CachingIterator extends IteratorIterator implements OuterIterator, Travers
 	/**
 	 * The offsetSet purpose
 	 * @link http://www.php.net/manual/en/cachingiterator.offsetset.php
-	 * @param index string <p>
+	 * @param string $index <p>
 	 * The index of the element to be set.
 	 * </p>
-	 * @param newval string <p>
+	 * @param string $newval <p>
 	 * The new value for the index.
 	 * </p>
 	 * @return void 
@@ -1267,7 +1286,7 @@ class CachingIterator extends IteratorIterator implements OuterIterator, Travers
 	/**
 	 * The offsetUnset purpose
 	 * @link http://www.php.net/manual/en/cachingiterator.offsetunset.php
-	 * @param index string <p>
+	 * @param string $index <p>
 	 * The index of the element to be unset.
 	 * </p>
 	 * @return void 
@@ -1277,7 +1296,7 @@ class CachingIterator extends IteratorIterator implements OuterIterator, Travers
 	/**
 	 * The offsetExists purpose
 	 * @link http://www.php.net/manual/en/cachingiterator.offsetexists.php
-	 * @param index string <p>
+	 * @param string $index <p>
 	 * The index being checked.
 	 * </p>
 	 * @return void true if an entry referenced by the offset exists, false otherwise.
@@ -1312,8 +1331,8 @@ class RecursiveCachingIterator extends CachingIterator implements Countable, Arr
 	/**
 	 * Construct
 	 * @link http://www.php.net/manual/en/recursivecachingiterator.construct.php
-	 * @param iterator Iterator
-	 * @param flags[optional]
+	 * @param Iterator $iterator
+	 * @param $flags [optional]
 	 */
 	public function __construct (Iterator $iterator, $flags = null) {}
 
@@ -1397,7 +1416,7 @@ class RecursiveCachingIterator extends CachingIterator implements Countable, Arr
 	/**
 	 * The setFlags purpose
 	 * @link http://www.php.net/manual/en/cachingiterator.setflags.php
-	 * @param flags bitmask <p>
+	 * @param bitmask $flags <p>
 	 * Bitmask of the flags to set.
 	 * </p>
 	 * @return void 
@@ -1407,7 +1426,7 @@ class RecursiveCachingIterator extends CachingIterator implements Countable, Arr
 	/**
 	 * The offsetGet purpose
 	 * @link http://www.php.net/manual/en/cachingiterator.offsetget.php
-	 * @param index string <p>
+	 * @param string $index <p>
 	 * Description...
 	 * </p>
 	 * @return void Description...
@@ -1417,10 +1436,10 @@ class RecursiveCachingIterator extends CachingIterator implements Countable, Arr
 	/**
 	 * The offsetSet purpose
 	 * @link http://www.php.net/manual/en/cachingiterator.offsetset.php
-	 * @param index string <p>
+	 * @param string $index <p>
 	 * The index of the element to be set.
 	 * </p>
-	 * @param newval string <p>
+	 * @param string $newval <p>
 	 * The new value for the index.
 	 * </p>
 	 * @return void 
@@ -1430,7 +1449,7 @@ class RecursiveCachingIterator extends CachingIterator implements Countable, Arr
 	/**
 	 * The offsetUnset purpose
 	 * @link http://www.php.net/manual/en/cachingiterator.offsetunset.php
-	 * @param index string <p>
+	 * @param string $index <p>
 	 * The index of the element to be unset.
 	 * </p>
 	 * @return void 
@@ -1440,7 +1459,7 @@ class RecursiveCachingIterator extends CachingIterator implements Countable, Arr
 	/**
 	 * The offsetExists purpose
 	 * @link http://www.php.net/manual/en/cachingiterator.offsetexists.php
-	 * @param index string <p>
+	 * @param string $index <p>
 	 * The index being checked.
 	 * </p>
 	 * @return void true if an entry referenced by the offset exists, false otherwise.
@@ -1468,7 +1487,7 @@ class NoRewindIterator extends IteratorIterator implements OuterIterator, Traver
 	/**
 	 * Construct a NoRewindIterator
 	 * @link http://www.php.net/manual/en/norewinditerator.construct.php
-	 * @param iterator Iterator
+	 * @param Iterator $iterator
 	 */
 	public function __construct (Iterator $iterator) {}
 
@@ -1527,7 +1546,7 @@ class AppendIterator extends IteratorIterator implements OuterIterator, Traversa
 	/**
 	 * Appends an iterator
 	 * @link http://www.php.net/manual/en/appenditerator.append.php
-	 * @param iterator Iterator <p>
+	 * @param Iterator $iterator <p>
 	 * The iterator to append.
 	 * </p>
 	 * @return void 
@@ -1599,7 +1618,7 @@ class InfiniteIterator extends IteratorIterator implements OuterIterator, Traver
 	/**
 	 * Constructs an InfiniteIterator
 	 * @link http://www.php.net/manual/en/infiniteiterator.construct.php
-	 * @param iterator Iterator
+	 * @param Iterator $iterator
 	 */
 	public function __construct (Iterator $iterator) {}
 
@@ -1662,11 +1681,11 @@ class RegexIterator extends FilterIterator implements Iterator, Traversable, Out
 	/**
 	 * Create a new RegexIterator
 	 * @link http://www.php.net/manual/en/regexiterator.construct.php
-	 * @param iterator Iterator
-	 * @param regex
-	 * @param mode[optional]
-	 * @param flags[optional]
-	 * @param preg_flags[optional]
+	 * @param Iterator $iterator
+	 * @param $regex
+	 * @param $mode [optional]
+	 * @param $flags [optional]
+	 * @param $preg_flags [optional]
 	 */
 	public function __construct (Iterator $iterator, $regex, $mode = null, $flags = null, $preg_flags = null) {}
 
@@ -1687,7 +1706,7 @@ class RegexIterator extends FilterIterator implements Iterator, Traversable, Out
 	/**
 	 * Sets the operation mode.
 	 * @link http://www.php.net/manual/en/regexiterator.setmode.php
-	 * @param mode int <p>
+	 * @param int $mode <p>
 	 * The operation mode.
 	 * </p>
 	 * <p>
@@ -1746,7 +1765,7 @@ class RegexIterator extends FilterIterator implements Iterator, Traversable, Out
 	/**
 	 * Sets the flags.
 	 * @link http://www.php.net/manual/en/regexiterator.setflags.php
-	 * @param flags int <p>
+	 * @param int $flags <p>
 	 * The flags to set, a bitmask of class constants.
 	 * </p>
 	 * <p>
@@ -1781,7 +1800,7 @@ class RegexIterator extends FilterIterator implements Iterator, Traversable, Out
 	/**
 	 * Sets the regular expression flags.
 	 * @link http://www.php.net/manual/en/regexiterator.setpregflags.php
-	 * @param preg_flags int <p>
+	 * @param int $preg_flags <p>
 	 * The regular expression flags. See RegexIterator::__construct
 	 * for an overview of available flags.
 	 * </p>
@@ -1855,13 +1874,15 @@ class RecursiveRegexIterator extends RegexIterator implements OuterIterator, Tra
 	/**
 	 * Creates a new RecursiveRegexIterator.
 	 * @link http://www.php.net/manual/en/recursiveregexiterator.construct.php
-	 * @param iterator RecursiveIterator
-	 * @param regex
-	 * @param mode[optional]
-	 * @param flags[optional]
-	 * @param preg_flags[optional]
+	 * @param RecursiveIterator $iterator
+	 * @param $regex
+	 * @param $mode [optional]
+	 * @param $flags [optional]
+	 * @param $preg_flags [optional]
 	 */
 	public function __construct (RecursiveIterator $iterator, $regex, $mode = null, $flags = null, $preg_flags = null) {}
+
+	public function accept () {}
 
 	/**
 	 * Returns whether an iterator can be obtained for the current entry.
@@ -1878,13 +1899,6 @@ class RecursiveRegexIterator extends RegexIterator implements OuterIterator, Tra
 	public function getChildren () {}
 
 	/**
-	 * Get accept status
-	 * @link http://www.php.net/manual/en/regexiterator.accept.php
-	 * @return bool true if a match, false otherwise.
-	 */
-	public function accept () {}
-
-	/**
 	 * Returns operation mode.
 	 * @link http://www.php.net/manual/en/regexiterator.getmode.php
 	 * @return int the operation mode.
@@ -1894,7 +1908,7 @@ class RecursiveRegexIterator extends RegexIterator implements OuterIterator, Tra
 	/**
 	 * Sets the operation mode.
 	 * @link http://www.php.net/manual/en/regexiterator.setmode.php
-	 * @param mode int <p>
+	 * @param int $mode <p>
 	 * The operation mode.
 	 * </p>
 	 * <p>
@@ -1953,7 +1967,7 @@ class RecursiveRegexIterator extends RegexIterator implements OuterIterator, Tra
 	/**
 	 * Sets the flags.
 	 * @link http://www.php.net/manual/en/regexiterator.setflags.php
-	 * @param flags int <p>
+	 * @param int $flags <p>
 	 * The flags to set, a bitmask of class constants.
 	 * </p>
 	 * <p>
@@ -1988,7 +2002,7 @@ class RecursiveRegexIterator extends RegexIterator implements OuterIterator, Tra
 	/**
 	 * Sets the regular expression flags.
 	 * @link http://www.php.net/manual/en/regexiterator.setpregflags.php
-	 * @param preg_flags int <p>
+	 * @param int $preg_flags <p>
 	 * The regular expression flags. See RegexIterator::__construct
 	 * for an overview of available flags.
 	 * </p>
@@ -2104,10 +2118,10 @@ class RecursiveTreeIterator extends RecursiveIteratorIterator implements OuterIt
 	/**
 	 * Construct a RecursiveTreeIterator
 	 * @link http://www.php.net/manual/en/recursivetreeiterator.construct.php
-	 * @param iterator Traversable
-	 * @param flags[optional]
-	 * @param caching_it_flags[optional]
-	 * @param mode[optional]
+	 * @param Traversable $iterator
+	 * @param $flags [optional]
+	 * @param $caching_it_flags [optional]
+	 * @param $mode [optional]
 	 */
 	public function __construct (Traversable $iterator, $flags = null, $caching_it_flags = null, $mode = null) {}
 
@@ -2205,10 +2219,10 @@ class RecursiveTreeIterator extends RecursiveIteratorIterator implements OuterIt
 	/**
 	 * Set a part of the prefix
 	 * @link http://www.php.net/manual/en/recursivetreeiterator.setprefixpart.php
-	 * @param part int <p>
+	 * @param int $part <p>
 	 * One of the RecursiveTreeIterator::PREFIX_* constants.
 	 * </p>
-	 * @param value string <p>
+	 * @param string $value <p>
 	 * The value to assign to the part of the prefix specified in part.
 	 * </p>
 	 * @return void 
@@ -2241,7 +2255,7 @@ class RecursiveTreeIterator extends RecursiveIteratorIterator implements OuterIt
 	/**
 	 * The current active sub iterator
 	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.getsubiterator.php
-	 * @param level int[optional] <p>
+	 * @param int $level [optional] <p>
 	 * </p>
 	 * @return RecursiveIterator The current active sub iterator.
 	 */
@@ -2257,7 +2271,7 @@ class RecursiveTreeIterator extends RecursiveIteratorIterator implements OuterIt
 	/**
 	 * Set max depth
 	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.setmaxdepth.php
-	 * @param max_depth string[optional] <p>
+	 * @param string $max_depth [optional] <p>
 	 * The maximum allowed depth. -1 is used
 	 * for any depth.
 	 * </p>
@@ -2282,14 +2296,14 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	/**
 	 * Construct a new array object
 	 * @link http://www.php.net/manual/en/arrayobject.construct.php
-	 * @param array
+	 * @param $array
 	 */
 	public function __construct ($array) {}
 
 	/**
 	 * Returns whether the requested index exists
 	 * @link http://www.php.net/manual/en/arrayobject.offsetexists.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index being checked.
 	 * </p>
 	 * @return bool true if the requested index exists, otherwise false
@@ -2299,7 +2313,7 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	/**
 	 * Returns the value at the specified index
 	 * @link http://www.php.net/manual/en/arrayobject.offsetget.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index with the value.
 	 * </p>
 	 * @return mixed The value at the specified index or &null;.
@@ -2309,10 +2323,10 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	/**
 	 * Sets the value at the specified index to newval
 	 * @link http://www.php.net/manual/en/arrayobject.offsetset.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index being set.
 	 * </p>
-	 * @param newval mixed <p>
+	 * @param mixed $newval <p>
 	 * The new value for the index.
 	 * </p>
 	 * @return void 
@@ -2322,7 +2336,7 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	/**
 	 * Unsets the value at the specified index
 	 * @link http://www.php.net/manual/en/arrayobject.offsetunset.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index being unset.
 	 * </p>
 	 * @return void 
@@ -2332,7 +2346,7 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	/**
 	 * Appends the value
 	 * @link http://www.php.net/manual/en/arrayobject.append.php
-	 * @param value mixed <p>
+	 * @param mixed $value <p>
 	 * The value being appended.
 	 * </p>
 	 * @return void 
@@ -2367,7 +2381,7 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	/**
 	 * Sets the behavior flags.
 	 * @link http://www.php.net/manual/en/arrayobject.setflags.php
-	 * @param flags int <p>
+	 * @param int $flags <p>
 	 * The new ArrayObject behavior.
 	 * It takes on either a bitmask, or named constants. Using named
 	 * constants is strongly encouraged to ensure compatibility for future
@@ -2418,7 +2432,7 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	/**
 	 * Sort the entries with a user-defined comparison function and maintain key association
 	 * @link http://www.php.net/manual/en/arrayobject.uasort.php
-	 * @param cmp_function callable <p>
+	 * @param callable $cmp_function <p>
 	 * Function cmp_function should accept two
 	 * parameters which will be filled by pairs of entries.
 	 * The comparison function must return an integer less than, equal
@@ -2433,7 +2447,7 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	/**
 	 * Sort the entries by keys using a user-defined comparison function
 	 * @link http://www.php.net/manual/en/arrayobject.uksort.php
-	 * @param cmp_function callable <p>
+	 * @param callable $cmp_function <p>
 	 * The callback comparison function.
 	 * </p>
 	 * <p>
@@ -2465,7 +2479,7 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	/**
 	 * Unserialize an ArrayObject
 	 * @link http://www.php.net/manual/en/arrayobject.unserialize.php
-	 * @param serialized string <p>
+	 * @param string $serialized <p>
 	 * The serialized ArrayObject.
 	 * </p>
 	 * @return void The unserialized ArrayObject.
@@ -2489,7 +2503,7 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	/**
 	 * Exchange the array for another one.
 	 * @link http://www.php.net/manual/en/arrayobject.exchangearray.php
-	 * @param input mixed <p>
+	 * @param mixed $input <p>
 	 * The new array or object to exchange with the current array.
 	 * </p>
 	 * @return array the old array.
@@ -2499,7 +2513,7 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	/**
 	 * Sets the iterator classname for the ArrayObject.
 	 * @link http://www.php.net/manual/en/arrayobject.setiteratorclass.php
-	 * @param iterator_class string <p>
+	 * @param string $iterator_class <p>
 	 * The classname of the array iterator to use when iterating over this object.
 	 * </p>
 	 * @return void 
@@ -2523,14 +2537,14 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	/**
 	 * Construct an ArrayIterator
 	 * @link http://www.php.net/manual/en/arrayiterator.construct.php
-	 * @param array
+	 * @param $array
 	 */
 	public function __construct ($array) {}
 
 	/**
 	 * Check if offset exists
 	 * @link http://www.php.net/manual/en/arrayiterator.offsetexists.php
-	 * @param index string <p>
+	 * @param string $index <p>
 	 * The offset being checked.
 	 * </p>
 	 * @return void true if the offset exists, otherwise false
@@ -2540,7 +2554,7 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	/**
 	 * Get value for an offset
 	 * @link http://www.php.net/manual/en/arrayiterator.offsetget.php
-	 * @param index string <p>
+	 * @param string $index <p>
 	 * The offset to get the value from.
 	 * </p>
 	 * @return mixed The value at offset index.
@@ -2550,10 +2564,10 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	/**
 	 * Set value for an offset
 	 * @link http://www.php.net/manual/en/arrayiterator.offsetset.php
-	 * @param index string <p>
+	 * @param string $index <p>
 	 * The index to set for.
 	 * </p>
-	 * @param newval string <p>
+	 * @param string $newval <p>
 	 * The new value to store at the index.
 	 * </p>
 	 * @return void 
@@ -2563,7 +2577,7 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	/**
 	 * Unset value for an offset
 	 * @link http://www.php.net/manual/en/arrayiterator.offsetunset.php
-	 * @param index string <p>
+	 * @param string $index <p>
 	 * The offset to unset.
 	 * </p>
 	 * @return void 
@@ -2573,7 +2587,7 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	/**
 	 * Append an element
 	 * @link http://www.php.net/manual/en/arrayiterator.append.php
-	 * @param value mixed <p>
+	 * @param mixed $value <p>
 	 * The value to append.
 	 * </p>
 	 * @return void 
@@ -2606,7 +2620,7 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	/**
 	 * Set behaviour flags
 	 * @link http://www.php.net/manual/en/arrayiterator.setflags.php
-	 * @param flags string <p>
+	 * @param string $flags <p>
 	 * A bitmask as follows:
 	 * 0 = Properties of the object have their normal functionality
 	 * when accessed as list (var_dump, foreach, etc.).
@@ -2633,7 +2647,7 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	/**
 	 * User defined sort
 	 * @link http://www.php.net/manual/en/arrayiterator.uasort.php
-	 * @param cmp_function string <p>
+	 * @param string $cmp_function <p>
 	 * The compare function used for the sort.
 	 * </p>
 	 * @return void 
@@ -2643,7 +2657,7 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	/**
 	 * User defined sort
 	 * @link http://www.php.net/manual/en/arrayiterator.uksort.php
-	 * @param cmp_function string <p>
+	 * @param string $cmp_function <p>
 	 * The compare function used for the sort.
 	 * </p>
 	 * @return void 
@@ -2667,7 +2681,7 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	/**
 	 * Unserialize
 	 * @link http://www.php.net/manual/en/arrayiterator.unserialize.php
-	 * @param serialized string <p>
+	 * @param string $serialized <p>
 	 * The serialized ArrayIterator object to be unserialized.
 	 * </p>
 	 * @return string The ArrayIterator.
@@ -2719,7 +2733,7 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	/**
 	 * Seek to position
 	 * @link http://www.php.net/manual/en/arrayiterator.seek.php
-	 * @param position int <p>
+	 * @param int $position <p>
 	 * The position to seek to.
 	 * </p>
 	 * @return void 
@@ -2750,14 +2764,14 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	/**
 	 * Construct an ArrayIterator
 	 * @link http://www.php.net/manual/en/arrayiterator.construct.php
-	 * @param array
+	 * @param $array
 	 */
 	public function __construct ($array) {}
 
 	/**
 	 * Check if offset exists
 	 * @link http://www.php.net/manual/en/arrayiterator.offsetexists.php
-	 * @param index string <p>
+	 * @param string $index <p>
 	 * The offset being checked.
 	 * </p>
 	 * @return void true if the offset exists, otherwise false
@@ -2767,7 +2781,7 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	/**
 	 * Get value for an offset
 	 * @link http://www.php.net/manual/en/arrayiterator.offsetget.php
-	 * @param index string <p>
+	 * @param string $index <p>
 	 * The offset to get the value from.
 	 * </p>
 	 * @return mixed The value at offset index.
@@ -2777,10 +2791,10 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	/**
 	 * Set value for an offset
 	 * @link http://www.php.net/manual/en/arrayiterator.offsetset.php
-	 * @param index string <p>
+	 * @param string $index <p>
 	 * The index to set for.
 	 * </p>
-	 * @param newval string <p>
+	 * @param string $newval <p>
 	 * The new value to store at the index.
 	 * </p>
 	 * @return void 
@@ -2790,7 +2804,7 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	/**
 	 * Unset value for an offset
 	 * @link http://www.php.net/manual/en/arrayiterator.offsetunset.php
-	 * @param index string <p>
+	 * @param string $index <p>
 	 * The offset to unset.
 	 * </p>
 	 * @return void 
@@ -2800,7 +2814,7 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	/**
 	 * Append an element
 	 * @link http://www.php.net/manual/en/arrayiterator.append.php
-	 * @param value mixed <p>
+	 * @param mixed $value <p>
 	 * The value to append.
 	 * </p>
 	 * @return void 
@@ -2833,7 +2847,7 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	/**
 	 * Set behaviour flags
 	 * @link http://www.php.net/manual/en/arrayiterator.setflags.php
-	 * @param flags string <p>
+	 * @param string $flags <p>
 	 * A bitmask as follows:
 	 * 0 = Properties of the object have their normal functionality
 	 * when accessed as list (var_dump, foreach, etc.).
@@ -2860,7 +2874,7 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	/**
 	 * User defined sort
 	 * @link http://www.php.net/manual/en/arrayiterator.uasort.php
-	 * @param cmp_function string <p>
+	 * @param string $cmp_function <p>
 	 * The compare function used for the sort.
 	 * </p>
 	 * @return void 
@@ -2870,7 +2884,7 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	/**
 	 * User defined sort
 	 * @link http://www.php.net/manual/en/arrayiterator.uksort.php
-	 * @param cmp_function string <p>
+	 * @param string $cmp_function <p>
 	 * The compare function used for the sort.
 	 * </p>
 	 * @return void 
@@ -2894,7 +2908,7 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	/**
 	 * Unserialize
 	 * @link http://www.php.net/manual/en/arrayiterator.unserialize.php
-	 * @param serialized string <p>
+	 * @param string $serialized <p>
 	 * The serialized ArrayIterator object to be unserialized.
 	 * </p>
 	 * @return string The ArrayIterator.
@@ -2946,7 +2960,7 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	/**
 	 * Seek to position
 	 * @link http://www.php.net/manual/en/arrayiterator.seek.php
-	 * @param position int <p>
+	 * @param int $position <p>
 	 * The position to seek to.
 	 * </p>
 	 * @return void 
@@ -2960,7 +2974,7 @@ class SplFileInfo  {
 	/**
 	 * Construct a new SplFileInfo object
 	 * @link http://www.php.net/manual/en/splfileinfo.construct.php
-	 * @param file_name
+	 * @param $file_name
 	 */
 	public function __construct ($file_name) {}
 
@@ -2989,7 +3003,7 @@ class SplFileInfo  {
 	/**
 	 * Gets the base name of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getbasename.php
-	 * @param suffix string[optional] <p>
+	 * @param string $suffix [optional] <p>
 	 * Optional suffix to omit from the base name returned.
 	 * </p>
 	 * @return string the base name without path information.
@@ -3127,7 +3141,7 @@ class SplFileInfo  {
 	/**
 	 * Gets an SplFileInfo object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getfileinfo.php
-	 * @param class_name string[optional] <p>
+	 * @param string $class_name [optional] <p>
 	 * Name of an SplFileInfo derived class to use. 
 	 * </p>
 	 * @return SplFileInfo An SplFileInfo object created for the file.
@@ -3137,7 +3151,7 @@ class SplFileInfo  {
 	/**
 	 * Gets an SplFileInfo object for the path
 	 * @link http://www.php.net/manual/en/splfileinfo.getpathinfo.php
-	 * @param class_name string[optional] <p>
+	 * @param string $class_name [optional] <p>
 	 * Name of an SplFileInfo derived class to use.
 	 * </p>
 	 * @return SplFileInfo an SplFileInfo object for the parent path of the file.
@@ -3147,15 +3161,15 @@ class SplFileInfo  {
 	/**
 	 * Gets an SplFileObject object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.openfile.php
-	 * @param open_mode string[optional] <p>
+	 * @param string $open_mode [optional] <p>
 	 * The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
 	 * </p>
-	 * @param use_include_path bool[optional] <p>
+	 * @param bool $use_include_path [optional] <p>
 	 * &parameter.use_include_path;
 	 * </p>
-	 * @param context resource[optional] <p>
+	 * @param resource $context [optional] <p>
 	 * &parameter.context;
 	 * </p>
 	 * @return SplFileObject The opened file as an SplFileObject object.
@@ -3163,20 +3177,23 @@ class SplFileInfo  {
 	public function openFile ($open_mode = null, $use_include_path = null, $context = null) {}
 
 	/**
-	 * Sets the class name used with <methodname>SplFileInfo::openFile</methodname>
+	 * Sets the class used with <methodname>SplFileInfo::openFile</methodname>
 	 * @link http://www.php.net/manual/en/splfileinfo.setfileclass.php
-	 * @param class_name string[optional] <p>
-	 * The class name to use when openFile() is called. 
+	 * @param string $class_name [optional] <p>
+	 * The class name to use when SplFileInfo::openFile
+	 * is called.
 	 * </p>
 	 * @return void 
 	 */
 	public function setFileClass ($class_name = null) {}
 
 	/**
-	 * Sets the class used with getFileInfo and getPathInfo
+	 * Sets the class used with <methodname>SplFileInfo::getFileInfo</methodname> and <methodname>SplFileInfo::getPathInfo</methodname>
 	 * @link http://www.php.net/manual/en/splfileinfo.setinfoclass.php
-	 * @param class_name string[optional] <p>
-	 * The class name to use.
+	 * @param string $class_name [optional] <p>
+	 * The class name to use when
+	 * SplFileInfo::getFileInfo and
+	 * SplFileInfo::getPathInfo are called.
 	 * </p>
 	 * @return void 
 	 */
@@ -3198,7 +3215,7 @@ class DirectoryIterator extends SplFileInfo implements Iterator, Traversable, Se
 	/**
 	 * Constructs a new directory iterator from a path
 	 * @link http://www.php.net/manual/en/directoryiterator.construct.php
-	 * @param path
+	 * @param $path
 	 */
 	public function __construct ($path) {}
 
@@ -3220,7 +3237,7 @@ class DirectoryIterator extends SplFileInfo implements Iterator, Traversable, Se
 	/**
 	 * Get base name of current DirectoryIterator item.
 	 * @link http://www.php.net/manual/en/directoryiterator.getbasename.php
-	 * @param suffix string[optional] <p>
+	 * @param string $suffix [optional] <p>
 	 * If the base name ends in suffix, 
 	 * this will be cut.
 	 * </p>
@@ -3274,7 +3291,7 @@ class DirectoryIterator extends SplFileInfo implements Iterator, Traversable, Se
 	/**
 	 * Seek to a DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.seek.php
-	 * @param position int <p>
+	 * @param int $position <p>
 	 * The zero-based numeric position to seek to.
 	 * </p>
 	 * @return void 
@@ -3426,7 +3443,7 @@ class DirectoryIterator extends SplFileInfo implements Iterator, Traversable, Se
 	/**
 	 * Gets an SplFileInfo object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getfileinfo.php
-	 * @param class_name string[optional] <p>
+	 * @param string $class_name [optional] <p>
 	 * Name of an SplFileInfo derived class to use. 
 	 * </p>
 	 * @return SplFileInfo An SplFileInfo object created for the file.
@@ -3436,7 +3453,7 @@ class DirectoryIterator extends SplFileInfo implements Iterator, Traversable, Se
 	/**
 	 * Gets an SplFileInfo object for the path
 	 * @link http://www.php.net/manual/en/splfileinfo.getpathinfo.php
-	 * @param class_name string[optional] <p>
+	 * @param string $class_name [optional] <p>
 	 * Name of an SplFileInfo derived class to use.
 	 * </p>
 	 * @return SplFileInfo an SplFileInfo object for the parent path of the file.
@@ -3446,15 +3463,15 @@ class DirectoryIterator extends SplFileInfo implements Iterator, Traversable, Se
 	/**
 	 * Gets an SplFileObject object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.openfile.php
-	 * @param open_mode string[optional] <p>
+	 * @param string $open_mode [optional] <p>
 	 * The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
 	 * </p>
-	 * @param use_include_path bool[optional] <p>
+	 * @param bool $use_include_path [optional] <p>
 	 * &parameter.use_include_path;
 	 * </p>
-	 * @param context resource[optional] <p>
+	 * @param resource $context [optional] <p>
 	 * &parameter.context;
 	 * </p>
 	 * @return SplFileObject The opened file as an SplFileObject object.
@@ -3462,20 +3479,23 @@ class DirectoryIterator extends SplFileInfo implements Iterator, Traversable, Se
 	public function openFile ($open_mode = null, $use_include_path = null, $context = null) {}
 
 	/**
-	 * Sets the class name used with <methodname>SplFileInfo::openFile</methodname>
+	 * Sets the class used with <methodname>SplFileInfo::openFile</methodname>
 	 * @link http://www.php.net/manual/en/splfileinfo.setfileclass.php
-	 * @param class_name string[optional] <p>
-	 * The class name to use when openFile() is called. 
+	 * @param string $class_name [optional] <p>
+	 * The class name to use when SplFileInfo::openFile
+	 * is called.
 	 * </p>
 	 * @return void 
 	 */
 	public function setFileClass ($class_name = null) {}
 
 	/**
-	 * Sets the class used with getFileInfo and getPathInfo
+	 * Sets the class used with <methodname>SplFileInfo::getFileInfo</methodname> and <methodname>SplFileInfo::getPathInfo</methodname>
 	 * @link http://www.php.net/manual/en/splfileinfo.setinfoclass.php
-	 * @param class_name string[optional] <p>
-	 * The class name to use.
+	 * @param string $class_name [optional] <p>
+	 * The class name to use when
+	 * SplFileInfo::getFileInfo and
+	 * SplFileInfo::getPathInfo are called.
 	 * </p>
 	 * @return void 
 	 */
@@ -3503,8 +3523,8 @@ class FilesystemIterator extends DirectoryIterator implements SeekableIterator, 
 	/**
 	 * Constructs a new filesystem iterator
 	 * @link http://www.php.net/manual/en/filesystemiterator.construct.php
-	 * @param path
-	 * @param flags[optional]
+	 * @param $path
+	 * @param $flags [optional]
 	 */
 	public function __construct ($path, $flags = null) {}
 
@@ -3548,7 +3568,7 @@ class FilesystemIterator extends DirectoryIterator implements SeekableIterator, 
 	/**
 	 * Sets handling flags
 	 * @link http://www.php.net/manual/en/filesystemiterator.setflags.php
-	 * @param flags int[optional] <p>
+	 * @param int $flags [optional] <p>
 	 * The handling flags to set.
 	 * See the FilesystemIterator constants.
 	 * </p>
@@ -3574,7 +3594,7 @@ class FilesystemIterator extends DirectoryIterator implements SeekableIterator, 
 	/**
 	 * Get base name of current DirectoryIterator item.
 	 * @link http://www.php.net/manual/en/directoryiterator.getbasename.php
-	 * @param suffix string[optional] <p>
+	 * @param string $suffix [optional] <p>
 	 * If the base name ends in suffix, 
 	 * this will be cut.
 	 * </p>
@@ -3600,7 +3620,7 @@ class FilesystemIterator extends DirectoryIterator implements SeekableIterator, 
 	/**
 	 * Seek to a DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.seek.php
-	 * @param position int <p>
+	 * @param int $position <p>
 	 * The zero-based numeric position to seek to.
 	 * </p>
 	 * @return void 
@@ -3752,7 +3772,7 @@ class FilesystemIterator extends DirectoryIterator implements SeekableIterator, 
 	/**
 	 * Gets an SplFileInfo object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getfileinfo.php
-	 * @param class_name string[optional] <p>
+	 * @param string $class_name [optional] <p>
 	 * Name of an SplFileInfo derived class to use. 
 	 * </p>
 	 * @return SplFileInfo An SplFileInfo object created for the file.
@@ -3762,7 +3782,7 @@ class FilesystemIterator extends DirectoryIterator implements SeekableIterator, 
 	/**
 	 * Gets an SplFileInfo object for the path
 	 * @link http://www.php.net/manual/en/splfileinfo.getpathinfo.php
-	 * @param class_name string[optional] <p>
+	 * @param string $class_name [optional] <p>
 	 * Name of an SplFileInfo derived class to use.
 	 * </p>
 	 * @return SplFileInfo an SplFileInfo object for the parent path of the file.
@@ -3772,15 +3792,15 @@ class FilesystemIterator extends DirectoryIterator implements SeekableIterator, 
 	/**
 	 * Gets an SplFileObject object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.openfile.php
-	 * @param open_mode string[optional] <p>
+	 * @param string $open_mode [optional] <p>
 	 * The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
 	 * </p>
-	 * @param use_include_path bool[optional] <p>
+	 * @param bool $use_include_path [optional] <p>
 	 * &parameter.use_include_path;
 	 * </p>
-	 * @param context resource[optional] <p>
+	 * @param resource $context [optional] <p>
 	 * &parameter.context;
 	 * </p>
 	 * @return SplFileObject The opened file as an SplFileObject object.
@@ -3788,20 +3808,23 @@ class FilesystemIterator extends DirectoryIterator implements SeekableIterator, 
 	public function openFile ($open_mode = null, $use_include_path = null, $context = null) {}
 
 	/**
-	 * Sets the class name used with <methodname>SplFileInfo::openFile</methodname>
+	 * Sets the class used with <methodname>SplFileInfo::openFile</methodname>
 	 * @link http://www.php.net/manual/en/splfileinfo.setfileclass.php
-	 * @param class_name string[optional] <p>
-	 * The class name to use when openFile() is called. 
+	 * @param string $class_name [optional] <p>
+	 * The class name to use when SplFileInfo::openFile
+	 * is called.
 	 * </p>
 	 * @return void 
 	 */
 	public function setFileClass ($class_name = null) {}
 
 	/**
-	 * Sets the class used with getFileInfo and getPathInfo
+	 * Sets the class used with <methodname>SplFileInfo::getFileInfo</methodname> and <methodname>SplFileInfo::getPathInfo</methodname>
 	 * @link http://www.php.net/manual/en/splfileinfo.setinfoclass.php
-	 * @param class_name string[optional] <p>
-	 * The class name to use.
+	 * @param string $class_name [optional] <p>
+	 * The class name to use when
+	 * SplFileInfo::getFileInfo and
+	 * SplFileInfo::getPathInfo are called.
 	 * </p>
 	 * @return void 
 	 */
@@ -3829,15 +3852,15 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator,
 	/**
 	 * Constructs a RecursiveDirectoryIterator
 	 * @link http://www.php.net/manual/en/recursivedirectoryiterator.construct.php
-	 * @param path
-	 * @param flags[optional]
+	 * @param $path
+	 * @param $flags [optional]
 	 */
 	public function __construct ($path, $flags = null) {}
 
 	/**
 	 * Returns whether current entry is a directory and not '.' or '..'
 	 * @link http://www.php.net/manual/en/recursivedirectoryiterator.haschildren.php
-	 * @param allow_links bool[optional] <p>
+	 * @param bool $allow_links [optional] <p>
 	 * </p>
 	 * @return bool whether the current entry is a directory, but not '.' or '..'
 	 */
@@ -3906,7 +3929,7 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator,
 	/**
 	 * Sets handling flags
 	 * @link http://www.php.net/manual/en/filesystemiterator.setflags.php
-	 * @param flags int[optional] <p>
+	 * @param int $flags [optional] <p>
 	 * The handling flags to set.
 	 * See the FilesystemIterator constants.
 	 * </p>
@@ -3932,7 +3955,7 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator,
 	/**
 	 * Get base name of current DirectoryIterator item.
 	 * @link http://www.php.net/manual/en/directoryiterator.getbasename.php
-	 * @param suffix string[optional] <p>
+	 * @param string $suffix [optional] <p>
 	 * If the base name ends in suffix, 
 	 * this will be cut.
 	 * </p>
@@ -3958,7 +3981,7 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator,
 	/**
 	 * Seek to a DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.seek.php
-	 * @param position int <p>
+	 * @param int $position <p>
 	 * The zero-based numeric position to seek to.
 	 * </p>
 	 * @return void 
@@ -4110,7 +4133,7 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator,
 	/**
 	 * Gets an SplFileInfo object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getfileinfo.php
-	 * @param class_name string[optional] <p>
+	 * @param string $class_name [optional] <p>
 	 * Name of an SplFileInfo derived class to use. 
 	 * </p>
 	 * @return SplFileInfo An SplFileInfo object created for the file.
@@ -4120,7 +4143,7 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator,
 	/**
 	 * Gets an SplFileInfo object for the path
 	 * @link http://www.php.net/manual/en/splfileinfo.getpathinfo.php
-	 * @param class_name string[optional] <p>
+	 * @param string $class_name [optional] <p>
 	 * Name of an SplFileInfo derived class to use.
 	 * </p>
 	 * @return SplFileInfo an SplFileInfo object for the parent path of the file.
@@ -4130,15 +4153,15 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator,
 	/**
 	 * Gets an SplFileObject object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.openfile.php
-	 * @param open_mode string[optional] <p>
+	 * @param string $open_mode [optional] <p>
 	 * The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
 	 * </p>
-	 * @param use_include_path bool[optional] <p>
+	 * @param bool $use_include_path [optional] <p>
 	 * &parameter.use_include_path;
 	 * </p>
-	 * @param context resource[optional] <p>
+	 * @param resource $context [optional] <p>
 	 * &parameter.context;
 	 * </p>
 	 * @return SplFileObject The opened file as an SplFileObject object.
@@ -4146,20 +4169,23 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator,
 	public function openFile ($open_mode = null, $use_include_path = null, $context = null) {}
 
 	/**
-	 * Sets the class name used with <methodname>SplFileInfo::openFile</methodname>
+	 * Sets the class used with <methodname>SplFileInfo::openFile</methodname>
 	 * @link http://www.php.net/manual/en/splfileinfo.setfileclass.php
-	 * @param class_name string[optional] <p>
-	 * The class name to use when openFile() is called. 
+	 * @param string $class_name [optional] <p>
+	 * The class name to use when SplFileInfo::openFile
+	 * is called.
 	 * </p>
 	 * @return void 
 	 */
 	public function setFileClass ($class_name = null) {}
 
 	/**
-	 * Sets the class used with getFileInfo and getPathInfo
+	 * Sets the class used with <methodname>SplFileInfo::getFileInfo</methodname> and <methodname>SplFileInfo::getPathInfo</methodname>
 	 * @link http://www.php.net/manual/en/splfileinfo.setinfoclass.php
-	 * @param class_name string[optional] <p>
-	 * The class name to use.
+	 * @param string $class_name [optional] <p>
+	 * The class name to use when
+	 * SplFileInfo::getFileInfo and
+	 * SplFileInfo::getPathInfo are called.
 	 * </p>
 	 * @return void 
 	 */
@@ -4187,8 +4213,8 @@ class GlobIterator extends FilesystemIterator implements Iterator, Traversable, 
 	/**
 	 * Construct a directory using glob
 	 * @link http://www.php.net/manual/en/globiterator.construct.php
-	 * @param path
-	 * @param flags[optional]
+	 * @param $path
+	 * @param $flags [optional]
 	 */
 	public function __construct ($path, $flags = null) {}
 
@@ -4240,7 +4266,7 @@ class GlobIterator extends FilesystemIterator implements Iterator, Traversable, 
 	/**
 	 * Sets handling flags
 	 * @link http://www.php.net/manual/en/filesystemiterator.setflags.php
-	 * @param flags int[optional] <p>
+	 * @param int $flags [optional] <p>
 	 * The handling flags to set.
 	 * See the FilesystemIterator constants.
 	 * </p>
@@ -4266,7 +4292,7 @@ class GlobIterator extends FilesystemIterator implements Iterator, Traversable, 
 	/**
 	 * Get base name of current DirectoryIterator item.
 	 * @link http://www.php.net/manual/en/directoryiterator.getbasename.php
-	 * @param suffix string[optional] <p>
+	 * @param string $suffix [optional] <p>
 	 * If the base name ends in suffix, 
 	 * this will be cut.
 	 * </p>
@@ -4292,7 +4318,7 @@ class GlobIterator extends FilesystemIterator implements Iterator, Traversable, 
 	/**
 	 * Seek to a DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.seek.php
-	 * @param position int <p>
+	 * @param int $position <p>
 	 * The zero-based numeric position to seek to.
 	 * </p>
 	 * @return void 
@@ -4444,7 +4470,7 @@ class GlobIterator extends FilesystemIterator implements Iterator, Traversable, 
 	/**
 	 * Gets an SplFileInfo object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getfileinfo.php
-	 * @param class_name string[optional] <p>
+	 * @param string $class_name [optional] <p>
 	 * Name of an SplFileInfo derived class to use. 
 	 * </p>
 	 * @return SplFileInfo An SplFileInfo object created for the file.
@@ -4454,7 +4480,7 @@ class GlobIterator extends FilesystemIterator implements Iterator, Traversable, 
 	/**
 	 * Gets an SplFileInfo object for the path
 	 * @link http://www.php.net/manual/en/splfileinfo.getpathinfo.php
-	 * @param class_name string[optional] <p>
+	 * @param string $class_name [optional] <p>
 	 * Name of an SplFileInfo derived class to use.
 	 * </p>
 	 * @return SplFileInfo an SplFileInfo object for the parent path of the file.
@@ -4464,15 +4490,15 @@ class GlobIterator extends FilesystemIterator implements Iterator, Traversable, 
 	/**
 	 * Gets an SplFileObject object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.openfile.php
-	 * @param open_mode string[optional] <p>
+	 * @param string $open_mode [optional] <p>
 	 * The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
 	 * </p>
-	 * @param use_include_path bool[optional] <p>
+	 * @param bool $use_include_path [optional] <p>
 	 * &parameter.use_include_path;
 	 * </p>
-	 * @param context resource[optional] <p>
+	 * @param resource $context [optional] <p>
 	 * &parameter.context;
 	 * </p>
 	 * @return SplFileObject The opened file as an SplFileObject object.
@@ -4480,20 +4506,23 @@ class GlobIterator extends FilesystemIterator implements Iterator, Traversable, 
 	public function openFile ($open_mode = null, $use_include_path = null, $context = null) {}
 
 	/**
-	 * Sets the class name used with <methodname>SplFileInfo::openFile</methodname>
+	 * Sets the class used with <methodname>SplFileInfo::openFile</methodname>
 	 * @link http://www.php.net/manual/en/splfileinfo.setfileclass.php
-	 * @param class_name string[optional] <p>
-	 * The class name to use when openFile() is called. 
+	 * @param string $class_name [optional] <p>
+	 * The class name to use when SplFileInfo::openFile
+	 * is called.
 	 * </p>
 	 * @return void 
 	 */
 	public function setFileClass ($class_name = null) {}
 
 	/**
-	 * Sets the class used with getFileInfo and getPathInfo
+	 * Sets the class used with <methodname>SplFileInfo::getFileInfo</methodname> and <methodname>SplFileInfo::getPathInfo</methodname>
 	 * @link http://www.php.net/manual/en/splfileinfo.setinfoclass.php
-	 * @param class_name string[optional] <p>
-	 * The class name to use.
+	 * @param string $class_name [optional] <p>
+	 * The class name to use when
+	 * SplFileInfo::getFileInfo and
+	 * SplFileInfo::getPathInfo are called.
 	 * </p>
 	 * @return void 
 	 */
@@ -4513,10 +4542,10 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Construct a new file object.
 	 * @link http://www.php.net/manual/en/splfileobject.construct.php
-	 * @param file_name
-	 * @param open_mode[optional]
-	 * @param use_include_path[optional]
-	 * @param context[optional]
+	 * @param $file_name
+	 * @param $open_mode [optional]
+	 * @param $use_include_path [optional]
+	 * @param $context [optional]
 	 */
 	public function __construct ($file_name, $open_mode = null, $use_include_path = null, $context = null) {}
 
@@ -4551,13 +4580,13 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Gets line from file and parse as CSV fields
 	 * @link http://www.php.net/manual/en/splfileobject.fgetcsv.php
-	 * @param delimiter string[optional] <p>
+	 * @param string $delimiter [optional] <p>
 	 * The field delimiter (one character only). Defaults as a comma or the value set using SplFileObject::setCsvControl.
 	 * </p>
-	 * @param enclosure string[optional] <p>
+	 * @param string $enclosure [optional] <p>
 	 * The field enclosure character (one character only). Defaults as a double quotation mark or the value set using SplFileObject::setCsvControl.
 	 * </p>
-	 * @param escape string[optional] <p>
+	 * @param string $escape [optional] <p>
 	 * The escape character (one character only). Defaults as a backslash (\) or the value set using SplFileObject::setCsvControl.
 	 * </p>
 	 * @return array an indexed array containing the fields read, or false on error.
@@ -4572,16 +4601,20 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Write a field array as a CSV line
 	 * @link http://www.php.net/manual/en/splfileobject.fputcsv.php
-	 * @param fields array <p>
+	 * @param array $fields <p>
 	 * An array of values.
 	 * </p>
-	 * @param delimiter string[optional] <p>
+	 * @param string $delimiter [optional] <p>
 	 * The optional delimiter parameter sets the field
 	 * delimiter (one character only).
 	 * </p>
-	 * @param enclosure string[optional] <p>
+	 * @param string $enclosure [optional] <p>
 	 * The optional enclosure parameter sets the field
 	 * enclosure (one character only).
+	 * </p>
+	 * @param string $escape [optional] <p>
+	 * The optional escape parameter sets the
+	 * escape character (one character only).
 	 * </p>
 	 * @return int the length of the written string or false on failure.
 	 * </p>
@@ -4590,18 +4623,18 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	 * delimiter or enclosure
 	 * parameter is not a single character.
 	 */
-	public function fputcsv (array $fields, $delimiter = null, $enclosure = null) {}
+	public function fputcsv (array $fields, $delimiter = null, $enclosure = null, $escape = null) {}
 
 	/**
 	 * Set the delimiter and enclosure character for CSV
 	 * @link http://www.php.net/manual/en/splfileobject.setcsvcontrol.php
-	 * @param delimiter string[optional] <p>
+	 * @param string $delimiter [optional] <p>
 	 * The field delimiter (one character only).
 	 * </p>
-	 * @param enclosure string[optional] <p>
+	 * @param string $enclosure [optional] <p>
 	 * The field enclosure character (one character only).
 	 * </p>
-	 * @param escape string[optional] <p>
+	 * @param string $escape [optional] <p>
 	 * The field escape character (one character only).
 	 * </p>
 	 * @return void 
@@ -4618,10 +4651,10 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Portable file locking
 	 * @link http://www.php.net/manual/en/splfileobject.flock.php
-	 * @param operation int <p>
+	 * @param int $operation <p>
 	 * operation is one of the following:
 	 * LOCK_SH to acquire a shared lock (reader).
-	 * @param wouldblock int[optional] <p>
+	 * @param int $wouldblock [optional] <p>
 	 * Set to true if the lock would block (EWOULDBLOCK errno condition).
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -4645,11 +4678,11 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Seek to a position
 	 * @link http://www.php.net/manual/en/splfileobject.fseek.php
-	 * @param offset int <p>
+	 * @param int $offset <p>
 	 * The offset. A negative value can be used to move backwards through the file which
 	 * is useful when SEEK_END is used as the whence value.
 	 * </p>
-	 * @param whence int[optional] <p>
+	 * @param int $whence [optional] <p>
 	 * whence values are:
 	 * SEEK_SET - Set position equal to offset bytes.
 	 * SEEK_CUR - Set position to current location plus offset.
@@ -4681,7 +4714,7 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Gets line from file and strip HTML tags
 	 * @link http://www.php.net/manual/en/splfileobject.fgetss.php
-	 * @param allowable_tags string[optional] <p>
+	 * @param string $allowable_tags [optional] <p>
 	 * Optional parameter to specify tags which should not be stripped. 
 	 * </p>
 	 * @return string a string containing the next line of the file with HTML and PHP
@@ -4692,10 +4725,10 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Parses input from file according to a format
 	 * @link http://www.php.net/manual/en/splfileobject.fscanf.php
-	 * @param format string <p>
+	 * @param string $format <p>
 	 * The specified format as described in the sprintf documentation.
 	 * </p>
-	 * @param _ mixed[optional] 
+	 * @param mixed $_ [optional] 
 	 * @return mixed If only one parameter is passed to this method, the values parsed will be
 	 * returned as an array. Otherwise, if optional parameters are passed, the
 	 * function will return the number of assigned values. The optional
@@ -4706,10 +4739,10 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Write to file
 	 * @link http://www.php.net/manual/en/splfileobject.fwrite.php
-	 * @param str string <p>
+	 * @param string $str <p>
 	 * The string to be written to the file.
 	 * </p>
-	 * @param length int[optional] <p>
+	 * @param int $length [optional] <p>
 	 * If the length argument is given, writing will
 	 * stop after length bytes have been written or
 	 * the end of string is reached, whichever comes
@@ -4722,7 +4755,7 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Read from file
 	 * @link http://www.php.net/manual/en/splfileobject.fread.php
-	 * @param length int <p>
+	 * @param int $length <p>
 	 * The number of bytes to read.
 	 * </p>
 	 * @return string the string read from the file or false on failure.
@@ -4740,7 +4773,7 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Truncates the file to a given length
 	 * @link http://www.php.net/manual/en/splfileobject.ftruncate.php
-	 * @param size int <p>
+	 * @param int $size <p>
 	 * The size to truncate to.
 	 * </p>
 	 * <p>
@@ -4777,7 +4810,7 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Sets flags for the SplFileObject
 	 * @link http://www.php.net/manual/en/splfileobject.setflags.php
-	 * @param flags int <p>
+	 * @param int $flags <p>
 	 * Bit mask of the flags to set. See 
 	 * SplFileObject constants 
 	 * for the available flags.
@@ -4796,7 +4829,7 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Set maximum line length
 	 * @link http://www.php.net/manual/en/splfileobject.setmaxlinelen.php
-	 * @param max_len int <p>
+	 * @param int $max_len <p>
 	 * The maximum length of a line.
 	 * </p>
 	 * @return void 
@@ -4828,7 +4861,7 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Seek to specified line
 	 * @link http://www.php.net/manual/en/splfileobject.seek.php
-	 * @param line_pos int <p>
+	 * @param int $line_pos <p>
 	 * The zero-based line number to seek to.
 	 * </p>
 	 * @return void 
@@ -4873,7 +4906,7 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Gets the base name of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getbasename.php
-	 * @param suffix string[optional] <p>
+	 * @param string $suffix [optional] <p>
 	 * Optional suffix to omit from the base name returned.
 	 * </p>
 	 * @return string the base name without path information.
@@ -5011,7 +5044,7 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Gets an SplFileInfo object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getfileinfo.php
-	 * @param class_name string[optional] <p>
+	 * @param string $class_name [optional] <p>
 	 * Name of an SplFileInfo derived class to use. 
 	 * </p>
 	 * @return SplFileInfo An SplFileInfo object created for the file.
@@ -5021,7 +5054,7 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Gets an SplFileInfo object for the path
 	 * @link http://www.php.net/manual/en/splfileinfo.getpathinfo.php
-	 * @param class_name string[optional] <p>
+	 * @param string $class_name [optional] <p>
 	 * Name of an SplFileInfo derived class to use.
 	 * </p>
 	 * @return SplFileInfo an SplFileInfo object for the parent path of the file.
@@ -5031,15 +5064,15 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	/**
 	 * Gets an SplFileObject object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.openfile.php
-	 * @param open_mode string[optional] <p>
+	 * @param string $open_mode [optional] <p>
 	 * The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
 	 * </p>
-	 * @param use_include_path bool[optional] <p>
+	 * @param bool $use_include_path [optional] <p>
 	 * &parameter.use_include_path;
 	 * </p>
-	 * @param context resource[optional] <p>
+	 * @param resource $context [optional] <p>
 	 * &parameter.context;
 	 * </p>
 	 * @return SplFileObject The opened file as an SplFileObject object.
@@ -5047,20 +5080,23 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	public function openFile ($open_mode = null, $use_include_path = null, $context = null) {}
 
 	/**
-	 * Sets the class name used with <methodname>SplFileInfo::openFile</methodname>
+	 * Sets the class used with <methodname>SplFileInfo::openFile</methodname>
 	 * @link http://www.php.net/manual/en/splfileinfo.setfileclass.php
-	 * @param class_name string[optional] <p>
-	 * The class name to use when openFile() is called. 
+	 * @param string $class_name [optional] <p>
+	 * The class name to use when SplFileInfo::openFile
+	 * is called.
 	 * </p>
 	 * @return void 
 	 */
 	public function setFileClass ($class_name = null) {}
 
 	/**
-	 * Sets the class used with getFileInfo and getPathInfo
+	 * Sets the class used with <methodname>SplFileInfo::getFileInfo</methodname> and <methodname>SplFileInfo::getPathInfo</methodname>
 	 * @link http://www.php.net/manual/en/splfileinfo.setinfoclass.php
-	 * @param class_name string[optional] <p>
-	 * The class name to use.
+	 * @param string $class_name [optional] <p>
+	 * The class name to use when
+	 * SplFileInfo::getFileInfo and
+	 * SplFileInfo::getPathInfo are called.
 	 * </p>
 	 * @return void 
 	 */
@@ -5080,7 +5116,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Construct a new temporary file object
 	 * @link http://www.php.net/manual/en/spltempfileobject.construct.php
-	 * @param max_memory[optional]
+	 * @param $max_memory [optional]
 	 */
 	public function __construct ($max_memory = null) {}
 
@@ -5115,13 +5151,13 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Gets line from file and parse as CSV fields
 	 * @link http://www.php.net/manual/en/splfileobject.fgetcsv.php
-	 * @param delimiter string[optional] <p>
+	 * @param string $delimiter [optional] <p>
 	 * The field delimiter (one character only). Defaults as a comma or the value set using SplFileObject::setCsvControl.
 	 * </p>
-	 * @param enclosure string[optional] <p>
+	 * @param string $enclosure [optional] <p>
 	 * The field enclosure character (one character only). Defaults as a double quotation mark or the value set using SplFileObject::setCsvControl.
 	 * </p>
-	 * @param escape string[optional] <p>
+	 * @param string $escape [optional] <p>
 	 * The escape character (one character only). Defaults as a backslash (\) or the value set using SplFileObject::setCsvControl.
 	 * </p>
 	 * @return array an indexed array containing the fields read, or false on error.
@@ -5136,16 +5172,20 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Write a field array as a CSV line
 	 * @link http://www.php.net/manual/en/splfileobject.fputcsv.php
-	 * @param fields array <p>
+	 * @param array $fields <p>
 	 * An array of values.
 	 * </p>
-	 * @param delimiter string[optional] <p>
+	 * @param string $delimiter [optional] <p>
 	 * The optional delimiter parameter sets the field
 	 * delimiter (one character only).
 	 * </p>
-	 * @param enclosure string[optional] <p>
+	 * @param string $enclosure [optional] <p>
 	 * The optional enclosure parameter sets the field
 	 * enclosure (one character only).
+	 * </p>
+	 * @param string $escape [optional] <p>
+	 * The optional escape parameter sets the
+	 * escape character (one character only).
 	 * </p>
 	 * @return int the length of the written string or false on failure.
 	 * </p>
@@ -5154,18 +5194,18 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	 * delimiter or enclosure
 	 * parameter is not a single character.
 	 */
-	public function fputcsv (array $fields, $delimiter = null, $enclosure = null) {}
+	public function fputcsv (array $fields, $delimiter = null, $enclosure = null, $escape = null) {}
 
 	/**
 	 * Set the delimiter and enclosure character for CSV
 	 * @link http://www.php.net/manual/en/splfileobject.setcsvcontrol.php
-	 * @param delimiter string[optional] <p>
+	 * @param string $delimiter [optional] <p>
 	 * The field delimiter (one character only).
 	 * </p>
-	 * @param enclosure string[optional] <p>
+	 * @param string $enclosure [optional] <p>
 	 * The field enclosure character (one character only).
 	 * </p>
-	 * @param escape string[optional] <p>
+	 * @param string $escape [optional] <p>
 	 * The field escape character (one character only).
 	 * </p>
 	 * @return void 
@@ -5182,10 +5222,10 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Portable file locking
 	 * @link http://www.php.net/manual/en/splfileobject.flock.php
-	 * @param operation int <p>
+	 * @param int $operation <p>
 	 * operation is one of the following:
 	 * LOCK_SH to acquire a shared lock (reader).
-	 * @param wouldblock int[optional] <p>
+	 * @param int $wouldblock [optional] <p>
 	 * Set to true if the lock would block (EWOULDBLOCK errno condition).
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -5209,11 +5249,11 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Seek to a position
 	 * @link http://www.php.net/manual/en/splfileobject.fseek.php
-	 * @param offset int <p>
+	 * @param int $offset <p>
 	 * The offset. A negative value can be used to move backwards through the file which
 	 * is useful when SEEK_END is used as the whence value.
 	 * </p>
-	 * @param whence int[optional] <p>
+	 * @param int $whence [optional] <p>
 	 * whence values are:
 	 * SEEK_SET - Set position equal to offset bytes.
 	 * SEEK_CUR - Set position to current location plus offset.
@@ -5245,7 +5285,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Gets line from file and strip HTML tags
 	 * @link http://www.php.net/manual/en/splfileobject.fgetss.php
-	 * @param allowable_tags string[optional] <p>
+	 * @param string $allowable_tags [optional] <p>
 	 * Optional parameter to specify tags which should not be stripped. 
 	 * </p>
 	 * @return string a string containing the next line of the file with HTML and PHP
@@ -5256,10 +5296,10 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Parses input from file according to a format
 	 * @link http://www.php.net/manual/en/splfileobject.fscanf.php
-	 * @param format string <p>
+	 * @param string $format <p>
 	 * The specified format as described in the sprintf documentation.
 	 * </p>
-	 * @param _ mixed[optional] 
+	 * @param mixed $_ [optional] 
 	 * @return mixed If only one parameter is passed to this method, the values parsed will be
 	 * returned as an array. Otherwise, if optional parameters are passed, the
 	 * function will return the number of assigned values. The optional
@@ -5270,10 +5310,10 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Write to file
 	 * @link http://www.php.net/manual/en/splfileobject.fwrite.php
-	 * @param str string <p>
+	 * @param string $str <p>
 	 * The string to be written to the file.
 	 * </p>
-	 * @param length int[optional] <p>
+	 * @param int $length [optional] <p>
 	 * If the length argument is given, writing will
 	 * stop after length bytes have been written or
 	 * the end of string is reached, whichever comes
@@ -5286,7 +5326,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Read from file
 	 * @link http://www.php.net/manual/en/splfileobject.fread.php
-	 * @param length int <p>
+	 * @param int $length <p>
 	 * The number of bytes to read.
 	 * </p>
 	 * @return string the string read from the file or false on failure.
@@ -5304,7 +5344,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Truncates the file to a given length
 	 * @link http://www.php.net/manual/en/splfileobject.ftruncate.php
-	 * @param size int <p>
+	 * @param int $size <p>
 	 * The size to truncate to.
 	 * </p>
 	 * <p>
@@ -5341,7 +5381,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Sets flags for the SplFileObject
 	 * @link http://www.php.net/manual/en/splfileobject.setflags.php
-	 * @param flags int <p>
+	 * @param int $flags <p>
 	 * Bit mask of the flags to set. See 
 	 * SplFileObject constants 
 	 * for the available flags.
@@ -5360,7 +5400,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Set maximum line length
 	 * @link http://www.php.net/manual/en/splfileobject.setmaxlinelen.php
-	 * @param max_len int <p>
+	 * @param int $max_len <p>
 	 * The maximum length of a line.
 	 * </p>
 	 * @return void 
@@ -5392,7 +5432,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Seek to specified line
 	 * @link http://www.php.net/manual/en/splfileobject.seek.php
-	 * @param line_pos int <p>
+	 * @param int $line_pos <p>
 	 * The zero-based line number to seek to.
 	 * </p>
 	 * @return void 
@@ -5437,7 +5477,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Gets the base name of the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getbasename.php
-	 * @param suffix string[optional] <p>
+	 * @param string $suffix [optional] <p>
 	 * Optional suffix to omit from the base name returned.
 	 * </p>
 	 * @return string the base name without path information.
@@ -5575,7 +5615,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Gets an SplFileInfo object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.getfileinfo.php
-	 * @param class_name string[optional] <p>
+	 * @param string $class_name [optional] <p>
 	 * Name of an SplFileInfo derived class to use. 
 	 * </p>
 	 * @return SplFileInfo An SplFileInfo object created for the file.
@@ -5585,7 +5625,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Gets an SplFileInfo object for the path
 	 * @link http://www.php.net/manual/en/splfileinfo.getpathinfo.php
-	 * @param class_name string[optional] <p>
+	 * @param string $class_name [optional] <p>
 	 * Name of an SplFileInfo derived class to use.
 	 * </p>
 	 * @return SplFileInfo an SplFileInfo object for the parent path of the file.
@@ -5595,15 +5635,15 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	/**
 	 * Gets an SplFileObject object for the file
 	 * @link http://www.php.net/manual/en/splfileinfo.openfile.php
-	 * @param open_mode string[optional] <p>
+	 * @param string $open_mode [optional] <p>
 	 * The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
 	 * </p>
-	 * @param use_include_path bool[optional] <p>
+	 * @param bool $use_include_path [optional] <p>
 	 * &parameter.use_include_path;
 	 * </p>
-	 * @param context resource[optional] <p>
+	 * @param resource $context [optional] <p>
 	 * &parameter.context;
 	 * </p>
 	 * @return SplFileObject The opened file as an SplFileObject object.
@@ -5611,20 +5651,23 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	public function openFile ($open_mode = null, $use_include_path = null, $context = null) {}
 
 	/**
-	 * Sets the class name used with <methodname>SplFileInfo::openFile</methodname>
+	 * Sets the class used with <methodname>SplFileInfo::openFile</methodname>
 	 * @link http://www.php.net/manual/en/splfileinfo.setfileclass.php
-	 * @param class_name string[optional] <p>
-	 * The class name to use when openFile() is called. 
+	 * @param string $class_name [optional] <p>
+	 * The class name to use when SplFileInfo::openFile
+	 * is called.
 	 * </p>
 	 * @return void 
 	 */
 	public function setFileClass ($class_name = null) {}
 
 	/**
-	 * Sets the class used with getFileInfo and getPathInfo
+	 * Sets the class used with <methodname>SplFileInfo::getFileInfo</methodname> and <methodname>SplFileInfo::getPathInfo</methodname>
 	 * @link http://www.php.net/manual/en/splfileinfo.setinfoclass.php
-	 * @param class_name string[optional] <p>
-	 * The class name to use.
+	 * @param string $class_name [optional] <p>
+	 * The class name to use when
+	 * SplFileInfo::getFileInfo and
+	 * SplFileInfo::getPathInfo are called.
 	 * </p>
 	 * @return void 
 	 */
@@ -5658,7 +5701,7 @@ class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAcce
 	/**
 	 * Pushes an element at the end of the doubly linked list
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.push.php
-	 * @param value mixed <p>
+	 * @param mixed $value <p>
 	 * The value to push.
 	 * </p>
 	 * @return void 
@@ -5668,7 +5711,7 @@ class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAcce
 	/**
 	 * Prepends the doubly linked list with an element
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.unshift.php
-	 * @param value mixed <p>
+	 * @param mixed $value <p>
 	 * The value to unshift.
 	 * </p>
 	 * @return void 
@@ -5699,7 +5742,7 @@ class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAcce
 	/**
 	 * Sets the mode of iteration
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.setiteratormode.php
-	 * @param mode int <p>
+	 * @param int $mode <p>
 	 * There are two orthogonal sets of modes that can be set:
 	 * </p>
 	 * The direction of the iteration (either one or the other):
@@ -5725,7 +5768,7 @@ class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAcce
 	/**
 	 * Returns whether the requested $index exists
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetexists.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index being checked.
 	 * </p>
 	 * @return bool true if the requested index exists, otherwise false
@@ -5735,7 +5778,7 @@ class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAcce
 	/**
 	 * Returns the value at the specified $index
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetget.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index with the value.
 	 * </p>
 	 * @return mixed The value at the specified index.
@@ -5745,10 +5788,10 @@ class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAcce
 	/**
 	 * Sets the value at the specified $index to $newval
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetset.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index being set.
 	 * </p>
-	 * @param newval mixed <p>
+	 * @param mixed $newval <p>
 	 * The new value for the index.
 	 * </p>
 	 * @return void 
@@ -5758,7 +5801,7 @@ class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAcce
 	/**
 	 * Unsets the value at the specified $index
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetunset.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index being unset.
 	 * </p>
 	 * @return void 
@@ -5768,10 +5811,10 @@ class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAcce
 	/**
 	 * Add/insert a new value at the specified index
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.add.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index where the new value is to be inserted.
 	 * </p>
-	 * @param newval mixed <p>
+	 * @param mixed $newval <p>
 	 * The new value for the index.
 	 * </p>
 	 * @return void 
@@ -5823,7 +5866,7 @@ class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAcce
 	/**
 	 * Unserializes the storage
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.unserialize.php
-	 * @param serialized string <p>
+	 * @param string $serialized <p>
 	 * The serialized string.
 	 * </p>
 	 * @return void 
@@ -5849,7 +5892,7 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Adds an element to the queue.
 	 * @link http://www.php.net/manual/en/splqueue.enqueue.php
-	 * @param value mixed <p>
+	 * @param mixed $value <p>
 	 * The value to enqueue.
 	 * </p>
 	 * @return void 
@@ -5880,7 +5923,7 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Pushes an element at the end of the doubly linked list
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.push.php
-	 * @param value mixed <p>
+	 * @param mixed $value <p>
 	 * The value to push.
 	 * </p>
 	 * @return void 
@@ -5890,7 +5933,7 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Prepends the doubly linked list with an element
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.unshift.php
-	 * @param value mixed <p>
+	 * @param mixed $value <p>
 	 * The value to unshift.
 	 * </p>
 	 * @return void 
@@ -5921,7 +5964,7 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Sets the mode of iteration
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.setiteratormode.php
-	 * @param mode int <p>
+	 * @param int $mode <p>
 	 * There are two orthogonal sets of modes that can be set:
 	 * </p>
 	 * The direction of the iteration (either one or the other):
@@ -5947,7 +5990,7 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Returns whether the requested $index exists
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetexists.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index being checked.
 	 * </p>
 	 * @return bool true if the requested index exists, otherwise false
@@ -5957,7 +6000,7 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Returns the value at the specified $index
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetget.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index with the value.
 	 * </p>
 	 * @return mixed The value at the specified index.
@@ -5967,10 +6010,10 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Sets the value at the specified $index to $newval
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetset.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index being set.
 	 * </p>
-	 * @param newval mixed <p>
+	 * @param mixed $newval <p>
 	 * The new value for the index.
 	 * </p>
 	 * @return void 
@@ -5980,7 +6023,7 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Unsets the value at the specified $index
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetunset.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index being unset.
 	 * </p>
 	 * @return void 
@@ -5990,10 +6033,10 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Add/insert a new value at the specified index
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.add.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index where the new value is to be inserted.
 	 * </p>
-	 * @param newval mixed <p>
+	 * @param mixed $newval <p>
 	 * The new value for the index.
 	 * </p>
 	 * @return void 
@@ -6045,7 +6088,7 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Unserializes the storage
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.unserialize.php
-	 * @param serialized string <p>
+	 * @param string $serialized <p>
 	 * The serialized string.
 	 * </p>
 	 * @return void 
@@ -6085,7 +6128,7 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Pushes an element at the end of the doubly linked list
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.push.php
-	 * @param value mixed <p>
+	 * @param mixed $value <p>
 	 * The value to push.
 	 * </p>
 	 * @return void 
@@ -6095,7 +6138,7 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Prepends the doubly linked list with an element
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.unshift.php
-	 * @param value mixed <p>
+	 * @param mixed $value <p>
 	 * The value to unshift.
 	 * </p>
 	 * @return void 
@@ -6126,7 +6169,7 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Sets the mode of iteration
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.setiteratormode.php
-	 * @param mode int <p>
+	 * @param int $mode <p>
 	 * There are two orthogonal sets of modes that can be set:
 	 * </p>
 	 * The direction of the iteration (either one or the other):
@@ -6152,7 +6195,7 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Returns whether the requested $index exists
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetexists.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index being checked.
 	 * </p>
 	 * @return bool true if the requested index exists, otherwise false
@@ -6162,7 +6205,7 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Returns the value at the specified $index
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetget.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index with the value.
 	 * </p>
 	 * @return mixed The value at the specified index.
@@ -6172,10 +6215,10 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Sets the value at the specified $index to $newval
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetset.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index being set.
 	 * </p>
-	 * @param newval mixed <p>
+	 * @param mixed $newval <p>
 	 * The new value for the index.
 	 * </p>
 	 * @return void 
@@ -6185,7 +6228,7 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Unsets the value at the specified $index
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.offsetunset.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index being unset.
 	 * </p>
 	 * @return void 
@@ -6195,10 +6238,10 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Add/insert a new value at the specified index
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.add.php
-	 * @param index mixed <p>
+	 * @param mixed $index <p>
 	 * The index where the new value is to be inserted.
 	 * </p>
-	 * @param newval mixed <p>
+	 * @param mixed $newval <p>
 	 * The new value for the index.
 	 * </p>
 	 * @return void 
@@ -6250,7 +6293,7 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	/**
 	 * Unserializes the storage
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.unserialize.php
-	 * @param serialized string <p>
+	 * @param string $serialized <p>
 	 * The serialized string.
 	 * </p>
 	 * @return void 
@@ -6278,7 +6321,7 @@ class SplHeap implements Iterator, Traversable, Countable {
 	/**
 	 * Inserts an element in the heap by sifting it up.
 	 * @link http://www.php.net/manual/en/splheap.insert.php
-	 * @param value mixed <p>
+	 * @param mixed $value <p>
 	 * The value to insert.
 	 * </p>
 	 * @return void 
@@ -6348,13 +6391,15 @@ class SplHeap implements Iterator, Traversable, Countable {
 	 */
 	public function recoverFromCorruption () {}
 
+	public function isCorrupted () {}
+
 	/**
 	 * Compare elements in order to place them correctly in the heap while sifting up.
 	 * @link http://www.php.net/manual/en/splheap.compare.php
-	 * @param value1 mixed <p>
+	 * @param mixed $value1 <p>
 	 * The value of the first node being compared.
 	 * </p>
-	 * @param value2 mixed <p>
+	 * @param mixed $value2 <p>
 	 * The value of the second node being compared.
 	 * </p>
 	 * @return int Result of the comparison, positive integer if value1 is greater than value2, 0 if they are equal, negative integer otherwise.
@@ -6371,10 +6416,10 @@ class SplMinHeap extends SplHeap implements Countable, Traversable, Iterator {
 	/**
 	 * Compare elements in order to place them correctly in the heap while sifting up.
 	 * @link http://www.php.net/manual/en/splminheap.compare.php
-	 * @param value1 mixed <p>
+	 * @param mixed $value1 <p>
 	 * The value of the first node being compared.
 	 * </p>
-	 * @param value2 mixed <p>
+	 * @param mixed $value2 <p>
 	 * The value of the second node being compared.
 	 * </p>
 	 * @return int Result of the comparison, positive integer if value1 is lower than value2, 0 if they are equal, negative integer otherwise.
@@ -6394,7 +6439,7 @@ class SplMinHeap extends SplHeap implements Countable, Traversable, Iterator {
 	/**
 	 * Inserts an element in the heap by sifting it up.
 	 * @link http://www.php.net/manual/en/splheap.insert.php
-	 * @param value mixed <p>
+	 * @param mixed $value <p>
 	 * The value to insert.
 	 * </p>
 	 * @return void 
@@ -6464,6 +6509,8 @@ class SplMinHeap extends SplHeap implements Countable, Traversable, Iterator {
 	 */
 	public function recoverFromCorruption () {}
 
+	public function isCorrupted () {}
+
 }
 
 class SplMaxHeap extends SplHeap implements Countable, Traversable, Iterator {
@@ -6471,10 +6518,10 @@ class SplMaxHeap extends SplHeap implements Countable, Traversable, Iterator {
 	/**
 	 * Compare elements in order to place them correctly in the heap while sifting up.
 	 * @link http://www.php.net/manual/en/splmaxheap.compare.php
-	 * @param value1 mixed <p>
+	 * @param mixed $value1 <p>
 	 * The value of the first node being compared.
 	 * </p>
-	 * @param value2 mixed <p>
+	 * @param mixed $value2 <p>
 	 * The value of the second node being compared.
 	 * </p>
 	 * @return int Result of the comparison, positive integer if value1 is greater than value2, 0 if they are equal, negative integer otherwise.
@@ -6494,7 +6541,7 @@ class SplMaxHeap extends SplHeap implements Countable, Traversable, Iterator {
 	/**
 	 * Inserts an element in the heap by sifting it up.
 	 * @link http://www.php.net/manual/en/splheap.insert.php
-	 * @param value mixed <p>
+	 * @param mixed $value <p>
 	 * The value to insert.
 	 * </p>
 	 * @return void 
@@ -6564,6 +6611,8 @@ class SplMaxHeap extends SplHeap implements Countable, Traversable, Iterator {
 	 */
 	public function recoverFromCorruption () {}
 
+	public function isCorrupted () {}
+
 }
 
 class SplPriorityQueue implements Iterator, Traversable, Countable {
@@ -6575,10 +6624,10 @@ class SplPriorityQueue implements Iterator, Traversable, Countable {
 	/**
 	 * Compare priorities in order to place elements correctly in the heap while sifting up.
 	 * @link http://www.php.net/manual/en/splpriorityqueue.compare.php
-	 * @param priority1 mixed <p>
+	 * @param mixed $priority1 <p>
 	 * The priority of the first node being compared.
 	 * </p>
-	 * @param priority2 mixed <p>
+	 * @param mixed $priority2 <p>
 	 * The priority of the second node being compared.
 	 * </p>
 	 * @return int Result of the comparison, positive integer if priority1 is greater than priority2, 0 if they are equal, negative integer otherwise.
@@ -6591,10 +6640,10 @@ class SplPriorityQueue implements Iterator, Traversable, Countable {
 	/**
 	 * Inserts an element in the queue by sifting it up.
 	 * @link http://www.php.net/manual/en/splpriorityqueue.insert.php
-	 * @param value mixed <p>
+	 * @param mixed $value <p>
 	 * The value to insert.
 	 * </p>
-	 * @param priority mixed <p>
+	 * @param mixed $priority <p>
 	 * The associated priority.
 	 * </p>
 	 * @return void 
@@ -6604,7 +6653,7 @@ class SplPriorityQueue implements Iterator, Traversable, Countable {
 	/**
 	 * Sets the mode of extraction
 	 * @link http://www.php.net/manual/en/splpriorityqueue.setextractflags.php
-	 * @param flags int <p>
+	 * @param int $flags <p>
 	 * Defines what is extracted by SplPriorityQueue::current,
 	 * SplPriorityQueue::top and 
 	 * SplPriorityQueue::extract.
@@ -6613,6 +6662,8 @@ class SplPriorityQueue implements Iterator, Traversable, Countable {
 	 * @return void 
 	 */
 	public function setExtractFlags ($flags) {}
+
+	public function getExtractFlags () {}
 
 	/**
 	 * Peeks at the node from the top of the queue
@@ -6684,6 +6735,8 @@ class SplPriorityQueue implements Iterator, Traversable, Countable {
 	 */
 	public function recoverFromCorruption () {}
 
+	public function isCorrupted () {}
+
 }
 
 class SplFixedArray implements Iterator, Traversable, ArrayAccess, Countable {
@@ -6691,7 +6744,7 @@ class SplFixedArray implements Iterator, Traversable, ArrayAccess, Countable {
 	/**
 	 * Constructs a new fixed array
 	 * @link http://www.php.net/manual/en/splfixedarray.construct.php
-	 * @param size[optional]
+	 * @param $size [optional]
 	 */
 	public function __construct ($size = null) {}
 
@@ -6719,10 +6772,10 @@ class SplFixedArray implements Iterator, Traversable, ArrayAccess, Countable {
 	/**
 	 * Import a PHP array in a <classname>SplFixedArray</classname> instance
 	 * @link http://www.php.net/manual/en/splfixedarray.fromarray.php
-	 * @param array array <p>
+	 * @param array $array <p>
 	 * The array to import.
 	 * </p>
-	 * @param save_indexes bool[optional] <p>
+	 * @param bool $save_indexes [optional] <p>
 	 * Try to save the numeric indexes used in the original array. 
 	 * </p>
 	 * @return SplFixedArray an instance of SplFixedArray 
@@ -6740,7 +6793,7 @@ class SplFixedArray implements Iterator, Traversable, ArrayAccess, Countable {
 	/**
 	 * Change the size of an array
 	 * @link http://www.php.net/manual/en/splfixedarray.setsize.php
-	 * @param size int <p>
+	 * @param int $size <p>
 	 * The new array size. This should be a value between 0 and PHP_INT_MAX.
 	 * </p>
 	 * @return int 
@@ -6750,7 +6803,7 @@ class SplFixedArray implements Iterator, Traversable, ArrayAccess, Countable {
 	/**
 	 * Returns whether the requested index exists
 	 * @link http://www.php.net/manual/en/splfixedarray.offsetexists.php
-	 * @param index int <p>
+	 * @param int $index <p>
 	 * The index being checked.
 	 * </p>
 	 * @return bool true if the requested index exists, otherwise false
@@ -6760,7 +6813,7 @@ class SplFixedArray implements Iterator, Traversable, ArrayAccess, Countable {
 	/**
 	 * Returns the value at the specified index
 	 * @link http://www.php.net/manual/en/splfixedarray.offsetget.php
-	 * @param index int <p>
+	 * @param int $index <p>
 	 * The index with the value.
 	 * </p>
 	 * @return mixed The value at the specified index.
@@ -6770,10 +6823,10 @@ class SplFixedArray implements Iterator, Traversable, ArrayAccess, Countable {
 	/**
 	 * Sets a new value at a specified index
 	 * @link http://www.php.net/manual/en/splfixedarray.offsetset.php
-	 * @param index int <p>
+	 * @param int $index <p>
 	 * The index being set.
 	 * </p>
-	 * @param newval mixed <p>
+	 * @param mixed $newval <p>
 	 * The new value for the index.
 	 * </p>
 	 * @return void 
@@ -6783,7 +6836,7 @@ class SplFixedArray implements Iterator, Traversable, ArrayAccess, Countable {
 	/**
 	 * Unsets the value at the specified $index
 	 * @link http://www.php.net/manual/en/splfixedarray.offsetunset.php
-	 * @param index int <p>
+	 * @param int $index <p>
 	 * The index being unset.
 	 * </p>
 	 * @return void 
@@ -6832,7 +6885,7 @@ interface SplObserver  {
 	/**
 	 * Receive update from subject
 	 * @link http://www.php.net/manual/en/splobserver.update.php
-	 * @param subject SplSubject <p>
+	 * @param SplSubject $subject <p>
 	 * The SplSubject notifying the observer of an update.
 	 * </p>
 	 * @return void 
@@ -6846,7 +6899,7 @@ interface SplSubject  {
 	/**
 	 * Attach an SplObserver
 	 * @link http://www.php.net/manual/en/splsubject.attach.php
-	 * @param observer SplObserver <p>
+	 * @param SplObserver $observer <p>
 	 * The SplObserver to attach.
 	 * </p>
 	 * @return void 
@@ -6856,7 +6909,7 @@ interface SplSubject  {
 	/**
 	 * Detach an observer
 	 * @link http://www.php.net/manual/en/splsubject.detach.php
-	 * @param observer SplObserver <p>
+	 * @param SplObserver $observer <p>
 	 * The SplObserver to detach.
 	 * </p>
 	 * @return void 
@@ -6877,10 +6930,10 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 	/**
 	 * Adds an object in the storage
 	 * @link http://www.php.net/manual/en/splobjectstorage.attach.php
-	 * @param object object <p>
+	 * @param object $object <p>
 	 * The object to add.
 	 * </p>
-	 * @param data mixed[optional] <p>
+	 * @param mixed $data [optional] <p>
 	 * The data to associate with the object.
 	 * </p>
 	 * @return void 
@@ -6890,7 +6943,7 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 	/**
 	 * Removes an <type>object</type> from the storage
 	 * @link http://www.php.net/manual/en/splobjectstorage.detach.php
-	 * @param object object <p>
+	 * @param object $object <p>
 	 * The object to remove.
 	 * </p>
 	 * @return void 
@@ -6900,7 +6953,7 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 	/**
 	 * Checks if the storage contains a specific object
 	 * @link http://www.php.net/manual/en/splobjectstorage.contains.php
-	 * @param object object <p>
+	 * @param object $object <p>
 	 * The object to look for.
 	 * </p>
 	 * @return bool true if the object is in the storage, false otherwise.
@@ -6910,7 +6963,7 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 	/**
 	 * Adds all objects from another storage
 	 * @link http://www.php.net/manual/en/splobjectstorage.addall.php
-	 * @param storage SplObjectStorage <p>
+	 * @param SplObjectStorage $storage <p>
 	 * The storage you want to import.
 	 * </p>
 	 * @return void 
@@ -6920,7 +6973,7 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 	/**
 	 * Removes objects contained in another storage from the current storage
 	 * @link http://www.php.net/manual/en/splobjectstorage.removeall.php
-	 * @param storage SplObjectStorage <p>
+	 * @param SplObjectStorage $storage <p>
 	 * The storage containing the elements to remove.
 	 * </p>
 	 * @return void 
@@ -6930,7 +6983,7 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 	/**
 	 * Removes all objects except for those contained in another storage from the current storage
 	 * @link http://www.php.net/manual/en/splobjectstorage.removeallexcept.php
-	 * @param storage SplObjectStorage <p>
+	 * @param SplObjectStorage $storage <p>
 	 * The storage containing the elements to retain in the current storage.
 	 * </p>
 	 * @return void 
@@ -6947,7 +7000,7 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 	/**
 	 * Sets the data associated with the current iterator entry
 	 * @link http://www.php.net/manual/en/splobjectstorage.setinfo.php
-	 * @param data mixed <p>
+	 * @param mixed $data <p>
 	 * The data to associate with the current iterator entry.
 	 * </p>
 	 * @return void 
@@ -6957,7 +7010,7 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 	/**
 	 * Calculate a unique identifier for the contained objects
 	 * @link http://www.php.net/manual/en/splobjectstorage.gethash.php
-	 * @param object object <p>
+	 * @param object $object <p>
 	 * The object whose identifier is to be calculated.
 	 * </p>
 	 * @return string A string with the calculated identifier.
@@ -7009,7 +7062,7 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 	/**
 	 * Unserializes a storage from its string representation
 	 * @link http://www.php.net/manual/en/splobjectstorage.unserialize.php
-	 * @param serialized string <p>
+	 * @param string $serialized <p>
 	 * The serialized representation of a storage.
 	 * </p>
 	 * @return void 
@@ -7026,7 +7079,7 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 	/**
 	 * Checks whether an object exists in the storage
 	 * @link http://www.php.net/manual/en/splobjectstorage.offsetexists.php
-	 * @param object object <p>
+	 * @param object $object <p>
 	 * The object to look for.
 	 * </p>
 	 * @return bool true if the object exists in the storage,
@@ -7037,10 +7090,10 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 	/**
 	 * Associates data to an object in the storage
 	 * @link http://www.php.net/manual/en/splobjectstorage.offsetset.php
-	 * @param object object <p>
+	 * @param object $object <p>
 	 * The object to associate data with.
 	 * </p>
-	 * @param data mixed[optional] <p>
+	 * @param mixed $data [optional] <p>
 	 * The data to associate with the object.
 	 * </p>
 	 * @return void 
@@ -7050,7 +7103,7 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 	/**
 	 * Removes an object from the storage
 	 * @link http://www.php.net/manual/en/splobjectstorage.offsetunset.php
-	 * @param object object <p>
+	 * @param object $object <p>
 	 * The object to remove.
 	 * </p>
 	 * @return void 
@@ -7060,7 +7113,7 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 	/**
 	 * Returns the data associated with an <type>object</type>
 	 * @link http://www.php.net/manual/en/splobjectstorage.offsetget.php
-	 * @param object object <p>
+	 * @param object $object <p>
 	 * The object to look for.
 	 * </p>
 	 * @return mixed The data previously associated with the object in the storage.
@@ -7079,7 +7132,7 @@ class MultipleIterator implements Iterator, Traversable {
 	/**
 	 * Constructs a new MultipleIterator
 	 * @link http://www.php.net/manual/en/multipleiterator.construct.php
-	 * @param flags
+	 * @param $flags
 	 */
 	public function __construct ($flags) {}
 
@@ -7093,7 +7146,7 @@ class MultipleIterator implements Iterator, Traversable {
 	/**
 	 * Sets flags
 	 * @link http://www.php.net/manual/en/multipleiterator.setflags.php
-	 * @param flags int <p>
+	 * @param int $flags <p>
 	 * The flags to set, according to the
 	 * Flag Constants
 	 * </p>
@@ -7104,10 +7157,10 @@ class MultipleIterator implements Iterator, Traversable {
 	/**
 	 * Attaches iterator information
 	 * @link http://www.php.net/manual/en/multipleiterator.attachiterator.php
-	 * @param iterator Iterator <p>
+	 * @param Iterator $iterator <p>
 	 * The new iterator to attach.
 	 * </p>
-	 * @param infos string[optional] <p>
+	 * @param string $infos [optional] <p>
 	 * The associative information for the Iterator, which must be an
 	 * integer, a string, or &null;. 
 	 * </p>
@@ -7118,7 +7171,7 @@ class MultipleIterator implements Iterator, Traversable {
 	/**
 	 * Detaches an iterator
 	 * @link http://www.php.net/manual/en/multipleiterator.detachiterator.php
-	 * @param iterator Iterator <p>
+	 * @param Iterator $iterator <p>
 	 * The iterator to detach.
 	 * </p>
 	 * @return void 
@@ -7128,7 +7181,7 @@ class MultipleIterator implements Iterator, Traversable {
 	/**
 	 * Checks if an iterator is attached
 	 * @link http://www.php.net/manual/en/multipleiterator.containsiterator.php
-	 * @param iterator Iterator <p>
+	 * @param Iterator $iterator <p>
 	 * The iterator to check.
 	 * </p>
 	 * @return void true on success or false on failure
@@ -7192,10 +7245,10 @@ function spl_classes () {}
 /**
  * Default implementation for __autoload()
  * @link http://www.php.net/manual/en/function.spl-autoload.php
- * @param class_name string <p>
+ * @param string $class_name <p>
  * The lowercased name of the class (and namespace) being instantiated.
  * </p>
- * @param file_extensions string[optional] <p>
+ * @param string $file_extensions [optional] <p>
  * By default it checks all include paths to
  * contain filenames built up by the lowercase class name appended by the
  * filename extensions .inc and .php. 
@@ -7207,7 +7260,7 @@ function spl_autoload ($class_name, $file_extensions = null) {}
 /**
  * Register and return default file extensions for spl_autoload
  * @link http://www.php.net/manual/en/function.spl-autoload-extensions.php
- * @param file_extensions string[optional] <p>
+ * @param string $file_extensions [optional] <p>
  * When calling without an argument, it simply returns the current list
  * of extensions each separated by comma. To modify the list of file
  * extensions, simply invoke the functions with the new list of file
@@ -7222,18 +7275,18 @@ function spl_autoload_extensions ($file_extensions = null) {}
 /**
  * Register given function as __autoload() implementation
  * @link http://www.php.net/manual/en/function.spl-autoload-register.php
- * @param autoload_function callable[optional] <p>
+ * @param callable $autoload_function [optional] <p>
  * The autoload function being registered.
  * If no parameter is provided, then the default implementation of
  * spl_autoload will be registered. 
  * </p>
- * @param throw bool[optional] <p>
+ * @param bool $throw [optional] <p>
  * This parameter specifies whether
  * spl_autoload_register should throw 
  * exceptions when the autoload_function
  * cannot be registered.
  * </p>
- * @param prepend bool[optional] <p>
+ * @param bool $prepend [optional] <p>
  * If true, spl_autoload_register will prepend
  * the autoloader on the autoload queue instead of appending it.
  * </p>
@@ -7244,7 +7297,7 @@ function spl_autoload_register ($autoload_function = null, $throw = null, $prepe
 /**
  * Unregister given function as __autoload() implementation
  * @link http://www.php.net/manual/en/function.spl-autoload-unregister.php
- * @param autoload_function mixed <p>
+ * @param mixed $autoload_function <p>
  * The autoload function being unregistered.
  * </p>
  * @return bool true on success or false on failure
@@ -7263,7 +7316,7 @@ function spl_autoload_functions () {}
 /**
  * Try all registered __autoload() function to load the requested class
  * @link http://www.php.net/manual/en/function.spl-autoload-call.php
- * @param class_name string <p>
+ * @param string $class_name <p>
  * The class name being searched.
  * </p>
  * @return void 
@@ -7273,10 +7326,10 @@ function spl_autoload_call ($class_name) {}
 /**
  * Return the parent classes of the given class
  * @link http://www.php.net/manual/en/function.class-parents.php
- * @param class mixed <p>
+ * @param mixed $class <p>
  * An object (class instance) or a string (class name).
  * </p>
- * @param autoload bool[optional] <p>
+ * @param bool $autoload [optional] <p>
  * Whether to allow this function to load the class automatically through
  * the __autoload magic method.
  * </p>
@@ -7285,12 +7338,12 @@ function spl_autoload_call ($class_name) {}
 function class_parents ($class, $autoload = null) {}
 
 /**
- * Return the interfaces which are implemented by the given class
+ * Return the interfaces which are implemented by the given class or interface
  * @link http://www.php.net/manual/en/function.class-implements.php
- * @param class mixed <p>
- * An object (class instance) or a string (class name).
+ * @param mixed $class <p>
+ * An object (class instance) or a string (class or interface name).
  * </p>
- * @param autoload bool[optional] <p>
+ * @param bool $autoload [optional] <p>
  * Whether to allow this function to load the class automatically through
  * the __autoload magic method.
  * </p>
@@ -7301,10 +7354,10 @@ function class_implements ($class, $autoload = null) {}
 /**
  * Return the traits used by the given class
  * @link http://www.php.net/manual/en/function.class-uses.php
- * @param class mixed <p>
+ * @param mixed $class <p>
  * An object (class instance) or a string (class name).
  * </p>
- * @param autoload bool[optional] <p>
+ * @param bool $autoload [optional] <p>
  * Whether to allow this function to load the class automatically through
  * the __autoload magic method.
  * </p>
@@ -7315,7 +7368,7 @@ function class_uses ($class, $autoload = null) {}
 /**
  * Return hash id for given object
  * @link http://www.php.net/manual/en/function.spl-object-hash.php
- * @param obj object 
+ * @param object $obj 
  * @return string A string that is unique for each currently existing object and is always
  * the same for each object.
  */
@@ -7324,10 +7377,10 @@ function spl_object_hash ($obj) {}
 /**
  * Copy the iterator into an array
  * @link http://www.php.net/manual/en/function.iterator-to-array.php
- * @param iterator Traversable <p>
+ * @param Traversable $iterator <p>
  * The iterator being copied.
  * </p>
- * @param use_keys bool[optional] <p>
+ * @param bool $use_keys [optional] <p>
  * Whether to use the iterator element keys as index.
  * </p>
  * <p>
@@ -7346,7 +7399,7 @@ function iterator_to_array ($iterator, $use_keys = null) {}
 /**
  * Count the elements in an iterator
  * @link http://www.php.net/manual/en/function.iterator-count.php
- * @param iterator Traversable <p>
+ * @param Traversable $iterator <p>
  * The iterator being counted.
  * </p>
  * @return int The number of elements in iterator.
@@ -7356,19 +7409,19 @@ function iterator_count ($iterator) {}
 /**
  * Call a function for every element in an iterator
  * @link http://www.php.net/manual/en/function.iterator-apply.php
- * @param iterator Traversable <p>
+ * @param Traversable $iterator <p>
  * The class to iterate over.
  * </p>
- * @param function callable <p>
+ * @param callable $function <p>
  * The callback function to call on every element.
  * The function must return true in order to
  * continue iterating over the iterator.
  * </p>
- * @param args array[optional] <p>
+ * @param array $args [optional] <p>
  * Arguments to pass to the callback function.
  * </p>
  * @return int the iteration count.
  */
 function iterator_apply ($iterator, $function, array $args = null) {}
 
-// End of SPL v.0.2
+// End of SPL v.7.0.0-dev
