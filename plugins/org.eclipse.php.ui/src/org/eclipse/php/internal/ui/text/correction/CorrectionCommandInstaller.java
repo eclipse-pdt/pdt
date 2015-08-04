@@ -44,8 +44,8 @@ public class CorrectionCommandInstaller {
 							"Command ID already registered: " + commandId); //$NON-NLS-1$
 					continue;
 				}
-				fActivations.put(commandId,
-						handlerService.activateHandler(commandId, new CorrectionCommandHandler()));
+				fActivations.put(commandId, handlerService.activateHandler(
+						commandId, new CorrectionCommandHandler()));
 			}
 		}
 
@@ -54,7 +54,9 @@ public class CorrectionCommandInstaller {
 	public static void unregisterCommands() {
 		final IHandlerService handlerService = (IHandlerService) PlatformUI
 				.getWorkbench().getService(IHandlerService.class);
-		handlerService.deactivateHandlers(fActivations.values());
+		if (handlerService != null) {
+			handlerService.deactivateHandlers(fActivations.values());
+		}
 		fActivations.clear();
 	}
 }
