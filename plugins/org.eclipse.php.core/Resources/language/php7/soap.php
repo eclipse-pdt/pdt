@@ -1,22 +1,22 @@
 <?php
 
-// Start of soap v.
+// Start of soap v.7.0.0-dev
 
 class SoapClient  {
 
 	/**
 	 * SoapClient constructor
 	 * @link http://www.php.net/manual/en/soapclient.soapclient.php
-	 * @param wsdl
-	 * @param options[optional]
+	 * @param $wsdl
+	 * @param $options [optional]
 	 */
 	public function SoapClient ($wsdl, $options = null) {}
 
 	/**
 	 * Calls a SOAP function (deprecated)
 	 * @link http://www.php.net/manual/en/soapclient.call.php
-	 * @param function_name string 
-	 * @param arguments string 
+	 * @param string $function_name 
+	 * @param string $arguments 
 	 * @return mixed 
 	 */
 	public function __call ($function_name, $arguments) {}
@@ -24,16 +24,16 @@ class SoapClient  {
 	/**
 	 * Calls a SOAP function
 	 * @link http://www.php.net/manual/en/soapclient.soapcall.php
-	 * @param function_name string <p>
+	 * @param string $function_name <p>
 	 * The name of the SOAP function to call.
 	 * </p>
-	 * @param arguments array <p>
+	 * @param array $arguments <p>
 	 * An array of the arguments to pass to the function. This can be either
 	 * an ordered or an associative array. Note that most SOAP servers require
 	 * parameter names to be provided, in which case this must be an
 	 * associative array.
 	 * </p>
-	 * @param options array[optional] <p>
+	 * @param array $options [optional] <p>
 	 * An associative array of options to pass to the client.
 	 * </p>
 	 * <p>
@@ -45,10 +45,10 @@ class SoapClient  {
 	 * <p>
 	 * The soapaction option is the action to call.
 	 * </p>
-	 * @param input_headers mixed[optional] <p>
+	 * @param mixed $input_headers [optional] <p>
 	 * An array of headers to be sent along with the SOAP request.
 	 * </p>
-	 * @param output_headers array[optional] <p>
+	 * @param array $output_headers [optional] <p>
 	 * If supplied, this array will be filled with the headers from the SOAP response.
 	 * </p>
 	 * @return mixed SOAP functions may return one, or multiple values. If only one value is returned
@@ -109,19 +109,19 @@ class SoapClient  {
 	/**
 	 * Performs a SOAP request
 	 * @link http://www.php.net/manual/en/soapclient.dorequest.php
-	 * @param request string <p>
+	 * @param string $request <p>
 	 * The XML SOAP request.
 	 * </p>
-	 * @param location string <p>
+	 * @param string $location <p>
 	 * The URL to request.
 	 * </p>
-	 * @param action string <p>
+	 * @param string $action <p>
 	 * The SOAP action.
 	 * </p>
-	 * @param version int <p>
+	 * @param int $version <p>
 	 * The SOAP version.
 	 * </p>
-	 * @param one_way int[optional] <p>
+	 * @param int $one_way [optional] <p>
 	 * If one_way is set to 1, this method returns nothing. 
 	 * Use this where a response is not expected.
 	 * </p>
@@ -132,10 +132,10 @@ class SoapClient  {
 	/**
 	 * The __setCookie purpose
 	 * @link http://www.php.net/manual/en/soapclient.setcookie.php
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The name of the cookie.
 	 * </p>
-	 * @param value string[optional] <p>
+	 * @param string $value [optional] <p>
 	 * The value of the cookie. If not specified, the cookie will be deleted.
 	 * </p>
 	 * @return void 
@@ -147,7 +147,7 @@ class SoapClient  {
 	/**
 	 * Sets the location of the Web service to use
 	 * @link http://www.php.net/manual/en/soapclient.setlocation.php
-	 * @param new_location string[optional] <p>
+	 * @param string $new_location [optional] <p>
 	 * The new endpoint URL.
 	 * </p>
 	 * @return string The old endpoint URL.
@@ -157,7 +157,7 @@ class SoapClient  {
 	/**
 	 * Sets SOAP headers for subsequent calls
 	 * @link http://www.php.net/manual/en/soapclient.setsoapheaders.php
-	 * @param soapheaders mixed[optional] <p>
+	 * @param mixed $soapheaders [optional] <p>
 	 * The headers to be set. It could be SoapHeader
 	 * object or array of SoapHeader objects.
 	 * If not specified or set to &null;, the headers will be deleted.
@@ -173,12 +173,12 @@ class SoapVar  {
 	/**
 	 * SoapVar constructor
 	 * @link http://www.php.net/manual/en/soapvar.soapvar.php
-	 * @param data
-	 * @param encoding
-	 * @param type_name[optional]
-	 * @param type_namespace[optional]
-	 * @param node_name[optional]
-	 * @param node_namespace[optional]
+	 * @param $data
+	 * @param $encoding
+	 * @param $type_name [optional]
+	 * @param $type_namespace [optional]
+	 * @param $node_name [optional]
+	 * @param $node_namespace [optional]
 	 */
 	public function SoapVar ($data, $encoding, $type_name = null, $type_namespace = null, $node_name = null, $node_namespace = null) {}
 
@@ -189,15 +189,15 @@ class SoapServer  {
 	/**
 	 * SoapServer constructor
 	 * @link http://www.php.net/manual/en/soapserver.soapserver.php
-	 * @param wsdl
-	 * @param options[optional]
+	 * @param $wsdl
+	 * @param $options [optional]
 	 */
 	public function SoapServer ($wsdl, $options = null) {}
 
 	/**
 	 * Sets SoapServer persistence mode
 	 * @link http://www.php.net/manual/en/soapserver.setpersistence.php
-	 * @param mode int <p>
+	 * @param int $mode <p>
 	 * One of the SOAP_PERSISTENCE_XXX constants.
 	 * </p>
 	 * <p>
@@ -218,14 +218,14 @@ class SoapServer  {
 	/**
 	 * Sets the class which handles SOAP requests
 	 * @link http://www.php.net/manual/en/soapserver.setclass.php
-	 * @param class_name string <p>
+	 * @param string $class_name <p>
 	 * The name of the exported class.
 	 * </p>
-	 * @param args mixed[optional] <p>
+	 * @param mixed $args [optional] <p>
 	 * These optional parameters will be passed to the default class constructor
 	 * during object creation. 
 	 * </p>
-	 * @param _ mixed[optional] 
+	 * @param mixed $_ [optional] 
 	 * @return void 
 	 */
 	public function setClass ($class_name, $args = null, $_ = null) {}
@@ -233,7 +233,7 @@ class SoapServer  {
 	/**
 	 * Sets the object which will be used to handle SOAP requests
 	 * @link http://www.php.net/manual/en/soapserver.setobject.php
-	 * @param object object <p>
+	 * @param object $object <p>
 	 * The object to handle the requests.
 	 * </p>
 	 * @return void 
@@ -243,7 +243,7 @@ class SoapServer  {
 	/**
 	 * Adds one or more functions to handle SOAP requests
 	 * @link http://www.php.net/manual/en/soapserver.addfunction.php
-	 * @param functions mixed <p>
+	 * @param mixed $functions <p>
 	 * To export one function, pass the function name into this parameter as
 	 * a string.
 	 * </p>
@@ -273,7 +273,7 @@ class SoapServer  {
 	/**
 	 * Handles a SOAP request
 	 * @link http://www.php.net/manual/en/soapserver.handle.php
-	 * @param soap_request string[optional] <p>
+	 * @param string $soap_request [optional] <p>
 	 * The SOAP request. If this argument is omitted, the request is assumed to be
 	 * in the raw POST data of the HTTP request.
 	 * </p>
@@ -284,19 +284,19 @@ class SoapServer  {
 	/**
 	 * Issue SoapServer fault indicating an error
 	 * @link http://www.php.net/manual/en/soapserver.fault.php
-	 * @param code string <p>
+	 * @param string $code <p>
 	 * The error code to return
 	 * </p>
-	 * @param string string <p>
+	 * @param string $string <p>
 	 * A brief description of the error
 	 * </p>
-	 * @param actor string[optional] <p>
+	 * @param string $actor [optional] <p>
 	 * A string identifying the actor that caused the fault.
 	 * </p>
-	 * @param details string[optional] <p>
+	 * @param string $details [optional] <p>
 	 * More details of the fault
 	 * </p>
-	 * @param name string[optional] <p>
+	 * @param string $name [optional] <p>
 	 * The name of the fault. This can be used to select a name from a WSDL file.
 	 * </p>
 	 * @return void 
@@ -306,7 +306,7 @@ class SoapServer  {
 	/**
 	 * Add a SOAP header to the response
 	 * @link http://www.php.net/manual/en/soapserver.addsoapheader.php
-	 * @param object SoapHeader <p>
+	 * @param SoapHeader $object <p>
 	 * The header to be returned.
 	 * </p>
 	 * @return void 
@@ -315,7 +315,7 @@ class SoapServer  {
 
 }
 
-class SoapFault extends Exception  {
+class SoapFault extends Exception implements Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -325,12 +325,12 @@ class SoapFault extends Exception  {
 	/**
 	 * SoapFault constructor
 	 * @link http://www.php.net/manual/en/soapfault.soapfault.php
-	 * @param faultcode
-	 * @param faultstring
-	 * @param faultactor[optional]
-	 * @param detail[optional]
-	 * @param faultname[optional]
-	 * @param headerfault[optional]
+	 * @param $faultcode
+	 * @param $faultstring
+	 * @param $faultactor [optional]
+	 * @param $detail [optional]
+	 * @param $faultname [optional]
+	 * @param $headerfault [optional]
 	 */
 	public function SoapFault ($faultcode, $faultstring, $faultactor = null, $detail = null, $faultname = null, $headerfault = null) {}
 
@@ -342,6 +342,8 @@ class SoapFault extends Exception  {
 	public function __toString () {}
 
 	final private function __clone () {}
+
+	public function __wakeup () {}
 
 	final public function getMessage () {}
 
@@ -364,8 +366,8 @@ class SoapParam  {
 	/**
 	 * SoapParam constructor
 	 * @link http://www.php.net/manual/en/soapparam.soapparam.php
-	 * @param data
-	 * @param name
+	 * @param $data
+	 * @param $name
 	 */
 	public function SoapParam ($data, $name) {}
 
@@ -376,11 +378,11 @@ class SoapHeader  {
 	/**
 	 * SoapHeader constructor
 	 * @link http://www.php.net/manual/en/soapheader.soapheader.php
-	 * @param namespace
-	 * @param name
-	 * @param data[optional]
-	 * @param mustunderstand[optional]
-	 * @param actor[optional]
+	 * @param $namespace
+	 * @param $name
+	 * @param $data [optional]
+	 * @param $mustunderstand [optional]
+	 * @param $actor [optional]
 	 */
 	public function SoapHeader ($namespace, $name, $data = null, $mustunderstand = null, $actor = null) {}
 
@@ -389,7 +391,7 @@ class SoapHeader  {
 /**
  * Set whether to use the SOAP error handler
  * @link http://www.php.net/manual/en/function.use-soap-error-handler.php
- * @param handler bool[optional] <p>
+ * @param bool $handler [optional] <p>
  * Set to true to send error details to clients.
  * </p>
  * @return bool the original value.
@@ -399,7 +401,7 @@ function use_soap_error_handler ($handler = null) {}
 /**
  * Checks if a SOAP call has failed
  * @link http://www.php.net/manual/en/function.is-soap-fault.php
- * @param object mixed <p>
+ * @param mixed $object <p>
  * The object to test.
  * </p>
  * @return bool This will return true on error, and false otherwise.
@@ -483,29 +485,9 @@ define ('WSDL_CACHE_NONE', 0);
 define ('WSDL_CACHE_DISK', 1);
 define ('WSDL_CACHE_MEMORY', 2);
 define ('WSDL_CACHE_BOTH', 3);
-
-/**
- * Since PHP 5.5.0.
- * @link http://www.php.net/manual/en/soap.constants.php
- */
 define ('SOAP_SSL_METHOD_TLS', 0);
-
-/**
- * Since PHP 5.5.0.
- * @link http://www.php.net/manual/en/soap.constants.php
- */
 define ('SOAP_SSL_METHOD_SSLv2', 1);
-
-/**
- * Since PHP 5.5.0.
- * @link http://www.php.net/manual/en/soap.constants.php
- */
 define ('SOAP_SSL_METHOD_SSLv3', 2);
-
-/**
- * Since PHP 5.5.0.
- * @link http://www.php.net/manual/en/soap.constants.php
- */
 define ('SOAP_SSL_METHOD_SSLv23', 3);
 
-// End of soap v.
+// End of soap v.7.0.0-dev

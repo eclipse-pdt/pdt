@@ -1,14 +1,14 @@
 <?php
 
-// Start of sysvmsg v.
+// Start of sysvmsg v.7.0.0-dev
 
 /**
  * Create or attach to a message queue
  * @link http://www.php.net/manual/en/function.msg-get-queue.php
- * @param key int <p>
+ * @param int $key <p>
  * Message queue numeric ID
  * </p>
- * @param perms int[optional] <p>
+ * @param int $perms [optional] <p>
  * Queue permissions. Default to 0666. If the message queue already
  * exists, the perms will be ignored.
  * </p>
@@ -19,13 +19,13 @@ function msg_get_queue ($key, $perms = null) {}
 /**
  * Send a message to a message queue
  * @link http://www.php.net/manual/en/function.msg-send.php
- * @param queue resource <p>
+ * @param resource $queue <p>
  * </p>
- * @param msgtype int <p>
+ * @param int $msgtype <p>
  * </p>
- * @param message mixed <p>
+ * @param mixed $message <p>
  * </p>
- * @param serialize bool[optional] <p>
+ * @param bool $serialize [optional] <p>
  * The optional serialize controls how the
  * message is sent. serialize
  * defaults to true which means that the message is
@@ -34,7 +34,7 @@ function msg_get_queue ($key, $perms = null) {}
  * other PHP scripts, or if you are using the WDDX serializer, to any WDDX
  * compatible client.
  * </p>
- * @param blocking bool[optional] <p>
+ * @param bool $blocking [optional] <p>
  * If the message is too large to fit in the queue, your script will wait
  * until another process reads messages from the queue and frees enough
  * space for your message to be sent.
@@ -46,7 +46,7 @@ function msg_get_queue ($key, $perms = null) {}
  * indicating that you should try to send your message again a little
  * later on.
  * </p>
- * @param errorcode int[optional] <p>
+ * @param int $errorcode [optional] <p>
  * </p>
  * @return bool true on success or false on failure
  * </p>
@@ -61,9 +61,9 @@ function msg_send ($queue, $msgtype, $message, $serialize = null, $blocking = nu
 /**
  * Receive a message from a message queue
  * @link http://www.php.net/manual/en/function.msg-receive.php
- * @param queue resource <p>
+ * @param resource $queue <p>
  * </p>
- * @param desiredmsgtype int <p>
+ * @param int $desiredmsgtype <p>
  * If desiredmsgtype is 0, the message from the front
  * of the queue is returned. If desiredmsgtype is
  * greater than 0, then the first message of that type is returned.
@@ -75,21 +75,21 @@ function msg_send ($queue, $msgtype, $message, $serialize = null, $blocking = nu
  * by specifying MSG_IPC_NOWAIT in the
  * flags parameter.
  * </p>
- * @param msgtype int <p>
+ * @param int $msgtype <p>
  * The type of the message that was received will be stored in this
  * parameter.
  * </p>
- * @param maxsize int <p>
+ * @param int $maxsize <p>
  * The maximum size of message to be accepted is specified by the
  * maxsize; if the message in the queue is larger
  * than this size the function will fail (unless you set
  * flags as described below).
  * </p>
- * @param message mixed <p>
+ * @param mixed $message <p>
  * The received message will be stored in message,
  * unless there were errors receiving the message.
  * </p>
- * @param unserialize bool[optional] <p>
+ * @param bool $unserialize [optional] <p>
  * If set to
  * true, the message is treated as though it was serialized using the
  * same mechanism as the session module. The message will be unserialized
@@ -101,7 +101,7 @@ function msg_send ($queue, $msgtype, $message, $serialize = null, $blocking = nu
  * If unserialize is false, the message will be
  * returned as a binary-safe string.
  * </p>
- * @param flags int[optional] <p>
+ * @param int $flags [optional] <p>
  * The optional flags allows you to pass flags to the
  * low-level msgrcv system call. It defaults to 0, but you may specify one
  * or more of the following values (by adding or ORing them together).
@@ -132,7 +132,7 @@ function msg_send ($queue, $msgtype, $message, $serialize = null, $blocking = nu
  * </tr>
  * </table>
  * </p>
- * @param errorcode int[optional] <p>
+ * @param int $errorcode [optional] <p>
  * If the function fails, the optional errorcode
  * will be set to the value of the system errno variable.
  * </p>
@@ -149,7 +149,7 @@ function msg_receive ($queue, $desiredmsgtype, &$msgtype, $maxsize, &$message, $
 /**
  * Destroy a message queue
  * @link http://www.php.net/manual/en/function.msg-remove-queue.php
- * @param queue resource <p>
+ * @param resource $queue <p>
  * Message queue resource handle
  * </p>
  * @return bool true on success or false on failure
@@ -159,7 +159,7 @@ function msg_remove_queue ($queue) {}
 /**
  * Returns information from the message queue data structure
  * @link http://www.php.net/manual/en/function.msg-stat-queue.php
- * @param queue resource <p>
+ * @param resource $queue <p>
  * Message queue resource handle
  * </p>
  * @return array The return value is an array whose keys and values have the following
@@ -235,10 +235,10 @@ function msg_stat_queue ($queue) {}
 /**
  * Set information in the message queue data structure
  * @link http://www.php.net/manual/en/function.msg-set-queue.php
- * @param queue resource <p>
+ * @param resource $queue <p>
  * Message queue resource handle
  * </p>
- * @param data array <p>
+ * @param array $data <p>
  * You specify the values you require by setting the value of the keys
  * that you require in the data array.
  * </p>
@@ -249,7 +249,7 @@ function msg_set_queue ($queue, array $data) {}
 /**
  * Check whether a message queue exists
  * @link http://www.php.net/manual/en/function.msg-queue-exists.php
- * @param key int <p>
+ * @param int $key <p>
  * Queue key.
  * </p>
  * @return bool true on success or false on failure
@@ -262,4 +262,4 @@ define ('MSG_ENOMSG', 42);
 define ('MSG_NOERROR', 2);
 define ('MSG_EXCEPT', 4);
 
-// End of sysvmsg v.
+// End of sysvmsg v.7.0.0-dev

@@ -1,19 +1,46 @@
 <?php
 
-// Start of Core v.5.6.0
+// Start of Core v.7.0.0-dev
 
 class stdClass  {
 }
 
+/**
+ * Interface to detect if a class is traversable using foreach.
+ * <p>Abstract base interface that cannot be implemented alone. Instead it must
+ * be implemented by either IteratorAggregate or
+ * Iterator.</p>
+ * <p>Internal (built-in) classes that implement this interface can be used in
+ * a foreach construct and do not need to implement
+ * IteratorAggregate or
+ * Iterator.</p>
+ * <p>This is an internal engine interface which cannot be implemented in PHP
+ * scripts. Either IteratorAggregate or
+ * Iterator must be used instead.
+ * When implementing an interface which extends Traversable, make sure to
+ * list IteratorAggregate or 
+ * Iterator before its name in the implements
+ * clause.</p>
+ * @link http://www.php.net/manual/en/class.traversable.php
+ */
 interface Traversable  {
 }
 
+/**
+ * Interface to create an external Iterator.
+ * @link http://www.php.net/manual/en/class.iteratoraggregate.php
+ */
 interface IteratorAggregate extends Traversable {
 
 	abstract public function getIterator () {}
 
 }
 
+/**
+ * Interface for external iterators or objects that can be iterated
+ * themselves internally.
+ * @link http://www.php.net/manual/en/class.iterator.php
+ */
 interface Iterator extends Traversable {
 
 	abstract public function current () {}
@@ -28,43 +55,96 @@ interface Iterator extends Traversable {
 
 }
 
+/**
+ * Interface to provide accessing objects as arrays.
+ * @link http://www.php.net/manual/en/class.arrayaccess.php
+ */
 interface ArrayAccess  {
 
 	/**
-	 * @param offset
+	 * @param $offset
 	 */
 	abstract public function offsetExists ($offset) {}
 
 	/**
-	 * @param offset
+	 * @param $offset
 	 */
 	abstract public function offsetGet ($offset) {}
 
 	/**
-	 * @param offset
-	 * @param value
+	 * @param $offset
+	 * @param $value
 	 */
 	abstract public function offsetSet ($offset, $value) {}
 
 	/**
-	 * @param offset
+	 * @param $offset
 	 */
 	abstract public function offsetUnset ($offset) {}
 
 }
 
+/**
+ * Interface for customized serializing.
+ * <p>Classes that implement this interface no longer support
+ * __sleep() and
+ * __wakeup(). The method serialize is
+ * called whenever an instance needs to be serialized. This does not invoke __destruct()
+ * or has any other side effect unless programmed inside the method. When the data is
+ * unserialized the class is known and the appropriate unserialize() method is called as
+ * a constructor instead of calling __construct(). If you need to execute the standard
+ * constructor you may do so in the method.</p>
+ * @link http://www.php.net/manual/en/class.serializable.php
+ */
 interface Serializable  {
 
 	abstract public function serialize () {}
 
 	/**
-	 * @param serialized
+	 * @param $serialized
 	 */
 	abstract public function unserialize ($serialized) {}
 
 }
 
-class Exception  {
+/**
+ * Throwable is the base interface for any object that
+ * can be thrown via a &throw; statement in PHP 7, including
+ * Error and Exception.
+ * <p>PHP classes cannot implement the Throwable
+ * interface directly, and must instead extend
+ * Exception.</p>
+ * @link http://www.php.net/manual/en/class.throwable.php
+ */
+interface Throwable  {
+
+	abstract public function getMessage () {}
+
+	abstract public function getCode () {}
+
+	abstract public function getFile () {}
+
+	abstract public function getLine () {}
+
+	abstract public function getTrace () {}
+
+	abstract public function getPrevious () {}
+
+	abstract public function getTraceAsString () {}
+
+	abstract public function __toString () {}
+
+}
+
+/**
+ * Exception is the base class for
+ * all Exceptions in PHP 5, and the base class for all user exceptions in PHP
+ * 7.
+ * <p>In PHP 7, Exception implements the
+ * Throwable interface.</p>
+ * @link http://www.php.net/manual/en/class.exception.php
+ */
+class Exception implements Throwable {
 	protected $message;
 	private $string;
 	protected $code;
@@ -77,11 +157,13 @@ class Exception  {
 	final private function __clone () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 * @param previous[optional]
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
 	 */
 	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
 
 	final public function getMessage () {}
 
@@ -101,7 +183,11 @@ class Exception  {
 
 }
 
-class ErrorException extends Exception  {
+/**
+ * An Error Exception.
+ * @link http://www.php.net/manual/en/class.errorexception.php
+ */
+class ErrorException extends Exception implements Throwable {
 	protected $message;
 	protected $code;
 	protected $file;
@@ -110,18 +196,20 @@ class ErrorException extends Exception  {
 
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 * @param severity[optional]
-	 * @param filename[optional]
-	 * @param lineno[optional]
-	 * @param previous[optional]
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $severity [optional]
+	 * @param $filename [optional]
+	 * @param $lineno [optional]
+	 * @param $previous [optional]
 	 */
 	public function __construct ($message = null, $code = null, $severity = null, $filename = null, $lineno = null, $previous = null) {}
 
 	final public function getSeverity () {}
 
 	final private function __clone () {}
+
+	public function __wakeup () {}
 
 	final public function getMessage () {}
 
@@ -141,25 +229,262 @@ class ErrorException extends Exception  {
 
 }
 
+/**
+ * Error is the base class for all
+ * internal PHP error exceptions.
+ * @link http://www.php.net/manual/en/class.error.php
+ */
+class Error implements Throwable {
+	protected $message;
+	private $string;
+	protected $code;
+	protected $file;
+	protected $line;
+	private $trace;
+	private $previous;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
+	 */
+	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+/**
+ * ParseError is thrown when an
+ * error occurs while parsing PHP code, such as when
+ * eval is called.
+ * @link http://www.php.net/manual/en/class.parseerror.php
+ */
+class ParseError extends Error implements Throwable {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
+	 */
+	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+/**
+ * TypeError is thrown when strict
+ * typing is enabled and an invalid argument is given to a function.
+ * @link http://www.php.net/manual/en/class.typeerror.php
+ */
+class TypeError extends Error implements Throwable {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
+	 */
+	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+/**
+ * ArithmeticError is thrown when
+ * an error occurs while performing mathematical operations. In PHP 7.0,
+ * these errors include attempting to perform a bitshift by a negative
+ * amount, and any call to intdiv that would result in a
+ * value outside the possible bounds of an integer.
+ * @link http://www.php.net/manual/en/class.arithmeticerror.php
+ */
+class ArithmeticError extends Error implements Throwable {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
+	 */
+	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+/**
+ * DivisionByZeroError is thrown
+ * when an attempt is made to divide a number by zero.
+ * @link http://www.php.net/manual/en/class.divisionbyzeroerror.php
+ */
+class DivisionByZeroError extends ArithmeticError implements Throwable {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
+	 */
+	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+/**
+ * Class used to represent anonymous
+ * functions.
+ * <p>Anonymous functions, implemented in PHP 5.3, yield objects of this type.
+ * This fact used to be considered an implementation detail, but it can now
+ * be relied upon. Starting with PHP 5.4, this class has methods that allow
+ * further control of the anonymous function after it has been created.</p>
+ * <p>Besides the methods listed here, this class also has an
+ * __invoke method. This is for consistency with other
+ * classes that implement calling
+ * magic, as this method is not used for calling the function.</p>
+ * @link http://www.php.net/manual/en/class.closure.php
+ */
 final class Closure  {
 
 	private function __construct () {}
 
 	/**
-	 * @param closure
-	 * @param newthis
-	 * @param newscope[optional]
+	 * @param $closure
+	 * @param $newthis
+	 * @param $newscope [optional]
 	 */
 	public static function bind ($closure, $newthis, $newscope = null) {}
 
 	/**
-	 * @param newthis
-	 * @param newscope[optional]
+	 * @param $newthis
+	 * @param $newscope [optional]
 	 */
 	public function bindTo ($newthis, $newscope = null) {}
 
+	/**
+	 * @param $newthis
+	 * @param $parameters [optional]
+	 */
+	public function call ($newthis, $parameters = null) {}
+
 }
 
+/**
+ * Generator objects are returned from generators.
+ * <p>Generator objects cannot be instantiated via
+ * new.</p>
+ * @link http://www.php.net/manual/en/class.generator.php
+ */
 final class Generator implements Iterator, Traversable {
 
 	public function rewind () {}
@@ -173,16 +498,54 @@ final class Generator implements Iterator, Traversable {
 	public function next () {}
 
 	/**
-	 * @param value
+	 * @param $value
 	 */
 	public function send ($value) {}
 
 	/**
-	 * @param exception
+	 * @param $exception
 	 */
 	public function throw ($exception) {}
 
+	public function getReturn () {}
+
 	public function __wakeup () {}
+
+}
+
+class ClosedGeneratorException extends Exception implements Throwable {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param $message [optional]
+	 * @param $code [optional]
+	 * @param $previous [optional]
+	 */
+	public function __construct ($message = null, $code = null, $previous = null) {}
+
+	public function __wakeup () {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
 
 }
 
@@ -204,7 +567,7 @@ function func_num_args () {}
 /**
  * Return an item from the argument list
  * @link http://www.php.net/manual/en/function.func-get-arg.php
- * @param arg_num int <p>
+ * @param int $arg_num <p>
  * The argument offset. Function arguments are counted starting from
  * zero.
  * </p>
@@ -223,7 +586,7 @@ function func_get_args () {}
 /**
  * Get string length
  * @link http://www.php.net/manual/en/function.strlen.php
- * @param string string <p>
+ * @param string $string <p>
  * The string being measured for length.
  * </p>
  * @return int The length of the string on success, 
@@ -234,10 +597,10 @@ function strlen ($string) {}
 /**
  * Binary safe string comparison
  * @link http://www.php.net/manual/en/function.strcmp.php
- * @param str1 string <p>
+ * @param string $str1 <p>
  * The first string.
  * </p>
- * @param str2 string <p>
+ * @param string $str2 <p>
  * The second string.
  * </p>
  * @return int &lt; 0 if str1 is less than
@@ -250,13 +613,13 @@ function strcmp ($str1, $str2) {}
 /**
  * Binary safe string comparison of the first n characters
  * @link http://www.php.net/manual/en/function.strncmp.php
- * @param str1 string <p>
+ * @param string $str1 <p>
  * The first string.
  * </p>
- * @param str2 string <p>
+ * @param string $str2 <p>
  * The second string.
  * </p>
- * @param len int <p>
+ * @param int $len <p>
  * Number of characters to use in the comparison.
  * </p>
  * @return int &lt; 0 if str1 is less than
@@ -269,10 +632,10 @@ function strncmp ($str1, $str2, $len) {}
 /**
  * Binary safe case-insensitive string comparison
  * @link http://www.php.net/manual/en/function.strcasecmp.php
- * @param str1 string <p>
+ * @param string $str1 <p>
  * The first string
  * </p>
- * @param str2 string <p>
+ * @param string $str2 <p>
  * The second string
  * </p>
  * @return int &lt; 0 if str1 is less than
@@ -285,13 +648,13 @@ function strcasecmp ($str1, $str2) {}
 /**
  * Binary safe case-insensitive string comparison of the first n characters
  * @link http://www.php.net/manual/en/function.strncasecmp.php
- * @param str1 string <p>
+ * @param string $str1 <p>
  * The first string.
  * </p>
- * @param str2 string <p>
+ * @param string $str2 <p>
  * The second string.
  * </p>
- * @param len int <p>
+ * @param int $len <p>
  * The length of strings to be used in the comparison.
  * </p>
  * @return int &lt; 0 if str1 is less than
@@ -303,7 +666,7 @@ function strncasecmp ($str1, $str2, $len) {}
 /**
  * Return the current key and value pair from an array and advance the array cursor
  * @link http://www.php.net/manual/en/function.each.php
- * @param array array <p>
+ * @param array $array <p>
  * The input array.
  * </p>
  * @return array the current key and value pair from the array
@@ -324,7 +687,7 @@ function each (array &$array) {}
 /**
  * Sets which PHP errors are reported
  * @link http://www.php.net/manual/en/function.error-reporting.php
- * @param level int[optional] <p>
+ * @param int $level [optional] <p>
  * The new error_reporting
  * level. It takes on either a bitmask, or named constants. Using named 
  * constants is strongly encouraged to ensure compatibility for future 
@@ -345,17 +708,20 @@ function error_reporting ($level = null) {}
 /**
  * Defines a named constant
  * @link http://www.php.net/manual/en/function.define.php
- * @param name string <p>
+ * @param string $name <p>
  * The name of the constant.
  * </p>
- * @param value mixed <p>
- * The value of the constant; only scalar and null values are allowed. 
- * Scalar values are integer, 
- * float, string or boolean values. It is 
- * possible to define resource constants, however it is not recommended 
- * and may cause unpredictable behavior.
+ * @param mixed $value <p>
+ * The value of the constant. In PHP 5, value must
+ * be a scalar value (integer,
+ * float, string, boolean, or
+ * &null;). In PHP 7, array values are also accepted.
  * </p>
- * @param case_insensitive bool[optional] <p>
+ * <p>
+ * While it is possible to define resource constants, it is
+ * not recommended and may cause unpredictable behavior.
+ * </p>
+ * @param bool $case_insensitive [optional] <p>
  * If set to true, the constant will be defined case-insensitive. 
  * The default behavior is case-sensitive; i.e. 
  * CONSTANT and Constant represent
@@ -371,7 +737,7 @@ function define ($name, $value, $case_insensitive = null) {}
 /**
  * Checks whether a given named constant exists
  * @link http://www.php.net/manual/en/function.defined.php
- * @param name string <p>
+ * @param string $name <p>
  * The constant name.
  * </p>
  * @return bool true if the named constant given by name
@@ -382,7 +748,7 @@ function defined ($name) {}
 /**
  * Returns the name of the class of an object
  * @link http://www.php.net/manual/en/function.get-class.php
- * @param object object[optional] <p>
+ * @param object $object [optional] <p>
  * The tested object. This parameter may be omitted when inside a class.
  * </p>
  * @return string the name of the class of which object is an
@@ -405,7 +771,7 @@ function get_called_class () {}
 /**
  * Retrieves the parent class name for object or class
  * @link http://www.php.net/manual/en/function.get-parent-class.php
- * @param object mixed[optional] <p>
+ * @param mixed $object [optional] <p>
  * The tested object or class name. This parameter is optional if called
  * from the object's method.
  * </p>
@@ -423,10 +789,10 @@ function get_parent_class ($object = null) {}
 /**
  * Checks if the class method exists
  * @link http://www.php.net/manual/en/function.method-exists.php
- * @param object mixed <p>
+ * @param mixed $object <p>
  * An object instance or a class name
  * </p>
- * @param method_name string <p>
+ * @param string $method_name <p>
  * The method name
  * </p>
  * @return bool true if the method given by method_name
@@ -438,10 +804,10 @@ function method_exists ($object, $method_name) {}
 /**
  * Checks if the object or class has a property
  * @link http://www.php.net/manual/en/function.property-exists.php
- * @param class mixed <p>
+ * @param mixed $class <p>
  * The class name or an object of the class to test for
  * </p>
- * @param property string <p>
+ * @param string $property <p>
  * The name of the property
  * </p>
  * @return bool true if the property exists, false if it doesn't exist or
@@ -452,10 +818,10 @@ function property_exists ($class, $property) {}
 /**
  * Checks if the class has been defined
  * @link http://www.php.net/manual/en/function.class-exists.php
- * @param class_name string <p>
+ * @param string $class_name <p>
  * The class name. The name is matched in a case-insensitive manner.
  * </p>
- * @param autoload bool[optional] <p>
+ * @param bool $autoload [optional] <p>
  * Whether or not to call &link.autoload; by default.
  * </p>
  * @return bool true if class_name is a defined class,
@@ -466,10 +832,10 @@ function class_exists ($class_name, $autoload = null) {}
 /**
  * Checks if the interface has been defined
  * @link http://www.php.net/manual/en/function.interface-exists.php
- * @param interface_name string <p>
+ * @param string $interface_name <p>
  * The interface name
  * </p>
- * @param autoload bool[optional] <p>
+ * @param bool $autoload [optional] <p>
  * Whether to call &link.autoload; or not by default.
  * </p>
  * @return bool true if the interface given by 
@@ -480,10 +846,10 @@ function interface_exists ($interface_name, $autoload = null) {}
 /**
  * Checks if the trait exists
  * @link http://www.php.net/manual/en/function.trait-exists.php
- * @param traitname string <p>
+ * @param string $traitname <p>
  * Name of the trait to check
  * </p>
- * @param autoload bool[optional] <p>
+ * @param bool $autoload [optional] <p>
  * Whether to autoload if not already loaded.
  * </p>
  * @return bool true if trait exists, false if not, &null; in case of an error.
@@ -493,7 +859,7 @@ function trait_exists ($traitname, $autoload = null) {}
 /**
  * Return true if the given function has been defined
  * @link http://www.php.net/manual/en/function.function-exists.php
- * @param function_name string <p>
+ * @param string $function_name <p>
  * The function name, as a string.
  * </p>
  * @return bool true if function_name exists and is a
@@ -508,13 +874,13 @@ function function_exists ($function_name) {}
 /**
  * Creates an alias for a class
  * @link http://www.php.net/manual/en/function.class-alias.php
- * @param original string <p>
+ * @param string $original <p>
  * The original class.
  * </p>
- * @param alias string <p>
+ * @param string $alias <p>
  * The alias name for the class.
  * </p>
- * @param autoload bool[optional] <p>
+ * @param bool $autoload [optional] <p>
  * Whether to autoload if the original class is not found.
  * </p>
  * @return bool true on success or false on failure
@@ -546,13 +912,13 @@ function get_required_files () {}
 /**
  * Checks if the object has this class as one of its parents
  * @link http://www.php.net/manual/en/function.is-subclass-of.php
- * @param object mixed <p>
+ * @param mixed $object <p>
  * A class name or an object instance. No error is generated if the class does not exist.
  * </p>
- * @param class_name string <p>
+ * @param string $class_name <p>
  * The class name
  * </p>
- * @param allow_string bool[optional] <p>
+ * @param bool $allow_string [optional] <p>
  * If this parameter set to false, string class name as object
  * is not allowed. This also prevents from calling autoloader if the class doesn't exist.
  * </p>
@@ -565,13 +931,13 @@ function is_subclass_of ($object, $class_name, $allow_string = null) {}
 /**
  * Checks if the object is of this class or has this class as one of its parents
  * @link http://www.php.net/manual/en/function.is-a.php
- * @param object object <p>
+ * @param object $object <p>
  * The tested object
  * </p>
- * @param class_name string <p>
+ * @param string $class_name <p>
  * The class name
  * </p>
- * @param allow_string bool[optional] <p>
+ * @param bool $allow_string [optional] <p>
  * If this parameter set to false, string class name as object
  * is not allowed. This also prevents from calling autoloader if the class doesn't exist.
  * </p>
@@ -583,7 +949,7 @@ function is_a ($object, $class_name, $allow_string = null) {}
 /**
  * Get the default properties of the class
  * @link http://www.php.net/manual/en/function.get-class-vars.php
- * @param class_name string <p>
+ * @param string $class_name <p>
  * The class name
  * </p>
  * @return array an associative array of declared properties visible from the
@@ -597,7 +963,7 @@ function get_class_vars ($class_name) {}
 /**
  * Gets the properties of the given object
  * @link http://www.php.net/manual/en/function.get-object-vars.php
- * @param object object <p>
+ * @param object $object <p>
  * An object instance.
  * </p>
  * @return array an associative array of defined object accessible non-static properties 
@@ -609,7 +975,7 @@ function get_object_vars ($object) {}
 /**
  * Gets the class methods' names
  * @link http://www.php.net/manual/en/function.get-class-methods.php
- * @param class_name mixed <p>
+ * @param mixed $class_name <p>
  * The class name or an object instance
  * </p>
  * @return array an array of method names defined for the class specified by
@@ -620,12 +986,12 @@ function get_class_methods ($class_name) {}
 /**
  * Generates a user-level error/warning/notice message
  * @link http://www.php.net/manual/en/function.trigger-error.php
- * @param error_msg string <p>
+ * @param string $error_msg <p>
  * The designated error message for this error. It's limited to 1024 
  * bytes in length. Any additional characters beyond 1024 bytes will be 
  * truncated.
  * </p>
- * @param error_type int[optional] <p>
+ * @param int $error_type [optional] <p>
  * The designated error type for this error. It only works with the E_USER
  * family of constants, and will default to E_USER_NOTICE.
  * </p>
@@ -637,15 +1003,15 @@ function trigger_error ($error_msg, $error_type = null) {}
 /**
  * Alias of <function>trigger_error</function>
  * @link http://www.php.net/manual/en/function.user-error.php
- * @param message
- * @param error_type[optional]
+ * @param $message
+ * @param $error_type [optional]
  */
 function user_error ($message, $error_type = null) {}
 
 /**
  * Sets a user-defined error handler function
  * @link http://www.php.net/manual/en/function.set-error-handler.php
- * @param error_handler callable <p>
+ * @param callable $error_handler <p>
  * A callback with the following signature.
  * &null; may be passed instead, to reset this handler to its default state.
  * Instead of a function name, an array containing an object reference 
@@ -661,7 +1027,7 @@ function user_error ($message, $error_type = null) {}
  * errno
  * The first parameter, errno, contains the
  * level of the error raised, as an integer.
- * @param error_types int[optional] <p>
+ * @param int $error_types [optional] <p>
  * Can be used to mask the triggering of the
  * error_handler function just like the error_reporting ini setting 
  * controls which errors are shown. Without this mask set the
@@ -686,7 +1052,7 @@ function restore_error_handler () {}
 /**
  * Sets a user-defined exception handler function
  * @link http://www.php.net/manual/en/function.set-exception-handler.php
- * @param exception_handler callable <p>
+ * @param callable $exception_handler <p>
  * Name of the function to be called when an uncaught exception occurs.
  * This handler function
  * needs to accept one parameter, which will be the exception object that
@@ -698,6 +1064,11 @@ function restore_error_handler () {}
  * </p>
  * <p>
  * &null; may be passed instead, to reset this handler to its default state.
+ * </p>
+ * <p>
+ * Note that providing an explicit Exception type
+ * hint for the ex parameter in your callback will
+ * cause issues with the changed exception hierarchy in PHP 7.
  * </p>
  * @return callable the name of the previously defined exception handler, or &null; on error. If
  * no previous handler was defined, &null; is also returned.
@@ -763,10 +1134,10 @@ function get_defined_vars () {}
 /**
  * Create an anonymous (lambda-style) function
  * @link http://www.php.net/manual/en/function.create-function.php
- * @param args string <p>
+ * @param string $args <p>
  * The function arguments.
  * </p>
- * @param code string <p>
+ * @param string $code <p>
  * The function code.
  * </p>
  * @return string a unique function name as a string, or false on error.
@@ -776,7 +1147,7 @@ function create_function ($args, $code) {}
 /**
  * Returns the resource type
  * @link http://www.php.net/manual/en/function.get-resource-type.php
- * @param handle resource <p>
+ * @param resource $handle <p>
  * The evaluated resource handle.
  * </p>
  * @return string If the given handle is a resource, this function
@@ -791,9 +1162,14 @@ function create_function ($args, $code) {}
 function get_resource_type ($handle) {}
 
 /**
+ * @param $type [optional]
+ */
+function get_resources ($type = null) {}
+
+/**
  * Returns an array with the names of all modules compiled and loaded
  * @link http://www.php.net/manual/en/function.get-loaded-extensions.php
- * @param zend_extensions bool[optional] <p>
+ * @param bool $zend_extensions [optional] <p>
  * Only return Zend extensions, if not then regular extensions, like 
  * mysqli are listed. Defaults to false (return regular extensions).
  * </p>
@@ -804,7 +1180,7 @@ function get_loaded_extensions ($zend_extensions = null) {}
 /**
  * Find out whether an extension is loaded
  * @link http://www.php.net/manual/en/function.extension-loaded.php
- * @param name string <p>
+ * @param string $name <p>
  * The extension name. This parameter is case-insensitive.
  * </p>
  * <p>
@@ -822,7 +1198,7 @@ function extension_loaded ($name) {}
 /**
  * Returns an array with the names of the functions of a module
  * @link http://www.php.net/manual/en/function.get-extension-funcs.php
- * @param module_name string <p>
+ * @param string $module_name <p>
  * The module name.
  * </p>
  * <p>
@@ -836,7 +1212,7 @@ function get_extension_funcs ($module_name) {}
 /**
  * Returns an associative array with the names of all the constants and their values
  * @link http://www.php.net/manual/en/function.get-defined-constants.php
- * @param categorize bool[optional] <p>
+ * @param bool $categorize [optional] <p>
  * Causing this function to return a multi-dimensional
  * array with categories in the keys of the first dimension and constants
  * and their values in the second dimension.
@@ -883,7 +1259,7 @@ function get_defined_constants ($categorize = null) {}
 /**
  * Generates a backtrace
  * @link http://www.php.net/manual/en/function.debug-backtrace.php
- * @param options int[optional] <p>
+ * @param int $options [optional] <p>
  * As of 5.3.6, this parameter is a bitmask for the following options:
  * <table>
  * debug_backtrace options
@@ -904,7 +1280,7 @@ function get_defined_constants ($categorize = null) {}
  * Before 5.3.6, the only values recognized are true or false, which are the same as 
  * setting or not setting the DEBUG_BACKTRACE_PROVIDE_OBJECT option respectively.
  * </p>
- * @param limit int[optional] <p>
+ * @param int $limit [optional] <p>
  * As of 5.4.0, this parameter can be used to limit the number of stack frames returned.
  * By default (limit=0) it returns all stack frames.
  * </p>
@@ -981,7 +1357,7 @@ function debug_backtrace ($options = null, $limit = null) {}
 /**
  * Prints a backtrace
  * @link http://www.php.net/manual/en/function.debug-print-backtrace.php
- * @param options int[optional] <p>
+ * @param int $options [optional] <p>
  * As of 5.3.6, this parameter is a bitmask for the following options:
  * <table>
  * debug_print_backtrace options
@@ -994,13 +1370,15 @@ function debug_backtrace ($options = null, $limit = null) {}
  * </tr>
  * </table>
  * </p>
- * @param limit int[optional] <p>
+ * @param int $limit [optional] <p>
  * As of 5.4.0, this parameter can be used to limit the number of stack frames printed.
  * By default (limit=0) it prints all stack frames.
  * </p>
  * @return void 
  */
 function debug_print_backtrace ($options = null, $limit = null) {}
+
+function gc_mem_caches () {}
 
 /**
  * Forces collection of any existing garbage cycles
@@ -1030,129 +1408,21 @@ function gc_enable () {}
  */
 function gc_disable () {}
 
-
-/**
- * Fatal run-time errors. These indicate errors that can not be
- * recovered from, such as a memory allocation problem.
- * Execution of the script is halted.
- * @link http://www.php.net/manual/en/errorfunc.constants.php
- */
 define ('E_ERROR', 1);
-
-/**
- * Catchable fatal error. It indicates that a probably dangerous error
- * occurred, but did not leave the Engine in an unstable state. If the error
- * is not caught by a user defined handle (see also
- * set_error_handler), the application aborts as it
- * was an E_ERROR.
- * @link http://www.php.net/manual/en/errorfunc.constants.php
- */
 define ('E_RECOVERABLE_ERROR', 4096);
-
-/**
- * Run-time warnings (non-fatal errors). Execution of the script is not
- * halted.
- * @link http://www.php.net/manual/en/errorfunc.constants.php
- */
 define ('E_WARNING', 2);
-
-/**
- * Compile-time parse errors. Parse errors should only be generated by
- * the parser.
- * @link http://www.php.net/manual/en/errorfunc.constants.php
- */
 define ('E_PARSE', 4);
-
-/**
- * Run-time notices. Indicate that the script encountered something that
- * could indicate an error, but could also happen in the normal course of
- * running a script.
- * @link http://www.php.net/manual/en/errorfunc.constants.php
- */
 define ('E_NOTICE', 8);
-
-/**
- * Enable to have PHP suggest changes
- * to your code which will ensure the best interoperability
- * and forward compatibility of your code.
- * @link http://www.php.net/manual/en/errorfunc.constants.php
- */
 define ('E_STRICT', 2048);
-
-/**
- * Run-time notices. Enable this to receive warnings about code
- * that will not work in future versions.
- * @link http://www.php.net/manual/en/errorfunc.constants.php
- */
 define ('E_DEPRECATED', 8192);
-
-/**
- * Fatal errors that occur during PHP's initial startup. This is like an
- * E_ERROR, except it is generated by the core of PHP.
- * @link http://www.php.net/manual/en/errorfunc.constants.php
- */
 define ('E_CORE_ERROR', 16);
-
-/**
- * Warnings (non-fatal errors) that occur during PHP's initial startup.
- * This is like an E_WARNING, except it is generated
- * by the core of PHP.
- * @link http://www.php.net/manual/en/errorfunc.constants.php
- */
 define ('E_CORE_WARNING', 32);
-
-/**
- * Fatal compile-time errors. This is like an E_ERROR,
- * except it is generated by the Zend Scripting Engine.
- * @link http://www.php.net/manual/en/errorfunc.constants.php
- */
 define ('E_COMPILE_ERROR', 64);
-
-/**
- * Compile-time warnings (non-fatal errors). This is like an
- * E_WARNING, except it is generated by the Zend
- * Scripting Engine.
- * @link http://www.php.net/manual/en/errorfunc.constants.php
- */
 define ('E_COMPILE_WARNING', 128);
-
-/**
- * User-generated error message. This is like an
- * E_ERROR, except it is generated in PHP code by
- * using the PHP function trigger_error.
- * @link http://www.php.net/manual/en/errorfunc.constants.php
- */
 define ('E_USER_ERROR', 256);
-
-/**
- * User-generated warning message. This is like an
- * E_WARNING, except it is generated in PHP code by
- * using the PHP function trigger_error.
- * @link http://www.php.net/manual/en/errorfunc.constants.php
- */
 define ('E_USER_WARNING', 512);
-
-/**
- * User-generated notice message. This is like an
- * E_NOTICE, except it is generated in PHP code by
- * using the PHP function trigger_error.
- * @link http://www.php.net/manual/en/errorfunc.constants.php
- */
 define ('E_USER_NOTICE', 1024);
-
-/**
- * User-generated warning message. This is like an
- * E_DEPRECATED, except it is generated in PHP code by
- * using the PHP function trigger_error.
- * @link http://www.php.net/manual/en/errorfunc.constants.php
- */
 define ('E_USER_DEPRECATED', 16384);
-
-/**
- * All errors and warnings, as supported, except of level
- * E_STRICT prior to PHP 5.4.0.
- * @link http://www.php.net/manual/en/errorfunc.constants.php
- */
 define ('E_ALL', 32767);
 define ('DEBUG_BACKTRACE_PROVIDE_OBJECT', 1);
 define ('DEBUG_BACKTRACE_IGNORE_ARGS', 2);
@@ -1161,161 +1431,46 @@ define ('FALSE', false);
 define ('ZEND_THREAD_SAFE', false);
 define ('ZEND_DEBUG_BUILD', false);
 define ('NULL', null);
-define ('PHP_VERSION', "5.6.0");
-define ('PHP_MAJOR_VERSION', 5);
-define ('PHP_MINOR_VERSION', 6);
+define ('PHP_VERSION', "7.0.0-dev");
+define ('PHP_MAJOR_VERSION', 7);
+define ('PHP_MINOR_VERSION', 0);
 define ('PHP_RELEASE_VERSION', 0);
-define ('PHP_EXTRA_VERSION', "");
-define ('PHP_VERSION_ID', 50600);
+define ('PHP_EXTRA_VERSION', "-dev");
+define ('PHP_VERSION_ID', 70000);
 define ('PHP_ZTS', 0);
 define ('PHP_DEBUG', 0);
 define ('PHP_OS', "Linux");
 define ('PHP_SAPI', "cli");
-define ('DEFAULT_INCLUDE_PATH', ".:/usr/local/zend/share/pear");
-define ('PEAR_INSTALL_DIR', "/usr/local/zend/share/pear");
-define ('PEAR_EXTENSION_DIR', "/usr/local/zend/lib/php/20131226");
-define ('PHP_EXTENSION_DIR', "/usr/local/zend/lib/php/20131226");
-define ('PHP_PREFIX', "/usr/local/zend");
-define ('PHP_BINDIR', "/usr/local/zend/bin");
-define ('PHP_MANDIR', "/usr/local/zend/man");
-define ('PHP_LIBDIR', "/usr/local/zend/lib/php");
-define ('PHP_DATADIR', "/usr/local/zend/share/php");
-define ('PHP_SYSCONFDIR', "/usr/local/zend/etc");
-define ('PHP_LOCALSTATEDIR', "/usr/local/zend/var");
-define ('PHP_CONFIG_FILE_PATH', "/usr/local/zend/etc");
-define ('PHP_CONFIG_FILE_SCAN_DIR', "/usr/local/zend/etc/conf.d");
+define ('DEFAULT_INCLUDE_PATH', ".:");
+define ('PEAR_INSTALL_DIR', "");
+define ('PEAR_EXTENSION_DIR', "/usr/local/php7/lib/php/extensions/no-debug-non-zts-20141001");
+define ('PHP_EXTENSION_DIR', "/usr/local/php7/lib/php/extensions/no-debug-non-zts-20141001");
+define ('PHP_PREFIX', "/usr/local/php7");
+define ('PHP_BINDIR', "/usr/local/php7/bin");
+define ('PHP_MANDIR', "/usr/local/php7/php/man");
+define ('PHP_LIBDIR', "/usr/local/php7/lib/php");
+define ('PHP_DATADIR', "/usr/local/php7/share/php");
+define ('PHP_SYSCONFDIR', "/usr/local/php7/etc");
+define ('PHP_LOCALSTATEDIR', "/usr/local/php7/var");
+define ('PHP_CONFIG_FILE_PATH', "/usr/local/php7/etc");
+define ('PHP_CONFIG_FILE_SCAN_DIR', "/usr/local/php7/etc/conf.d");
 define ('PHP_SHLIB_SUFFIX', "so");
 define ('PHP_EOL', "\n");
 define ('PHP_MAXPATHLEN', 4096);
 define ('PHP_INT_MAX', 9223372036854775807);
+define ('PHP_INT_MIN', -9223372036854775808);
 define ('PHP_INT_SIZE', 8);
-define ('PHP_BINARY', "/home/wywrzal/tmp/ZendStudio/plugins/com.zend.php.debug.debugger.php56.linux.x86_64_12.0.0.v20141006-0234/resources/php56/php");
-
-/**
- * <p>
- * Indicates that output buffering has begun.
- * </p>
- * @link http://www.php.net/manual/en/outcontrol.constants.php
- */
+define ('PHP_BINARY', "/usr/local/php7/bin/php");
 define ('PHP_OUTPUT_HANDLER_START', 1);
-
-/**
- * <p>
- * Indicates that the output buffer is being flushed, and had data to output.
- * </p>
- * <p>
- * Available since PHP 5.4.
- * </p>
- * @link http://www.php.net/manual/en/outcontrol.constants.php
- */
 define ('PHP_OUTPUT_HANDLER_WRITE', 0);
-
-/**
- * <p>
- * Indicates that the buffer has been flushed.
- * </p>
- * <p>
- * Available since PHP 5.4.
- * </p>
- * @link http://www.php.net/manual/en/outcontrol.constants.php
- */
 define ('PHP_OUTPUT_HANDLER_FLUSH', 4);
-
-/**
- * <p>
- * Indicates that the output buffer has been cleaned.
- * </p>
- * <p>
- * Available since PHP 5.4.
- * </p>
- * @link http://www.php.net/manual/en/outcontrol.constants.php
- */
 define ('PHP_OUTPUT_HANDLER_CLEAN', 2);
-
-/**
- * <p>
- * Indicates that this is the final output buffering operation.
- * </p>
- * <p>
- * Available since PHP 5.4.
- * </p>
- * @link http://www.php.net/manual/en/outcontrol.constants.php
- */
 define ('PHP_OUTPUT_HANDLER_FINAL', 8);
-
-/**
- * <p>
- * Indicates that the buffer has been flushed, but output buffering will
- * continue.
- * </p>
- * <p>
- * As of PHP 5.4, this is an alias for
- * PHP_OUTPUT_HANDLER_WRITE.
- * </p>
- * @link http://www.php.net/manual/en/outcontrol.constants.php
- */
 define ('PHP_OUTPUT_HANDLER_CONT', 0);
-
-/**
- * <p>
- * Indicates that output buffering has ended.
- * </p>
- * <p>
- * As of PHP 5.4, this is an alias for
- * PHP_OUTPUT_HANDLER_FINAL.
- * </p>
- * @link http://www.php.net/manual/en/outcontrol.constants.php
- */
 define ('PHP_OUTPUT_HANDLER_END', 8);
-
-/**
- * <p>
- * Controls whether an output buffer created by
- * ob_start can be cleaned.
- * </p>
- * <p>
- * Available since PHP 5.4.
- * </p>
- * @link http://www.php.net/manual/en/outcontrol.constants.php
- */
 define ('PHP_OUTPUT_HANDLER_CLEANABLE', 16);
-
-/**
- * <p>
- * Controls whether an output buffer created by
- * ob_start can be flushed.
- * </p>
- * <p>
- * Available since PHP 5.4.
- * </p>
- * @link http://www.php.net/manual/en/outcontrol.constants.php
- */
 define ('PHP_OUTPUT_HANDLER_FLUSHABLE', 32);
-
-/**
- * <p>
- * Controls whether an output buffer created by
- * ob_start can be removed before the end of the script.
- * </p>
- * <p>
- * Available since PHP 5.4.
- * </p>
- * @link http://www.php.net/manual/en/outcontrol.constants.php
- */
 define ('PHP_OUTPUT_HANDLER_REMOVABLE', 64);
-
-/**
- * <p>
- * The default set of output buffer flags; currently equivalent to
- * PHP_OUTPUT_HANDLER_CLEANABLE |
- * PHP_OUTPUT_HANDLER_FLUSHABLE |
- * PHP_OUTPUT_HANDLER_REMOVABLE.
- * </p>
- * <p>
- * Available since PHP 5.4.
- * </p>
- * @link http://www.php.net/manual/en/outcontrol.constants.php
- */
 define ('PHP_OUTPUT_HANDLER_STDFLAGS', 112);
 define ('PHP_OUTPUT_HANDLER_STARTED', 4096);
 define ('PHP_OUTPUT_HANDLER_DISABLED', 8192);
@@ -1327,9 +1482,8 @@ define ('UPLOAD_ERR_NO_FILE', 4);
 define ('UPLOAD_ERR_NO_TMP_DIR', 6);
 define ('UPLOAD_ERR_CANT_WRITE', 7);
 define ('UPLOAD_ERR_EXTENSION', 8);
-define ('DEBUGGER_VERSION', "6.0.0");
 define ('STDIN', "Resource id #1");
 define ('STDOUT', "Resource id #2");
 define ('STDERR', "Resource id #3");
 
-// End of Core v.5.6.0
+// End of Core v.7.0.0-dev

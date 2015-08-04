@@ -1,6 +1,6 @@
 <?php
 
-// Start of xmlreader v.0.1
+// Start of xmlreader v.7.0.0-dev
 
 class XMLReader  {
 	const NONE = 0;
@@ -37,7 +37,7 @@ class XMLReader  {
 	/**
 	 * Get the value of a named attribute
 	 * @link http://www.php.net/manual/en/xmlreader.getattribute.php
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The name of the attribute.
 	 * </p>
 	 * @return string The value of the attribute, or &null; if no attribute with the given
@@ -48,7 +48,7 @@ class XMLReader  {
 	/**
 	 * Get the value of an attribute by index
 	 * @link http://www.php.net/manual/en/xmlreader.getattributeno.php
-	 * @param index int <p>
+	 * @param int $index <p>
 	 * The position of the attribute.
 	 * </p>
 	 * @return string The value of the attribute, or an empty string (before PHP 5.6) or &null;
@@ -60,10 +60,10 @@ class XMLReader  {
 	/**
 	 * Get the value of an attribute by localname and URI
 	 * @link http://www.php.net/manual/en/xmlreader.getattributens.php
-	 * @param localName string <p>
+	 * @param string $localName <p>
 	 * The local name.
 	 * </p>
-	 * @param namespaceURI string <p>
+	 * @param string $namespaceURI <p>
 	 * The namespace URI.
 	 * </p>
 	 * @return string The value of the attribute, or an empty string (before PHP 5.6) or &null;
@@ -76,7 +76,7 @@ class XMLReader  {
 	/**
 	 * Indicates if specified property has been set
 	 * @link http://www.php.net/manual/en/xmlreader.getparserproperty.php
-	 * @param property int <p>
+	 * @param int $property <p>
 	 * One of the parser option 
 	 * constants.
 	 * </p>
@@ -94,17 +94,17 @@ class XMLReader  {
 	/**
 	 * Lookup namespace for a prefix
 	 * @link http://www.php.net/manual/en/xmlreader.lookupnamespace.php
-	 * @param prefix string <p>
+	 * @param string $prefix <p>
 	 * String containing the prefix.
 	 * </p>
-	 * @return bool true on success or false on failure
+	 * @return string true on success or false on failure
 	 */
 	public function lookupNamespace ($prefix) {}
 
 	/**
 	 * Move cursor to an attribute by index
 	 * @link http://www.php.net/manual/en/xmlreader.movetoattributeno.php
-	 * @param index int <p>
+	 * @param int $index <p>
 	 * The position of the attribute.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -114,7 +114,7 @@ class XMLReader  {
 	/**
 	 * Move cursor to a named attribute
 	 * @link http://www.php.net/manual/en/xmlreader.movetoattribute.php
-	 * @param name string <p>
+	 * @param string $name <p>
 	 * The name of the attribute.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -124,10 +124,10 @@ class XMLReader  {
 	/**
 	 * Move cursor to a named attribute
 	 * @link http://www.php.net/manual/en/xmlreader.movetoattributens.php
-	 * @param localName string <p>
+	 * @param string $localName <p>
 	 * The local name.
 	 * </p>
-	 * @param namespaceURI string <p>
+	 * @param string $namespaceURI <p>
 	 * The namespace URI.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -159,13 +159,13 @@ class XMLReader  {
 	/**
 	 * Set the URI containing the XML to parse
 	 * @link http://www.php.net/manual/en/xmlreader.open.php
-	 * @param URI string <p>
+	 * @param string $URI <p>
 	 * URI pointing to the document.
 	 * </p>
-	 * @param encoding string[optional] <p>
+	 * @param string $encoding [optional] <p>
 	 * The document encoding or &null;.
 	 * </p>
-	 * @param options int[optional] <p>
+	 * @param int $options [optional] <p>
 	 * A bitmask of the LIBXML_* 
 	 * constants.
 	 * </p>
@@ -184,7 +184,7 @@ class XMLReader  {
 	/**
 	 * Move cursor to next node skipping all subtrees
 	 * @link http://www.php.net/manual/en/xmlreader.next.php
-	 * @param localname string[optional] <p>
+	 * @param string $localname [optional] <p>
 	 * The name of the next node to move to.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -216,7 +216,7 @@ class XMLReader  {
 	/**
 	 * Validate document against XSD
 	 * @link http://www.php.net/manual/en/xmlreader.setschema.php
-	 * @param filename string <p>
+	 * @param string $filename <p>
 	 * The filename of the XSD schema.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -226,11 +226,11 @@ class XMLReader  {
 	/**
 	 * Set parser options
 	 * @link http://www.php.net/manual/en/xmlreader.setparserproperty.php
-	 * @param property int <p>
+	 * @param int $property <p>
 	 * One of the parser option 
 	 * constants.
 	 * </p>
-	 * @param value bool <p>
+	 * @param bool $value <p>
 	 * If set to true the option will be enabled otherwise will 
 	 * be disabled.
 	 * </p>
@@ -241,7 +241,7 @@ class XMLReader  {
 	/**
 	 * Set the filename or URI for a RelaxNG Schema
 	 * @link http://www.php.net/manual/en/xmlreader.setrelaxngschema.php
-	 * @param filename string <p>
+	 * @param string $filename <p>
 	 * filename or URI pointing to a RelaxNG Schema.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -251,7 +251,7 @@ class XMLReader  {
 	/**
 	 * Set the data containing a RelaxNG Schema
 	 * @link http://www.php.net/manual/en/xmlreader.setrelaxngschemasource.php
-	 * @param source string <p>
+	 * @param string $source <p>
 	 * String containing the RelaxNG Schema.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -261,13 +261,13 @@ class XMLReader  {
 	/**
 	 * Set the data containing the XML to parse
 	 * @link http://www.php.net/manual/en/xmlreader.xml.php
-	 * @param source string <p>
+	 * @param string $source <p>
 	 * String containing the XML to be parsed.
 	 * </p>
-	 * @param encoding string[optional] <p>
+	 * @param string $encoding [optional] <p>
 	 * The document encoding or &null;.
 	 * </p>
-	 * @param options int[optional] <p>
+	 * @param int $options [optional] <p>
 	 * A bitmask of the LIBXML_* 
 	 * constants.
 	 * </p>
@@ -279,10 +279,12 @@ class XMLReader  {
 	/**
 	 * Returns a copy of the current node as a DOM object
 	 * @link http://www.php.net/manual/en/xmlreader.expand.php
-	 * @param basenode DOMNode[optional] 
+	 * @param DOMNode $basenode [optional] <p>
+	 * A DOMNode defining the target DOMDocument for the created DOM object.
+	 * </p>
 	 * @return DOMNode The resulting DOMNode or false on error.
 	 */
 	public function expand (DOMNode $basenode = null) {}
 
 }
-// End of xmlreader v.0.1
+// End of xmlreader v.7.0.0-dev

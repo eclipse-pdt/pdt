@@ -1,15 +1,15 @@
 <?php
 
-// Start of exif v.1.4 $Id: 0b28f1c2604848245c00549a8c8055a1c0d22a49 $
+// Start of exif v.1.4 $Id: 8bdc0c8f27c2c9dd1f7551f1f9fe3ab57a06a4b1 $
 
 /**
  * Reads the <acronym>EXIF</acronym> headers from <acronym>JPEG</acronym> or <acronym>TIFF</acronym>
  * @link http://www.php.net/manual/en/function.exif-read-data.php
- * @param filename string <p>
+ * @param string $filename <p>
  * The name of the image file being read. This cannot be an
  * URL.
  * </p>
- * @param sections string[optional] <p>
+ * @param string $sections [optional] <p>
  * Is a comma separated list of sections that need to be present in file 
  * to produce a result array. If none of the requested 
  * sections could be found the return value is false.
@@ -59,14 +59,14 @@
  * </td>
  * </tr>
  * </p>
- * @param arrays bool[optional] <p>
+ * @param bool $arrays [optional] <p>
  * Specifies whether or not each section becomes an array. The 
  * sections COMPUTED,
  * THUMBNAIL, and COMMENT 
  * always become arrays as they may contain values whose names conflict
  * with other sections.
  * </p>
- * @param thumbnail bool[optional] <p>
+ * @param bool $thumbnail [optional] <p>
  * When set to true the thumbnail itself is read. Otherwise, only the
  * tagged data is read.
  * </p>
@@ -80,17 +80,17 @@ function exif_read_data ($filename, $sections = null, $arrays = null, $thumbnail
 /**
  * &Alias; <function>exif_read_data</function>
  * @link http://www.php.net/manual/en/function.read-exif-data.php
- * @param filename
- * @param sections_needed[optional]
- * @param sub_arrays[optional]
- * @param read_thumbnail[optional]
+ * @param $filename
+ * @param $sections_needed [optional]
+ * @param $sub_arrays [optional]
+ * @param $read_thumbnail [optional]
  */
 function read_exif_data ($filename, $sections_needed = null, $sub_arrays = null, $read_thumbnail = null) {}
 
 /**
  * Get the header name for an index
  * @link http://www.php.net/manual/en/function.exif-tagname.php
- * @param index int <p>
+ * @param int $index <p>
  * The Tag ID for which a Tag Name will be looked up.
  * </p>
  * @return string the header name, or false if index is
@@ -101,17 +101,17 @@ function exif_tagname ($index) {}
 /**
  * Retrieve the embedded thumbnail of a TIFF or JPEG image
  * @link http://www.php.net/manual/en/function.exif-thumbnail.php
- * @param filename string <p>
+ * @param string $filename <p>
  * The name of the image file being read. This image contains an
  * embedded thumbnail.
  * </p>
- * @param width int[optional] <p>
+ * @param int $width [optional] <p>
  * The return width of the returned thumbnail.
  * </p>
- * @param height int[optional] <p>
+ * @param int $height [optional] <p>
  * The returned height of the returned thumbnail.
  * </p>
- * @param imagetype int[optional] <p>
+ * @param int $imagetype [optional] <p>
  * The returned image type of the returned thumbnail. This is either
  * TIFF or JPEG.
  * </p>
@@ -123,7 +123,7 @@ function exif_thumbnail ($filename, &$width = null, &$height = null, &$imagetype
 /**
  * Determine the type of an image
  * @link http://www.php.net/manual/en/function.exif-imagetype.php
- * @param filename string The image being checked.
+ * @param string $filename The image being checked.
  * @return int When a correct signature is found, the appropriate constant value will be
  * returned otherwise the return value is false. The return value is the
  * same value that getimagesize returns in index 2 but
@@ -138,4 +138,4 @@ function exif_imagetype ($filename) {}
 
 define ('EXIF_USE_MBSTRING', 1);
 
-// End of exif v.1.4 $Id: 0b28f1c2604848245c00549a8c8055a1c0d22a49 $
+// End of exif v.1.4 $Id: 8bdc0c8f27c2c9dd1f7551f1f9fe3ab57a06a4b1 $
