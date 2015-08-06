@@ -855,7 +855,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 					fNodes.push(assignment);
 				}
 			}
-		} else if (left instanceof VariableReference) {
+		} else if (left instanceof VariableReference
+				&& !(left instanceof ArrayVariableReference)) {
 			if (!declarations.empty()) {
 				Declaration parentDeclaration = declarations.peek();
 				if (parentDeclaration instanceof MethodDeclaration
