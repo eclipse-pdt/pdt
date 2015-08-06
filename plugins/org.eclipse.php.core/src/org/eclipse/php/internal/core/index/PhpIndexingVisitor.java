@@ -834,7 +834,8 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 									null, fCurrentQualifier, fCurrentParent));
 				}
 			}
-		} else if (left instanceof VariableReference) {
+		} else if (left instanceof VariableReference
+				&& !(left instanceof ArrayVariableReference)) {
 			int modifiers = Modifiers.AccPublic | Modifiers.AccGlobal;
 			if (!declarations.empty()
 					&& declarations.peek() instanceof MethodDeclaration

@@ -14,6 +14,7 @@ package org.eclipse.php.internal.ui.editor.configuration;
 import java.util.*;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.dltk.internal.ui.typehierarchy.HierarchyInformationControl;
@@ -31,8 +32,10 @@ import org.eclipse.jface.text.information.*;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
@@ -40,7 +43,6 @@ import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.core.format.IFormatterCommonPrferences;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.autoEdit.CloseTagAutoEditStrategyPHP;
-import org.eclipse.php.internal.ui.autoEdit.IndentLineAutoEditStrategy;
 import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.internal.ui.doubleclick.PHPDoubleClickStrategy;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
@@ -56,6 +58,7 @@ import org.eclipse.php.internal.ui.text.correction.PHPCorrectionAssistant;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.internal.ui.util.ElementCreationProxy;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -71,6 +74,9 @@ import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.style.ReconcilerHighlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.StructuredPresentationReconciler;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
+import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Node;
 
 public class PHPStructuredTextViewerConfiguration extends
 		StructuredTextViewerConfigurationHTML {
@@ -79,17 +85,19 @@ public class PHPStructuredTextViewerConfiguration extends
 	private static final String EMPTY = ""; //$NON-NLS-1$
 	private static final String[] DEFAULT_PREFIXES = new String[] {
 			"//", "#", EMPTY }; //$NON-NLS-1$ //$NON-NLS-2$
-	private static final IAutoEditStrategy indentLineAutoEditStrategy = new IndentLineAutoEditStrategy();
+
 	private static final IAutoEditStrategy mainAutoEditStrategy = new MainAutoEditStrategy();
 	private static final IAutoEditStrategy closeTagAutoEditStrategy = new CloseTagAutoEditStrategyPHP();
 
 	private String[] configuredContentTypes;
+	
 	private LineStyleProvider fLineStyleProvider;
 	private StructuredContentAssistant fContentAssistant;
 	private IQuickAssistAssistant fQuickAssistant;
 	private PHPCompletionProcessor phpCompletionProcessor;
 	Map<String, IContentAssistProcessor[]> processorMap = new HashMap<String, IContentAssistProcessor[]>();
 	private ReconcilerHighlighter fHighlighter = null;
+	private ILabelProvider fStatusLineLabelProvider;
 
 	public PHPStructuredTextViewerConfiguration() {
 	}
@@ -139,6 +147,53 @@ public class PHPStructuredTextViewerConfiguration extends
 			return new LineStyleProvider[] { getLineStyleProvider() };
 		}
 		return super.getLineStyleProviders(sourceViewer, partitionType);
+	}
+	
+	/**
+	 * Method overrides default status line label provider because HTML version
+	 * can freeze UI during searching image for status line for large PHP files.
+	 * 
+	 * @see http://eclip.se\474115
+	 */
+	@Override
+	public ILabelProvider getStatusLineLabelProvider(
+			ISourceViewer sourceViewer) {
+		if (fStatusLineLabelProvider == null) {
+			fStatusLineLabelProvider = new JFaceNodeLabelProvider() {
+				public String getText(Object element) {
+					if (element == null)
+						return null;
+
+					StringBuffer s = new StringBuffer();
+					Node node = (Node) element;
+					while (node != null) {
+						if (node.getNodeType() != Node.DOCUMENT_NODE) {
+							s.insert(0, super.getText(node));
+						}
+
+						if (node.getNodeType() == Node.ATTRIBUTE_NODE)
+							node = ((Attr) node).getOwnerElement();
+						else
+							node = node.getParentNode();
+
+						if (node != null
+								&& node.getNodeType() != Node.DOCUMENT_NODE) {
+							s.insert(0, IPath.SEPARATOR);
+						}
+					}
+					return s.toString();
+				}
+
+				@Override
+				public Image getImage(Object element) {
+					if (element instanceof ElementImplForPhp) {
+						return null;
+					}
+					return super.getImage(element);
+				}
+			};
+		}
+		return fStatusLineLabelProvider;
 	}
 
 	@Override
