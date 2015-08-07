@@ -25,6 +25,7 @@ import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTagKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.VarComment;
 import org.eclipse.php.internal.core.compiler.ast.parser.php5.CompilerAstLexer;
 import org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerParserConstants;
@@ -1098,7 +1099,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 						|| codeBeforeComment.equals("<?php"); //$NON-NLS-1$
 				if ((!isHeaderComment || this.preferences.comment_format_header)
 						&& this.editsEnabled
-						&& this.preferences.comment_format_javadoc_comment) {
+						&& this.preferences.comment_format_javadoc_comment
+						&& canHandlePHPDocComment((PHPDocBlock) comment, offset)) {
 					PHPDocBlock block = (PHPDocBlock) comment;
 
 					newLineOfComment = false;
@@ -1569,6 +1571,21 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			}
 
 		}
+	}
+
+	private boolean canHandlePHPDocComment(PHPDocBlock comment, int offset)
+			throws BadLocationException {
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=474332
+		// do not handle single-line PHPDoc comment with @var tag inside
+		PHPDocTag[] varTags = comment.getTags(PHPDocTagKinds.VAR);
+		if (varTags.length != 1) {
+			return true;
+		}
+		int commentStartLine = document.getLineOfOffset(comment.sourceStart()
+				+ offset);
+		int commentEndLine = document.getLineOfOffset(comment.sourceEnd()
+				+ offset);
+		return commentStartLine != commentEndLine;
 	}
 
 	private boolean isComment(IRegion iRegion) {
