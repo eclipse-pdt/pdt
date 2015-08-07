@@ -1,0 +1,22 @@
+--TEST--
+Bug 474332 - handle correctly single-line PHPDoc comments with @tag inside
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+class T {
+	public function foo() {
+		/** @var $x T */
+		$x->|
+	}
+}
+?>
+--EXPECT--
+<?php
+class T {
+	public function foo() {
+		/** @var $x T */
+		$x->foo()
+	}
+}
+?>
