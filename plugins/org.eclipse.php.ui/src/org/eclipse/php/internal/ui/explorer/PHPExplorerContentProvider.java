@@ -194,10 +194,8 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 
 					ArrayList<Object> returnChildren = new ArrayList<Object>();
 
-					boolean groupByNamespace = PHPUiPlugin
-							.getDefault()
-							.getPreferenceStore()
-							.getBoolean(
+					boolean groupByNamespace = PHPUiPlugin.getDefault()
+							.getPreferenceStore().getBoolean(
 									PreferenceConstants.EXPLORER_GROUP_BY_NAMESPACES);
 					if (groupByNamespace
 							&& parentElement instanceof IModelElement
@@ -207,8 +205,8 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 						returnChildren.add(new GlobalNamespace(
 								(IModelElement) parentElement));
 
-						returnChildren.addAll(collectNamespaces(DLTKCore
-								.create(resource)));
+						returnChildren.addAll(
+								collectNamespaces(DLTKCore.create(resource)));
 
 						IResource[] resChildren = ((IContainer) resource)
 								.members();
@@ -248,12 +246,12 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 						returnChildren.add(incPathContainer);
 
 						// Add the language library
-						Object[] projectChildren = getProjectFragments(scriptProject);
+						Object[] projectChildren = getProjectFragments(
+								scriptProject);
 						for (Object modelElement : projectChildren) {
 							if (modelElement instanceof BuildPathContainer
 									&& ((BuildPathContainer) modelElement)
-											.getBuildpathEntry()
-											.getPath()
+											.getBuildpathEntry().getPath()
 											.equals(LanguageModelInitializer.LANGUAGE_CONTAINER_PATH)) {
 								returnChildren.add(modelElement);
 							}
@@ -409,11 +407,11 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		while (next != null) {
 			try {
 				if (next instanceof IPackageFragment) {
-					expanded.addAll(Arrays.asList(((IPackageFragment) next)
-							.getChildren()));
+					expanded.addAll(Arrays
+							.asList(((IPackageFragment) next).getChildren()));
 				} else if (next instanceof IPackageFragmentRoot) {
-					expanded.addAll(Arrays.asList(((IPackageFragmentRoot) next)
-							.getChildren()));
+					expanded.addAll(Arrays.asList(
+							((IPackageFragmentRoot) next).getChildren()));
 				} else if (next instanceof IClassFile) {
 					List<IJavaScriptElement> newChildren = Arrays
 							.asList(((IClassFile) next).getChildren());
@@ -476,7 +474,8 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	public class IncludePathContainer extends ProjectFragmentContainer {
 		private IncludePath[] fIncludePath;
 
-		public IncludePathContainer(IScriptProject parent, IncludePath[] entries) {
+		public IncludePathContainer(IScriptProject parent,
+				IncludePath[] entries) {
 			super(parent);
 			fIncludePath = entries;
 		}
@@ -591,5 +590,19 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public Object getParent(Object element) {
+		if (element instanceof IProjectFragment) {
+			IResource resource = ((IModelElement) element).getResource()
+					.getParent();
+			IModelElement modelElement = DLTKCore.create(resource);
+			if (modelElement != null) {
+				return modelElement;
+			}
+			return resource;
+		}
+		return super.getParent(element);
 	}
 }
