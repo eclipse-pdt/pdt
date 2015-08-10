@@ -11,17 +11,14 @@
 package org.eclipse.php.internal.debug.core.zend.communication;
 
 import java.net.Socket;
-import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.daemon.AbstractDebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * A broadcast daemon class that is responsible for any information request that
@@ -67,17 +64,7 @@ public class BroadcastDaemon extends AbstractDebuggerCommunicationDaemon {
 	public void handleMultipleBindingError() {
 		final int port = getReceiverPort();
 		Logger.log(Logger.ERROR, "Could not open a broadcast port on: " + port //$NON-NLS-1$
-				+ " (port might be in use). Select a different port number"); //$NON-NLS-1$
-		final Display display = Display.getDefault();
-		display.asyncExec(new Runnable() {
-			public void run() {
-				final String message = MessageFormat.format(
-						Messages.BroadcastDaemon_Broadcast_port_is_already_in_use,
-						String.valueOf(port));
-				MessageDialog.openWarning(display.getActiveShell(),
-						Messages.BroadcastDaemon_ZD_port_problem, message);
-			}
-		});
+				+ " (port might be in use). Please select a different port number"); //$NON-NLS-1$
 	}
 
 	/**

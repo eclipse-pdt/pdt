@@ -16,8 +16,6 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.core.zend.communication.messages"; //$NON-NLS-1$
 	public static String BroadcastConnection_Broadcast_connection_handler_name;
 	public static String BroadcastConnection_HTML_content_message;
-	public static String BroadcastDaemon_Broadcast_port_is_already_in_use;
-	public static String BroadcastDaemon_ZD_port_problem;
 
 	static {
 		// initialize resource bundle
