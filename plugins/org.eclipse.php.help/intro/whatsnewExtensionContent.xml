@@ -1,25 +1,23 @@
-<?xml version="1.0" encoding="UTF-8" ?><!--
-    Copyright (c) 2013 Kaloyan Raev and others.
-    All rights reserved. This program and the accompanying materials
-    are made available under the terms of the Eclipse Public License v1.0
-    which accompanies this distribution, and is available at
-    http://www.eclipse.org/legal/epl-v10.html
-
-    Contributors:
-         Kaloyan Raev <kaloyan.r@zend.com> - initial API and implementation
- -->
+<?xml version="1.0" encoding="UTF-8" ?><!-- Copyright (c) 2013 Kaloyan Raev and others. 
+	All rights reserved. This program and the accompanying materials are made available 
+	under the terms of the Eclipse Public License v1.0 which accompanies this distribution, 
+	and is available at http://www.eclipse.org/legal/epl-v10.html Contributors: Kaloyan 
+	Raev <kaloyan.r@zend.com> - initial API and implementation 
+	Dawid Pakuła - PDT News
+	-->
 
 <introContent>
-	<extensionContent id="org.eclipse.pdt" name="PDT"
-		style="css/whatsnew.css" alt-style="css/whatsnew.properties" path="whatsnew/@">
+	<extensionContent id="org.eclipse.pdt" name="PDT" style="css/whatsnew.css"
+		alt-style="css/whatsnew.properties" path="whatsnew/@">
 		<group id="content-group" style-id="content-group">
-			<link label="PHP Development Tools"
-				url="https://wiki.eclipse.org/PDT/NewIn36"
+			<link label="PHP Development Tools" url="https://wiki.eclipse.org/PDT/NewIn36"
 				id="pdt-noteworthy" style-id="content-link">
-				<text>
-					Find out what's new in the PHP Development Tools project
-				</text>
+				<text>Find out about the major new features in this release</text>
 			</link>
+			<group id="pdt-rss-news" label="Latest News" expandable="true" expanded="true">
+				<contentProvider id="url=http://www.eclipse.org/pdt/news.xml##welcome_items=5##no_news_url=http://www.eclipse.org/pdt/news.xml##no_news_text=Eclipse PHP Development Tools News Page" pluginId="org.eclipse.ui.intro" class="org.eclipse.ui.intro.contentproviders.EclipseRSSViewer">
+				</contentProvider>
+			</group>
 		</group>
 	</extensionContent>
 </introContent>
