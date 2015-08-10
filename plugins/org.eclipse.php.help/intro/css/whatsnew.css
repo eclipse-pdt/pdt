@@ -5,3 +5,22 @@ a#pdt-noteworthy img {
 a#pdt-noteworthy:hover img {
 	background-image: url(../images/php-hover.png);
 }
+div#pdt-rss-news {
+	position: relative;
+	top: -25px;
+	margin-bottom: -25px;
+	margin-left: 52px;
+}
+
+#pdt-rss-news .div-label {
+	font-size: 9pt;
+}
+
+#pdt-rss-news .provided-content {
+}
+
+#pdt-rss-news .status-text {
+	font-weight: normal;
+	color: #909090;
+	font-size: 8pt;
+}
