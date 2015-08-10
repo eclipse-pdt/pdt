@@ -36,10 +36,14 @@ public class PHPEvaluationUtils {
 	public final static Pattern ARRAY_TYPE_PATTERN = Pattern
 			.compile("array\\[.*\\]"); //$NON-NLS-1$
 
-	private final static Pattern MULTITYPE_PATTERN = Pattern.compile(
-			"^multitype:(.+)$", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+	private final static Pattern MULTITYPE_PATTERN = Pattern
+			.compile("^multitype:(.+)$", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
 	private final static String SELF_RETURN_TYPE = "self"; //$NON-NLS-1$
+
+	private final static String STATIC_RETURN_TYPE = "static"; //$NON-NLS-1$
+
+	private final static String THIS_RETURN_TYPE = "$this"; //$NON-NLS-1$
 
 	public final static String BRACKETS_PATTERN = "\\[.*\\]"; //$NON-NLS-1$
 
@@ -104,9 +108,8 @@ public class PHPEvaluationUtils {
 					.addType(getArrayType(m.group(), currentNamespace, offset));
 			type = m.replaceAll(""); //$NON-NLS-1$
 		} else if (type.endsWith(BRACKETS) && type.length() > 2) {
-			arrayType.addType(getArrayType(
-					type.substring(0, type.length() - 2), currentNamespace,
-					offset));
+			arrayType.addType(getArrayType(type.substring(0, type.length() - 2),
+					currentNamespace, offset));
 			type = type.replaceAll(BRACKETS, ""); //$NON-NLS-1$
 		}
 		String[] typeNames = type.split(","); //$NON-NLS-1$
@@ -118,13 +121,12 @@ public class PHPEvaluationUtils {
 					// check if the first part is an
 					// alias,then get the full name
 					ModuleDeclaration moduleDeclaration = SourceParserUtil
-							.getModuleDeclaration(currentNamespace
-									.getSourceModule());
+							.getModuleDeclaration(
+									currentNamespace.getSourceModule());
 					String prefix = name;
 					if (nsSeparatorIndex != -1) {
-						name.substring(
-								0,
-								name.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
+						name.substring(0, name.indexOf(
+								NamespaceReference.NAMESPACE_SEPARATOR));
 					}
 					final Map<String, UsePart> result = PHPModelUtils
 							.getAliasToNSMap(prefix, moduleDeclaration, offset,
@@ -133,7 +135,8 @@ public class PHPEvaluationUtils {
 						String fullName = result.get(prefix).getNamespace()
 								.getFullyQualifiedName();
 						name = name.replace(prefix, fullName);
-						if (name.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+						if (name.charAt(
+								0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 							name = NamespaceReference.NAMESPACE_SEPARATOR
 									+ name;
 						}
@@ -177,7 +180,7 @@ public class PHPEvaluationUtils {
 		}
 
 		String substring = split[1];
-		int parenIndex = split[1].indexOf('('); //$NON-NLS-1$
+		int parenIndex = split[1].indexOf('('); // $NON-NLS-1$
 		if (parenIndex != -1) {
 			substring = substring.substring(0, parenIndex);
 		}
@@ -207,7 +210,8 @@ public class PHPEvaluationUtils {
 				|| currentNamespace == null) {
 			return new PHPClassType(typeName);
 		} else {
-			return new PHPClassType(currentNamespace.getElementName(), typeName);
+			return new PHPClassType(currentNamespace.getElementName(),
+					typeName);
 		}
 	}
 
@@ -255,8 +259,8 @@ public class PHPEvaluationUtils {
 			if (typeName.trim().isEmpty()) {
 				continue;
 			}
-			IEvaluatedType evaluatedType = PHPEvaluationUtils.extractArrayType(
-					typeName, currentNamespace, offset);
+			IEvaluatedType evaluatedType = PHPEvaluationUtils
+					.extractArrayType(typeName, currentNamespace, offset);
 			if (evaluatedType != null) {
 				evaluated.add(evaluatedType);
 			} else {
@@ -275,12 +279,15 @@ public class PHPEvaluationUtils {
 						Logger.logException(e);
 					}
 					if (classFinder.found) {
-						evaluated.add(PHPEvaluationUtils.getEvaluatedType(
-								typeName, currentNamespace));
+						evaluated.add(PHPEvaluationUtils
+								.getEvaluatedType(typeName, currentNamespace));
 					} else {
 						evaluated.add(PHPSimpleTypes.fromStringCS(typeName));
 					}
-				} else if (typeName.equals(SELF_RETURN_TYPE) && types != null) {
+				} else if ((typeName.equals(SELF_RETURN_TYPE)
+						|| typeName.equals(THIS_RETURN_TYPE)
+						|| typeName.equals(STATIC_RETURN_TYPE))
+						&& types != null) {
 					for (IType t : types) {
 						IEvaluatedType type = PHPEvaluationUtils
 								.getEvaluatedType(PHPModelUtils.getFullName(t),
@@ -296,12 +303,11 @@ public class PHPEvaluationUtils {
 					if (currentNamespace != null) {
 						ModuleDeclaration moduleDeclaration = SourceParserUtil
 								.getModuleDeclaration(sourceModule);
-						if (typeName
-								.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
-							String prefix = typeName
-									.substring(
-											0,
-											typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
+						if (typeName.indexOf(
+								NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
+							String prefix = typeName.substring(0,
+									typeName.indexOf(
+											NamespaceReference.NAMESPACE_SEPARATOR));
 							final Map<String, UsePart> result = PHPModelUtils
 									.getAliasToNSMap(prefix, moduleDeclaration,
 											offset, currentNamespace, true);
@@ -309,13 +315,14 @@ public class PHPEvaluationUtils {
 								String fullName = result.get(prefix)
 										.getNamespace().getFullyQualifiedName();
 								typeName = typeName.replace(prefix, fullName);
-								if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+								if (typeName.charAt(
+										0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 									typeName = NamespaceReference.NAMESPACE_SEPARATOR
 											+ typeName;
 								}
 							}
-						} else if (typeName
-								.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
+						} else if (typeName.indexOf(
+								NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
 
 							String prefix = typeName;
 							final Map<String, UsePart> result = PHPModelUtils
@@ -325,15 +332,16 @@ public class PHPEvaluationUtils {
 								String fullName = result.get(prefix)
 										.getNamespace().getFullyQualifiedName();
 								typeName = fullName;
-								if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+								if (typeName.charAt(
+										0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 									typeName = NamespaceReference.NAMESPACE_SEPARATOR
 											+ typeName;
 								}
 							}
 						}
 					}
-					IEvaluatedType type = PHPEvaluationUtils.getEvaluatedType(
-							typeName, currentNamespace);
+					IEvaluatedType type = PHPEvaluationUtils
+							.getEvaluatedType(typeName, currentNamespace);
 					if (type != null) {
 						evaluated.add(type);
 					}
