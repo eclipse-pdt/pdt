@@ -17,6 +17,7 @@ import org.eclipse.php.internal.debug.core.pathmapper.ILocalFileSearchFilter;
 import org.eclipse.php.internal.debug.core.pathmapper.LocalFileSearchResult;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -45,8 +46,12 @@ public class OpenLocalFileSearchFilter implements ILocalFileSearchFilter {
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			@Override
 			public void run() {
-				MapLocalFileDialog dialog = new MapLocalFileDialog(
-						PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+				final Shell shell = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getShell();
+				if (shell != null) {
+					shell.forceActive();
+				}
+				MapLocalFileDialog dialog = new MapLocalFileDialog(shell,
 						Messages.OpenLocalFileSearchFilter_Open_file_request,
 						remotePath, entries);
 				LocalFileSearchResult filteredResult;

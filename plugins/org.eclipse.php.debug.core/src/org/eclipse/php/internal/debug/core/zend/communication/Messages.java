@@ -19,6 +19,9 @@ public class Messages extends NLS {
 	public static String BroadcastDaemon_Broadcast_port_is_already_in_use;
 	public static String BroadcastDaemon_ZD_port_problem;
 
+	public static String OpenRemoteFileRequestor_No_match_could_be_found;
+	public static String OpenRemoteFileRequestor_Open_remote_file_request;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
