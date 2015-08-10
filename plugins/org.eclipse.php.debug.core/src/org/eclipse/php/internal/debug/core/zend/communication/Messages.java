@@ -17,6 +17,9 @@ public class Messages extends NLS {
 	public static String BroadcastConnection_Broadcast_connection_handler_name;
 	public static String BroadcastConnection_HTML_content_message;
 
+	public static String OpenRemoteFileRequestor_No_match_could_be_found;
+	public static String OpenRemoteFileRequestor_Open_remote_file_request;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

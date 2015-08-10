@@ -10,12 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.communication;
 
+import java.io.File;
+import java.text.MessageFormat;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.debug.core.pathmapper.*;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionStartedNotification;
 import org.eclipse.php.internal.server.core.Server;
@@ -23,6 +27,8 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * This file content requester handles received file open request with the use
@@ -106,6 +112,15 @@ public class OpenRemoteFileRequestor implements IFileContentRequestor {
 					LocalFileSearchEngine searchEngine = new LocalFileSearchEngine();
 					LocalFileSearchResult searchResult = searchEngine.find(root,
 							remoteFile, serverMatch.getUniqueId());
+					if (searchResult == null) {
+						// Check if file is available locally (outside the workspace)
+						File localFile = new File(remoteFile);
+						if (localFile.exists())
+							return remoteFile;
+						// No match - open info dialog
+						openNoMatchDialog(remoteFile);
+						return null;
+					}
 					entry = searchResult.getPathEntry();
 				}
 			} else {
@@ -136,6 +151,11 @@ public class OpenRemoteFileRequestor implements IFileContentRequestor {
 	private void openEditor(final String localFile, final int lineNumber) {
 		try {
 			EditorUtility.openLocalFile(localFile, lineNumber);
+			final Shell shell = PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getShell();
+			if (shell != null) {
+				shell.forceActive();
+			}
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
@@ -162,6 +182,24 @@ public class OpenRemoteFileRequestor implements IFileContentRequestor {
 			return value;
 		}
 		return null;
+	}
+
+	private void openNoMatchDialog(final String remoteFile) {
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				final Shell shell = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getShell();
+				if (shell != null) {
+					shell.forceActive();
+				}
+				MessageDialog.openInformation(shell,
+						Messages.OpenRemoteFileRequestor_Open_remote_file_request,
+						MessageFormat.format(
+								Messages.OpenRemoteFileRequestor_No_match_could_be_found,
+								remoteFile));
+			}
+		});
 	}
 
 }
