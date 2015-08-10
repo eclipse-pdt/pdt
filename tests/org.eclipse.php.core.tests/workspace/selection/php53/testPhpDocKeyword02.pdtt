@@ -1,0 +1,19 @@
+--TEST--
+Test $this keyword in PhpDoc
+--FILE--
+<?php 
+class classParent {
+	public function funcParent(){}
+	/** @return static */
+	static public function create($array){
+		//some Code
+	}
+}
+
+class classChild extends classParent {
+	public function funcChild(){}
+}
+
+classChild::create($array)->|funcChild|();
+--EXPECT--
+method(funcChild)

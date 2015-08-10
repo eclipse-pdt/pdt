@@ -1,0 +1,26 @@
+--TEST--
+Test $this keyword in PhpDoc
+--FILE--
+<?php
+class A
+{
+	/**
+	 * @return $this
+	 */
+	public function b()
+	{
+	}
+
+	/**
+	 * @return self
+	 */
+	public function c()
+	{
+	}
+}
+
+$bb = new A();
+$bb->b()->|;
+--EXPECT--
+method(b)
+method(c)

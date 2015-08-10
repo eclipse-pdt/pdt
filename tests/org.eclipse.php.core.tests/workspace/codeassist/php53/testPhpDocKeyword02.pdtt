@@ -1,0 +1,21 @@
+--TEST--
+Test static keyword in PhpDoc
+--FILE--
+<?php 
+class classParent {
+	public function funcParent(){}
+	/** @return static */
+	static public function create($array){
+		//some Code
+	}
+}
+
+class classChild extends classParent {
+	public function funcChild(){}
+}
+
+classChild::create($array)->|
+--EXPECT--
+method(create)
+method(funcParent)
+method(funcChild)
