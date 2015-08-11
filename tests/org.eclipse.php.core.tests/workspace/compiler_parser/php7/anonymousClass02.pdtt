@@ -12,6 +12,8 @@ $anonClass = new class {
 			<VariableReference start="6" end="16" name="$anonClass">
 			</VariableReference>
 			<ClassInstanceCreation start="19" end="45">
+				<SimpleReference start="23" end="28" name="class">
+				</SimpleReference>
 				<PHPCallArgumentsList start="0" end="-1">
 				</PHPCallArgumentsList>
 				<AnonymousClassDeclaration start="28" end="45">
