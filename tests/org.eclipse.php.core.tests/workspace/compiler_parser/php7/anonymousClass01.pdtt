@@ -12,6 +12,8 @@ new class($var) extends SuperClass01 implements Interface01, Interface02 {
 <ModuleDeclaration start="0" end="165">
 	<ExpressionStatement start="6" end="164">
 		<ClassInstanceCreation start="6" end="163">
+			<SimpleReference start="10" end="15" name="class">
+			</SimpleReference>
 			<PHPCallArgumentsList start="16" end="20">
 				<VariableReference start="16" end="20" name="$var">
 				</VariableReference>

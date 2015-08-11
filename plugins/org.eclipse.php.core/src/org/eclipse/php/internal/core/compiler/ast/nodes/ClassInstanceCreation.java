@@ -37,23 +37,17 @@ public class ClassInstanceCreation extends Expression {
 
 	public ClassInstanceCreation(int start, int end, Expression className,
 			CallArgumentsList ctorParams) {
+		this(start, end, className, ctorParams, null);
+	}
+
+	public ClassInstanceCreation(int start, int end, Expression className,
+			CallArgumentsList ctorParams,
+			AnonymousClassDeclaration anonymousClass) {
 		super(start, end);
 
 		assert className != null && ctorParams != null;
 
 		this.className = className;
-		this.ctorParams = ctorParams;
-		this.anonymousClassDeclaration = null;
-	}
-
-	public ClassInstanceCreation(int start, int end,
-			AnonymousClassDeclaration anonymousClass,
-			CallArgumentsList ctorParams) {
-		super(start, end);
-
-		assert anonymousClass != null && ctorParams != null;
-
-		this.className = null;
 		this.ctorParams = ctorParams;
 		this.anonymousClassDeclaration = anonymousClass;
 	}
