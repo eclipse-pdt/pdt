@@ -2487,7 +2487,8 @@ T_NEW:start class_name_reference:className ctor_arguments:ctor
 :}
 | T_NEW:start T_CLASS:tclass ctor_arguments:ctor anonymous_class:ac
 {:
-	RESULT = new ClassInstanceCreation(startleft, acright, ac, ctor);
+	Expression className = new SimpleReference(tclassleft, tclassright, "class");
+	RESULT = new ClassInstanceCreation(startleft, acright, className, ctor, ac);
 :}
 ;
 

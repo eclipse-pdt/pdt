@@ -140,11 +140,9 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 	}
 
 	public boolean hasChildren(Object parent) {
-
 		if (parent instanceof IModelElement) {
 			IModelElement me = (IModelElement) parent;
-			if (me.getElementType() == IModelElement.FIELD
-					|| me.getElementType() == IModelElement.METHOD) {
+			if (me.getElementType() == IModelElement.FIELD) {
 				return false;
 			}
 		}

@@ -53,8 +53,7 @@ public class OutlineFilter {
 				new Comparator<IModelElement>() {
 					public int compare(IModelElement o1, IModelElement o2) {
 						// filter duplications of variables
-						if (o1 instanceof IField
-								&& o2 instanceof IField
+						if (o1 instanceof IField && o2 instanceof IField
 								&& PHPModelUtils.isSameField((IField) o1,
 										(IField) o2)) {
 							return 0;
@@ -77,12 +76,15 @@ public class OutlineFilter {
 		IModelElement parent = element.getParent();
 		if (parent != null) {
 			int parentType = parent.getElementType();
-			if (element.getElementType() == IModelElement.FIELD
-					&& !(parentType == IModelElement.METHOD)
-					&& !(parentType == IModelElement.TYPE)) {
-				return false;
-			} else if (parentType == IModelElement.METHOD)
-				return true;
+			if (element.getElementType() == IModelElement.FIELD) {
+				if (!(parentType == IModelElement.METHOD)
+						&& !(parentType == IModelElement.TYPE)) {
+					return false;
+				}
+				if (parentType == IModelElement.METHOD) {
+					return true;
+				}
+			}
 		} else if (element.getElementType() == IModelElement.IMPORT_CONTAINER) {
 			return true;
 		}
