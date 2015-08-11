@@ -88,6 +88,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 	protected NamespaceDeclaration fLastNamespace;
 	protected Map<String, UsePart> fLastUseParts = new HashMap<String, UsePart>();
+	protected ClassInstanceCreation flastInstanceCreation = null;
 
 	public PHPSourceElementRequestor(ISourceElementRequestor requestor,
 			IModuleSource sourceModule) {
@@ -273,20 +274,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		fNodes.push(anonymousClassDeclaration);
 
-		ASTNode parentDeclaration = null;
-		if (!declarations.empty()) {
-			parentDeclaration = declarations.peek();
-		}
-
-		if (parentDeclaration instanceof MethodDeclaration) {
-			if (fLastNamespace == null) {
-				deferredDeclarations.add(anonymousClassDeclaration);
-			} else {
-				deferredNamespacedDeclarations.add(anonymousClassDeclaration);
-			}
-			return false;
-		}
-
 		declarations.push(anonymousClassDeclaration);
 
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
@@ -330,8 +317,14 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		mi.name = name;
 		mi.modifiers = Modifiers.AccPrivate | IPHPModifiers.AccAnonymous;
 
-		mi.nameSourceStart = anonymousClassDeclaration.sourceStart();
-		mi.nameSourceEnd = anonymousClassDeclaration.sourceEnd();
+		if (flastInstanceCreation != null) {
+			mi.nameSourceStart = flastInstanceCreation.getClassName()
+					.sourceStart();
+			mi.nameSourceEnd = flastInstanceCreation.getClassName().sourceEnd() - 1;
+		} else {
+			mi.nameSourceStart = anonymousClassDeclaration.sourceStart();
+			mi.nameSourceEnd = anonymousClassDeclaration.sourceStart();
+		}
 		mi.declarationStart = mi.nameSourceStart;
 
 		mi.superclasses = superClasses.toArray(new String[0]);
@@ -339,6 +332,11 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		this.fRequestor.enterType(mi);
 		this.fInClass = true;
 
+		return true;
+	}
+
+	public boolean visit(ClassInstanceCreation cic) throws Exception {
+		flastInstanceCreation = cic;
 		return true;
 	}
 
@@ -1137,6 +1135,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		if (node instanceof AnonymousClassDeclaration) {
 			return visit((AnonymousClassDeclaration) node);
+		}
+		if (node instanceof ClassInstanceCreation) {
+			return visit((ClassInstanceCreation) node);
 		}
 		return true;
 	}
