@@ -40,6 +40,13 @@
             categoryId="org.eclipse.debug.ui.category.run"
             id="org.eclipse.php.debug.ui.commands.Inspect">
       </command>
+  <command
+        categoryId="org.eclipse.debug.ui.category.run"
+        defaultHandler="org.eclipse.php.internal.debug.ui.actions.PopupInspectAction$ActionDelegate"
+        description="%ActionDefinition.inspect.description"
+        id="org.eclipse.php.debug.ui.commands.InspectDelegate"
+        name="%ActionDefinition.inspect.name">
+  </command>
 	</extension>
 	
 	<extension point="org.eclipse.ui.bindings">
@@ -51,10 +58,15 @@
 			sequence="M3+M2+D H" />
 		<!--M3+M2+Y,M3+M2+H, M1+M2+V,1+M2+Z   -->
 	    <key
-            sequence="M1+M2+N"
-            contextId="org.eclipse.ui.contexts.dialogAndWindow"
+            sequence="M1+M2+I"
+            contextId="org.eclipse.php.ui.phpEditorScope"
             commandId="org.eclipse.php.debug.ui.commands.Inspect"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+     	<key
+     		sequence="M1+M2+N"
+     		contextId="org.eclipse.php.ui.phpEditorScope"
+           	commandId="org.eclipse.php.debug.ui.commands.InspectDelegate"
+           	schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 	</extension>
 	
 	<extension point="org.eclipse.ui.contexts">
