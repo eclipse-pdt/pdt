@@ -143,7 +143,7 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 						selectionLineText.substring(0, nonSpaceMatch.start()));
 			}
 
-			varTypeHint.append("/* @var "); //$NON-NLS-1$
+			varTypeHint.append("/** @var "); //$NON-NLS-1$
 			varTypeHint.append(typeName);
 			varTypeHint.append(" "); //$NON-NLS-1$
 			varTypeHint.append(varName);
