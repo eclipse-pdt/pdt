@@ -1,0 +1,26 @@
+--TEST--
+Test PHPDoc @return keywords
+--FILE--
+<?php
+/**
+ * @return |
+ */
+function test(){
+}
+--EXPECT--
+keyword(array)
+keyword(mixed)
+keyword(void)
+keyword(integer)
+keyword(int)
+keyword(string)
+keyword(float)
+keyword(double)
+keyword(bool)
+keyword(boolean)
+keyword(resource)
+keyword(null)
+keyword(NULL)
+keyword($this)
+keyword(self)
+keyword(static)
