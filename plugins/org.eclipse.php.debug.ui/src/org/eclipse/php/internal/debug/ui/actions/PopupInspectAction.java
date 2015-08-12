@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.actions;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.common.CommandException;
 import org.eclipse.core.internal.runtime.AdapterManager;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.*;
@@ -28,6 +33,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
+import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.debug.ui.watch.IWatchExpressionResultExtension;
 import org.eclipse.php.internal.debug.ui.watch.PHPWatchExpressionDelegate;
@@ -36,13 +42,13 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
@@ -52,6 +58,41 @@ import org.eclipse.ui.texteditor.ITextEditor;
 public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 		IObjectActionDelegate, IEditorActionDelegate, IPartListener,
 		IViewActionDelegate {
+
+	/**
+	 * Handler that delegates execution to original command.
+	 */
+	public static class ActionDelegate extends AbstractHandler {
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
+		 * ExecutionEvent)
+		 */
+		@Override
+		public Object execute(ExecutionEvent event) throws ExecutionException {
+			IWorkbenchSite activeSite = HandlerUtil.getActiveSite(event);
+			if (activeSite == null)
+				return null;
+			Command command = activeSite.getService(ICommandService.class)
+					.getCommand(ACTION_DEFININITION_ID);
+			if (!command.isEnabled())
+				return null;
+			final Event trigger = new Event();
+			ExecutionEvent executionEvent = activeSite
+					.getService(IHandlerService.class)
+					.createExecutionEvent(command, trigger);
+			try {
+				command.executeWithChecks(executionEvent);
+			} catch (CommandException e) {
+				Logger.logException(e);
+			}
+			return null;
+		}
+
+	}
 
 	public static final String ACTION_DEFININITION_ID = "org.eclipse.php.debug.ui.commands.Inspect"; //$NON-NLS-1$
 
