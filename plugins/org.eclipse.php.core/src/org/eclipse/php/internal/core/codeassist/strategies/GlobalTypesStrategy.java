@@ -215,48 +215,51 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		String prefix = abstractContext.getPrefixWithoutProcessing();
 		IDLTKSearchScope scope = createSearchScope();
 		for (Entry<String, UsePart> entry : result.entrySet()) {
-			String name = entry.getKey();
-			String fullName = entry.getValue().getNamespace()
-					.getFullyQualifiedName();
-			if (fullName.startsWith("\\")) { //$NON-NLS-1$
-				fullName = fullName.substring(1);
-			}
-			try {
-				IType[] elements = PhpModelAccess.getDefault().findTypes(
-						fullName, MatchRule.EXACT, 0, 0, scope, null);
-				for (int i = 0; i < elements.length; i++) {
-					reportAlias(reporter, scope, module, replacementRange,
-							elements[i], elements[i].getElementName(), name,
-							suffix);
+			if (entry.getValue().getAlias() != null) {
+				String name = entry.getKey();
+				String fullName = entry.getValue().getNamespace()
+						.getFullyQualifiedName();
+				if (fullName.startsWith("\\")) { //$NON-NLS-1$
+					fullName = fullName.substring(1);
 				}
-				IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(
-						null, fullName, MatchRule.EXACT, 0, 0, scope, null);
-				for (int i = 0; i < namespaces.length; i++) {
-					String elementName = namespaces[i].getElementName();
-					String nsname = prefix.replace(name, fullName);
-					if (nsname.startsWith(elementName + SPLASH) && nsname
-							.lastIndexOf(SPLASH) == elementName.length()) {
-						// namespace strategy will handle this case
-						continue;
-					}
-
-					IType[] typesOfNS = namespaces[i].getTypes();
-
-					for (int j = 0; j < typesOfNS.length; j++) {
+				try {
+					IType[] elements = PhpModelAccess.getDefault().findTypes(
+							fullName, MatchRule.EXACT, 0, 0, scope, null);
+					for (int i = 0; i < elements.length; i++) {
 						reportAlias(reporter, scope, module, replacementRange,
-								typesOfNS[j],
-								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=469779
-								// elementName + SPLASH +
-								typesOfNS[j].getElementName(),
-								(elementName + SPLASH
-										+ typesOfNS[j].getElementName())
-												.replace(fullName, name),
+								elements[i], elements[i].getElementName(), name,
 								suffix);
 					}
+					IType[] namespaces = PhpModelAccess.getDefault()
+							.findNamespaces(null, fullName, MatchRule.EXACT, 0,
+									0, scope, null);
+					for (int i = 0; i < namespaces.length; i++) {
+						String elementName = namespaces[i].getElementName();
+						String nsname = prefix.replace(name, fullName);
+						if (nsname.startsWith(elementName + SPLASH) && nsname
+								.lastIndexOf(SPLASH) == elementName.length()) {
+							// namespace strategy will handle this case
+							continue;
+						}
 
+						IType[] typesOfNS = namespaces[i].getTypes();
+
+						for (int j = 0; j < typesOfNS.length; j++) {
+							reportAlias(reporter, scope, module,
+									replacementRange, typesOfNS[j],
+									// https://bugs.eclipse.org/bugs/show_bug.cgi?id=469779
+									// elementName + SPLASH +
+									typesOfNS[j].getElementName(),
+									(elementName + SPLASH
+											+ typesOfNS[j].getElementName())
+													.replace(fullName, name),
+									suffix);
+						}
+
+					}
+				} catch (ModelException e) {
+					PHPCorePlugin.log(e);
 				}
-			} catch (ModelException e) {
-				PHPCorePlugin.log(e);
 			}
 		}
 	}

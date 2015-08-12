@@ -1,0 +1,23 @@
+--TEST--
+Bug http://eclip.se/474780
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+namespace Boo {
+	use Test\Space02;
+
+	new Space02|
+}
+
+--FILE0--
+<?php
+namespace Test {
+	class Space02 {
+		
+		public function __construct($param01){
+		}
+	}
+}
+--EXPECT--
+method(Space02)
