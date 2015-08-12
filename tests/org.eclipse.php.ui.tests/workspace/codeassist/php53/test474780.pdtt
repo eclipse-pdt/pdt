@@ -1,0 +1,34 @@
+--TEST--
+Bug http://eclip.se/474780
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+namespace Boo {
+	use Test\Space02;
+
+	new Space02|
+}
+
+namespace Test {
+	class Space02 {
+		
+		public function __construct($param01){
+		}
+	}
+}
+--EXPECT--
+<?php
+namespace Boo {
+	use Test\Space02;
+
+	new Space02($param01)
+}
+
+namespace Test {
+	class Space02 {
+		
+		public function __construct($param01){
+		}
+	}
+}
