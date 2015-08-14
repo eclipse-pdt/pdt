@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.php.ui.tests;
 
+import org.eclipse.php.ui.tests.commands.CommandsTests;
 import org.eclipse.php.ui.tests.contentassist.ContentAssistTests;
 import org.eclipse.php.ui.tests.formatter.autoedit.FormatterAutoEditTests;
 import org.eclipse.php.ui.tests.semantic_highlighter.SemanticHighlightingTests;
@@ -21,7 +22,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ SemanticHighlightingTests.class, ContentAssistTests.class,
-		FormatterAutoEditTests.class })
+		FormatterAutoEditTests.class, CommandsTests.class })
 public class AllTests {
 
 }
