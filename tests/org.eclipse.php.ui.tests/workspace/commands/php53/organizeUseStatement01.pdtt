@@ -1,0 +1,23 @@
+--TEST--
+Test organize imports action
+--CONFIG--
+command_id: org.eclipse.php.ui.editor.organize.use.statements
+--FILE--
+<?php
+use Boo\C;
+use Boo\A;
+use Boo\B;
+
+new A();
+new B();
+new C();
+||
+--EXPECT--
+<?php
+use Boo\A;
+use Boo\B;
+use Boo\C;
+
+new A();
+new B();
+new C();
