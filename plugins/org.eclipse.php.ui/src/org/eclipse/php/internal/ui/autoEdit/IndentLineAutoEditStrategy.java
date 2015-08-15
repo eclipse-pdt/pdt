@@ -56,22 +56,21 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy
 			helpBuffer.setLength(0);
 			helpBuffer.append(command.text);
 
-			final int startOffset = command.offset;
-			final int endOffset = startOffset + command.length;
-
-			final int startLineNumber = document.getLineOfOffset(startOffset);
-
-			placeMatchingBlanks(document, helpBuffer, startLineNumber, command);
+			placeMatchingBlanks(document, helpBuffer,
+					document.getLineOfOffset(command.offset), command);
 
 			int futureCaretPosition = -1;
 
-			if (startOffset > 0) {
+			if (command.offset > 0) {
 				final IAfterNewLineAutoEditStrategy autoEditStrategy = getAfterNewLineAutoEditStrategy(
 						document, command);
 				if (autoEditStrategy != null)
 					futureCaretPosition = autoEditStrategy
 							.autoEditAfterNewLine(document, command, helpBuffer);
 			}
+
+			final int startOffset = command.offset;
+			final int endOffset = startOffset + command.length;
 
 			IRegion firstLineInfo = document
 					.getLineInformationOfOffset(startOffset);
