@@ -1,0 +1,14 @@
+--TEST--
+Bug 474795 - PDT removes line on autocomplete of "if block"
+--FILE--
+<?php
+if($b){|  doSomething();
+doSomethingElse();
+?>
+--EXPECT--
+<?php
+if($b){
+	doSomething();
+}
+doSomethingElse();
+?>
