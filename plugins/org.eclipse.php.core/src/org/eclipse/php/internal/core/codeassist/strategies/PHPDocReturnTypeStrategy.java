@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
@@ -30,11 +29,11 @@ public class PHPDocReturnTypeStrategy extends GlobalTypesStrategy {
 			"mixed", "void", "integer", "int", "string", "float", "double", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 			"bool", "boolean", "resource", "null", "NULL", "$this", "self", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 			"static" }; //$NON-NLS-1$
-	
+
 	private static final String EMPTY = ""; //$NON-NLS-1$
 
 	public PHPDocReturnTypeStrategy(ICompletionContext context) {
-		super(context, 0, Modifiers.AccNameSpace);
+		super(context);
 	}
 
 	public PHPDocReturnTypeStrategy(ICompletionContext context, int trueFlag,

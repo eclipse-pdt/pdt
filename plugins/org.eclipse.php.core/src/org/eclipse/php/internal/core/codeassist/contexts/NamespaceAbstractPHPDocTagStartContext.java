@@ -211,12 +211,19 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends
 
 	public int getPrefixEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
-		if (phpToken.getType() == PHPRegionTypes.PHP_NS_SEPARATOR) {
+		if (phpToken.getType() == PHPRegionTypes.PHP_NS_SEPARATOR
+		// Check that there's no other (whitespace) characters
+		// after the namespace separator, otherwise there's no reason
+		// to retrieve the next region.
+				&& phpToken.getLength() == 1 /* "\\".length() */) {
 			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
 			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken
 					.getEnd());
-			return getRegionCollection().getStartOffset()
-					+ phpScriptRegion.getStart() + nextRegion.getTextEnd();
+			// Also check that we only retrieve PHP labels.
+			if (nextRegion.getType() == PHPRegionTypes.PHP_LABEL) {
+				return getRegionCollection().getStartOffset()
+						+ phpScriptRegion.getStart() + nextRegion.getTextEnd();
+			}
 		}
 		return super.getPrefixEnd();
 	}

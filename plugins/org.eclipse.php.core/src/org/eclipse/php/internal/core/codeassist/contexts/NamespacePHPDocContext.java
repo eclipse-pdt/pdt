@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 
@@ -40,7 +41,9 @@ public abstract class NamespacePHPDocContext extends AbstractCompletionContext {
 
 	public int getPrefixEnd() throws BadLocationException {
 		int prefixEnd = getOffset();
-		while (!Character.isWhitespace(getDocument().getChar(prefixEnd))) {
+		// NB: getChar(prefixEnd) returns ' ' if offset is at end of document
+		while (!Character.isWhitespace(getChar(prefixEnd))
+				&& getChar(prefixEnd) != Constants.TYPE_SEPERATOR_CHAR) {
 			++prefixEnd;
 		}
 		return prefixEnd;

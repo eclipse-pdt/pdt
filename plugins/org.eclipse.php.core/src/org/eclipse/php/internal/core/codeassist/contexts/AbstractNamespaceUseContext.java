@@ -113,11 +113,16 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 
 	public int getPrefixEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
-		if (phpToken.getType() == PHPRegionTypes.PHP_NS_SEPARATOR) {
-			if (phpToken.getLength() == phpToken.getTextLength()) {
-				IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
-				ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken
-						.getEnd());
+		if (phpToken.getType() == PHPRegionTypes.PHP_NS_SEPARATOR
+		// Check that there's no other (whitespace) characters
+		// after the namespace separator, otherwise there's no reason
+		// to retrieve the next region.
+				&& phpToken.getLength() == 1 /* "\\".length() */) {
+			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
+			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken
+					.getEnd());
+			// Also check that we only retrieve PHP labels.
+			if (nextRegion.getType() == PHPRegionTypes.PHP_LABEL) {
 				return getRegionCollection().getStartOffset()
 						+ phpScriptRegion.getStart() + nextRegion.getTextEnd();
 			}
