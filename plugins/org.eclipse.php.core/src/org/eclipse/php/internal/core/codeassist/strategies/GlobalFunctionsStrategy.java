@@ -117,11 +117,11 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 			String name = entry.getKey();
 			String fullName = entry.getValue().getNamespace()
 					.getFullyQualifiedName();
-			if (fullName.startsWith("\\")) { //$NON-NLS-1$
+			if (fullName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 				fullName = fullName.substring(1);
 			}
 			IMethod[] elements;
-			if (!fullName.contains("\\")) { //$NON-NLS-1$
+			if (!fullName.contains(NamespaceReference.NAMESPACE_DELIMITER)) {
 				elements = PhpModelAccess.getDefault().findMethods(null,
 						fullName, MatchRule.PREFIX, 0, 0, scope, null);
 				for (int i = 0; i < elements.length; i++) {

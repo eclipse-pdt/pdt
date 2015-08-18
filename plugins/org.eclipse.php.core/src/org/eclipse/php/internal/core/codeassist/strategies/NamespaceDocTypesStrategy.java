@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
@@ -28,6 +29,7 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.NamespacePHPDocVarStartContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * This strategy completes namespace classes and interfaces
@@ -54,16 +56,27 @@ public class NamespaceDocTypesStrategy extends AbstractCompletionStrategy {
 		NamespacePHPDocVarStartContext concreteContext = (NamespacePHPDocVarStartContext) context;
 		// now we compute type suffix in PHPCompletionProposalCollector
 		String suffix = "";//$NON-NLS-1$ 
+		String nsSuffix = getNSSuffix(concreteContext);
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
 
 		for (IType type : getTypes(concreteContext)) {
-			reporter.reportType(type, suffix, replaceRange, getExtraInfo());
+			try {
+				int flags = type.getFlags();
+				int extraInfo = getExtraInfo();
+				boolean isNamespace = PHPFlags.isNamespace(flags);
+				reporter.reportType(type, isNamespace ? nsSuffix : suffix,
+						replaceRange, isNamespace ? extraInfo : extraInfo
+								| ProposalExtraInfo.CLASS_IN_NAMESPACE);
+			} catch (ModelException e) {
+				PHPCorePlugin.log(e);
+			}
 		}
 	}
 
 	public IType[] getTypes(NamespacePHPDocVarStartContext context)
 			throws BadLocationException {
 		String prefix = context.getPrefix();
+		prefix = PHPModelUtils.extractElementName(prefix);
 
 		List<IType> result = new LinkedList<IType>();
 		for (IType ns : context.getNamespaces()) {
@@ -105,7 +118,7 @@ public class NamespaceDocTypesStrategy extends AbstractCompletionStrategy {
 		return result;
 	}
 
-	protected Object getExtraInfo() {
+	protected int getExtraInfo() {
 		return ProposalExtraInfo.TYPE_ONLY;
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 
 /**
@@ -43,7 +44,9 @@ public abstract class PHPDocContext extends AbstractCompletionContext {
 
 	public int getPrefixEnd() throws BadLocationException {
 		int prefixEnd = getOffset();
-		while (!Character.isWhitespace(getDocument().getChar(prefixEnd))) {
+		// NB: getChar(prefixEnd) returns ' ' if offset is at end of document
+		while (!Character.isWhitespace(getChar(prefixEnd))
+				&& getChar(prefixEnd) != Constants.TYPE_SEPERATOR_CHAR) {
 			++prefixEnd;
 		}
 		return prefixEnd;

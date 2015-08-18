@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,13 +16,15 @@ import org.eclipse.dltk.ast.references.TypeReference;
 
 /**
  * This is a reference to a namespace or to a namespace alias.
+ * 
  * @author michael
  */
 public class NamespaceReference extends TypeReference {
-	
+
 	public final static char NAMESPACE_SEPARATOR = '\\';
+	public final static String NAMESPACE_DELIMITER = "\\";
 	private boolean global;
-	private boolean local; 
+	private boolean local;
 
 	public NamespaceReference(DLTKToken token) {
 		super(token);
@@ -31,13 +33,15 @@ public class NamespaceReference extends TypeReference {
 	public NamespaceReference(int start, int end, String name) {
 		super(start, end, name);
 	}
-	
-	public NamespaceReference(int start, int end, String name, boolean global, boolean local) {
+
+	public NamespaceReference(int start, int end, String name, boolean global,
+			boolean local) {
 		super(start, end, name);
 	}
 
 	/**
 	 * Returns whether the namespace name is prefixed with a '\' character
+	 * 
 	 * @return
 	 */
 	public boolean isGlobal() {
@@ -46,6 +50,7 @@ public class NamespaceReference extends TypeReference {
 
 	/**
 	 * Sets whether the namespace name is prefixed with a '\' character
+	 * 
 	 * @param global
 	 */
 	public void setGlobal(boolean global) {
@@ -54,6 +59,7 @@ public class NamespaceReference extends TypeReference {
 
 	/**
 	 * Returns whether the namespace name is prefixed with a 'namespace' keyword
+	 * 
 	 * @return
 	 */
 	public boolean isLocal() {
@@ -62,6 +68,7 @@ public class NamespaceReference extends TypeReference {
 
 	/**
 	 * Sets whether the namespace name is prefixed with a 'namespace' keyword
+	 * 
 	 * @param local
 	 */
 	public void setLocal(boolean local) {

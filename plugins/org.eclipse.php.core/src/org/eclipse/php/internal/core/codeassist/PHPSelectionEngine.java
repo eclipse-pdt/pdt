@@ -71,7 +71,6 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	private static final String PUBLIC = "public"; //$NON-NLS-1$
 	private static final String OBJECT_OPERATOR = "->"; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
-	private static final String NS_SEPARATOR = "\\"; //$NON-NLS-1$
 	private static final String CONST = "const"; //$NON-NLS-1$
 	private static final String THIS = "this"; //$NON-NLS-1$
 	private static final String STATIC = "static"; //$NON-NLS-1$
@@ -407,7 +406,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					!(evaluatedType instanceof PHPTraitType));
 			if (types == null || types.length == 0) {
 				// This can be a constant or namespace in PHP 5.3:
-				if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+				if (name.length() > 0
+						&& name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 					name = name.substring(1);
 				}
 
@@ -811,7 +811,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						return PHPModelUtils.getTypes(elementName,
 								sourceModule, offset, cache, null);
 					}
-					if (NS_SEPARATOR.equals(nextWord)) {
+					if (NamespaceReference.NAMESPACE_DELIMITER.equals(nextWord)) {
 						IDLTKSearchScope scope = SearchEngine
 								.createSearchScope(sourceModule
 										.getScriptProject());

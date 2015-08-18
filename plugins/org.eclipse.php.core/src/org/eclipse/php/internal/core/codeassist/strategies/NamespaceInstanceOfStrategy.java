@@ -14,8 +14,6 @@ import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
 
 public class NamespaceInstanceOfStrategy extends NamespaceTypesStrategy {
 
-	private static final String SPLASH = "\\"; //$NON-NLS-1$
-
 	public NamespaceInstanceOfStrategy(ICompletionContext context,
 			IElementFilter elementFilter) {
 		super(context, elementFilter);
@@ -56,15 +54,4 @@ public class NamespaceInstanceOfStrategy extends NamespaceTypesStrategy {
 		}
 		return "(".equals(nextWord) ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
-
-	public String getNSSuffix(AbstractCompletionContext abstractContext) {
-		String nextWord = null;
-		try {
-			nextWord = abstractContext.getNextWord();
-		} catch (BadLocationException e) {
-			PHPCorePlugin.log(e);
-		}
-		return SPLASH.equals(nextWord) ? "" : SPLASH; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	}
-
 }

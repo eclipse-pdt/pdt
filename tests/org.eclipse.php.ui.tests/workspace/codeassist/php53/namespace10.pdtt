@@ -1,0 +1,44 @@
+--TEST--
+Bug 474697 - CA problems with inserting proposals in phpDoc
+--FILE--
+<?php
+namespace otherspace\multi\path
+{
+
+    class TestMyClass
+    {
+    }
+}
+namespace AAA
+{
+
+    /**
+     *
+     * @return \otherspace\multi\|
+     */
+    function functionName($param)
+    {
+    }
+}
+?>
+--EXPECT--
+<?php
+namespace otherspace\multi\path
+{
+
+    class TestMyClass
+    {
+    }
+}
+namespace AAA
+{
+
+    /**
+     *
+     * @return \otherspace\multi\path\
+     */
+    function functionName($param)
+    {
+    }
+}
+?>

@@ -29,6 +29,7 @@ import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.IncludeStatementContext;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.phar.PharConstants;
@@ -84,7 +85,8 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 		final IPath prefixPath = new Path(prefix);
 		IPath prefixPathFolder = prefixPath;
 		IPath lastSegmant = new Path(""); //$NON-NLS-1$
-		if (prefixPath.segmentCount() != 0 && !prefix.endsWith("\\") //$NON-NLS-1$
+		if (prefixPath.segmentCount() != 0
+				&& !prefix.endsWith(NamespaceReference.NAMESPACE_DELIMITER)
 				&& !prefix.endsWith("/")) { //$NON-NLS-1$
 			prefixPathFolder = prefixPath.removeLastSegments(1);
 			lastSegmant = new Path(prefixPath.lastSegment());

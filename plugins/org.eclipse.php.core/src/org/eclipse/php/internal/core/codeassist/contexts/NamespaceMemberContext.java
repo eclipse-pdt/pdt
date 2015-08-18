@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -74,7 +75,7 @@ public class NamespaceMemberContext extends StatementContext {
 
 		String triggerText = statementText.subSequence(elementStart - 1,
 				elementStart).toString();
-		if (!triggerText.equals("\\")) { //$NON-NLS-1$
+		if (!triggerText.equals(NamespaceReference.NAMESPACE_DELIMITER)) {
 			return false;
 		}
 
@@ -90,7 +91,7 @@ public class NamespaceMemberContext extends StatementContext {
 				statementText, endNamespace, false);
 		String nsName = statementText.subSequence(nsNameStart, elementStart)
 				.toString();
-		if (nsName.equals("\\")) { //$NON-NLS-1$
+		if (nsName.equals(NamespaceReference.NAMESPACE_DELIMITER)) {
 			isGlobal = true;
 			return true;
 		}
@@ -151,7 +152,8 @@ public class NamespaceMemberContext extends StatementContext {
 		// Check that there's no other (whitespace) characters
 		// after the namespace separator, otherwise there's no reason
 		// to retrieve the next region.
-				&& phpToken.getLength() == 1 /* "\\".length() */) {
+				&& phpToken.getLength() == NamespaceReference.NAMESPACE_DELIMITER
+						.length()) {
 			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
 			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken
 					.getEnd());

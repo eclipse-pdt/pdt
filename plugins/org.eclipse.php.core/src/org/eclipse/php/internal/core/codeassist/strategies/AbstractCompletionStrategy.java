@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 /**
@@ -83,6 +84,18 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 		}
 
 		return new org.eclipse.dltk.internal.core.SourceRange(start, length);
+	}
+
+	public String getNSSuffix(ICompletionContext context) {
+		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
+
+		String nextWord = null;
+		try {
+			nextWord = completionContext.getNextWord();
+		} catch (BadLocationException e) {
+			PHPCorePlugin.log(e);
+		}
+		return NamespaceReference.NAMESPACE_DELIMITER.equals(nextWord) ? "" : NamespaceReference.NAMESPACE_DELIMITER; //$NON-NLS-1$
 	}
 
 	public ISourceRange getReplacementRangeWithBraces(ICompletionContext context)
