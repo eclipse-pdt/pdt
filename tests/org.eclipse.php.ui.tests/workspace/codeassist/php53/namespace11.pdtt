@@ -1,0 +1,46 @@
+--TEST--
+Bug 474697 - CA problems with inserting proposals in phpDoc
+--CONFIG--
+cursor: _
+--FILE--
+<?php
+namespace otherspace\multi\path
+{
+
+    class TestMyClass
+    {
+    }
+}
+namespace AAA
+{
+
+    /**
+     *
+     * @return \otherspace\multi\p_|\AAA
+     */
+    function functionName($param)
+    {
+    }
+}
+?>
+--EXPECT--
+<?php
+namespace otherspace\multi\path
+{
+
+    class TestMyClass
+    {
+    }
+}
+namespace AAA
+{
+
+    /**
+     *
+     * @return \otherspace\multi\path\|\AAA
+     */
+    function functionName($param)
+    {
+    }
+}
+?>

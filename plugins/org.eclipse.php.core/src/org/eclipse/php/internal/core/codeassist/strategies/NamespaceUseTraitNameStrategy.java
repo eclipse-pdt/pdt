@@ -72,7 +72,7 @@ public class NamespaceUseTraitNameStrategy extends AbstractCompletionStrategy {
 		return "::".equals(nextWord) ? "" : "::"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
-	protected Object getExtraInfo() {
+	protected int getExtraInfo() {
 		return ProposalExtraInfo.TYPE_ONLY;
 	}
 }

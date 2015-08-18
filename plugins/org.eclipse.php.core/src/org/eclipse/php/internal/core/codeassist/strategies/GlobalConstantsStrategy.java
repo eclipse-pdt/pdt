@@ -164,7 +164,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 			String name = entry.getKey();
 			String fullName = entry.getValue().getNamespace()
 					.getFullyQualifiedName();
-			if (fullName.startsWith("\\")) { //$NON-NLS-1$
+			if (fullName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 				fullName = fullName.substring(1);
 			}
 			IField[] elements = PhpModelAccess.getDefault().findFields(null,

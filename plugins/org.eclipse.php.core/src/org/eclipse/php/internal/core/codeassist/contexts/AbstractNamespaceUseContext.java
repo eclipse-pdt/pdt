@@ -3,6 +3,7 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -12,7 +13,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 public class AbstractNamespaceUseContext extends UseStatementContext {
 
-	private static final String SPLASH = "\\"; //$NON-NLS-1$
 	private IType[] namespaces;
 	private int elementStart;
 	private boolean isGlobal;
@@ -39,7 +39,7 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 
 		String triggerText = statementText.subSequence(elementStart - 1,
 				elementStart).toString();
-		if (!triggerText.equals(SPLASH)) {
+		if (!triggerText.equals(NamespaceReference.NAMESPACE_DELIMITER)) {
 			return false;
 		}
 
@@ -55,11 +55,11 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 				statementText, endNamespace, false);
 		String nsName = statementText.subSequence(nsNameStart, elementStart)
 				.toString();
-		if (!nsName.contains(SPLASH)) {
+		if (!nsName.contains(NamespaceReference.NAMESPACE_DELIMITER)) {
 			return false;
 		}
-		if (!nsName.startsWith(SPLASH)) {
-			nsName = SPLASH + nsName;
+		if (!nsName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
+			nsName = NamespaceReference.NAMESPACE_DELIMITER + nsName;
 		}
 		try {
 			namespaces = PHPModelUtils.getNamespaceOf(nsName, sourceModule,
@@ -113,11 +113,17 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 
 	public int getPrefixEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
-		if (phpToken.getType() == PHPRegionTypes.PHP_NS_SEPARATOR) {
-			if (phpToken.getLength() == phpToken.getTextLength()) {
-				IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
-				ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken
-						.getEnd());
+		if (phpToken.getType() == PHPRegionTypes.PHP_NS_SEPARATOR
+		// Check that there's no other (whitespace) characters
+		// after the namespace separator, otherwise there's no reason
+		// to retrieve the next region.
+				&& phpToken.getLength() == NamespaceReference.NAMESPACE_DELIMITER
+						.length()) {
+			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
+			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken
+					.getEnd());
+			// Also check that we only retrieve PHP labels.
+			if (nextRegion.getType() == PHPRegionTypes.PHP_LABEL) {
 				return getRegionCollection().getStartOffset()
 						+ phpScriptRegion.getStart() + nextRegion.getTextEnd();
 			}

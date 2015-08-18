@@ -10,7 +10,7 @@ public class NamespaceNonFinalClassesStrategy extends NamespaceTypesStrategy {
 	}
 
 	@Override
-	protected Object getExtraInfo() {
+	protected int getExtraInfo() {
 		return ProposalExtraInfo.TYPE_ONLY;
 	}
 }

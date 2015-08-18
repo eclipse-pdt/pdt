@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Zend Technologies and others.
+ * Copyright (c) 2010, 2015 Zend Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,6 @@ import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegi
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
@@ -65,10 +64,12 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends
 			String lastWord = stack.pop();
 			if (lastWord.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
 				if (!stack.empty() && isPrefix(lastWord)) {
-					if (lastWord.startsWith("\\")) { //$NON-NLS-1$
+					if (lastWord
+							.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 						// isGlobal = true;
 					}
-					if (lastWord.startsWith("\\") //$NON-NLS-1$
+					if (lastWord
+							.startsWith(NamespaceReference.NAMESPACE_DELIMITER)
 							&& lastWord
 									.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR) == 0) {
 						isGlobal = true;
@@ -111,7 +112,7 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends
 		} else {
 			namespaces = PhpModelAccess.NULL_TYPES;
 		}
-		if (lastWord.startsWith("\\")) { //$NON-NLS-1$
+		if (lastWord.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 			nsPrefix = null;
 		} else {
 
@@ -148,7 +149,7 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
-		if (fullName.startsWith("\\")) { //$NON-NLS-1$
+		if (fullName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 			fullName = fullName.substring(1);
 		}
 		possibleNamespaces = PhpModelAccess.getDefault().findNamespaces(null,
@@ -196,27 +197,22 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends
 		return getPrefixWithoutProcessing().endsWith(lastWord);
 	}
 
-	public String getPrefix() throws BadLocationException {
-		if (hasWhitespaceBeforeCursor()) {
-			return ""; //$NON-NLS-1$
-		}
-		TextSequence statementText = getStatementText();
-		int statementLength = statementText.length();
-		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(
-				statementText, statementLength); // read whitespace
-		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
-				statementText, prefixEnd, true);
-		return statementText.subSequence(prefixStart, prefixEnd).toString();
-	}
-
 	public int getPrefixEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
-		if (phpToken.getType() == PHPRegionTypes.PHP_NS_SEPARATOR) {
+		if (phpToken.getType() == PHPRegionTypes.PHP_NS_SEPARATOR
+		// Check that there's no other (whitespace) characters
+		// after the namespace separator, otherwise there's no reason
+		// to retrieve the next region.
+				&& phpToken.getLength() == NamespaceReference.NAMESPACE_DELIMITER
+						.length()) {
 			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
 			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken
 					.getEnd());
-			return getRegionCollection().getStartOffset()
-					+ phpScriptRegion.getStart() + nextRegion.getTextEnd();
+			// Also check that we only retrieve PHP labels.
+			if (nextRegion.getType() == PHPRegionTypes.PHP_LABEL) {
+				return getRegionCollection().getStartOffset()
+						+ phpScriptRegion.getStart() + nextRegion.getTextEnd();
+			}
 		}
 		return super.getPrefixEnd();
 	}

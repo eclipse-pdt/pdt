@@ -86,7 +86,7 @@ public class ContentAssistTests {
 						"/workspace/codeassist/php7" });
 	};
 
-	protected static final char OFFSET_CHAR = '|';
+	protected static final String DEFAULT_CURSOR = "|";
 
 	@Context
 	public static Bundle getBundle() {
@@ -141,6 +141,11 @@ public class ContentAssistTests {
 		}
 	}
 
+	private static String getCursor(PdttFile pdttFile) {
+		Map<String, String> config = pdttFile.getConfig();
+		return config.get("cursor");
+	}
+
 	@Test
 	public void assist(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(
@@ -148,7 +153,9 @@ public class ContentAssistTests {
 		pdttFile.applyPreferences();
 
 		String data = pdttFile.getFile();
-		final int offset = data.lastIndexOf(OFFSET_CHAR);
+		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile)
+				: DEFAULT_CURSOR;
+		final int offset = data.lastIndexOf(cursor);
 
 		// replace the offset character
 		data = data.substring(0, offset) + data.substring(offset + 1);

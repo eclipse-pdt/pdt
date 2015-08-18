@@ -79,7 +79,7 @@ public class NamespaceUseFunctionNameStrategy extends
 		return "::".equals(nextWord) ? "" : "::"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
-	protected Object getExtraInfo() {
+	protected int getExtraInfo() {
 		return ProposalExtraInfo.DEFAULT
 				| ProposalExtraInfo.NO_INSERT_NAMESPACE
 				| ProposalExtraInfo.NO_INSERT_USE;

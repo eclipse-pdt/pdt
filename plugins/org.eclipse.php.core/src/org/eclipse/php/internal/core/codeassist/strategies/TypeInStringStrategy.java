@@ -26,6 +26,7 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 
 /**
@@ -33,7 +34,6 @@ import org.eclipse.php.internal.core.model.PhpModelAccess;
  */
 public class TypeInStringStrategy extends AbstractCompletionStrategy {
 
-	private final static String SPLAH = "\\"; //$NON-NLS-1$
 	private final static String SUFFIX = ""; //$NON-NLS-1$
 	protected static final IType[] EMPTY = {};
 
@@ -54,12 +54,10 @@ public class TypeInStringStrategy extends AbstractCompletionStrategy {
 	public void apply(ICompletionReporter reporter) throws Exception {
 		ICompletionContext context = getContext();
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
-		if (abstractContext
-				.getCompletionRequestor() instanceof IPHPCompletionRequestor) {
+		if (abstractContext.getCompletionRequestor() instanceof IPHPCompletionRequestor) {
 			IPHPCompletionRequestor phpCompletionRequestor = (IPHPCompletionRequestor) abstractContext
 					.getCompletionRequestor();
-			if (phpCompletionRequestor
-					.filter(CompletionFlag.STOP_REPORT_TYPE)) {
+			if (phpCompletionRequestor.filter(CompletionFlag.STOP_REPORT_TYPE)) {
 				return;
 			}
 		}
@@ -100,15 +98,15 @@ public class TypeInStringStrategy extends AbstractCompletionStrategy {
 
 		List<IType> result = new LinkedList<IType>();
 
-		if (prefix.contains(SPLAH)) {
+		if (prefix.contains(NamespaceReference.NAMESPACE_DELIMITER)) {
 			if ((Modifiers.AccNameSpace & falseFlag) == 0) {
 				result.addAll(Arrays.asList(PhpModelAccess.getDefault()
 						.findNamespaces(null, prefix, MatchRule.PREFIX,
 								trueFlag, falseFlag, scope, null)));
 			}
-			result.addAll(Arrays.asList(PhpModelAccess.getDefault().findTypes(
-					prefix, MatchRule.PREFIX, trueFlag, falseFlag, scope,
-					null)));
+			result.addAll(Arrays
+					.asList(PhpModelAccess.getDefault().findTypes(prefix,
+							MatchRule.PREFIX, trueFlag, falseFlag, scope, null)));
 			result.addAll(Arrays.asList(PhpModelAccess.getDefault().findTypes(
 					prefix, "", MatchRule.PREFIX, trueFlag, falseFlag, scope, //$NON-NLS-1$
 					null)));
