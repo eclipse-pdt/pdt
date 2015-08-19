@@ -289,7 +289,6 @@ public class BroadcastConnection {
 		result += DEBUG_PORT + '=' + port;
 		result += '&' + DEBUG_HOST + '=' + host;
 		result += '&' + DEBUG_FASTFILE + '=' + String.valueOf(1);
-		result += '&' + USE_SSL + '=' + String.valueOf(0);
 		result += '&' + USE_TUNNELING + '=' + String.valueOf(0);
 		return result;
 	}
@@ -301,7 +300,6 @@ public class BroadcastConnection {
 		descriptor.put(DEBUG_HOST, JSONDescriptor.quote(host));
 		descriptor.put(DEBUG_PORT, String.valueOf(port));
 		descriptor.put(DEBUG_FASTFILE, String.valueOf(1));
-		descriptor.put(USE_SSL, String.valueOf(0));
 		descriptor.put(USE_TUNNELING, String.valueOf(0));
 		result = IDE_SETTINGS + descriptor.getString();
 		return result;
