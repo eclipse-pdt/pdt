@@ -1,0 +1,25 @@
+--TEST--
+Bug 475533 - AST DOM parser doesn't handle correctly "?>" in some rare cases
+--FILE--
+<?php
+namespace AB;
+
+?>
+
+<!DOCTYPE unspecified PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+--EXPECT--
+<Program start='0' length='134'>
+	<Statements>
+		<NamespaceDeclaration start='6' length='13' isBracketed='false'>
+			<NamespaceName start='16' length='2' global='false' current='false'>
+				<Identifier start='16' length='2' name='AB'/>
+			</NamespaceName>
+			<Block start='20' length='0' isCurly='false'>
+			</Block>
+		</NamespaceDeclaration>
+		<EmptyStatement start='21' length='3'/>
+		<InLineHtml start='24' length='110'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>
