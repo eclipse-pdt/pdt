@@ -572,9 +572,7 @@ public class PHPexes {
 				final String version = element.getAttribute(VERSION_ATTRIBUTE);
 				String debuggerID = element.getAttribute(DEBUGGER_ID_ATTRIBUTE);
 				if (debuggerID == null || debuggerID.equals("")) { //$NON-NLS-1$
-					// The debugger id is an optional field, so in case that
-					// none was entered assign the debugger to Zend.
-					debuggerID = DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID;
+					debuggerID = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
 				}
 				final boolean isDefault = "true".equalsIgnoreCase(element //$NON-NLS-1$
 						.getAttribute(DEFAULT_ATTRIBUTE));
