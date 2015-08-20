@@ -86,7 +86,7 @@ This name will appear in the preferences page.
                   The debugger id that will use this php exe (e.g. Zend, XDebug etc.)
 The given id should fit the phpDebugger id definition.
 
-This field is optional, and if not given, the php executable will be assigned to the default Zend debugger.
+This field is optional, and if not given, the php executable will not be assigned to any debugger type (which just simply means that debugger is not installed).
                </documentation>
             </annotation>
          </attribute>
