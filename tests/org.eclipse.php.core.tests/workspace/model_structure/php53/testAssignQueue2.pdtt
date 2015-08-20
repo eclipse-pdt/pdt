@@ -1,0 +1,11 @@
+--TEST--
+Test 
+--FILE--
+<?php
+$x = (($y = call()) ? $z = foo() : bar());
+?>
+--EXPECT--
+FILE: test.php
+	VARIABLE: $x
+	VARIABLE: $y
+	VARIABLE: $z

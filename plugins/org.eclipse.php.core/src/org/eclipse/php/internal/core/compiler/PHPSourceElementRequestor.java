@@ -31,6 +31,7 @@ import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.IElementRequestor;
+import org.eclipse.dltk.compiler.IElementRequestor.ElementInfo;
 import org.eclipse.dltk.compiler.IElementRequestor.ImportInfo;
 import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
@@ -79,6 +80,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	 * belong to current namespace scope
 	 */
 	protected List<ASTNode> deferredNamespacedDeclarations = new LinkedList<ASTNode>();
+
+	protected Stack<ISourceElementRequestor.ElementInfo> fInfoStack = new Stack<IElementRequestor.ElementInfo>();
+
+	protected Map<ISourceElementRequestor.ElementInfo, List<Assignment>> fDeferredVariables = new HashMap<IElementRequestor.ElementInfo, List<Assignment>>();
 
 	/**
 	 * This stack contains a set per method, where each set contains all global
@@ -135,6 +140,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		if (!fNodes.isEmpty() && fNodes.peek() == lambdaMethod) {
 			fRequestor.exitMethod(lambdaMethod.sourceEnd() - 1);
+			fInfoStack.pop();
 			fNodes.pop();
 		}
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
@@ -149,6 +155,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		if (!fNodes.isEmpty() && fNodes.peek() == anonymousClassDeclaration) {
 			fRequestor.exitType(anonymousClassDeclaration.sourceEnd() - 1);
+			fInfoStack.pop();
 			fNodes.pop();
 		}
 
@@ -260,6 +267,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		mi.declarationStart = mi.nameSourceStart;
 		mi.isConstructor = false;
 
+		fInfoStack.push(mi);
 		this.fRequestor.enterMethod(mi);
 		this.fInMethod = true;
 
@@ -334,6 +342,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		mi.superclasses = superClasses.toArray(new String[0]);
 
+		fInfoStack.push(mi);
 		this.fRequestor.enterType(mi);
 		this.fInClass = true;
 
@@ -428,6 +437,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		modifyMethodInfo(method, mi);
 
+		fInfoStack.push(mi);
 		this.fRequestor.enterMethod(mi);
 
 		this.fInMethod = true;
@@ -794,6 +804,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				}
 			}
 		}
+		fInfoStack.push(info);
 		fRequestor.enterField(info);
 		return true;
 	}
@@ -830,12 +841,14 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		info.nameSourceStart = var.sourceStart();
 		info.declarationStart = catchClause.sourceStart();
 
+		fInfoStack.push(info);
 		fRequestor.enterField(info);
 		return true;
 	}
 
 	public boolean endvisit(CatchClause catchClause) throws Exception {
 		fRequestor.exitField(catchClause.sourceEnd() - 1);
+		fInfoStack.pop();
 		return true;
 	}
 
@@ -872,6 +885,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 	public boolean endvisit(PHPFieldDeclaration declaration) throws Exception {
 		fRequestor.exitField(declaration.sourceEnd() - 1);
+		fInfoStack.pop();
 		return true;
 	}
 
@@ -921,12 +935,15 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		info.nameSourceStart = constantName.sourceStart();
 		info.declarationStart = declaration.sourceStart();
 		info.modifiers = markAsDeprecated(info.modifiers, declaration);
+
+		fInfoStack.push(info);
 		fRequestor.enterField(info);
 		return true;
 	}
 
 	public boolean endvisit(ConstantDeclaration declaration) throws Exception {
 		fRequestor.exitField(declaration.sourceEnd() - 1);
+		fInfoStack.pop();
 		return true;
 	}
 
@@ -946,6 +963,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 					info.nameSourceEnd = ref.sourceEnd() - 1;
 					info.nameSourceStart = ref.sourceStart();
 					info.declarationStart = assignment.sourceStart();
+					fInfoStack.push(info);
 					fRequestor.enterField(info);
 					fNodes.push(assignment);
 				}
@@ -962,23 +980,43 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 					return false;
 				}
 			}
-
+			if (!fInfoStack.isEmpty() && fInfoStack
+					.peek() instanceof ISourceElementRequestor.FieldInfo) {
+				if (!fDeferredVariables.containsKey(fInfoStack.peek())) {
+					fDeferredVariables.put(fInfoStack.peek(),
+							new LinkedList<Assignment>());
+				}
+				fDeferredVariables.get(fInfoStack.peek()).add(assignment);
+				return false;
+			}
 			ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 			info.modifiers = Modifiers.AccPublic;
 			info.name = ((VariableReference) left).getName();
 			info.nameSourceEnd = left.sourceEnd() - 1;
 			info.nameSourceStart = left.sourceStart();
 			info.declarationStart = assignment.sourceStart();
+
+			fInfoStack.push(info);
 			fRequestor.enterField(info);
+
 			fNodes.push(assignment);
 		}
 		return true;
+
 	}
 
 	public boolean endvisit(Assignment assignment) throws Exception {
 		if (!fNodes.isEmpty() && fNodes.peek() == assignment) {
 			fRequestor.exitField(assignment.sourceEnd() - 1);
 			fNodes.pop();
+			ElementInfo currentField = fInfoStack.pop();
+			if (fDeferredVariables.containsKey(currentField)) {
+				for (Assignment assign : fDeferredVariables.get(currentField)) {
+					assign.traverse(this);
+				}
+
+				fDeferredVariables.remove(currentField);
+			}
 		}
 
 		return true;
