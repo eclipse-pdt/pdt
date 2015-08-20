@@ -1,0 +1,11 @@
+--TEST--
+Test 
+--FILE--
+<?php
+$q1 = $q2 = $q3 = 'test';
+?>
+--EXPECT--
+FILE: test.php
+	VARIABLE: $q1
+	VARIABLE: $q2
+	VARIABLE: $q3

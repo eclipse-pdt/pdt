@@ -970,7 +970,11 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			info.nameSourceStart = left.sourceStart();
 			info.declarationStart = assignment.sourceStart();
 			fRequestor.enterField(info);
-			fNodes.push(assignment);
+			if (assignment.getValue() instanceof Assignment) {
+				fRequestor.exitField(assignment.sourceEnd() - 1);
+			} else {
+				fNodes.push(assignment);
+			}
 		}
 		return true;
 	}
