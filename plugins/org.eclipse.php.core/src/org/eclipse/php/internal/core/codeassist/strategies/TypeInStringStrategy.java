@@ -54,10 +54,15 @@ public class TypeInStringStrategy extends AbstractCompletionStrategy {
 	public void apply(ICompletionReporter reporter) throws Exception {
 		ICompletionContext context = getContext();
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
-		if (abstractContext.getCompletionRequestor() instanceof IPHPCompletionRequestor) {
+		if (abstractContext
+				.getCompletionRequestor() instanceof IPHPCompletionRequestor) {
 			IPHPCompletionRequestor phpCompletionRequestor = (IPHPCompletionRequestor) abstractContext
 					.getCompletionRequestor();
-			if (phpCompletionRequestor.filter(CompletionFlag.STOP_REPORT_TYPE)) {
+			if (phpCompletionRequestor
+					.filter(CompletionFlag.STOP_REPORT_TYPE)) {
+				return;
+			}
+			if (!phpCompletionRequestor.isExplicit()) {
 				return;
 			}
 		}
@@ -104,9 +109,9 @@ public class TypeInStringStrategy extends AbstractCompletionStrategy {
 						.findNamespaces(null, prefix, MatchRule.PREFIX,
 								trueFlag, falseFlag, scope, null)));
 			}
-			result.addAll(Arrays
-					.asList(PhpModelAccess.getDefault().findTypes(prefix,
-							MatchRule.PREFIX, trueFlag, falseFlag, scope, null)));
+			result.addAll(Arrays.asList(PhpModelAccess.getDefault().findTypes(
+					prefix, MatchRule.PREFIX, trueFlag, falseFlag, scope,
+					null)));
 			result.addAll(Arrays.asList(PhpModelAccess.getDefault().findTypes(
 					prefix, "", MatchRule.PREFIX, trueFlag, falseFlag, scope, //$NON-NLS-1$
 					null)));
