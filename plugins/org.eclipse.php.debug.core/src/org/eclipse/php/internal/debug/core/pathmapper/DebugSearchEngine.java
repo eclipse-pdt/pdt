@@ -150,9 +150,14 @@ public class DebugSearchEngine {
 
 		PathMapper pathMapper = PathMapperRegistry
 				.getByLaunchConfiguration(launchConfiguration);
-		if (pathMapper != null) {
-			pathEntry = find(pathMapper, remoteFile, project, debugTarget);
+		if (pathMapper == null) {
+			/*
+			 * Use temporary one as launch configuration may not always be
+			 * attached to some PHP server (e.g. external debug requests)
+			 */
+			pathMapper = new PathMapper();
 		}
+		pathEntry = find(pathMapper, remoteFile, project, debugTarget);
 		return pathEntry;
 	}
 
