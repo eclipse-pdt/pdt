@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.php.internal.ui.util.SWTUtil;
 import org.eclipse.php.internal.ui.util.TableLayoutComposite;
+import org.eclipse.php.internal.ui.util.TableSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -72,6 +73,7 @@ public class ListDialogField<E> extends DialogField {
 	protected ListViewerAdapter fListViewerAdapter;
 	protected List<E> fElements;
 	protected ViewerSorter fViewerSorter;
+	protected TableSorter fTableSorter;
 
 	protected String[] fButtonLabels;
 	private Button[] fButtonControls;
@@ -107,10 +109,30 @@ public class ListDialogField<E> extends DialogField {
 	 */
 	public ListDialogField(IListAdapter adapter, String[] buttonLabels,
 			ILabelProvider lprovider) {
+		this(adapter, buttonLabels, lprovider, null);
+	}
+
+	/**
+	 * Creates the <code>ListDialogField</code>.
+	 * 
+	 * @param adapter
+	 *            A listener for button invocation, selection changes. Can be
+	 *            <code>null</code>.
+	 * @param buttonLabels
+	 *            The labels of all buttons: <code>null</code> is a valid array
+	 *            entry and marks a separator.
+	 * @param lprovider
+	 *            The label provider to render the table entries
+	 * @param sorter
+	 *            The sorter to sort table entries
+	 */
+	public ListDialogField(IListAdapter adapter, String[] buttonLabels,
+			ILabelProvider lprovider, TableSorter sorter) {
 		super();
 		fListAdapter = adapter;
 
 		fLabelProvider = lprovider;
+		fTableSorter = sorter;
 		fListViewerAdapter = new ListViewerAdapter();
 		fParentElement = this;
 
@@ -181,10 +203,13 @@ public class ListDialogField<E> extends DialogField {
 	}
 
 	/**
-	 * Sets the viewerSorter.
+	 * Sets the viewerSorter. If table sorter has been provided it will replace
+	 * it.
 	 * 
 	 * @param viewerSorter
 	 *            The viewerSorter to set
+	 * @see ListDialogField#ListDialogField(IListAdapter, String[],
+	 *      ILabelProvider, TableSorter)
 	 */
 	public void setViewerSorter(ViewerSorter viewerSorter) {
 		fViewerSorter = viewerSorter;
@@ -338,6 +363,10 @@ public class ListDialogField<E> extends DialogField {
 			fTable.addDoubleClickListener(fListViewerAdapter);
 
 			fTable.setInput(fParentElement);
+
+			if (fTableSorter != null) {
+				fTableSorter.setTableViewer(fTable);
+			}
 
 			if (fViewerSorter != null) {
 				fTable.setSorter(fViewerSorter);
