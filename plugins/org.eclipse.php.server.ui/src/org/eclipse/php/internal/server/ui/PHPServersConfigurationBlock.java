@@ -29,6 +29,7 @@ import org.eclipse.php.internal.ui.preferences.IPreferenceConfigurationBlock;
 import org.eclipse.php.internal.ui.preferences.ScrolledCompositeImpl;
 import org.eclipse.php.internal.ui.util.StatusInfo;
 import org.eclipse.php.internal.ui.util.StatusUtil;
+import org.eclipse.php.internal.ui.util.TableSorter;
 import org.eclipse.php.internal.ui.wizards.WizardModel;
 import org.eclipse.php.internal.ui.wizards.fields.DialogField;
 import org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener;
@@ -37,8 +38,8 @@ import org.eclipse.php.internal.ui.wizards.fields.ListDialogField;
 import org.eclipse.php.server.core.types.IServerType;
 import org.eclipse.php.server.core.types.ServerTypesManager;
 import org.eclipse.php.server.ui.types.IServerTypeDescriptor;
-import org.eclipse.php.server.ui.types.ServerTypesDescriptorRegistry;
 import org.eclipse.php.server.ui.types.IServerTypeDescriptor.ImageType;
+import org.eclipse.php.server.ui.types.ServerTypesDescriptorRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -73,9 +74,15 @@ public class PHPServersConfigurationBlock implements
 		ServerAdapter adapter = new ServerAdapter();
 		String buttons[] = new String[] {
 				PHPServerUIMessages
-						.getString("PHPServersConfigurationBlock.new"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.edit"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.remove"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.setDefault") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						.getString("PHPServersConfigurationBlock.new"), //$NON-NLS-1$
+				PHPServerUIMessages
+						.getString("PHPServersConfigurationBlock.edit"), //$NON-NLS-1$
+				PHPServerUIMessages
+						.getString("PHPServersConfigurationBlock.remove"), //$NON-NLS-1$
+				PHPServerUIMessages
+						.getString("PHPServersConfigurationBlock.setDefault") }; //$NON-NLS-1$
 		fServersList = new ListDialogField(adapter, buttons,
-				new PHPServersLabelProvider()) {
+				new PHPServersLabelProvider(), new TableSorter()) {
 			protected boolean managedButtonPressed(int index) {
 				if (index == getRemoveButtonIndex()) {
 					handleRemoveServer();
@@ -88,7 +95,9 @@ public class PHPServersConfigurationBlock implements
 
 		String[] columnsHeaders = new String[] {
 				PHPServerUIMessages
-						.getString("PHPServersConfigurationBlock.name"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.url") }; //$NON-NLS-1$ //$NON-NLS-2$
+						.getString("PHPServersConfigurationBlock.name"), //$NON-NLS-1$
+				PHPServerUIMessages
+						.getString("PHPServersConfigurationBlock.url") }; //$NON-NLS-1$
 		ColumnLayoutData[] layoutDatas = new ColumnLayoutData[] {
 				new ColumnWeightData(40), new ColumnWeightData(40) };
 		fServersList.setTableColumns(new ListDialogField.ColumnsDescription(
