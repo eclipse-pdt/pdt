@@ -1,0 +1,125 @@
+--TEST--
+Test context lexer
+--FILE--
+<?php
+class MyClass {
+    public function forEach() {}
+    public function list() {}
+    public function const() {}
+}
+(new MyClass())->forEach()->list()->const();
+--EXPECT--
+<Program start='0' length='162'>
+	<Statements>
+		<ClassDeclaration start='6' length='111' modifier=''>
+			<ClassName>
+				<Identifier start='12' length='7' name='MyClass'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='20' length='97' isCurly='true'>
+				<MethodDeclaration start='26' length='28' modifier='public'>
+					<FunctionDeclaration start='33' length='21' isReference='false'>
+						<FunctionName>
+							<Identifier start='42' length='7' name='forEach'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='52' length='2' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+				<MethodDeclaration start='59' length='25' modifier='public'>
+					<FunctionDeclaration start='66' length='18' isReference='false'>
+						<FunctionName>
+							<Identifier start='75' length='4' name='list'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='82' length='2' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+				<MethodDeclaration start='89' length='26' modifier='public'>
+					<FunctionDeclaration start='96' length='19' isReference='false'>
+						<FunctionName>
+							<Identifier start='105' length='5' name='const'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='113' length='2' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<ExpressionStatement start='118' length='44'>
+			<MethodInvocation start='118' length='43'>
+				<Dispatcher>
+					<MethodInvocation start='118' length='34'>
+						<Dispatcher>
+							<MethodInvocation start='118' length='26'>
+								<Dispatcher>
+									<ParenthesisExpression start='118' length='15'>
+										<ClassInstanceCreation start='119' length='13'>
+											<ClassName start='123' length='7'>
+												<NamespaceName start='123' length='7' global='false' current='false'>
+													<Identifier start='123' length='7' name='MyClass'/>
+												</NamespaceName>
+											</ClassName>
+											<ConstructorParameters>
+											</ConstructorParameters>
+										</ClassInstanceCreation>
+									</ParenthesisExpression>
+								</Dispatcher>
+								<Property>
+									<FunctionInvocation start='135' length='9'>
+										<FunctionName start='135' length='7'>
+											<Variable start='135' length='7' isDollared='false'>
+												<Identifier start='135' length='7' name='forEach'/>
+											</Variable>
+										</FunctionName>
+										<Parameters>
+										</Parameters>
+									</FunctionInvocation>
+								</Property>
+							</MethodInvocation>
+						</Dispatcher>
+						<Property>
+							<FunctionInvocation start='146' length='6'>
+								<FunctionName start='146' length='4'>
+									<Variable start='146' length='4' isDollared='false'>
+										<Identifier start='146' length='4' name='list'/>
+									</Variable>
+								</FunctionName>
+								<Parameters>
+								</Parameters>
+							</FunctionInvocation>
+						</Property>
+					</MethodInvocation>
+				</Dispatcher>
+				<Property>
+					<FunctionInvocation start='154' length='7'>
+						<FunctionName start='154' length='5'>
+							<Variable start='154' length='5' isDollared='false'>
+								<Identifier start='154' length='5' name='const'/>
+							</Variable>
+						</FunctionName>
+						<Parameters>
+						</Parameters>
+					</FunctionInvocation>
+				</Property>
+			</MethodInvocation>
+		</ExpressionStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

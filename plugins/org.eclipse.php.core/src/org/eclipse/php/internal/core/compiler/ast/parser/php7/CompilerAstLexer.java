@@ -63,8 +63,18 @@ public class CompilerAstLexer
 		return result;
 	}
 
-	protected Symbol createSymbol(int symbolNumber) {
-		Symbol symbol = super.createSymbol(symbolNumber);
+	protected static class PHPDocBlockSymbolPair {
+		public String value;
+		public PHPDocBlock doc;
+
+		public PHPDocBlockSymbolPair(String value, PHPDocBlock block) {
+			this.value = value;
+			this.doc = block;
+		}
+	}
+
+	protected Symbol createFullSymbol(int symbolNumber) {
+		Symbol symbol = super.createFullSymbol(symbolNumber);
 
 		switch (symbolNumber) {
 		case ParserConstants.T_FUNCTION:
@@ -79,7 +89,8 @@ public class CompilerAstLexer
 		case ParserConstants.T_PROTECTED:
 		case ParserConstants.T_PUBLIC:
 		case ParserConstants.T_TRAIT:
-			symbol.value = latestDocBlock;
+			symbol.value = new PHPDocBlockSymbolPair((String) symbol.value,
+					latestDocBlock);
 			break;
 		}
 

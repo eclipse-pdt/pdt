@@ -28,9 +28,7 @@ Test [1];
 		</ExpressionStatement>
 		<ExpressionStatement start='28' length='9'>
 			<ArrayAccess start='28' length='8' type='array'>
-				<NamespaceName start='28' length='4' global='false' current='false'>
-					<Identifier start='28' length='4' name='Test'/>
-				</NamespaceName>
+				<Scalar start='28' length='4' type='string' value='Test'/>
 				<Index>
 					<Scalar start='34' length='1' type='int' value='1'/>
 				</Index>

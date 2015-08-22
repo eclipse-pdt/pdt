@@ -23,7 +23,7 @@ public class PHP56ErrorReportingTests extends AbstractErrorReportingTests {
 	@Parameters
 	public static final String[] TEST_DIRS = { "/workspace/errors/php54",
 			"/workspace/errors/php55", "/workspace/errors/php55/classExclusive",
-			"/workspace/errors/php56" };
+			"/workspace/errors/php54/exclusive", "/workspace/errors/php56" };
 
 	public PHP56ErrorReportingTests(String[] fileNames) {
 		super(fileNames);
