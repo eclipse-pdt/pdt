@@ -45,8 +45,8 @@ Test [1] ['x'] [3];
 		<ReflectionArrayVariableReference start="44" end="62">
 			<ReflectionArrayVariableReference start="44" end="58">
 				<ReflectionArrayVariableReference start="44" end="52">
-					<FullyQualifiedReference start="44" end="48" name="Test">
-					</FullyQualifiedReference>
+					<Scalar start="44" end="48" type="string" value="Test">
+					</Scalar>
 					<Scalar start="50" end="51" type="int" value="1">
 					</Scalar>
 				</ReflectionArrayVariableReference>

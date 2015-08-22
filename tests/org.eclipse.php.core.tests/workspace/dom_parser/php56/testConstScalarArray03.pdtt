@@ -108,9 +108,7 @@ Test [self::$var] [MyClass::TEST] [parent::$var];
 			<ArrayAccess start='80' length='48' type='array'>
 				<ArrayAccess start='80' length='33' type='array'>
 					<ArrayAccess start='80' length='17' type='array'>
-						<NamespaceName start='80' length='4' global='false' current='false'>
-							<Identifier start='80' length='4' name='Test'/>
-						</NamespaceName>
+						<Scalar start='80' length='4' type='string' value='Test'/>
 						<Index>
 							<StaticFieldAccess start='86' length='10'>
 								<ClassName>

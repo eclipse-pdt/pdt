@@ -165,8 +165,8 @@ $this->callA() <=> callB();
 				</Scalar>
 			</ReflectionArrayVariableReference>
 			<ReflectionArrayVariableReference start="205" end="225">
-				<FullyQualifiedReference start="205" end="213" name="CONSTANT">
-				</FullyQualifiedReference>
+				<Scalar start="205" end="213" type="string" value="CONSTANT">
+				</Scalar>
 				<Scalar start="214" end="224" type="string" value="OTHERCONST">
 				</Scalar>
 			</ReflectionArrayVariableReference>
