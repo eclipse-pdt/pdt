@@ -52,6 +52,22 @@ parser code {:
 		return variable;
 	}
 
+	/**
+     * XXX: Reimplement scalars as NamespaceName
+     */
+	protected VariableBase detectScalar(VariableBase expr) {
+		if (expr instanceof NamespaceName) {
+			NamespaceName name = (NamespaceName) expr;
+			if (name.segments().size() == 1) {
+				Identifier i = name.segments().get(0);
+				if (!name.isGlobal() && !name.isCurrent()) {
+					return new Scalar(i.getStart(), i.getEnd(), ast, i.getName(), Scalar.TYPE_STRING);
+				}
+			}
+		}
+		return expr;
+	}
+
     /** Report a non fatal error (or warning).  This method takes a message 
      *  string and an additional object (to be used by specializations 
      *  implemented in subclasses).  Here in the base class a very simple 
@@ -2889,7 +2905,7 @@ T_CONSTANT_ENCAPSED_STRING:scalar T_OPEN_RECT static_scalar:index T_CLOSE_RECT:e
 constant_dereference ::=
 class_name:constant T_OPEN_RECT expr:index T_CLOSE_RECT:end
 {:
-	RESULT = new ArrayAccess(constantleft, endright, parser.ast, (VariableBase)constant, index, ArrayAccess.VARIABLE_ARRAY);
+	RESULT = new ArrayAccess(constantleft, endright, parser.ast, detectScalar((VariableBase)constant), index, ArrayAccess.VARIABLE_ARRAY);
 :}
 
 | static_class_constant:constant T_OPEN_RECT expr:index T_CLOSE_RECT:end

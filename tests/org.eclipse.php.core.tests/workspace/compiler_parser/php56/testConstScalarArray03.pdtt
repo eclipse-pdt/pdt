@@ -61,8 +61,8 @@ Test [self::$var] [MyClass::TEST] [parent::$var];
 		<ReflectionArrayVariableReference start="80" end="128">
 			<ReflectionArrayVariableReference start="80" end="113">
 				<ReflectionArrayVariableReference start="80" end="97">
-					<FullyQualifiedReference start="80" end="84" name="Test">
-					</FullyQualifiedReference>
+					<Scalar start="80" end="84" type="string" value="Test">
+					</Scalar>
 					<StaticFieldAccess start="86" end="96">
 						<FullyQualifiedReference start="86" end="90" name="self">
 						</FullyQualifiedReference>
