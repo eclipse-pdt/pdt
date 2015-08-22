@@ -251,9 +251,7 @@ $this->callA() ?? callB();
 				</Condition>
 				<IfNull>
 					<ArrayAccess start='194' length='20' type='array'>
-						<NamespaceName start='194' length='8' global='false' current='false'>
-							<Identifier start='194' length='8' name='CONSTANT'/>
-						</NamespaceName>
+						<Scalar start='194' length='8' type='string' value='CONSTANT'/>
 						<Index>
 							<Scalar start='203' length='10' type='string' value='OTHERCONST'/>
 						</Index>
