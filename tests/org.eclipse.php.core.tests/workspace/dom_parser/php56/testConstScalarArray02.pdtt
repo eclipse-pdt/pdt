@@ -50,9 +50,7 @@ Test [1] ['x'] [3];
 			<ArrayAccess start='44' length='18' type='array'>
 				<ArrayAccess start='44' length='14' type='array'>
 					<ArrayAccess start='44' length='8' type='array'>
-						<NamespaceName start='44' length='4' global='false' current='false'>
-							<Identifier start='44' length='4' name='Test'/>
-						</NamespaceName>
+						<Scalar start='44' length='4' type='string' value='Test'/>
 						<Index>
 							<Scalar start='50' length='1' type='int' value='1'/>
 						</Index>

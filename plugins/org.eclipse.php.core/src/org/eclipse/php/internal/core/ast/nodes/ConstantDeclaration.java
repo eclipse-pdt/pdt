@@ -42,14 +42,15 @@ public class ConstantDeclaration extends Statement {
 	public static final ChildListPropertyDescriptor NAMES_PROPERTY = new ChildListPropertyDescriptor(
 			ConstantDeclaration.class, "names", Identifier.class, CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildListPropertyDescriptor INITIALIZERS_PROPERTY = new ChildListPropertyDescriptor(
-			ConstantDeclaration.class,
-			"initializers", Expression.class, CYCLE_RISK); //$NON-NLS-1$
+			ConstantDeclaration.class, "initializers", Expression.class, //$NON-NLS-1$
+			CYCLE_RISK);
 
 	/**
 	 * A list of property descriptors (element type:
 	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(
 				2);
@@ -58,7 +59,7 @@ public class ConstantDeclaration extends Statement {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	private ConstantDeclaration(int start, int end, AST ast,
+	public ConstantDeclaration(int start, int end, AST ast,
 			List<Identifier> names, List<Expression> initializers) {
 		super(start, end, ast);
 
@@ -173,7 +174,8 @@ public class ConstantDeclaration extends Statement {
 		return this.names;
 	}
 
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	final List internalGetChildListProperty(
+			ChildListPropertyDescriptor property) {
 		if (property == NAMES_PROPERTY) {
 			return names();
 		}
@@ -211,8 +213,8 @@ public class ConstantDeclaration extends Statement {
 		final List names = ASTNode.copySubtrees(target, this.names());
 		final List initializers = ASTNode.copySubtrees(target,
 				this.initializers());
-		final ConstantDeclaration ccd = new ConstantDeclaration(
-				this.getStart(), this.getEnd(), target, names, initializers);
+		final ConstantDeclaration ccd = new ConstantDeclaration(this.getStart(),
+				this.getEnd(), target, names, initializers);
 		return ccd;
 
 	}

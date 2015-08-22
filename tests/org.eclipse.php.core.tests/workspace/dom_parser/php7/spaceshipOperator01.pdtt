@@ -208,9 +208,7 @@ $this->callA() <=> callB();
 					</Index>
 				</ArrayAccess>
 				<ArrayAccess start='205' length='20' type='array'>
-					<NamespaceName start='205' length='8' global='false' current='false'>
-						<Identifier start='205' length='8' name='CONSTANT'/>
-					</NamespaceName>
+					<Scalar start='205' length='8' type='string' value='CONSTANT'/>
 					<Index>
 						<Scalar start='214' length='10' type='string' value='OTHERCONST'/>
 					</Index>

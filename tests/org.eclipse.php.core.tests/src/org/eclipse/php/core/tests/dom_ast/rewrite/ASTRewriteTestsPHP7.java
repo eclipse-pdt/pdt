@@ -17,8 +17,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.ast.nodes.ArrayAccess;
 import org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
+import org.eclipse.php.internal.core.ast.nodes.StaticFieldAccess;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite.SuiteClasses;
@@ -37,6 +39,21 @@ public class ASTRewriteTestsPHP7 extends ASTRewriteTestsPHP56 {
 	@Override
 	protected PHPVersion getPHPVersion() {
 		return PHPVersion.PHP7_0;
+	}
+
+	@Test
+	public void staticMemberWithArray() throws Exception {
+		String str = "<?php MyClass::$$a[5];?>";
+		initialize(str);
+
+		List<ArrayAccess> arrayAccess = getAllOfType(program,
+				ArrayAccess.class);
+		assertTrue("Unexpected list size.", arrayAccess.size() == 1);
+		((StaticFieldAccess) arrayAccess.get(0).getName())
+				.setField(ast.newReflectionVariable(ast.newArrayAccess(
+						ast.newVariable("bar"), ast.newScalar("333"))));
+		rewrite();
+		checkResult("<?php MyClass::$$bar[333][5];?>");
 	}
 
 	@Test

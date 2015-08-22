@@ -27,8 +27,8 @@ Test [1];
 	</ExpressionStatement>
 	<ExpressionStatement start="28" end="37">
 		<ReflectionArrayVariableReference start="28" end="36">
-			<FullyQualifiedReference start="28" end="32" name="Test">
-			</FullyQualifiedReference>
+			<Scalar start="28" end="32" type="string" value="Test">
+			</Scalar>
 			<Scalar start="34" end="35" type="int" value="1">
 			</Scalar>
 		</ReflectionArrayVariableReference>
