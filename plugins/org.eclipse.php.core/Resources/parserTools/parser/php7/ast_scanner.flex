@@ -156,7 +156,7 @@ import org.eclipse.php.internal.core.PHPVersion;
     	addComment(Comment.TYPE_MULTILINE);
     }
 
-    private Symbol createFullSymbol(int symbolNumber) {
+    protected Symbol createFullSymbol(int symbolNumber) {
         Symbol symbol = createSymbol(symbolNumber);
         symbol.value = yytext();
         return symbol;
@@ -268,19 +268,19 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_IN_SCRIPTING>"function" {
-	return createSymbol(ParserConstants.T_FUNCTION);
+	return createFullSymbol(ParserConstants.T_FUNCTION);
 }
 
 <ST_IN_SCRIPTING>"const" {
-	return createSymbol(ParserConstants.T_CONST);
+	return createFullSymbol(ParserConstants.T_CONST);
 }
 
 <ST_IN_SCRIPTING>"return" {
-	return createSymbol(ParserConstants.T_RETURN);
+	return createFullSymbol(ParserConstants.T_RETURN);
 }
 
 <ST_IN_SCRIPTING>"yield" {
-	return createSymbol(ParserConstants.T_YIELD);
+	return createFullSymbol(ParserConstants.T_YIELD);
 }
 
 <ST_IN_SCRIPTING>"yield"{WHITESPACE}+"from" {
@@ -288,143 +288,143 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_IN_SCRIPTING>"try" {
-	return createSymbol(ParserConstants.T_TRY);
+	return createFullSymbol(ParserConstants.T_TRY);
 }
 
 <ST_IN_SCRIPTING>"catch" {
-	return createSymbol(ParserConstants.T_CATCH);
+	return createFullSymbol(ParserConstants.T_CATCH);
 }
 
 <ST_IN_SCRIPTING>"throw" {
-	return createSymbol(ParserConstants.T_THROW);
+	return createFullSymbol(ParserConstants.T_THROW);
 }
 
 <ST_IN_SCRIPTING>"finally" {
-	return createSymbol(ParserConstants.T_FINALLY);
+	return createFullSymbol(ParserConstants.T_FINALLY);
 }
 
 <ST_IN_SCRIPTING>"if" {
-	return createSymbol(ParserConstants.T_IF);
+	return createFullSymbol(ParserConstants.T_IF);
 }
 
 <ST_IN_SCRIPTING>"elseif" {
-	return createSymbol(ParserConstants.T_ELSEIF);
+	return createFullSymbol(ParserConstants.T_ELSEIF);
 }
 
 <ST_IN_SCRIPTING>"endif" {
-	return createSymbol(ParserConstants.T_ENDIF);
+	return createFullSymbol(ParserConstants.T_ENDIF);
 }
 
 <ST_IN_SCRIPTING>"else" {
-	return createSymbol(ParserConstants.T_ELSE);
+	return createFullSymbol(ParserConstants.T_ELSE);
 }
 
 <ST_IN_SCRIPTING>"while" {
-	return createSymbol(ParserConstants.T_WHILE);
+	return createFullSymbol(ParserConstants.T_WHILE);
 }
 
 <ST_IN_SCRIPTING>"endwhile" {
-	return createSymbol(ParserConstants.T_ENDWHILE);
+	return createFullSymbol(ParserConstants.T_ENDWHILE);
 }
 
 <ST_IN_SCRIPTING>"do" {
-	return createSymbol(ParserConstants.T_DO);
+	return createFullSymbol(ParserConstants.T_DO);
 }
 
 <ST_IN_SCRIPTING>"for" {
-	return createSymbol(ParserConstants.T_FOR);
+	return createFullSymbol(ParserConstants.T_FOR);
 }
 
 <ST_IN_SCRIPTING>"endfor" {
-	return createSymbol(ParserConstants.T_ENDFOR);
+	return createFullSymbol(ParserConstants.T_ENDFOR);
 }
 
 <ST_IN_SCRIPTING>"foreach" {
-	return createSymbol(ParserConstants.T_FOREACH);
+	return createFullSymbol(ParserConstants.T_FOREACH);
 }
 
 <ST_IN_SCRIPTING>"endforeach" {
-	return createSymbol(ParserConstants.T_ENDFOREACH);
+	return createFullSymbol(ParserConstants.T_ENDFOREACH);
 }
 
 <ST_IN_SCRIPTING>"declare" {
-	return createSymbol(ParserConstants.T_DECLARE);
+	return createFullSymbol(ParserConstants.T_DECLARE);
 }
 
 <ST_IN_SCRIPTING>"enddeclare" {
-	return createSymbol(ParserConstants.T_ENDDECLARE);
+	return createFullSymbol(ParserConstants.T_ENDDECLARE);
 }
 
 <ST_IN_SCRIPTING>"instanceof" {
-	return createSymbol(ParserConstants.T_INSTANCEOF);
+	return createFullSymbol(ParserConstants.T_INSTANCEOF);
 }
 
 <ST_IN_SCRIPTING>"as" {
-	return createSymbol(ParserConstants.T_AS);
+	return createFullSymbol(ParserConstants.T_AS);
 }
 
 <ST_IN_SCRIPTING>"switch" {
-	return createSymbol(ParserConstants.T_SWITCH);
+	return createFullSymbol(ParserConstants.T_SWITCH);
 }
 
 <ST_IN_SCRIPTING>"endswitch" {
-	return createSymbol(ParserConstants.T_ENDSWITCH);
+	return createFullSymbol(ParserConstants.T_ENDSWITCH);
 }
 
 <ST_IN_SCRIPTING>"case" {
-	return createSymbol(ParserConstants.T_CASE);
+	return createFullSymbol(ParserConstants.T_CASE);
 }
 
 <ST_IN_SCRIPTING>"default" {
-	return createSymbol(ParserConstants.T_DEFAULT);
+	return createFullSymbol(ParserConstants.T_DEFAULT);
 }
 
 <ST_IN_SCRIPTING>"break" {
-	return createSymbol(ParserConstants.T_BREAK);
+	return createFullSymbol(ParserConstants.T_BREAK);
 }
 
 <ST_IN_SCRIPTING>"continue" {
-	return createSymbol(ParserConstants.T_CONTINUE);
+	return createFullSymbol(ParserConstants.T_CONTINUE);
 }
 
 <ST_IN_SCRIPTING>"goto" {
- 	return createSymbol(ParserConstants.T_GOTO);
+ 	return createFullSymbol(ParserConstants.T_GOTO);
 }
 
 <ST_IN_SCRIPTING>"echo" {
-	return createSymbol(ParserConstants.T_ECHO);
+	return createFullSymbol(ParserConstants.T_ECHO);
 }
 
 <ST_IN_SCRIPTING>"print" {
-	return createSymbol(ParserConstants.T_PRINT);
+	return createFullSymbol(ParserConstants.T_PRINT);
 }
 
 <ST_IN_SCRIPTING>"class" {
-	return createSymbol(ParserConstants.T_CLASS);
+	return createFullSymbol(ParserConstants.T_CLASS);
 }
 
 <ST_IN_SCRIPTING>"interface" {
-	return createSymbol(ParserConstants.T_INTERFACE);
+	return createFullSymbol(ParserConstants.T_INTERFACE);
 }
 
 <ST_IN_SCRIPTING>"trait" {
-	return createSymbol(ParserConstants.T_TRAIT);
+	return createFullSymbol(ParserConstants.T_TRAIT);
 }
 
 <ST_IN_SCRIPTING>"insteadof" {
-        return createSymbol(ParserConstants.T_INSTEADOF);
+        return createFullSymbol(ParserConstants.T_INSTEADOF);
 }
 
 <ST_IN_SCRIPTING>"callable" {
- return createSymbol(ParserConstants.T_CALLABLE);
+ return createFullSymbol(ParserConstants.T_CALLABLE);
 }
 
 <ST_IN_SCRIPTING>"extends" {
-	return createSymbol(ParserConstants.T_EXTENDS);
+	return createFullSymbol(ParserConstants.T_EXTENDS);
 }
 
 <ST_IN_SCRIPTING>"implements" {
-	return createSymbol(ParserConstants.T_IMPLEMENTS);
+	return createFullSymbol(ParserConstants.T_IMPLEMENTS);
 }
 
 <ST_IN_SCRIPTING>"->" {
@@ -458,15 +458,15 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_IN_SCRIPTING>"new" {
-	return createSymbol(ParserConstants.T_NEW);
+	return createFullSymbol(ParserConstants.T_NEW);
 }
 
 <ST_IN_SCRIPTING>"clone" {
-	return createSymbol(ParserConstants.T_CLONE);
+	return createFullSymbol(ParserConstants.T_CLONE);
 }
 
 <ST_IN_SCRIPTING>"var" {
-	return createSymbol(ParserConstants.T_VAR);
+	return createFullSymbol(ParserConstants.T_VAR);
 }
 
 <ST_IN_SCRIPTING>"("{TABS_AND_SPACES}("int"|"integer"){TABS_AND_SPACES}")" {
@@ -502,74 +502,74 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_IN_SCRIPTING>"eval" {
-	return createSymbol(ParserConstants.T_EVAL);
+	return createFullSymbol(ParserConstants.T_EVAL);
 }
 
 <ST_IN_SCRIPTING>"include" {
-	return createSymbol(ParserConstants.T_INCLUDE);
+	return createFullSymbol(ParserConstants.T_INCLUDE);
 }
 
 <ST_IN_SCRIPTING>"include_once" {
-	return createSymbol(ParserConstants.T_INCLUDE_ONCE);
+	return createFullSymbol(ParserConstants.T_INCLUDE_ONCE);
 }
 
 <ST_IN_SCRIPTING>"require" {
-	return createSymbol(ParserConstants.T_REQUIRE);
+	return createFullSymbol(ParserConstants.T_REQUIRE);
 }
 
 <ST_IN_SCRIPTING>"require_once" {
-	return createSymbol(ParserConstants.T_REQUIRE_ONCE);
+	return createFullSymbol(ParserConstants.T_REQUIRE_ONCE);
 }
 
 <ST_IN_SCRIPTING>"namespace" {
- 	return createSymbol(ParserConstants.T_NAMESPACE);
+ 	return createFullSymbol(ParserConstants.T_NAMESPACE);
 }
 
 <ST_IN_SCRIPTING>"use" {
-	return createSymbol(ParserConstants.T_USE);
+	return createFullSymbol(ParserConstants.T_USE);
 }
 
 <ST_IN_SCRIPTING>"global" {
-	return createSymbol(ParserConstants.T_GLOBAL);
+	return createFullSymbol(ParserConstants.T_GLOBAL);
 }
 
 <ST_IN_SCRIPTING>"isset" {
-	return createSymbol(ParserConstants.T_ISSET);
+	return createFullSymbol(ParserConstants.T_ISSET);
 }
 
 <ST_IN_SCRIPTING>"empty" {
-	return createSymbol(ParserConstants.T_EMPTY);
+	return createFullSymbol(ParserConstants.T_EMPTY);
 }
 
 <ST_IN_SCRIPTING>"__halt_compiler" {
 	return createSymbol(ParserConstants.T_HALT_COMPILER);
 }
 <ST_IN_SCRIPTING>"static" {
-	return createSymbol(ParserConstants.T_STATIC);
+	return createFullSymbol(ParserConstants.T_STATIC);
 }
 
 <ST_IN_SCRIPTING>"abstract" {
-	return createSymbol(ParserConstants.T_ABSTRACT);
+	return createFullSymbol(ParserConstants.T_ABSTRACT);
 }
 
 <ST_IN_SCRIPTING>"final" {
-	return createSymbol(ParserConstants.T_FINAL);
+	return createFullSymbol(ParserConstants.T_FINAL);
 }
 
 <ST_IN_SCRIPTING>"private" {
-	return createSymbol(ParserConstants.T_PRIVATE);
+	return createFullSymbol(ParserConstants.T_PRIVATE);
 }
 
 <ST_IN_SCRIPTING>"protected" {
-	return createSymbol(ParserConstants.T_PROTECTED);
+	return createFullSymbol(ParserConstants.T_PROTECTED);
 }
 
 <ST_IN_SCRIPTING>"public" {
-	return createSymbol(ParserConstants.T_PUBLIC);
+	return createFullSymbol(ParserConstants.T_PUBLIC);
 }
 
 <ST_IN_SCRIPTING>"unset" {
-	return createSymbol(ParserConstants.T_UNSET);
+	return createFullSymbol(ParserConstants.T_UNSET);
 }
 
 <ST_IN_SCRIPTING>"=>" {
@@ -577,11 +577,11 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_IN_SCRIPTING>"list" {
-	return createSymbol(ParserConstants.T_LIST);
+	return createFullSymbol(ParserConstants.T_LIST);
 }
 
 <ST_IN_SCRIPTING>"array" {
-	return createSymbol(ParserConstants.T_ARRAY);
+	return createFullSymbol(ParserConstants.T_ARRAY);
 }
 
 <ST_IN_SCRIPTING>"++" {
@@ -673,15 +673,15 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_IN_SCRIPTING>"OR" {
-	return createSymbol(ParserConstants.T_LOGICAL_OR);
+	return createFullSymbol(ParserConstants.T_LOGICAL_OR);
 }
 
 <ST_IN_SCRIPTING>"AND" {
-	return createSymbol(ParserConstants.T_LOGICAL_AND);
+	return createFullSymbol(ParserConstants.T_LOGICAL_AND);
 }
 
 <ST_IN_SCRIPTING>"XOR" {
-	return createSymbol(ParserConstants.T_LOGICAL_XOR);
+	return createFullSymbol(ParserConstants.T_LOGICAL_XOR);
 }
 
 <ST_IN_SCRIPTING>"<<" {
