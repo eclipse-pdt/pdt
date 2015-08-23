@@ -24,9 +24,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceType;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.*;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -50,6 +48,8 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
+import org.eclipse.text.edits.InsertEdit;
+import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
@@ -370,6 +370,32 @@ public class UseStatementInjector {
 				ast.setInsertUseStatement(true);
 				TextEdit edits = program.rewrite(document,
 						createOptions(modelElement));
+				// workaround for bug 400976:
+				// when current offset is in a php section that only contains
+				// AstErrors, the use statements will be added at the beginning
+				// of the previous php section.
+				// If luckily there is a previous php section in the
+				// document, we're good, otherwise we have to create one
+				// now at the beginning of the document.
+				// Text edits that will be correctly inserted in an existing
+				// php section have all their offset > 0, so looking for text
+				// edits having all their offset = 0 (and their length = 0)
+				// should be enough to detect use statements that will be
+				// wrongly inserted outside any existing php section...
+				if (new Region(0, 0).equals(edits.getRegion())) {
+					String lineDelim = TextUtilities
+							.getDefaultLineDelimiter(document);
+					MultiTextEdit newEdits = new MultiTextEdit();
+					newEdits.addChild(new InsertEdit(0, "<?php"));
+					newEdits.addChild(new InsertEdit(0, lineDelim));
+					for (TextEdit edit : edits.getChildren()) {
+						// we have to copy the text edit to reset its parent
+						newEdits.addChild(edit.copy());
+					}
+					newEdits.addChild(new InsertEdit(0, "?>"));
+					newEdits.addChild(new InsertEdit(0, lineDelim));
+					edits = newEdits;
+				}
 				edits.apply(document);
 				ast.setInsertUseStatement(false);
 
