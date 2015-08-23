@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
@@ -53,7 +56,17 @@ public class NamespacesStrategy extends GlobalTypesStrategy {
 			return PhpModelAccess.getDefault().findNamespaces(null, prefix,
 					MatchRule.EXACT, trueFlag, falseFlag, scope, null);
 		}
-		return PhpModelAccess.getDefault().findNamespaces(null, prefix,
+		
+		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null, prefix,
 				MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
+		List<IType> result = new ArrayList<IType>();
+		String lastNamespace = null;
+		for (IType namespace : namespaces) {
+			if (!namespace.getElementName().equals(lastNamespace)) {
+				result.add(namespace);
+			}
+			lastNamespace = namespace.getElementName();
+		}
+		return result.toArray(new IType[0]);
 	}
 }

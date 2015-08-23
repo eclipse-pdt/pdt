@@ -304,7 +304,15 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 					scope, null);
 
 			result.addAll(Arrays.asList(types));
-			result.addAll(Arrays.asList(namespaces));
+			
+			Arrays.sort(namespaces, new Comparator<IType>() {
+
+				@Override
+				public int compare(IType o1, IType o2) {
+					return o1.getElementName().compareToIgnoreCase(o2.getElementName());
+				}
+			});
+			addFilteredNamespaces(namespaces, result);
 		}
 		IType[] types = PhpModelAccess.getDefault().findTypes(null, prefix,
 				MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
@@ -324,11 +332,23 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 			}
 		} else {
 			result.addAll(Arrays.asList(types));
-			result.addAll(Arrays.asList(namespaces));
+			
+			addFilteredNamespaces(namespaces, result);
 		}
-
+		
 		return result.toArray(new IType[result.size()]);
 	}
+	
+	private void addFilteredNamespaces(IType[] namespaces, List<IType> result){
+		String lastNamespace = null;
+		for (IType namespace : namespaces) {
+			if (!namespace.getElementName().equals(lastNamespace)) {
+				result.add(namespace);
+			}
+			lastNamespace = namespace.getElementName();
+		}
+	}
+
 
 	/**
 	 * Adds the self function with the relevant data to the proposals array
