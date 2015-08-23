@@ -1,0 +1,37 @@
+--TEST--
+http://eclip.se/457799
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+
+FB|
+--FILE0--
+<?php
+namespace Fooa\Boo {
+	class Test01{
+		
+	}
+}
+
+namespace Fooa\Boo2 {
+	class Test01{
+
+	}
+}
+--FILE1--
+<?php
+namespace Fooa\Boo {
+	class Test02{
+		
+	}
+}
+
+namespace Fooa\Boo2 {
+	class Test02{
+
+	}
+}
+--EXPECT--
+type(Fooa\Boo)
+type(Fooa\Boo2)

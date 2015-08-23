@@ -16,11 +16,13 @@ import org.eclipse.dltk.internal.core.ArchiveProjectFragment;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.codeassist.AliasField;
 import org.eclipse.php.internal.core.codeassist.AliasMethod;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.util.PHPModelLabelProvider;
 
 public class PHPCompletionProposalLabelProvider extends
@@ -124,7 +126,13 @@ public class PHPCompletionProposalLabelProvider extends
 		}
 		nameBuffer.append(typeProposal.getName());
 
-		if (type.getParent() != null) {
+		boolean isNamespace = false;
+		try {
+			isNamespace = PHPFlags.isNamespace(type.getFlags());
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
+		if (type.getParent() != null && !isNamespace) {
 			nameBuffer.append(" - "); //$NON-NLS-1$
 			IModelElement parent = type.getParent();
 			nameBuffer.append(parent.getElementName());
