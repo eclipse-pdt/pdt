@@ -208,8 +208,8 @@ $this->callA() ?? callB();
 			</Condition>
 			<IfNull>
 				<ReflectionArrayVariableReference start="194" end="214">
-					<FullyQualifiedReference start="194" end="202" name="CONSTANT">
-					</FullyQualifiedReference>
+					<Scalar start="194" end="202" type="string" value="CONSTANT">
+					</Scalar>
 					<Scalar start="203" end="213" type="string" value="OTHERCONST">
 					</Scalar>
 				</ReflectionArrayVariableReference>

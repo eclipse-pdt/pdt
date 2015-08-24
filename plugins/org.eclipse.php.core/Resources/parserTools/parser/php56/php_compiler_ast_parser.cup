@@ -58,6 +58,16 @@ parser code {:
 		return variable;
 	}
 
+	protected Expression detectScalar(Expression expr) {
+		if (expr instanceof FullyQualifiedReference) {
+			FullyQualifiedReference name = (FullyQualifiedReference) expr;
+			if (name.getNamespace() == null) {
+				return new Scalar(name.start(), name.end(), name.getName(), Scalar.TYPE_STRING);
+			}
+		}
+		return expr;
+	}
+
 	protected String getTokenName(int token) {
 		return PhpTokenNames.getName(token);
 	}
@@ -3396,7 +3406,7 @@ T_CONSTANT_ENCAPSED_STRING:scalar T_OPEN_RECT static_scalar:index T_CLOSE_RECT:e
 constant_dereference ::=
 class_name:constant T_OPEN_RECT expr:index T_CLOSE_RECT:end
 {:
-	RESULT = new ReflectionArrayVariableReference(constantleft, endright, constant, index, ReflectionArrayVariableReference.VARIABLE_ARRAY);
+	RESULT = new ReflectionArrayVariableReference(constantleft, endright, detectScalar(constant), index, ReflectionArrayVariableReference.VARIABLE_ARRAY);
 :}
 
 | static_class_constant:constant T_OPEN_RECT expr:index T_CLOSE_RECT:end

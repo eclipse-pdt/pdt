@@ -1203,12 +1203,6 @@ if (parsePHPDoc()) {
     return createSymbol(ParserConstants.T_CHARACTER);
 }
 
-<ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"{$" {
-    pushState(ST_IN_SCRIPTING);
-    yypushback(yylength()-1);
-    return createSymbol(ParserConstants.T_CURLY_OPEN_WITH_DOLAR);
-}
-
 <ST_DOUBLE_QUOTES>{DOUBLE_QUOTES_CHARS}+ {
 	return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
 }
