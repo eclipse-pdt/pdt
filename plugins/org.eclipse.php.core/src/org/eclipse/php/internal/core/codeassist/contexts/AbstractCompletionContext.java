@@ -599,8 +599,14 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		ITextRegion phpToken = getPHPToken();
 		int endOffset = regionCollection.getStartOffset()
 				+ phpScriptRegion.getStart() + phpToken.getTextEnd();
-		if (phpToken.getType() == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
-			--endOffset;
+		if (PHPPartitionTypes.isPHPEncapsedStringState(phpToken.getType())) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=475671
+			for (int index = offset; index < endOffset; index++) {
+				char charAt = document.getChar(index);
+				if (charAt == '\'' || charAt == '"') {
+					return index;
+				}
+			}
 		}
 		return endOffset;
 	}

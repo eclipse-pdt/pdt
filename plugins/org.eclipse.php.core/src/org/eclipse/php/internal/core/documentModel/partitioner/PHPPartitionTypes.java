@@ -50,10 +50,14 @@ public abstract class PHPPartitionTypes {
 				|| type == PHPRegionTypes.PHP_COMMENT_END;
 	}
 
-	public static boolean isPHPQuotesState(final String type) {
+	public static boolean isPHPEncapsedStringState(final String type) {
 		return type == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING
-				|| type == PHPRegionTypes.PHP_HEREDOC_TAG
 				|| type == PHPRegionTypes.PHP_ENCAPSED_AND_WHITESPACE;
+	}
+
+	public static boolean isPHPQuotesState(final String type) {
+		return isPHPEncapsedStringState(type)
+				|| type == PHPRegionTypes.PHP_HEREDOC_TAG;
 	}
 
 	public static final boolean isPHPRegularState(final String type) {
