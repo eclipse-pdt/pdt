@@ -1,0 +1,18 @@
+--TEST--
+Bug 475671 - CA in strings eats characters
+--FILE--
+<?php
+namespace MyNamespace;
+
+class MyClass {
+}
+echo "MyNamespace\|"; // some comment
+?>
+--EXPECT--
+<?php
+namespace MyNamespace;
+
+class MyClass {
+}
+echo "MyNamespace\MyClass"; // some comment
+?>

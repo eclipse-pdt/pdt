@@ -599,8 +599,16 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		ITextRegion phpToken = getPHPToken();
 		int endOffset = regionCollection.getStartOffset()
 				+ phpScriptRegion.getStart() + phpToken.getTextEnd();
-		if (phpToken.getType() == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
-			--endOffset;
+		if (PHPPartitionTypes.isPHPQuotesState(phpToken.getType())) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=475671
+			for (int index = offset; index < endOffset; index++) {
+				char charAt = document.getChar(index);
+				// Stop on quote (even in a heredoc section) or on whitespace:
+				if (Character.isWhitespace(charAt) || charAt == '\''
+						|| charAt == '"') {
+					return index;
+				}
+			}
 		}
 		return endOffset;
 	}
