@@ -21,12 +21,13 @@ import org.eclipse.jface.viewers.ColumnLayoutData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping;
 import org.eclipse.php.internal.ui.preferences.ScrolledCompositeImpl;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.internal.ui.util.PixelConverter;
+import org.eclipse.php.internal.ui.util.TableSorter;
 import org.eclipse.php.internal.ui.wizards.fields.IListAdapter;
 import org.eclipse.php.internal.ui.wizards.fields.ListDialogField;
 import org.eclipse.swt.SWT;
@@ -59,7 +60,7 @@ public class PathMappingComposite extends Composite {
 
 	protected void initializeControls() {
 		fMapList = new ListDialogField(new ListAdapter(), buttonLabels,
-				new LabelProvider());
+				new LabelProvider(), new TableSorter());
 		fMapList.setRemoveButtonIndex(IDX_REMOVE);
 		fMapList.setTableColumns(new ListDialogField.ColumnsDescription(
 				columnLayoutDatas, columnHeaders, true));
