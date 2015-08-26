@@ -21,7 +21,6 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.php.internal.server.PHPServerUIMessages;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
@@ -199,12 +198,8 @@ public class PHPServersConfigurationBlock implements
 
 	protected void handleEditServerButtonSelected() {
 		Server server = (Server) fServersList.getSelectedElements().get(0);
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getShell();
 		NullProgressMonitor monitor = new NullProgressMonitor();
-		ServerEditWizard wizard = new ServerEditWizard(server);
-		WizardDialog dialog = new WizardDialog(shell, wizard);
-		if (dialog.open() == Window.CANCEL) {
+		if (ServerEditWizardRunner.runWizard(server) == Window.CANCEL) {
 			monitor.setCanceled(true);
 			return;
 		}

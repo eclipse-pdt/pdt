@@ -25,7 +25,6 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
@@ -290,12 +289,8 @@ public class ServerLaunchConfigurationTab extends
 		int selectionIndex = serverCombo.getSelectionIndex();
 		Server server = servers.get(selectionIndex);
 		String serverName = server.getName();
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getShell();
 		NullProgressMonitor monitor = new NullProgressMonitor();
-		WizardDialog dialog = new WizardDialog(shell,
-				new ServerEditWizard(server));
-		if (dialog.open() == Window.CANCEL) {
+		if (ServerEditWizardRunner.runWizard(server) == Window.CANCEL) {
 			monitor.setCanceled(true);
 			return;
 		}
