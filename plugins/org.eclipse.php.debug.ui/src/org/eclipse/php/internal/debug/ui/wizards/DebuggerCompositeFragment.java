@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.eclipse.debug.internal.ui.SWTFactory;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.php.internal.core.IUniqueIdentityElement;
 import org.eclipse.php.internal.debug.core.PHPExeUtil;
@@ -37,6 +38,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Debugger settings composite fragment.
@@ -131,6 +133,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	private List<String> debuggersIds;
 	private Combo debuggerCombo;
 	private Button debuggerTest;
+	private Link debuggerGlobalSettings;
 	private PHPExeListener phpExeListener;
 	private PHPServerListener phpServerListener;
 	private ValuesCache originalValuesCache = new ValuesCache();
@@ -254,7 +257,8 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			return;
 		IDebuggerSettings settings = DebuggerSettingsManager.INSTANCE
 				.findSettings(debuggerOwner.getUniqueId(), debuggerId);
-		boolean repaint = false;
+		boolean repaint = controlHandler.getKind() == Kind.WIZARD
+				&& !PHPDebuggersRegistry.NONE_DEBUGGER_ID.equals(debuggerId);
 		if (debuggerSettingsSection != null) {
 			debuggerSettingsComposite.dispose();
 			repaint = true;
@@ -267,10 +271,14 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		if (PHPDebuggersRegistry.NONE_DEBUGGER_ID.equals(debuggerId)) {
 			debuggerSettingsSection = new EmptySettingsSection(
 					debuggerSettingsComposite);
+			debuggerGlobalSettings.setVisible(false);
 		} else if (settings == null) {
 			debuggerSettingsSection = new DebuggerUnsupportedSettingsSection(
 					this, debuggerSettingsComposite);
 		} else {
+			debuggerGlobalSettings.setVisible(PHPDebuggersRegistry
+					.getDebuggerConfiguration(debuggerId) != null ? true
+							: false);
 			debuggerSettingsWC = getSettingsWC(debuggerId, settings);
 			IDebuggerSettingsProvider provider = DebuggerSettingsProviderRegistry
 					.getProvider(debuggerId);
@@ -324,7 +332,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		mainComposite = parent;
 		Composite debuggerChoice = new Composite(parent, SWT.NONE);
 		GridLayout dcLayout = new GridLayout();
-		dcLayout.numColumns = 3;
+		dcLayout.numColumns = 4;
 		debuggerChoice.setLayout(dcLayout);
 		debuggerChoice.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				false));
@@ -360,6 +368,26 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 				if (debuggerSettingsSection != null) {
 					debuggerSettingsSection.performTest();
 				}
+			}
+		});
+		debuggerGlobalSettings = new Link(debuggerChoice, SWT.NONE);
+		GridData dgsData = new GridData(SWT.RIGHT, SWT.CENTER, true, false);
+		debuggerGlobalSettings.setLayoutData(dgsData);
+		debuggerGlobalSettings.setText(Messages.DebuggerCompositeFragment_Global_settings_link);
+		debuggerGlobalSettings.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				String selectedDebuggerId = debuggersIds
+						.get(debuggerCombo.getSelectionIndex());
+				AbstractDebuggerConfiguration globalConfiguration = PHPDebuggersRegistry
+						.getDebuggerConfiguration(selectedDebuggerId);
+				globalConfiguration.openConfigurationDialog(PlatformUI
+						.getWorkbench().getActiveWorkbenchWindow().getShell());
+			}
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				widgetDefaultSelected(e);
 			}
 		});
 		for (int i = 0; i < debuggersIds.size(); ++i) {
@@ -422,7 +450,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		}
 		if (detectedDebuggerId == null
 				&& (modifiedValuesCache.debuggerId == null || modifiedValuesCache.debuggerId
-						.equals(PHPDebuggersRegistry.NONE_DEBUGGER_ID)))
+								.equals(PHPDebuggersRegistry.NONE_DEBUGGER_ID)))
 			detectedDebuggerId = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
 		else if (modifiedValuesCache.debuggerId != null) {
 			detectedDebuggerId = modifiedValuesCache.debuggerId;
@@ -474,7 +502,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		boolean resize = computedSize.y > previousSize.y;
 		if (resize) {
 			shell.setSize(shell.computeSize(previousClientArea.width,
-					computedSize.y, true));
+					computedSize.y - IDialogConstants.BUTTON_BAR_HEIGHT, true));
 		} else {
 			// Workaround for incorrect redrawing in GTK 3
 			shell.setRedraw(false);
