@@ -9,6 +9,7 @@ public class Messages extends NLS {
 	public static String DebuggerCompositeFragment_Configure_server_debugger_settings;
 	public static String DebuggerCompositeFragment_Debugger;
 	public static String DebuggerCompositeFragment_Debugger_settings;
+	public static String DebuggerCompositeFragment_Global_settings_link;
 	public static String DebuggerCompositeFragment_Test_button;
 	public static String DebuggerUnsupportedSettingsSection_Check_global_settings_in_preferences;
 	public static String DebuggerUnsupportedSettingsSection_Settings_unsupported_for_debugger_type;
