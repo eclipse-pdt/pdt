@@ -2647,6 +2647,7 @@ extends_from:superClass errorOrNot implements_list:interfaces
 {:
 	Block block = new Block(0, 0, null);
 	AnonymousClassDeclaration acd = new AnonymousClassDeclaration(superClassleft, superClassleft, superClass, interfaces, block);
+	acd.setRecovered(true);
 	parser.addDeclarationStatement(acd);
 	parser.declarations.push(acd);
 :}
@@ -2655,6 +2656,7 @@ T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEn
 	AnonymousClassDeclaration acd = (AnonymousClassDeclaration)parser.declarations.pop();
 
 	acd.setEnd(blockEndright);
+	acd.setRecovered(false);
 	acd.getBody().setStart(blockStartleft);
 	acd.getBody().setEnd(blockEndright);
 	RESULT = acd;

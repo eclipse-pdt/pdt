@@ -1,0 +1,11 @@
+--TEST--
+Test anonymous class
+--FILE--
+<?php
+new class() implements Test {
+	p|
+
+--EXPECT--
+keyword(private)
+keyword(protected)
+keyword(public)

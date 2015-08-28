@@ -19,11 +19,13 @@ import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
-public class AnonymousClassDeclaration extends Expression {
+public class AnonymousClassDeclaration extends Expression
+		implements IRecoverable {
 
 	private TypeReference superClass;
 	private List<TypeReference> interfaceList;
 	private Block body;
+	private boolean isRecovered;
 
 	public AnonymousClassDeclaration(int start, int end,
 			TypeReference superClass, List<TypeReference> interfaceList,
@@ -78,6 +80,16 @@ public class AnonymousClassDeclaration extends Expression {
 	@Override
 	public int getKind() {
 		return ASTNodeKinds.ANONYMOUS_CLASS_DECLARATION;
+	}
+
+	@Override
+	public boolean isRecovered() {
+		return isRecovered;
+	}
+
+	@Override
+	public void setRecovered(boolean isRecovered) {
+		this.isRecovered = isRecovered;
 	}
 
 }
