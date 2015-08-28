@@ -7,4 +7,4 @@ use Test\UsedStatement;
 
 new UsedStatement();
 --EXPECT--
-[line=2, start=6, end=31] "Unused import 'Test\UnusedStatement', consider removing."
+[line=2, start=6, end=31] Unused import 'Test\UnusedStatement', consider removing
