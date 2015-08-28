@@ -626,6 +626,16 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					} else {
 						// remove element and next separator
 						int end = getStartOfNextNode(nextIndex, currEnd); // start
+						// check if comment exists
+
+						for (Comment comm : parent.getProgramRoot()
+								.comments()) {
+							if (comm.getStart() > currEnd
+									&& comm.getStart() < end) {
+								end = comm.getStart();
+								break;
+							}
+						}
 						// of
 						// next
 						doTextRemoveAndVisit(currPos, currEnd - currPos, node,
@@ -844,10 +854,11 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				try {
 					ASTNode node = (ASTNode) event.getOriginalValue();
 					TextEditGroup editGroup = getEditGroup(event);
-					int dotEnd = getScanner().getTokenEndOffset(
-							SymbolsProvider.getSymbol(
-									SymbolsProvider.OBJECT_OP_SYMBOL_ID,
-									scanner.getPHPVersion()),
+					int dotEnd = getScanner()
+							.getTokenEndOffset(
+									SymbolsProvider.getSymbol(
+											SymbolsProvider.OBJECT_OP_SYMBOL_ID,
+											scanner.getPHPVersion()),
 							node.getEnd());
 					doTextRemoveAndVisit(startPos, dotEnd - startPos, node,
 							editGroup);
@@ -1580,41 +1591,26 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(Program)
-	 */
 	public boolean visit(Program node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
 		}
-		int pos = content.length; // TODO - Check if this is right (using 0
-		// cause for the code to be inserted before
-		// the <?php section).
+		int pos = node.getStart() + 2;
+		if (content.length > node.getStart() + 3) {
+			if (Character.toLowerCase(content[node.getStart() + 2]) == 'p'
+					&& Character
+							.toLowerCase(content[node.getStart() + 3]) == 'h'
+					&& Character
+							.toLowerCase(content[node.getStart() + 4]) == 'p') {
+				pos += 4;
+			}
+		}
 		rewriteNodeList(node, Program.STATEMENTS_PROPERTY, pos, "", //$NON-NLS-1$
 				getLineDelimiter());
-		// int startPos = rewriteNode(node, Program.PACKAGE_PROPERTY, 0,
-		// ASTRewriteFormatter.NONE);
-		//
-		// if (getChangeKind(node, Program.PACKAGE_PROPERTY) ==
-		// RewriteEvent.INSERTED) {
-		// doTextInsert(0, getLineDelimiter(), getEditGroup(node,
-		// Program.PACKAGE_PROPERTY));
-		// }
-		//
-		// startPos = rewriteParagraphList(node, Program.IMPORTS_PROPERTY,
-		// startPos, 0, 0, 2);
-		// rewriteParagraphList(node, Program.TYPES_PROPERTY, startPos, 0, -1,
-		// 2);
+
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(TypeDeclaration)
-	 */
 	public boolean visit(TypeDeclaration node) {
 		// Return false.
 		// There is no need to visit it, all the implementation is done in the
@@ -1687,7 +1683,11 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		}
 		int blockStart = node.getStart();
 		int startIndent = getIndent(node.getStart()) + 1;
-		rewriteParagraphList(node, Block.STATEMENTS_PROPERTY, blockStart + 1,
+		if (!(node.getParent() instanceof NamespaceDeclaration)
+				|| ((NamespaceDeclaration) node.getParent()).isBracketed()) {
+			blockStart++;
+		}
+		rewriteParagraphList(node, Block.STATEMENTS_PROPERTY, blockStart,
 				startIndent, 0, 1);
 
 		// Check for While, For, If, ForEach, Switch
