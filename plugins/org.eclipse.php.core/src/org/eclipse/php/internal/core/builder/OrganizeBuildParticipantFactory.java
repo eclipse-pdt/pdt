@@ -122,21 +122,25 @@ public class OrganizeBuildParticipantFactory
 			} else {
 				total = DocumentUtils.stripUseStatements(statements, doc);
 			}
-
+			boolean multiPart = s.getParts().size() > 1;
 			for (UsePart part : s.getParts()) {
 				if (DocumentUtils.containsUseStatement(part, total)) {
 					continue;
 				}
+				int sourceStart = multiPart ? part.getNamespace().sourceStart()
+						: s.sourceStart();
+				int sourceEnd = multiPart ? part.getNamespace().sourceEnd()
+						: s.sourceEnd();
 				int lineNumber = context.getLineTracker()
-						.getLineNumberOfOffset(s.sourceStart());
+						.getLineNumberOfOffset(sourceStart);
 
 				DefaultProblem problem = new DefaultProblem(
 						context.getFile().getName(),
 						Messages.format(UNUSED_MESSAGE,
 								part.getNamespace().getFullyQualifiedName()),
 						PhpProblemIdentifier.USE_STATEMENTS, new String[0],
-						ProblemSeverities.Warning, s.sourceStart(),
-						s.sourceEnd(), lineNumber, -1);
+						ProblemSeverities.Warning, sourceStart, sourceEnd,
+						lineNumber, -1);
 
 				context.getProblemReporter().reportProblem(problem);
 			}
