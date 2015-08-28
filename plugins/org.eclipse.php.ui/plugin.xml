@@ -2541,5 +2541,16 @@
 			<command id="org.eclipse.php.ui.insertVarComment"/>
 		</quickAssistProcessor>
 	</extension>
-
+	<extension
+	       point="org.eclipse.php.ui.quickFixProcessors">
+	    <quickFixProcessor
+	          class="org.eclipse.php.internal.ui.quickfix.UnusedUseStatementProcessor"
+	          id="org.eclipse.php.ui.useStamenetsQuickFixProcessor">
+	          <handledMarkerTypes>
+	            <markerType
+	                  id="org.eclipse.php.core.phpproblemmarker">
+	            </markerType>
+	         </handledMarkerTypes>
+	    </quickFixProcessor>
+	</extension>
 </plugin>
