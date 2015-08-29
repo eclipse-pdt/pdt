@@ -16,7 +16,8 @@ import java.util.Scanner;
 import org.eclipse.dltk.compiler.problem.CategorizedProblem;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
-import org.eclipse.dltk.core.IScriptModelMarker;
+import org.eclipse.dltk.compiler.problem.IProblemIdentifierExtension;
+import org.eclipse.dltk.core.IModelMarker;
 import org.eclipse.dltk.ui.editor.IScriptAnnotation;
 import org.eclipse.dltk.ui.editor.ScriptMarkerAnnotation;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
@@ -36,7 +37,8 @@ public class ProblemLocation implements IProblemLocation {
 	private final String fMarkerType;
 	private final IProblemIdentifier fIdentifier;
 
-	public ProblemLocation(int offset, int length, IScriptAnnotation annotation) {
+	public ProblemLocation(int offset, int length,
+			IScriptAnnotation annotation) {
 		if (annotation.getId() != null) {
 			Scanner scan = new Scanner(annotation.getId().name());
 			if (scan.hasNextInt()) {
@@ -45,6 +47,7 @@ public class ProblemLocation implements IProblemLocation {
 				fId = -1;
 			}
 			fIdentifier = annotation.getId();
+			scan.close();
 		} else {
 			fId = -1;
 			fIdentifier = null;
@@ -57,7 +60,7 @@ public class ProblemLocation implements IProblemLocation {
 
 		String markerType = annotation.getMarkerType();
 		fMarkerType = markerType != null ? markerType
-				: IScriptModelMarker.DLTK_MODEL_PROBLEM_MARKER;
+				: IModelMarker.SCRIPT_MODEL_PROBLEM_MARKER;
 	}
 
 	public ProblemLocation(int offset, int length, int id, String[] arguments,
@@ -71,6 +74,7 @@ public class ProblemLocation implements IProblemLocation {
 		fIdentifier = null;
 	}
 
+	@SuppressWarnings("deprecation")
 	public ProblemLocation(IProblem problem) {
 		if (problem.getID() != null) {
 			Scanner scan = new Scanner(problem.getID().name());
@@ -80,6 +84,7 @@ public class ProblemLocation implements IProblemLocation {
 				fId = -1;
 			}
 			fIdentifier = problem.getID();
+			scan.close();
 		} else {
 			fId = -1;
 			fIdentifier = null;
@@ -88,8 +93,14 @@ public class ProblemLocation implements IProblemLocation {
 		fOffset = problem.getSourceStart();
 		fLength = problem.getSourceEnd() - fOffset + 1;
 		fIsError = problem.isError();
-		fMarkerType = problem instanceof CategorizedProblem ? ((CategorizedProblem) problem)
-				.getMarkerType() : IScriptModelMarker.DLTK_MODEL_PROBLEM_MARKER;
+		if (problem.getID() instanceof IProblemIdentifierExtension) {
+			fMarkerType = ((IProblemIdentifierExtension) problem.getID())
+					.getMarkerType();
+		} else if (problem instanceof CategorizedProblem) {
+			fMarkerType = ((CategorizedProblem) problem).getMarkerType();
+		} else {
+			fMarkerType = IModelMarker.SCRIPT_MODEL_PROBLEM_MARKER;
+		}
 	}
 
 	/*
@@ -158,9 +169,8 @@ public class ProblemLocation implements IProblemLocation {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getCoveringNode
-	 * (org.eclipse.jdt.core.dom.CompilationUnit)
+	 * @see org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#
+	 * getCoveringNode (org.eclipse.jdt.core.dom.CompilationUnit)
 	 */
 	public ASTNode getCoveringNode(Program astRoot) {
 		NodeFinder finder = new NodeFinder(fOffset, fLength);
@@ -171,9 +181,8 @@ public class ProblemLocation implements IProblemLocation {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getCoveredNode
-	 * (org.eclipse.jdt.core.dom.CompilationUnit)
+	 * @see org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#
+	 * getCoveredNode (org.eclipse.jdt.core.dom.CompilationUnit)
 	 */
 	public ASTNode getCoveredNode(Program astRoot) {
 		NodeFinder finder = new NodeFinder(fOffset, fLength);
@@ -185,8 +194,8 @@ public class ProblemLocation implements IProblemLocation {
 		StringBuffer buf = new StringBuffer();
 		buf.append(Messages.ProblemLocation_0).append(getErrorCode(fId))
 				.append('\n');
-		buf.append('[').append(fOffset)
-				.append(", ").append(fLength).append(']').append('\n'); //$NON-NLS-1$
+		buf.append('[').append(fOffset).append(", ").append(fLength).append(']') //$NON-NLS-1$
+				.append('\n');
 		String[] arg = fArguments;
 		if (arg != null) {
 			for (int i = 0; i < arg.length; i++) {
