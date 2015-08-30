@@ -150,7 +150,7 @@ public final class NodeInfoStore {
 			case ASTNode.CLASS_INSTANCE_CREATION:
 				ClassInstanceCreation inst = (ClassInstanceCreation) node;
 				inst.setClassName(this.ast.newClassName(this.ast
-						.newIdentifier(""))); //$NON-NLS-1$
+						.newIdentifier("a"))); //$NON-NLS-1$
 				break;
 			}
 			return node;

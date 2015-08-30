@@ -146,15 +146,15 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse
-	 * .php.internal.core.ast.nodes.ArrayAccess)
+	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
+	 * eclipse .php.internal.core.ast.nodes.ArrayAccess)
 	 */
 	public boolean visit(ArrayAccess arrayAccess) {
 		if (arrayAccess.getName() != null) {
 			arrayAccess.getName().accept(this);
 		}
-		boolean isVariableHashtable = arrayAccess.getArrayType() == ArrayAccess.VARIABLE_HASHTABLE;
+		boolean isVariableHashtable = arrayAccess
+				.getArrayType() == ArrayAccess.VARIABLE_HASHTABLE;
 		if (isVariableHashtable) {
 			result.append('{');
 		} else {
@@ -228,20 +228,23 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			StructuralPropertyDescriptor locationInParent = block
 					.getLocationInParent();
 			if (locationInParent == IfStatement.TRUE_STATEMENT_PROPERTY) {
-				if (((IfStatement) block.getParent()).getFalseStatement() == null) {
+				if (((IfStatement) block.getParent())
+						.getFalseStatement() == null) {
 					// End the if statement
 					result.append("endif;\n"); //$NON-NLS-1$
 				} else {
 					// Just add a new line char
 					result.append("\n"); //$NON-NLS-1$
 				}
-			} else if (locationInParent == IfStatement.FALSE_STATEMENT_PROPERTY) {
+			} else
+				if (locationInParent == IfStatement.FALSE_STATEMENT_PROPERTY) {
 				result.append("endif;\n"); //$NON-NLS-1$
 			} else if (locationInParent == WhileStatement.BODY_PROPERTY) {
 				result.append("endwhile;\n"); //$NON-NLS-1$
 			} else if (locationInParent == ForStatement.BODY_PROPERTY) {
 				result.append("endfor;\n"); //$NON-NLS-1$
-			} else if (locationInParent == ForEachStatement.STATEMENT_PROPERTY) {
+			} else
+				if (locationInParent == ForEachStatement.STATEMENT_PROPERTY) {
 				result.append("endforeach;\n"); //$NON-NLS-1$
 			} else if (locationInParent == SwitchStatement.BODY_PROPERTY) {
 				result.append("endswitch;\n"); //$NON-NLS-1$
@@ -334,7 +337,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		classInstanceCreation.getClassName().accept(this);
 		Expression[] ctorParams = classInstanceCreation.getCtorParams();
 		if (classInstanceCreation.getEnd() != classInstanceCreation
-				.getClassName().getEnd()) {
+				.getClassName().getEnd()
+				|| classInstanceCreation.getClassName().getStart() == -1) {
 			result.append("("); //$NON-NLS-1$
 		}
 		if (ctorParams.length != 0) {
@@ -345,7 +349,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			}
 		}
 		if (classInstanceCreation.getEnd() != classInstanceCreation
-				.getClassName().getEnd()) {
+				.getClassName().getEnd()
+				|| classInstanceCreation.getClassName().getStart() == -1) {
 			result.append(")"); //$NON-NLS-1$
 		}
 		return false;
@@ -376,7 +381,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			return "/* */"; //$NON-NLS-1$
 		}
 		if (comment.getCommentType() == Comment.TYPE_PHPDOC) {
-			return "/** */"; //$NON-NLS-1$"
+			return "/** */"; //$NON-NLS-1$ "
 		}
 		return null;
 	}
@@ -738,7 +743,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	public boolean visit(InfixExpression infixExpression) {
 		infixExpression.getLeft().accept(this);
 		result.append(' ');
-		result.append(InfixExpression.getOperator(infixExpression.getOperator()));
+		result.append(
+				InfixExpression.getOperator(infixExpression.getOperator()));
 		result.append(' ');
 		infixExpression.getRight().accept(this);
 		return false;
@@ -857,15 +863,15 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(PostfixExpression postfixExpressions) {
 		postfixExpressions.getVariable().accept(this);
-		result.append(PostfixExpression.getOperator(postfixExpressions
-				.getOperator()));
+		result.append(PostfixExpression
+				.getOperator(postfixExpressions.getOperator()));
 		return false;
 	}
 
 	public boolean visit(PrefixExpression prefixExpression) {
 		prefixExpression.getVariable().accept(this);
-		result.append(PrefixExpression.getOperator(prefixExpression
-				.getOperator()));
+		result.append(
+				PrefixExpression.getOperator(prefixExpression.getOperator()));
 		return false;
 	}
 
