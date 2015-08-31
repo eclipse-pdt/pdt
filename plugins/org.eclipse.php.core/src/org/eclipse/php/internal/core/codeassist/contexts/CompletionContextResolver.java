@@ -83,6 +83,7 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 				new ClassObjMemberContext(), new ClassStatementContext(),
 				new ClassStaticMemberContext(),
 				new FunctionParameterTypeContext(),
+				new FunctionReturnTypeContext(),
 				new FunctionParameterValueContext(),
 				new FunctionParameterVariableContext(), new MethodNameContext(),
 				new GlobalStatementContext(),

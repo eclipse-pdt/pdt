@@ -144,6 +144,10 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 					new FunctionParameterTypeStrategy(context),
 					new FunctionParameterKeywordTypeStrategy(context) };
 		}
+		if (contextClass == FunctionReturnTypeContext.class) {
+			return new ICompletionStrategy[] {
+					new FunctionReturnTypeStrategy(context) };
+		}
 		if (contextClass == FunctionParameterValueContext.class) {
 			return new ICompletionStrategy[] {
 					new GlobalConstantsStrategy(context),
