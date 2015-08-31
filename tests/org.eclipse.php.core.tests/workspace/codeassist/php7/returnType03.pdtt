@@ -1,0 +1,12 @@
+--TEST--
+Test function return type completion
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+class FooBar {}
+function test(): Foo| {
+}
+
+--EXPECT--
+type(FooBar)
