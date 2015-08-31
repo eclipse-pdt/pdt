@@ -330,6 +330,7 @@ non terminal Expression base_variable_with_function_calls;
 /* added the following rules for improving error recovery*/
 non terminal Statement class_closure;
 non terminal PHPMethodDeclaration function_body;
+non terminal LambdaFunctionDeclaration lambda_function_body;
 non terminal errorOrNot;
 
 //php5.4
@@ -871,7 +872,8 @@ inner_statement_list:statementList T_CURLY_CLOSE:end
 	boolean found = false;
 	ListIterator<Statement> it = parser.declarations.listIterator(parser.declarations.size());
 	while (!found && it.hasPrevious()) {
-		found = (it.previous() instanceof PHPMethodDeclaration);
+		Statement prev = it.previous();
+		found = (prev instanceof PHPMethodDeclaration) || (prev instanceof LambdaFunctionDeclaration);
 	}
 	if (parser.declarations.isEmpty() || !found) {
 		parser.reportError(new ASTError(yieldleft, yieldright), "syntax error, the yield expression can only be used inside a function");
@@ -2657,7 +2659,8 @@ list_variable:vars T_EQUAL expr:expr
 	boolean found = false;
 	ListIterator<Statement> it = parser.declarations.listIterator(parser.declarations.size());
 	while (!found && it.hasPrevious()) {
-		found = (it.previous() instanceof PHPMethodDeclaration);
+		Statement prev = it.previous();
+		found = (prev instanceof PHPMethodDeclaration) || (prev instanceof LambdaFunctionDeclaration);
 	}
 	if (parser.declarations.isEmpty() || !found) {
 		parser.reportError(new ASTError(yieldleft, yieldright), "syntax error, the yield expression can only be used inside a function");
@@ -2777,17 +2780,47 @@ list_variable:vars T_EQUAL expr:expr
 
 | T_FUNCTION:s is_reference:isReference
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList
-T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
 {:
-	RESULT = new LambdaFunctionDeclaration(sleft, blockEndright, paramList, varsList,
-		new Block(blockStartleft, blockEndright, list), isReference.booleanValue());
+	LambdaFunctionDeclaration functionDeclaration = new LambdaFunctionDeclaration(sleft, varsListright, paramList, varsList,
+		new Block(varsListright, varsListright, null), isReference.booleanValue());
+	parser.addDeclarationStatement(functionDeclaration);
+	parser.declarations.push(functionDeclaration);
 :}
+lambda_function_body:body
+{:
+	RESULT = body;
+:}
+
 | T_STATIC T_FUNCTION:s is_reference:isReference
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList
-T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
 {:
-	RESULT = new LambdaFunctionDeclaration(sleft, blockEndright, paramList, varsList,
-		new Block(blockStartleft, blockEndright, list), isReference.booleanValue(),true);
+	
+	LambdaFunctionDeclaration functionDeclaration = new LambdaFunctionDeclaration(sleft, varsListright, paramList, varsList,
+		new Block(varsListright, varsListright, null), isReference.booleanValue(), true);
+	parser.addDeclarationStatement(functionDeclaration);
+	parser.declarations.push(functionDeclaration);
+:}
+lambda_function_body:body
+{:
+	RESULT = body;
+:}
+;
+
+lambda_function_body ::=
+T_CURLY_OPEN:blockStart inner_statement_list:statementList T_CURLY_CLOSE:blockEnd
+{:
+	LambdaFunctionDeclaration functionDeclaration = (LambdaFunctionDeclaration)parser.declarations.pop();
+	Block block = functionDeclaration.getBody();
+	block.setStart(blockStartleft);
+	block.setEnd(blockEndright);
+	block.getStatements().clear();
+	block.acceptStatements(statementList);
+	functionDeclaration.setEnd(blockEndright);
+	RESULT = functionDeclaration;
+:}
+| error:theError
+{:
+	RESULT = (LambdaFunctionDeclaration)parser.declarations.pop();
 :}
 ;
 
