@@ -845,7 +845,8 @@ inner_statement_list:statementList T_CURLY_CLOSE:end
 	boolean found = false;
 	ListIterator<Statement> it = parser.declarations.listIterator(parser.declarations.size());
 	while (!found && it.hasPrevious()) {
-		found = (it.previous() instanceof PHPMethodDeclaration);
+		Statement prev = it.previous();
+		found = (prev instanceof PHPMethodDeclaration) || (prev instanceof LambdaFunctionDeclaration);
 	}
 	if (parser.declarations.isEmpty() || !found) {
 		parser.reportError(new ASTError(yieldleft, yieldright), "syntax error, the yield expression can only be used inside a function");
@@ -2542,7 +2543,8 @@ list_variable:vars T_EQUAL expr:expr
 	boolean found = false;
 	ListIterator<Statement> it = parser.declarations.listIterator(parser.declarations.size());
 	while (!found && it.hasPrevious()) {
-		found = (it.previous() instanceof PHPMethodDeclaration);
+		Statement prev = it.previous();
+		found = (prev instanceof PHPMethodDeclaration) || (prev instanceof LambdaFunctionDeclaration);
 	}
 	if (parser.declarations.isEmpty() || !found) {
 		parser.reportError(new ASTError(yieldleft, yieldright), "syntax error, the yield expression can only be used inside a function");
