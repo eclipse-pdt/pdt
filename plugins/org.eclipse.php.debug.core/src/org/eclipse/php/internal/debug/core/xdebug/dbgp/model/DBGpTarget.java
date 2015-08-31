@@ -852,7 +852,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 				// launch, then we need to wait for the next session. Otherwise
 				// we
 				// terminate the debug target.
-				if (isWebLaunch()) {
+				if (isWebLaunch() && !isMultiSessionManaged()) {
 					if (isSuspended()) {
 						// if we are suspended, then inform eclipse we have
 						// resumed
