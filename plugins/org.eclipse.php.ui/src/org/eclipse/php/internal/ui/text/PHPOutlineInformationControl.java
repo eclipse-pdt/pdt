@@ -41,8 +41,7 @@ public class PHPOutlineInformationControl extends
 
 	public PHPOutlineInformationControl(Shell parent, int shellStyle,
 			int treeStyle, String commandId) {
-		super(parent, shellStyle, treeStyle, commandId, PHPUiPlugin
-				.getDefault().getPreferenceStore());
+		super(parent, shellStyle, treeStyle, commandId, null);
 	}
 
 	protected ITypeHierarchy getSuperTypeHierarchy(

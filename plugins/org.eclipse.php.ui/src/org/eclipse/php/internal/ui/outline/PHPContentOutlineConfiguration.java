@@ -77,8 +77,6 @@ public class PHPContentOutlineConfiguration extends
 	private ScriptUILabelProvider fSimpleLabelProvider;
 	// private ShowGroupsAction fShowGroupsAction;
 	private boolean fShowAttributes = false;
-	protected IPreferenceStore fStore = DLTKUIPlugin.getDefault()
-			.getPreferenceStore();
 	private CustomFiltersActionGroup fCustomFiltersActionGroup;
 
 	/** See {@link #MODE_PHP}, {@link #MODE_HTML} */
@@ -277,7 +275,7 @@ public class PHPContentOutlineConfiguration extends
 					AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS
 							| ScriptElementLabels.F_APP_TYPE_SIGNATURE
 							| ScriptElementLabels.ALL_CATEGORY,
-					AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS, fStore);
+					AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS, null);
 			fLabelProvider
 					.addLabelDecorator(new OverrideIndicatorLabelDecorator());
 			fLabelProvider.addLabelDecorator(new ProblemsLabelDecorator());
