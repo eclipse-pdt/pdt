@@ -602,7 +602,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 				if (modelElement != null) {
 					return modelElement;
 				}
-				return resource;
+				return parentResource;
 			}
 
 		}
