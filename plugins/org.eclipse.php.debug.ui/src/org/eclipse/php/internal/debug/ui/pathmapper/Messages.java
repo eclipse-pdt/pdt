@@ -38,6 +38,7 @@ public class Messages extends NLS {
 	public static String PathMappingComposite_2;
 	public static String PathMappingComposite_3;
 	public static String PathMappingComposite_4;
+	public static String PathMappingComposite_5;
 
 	static {
 		// initialize resource bundle

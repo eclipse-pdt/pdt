@@ -40,6 +40,7 @@ import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping.MappingSource;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.ui.pathmapper.PathMapperEntryDialog.WorkspaceBrowseDialog.IPFile;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
@@ -345,6 +346,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 
 	protected void validate() {
 		Mapping mapping = new Mapping();
+		mapping.source = MappingSource.USER;
 
 		String remotePathStr = fRemotePathText.getText().trim();
 		if (remotePathStr.length() == 0) {
