@@ -17,31 +17,11 @@ import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.KIN
 import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.VIRTUAL_CLASS;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.*;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IMarkerDelta;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.debug.core.DebugEvent;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.IBreakpointManager;
-import org.eclipse.debug.core.IBreakpointManagerListener;
-import org.eclipse.debug.core.ILaunch;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.*;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -57,6 +37,7 @@ import org.eclipse.php.internal.debug.core.model.VariablesUtil;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping.MappingSource;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceLookupDirector;
 import org.eclipse.php.internal.debug.core.sourcelookup.containers.PHPCompositeSourceContainer;
@@ -533,7 +514,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 			PathEntry pe = new PathEntry(projectScript,
 					PathEntry.Type.WORKSPACE, ResourcesPlugin.getWorkspace()
 							.getRoot());
-			pathMapper.addEntry(initScript, pe);
+			pathMapper.addEntry(initScript, pe, MappingSource.ENVIRONMENT);
 		} else {
 			// ok, the initial script doesn't match what was passed into
 			// the launch, need to locate the required script.

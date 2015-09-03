@@ -45,11 +45,14 @@ public class PathMappingComposite extends Composite {
 	private static final int IDX_ADD = 0;
 	private static final int IDX_EDIT = 1;
 	private static final int IDX_REMOVE = 2;
-	private static final String[] buttonLabels = { Messages.PathMappingComposite_0, Messages.PathMappingComposite_1, Messages.PathMappingComposite_2 };
-	private static final String[] columnHeaders = { Messages.PathMappingComposite_3,
-			Messages.PathMappingComposite_4 };
-	private static final ColumnLayoutData[] columnLayoutDatas = new ColumnLayoutData[] {
-			new ColumnWeightData(50), new ColumnWeightData(50) };
+	private static final String[] buttonLabels = {
+			Messages.PathMappingComposite_0, Messages.PathMappingComposite_1,
+			Messages.PathMappingComposite_2 };
+	private static final String[] columnHeaders = { Messages.PathMappingComposite_5,
+			Messages.PathMappingComposite_3, Messages.PathMappingComposite_4 };
+	private static final ColumnLayoutData[] columnLayoutData = new ColumnLayoutData[] {
+			new ColumnWeightData(15), new ColumnWeightData(50),
+			new ColumnWeightData(50) };
 
 	private ListDialogField fMapList;
 
@@ -63,7 +66,7 @@ public class PathMappingComposite extends Composite {
 				new LabelProvider(), new TableSorter());
 		fMapList.setRemoveButtonIndex(IDX_REMOVE);
 		fMapList.setTableColumns(new ListDialogField.ColumnsDescription(
-				columnLayoutDatas, columnHeaders, true));
+				columnLayoutData, columnHeaders, true));
 
 		GridLayout layout = new GridLayout();
 		setLayout(layout);
@@ -193,7 +196,7 @@ public class PathMappingComposite extends Composite {
 		private ScriptUILabelProvider phpLabelProvider = new ScriptUILabelProvider();
 
 		public Image getColumnImage(Object element, int columnIndex) {
-			if (columnIndex == 1) { // local path
+			if (columnIndex == 2) { // local path
 				PathMapper.Mapping mapping = (PathMapper.Mapping) element;
 				if (mapping.type == Type.EXTERNAL) {
 					return PlatformUI.getWorkbench().getSharedImages()
@@ -220,8 +223,10 @@ public class PathMappingComposite extends Composite {
 			PathMapper.Mapping mapping = (PathMapper.Mapping) element;
 			switch (columnIndex) {
 			case 0:
-				return mapping.remotePath.toString();
+				return mapping.source.toString();
 			case 1:
+				return mapping.remotePath.toString();
+			case 2:
 				return mapping.localPath.toString();
 			}
 			return null;
