@@ -31,7 +31,7 @@ import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.includepath.IncludePath;
-import org.eclipse.php.internal.core.util.*;
+import org.eclipse.php.internal.core.util.PHPSearchEngine;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ExternalFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
@@ -39,6 +39,7 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping.MappingSource;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.ui.*;
 import org.eclipse.ui.ide.FileStoreEditorInput;
@@ -264,7 +265,8 @@ public class DebugSearchEngine {
 											.getFullPath().toString(),
 											Type.WORKSPACE, file.getParent());
 									pathMapper.addEntry(remoteFile,
-											localFile[0]);
+											localFile[0],
+											MappingSource.ENVIRONMENT);
 									PathMapperRegistry.storeToPreferences();
 									return Status.OK_STATUS;
 								}
@@ -332,7 +334,8 @@ public class DebugSearchEngine {
 										: Type.INCLUDE_FOLDER;
 								localFile[0] = new PathEntry(
 										file.getAbsolutePath(), type, entry);
-								pathMapper.addEntry(remoteFile, localFile[0]);
+								pathMapper.addEntry(remoteFile, localFile[0],
+										MappingSource.ENVIRONMENT);
 								PathMapperRegistry.storeToPreferences();
 								return Status.OK_STATUS;
 							}
@@ -435,11 +438,13 @@ public class DebugSearchEngine {
 							debugTarget);
 					if (localFile[0] != null) {
 						if (localFile[0].getType() == Type.SERVER) {
-							pathMapper.addServerEntry(remoteFile, localFile[0]);
+							pathMapper.addServerEntry(remoteFile, localFile[0],
+									MappingSource.ENVIRONMENT);
 							PathMapperRegistry.storeToPreferences();
 							localFile[0] = null;
 						} else {
-							pathMapper.addEntry(remoteFile, localFile[0]);
+							pathMapper.addEntry(remoteFile, localFile[0],
+									MappingSource.ENVIRONMENT);
 							PathMapperRegistry.storeToPreferences();
 						}
 					}

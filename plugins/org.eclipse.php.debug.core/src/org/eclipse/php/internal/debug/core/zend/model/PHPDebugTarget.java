@@ -29,8 +29,12 @@ import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.php.internal.debug.core.model.*;
-import org.eclipse.php.internal.debug.core.pathmapper.*;
+import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
+import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping.MappingSource;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnection;
 import org.eclipse.php.internal.debug.core.zend.debugger.*;
 import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
@@ -1130,7 +1134,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 					}
 					if (pathEntry != null) {
 						// Map remote file to the map point:
-						pathMapper.addEntry(remoteFile, pathEntry);
+						pathMapper.addEntry(remoteFile, pathEntry,
+								MappingSource.ENVIRONMENT);
 						PathMapperRegistry.storeToPreferences();
 					} else {
 						// Find the local file, and map it:

@@ -30,6 +30,7 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine;
 import org.eclipse.php.internal.core.util.SyncObject;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping.MappingSource;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 
 /**
@@ -174,7 +175,8 @@ public class LocalFileSearchEngine {
 											file.getFullPath().toString(),
 											Type.WORKSPACE, file.getParent());
 									pathMapper.addEntry(remoteFilePath,
-											localFile);
+											localFile,
+											MappingSource.ENVIRONMENT);
 									PathMapperRegistry.storeToPreferences();
 									searchResult.set(new LocalFileSearchResult(
 											localFile));
@@ -275,7 +277,8 @@ public class LocalFileSearchEngine {
 					if (filteredResult.getPathEntry() != null
 							&& filteredResult.getStatus().isOK()) {
 						pathMapper.addEntry(remoteFilePath,
-								filteredResult.getPathEntry());
+								filteredResult.getPathEntry(),
+								MappingSource.ENVIRONMENT);
 						PathMapperRegistry.storeToPreferences();
 					}
 					searchResult.set(filteredResult);
