@@ -14,9 +14,7 @@ package org.eclipse.php.internal.debug.core.zend.model;
 import java.io.File;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.debug.core.DebugEvent;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
@@ -29,12 +27,15 @@ import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
 import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManager;
 import org.eclipse.php.internal.debug.core.zend.debugger.IRemoteDebugger;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
+import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
 
 /**
  * A PHP debug server handler.
  * 
  * @author Shalom Gibly
  */
+@SuppressWarnings("restriction")
 public class ServerDebugHandler extends SimpleDebugHandler {
 
 	private IRemoteDebugger fRemoteDebugger;
@@ -45,10 +46,6 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	public ServerDebugHandler() {
 	}
 
-	protected IRemoteDebugger createRemoteDebugger() {
-		return new RemoteDebugger(this, fDebugConnection);
-	}
-
 	public IRemoteDebugger getRemoteDebugger() {
 		return fRemoteDebugger;
 	}
@@ -56,11 +53,35 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	public void sessionStarted(String remoteFile, String uri, String query,
 			String options) {
 		super.sessionStarted(remoteFile, uri, query, options);
-
 		if (isUsingPathMapper()) {
-			// Hack for the case when htdocs is symlinked to the workspace.
-			// Zend Debugger resolves symbolic links later, and it fucks up the
-			// path mapper:
+			/*
+			 * Hack for the case when htdocs is symlinked to the workspace. Zend
+			 * Debugger resolves symbolic links later and it breaks path mapper.
+			 */
+			ILaunchConfiguration launchConfiguration = fDebugTarget.getLaunch()
+					.getLaunchConfiguration();
+			try {
+				String lcServerName = launchConfiguration
+						.getAttribute(Server.NAME, (String) null);
+				if (lcServerName == null || lcServerName.isEmpty()) {
+					// Bind server with this configuration, if we can find any.
+					String serverName = null;
+					Server serverLookup = ServersManager
+							.findByURL(fDebugTarget.getURL());
+					if (serverLookup != null)
+						serverName = serverLookup.getName();
+					if (serverName != null) {
+						ILaunchConfigurationWorkingCopy wc = launchConfiguration
+								.getWorkingCopy();
+						wc.setAttribute(Server.NAME, serverName);
+						synchronized (launchConfiguration) {
+							wc.doSave();
+						}
+					}
+				}
+			} catch (CoreException e) {
+				DebugPlugin.log(e);
+			}
 			try {
 				File file = new File(remoteFile);
 				if (file.exists()) {
@@ -68,7 +89,6 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 				}
 			} catch (Exception e) {
 			}
-
 			fDebugTarget.mapFirstDebugFile(remoteFile);
 		}
 
@@ -76,7 +96,6 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		if (!fDebugTarget.isPHPCGI()) {
 			fDebugTarget.setServerWindows(false);
 		}
-
 		StartLock startLock = fDebugTarget.getStartLock();
 		synchronized (startLock) {
 			if (startLock.isRunStart()) {
@@ -98,10 +117,6 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 				startLock.setRunStart(true);
 			}
 		}
-	}
-
-	protected boolean isUsingPathMapper() {
-		return true;
 	}
 
 	public void connectionEstablished() {
@@ -264,4 +279,13 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	public PHPDebugTarget getDebugTarget() {
 		return fDebugTarget;
 	}
+
+	protected IRemoteDebugger createRemoteDebugger() {
+		return new RemoteDebugger(this, fDebugConnection);
+	}
+
+	protected boolean isUsingPathMapper() {
+		return true;
+	}
+	
 }

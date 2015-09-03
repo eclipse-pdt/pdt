@@ -75,6 +75,10 @@ public class PathEntrySelector implements IPathEntryFilter {
 			PathEntry[] entries, IDebugTarget debugTarget) {
 		PathEntrySelectionDialog selectDialog = createSelectionDialog(shell,
 				remotePath, entries);
+		if (shell != null) {
+			shell.forceActive();
+			shell.setActive();
+		}
 		if (selectDialog.open() == Window.OK) {
 			// Path entry was chosen:
 			PathEntry result = selectDialog.getResult();

@@ -11,38 +11,124 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.pathmapper;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
+import org.eclipse.php.internal.core.util.preferences.XMLPreferencesReader;
+import org.eclipse.php.internal.core.util.preferences.XMLPreferencesWriter;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.preferences.*;
+import org.eclipse.php.internal.debug.core.preferences.IPHPExesListener;
+import org.eclipse.php.internal.debug.core.preferences.PHPExesEvent;
+import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
+import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.IServersManagerListener;
 import org.eclipse.php.internal.server.core.manager.ServerManagerEvent;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
-import org.eclipse.php.internal.ui.preferences.util.XMLPreferencesReaderUI;
-import org.eclipse.php.internal.ui.preferences.util.XMLPreferencesWriterUI;
 
-public class PathMapperRegistry implements IXMLPreferencesStorable,
-		IServersManagerListener, IPHPExesListener {
+@SuppressWarnings("restriction")
+public class PathMapperRegistry implements IXMLPreferencesStorable {
+
+	private class MapperOwnerListener
+			implements IServersManagerListener, IPHPExesListener {
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.php.internal.server.core.manager.IServersManagerListener#
+		 * serverAdded(org.eclipse.php.internal.server.core.manager.
+		 * ServerManagerEvent)
+		 */
+		public void serverAdded(ServerManagerEvent event) {
+			if (!serverPathMapper.containsKey(event.getServer())) {
+				serverPathMapper.put(event.getServer(), new PathMapper());
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.php.internal.server.core.manager.IServersManagerListener#
+		 * serverModified(org.eclipse.php.internal.server.core.manager.
+		 * ServerManagerEvent)
+		 */
+		public void serverModified(ServerManagerEvent event) {
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.php.internal.server.core.manager.IServersManagerListener#
+		 * serverRemoved(org.eclipse.php.internal.server.core.manager.
+		 * ServerManagerEvent)
+		 */
+		public void serverRemoved(ServerManagerEvent event) {
+			serverPathMapper.remove(event.getServer());
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.php.internal.debug.core.preferences.IPHPExesListener#
+		 * phpExeAdded(org.eclipse.php.internal.debug.core.preferences.
+		 * PHPExesEvent)
+		 */
+		public void phpExeAdded(PHPExesEvent event) {
+			if (!phpExePathMapper.containsKey(event.getPHPExeItem())) {
+				phpExePathMapper.put(event.getPHPExeItem(), new PathMapper());
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.php.internal.debug.core.preferences.IPHPExesListener#
+		 * phpExeRemoved(org.eclipse.php.internal.debug.core.preferences.
+		 * PHPExesEvent)
+		 */
+		public void phpExeRemoved(PHPExesEvent event) {
+			phpExePathMapper.remove(event.getPHPExeItem());
+		}
+
+	}
 
 	private static final String PATH_MAPPER_PREF_KEY = PHPDebugPlugin.getID()
 			+ ".pathMapper"; //$NON-NLS-1$
 
 	private static PathMapperRegistry instance;
-	private HashMap<Server, PathMapper> serverPathMapper;
-	private HashMap<PHPexeItem, PathMapper> phpExePathMapper;
+	private final Map<Server, PathMapper> serverPathMapper;
+	private final Map<PHPexeItem, PathMapper> phpExePathMapper;
+	private final Map<ILaunchConfiguration, PathMapper> launchConfigPathMapper;
+	private final MapperOwnerListener ownerListener;
 
 	private PathMapperRegistry() {
+		// Make it weak to remove entry after dropping the launch configuration
+		launchConfigPathMapper = new WeakHashMap<ILaunchConfiguration, PathMapper>();
 		serverPathMapper = new HashMap<Server, PathMapper>();
 		phpExePathMapper = new HashMap<PHPexeItem, PathMapper>();
-		loadFromPreferences();
+		ownerListener = new MapperOwnerListener();
+		// Load persistent mappings from preferences
+		List<Map<String, Object>> elements = XMLPreferencesReader.read(
+				InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID),
+				PATH_MAPPER_PREF_KEY, true);
+		if (elements.size() == 1) {
+			restoreFromMap(elements.get(0));
+		}
 	}
 
+	/**
+	 * Returns singleton instance for this registry.
+	 * 
+	 * @return singleton instance for this registry
+	 */
 	public synchronized static PathMapperRegistry getInstance() {
 		if (instance == null) {
 			instance = new PathMapperRegistry();
@@ -51,7 +137,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable,
 	}
 
 	/**
-	 * Return path mapper which corresponding to the given PHPexe item
+	 * Returns path mapper that corresponds to the given PHPexe item
 	 * 
 	 * @param phpExe
 	 *            PHPExe item
@@ -62,7 +148,8 @@ public class PathMapperRegistry implements IXMLPreferencesStorable,
 		if (result == null) {
 			result = new PathMapper();
 			getInstance().phpExePathMapper.put(phpExe, result);
-			PHPexes.getInstance().addPHPExesListener(getInstance());
+			PHPexes.getInstance()
+					.addPHPExesListener(getInstance().ownerListener);
 		}
 		return result;
 	}
@@ -79,9 +166,11 @@ public class PathMapperRegistry implements IXMLPreferencesStorable,
 		if (result == null) {
 			result = new PathMapper();
 			getInstance().serverPathMapper.put(server, result);
-			// create the link to servers manager here in order not to create
-			// tightly coupled relationship
-			ServersManager.addManagerListener(getInstance());
+			/*
+			 * Create the link to servers manager here in order not to create
+			 * tightly coupled relationship.
+			 */
+			ServersManager.addManagerListener(getInstance().ownerListener);
 		}
 		return result;
 	}
@@ -100,39 +189,47 @@ public class PathMapperRegistry implements IXMLPreferencesStorable,
 			String serverName = launchConfiguration.getAttribute(Server.NAME,
 					(String) null);
 			if (serverName != null) {
+				/*
+				 * Try to find path mapper with the use of the server that might
+				 * be bound to the corresponding launch configuration.
+				 */
 				pathMapper = getByServer(ServersManager.getServer(serverName));
-			}/*
-			 * else { String phpExe =
-			 * launchConfiguration.getAttribute(PHPCoreConstants
-			 * .ATTR_EXECUTABLE_LOCATION, (String) null); String phpIni =
-			 * launchConfiguration
-			 * .getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
-			 * if (phpExe != null) { pathMapper =
-			 * getByPHPExe(PHPexes.getInstance().getItemForFile(phpExe,
-			 * phpIni)); } }
-			 */
+			} else {
+				/*
+				 * If no server could be found (launch configuration for
+				 * externally triggered sessions), create temporary one and bind
+				 * it with the launch configuration.
+				 */
+				pathMapper = getInstance().launchConfigPathMapper
+						.get(launchConfiguration);
+				if (pathMapper == null) {
+					pathMapper = new PathMapper();
+					getInstance().launchConfigPathMapper
+							.put(launchConfiguration, pathMapper);
+				}
+			}
 		} catch (CoreException e) {
 			PHPDebugPlugin.log(e);
 		}
 		return pathMapper;
 	}
 
-	@SuppressWarnings("unchecked")
-	public void loadFromPreferences() {
-		HashMap[] elements = XMLPreferencesReaderUI.read(
-				PHPProjectPreferences.getModelPreferences(),
-				PATH_MAPPER_PREF_KEY);
-		if (elements.length == 1) {
-			restoreFromMap(elements[0]);
-		}
-	}
-
+	/**
+	 * Persist settings to preference file.
+	 */
 	public static void storeToPreferences() {
-		XMLPreferencesWriterUI.write(
-				PHPProjectPreferences.getModelPreferences(),
+		XMLPreferencesWriter.write(
+				InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID),
 				PATH_MAPPER_PREF_KEY, getInstance());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable#
+	 * restoreFromMap(java.util.Map)
+	 */
 	@SuppressWarnings("unchecked")
 	public synchronized void restoreFromMap(Map<String, Object> map) {
 		if (map == null) {
@@ -140,7 +237,6 @@ public class PathMapperRegistry implements IXMLPreferencesStorable,
 		}
 		serverPathMapper.clear();
 		phpExePathMapper.clear();
-
 		map = (Map<String, Object>) map.get("pathMappers"); //$NON-NLS-1$
 		if (map == null) {
 			return;
@@ -170,6 +266,13 @@ public class PathMapperRegistry implements IXMLPreferencesStorable,
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable#
+	 * storeToMap()
+	 */
 	public synchronized Map<String, Object> storeToMap() {
 		Map<String, Object> elements = new HashMap<String, Object>();
 		Iterator<?> i = serverPathMapper.keySet().iterator();
@@ -201,26 +304,4 @@ public class PathMapperRegistry implements IXMLPreferencesStorable,
 		return root;
 	}
 
-	public void serverAdded(ServerManagerEvent event) {
-		if (!serverPathMapper.containsKey(event.getServer())) {
-			serverPathMapper.put(event.getServer(), new PathMapper());
-		}
-	}
-
-	public void serverModified(ServerManagerEvent event) {
-	}
-
-	public void serverRemoved(ServerManagerEvent event) {
-		serverPathMapper.remove(event.getServer());
-	}
-
-	public void phpExeAdded(PHPExesEvent event) {
-		if (!phpExePathMapper.containsKey(event.getPHPExeItem())) {
-			phpExePathMapper.put(event.getPHPExeItem(), new PathMapper());
-		}
-	}
-
-	public void phpExeRemoved(PHPExesEvent event) {
-		phpExePathMapper.remove(event.getPHPExeItem());
-	}
 }
