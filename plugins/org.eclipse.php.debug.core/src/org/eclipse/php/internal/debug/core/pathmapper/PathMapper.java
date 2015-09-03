@@ -18,20 +18,24 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping.MappingSource;
 
 public class PathMapper implements IXMLPreferencesStorable {
 
 	private Map<VirtualPath, VirtualPath> remoteToLocalMap;
 	private Map<VirtualPath, VirtualPath> localToRemoteMap;
 	private Map<VirtualPath, Type> localToPathEntryType;
+	private Map<VirtualPath, MappingSource> localToMappingSource;
 
 	public PathMapper() {
 		remoteToLocalMap = new HashMap<VirtualPath, VirtualPath>();
 		localToRemoteMap = new HashMap<VirtualPath, VirtualPath>();
 		localToPathEntryType = new HashMap<VirtualPath, Type>();
+		localToMappingSource = new HashMap<VirtualPath, MappingSource>();
 	}
 
-	public synchronized void addEntry(String remoteFile, PathEntry entry) {
+	public synchronized void addEntry(String remoteFile, PathEntry entry,
+			MappingSource source) {
 		VirtualPath remotePath = new VirtualPath(remoteFile);
 		VirtualPath localPath = entry.getAbstractPath().clone(); // don't break
 																	// original
@@ -59,10 +63,12 @@ public class PathMapper implements IXMLPreferencesStorable {
 			remoteToLocalMap.put(remotePath, localPath);
 			localToRemoteMap.put(localPath, remotePath);
 			localToPathEntryType.put(localPath, entry.getType());
+			localToMappingSource.put(localPath, source);
 		}
 	}
 
-	public synchronized void addServerEntry(String remoteFile, PathEntry entry) {
+	public synchronized void addServerEntry(String remoteFile, PathEntry entry,
+			MappingSource source) {
 		VirtualPath localPath = entry.getAbstractPath().clone(); // don't break
 																	// original
 																	// entry
@@ -70,6 +76,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 		remoteToLocalMap.put(localPath, localPath);
 		localToRemoteMap.put(localPath, localPath);
 		localToPathEntryType.put(localPath, entry.getType());
+		localToMappingSource.put(localPath, source);
 	}
 
 	public String getRemoteFile(String localFile) {
@@ -184,7 +191,8 @@ public class PathMapper implements IXMLPreferencesStorable {
 			VirtualPath localPath = i.next();
 			VirtualPath remotePath = localToRemoteMap.get(localPath);
 			Type type = localToPathEntryType.get(localPath);
-			l.add(new Mapping(localPath, remotePath, type));
+			MappingSource source = localToMappingSource.get(localPath);
+			l.add(new Mapping(localPath, remotePath, type, source));
 		}
 		return l.toArray(new Mapping[l.size()]);
 	}
@@ -196,11 +204,13 @@ public class PathMapper implements IXMLPreferencesStorable {
 		remoteToLocalMap.clear();
 		localToRemoteMap.clear();
 		localToPathEntryType.clear();
+		localToMappingSource.clear();
 
 		for (Mapping mapping : mappings) {
 			localToRemoteMap.put(mapping.localPath, mapping.remotePath);
 			remoteToLocalMap.put(mapping.remotePath, mapping.localPath);
 			localToPathEntryType.put(mapping.localPath, mapping.type);
+			localToMappingSource.put(mapping.localPath, mapping.source);
 		}
 	}
 
@@ -211,6 +221,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 		localToRemoteMap.put(mapping.localPath, mapping.remotePath);
 		remoteToLocalMap.put(mapping.remotePath, mapping.localPath);
 		localToPathEntryType.put(mapping.localPath, mapping.type);
+		localToMappingSource.put(mapping.localPath, mapping.source);
 	}
 
 	/**
@@ -220,45 +231,92 @@ public class PathMapper implements IXMLPreferencesStorable {
 		localToRemoteMap.remove(mapping.localPath);
 		remoteToLocalMap.remove(mapping.remotePath);
 		localToPathEntryType.remove(mapping.localPath);
+		localToMappingSource.remove(mapping.localPath);
 	}
 
 	public static class Mapping implements Cloneable {
+
+		public enum MappingSource {
+			UNKNOWN(Messages.PathMapper_MappingSource_Unknown_Name), ENVIRONMENT(
+					Messages.PathMapper_MappingSource_Environment_Name), USER(
+							Messages.PathMapper_MappingSource_User_Name);
+
+			private String name;
+
+			private MappingSource(String name) {
+				this.name = name;
+			}
+
+			public String toString() {
+				return name;
+			}
+		}
+
 		public VirtualPath localPath;
 		public VirtualPath remotePath;
 		public Type type;
+		public MappingSource source;
 
 		public Mapping() {
 		}
 
-		public Mapping(VirtualPath localPath, VirtualPath remotePath, Type type) {
+		public Mapping(VirtualPath localPath, VirtualPath remotePath, Type type,
+				MappingSource source) {
 			this.localPath = localPath;
 			this.remotePath = remotePath;
 			this.type = type;
+			this.source = source;
 		}
 
 		public Mapping clone() {
-			return new Mapping(localPath, remotePath, type);
+			return new Mapping(localPath, remotePath, type, source);
 		}
 
+		@Override
 		public boolean equals(Object obj) {
-			if (!(obj instanceof Mapping)) {
+			if (this == obj)
+				return true;
+			if (obj == null)
 				return false;
-			}
+			if (getClass() != obj.getClass())
+				return false;
 			Mapping other = (Mapping) obj;
-			return other.localPath.equals(localPath)
-					&& other.remotePath.equals(remotePath)
-					&& other.type == type;
+			if (localPath == null) {
+				if (other.localPath != null)
+					return false;
+			} else if (!localPath.equals(other.localPath))
+				return false;
+			if (remotePath == null) {
+				if (other.remotePath != null)
+					return false;
+			} else if (!remotePath.equals(other.remotePath))
+				return false;
+			if (source != other.source)
+				return false;
+			if (type != other.type)
+				return false;
+			return true;
 		}
 
+		@Override
 		public int hashCode() {
-			return localPath.hashCode() + 13 * remotePath.hashCode() + 31
-					* type.hashCode();
+			final int prime = 31;
+			int result = 1;
+			result = prime * result
+					+ ((localPath == null) ? 0 : localPath.hashCode());
+			result = prime * result
+					+ ((remotePath == null) ? 0 : remotePath.hashCode());
+			result = prime * result
+					+ ((source == null) ? 0 : source.hashCode());
+			result = prime * result + ((type == null) ? 0 : type.hashCode());
+			return result;
 		}
 
 		public String toString() {
 			StringBuilder buf = new StringBuilder("Mapping { "); //$NON-NLS-1$
 			buf.append(localPath).append(", ").append(remotePath).append(", ") //$NON-NLS-1$ //$NON-NLS-2$
-					.append(type);
+					.append(type).append(", ").append(source.name()) //$NON-NLS-1$
+					.append(" }"); //$NON-NLS-1$
 			return buf.toString();
 		}
 	}
@@ -270,6 +328,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 		remoteToLocalMap.clear();
 		localToRemoteMap.clear();
 		localToPathEntryType.clear();
+		localToMappingSource.clear();
 
 		Iterator<String> i = map.keySet().iterator();
 		while (i.hasNext()) {
@@ -279,13 +338,19 @@ public class PathMapper implements IXMLPreferencesStorable {
 			String localStr = (String) entryMap.get("local"); //$NON-NLS-1$
 			String remoteStr = (String) entryMap.get("remote"); //$NON-NLS-1$
 			String typeStr = (String) entryMap.get("type"); //$NON-NLS-1$
+			String sourceStr = (String) entryMap.get("source"); //$NON-NLS-1$
 			if (localStr != null && remoteStr != null && typeStr != null) {
 				Type type = Type.valueOf(typeStr);
+				MappingSource source = MappingSource.UNKNOWN;
+				if (sourceStr != null) {
+					source = MappingSource.valueOf(sourceStr);
+				}
 				VirtualPath local = new VirtualPath(localStr);
 				VirtualPath remote = new VirtualPath(remoteStr);
 				remoteToLocalMap.put(remote, local);
 				localToRemoteMap.put(local, remote);
 				localToPathEntryType.put(local, type);
+				localToMappingSource.put(local, source);
 			}
 		}
 	}
@@ -299,10 +364,14 @@ public class PathMapper implements IXMLPreferencesStorable {
 			VirtualPath local = i.next();
 			VirtualPath remote = localToRemoteMap.get(local);
 			Type type = localToPathEntryType.get(local);
+			MappingSource source = localToMappingSource.get(local);
 			entry.put("local", local); //$NON-NLS-1$
 			entry.put("remote", remote); //$NON-NLS-1$
 			if (type != null) {
 				entry.put("type", type.name()); //$NON-NLS-1$
+			}
+			if (source != null) {
+				entry.put("source", source.name()); //$NON-NLS-1$
 			}
 			entries.put("item" + (c++), entry); //$NON-NLS-1$
 		}

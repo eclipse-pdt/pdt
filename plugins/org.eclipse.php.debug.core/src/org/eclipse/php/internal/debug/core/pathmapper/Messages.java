@@ -17,6 +17,9 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.core.pathmapper.messages"; //$NON-NLS-1$
 	public static String DebugSearchEngine_0;
 	public static String LocalFileSearchEngine_Searching_for_local_file;
+	public static String PathMapper_MappingSource_Environment_Name;
+	public static String PathMapper_MappingSource_Unknown_Name;
+	public static String PathMapper_MappingSource_User_Name;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

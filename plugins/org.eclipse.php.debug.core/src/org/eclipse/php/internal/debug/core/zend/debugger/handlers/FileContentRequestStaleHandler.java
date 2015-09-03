@@ -39,6 +39,7 @@ import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping.MappingSource;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
@@ -248,7 +249,8 @@ public class FileContentRequestStaleHandler
 			}
 			if (pathEntry != null) {
 				// Map remote file to the map point:
-				pathMapper.addEntry(currentFileName, pathEntry);
+				pathMapper.addEntry(currentFileName, pathEntry,
+						MappingSource.ENVIRONMENT);
 				PathMapperRegistry.storeToPreferences();
 			}
 		}
