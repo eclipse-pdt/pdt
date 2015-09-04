@@ -46,6 +46,7 @@ public class PHPDebugUIImages {
 	public static final String IMG_WIZBAN_PHPEXE = "IMG_WIZBAN_PHPEXE"; //$NON-NLS-1$
 	public static final String IMG_WIZBAN_DEBUG_PHPEXE = "IMG_WIZBAN_DEBUG_PHPEXE"; //$NON-NLS-1$
 	public static final String IMG_WIZBAN_DEBUG_SERVER = "IMG_WIZBAN_DEBUG_SERVER"; //$NON-NLS-1$
+	public static final String IMG_WIZBAN_MAPPING_SERVER = "IMG_WIZBAN_MAPPING_SERVER"; //$NON-NLS-1$
 
 	public static final String IMG_OBJ_DEBUG_CONF = "IMG_OBJ_DEBUG_CONF"; //$NON-NLS-1$
 	public static final String IMG_OBJ_PHP_EXE = "IMG_OBJ_PHP_EXE"; //$NON-NLS-1$
@@ -109,10 +110,12 @@ public class PHPDebugUIImages {
 		declareRegistryImage(IMG_WIZBAN_ZEND_DEBUGGER_CONF, T_WIZBAN
 				+ "zend_debugger_conf_wiz.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_WIZBAN_PHPEXE, T_WIZBAN + "php_exe_wiz.png"); //$NON-NLS-1$
-		declareRegistryImage(IMG_WIZBAN_DEBUG_PHPEXE, T_WIZBAN
-				+ "php_exe_debug_wiz.png"); //$NON-NLS-1$
-		declareRegistryImage(IMG_WIZBAN_DEBUG_SERVER, T_WIZBAN
-				+ "server_debug_wiz.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_WIZBAN_DEBUG_PHPEXE,
+				T_WIZBAN + "php_exe_debug_wiz.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_WIZBAN_DEBUG_SERVER,
+				T_WIZBAN + "server_debug_wiz.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_WIZBAN_MAPPING_SERVER,
+				T_WIZBAN + "server_mapping_wiz.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_DEBUG_CONF, T_OBJ + "debug_conf.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_PHP_EXE, T_OBJ + "php_exe.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_PHP_EXE_LAUNCH, T_OBJ + "php_exec.png"); //$NON-NLS-1$

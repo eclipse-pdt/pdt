@@ -16,6 +16,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
+import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
 import org.eclipse.php.internal.debug.ui.pathmapper.PathMappingComposite;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.ui.wizards.CompositeFragment;
@@ -46,7 +47,8 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 		controlHandler.setTitle(getTitle());
 		setDescription(Messages.PathMapperCompositeFragment_1);
 		controlHandler.setDescription(getDescription());
-		setImageDescriptor(ServersPluginImages.DESC_WIZ_MAPPING_SERVER);
+		setImageDescriptor(PHPDebugUIImages.getImageDescriptor(
+				PHPDebugUIImages.IMG_WIZBAN_MAPPING_SERVER));
 		controlHandler.setImageDescriptor(getImageDescriptor());
 		setDisplayName(Messages.PathMapperCompositeFragment_2);
 	}
