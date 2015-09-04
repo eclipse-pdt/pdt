@@ -438,28 +438,33 @@ public class DebugSearchEngine {
 				} else if (results.size() > 0) {
 					Collections.sort(results,
 							new BestMatchPathComparator(abstractPath));
-
+					// Pre-filter items
 					results = preFilterItems(abstractPath, results,
 							debugTarget);
-					boolean isSingleMatch = results.size() == 1;
-
-					if (isSingleMatch) {
-						localFile[0] = results.get(0);
+					PathEntry singleMatch = results.size() == 1 ? results.get(0)
+							: null;
+					boolean isAutoDetected;
+					if (singleMatch != null && singleMatch.getAbstractPath()
+							.isSuffixOf(abstractPath)) {
+						localFile[0] = singleMatch;
+						isAutoDetected = true;
 					} else {
+						// User will decide...
 						localFile[0] = filterItems(abstractPath,
 								results.toArray(new PathEntry[results.size()]),
 								debugTarget);
+						isAutoDetected = false;
 					}
 					if (localFile[0] != null) {
 						if (localFile[0].getType() == Type.SERVER) {
 							pathMapper.addServerEntry(remoteFile, localFile[0],
-									isSingleMatch ? MappingSource.ENVIRONMENT
+									isAutoDetected ? MappingSource.ENVIRONMENT
 											: MappingSource.USER);
 							PathMapperRegistry.storeToPreferences();
 							localFile[0] = null;
 						} else {
 							pathMapper.addEntry(remoteFile, localFile[0],
-									isSingleMatch ? MappingSource.ENVIRONMENT
+									isAutoDetected ? MappingSource.ENVIRONMENT
 											: MappingSource.USER);
 							PathMapperRegistry.storeToPreferences();
 						}

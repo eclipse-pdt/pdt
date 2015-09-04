@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.core.pathmapper;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -140,6 +141,18 @@ public class VirtualPath implements Cloneable {
 			}
 		}
 		return !i1.hasNext();
+	}
+
+	public boolean isSuffixOf(VirtualPath path) {
+		ListIterator<String> i1 = segments.listIterator(segments.size());
+		ListIterator<String> i2 = path.segments
+				.listIterator(path.segments.size());
+		while (i1.hasPrevious() && i2.hasPrevious()) {
+			if (!i1.previous().equals(i2.previous())) {
+				return false;
+			}
+		}
+		return !i1.hasPrevious();
 	}
 
 	public String toString() {
