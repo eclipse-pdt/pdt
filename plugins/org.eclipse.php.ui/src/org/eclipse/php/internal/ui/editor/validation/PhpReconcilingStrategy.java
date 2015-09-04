@@ -88,23 +88,22 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 	private IEditorPart getEditor(final IEditorInput editorInput) {
 		final IEditorPart editor[] = new IEditorPart[1];
 		Display.getDefault().syncExec(new Runnable() { // needs UI thread to
-					// retrieve active page
-					public void run() {
-						IWorkbenchPage activePage = DLTKUIPlugin
-								.getActivePage();
-						if (activePage != null) {
-							if (editorInput != null) {
-								editor[0] = activePage.findEditor(editorInput);
-							} else {
-								editor[0] = activePage.getActiveEditor(); // workaround
-								// for
-								// external
-								// files
-								// editor
-							}
-						}
+			// retrieve active page
+			public void run() {
+				IWorkbenchPage activePage = DLTKUIPlugin.getActivePage();
+				if (activePage != null) {
+					if (editorInput != null) {
+						editor[0] = activePage.findEditor(editorInput);
+					} else {
+						editor[0] = activePage.getActiveEditor(); // workaround
+						// for
+						// external
+						// files
+						// editor
 					}
-				});
+				}
+			}
+		});
 		return editor[0];
 	}
 
@@ -140,6 +139,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		/* fix for missing cancel flag communication */
 		IProblemRequestorExtension extension = getProblemRequestorExtension();
 		if (extension != null) {
+			extension.beginReportingSequence();
 			extension.setProgressMonitor(fProgressMonitor);
 			extension.setIsActive(true);
 		}
@@ -160,8 +160,8 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 			}
 
 			if (initialReconcile || astProvider.isActive(unit)) {
-				PHPVersion phpVersion = ProjectOptions.getPhpVersion(unit
-						.getScriptProject().getProject());
+				PHPVersion phpVersion = ProjectOptions
+						.getPhpVersion(unit.getScriptProject().getProject());
 				ASTParser newParser = ASTParser.newParser(phpVersion, unit);
 				createdAST = newParser.createAST(null);
 				if (createdAST != null && document != null) {
@@ -173,8 +173,8 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 			}
 
 		} catch (OperationCanceledException ex) {
-			Assert.isTrue(fProgressMonitor == null
-					|| fProgressMonitor.isCanceled());
+			Assert.isTrue(
+					fProgressMonitor == null || fProgressMonitor.isCanceled());
 
 		} catch (Exception e) {
 			throw new ModelException(e, IStatus.ERROR);
@@ -184,6 +184,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 			if (extension != null) {
 				extension.setProgressMonitor(null);
 				extension.setIsActive(false);
+				extension.endReportingSequence();
 			}
 		}
 
@@ -281,8 +282,8 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 	}
 
 	private IProblemRequestorExtension getProblemRequestorExtension() {
-		IAnnotationModel model = fDocumentProvider.getAnnotationModel(fEditor
-				.getEditorInput());
+		IAnnotationModel model = fDocumentProvider
+				.getAnnotationModel(fEditor.getEditorInput());
 		if (model instanceof IProblemRequestorExtension)
 			return (IProblemRequestorExtension) model;
 		return null;
