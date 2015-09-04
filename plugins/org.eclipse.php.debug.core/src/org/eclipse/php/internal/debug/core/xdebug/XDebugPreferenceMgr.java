@@ -49,6 +49,8 @@ public class XDebugPreferenceMgr {
 			+ ".xdebug_idekey"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_PROXY = PHPDebugPlugin.ID
 			+ ".xdebug_proxy"; //$NON-NLS-1$
+	public static final String XDEBUG_PREF_WARN_NO_LOCALHOST_SESSION = PHPDebugPlugin.ID
+			+ ".no_localhost_remote_session"; //$NON-NLS-1$
 
 	public static enum AcceptRemoteSession {
 		off, localhost, any, prompt
@@ -75,7 +77,7 @@ public class XDebugPreferenceMgr {
 		Preferences prefs = getPreferences();
 		prefs
 				.setDefault(XDebugPreferenceMgr.XDEBUG_PREF_PORT,
-						getPortDefault());
+				getPortDefault());
 		prefs.setDefault(XDebugPreferenceMgr.XDEBUG_PREF_SHOWSUPERGLOBALS,
 				showSuperGlobalsDefault());
 		prefs.setDefault(XDebugPreferenceMgr.XDEBUG_PREF_ARRAYDEPTH,
@@ -87,11 +89,13 @@ public class XDebugPreferenceMgr {
 		prefs.setDefault(XDebugPreferenceMgr.XDEBUG_PREF_DATA, getDataDefault());
 		prefs.setDefault(XDebugPreferenceMgr.XDEBUG_PREF_REMOTESESSION,
 				getAcceptRemoteSessionDefault());
-
 		prefs.setDefault(XDebugPreferenceMgr.XDEBUG_PREF_CAPTURESTDOUT,
 				getCaptureDefault());
 		prefs.setDefault(XDebugPreferenceMgr.XDEBUG_PREF_CAPTURESTDERR,
 				getCaptureDefault());
+		prefs.setDefault(
+				XDebugPreferenceMgr.XDEBUG_PREF_WARN_NO_LOCALHOST_SESSION,
+				getWarnNoLocalhostSessionDefault());
 
 		// Proxy config doesn't need its default values set here.
 	}
@@ -116,7 +120,7 @@ public class XDebugPreferenceMgr {
 								.getDefaultInt(XDebugPreferenceMgr.XDEBUG_PREF_CHILDREN));
 		preferences
 				.setValue(XDebugPreferenceMgr.XDEBUG_PREF_DATA, preferences
-						.getDefaultInt(XDebugPreferenceMgr.XDEBUG_PREF_DATA));
+				.getDefaultInt(XDebugPreferenceMgr.XDEBUG_PREF_DATA));
 		preferences
 				.setValue(
 						XDebugPreferenceMgr.XDEBUG_PREF_MULTISESSION,
@@ -148,9 +152,13 @@ public class XDebugPreferenceMgr {
 				.setValue(
 						XDebugPreferenceMgr.XDEBUG_PREF_IDEKEY,
 						preferences
-								.getDefaultBoolean(XDebugPreferenceMgr.XDEBUG_PREF_IDEKEY));
+				.getDefaultBoolean(XDebugPreferenceMgr.XDEBUG_PREF_IDEKEY));
 		preferences.setValue(XDebugPreferenceMgr.XDEBUG_PREF_PROXY, preferences
 				.getDefaultBoolean(XDebugPreferenceMgr.XDEBUG_PREF_PROXY));
+		preferences.setValue(
+				XDebugPreferenceMgr.XDEBUG_PREF_WARN_NO_LOCALHOST_SESSION,
+				preferences.getDefaultBoolean(
+						XDebugPreferenceMgr.XDEBUG_PREF_WARN_NO_LOCALHOST_SESSION));
 	}
 
 	/**
@@ -244,6 +252,12 @@ public class XDebugPreferenceMgr {
 		return AcceptRemoteSession.values()[rSess];
 	}
 
+	public static boolean getWarnNoLocalhostSession() {
+		Preferences prefs = getPreferences();
+		return prefs.getBoolean(
+				XDebugPreferenceMgr.XDEBUG_PREF_WARN_NO_LOCALHOST_SESSION);
+	}
+
 	// the defaults for the UI preferences
 	private static int getDepthDefault() {
 		return DBGpPreferences.DBGP_MAX_DEPTH_DEFAULT;
@@ -273,12 +287,16 @@ public class XDebugPreferenceMgr {
 
 	private static boolean useMultiSessionDefault() {
 		// this is not a DBGp property.
-		return false;
+		return true;
 	}
 
 	private static int getAcceptRemoteSessionDefault() {
 		// this is not a DBGp property
-		return AcceptRemoteSession.off.ordinal();
+		return AcceptRemoteSession.localhost.ordinal();
+	}
+
+	private static boolean getWarnNoLocalhostSessionDefault() {
+		return DBGpPreferences.WARN_NO_LOCALHOST_SESSION;
 	}
 
 }

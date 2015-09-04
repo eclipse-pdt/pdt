@@ -17,11 +17,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.ui.IDebugUIConstants;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
@@ -30,11 +32,13 @@ import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.PHPDebugUtil;
 import org.eclipse.php.internal.debug.core.daemon.AbstractDebuggerCommunicationDaemon;
+import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.debugger.DebuggerSettingsManager;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsListener;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceLookupDirector;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
@@ -51,9 +55,15 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListe
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.ui.util.PerspectiveManager;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.php.ui.util.LinkMessageDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.osgi.service.prefs.BackingStoreException;
 
 import com.ibm.icu.text.MessageFormat;
 
@@ -97,6 +107,98 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 			}
 		}
 
+		private class RequestVerifier {
+
+			private DBGpSession session;
+
+			public void verify(DBGpSession session) {
+				if (!XDebugPreferenceMgr.getWarnNoLocalhostSession()) {
+					return;
+				}
+				this.session = session;
+				String message = null;
+				int messageType = 0;
+				AcceptRemoteSession acceptSession = XDebugPreferenceMgr
+						.getAcceptRemoteSession();
+				if ((acceptSession == AcceptRemoteSession.localhost
+						|| acceptSession == AcceptRemoteSession.off)
+						&& !this.session.getRemoteAddress()
+								.isLoopbackAddress()) {
+					message = PHPDebugCoreMessages.XDebugCommunicationDaemon_Remote_debug_session_does_not_refer_to_localhost;
+					messageType = MessageDialog.WARNING;
+				} else
+					if (acceptSession == AcceptRemoteSession.off && this.session
+							.getRemoteAddress().isLoopbackAddress()) {
+					messageType = MessageDialog.INFORMATION;
+					message = PHPDebugCoreMessages.XDebugCommunicationDaemon_Remote_debug_session_for_localhost;
+				} else {
+					return;
+				}
+				openMessage(message, messageType);
+			}
+
+			private void openMessage(final String message,
+					final int messageType) {
+				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+					@Override
+					public void run() {
+						final Shell shell = PlatformUI.getWorkbench()
+								.getActiveWorkbenchWindow().getShell();
+						final MessageDialog dialog = new LinkMessageDialog(
+								shell,
+								PHPDebugCoreMessages.XDebugCommunicationDaemon_XDebug_remote_session_title,
+								null, message, messageType,
+								new String[] { IDialogConstants.OK_LABEL }, 0) {
+							@Override
+							protected void linkActivated() {
+								AbstractDebuggerConfiguration configuration = PHPDebuggersRegistry
+										.getDebuggerConfiguration(
+												XDEBUG_DEBUGGER_ID);
+								configuration
+										.openConfigurationDialog(getShell());
+							}
+
+							@Override
+							protected Control createDialogArea(
+									Composite composite) {
+								Control control = super.createDialogArea(
+										composite);
+								final Button button = new Button(composite,
+										SWT.CHECK);
+								final GridData gridData = new GridData(SWT.FILL,
+										SWT.FILL, true, true, 2, 1);
+								button.setLayoutData(gridData);
+								button.setText(
+										PHPDebugCoreMessages.XDebugCommunicationDaemon_Dont_show_this_message_again);
+								button.addSelectionListener(
+										new SelectionAdapter() {
+									public void widgetSelected(
+											SelectionEvent e) {
+										IEclipsePreferences preferences = InstanceScope.INSTANCE
+												.getNode(PHPDebugPlugin.ID);
+										preferences.putBoolean(
+												XDebugPreferenceMgr.XDEBUG_PREF_WARN_NO_LOCALHOST_SESSION,
+												!button.getSelection());
+										try {
+											preferences.flush();
+										} catch (BackingStoreException e1) {
+										}
+									}
+								});
+								return control;
+							}
+						};
+						if (shell != null) {
+							shell.forceActive();
+							shell.setActive();
+						}
+						dialog.open();
+					}
+				});
+			}
+
+		}
+
 		private int port;
 
 		public CommunicationDaemon(int port) {
@@ -137,6 +239,7 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 					if (!DBGpSessionHandler.getInstance().fireSessionAdded(
 							session)) {
 						// Session not taken, we want to create a launch
+						(new RequestVerifier()).verify(session);
 						AcceptRemoteSession aSess = XDebugPreferenceMgr
 								.getAcceptRemoteSession();
 						if (aSess != AcceptRemoteSession.off) {
@@ -169,8 +272,8 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 			} catch (Exception e) {
 				DBGpLogger
 						.logException(
-								"Unexpected Exception: Listener thread still listening", //$NON-NLS-1$
-								this, e);
+						"Unexpected Exception: Listener thread still listening", //$NON-NLS-1$
+						this, e);
 			}
 		}
 
@@ -194,7 +297,7 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 							.getDefault()
 							.getLaunchManager()
 							.getSourcePathComputer(
-									"org.eclipse.php.debug.core.sourcePathComputer.php")); //$NON-NLS-1$
+							"org.eclipse.php.debug.core.sourcePathComputer.php")); //$NON-NLS-1$
 			ILaunchConfigurationType type = null;
 			ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
 			if (session.getSessionId() == null) {

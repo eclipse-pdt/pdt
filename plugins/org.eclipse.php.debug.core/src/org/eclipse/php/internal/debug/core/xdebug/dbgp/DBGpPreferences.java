@@ -25,6 +25,7 @@ public class DBGpPreferences {
 	public static final boolean DBGP_SHOW_GLOBALS_DEFAULT = true;
 	public static final int DBGP_CAPTURE_DEFAULT = 0;
 	public static final int DBGP_MAX_DATA_DEFAULT = 1024;
+	public static final boolean WARN_NO_LOCALHOST_SESSION = true;
 
 	// define the session property keys
 	public static final String DBGP_MAX_DEPTH_PROPERTY = "MaxDepth"; //$NON-NLS-1$

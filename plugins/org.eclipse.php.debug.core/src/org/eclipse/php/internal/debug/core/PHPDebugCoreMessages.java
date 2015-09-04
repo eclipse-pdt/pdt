@@ -128,6 +128,11 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String ZendDebuggerConfigurationDialog_zendDebugger;
 	public static String ZendDebuggerConfigurationDialog_zendDebuggerSettings;
 
+	public static String XDebugCommunicationDaemon_Dont_show_this_message_again;
+	public static String XDebugCommunicationDaemon_Remote_debug_session_does_not_refer_to_localhost;
+	public static String XDebugCommunicationDaemon_Remote_debug_session_for_localhost;
+	public static String XDebugCommunicationDaemon_XDebug_remote_session_title;
+
 	// title and groups
 	public static String XDebugConfigurationDialog_mainTitle;
 	public static String XDebugConfigurationDialog_generalGroup;
