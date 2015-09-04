@@ -25,6 +25,7 @@ public class Messages extends NLS {
 	public static String PathMapperEntryDialog_16;
 	public static String PathMapperEntryDialog_17;
 	public static String PathMapperEntryDialog_18;
+	public static String PathMapperEntryDialog_19;
 	public static String PathMapperEntryDialog_2;
 	public static String PathMapperEntryDialog_3;
 	public static String PathMapperEntryDialog_4;

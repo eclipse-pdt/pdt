@@ -36,8 +36,8 @@ public class ServersPluginImages {
 	// Otherwise low color
 	// images are used
 	static {
-		fgIconBaseURL = Activator.getDefault().getBundle().getEntry(
-				"/icons/full/"); //$NON-NLS-1$
+		fgIconBaseURL = Activator.getDefault().getBundle()
+				.getEntry("/icons/full/"); //$NON-NLS-1$
 	}
 
 	// The plug-in registry
@@ -49,15 +49,11 @@ public class ServersPluginImages {
 
 	public static final String IMG_SERVER = NAME_PREFIX + "server.png"; //$NON-NLS-1$
 	public static final String IMG_WIZ_SERVER = NAME_PREFIX + "server_wiz.png"; //$NON-NLS-1$
-	public static final String IMG_WIZ_MAPPING_SERVER = NAME_PREFIX
-			+ "server_mapping_wiz.png"; //$NON-NLS-1$
 
 	public static final ImageDescriptor DESC_SERVER = createManaged(T_OBJ,
 			IMG_SERVER);
 	public static final ImageDescriptor DESC_WIZ_SERVER = createManaged(
 			T_WIZBAN, IMG_WIZ_SERVER);
-	public static final ImageDescriptor DESC_WIZ_MAPPING_SERVER = createManaged(
-			T_WIZBAN, IMG_WIZ_MAPPING_SERVER);
 
 	/**
 	 * Returns the image managed under the given key in this registry.
@@ -79,7 +75,8 @@ public class ServersPluginImages {
 	 * @param iconName
 	 *            the icon name
 	 */
-	public static void setToolImageDescriptors(IAction action, String iconName) {
+	public static void setToolImageDescriptors(IAction action,
+			String iconName) {
 		setImageDescriptors(action, "tool16", iconName); //$NON-NLS-1$
 	}
 
@@ -92,7 +89,8 @@ public class ServersPluginImages {
 	 * @param iconName
 	 *            the icon name
 	 */
-	public static void setLocalImageDescriptors(IAction action, String iconName) {
+	public static void setLocalImageDescriptors(IAction action,
+			String iconName) {
 		setImageDescriptors(action, "lcl16", iconName); //$NON-NLS-1$
 	}
 
@@ -105,8 +103,8 @@ public class ServersPluginImages {
 			for (Iterator iter = fgAvoidSWTErrorMap.keySet().iterator(); iter
 					.hasNext();) {
 				String key = (String) iter.next();
-				fgImageRegistry.put(key, (ImageDescriptor) fgAvoidSWTErrorMap
-						.get(key));
+				fgImageRegistry.put(key,
+						(ImageDescriptor) fgAvoidSWTErrorMap.get(key));
 			}
 			fgAvoidSWTErrorMap = null;
 		}
@@ -120,8 +118,8 @@ public class ServersPluginImages {
 			String relPath) {
 
 		try {
-			ImageDescriptor id = ImageDescriptor.createFromURL(makeIconFileURL(
-					"d" + type, relPath)); //$NON-NLS-1$
+			ImageDescriptor id = ImageDescriptor
+					.createFromURL(makeIconFileURL("d" + type, relPath)); //$NON-NLS-1$
 			if (id != null)
 				action.setDisabledImageDescriptor(id);
 		} catch (MalformedURLException e) {
@@ -139,8 +137,8 @@ public class ServersPluginImages {
 			int flags, Point size) {
 		try {
 			ImageDescriptor result = ImageDescriptor
-					.createFromURL(makeIconFileURL(prefix, name
-							.substring(NAME_PREFIX_LENGTH)));
+					.createFromURL(makeIconFileURL(prefix,
+							name.substring(NAME_PREFIX_LENGTH)));
 			if (fgAvoidSWTErrorMap == null) {
 				fgAvoidSWTErrorMap = new HashMap();
 			}
