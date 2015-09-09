@@ -23,6 +23,8 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String LineBreakPointMessage_1;
 	public static String ConditionalBreakPointMessage_1;
 	public static String ConditionalBreakPointMessage_2;
+	public static String DBGpMultiSessionTarget_Multisession_PHP_process;
+
 	public static String DBGpProxyConnection_Registering_DBGp_proxy;
 
 	public static String DebuggerFileNotFound_1;
@@ -86,7 +88,7 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String DebugConfigurationDialog_invalidPortRange;
 	public static String DebugConfigurationDialog_invalidPort;
 	public static String DebugConfigurationDialog_PortInUse;
-	
+
 	public static String DebuggerConfigurationDialog_debugPort;
 	public static String DebuggerConfigurationDialog_invalidPortRange;
 
@@ -234,6 +236,11 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebugDebuggerConfiguration_XDebugNotEnabledError;
 
 	public static String XDebugDebuggerConfiguration_XDebugNotInstalledError;
+
+	public static String XDebugWebLaunchConfigurationDelegate_PHP_process;
+
+	public static String PHPProcess_Zend_Debugger_suffix;
+	public static String PHPProcess_XDebug_suffix;
 
 	static {
 		// load message values from bundle file

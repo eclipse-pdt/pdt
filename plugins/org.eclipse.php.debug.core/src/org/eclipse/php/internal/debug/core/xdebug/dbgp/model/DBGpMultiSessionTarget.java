@@ -11,17 +11,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.*;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
+import org.eclipse.php.internal.debug.core.PHPDebugUtil;
+import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
@@ -118,10 +118,18 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 		this.scriptName = workspaceRelativeScript;
 		this.ideKey = ideKey;
 		this.webLaunch = true;
-		this.sessionID = null; // in the web launch we have no need for the
-		// session ID.
+		this.sessionID = null; // in the web launch we have no need for the session ID.
+		createMockProcess(launch, stopDebugURL);
+	}
+
+	private void createMockProcess(ILaunch launch, String stopDebugURL) {
 		this.stopDebugURL = stopDebugURL;
-		this.process = null; // no process indicates a web launch
+		this.process = new PHPProcess(launch,
+				PHPDebugCoreMessages.DBGpMultiSessionTarget_Multisession_PHP_process);
+		this.process.setAttribute(IProcess.ATTR_PROCESS_TYPE,
+				IPHPDebugConstants.PHPProcessType);
+		((PHPProcess) this.process).setDebugTarget(this);
+		launch.addProcess(process);
 	}
 
 	/*
@@ -161,10 +169,20 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 	}
 
 	public IThread[] getThreads() throws DebugException {
-		return new IThread[0];
+		// Collect threads from all sub-targets
+		List<IThread> threads = new ArrayList<IThread>();
+		for (IPHPDebugTarget target : debugTargets)
+			if (target.hasThreads())
+				for (IThread thread : target.getThreads())
+					threads.add(thread);
+		return threads.toArray(new IThread[threads.size()]);
 	}
 
 	public boolean hasThreads() throws DebugException {
+		// Check if any sub-target has at least one thread
+		for (IPHPDebugTarget target : debugTargets)
+			if (target.hasThreads())
+				return true;
 		return false;
 	}
 
@@ -334,7 +352,6 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 		owningTarget.setMultiSessionManaged(true);
 		addDebugTarget(owningTarget);
 		setPathMapper(globalMapper);
-		launch.addDebugTarget(owningTarget);
 		owningTarget.sessionReceived(facade, sessionPrefs);
 	}
 
@@ -347,25 +364,27 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 	public boolean SessionCreated(DBGpSession session) {
 		boolean accepted = false;
 		synchronized (debugTargets) {
-
-			// we need to use single shot debug targets to ensure that
-			// they terminate when complete and don't hang around waiting for
-			// another session they won't receive.
+			/*
+			 * We need to use single shot debug targets to ensure that they
+			 * terminate when complete and don't hang around waiting for another
+			 * session they won't receive.
+			 */
 			DBGpTarget target = new DBGpTarget(this.launch, this.scriptName,
 					this.stopDebugURL, this.ideKey, this.sessionID,
 					this.stopAtStart);
 			target.setMultiSessionManaged(true);
 			target.setPathMapper(pathMapper);
 			accepted = target.SessionCreated(session);
-
 			if (accepted) {
-				// need to make sure bpFacade is thread safe.
-				// cannot provide a launch monitor here, unless this is the
-				// first launch, but it doesn't matter.
-				target.waitForInitialSession(bpFacade, sessionPreferences, null);
+				/*
+				 * Need to make sure bpFacade is thread safe. cannot provide a
+				 * launch monitor here, unless this is the first launch, but it
+				 * doesn't matter.
+				 */
+				target.waitForInitialSession(bpFacade, sessionPreferences,
+						null);
 				if (!target.isTerminated()) {
 					addDebugTarget(target);
-					launch.addDebugTarget(target);
 					if (targetState == STATE_INIT_SESSION_WAIT) {
 						targetState = STATE_STARTED;
 						te.signalEvent();
@@ -412,7 +431,6 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 						// ok it is one of ours, what is the event
 						int kind = evt.getKind();
 						if (kind == DebugEvent.TERMINATE) {
-							launch.removeDebugTarget((IDebugTarget) src);
 							debugTargets.remove(src);
 						}
 					}
@@ -433,7 +451,11 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 		targetState = STATE_TERMINATED;
 		DebugPlugin.getDefault().removeDebugEventListener(this);
 		fireTerminateEvent();
-
+		// Terminate corresponding launch as well
+		try {
+			getLaunch().terminate();
+		} catch (DebugException e) {
+		}
 	}
 
 	/**
@@ -443,20 +465,13 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 		if (stopDebugURL == null) {
 			return;
 		}
+		DBGpLogger.debug("browser is not null, sending " + stopDebugURL); //$NON-NLS-1$
 		try {
-			DBGpLogger.debug("browser is not null, sending " + stopDebugURL); //$NON-NLS-1$
-			URL url = new URL(stopDebugURL);
-			try {
-				URLConnection connection = url.openConnection();
-				connection.connect();
-			} catch (IOException e) {
-				DBGpLogger
-						.logException(
-								"Failed to send stop XDebug session URL: " + stopDebugURL, this, e); //$NON-NLS-1$
-			}
-		} catch (MalformedURLException e) {
-			// Should not happen
-			DBGpLogger.logException(null, this, e);
+			PHPDebugUtil.openLaunchURL(stopDebugURL);
+		} catch (DebugException e) {
+			DBGpLogger.logException(
+					"Failed to send stop XDebug session URL: " + stopDebugURL, //$NON-NLS-1$
+					this, e);
 		}
 	}
 

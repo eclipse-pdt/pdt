@@ -29,24 +29,23 @@ import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
  * 
  * @author shalom
  */
+@SuppressWarnings("restriction")
 public class PHPModelPresentationRegistry {
 
 	private static final String EXTENSION_POINT_NAME = "phpDebugModelPresentations"; //$NON-NLS-1$
 	private static final String MODEL_PRESENTATION_TAG = "phpDebugModelPresentation"; //$NON-NLS-1$
 	private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
-	private static final String VIEWER_CONFIGURATION_ATTRIBUTE = "detailsViewerConfiguration"; //$NON-NLS-1$
 
 	/* Instance of this registry */
 	private static PHPModelPresentationRegistry instance = null;
-	private Dictionary debugModelPresentations = new Hashtable();
+	private Dictionary<String, DebugModelPresentationFactory> debugModelPresentations = new Hashtable<String, DebugModelPresentationFactory>();
 	private IDebugModelPresentation bestMatchPresentation;
 
 	private PHPModelPresentationRegistry() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = registry
-				.getConfigurationElementsFor(PHPDebugUIPlugin.getID(),
-						EXTENSION_POINT_NAME);
+		IConfigurationElement[] elements = registry.getConfigurationElementsFor(
+				PHPDebugUIPlugin.getID(), EXTENSION_POINT_NAME);
 		for (int i = 0; i < elements.length; i++) {
 			final IConfigurationElement element = elements[i];
 			if (MODEL_PRESENTATION_TAG.equals(element.getName())) {
@@ -75,13 +74,13 @@ public class PHPModelPresentationRegistry {
 		}
 		try {
 			DebugModelPresentationFactory bestModelPresentationFactory = null;
-			Dictionary presentations = registry.debugModelPresentations;
-			Enumeration e = presentations.elements();
+			Dictionary<?, ?> presentations = registry.debugModelPresentations;
+			Enumeration<?> e = presentations.elements();
 			while (e.hasMoreElements()) {
 				DebugModelPresentationFactory modelPresentationFactory = (DebugModelPresentationFactory) e
 						.nextElement();
-				if (PHPDebugUIPlugin.getID().equals(
-						modelPresentationFactory.element
+				if (PHPDebugUIPlugin.getID()
+						.equals(modelPresentationFactory.element
 								.getNamespaceIdentifier())) {
 					bestModelPresentationFactory = modelPresentationFactory;
 				} else {
@@ -123,4 +122,5 @@ public class PHPModelPresentationRegistry {
 			return modelPresentation;
 		}
 	}
+
 }

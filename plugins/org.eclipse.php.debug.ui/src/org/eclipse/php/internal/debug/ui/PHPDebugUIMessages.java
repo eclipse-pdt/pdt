@@ -248,6 +248,8 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PHPLaunchingPreferencePage_switchToPHPMessage;
 
 	public static String PHPModelPresentation_ParallelRequests;
+
+	public static String PHPModelPresentation_PHP_Applications;
 	public static String PHPPrimitiveValueEditor_0;
 	public static String PHPPrimitiveValueEditor_1;
 	public static String PHPPrimitiveValueEditor_2;
@@ -279,6 +281,8 @@ public class PHPDebugUIMessages extends NLS {
 
 	public static String XDebugWatch_failed;
 	public static String XDebugHover_empty;
+
+	public static String XDebugModelPresentation_Waiting;
 	public static String XDebugPresentation_line;
 	public static String XDebugVariableValueEditor_0;
 
