@@ -252,7 +252,7 @@ public class PHPThreadEventHandler extends DebugEventHandler {
 		Object[] children = launch.getChildren();
 		delta = delta.addNode(launch,
 				indexOf(getLaunchManager().getLaunches(), launch),
-				IModelDelta.NO_CHANGE, children.length);
+				IModelDelta.CONTENT, children.length);
 		IDebugTarget debugTarget = launch.getDebugTarget();
 		int numThreads = -1;
 		try {
