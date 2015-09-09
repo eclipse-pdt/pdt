@@ -451,7 +451,7 @@
       <launchConfigurationType
             delegate="org.eclipse.php.internal.debug.core.launching.PHPRemoteLaunchConfigurationDelegate"
             id="org.eclipse.php.debug.core.remoteZendLaunchConfigurationType"
-            modes="debug"
+            modes="run, debug, profile"
             name="Remote PHP Launch"
             public="false"
             sourceLocatorId="org.eclipse.php.debug.core.sourceLookupDirector.php"
