@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
@@ -58,6 +59,28 @@ public class XDebugWebLaunchConfigurationDelegate extends
 		registerLaunchListeners();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.core.model.LaunchConfigurationDelegate#getLaunch(org.
+	 * eclipse.debug.core.ILaunchConfiguration, java.lang.String)
+	 */
+	@Override
+	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode)
+			throws CoreException {
+		return new XDebugLaunch(configuration, mode, null);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.
+	 * eclipse.debug.core.ILaunchConfiguration, java.lang.String,
+	 * org.eclipse.debug.core.ILaunch,
+	 * org.eclipse.core.runtime.IProgressMonitor)
+	 */
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		// Notify all listeners of a pre-launch event.
@@ -165,6 +188,12 @@ public class XDebugWebLaunchConfigurationDelegate extends
 				target = new DBGpTarget(launch, launchScript, startStopURLs[1],
 						ideKey, null, stopAtFirstLine);
 				target.setPathMapper(PathMapperRegistry.getByServer(server));
+				IProcess process = new PHPProcess(launch, PHPDebugCoreMessages.XDebugWebLaunchConfigurationDelegate_PHP_process);
+				process.setAttribute(IProcess.ATTR_PROCESS_TYPE,
+						IPHPDebugConstants.PHPProcessType);
+				((DBGpTarget) target).setProcess(process);
+				((PHPProcess) process).setDebugTarget(target);
+				launch.addProcess(process);
 			}
 			DBGpSessionHandler.getInstance().addSessionListener(
 					(IDBGpSessionListener) target);

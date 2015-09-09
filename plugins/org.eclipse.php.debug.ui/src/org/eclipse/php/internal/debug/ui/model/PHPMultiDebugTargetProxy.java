@@ -19,7 +19,6 @@ import org.eclipse.debug.internal.ui.viewers.model.provisional.IModelDelta;
 import org.eclipse.debug.internal.ui.viewers.model.provisional.ModelDelta;
 import org.eclipse.debug.internal.ui.viewers.update.DebugEventHandler;
 import org.eclipse.debug.internal.ui.viewers.update.DebugTargetProxy;
-import org.eclipse.php.internal.debug.core.zend.model.PHPMultiDebugTarget;
 
 /**
  * PHP multi-debug target element proxy.
@@ -29,14 +28,14 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPMultiDebugTarget;
 @SuppressWarnings("restriction")
 public class PHPMultiDebugTargetProxy extends DebugTargetProxy {
 
-	private PHPMultiDebugTarget debugTarget;
+	private IDebugTarget debugTarget;
 
 	/**
 	 * Creates new multi+debug target proxz.
 	 * 
 	 * @param debugTarget
 	 */
-	public PHPMultiDebugTargetProxy(PHPMultiDebugTarget debugTarget) {
+	public PHPMultiDebugTargetProxy(IDebugTarget debugTarget) {
 		super(debugTarget);
 		this.debugTarget = debugTarget;
 	}

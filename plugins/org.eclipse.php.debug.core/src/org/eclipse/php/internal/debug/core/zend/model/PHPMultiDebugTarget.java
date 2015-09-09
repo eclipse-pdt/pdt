@@ -39,8 +39,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	private IProcess fProcess;
 	private boolean fTerminated = false;
 	protected DebugOutput fDebugOutput = new DebugOutput();
-	private CopyOnWriteArrayList<PHPThread> fThreads = new CopyOnWriteArrayList<PHPThread>();
-	private CopyOnWriteArrayList<PHPDebugTarget> fDebugTargets = new CopyOnWriteArrayList<PHPDebugTarget>();
+	private CopyOnWriteArrayList<IPHPDebugTarget> fDebugTargets = new CopyOnWriteArrayList<IPHPDebugTarget>();
 
 	/**
 	 * Creates new multiple debug targets wrapper.
@@ -100,11 +99,11 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	public IThread[] getThreads() throws DebugException {
 		// Collect threads from all sub-targets
 		List<IThread> threads = new ArrayList<IThread>();
-		for (PHPDebugTarget target : fDebugTargets)
+		for (IPHPDebugTarget target : fDebugTargets)
 			if (target.hasThreads())
 				for (IThread thread : target.getThreads())
 					threads.add(thread);
-		return threads.toArray(new IThread[fThreads.size()]);
+		return threads.toArray(new IThread[threads.size()]);
 	}
 
 	/*
@@ -115,7 +114,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	@Override
 	public boolean hasThreads() throws DebugException {
 		// Check if any sub-target has at least one thread
-		for (PHPDebugTarget target : fDebugTargets)
+		for (IPHPDebugTarget target : fDebugTargets)
 			if (target.hasThreads())
 				return true;
 		return false;
@@ -142,9 +141,9 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
 		boolean supports = false;
 		// Supports if any of sub-targets supports
-		if (breakpoint.getModelIdentifier().equals(
-				IPHPDebugConstants.ID_PHP_DEBUG_CORE)) {
-			for (PHPDebugTarget target : fDebugTargets)
+		if (breakpoint.getModelIdentifier()
+				.equals(IPHPDebugConstants.ID_PHP_DEBUG_CORE)) {
+			for (IPHPDebugTarget target : fDebugTargets)
 				if (target.supportsBreakpoint(breakpoint))
 					supports = true;
 		}
@@ -179,7 +178,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	@Override
 	public synchronized void terminate() throws DebugException {
 		if (!fTerminated)
-			for (PHPDebugTarget target : fDebugTargets)
+			for (IPHPDebugTarget target : fDebugTargets)
 				target.terminate();
 		DebugPlugin.getDefault().removeDebugEventListener(this);
 		fProcess.terminate();
@@ -194,7 +193,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	 */
 	@Override
 	public boolean canResume() {
-		for (PHPDebugTarget target : fDebugTargets)
+		for (IPHPDebugTarget target : fDebugTargets)
 			if (target.canResume())
 				return true;
 		return false;
@@ -207,7 +206,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	 */
 	@Override
 	public boolean canSuspend() {
-		for (PHPDebugTarget target : fDebugTargets)
+		for (IPHPDebugTarget target : fDebugTargets)
 			if (target.canSuspend())
 				return true;
 		return false;
@@ -220,7 +219,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	 */
 	@Override
 	public boolean isSuspended() {
-		for (PHPDebugTarget target : fDebugTargets)
+		for (IPHPDebugTarget target : fDebugTargets)
 			if (target.isSuspended())
 				return true;
 		return false;
@@ -233,7 +232,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	 */
 	@Override
 	public void resume() throws DebugException {
-		for (PHPDebugTarget target : fDebugTargets)
+		for (IPHPDebugTarget target : fDebugTargets)
 			if (target.canResume())
 				target.resume();
 	}
@@ -245,7 +244,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	 */
 	@Override
 	public void suspend() throws DebugException {
-		for (PHPDebugTarget target : fDebugTargets)
+		for (IPHPDebugTarget target : fDebugTargets)
 			if (target.canSuspend())
 				target.suspend();
 	}
@@ -259,7 +258,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	 */
 	@Override
 	public void breakpointAdded(IBreakpoint breakpoint) {
-		for (PHPDebugTarget target : fDebugTargets)
+		for (IPHPDebugTarget target : fDebugTargets)
 			target.breakpointAdded(breakpoint);
 	}
 
@@ -272,7 +271,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	 */
 	@Override
 	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
-		for (PHPDebugTarget target : fDebugTargets)
+		for (IPHPDebugTarget target : fDebugTargets)
 			target.breakpointRemoved(breakpoint, delta);
 	}
 
@@ -285,7 +284,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	 */
 	@Override
 	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
-		for (PHPDebugTarget target : fDebugTargets)
+		for (IPHPDebugTarget target : fDebugTargets)
 			target.breakpointChanged(breakpoint, delta);
 	}
 
@@ -397,13 +396,13 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	 * 
 	 * @param target
 	 */
-	public void addSubTarget(PHPDebugTarget target) {
+	public void addSubTarget(IPHPDebugTarget target) {
 		fDebugTargets.add(target);
 	}
 
 	private void shutdown() {
 		// Check if all sub-targets are terminated
-		for (PHPDebugTarget target : fDebugTargets)
+		for (IPHPDebugTarget target : fDebugTargets)
 			if (!target.isTerminated())
 				return;
 		try {

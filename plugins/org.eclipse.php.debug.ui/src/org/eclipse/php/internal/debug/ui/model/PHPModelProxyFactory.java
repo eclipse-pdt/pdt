@@ -15,6 +15,7 @@ import org.eclipse.debug.internal.ui.viewers.model.provisional.IModelProxyFactor
 import org.eclipse.debug.internal.ui.viewers.model.provisional.IPresentationContext;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunch;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpMultiSessionTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPMultiDebugTarget;
 
 /**
@@ -39,12 +40,16 @@ public class PHPModelProxyFactory implements IModelProxyFactory {
 			IPresentationContext context) {
 		// Hook the Debug view
 		if (IDebugUIConstants.ID_DEBUG_VIEW.equals(context.getId())) {
+			if (element instanceof PHPLaunch) {
+				return new PHPLaunchProxy((PHPLaunch) element);
+			}
 			if (element instanceof PHPMultiDebugTarget) {
 				return new PHPMultiDebugTargetProxy(
 						((PHPMultiDebugTarget) element));
 			}
-			if (element instanceof PHPLaunch) {
-				return new PHPLaunchProxy((PHPLaunch) element);
+			if (element instanceof DBGpMultiSessionTarget) {
+				return new PHPMultiDebugTargetProxy(
+						((DBGpMultiSessionTarget) element));
 			}
 		}
 		return null;

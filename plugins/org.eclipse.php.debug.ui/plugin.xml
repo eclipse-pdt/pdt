@@ -674,9 +674,9 @@
    <extension
        point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     <launchConfigurationTypeImage
-          configTypeID="org.eclipse.php.debug.core.remoteZendLaunchConfigurationType"
+          configTypeID="org.eclipse.php.debug.core.remotePHPLaunchConfigurationType"
           icon="icon/full/obj16/remote_launch.png"
-          id="org.eclipse.php.debug.core.remoteZendLaunchConfigurationTypeImage">
+          id="org.eclipse.php.debug.core.remotePHPLaunchConfigurationTypeImage">
     </launchConfigurationTypeImage>
    </extension>
 </plugin>
