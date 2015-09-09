@@ -717,14 +717,14 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			case NO_LINE_WRAP:
 				break;
 			case FIRST_WRAP_WHEN_NECESSARY:
+				if (!cio.indented) {
+					cio.indented = true;
+					indentationLevel += indentGap;
+				}
 				if (lineWidth + array[i]
 						.getLength() > this.preferences.line_wrap_line_split) {
 					lineWrapPolicy = WRAP_WHEN_NECESSARY;
 					insertNewLine();
-					if (!cio.indented) {
-						indentationLevel += indentGap;
-					}
-
 					indent();
 				}
 				break;
@@ -736,6 +736,10 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				}
 				break;
 			case WRAP_FIRST_ELEMENT:
+				if (!cio.indented) {
+					cio.indented = true;
+					indentationLevel += indentGap;
+				}
 				if (forceSplit || lineWidth + array[i]
 						.getLength() > this.preferences.line_wrap_line_split) {
 					revert(savedBuffer, changesIndex);
@@ -743,13 +747,14 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					i = 0;
 					lineWrapPolicy = WRAP_WHEN_NECESSARY;
 					insertNewLine();
-					if (!cio.indented) {
-						indentationLevel += indentGap;
-					}
 					indent();
 				}
 				break;
 			case WRAP_ALL_ELEMENTS:
+				if (!cio.indented) {
+					cio.indented = true;
+					indentationLevel += indentGap;
+				}
 				if (forceSplit || lineWidth + array[i]
 						.getLength() > this.preferences.line_wrap_line_split) {
 					revert(savedBuffer, changesIndex);
@@ -757,13 +762,14 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					i = 0;
 					lineWrapPolicy = ALWAYS_WRAP_ELEMENT;
 					insertNewLine();
-					if (!cio.indented) {
-						indentationLevel += indentGap;
-					}
 					indent();
 				}
 				break;
 			case WRAP_ALL_ELEMENTS_NO_INDENT_FIRST:
+				if (!cio.indented) {
+					cio.indented = true;
+					indentationLevel += indentGap;
+				}
 				if (forceSplit || lineWidth + array[i]
 						.getLength() > this.preferences.line_wrap_line_split) {
 					// revert the buffer
@@ -772,9 +778,6 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					i = 0;
 					lineWrapPolicy = ALWAYS_WRAP_ELEMENT;
 					insertNewLine();
-					if (!cio.indented) {
-						indentationLevel += indentGap;
-					}
 					indent();
 
 					// increase the indentation level after the first element
@@ -783,6 +786,10 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				}
 				break;
 			case WRAP_ALL_ELEMENTS_EXCEPT_FIRST:
+				if (!cio.indented) {
+					cio.indented = true;
+					indentationLevel += indentGap;
+				}
 				if (forceSplit || lineWidth + array[i]
 						.getLength() > this.preferences.line_wrap_line_split) {
 					// revert
@@ -791,9 +798,6 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					i = (i > 0) ? 1 : 0;
 					lineWrapPolicy = ALWAYS_WRAP_ELEMENT;
 					insertNewLine();
-					if (!cio.indented) {
-						indentationLevel += indentGap;
-					}
 					indent();
 				}
 				break;
@@ -1100,7 +1104,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				if ((!isHeaderComment || this.preferences.comment_format_header)
 						&& this.editsEnabled
 						&& this.preferences.comment_format_javadoc_comment
-						&& canHandlePHPDocComment((PHPDocBlock) comment, offset)) {
+						&& canHandlePHPDocComment((PHPDocBlock) comment,
+								offset)) {
 					PHPDocBlock block = (PHPDocBlock) comment;
 
 					newLineOfComment = false;
@@ -1581,10 +1586,10 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		if (varTags.length != 1) {
 			return true;
 		}
-		int commentStartLine = document.getLineOfOffset(comment.sourceStart()
-				+ offset);
-		int commentEndLine = document.getLineOfOffset(comment.sourceEnd()
-				+ offset);
+		int commentStartLine = document
+				.getLineOfOffset(comment.sourceStart() + offset);
+		int commentEndLine = document
+				.getLineOfOffset(comment.sourceEnd() + offset);
 		return commentStartLine != commentEndLine;
 	}
 

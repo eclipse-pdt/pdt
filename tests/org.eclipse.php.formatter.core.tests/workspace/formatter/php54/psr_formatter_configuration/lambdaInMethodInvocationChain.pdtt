@@ -1,0 +1,29 @@
+--TEST--
+Test multiline array creation inside call chain
+--FILE--
+<?php
+$x = $this->call()->call(function() {
+    do_something();
+}, 2, function() {
+    do_something();
+})->call()->call(function() {
+    $lambda = function() {
+        call_me();
+    };
+}); 
+?>
+--EXPECT--
+<?php
+$x = $this->call()
+    ->call(function () {
+        do_something();
+    }, 2, function () {
+        do_something();
+    })
+    ->call()
+    ->call(function () {
+        $lambda = function () {
+            call_me();
+        };
+    });
+?>
