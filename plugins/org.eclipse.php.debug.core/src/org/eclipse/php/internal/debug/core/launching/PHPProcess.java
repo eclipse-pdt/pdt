@@ -19,11 +19,13 @@ import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IStreamsProxy;
 import org.eclipse.debug.core.model.ITerminate;
 import org.eclipse.debug.ui.console.IConsole;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 
 public class PHPProcess extends PlatformObject implements IProcess {
 
@@ -57,7 +59,15 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	 * @see org.eclipse.debug.core.model.IProcess#getLabel()
 	 */
 	public String getLabel() {
-		return fName;
+		String suffix = null;
+		if (fLaunch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE)) {
+			if (fLaunch instanceof PHPLaunch) {
+				suffix = PHPDebugCoreMessages.PHPProcess_Zend_Debugger_suffix;
+			} else if (fLaunch instanceof XDebugLaunch) {
+				suffix = PHPDebugCoreMessages.PHPProcess_XDebug_suffix;
+			}
+		}
+		return suffix != null ? (fName + ' ' + suffix) : fName;
 	}
 
 	/*
@@ -168,6 +178,7 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	public void terminate() throws DebugException {
 		fTerminated = true;
 		fireTerminateEvent();
+		fLaunch.terminate();
 	}
 
 	/**

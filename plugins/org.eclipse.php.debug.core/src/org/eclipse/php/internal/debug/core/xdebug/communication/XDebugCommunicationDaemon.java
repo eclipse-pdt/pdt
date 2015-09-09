@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChang
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -36,6 +37,8 @@ import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguratio
 import org.eclipse.php.internal.debug.core.debugger.DebuggerSettingsManager;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsListener;
+import org.eclipse.php.internal.debug.core.launching.PHPProcess;
+import org.eclipse.php.internal.debug.core.launching.XDebugLaunch;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
@@ -302,8 +305,8 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 			ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
 			if (session.getSessionId() == null) {
 				// WEB launch
-				type = lm
-						.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
+				type = lm.getLaunchConfigurationType(
+						IPHPDebugConstants.PHPRemoteLaunchType);
 			} else {
 				// CLI launch
 				type = lm
@@ -313,13 +316,20 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 					PHPDebugCoreMessages.XDebugMessage_remoteSessionTitle);
 			srcLocator.initializeDefaults(launchConfig);
 			srcLocator.initializeParticipants();
-			ILaunch remoteLaunch = new Launch(launchConfig,
+			ILaunch remoteLaunch = new XDebugLaunch(launchConfig,
 					ILaunchManager.DEBUG_MODE, srcLocator);
 			boolean multiSession = XDebugPreferenceMgr.useMultiSession();
 			if (session.getSessionId() == null && !multiSession) {
 				// Non multi-session web launch
 				target = new DBGpTarget(remoteLaunch, null, null,
 						session.getIdeKey(), null, stopAtFirstLine);
+				IProcess process = new PHPProcess(remoteLaunch, 
+						PHPDebugCoreMessages.XDebugWebLaunchConfigurationDelegate_PHP_process);
+				process.setAttribute(IProcess.ATTR_PROCESS_TYPE,
+						IPHPDebugConstants.PHPProcessType);
+				((DBGpTarget) target).setProcess(process);
+				((PHPProcess) process).setDebugTarget(target);
+				remoteLaunch.addProcess(process);
 				/*
 				 * try to locate a relevant server definition so we can get its
 				 * path mapper

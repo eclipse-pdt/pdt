@@ -45,6 +45,7 @@ public interface IPHPDebugConstants {
 
 	public static final String PHPEXELaunchType = "org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"; //$NON-NLS-1$
 	public static final String PHPServerLaunchType = "org.eclipse.php.debug.core.launching.webPageLaunch"; //$NON-NLS-1$
+	public static final String PHPRemoteLaunchType = "org.eclipse.php.debug.core.remotePHPLaunchConfigurationType"; //$NON-NLS-1$
 	// public static final String USE_INTERNAL_BROWSER = ID_PHP_DEBUG_CORE
 	// + ".UseExternalBrowser";
 	public static final String USE_SSH_TUNNEL = ID_PHP_DEBUG_CORE
