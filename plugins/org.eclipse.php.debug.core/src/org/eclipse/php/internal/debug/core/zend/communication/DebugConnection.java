@@ -465,7 +465,7 @@ public class DebugConnection {
 	}
 
 	// Launch configuration type for handling an external launch triggers.
-	public static final String REMOTE_LAUNCH_TYPE_ID = "org.eclipse.php.debug.core.remoteZendLaunchConfigurationType"; //$NON-NLS-1$
+	public static final String REMOTE_LAUNCH_TYPE_ID = "org.eclipse.php.debug.core.remotePHPLaunchConfigurationType"; //$NON-NLS-1$
 	public static final String REMOTE_DEBUG_LAUNCH_NAME = "PHP Debug"; //$NON-NLS-1$
 	private static final Lock HOOK_LOCK = new ReentrantLock(true);
 	private static final long HOOK_TIMEOUT = 10000;

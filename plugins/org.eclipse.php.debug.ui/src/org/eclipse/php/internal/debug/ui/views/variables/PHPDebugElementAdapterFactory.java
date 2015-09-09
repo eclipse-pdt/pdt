@@ -15,6 +15,7 @@ import org.eclipse.debug.internal.ui.viewers.model.provisional.IElementEditor;
 import org.eclipse.debug.internal.ui.viewers.model.provisional.IModelProxyFactory;
 import org.eclipse.debug.internal.ui.views.launch.DebugElementAdapterFactory;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunch;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpMultiSessionTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPMultiDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPVariable;
 import org.eclipse.php.internal.debug.ui.model.PHPModelProxyFactory;
@@ -29,11 +30,12 @@ import org.eclipse.php.internal.debug.ui.model.PHPModelProxyFactory;
 public class PHPDebugElementAdapterFactory extends DebugElementAdapterFactory {
 
 	private static IElementEditor fElementEditor = new PHPVariableColumnEditor();
-	private static IModelProxyFactory fgFactory = new PHPModelProxyFactory();
+	private static IModelProxyFactory fgModelFactory = new PHPModelProxyFactory();
 
 	/**
 	 * Override the default one to provide the PHP specific adapters.
 	 */
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Object adaptableObject,
 			@SuppressWarnings("rawtypes") Class adapterType) {
 		if (adapterType.equals(IElementEditor.class)) {
@@ -42,10 +44,10 @@ public class PHPDebugElementAdapterFactory extends DebugElementAdapterFactory {
 			}
 		}
 		if (adapterType.equals(IModelProxyFactory.class)) {
-			if (adaptableObject instanceof PHPMultiDebugTarget)
-				return fgFactory;
-			if (adaptableObject instanceof PHPLaunch)
-				return fgFactory;
+			if (adaptableObject instanceof PHPLaunch
+					|| adaptableObject instanceof PHPMultiDebugTarget
+					|| adaptableObject instanceof DBGpMultiSessionTarget)
+				return fgModelFactory;
 		}
 		return super.getAdapter(adaptableObject, adapterType);
 	}
