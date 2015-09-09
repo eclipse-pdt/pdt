@@ -12,18 +12,24 @@
 package org.eclipse.php.internal.debug.ui.presentation;
 
 import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.ui.IDebugModelPresentation;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpMultiSessionTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpThread;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 
+import com.ibm.icu.text.MessageFormat;
+
 /**
  * Renders PHP debug elements
  */
-public class XDebugModelPresentation extends PHPModelPresentation implements
-		IDebugModelPresentation {
+@SuppressWarnings("restriction")
+public class XDebugModelPresentation extends PHPModelPresentation
+		implements IDebugModelPresentation {
 
 	protected String getStackFrameText(IStackFrame frame) {
 		if (frame instanceof DBGpStackFrame) {
@@ -54,6 +60,33 @@ public class XDebugModelPresentation extends PHPModelPresentation implements
 			}
 		}
 		return ""; //$NON-NLS-1$
-
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.php.internal.debug.ui.presentation.PHPModelPresentation#
+	 * getTargetText(org.eclipse.debug.core.model.IDebugTarget)
+	 */
+	@Override
+	protected String getTargetText(IDebugTarget target) {
+		String label = ""; //$NON-NLS-1$
+		if (target.isTerminated()) {
+			label = MessageFormat.format(
+					PHPDebugUIMessages.MPresentation_Terminated_1,
+					new Object[] {});
+		}
+		String name = PHPDebugUIMessages.MPresentation_PHP_APP_1;
+		if (target instanceof DBGpTarget
+				|| target instanceof DBGpMultiSessionTarget) {
+			name = PHPDebugUIMessages.PHPModelPresentation_PHP_Applications;
+			try {
+				if (!target.hasThreads() && !target.isTerminated())
+					name += PHPDebugUIMessages.XDebugModelPresentation_Waiting;
+			} catch (DebugException e) {
+			}
+		}
+		return label + name;
+	}
+
 }

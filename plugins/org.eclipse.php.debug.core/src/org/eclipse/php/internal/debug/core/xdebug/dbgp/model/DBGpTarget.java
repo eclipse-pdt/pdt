@@ -26,11 +26,7 @@ import org.eclipse.debug.core.model.*;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.core.phar.PharPath;
-import org.eclipse.php.internal.debug.core.PHPDebugUtil;
-import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
-import org.eclipse.php.internal.debug.core.Logger;
-import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
-import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.*;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
 import org.eclipse.php.internal.debug.core.model.VariablesUtil;
@@ -649,6 +645,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @see org.eclipse.debug.core.model.IDebugTarget#getThreads()
 	 */
 	public IThread[] getThreads() throws DebugException {
+		if (isTerminated() || STATE_STARTED_SESSION_WAIT == targetState)
+			return new IThread[0];
 		return allThreads;
 	}
 
@@ -658,8 +656,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @see org.eclipse.debug.core.model.IDebugTarget#hasThreads()
 	 */
 	public boolean hasThreads() throws DebugException {
-		boolean hasThreads = allThreads.length > 0;
-		return hasThreads;
+		return getThreads().length > 0;
 	}
 
 	/*
@@ -712,12 +709,12 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
 	 */
 	public boolean canTerminate() {
-
 		// can only terminate if we have not terminated (allow for terminating
 		// state as well to be safe).
 		boolean canTerminate = (STATE_TERMINATED != targetState
-				&& STATE_CREATE != targetState && STATE_DISCONNECTED != targetState);
-		if (process != null) {
+				&& STATE_CREATE != targetState
+				&& STATE_DISCONNECTED != targetState);
+		if (!canTerminate && process != null) {
 			canTerminate = canTerminate && process.canTerminate();
 		}
 		return canTerminate;
@@ -731,11 +728,10 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 	public boolean isTerminated() {
 		boolean terminated = (STATE_TERMINATED == targetState);
-		if (process != null) {
+		if (!terminated && process != null) {
 			return process.isTerminated();
-		} else {
-			return terminated;
 		}
+		return terminated;
 	}
 
 	/**
@@ -836,7 +832,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 				// we are terminating, if we are a web launch, we need to issue
 				// the
 				// stop URL, then terminate the debug target.
-				if (isWebLaunch()) {
+				if (isWebLaunch() && !isMultiSessionManaged()) {
 					sendStopDebugURL();
 				}
 				terminateDebugTarget(true);
@@ -938,6 +934,12 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 			stepping = false;
 			fireTerminateEvent();
 		}
+		if (!isMultiSessionManaged())
+			// Terminate corresponding launch if target is not multi-session managed
+			try {
+				getLaunch().terminate();
+			} catch (DebugException e) {
+			}
 	}
 
 	/*
@@ -1385,7 +1387,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 						for (int i = 0; i < stackNodes.getLength(); i++) {
 							Node stackNode = stackNodes.item(i);
 							// merge top frame
-							if (i == 0 && previousFrames != null) {
+							if (i == 0 && previousFrames != null && previousFrames.length != 0) {
 								// merge top frame
 								stackFrames[0] = mergeFrame(
 										(DBGpStackFrame) previousFrames[0],
