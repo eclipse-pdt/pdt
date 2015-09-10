@@ -287,9 +287,16 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 	public boolean visit(AnonymousClassDeclaration anonymousClassDeclaration)
 			throws Exception {
+		ASTNode parentDeclaration = null;
+		if (!declarations.empty()) {
+			parentDeclaration = declarations.peek();
+		}
+
+		if (parentDeclaration instanceof TypeDeclaration) {
+			return false;
+		}
 
 		fNodes.push(anonymousClassDeclaration);
-
 		declarations.push(anonymousClassDeclaration);
 
 		for (PHPSourceElementRequestorExtension visitor : extensions) {

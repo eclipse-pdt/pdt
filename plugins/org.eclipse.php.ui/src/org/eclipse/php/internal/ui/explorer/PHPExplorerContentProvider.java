@@ -41,6 +41,7 @@ import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.GlobalNamespace;
+import org.eclipse.php.internal.core.util.OutlineFilter;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -134,7 +135,9 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		try {
 			// don't show local method variables:
 			if (parentElement instanceof IMethod) {
-				return NO_CHILDREN;
+				IMethod method = (IMethod) parentElement;
+				return OutlineFilter.filterChildrenForOutline(method,
+						method.getChildren());
 			}
 
 			// aggregate php projects and non php projects (includes closed

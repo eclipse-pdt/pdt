@@ -74,8 +74,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			fListener = null;
 		}
 		if (fProblemListener != null) {
-			PHPUiPlugin.getWorkspace().removeResourceChangeListener(
-					fProblemListener);
+			PHPUiPlugin.getWorkspace()
+					.removeResourceChangeListener(fProblemListener);
 			fProblemListener = null;
 		}
 	}
@@ -107,8 +107,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 							PHPCoreConstants.PHP_OPTIONS_PHP_VERSION);
 			phpVersion = PHPVersion.byAlias(versionName);
 		} else {
-			phpVersion = ProjectOptions.getPhpVersion(modelElement
-					.getScriptProject().getProject());
+			phpVersion = ProjectOptions.getPhpVersion(
+					modelElement.getScriptProject().getProject());
 		}
 		return phpVersion.isGreaterThan(PHPVersion.PHP5);
 	}
@@ -143,6 +143,17 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		if (parent instanceof IModelElement) {
 			IModelElement me = (IModelElement) parent;
 			if (me.getElementType() == IModelElement.FIELD) {
+				IField field = (IField) me;
+				try {
+					for (IModelElement child : field.getChildren()) {
+						if (child.getElementType() == IModelElement.METHOD
+								|| child.getElementType() == IModelElement.TYPE) {
+							return true;
+						}
+					}
+				} catch (ModelException e) {
+					PHPUiPlugin.log(e);
+				}
 				return false;
 			}
 		}
@@ -187,8 +198,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			DLTKCore.removeElementChangedListener(fListener);
 			fListener = null;
 
-			PHPUiPlugin.getWorkspace().removeResourceChangeListener(
-					fProblemListener);
+			PHPUiPlugin.getWorkspace()
+					.removeResourceChangeListener(fProblemListener);
 			fProblemListener = null;
 
 			fInput = null;
@@ -243,10 +254,10 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 
 								if (isNamespaceSupported(base)) {
 									ModuleDeclaration moduleDeclaration = SourceParserUtil
-											.getModuleDeclaration((ISourceModule) base);
+											.getModuleDeclaration(
+													(ISourceModule) base);
 									UseStatement[] useStatements = ASTUtils
-											.getUseStatements(
-													moduleDeclaration,
+											.getUseStatements(moduleDeclaration,
 													moduleDeclaration
 															.sourceEnd());
 									useStatementsCountNew = useStatements.length;
@@ -256,7 +267,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 					}
 					final IModelElementDelta delta = findElement(fSourceModule,
 							e.getDelta());
-					if ((delta != null || e.getType() == ElementChangedEvent.POST_CHANGE)
+					if ((delta != null
+							|| e.getType() == ElementChangedEvent.POST_CHANGE)
 							&& fOutlineViewer != null
 							&& fOutlineViewer.getControl() != null
 							&& !fOutlineViewer.getControl().isDisposed()) {
@@ -292,8 +304,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 				return;
 			}
 			if (fOutlineViewer.getTree() == null
-					|| (fOutlineViewer.getTree() != null && !fOutlineViewer
-							.getTree().isDisposed())) {
+					|| (fOutlineViewer.getTree() != null
+							&& !fOutlineViewer.getTree().isDisposed())) {
 				visitAndUpdate(delta);
 			}
 		}
@@ -311,7 +323,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 						}
 					} else {
 						fOutlineViewer.add(modelElement.getParent(),
-								modelElement);
+								OutlineFilter.filter(
+										new IModelElement[] { modelElement }));
 					}
 					refreshUseStatements(modelElement);
 					break;
@@ -330,8 +343,9 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		}
 
 		private void refreshUseStatements(IModelElement element) {
-			if (fUseStatementsNode != null
-					&& (element.getElementType() == IModelElement.IMPORT_CONTAINER || element
+			if (fUseStatementsNode != null && (element
+					.getElementType() == IModelElement.IMPORT_CONTAINER
+					|| element
 							.getElementType() == IModelElement.IMPORT_DECLARATION)) {
 				fOutlineViewer.refresh(fUseStatementsNode);
 			}
@@ -386,7 +400,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			if ((flags & IModelElementDelta.F_CHILDREN) != 0) {
 				return true;
 			}
-			return (flags & (IModelElementDelta.F_CONTENT | IModelElementDelta.F_FINE_GRAINED)) == IModelElementDelta.F_CONTENT;
+			return (flags & (IModelElementDelta.F_CONTENT
+					| IModelElementDelta.F_FINE_GRAINED)) == IModelElementDelta.F_CONTENT;
 		}
 	}
 
@@ -459,8 +474,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			toUpdate.add(element);
 
 			// update elements from virtual 'use statements' node
-			if (fUseStatementsNode != null
-					&& element.getElementType() == IModelElement.IMPORT_DECLARATION) {
+			if (fUseStatementsNode != null && element
+					.getElementType() == IModelElement.IMPORT_DECLARATION) {
 				Object[] objects = getChildren(fUseStatementsNode);
 				toUpdate.addAll(Arrays.asList(objects));
 			}
@@ -545,7 +560,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 				IImportContainer importContainer) {
 			Object[] children = getChildren(object);
 			for (Object child : children) {
-				if (child == importContainer && object instanceof IModelElement) {
+				if (child == importContainer
+						&& object instanceof IModelElement) {
 					return (IModelElement) object;
 				}
 				IModelElement parent = findParent(child, importContainer);
