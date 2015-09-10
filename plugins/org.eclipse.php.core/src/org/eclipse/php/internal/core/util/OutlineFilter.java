@@ -8,6 +8,8 @@ import java.util.Vector;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 public class OutlineFilter {
@@ -32,10 +34,9 @@ public class OutlineFilter {
 
 		Vector<IModelElement> v = new Vector<IModelElement>();
 		for (int i = 0; i < children.length; i++) {
-			if (matches(children[i])) {
-				continue;
+			if (!matches(children[i])) {
+				v.addElement(children[i]);
 			}
-			v.addElement(children[i]);
 		}
 
 		IModelElement[] result = new IModelElement[v.size()];
@@ -82,6 +83,19 @@ public class OutlineFilter {
 					return false;
 				}
 				if (parentType == IModelElement.METHOD) {
+					IField field = (IField) element;
+					try {
+						for (IModelElement modelElement : field.getChildren()) {
+							if (modelElement
+									.getElementType() == IModelElement.METHOD
+									|| modelElement
+											.getElementType() == IModelElement.TYPE) {
+								return false;
+							}
+						}
+					} catch (ModelException e) {
+						PHPCorePlugin.log(e);
+					}
 					return true;
 				}
 			}
