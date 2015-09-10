@@ -13,11 +13,13 @@ var version = java.lang.System.getProperty("java.version").split(".");
 if (parseInt(version[0]) == 1 && parseInt(version[1]) > 7) {
     load("nashorn:mozilla_compat.js");
 }
+var encoding = "UTF-8";
 
 importPackage(Packages.org.apache.tools.ant.types);
 importClass(java.io.File);
 importClass(java.util.Scanner);
 importClass(java.lang.Exception);
+
 var debug = function(el) {
     var echo = project.createTask('echo');
     echo.setMessage(el);
@@ -28,16 +30,16 @@ var debug = function(el) {
 }, globalTree = tree, sourceDir = new File(project.getProperty('doc.source.dir')), destinationDir = new File(project.getProperty('doc.build.dir')), templateDir = new File(project.getProperty('doc.template.dir')), nameReg = /^[0-9]{3}-(.*?)\.md$/i, baseNameReg = /^[0-9]{3}-(.*?)$/i, convertToHtml = function(file, target) {
     // Converting may be disabled
 }, footerTemplateRead = function() {
-    var scanner = new Scanner(new File(templateDir, "footer.html"));
+    var scanner = new Scanner(new File(templateDir, "footer.html"), encoding);
     
     return scanner.useDelimiter("\\A").next().trim().replace('${project.version}', project.getProperty('project.version').replace('SNAPSHOT', project.getProperty('buildQualifier')));
 }, footerTemplate = footerTemplateRead(), headerTemplateRead = function() {
-    var scanner = (new Scanner(new File(templateDir, "header.html"))); 
+    var scanner = new Scanner(new File(templateDir, "header.html"), encoding); 
     
     return scanner.useDelimiter("\\A").next().trim();
     
 }, headerTemplate = headerTemplateRead(), readAndConvert = function(tree, file, destination) {
-    var scanner = new Scanner(file), content = scanner.useDelimiter("\\A").next().trim(), lines = content.split("\n");
+    var scanner = new Scanner(file, encoding), content = scanner.useDelimiter("\\A").next().trim(), lines = content.split("\n");
     if (content.substring(0, 2) != '# ') {
         debug(file.getAbsolutePath());
         throw new Exception("Title is required! : " + file.getAbsolutePath());
