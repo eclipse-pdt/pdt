@@ -1,13 +1,12 @@
 package org.eclipse.php.internal.core.util;
 
-import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.Vector;
+import java.util.*;
 
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 public class OutlineFilter {
@@ -17,29 +16,13 @@ public class OutlineFilter {
 	}
 
 	public static IModelElement[] filter(IModelElement[] children) {
-		boolean initializers = false;
+		List<IModelElement> v = new ArrayList<IModelElement>();
 		for (int i = 0; i < children.length; i++) {
-			if (matches(children[i])) {
-				initializers = true;
-				break;
+			if (!matches(children[i])) {
+				v.add(children[i]);
 			}
 		}
-
-		if (!initializers) {
-			return children;
-		}
-
-		Vector<IModelElement> v = new Vector<IModelElement>();
-		for (int i = 0; i < children.length; i++) {
-			if (matches(children[i])) {
-				continue;
-			}
-			v.addElement(children[i]);
-		}
-
-		IModelElement[] result = new IModelElement[v.size()];
-		v.copyInto(result);
-		return result;
+		return v.toArray(new IModelElement[v.size()]);
 	}
 
 	public static IModelElement[] filterDuplicatePublicVars(Object parent, IModelElement[] children) {
@@ -77,6 +60,19 @@ public class OutlineFilter {
 					return false;
 				}
 				if (parentType == IModelElement.METHOD) {
+					IField field = (IField) element;
+					try {
+						for (IModelElement modelElement : field.getChildren()) {
+							if (modelElement
+									.getElementType() == IModelElement.METHOD
+									|| modelElement
+											.getElementType() == IModelElement.TYPE) {
+								return false;
+							}
+						}
+					} catch (ModelException e) {
+						PHPCorePlugin.log(e);
+					}
 					return true;
 				}
 			}
