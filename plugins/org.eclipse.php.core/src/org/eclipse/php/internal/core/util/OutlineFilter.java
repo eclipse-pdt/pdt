@@ -1,13 +1,9 @@
 package org.eclipse.php.internal.core.util;
 
-import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.Vector;
+import java.util.*;
 
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.*;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 public class OutlineFilter {
@@ -33,9 +29,17 @@ public class OutlineFilter {
 		Vector<IModelElement> v = new Vector<IModelElement>();
 		for (int i = 0; i < children.length; i++) {
 			if (matches(children[i])) {
-				continue;
+				if (children[i] instanceof IParent) {
+					IParent parent = (IParent) children[i];
+					try {
+						v.addAll(Arrays.asList(filter(parent.getChildren())));
+					} catch (ModelException e) {
+						PHPCorePlugin.log(e);
+					}
+				}
+			} else {
+				v.addElement(children[i]);
 			}
-			v.addElement(children[i]);
 		}
 
 		IModelElement[] result = new IModelElement[v.size()];
