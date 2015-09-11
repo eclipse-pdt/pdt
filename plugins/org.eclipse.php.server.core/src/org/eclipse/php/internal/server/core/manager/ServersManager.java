@@ -296,6 +296,9 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	 *         there is no match
 	 */
 	public static Server findByURL(String urlString) {
+		if (urlString == null) {
+			return null;
+		}
 		List<Server> matches = null;
 		URL url;
 		try {

@@ -63,7 +63,8 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 			try {
 				String lcServerName = launchConfiguration
 						.getAttribute(Server.NAME, (String) null);
-				if (lcServerName == null || lcServerName.isEmpty()) {
+				if ((lcServerName == null || lcServerName.isEmpty())
+						&& fDebugTarget.getURL() != null) {
 					// Bind server with this configuration, if we can find any.
 					String serverName = null;
 					Server serverLookup = ServersManager
@@ -287,5 +288,5 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	protected boolean isUsingPathMapper() {
 		return true;
 	}
-	
+
 }
