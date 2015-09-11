@@ -55,9 +55,6 @@ public class PHPPartitionerTests {
 
 	private static final String PROJECT_NAME = "partitioner";
 
-	private static final int endLine = System.getProperty("line.separator")
-			.length();
-
 	// The markers looked for in the PHP partition
 	private static final String[] phpLookUp = { "php", "echo",
 			"PHP_Single_Comment", "PHP_Multi_Comment", "PHP_Doc",
@@ -281,6 +278,7 @@ public class PHPPartitionerTests {
 
 			// go over the file, one line at a time, and search for the markers
 			String curLine = reader.readLine();
+			int lineNumber = 0;
 			while (curLine != null) {
 				for (int i = 0; i < markers.length; i++) {
 					int lineOffset = curLine.indexOf(markers[i]);
@@ -292,8 +290,13 @@ public class PHPPartitionerTests {
 					}
 				}
 				// update global offset
-				offset += curLine.length() + endLine;
+				String curLineDelimiter = structuredDocument
+						.getLineDelimiter(lineNumber);
+				// use original line endings to shift the offset
+				offset += curLine.length() + (curLineDelimiter != null
+						? curLineDelimiter.length() : 0);
 				curLine = reader.readLine();
+				lineNumber++;
 			}
 		} finally {
 			reader.close();
