@@ -50,7 +50,8 @@
  * ${tags}
  */</template>
 
-<template name="overridecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.overridecomment" description="%CodeTemplates.overridecomment" context="php_overridecomment_context" enabled="true">/* %CodeTemplates.overridecomment.nonjd
+<template name="overridecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.overridecomment" description="%CodeTemplates.overridecomment" context="php_overridecomment_context" enabled="true">/**
+ * {@inheritDoc}
  * ${see_to_overridden}
  */</template>
 
