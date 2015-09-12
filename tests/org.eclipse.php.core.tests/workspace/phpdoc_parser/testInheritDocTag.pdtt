@@ -1,0 +1,16 @@
+--TEST--
+Test Var Tag
+--FILE--
+/**
+* {@inheritDoc}
+* {@inheritdoc}
+*/
+--EXPECT--
+<PHPDocBlock start="0" end="38" shortDescription="">
+	<PHPDocTag start="6" end="20" tagKind="inheritdoc" value="
+">
+	</PHPDocTag>
+	<PHPDocTag start="22" end="36" tagKind="inheritdoc" value="
+">
+	</PHPDocTag>
+</PHPDocBlock>
