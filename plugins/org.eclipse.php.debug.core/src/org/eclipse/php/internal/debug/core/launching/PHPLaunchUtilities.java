@@ -206,11 +206,11 @@ public class PHPLaunchUtilities {
 				// launch.
 				MessageDialogWithToggle m = MessageDialogWithToggle.openYesNoQuestion(
 						disp.getActiveShell(),
-						PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
-						PHPDebugCoreMessages.PHPLaunchUtilities_multipleLaunchesPrompt,
-						PHPDebugCoreMessages.PHPLaunchUtilities_rememberDecision,
-						false, store,
-						PreferenceConstants.ALLOW_MULTIPLE_LAUNCHES);
+								PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
+								PHPDebugCoreMessages.PHPLaunchUtilities_multipleLaunchesPrompt,
+								PHPDebugCoreMessages.PHPLaunchUtilities_rememberDecision,
+								false, store,
+								PreferenceConstants.ALLOW_MULTIPLE_LAUNCHES);
 				resultHolder.setReturnCode(m.getReturnCode());
 			}
 		});
@@ -363,25 +363,25 @@ public class PHPLaunchUtilities {
 					if (fHasContiniousLaunch) {
 						resultHolder.setResult(MessageDialog
 								.openConfirm(
-										Display.getDefault().getActiveShell(),
-										PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
-										PHPDebugCoreMessages.PHPLaunchUtilities_0));
+								Display.getDefault().getActiveShell(),
+								PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
+								PHPDebugCoreMessages.PHPLaunchUtilities_0));
 					} else {
 						if (newIsDebugAllPages) {
 							resultHolder.setResult(MessageDialog
 									.openConfirm(
 											Display.getDefault()
 													.getActiveShell(),
-											PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
-											PHPDebugCoreMessages.PHPLaunchUtilities_7));
+									PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
+									PHPDebugCoreMessages.PHPLaunchUtilities_7));
 						} else {
 							// newIsStartDebugFrom == true
 							resultHolder.setResult(MessageDialog
 									.openConfirm(
 											Display.getDefault()
 													.getActiveShell(),
-											PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
-											PHPDebugCoreMessages.PHPLaunchUtilities_8));
+									PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
+									PHPDebugCoreMessages.PHPLaunchUtilities_8));
 						}
 					}
 					if (resultHolder.getResult()) {
@@ -1049,8 +1049,8 @@ public class PHPLaunchUtilities {
 									"-S", //$NON-NLS-1$
 									server,
 									"-t", root, useDefaultPHPIni ? "" : "-n", "-c", phpConfigDir, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-									"asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$
-									"short_open_tag=" + shortOpenTag })); //$NON-NLS-1$
+					"asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$
+					"short_open_tag=" + shortOpenTag })); //$NON-NLS-1$
 		} else {
 			cmdLineList
 					.addAll(Arrays
@@ -1059,8 +1059,8 @@ public class PHPLaunchUtilities {
 									"-S", //$NON-NLS-1$
 									server,
 									"-t", root, routerFile, useDefaultPHPIni ? "" : "-n", "-c", phpConfigDir, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-									"-d", "asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-									"short_open_tag=" + shortOpenTag })); //$NON-NLS-1$
+					"-d", "asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					"short_open_tag=" + shortOpenTag })); //$NON-NLS-1$
 		}
 		if (args != null) {
 			cmdLineList.addAll(Arrays.asList(args));
@@ -1122,7 +1122,7 @@ public class PHPLaunchUtilities {
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=298606
 		return DebugPlugin.parseArguments(VariablesPlugin.getDefault()
 				.getStringVariableManager()
-				.performStringSubstitution(arguments));
+						.performStringSubstitution(arguments));
 	}
 
 	/**
@@ -1138,8 +1138,8 @@ public class PHPLaunchUtilities {
 						.getPluginPreferences());
 		String value = preferencesSupport
 				.getPreferencesValue(
-						CorePreferenceConstants.Keys.EDITOR_USE_ASP_TAGS, null,
-						project);
+				CorePreferenceConstants.Keys.EDITOR_USE_ASP_TAGS, null,
+				project);
 		if (value == null) {
 			value = preferencesSupport
 					.getWorkspacePreferencesValue(CorePreferenceConstants.Keys.EDITOR_USE_ASP_TAGS);
@@ -1171,7 +1171,7 @@ public class PHPLaunchUtilities {
 			} catch (UnsupportedEncodingException exc) {
 			}
 			if (e.hasMoreElements()) {
-				buf.append('&'); //$NON-NLS-1$
+				buf.append('&'); // $NON-NLS-1$
 			}
 		}
 		return buf.toString();
@@ -1212,7 +1212,7 @@ public class PHPLaunchUtilities {
 			Logger.logException("Error obtaining an SSHTunnel instance", e);//$NON-NLS-1$
 		} catch (StorageException e) {
 			Logger.logException(
-					"Error accessing the secured storage for the debug SSH tunnel",//$NON-NLS-1$
+					"Error accessing the secured storage for the debug SSH tunnel", //$NON-NLS-1$
 					e);
 		}
 		return null;
@@ -1343,6 +1343,31 @@ public class PHPLaunchUtilities {
 	public static boolean isDebugDaemonActive(int port, String debuggerId) {
 		return DaemonPlugin.getDefault().validateCommunicationDaemons(
 				debuggerId, port);
+	}
+
+	/**
+	 * Checks if given launch configurations is of provided type.
+	 * 
+	 * @param launchConfiguration
+	 * @param launchConfigurationType
+	 * @return <code>true</code> if given launch configurations is of provided type,
+	 *         <code>false</code> otherwise
+	 */
+	public static boolean isLaunchConfigurationTypeOf(
+			ILaunchConfiguration launchConfiguration,
+			String launchConfigurationType) {
+		ILaunchConfigurationType type = DebugPlugin.getDefault()
+				.getLaunchManager()
+				.getLaunchConfigurationType(launchConfigurationType);
+		try {
+			if (launchConfiguration.getType().equals(type)) {
+				return true;
+			}
+		} catch (CoreException e) {
+			// Should not happened, anyway...
+			Logger.logException(e);
+		}
+		return false;
 	}
 
 }

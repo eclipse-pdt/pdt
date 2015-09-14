@@ -152,7 +152,9 @@ public class DebugSearchEngine {
 		}
 		PathMapper pathMapper = PathMapperRegistry
 				.getByLaunchConfiguration(launchConfiguration);
-		pathEntry = find(pathMapper, remoteFile, project, debugTarget);
+		if (pathMapper != null) {
+			pathEntry = find(pathMapper, remoteFile, project, debugTarget);
+		}
 		return pathEntry;
 	}
 

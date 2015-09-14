@@ -19,7 +19,9 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
 import org.eclipse.php.internal.core.util.preferences.XMLPreferencesReader;
 import org.eclipse.php.internal.core.util.preferences.XMLPreferencesWriter;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.preferences.IPHPExesListener;
 import org.eclipse.php.internal.debug.core.preferences.PHPExesEvent;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
@@ -194,7 +196,9 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 				 * be bound to the corresponding launch configuration.
 				 */
 				pathMapper = getByServer(ServersManager.getServer(serverName));
-			} else {
+			} else if (PHPLaunchUtilities.isLaunchConfigurationTypeOf(
+					launchConfiguration,
+					IPHPDebugConstants.PHPRemoteLaunchType)) {
 				/*
 				 * If no server could be found (launch configuration for
 				 * externally triggered sessions), create temporary one and bind
