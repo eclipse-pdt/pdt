@@ -167,7 +167,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		private Map<String, String> current = new HashMap<String, String>();
 		private Map<String, String> previous = new HashMap<String, String>();
 
-		public boolean store(DBGpValue value, Node property) {
+		public synchronized boolean store(DBGpValue value, Node property) {
 			if (DBGpResponse.getAttribute(property, "name").equals("$this")) //$NON-NLS-1$ //$NON-NLS-2$
 				return false;
 			boolean hasChanged = false;
@@ -186,7 +186,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 			return hasChanged;
 		}
 
-		public void reset() {
+		public synchronized void reset() {
 			previous = current;
 			current = new HashMap<String, String>();
 		}
@@ -563,8 +563,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 									.openError(
 											Display.getDefault()
 													.getActiveShell(),
-											PHPDebugCoreMessages.XDebugMessage_debugError,
-											PHPDebugCoreMessages.XDebug_DBGpTarget_0);
+									PHPDebugCoreMessages.XDebugMessage_debugError,
+									PHPDebugCoreMessages.XDebug_DBGpTarget_0);
 						}
 					});
 					session.endSession();
@@ -2536,7 +2536,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @return <code>true</code> if given value has changed since previous
 	 *         suspension, <code>false</code> otherwise
 	 */
-	synchronized boolean storeValue(DBGpValue value, Node property) {
+	boolean storeValue(DBGpValue value, Node property) {
 		return valueStorage.store(value, property);
 	}
 
