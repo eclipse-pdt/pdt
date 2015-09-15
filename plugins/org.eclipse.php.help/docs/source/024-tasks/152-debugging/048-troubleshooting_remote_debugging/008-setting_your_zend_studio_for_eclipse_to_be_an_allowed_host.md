@@ -11,9 +11,9 @@ If only the standalone Zend Debugger is installed on your server:
 To configure your debugger to allow your PDT to debug:
 
  1. Open your php.ini file.
- 2. Edit the zend_debugger.allow_hosts parameters to include the IP address of the machine on which your PDT is installed.  e.g. zend_debugger.allow_hosts=127.0.0.1/32
- 3. Ensure the address is not in your zend_debugger.deny_hosts parameter list.
- 4. Set the Debug Server to expose itself to remote clients by setting the zend_debugger.expose_remotely parameter to Always.  (e.g. zend_debugger.expose_remotely=always).
+ 2. Edit the zend\_debugger.allow\_hosts parameters to include the IP address of the machine on which your PDT is installed.  e.g. zend\_debugger.allow\_hosts=127.0.0.1/32
+ 3. Ensure the address is not in your zend\_debugger.deny\_hosts parameter list.
+ 4. Set the Debug Server to expose itself to remote clients by setting the zend\_debugger.expose\_remotely parameter to Always.  (e.g. zend\_debugger.expose\_remotely=always).
  5. Save the file.
  6. Restart your Web server for the settings to take effect.
 

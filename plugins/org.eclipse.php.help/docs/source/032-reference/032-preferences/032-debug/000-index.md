@@ -12,8 +12,7 @@ The settings that can be configured from the debug preferences page are:
 
 Default Settings
 
- * PHP Debugger - Select which debugger will be used by default.
- * Server - Choose which server the debugger will use by default. Click the "PHP Servers" category to be taken to the PHP Servers management page. For more on this, see [PHP Servers.](../../../032-reference/032-preferences/080-php_servers.md)
+ * PHP Server - Choose which server the debugger will use by default. Click the "PHP Servers" category to be taken to the PHP Servers management page. For more on this, see [PHP Servers.](../../../032-reference/032-preferences/080-php_servers.md)
  * PHP Executable - Choose the required default PHP version. Click the "PHP Executables" category to be taken to the PHP Executables management page. For more on this, see [PHP Executables.](../../../032-reference/032-preferences/056-php_executables/000-index.md)
 
 Encoding Settings
@@ -47,7 +46,7 @@ To apply Debug Preferences settings to a specific project only:
 #### Related Links:
 
  * [Debugging](../../../024-tasks/152-debugging/000-index.md)
- * [Installed Debuggers](008-installed_debuggers.md)
+ * [Debuggers](008-installed_debuggers.md)
  * [Workbench Options](024-launching.md)
  * [PHP Preferences](../../../032-reference/032-preferences/000-index.md)
 
