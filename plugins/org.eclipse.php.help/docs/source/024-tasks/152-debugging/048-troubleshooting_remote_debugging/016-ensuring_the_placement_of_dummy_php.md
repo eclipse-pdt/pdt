@@ -22,8 +22,8 @@ You must also ensure that the Dummy File name is set to 'dummy.php' in PDT .
 
 To check your dummy file configuration in PDT :
 
- 1. Open the Installed Debugger Preferences page by going to Windows| Preferences | PHP | Debug | Installed Debuggers.
- 2. In the Installed Debuggers list, select the Zend Debugger and click Configure.  The Zend Debugger Settings dialog will open.
+ 1. Open the Installed Debugger Preferences page by going to Windows| Preferences | PHP | Debug | Debuggers.
+ 2. In the Debuggers list, select the Zend Debugger and click Configure.  The Zend Debugger Settings dialog will open.
  3. In the Dummy File Name setting, ensure 'dummy.php' is entered.
 
 <!--note-start-->

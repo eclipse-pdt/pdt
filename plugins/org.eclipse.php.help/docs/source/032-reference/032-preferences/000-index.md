@@ -39,9 +39,9 @@ To access this menu, go to Window menu and select **Preferences | PHP**.
 
 <td>Configure your debug preferences.</td></tr>
 
-<tr><td>[Installed Debuggers](../../032-reference/032-preferences/032-debug/008-installed_debuggers.md)</td>
+<tr><td>[Debuggers](../../032-reference/032-preferences/032-debug/008-installed_debuggers.md)</td>
 
-<td>Configure the settings for your installed debuggers.</td></tr>
+<td>Configure the settings for your debuggers.</td></tr>
 
 <tr><td>[Workbench Options](../../032-reference/032-preferences/032-debug/024-launching.md)</td>
 

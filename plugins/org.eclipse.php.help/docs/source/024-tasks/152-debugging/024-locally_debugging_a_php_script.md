@@ -19,15 +19,14 @@ To locally debug a PHP Script:
  1. Set breakpoints at the relevant places in the file that you would like to debug by double-clicking the vertical marker bar to the left of the editor.
  2. Save the file.
  3. Click the arrow next to the debug button ![debug_icon.png](images/debug_icon.png "debug_icon.png") on the toolbar and select Debug Configurations... -or- select **Run | Debug Configurations....**  A Debug dialog will open.
- 4. Double-click the PHP Script option to create a new debug configuration. <br />![New Debug Configuration](images/debug_phpscript_configuration.png "New Debug Configuration")
+ 4. Double-click the PHP CLI Application option to create a new debug configuration.<p>![New Debug Configuration](images/debug_phpscript_configuration.png "New Debug Configuration")</p>
  5. Enter a name for the new configuration.
- 6. S elect the required PHP executable.   If no PHP Executables are listed, click the PHP Executable link and add a PHP Executable in the [PHP Executable Preferences](../../032-reference/032-preferences/056-php_executables/000-index.md) page. The PHP Executables must match the Debugger type.
- 7. Select the PHP Debugger to be used. PDT supports both the Zend Debugger and XDebug.
- 8. Enter your PHP file in the "PHP File" text field, or click **Browse** and select your file
- 9. Marking the "Breakpoint" checkbox will result in the debugging process pausing at the first line of code.
- 10. If necessary, you can add arguments in the PHP Script Arguments tab to simulate command line inputs.
- 11. Click **Apply**and then **Debug**.
- 12. Click **Yes**if asked whether to open the PHP Debug Perspective.
+ 6. Select the appropriate PHP Executable in **Runtime PHP** section. If no PHP Executables are available, click the **Installed PHPs** button and add a PHP Executable in the [PHP Executable Preferences](../../032-reference/032-preferences/056-php_executables/000-index.md) page.
+ 7. Enter your PHP file in the "PHP File" text field, or click **Browse** and select your file
+ 8. Marking the "Break at First Line" checkbox will result in the debugging process pausing at the first line of code.
+ 9. If necessary, you can add arguments in the Script Arguments section to simulate command line inputs.
+ 10. Click **Apply** and then **Debug**.
+ 11. Click **Yes** if asked whether to open the PHP Debug Perspective.
 
 A number of views will open with relevant debug information.
 

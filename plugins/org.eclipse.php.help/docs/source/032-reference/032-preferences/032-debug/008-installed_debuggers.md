@@ -1,38 +1,40 @@
-# Installed Debuggers
+# Debuggers
 
 <!--context:installed_debuggers-->
 
-The Installed Debuggers preferences page allows you to configure your Debugger settings.
+The Debuggers preferences page allows you to configure your Debugger settings.
 
-The Installed Debuggers Preferences page is accessed from **Window | Preferences | PHP | Debug | Installed Debuggers**.
+The Debuggers Preferences page is accessed from **Window | Preferences | PHP | Debug | Debuggers**.
 
 ![installed_debugger_preferences_pdt.png](images/installed_debugger_preferences_pdt.png "installed_debugger_preferences_pdt.png")
 
 <!--ref-start-->
 
-To configure your Zend Debugger settings:
+To e.g. configure your Zend Debugger settings:
 
  1. Select the Zend Debugger.
  2. Click Configure.  The Zend Debugger Settings dialog will open.
 
 ![zend_debugger_settings_pdt.png](images/zend_debugger_settings_pdt.png "zend_debugger_settings_pdt.png")
 
-1\. Configure the following:
+  You can configure the following:
    
- * Debug Port - The port which the Zend Debugger will use. The default port is 10137.
- * Run with Debug info - Mark the checkbox for Debug info, such as the Console view and the Browser Output, to be displayed when a Run configuration is executed.
  * Client Host/IP - Enter the Client Host/IP to which debugging results will be returned. PDT will automatically search for and recognize the  Client Host/IP, but entering a specific Host/IP will speed up the debugging process and decrease the likelihood of session timeouts.
+ * Debug Port - The port which the Zend Debugger will use. The default port is 10137.
+ * Debug Response Timeout (ms) - Debugger response timeout in milliseconds.
+ * Broadcast Port - The Broadcast Port allows your Zend Browser Toolbar to detect your debugging preferences. The Broadcast Port number entered here must match the Broadcast Port entered in your Zend Browser Toolbar. The default port is 20080.
+ * Dummy File Name - This is the file which the PHP Script debugger uses in order to test a PHP debugging session on a specified server. The name should be left as the default dummy.php. However, if this is changed, ensure the change has also been made on your server.
+ * Display debug information when running - Mark the checkbox for Debug info, such as the Console view and the Browser Output, to be displayed when a Run configuration is executed.
+ * Use New Protocol - This check-box is selected by default, and applies usage of the latest Zend Debugger engine. If you have encountered any issues with the Zend Debugger, de-select this check-box to revert to previous Zend Debugger protocol.
+ 
 
 <!--note-start-->
 
 #### Note:
 
-If the field contains too many host/IPs, the session could timeout before a debugging connection is established. Entering a non-existent host/IP could cause the session to terminate.
+Some of the debugger global settings (responsible for establishing a connection with debugger engine) can be overridden at the corresponding debugger owner level (PHP Server or PHP Executable). In case of setting up the individual connection settings for debugger owners, those will be taken into account while triggering debug session from IDE. If there is no possibility to find the debugger owner settings in IDE (e.g. when triggering the debug session outside the IDE with the use of browser toolbars) the global settings will be used to establish the connection.
 
- 1. Click OK to return to the Installed Debuggers Preferences page.
- 2. Click Apply to apply your settings.
- 
-<!--note-end-->
+<!--note-end--> 
 
 <!--ref-end-->
 
@@ -41,7 +43,7 @@ If the field contains too many host/IPs, the session could timeout before a debu
 #### Related Links:
 
  * [Debugging](../../../024-tasks/152-debugging/000-index.md)
- * [Installed Debuggers](008-installed_debuggers.md)
+ * [Debuggers](008-installed_debuggers.md)
  * [Workbench Options](024-launching.md)
  * [PHP Preferences](../../../032-reference/032-preferences/000-index.md)
 

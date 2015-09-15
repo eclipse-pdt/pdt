@@ -18,24 +18,25 @@ Your server must be running the XDebug or Zend Debugger in order for remote debu
 
 1\. Click the arrow next to the debug button ![debug_icon.png](images/debug_icon.png "debug_icon.png") on the toolbar and select Open Debug Dialog -or- select Run | Open Debug Dialog.  A Debug dialog will open.
 
-2\. Double-click the PHP Web Page option to create a new debug configuration. <br />![debug_configuration_webpage.png](images/debug_configuration_webpage.png "debug_configuration_webpage.png")
+2\. Double-click the PHP Web Application option to create a new debug configuration.<p>![Web Debug Server Page](images/debug_configuration_webpage_server.png "Web Debug Server Page")</p>
  
 3\. Enter a name for the new configuration.
 
-4\. Select the Server Debugger to be used . PDT supports both the Zend Debugger and XDebug.
+4\. Select your server from the PHP Server list.  If you have not yet configured your server, click New.  The PHP Server Creation Wizard will open.  Configure your server by following the instructions on '[adding a new server](../../032-reference/032-preferences/080-php_servers.md#Adding_servers)' under the [PHP Servers Preferences](../../032-reference/032-preferences/080-php_servers.md) page.
 
-5\. Select your server from the PHP Server list.  If you have not yet configured your server, click New.  The PHP Server Creation Wizard will open.  Configure your server by following the instructions on '[adding a new server](../../032-reference/032-preferences/080-php_servers.md#Adding_servers)' under the [PHP Servers Preferences](../../032-reference/032-preferences/080-php_servers.md) page.
-
-6\. To check whether your server connection is correctly configured, and that PDT can communicate with your server debugger, click the 'Check Debug Server Connection' button.
-
-7\. Under PHP File, click Browse and select your 'debug target' file (the file from which the debugging process will start.)
+5\. Under File, click Browse and select your 'debug target' file (the file from which the debugging process will start.)
  
-8\. Select whether the Debugger should stop at the first line of code by marking/unmarking the 'Break at First Line' checkbox.
+6\. The URL to be debugged will have been automatically created based on the file name and your server address. If the URL does not point to your debug target's location, unmark the Auto Generate checkbox and modify the URL.
+
+7\. To set up the options of a debugger that is attached to chosen PHP server, click on the **Debugger** tab.<p>![Web Debug Debugger Page](images/debug_configuration_webpage_debugger.png "Web Debug Debugger Page")</p>
+
+8\. To check whether your server connection is correctly configured, and that PDT can communicate with your server debugger, click the 'Test' button.
+
+9\. Select whether the Debugger should stop at the first line of code by marking/unmarking the 'Break at First Line' checkbox.
  
-9\. The URL to be debugged will have been automatically created based on the file name and your server address. If the URL does not point to your debug target's location, unmark the Auto Generate checkbox and modify the URL.
+10\. You can set some additional options that are related to the debugger type, e.g. the following options are available for Zend Debugger:
 
-10\. For further Debug options, select the Advanced tab, which has the following options:<br /> ![debug_new_phpwebpage_advanced_config_pdt.png](images/debug_new_phpwebpage_advanced_config_pdt.png "debug_new_phpwebpage_advanced_config_pdt.png")
-
+ * Debug Through SSH Tunnel - Mark if you would like to debug with the use of SSH tunnel.
  * Open in Browser - Mark if you would like the application to be displayed in PDT 's internal browser while it is debugged.
  * Choose whether to:
  * Debug All Pages - The specified page and all the pages linked to it are debugged. The browser waits for the debug of each page before displaying it.

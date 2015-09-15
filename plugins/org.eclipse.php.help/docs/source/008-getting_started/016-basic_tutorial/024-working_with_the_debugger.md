@@ -49,13 +49,11 @@ This procedure demonstrates how to debug a file using the internal debugger or y
  
  4\. Click the arrow next to the debug button ![debug_icon.png](images/debug_icon.png "debug_icon.png") on the toolbar and select **Debug Configurations...** -or- select **Run | Debug Configurations** from the main menu -or- right-click the file in PHP Explorer view and select **Debug Configurations....**  A Debug dialog will appear.
  
- 5\. Double-click the PHP Script option to create a new debug configuration.
-
-![New Debug Configuration](images/debug_phpscript_configuration.png "New Debug Configuration")
+ 5\. Double-click the PHP CLI Application option to create a new debug configuration.<p>![New Debug Configuration](images/debug_phpscript_configuration.png "New Debug Configuration")</p>
 
  6\. Enter a name for the new configuration.
  
- 7\. To debug the file using your PHP Executable debugger, select the PHP Executable option in the Debugger Location category.
+ 7\. To debug the file using your PHP Executable debugger, select the appropriate option in the **Runtime PHP** category. If no PHP Executables are available, click the **Installed PHPs** button and add a PHP Executable in the [PHP Executable Preferences](../../032-reference/032-preferences/056-php_executables/000-index.md) page.
  
  8\. Under PHP File, click **Browse** and select the "debug" file.
  
@@ -67,8 +65,7 @@ This procedure demonstrates how to debug a file using the internal debugger or y
  
  12\. A number of views will open with information about your script.
  
- 13\. The Debug View is where the debug stack trace is displayed and the debugging process can be monitored and controlled. <br />
-    ![Debug View](images/debug_view.png "Debug View") 
+ 13\. The Debug View is where the debug stack trace is displayed and the debugging process can be monitored and controlled. <p>![Debug View](images/debug_view.png "Debug View")</p> 
  
  14\. The debugging process will currently have stopped where your first `<?php label appears.`
  
@@ -78,13 +75,11 @@ This procedure demonstrates how to debug a file using the internal debugger or y
  
  17\. The Variable view will now display various information about the relevant variables and parameters through which the function was reached.
  
- 18\. In the editor window, place and hold the cursor over $worker_name, $worker_address, and $worker_phone. A tooltip appears displaying the variable values. <br />
-     ![Editor View While Debugging](images/debug_tutorial_editor.png "Editor View While Debugging")
+ 18\. In the editor window, place and hold the cursor over $worker\_name, $worker\_address, and $worker\_phone. A tooltip appears displaying the variable values.<p>![Editor View While Debugging](images/debug_tutorial_editor.png "Editor View While Debugging")</p>
  
  19\. Click Step Return. ![debug_step_return_icon.png](images/debug_step_return_icon.png "debug_step_return_icon.png") The cursor returns to line 103.  The Debug Output view will display the HTML output created up until the breakpoint, while the Browser Output view will show the current output to a browser.
  
- 20\. In the Debug view, click Resume ![resume_icon.png](images/resume_icon.png "resume_icon.png")  until the debugging process is terminated.  Notice that as the debugging process progresses, the Debug Output and Browser Output displays are updated. <br />
- ![Browser Output](images/debug_browser_output.png "Browser Output")
+ 20\. In the Debug view, click Resume ![resume_icon.png](images/resume_icon.png "resume_icon.png")  until the debugging process is terminated.  Notice that as the debugging process progresses, the Debug Output and Browser Output displays are updated.<p>![Browser Output](images/debug_browser_output.png "Browser Output")</p>
  
  21\. The console view will display any errors or warnings about your script. In this case, it will display a Notice about an undefined variable on line 105.
  
@@ -145,19 +140,21 @@ This procedure demonstrates how to debug applications on a server:
  
  4\. Click the arrow next to the debug button ![debug_icon.png](images/debug_icon.png "debug_icon.png")  on the toolbar and select Debug Configurations... -or- right-click the file in PHP explorer or within the file's editor window and select **Debug as | Debug Configurations....**  A Debug dialog will appear.
  
- 5\. Double-click on the PHP Web Page option to create a new debug configuration.
+ 5\. Double-click on the PHP Web Application option to create a new debug configuration.
  
  6\. Enter a name for the new configuration.
  
  7\. Select the Debugger from the Server Debugger drop-down list.
  
- 8\. Select your server from the drop-down list.  If you have not configured a server, click the PHP Servers link to be taken to the [PHP Servers Preferences](../../032-reference/032-preferences/080-php_servers.md) page.
+ 8\. Select your server from the drop-down list.  If you have not configured a server, click the **New** button to open a wizard for creating new PHP server..
  
  9\. Under the File/Project category, click **Browse** and select the "form1" file. This will be the file from which the debugger will start debugging (the 'debug target'.)
  
  10\. Ensure that the URL pointing to the file location is correct.  If this is not correct, unmark the Auto Generate checkbox and manually change the URL.
 
-![New Debug Configuration](images/debug_configuration_webpage.png "New Debug Configuration")
+![New Debug Configuration Server Page](images/debug_configuration_webpage_server.png "New Web Debug Configuration")
+
+![New Debug Configuration Debugger Page](images/debug_configuration_webpage_debugger.png "New Web Debug Configuration")
 
  11\. Click **Apply** and then **Debug**.
  
