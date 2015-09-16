@@ -13,7 +13,7 @@
 		<tycho-version>0.23.0</tycho-version>
 		<antrun-version>1.7</antrun-version>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
-		<test.vmargs />
+		<test.vmargs>-Dh2.syncMethod=force</test.vmargs>
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.exclusions>**/parser/*/CompilerAstParser.java,**/parser/DocumentorLexer.java,**/scanner/*/PhpAstLexer.java,**/scanner/*/PhpAstParser.java,**/scanner/*/ParserConstants.java,**/documentModel/parser/PHPTokenizer.java,**/parser/*/PhpLexer.java,**/*Messages.java,**/parser/*/CompilerParserConstants.java</sonar.exclusions>
@@ -170,7 +170,7 @@
 				</os>
 			</activation>
 			<properties>
-				<test.vmargs>-XstartOnFirstThread</test.vmargs>
+				<test.vmargs>-Dh2.syncMethod=force -XstartOnFirstThread</test.vmargs>
 			</properties>
 		</profile>
 		<profile>
