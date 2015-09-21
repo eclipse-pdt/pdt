@@ -45,7 +45,6 @@ import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.internal.ui.util.ElementCreationProxy;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
-import org.eclipse.php.internal.ui.util.ProblemMarkerManager;
 import org.eclipse.php.internal.ui.viewsupport.ImagesOnFileSystemRegistry;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
@@ -55,7 +54,6 @@ import org.eclipse.ui.texteditor.ConfigurationElementSorter;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.jsdt.core.ITypeRoot;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
-import org.eclipse.wst.xml.ui.internal.Logger;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 
@@ -89,7 +87,6 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	private ImageDescriptorRegistry fImageDescriptorRegistry;
-	private ProblemMarkerManager fProblemMarkerManager;
 	protected TemplateStore templateStore = null;
 	protected ContextTypeRegistry codeTypeRegistry = null;
 	private MembersOrderPreferenceCache fMembersOrderPreferenceCache;
@@ -145,15 +142,15 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			protected IStatus run(IProgressMonitor monitor) {
 
 				libraryFolderChangeListener = new LibraryFolderChangeListener();
-				LibraryFolderManager.getInstance().addListener(
-						libraryFolderChangeListener);
+				LibraryFolderManager.getInstance()
+						.addListener(libraryFolderChangeListener);
 
 				PlatformUI.getWorkbench().getDisplay()
 						.asyncExec(new Runnable() {
-							public void run() {
-								processCommandLine(context);
-							}
-						});
+					public void run() {
+						processCommandLine(context);
+					}
+				});
 
 				if (PlatformUI.isWorkbenchRunning()) {
 					new InitializeAfterLoadJob().schedule(); // must be last
@@ -168,8 +165,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	static void initializeAfterLoad(IProgressMonitor monitor) {
-		org.eclipse.dltk.internal.corext.util.OpenTypeHistory.getInstance(
-				PHPUILanguageToolkit.getInstance()).checkConsistency(monitor);
+		org.eclipse.dltk.internal.corext.util.OpenTypeHistory
+				.getInstance(PHPUILanguageToolkit.getInstance())
+				.checkConsistency(monitor);
 	}
 
 	private void processCommandLine(BundleContext context) {
@@ -221,12 +219,12 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
-		
+
 		CorrectionCommandInstaller.unregisterCommands();
 
 		if (libraryFolderChangeListener != null) {
-			LibraryFolderManager.getInstance().removeListener(
-					libraryFolderChangeListener);
+			LibraryFolderManager.getInstance()
+					.removeListener(libraryFolderChangeListener);
 			libraryFolderChangeListener = null;
 		}
 
@@ -252,8 +250,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin(
-				"org.eclipse.php.ui", path); //$NON-NLS-1$
+		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.php.ui", //$NON-NLS-1$
+				path);
 	}
 
 	public static Shell getActiveWorkbenchShell() {
@@ -289,12 +287,6 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 		if (fImageDescriptorRegistry == null)
 			fImageDescriptorRegistry = new ImageDescriptorRegistry();
 		return fImageDescriptorRegistry;
-	}
-
-	public synchronized ProblemMarkerManager getProblemMarkerManager() {
-		if (fProblemMarkerManager == null)
-			fProblemMarkerManager = new ProblemMarkerManager();
-		return fProblemMarkerManager;
 	}
 
 	public static IWorkspace getWorkspace() {
@@ -404,12 +396,18 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
 
 			registry.addContextType(PhpTemplateContextType.PHP_CONTEXT_TYPE_ID);
-			registry.addContextType(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
-			registry.addContextType(PhpTemplateContextType.PHP_TYPE_MEMBERS_CONTEXT_TYPE_ID);
-			registry.addContextType(PhpTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
-			registry.addContextType(PhpTemplateContextType.PHP_TYPE_METHOD_STATEMENTS_CONTEXT_TYPE_ID);
-			registry.addContextType(PhpTemplateContextType.PHP_CLASS_MEMBERS_CONTEXT_TYPE_ID);
-			registry.addContextType(PhpCommentTemplateContextType.PHP_COMMENT_CONTEXT_TYPE_ID);
+			registry.addContextType(
+					PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
+			registry.addContextType(
+					PhpTemplateContextType.PHP_TYPE_MEMBERS_CONTEXT_TYPE_ID);
+			registry.addContextType(
+					PhpTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
+			registry.addContextType(
+					PhpTemplateContextType.PHP_TYPE_METHOD_STATEMENTS_CONTEXT_TYPE_ID);
+			registry.addContextType(
+					PhpTemplateContextType.PHP_CLASS_MEMBERS_CONTEXT_TYPE_ID);
+			registry.addContextType(
+					PhpCommentTemplateContextType.PHP_COMMENT_CONTEXT_TYPE_ID);
 
 			fContextTypeRegistry = registry;
 		}
@@ -471,7 +469,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 						.equals(fPHPEditorTextHoverDescriptors[i].getId())) {
 					PHPEditorTextHoverDescriptor hoverDescriptor = fPHPEditorTextHoverDescriptors[i];
 					for (int j = i; j > 0; j--)
-						fPHPEditorTextHoverDescriptors[j] = fPHPEditorTextHoverDescriptors[j - 1];
+						fPHPEditorTextHoverDescriptors[j] = fPHPEditorTextHoverDescriptors[j
+								- 1];
 					fPHPEditorTextHoverDescriptors[0] = hoverDescriptor;
 					break;
 				}
@@ -556,7 +555,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 * 
 	 * @since 3.4
 	 */
-	public static ISourceModule getEditorInputTypeRoot(IEditorInput editorInput) {
+	public static ISourceModule getEditorInputTypeRoot(
+			IEditorInput editorInput) {
 		// Performance: check working copy manager first: this is faster
 		ISourceModule cu = DLTKUIPlugin.getDefault().getWorkingCopyManager()
 				.getWorkingCopy(editorInput);
