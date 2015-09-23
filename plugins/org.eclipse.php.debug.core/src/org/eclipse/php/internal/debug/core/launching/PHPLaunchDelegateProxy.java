@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate2;
+import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
@@ -84,12 +85,12 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 		ILaunchConfigurationType exeType = lm
 				.getLaunchConfigurationType(IPHPDebugConstants.PHPEXELaunchType);
 		if (configuration.getType().equals(exeType)) {
-			configuration = updatePHPExeAttributes(configuration);
+			configuration = updatePHPExeAttributes(configuration, mode);
 		}
 		ILaunchConfigurationType serverType = lm
 				.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
 		if (configuration.getType().equals(serverType)) {
-			configuration = updatePHPServerAttributes(configuration);
+			configuration = updatePHPServerAttributes(configuration, mode);
 		}
 		return getConfigurationDelegate(configuration).getLaunch(configuration,
 				mode);
@@ -162,7 +163,8 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 	}
 
 	private ILaunchConfiguration updatePHPExeAttributes(
-			ILaunchConfiguration configuration) throws CoreException {
+			ILaunchConfiguration configuration, String mode)
+					throws CoreException {
 		PHPexeItem item = PHPLaunchUtilities.getPHPExe(configuration);
 		if (item != null) {
 			ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
@@ -176,6 +178,12 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 			wc.setAttribute(
 					PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
 					debuggerConfiguration.getScriptLaunchDelegateClass());
+			if ((mode.equals(ILaunchManager.DEBUG_MODE)
+					|| mode.equals(ILaunchManager.PROFILE_MODE))
+					&& debuggerConfiguration.getDebuggerId()
+							.equals(PHPDebuggersRegistry.NONE_DEBUGGER_ID)) {
+				wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, true);
+			}
 			if (item.getINILocation() != null) {
 				wc.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, item
 						.getINILocation().toString());
@@ -189,7 +197,8 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 	}
 
 	private ILaunchConfiguration updatePHPServerAttributes(
-			ILaunchConfiguration configuration) throws CoreException {
+			ILaunchConfiguration configuration, String mode)
+					throws CoreException {
 		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 		Server server = ServersManager
 				.getServer(configuration.getAttribute(Server.NAME, "")); //$NON-NLS-1$
@@ -202,6 +211,12 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 			wc.setAttribute(
 					PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
 					debuggerConfiguration.getWebLaunchDelegateClass());
+			if ((mode.equals(ILaunchManager.DEBUG_MODE)
+					|| mode.equals(ILaunchManager.PROFILE_MODE))
+					&& debuggerConfiguration.getDebuggerId()
+							.equals(PHPDebuggersRegistry.NONE_DEBUGGER_ID)) {
+				wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, true);
+			}
 			configuration = wc.doSave();
 		}
 		return configuration;
