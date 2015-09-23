@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChange
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -57,7 +56,6 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandle
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
-import org.eclipse.php.internal.ui.util.PerspectiveManager;
 import org.eclipse.php.ui.util.LinkMessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -318,6 +316,8 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 			srcLocator.initializeParticipants();
 			ILaunch remoteLaunch = new XDebugLaunch(launchConfig,
 					ILaunchManager.DEBUG_MODE, srcLocator);
+			// Add the remote launch to the launch manager
+			DebugPlugin.getDefault().getLaunchManager().addLaunch(remoteLaunch);
 			boolean multiSession = XDebugPreferenceMgr.useMultiSession();
 			if (session.getSessionId() == null && !multiSession) {
 				// Non multi-session web launch
@@ -398,37 +398,6 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 				 * Probably could do waitForInitialSession as session has
 				 * already been set.
 				 */
-			}
-
-			// add the remote launch to the launch manager
-			DebugPlugin.getDefault().getLaunchManager().addLaunch(remoteLaunch);
-
-			/*
-			 * Check to see owning session target is still active, if so do a
-			 * perspective switch
-			 */
-			if (target.isTerminated() == false
-					&& target.isTerminating() == false) {
-				Display.getDefault().asyncExec(new Runnable() {
-
-					public void run() {
-						IWorkbenchWindow window = PlatformUI.getWorkbench()
-								.getActiveWorkbenchWindow();
-						// Code the Debug perspective.
-						// org.eclipse.debug.ui.DebugPerspective
-						// also look at the PHPLaunchUtilities
-						if (!PerspectiveManager.isCurrentPerspective(window,
-								IDebugUIConstants.ID_DEBUG_PERSPECTIVE)) {
-							if (PerspectiveManager.shouldSwitchPerspective(
-									window,
-									IDebugUIConstants.ID_DEBUG_PERSPECTIVE)) {
-								PerspectiveManager.switchToPerspective(window,
-										IDebugUIConstants.ID_DEBUG_PERSPECTIVE);
-							}
-						}
-					}
-
-				});
 			}
 		}
 
