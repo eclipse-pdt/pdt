@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
+import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.launching.ILaunchDelegateListener;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
@@ -91,10 +92,15 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 						configuration.getName()));
 				return false;
 			}
-			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
-				displayError(MessageFormat
-						.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_There_is_no_debugger_attached_for_PHP_executable,
+			if ((mode.equals(ILaunchManager.DEBUG_MODE)
+					|| mode.equals(ILaunchManager.PROFILE_MODE))) {
+				displayError(MessageFormat.format(
+						PHPDebugCoreMessages.NoneDebuggerConfiguration_There_is_no_debugger_attached_for_PHP_executable,
 						configuration.getName(), phpExeItem.getName()));
+				ILaunchConfigurationWorkingCopy wc = configuration
+						.getWorkingCopy();
+				wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, false);
+				wc.doSave();
 				return false;
 			}
 			return true;
@@ -346,12 +352,17 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 						configuration.getName()));
 				return false;
 			}
-			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
+			if ((mode.equals(ILaunchManager.DEBUG_MODE)
+					|| mode.equals(ILaunchManager.PROFILE_MODE))) {
 				Server phpServer = PHPLaunchUtilities
 						.getPHPServer(configuration);
-				displayError(MessageFormat
-						.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_There_is_no_debugger_attached_for_PHP_server,
+				displayError(MessageFormat.format(
+						PHPDebugCoreMessages.NoneDebuggerConfiguration_There_is_no_debugger_attached_for_PHP_server,
 						configuration.getName(), phpServer.getName()));
+				ILaunchConfigurationWorkingCopy wc = configuration
+						.getWorkingCopy();
+				wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, false);
+				wc.doSave();
 				return false;
 			}
 			return true;
