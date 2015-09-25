@@ -18,11 +18,13 @@ import java.util.*;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileSystem;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
+import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
 import org.eclipse.php.core.language.ILanguageModelProvider;
 import org.eclipse.php.internal.core.Logger;
@@ -92,7 +94,8 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 			return;
 		}
 		IPreferencesPropagatorListener versionChangeListener = new IPreferencesPropagatorListener() {
-			public void preferencesEventOccured(PreferencesPropagatorEvent event) {
+			public void preferencesEventOccured(
+					PreferencesPropagatorEvent event) {
 				try {
 					// Re-initialize when PHP version changes
 					initialize(containerPath, scriptProject);
@@ -107,8 +110,8 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		};
 
 		project2PhpVerListener.put(project, versionChangeListener);
-		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(
-				versionChangeListener);
+		PhpVersionChangedHandler.getInstance()
+				.addPhpVersionChangedListener(versionChangeListener);
 
 		ProjectRemovedObserversAttacher.getInstance().addProjectClosedObserver(
 				project, new IProjectClosedObserver() {
@@ -127,11 +130,12 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 				&& containerPath.segment(0).equals(CONTAINER_PATH)) {
 			try {
 				if (isPHPProject(scriptProject)) {
-					DLTKCore.setBuildpathContainer(
-							containerPath,
+					DLTKCore.setBuildpathContainer(containerPath,
 							new IScriptProject[] { scriptProject },
-							new IBuildpathContainer[] { new LanguageModelContainer(
-									containerPath, scriptProject) }, null);
+							new IBuildpathContainer[] {
+									new LanguageModelContainer(containerPath,
+											scriptProject) },
+							null);
 					initializeListener(containerPath, scriptProject);
 				}
 			} catch (Exception e) {
@@ -163,8 +167,8 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 
 				// see getTargetLocation() below for description:
 				if (path.segmentCount() > 2) {
-					return LANGUAGE_PREFIX.equals(path.segment(path
-							.segmentCount() - 2));
+					return LANGUAGE_PREFIX
+							.equals(path.segment(path.segmentCount() - 2));
 				}
 			}
 		}
@@ -204,7 +208,8 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 			newRawBuildpath.addAll(Arrays.asList(rawBuildpath));
 			newRawBuildpath.add(containerEntry);
 			project.setRawBuildpath(
-					newRawBuildpath.toArray(new IBuildpathEntry[newSize]), null);
+					newRawBuildpath.toArray(new IBuildpathEntry[newSize]),
+					null);
 		}
 	}
 
@@ -235,11 +240,9 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	static IPath getTargetLocation(ILanguageModelProvider provider,
 			IPath sourcePath, IScriptProject project) {
 
-		return provider
-				.getPlugin()
-				.getStateLocation()
-				.append(LANGUAGE_PREFIX)
-				.append(Integer.toHexString(sourcePath.toOSString().hashCode()));
+		return provider.getPlugin().getStateLocation().append(LANGUAGE_PREFIX)
+				.append(Integer
+						.toHexString(sourcePath.toOSString().hashCode()));
 	}
 
 	/**
@@ -269,7 +272,6 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 				inUse.add(entry.getPath());
 			}
 		}
-
 		for (ILanguageModelProvider provider : getContributedProviders()) {
 			File dir = provider.getPlugin().getStateLocation()
 					.append(LANGUAGE_PREFIX).toFile();
@@ -292,8 +294,18 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 
 		for (IPath path : toDrop) {
 			ProjectIndexerManager.removeProject(path);
-			efs.getStore(EnvironmentPathUtils.getLocalPath(path)).delete(
-					EFS.NONE, monitor);
+			efs.getStore(EnvironmentPathUtils.getLocalPath(path))
+					.delete(EFS.NONE, monitor);
+
 		}
+		ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
+
+			@Override
+			public void run(IProgressMonitor monitor) throws CoreException {
+				ModelManager.getExternalManager().cleanUp(monitor);
+			}
+		}, ModelManager.getExternalManager().getExternalFoldersProject(), 0,
+				new NullProgressMonitor());
+
 	}
 }
