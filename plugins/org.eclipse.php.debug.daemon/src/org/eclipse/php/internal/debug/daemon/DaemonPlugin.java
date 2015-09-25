@@ -29,8 +29,13 @@ import org.osgi.framework.BundleContext;
 public class DaemonPlugin extends Plugin {
 
 	public static final String ID = "org.eclipse.php.debug.daemon"; //$NON-NLS-1$
+	/**
+	 * Disable deamon startup via -Dorg.eclipse.php.debug.disableDaemonStartup
+	 */
+	private static final String DISABLE_PROPERTY = "org.eclipse.php.debug.disableDaemonStartup"; //$NON-NLS-1$
 	private static final int INTERNAL_ERROR = 10001;
 	public static final boolean isDebugMode;
+
 	static {
 		String value = Platform
 				.getDebugOption("org.eclipse.php.debug.daemon/debug"); //$NON-NLS-1$
@@ -64,6 +69,9 @@ public class DaemonPlugin extends Plugin {
 	 * @param context
 	 */
 	void initializeAfterStart(final BundleContext context) {
+		if (System.getProperty(DISABLE_PROPERTY, null) != null) {
+			return;
+		}
 		Job job = new Job("") { //$NON-NLS-1$
 			protected IStatus run(IProgressMonitor monitor) {
 				startDaemons(null);
@@ -88,9 +96,8 @@ public class DaemonPlugin extends Plugin {
 		}
 		if (daemons != null) {
 			for (int i = 0; i < daemons.length; i++) {
-				if (debuggerID == null
-						|| (daemons[i].isDebuggerDaemon() && debuggerID
-								.equals(daemons[i].getDebuggerID()))) {
+				if (debuggerID == null || (daemons[i].isDebuggerDaemon()
+						&& debuggerID.equals(daemons[i].getDebuggerID()))) {
 					daemons[i].init();
 					daemons[i].startListen();
 				}
@@ -101,9 +108,8 @@ public class DaemonPlugin extends Plugin {
 	public boolean isInitialized(String debuggerID) {
 		if (daemons != null) {
 			for (int i = 0; i < daemons.length; i++) {
-				if (debuggerID == null
-						|| (daemons[i].isDebuggerDaemon() && debuggerID
-								.equals(daemons[i].getDebuggerID()))) {
+				if (debuggerID == null || (daemons[i].isDebuggerDaemon()
+						&& debuggerID.equals(daemons[i].getDebuggerID()))) {
 					if (!daemons[i].isInitialized()) {
 						return false;
 					}
@@ -117,6 +123,9 @@ public class DaemonPlugin extends Plugin {
 	public void makeSureDebuggerInitialized(String debuggerID) {
 		while (true) {
 			if (!isInitialized(debuggerID)) {
+				if (System.getProperty(DISABLE_PROPERTY, null) != null) {
+					startDaemons(debuggerID);
+				}
 				try {
 					Thread.sleep(50);
 				} catch (InterruptedException e) {
@@ -138,9 +147,8 @@ public class DaemonPlugin extends Plugin {
 	public void stopDaemons(String debuggerID) {
 		if (daemons != null) {
 			for (int i = 0; i < daemons.length; i++) {
-				if (debuggerID == null
-						|| (daemons[i].isDebuggerDaemon() && debuggerID
-								.equals(daemons[i].getDebuggerID()))) {
+				if (debuggerID == null || (daemons[i].isDebuggerDaemon()
+						&& debuggerID.equals(daemons[i].getDebuggerID()))) {
 					daemons[i].stopListen();
 				}
 			}
@@ -178,9 +186,8 @@ public class DaemonPlugin extends Plugin {
 		boolean validated = true;
 		if (daemons != null) {
 			for (int i = 0; i < daemons.length; i++) {
-				if (debuggerID == null
-						|| (daemons[i].isDebuggerDaemon() && debuggerID
-								.equals(daemons[i].getDebuggerID()))) {
+				if (debuggerID == null || (daemons[i].isDebuggerDaemon()
+						&& debuggerID.equals(daemons[i].getDebuggerID()))) {
 					if (!daemons[i].isListening(port)) {
 						// Try to restart daemons
 						daemons[i].resetSocket();
