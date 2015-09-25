@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,8 +8,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawd Pakuła - variable initializers
  *******************************************************************************/
 package org.eclipse.php.internal.core.language;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 import org.eclipse.php.internal.core.PHPVersion;
 
@@ -19,15 +23,65 @@ import org.eclipse.php.internal.core.PHPVersion;
  * @author michael
  */
 public class PHPVariables {
+	public static int GLOBAL = 1 << 0;
 
-	private final static String[] PHP_VARIABLES = { "$_COOKIE", "$_ENV", //$NON-NLS-1$ //$NON-NLS-2$
-			"$_FILES", "$_GET", "$_POST", "$_REQUEST", "$_SERVER", "$_SESSION", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-			"$GLOBALS", "$HTTP_COOKIE_VARS", "$HTTP_ENV_VARS", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			"$HTTP_GET_VARS", "$HTTP_POST_FILES", "$HTTP_POST_VARS", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			"$HTTP_SERVER_VARS", "$HTTP_SESSION_VARS", }; //$NON-NLS-1$ //$NON-NLS-2$
+	public static int SUPER_GLOBAL = 2 << 1;
+
+	private static Map<PHPVersion, PHPVariables> instances = new HashMap<PHPVersion, PHPVariables>();
+
+	private Map<Integer, String[]> variables = new HashMap<Integer, String[]>();
+
+	private PHPVariables(IPHPVariablesInitializer initializer) {
+		LinkedList<String> tmp = new LinkedList<String>();
+		initializer.initializeGlobals(tmp);
+		variables.put(GLOBAL, tmp.toArray(new String[tmp.size()]));
+
+		tmp.clear();
+		initializer.initializeSuperGlobals(tmp);
+		variables.put(SUPER_GLOBAL, tmp.toArray(new String[tmp.size()]));
+	}
 
 	public static String[] getVariables(PHPVersion phpVersion) {
-		return PHP_VARIABLES; // for now the variables set is the same for all
-								// PHP versions
+		return getVariables(phpVersion, GLOBAL | SUPER_GLOBAL);
 	}
+
+	public static String[] getVariables(PHPVersion phpVersion, int type) {
+		return getInstance(phpVersion).getByType(type);
+	}
+
+	public String[] getByType(int type) {
+		List<String> result = new LinkedList<String>();
+		for (Entry<Integer, String[]> item : variables.entrySet()) {
+			if (item.getKey() == type) {
+				return item.getValue().clone();
+			}
+			if ((type & item.getKey()) != 0) {
+				result.addAll(Arrays.asList(item.getValue()));
+			}
+		}
+
+		return result.toArray(new String[result.size()]);
+	}
+
+	private static PHPVariables getInstance(PHPVersion phpVersion) {
+		if (!instances.containsKey(phpVersion)) {
+			IPHPVariablesInitializer initializer;
+			switch (phpVersion) {
+			case PHP5_4:
+			case PHP5_5:
+			case PHP5_6:
+			case PHP7_0:
+				initializer = new PHPVariablesInitializerPHP_5_4();
+				break;
+			case PHP5:
+			case PHP5_3:
+			default: // php4
+				initializer = new PHPVariablesInitializerPHP_5();
+			}
+			instances.put(phpVersion, new PHPVariables(initializer));
+		}
+
+		return instances.get(phpVersion);
+	}
+
 }

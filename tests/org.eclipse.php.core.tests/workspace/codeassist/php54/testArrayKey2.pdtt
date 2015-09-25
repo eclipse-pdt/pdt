@@ -1,0 +1,15 @@
+--TEST--
+Test Globals
+--FILE--
+<? $a = ''; $GLOBALS['|']; ?>
+--EXPECT--
+field(a)
+field(_COOKIE)
+field(_ENV)
+field(_FILES)
+field(_GET)
+field(_POST)
+field(_REQUEST)
+field(_SERVER)
+field(_SESSION)
+field(GLOBALS)
