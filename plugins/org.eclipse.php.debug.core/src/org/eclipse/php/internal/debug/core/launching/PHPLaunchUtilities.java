@@ -1225,13 +1225,14 @@ public class PHPLaunchUtilities {
 	 * @return The port in use. -1, in case of an error.
 	 */
 	public static int getDebugPort(ILaunchConfiguration launchConfiguration) {
+		int port = -1;
 		try {
 			String debuggerID = launchConfiguration.getAttribute(
 					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
 					PHPDebugPlugin.getCurrentDebuggerId());
 			IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
 					.getDebuggerConfiguration(debuggerID);
-			int port = debuggerConfiguration.getPort();
+			port = debuggerConfiguration.getPort();
 			Server server = ServersManager.getServer(launchConfiguration
 					.getAttribute(Server.NAME, "")); //$NON-NLS-1$
 			int customPort = -1;
@@ -1255,7 +1256,7 @@ public class PHPLaunchUtilities {
 			Logger.logException(
 					"Could not retrieve the debugger's port number", e);//$NON-NLS-1$
 		}
-		return -1;
+		return port;
 	}
 
 	/**
