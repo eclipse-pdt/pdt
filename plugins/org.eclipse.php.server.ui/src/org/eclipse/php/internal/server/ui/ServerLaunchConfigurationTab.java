@@ -717,7 +717,7 @@ public class ServerLaunchConfigurationTab extends
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#getImage()
 	 */
 	public Image getImage() {
-		return null; // TODO - ImageResource.getImage(ImageResource.IMG_SERVER);
+		return ServersPluginImages.get(ServersPluginImages.IMG_SERVER);
 	}
 
 	/**
