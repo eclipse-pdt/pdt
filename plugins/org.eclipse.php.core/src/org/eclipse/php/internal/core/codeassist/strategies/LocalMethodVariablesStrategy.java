@@ -71,25 +71,29 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 		if (!PHPFlags.isStatic(enclosingMethod.getFlags())) {
 			IType declaringType = enclosingMethod.getDeclaringType();
 			if (declaringType != null) {
-				if (THIS.startsWith(prefix)) { //$NON-NLS-1$
-					reporter.reportField(new FakeField(
-							(ModelElement) declaringType, THIS, 0, 0), suffix,
-							replaceRange, false,
-							ICompletionReporter.RELEVANCE_ADJUST); //NON-NLS-1 //$NON-NLS-2$
+				if (THIS.startsWith(prefix)) { // $NON-NLS-1$
+					reporter.reportField(
+							new FakeField((ModelElement) declaringType, THIS, 0,
+									0),
+							suffix, replaceRange, false,
+							ICompletionReporter.RELEVANCE_ADJUST); // NON-NLS-1
+																	// //$NON-NLS-2$
 				}
 			} else {
 				if (enclosingMethod.getParent() instanceof IField
-						&& concreteContext.getPhpVersion().isGreaterThan(
-								PHPVersion.PHP5_3)) {
+						&& concreteContext.getPhpVersion()
+								.isGreaterThan(PHPVersion.PHP5_3)) {
 					IMethod method = (IMethod) enclosingMethod.getParent()
 							.getAncestor(IModelElement.METHOD);
 					if (method != null) {
 						declaringType = method.getDeclaringType();
-						if (declaringType != null && THIS.startsWith(prefix)) { //$NON-NLS-1$
-							reporter.reportField(new FakeField(
-									(ModelElement) declaringType, THIS, 0, 0),
+						if (declaringType != null && THIS.startsWith(prefix)) { // $NON-NLS-1$
+							reporter.reportField(
+									new FakeField((ModelElement) declaringType,
+											THIS, 0, 0),
 									suffix, replaceRange, false,
-									ICompletionReporter.RELEVANCE_ADJUST); //NON-NLS-1 //$NON-NLS-2$
+									ICompletionReporter.RELEVANCE_ADJUST); // NON-NLS-1
+																			// //$NON-NLS-2$
 						}
 					}
 				}
@@ -104,13 +108,15 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 		}
 
 		PHPVersion phpVersion = concreteContext.getPhpVersion();
-		for (String variable : PHPVariables.getVariables(phpVersion)) {
+		for (String variable : PHPVariables.getVariables(phpVersion,
+				PHPVariables.SUPER_GLOBAL)) {
 			if (variable.startsWith(prefix)) {
 				if (!requestor.isContextInformationMode()
 						|| variable.length() == prefix.length()) {
-					reporter.reportField(new FakeField(
-							(ModelElement) concreteContext.getSourceModule(),
-							variable, 0, 0), "", replaceRange, false, //$NON-NLS-1$
+					reporter.reportField(
+							new FakeField((ModelElement) concreteContext
+									.getSourceModule(), variable, 0, 0),
+							"", replaceRange, false, //$NON-NLS-1$
 							-ICompletionReporter.RELEVANCE_ADJUST); // NON-NLS-1
 				}
 			}
