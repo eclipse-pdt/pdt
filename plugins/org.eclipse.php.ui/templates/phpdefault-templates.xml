@@ -465,7 +465,7 @@ if (${dollar}${dirh}) {
 	id="org.eclipse.php.ui.editor.templates.php.mySql.fr"
 	context="php-statements"
 	enabled="true"
-	autoinsert="false">while (${dollar}${row} = mysql_fetch_row(${dollar}${query})) {
+	autoinsert="false">while (${dollar}${row} = mysqli_fetch_row(${dollar}${query})) {
 	${cursor};
 }
 </template>
@@ -476,7 +476,7 @@ if (${dollar}${dirh}) {
 	id="org.eclipse.php.ui.editor.templates.php.mySql.fa"
 	context="php-statements"
 	enabled="true"
-	autoinsert="false">while (${dollar}${row} = mysql_fetch_array(${dollar}${query})) {
+	autoinsert="false">while (${dollar}${row} = mysqli_fetch_array(${dollar}${query})) {
 	${cursor};
 }
 </template>
@@ -487,7 +487,7 @@ if (${dollar}${dirh}) {
 	id="org.eclipse.php.ui.editor.templates.php.mySql.fo"
 	context="php-statements"
 	enabled="true"
-	autoinsert="false">while (${dollar}${row} = mysql_fetch_object(${dollar}${query})) {
+	autoinsert="false">while (${dollar}${row} = mysqli_fetch_object(${dollar}${query})) {
 	${cursor};
 }
 </template>
