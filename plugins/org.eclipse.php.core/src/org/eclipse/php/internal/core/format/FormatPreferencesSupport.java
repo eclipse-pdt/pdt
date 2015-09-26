@@ -56,7 +56,7 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 
 		preferencesPropagator = PreferencePropagatorFactory
 				.getPreferencePropagator(NODES_QUALIFIER, store);
-		preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, store);
+		preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID);
 	}
 
 	private static FormatPreferencesSupport instance = null;
@@ -70,8 +70,8 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 
 	public int getIndentationWrappedLineSize(IDocument document) {
 		if (!verifyValidity(document)) {
-			String indentSize = preferencesSupport
-					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE);
+			String indentSize = preferencesSupport.getWorkspacePreferencesValue(
+					PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE);
 			if (indentSize == null || indentSize.length() == 0) {
 				return fIndentationWrappedLineSize;
 			}
@@ -82,8 +82,8 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 
 	public int getIndentationArrayInitSize(IDocument document) {
 		if (!verifyValidity(document)) {
-			String indentSize = preferencesSupport
-					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE);
+			String indentSize = preferencesSupport.getWorkspacePreferencesValue(
+					PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE);
 			if (indentSize == null || indentSize.length() == 0) {
 				return fIndentationArrayInitSize;
 			}
@@ -94,8 +94,8 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 
 	public int getIndentationSize(IDocument document) {
 		if (!verifyValidity(document)) {
-			String indentSize = preferencesSupport
-					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+			String indentSize = preferencesSupport.getWorkspacePreferencesValue(
+					PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
 			if (indentSize == null || indentSize.length() == 0) {
 				return indentationSize;
 			}
@@ -106,8 +106,8 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 
 	public int getTabSize(IDocument document) {
 		if (!verifyValidity(document)) {
-			String tabSizeStr = preferencesSupport
-					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_TAB_SIZE);
+			String tabSizeStr = preferencesSupport.getWorkspacePreferencesValue(
+					PHPCoreConstants.FORMATTER_TAB_SIZE);
 			if (tabSizeStr == null || tabSizeStr.length() == 0) {
 				return tabSize;
 			}
@@ -118,8 +118,8 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 
 	public char getIndentationChar(IDocument document) {
 		if (!verifyValidity(document)) {
-			String useTab = preferencesSupport
-					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_USE_TABS);
+			String useTab = preferencesSupport.getWorkspacePreferencesValue(
+					PHPCoreConstants.FORMATTER_USE_TABS);
 			if (useTab == null) {
 				return '\t';
 			}
@@ -130,8 +130,8 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 
 	public boolean useTab(IDocument document) {
 		if (!verifyValidity(document)) {
-			String useTab = preferencesSupport
-					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_USE_TABS);
+			String useTab = preferencesSupport.getWorkspacePreferencesValue(
+					PHPCoreConstants.FORMATTER_USE_TABS);
 			if (useTab == null) {
 				return true;
 			}
@@ -214,10 +214,10 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 			this.useTab = Boolean.valueOf(useTab).booleanValue();
 			indentationSize = Integer.valueOf(indentSize).intValue();
 			this.tabSize = Integer.valueOf(tabSize).intValue();
-			fIndentationWrappedLineSize = Integer.valueOf(
-					indentationWrappedLineSize).intValue();
-			fIndentationArrayInitSize = Integer.valueOf(
-					indentationArrayInitSize).intValue();
+			fIndentationWrappedLineSize = Integer
+					.valueOf(indentationWrappedLineSize).intValue();
+			fIndentationArrayInitSize = Integer
+					.valueOf(indentationArrayInitSize).intValue();
 
 			preferencesChanged = false;
 			fLastDocument = document;
@@ -248,8 +248,8 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 				PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
 	}
 
-	private class PreferencesPropagatorListener implements
-			IPreferencesPropagatorListener {
+	private class PreferencesPropagatorListener
+			implements IPreferencesPropagatorListener {
 
 		private IProject project;
 

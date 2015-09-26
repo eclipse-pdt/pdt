@@ -24,7 +24,7 @@ public class PhpVersionChangedHandler implements IResourceChangeListener {
 
 	private static final String PHP_VERSION = "phpVersion"; //$NON-NLS-1$
 
-	private HashMap<IProject, HashSet> projectListeners = new HashMap<IProject, HashSet>();
+	private HashMap<IProject, HashSet<IPreferencesPropagatorListener>> projectListeners = new HashMap<IProject, HashSet<IPreferencesPropagatorListener>>();
 	private HashMap<IProject, PreferencesPropagatorListener> preferencesPropagatorListeners = new HashMap<IProject, PreferencesPropagatorListener>();
 
 	private PreferencesPropagator preferencesPropagator;
@@ -46,18 +46,19 @@ public class PhpVersionChangedHandler implements IResourceChangeListener {
 
 	private void projectVersionChanged(IProject project,
 			PreferencesPropagatorEvent event) {
-		HashSet listeners = projectListeners.get(project);
+		HashSet<IPreferencesPropagatorListener> listeners = projectListeners
+				.get(project);
 		if (listeners != null) {
-			for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-				IPreferencesPropagatorListener listener = (IPreferencesPropagatorListener) iter
-						.next();
+			for (Iterator<IPreferencesPropagatorListener> iter = listeners
+					.iterator(); iter.hasNext();) {
+				IPreferencesPropagatorListener listener = iter.next();
 				listener.preferencesEventOccured(event);
 			}
 		}
 	}
 
-	private class PreferencesPropagatorListener implements
-			IPreferencesPropagatorListener {
+	private class PreferencesPropagatorListener
+			implements IPreferencesPropagatorListener {
 
 		private IProject project;
 
@@ -70,13 +71,13 @@ public class PhpVersionChangedHandler implements IResourceChangeListener {
 				// We take the workspace settings since there was a move from
 				// project-specific to workspace setings.
 				String newValue = PreferencesSupport
-						.getWorkspacePreferencesValue((String) event.getKey(),
-								store);
+						.getWorkspacePreferencesValue(PHPCorePlugin.ID,
+								(String) event.getKey());
 				if (newValue == null || newValue.equals(event.getOldValue())) {
 					return; // No need to send a notification
 				}
-				event = new PreferencesPropagatorEvent(event.getSource(), event
-						.getOldValue(), newValue, event.getKey());
+				event = new PreferencesPropagatorEvent(event.getSource(),
+						event.getOldValue(), newValue, event.getKey());
 			} else if (event.getOldValue() == null) {
 				// In this case there was a move from the workspace setting to a
 				// project-specific setting.
@@ -84,8 +85,8 @@ public class PhpVersionChangedHandler implements IResourceChangeListener {
 				// always be as the workspace, so there is
 				// no need to send a notification.
 				String preferencesValue = PreferencesSupport
-						.getWorkspacePreferencesValue((String) event.getKey(),
-								store);
+						.getWorkspacePreferencesValue(PHPCorePlugin.ID,
+								(String) event.getKey());
 				if (preferencesValue != null
 						&& preferencesValue.equals(event.getNewValue())) {
 					return; // No need to send a notification
@@ -119,7 +120,8 @@ public class PhpVersionChangedHandler implements IResourceChangeListener {
 			return;
 		}
 		IProject project = listener.getProject();
-		HashSet listeners = projectListeners.get(project);
+		HashSet<IPreferencesPropagatorListener> listeners = projectListeners
+				.get(project);
 		if (listeners != null) {
 			listeners.remove(listener);
 		}
@@ -129,7 +131,8 @@ public class PhpVersionChangedHandler implements IResourceChangeListener {
 		if (project == null || projectListeners.get(project) != null) {
 			return;
 		}
-		projectListeners.put(project, new HashSet());
+		projectListeners.put(project,
+				new HashSet<IPreferencesPropagatorListener>());
 
 		// register as a listener to the PP on this project
 		PreferencesPropagatorListener listener = new PreferencesPropagatorListener(
