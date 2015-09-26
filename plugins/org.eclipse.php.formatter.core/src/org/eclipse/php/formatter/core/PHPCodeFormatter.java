@@ -32,9 +32,7 @@ import org.eclipse.php.internal.core.format.IContentFormatter2;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.text.edits.ReplaceEdit;
-import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -45,19 +43,16 @@ import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
  * 
  * @author moshe, 2007
  */
-public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
-		IFormatterProcessorFactory {
+public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2, IFormatterProcessorFactory {
 
-	private CodeFormatterPreferences fCodeFormatterPreferences = CodeFormatterPreferences
-			.getDefaultPreferences();
-	private static final Map<String, Object> defaultPrefrencesValues = CodeFormatterPreferences
-			.getDefaultPreferences().getMap();
+	private CodeFormatterPreferences fCodeFormatterPreferences = CodeFormatterPreferences.getDefaultPreferences();
+	private static final Map<String, Object> defaultPrefrencesValues = CodeFormatterPreferences.getDefaultPreferences()
+			.getMap();
 
 	public PHPCodeFormatter() {
 	}
 
-	private CodeFormatterPreferences getPreferences(IProject project)
-			throws Exception {
+	private CodeFormatterPreferences getPreferences(IProject project) throws Exception {
 
 		IEclipsePreferences node = null;
 		if (project != null) {
@@ -65,13 +60,11 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 			node = scope.getNode(FormatterCorePlugin.PLUGIN_ID);
 		}
 
-		Map<String, Object> p = new HashMap<String, Object>(
-				defaultPrefrencesValues);
-		if (node != null && node.keys().length > 0 && node
-				.get(PreferenceConstants.FORMATTER_PROFILE, null) != null) {
+		Map<String, Object> p = new HashMap<String, Object>(defaultPrefrencesValues);
+		if (node != null && node.keys().length > 0
+				&& node.get(CodeFormatterConstants.FORMATTER_PROFILE, null) != null) {
 			Set<String> propetiesNames = p.keySet();
-			for (Iterator<String> iter = propetiesNames.iterator(); iter
-					.hasNext();) {
+			for (Iterator<String> iter = propetiesNames.iterator(); iter.hasNext();) {
 				String property = (String) iter.next();
 				String value = node.get(property, null);
 				if (value != null) {
@@ -79,8 +72,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 				}
 			}
 		} else {
-			Preferences preferences = FormatterCorePlugin.getDefault()
-					.getPluginPreferences();
+			Preferences preferences = FormatterCorePlugin.getDefault().getPluginPreferences();
 			String[] propetiesNames = preferences.propertyNames();
 			for (int i = 0; i < propetiesNames.length; i++) {
 				String property = propetiesNames[i];
@@ -102,8 +94,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 		try {
 			if (document instanceof IStructuredDocument) {
 				IStructuredDocument structuredDocument = (IStructuredDocument) document;
-				structuredModel = StructuredModelManager.getModelManager()
-						.getExistingModelForRead(document);
+				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 				DOMModelForPHP doModelForPHP = (DOMModelForPHP) structuredModel;
 
 				IProject project = this.project;
@@ -111,8 +102,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 					project = getProject(doModelForPHP);
 				}
 				if (project == null) {
-					Logger.logException(new IllegalStateException(
-							"Cann't resolve file name")); //$NON-NLS-1$
+					Logger.logException(new IllegalStateException("Cann't resolve file name")); //$NON-NLS-1$
 					return;
 				}
 
@@ -123,8 +113,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 				// html format
 				HTMLFormatProcessorImpl htmlFormatter = new HtmlFormatterForPhpCode();
 				try {
-					htmlFormatter.formatDocument(document, region.getOffset(),
-							region.getLength());
+					htmlFormatter.formatDocument(document, region.getOffset(), region.getLength());
 				} catch (Exception e) {
 					Logger.logException(e);
 				}
@@ -132,11 +121,10 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 				// php format
 				PHPVersion version = ProjectOptions.getPhpVersion(project);
 				boolean useShortTags = ProjectOptions.useShortTags(project);
-				ICodeFormattingProcessor codeFormatterVisitor = getCodeFormattingProcessor(
-						project, document, version, useShortTags, region);
+				ICodeFormattingProcessor codeFormatterVisitor = getCodeFormattingProcessor(project, document, version,
+						useShortTags, region);
 				if (codeFormatterVisitor instanceof CodeFormatterVisitor) {
-					List<ReplaceEdit> changes = ((CodeFormatterVisitor) codeFormatterVisitor)
-							.getChanges();
+					List<ReplaceEdit> changes = ((CodeFormatterVisitor) codeFormatterVisitor).getChanges();
 					if (changes.size() > 0) {
 						replaceAll(document, changes, doModelForPHP);
 					}
@@ -188,19 +176,15 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 	 * getCodeFormattingProcessor(org.eclipse.jface.text.IDocument,
 	 * java.lang.Object, java.lang.String, org.eclipse.jface.text.IRegion)
 	 */
-	public ICodeFormattingProcessor getCodeFormattingProcessor(
-			IDocument document, PHPVersion phpVersion, boolean useShortTags,
-			IRegion region) throws Exception {
+	public ICodeFormattingProcessor getCodeFormattingProcessor(IDocument document, PHPVersion phpVersion,
+			boolean useShortTags, IRegion region) throws Exception {
 		IProject project = getProject(document);
-		return getCodeFormattingProcessor(project, document, phpVersion,
-				useShortTags, region);
+		return getCodeFormattingProcessor(project, document, phpVersion, useShortTags, region);
 	}
 
-	private ICodeFormattingProcessor getCodeFormattingProcessor(
-			IProject project, IDocument document, PHPVersion phpVersion,
-			boolean useShortTags, IRegion region) throws Exception {
-		CodeFormatterPreferences fCodeFormatterPreferences = getPreferences(
-				project);
+	private ICodeFormattingProcessor getCodeFormattingProcessor(IProject project, IDocument document,
+			PHPVersion phpVersion, boolean useShortTags, IRegion region) throws Exception {
+		CodeFormatterPreferences fCodeFormatterPreferences = getPreferences(project);
 		int oldCommentLength = fCodeFormatterPreferences.comment_line_length;
 		boolean forceSplit = fCodeFormatterPreferences.line_wrap_expressions_in_array_init_force_split;
 		boolean insertSpaceAfterComma = fCodeFormatterPreferences.insert_space_after_list_comma_in_array;
@@ -213,10 +197,8 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 			fCodeFormatterPreferences.insert_space_after_list_comma_in_array = false;
 			fCodeFormatterPreferences.new_line_before_close_array_parenthesis_array = true;
 		}
-		ICodeFormattingProcessor codeFormattingProcessor = new CodeFormatterVisitor(
-				document, fCodeFormatterPreferences,
-				PHPModelUtils.getLineSeparator(project), phpVersion,
-				useShortTags, region);
+		ICodeFormattingProcessor codeFormattingProcessor = new CodeFormatterVisitor(document, fCodeFormatterPreferences,
+				PHPModelUtils.getLineSeparator(project), phpVersion, useShortTags, region);
 
 		if (isPasting) {
 			fCodeFormatterPreferences.comment_line_length = oldCommentLength;
@@ -233,8 +215,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 		IStructuredModel structuredModel = null;
 		if (document instanceof IStructuredDocument) {
 			try {
-				structuredModel = StructuredModelManager.getModelManager()
-						.getExistingModelForRead(document);
+				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 				DOMModelForPHP doModelForPHP = (DOMModelForPHP) structuredModel;
 				project = getProject(doModelForPHP);
 			} finally {
@@ -246,8 +227,8 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 		return project;
 	}
 
-	private void replaceAll(IDocument document, List<ReplaceEdit> changes,
-			DOMModelForPHP domModelForPHP) throws BadLocationException {
+	private void replaceAll(IDocument document, List<ReplaceEdit> changes, DOMModelForPHP domModelForPHP)
+			throws BadLocationException {
 		// Collect the markers before the content of the document is replaced.
 		IFile file = null;
 		IMarker[] allMarkers = null;
@@ -256,8 +237,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 			try {
 				if (file != null) {
 					// collect and then delete
-					allMarkers = file.findMarkers(null, true,
-							IResource.DEPTH_INFINITE);
+					allMarkers = file.findMarkers(null, true, IResource.DEPTH_INFINITE);
 				} else {
 					return; // no need to save breakpoints when no file was
 					// detected
@@ -270,8 +250,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 		StringBuffer buffer = new StringBuffer(document.get());
 		for (int i = changes.size() - 1; i >= 0; i--) {
 			ReplaceEdit replace = (ReplaceEdit) changes.get(i);
-			buffer.replace(replace.getOffset(), replace.getExclusiveEnd(),
-					replace.getText());
+			buffer.replace(replace.getOffset(), replace.getExclusiveEnd(), replace.getText());
 		}
 		document.set(buffer.toString());
 
@@ -285,26 +264,21 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 
 	// Return the markers
 	// TODO - This is buggy since the lines might be different now.
-	private void reinsertMarkers(IMarker[] allMarkers, IFile file)
-			throws CoreException {
-		final IBreakpointManager breakpointManager = DebugPlugin.getDefault()
-				.getBreakpointManager();
+	private void reinsertMarkers(IMarker[] allMarkers, IFile file) throws CoreException {
+		final IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 		if (allMarkers != null) {
 			for (IMarker marker : allMarkers) {
 				String markerType = MarkerUtilities.getMarkerType(marker);
 				if (markerType != null) {
-					IBreakpoint breakpoint = breakpointManager
-							.getBreakpoint(marker);
+					IBreakpoint breakpoint = breakpointManager.getBreakpoint(marker);
 					if (breakpoint != null) {
 						IMarker createdMarker = file.createMarker(markerType);
-						createdMarker.setAttributes(
-								breakpoint.getMarker().getAttributes());
+						createdMarker.setAttributes(breakpoint.getMarker().getAttributes());
 						breakpointManager.removeBreakpoint(breakpoint, true);
 						breakpoint.setMarker(createdMarker);
 						breakpointManager.addBreakpoint(breakpoint);
 					} else {
-						MarkerUtilities.createMarker(file,
-								marker.getAttributes(), markerType);
+						MarkerUtilities.createMarker(file, marker.getAttributes(), markerType);
 					}
 				}
 				marker.delete();
@@ -335,8 +309,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 		try {
 			if (document instanceof IStructuredDocument) {
 				IStructuredDocument structuredDocument = (IStructuredDocument) document;
-				structuredModel = StructuredModelManager.getModelManager()
-						.getExistingModelForRead(document);
+				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 				DOMModelForPHP doModelForPHP = (DOMModelForPHP) structuredModel;
 
 				IProject project = this.project;
@@ -344,8 +317,7 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 					project = getProject(doModelForPHP);
 				}
 				if (project == null) {
-					Logger.logException(new IllegalStateException(
-							"Cann't resolve file name")); //$NON-NLS-1$
+					Logger.logException(new IllegalStateException("Cann't resolve file name")); //$NON-NLS-1$
 					return;
 				}
 
@@ -364,11 +336,10 @@ public class PHPCodeFormatter implements IContentFormatter, IContentFormatter2,
 				// php format
 				// PHPVersion version = ProjectOptions.getPhpVersion(project);
 				boolean useShortTags = ProjectOptions.useShortTags(project);
-				ICodeFormattingProcessor codeFormatterVisitor = getCodeFormattingProcessor(
-						project, document, version, useShortTags, region);
+				ICodeFormattingProcessor codeFormatterVisitor = getCodeFormattingProcessor(project, document, version,
+						useShortTags, region);
 				if (codeFormatterVisitor instanceof CodeFormatterVisitor) {
-					List<ReplaceEdit> changes = ((CodeFormatterVisitor) codeFormatterVisitor)
-							.getChanges();
+					List<ReplaceEdit> changes = ((CodeFormatterVisitor) codeFormatterVisitor).getChanges();
 					if (changes.size() > 0) {
 						replaceAll(document, changes, doModelForPHP);
 					}

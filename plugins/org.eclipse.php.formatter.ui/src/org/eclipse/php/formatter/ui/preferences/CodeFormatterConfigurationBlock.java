@@ -11,8 +11,11 @@
 package org.eclipse.php.formatter.ui.preferences;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -21,6 +24,7 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.formatter.core.CodeFormatterConstants;
 import org.eclipse.php.formatter.core.CodeFormatterPreferences;
 import org.eclipse.php.formatter.core.FormatterCorePlugin;
 import org.eclipse.php.formatter.ui.FormatterMessages;
@@ -30,7 +34,6 @@ import org.eclipse.php.formatter.ui.preferences.ProfileManager.CustomProfile;
 import org.eclipse.php.formatter.ui.preferences.ProfileManager.Profile;
 import org.eclipse.php.internal.ui.preferences.IStatusChangeListener;
 import org.eclipse.php.internal.ui.preferences.PHPCoreOptionsConfigurationBlock;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.preferences.util.Key;
 import org.eclipse.php.internal.ui.util.ExceptionHandler;
 import org.eclipse.php.internal.ui.util.Messages;
@@ -49,15 +52,11 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  * @author moshe
  * 
  */
-public class CodeFormatterConfigurationBlock extends
-		PHPCoreOptionsConfigurationBlock implements SelectionListener {
-	private static final Key PROFILE_KEY = new Key(
-			FormatterCorePlugin.PLUGIN_ID,
-			PreferenceConstants.FORMATTER_PROFILE);
-	private static final String DIALOGSTORE_LASTLOADPATH = FormatterUIPlugin.PLUGIN_ID
-			+ ".loadpath"; //$NON-NLS-1$
-	private static final String DIALOGSTORE_LASTSAVEPATH = FormatterUIPlugin.PLUGIN_ID
-			+ ".savepath"; //$NON-NLS-1$
+public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfigurationBlock implements SelectionListener {
+	private static final Key PROFILE_KEY = new Key(FormatterCorePlugin.PLUGIN_ID,
+			CodeFormatterConstants.FORMATTER_PROFILE);
+	private static final String DIALOGSTORE_LASTLOADPATH = FormatterUIPlugin.PLUGIN_ID + ".loadpath"; //$NON-NLS-1$
+	private static final String DIALOGSTORE_LASTSAVEPATH = FormatterUIPlugin.PLUGIN_ID + ".savepath"; //$NON-NLS-1$
 
 	private class StoreUpdater implements Observer {
 
@@ -73,11 +72,9 @@ public class CodeFormatterConfigurationBlock extends
 			case ProfileManager.PROFILE_CREATED_EVENT:
 			case ProfileManager.SETTINGS_CHANGED_EVENT:
 				try {
-					ProfileStore
-							.writeProfiles(fProfileManager.getSortedProfiles(),
-									fInstanceScope); // update
-														// profile
-														// store
+					ProfileStore.writeProfiles(fProfileManager.getSortedProfiles(), fInstanceScope); // update
+																										// profile
+																										// store
 					fProfileManager.commitChanges(fCurrContext); // update
 																	// formatter
 																	// settings
@@ -162,9 +159,8 @@ public class CodeFormatterConfigurationBlock extends
 		public void update(Observable o, Object arg) {
 			Profile selected = ((ProfileManager) o).getSelected();
 			final boolean notBuiltIn = !selected.isBuiltInProfile();
-			fEditButton
-					.setText(notBuiltIn ? FormatterMessages.CodingStyleConfigurationBlock_edit_button_desc
-							: FormatterMessages.CodingStyleConfigurationBlock_show_button_desc);
+			fEditButton.setText(notBuiltIn ? FormatterMessages.CodingStyleConfigurationBlock_edit_button_desc
+					: FormatterMessages.CodingStyleConfigurationBlock_show_button_desc);
 			fDeleteButton.setEnabled(notBuiltIn);
 			fSaveButton.setEnabled(notBuiltIn);
 			fRenameButton.setEnabled(notBuiltIn);
@@ -192,61 +188,50 @@ public class CodeFormatterConfigurationBlock extends
 		private void renameButtonPressed() {
 			if (fProfileManager.getSelected().isBuiltInProfile())
 				return;
-			final CustomProfile profile = (CustomProfile) fProfileManager
-					.getSelected();
-			final RenameProfileDialog renameDialog = new RenameProfileDialog(
-					fComposite.getShell(), profile, fProfileManager);
+			final CustomProfile profile = (CustomProfile) fProfileManager.getSelected();
+			final RenameProfileDialog renameDialog = new RenameProfileDialog(fComposite.getShell(), profile,
+					fProfileManager);
 			if (renameDialog.open() == Window.OK) {
 				fProfileManager.setSelected(renameDialog.getRenamedProfile());
 			}
 		}
 
 		private void modifyButtonPressed() {
-			final ModifyDialog modifyDialog = new ModifyDialog(
-					CodeFormatterConfigurationBlock.this,
-					fComposite.getShell(), fProfileManager.getSelected(),
-					fProfileManager, false);
+			final ModifyDialog modifyDialog = new ModifyDialog(CodeFormatterConfigurationBlock.this,
+					fComposite.getShell(), fProfileManager.getSelected(), fProfileManager, false);
 			modifyDialog.open();
 		}
 
 		private void deleteButtonPressed() {
-			if (MessageDialog
-					.openQuestion(
-							fComposite.getShell(),
-							FormatterMessages.CodingStyleConfigurationBlock_delete_confirmation_title,
-							Messages.format(
-									FormatterMessages.CodingStyleConfigurationBlock_delete_confirmation_question,
-									fProfileManager.getSelected().getName()))) {
+			if (MessageDialog.openQuestion(fComposite.getShell(),
+					FormatterMessages.CodingStyleConfigurationBlock_delete_confirmation_title,
+					Messages.format(FormatterMessages.CodingStyleConfigurationBlock_delete_confirmation_question,
+							fProfileManager.getSelected().getName()))) {
 				fProfileManager.deleteSelected();
 			}
 		}
 
 		private void newButtonPressed() {
-			final CreateProfileDialog p = new CreateProfileDialog(
-					fComposite.getShell(), fProfileManager);
+			final CreateProfileDialog p = new CreateProfileDialog(fComposite.getShell(), fProfileManager);
 			if (p.open() != Window.OK)
 				return;
 			if (!p.openEditDialog())
 				return;
-			final ModifyDialog modifyDialog = new ModifyDialog(
-					CodeFormatterConfigurationBlock.this,
-					fComposite.getShell(), p.getCreatedProfile(),
-					fProfileManager, true);
+			final ModifyDialog modifyDialog = new ModifyDialog(CodeFormatterConfigurationBlock.this,
+					fComposite.getShell(), p.getCreatedProfile(), fProfileManager, true);
 			modifyDialog.open();
 		}
 
 		private void saveButtonPressed() {
 			Profile selected = fProfileManager.getSelected();
 
-			final FileDialog dialog = new FileDialog(fComposite.getShell(),
-					SWT.SAVE);
+			final FileDialog dialog = new FileDialog(fComposite.getShell(), SWT.SAVE);
 			dialog.setText(FormatterMessages.CodingStyleConfigurationBlock_save_profile_dialog_title);
 			dialog.setFilterExtensions(new String[] { "*.xml" }); //$NON-NLS-1$
 			// set default file name to profile name
 			dialog.setFileName(selected.getName() + ".xml");
 
-			final String lastPath = FormatterUIPlugin.getDefault()
-					.getDialogSettings().get(DIALOGSTORE_LASTSAVEPATH);
+			final String lastPath = FormatterUIPlugin.getDefault().getDialogSettings().get(DIALOGSTORE_LASTSAVEPATH);
 			if (lastPath != null) {
 				dialog.setFilterPath(lastPath);
 			}
@@ -259,18 +244,15 @@ public class CodeFormatterConfigurationBlock extends
 				path.concat(".xml");
 			}
 
-			FormatterUIPlugin.getDefault().getDialogSettings()
-					.put(DIALOGSTORE_LASTSAVEPATH, dialog.getFilterPath());
+			FormatterUIPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LASTSAVEPATH, dialog.getFilterPath());
 
 			final File file = new File(path);
 			if (file.exists()
-					&& !MessageDialog
-							.openQuestion(
-									fComposite.getShell(),
-									FormatterMessages.CodingStyleConfigurationBlock_save_profile_overwrite_title,
-									Messages.format(
-											FormatterMessages.CodingStyleConfigurationBlock_save_profile_overwrite_message,
-											path))) {
+					&& !MessageDialog.openQuestion(fComposite.getShell(),
+							FormatterMessages.CodingStyleConfigurationBlock_save_profile_overwrite_title,
+							Messages.format(
+									FormatterMessages.CodingStyleConfigurationBlock_save_profile_overwrite_message,
+									path))) {
 				return;
 			}
 
@@ -282,26 +264,22 @@ public class CodeFormatterConfigurationBlock extends
 			} catch (CoreException e) {
 				final String title = FormatterMessages.CodingStyleConfigurationBlock_save_profile_error_title;
 				final String message = FormatterMessages.CodingStyleConfigurationBlock_save_profile_error_message;
-				ExceptionHandler.handle(e, fComposite.getShell(), title,
-						message);
+				ExceptionHandler.handle(e, fComposite.getShell(), title, message);
 			}
 		}
 
 		private void loadButtonPressed() {
-			final FileDialog dialog = new FileDialog(fComposite.getShell(),
-					SWT.OPEN);
+			final FileDialog dialog = new FileDialog(fComposite.getShell(), SWT.OPEN);
 			dialog.setText(FormatterMessages.CodingStyleConfigurationBlock_load_profile_dialog_title);
 			dialog.setFilterExtensions(new String[] { "*.xml" }); //$NON-NLS-1$
-			final String lastPath = FormatterUIPlugin.getDefault()
-					.getDialogSettings().get(DIALOGSTORE_LASTLOADPATH);
+			final String lastPath = FormatterUIPlugin.getDefault().getDialogSettings().get(DIALOGSTORE_LASTLOADPATH);
 			if (lastPath != null) {
 				dialog.setFilterPath(lastPath);
 			}
 			final String path = dialog.open();
 			if (path == null)
 				return;
-			FormatterUIPlugin.getDefault().getDialogSettings()
-					.put(DIALOGSTORE_LASTLOADPATH, dialog.getFilterPath());
+			FormatterUIPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LASTLOADPATH, dialog.getFilterPath());
 
 			final File file = new File(path);
 			Collection<Profile> profiles = null;
@@ -310,18 +288,16 @@ public class CodeFormatterConfigurationBlock extends
 			} catch (CoreException e) {
 				final String title = FormatterMessages.CodingStyleConfigurationBlock_load_profile_error_title;
 				final String message = FormatterMessages.CodingStyleConfigurationBlock_load_profile_error_message;
-				ExceptionHandler.handle(e, fComposite.getShell(), title,
-						message);
+				ExceptionHandler.handle(e, fComposite.getShell(), title, message);
 			}
 			if (profiles == null || profiles.isEmpty())
 				return;
 
-			final CustomProfile profile = (CustomProfile) profiles.iterator()
-					.next();
+			final CustomProfile profile = (CustomProfile) profiles.iterator().next();
 
 			if (fProfileManager.containsName(profile.getName())) {
-				final AlreadyExistsDialog aeDialog = new AlreadyExistsDialog(
-						fComposite.getShell(), profile, fProfileManager);
+				final AlreadyExistsDialog aeDialog = new AlreadyExistsDialog(fComposite.getShell(), profile,
+						fProfileManager);
 				if (aeDialog.open() != Window.OK)
 					return;
 			}
@@ -333,8 +309,7 @@ public class CodeFormatterConfigurationBlock extends
 
 		public PreviewController() {
 			fProfileManager.addObserver(this);
-			fPhpPreview.setPreferences(new CodeFormatterPreferences(
-					fProfileManager.getSelected().getSettings()));
+			fPhpPreview.setPreferences(new CodeFormatterPreferences(fProfileManager.getSelected().getSettings()));
 			fPhpPreview.update();
 		}
 
@@ -345,8 +320,8 @@ public class CodeFormatterConfigurationBlock extends
 			case ProfileManager.PROFILE_DELETED_EVENT:
 			case ProfileManager.SELECTION_CHANGED_EVENT:
 			case ProfileManager.SETTINGS_CHANGED_EVENT:
-				fPhpPreview.setPreferences(new CodeFormatterPreferences(
-						((ProfileManager) o).getSelected().getSettings()));
+				fPhpPreview
+						.setPreferences(new CodeFormatterPreferences(((ProfileManager) o).getSelected().getSettings()));
 				fPhpPreview.update();
 			}
 		}
@@ -400,8 +375,8 @@ public class CodeFormatterConfigurationBlock extends
 	private IScopeContext fCurrContext;
 	private IScopeContext fInstanceScope;
 
-	public CodeFormatterConfigurationBlock(IStatusChangeListener context,
-			IProject project, IWorkbenchPreferenceContainer container) {
+	public CodeFormatterConfigurationBlock(IStatusChangeListener context, IProject project,
+			IWorkbenchPreferenceContainer container) {
 		super(context, project, new Key[] { PROFILE_KEY }, container);
 
 		fInstanceScope = InstanceScope.INSTANCE;
@@ -413,8 +388,7 @@ public class CodeFormatterConfigurationBlock extends
 		}
 		if (profiles == null) {
 			try {
-				profiles = ProfileStore
-						.readProfilesFromPreferences(DefaultScope.INSTANCE);
+				profiles = ProfileStore.readProfilesFromPreferences(DefaultScope.INSTANCE);
 			} catch (CoreException e) {
 				Logger.logException(e);
 			}
@@ -423,8 +397,7 @@ public class CodeFormatterConfigurationBlock extends
 		if (profiles == null)
 			profiles = new ArrayList<Profile>();
 
-		PreferencesAccess access = PreferencesAccess
-				.getWorkingCopyPreferences(fManager);
+		PreferencesAccess access = PreferencesAccess.getWorkingCopyPreferences(fManager);
 
 		if (project != null) {
 			fCurrContext = access.getProjectScope(project);
@@ -443,19 +416,12 @@ public class CodeFormatterConfigurationBlock extends
 		fPixConv = new PixelConverter(parent);
 		fComposite = createComposite(parent, numColumns);
 
-		fProfileCombo = createProfileCombo(fComposite, numColumns - 3,
-				fPixConv.convertWidthInCharsToPixels(20));
-		fEditButton = createButton(
-				fComposite,
-				FormatterMessages.CodingStyleConfigurationBlock_edit_button_desc,
+		fProfileCombo = createProfileCombo(fComposite, numColumns - 3, fPixConv.convertWidthInCharsToPixels(20));
+		fEditButton = createButton(fComposite, FormatterMessages.CodingStyleConfigurationBlock_edit_button_desc,
 				GridData.HORIZONTAL_ALIGN_BEGINNING);
-		fRenameButton = createButton(
-				fComposite,
-				FormatterMessages.CodingStyleConfigurationBlock_rename_button_desc,
+		fRenameButton = createButton(fComposite, FormatterMessages.CodingStyleConfigurationBlock_rename_button_desc,
 				GridData.HORIZONTAL_ALIGN_BEGINNING);
-		fDeleteButton = createButton(
-				fComposite,
-				FormatterMessages.CodingStyleConfigurationBlock_remove_button_desc,
+		fDeleteButton = createButton(fComposite, FormatterMessages.CodingStyleConfigurationBlock_remove_button_desc,
 				GridData.HORIZONTAL_ALIGN_BEGINNING);
 
 		final Composite group = createComposite(fComposite, 4);
@@ -463,24 +429,15 @@ public class CodeFormatterConfigurationBlock extends
 		groupData.horizontalSpan = numColumns;
 		group.setLayoutData(groupData);
 
-		fNewButton = createButton(
-				group,
-				FormatterMessages.CodingStyleConfigurationBlock_new_button_desc,
+		fNewButton = createButton(group, FormatterMessages.CodingStyleConfigurationBlock_new_button_desc,
 				GridData.HORIZONTAL_ALIGN_BEGINNING);
 		((GridData) createLabel(group, "", 1).getLayoutData()).grabExcessHorizontalSpace = true; //$NON-NLS-1$
-		fLoadButton = createButton(
-				group,
-				FormatterMessages.CodingStyleConfigurationBlock_load_button_desc,
+		fLoadButton = createButton(group, FormatterMessages.CodingStyleConfigurationBlock_load_button_desc,
 				GridData.HORIZONTAL_ALIGN_END);
-		fSaveButton = createButton(
-				group,
-				FormatterMessages.CodingStyleConfigurationBlock_save_button_desc,
+		fSaveButton = createButton(group, FormatterMessages.CodingStyleConfigurationBlock_save_button_desc,
 				GridData.HORIZONTAL_ALIGN_END);
 
-		createLabel(
-				fComposite,
-				FormatterMessages.CodingStyleConfigurationBlock_preview_label_text,
-				numColumns);
+		createLabel(fComposite, FormatterMessages.CodingStyleConfigurationBlock_preview_label_text, numColumns);
 		configurePreview(fComposite, numColumns);
 
 		new ButtonController();
@@ -505,8 +462,7 @@ public class CodeFormatterConfigurationBlock extends
 			}
 		}
 		fProfileCombo.select(index);
-		fProfileManager.setSelected(fProfileManager
-				.getProfile(ProfileManager.PHP_PROFILE));
+		fProfileManager.setSelected(fProfileManager.getProfile(ProfileManager.PHP_PROFILE));
 
 		super.performDefaults();
 	}
@@ -515,8 +471,7 @@ public class CodeFormatterConfigurationBlock extends
 	public boolean performOk() {
 		if (this.fComposite.isEnabled()) {
 			final int index = fProfileCombo.getSelectionIndex();
-			Profile selectedProfile = fProfileManager.getSortedProfiles().get(
-					index);
+			Profile selectedProfile = fProfileManager.getSortedProfiles().get(index);
 			fProfileManager.setSelected(selectedProfile);
 		}
 		return super.performOk();
@@ -532,13 +487,11 @@ public class CodeFormatterConfigurationBlock extends
 
 	}
 
-	protected void validateSettings(Key changedKey, String oldValue,
-			String newValue) {
+	protected void validateSettings(Key changedKey, String oldValue, String newValue) {
 		// TODO Auto-generated method stub
 	}
 
-	private static Button createButton(Composite composite, String text,
-			final int style) {
+	private static Button createButton(Composite composite, String text, final int style) {
 		final Button button = new Button(composite, SWT.PUSH);
 		button.setFont(composite.getFont());
 		button.setText(text);
@@ -549,8 +502,7 @@ public class CodeFormatterConfigurationBlock extends
 		return button;
 	}
 
-	private static Combo createProfileCombo(Composite composite, int span,
-			int widthHint) {
+	private static Combo createProfileCombo(Composite composite, int span, int widthHint) {
 		final GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = span;
 		gd.widthHint = widthHint;
@@ -585,12 +537,10 @@ public class CodeFormatterConfigurationBlock extends
 	}
 
 	private void configurePreview(Composite composite, int numColumns) {
-		fPhpPreview = new CodeFormatterPreview(
-				CodeFormatterPreferences.getDefaultPreferences(), composite);
+		fPhpPreview = new CodeFormatterPreview(CodeFormatterPreferences.getDefaultPreferences(), composite);
 		fPhpPreview.setPreviewText(PREVIEW);
 
-		final GridData gd = new GridData(GridData.FILL_VERTICAL
-				| GridData.HORIZONTAL_ALIGN_FILL);
+		final GridData gd = new GridData(GridData.FILL_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL);
 		gd.horizontalSpan = numColumns;
 		gd.verticalSpan = 7;
 		gd.widthHint = 0;

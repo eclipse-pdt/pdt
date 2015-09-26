@@ -20,7 +20,6 @@ public class FormatterCorePlugin extends Plugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.eclipse.php.formatter.core"; //$NON-NLS-1$
-	public static final String UI_PLUGIN_ID = "org.eclipse.php.formatter.ui"; //$NON-NLS-1$
 
 	// The shared instance
 	private static FormatterCorePlugin plugin;

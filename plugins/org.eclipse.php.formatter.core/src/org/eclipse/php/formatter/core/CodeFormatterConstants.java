@@ -23,6 +23,17 @@ import java.util.Map;
 public class CodeFormatterConstants {
 
 	/**
+	 * A named preference that controls which profile is used by the code
+	 * formatter.
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 * 
+	 * @since 3.7
+	 */
+	public static final String FORMATTER_PROFILE = "formatterProfile"; //$NON-NLS-1$
+
+	/**
 	 * <pre>
 	 * FORMATTER / Value to set a brace location at the end of a line.
 	 * </pre>
@@ -3419,8 +3430,7 @@ public class CodeFormatterConstants {
 	 * 
 	 * @since 3.0
 	 */
-	public static final String FORMATTER_LINE_SPLIT = FormatterCorePlugin.PLUGIN_ID
-			+ ".formatter.lineSplit"; //$NON-NLS-1$
+	public static final String FORMATTER_LINE_SPLIT = FormatterCorePlugin.PLUGIN_ID + ".formatter.lineSplit"; //$NON-NLS-1$
 
 	/**
 	 * <pre>
@@ -3463,8 +3473,7 @@ public class CodeFormatterConstants {
 	 * @see #MIXED
 	 * @since 3.0
 	 */
-	public static final String FORMATTER_TAB_CHAR = FormatterCorePlugin.PLUGIN_ID
-			+ ".formatter.tabulation.char"; //$NON-NLS-1$
+	public static final String FORMATTER_TAB_CHAR = FormatterCorePlugin.PLUGIN_ID + ".formatter.tabulation.char"; //$NON-NLS-1$
 	/**
 	 * <pre>
 	 * FORMATTER / Option to specify the equivalent number of spaces that represents one tabulation
@@ -3475,8 +3484,7 @@ public class CodeFormatterConstants {
 	 * 
 	 * @since 3.0
 	 */
-	public static final String FORMATTER_TAB_SIZE = FormatterCorePlugin.PLUGIN_ID
-			+ ".formatter.tabulation.size"; //$NON-NLS-1$
+	public static final String FORMATTER_TAB_SIZE = FormatterCorePlugin.PLUGIN_ID + ".formatter.tabulation.size"; //$NON-NLS-1$
 
 	/**
 	 * <pre>
@@ -3955,8 +3963,7 @@ public class CodeFormatterConstants {
 	 * @see #FALSE
 	 * @since 3.0
 	 */
-	public static final String FORMATTER_COMPACT_ELSE_IF = FormatterCorePlugin.PLUGIN_ID
-			+ ".formatter.compact_else_if"; //$NON-NLS-1$
+	public static final String FORMATTER_COMPACT_ELSE_IF = FormatterCorePlugin.PLUGIN_ID + ".formatter.compact_else_if"; //$NON-NLS-1$
 
 	/**
 	 * <pre>
@@ -4060,8 +4067,7 @@ public class CodeFormatterConstants {
 	 * 
 	 * @since 3.6
 	 */
-	public static final String FORMATTER_USE_ON_OFF_TAGS = FormatterCorePlugin.PLUGIN_ID
-			+ ".formatter.use_on_off_tags"; //$NON-NLS-1$
+	public static final String FORMATTER_USE_ON_OFF_TAGS = FormatterCorePlugin.PLUGIN_ID + ".formatter.use_on_off_tags"; //$NON-NLS-1$
 	/**
 	 * <pre>
 	 * FORMATTER / Option to define the tag to put in a comment to disable the formatting.
@@ -4095,9 +4101,9 @@ public class CodeFormatterConstants {
 	 * stops to format the code from the beginning of the comment including this
 	 * tag. If it was already disabled, the tag has no special effect.
 	 * <p>
-	 * For example, the second default enabling tag
-	 * &quot;<b>@formatter:off</b>&quot; in the following snippet is not
-	 * necessary as the formatter was already disabled since the first one:
+	 * For example, the second default enabling tag &quot;<b>@formatter:off</b>
+	 * &quot; in the following snippet is not necessary as the formatter was
+	 * already disabled since the first one:
 	 * 
 	 * <pre>
 	 * class X {
@@ -4154,9 +4160,10 @@ public class CodeFormatterConstants {
 	 * class X {
 	 * 	/*
 	 * 	 * This is a comment with a mix of disabling and enabling tags: -
-	 * 	 * &lt;b&gt;@formatter:off&lt;/b&gt; - &lt;b&gt;@formatter:on&lt;/b&gt; - &lt;b&gt;@formatter:off&lt;/b&gt; The
-	 * 	 * formatter will stop to format from the beginning of this comment...
-	 * 	 &#42;/
+	 * 	 * &lt;b&gt;@formatter:off&lt;/b&gt; - &lt;b&gt;@formatter:on&lt;/b&gt; -
+	 * 	 * &lt;b&gt;@formatter:off&lt;/b&gt; The formatter will stop to format from the
+	 * 	 * beginning of this comment...
+	 * 	&#42;/
 	 * 	void foo() {
 	 * 	}
 	 * 
@@ -4169,7 +4176,8 @@ public class CodeFormatterConstants {
 	 * <li>The tag cannot include newline character (i.e. '\n') but it can have
 	 * white spaces.<br>
 	 * E.g. "<b>format: off</b>" is a valid disabling tag.<br>
-	 * In the future, newlines may be used to support multiple disabling tags.</li>
+	 * In the future, newlines may be used to support multiple disabling tags.
+	 * </li>
 	 * <li>The tag can include line or block comments start/end tokens.
 	 * <p>
 	 * If such tags are used, e.g. "<b>//J-</b>", then the single comment can
@@ -4203,9 +4211,9 @@ public class CodeFormatterConstants {
 	 * 	}
 	 * 
 	 * 	/*
-	 * 	 * Block comment including the disabling tag: //J+ The formatter stops from
-	 * 	 * this comment...
-	 * 	 &#42;/
+	 * 	 * Block comment including the disabling tag: //J+ The formatter
+	 * 	 * stops from this comment...
+	 * 	&#42;/
 	 * 	void foo2() {
 	 * 	}
 	 * 
@@ -4215,9 +4223,9 @@ public class CodeFormatterConstants {
 	 * 	}
 	 * 
 	 * 	/**
-	 * 	 * Javadoc comment including the enabling tag: //J+ The formatter stops from
-	 * 	 * this comment...
-	 * 	 &#42;/
+	 * 	 * Javadoc comment including the enabling tag: //J+ The formatter
+	 * 	 * stops from this comment...
+	 * 	&#42;/
 	 * 	void foo3() {
 	 * 	}
 	 * }
@@ -4229,8 +4237,7 @@ public class CodeFormatterConstants {
 	 * 
 	 * @since 3.6
 	 */
-	public static final String FORMATTER_DISABLING_TAG = FormatterCorePlugin.PLUGIN_ID
-			+ ".formatter.disabling_tag"; //$NON-NLS-1$
+	public static final String FORMATTER_DISABLING_TAG = FormatterCorePlugin.PLUGIN_ID + ".formatter.disabling_tag"; //$NON-NLS-1$
 	/**
 	 * <pre>
 	 * FORMATTER / Option to define the tag to put in a comment to re-enable the formatting after it has been disabled (see {@link #FORMATTER_DISABLING_TAG})
@@ -4321,9 +4328,10 @@ public class CodeFormatterConstants {
 	 * class X {
 	 * 	/*
 	 * 	 * This is a comment with a mix of disabling and enabling tags: -
-	 * 	 * &lt;b&gt;@formatter:on&lt;/b&gt; - &lt;b&gt;@formatter:off&lt;/b&gt; - &lt;b&gt;@formatter:on&lt;/b&gt; The
-	 * 	 * formatter will restart to format after this comment...
-	 * 	 &#42;/
+	 * 	 * &lt;b&gt;@formatter:on&lt;/b&gt; - &lt;b&gt;@formatter:off&lt;/b&gt; -
+	 * 	 * &lt;b&gt;@formatter:on&lt;/b&gt; The formatter will restart to format after
+	 * 	 * this comment...
+	 * 	&#42;/
 	 * 	void foo() {
 	 * 	}
 	 * 
@@ -4336,7 +4344,8 @@ public class CodeFormatterConstants {
 	 * <li>The tag cannot include newline character (i.e. '\n') but it can have
 	 * white spaces.<br>
 	 * E.g. "<b>format: on</b>" is a valid enabling tag<br>
-	 * In the future, newlines may be used to support multiple enabling tags.</li>
+	 * In the future, newlines may be used to support multiple enabling tags.
+	 * </li>
 	 * <li>The tag can include line or block comments start/end tokens. Javadoc
 	 * tokens are not considered as valid tags.
 	 * <p>
@@ -4378,9 +4387,9 @@ public class CodeFormatterConstants {
 	 * 	}
 	 * 
 	 * 	/*
-	 * 	 * Block comment including the enabling tag: //J+ The formatter restarts
-	 * 	 * after this comment...
-	 * 	 &#42;/
+	 * 	 * Block comment including the enabling tag: //J+ The formatter
+	 * 	 * restarts after this comment...
+	 * 	&#42;/
 	 * 	// Formatting restarts from here...
 	 * 	void bar2() {
 	 * 	}
@@ -4391,9 +4400,9 @@ public class CodeFormatterConstants {
 	 * 	}
 	 * 
 	 * 	/**
-	 * 	 * Javadoc comment including the enabling tag: //J+ The formatter restarts
-	 * 	 * after this comment...
-	 * 	 &#42;/
+	 * 	 * Javadoc comment including the enabling tag: //J+ The formatter
+	 * 	 * restarts after this comment...
+	 * 	&#42;/
 	 * 	void bar3() {
 	 * 	}
 	 * }
@@ -4405,8 +4414,7 @@ public class CodeFormatterConstants {
 	 * 
 	 * @since 3.6
 	 */
-	public static final String FORMATTER_ENABLING_TAG = FormatterCorePlugin.PLUGIN_ID
-			+ ".formatter.enabling_tag"; //$NON-NLS-1$
+	public static final String FORMATTER_ENABLING_TAG = FormatterCorePlugin.PLUGIN_ID + ".formatter.enabling_tag"; //$NON-NLS-1$
 
 	public static final String EMPTY_STRING = new String(new char[0]);
 
@@ -4423,8 +4431,7 @@ public class CodeFormatterConstants {
 	 * 
 	 * @return the new alignement value
 	 */
-	public static String createAlignmentValue(boolean forceSplit,
-			int wrapStyle, int indentStyle) {
+	public static String createAlignmentValue(boolean forceSplit, int wrapStyle, int indentStyle) {
 		// int alignmentValue = 0;
 		// switch(wrapStyle) {
 		// case WRAP_COMPACT :

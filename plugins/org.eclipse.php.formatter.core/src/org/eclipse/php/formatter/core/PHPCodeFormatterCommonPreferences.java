@@ -28,24 +28,20 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
 import org.eclipse.php.internal.core.format.IFormatterCommonPrferences;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
-public class PHPCodeFormatterCommonPreferences implements
-		IFormatterCommonPrferences {
+public class PHPCodeFormatterCommonPreferences implements IFormatterCommonPrferences {
 
-	private CodeFormatterPreferences fCodeFormatterPreferences = CodeFormatterPreferences
-			.getDefaultPreferences();
-	private static final Map<String, Object> defaultPrefrencesValues = CodeFormatterPreferences
-			.getDefaultPreferences().getMap();
+	private CodeFormatterPreferences fCodeFormatterPreferences = CodeFormatterPreferences.getDefaultPreferences();
+	private static final Map<String, Object> defaultPrefrencesValues = CodeFormatterPreferences.getDefaultPreferences()
+			.getMap();
 
 	public int getIndentationWrappedLineSize(IDocument document) {
 		CodeFormatterPreferences preferences = getPreferences(document);
 		if (preferences == null) {
-			return FormatPreferencesSupport.getInstance()
-					.getIndentationWrappedLineSize(document);
+			return FormatPreferencesSupport.getInstance().getIndentationWrappedLineSize(document);
 		} else {
 			return preferences.line_wrap_wrapped_lines_indentation;
 		}
@@ -54,8 +50,7 @@ public class PHPCodeFormatterCommonPreferences implements
 	public int getIndentationArrayInitSize(IDocument document) {
 		CodeFormatterPreferences preferences = getPreferences(document);
 		if (preferences == null) {
-			return FormatPreferencesSupport.getInstance()
-					.getIndentationArrayInitSize(document);
+			return FormatPreferencesSupport.getInstance().getIndentationArrayInitSize(document);
 		} else {
 			return preferences.line_wrap_array_init_indentation;
 		}
@@ -64,8 +59,7 @@ public class PHPCodeFormatterCommonPreferences implements
 	public int getIndentationSize(IDocument document) {
 		CodeFormatterPreferences preferences = getPreferences(document);
 		if (preferences == null) {
-			return FormatPreferencesSupport.getInstance().getIndentationSize(
-					document);
+			return FormatPreferencesSupport.getInstance().getIndentationSize(document);
 		} else {
 			return preferences.indentationSize;
 		}
@@ -74,8 +68,7 @@ public class PHPCodeFormatterCommonPreferences implements
 	public char getIndentationChar(IDocument document) {
 		CodeFormatterPreferences preferences = getPreferences(document);
 		if (preferences == null) {
-			return FormatPreferencesSupport.getInstance().getIndentationChar(
-					document);
+			return FormatPreferencesSupport.getInstance().getIndentationChar(document);
 		} else {
 			return preferences.indentationChar;
 		}
@@ -86,8 +79,7 @@ public class PHPCodeFormatterCommonPreferences implements
 		try {
 			if (document instanceof IStructuredDocument) {
 				IStructuredDocument structuredDocument = (IStructuredDocument) document;
-				structuredModel = StructuredModelManager.getModelManager()
-						.getExistingModelForRead(document);
+				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 				if (structuredModel == null) {
 					try {
 						CodeFormatterPreferences preferences = getPreferences((IProject) null);
@@ -100,8 +92,7 @@ public class PHPCodeFormatterCommonPreferences implements
 
 				IProject project = getProject(doModelForPHP);
 				if (project == null) {
-					Logger.logException(new IllegalStateException(
-							"Cann't resolve file name")); //$NON-NLS-1$
+					Logger.logException(new IllegalStateException("Cann't resolve file name")); //$NON-NLS-1$
 				}
 				try {
 					CodeFormatterPreferences preferences = getPreferences(project);
@@ -119,25 +110,21 @@ public class PHPCodeFormatterCommonPreferences implements
 		return null;
 	}
 
-	private CodeFormatterPreferences getPreferences(IProject project)
-			throws Exception {
+	private CodeFormatterPreferences getPreferences(IProject project) throws Exception {
 
 		IEclipsePreferences node = null;
 		if (project != null) {
 			ProjectScope scope = (ProjectScope) new ProjectScope(project);
 			node = scope.getNode(FormatterCorePlugin.PLUGIN_ID);
 		}
-		if (node == null
-				|| node.get(PreferenceConstants.FORMATTER_PROFILE, null) == null) {
+		if (node == null || node.get(CodeFormatterConstants.FORMATTER_PROFILE, null) == null) {
 			IScopeContext context = InstanceScope.INSTANCE;
 			node = context.getNode(FormatterCorePlugin.PLUGIN_ID);
 		}
-		Map<String, Object> p = new HashMap<String, Object>(
-				defaultPrefrencesValues);
+		Map<String, Object> p = new HashMap<String, Object>(defaultPrefrencesValues);
 		if (node != null && node.keys().length > 0) {
 			Set<String> propetiesNames = p.keySet();
-			for (Iterator<String> iter = propetiesNames.iterator(); iter
-					.hasNext();) {
+			for (Iterator<String> iter = propetiesNames.iterator(); iter.hasNext();) {
 				String property = (String) iter.next();
 				String value = node.get(property, null);
 				if (value != null) {
@@ -145,8 +132,7 @@ public class PHPCodeFormatterCommonPreferences implements
 				}
 			}
 		} else {
-			Preferences preferences = FormatterCorePlugin.getDefault()
-					.getPluginPreferences();
+			Preferences preferences = FormatterCorePlugin.getDefault().getPluginPreferences();
 			String[] propetiesNames = preferences.propertyNames();
 			for (int i = 0; i < propetiesNames.length; i++) {
 				String property = propetiesNames[i];
@@ -188,8 +174,7 @@ public class PHPCodeFormatterCommonPreferences implements
 	public int getTabSize(IDocument document) {
 		CodeFormatterPreferences preferences = getPreferences(document);
 		if (preferences == null) {
-			return FormatPreferencesSupport.getInstance().getIndentationSize(
-					document);
+			return FormatPreferencesSupport.getInstance().getIndentationSize(document);
 		} else {
 			return preferences.tabSize;
 		}
