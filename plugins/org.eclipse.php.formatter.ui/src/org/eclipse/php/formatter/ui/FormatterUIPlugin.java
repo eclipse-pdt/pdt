@@ -13,8 +13,8 @@ package org.eclipse.php.formatter.ui;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.php.formatter.core.CodeFormatterConstants;
 import org.eclipse.php.formatter.ui.preferences.ProfileManager;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -39,9 +39,8 @@ public class FormatterUIPlugin extends AbstractUIPlugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
-	 * )
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.
+	 * BundleContext )
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -51,9 +50,8 @@ public class FormatterUIPlugin extends AbstractUIPlugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
-	 * )
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.
+	 * BundleContext )
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
@@ -74,8 +72,7 @@ public class FormatterUIPlugin extends AbstractUIPlugin {
 	}
 
 	public static void log(Throwable e) {
-		log(new Status(IStatus.ERROR, PLUGIN_ID, 10001,
-				"FormatterUI plugin internal error", e)); //$NON-NLS-1$
+		log(new Status(IStatus.ERROR, PLUGIN_ID, 10001, "FormatterUI plugin internal error", e)); //$NON-NLS-1$
 	}
 
 	public static void logErrorMessage(String message) {
@@ -83,10 +80,8 @@ public class FormatterUIPlugin extends AbstractUIPlugin {
 	}
 
 	private void initPreferenceDefaults() {
-		IPreferenceStore store = FormatterUIPlugin.getDefault()
-				.getPreferenceStore();
-		store.setDefault(PreferenceConstants.FORMATTER_PROFILE,
-				ProfileManager.PHP_PROFILE);
+		IPreferenceStore store = FormatterUIPlugin.getDefault().getPreferenceStore();
+		store.setDefault(CodeFormatterConstants.FORMATTER_PROFILE, ProfileManager.PHP_PROFILE);
 	}
 
 	public String getID() {

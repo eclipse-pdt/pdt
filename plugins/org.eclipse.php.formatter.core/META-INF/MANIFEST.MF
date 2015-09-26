@@ -4,7 +4,7 @@ Bundle-Name: Code Formatter Core Plug-in
 Bundle-SymbolicName: org.eclipse.php.formatter.core;singleton:=true
 Bundle-Version: 3.6.0.qualifier
 Bundle-Activator: org.eclipse.php.formatter.core.FormatterCorePlugin
-Bundle-Vendor: Eclipse PDT
+Bundle-Vendor: %vendor
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.php.core.parser,
  org.eclipse.php.core,
@@ -12,13 +12,10 @@ Require-Bundle: org.eclipse.php.core.parser,
  org.eclipse.core.runtime,
  org.eclipse.jface.text,
  org.eclipse.wst.sse.core,
- org.eclipse.ui.ide,
  org.eclipse.core.resources,
  org.eclipse.dltk.core,
- org.eclipse.php.ui,
  org.eclipse.wst.html.core,
- org.eclipse.wst.sse.ui,
  org.eclipse.debug.core
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.formatter.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -24,12 +24,12 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.php.core.format.IProfile;
 import org.eclipse.php.core.format.IProfileManager;
+import org.eclipse.php.formatter.core.CodeFormatterConstants;
 import org.eclipse.php.formatter.core.CodeFormatterPreferences;
 import org.eclipse.php.formatter.core.FormatterCorePlugin;
 import org.eclipse.php.formatter.core.ICodeFormatterPreferencesInitializer;
 import org.eclipse.php.formatter.ui.FormatterMessages;
 import org.eclipse.php.formatter.ui.FormatterUIPlugin;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.util.Messages;
 
 /**
@@ -49,8 +49,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	 * Represents a profile with a unique ID, a name and a map containing the
 	 * code formatter settings.
 	 */
-	public static abstract class Profile implements Comparable<Object>,
-			IProfile {
+	public static abstract class Profile implements Comparable<Object>, IProfile {
 
 		public abstract String getName();
 
@@ -60,8 +59,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 
 		public abstract void setSettings(Map<String, Object> settings);
 
-		public boolean hasEqualSettings(Map<String, Object> otherMap,
-				List<String> allKeys) {
+		public boolean hasEqualSettings(Map<String, Object> otherMap, List<String> allKeys) {
 			Map<?, ?> settings = getSettings();
 			for (Iterator<String> iter = allKeys.iterator(); iter.hasNext();) {
 				String key = iter.next();
@@ -101,8 +99,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 		private final Map<String, Object> fSettings;
 		private final int fOrder;
 
-		protected BuiltInProfile(String ID, String name,
-				Map<String, Object> settings, int order) {
+		protected BuiltInProfile(String ID, String name, Map<String, Object> settings, int order) {
 			fName = name;
 			fID = ID;
 			fSettings = settings;
@@ -226,8 +223,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 		}
 
 		public Profile rename(String name, ProfileManager manager) {
-			CustomProfile profile = new CustomProfile(name.trim(),
-					getSettings());
+			CustomProfile profile = new CustomProfile(name.trim(), getSettings());
 
 			manager.profileReplaced(this, profile);
 			return profile;
@@ -262,7 +258,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	/**
 	 * The key of the preference where the selected profile is stored.
 	 */
-	private final static String PROFILE_KEY = PreferenceConstants.FORMATTER_PROFILE;
+	private final static String PROFILE_KEY = CodeFormatterConstants.FORMATTER_PROFILE;
 
 	/**
 	 * The keys of the built-in profiles
@@ -295,8 +291,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	private static final Map<String, Object> EMPTY_MAP = Collections.emptyMap();;
 
 	static {
-		fKeys = new ArrayList<String>(CodeFormatterPreferences
-				.getDefaultPreferences().getMap().keySet());
+		fKeys = new ArrayList<String>(CodeFormatterPreferences.getDefaultPreferences().getMap().keySet());
 		Collections.sort(fKeys);
 	}
 
@@ -323,16 +318,13 @@ public class ProfileManager extends Observable implements IProfileManager {
 		Collections.sort(fProfilesByName);
 
 		IScopeContext instanceScope = InstanceScope.INSTANCE;
-		String profileId = instanceScope.getNode(FormatterCorePlugin.PLUGIN_ID)
-				.get(PROFILE_KEY, null);
+		String profileId = instanceScope.getNode(FormatterCorePlugin.PLUGIN_ID).get(PROFILE_KEY, null);
 		if (profileId == null) {
 			// request from bug 129427
-			profileId = DefaultScope.INSTANCE.getNode(
-					FormatterCorePlugin.PLUGIN_ID).get(PROFILE_KEY, null);
+			profileId = DefaultScope.INSTANCE.getNode(FormatterCorePlugin.PLUGIN_ID).get(PROFILE_KEY, null);
 			// fix for bug 89739
 			if (DEFAULT_PROFILE.equals(profileId)) { // default default:
-				IEclipsePreferences node = instanceScope
-						.getNode(FormatterCorePlugin.PLUGIN_ID);
+				IEclipsePreferences node = instanceScope.getNode(FormatterCorePlugin.PLUGIN_ID);
 				if (node != null) {
 					profileId = PHP_PROFILE;
 				}
@@ -345,25 +337,20 @@ public class ProfileManager extends Observable implements IProfileManager {
 		}
 		fSelected = profile;
 
-		if (context.getName() == ProjectScope.SCOPE
-				&& hasProjectSpecificSettings(context)) {
+		if (context.getName() == ProjectScope.SCOPE && hasProjectSpecificSettings(context)) {
 			Map<String, Object> map = readFromPreferenceStore(context, profile);
 			if (map != null) {
 				Profile matching = null;
 
-				String projProfileId = context.getNode(
-						FormatterCorePlugin.PLUGIN_ID).get(PROFILE_KEY, null);
+				String projProfileId = context.getNode(FormatterCorePlugin.PLUGIN_ID).get(PROFILE_KEY, null);
 				if (projProfileId != null) {
 					Profile curr = fProfiles.get(projProfileId);
-					if (curr != null
-							&& (curr.isBuiltInProfile() || curr
-									.hasEqualSettings(map, getKeys()))) {
+					if (curr != null && (curr.isBuiltInProfile() || curr.hasEqualSettings(map, getKeys()))) {
 						matching = curr;
 					}
 				} else {
 					// old version: look for similar
-					for (final Iterator<Profile> iter = fProfilesByName
-							.iterator(); iter.hasNext();) {
+					for (final Iterator<Profile> iter = fProfilesByName.iterator(); iter.hasNext();) {
 						Profile curr = iter.next();
 						if (curr.hasEqualSettings(map, getKeys())) {
 							matching = curr;
@@ -373,12 +360,9 @@ public class ProfileManager extends Observable implements IProfileManager {
 				}
 				if (matching == null) {
 					String name;
-					if (projProfileId != null
-							&& !fProfiles.containsKey(projProfileId)) {
-						name = Messages
-								.format(FormatterMessages.ProfileManager_unmanaged_profile_with_name,
-										projProfileId.substring(ID_PREFIX
-												.length()));
+					if (projProfileId != null && !fProfiles.containsKey(projProfileId)) {
+						name = Messages.format(FormatterMessages.ProfileManager_unmanaged_profile_with_name,
+								projProfileId.substring(ID_PREFIX.length()));
 					} else {
 						name = FormatterMessages.ProfileManager_unmanaged_profile;
 					}
@@ -414,9 +398,8 @@ public class ProfileManager extends Observable implements IProfileManager {
 	}
 
 	public static boolean hasProjectSpecificSettings(IScopeContext context) {
-		IEclipsePreferences prefs = context
-				.getNode(FormatterCorePlugin.PLUGIN_ID);
-		return prefs.get(PreferenceConstants.FORMATTER_PROFILE, null) != null;
+		IEclipsePreferences prefs = context.getNode(FormatterCorePlugin.PLUGIN_ID);
+		return prefs.get(CodeFormatterConstants.FORMATTER_PROFILE, null) != null;
 	}
 
 	/**
@@ -426,16 +409,13 @@ public class ProfileManager extends Observable implements IProfileManager {
 	 * @param context
 	 *            The project context
 	 */
-	public Map<String, Object> readFromPreferenceStore(IScopeContext context,
-			Profile workspaceProfile) {
+	public Map<String, Object> readFromPreferenceStore(IScopeContext context, Profile workspaceProfile) {
 		final Map<String, Object> profileOptions = new HashMap<String, Object>();
-		IEclipsePreferences prefs = context
-				.getNode(FormatterCorePlugin.PLUGIN_ID);
+		IEclipsePreferences prefs = context.getNode(FormatterCorePlugin.PLUGIN_ID);
 
 		boolean hasValues = false;
 
-		for (final Iterator<String> keyIter = fKeys.iterator(); keyIter
-				.hasNext();) {
+		for (final Iterator<String> keyIter = fKeys.iterator(); keyIter.hasNext();) {
 			final String key = keyIter.next();
 			Object val = prefs.get(key, null);
 			if (val != null) {
@@ -453,11 +433,10 @@ public class ProfileManager extends Observable implements IProfileManager {
 		return profileOptions;
 	}
 
-	private boolean updatePreferences(IEclipsePreferences prefs,
-			List<String> keys, Map<String, Object> profileOptions) {
+	private boolean updatePreferences(IEclipsePreferences prefs, List<String> keys,
+			Map<String, Object> profileOptions) {
 		boolean hasChanges = false;
-		for (final Iterator<String> keyIter = keys.iterator(); keyIter
-				.hasNext();) {
+		for (final Iterator<String> keyIter = keys.iterator(); keyIter.hasNext();) {
 			final String key = keyIter.next();
 			final String oldVal = prefs.get(key, null);
 			final String val = (String) profileOptions.get(key);
@@ -483,14 +462,12 @@ public class ProfileManager extends Observable implements IProfileManager {
 	private void writeToPreferenceStore(Profile profile, IScopeContext context) {
 		final Map<String, Object> profileOptions = profile.getSettings();
 
-		final IEclipsePreferences prefs = context
-				.getNode(FormatterCorePlugin.PLUGIN_ID);
+		final IEclipsePreferences prefs = context.getNode(FormatterCorePlugin.PLUGIN_ID);
 		updatePreferences(prefs, fKeys, profileOptions);
 
 		if (context.getName() == InstanceScope.SCOPE) {
 			prefs.put(PROFILE_KEY, profile.getID());
-		} else if (context.getName() == ProjectScope.SCOPE
-				&& !profile.isSharedProfile()) {
+		} else if (context.getName() == ProjectScope.SCOPE && !profile.isSharedProfile()) {
 			prefs.put(PROFILE_KEY, profile.getID());
 		}
 	}
@@ -505,19 +482,17 @@ public class ProfileManager extends Observable implements IProfileManager {
 	 * @param profilesByName
 	 *            List of profiles by
 	 */
-	private void addBuiltinProfiles(Map<String, Profile> profiles,
-			List<Profile> profilesByName) {
+	private void addBuiltinProfiles(Map<String, Profile> profiles, List<Profile> profilesByName) {
 		int order = 1;
 		String builtinPostFix = FormatterMessages.ProfileManager_built_in_postfix;
 		final Profile phpProfile = new BuiltInProfile(PHP_PROFILE,
-				FormatterMessages.ProfileManager_php_conventions_profile_name
-						+ builtinPostFix, getPhpSettings(), order);
+				FormatterMessages.ProfileManager_php_conventions_profile_name + builtinPostFix, getPhpSettings(),
+				order);
 		profiles.put(phpProfile.getID(), phpProfile);
 		profilesByName.add(phpProfile);
 
 		IConfigurationElement[] elements = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(FormatterUIPlugin.PLUGIN_ID,
-						PROFILES_EXTENSION_POINT_ID);
+				.getConfigurationElementsFor(FormatterUIPlugin.PLUGIN_ID, PROFILES_EXTENSION_POINT_ID);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if ("profile".equals(element.getName())) { //$NON-NLS-1$
@@ -527,11 +502,9 @@ public class ProfileManager extends Observable implements IProfileManager {
 					try {
 						ICodeFormatterPreferencesInitializer initializer = (ICodeFormatterPreferencesInitializer) element
 								.createExecutableExtension("class"); //$NON-NLS-1$
-						CodeFormatterPreferences preferences = initializer
-								.initValues();
-						final Profile extensionProfile = new BuiltInProfile(id,
-								name + builtinPostFix, preferences.getMap(),
-								++order);
+						CodeFormatterPreferences preferences = initializer.initValues();
+						final Profile extensionProfile = new BuiltInProfile(id, name + builtinPostFix,
+								preferences.getMap(), ++order);
 						profiles.put(extensionProfile.getID(), extensionProfile);
 						profilesByName.add(extensionProfile);
 					} catch (CoreException e) {
@@ -546,8 +519,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	 * @return Returns the settings for the PHP Conventions profile.
 	 */
 	public static Map<String, Object> getPhpSettings() {
-		final Map<String, Object> options = CodeFormatterPreferences
-				.getDefaultPreferences().getMap();
+		final Map<String, Object> options = CodeFormatterPreferences.getDefaultPreferences().getMap();
 
 		return options;
 	}
@@ -592,8 +564,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	public String[] getSortedDisplayNames() {
 		final String[] sortedNames = new String[fProfilesByName.size()];
 		int i = 0;
-		for (final Iterator<Profile> iter = fProfilesByName.iterator(); iter
-				.hasNext();) {
+		for (final Iterator<Profile> iter = fProfilesByName.iterator(); iter.hasNext();) {
 			Profile curr = iter.next();
 			sortedNames[i++] = curr.getName();
 		}
@@ -622,8 +593,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	}
 
 	public void clearAllSettings(IScopeContext context) {
-		final IEclipsePreferences prefs = context
-				.getNode(FormatterCorePlugin.PLUGIN_ID);
+		final IEclipsePreferences prefs = context.getNode(FormatterCorePlugin.PLUGIN_ID);
 		updatePreferences(prefs, fKeys, EMPTY_MAP);
 
 		prefs.remove(PROFILE_KEY);
@@ -673,8 +643,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	 * @return Returns <code>true</code> if a profile with the given name exists
 	 */
 	public boolean containsName(String name) {
-		for (final Iterator<Profile> iter = fProfilesByName.iterator(); iter
-				.hasNext();) {
+		for (final Iterator<Profile> iter = fProfilesByName.iterator(); iter.hasNext();) {
 			Profile curr = iter.next();
 			if (name.equals(curr.getName())) {
 				return true;
@@ -691,8 +660,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	 */
 	public void addProfile(CustomProfile profile) {
 		profile.setManager(this);
-		final CustomProfile oldProfile = (CustomProfile) fProfiles.get(profile
-				.getID());
+		final CustomProfile oldProfile = (CustomProfile) fProfiles.get(profile.getID());
 		if (oldProfile != null) {
 			fProfiles.remove(oldProfile.getID());
 			fProfilesByName.remove(oldProfile);
@@ -749,8 +717,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 		notifyObservers(PROFILE_RENAMED_EVENT);
 	}
 
-	public void profileReplaced(CustomProfile oldProfile,
-			CustomProfile newProfile) {
+	public void profileReplaced(CustomProfile oldProfile, CustomProfile newProfile) {
 		fProfiles.remove(oldProfile.getID());
 		fProfiles.put(newProfile.getID(), newProfile);
 		fProfilesByName.remove(oldProfile);
@@ -774,14 +741,11 @@ public class ProfileManager extends Observable implements IProfileManager {
 		notifyObservers(SETTINGS_CHANGED_EVENT);
 	}
 
-	private void updateProfilesWithName(String oldName, Profile newProfile,
-			boolean applySettings) {
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
-				.getProjects();
+	private void updateProfilesWithName(String oldName, Profile newProfile, boolean applySettings) {
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		for (int i = 0; i < projects.length; i++) {
 			IScopeContext projectScope = new ProjectScope(projects[i]);
-			IEclipsePreferences node = projectScope
-					.getNode(FormatterCorePlugin.PLUGIN_ID);
+			IEclipsePreferences node = projectScope.getNode(FormatterCorePlugin.PLUGIN_ID);
 			String profileId = node.get(PROFILE_KEY, null);
 			if (oldName.equals(profileId)) {
 				if (newProfile == null) {
@@ -797,10 +761,8 @@ public class ProfileManager extends Observable implements IProfileManager {
 		}
 
 		IScopeContext instanceScope = InstanceScope.INSTANCE;
-		final IEclipsePreferences uiPrefs = instanceScope
-				.getNode(FormatterCorePlugin.PLUGIN_ID);
-		if (newProfile != null
-				&& oldName.equals(uiPrefs.get(PROFILE_KEY, null))) {
+		final IEclipsePreferences uiPrefs = instanceScope.getNode(FormatterCorePlugin.PLUGIN_ID);
+		if (newProfile != null && oldName.equals(uiPrefs.get(PROFILE_KEY, null))) {
 			writeToPreferenceStore(newProfile, instanceScope);
 		}
 	}
