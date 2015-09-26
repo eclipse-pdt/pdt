@@ -6,5 +6,5 @@ $hello=(isset($_GET) ) ?: 'hello';
 ?>
 --EXPECT--
 <?php
-$hello = (isset ( $_GET )) ?  : 'hello';
+$hello = (isset ( $_GET )) ?: 'hello';
 ?>
