@@ -1100,7 +1100,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				if ((!isHeaderComment || this.preferences.comment_format_header)
 						&& this.editsEnabled
 						&& this.preferences.comment_format_javadoc_comment
-						&& canHandlePHPDocComment((PHPDocBlock) comment, offset)) {
+						&& canHandlePHPDocComment((PHPDocBlock) comment,
+								offset)) {
 					PHPDocBlock block = (PHPDocBlock) comment;
 
 					newLineOfComment = false;
@@ -1581,10 +1582,10 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		if (varTags.length != 1) {
 			return true;
 		}
-		int commentStartLine = document.getLineOfOffset(comment.sourceStart()
-				+ offset);
-		int commentEndLine = document.getLineOfOffset(comment.sourceEnd()
-				+ offset);
+		int commentStartLine = document
+				.getLineOfOffset(comment.sourceStart() + offset);
+		int commentEndLine = document
+				.getLineOfOffset(comment.sourceEnd() + offset);
 		return commentStartLine != commentEndLine;
 	}
 
@@ -3118,18 +3119,23 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		if (!isTernaryOperator) {
 			appendToBuffer(QUESTION_MARK);
 		}
-		if (this.preferences.insert_space_after_conditional_question_mark) {
-			insertSpace();
-		}
+
 		Expression ifTrue = conditionalExpression.getIfTrue();
 		Expression ifFalse = conditionalExpression.getIfFalse();
 		int offset = conditionalExpression.getCondition().getStart();
 
 		int colonOffset = 0;
 		if (ifTrue != null) {
+			if (this.preferences.insert_space_after_conditional_question_mark) {
+				insertSpace();
+			}
 			handleChars(conditionalExpression.getCondition().getEnd(),
 					ifTrue.getStart());
 			ifTrue.accept(this);
+			// iftrue -> iffalse
+			if (this.preferences.insert_space_before_conditional_colon) {
+				insertSpace();
+			}
 		} else {
 			int length = offset;
 			if (ifFalse != null) {
@@ -3141,10 +3147,6 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					colonOffset);
 		}
 
-		// iftrue -> iffalse
-		if (this.preferences.insert_space_before_conditional_colon) {
-			insertSpace();
-		}
 		if (isTernaryOperator) {
 			appendToBuffer(COLON);
 
