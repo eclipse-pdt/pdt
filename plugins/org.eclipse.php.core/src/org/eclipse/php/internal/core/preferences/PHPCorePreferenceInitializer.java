@@ -15,13 +15,12 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 
 ;
 
-public class PHPCorePreferenceInitializer extends AbstractPreferenceInitializer {
+public class PHPCorePreferenceInitializer
+		extends AbstractPreferenceInitializer {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#
-	 * initializeDefaultPreferences()
+	/**
+	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#
+	 *      initializeDefaultPreferences()
 	 */
 	public void initializeDefaultPreferences() {
 		CorePreferenceConstants.initializeDefaultValues();

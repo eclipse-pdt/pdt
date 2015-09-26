@@ -12,18 +12,25 @@
 package org.eclipse.php.internal.core.preferences;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.php.internal.core.Logger;
 
 public class PreferencesSupport {
 
-	private HashMap projectToScope;
+	private Map<IProject, ProjectScope> projectToScope;
 	private String nodeQualifier;
-	private Preferences preferenceStore;
+
+	private final static IScopeContext[] WORKSPACE_CONTEXT = {
+			InstanceScope.INSTANCE, DefaultScope.INSTANCE };
 
 	/**
 	 * Constructs a new PreferencesSupport.
@@ -34,10 +41,24 @@ public class PreferencesSupport {
 	 * @param preferenceStore
 	 *            The relevant preferences store.
 	 */
-	public PreferencesSupport(String nodeQualifier, Preferences preferenceStore) {
+	@Deprecated
+	public PreferencesSupport(String nodeQualifier,
+			Preferences preferenceStore) {
+		this(nodeQualifier);
+	}
+
+	/**
+	 * Constructs a new PreferencesSupport.
+	 * 
+	 * @param nodeQualifier
+	 *            A string qualifier for the node (for example:
+	 *            PHPCorePlugin.ID)
+	 * @param preferenceStore
+	 *            The relevant preferences store.
+	 */
+	public PreferencesSupport(String nodeQualifier) {
 		this.nodeQualifier = nodeQualifier;
-		this.preferenceStore = preferenceStore;
-		projectToScope = new HashMap();
+		projectToScope = new HashMap<IProject, ProjectScope>();
 	}
 
 	/**
@@ -55,7 +76,7 @@ public class PreferencesSupport {
 	public String getProjectSpecificPreferencesValue(String key, String def,
 			IProject project) {
 		assert project != null;
-		ProjectScope scope = (ProjectScope) projectToScope.get(project);
+		ProjectScope scope = projectToScope.get(project);
 		if (scope == null) {
 			scope = new ProjectScope(project);
 			projectToScope.put(project, scope);
@@ -81,9 +102,10 @@ public class PreferencesSupport {
 	 * @return Returns the value for the key.
 	 * @see #getProjectSpecificPreferencesValue(String, String, IProject)
 	 * @see #getWorkspacePreferencesValue(String)
-	 * @see #getWorkspacePreferencesValue(String, IPreferenceStore)
+	 * @see #getWorkspacePreferencesValue(String, String)
 	 */
-	public String getPreferencesValue(String key, String def, IProject project) {
+	public String getPreferencesValue(String key, String def,
+			IProject project) {
 		if (project == null) {
 			return getWorkspacePreferencesValue(key);
 		}
@@ -103,7 +125,8 @@ public class PreferencesSupport {
 	 * @return
 	 */
 	public String getWorkspacePreferencesValue(String key) {
-		return preferenceStore == null ? null : preferenceStore.getString(key);
+		return Platform.getPreferencesService().getString(nodeQualifier, key,
+				null, WORKSPACE_CONTEXT);
 	}
 
 	/**
@@ -113,9 +136,23 @@ public class PreferencesSupport {
 	 * @param preferenceStore
 	 * @return The String value
 	 */
+	@Deprecated
 	public static String getWorkspacePreferencesValue(String key,
 			Preferences preferenceStore) {
 		return preferenceStore.getString(key);
+	}
+
+	/**
+	 * Returns the value for the key, as found in the given preferences store.
+	 * 
+	 * @param qualifier
+	 * @param key
+	 * @return
+	 */
+	public static String getWorkspacePreferencesValue(String qualifier,
+			String key) {
+		return Platform.getPreferencesService().getString(qualifier, key, null,
+				WORKSPACE_CONTEXT);
 	}
 
 	/**
@@ -136,7 +173,7 @@ public class PreferencesSupport {
 		if (!project.exists()) {
 			return false;
 		}
-		ProjectScope scope = (ProjectScope) projectToScope.get(project);
+		ProjectScope scope = projectToScope.get(project);
 		if (scope == null) {
 			scope = new ProjectScope(project);
 			projectToScope.put(project, scope);

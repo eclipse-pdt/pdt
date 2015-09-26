@@ -103,10 +103,10 @@ public class PHPLaunchUtilities {
 						.getActiveWorkbenchWindow().getActivePage();
 				if (page != null) {
 					try {
-						IViewPart debugOutputPart = page
-								.findView("org.eclipse.debug.ui.PHPDebugOutput"); //$NON-NLS-1$
-						IViewPart browserOutputPart = page
-								.findView("org.eclipse.debug.ui.PHPBrowserOutput"); //$NON-NLS-1$
+						IViewPart debugOutputPart = page.findView(
+								"org.eclipse.debug.ui.PHPDebugOutput"); //$NON-NLS-1$
+						IViewPart browserOutputPart = page.findView(
+								"org.eclipse.debug.ui.PHPBrowserOutput"); //$NON-NLS-1$
 
 						// Test if the Debug Output view is alive and visible.
 						boolean shouldShowDebug = false;
@@ -123,7 +123,8 @@ public class PHPLaunchUtilities {
 						}
 
 						if (shouldShowDebug) {
-							page.showView("org.eclipse.debug.ui.PHPDebugOutput"); //$NON-NLS-1$
+							page.showView(
+									"org.eclipse.debug.ui.PHPDebugOutput"); //$NON-NLS-1$
 						}
 					} catch (Exception e) {
 						Logger.logException(
@@ -144,8 +145,8 @@ public class PHPLaunchUtilities {
 				.getLaunches();
 		for (int i = 0; i < launches.length; i++) {
 			if (!launches[i].isTerminated()
-					&& ILaunchManager.DEBUG_MODE.equals(launches[i]
-							.getLaunchMode())
+					&& ILaunchManager.DEBUG_MODE
+							.equals(launches[i].getLaunchMode())
 					&& launches[i].getDebugTarget() instanceof PHPDebugTarget) {
 				return true;
 			}
@@ -189,8 +190,7 @@ public class PHPLaunchUtilities {
 			final Display disp = Display.getDefault();
 			disp.syncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openInformation(
-							disp.getActiveShell(),
+					MessageDialog.openInformation(disp.getActiveShell(),
 							PHPDebugCoreMessages.PHPLaunchUtilities_phpLaunchTitle,
 							PHPDebugCoreMessages.PHPLaunchUtilities_activeLaunchDetected);
 				}
@@ -204,8 +204,8 @@ public class PHPLaunchUtilities {
 			public void run() {
 				// Display a dialog to notify the existence of a previous active
 				// launch.
-				MessageDialogWithToggle m = MessageDialogWithToggle.openYesNoQuestion(
-						disp.getActiveShell(),
+				MessageDialogWithToggle m = MessageDialogWithToggle
+						.openYesNoQuestion(disp.getActiveShell(),
 								PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
 								PHPDebugCoreMessages.PHPLaunchUtilities_multipleLaunchesPrompt,
 								PHPDebugCoreMessages.PHPLaunchUtilities_rememberDecision,
@@ -283,8 +283,7 @@ public class PHPLaunchUtilities {
 
 			// Ask the user whether to switch
 			MessageDialogWithToggle m = MessageDialogWithToggle
-					.openYesNoQuestion(
-							window.getShell(),
+					.openYesNoQuestion(window.getShell(),
 							PHPDebugCoreMessages.PHPLaunchUtilities_PHPPerspectiveSwitchTitle,
 							NLS.bind(
 									PHPDebugCoreMessages.PHPLaunchUtilities_PHPPerspectiveSwitchMessage,
@@ -336,8 +335,8 @@ public class PHPLaunchUtilities {
 		// attribute
 		for (int i = 0; !hasContiniousLaunch && i < launches.length; i++) {
 			ILaunch launch = launches[i];
-			if (launch != newLaunch
-					&& ILaunchManager.DEBUG_MODE.equals(launch.getLaunchMode())) {
+			if (launch != newLaunch && ILaunchManager.DEBUG_MODE
+					.equals(launch.getLaunchMode())) {
 				if (isDebugAllPages(launch) || isStartDebugFrom(launch)) {
 					hasContiniousLaunch = true;
 				}
@@ -345,8 +344,8 @@ public class PHPLaunchUtilities {
 		}
 		// Check if the new launch is 'debug all pages'
 
-		boolean newLaunchIsDebug = ILaunchManager.DEBUG_MODE.equals(newLaunch
-				.getLaunchMode());
+		boolean newLaunchIsDebug = ILaunchManager.DEBUG_MODE
+				.equals(newLaunch.getLaunchMode());
 		final boolean newIsDebugAllPages = newLaunchIsDebug
 				&& isDebugAllPages(newLaunch);
 		final boolean newIsStartDebugFrom = newLaunchIsDebug
@@ -361,25 +360,20 @@ public class PHPLaunchUtilities {
 					// TODO - Advanced message dialog with 'don't show this
 					// again' check.
 					if (fHasContiniousLaunch) {
-						resultHolder.setResult(MessageDialog
-								.openConfirm(
+						resultHolder.setResult(MessageDialog.openConfirm(
 								Display.getDefault().getActiveShell(),
 								PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
 								PHPDebugCoreMessages.PHPLaunchUtilities_0));
 					} else {
 						if (newIsDebugAllPages) {
-							resultHolder.setResult(MessageDialog
-									.openConfirm(
-											Display.getDefault()
-													.getActiveShell(),
+							resultHolder.setResult(MessageDialog.openConfirm(
+									Display.getDefault().getActiveShell(),
 									PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
 									PHPDebugCoreMessages.PHPLaunchUtilities_7));
 						} else {
 							// newIsStartDebugFrom == true
-							resultHolder.setResult(MessageDialog
-									.openConfirm(
-											Display.getDefault()
-													.getActiveShell(),
+							resultHolder.setResult(MessageDialog.openConfirm(
+									Display.getDefault().getActiveShell(),
 									PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
 									PHPDebugCoreMessages.PHPLaunchUtilities_8));
 						}
@@ -417,7 +411,8 @@ public class PHPLaunchUtilities {
 	// In case that there are no launches, make sure to enable the auto-remove
 	// old launches in case it's needed
 	private static void checkAutoRemoveLaunches() {
-		if (DebugPlugin.getDefault().getLaunchManager().getLaunches().length == 1) {
+		if (DebugPlugin.getDefault().getLaunchManager()
+				.getLaunches().length == 1) {
 			PHPDebugPlugin.setDisableAutoRemoveLaunches(false);
 		}
 	}
@@ -449,7 +444,8 @@ public class PHPLaunchUtilities {
 	 *         from'.
 	 * @throws CoreException
 	 */
-	public static boolean isStartDebugFrom(ILaunch launch) throws CoreException {
+	public static boolean isStartDebugFrom(ILaunch launch)
+			throws CoreException {
 		String attribute = launch
 				.getAttribute(IPHPDebugConstants.DEBUGGING_PAGES);
 		return attribute != null
@@ -591,8 +587,8 @@ public class PHPLaunchUtilities {
 		}
 	}
 
-	private static class DebuggerDelayProgressMonitorDialog extends
-			ProgressMonitorDialog {
+	private static class DebuggerDelayProgressMonitorDialog
+			extends ProgressMonitorDialog {
 
 		public DebuggerDelayProgressMonitorDialog() {
 			super(null);
@@ -663,9 +659,9 @@ public class PHPLaunchUtilities {
 				}
 				ILaunchGroup group = DebugUITools.getLaunchGroup(conf, mode);
 				if (group != null) {
-					DebugUITools.openLaunchConfigurationDialog(Display
-							.getDefault().getActiveShell(), conf, group
-							.getIdentifier(), null);
+					DebugUITools.openLaunchConfigurationDialog(
+							Display.getDefault().getActiveShell(), conf,
+							group.getIdentifier(), null);
 				}
 			}
 		});
@@ -702,7 +698,8 @@ public class PHPLaunchUtilities {
 
 		if (launchConfigurationEnvironment != null) {
 			// The launch configuration tab has environment settings.
-			Map<String, String> envMap = asAttributesMap(launchConfigurationEnvironment);
+			Map<String, String> envMap = asAttributesMap(
+					launchConfigurationEnvironment);
 			// Make sure that these settings override any additional settings,
 			// so add them to the
 			// additional environments map.
@@ -725,7 +722,8 @@ public class PHPLaunchUtilities {
 	 * Returns a map of Strings parsed from a given array of attributes in a
 	 * form of 'key=value'.
 	 */
-	public static Map<String, String> asAttributesMap(String[] attributesArray) {
+	public static Map<String, String> asAttributesMap(
+			String[] attributesArray) {
 		Map<String, String> map = new HashMap<String, String>();
 		if (attributesArray == null) {
 			return map;
@@ -746,7 +744,8 @@ public class PHPLaunchUtilities {
 	/*
 	 * Returns an array of Strings in the form of 'key=value'
 	 */
-	public static String[] asAttributesArray(Map<String, String> attributesMap) {
+	public static String[] asAttributesArray(
+			Map<String, String> attributesMap) {
 		String[] attributes = new String[attributesMap.size()];
 		int index = 0;
 		for (Map.Entry<String, String> entry : attributesMap.entrySet()) {
@@ -905,7 +904,8 @@ public class PHPLaunchUtilities {
 	 * @return string containing variable=value for appending it to the process
 	 *         environment vars array
 	 */
-	public static String getLibrarySearchPathEnv(File phpExeDir, boolean quoted) {
+	public static String getLibrarySearchPathEnv(File phpExeDir,
+			boolean quoted) {
 		String variable = getLibrarySearchEnvVariable();
 		if (variable == null) {
 			return null;
@@ -1018,8 +1018,8 @@ public class PHPLaunchUtilities {
 	}
 
 	public static String[] getCommandLine(ILaunchConfiguration configuration,
-			String phpExe, String phpConfigDir, String scriptPath, String[] args)
-			throws CoreException {
+			String phpExe, String phpConfigDir, String scriptPath,
+			String[] args) throws CoreException {
 		return getCommandLine(configuration, phpExe, phpConfigDir, scriptPath,
 				args, null);
 	}
@@ -1042,23 +1042,15 @@ public class PHPLaunchUtilities {
 
 		List<String> cmdLineList = new LinkedList<String>();
 		if (routerFile == null) {
-			cmdLineList
-					.addAll(Arrays
-							.asList(new String[] {
-									phpExe,
-									"-S", //$NON-NLS-1$
-									server,
-									"-t", root, useDefaultPHPIni ? "" : "-n", "-c", phpConfigDir, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-S", //$NON-NLS-1$
+					server, "-t", root, useDefaultPHPIni ? "" : "-n", "-c", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					phpConfigDir, "-d", //$NON-NLS-1$
 					"asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$
 					"short_open_tag=" + shortOpenTag })); //$NON-NLS-1$
 		} else {
-			cmdLineList
-					.addAll(Arrays
-							.asList(new String[] {
-									phpExe,
-									"-S", //$NON-NLS-1$
-									server,
-									"-t", root, routerFile, useDefaultPHPIni ? "" : "-n", "-c", phpConfigDir, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-S", //$NON-NLS-1$
+					server, "-t", root, routerFile, //$NON-NLS-1$
+					useDefaultPHPIni ? "" : "-n", "-c", phpConfigDir, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					"-d", "asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					"short_open_tag=" + shortOpenTag })); //$NON-NLS-1$
 		}
@@ -1084,8 +1076,8 @@ public class PHPLaunchUtilities {
 	 */
 	private static IProject getProject(ILaunchConfiguration configuration) {
 		try {
-			String fileNameString = configuration.getAttribute(
-					IPHPDebugConstants.ATTR_FILE, (String) null);
+			String fileNameString = configuration
+					.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
 			final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
 					.getRoot();
 			final IPath filePath = new Path(fileNameString);
@@ -1120,8 +1112,8 @@ public class PHPLaunchUtilities {
 			return new String[0];
 		}
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=298606
-		return DebugPlugin.parseArguments(VariablesPlugin.getDefault()
-				.getStringVariableManager()
+		return DebugPlugin.parseArguments(
+				VariablesPlugin.getDefault().getStringVariableManager()
 						.performStringSubstitution(arguments));
 	}
 
@@ -1134,15 +1126,13 @@ public class PHPLaunchUtilities {
 	 */
 	public static boolean isUsingASPTags(IProject project) {
 		PreferencesSupport preferencesSupport = new PreferencesSupport(
-				PHPCorePlugin.getPluginId(), PHPCorePlugin.getDefault()
-						.getPluginPreferences());
-		String value = preferencesSupport
-				.getPreferencesValue(
+				PHPCorePlugin.getPluginId());
+		String value = preferencesSupport.getPreferencesValue(
 				CorePreferenceConstants.Keys.EDITOR_USE_ASP_TAGS, null,
 				project);
 		if (value == null) {
-			value = preferencesSupport
-					.getWorkspacePreferencesValue(CorePreferenceConstants.Keys.EDITOR_USE_ASP_TAGS);
+			value = preferencesSupport.getWorkspacePreferencesValue(
+					CorePreferenceConstants.Keys.EDITOR_USE_ASP_TAGS);
 		}
 		return Boolean.valueOf(value).booleanValue();
 	}
@@ -1199,11 +1189,12 @@ public class PHPLaunchUtilities {
 				String remoteHost = PHPLaunchUtilities
 						.getDebugHost(configuration);
 				int port = PHPLaunchUtilities.getDebugPort(configuration);
-				if (remoteHost != null && remoteHost.length() > 0 && port > -1) {
+				if (remoteHost != null && remoteHost.length() > 0
+						&& port > -1) {
 					String userName = configuration.getAttribute(
 							IPHPDebugConstants.SSH_TUNNEL_USER_NAME, "");//$NON-NLS-1$
-					String password = PHPLaunchUtilities.getSecurePreferences(
-							remoteHost).get(userName, "");//$NON-NLS-1$
+					String password = PHPLaunchUtilities
+							.getSecurePreferences(remoteHost).get(userName, "");//$NON-NLS-1$
 					return SSHTunnelFactory.getSSHTunnel(remoteHost, userName,
 							password, port, port);
 				}
@@ -1232,28 +1223,28 @@ public class PHPLaunchUtilities {
 			IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
 					.getDebuggerConfiguration(debuggerID);
 			int port = debuggerConfiguration.getPort();
-			Server server = ServersManager.getServer(launchConfiguration
-					.getAttribute(Server.NAME, "")); //$NON-NLS-1$
+			Server server = ServersManager.getServer(
+					launchConfiguration.getAttribute(Server.NAME, "")); //$NON-NLS-1$
 			int customPort = -1;
 			// Check custom port for server's Zend Debugger
 			if (ZendDebuggerConfiguration.ID.equals(debuggerID)) {
 				if (server != null) {
-					customPort = ZendDebuggerSettingsUtil.getDebugPort(server
-							.getUniqueId());
+					customPort = ZendDebuggerSettingsUtil
+							.getDebugPort(server.getUniqueId());
 				}
 			}
 			// Check custom port for server's XDebug
 			else if (XDebugDebuggerConfiguration.ID.equals(debuggerID)) {
 				if (server != null) {
-					customPort = XDebugDebuggerSettingsUtil.getDebugPort(server
-							.getUniqueId());
+					customPort = XDebugDebuggerSettingsUtil
+							.getDebugPort(server.getUniqueId());
 				}
 			}
 			if (customPort != -1)
 				port = customPort;
 		} catch (Exception e) {
-			Logger.logException(
-					"Could not retrieve the debugger's port number", e);//$NON-NLS-1$
+			Logger.logException("Could not retrieve the debugger's port number", //$NON-NLS-1$
+					e);
 		}
 		return -1;
 	}
@@ -1265,7 +1256,8 @@ public class PHPLaunchUtilities {
 	 * 
 	 * @return The host address, or null.
 	 */
-	public static String getDebugHost(ILaunchConfiguration launchConfiguration) {
+	public static String getDebugHost(
+			ILaunchConfiguration launchConfiguration) {
 		try {
 			String url = launchConfiguration.getAttribute(Server.BASE_URL, "");//$NON-NLS-1$
 			if (url == null || url.length() == 0) {
@@ -1294,8 +1286,8 @@ public class PHPLaunchUtilities {
 			hostPath = '/' + host;
 		}
 		ISecurePreferences root = SecurePreferencesFactory.getDefault();
-		ISecurePreferences node = root
-				.node(IPHPDebugConstants.SSH_TUNNEL_SECURE_PREF_NODE + hostPath);
+		ISecurePreferences node = root.node(
+				IPHPDebugConstants.SSH_TUNNEL_SECURE_PREF_NODE + hostPath);
 		return node;
 	}
 
@@ -1341,8 +1333,8 @@ public class PHPLaunchUtilities {
 	 *         <code>false</code> otherwise
 	 */
 	public static boolean isDebugDaemonActive(int port, String debuggerId) {
-		return DaemonPlugin.getDefault().validateCommunicationDaemons(
-				debuggerId, port);
+		return DaemonPlugin.getDefault()
+				.validateCommunicationDaemons(debuggerId, port);
 	}
 
 	/**
@@ -1350,8 +1342,8 @@ public class PHPLaunchUtilities {
 	 * 
 	 * @param launchConfiguration
 	 * @param launchConfigurationType
-	 * @return <code>true</code> if given launch configurations is of provided type,
-	 *         <code>false</code> otherwise
+	 * @return <code>true</code> if given launch configurations is of provided
+	 *         type, <code>false</code> otherwise
 	 */
 	public static boolean isLaunchConfigurationTypeOf(
 			ILaunchConfiguration launchConfiguration,
