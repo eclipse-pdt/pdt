@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009,2015 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.preferences;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A base class for all the preferences propagators.
@@ -22,7 +23,7 @@ import java.util.List;
  */
 public abstract class AbstractPreferencesPropagator {
 
-	protected HashMap listenersMap;
+	protected Map<String, List<IPreferencesPropagatorListener>> listenersMap;
 	protected boolean isInstalled;
 	protected Object lock = new Object();
 
@@ -41,11 +42,10 @@ public abstract class AbstractPreferencesPropagator {
 	 * @param preferencesKey
 	 *            The preferences key that will screen the relevant changes.
 	 */
-	public void addPropagatorListener(IPreferencesPropagatorListener listener,
-			String preferencesKey) {
-		List list = (List) listenersMap.get(preferencesKey);
+	public void addPropagatorListener(IPreferencesPropagatorListener listener, String preferencesKey) {
+		List<IPreferencesPropagatorListener> list = listenersMap.get(preferencesKey);
 		if (list == null) {
-			list = new ArrayList(5);
+			list = new ArrayList<IPreferencesPropagatorListener>(5);
 			listenersMap.put(preferencesKey, list);
 		}
 		if (!list.contains(listener)) {
@@ -63,9 +63,8 @@ public abstract class AbstractPreferencesPropagator {
 	 *            The preferences key that is the screening key for the
 	 *            IPreferencesPropagatorListener.
 	 */
-	public void removePropagatorListener(
-			IPreferencesPropagatorListener listener, String preferencesKey) {
-		List list = (List) listenersMap.get(preferencesKey);
+	public void removePropagatorListener(IPreferencesPropagatorListener listener, String preferencesKey) {
+		List<IPreferencesPropagatorListener> list = listenersMap.get(preferencesKey);
 		if (list != null) {
 			list.remove(listener);
 		}
@@ -80,7 +79,7 @@ public abstract class AbstractPreferencesPropagator {
 	 * @param preferencesKey
 	 *            The preferences key that will screen the relevant changes.
 	 */
-	public void setPropagatorListeners(List listeners, String preferencesKey) {
+	public void setPropagatorListeners(List<IPreferencesPropagatorListener> listeners, String preferencesKey) {
 		listenersMap.put(preferencesKey, listeners);
 	}
 
@@ -93,9 +92,9 @@ public abstract class AbstractPreferencesPropagator {
 	 * @return The list of listeners assigned for the key, or null if non
 	 *         exists.
 	 */
-	protected List getPropagatorListeners(String preferencesKey) {
+	protected List<IPreferencesPropagatorListener> getPropagatorListeners(String preferencesKey) {
 		synchronized (lock) {
-			return (List) listenersMap.get(preferencesKey);
+			return listenersMap.get(preferencesKey);
 		}
 	}
 
@@ -106,7 +105,7 @@ public abstract class AbstractPreferencesPropagator {
 		if (isInstalled) {
 			return;
 		}
-		listenersMap = new HashMap();
+		listenersMap = new HashMap<String, List<IPreferencesPropagatorListener>>();
 		isInstalled = true;
 	}
 

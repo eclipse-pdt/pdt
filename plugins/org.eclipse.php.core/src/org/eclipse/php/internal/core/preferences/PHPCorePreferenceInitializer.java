@@ -13,10 +13,7 @@ package org.eclipse.php.internal.core.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 
-;
-
-public class PHPCorePreferenceInitializer
-		extends AbstractPreferenceInitializer {
+public class PHPCorePreferenceInitializer extends AbstractPreferenceInitializer {
 
 	/**
 	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#

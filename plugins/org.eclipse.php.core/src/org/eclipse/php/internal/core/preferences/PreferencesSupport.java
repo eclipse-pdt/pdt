@@ -29,8 +29,7 @@ public class PreferencesSupport {
 	private Map<IProject, ProjectScope> projectToScope;
 	private String nodeQualifier;
 
-	private final static IScopeContext[] WORKSPACE_CONTEXT = {
-			InstanceScope.INSTANCE, DefaultScope.INSTANCE };
+	private final static IScopeContext[] WORKSPACE_CONTEXT = { InstanceScope.INSTANCE, DefaultScope.INSTANCE };
 
 	/**
 	 * Constructs a new PreferencesSupport.
@@ -42,8 +41,7 @@ public class PreferencesSupport {
 	 *            The relevant preferences store.
 	 */
 	@Deprecated
-	public PreferencesSupport(String nodeQualifier,
-			Preferences preferenceStore) {
+	public PreferencesSupport(String nodeQualifier, Preferences preferenceStore) {
 		this(nodeQualifier);
 	}
 
@@ -73,8 +71,7 @@ public class PreferencesSupport {
 	 *            The IProject
 	 * @return The project-specific value for the given key.
 	 */
-	public String getProjectSpecificPreferencesValue(String key, String def,
-			IProject project) {
+	public String getProjectSpecificPreferencesValue(String key, String def, IProject project) {
 		assert project != null;
 		ProjectScope scope = projectToScope.get(project);
 		if (scope == null) {
@@ -104,13 +101,11 @@ public class PreferencesSupport {
 	 * @see #getWorkspacePreferencesValue(String)
 	 * @see #getWorkspacePreferencesValue(String, String)
 	 */
-	public String getPreferencesValue(String key, String def,
-			IProject project) {
+	public String getPreferencesValue(String key, String def, IProject project) {
 		if (project == null) {
 			return getWorkspacePreferencesValue(key);
 		}
-		String projectSpecificPreferencesValue = getProjectSpecificPreferencesValue(
-				key, def, project);
+		String projectSpecificPreferencesValue = getProjectSpecificPreferencesValue(key, def, project);
 		if (projectSpecificPreferencesValue == null) {
 			return getWorkspacePreferencesValue(key);
 		}
@@ -125,8 +120,7 @@ public class PreferencesSupport {
 	 * @return
 	 */
 	public String getWorkspacePreferencesValue(String key) {
-		return Platform.getPreferencesService().getString(nodeQualifier, key,
-				null, WORKSPACE_CONTEXT);
+		return Platform.getPreferencesService().getString(nodeQualifier, key, null, WORKSPACE_CONTEXT);
 	}
 
 	/**
@@ -137,8 +131,7 @@ public class PreferencesSupport {
 	 * @return The String value
 	 */
 	@Deprecated
-	public static String getWorkspacePreferencesValue(String key,
-			Preferences preferenceStore) {
+	public static String getWorkspacePreferencesValue(String key, Preferences preferenceStore) {
 		return preferenceStore.getString(key);
 	}
 
@@ -149,10 +142,8 @@ public class PreferencesSupport {
 	 * @param key
 	 * @return
 	 */
-	public static String getWorkspacePreferencesValue(String qualifier,
-			String key) {
-		return Platform.getPreferencesService().getString(qualifier, key, null,
-				WORKSPACE_CONTEXT);
+	public static String getWorkspacePreferencesValue(String qualifier, String key) {
+		return Platform.getPreferencesService().getString(qualifier, key, null, WORKSPACE_CONTEXT);
 	}
 
 	/**
@@ -167,8 +158,7 @@ public class PreferencesSupport {
 	 *            The IProject
 	 * @return boolean When the value was set.
 	 */
-	public boolean setProjectSpecificPreferencesValue(String key, String value,
-			IProject project) {
+	public boolean setProjectSpecificPreferencesValue(String key, String value, IProject project) {
 		assert project != null;
 		if (!project.exists()) {
 			return false;

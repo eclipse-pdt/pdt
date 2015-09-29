@@ -66,8 +66,7 @@ public class XMLPreferencesReader {
 			Node n = nl.item(i);
 			if (n.hasChildNodes()) {
 				if (n.getFirstChild().getNodeType() == Node.TEXT_NODE) {
-					map.put(n.getNodeName(), getUnEscaped(n.getFirstChild()
-							.getNodeValue()));
+					map.put(n.getNodeName(), getUnEscaped(n.getFirstChild().getNodeValue()));
 				} else {
 					map.put(n.getNodeName(), read(n.getChildNodes()));
 				}
@@ -83,19 +82,15 @@ public class XMLPreferencesReader {
 	 * @param skipEmptyNodes
 	 * @return values map
 	 */
-	private static Map<String, Object> read(NodeList nodeList,
-			boolean skipEmptyNodes) {
-		Map<String, Object> map = new HashMap<String, Object>(
-				nodeList.getLength());
+	private static Map<String, Object> read(NodeList nodeList, boolean skipEmptyNodes) {
+		Map<String, Object> map = new HashMap<String, Object>(nodeList.getLength());
 		for (int i = 0; i < nodeList.getLength(); ++i) {
 			Node n = nodeList.item(i);
 			if (n.hasChildNodes()) {
 				if (n.getFirstChild().getNodeType() == Node.TEXT_NODE) {
-					map.put(n.getNodeName(), getUnEscaped(n.getFirstChild()
-							.getNodeValue()));
+					map.put(n.getNodeName(), getUnEscaped(n.getFirstChild().getNodeValue()));
 				} else {
-					map.put(n.getNodeName(),
-							read(n.getChildNodes(), skipEmptyNodes));
+					map.put(n.getNodeName(), read(n.getChildNodes(), skipEmptyNodes));
 				}
 			} else if (!skipEmptyNodes) {
 				map.put(n.getNodeName(), ""); //$NON-NLS-1$
@@ -117,12 +112,10 @@ public class XMLPreferencesReader {
 	@SuppressWarnings("rawtypes")
 	protected static HashMap read(String str) {
 		try {
-			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
-					.newInstance();
+			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 			// docBuilderFactory.setValidating(true);
 			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-			Document doc = docBuilder.parse(new ByteArrayInputStream(str
-					.getBytes()));
+			Document doc = docBuilder.parse(new ByteArrayInputStream(str.getBytes()));
 			return read(doc.getChildNodes());
 		} catch (Exception e) {
 			Logger.logException(e);
@@ -139,11 +132,9 @@ public class XMLPreferencesReader {
 	 */
 	protected static Map<String, Object> read(String str, boolean skipEmptyNodes) {
 		try {
-			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
-					.newInstance();
+			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-			Document doc = docBuilder.parse(new ByteArrayInputStream(str
-					.getBytes()));
+			Document doc = docBuilder.parse(new ByteArrayInputStream(str.getBytes()));
 			return read(doc.getChildNodes(), skipEmptyNodes);
 		} catch (Exception e) {
 			Logger.logException(e);
@@ -163,6 +154,7 @@ public class XMLPreferencesReader {
 	 *             instead
 	 */
 	@SuppressWarnings("rawtypes")
+	@Deprecated
 	public static HashMap[] read(Preferences store, String prefsKey) {
 		String storedValue = store.getString(prefsKey);
 		return getHashFromStoredValue(storedValue);
@@ -176,8 +168,7 @@ public class XMLPreferencesReader {
 	 * @param skipEmptyNodes
 	 * @return a map of elements from the preferences by a given key
 	 */
-	public static List<Map<String, Object>> read(IEclipsePreferences store,
-			String prefsKey, boolean skipEmptyNodes) {
+	public static List<Map<String, Object>> read(IEclipsePreferences store, String prefsKey, boolean skipEmptyNodes) {
 		String storedValue = store.get(prefsKey, null);
 		if (storedValue == null)
 			return new ArrayList<Map<String, Object>>();
@@ -194,11 +185,11 @@ public class XMLPreferencesReader {
 	 *             {@link XMLPreferencesReader#getMapsFromValue(String, boolean)}
 	 *             instead
 	 */
+	@Deprecated
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static HashMap[] getHashFromStoredValue(String storedValue) {
 		ArrayList maps = new ArrayList();
-		StringTokenizer st = new StringTokenizer(storedValue, new String(
-				new char[] { DELIMITER }));
+		StringTokenizer st = new StringTokenizer(storedValue, new String(new char[] { DELIMITER }));
 		while (st.hasMoreTokens()) {
 			maps.add(read(st.nextToken()));
 		}
@@ -212,11 +203,9 @@ public class XMLPreferencesReader {
 	 * @param skipEmptyNodes
 	 * @return array of maps with stored values
 	 */
-	public static List<Map<String, Object>> getMapsFromValue(
-			String storedValue, boolean skipEmptyNodes) {
+	public static List<Map<String, Object>> getMapsFromValue(String storedValue, boolean skipEmptyNodes) {
 		List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
-		StringTokenizer st = new StringTokenizer(storedValue, new String(
-				new char[] { DELIMITER }));
+		StringTokenizer st = new StringTokenizer(storedValue, new String(new char[] { DELIMITER }));
 		while (st.hasMoreTokens()) {
 			maps.add(read(st.nextToken(), skipEmptyNodes));
 		}

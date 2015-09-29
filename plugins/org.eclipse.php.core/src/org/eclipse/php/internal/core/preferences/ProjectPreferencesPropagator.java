@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.preferences;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -57,8 +58,7 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 		}
 		scope = new ProjectScope(project);
 		preferenceChangeListener = new InnerPreferenceChangeListener();
-		scope.getNode(nodeQualifier).addPreferenceChangeListener(
-				preferenceChangeListener);
+		scope.getNode(nodeQualifier).addPreferenceChangeListener(preferenceChangeListener);
 		super.install();
 	}
 
@@ -90,16 +90,15 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 	 * @return The list of listeners assigned for the key, or null if non
 	 *         exists.
 	 */
-	public List removePropagatorListeners(String preferencesKey) {
-		return (List) listenersMap.remove(preferencesKey);
+	public List<IPreferencesPropagatorListener> removePropagatorListeners(String preferencesKey) {
+		return listenersMap.remove(preferencesKey);
 	}
 
 	/**
 	 * Notify a PreferencesPropagatorEvent to all the relevant listeners.
 	 */
 	public void notifyPropagatorEvent(PreferencesPropagatorEvent event) {
-		notifyEvent((String) event.getKey(), event.getOldValue(), event
-				.getNewValue());
+		notifyEvent((String) event.getKey(), event.getOldValue(), event.getNewValue());
 	}
 
 	/*
@@ -110,7 +109,7 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 	}
 
 	private void notifyEvent(String key, Object oldValue, Object newValue) {
-		List listeners = getPropagatorListeners(key);
+		List<IPreferencesPropagatorListener> listeners = getPropagatorListeners(key);
 		if (listeners != null) {
 			// We assume that null value in the new-value means that the user
 			// selected and applied a move
@@ -125,15 +124,12 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 					return;
 				}
 			}
-			PreferencesPropagatorEvent e = new PreferencesPropagatorEvent(
-					project, oldValue, newValue, key);
+			PreferencesPropagatorEvent e = new PreferencesPropagatorEvent(project, oldValue, newValue, key);
 
 			// Notify
-			IPreferencesPropagatorListener[] allListeners = new IPreferencesPropagatorListener[listeners
-					.size()];
-			listeners.toArray(allListeners);
-			for (IPreferencesPropagatorListener element : allListeners) {
-				element.preferencesEventOccured(e);
+			Iterator<IPreferencesPropagatorListener> iterator = listeners.iterator();
+			while (iterator.hasNext()) {
+				iterator.next().preferencesEventOccured(e);
 			}
 		}
 	}
@@ -147,14 +143,13 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 	 * @return The String value of the property.
 	 */
 	public String getWorkspaceProperty(String id) {
-		return PHPCorePlugin.getDefault().getPluginPreferences().getString(id);
+		return PreferencesSupport.getWorkspacePreferencesValue(PHPCorePlugin.ID, id);
 	}
 
 	/*
 	 * Inner listener for the project scope preferences changes.
 	 */
-	private class InnerPreferenceChangeListener implements
-			IPreferenceChangeListener {
+	private class InnerPreferenceChangeListener implements IPreferenceChangeListener {
 
 		public void preferenceChange(PreferenceChangeEvent event) {
 			notifyPropagatorEvent(event);
