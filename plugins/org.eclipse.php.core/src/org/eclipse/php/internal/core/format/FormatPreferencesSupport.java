@@ -16,7 +16,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -49,13 +48,10 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 	private PreferencesPropagator preferencesPropagator;
 
 	private static final String NODES_QUALIFIER = PHPCorePlugin.ID;
-	private static final Preferences store = PHPCorePlugin.getDefault()
-			.getPluginPreferences();
 
 	private FormatPreferencesSupport() {
 
-		preferencesPropagator = PreferencePropagatorFactory
-				.getPreferencePropagator(NODES_QUALIFIER, store);
+		preferencesPropagator = PreferencePropagatorFactory.getPreferencePropagator(NODES_QUALIFIER);
 		preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID);
 	}
 
@@ -70,8 +66,8 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 
 	public int getIndentationWrappedLineSize(IDocument document) {
 		if (!verifyValidity(document)) {
-			String indentSize = preferencesSupport.getWorkspacePreferencesValue(
-					PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE);
+			String indentSize = preferencesSupport
+					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE);
 			if (indentSize == null || indentSize.length() == 0) {
 				return fIndentationWrappedLineSize;
 			}
@@ -82,8 +78,8 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 
 	public int getIndentationArrayInitSize(IDocument document) {
 		if (!verifyValidity(document)) {
-			String indentSize = preferencesSupport.getWorkspacePreferencesValue(
-					PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE);
+			String indentSize = preferencesSupport
+					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE);
 			if (indentSize == null || indentSize.length() == 0) {
 				return fIndentationArrayInitSize;
 			}
@@ -94,8 +90,8 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 
 	public int getIndentationSize(IDocument document) {
 		if (!verifyValidity(document)) {
-			String indentSize = preferencesSupport.getWorkspacePreferencesValue(
-					PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+			String indentSize = preferencesSupport
+					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
 			if (indentSize == null || indentSize.length() == 0) {
 				return indentationSize;
 			}
@@ -106,8 +102,7 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 
 	public int getTabSize(IDocument document) {
 		if (!verifyValidity(document)) {
-			String tabSizeStr = preferencesSupport.getWorkspacePreferencesValue(
-					PHPCoreConstants.FORMATTER_TAB_SIZE);
+			String tabSizeStr = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_TAB_SIZE);
 			if (tabSizeStr == null || tabSizeStr.length() == 0) {
 				return tabSize;
 			}
@@ -118,8 +113,7 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 
 	public char getIndentationChar(IDocument document) {
 		if (!verifyValidity(document)) {
-			String useTab = preferencesSupport.getWorkspacePreferencesValue(
-					PHPCoreConstants.FORMATTER_USE_TABS);
+			String useTab = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_USE_TABS);
 			if (useTab == null) {
 				return '\t';
 			}
@@ -130,8 +124,7 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 
 	public boolean useTab(IDocument document) {
 		if (!verifyValidity(document)) {
-			String useTab = preferencesSupport.getWorkspacePreferencesValue(
-					PHPCoreConstants.FORMATTER_USE_TABS);
+			String useTab = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_USE_TABS);
 			if (useTab == null) {
 				return true;
 			}
@@ -144,8 +137,8 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 		if (fLastDocument != document) {
 			DOMModelForPHP editorModel = null;
 			try {
-				editorModel = (DOMModelForPHP) StructuredModelManager
-						.getModelManager().getExistingModelForRead(document);
+				editorModel = (DOMModelForPHP) StructuredModelManager.getModelManager()
+						.getExistingModelForRead(document);
 
 				// The PHPMergeViewer can be used outside Editor.
 				// E.g. the preview page.
@@ -162,8 +155,7 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 				IPath basePath = new Path(baseLocation);
 				IFile file = null;
 				if (basePath.segmentCount() > 1) {
-					file = ResourcesPlugin.getWorkspace().getRoot()
-							.getFile(basePath);
+					file = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath);
 					if (!file.exists()) {
 						file = null;
 					}
@@ -184,40 +176,30 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 		}
 
 		if (fLastDocument != document || preferencesChanged) {
-			String useTab = preferencesSupport.getPreferencesValue(
-					PHPCoreConstants.FORMATTER_USE_TABS, null, fLastProject);
-			String indentSize = preferencesSupport.getPreferencesValue(
-					PHPCoreConstants.FORMATTER_INDENTATION_SIZE, null,
+			String useTab = preferencesSupport.getPreferencesValue(PHPCoreConstants.FORMATTER_USE_TABS, null,
 					fLastProject);
-			String tabSize = preferencesSupport.getPreferencesValue(
-					PHPCoreConstants.FORMATTER_TAB_SIZE, null, fLastProject);
+			String indentSize = preferencesSupport.getPreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_SIZE,
+					null, fLastProject);
+			String tabSize = preferencesSupport.getPreferencesValue(PHPCoreConstants.FORMATTER_TAB_SIZE, null,
+					fLastProject);
 			String indentationWrappedLineSize = preferencesSupport
-					.getPreferencesValue(
-							PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE,
-							null, fLastProject);
-			if (indentationWrappedLineSize == null
-					|| indentationWrappedLineSize.trim().length() == 0) {
+					.getPreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE, null, fLastProject);
+			if (indentationWrappedLineSize == null || indentationWrappedLineSize.trim().length() == 0) {
 				indentationWrappedLineSize = PHPCoreConstants.DEFAULT_INDENTATION_WRAPPED_LINE_SIZE;
 			}
 
 			String indentationArrayInitSize = preferencesSupport
-					.getPreferencesValue(
-							PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE,
-							null, fLastProject);
-			if (indentationArrayInitSize == null
-					|| indentationArrayInitSize.trim().length() == 0) {
+					.getPreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE, null, fLastProject);
+			if (indentationArrayInitSize == null || indentationArrayInitSize.trim().length() == 0) {
 				indentationArrayInitSize = PHPCoreConstants.DEFAULT_INDENTATION_ARRAY_INIT_SIZE;
 			}
 
-			indentationChar = (Boolean.valueOf(useTab).booleanValue()) ? '\t'
-					: ' ';
+			indentationChar = (Boolean.valueOf(useTab).booleanValue()) ? '\t' : ' ';
 			this.useTab = Boolean.valueOf(useTab).booleanValue();
 			indentationSize = Integer.valueOf(indentSize).intValue();
 			this.tabSize = Integer.valueOf(tabSize).intValue();
-			fIndentationWrappedLineSize = Integer
-					.valueOf(indentationWrappedLineSize).intValue();
-			fIndentationArrayInitSize = Integer
-					.valueOf(indentationArrayInitSize).intValue();
+			fIndentationWrappedLineSize = Integer.valueOf(indentationWrappedLineSize).intValue();
+			fIndentationArrayInitSize = Integer.valueOf(indentationArrayInitSize).intValue();
 
 			preferencesChanged = false;
 			fLastDocument = document;
@@ -231,25 +213,18 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 					PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE);
 			preferencesPropagator.removePropagatorListener(listener,
 					PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE);
-			preferencesPropagator.removePropagatorListener(listener,
-					PHPCoreConstants.FORMATTER_USE_TABS);
-			preferencesPropagator.removePropagatorListener(listener,
-					PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+			preferencesPropagator.removePropagatorListener(listener, PHPCoreConstants.FORMATTER_USE_TABS);
+			preferencesPropagator.removePropagatorListener(listener, PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
 		}
 
 		listener = new PreferencesPropagatorListener(fLastProject);
-		preferencesPropagator.addPropagatorListener(listener,
-				PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE);
-		preferencesPropagator.addPropagatorListener(listener,
-				PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE);
-		preferencesPropagator.addPropagatorListener(listener,
-				PHPCoreConstants.FORMATTER_USE_TABS);
-		preferencesPropagator.addPropagatorListener(listener,
-				PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+		preferencesPropagator.addPropagatorListener(listener, PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE);
+		preferencesPropagator.addPropagatorListener(listener, PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE);
+		preferencesPropagator.addPropagatorListener(listener, PHPCoreConstants.FORMATTER_USE_TABS);
+		preferencesPropagator.addPropagatorListener(listener, PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
 	}
 
-	private class PreferencesPropagatorListener
-			implements IPreferencesPropagatorListener {
+	private class PreferencesPropagatorListener implements IPreferencesPropagatorListener {
 
 		private IProject project;
 

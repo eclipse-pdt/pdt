@@ -26,7 +26,6 @@ import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
@@ -35,6 +34,7 @@ import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -52,8 +52,7 @@ public class ProjectBackwardCompatibilityUtil {
 	public static final String TAG_PATH = "path"; //$NON-NLS-1$
 	public static final String TAG_RESOURCE = "resource"; //$NON-NLS-1$
 	public static final String TAG_EXPORTED = "exported"; //$NON-NLS-1$
-	private static final String PREF_QUALIFIER = PHPCorePlugin.ID
-			+ ".projectOptions"; //$NON-NLS-1$
+	private static final String PREF_QUALIFIER = PHPCorePlugin.ID + ".projectOptions"; //$NON-NLS-1$
 
 	private IBuildpathEntry[] buildpathEntries = {};
 	private List<String> notImportedIncludePathVariableNames = new ArrayList<String>();
@@ -69,10 +68,8 @@ public class ProjectBackwardCompatibilityUtil {
 		try {
 			ProjectScope projectScope = new ProjectScope(project);
 			// reads the project options created by the old model
-			IEclipsePreferences preferences = projectScope
-					.getNode(PREF_QUALIFIER);
-			String includePathXml = preferences.get(
-					PHPCoreConstants.PHPOPTION_INCLUDE_PATH, null);
+			IEclipsePreferences preferences = projectScope.getNode(PREF_QUALIFIER);
+			String includePathXml = preferences.get(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, null);
 
 			if (includePathXml == null) {
 				return buildpathEntries;
@@ -83,13 +80,10 @@ public class ProjectBackwardCompatibilityUtil {
 			final Reader reader = new StringReader(includePathXml);
 
 			try {
-				final DocumentBuilder parser = DocumentBuilderFactory
-						.newInstance().newDocumentBuilder();
-				cpElement = parser.parse(new InputSource(reader))
-						.getDocumentElement();
+				final DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				cpElement = parser.parse(new InputSource(reader)).getDocumentElement();
 			} catch (final Exception e) {
-				throw new IOException(CoreMessages
-						.getString("PHPProjectOptions_1")); //$NON-NLS-1$
+				throw new IOException(CoreMessages.getString("PHPProjectOptions_1")); //$NON-NLS-1$
 			} finally {
 				reader.close();
 			}
@@ -100,8 +94,7 @@ public class ProjectBackwardCompatibilityUtil {
 
 			// convert each node in the xml into a build path entry
 			final List<IBuildpathEntry> paths = new ArrayList<IBuildpathEntry>();
-			NodeList list = cpElement
-					.getElementsByTagName(TAG_INCLUDEPATHENTRY);
+			NodeList list = cpElement.getElementsByTagName(TAG_INCLUDEPATHENTRY);
 			for (int i = 0; i < list.getLength(); ++i) {
 				final Node node = list.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -140,8 +133,7 @@ public class ProjectBackwardCompatibilityUtil {
 		int entryKind = entryKindFromString(entryKindAttr);
 		switch (entryKind) {
 		case IBuildpathEntry.BPE_PROJECT:
-			path = ResourcesPlugin.getWorkspace().getRoot().getProject(
-					resourceAttr).getFullPath();
+			path = ResourcesPlugin.getWorkspace().getRoot().getProject(resourceAttr).getFullPath();
 			if (path != null) {
 				entry = DLTKCore.newProjectEntry(path, isExported);
 			}
@@ -150,35 +142,27 @@ public class ProjectBackwardCompatibilityUtil {
 			if ("var".equalsIgnoreCase(entryKindAttr)) { //$NON-NLS-1$
 				variableName = pathAttr;
 				if (variableName != null && variableName.length() > 0) {
-					String resolvedPath = ""; //$NON-NLS-1$
-					Preferences pluginPreferences = PHPCorePlugin.getDefault()
-							.getPluginPreferences();
-					String pathString = pluginPreferences
-							.getString(variableName);
+					String pathString = PreferencesSupport.getWorkspacePreferencesValue(PHPCorePlugin.ID,
+							PHPCorePlugin.ID);
 					// try to read from default values
 					if (pathString != null) {
-						path = IncludePathVariableManager.instance()
-								.getIncludePathVariable(pathString);
+						path = IncludePathVariableManager.instance().getIncludePathVariable(pathString);
 						// second chance, try to read from old workspace
 						// configuration
 						if (path == null) {
-							path = IncludePathVariableManager.instance()
-									.resolveVariablePath(variableName);
+							path = IncludePathVariableManager.instance().resolveVariablePath(variableName);
 						}
 					}
 
 					if (path != null) {
-						entry = DLTKCore
-								.newExtLibraryEntry(EnvironmentPathUtils
-										.getFullPath(LocalEnvironment
-												.getInstance(), path));
+						entry = DLTKCore.newExtLibraryEntry(
+								EnvironmentPathUtils.getFullPath(LocalEnvironment.getInstance(), path));
 					} else {
 						notImportedIncludePathVariableNames.add(variableName);
 					}
 				}
 			} else {
-				entry = DLTKCore.newLibraryEntry(new Path(pathAttr)
-						.makeAbsolute());
+				entry = DLTKCore.newLibraryEntry(new Path(pathAttr).makeAbsolute());
 			}
 		case IBuildpathEntry.BPE_CONTAINER:
 			break;
@@ -224,9 +208,6 @@ public class ProjectBackwardCompatibilityUtil {
 			return instance;
 		}
 
-		Preferences preferenceStore = PHPCorePlugin.getDefault()
-				.getPluginPreferences();
-
 		HashMap<String, Path> variables = new HashMap<String, Path>();
 
 		private IncludePathVariableManager() {
@@ -255,10 +236,10 @@ public class ProjectBackwardCompatibilityUtil {
 		}
 
 		public void startUp() {
-			String namesString = preferenceStore
-					.getString(PHPCoreConstants.INCLUDE_PATH_VARIABLE_NAMES);
-			String pathsString = preferenceStore
-					.getString(PHPCoreConstants.INCLUDE_PATH_VARIABLE_PATHS);
+			String namesString = PreferencesSupport.getWorkspacePreferencesValue(PHPCorePlugin.ID,
+					PHPCoreConstants.INCLUDE_PATH_VARIABLE_NAMES);
+			String pathsString = PreferencesSupport.getWorkspacePreferencesValue(PHPCorePlugin.ID,
+					PHPCoreConstants.INCLUDE_PATH_VARIABLE_PATHS);
 			String[] names = {};
 			if (namesString.length() > 0)
 				names = namesString.split(","); //$NON-NLS-1$
