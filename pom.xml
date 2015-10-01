@@ -181,7 +181,7 @@
 				</property>
 			</activation>
 			<properties>
-				<eclipse.name>luna</eclipse.name>
+				<eclipse.name>mars</eclipse.name>
 			</properties>
 		</profile>
 		<profile>
@@ -192,7 +192,7 @@
 				</property>
 			</activation>
 			<properties>
-				<eclipse.name>mars</eclipse.name>
+				<eclipse.name>neon</eclipse.name>
 			</properties>
 		</profile>
 	</profiles>
