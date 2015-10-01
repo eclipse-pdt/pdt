@@ -154,8 +154,11 @@ public class VariableDeclarationSearcher extends ContextFinder {
 		}
 
 		if (node instanceof Assignment) {
-			Expression variable = ((Assignment) node).getVariable();
-			addDeclaredVariables(variable, node);
+			Assignment assignment = (Assignment) node;
+			if (assignment.getOperatorType() == Assignment.OP_EQUAL) {
+				Expression variable = assignment.getVariable();
+				addDeclaredVariables(variable, node);
+			}
 		}
 
 		postProcess(node);
@@ -173,11 +176,9 @@ public class VariableDeclarationSearcher extends ContextFinder {
 				addDeclaredVariables(nestedVar, node);
 			}
 		} else if (variable instanceof ReflectionArrayVariableReference) {
-			Expression expression = ((ReflectionArrayVariableReference) variable)
-					.getExpression();
+			Expression expression = ((ReflectionArrayVariableReference) variable).getExpression();
 			while (expression instanceof ReflectionArrayVariableReference) {
-				expression = ((ReflectionArrayVariableReference) expression)
-						.getExpression();
+				expression = ((ReflectionArrayVariableReference) expression).getExpression();
 			}
 			if (expression instanceof ArrayVariableReference) {
 				ArrayVariableReference varRef = (ArrayVariableReference) expression;
@@ -214,8 +215,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 			for (Expression variable : globalStatement.getVariables()) {
 				if (variable instanceof VariableReference) {
 					VariableReference varReference = (VariableReference) variable;
-					getScope().addDeclaration(varReference.getName(),
-							globalStatement);
+					getScope().addDeclaration(varReference.getName(), globalStatement);
 				}
 			}
 		} else if (node instanceof FormalParameter) {
@@ -251,8 +251,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 			for (Expression variable : staticStatement.getExpressions()) {
 				if (variable instanceof VariableReference) {
 					VariableReference varReference = (VariableReference) variable;
-					getScope().addDeclaration(varReference.getName(),
-							staticStatement);
+					getScope().addDeclaration(varReference.getName(), staticStatement);
 				}
 			}
 			// VariableReference varReference =
@@ -312,12 +311,9 @@ public class VariableDeclarationSearcher extends ContextFinder {
 	protected boolean isConditional(ASTNode node) {
 		if (node instanceof Statement) {
 			final int kind = ((Statement) node).getKind();
-			return kind == ASTNodeKinds.CATCH_CLAUSE
-					|| kind == ASTNodeKinds.IF_STATEMENT
-					|| kind == ASTNodeKinds.FOR_STATEMENT
-					|| kind == ASTNodeKinds.FOR_EACH_STATEMENT
-					|| kind == ASTNodeKinds.SWITCH_CASE
-					|| kind == ASTNodeKinds.WHILE_STATEMENT;
+			return kind == ASTNodeKinds.CATCH_CLAUSE || kind == ASTNodeKinds.IF_STATEMENT
+					|| kind == ASTNodeKinds.FOR_STATEMENT || kind == ASTNodeKinds.FOR_EACH_STATEMENT
+					|| kind == ASTNodeKinds.SWITCH_CASE || kind == ASTNodeKinds.WHILE_STATEMENT;
 		}
 		return false;
 	}
@@ -351,8 +347,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 	 */
 	public DeclarationScope[] getScopes() {
 		Collection<DeclarationScope> values = scopes.values();
-		return (DeclarationScope[]) values.toArray(new DeclarationScope[values
-				.size()]);
+		return (DeclarationScope[]) values.toArray(new DeclarationScope[values.size()]);
 	}
 
 	/**
