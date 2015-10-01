@@ -828,13 +828,17 @@ public class PHPLaunchUtilities {
 			} else {
 				String phpScriptString = configuration.getAttribute(
 						IPHPDebugConstants.ATTR_FILE, (String) null);
-				IPath filePath = new Path(phpScriptString);
-				IResource scriptRes = workspaceRoot.findMember(filePath);
-				if (scriptRes != null) {
-					project = scriptRes.getProject();
+				if (phpScriptString != null) {
+					IPath filePath = new Path(phpScriptString);
+					IResource scriptRes = workspaceRoot.findMember(filePath);
+					if (scriptRes != null) {
+						project = scriptRes.getProject();
+					}
 				}
 			}
-			item = PHPDebugPlugin.getPHPexeItem(project);
+			if (project != null) {
+				item = PHPDebugPlugin.getPHPexeItem(project);
+			}
 		} else {
 			IPath exePath = Path.fromPortableString(path);
 			org.eclipse.php.internal.core.PHPVersion version = PHPRuntime

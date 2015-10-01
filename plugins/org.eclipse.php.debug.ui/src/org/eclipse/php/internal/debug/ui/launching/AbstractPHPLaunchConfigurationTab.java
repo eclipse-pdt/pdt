@@ -48,6 +48,18 @@ public abstract class AbstractPHPLaunchConfigurationTab
 		initialize(configuration);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.ILaunchConfigurationTab#setDefaults(org.eclipse.
+	 * debug.core.ILaunchConfigurationWorkingCopy)
+	 */
+	@Override
+	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
+		this.configuration = configuration;
+	}
+
 	/**
 	 * Returns launch configuration for this tab
 	 * 
