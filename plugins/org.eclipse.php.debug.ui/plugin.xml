@@ -25,6 +25,8 @@
         schema="schema/phpBreakpointProviders.exsd"/>
     <extension-point id="phpDebuggerSettingsSectionBuilders" name="PHP Debugger Settings Section Builders" 
         schema="schema/phpDebuggerSettingsSectionBuilders.exsd"/>
+    <extension-point id="phpDebuggerLaunchSettingsSections" name="PHP Debugger Launch Settings Sections" 
+        schema="schema/phpDebuggerLaunchSettingsSections.exsd"/>
 	
 	<extension point="org.eclipse.ui.commands">
 		<command categoryId="org.eclipse.debug.ui.category.run"
@@ -198,6 +200,13 @@
 			class="org.eclipse.php.internal.debug.ui.launching.PHPExecutableLaunchTab"
 			id="org.eclipse.php.debug.ui.launching.exeLaunchConfigurationTab"
 			launchConfigurationTabGroupId="org.eclipse.php.deubg.ui.launching.launchConfigurationTabGroup.phpexe" />
+  <launchConfigurationTab
+        class="org.eclipse.php.internal.debug.ui.launching.PHPExeLaunchConfigurationDebuggerTab"
+        id="org.eclipse.php.debug.ui.launching.exeLaunchConfigurationDebuggerTab"
+        launchConfigurationTabGroupId="org.eclipse.php.deubg.ui.launching.launchConfigurationTabGroup.phpexe"
+        modes="debug"
+        placeAfter="org.eclipse.php.debug.ui.launching.exeLaunchConfigurationTab">
+  </launchConfigurationTab>
 	</extension>
 	
 	<!--======================================================================================-->
@@ -678,5 +687,36 @@
           icon="icon/full/obj16/remote_launch.png"
           id="org.eclipse.php.debug.core.remotePHPLaunchConfigurationTypeImage">
     </launchConfigurationTypeImage>
+   </extension>
+   <extension
+         point="org.eclipse.php.debug.ui.phpDebuggerLaunchSettingsSections">
+      <phpDebuggerLaunchSettingsSection
+            debuggerId="org.eclipse.php.debug.core.xdebugDebugger"
+            id="org.eclipse.php.debug.ui.xDebugExeLaunchSettings"
+            launchTypeId="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"
+            name="XDebug Exe Launch Settings"
+            section="org.eclipse.php.internal.debug.ui.launching.XDebugExeLaunchSettingsSection">
+      </phpDebuggerLaunchSettingsSection>
+      <phpDebuggerLaunchSettingsSection
+            debuggerId="org.eclipse.php.debug.core.xdebugDebugger"
+            id="org.eclipse.php.debug.ui.xDebugWebLaunchSettings"
+            launchTypeId="org.eclipse.php.debug.core.launching.webPageLaunch"
+            name="XDebug Web Launch Settings"
+            section="org.eclipse.php.internal.debug.ui.launching.XDebugWebLaunchSettingsSection">
+      </phpDebuggerLaunchSettingsSection>
+      <phpDebuggerLaunchSettingsSection
+            debuggerId="org.eclipse.php.debug.core.zendDebugger"
+            id="org.eclipse.php.debug.ui.zendDebuggerExeLaunchSettings"
+            launchTypeId="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"
+            name="Zend Debugger Exe Launch Settings"
+            section="org.eclipse.php.internal.debug.ui.launching.ZendDebuggerExeLaunchSettingsSection">
+      </phpDebuggerLaunchSettingsSection>
+      <phpDebuggerLaunchSettingsSection
+            debuggerId="org.eclipse.php.debug.core.zendDebugger"
+            id="org.eclipse.php.debug.ui.zendDebuggerWebLaunchSettings"
+            launchTypeId="org.eclipse.php.debug.core.launching.webPageLaunch"
+            name="Zend Debugger Web Launch Settings"
+            section="org.eclipse.php.internal.debug.ui.launching.ZendDebuggerWebLaunchSettingsSection">
+      </phpDebuggerLaunchSettingsSection>
    </extension>
 </plugin>

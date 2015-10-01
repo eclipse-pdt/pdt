@@ -35,7 +35,7 @@
 			id="org.eclipse.php.debug.ui.launching.PHPWebPageLaunchConfigurationTab"
 			launchConfigurationTabGroupId="org.eclipse.php.server.ui.launchConfigurationTabGroup" />
 		<launchConfigurationTab
-        class="org.eclipse.php.internal.server.ui.launching.PHPServerAdvancedTab"
+        class="org.eclipse.php.internal.server.ui.launching.PHPWebPageLaunchConfigurationDebuggerTab"
         id="org.eclipse.php.debug.ui.launching.PHPServerAdvancedTab"
         launchConfigurationTabGroupId="org.eclipse.php.server.ui.launchConfigurationTabGroup"
         modes="debug"

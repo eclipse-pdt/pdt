@@ -63,9 +63,14 @@ import org.eclipse.ui.progress.UIJob;
  * A PHPServerAdvancedTab for selecting advanced debug options, such as 'Debug
  * all Pages', 'Start Debug from' etc.
  * 
+ * @deprecated This class is no longer used since PDT 3.7 (see
+ *             {@link PHPWebPageLaunchConfigurationDebuggerTab}). It will be
+ *             probably removed in the future releases.
+ * 
  * @author Shalom Gibly
  */
 @SuppressWarnings("restriction")
+@Deprecated
 public class PHPServerAdvancedTab extends AbstractPHPLaunchConfigurationTab {
 
 	protected class WidgetListener extends SelectionAdapter

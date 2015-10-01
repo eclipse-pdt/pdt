@@ -7,6 +7,7 @@ public class Messages extends NLS {
 	public static String launch_failure_msg_title;
 	public static String launch_failure_no_target;
 	public static String launch_failure_server_msg_text;
+	public static String PHPWebPageLaunchConfigurationDebuggerTab_No_debugger_is_attached_to_server_configuration;
 	public static String PHPWebPageLaunchShortcut_0;
 	public static String PHPWebPageLaunchShortcut_1;
 	public static String PHPWebPageLaunchShortcut_10;
