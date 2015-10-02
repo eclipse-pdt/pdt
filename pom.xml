@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.php</groupId>
 	<artifactId>org.eclipse.pdt.releng</artifactId>
-	<version>3.6.0-SNAPSHOT</version>
+	<version>3.7.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>PHP Development Tools (PDT)</name>
 
@@ -22,7 +22,7 @@
 		<tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git</tycho.scmUrl>
 		<tycho.testArgLine />
 		<eclipseNext>false</eclipseNext>
-		<p2.mirrorsPrefix>/tools/pdt/updates/3.6/</p2.mirrorsPrefix>
+		<p2.mirrorsPrefix>/tools/pdt/updates/3.7/</p2.mirrorsPrefix>
 		<p2.statsURL>http://download.eclipse.org/stats</p2.statsURL>
 		<p2.mirrorsURL>http://www.eclipse.org/downloads/download.php?format=xml&amp;file=${p2.mirrorsPrefix}</p2.mirrorsURL>
 		<p2.statsTrackedArtifacts>org.eclipse.php,org.eclipse.php.mylyn</p2.statsTrackedArtifacts>
