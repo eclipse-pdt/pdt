@@ -441,20 +441,28 @@ function print_extension ($extRef) {
  */
 function print_class ($classRef, $tabs = 0) {
 	global $processedClasses;
+
 	$processedClasses [strtolower($classRef->getName())] = true;
 
-	print "\n";
+	if ($classRef->inNamespace()) {
+	    print "namespace " . $classRef->getNamespaceName() . " {\n";
+	    $prefix = '\\';
+	} else {
+	   print "\n";
+	   $prefix = '';
+	}
+
 	print_doccomment ($classRef, $tabs);
 	print_tabs ($tabs);
 	if ($classRef->isFinal()) print "final ";
 
 	print $classRef->isInterface() ? "interface " : "class ";
-	print clean_php_identifier($classRef->getName())." ";
+	print clean_php_identifier($classRef->getShortName())." ";
 
 	// print out parent class
 	$parentClassRef = $classRef->getParentClass();
 	if ($parentClassRef) {
-		print "extends {$parentClassRef->getName()} ";
+		print "extends " . $prefix . $parentClassRef->getName() . " ";
 	}
 
 	// print out interfaces
@@ -466,7 +474,7 @@ function print_class ($classRef, $tabs = 0) {
 			if ($i++ > 0) {
 				print ", ";
 			}
-			print "{$interfaceRef->getName()}";
+			print $prefix . "{$interfaceRef->getName()}";
 		}
 	}
 	print " {\n";
@@ -479,7 +487,6 @@ function print_class ($classRef, $tabs = 0) {
 	}
 
 	global $classesDoc;
-
 
 	// process properties
 	$propertiesRef = $classRef->getProperties();
@@ -557,6 +564,10 @@ function print_class ($classRef, $tabs = 0) {
 	}
 	print_tabs ($tabs);
 	print "}\n";
+
+	if ($classRef->inNamespace()) {
+	    print "}\n";
+	}
 }
 
 /**
@@ -909,7 +920,7 @@ function print_tabs ($tabs) {
 function get_parameter_classname(ReflectionParameter $paramRef) {
 	try {
 		if ($classRef = $paramRef->getClass()) {
-			return $classRef->getName();
+			return '\\' . $classRef->getName();
 		}
 	} catch (Exception $e) {
 		if (preg_match('/Class (\w+) does not exist/', $e->getMessage(), $matches)) {
