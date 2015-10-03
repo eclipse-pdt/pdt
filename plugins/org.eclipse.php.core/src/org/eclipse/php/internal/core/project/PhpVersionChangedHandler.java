@@ -81,7 +81,6 @@ public class PhpVersionChangedHandler implements IResourceChangeListener {
 					return; // No need to send a notification
 				}
 			}
-			System.out.println(event);
 			projectVersionChanged(project, event);
 		}
 
