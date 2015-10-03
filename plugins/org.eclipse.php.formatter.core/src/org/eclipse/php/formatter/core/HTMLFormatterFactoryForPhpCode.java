@@ -10,7 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.formatter.core;
 
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatter;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
@@ -30,8 +31,7 @@ class HTMLFormatterFactoryForPhpCode {
 		return fInstance;
 	}
 
-	protected IStructuredFormatter createFormatter(Node node,
-			IStructuredFormatPreferences formatPreferences) {
+	protected IStructuredFormatter createFormatter(Node node, IStructuredFormatPreferences formatPreferences) {
 		IStructuredFormatter formatter = null;
 
 		switch (node.getNodeType()) {
@@ -80,34 +80,29 @@ class HTMLFormatterFactoryForPhpCode {
 		if (fFormatPreferences == null) {
 			fFormatPreferences = new StructuredFormatPreferencesXML();
 
-			Preferences preferences = HTMLCorePlugin.getDefault()
-					.getPluginPreferences();
-			if (preferences != null) {
-				fFormatPreferences.setLineWidth(preferences
-						.getInt(HTMLCorePreferenceNames.LINE_WIDTH));
-				fFormatPreferences.setSplitMultiAttrs(preferences
-						.getBoolean(HTMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
-				fFormatPreferences.setAlignEndBracket(preferences
-						.getBoolean(HTMLCorePreferenceNames.ALIGN_END_BRACKET));
-				fFormatPreferences
-						.setClearAllBlankLines(preferences
-								.getBoolean(HTMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
+			IPreferencesService service = Platform.getPreferencesService();
+			fFormatPreferences
+					.setLineWidth(service.getInt(HTMLCorePlugin.ID, HTMLCorePreferenceNames.LINE_WIDTH, 0, null));
+			fFormatPreferences.setSplitMultiAttrs(
+					service.getBoolean(HTMLCorePlugin.ID, HTMLCorePreferenceNames.SPLIT_MULTI_ATTRS, false, null));
+			fFormatPreferences.setAlignEndBracket(
+					service.getBoolean(HTMLCorePlugin.ID, HTMLCorePreferenceNames.ALIGN_END_BRACKET, false, null));
+			fFormatPreferences.setClearAllBlankLines(
+					service.getBoolean(HTMLCorePlugin.ID, HTMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES, false, null));
 
-				char indentChar = ' ';
-				String indentCharPref = preferences
-						.getString(HTMLCorePreferenceNames.INDENTATION_CHAR);
-				if (HTMLCorePreferenceNames.TAB.equals(indentCharPref)) {
-					indentChar = '\t';
-				}
-				int indentationWidth = preferences
-						.getInt(HTMLCorePreferenceNames.INDENTATION_SIZE);
-
-				StringBuffer indent = new StringBuffer();
-				for (int i = 0; i < indentationWidth; i++) {
-					indent.append(indentChar);
-				}
-				fFormatPreferences.setIndent(indent.toString());
+			char indentChar = ' ';
+			String indentCharPref = service.getString(HTMLCorePlugin.ID, HTMLCorePreferenceNames.INDENTATION_CHAR, null,
+					null);
+			if (HTMLCorePreferenceNames.TAB.equals(indentCharPref)) {
+				indentChar = '\t';
 			}
+			int indentationWidth = service.getInt(HTMLCorePlugin.ID, HTMLCorePreferenceNames.INDENTATION_SIZE, 0, null);
+
+			StringBuffer indent = new StringBuffer();
+			for (int i = 0; i < indentationWidth; i++) {
+				indent.append(indentChar);
+			}
+			fFormatPreferences.setIndent(indent.toString());
 		}
 
 		return fFormatPreferences;

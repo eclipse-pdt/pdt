@@ -20,8 +20,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.text.IDocument;
@@ -31,6 +32,7 @@ import org.eclipse.php.internal.core.format.IFormatterCommonPrferences;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.osgi.service.prefs.Preferences;
 
 public class PHPCodeFormatterCommonPreferences implements IFormatterCommonPrferences {
 
@@ -132,11 +134,14 @@ public class PHPCodeFormatterCommonPreferences implements IFormatterCommonPrfere
 				}
 			}
 		} else {
-			Preferences preferences = FormatterCorePlugin.getDefault().getPluginPreferences();
-			String[] propetiesNames = preferences.propertyNames();
-			for (int i = 0; i < propetiesNames.length; i++) {
-				String property = propetiesNames[i];
-				String value = preferences.getString(property);
+			IPreferencesService service = Platform.getPreferencesService();
+			String[] lookup = service.getLookupOrder(FormatterCorePlugin.PLUGIN_ID, null);
+			Preferences[] nodes = new Preferences[lookup.length];
+			for (int i = 0; i < lookup.length; i++) {
+				nodes[i] = service.getRootNode().node(lookup[i]).node(FormatterCorePlugin.PLUGIN_ID);
+			}
+			for (String property : p.keySet()) {
+				String value = service.get(property, null, nodes);
 				if (value != null) {
 					p.put(property, value);
 				}
