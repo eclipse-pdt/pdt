@@ -17,11 +17,14 @@ package org.eclipse.php.internal.debug.core.debugger;
 import java.util.HashMap;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
+import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.PHPExeUtil;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * An abstract implementation of the IDebuggerConfiguration.
@@ -29,10 +32,12 @@ import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
  * @author Shalom Gibly
  * @since PDT 1.0
  */
-public abstract class AbstractDebuggerConfiguration implements
-		IDebuggerConfiguration {
+public abstract class AbstractDebuggerConfiguration implements IDebuggerConfiguration {
 
-	protected Preferences preferences;
+	protected IEclipsePreferences preferences;
+	protected IEclipsePreferences defaultPreferences;
+	protected final static int INST_PREF = 0;
+	protected final static int DEF_PREF = 1;
 	private HashMap<String, String> attributes;
 	private ICommunicationDaemon communicationDaemon;
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
@@ -41,8 +46,10 @@ public abstract class AbstractDebuggerConfiguration implements
 	 * AbstractDebuggerConfiguration constructor.
 	 */
 	public AbstractDebuggerConfiguration() {
-		preferences = PHPDebugPlugin.getDefault().getPluginPreferences();
 		attributes = new HashMap<String, String>();
+		preferences = PHPDebugPlugin.getInstancePreferences();
+		defaultPreferences = PHPDebugPlugin.getDefaultPreferences();
+		Platform.getPreferencesService();
 	}
 
 	/**
@@ -56,23 +63,21 @@ public abstract class AbstractDebuggerConfiguration implements
 	 * @see #getAttribute(String)
 	 */
 	public void setAttribute(String id, String value) {
-		if (EMPTY_STRING.equals(preferences.getDefaultString(id))) {
+		if (EMPTY_STRING.equals(defaultPreferences.get(id, EMPTY_STRING))) {
 			attributes.put(id, value);
 		} else {
-			preferences.setValue(id, value);
+			preferences.put(id, value);
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
-	 * getAttribute(java.lang.String)
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
+	 *      getAttribute(java.lang.String)
 	 */
 	public String getAttribute(String id) {
 		String attribute = attributes.get(id);
 		if (attribute == null) {
-			attribute = preferences.getString(id);
+			attribute = Platform.getPreferencesService().getString(PHPDebugPlugin.ID, id, null, null);
 		}
 		return attribute;
 	}
@@ -86,11 +91,9 @@ public abstract class AbstractDebuggerConfiguration implements
 		attributes.put(DEBUGGER_ID, id);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
-	 * getDebuggerId()
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
+	 *      getDebuggerId()
 	 */
 	public String getDebuggerId() {
 		return getAttribute(DEBUGGER_ID);
@@ -105,12 +108,9 @@ public abstract class AbstractDebuggerConfiguration implements
 		attributes.put(DEBUGGER_NAME, name);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#getName
-	 * ()
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
+	 *      getName ()
 	 */
 	public String getName() {
 		return getAttribute(DEBUGGER_NAME);
@@ -162,7 +162,11 @@ public abstract class AbstractDebuggerConfiguration implements
 	 * Save any plug-in preferences that needs to be saved.
 	 */
 	public void save() {
-		PHPDebugPlugin.getDefault().savePluginPreferences();
+		try {
+			preferences.flush();
+		} catch (BackingStoreException e) {
+			Logger.logException(e);
+		}
 	}
 
 	/**
@@ -182,5 +186,4 @@ public abstract class AbstractDebuggerConfiguration implements
 	protected boolean isInstalled(PHPexeItem exeItem, String extensionId) {
 		return PHPExeUtil.hasModule(exeItem, extensionId);
 	}
-
 }

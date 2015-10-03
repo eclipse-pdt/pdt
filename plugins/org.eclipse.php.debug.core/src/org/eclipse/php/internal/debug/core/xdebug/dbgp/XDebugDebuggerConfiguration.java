@@ -46,88 +46,67 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	public XDebugDebuggerConfiguration() {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
-	 * #getModuleId()
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.
+	 *      AbstractDebuggerConfiguration #getModuleId()
 	 */
 	@Override
 	public String getModuleId() {
 		return EXTENSION_MODULE_ID;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
-	 * openConfigurationDialog(org.eclipse.swt.widgets.Shell)
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
+	 *      openConfigurationDialog(org.eclipse.swt.widgets.Shell)
 	 */
 	public void openConfigurationDialog(final Shell parentShell) {
 		new XDebugConfigurationDialog(this, parentShell).open();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
-	 * #getPort()
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.
+	 *      AbstractDebuggerConfiguration #getPort()
 	 */
 	public int getPort() {
-		return XDebugPreferenceMgr.getPort(preferences);
+		return XDebugPreferenceMgr.getPort();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
-	 * #setPort(int)
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.
+	 *      AbstractDebuggerConfiguration #setPort(int)
 	 */
 	public void setPort(int port) {
 		XDebugPreferenceMgr.setPort(preferences, port);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
-	 * getScriptLaunchDelegateClass()
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
+	 *      getScriptLaunchDelegateClass()
 	 */
 	public String getScriptLaunchDelegateClass() {
 		return XDebugExeLaunchConfigurationDelegate.class.getName();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
-	 * getWebLaunchDelegateClass()
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
+	 *      getWebLaunchDelegateClass()
 	 */
 	public String getWebLaunchDelegateClass() {
 		return XDebugWebLaunchConfigurationDelegate.class.getName();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
-	 * #applyDefaults()
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.
+	 *      AbstractDebuggerConfiguration #applyDefaults()
 	 */
 	public void applyDefaults() {
 		XDebugPreferenceMgr.applyDefaults(preferences);
 		save();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
-	 * #validate()
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.
+	 *      AbstractDebuggerConfiguration #validate()
 	 */
 	public IStatus validate(PHPexeItem item) {
 		File executable = item.getExecutable();
@@ -137,34 +116,27 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 				String output = null;
 				File iniFile = item.getINILocation();
 				if (iniFile != null) {
-					output = PHPExeUtil.exec(executable.getAbsolutePath(),
-							"-c", iniFile.getAbsolutePath(), "--ri", //$NON-NLS-1$ //$NON-NLS-2$
+					output = PHPExeUtil.exec(executable.getAbsolutePath(), "-c", iniFile.getAbsolutePath(), "--ri", //$NON-NLS-1$ //$NON-NLS-2$
 							EXTENSION_MODULE_ID);
 				} else {
-					output = PHPExeUtil.exec(executable.getAbsolutePath(),
-							"--ri", EXTENSION_MODULE_ID); //$NON-NLS-1$
+					output = PHPExeUtil.exec(executable.getAbsolutePath(), "--ri", EXTENSION_MODULE_ID); //$NON-NLS-1$
 				}
 				if (output != null) {
 					String[] properties = output.split("\n"); //$NON-NLS-1$
 					for (String property : properties) {
 						String[] columns = property.split("=>"); //$NON-NLS-1$
 						if (columns.length == 3
-								&& (EXTENSION_MODULE_ID + '.' + REMOTE_ENABLE)
-										.equals(columns[0].trim())) {
+								&& (EXTENSION_MODULE_ID + '.' + REMOTE_ENABLE).equals(columns[0].trim())) {
 							String value = columns[1].trim();
 							if (!"on".equalsIgnoreCase(value)) { //$NON-NLS-1$
-								return new Status(
-										IStatus.WARNING,
-										PHPDebugPlugin.ID,
+								return new Status(IStatus.WARNING, PHPDebugPlugin.ID,
 										PHPDebugCoreMessages.XDebugDebuggerConfiguration_XDebugNotEnabledError);
 							}
 						}
 					}
 				}
 			} else {
-				return new Status(
-						IStatus.WARNING,
-						PHPDebugPlugin.ID,
+				return new Status(IStatus.WARNING, PHPDebugPlugin.ID,
 						PHPDebugCoreMessages.XDebugDebuggerConfiguration_XDebugNotInstalledError);
 			}
 		} catch (IOException e) {

@@ -12,7 +12,6 @@
 package org.eclipse.php.internal.debug.core.xdebug;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 
@@ -21,11 +20,9 @@ public interface IDELayer {
 	// required for Source Lookup
 	public Object sourceNotFound(Object debugElement);
 
-	public ISourceContainer getSourceContainer(IProject resource,
-			ILaunchConfiguration launchConfig);
+	public ISourceContainer getSourceContainer(IProject resource, ILaunchConfiguration launchConfig);
 
 	// required for Launch Listener
 	public String getSystemDebugProperty();
 
-	public Preferences getPrefs();
 }

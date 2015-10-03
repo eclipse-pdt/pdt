@@ -18,7 +18,6 @@ import java.net.UnknownHostException;
 import java.util.*;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -28,8 +27,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicat
 /**
  * Sets default values for PHP Debug preferences
  */
-public class PHPDebugCorePreferenceInitializer extends
-		AbstractPreferenceInitializer {
+public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitializer {
 
 	private static Inet4Address CLASS_A_NETWORK;
 	private static Inet4Address CLASS_B_NETWORK;
@@ -39,10 +37,8 @@ public class PHPDebugCorePreferenceInitializer extends
 	static {
 		try {
 			CLASS_A_NETWORK = (Inet4Address) InetAddress.getByName("10.0.0.0"); //$NON-NLS-1$
-			CLASS_B_NETWORK = (Inet4Address) InetAddress
-					.getByName("172.16.0.0"); //$NON-NLS-1$
-			CLASS_C_NETWORK = (Inet4Address) InetAddress
-					.getByName("192.168.0.0"); //$NON-NLS-1$
+			CLASS_B_NETWORK = (Inet4Address) InetAddress.getByName("172.16.0.0"); //$NON-NLS-1$
+			CLASS_C_NETWORK = (Inet4Address) InetAddress.getByName("192.168.0.0"); //$NON-NLS-1$
 			LOCALHOST = (Inet4Address) InetAddress.getByName("127.0.0.1"); //$NON-NLS-1$
 		} catch (UnknownHostException e) {
 			// cannot occur in this particular case because all IPs are valid
@@ -50,8 +46,7 @@ public class PHPDebugCorePreferenceInitializer extends
 	}
 
 	public void initializeDefaultPreferences() {
-		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(PHPDebugPlugin
-				.getDefault().getBundle().getSymbolicName());
+		IEclipsePreferences node = PHPDebugPlugin.getDefaultPreferences();
 
 		// formatting preferences
 		node.putBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, true);
@@ -60,29 +55,25 @@ public class PHPDebugCorePreferenceInitializer extends
 		node.putBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, true);
 		node.putBoolean(PHPDebugCorePreferenceNames.ZEND_NEW_PROTOCOL, true);
 		node.putInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, 10137);
-		node.putInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT,
-				20080);
-		node.put(PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE,
-				"dummy.php"); //$NON-NLS-1$
+		node.putInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT, 20080);
+		node.put(PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE, "dummy.php"); //$NON-NLS-1$
 		node.putInt(PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT, 60000); // 60
 																				// seconds
 		node.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, "UTF-8"); //$NON-NLS-1$
 		node.put(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, "UTF-8"); //$NON-NLS-1$
-		node.put(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
-				PHPExecutableLaunchDelegate.class.getName());
-		node.put(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-				DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID); // The default is
-																// Zend's
-																// debugger
-		node.put(IPHPDebugConstants.PHP_DEBUG_PARAMETERS_INITIALIZER,
-				"org.eclipse.php.debug.core.defaultInitializer"); //$NON-NLS-1$
+		node.put(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, PHPExecutableLaunchDelegate.class.getName());
+		node.put(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID); // The
+																												// default
+																												// is
+																												// Zend's
+																												// debugger
+		node.put(IPHPDebugConstants.PHP_DEBUG_PARAMETERS_INITIALIZER, "org.eclipse.php.debug.core.defaultInitializer"); //$NON-NLS-1$
 
 		node.putBoolean(PHPDebugCorePreferenceNames.SORT_BY_NAME, false);
 		List<Inet4Address> clientHosts = new ArrayList<Inet4Address>();
 		clientHosts.add(LOCALHOST);
 		try {
-			Enumeration<NetworkInterface> ii = NetworkInterface
-					.getNetworkInterfaces();
+			Enumeration<NetworkInterface> ii = NetworkInterface.getNetworkInterfaces();
 			while (ii.hasMoreElements()) {
 				NetworkInterface i = ii.nextElement();
 				if (i.getDisplayName().contains("VMware")) { //$NON-NLS-1$
@@ -99,8 +90,7 @@ public class PHPDebugCorePreferenceInitializer extends
 		} catch (Exception e) {
 			// in this case continue with already detected hosts
 		}
-		Inet4Address[] hosts = clientHosts.toArray(new Inet4Address[clientHosts
-				.size()]);
+		Inet4Address[] hosts = clientHosts.toArray(new Inet4Address[clientHosts.size()]);
 		Arrays.sort(hosts, new Comparator<Inet4Address>() {
 
 			@Override
@@ -185,8 +175,7 @@ public class PHPDebugCorePreferenceInitializer extends
 		return isInRange(address, CLASS_C_NETWORK, 16);
 	}
 
-	private boolean isInRange(Inet4Address address, Inet4Address subnet,
-			int mask) {
+	private boolean isInRange(Inet4Address address, Inet4Address subnet, int mask) {
 		int maskValue = 0xFFFFFFF << (32 - mask);
 		int subnetValue = getAddress(subnet.getAddress());
 		int addressValue = getAddress(address.getAddress());
@@ -194,10 +183,8 @@ public class PHPDebugCorePreferenceInitializer extends
 	}
 
 	private int getAddress(byte[] bytesAddress) {
-		return ((((int) bytesAddress[0]) & 0xFF) << 24)
-				| ((((int) bytesAddress[1]) & 0xFF) << 16)
-				| ((((int) bytesAddress[2]) & 0xFF) << 8)
-				| ((((int) bytesAddress[3]) & 0xFF) << 0);
+		return ((((int) bytesAddress[0]) & 0xFF) << 24) | ((((int) bytesAddress[1]) & 0xFF) << 16)
+				| ((((int) bytesAddress[2]) & 0xFF) << 8) | ((((int) bytesAddress[3]) & 0xFF) << 0);
 	}
 
 }
