@@ -17,6 +17,7 @@ package org.eclipse.php.internal.debug.core.zend.debugger;
 import java.io.File;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -46,56 +47,46 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	public ZendDebuggerConfiguration() {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
-	 * #getModuleId()
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.
+	 *      AbstractDebuggerConfiguration #getModuleId()
 	 */
 	@Override
 	public String getModuleId() {
 		return EXTENSION_MODULE_ID;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
-	 * openConfigurationDialog(org.eclipse.swt.widgets.Shell)
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
+	 *      openConfigurationDialog(org.eclipse.swt.widgets.Shell)
 	 */
 	public void openConfigurationDialog(Shell parentShell) {
 		new ZendDebuggerConfigurationDialog(this, parentShell).open();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
-	 * #getPort()
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.
+	 *      AbstractDebuggerConfiguration #getPort()
 	 */
 	public int getPort() {
-		return preferences.getInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT);
+		return Platform.getPreferencesService().getInt(PHPDebugPlugin.ID, PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT,
+				0, null);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
-	 * #setPort(int)
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.
+	 *      AbstractDebuggerConfiguration #setPort(int)
 	 */
 	public void setPort(int port) {
-		preferences.setValue(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, port);
+		preferences.putInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, port);
 	}
 
 	/**
 	 * @return port for broadcasting Studio settings to the ToolBar or Zend GUI
 	 */
 	public int getBroadcastPort() {
-		return preferences
-				.getInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT);
+		return Platform.getPreferencesService().getInt(PHPDebugPlugin.ID,
+				PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT, 0, null);
 	}
 
 	/**
@@ -104,17 +95,15 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 *            GUI
 	 */
 	public void setBroadcastPort(int broadcastPort) {
-		preferences.setValue(
-				PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT,
-				broadcastPort);
+		preferences.putInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT, broadcastPort);
 	}
 
 	/**
 	 * @return dummy PHP file name
 	 */
 	public String getDummyFile() {
-		return preferences
-				.getString(PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE);
+		return Platform.getPreferencesService().getString(PHPDebugPlugin.ID,
+				PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE, null, null);
 	}
 
 	/**
@@ -122,75 +111,55 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 *            dummy PHP file name
 	 */
 	public void setDummyFile(String dummyFile) {
-		preferences.setValue(PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE,
-				dummyFile);
+		preferences.put(PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE, dummyFile);
 	}
 
 	public boolean isUseNewProtocol() {
-		return preferences
-				.getBoolean(PHPDebugCorePreferenceNames.ZEND_NEW_PROTOCOL);
+		return Platform.getPreferencesService().getBoolean(PHPDebugPlugin.ID,
+				PHPDebugCorePreferenceNames.ZEND_NEW_PROTOCOL, true, null);
 	}
 
 	public void setUNewProtocol(boolean enable) {
-		preferences.setValue(PHPDebugCorePreferenceNames.ZEND_NEW_PROTOCOL,
-				enable);
+		preferences.putBoolean(PHPDebugCorePreferenceNames.ZEND_NEW_PROTOCOL, enable);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
-	 * getScriptLaunchDelegateClass()
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#getScriptLaunchDelegateClass()
 	 */
 	public String getScriptLaunchDelegateClass() {
 		return PHPExecutableLaunchDelegate.class.getName();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
-	 * getWebLaunchDelegateClass()
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#getWebLaunchDelegateClass()
 	 */
 	public String getWebLaunchDelegateClass() {
 		return PHPWebPageLaunchDelegate.class.getName();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
-	 * #applyDefaults()
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
+	 *      #applyDefaults()
 	 */
 	public void applyDefaults() {
-		setPort(preferences
-				.getDefaultInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT));
-		preferences.setValue(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO,
-				preferences.getDefaultBoolean(
-						PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO));
-		setBroadcastPort(preferences.getDefaultInt(
-				PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT));
-		setDummyFile(preferences.getDefaultString(
-				PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE));
+		setPort(defaultPreferences.getInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, 0));
+		preferences.put(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO,
+				defaultPreferences.get(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, null));
+		setBroadcastPort(defaultPreferences.getInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT, 0));
+		setDummyFile(defaultPreferences.get(PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE, null));
 		save();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
-	 * #validate()
+	/**
+	 * @see org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
+	 *      #validate()
 	 */
 	public IStatus validate(PHPexeItem item) {
 		File executable = item.getExecutable();
 		PHPexes.changePermissions(executable);
 		if (isInstalled(item, EXTENSION_MODULE_ID))
 			return Status.OK_STATUS;
-		return new Status(
-				IStatus.WARNING,
-				PHPDebugPlugin.ID,
+		return new Status(IStatus.WARNING, PHPDebugPlugin.ID,
 				PHPDebugCoreMessages.ZendDebuggerConfiguration_ZendDebuggerNotInstalledError);
 	}
 

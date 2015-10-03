@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: PDT Core Plug-in
-Bundle-SymbolicName: org.eclipse.php.debug.core; singleton:=true
+Bundle-SymbolicName: org.eclipse.php.debug.core;singleton:=true
 Bundle-Version: 3.7.0.qualifier
 Bundle-Activator: org.eclipse.php.internal.debug.core.PHPDebugPlugin
 Bundle-Localization: plugin
@@ -29,7 +29,7 @@ Export-Package: org.eclipse.php.debug.core.debugger,
  org.eclipse.php.debug.core.debugger.launching,
  org.eclipse.php.debug.core.debugger.messages,
  org.eclipse.php.debug.core.debugger.parameters,
- org.eclipse.php.internal.debug.core;x-internal:=true,
+ org.eclipse.php.internal.debug.core;x-friends:="org.eclipse.php.debug.ui",
  org.eclipse.php.internal.debug.core.daemon;x-internal:=true,
  org.eclipse.php.internal.debug.core.debugger;x-internal:=true,
  org.eclipse.php.internal.debug.core.launching;x-internal:=true,

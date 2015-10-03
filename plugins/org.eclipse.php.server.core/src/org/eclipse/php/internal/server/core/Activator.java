@@ -15,6 +15,7 @@ package org.eclipse.php.internal.server.core;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jsch.core.IJSchService;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.server.core.tunneling.SSHTunnelSession;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
@@ -29,6 +30,7 @@ public class Activator extends Plugin {
 
 	// Debug mode identifier
 	public static final boolean isDebugMode;
+
 	static {
 		String value = Platform.getDebugOption(PLUGIN_ID + "/debug"); //$NON-NLS-1$
 		isDebugMode = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
@@ -54,8 +56,7 @@ public class Activator extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		tracker = new ServiceTracker(getBundle().getBundleContext(),
-				IJSchService.class.getName(), null);
+		tracker = new ServiceTracker(getBundle().getBundleContext(), IJSchService.class.getName(), null);
 		tracker.open();
 	}
 
@@ -89,4 +90,10 @@ public class Activator extends Plugin {
 	public IJSchService getJSchService() {
 		return (IJSchService) tracker.getService();
 	}
+
+	public static String getWorkspaceDefaultServer() {
+		return Platform.getPreferencesService().getString(PLUGIN_ID, ServersManager.DEFAULT_SERVER_PREFERENCES_KEY,
+				null, null);
+	}
+
 }

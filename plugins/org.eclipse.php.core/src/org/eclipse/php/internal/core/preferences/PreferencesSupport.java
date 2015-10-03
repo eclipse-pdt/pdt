@@ -18,18 +18,13 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.php.internal.core.Logger;
 
 public class PreferencesSupport {
 
 	private Map<IProject, ProjectScope> projectToScope;
 	private String nodeQualifier;
-
-	private final static IScopeContext[] WORKSPACE_CONTEXT = { InstanceScope.INSTANCE, DefaultScope.INSTANCE };
 
 	/**
 	 * Constructs a new PreferencesSupport.
@@ -120,7 +115,7 @@ public class PreferencesSupport {
 	 * @return
 	 */
 	public String getWorkspacePreferencesValue(String key) {
-		return Platform.getPreferencesService().getString(nodeQualifier, key, null, WORKSPACE_CONTEXT);
+		return Platform.getPreferencesService().getString(nodeQualifier, key, null, null);
 	}
 
 	/**
@@ -143,7 +138,7 @@ public class PreferencesSupport {
 	 * @return
 	 */
 	public static String getWorkspacePreferencesValue(String qualifier, String key) {
-		return Platform.getPreferencesService().getString(qualifier, key, null, WORKSPACE_CONTEXT);
+		return Platform.getPreferencesService().getString(qualifier, key, null, null);
 	}
 
 	/**

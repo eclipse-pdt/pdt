@@ -13,7 +13,7 @@ package org.eclipse.php.internal.debug.core.preferences;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -25,18 +25,13 @@ public class PHPProjectPreferences {
 		return IPHPDebugConstants.DEBUG_QUALIFIER;
 	}
 
-	public static Preferences getModelPreferences() {
-		return PHPDebugPlugin.getDefault().getPluginPreferences();
-	}
-
 	public static IScopeContext getProjectScope(IProject project) {
 		return new ProjectScope(project);
 	}
 
 	public static boolean getElementSettingsForProject(IProject project) {
 		IScopeContext pScope = getProjectScope(project);
-		return pScope.getNode(getPreferenceNodeQualifier()).getBoolean(
-				getProjectSettingsKey(), false);
+		return pScope.getNode(getPreferenceNodeQualifier()).getBoolean(getProjectSettingsKey(), false);
 	}
 
 	public static String getProjectSettingsKey() {
@@ -44,37 +39,35 @@ public class PHPProjectPreferences {
 	}
 
 	public static boolean getStopAtFirstLine(IProject project) {
-		Preferences prefs = getModelPreferences();
-		boolean stop = prefs
-				.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE);
+		boolean stop = Platform.getPreferencesService().getBoolean(PHPDebugPlugin.ID,
+				PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, true, null);
 		if (project != null && getElementSettingsForProject(project)) {
 			IScopeContext projectScope = getProjectScope(project);
 			stop = projectScope.getNode(getPreferenceNodeQualifier())
-					.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE,
-							stop);
+					.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, stop);
 		}
 		return stop;
 
 	}
 
 	public static boolean isSortByName() {
-		Preferences prefs = getModelPreferences();
-		return prefs.getBoolean(PHPDebugCorePreferenceNames.SORT_BY_NAME);
+		return Platform.getPreferencesService().getBoolean(PHPDebugPlugin.ID, PHPDebugCorePreferenceNames.SORT_BY_NAME,
+				true, null);
 
 	}
 
 	public static void changeSortByNameStatus() {
-		Preferences prefs = getModelPreferences();
-		prefs.setValue(PHPDebugCorePreferenceNames.SORT_BY_NAME,
-				!prefs.getBoolean(PHPDebugCorePreferenceNames.SORT_BY_NAME));
+		PHPDebugPlugin.getInstancePreferences().putBoolean(PHPDebugCorePreferenceNames.SORT_BY_NAME,
+				!Platform.getPreferencesService().getBoolean(PHPDebugPlugin.ID,
+						PHPDebugCorePreferenceNames.SORT_BY_NAME, true, null));
 	}
 
 	public static String getDefaultBasePath(IProject project) {
 		String basePath = null;
 		if (project != null && getElementSettingsForProject(project)) {
 			IScopeContext projectScope = getProjectScope(project);
-			basePath = projectScope.getNode(getPreferenceNodeQualifier()).get(
-					PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, basePath);
+			basePath = projectScope.getNode(getPreferenceNodeQualifier())
+					.get(PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, basePath);
 		}
 		if (project != null && basePath == null) {
 			basePath = '/' + project.getName();
@@ -89,61 +82,54 @@ public class PHPProjectPreferences {
 		if (basePath != null && !basePath.startsWith("/")) { //$NON-NLS-1$
 			basePath = '/' + basePath;
 		}
-		Preferences prefs = getModelPreferences();
-		prefs.setValue(PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, basePath);
+		PHPDebugPlugin.getInstancePreferences().put(PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, basePath);
 		if (project != null && getElementSettingsForProject(project)) {
 			IScopeContext projectScope = getProjectScope(project);
-			projectScope.getNode(getPreferenceNodeQualifier()).put(
-					PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, basePath);
+			projectScope.getNode(getPreferenceNodeQualifier()).put(PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH,
+					basePath);
 		}
 	}
 
 	public static String getDefaultServerName(IProject project) {
-		Preferences prefs = getModelPreferences();
-		String serverName = prefs
-				.getString(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);
+		String serverName = Platform.getPreferencesService().getString(PHPDebugPlugin.ID,
+				ServersManager.DEFAULT_SERVER_PREFERENCES_KEY, null, null);
 		if (project != null && getElementSettingsForProject(project)) {
 			IScopeContext projectScope = getProjectScope(project);
 			serverName = projectScope.getNode(getPreferenceNodeQualifier())
-					.get(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY,
-							serverName);
+					.get(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY, serverName);
 		}
 		return serverName;
 	}
 
 	public static String getDefaultDebuggerID(IProject project) {
-		Preferences prefs = getModelPreferences();
-		String debuggerID = prefs
-				.getString(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID);
+		String debuggerID = Platform.getPreferencesService().getString(PHPDebugPlugin.ID,
+				PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, null, null);
 		if (project != null && getElementSettingsForProject(project)) {
 			IScopeContext projectScope = getProjectScope(project);
 			debuggerID = projectScope.getNode(getPreferenceNodeQualifier())
-					.get(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-							debuggerID);
+					.get(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerID);
 		}
 		return debuggerID;
 	}
 
 	public static String getTransferEncoding(IProject project) {
-		Preferences prefs = getModelPreferences();
-		String encoding = prefs
-				.getString(PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
+		String encoding = Platform.getPreferencesService().getString(PHPDebugPlugin.ID,
+				PHPDebugCorePreferenceNames.TRANSFER_ENCODING, null, null);
 		if (project != null && getElementSettingsForProject(project)) {
 			IScopeContext projectScope = getProjectScope(project);
-			encoding = projectScope.getNode(getPreferenceNodeQualifier()).get(
-					PHPDebugCorePreferenceNames.TRANSFER_ENCODING, encoding);
+			encoding = projectScope.getNode(getPreferenceNodeQualifier())
+					.get(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, encoding);
 		}
 		return encoding;
 	}
 
 	public static String getOutputEncoding(IProject project) {
-		Preferences prefs = getModelPreferences();
-		String encoding = prefs
-				.getString(PHPDebugCorePreferenceNames.OUTPUT_ENCODING);
+		String encoding = Platform.getPreferencesService().getString(PHPDebugPlugin.ID,
+				PHPDebugCorePreferenceNames.OUTPUT_ENCODING, null, null);
 		if (project != null && getElementSettingsForProject(project)) {
 			IScopeContext projectScope = getProjectScope(project);
-			encoding = projectScope.getNode(getPreferenceNodeQualifier()).get(
-					PHPDebugCorePreferenceNames.OUTPUT_ENCODING, encoding);
+			encoding = projectScope.getNode(getPreferenceNodeQualifier())
+					.get(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, encoding);
 		}
 		return encoding;
 	}

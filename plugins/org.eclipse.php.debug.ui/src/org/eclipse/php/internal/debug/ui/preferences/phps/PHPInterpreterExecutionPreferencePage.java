@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.preferences.phps;
 
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.AbstractPreferencePage;
@@ -25,8 +23,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 
-public class PHPInterpreterExecutionPreferencePage extends
-		AbstractPreferencePage implements IWorkbenchPreferencePage {
+public class PHPInterpreterExecutionPreferencePage extends AbstractPreferencePage implements IWorkbenchPreferencePage {
 
 	public static final String PREF_ID = "org.eclipse.php.debug.ui.preferencesphps.PHPExecutionPreferencePreferencePage"; //$NON-NLS-1$
 
@@ -40,23 +37,15 @@ public class PHPInterpreterExecutionPreferencePage extends
 		setDescription(Messages.PHPInterpreterExecutionPreferencePage_1);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	/**
+	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
 	}
 
-	protected Preferences getModelPreferences() {
-		return PHPProjectPreferences.getModelPreferences();
-	}
-
-	/*
-	 * @see
-	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-	 * .Composite)
+	/**
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
+	 *      widgets .Composite)
 	 */
 	protected Control createContents(Composite ancestor) {
 		initializeDialogUnits(ancestor);
@@ -82,24 +71,18 @@ public class PHPInterpreterExecutionPreferencePage extends
 	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(getControl(),
-						IPHPHelpContextIds.PHPEXE_ENV_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PHPEXE_ENV_PREFERENCES);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
-	 * getPreferencePageID()
+	/**
+	 * @see org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
+	 *      getPreferencePageID()
 	 */
 	protected String getPreferencePageID() {
 		return PREF_ID;
 	}
 
-	/*
+	/**
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
 	public boolean performOk() {

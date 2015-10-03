@@ -21,8 +21,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.IPageChangedListener;
@@ -91,53 +92,43 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 
 	public void initializeValues(PreferencePage propertyPage) {
 		this.propertyPage = propertyPage;
-		Preferences prefs = PHPProjectPreferences.getModelPreferences();
+		IPreferencesService service = Platform.getPreferencesService();
 		IScopeContext[] preferenceScopes = createPreferenceScopes(propertyPage);
 		IProject project = getProject(propertyPage);
-		boolean stopAtFirstLine = prefs
-				.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE);
+		boolean stopAtFirstLine = service.getBoolean(PHPDebugPlugin.ID, PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE,
+				true, null);
 		String serverName = ServersManager.getDefaultServer(null).getName();
 		String phpExeName = InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
 				.get(PHPDebugCorePreferenceNames.DEFAULT_PHP, null);
 		if (phpExeName == null || phpExeName.isEmpty()) {
 			phpExeName = PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined;
 		}
-		String transferEncoding = prefs
-				.getString(PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
-		String outputEncoding = prefs
-				.getString(PHPDebugCorePreferenceNames.OUTPUT_ENCODING);
+		String transferEncoding = service.getString(PHPDebugPlugin.ID, PHPDebugCorePreferenceNames.TRANSFER_ENCODING,
+				null, null);
+		String outputEncoding = service.getString(PHPDebugPlugin.ID, PHPDebugCorePreferenceNames.OUTPUT_ENCODING, null,
+				null);
 		loadServers(fDefaultServer);
 		String serverDebuggerId = PHPDebugPlugin.getDebuggerId(serverName);
 		boolean exeLoaded = false;
 		// Update the values in case we have a project-specific settings.
 		if (preferenceScopes[0] instanceof ProjectScope && isProjectSpecific) {
-			IEclipsePreferences node = preferenceScopes[0]
-					.getNode(getPreferenceNodeQualifier());
+			IEclipsePreferences node = preferenceScopes[0].getNode(getPreferenceNodeQualifier());
 			if (node != null && project != null) {
-				if (getBasePathValue(project) == null
-						|| getBasePathValue(project) == "") { //$NON-NLS-1$
+				if (getBasePathValue(project) == null || getBasePathValue(project) == "") { //$NON-NLS-1$
 					setBasePathValue(project, project.getName());
 				}
-				String projectServerName = ServersManager.getDefaultServer(
-						project).getName();
+				String projectServerName = ServersManager.getDefaultServer(project).getName();
 				if (!projectServerName.equals("")) { //$NON-NLS-1$
 					serverName = projectServerName;
-					stopAtFirstLine = node.getBoolean(
-							PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE,
-							stopAtFirstLine);
-					transferEncoding = node.get(
-							PHPDebugCorePreferenceNames.TRANSFER_ENCODING,
-							transferEncoding);
-					outputEncoding = node.get(
-							PHPDebugCorePreferenceNames.OUTPUT_ENCODING,
-							outputEncoding);
+					stopAtFirstLine = node.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, stopAtFirstLine);
+					transferEncoding = node.get(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, transferEncoding);
+					outputEncoding = node.get(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, outputEncoding);
 					PHPexeItem item = PHPDebugPlugin.getPHPexeItem(project);
 					if (item != null && item.getName() != null) {
 						phpExeName = item.getName();
 					}
 					serverDebuggerId = PHPDebugPlugin.getDebuggerId(serverName);
-					loadPHPExes(fDefaultPHPExe, PHPexes.getInstance()
-							.getAllItems());
+					loadPHPExes(fDefaultPHPExe, PHPexes.getInstance().getAllItems());
 					exeLoaded = true;
 				}
 			}
@@ -147,21 +138,17 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		}
 		fStopAtFirstLine.setSelection(stopAtFirstLine);
 		fDefaultServer.select(fDefaultServer.indexOf(serverName));
-		fServerDebugger.setText(PHPDebuggersRegistry
-				.getDebuggerName(serverDebuggerId));
+		fServerDebugger.setText(PHPDebuggersRegistry.getDebuggerName(serverDebuggerId));
 		if (fDefaultPHPExe.indexOf(phpExeName) != -1) {
 			fDefaultPHPExe.select(fDefaultPHPExe.indexOf(phpExeName));
 		} else {
 			fDefaultPHPExe.select(0);
 		}
-		PHPexeItem item = PHPexes.getInstance().getItem(
-				fDefaultPHPExe.getText());
+		PHPexeItem item = PHPexes.getInstance().getItem(fDefaultPHPExe.getText());
 		if (item != null) {
-			fCLIDebugger.setText(PHPDebuggersRegistry.getDebuggerName(item
-					.getDebuggerID()));
+			fCLIDebugger.setText(PHPDebuggersRegistry.getDebuggerName(item.getDebuggerID()));
 		} else {
-			fCLIDebugger
-					.setText(PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined);
+			fCLIDebugger.setText(PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined);
 		}
 		fDebugEncodingSettings.setText(transferEncoding);
 		fOutputEncodingSettings.setText(outputEncoding);
@@ -188,8 +175,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 				try {
 					try {
 						if (pageValidator != null)
-							pageValidator.validate(new BasePathValidator(
-									fDefaultBasePath));
+							pageValidator.validate(new BasePathValidator(fDefaultBasePath));
 						refreshAutoGeneratedBaseURLDisplay();
 					} catch (ControlValidationException e1) {
 						// TODO Auto-generated catch block
@@ -228,27 +214,18 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 	}
 
 	public void performDefaults() {
-		Preferences prefs = PHPProjectPreferences.getModelPreferences();
-		fStopAtFirstLine
-			.setSelection(prefs
-					.getDefaultBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE));
+		IEclipsePreferences prefs = PHPDebugPlugin.getDefaultPreferences();
+		fStopAtFirstLine.setSelection(prefs.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, true));
 		loadServers(fDefaultServer);
-		String serverDebuggerId = PHPDebugPlugin.getDebuggerId(fDefaultServer
-				.getText());
-		fServerDebugger.setText(PHPDebuggersRegistry
-				.getDebuggerName(serverDebuggerId));
+		String serverDebuggerId = PHPDebugPlugin.getDebuggerId(fDefaultServer.getText());
+		fServerDebugger.setText(PHPDebuggersRegistry.getDebuggerName(serverDebuggerId));
 		loadPHPExes(fDefaultPHPExe, PHPexes.getInstance().getAllItems());
-		PHPexeItem item = PHPexes.getInstance().getItem(
-				fDefaultPHPExe.getText());
+		PHPexeItem item = PHPexes.getInstance().getItem(fDefaultPHPExe.getText());
 		if (item != null) {
-			fCLIDebugger.setText(PHPDebuggersRegistry.getDebuggerName(item
-					.getDebuggerID()));
+			fCLIDebugger.setText(PHPDebuggersRegistry.getDebuggerName(item.getDebuggerID()));
 		}
-		fDebugEncodingSettings
-				.setText(prefs
-						.getDefaultString(PHPDebugCorePreferenceNames.TRANSFER_ENCODING));
-		fOutputEncodingSettings.setText(prefs
-				.getDefaultString(PHPDebugCorePreferenceNames.OUTPUT_ENCODING));
+		fDebugEncodingSettings.setText(prefs.get(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, null));
+		fOutputEncodingSettings.setText(prefs.get(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, null));
 	}
 
 	protected String getPreferenceNodeQualifier() {
@@ -257,8 +234,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 
 	private void addProjectPreferenceSubsection(Composite composite) {
 		Group defultServerGroup = new Group(composite, SWT.NONE);
-		defultServerGroup
-				.setText(PHPDebugUIMessages.PHPDebugPreferencesBlock_0);
+		defultServerGroup.setText(PHPDebugUIMessages.PHPDebugPreferencesBlock_0);
 		defultServerGroup.setFont(composite.getFont());
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 3;
@@ -266,19 +242,14 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		defultServerGroup.setLayout(layout);
 		defultServerGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		Label label = addLabelControl(defultServerGroup,
-				PHPDebugUIMessages.PhpDebugPreferencePage_9,
+		Label label = addLabelControl(defultServerGroup, PHPDebugUIMessages.PhpDebugPreferencePage_9,
 				ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);
 		GridData gd = new GridData();
 		gd.widthHint = 90;
 		label.setLayoutData(gd);
 		fDefaultServer = addCombo(defultServerGroup, 2);
-		addLink(defultServerGroup,
-				PHPDebugUIMessages.PhpDebugPreferencePage_serversLink,
-				SERVERS_PAGE_ID);
-		label = addLabelControl(defultServerGroup,
-				PHPDebugUIMessages.PHPDebugPreferencesBlock_ServerDebugger,
-				null);
+		addLink(defultServerGroup, PHPDebugUIMessages.PhpDebugPreferencePage_serversLink, SERVERS_PAGE_ID);
+		label = addLabelControl(defultServerGroup, PHPDebugUIMessages.PHPDebugPreferencesBlock_ServerDebugger, null);
 		gd = new GridData();
 		gd.widthHint = 90;
 		label.setLayoutData(gd);
@@ -288,8 +259,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		fServerDebugger.setLayoutData(gd);
 
 		Group defultCLIGroup = new Group(composite, SWT.NONE);
-		defultCLIGroup
-				.setText(PHPDebugUIMessages.PHPDebugPreferencesBlock_CLISettings);
+		defultCLIGroup.setText(PHPDebugUIMessages.PHPDebugPreferencesBlock_CLISettings);
 		defultCLIGroup.setFont(composite.getFont());
 		layout = new GridLayout();
 		layout.numColumns = 3;
@@ -297,18 +267,14 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		defultCLIGroup.setLayout(layout);
 		defultCLIGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		label = addLabelControl(defultCLIGroup,
-				PHPDebugUIMessages.PhpDebugPreferencePage_12,
+		label = addLabelControl(defultCLIGroup, PHPDebugUIMessages.PhpDebugPreferencePage_12,
 				PHPDebugCorePreferenceNames.DEFAULT_PHP);
 		gd = new GridData();
 		gd.widthHint = 90;
 		label.setLayoutData(gd);
 		fDefaultPHPExe = addCombo(defultCLIGroup, 2);
-		addLink(defultCLIGroup,
-				PHPDebugUIMessages.PhpDebugPreferencePage_installedPHPsLink,
-				PHP_EXE_PAGE_ID);
-		label = addLabelControl(defultCLIGroup,
-				PHPDebugUIMessages.PHPDebugPreferencesBlock_CLIDebugger, null);
+		addLink(defultCLIGroup, PHPDebugUIMessages.PhpDebugPreferencePage_installedPHPsLink, PHP_EXE_PAGE_ID);
+		label = addLabelControl(defultCLIGroup, PHPDebugUIMessages.PHPDebugPreferencesBlock_CLIDebugger, null);
 		gd = new GridData();
 		gd.widthHint = 90;
 		label.setLayoutData(gd);
@@ -324,27 +290,21 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		encodingGroup.setLayout(new GridLayout(2, false));
 		encodingGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		addLabelControl(
-				encodingGroup,
-				PHPDebugUIMessages.PHPDebugPreferencesAddon_debugTransferEncoding,
+		addLabelControl(encodingGroup, PHPDebugUIMessages.PHPDebugPreferencesAddon_debugTransferEncoding,
 				PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
 		fDebugEncodingSettings = addEncodingSettings(encodingGroup);
 
-		addLabelControl(
-				encodingGroup,
-				PHPDebugUIMessages.PHPDebugPreferencesAddon_debugOutputEncoding,
+		addLabelControl(encodingGroup, PHPDebugUIMessages.PHPDebugPreferencesAddon_debugOutputEncoding,
 				PHPDebugCorePreferenceNames.OUTPUT_ENCODING);
 		fOutputEncodingSettings = addEncodingSettings(encodingGroup);
 
 		ModifyListener modifyListener = new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				boolean isValid = isValidEncoding(((Combo) e.getSource())
-						.getText());
+				boolean isValid = isValidEncoding(((Combo) e.getSource()).getText());
 				if (isValid) {
 					propertyPage.setErrorMessage(null);
 				} else {
-					propertyPage
-							.setErrorMessage(PHPDebugUIMessages.PHPDebugPreferencesAddon_unsupportedEncoding);
+					propertyPage.setErrorMessage(PHPDebugUIMessages.PHPDebugPreferencesAddon_unsupportedEncoding);
 				}
 				propertyPage.setValid(isValid);
 			}
@@ -356,20 +316,16 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		if (isPropertyPage())
 			createBaseURLGroup(composite);
 
-		fStopAtFirstLine = addCheckBox(composite,
-				PHPDebugUIMessages.PhpDebugPreferencePage_1,
+		fStopAtFirstLine = addCheckBox(composite, PHPDebugUIMessages.PhpDebugPreferencePage_1,
 				PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, 0);
 
 		fDefaultPHPExe.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				PHPexeItem item = PHPexes.getInstance().getItem(
-						fDefaultPHPExe.getText());
+				PHPexeItem item = PHPexes.getInstance().getItem(fDefaultPHPExe.getText());
 				if (item != null) {
-					fCLIDebugger.setText(PHPDebuggersRegistry
-							.getDebuggerName(item.getDebuggerID()));
+					fCLIDebugger.setText(PHPDebuggersRegistry.getDebuggerName(item.getDebuggerID()));
 				} else {
-					fCLIDebugger
-							.setText(PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined);
+					fCLIDebugger.setText(PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined);
 				}
 			}
 		});
@@ -377,12 +333,9 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		fDefaultServer.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					PHPDebugPreferencesBlock.this
-							.refreshAutoGeneratedBaseURLDisplay();
-					String serverDebuggerId = PHPDebugPlugin
-							.getDebuggerId(fDefaultServer.getText());
-					fServerDebugger.setText(PHPDebuggersRegistry
-							.getDebuggerName(serverDebuggerId));
+					PHPDebugPreferencesBlock.this.refreshAutoGeneratedBaseURLDisplay();
+					String serverDebuggerId = PHPDebugPlugin.getDebuggerId(fDefaultServer.getText());
+					fServerDebugger.setText(PHPDebuggersRegistry.getDebuggerName(serverDebuggerId));
 				} catch (MalformedURLException e1) {
 					// safe Malformed URL - exisiting server
 				}
@@ -391,24 +344,21 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 	}
 
 	private void createBaseURLGroup(Composite composite) {
-		Group baseURLGroup = createGroup(composite,
-				PHPDebugUIMessages.PHPDebugPreferencesBlock_9);
+		Group baseURLGroup = createGroup(composite, PHPDebugUIMessages.PHPDebugPreferencesBlock_9);
 
 		addBasePathLabelAndText(baseURLGroup);
 		addBaseURLLabelAndText(baseURLGroup);
 	}
 
 	private void addBaseURLLabelAndText(Group baseURLGroup) {
-		addLabelControl(baseURLGroup,
-				PHPDebugUIMessages.PHPDebugPreferencesBlock_10,
+		addLabelControl(baseURLGroup, PHPDebugUIMessages.PHPDebugPreferencesBlock_10,
 				PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
 
 		addBaseURLText(baseURLGroup);
 
 	}
 
-	private URL generateBaseURL(Server server, IPath basePath)
-			throws MalformedURLException {
+	private URL generateBaseURL(Server server, IPath basePath) throws MalformedURLException {
 		URL serverUrl = server.getRootURL();
 		IPath file = new Path(serverUrl.getFile());
 		if (!file.isEmpty()) {
@@ -416,8 +366,8 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		} else {
 			file = basePath;
 		}
-		URL generatedBaseURL = new URL(serverUrl.getProtocol(),
-				serverUrl.getHost(), serverUrl.getPort(), file.toString());
+		URL generatedBaseURL = new URL(serverUrl.getProtocol(), serverUrl.getHost(), serverUrl.getPort(),
+				file.toString());
 		return generatedBaseURL;
 	}
 
@@ -427,8 +377,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 	}
 
 	private void addBasePathLabelAndText(Group baseURLGroup) {
-		addLabelControl(baseURLGroup,
-				PHPDebugUIMessages.PHPDebugPreferencesBlock_11,
+		addLabelControl(baseURLGroup, PHPDebugUIMessages.PHPDebugPreferencesBlock_11,
 				PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
 		addBasePathText(baseURLGroup);
 	}
@@ -491,8 +440,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		}
 	}
 
-	private void addLink(Composite parent, String label,
-			final String propertyPageID) {
+	private void addLink(Composite parent, String label, final String propertyPageID) {
 		Link link = new Link(parent, SWT.NONE);
 		link.setFont(parent.getFont());
 		link.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, false, false));
@@ -500,8 +448,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(
-						PHPDebugPreferencesBlock.this.propertyPage.getShell(),
-						propertyPageID, null, null);
+						PHPDebugPreferencesBlock.this.propertyPage.getShell(), propertyPageID, null, null);
 				dialog.setBlockOnOpen(true);
 				dialog.addPageChangedListener(new IPageChangedListener() {
 					public void pageChanged(PageChangedEvent event) {
@@ -509,8 +456,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 					}
 				});
 				dialog.open();
-				if (!fDefaultServer.isDisposed()
-						&& !fDefaultPHPExe.isDisposed()) {
+				if (!fDefaultServer.isDisposed() && !fDefaultPHPExe.isDisposed()) {
 					refreshDebuggers();
 				}
 			}
@@ -526,22 +472,17 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 				if (index != -1) {
 					fDefaultServer.select(index);
 				}
-				String serverDebuggerId = PHPDebugPlugin
-						.getDebuggerId(fDefaultServer.getText());
-				fServerDebugger.setText(PHPDebuggersRegistry
-						.getDebuggerName(serverDebuggerId));
+				String serverDebuggerId = PHPDebugPlugin.getDebuggerId(fDefaultServer.getText());
+				fServerDebugger.setText(PHPDebuggersRegistry.getDebuggerName(serverDebuggerId));
 				String selectedPHP = fDefaultPHPExe.getText();
 				loadPHPExes(fDefaultPHPExe, PHPexes.getInstance().getAllItems());
 				index = fDefaultPHPExe.indexOf(selectedPHP);
 				fDefaultPHPExe.select(index != -1 ? index : 0);
-				PHPexeItem item = PHPexes.getInstance().getItem(
-						fDefaultPHPExe.getText());
+				PHPexeItem item = PHPexes.getInstance().getItem(fDefaultPHPExe.getText());
 				if (item != null) {
-					fCLIDebugger.setText(PHPDebuggersRegistry
-							.getDebuggerName(item.getDebuggerID()));
+					fCLIDebugger.setText(PHPDebuggersRegistry.getDebuggerName(item.getDebuggerID()));
 				} else {
-					fCLIDebugger
-							.setText(PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined);
+					fCLIDebugger.setText(PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined);
 				}
 			}
 		});
@@ -588,27 +529,19 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 
 	private void savePreferences(boolean isProjectSpecific) {
 		// TODO - Might do the same for the default server
-		Preferences prefs = PHPProjectPreferences.getModelPreferences();
+		IEclipsePreferences prefs = PHPDebugPlugin.getInstancePreferences();
 		IScopeContext[] preferenceScopes = createPreferenceScopes(propertyPage);
-		IEclipsePreferences debugUINode = preferenceScopes[0]
-				.getNode(getPreferenceNodeQualifier());
+		IEclipsePreferences debugUINode = preferenceScopes[0].getNode(getPreferenceNodeQualifier());
 		String phpExe = fDefaultPHPExe.getText();
 		IProject project = getProject(propertyPage);
-		if (isProjectSpecific && debugUINode != null
-				&& preferenceScopes[0] instanceof ProjectScope
+		if (isProjectSpecific && debugUINode != null && preferenceScopes[0] instanceof ProjectScope
 				&& project != null) {
-			debugUINode.putBoolean(
-					PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE,
-					fStopAtFirstLine.getSelection());
-			if (!PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined
-					.equals(phpExe)) {
-				debugUINode
-						.put(PHPDebugCorePreferenceNames.DEFAULT_PHP, phpExe);
+			debugUINode.putBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, fStopAtFirstLine.getSelection());
+			if (!PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined.equals(phpExe)) {
+				debugUINode.put(PHPDebugCorePreferenceNames.DEFAULT_PHP, phpExe);
 			}
-			debugUINode.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING,
-					fDebugEncodingSettings.getText());
-			debugUINode.put(PHPDebugCorePreferenceNames.OUTPUT_ENCODING,
-					fOutputEncodingSettings.getText());
+			debugUINode.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, fDebugEncodingSettings.getText());
+			debugUINode.put(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, fOutputEncodingSettings.getText());
 
 			ServersManager.setDefaultServer(project, fDefaultServer.getText());
 			Server server = ServersManager.getServer(fDefaultServer.getText());
@@ -616,39 +549,28 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		} else {
 			if (project == null) {
 				// Workspace settings
-				prefs.setValue(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE,
-						fStopAtFirstLine.getSelection());
-				prefs.setValue(PHPDebugCorePreferenceNames.TRANSFER_ENCODING,
-						fDebugEncodingSettings.getText());
-				prefs.setValue(PHPDebugCorePreferenceNames.OUTPUT_ENCODING,
-						fOutputEncodingSettings.getText());
-				if (!PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined
-						.equals(phpExe)) {
-					prefs.setValue(PHPDebugCorePreferenceNames.DEFAULT_PHP,
-							phpExe);
+				prefs.putBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, fStopAtFirstLine.getSelection());
+				prefs.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, fDebugEncodingSettings.getText());
+				prefs.put(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, fOutputEncodingSettings.getText());
+				if (!PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined.equals(phpExe)) {
+					prefs.put(PHPDebugCorePreferenceNames.DEFAULT_PHP, phpExe);
 				}
-				ServersManager.setDefaultServer(project,
-						fDefaultServer.getText());
+				ServersManager.setDefaultServer(project, fDefaultServer.getText());
 			} else {
 				if (debugUINode != null) {
 					// Removed a project specific
-					debugUINode
-							.remove(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE);
+					debugUINode.remove(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE);
 					debugUINode.remove(PHPDebugCorePreferenceNames.DEFAULT_PHP);
 					ServersManager.setDefaultServer(project, (Server) null);
-					debugUINode
-							.remove(PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
-					debugUINode
-							.remove(PHPDebugCorePreferenceNames.OUTPUT_ENCODING);
-					prefs.setValue(
-							PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH,
-							defaultBasePath);
+					debugUINode.remove(PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
+					debugUINode.remove(PHPDebugCorePreferenceNames.OUTPUT_ENCODING);
+					prefs.put(PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, defaultBasePath);
 				}
 			}
 		}
 		try {
 			debugUINode.flush();
-			PHPDebugPlugin.getDefault().savePluginPreferences();
+			prefs.flush();
 		} catch (BackingStoreException e) {
 			Logger.logException(e);
 		}
@@ -665,8 +587,8 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 	 *            the encoding to validate
 	 * @return <code>true</code> if the encoding is valid, <code>false</code>
 	 *         otherwise
-	 * @see org.eclipse.ui.ide.dialogs.AbstractEncodingFieldEditor.isValidEncoding
-	 *      (String)
+	 * @see org.eclipse.ui.ide.dialogs.AbstractEncodingFieldEditor.
+	 *      isValidEncoding (String)
 	 */
 	private boolean isValidEncoding(String enc) {
 		try {
@@ -686,8 +608,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		}
 	}
 
-	private void refreshAutoGeneratedBaseURLDisplay()
-			throws MalformedURLException {
+	private void refreshAutoGeneratedBaseURLDisplay() throws MalformedURLException {
 		if (!isPropertyPage) {
 			return;
 		}
