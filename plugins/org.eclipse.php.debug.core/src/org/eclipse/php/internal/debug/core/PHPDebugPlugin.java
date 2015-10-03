@@ -66,27 +66,22 @@ public class PHPDebugPlugin extends Plugin {
 
 		@Override
 		public void bundleChanged(BundleEvent event) {
-			if (event.getBundle() == getBundle()
-					&& event.getType() == BundleEvent.STARTED) {
-				Job handler = new Job(
-						PHPDebugCoreMessages.PHPDebugPlugin_PostStartup) {
+			if (event.getBundle() == getBundle() && event.getType() == BundleEvent.STARTED) {
+				Job handler = new Job(PHPDebugCoreMessages.PHPDebugPlugin_PostStartup) {
 					@Override
 					protected IStatus run(IProgressMonitor monitor) {
 						// Perform 'Post Startup'
 						try {
-							monitor.beginTask(
-									PHPDebugCoreMessages.PHPDebugPlugin_PerformingPostStartupOperations,
+							monitor.beginTask(PHPDebugCoreMessages.PHPDebugPlugin_PerformingPostStartupOperations,
 									IProgressMonitor.UNKNOWN);
 							perform();
 						} catch (Exception e) {
-							Logger.logException(
-									MessageFormat
-											.format("Errors occurred while performing ''{0}'' bundle post startup.", //$NON-NLS-1$
-													ID), e);
+							Logger.logException(MessageFormat.format(
+									"Errors occurred while performing ''{0}'' bundle post startup.", //$NON-NLS-1$
+									ID), e);
 						} finally {
 							// Unregister itself from listeners
-							getBundle().getBundleContext()
-									.removeBundleListener(PostStart.this);
+							getBundle().getBundleContext().removeBundleListener(PostStart.this);
 							monitor.done();
 						}
 						return Status.OK_STATUS;
@@ -101,12 +96,9 @@ public class PHPDebugPlugin extends Plugin {
 
 		private void perform() {
 			// Set the auto-remove old launches listener
-			IPreferenceStore preferenceStore = DebugUIPlugin.getDefault()
-					.getPreferenceStore();
-			fInitialAutoRemoveLaunches = preferenceStore
-					.getBoolean(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES);
-			preferenceStore
-					.addPropertyChangeListener(new AutoRemoveOldLaunchesListener());
+			IPreferenceStore preferenceStore = DebugUIPlugin.getDefault().getPreferenceStore();
+			fInitialAutoRemoveLaunches = preferenceStore.getBoolean(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES);
+			preferenceStore.addPropertyChangeListener(new AutoRemoveOldLaunchesListener());
 			org.eclipse.php.internal.server.core.Activator.getDefault();
 			XDebugPreferenceMgr.setDefaults();
 			XDebugLaunchListener.getInstance();
@@ -135,9 +127,8 @@ public class PHPDebugPlugin extends Plugin {
 		getBundle().getBundleContext().addBundleListener(new PostStart());
 	}
 
-	public static final boolean DEBUG = Boolean
-			.valueOf(
-					Platform.getDebugOption("org.eclipse.php.debug.core/debug")).booleanValue(); //$NON-NLS-1$
+	public static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.php.debug.core/debug")) //$NON-NLS-1$
+			.booleanValue();
 
 	/**
 	 * This method is called upon plug-in activation
@@ -156,11 +147,8 @@ public class PHPDebugPlugin extends Plugin {
 		DebuggerSettingsManager.INSTANCE.shutdown();
 		super.stop(context);
 		plugin = null;
-		DebugUIPlugin
-				.getDefault()
-				.getPreferenceStore()
-				.setValue(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES,
-						fInitialAutoRemoveLaunches);
+		DebugUIPlugin.getDefault().getPreferenceStore().setValue(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES,
+				fInitialAutoRemoveLaunches);
 	}
 
 	/**
@@ -185,8 +173,7 @@ public class PHPDebugPlugin extends Plugin {
 
 	public static boolean getDebugInfoOption() {
 		Preferences prefs = getDefault().getPluginPreferences();
-		return prefs
-				.getBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO);
+		return prefs.getBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO);
 
 	}
 
@@ -204,8 +191,7 @@ public class PHPDebugPlugin extends Plugin {
 		// For backward compatibility try to get default debugger from
 		// preferences
 		Preferences prefs = getDefault().getPluginPreferences();
-		String id = prefs
-				.getString(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID);
+		String id = prefs.getString(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID);
 		if (id == null || id.isEmpty()) {
 			return DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID;
 		}
@@ -239,11 +225,8 @@ public class PHPDebugPlugin extends Plugin {
 	 *             {@link DebugUIPlugin}
 	 */
 	public static boolean getAutoSaveDirtyOption() {
-		String saveDirty = DebugUIPlugin
-				.getDefault()
-				.getPreferenceStore()
-				.getString(
-						IInternalDebugUIConstants.PREF_SAVE_DIRTY_EDITORS_BEFORE_LAUNCH);
+		String saveDirty = DebugUIPlugin.getDefault().getPreferenceStore()
+				.getString(IInternalDebugUIConstants.PREF_SAVE_DIRTY_EDITORS_BEFORE_LAUNCH);
 		if (saveDirty == null) {
 			return true;
 		}
@@ -264,8 +247,7 @@ public class PHPDebugPlugin extends Plugin {
 	 * @return The debug port, or -1.
 	 */
 	public static int getDebugPort(String debuggerId) {
-		IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
-				.getDebuggerConfiguration(debuggerId);
+		IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(debuggerId);
 		if (debuggerConfiguration == null) {
 			return -1;
 		}
@@ -278,15 +260,12 @@ public class PHPDebugPlugin extends Plugin {
 	 * @return debug hosts suitable for URL parameter
 	 */
 	public static String getDebugHosts() {
-		Preferences prefs = PHPProjectPreferences.getModelPreferences();
-		return prefs.getString(PHPDebugCorePreferenceNames.CLIENT_IP);
+		return Platform.getPreferencesService().getString(PHPDebugPlugin.ID, PHPDebugCorePreferenceNames.CLIENT_IP,
+				null, null);
 	}
 
 	public static String getWorkspaceDefaultServer() {
-		Preferences serverPrefs = org.eclipse.php.internal.server.core.Activator
-				.getDefault().getPluginPreferences();
-		return serverPrefs
-				.getString(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);
+		return org.eclipse.php.internal.server.core.Activator.getWorkspaceDefaultServer();
 
 	}
 
@@ -298,8 +277,7 @@ public class PHPDebugPlugin extends Plugin {
 	}
 
 	public static void log(Throwable e) {
-		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR,
-				"PHPDebug plugin internal error", e)); //$NON-NLS-1$
+		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR, "PHPDebug plugin internal error", e)); //$NON-NLS-1$
 	}
 
 	public static void logErrorMessage(String message) {
@@ -355,15 +333,11 @@ public class PHPDebugPlugin extends Plugin {
 	 * 
 	 * @param disableAutoRemoveLaunches
 	 */
-	public static void setDisableAutoRemoveLaunches(
-			boolean disableAutoRemoveLaunches) {
+	public static void setDisableAutoRemoveLaunches(boolean disableAutoRemoveLaunches) {
 		if (DebugUIPlugin.getDefault().getPreferenceStore()
 				.getBoolean(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES) == disableAutoRemoveLaunches) {
 			fLaunchChangedAutoRemoveLaunches = true;
-			DebugUIPlugin
-					.getDefault()
-					.getPreferenceStore()
-					.setValue(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES,
+			DebugUIPlugin.getDefault().getPreferenceStore().setValue(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES,
 					!disableAutoRemoveLaunches);
 		}
 	}
@@ -384,8 +358,7 @@ public class PHPDebugPlugin extends Plugin {
 		IDebugTarget debugTarget = null;
 		IAdaptable adaptable = DebugUITools.getDebugContext();
 		if (adaptable != null) {
-			IDebugElement element = (IDebugElement) adaptable
-					.getAdapter(IDebugElement.class);
+			IDebugElement element = (IDebugElement) adaptable.getAdapter(IDebugElement.class);
 			if (element != null) {
 				debugTarget = element.getDebugTarget();
 			}
@@ -412,12 +385,10 @@ public class PHPDebugPlugin extends Plugin {
 	}
 
 	//
-	private class AutoRemoveOldLaunchesListener implements
-			IPropertyChangeListener {
+	private class AutoRemoveOldLaunchesListener implements IPropertyChangeListener {
 
 		public void propertyChange(PropertyChangeEvent event) {
-			if (IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES.equals(event
-					.getProperty())) {
+			if (IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES.equals(event.getProperty())) {
 				if (fLaunchChangedAutoRemoveLaunches) {
 					fLaunchChangedAutoRemoveLaunches = false;// We got the
 					// event, so
@@ -426,8 +397,7 @@ public class PHPDebugPlugin extends Plugin {
 				} else {
 					// The event was triggered from some other source - e.g. The
 					// user changed the preferences manually.
-					fInitialAutoRemoveLaunches = Boolean.valueOf(event
-							.getNewValue().toString());
+					fInitialAutoRemoveLaunches = Boolean.valueOf(event.getNewValue().toString());
 				}
 			}
 		}
@@ -444,8 +414,7 @@ public class PHPDebugPlugin extends Plugin {
 	}
 
 	public static String getCurrentDebuggerId(PHPVersion phpVersion) {
-		PHPexeItem item = PHPexes.getInstance().getDefaultItemForPHPVersion(
-				phpVersion);
+		PHPexeItem item = PHPexes.getInstance().getDefaultItemForPHPVersion(phpVersion);
 		if (item != null) {
 			return item.getDebuggerID();
 		}
@@ -460,8 +429,7 @@ public class PHPDebugPlugin extends Plugin {
 			if (node != null) {
 				// Replace the workspace defaults with the project-specific
 				// settings.
-				String phpExe = node.get(
-						PHPDebugCorePreferenceNames.DEFAULT_PHP, null);
+				String phpExe = node.get(PHPDebugCorePreferenceNames.DEFAULT_PHP, null);
 				if (phpExe != null) {
 					return PHPexes.getInstance().getItem(phpExe);
 				}
@@ -476,8 +444,7 @@ public class PHPDebugPlugin extends Plugin {
 	}
 
 	public static PHPexeItem getPHPexeItem(PHPVersion phpVersion) {
-		PHPexeItem item = PHPexes.getInstance().getDefaultItemForPHPVersion(
-				phpVersion);
+		PHPexeItem item = PHPexes.getInstance().getDefaultItemForPHPVersion(phpVersion);
 		if (item != null) {
 			return item;
 		}
@@ -499,11 +466,9 @@ public class PHPDebugPlugin extends Plugin {
 	// This scope will be used to search for preferences values.
 	public static IScopeContext[] createPreferenceScopes(IProject project) {
 		if (project != null) {
-			return new IScopeContext[] { new ProjectScope(project),
-					InstanceScope.INSTANCE, DefaultScope.INSTANCE };
+			return new IScopeContext[] { new ProjectScope(project), InstanceScope.INSTANCE, DefaultScope.INSTANCE };
 		}
-		return new IScopeContext[] { InstanceScope.INSTANCE,
-				DefaultScope.INSTANCE };
+		return new IScopeContext[] { InstanceScope.INSTANCE, DefaultScope.INSTANCE };
 	}
 
 	/**
@@ -511,18 +476,15 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public static boolean isDummyFile(String fileName) {
 		if (fileName != null) {
-			String dummyFile = Platform.getPreferencesService().getString(
-					PHPDebugPlugin.ID,
+			String dummyFile = Platform.getPreferencesService().getString(PHPDebugPlugin.ID,
 					PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE, "", //$NON-NLS-1$
 					null);
-			int idx = Math.max(dummyFile.lastIndexOf('/'),
-					dummyFile.lastIndexOf('\\'));
+			int idx = Math.max(dummyFile.lastIndexOf('/'), dummyFile.lastIndexOf('\\'));
 			if (idx != -1) {
 				dummyFile = dummyFile.substring(idx + 1);
 			}
 
-			idx = Math.max(fileName.lastIndexOf('/'),
-					fileName.lastIndexOf('\\'));
+			idx = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'));
 			if (idx != -1) {
 				fileName = fileName.substring(idx + 1); // strip everything but
 														// last segment
@@ -530,6 +492,14 @@ public class PHPDebugPlugin extends Plugin {
 			return fileName.equals(dummyFile);
 		}
 		return false;
+	}
+
+	public static IEclipsePreferences getInstancePreferences() {
+		return InstanceScope.INSTANCE.getNode(ID);
+	}
+
+	public static IEclipsePreferences getDefaultPreferences() {
+		return DefaultScope.INSTANCE.getNode(ID);
 	}
 
 }

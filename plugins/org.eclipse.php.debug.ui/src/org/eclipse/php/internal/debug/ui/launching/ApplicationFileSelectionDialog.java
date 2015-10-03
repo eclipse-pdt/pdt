@@ -11,9 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.launching;
 
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.debug.ui.model.ExtendedWorkbenchContentProvider;
 import org.eclipse.swt.SWT;
@@ -37,7 +38,6 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 	protected String[] fRequiredNatures;
 	private Button fExternalFilesBt;
 	private boolean fAllowExternalFiles;
-	private Preferences fStore;
 
 	/**
 	 * FilteredFileSelectionDialog constructor comment.
@@ -55,29 +55,21 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 	 *            Allows selection from an external files that are currently
 	 *            opened in the editor
 	 */
-	public ApplicationFileSelectionDialog(Shell parent,
-			ILabelProvider labelProvider, String title, String message,
-			String[] extensions, String[] requiredNatures,
-			boolean allowMultiple, boolean allowExternalFiles) {
-		super(parent, labelProvider, new ExtendedWorkbenchContentProvider(
-				allowExternalFiles));
+	public ApplicationFileSelectionDialog(Shell parent, ILabelProvider labelProvider, String title, String message,
+			String[] extensions, String[] requiredNatures, boolean allowMultiple, boolean allowExternalFiles) {
+		super(parent, labelProvider, new ExtendedWorkbenchContentProvider(allowExternalFiles));
 		this.fAllowExternalFiles = allowExternalFiles;
 		setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
 		setTitle(title);
 		if (title == null)
-			setTitle(Messages.ApplicationFileSelectionDialog_2); 
+			setTitle(Messages.ApplicationFileSelectionDialog_2);
 		if (message == null)
-			message = Messages.ApplicationFileSelectionDialog_1; 
+			message = Messages.ApplicationFileSelectionDialog_1;
 		setMessage(message);
 		setAllowMultiple(allowMultiple);
 
 		if (extensions != null) {
-			addFilter(new ApplicationFileViewerFilter(requiredNatures,
-					extensions));
-		}
-		PHPDebugUIPlugin debugPlugin = PHPDebugUIPlugin.getDefault();
-		if (debugPlugin != null) {
-			fStore = debugPlugin.getPluginPreferences();
+			addFilter(new ApplicationFileViewerFilter(requiredNatures, extensions));
 		}
 	}
 
@@ -139,7 +131,8 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 		});
 
 		// Set the current state as saved in the preferences.
-		String shouldShowExternals = fStore.getString(SHOW_EXTERNAL_FILES);
+		String shouldShowExternals = Platform.getPreferencesService().getString(PHPDebugUIPlugin.ID,
+				SHOW_EXTERNAL_FILES, null, null);
 		if (shouldShowExternals.length() == 0) {
 			fExternalFilesBt.setSelection(true);
 			updateView(true);
@@ -160,8 +153,8 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 	protected void okPressed() {
 		// Save the external files visibility state into the preferences.
 		if (fExternalFilesBt != null) {
-			fStore.setValue(SHOW_EXTERNAL_FILES, Boolean
-					.toString(fExternalFilesBt.getSelection()));
+			PHPDebugPlugin.getInstancePreferences().put(SHOW_EXTERNAL_FILES,
+					Boolean.toString(fExternalFilesBt.getSelection()));
 		}
 		super.okPressed();
 	}
@@ -170,8 +163,7 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 	 * Update the tree view.
 	 */
 	private void updateView(boolean showExternalFiles) {
-		((ExtendedWorkbenchContentProvider) getTreeViewer()
-				.getContentProvider())
+		((ExtendedWorkbenchContentProvider) getTreeViewer().getContentProvider())
 				.setProvideExternalFiles(showExternalFiles);
 		getTreeViewer().refresh();
 	}

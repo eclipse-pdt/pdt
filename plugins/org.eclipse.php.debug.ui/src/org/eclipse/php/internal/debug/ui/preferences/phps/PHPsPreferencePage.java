@@ -12,12 +12,10 @@
 package org.eclipse.php.internal.debug.ui.preferences.phps;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
-import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
@@ -37,8 +35,7 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @since 3.0
  */
-public class PHPsPreferencePage extends AbstractPreferencePage implements
-		IWorkbenchPreferencePage {
+public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkbenchPreferencePage {
 
 	public static String ID = "org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage"; //$NON-NLS-1$
 	// PHP Block
@@ -53,26 +50,16 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements
 		setDescription(PHPDebugUIMessages.PHPsPreferencePage_2);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	/**
+	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
 		PHPExeVerifier.verify(PHPexes.getInstance().getAllItems());
 	}
 
-	protected Preferences getModelPreferences() {
-		return PHPProjectPreferences.getModelPreferences();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse
-	 * .swt.widgets.Composite)
+	/**
+	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse
+	 *      .swt.widgets.Composite)
 	 */
 	protected Control createContents(Composite ancestor) {
 		initializeDialogUnits(ancestor);
@@ -92,29 +79,23 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements
 		data.horizontalSpan = 1;
 		control.setLayoutData(data);
 
-		fPHPBlock.restoreColumnSettings(PHPDebugUIPlugin.getDefault()
-				.getDialogSettings(),
+		fPHPBlock.restoreColumnSettings(PHPDebugUIPlugin.getDefault().getDialogSettings(),
 				PHPDebugCorePreferenceNames.DIALOG_COLUMN_WIDTH);
 
 		initDefaultPHP();
 		applyDialogFont(ancestor);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(ancestor,
-				IPHPHelpContextIds.PHP_EXECUTABLES_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(ancestor, IPHPHelpContextIds.PHP_EXECUTABLES_PREFERENCES);
 		return ancestor;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
 	public boolean performOk() {
 
 		// save column widths
-		IDialogSettings settings = PHPDebugUIPlugin.getDefault()
-				.getDialogSettings();
-		fPHPBlock.saveColumnSettings(settings,
-				PHPDebugCorePreferenceNames.DIALOG_COLUMN_WIDTH);
+		IDialogSettings settings = PHPDebugUIPlugin.getDefault().getDialogSettings();
+		fPHPBlock.saveColumnSettings(settings, PHPDebugCorePreferenceNames.DIALOG_COLUMN_WIDTH);
 
 		fPHPBlock.commitChanges();
 		return super.performOk();
@@ -128,17 +109,9 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements
 			// otherwise remove the PHP setting
 			if (!exist) {
 				fPHPBlock.removePHPs(new PHPexeItem[] { php });
-				ErrorDialog
-						.openError(
-								getControl().getShell(),
-								PHPDebugUIMessages.PHPsPreferencePage_1,
-								PHPDebugUIMessages.PHPsPreferencePage_10,
-								new Status(
-										IStatus.ERROR,
-										PHPDebugUIPlugin.ID,
-										PHPDebugUIPlugin.INTERNAL_ERROR,
-										PHPDebugUIMessages.PHPsPreferencePage_11,
-										null));
+				ErrorDialog.openError(getControl().getShell(), PHPDebugUIMessages.PHPsPreferencePage_1,
+						PHPDebugUIMessages.PHPsPreferencePage_10, new Status(IStatus.ERROR, PHPDebugUIPlugin.ID,
+								PHPDebugUIPlugin.INTERNAL_ERROR, PHPDebugUIMessages.PHPsPreferencePage_11, null));
 				return;
 			}
 		}
