@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.IExternalSourceModule;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
@@ -59,7 +60,8 @@ public final class ASTProvider {
 	 * 
 	 * @since 3.0
 	 */
-	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jdt.ui/debug/ASTProvider")); //$NON-NLS-1$//$NON-NLS-2$
+	private static final boolean DEBUG = "true" //$NON-NLS-1$
+			.equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jdt.ui/debug/ASTProvider")); //$NON-NLS-1$
 
 	/**
 	 * Internal activation listener.
@@ -95,9 +97,8 @@ public final class ASTProvider {
 		public void partClosed(IWorkbenchPartReference ref) {
 			if (isActiveEditor(ref)) {
 				if (DEBUG) {
-					System.out
-							.println(getThreadName()
-									+ " - " + DEBUG_PREFIX + "closed active editor: " + ref.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+					System.out.println(
+							getThreadName() + " - " + DEBUG_PREFIX + "closed active editor: " + ref.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				activeJavaEditorChanged(null);
 			}
@@ -152,8 +153,7 @@ public final class ASTProvider {
 		 * IWorkbenchWindow)
 		 */
 		public void windowActivated(IWorkbenchWindow window) {
-			IWorkbenchPartReference ref = window.getPartService()
-					.getActivePartReference();
+			IWorkbenchPartReference ref = window.getPartService().getActivePartReference();
 			if (isJavaEditor(ref) && !isActiveEditor(ref)) {
 				activeJavaEditorChanged(ref.getPart(true));
 			}
@@ -174,9 +174,8 @@ public final class ASTProvider {
 			if (fActiveEditor != null && fActiveEditor.getSite() != null
 					&& window == fActiveEditor.getSite().getWorkbenchWindow()) {
 				if (DEBUG) {
-					System.out
-							.println(getThreadName()
-									+ " - " + DEBUG_PREFIX + "closed active editor: " + fActiveEditor.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+					System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "closed active editor: " //$NON-NLS-1$ //$NON-NLS-2$
+							+ fActiveEditor.getTitle());
 				}
 				activeJavaEditorChanged(null);
 			}
@@ -208,8 +207,7 @@ public final class ASTProvider {
 
 			// The instanceof check is not need but helps clients, see
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=84862
-			return PHPUiConstants.PHP_EDITOR_ID.equals(id)
-					|| ref.getPart(false) instanceof PHPStructuredEditor;
+			return PHPUiConstants.PHP_EDITOR_ID.equals(id) || ref.getPart(false) instanceof PHPStructuredEditor;
 		}
 	}
 
@@ -254,8 +252,7 @@ public final class ASTProvider {
 		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
 
 		// Ensure existing windows get connected
-		IWorkbenchWindow[] windows = PlatformUI.getWorkbench()
-				.getWorkbenchWindows();
+		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
 		for (int i = 0, length = windows.length; i < length; i++) {
 			windows[i].getPartService().addPartListener(fActivationListener);
 		}
@@ -265,8 +262,7 @@ public final class ASTProvider {
 
 		ISourceModule javaElement = null;
 		if (editor instanceof PHPStructuredEditor) {
-			javaElement = (ISourceModule) ((PHPStructuredEditor) editor)
-					.getModelElement();
+			javaElement = (ISourceModule) ((PHPStructuredEditor) editor).getModelElement();
 		}
 
 		synchronized (this) {
@@ -276,14 +272,10 @@ public final class ASTProvider {
 		}
 
 		if (DEBUG) {
-			System.out
-					.println(getThreadName()
-							+ " - " + DEBUG_PREFIX + "active editor is: " + toString(javaElement)); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "active editor is: " + toString(javaElement)); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		synchronized (fReconcileLock) {
-			if (fIsReconciling
-					&& (fReconcilingJavaElement == null || !fReconcilingJavaElement
-							.equals(javaElement))) {
+			if (fIsReconciling && (fReconcilingJavaElement == null || !fReconcilingJavaElement.equals(javaElement))) {
 				fIsReconciling = false;
 				fReconcilingJavaElement = null;
 			} else if (javaElement == null) {
@@ -332,9 +324,7 @@ public final class ASTProvider {
 		}
 
 		if (DEBUG) {
-			System.out
-					.println(getThreadName()
-							+ " - " + DEBUG_PREFIX + "about to reconcile: " + toString(javaElement)); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "about to reconcile: " + toString(javaElement)); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		synchronized (fReconcileLock) {
 			fIsReconciling = true;
@@ -353,9 +343,8 @@ public final class ASTProvider {
 		}
 
 		if (DEBUG) {
-			System.out
-					.println(getThreadName()
-							+ " - " + DEBUG_PREFIX + "disposing AST: " + toString(fAST) + " for: " + toString(fActiveJavaElement)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "disposing AST: " + toString(fAST) + " for: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ toString(fActiveJavaElement));
 		}
 		fAST = null;
 
@@ -406,24 +395,21 @@ public final class ASTProvider {
 	 */
 	private synchronized void cache(Program ast, ISourceModule javaElement) {
 
-		if (fActiveJavaElement != null
-				&& !fActiveJavaElement.equals(javaElement)) {
+		if (fActiveJavaElement != null && !fActiveJavaElement.equals(javaElement)) {
 			if (DEBUG && javaElement != null) {
 				// don't report call from
 
 				// disposeAST()
-				System.out
-						.println(getThreadName()
-								+ " - " + DEBUG_PREFIX + "don't cache AST for inactive: " + toString(javaElement)); //$NON-NLS-1$ //$NON-NLS-2$
+				System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "don't cache AST for inactive: " //$NON-NLS-1$ //$NON-NLS-2$
+						+ toString(javaElement));
 			}
 			return;
 		}
 
 		if (DEBUG && (javaElement != null || ast != null)) {
 			// don't report call
-			System.out
-					.println(getThreadName()
-							+ " - " + DEBUG_PREFIX + "caching AST: " + toString(ast) + " for: " + toString(javaElement)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "caching AST: " + toString(ast) + " for: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ toString(javaElement));
 		}
 
 		if (fAST != null) {
@@ -455,8 +441,7 @@ public final class ASTProvider {
 	 *            the progress monitor or <code>null</code>
 	 * @return the AST or <code>null</code> if the AST is not available
 	 */
-	public Program getAST(ISourceModule input, WAIT_FLAG waitFlag,
-			IProgressMonitor progressMonitor) {
+	public Program getAST(ISourceModule input, WAIT_FLAG waitFlag, IProgressMonitor progressMonitor) {
 		if (input == null || waitFlag == null) {
 			throw new IllegalArgumentException("input or wait flag are null"); //$NON-NLS-1$
 		}
@@ -471,17 +456,15 @@ public final class ASTProvider {
 			if (isActiveElement) {
 				if (fAST != null) {
 					if (DEBUG) {
-						System.out
-								.println(getThreadName()
-										+ " - " + DEBUG_PREFIX + "returning cached AST:" + toString(fAST) + " for: " + input.getElementName()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "returning cached AST:" //$NON-NLS-1$ //$NON-NLS-2$
+								+ toString(fAST) + " for: " + input.getElementName()); //$NON-NLS-1$
 					}
 					return fAST;
 				}
 				if (waitFlag == SharedASTProvider.WAIT_NO) {
 					if (DEBUG) {
-						System.out
-								.println(getThreadName()
-										+ " - " + DEBUG_PREFIX + "returning null (WAIT_NO) for: " + input.getElementName()); //$NON-NLS-1$ //$NON-NLS-2$
+						System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "returning null (WAIT_NO) for: " //$NON-NLS-1$ //$NON-NLS-2$
+								+ input.getElementName());
 					}
 					return null;
 
@@ -508,9 +491,8 @@ public final class ASTProvider {
 				// Wait for AST
 				synchronized (fWaitLock) {
 					if (DEBUG) {
-						System.out
-								.println(getThreadName()
-										+ " - " + DEBUG_PREFIX + "waiting for AST for: " + input.getElementName()); //$NON-NLS-1$ //$NON-NLS-2$
+						System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "waiting for AST for: " //$NON-NLS-1$ //$NON-NLS-2$
+								+ input.getElementName());
 					}
 					fWaitLock.wait(30000); // XXX: The 30 seconds timeout is an
 											// attempt to at least avoid a
@@ -522,9 +504,8 @@ public final class ASTProvider {
 				synchronized (this) {
 					if (activeElement == fActiveJavaElement && fAST != null) {
 						if (DEBUG) {
-							System.out
-									.println(getThreadName()
-											+ " - " + DEBUG_PREFIX + "...got AST for: " + input.getElementName()); //$NON-NLS-1$ //$NON-NLS-2$
+							System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "...got AST for: " //$NON-NLS-1$ //$NON-NLS-2$
+									+ input.getElementName());
 						}
 						return fAST;
 					}
@@ -542,9 +523,8 @@ public final class ASTProvider {
 			if (progressMonitor != null && progressMonitor.isCanceled()) {
 				ast = null;
 				if (DEBUG) {
-					System.out
-							.println(getThreadName()
-									+ " - " + DEBUG_PREFIX + "Ignore created AST for: " + input.getElementName() + " - operation has been cancelled"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "Ignore created AST for: " //$NON-NLS-1$ //$NON-NLS-2$
+							+ input.getElementName() + " - operation has been cancelled"); //$NON-NLS-1$
 				}
 			}
 		} finally {
@@ -553,9 +533,8 @@ public final class ASTProvider {
 					// in the meantime, reconcile created a new AST. Return that
 					// one
 					if (DEBUG) {
-						System.out
-								.println(getThreadName()
-										+ " - " + DEBUG_PREFIX + "Ignore created AST for " + input.getElementName() + " - AST from reconciler is newer"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "Ignore created AST for " //$NON-NLS-1$ //$NON-NLS-2$
+								+ input.getElementName() + " - AST from reconciler is newer"); //$NON-NLS-1$
 					}
 					reconciled(fAST, input, null);
 					return fAST;
@@ -576,11 +555,8 @@ public final class ASTProvider {
 	 */
 	private boolean isReconciling(ISourceModule javaElement) {
 		synchronized (fReconcileLock) {
-			return javaElement != null
-					&& javaElement.equals(fReconcilingJavaElement)
-					&& fIsReconciling
-					&& !(javaElement instanceof IExternalSourceModule)
-					&& !isValidatorDisabled(javaElement);
+			return javaElement != null && javaElement.equals(fReconcilingJavaElement) && fIsReconciling
+					&& !(javaElement instanceof IExternalSourceModule) && !isValidatorDisabled(javaElement);
 		}
 	}
 
@@ -589,15 +565,15 @@ public final class ASTProvider {
 			return true;
 		} else if (javaElement.getResource() != null) {
 			final IResource resource = javaElement.getResource();
-			if (ValidationFramework.getDefault().isSuspended(
-					resource.getProject())) {
+			if (ValidationFramework.getDefault().isSuspended(resource.getProject())) {
 				return true;
-			} else if (ValidationFramework.getDefault()
-					.getProjectSettings(resource.getProject()).getSuspend()) {
+			} else if (ValidationFramework.getDefault().getProjectSettings(resource.getProject()).getSuspend()) {
 				return true;
+			} else if (ModelManager.getExternalManager().getExternalFoldersProject()
+					.equals(javaElement.getScriptProject())) {
+				return false;
 			}
-			Set<Validator> validators = ValidationFramework.getDefault()
-					.getDisabledValidatorsFor(resource);
+			Set<Validator> validators = ValidationFramework.getDefault().getDisabledValidatorsFor(resource);
 			for (Validator v : validators) {
 				if (v.getId().equals(PhpReconcilingStrategy.ID)) {
 					return true;
@@ -617,8 +593,7 @@ public final class ASTProvider {
 	 *            the progress monitor
 	 * @return AST
 	 */
-	private static Program createAST(final ISourceModule input,
-			final IProgressMonitor progressMonitor) {
+	private static Program createAST(final ISourceModule input, final IProgressMonitor progressMonitor) {
 		if (!hasSource(input)) {
 			return null;
 		}
@@ -645,9 +620,8 @@ public final class ASTProvider {
 						return;
 					}
 					if (DEBUG) {
-						System.err
-								.println(getThreadName()
-										+ " - " + DEBUG_PREFIX + "creating AST for: " + input.getElementName()); //$NON-NLS-1$ //$NON-NLS-2$
+						System.err.println(
+								getThreadName() + " - " + DEBUG_PREFIX + "creating AST for: " + input.getElementName()); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					root[0] = (Program) parser.createAST(progressMonitor);
 
@@ -662,8 +636,8 @@ public final class ASTProvider {
 			}
 
 			public void handleException(Throwable ex) {
-				IStatus status = new Status(IStatus.ERROR, PHPUiPlugin.ID,
-						IStatus.OK, "Error in PDT UI during AST creation", ex); //$NON-NLS-1$
+				IStatus status = new Status(IStatus.ERROR, PHPUiPlugin.ID, IStatus.OK,
+						"Error in PDT UI during AST creation", ex); //$NON-NLS-1$
 				PHPUiPlugin.log(status);
 			}
 		});
@@ -687,7 +661,8 @@ public final class ASTProvider {
 		// try {
 		// return je.getBuffer() != null;
 		// } catch (ModelException ex) {
-		//			IStatus status= new Status(IStatus.ERROR, PHPUiPlugin.ID, IStatus.OK, "Error in PDT UI during AST creation", ex);  //$NON-NLS-1$
+		// IStatus status= new Status(IStatus.ERROR, PHPUiPlugin.ID, IStatus.OK,
+		// "Error in PDT UI during AST creation", ex); //$NON-NLS-1$
 		// PHPUiPlugin.log(status);
 		// }
 		// return false;
@@ -714,22 +689,17 @@ public final class ASTProvider {
 	 * org.eclipse.jdt.internal.ui.text.java.IJavaReconcilingListener#reconciled
 	 * (org.eclipse.jdt.core.dom.Program)
 	 */
-	void reconciled(Program ast, ISourceModule javaElement,
-			IProgressMonitor progressMonitor) {
+	void reconciled(Program ast, ISourceModule javaElement, IProgressMonitor progressMonitor) {
 		if (DEBUG) {
-			System.out
-					.println(getThreadName()
-							+ " - " + DEBUG_PREFIX + "reconciled: " + toString(javaElement) + ", AST: " + toString(ast)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "reconciled: " + toString(javaElement) //$NON-NLS-1$ //$NON-NLS-2$
+					+ ", AST: " + toString(ast)); //$NON-NLS-1$
 		}
 
 		synchronized (fReconcileLock) {
-			if (javaElement == null
-					|| !javaElement.equals(fReconcilingJavaElement)) {
+			if (javaElement == null || !javaElement.equals(fReconcilingJavaElement)) {
 
 				if (DEBUG) {
-					System.out
-							.println(getThreadName()
-									+ " - " + DEBUG_PREFIX + "  ignoring AST of out-dated editor"); //$NON-NLS-1$ //$NON-NLS-2$
+					System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "  ignoring AST of out-dated editor"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				// Signal - threads might wait for wrong element
 				synchronized (fWaitLock) {
@@ -738,8 +708,7 @@ public final class ASTProvider {
 
 				return;
 			}
-			fIsReconciling = progressMonitor != null
-					&& progressMonitor.isCanceled();
+			fIsReconciling = progressMonitor != null && progressMonitor.isCanceled();
 			cache(ast, javaElement);
 		}
 	}
