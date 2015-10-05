@@ -28,4 +28,4 @@ Export-Package: org.eclipse.php.internal.server;x-internal:=true,
  org.eclipse.php.internal.server.ui.wizard;x-internal:=true,
  org.eclipse.php.server.ui.types,
  org.eclipse.php.server.ui.wizards
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
