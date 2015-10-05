@@ -9,5 +9,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.help
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Eclipse PDT
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.eclipse.php.help

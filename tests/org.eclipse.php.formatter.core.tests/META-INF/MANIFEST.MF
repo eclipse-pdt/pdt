@@ -16,6 +16,6 @@ Require-Bundle: org.junit,
  org.eclipse.php.formatter.ui,
  org.eclipse.jface.text,
  org.eclipse.dltk.core
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.dltk.compiler.problem
