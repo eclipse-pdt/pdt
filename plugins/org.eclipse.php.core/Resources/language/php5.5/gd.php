@@ -1,5 +1,29 @@
 <?php
 
+// added manually
+
+/**
+ * Output an WebP image to browser or file
+ *
+ * @param resource $image
+ *        	An image resource, returned by one of the image creation functions, such as imagecreatetruecolor()
+ * @param string $filename
+ *        	The path to save the file to. If not set or NULL, the raw image stream will be outputted directly
+ * @since 5.5
+ */
+function imagewebp($image, $filename) {
+}
+
+/**
+ * Create a new image from file or URL
+ *
+ * @param string $filename
+ *        	Path to the WebP image
+ * @since 5.5
+ */
+function imagecreatefromwebp($filename) {
+}
+
 // Start of gd v.
 
 /**
