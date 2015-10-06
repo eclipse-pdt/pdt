@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.validation;
 
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
@@ -37,6 +39,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.ide.FileStoreEditorInput;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -74,8 +78,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 
 		IEditorInput fEditorInput = findEditor(helper);
 
-		fDocumentProvider = DLTKUIPlugin.getDefault()
-				.getSourceModuleDocumentProvider();
+		fDocumentProvider = DLTKUIPlugin.getDefault().getSourceModuleDocumentProvider();
 
 		fEditor = getEditor(fEditorInput);
 
@@ -88,23 +91,19 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 	private IEditorPart getEditor(final IEditorInput editorInput) {
 		final IEditorPart editor[] = new IEditorPart[1];
 		Display.getDefault().syncExec(new Runnable() { // needs UI thread to
-					// retrieve active page
-					public void run() {
-						IWorkbenchPage activePage = DLTKUIPlugin
-								.getActivePage();
-						if (activePage != null) {
-							if (editorInput != null) {
-								editor[0] = activePage.findEditor(editorInput);
-							} else {
-								editor[0] = activePage.getActiveEditor(); // workaround
-								// for
-								// external
-								// files
-								// editor
-							}
-						}
+			// retrieve active page
+			public void run() {
+				IWorkbenchPage activePage = DLTKUIPlugin.getActivePage();
+				if (activePage != null) {
+					if (editorInput != null) {
+						editor[0] = activePage.findEditor(editorInput);
+					} else {
+						// workaround for external files editor
+						editor[0] = activePage.getActiveEditor();
 					}
-				});
+				}
+			}
+		});
 		return editor[0];
 	}
 
@@ -113,12 +112,11 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		if (delta.length > 0) {
 			// get the file, model and document:
 			IFile file = getFile(delta[0]);
-			if (file == null) {
-				return null;
+			if (file == null || !file.exists()) {
+				IFileStore fileStore = FileBuffers.getFileStoreAtLocation(new Path(delta[0]));
+				return new FileStoreEditorInput(fileStore);
 			}
-			org.eclipse.ui.part.FileEditorInput fileEditorInput = new org.eclipse.ui.part.FileEditorInput(
-					file);
-			return fileEditorInput;
+			return new FileEditorInput(file);
 		}
 		return null;
 	}
@@ -135,8 +133,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 	 *             if the original Java element does not exist
 	 * @since 3.4
 	 */
-	private Program reconcile(ISourceModule unit, boolean initialReconcile)
-			throws ModelException {
+	private Program reconcile(ISourceModule unit, boolean initialReconcile) throws ModelException {
 		/* fix for missing cancel flag communication */
 		IProblemRequestorExtension extension = getProblemRequestorExtension();
 		if (extension != null) {
@@ -145,23 +142,20 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		}
 
 		try {
-			final ASTProvider astProvider = PHPUiPlugin.getDefault()
-					.getASTProvider();
+			final ASTProvider astProvider = PHPUiPlugin.getDefault().getASTProvider();
 
 			synchronized (unit) {
 				unit.reconcile(true, null, fProgressMonitor);
 			}
 
 			// read DOM AST from provider if avaiable
-			Program createdAST = astProvider.getAST(unit,
-					SharedASTProvider.WAIT_NO, fProgressMonitor);
+			Program createdAST = astProvider.getAST(unit, SharedASTProvider.WAIT_NO, fProgressMonitor);
 			if (astProvider.isActive(unit) && createdAST != null) {
 				return createdAST;
 			}
 
 			if (initialReconcile || astProvider.isActive(unit)) {
-				PHPVersion phpVersion = ProjectOptions.getPhpVersion(unit
-						.getScriptProject().getProject());
+				PHPVersion phpVersion = ProjectOptions.getPhpVersion(unit.getScriptProject().getProject());
 				ASTParser newParser = ASTParser.newParser(phpVersion, unit);
 				createdAST = newParser.createAST(null);
 				if (createdAST != null && document != null) {
@@ -173,8 +167,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 			}
 
 		} catch (OperationCanceledException ex) {
-			Assert.isTrue(fProgressMonitor == null
-					|| fProgressMonitor.isCanceled());
+			Assert.isTrue(fProgressMonitor == null || fProgressMonitor.isCanceled());
 
 		} catch (Exception e) {
 			throw new ModelException(e, IStatus.ERROR);
@@ -190,13 +183,11 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		return null;
 	}
 
-	public void validate(IValidationContext helper, IReporter reporter)
-			throws ValidationException {
+	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
 		validate(null, helper, reporter);
 	}
 
-	public void validate(IRegion dirtyRegion, IValidationContext helper,
-			IReporter reporter) {
+	public void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter) {
 
 		// install editors
 		if (fEditor == null) {
@@ -210,8 +201,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 			return;
 		}
 
-		final IModelElement modelElement = ((PHPStructuredEditor) fEditor)
-				.getModelElement();
+		final IModelElement modelElement = ((PHPStructuredEditor) fEditor).getModelElement();
 		if (modelElement instanceof ISourceModule) {
 
 			final Program ast[] = new Program[1];
@@ -222,8 +212,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 					}
 
 					public void handleException(Throwable ex) {
-						IStatus status = new Status(IStatus.ERROR,
-								PHPUiPlugin.ID, IStatus.OK,
+						IStatus status = new Status(IStatus.ERROR, PHPUiPlugin.ID, IStatus.OK,
 								"Error in php Core during reconcile", ex); //$NON-NLS-1$
 						PHPCorePlugin.getDefault().getLog().log(status);
 					}
@@ -237,8 +226,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 						IProgressMonitor pm = fProgressMonitor;
 						if (pm == null)
 							pm = new NullProgressMonitor();
-						fJavaReconcilingListener.reconciled(ast[0], !fNotify,
-								pm);
+						fJavaReconcilingListener.reconciled(ast[0], !fNotify, pm);
 					}
 				} finally {
 					fNotify = true;
@@ -254,8 +242,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 	 */
 	public IFile getFile(String delta) {
 		try {
-			return ResourcesPlugin.getWorkspace().getRoot()
-					.getFile(new Path(delta));
+			return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(delta));
 		} catch (Exception e) {
 		}
 		return null;
@@ -281,8 +268,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 	}
 
 	private IProblemRequestorExtension getProblemRequestorExtension() {
-		IAnnotationModel model = fDocumentProvider.getAnnotationModel(fEditor
-				.getEditorInput());
+		IAnnotationModel model = fDocumentProvider.getAnnotationModel(fEditor.getEditorInput());
 		if (model instanceof IProblemRequestorExtension)
 			return (IProblemRequestorExtension) model;
 		return null;
