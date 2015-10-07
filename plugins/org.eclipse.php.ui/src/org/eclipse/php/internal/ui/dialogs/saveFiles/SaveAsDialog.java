@@ -47,27 +47,20 @@ import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
 public class SaveAsDialog extends TitleAreaDialog {
 
 	private static final String DIALOG_SETTINGS_SECTION = "SaveAsDialogSettings"; //$NON-NLS-1$
-
 	private static final int NEW_PROJ_ID = IDialogConstants.CLIENT_ID + 1;
 
 	private IFile originalFile = null;
-
 	private String originalName = null;
-
 	private IPath result;
 
 	// widgets
 	private ResourceAndContainerGroup resourceGroup;
-
 	private Button okButton;
-
-	private Button newProjectButton;
 
 	/**
 	 * Image for title area
 	 */
 	private Image dlgTitleImage = null;
-
 	private IWorkbenchWizard newProjectWizard;
 
 	/**
@@ -86,9 +79,15 @@ public class SaveAsDialog extends TitleAreaDialog {
 	 */
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-		shell.setText(""); //$NON-NLS-1$
-		PlatformUI.getWorkbench().getHelpSystem()
-				.setHelp(shell, IIDEHelpContextIds.SAVE_AS_DIALOG);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(shell, IIDEHelpContextIds.SAVE_AS_DIALOG);
+	}
+
+	@Override
+	public void create() {
+		super.create();
+		getShell().setText(PHPUIMessages.SaveAsDialog_Title);
+		setTitle(PHPUIMessages.SaveAsDialog_Title);
+		setMessage(PHPUIMessages.SaveAsDialog_Message);
 	}
 
 	/*
@@ -101,12 +100,10 @@ public class SaveAsDialog extends TitleAreaDialog {
 		validatePage();
 		resourceGroup.setFocus();
 		setTitle(""); //$NON-NLS-1$
-		dlgTitleImage = IDEInternalWorkbenchImages.getImageDescriptor(
-				IDEInternalWorkbenchImages.IMG_DLGBAN_SAVEAS_DLG).createImage();
-		setTitleImage(PHPUiPlugin.getImageDescriptorRegistry().get(
-				PHPPluginImages.DESC_WIZBAN_ADD_PHP_FILE));
+		dlgTitleImage = IDEInternalWorkbenchImages.getImageDescriptor(IDEInternalWorkbenchImages.IMG_DLGBAN_SAVEAS_DLG)
+				.createImage();
+		setTitleImage(PHPUiPlugin.getImageDescriptorRegistry().get(PHPPluginImages.DESC_WIZBAN_ADD_PHP_FILE));
 		setMessage(""); //$NON-NLS-1$
-
 		return contents;
 	}
 
@@ -128,12 +125,8 @@ public class SaveAsDialog extends TitleAreaDialog {
 		GridLayout parentLayout = (GridLayout) parent.getLayout();
 		parentLayout.makeColumnsEqualWidth = false;
 
-		newProjectButton = createButton(parent, NEW_PROJ_ID,
-				PHPUIMessages.SaveAsDialog_createNewProject, false); 
-		okButton = createButton(parent, IDialogConstants.OK_ID,
-				IDialogConstants.OK_LABEL, true);
-		createButton(parent, IDialogConstants.CANCEL_ID,
-				IDialogConstants.CANCEL_LABEL, false);
+		okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 
 	/*
@@ -160,8 +153,8 @@ public class SaveAsDialog extends TitleAreaDialog {
 			}
 		};
 
-		resourceGroup = new ResourceAndContainerGroup(composite, listener,
-				"", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		resourceGroup = new ResourceAndContainerGroup(composite, listener, PHPUIMessages.SaveAsDialog_File_Name, "",
+				false); // $NON-NLS-2$
 		resourceGroup.setAllowExistingResources(true);
 
 		return parentComposite;
@@ -186,8 +179,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	 */
 	private void initializeControls() {
 		if (originalFile != null) {
-			resourceGroup.setContainerFullPath(originalFile.getParent()
-					.getFullPath());
+			resourceGroup.setContainerFullPath(originalFile.getParent().getFullPath());
 			resourceGroup.setResource(originalFile.getName());
 		} else if (originalName != null) {
 			resourceGroup.setResource(originalName);
@@ -199,8 +191,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	 * (non-Javadoc) Method declared on Dialog.
 	 */
 	protected void okPressed() {
-		IPath path = resourceGroup.getContainerFullPath().append(
-				resourceGroup.getResource());
+		IPath path = resourceGroup.getContainerFullPath().append(resourceGroup.getResource());
 
 		// If the user does not supply a file extension and if the save
 		// as dialog was provided a default file name append the extension
@@ -219,12 +210,12 @@ public class SaveAsDialog extends TitleAreaDialog {
 		// If the path already exists then confirm overwrite.
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 		if (file.exists()) {
-			String[] buttons = new String[] { IDialogConstants.YES_LABEL,
-					IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL };
-			String question = PHPUIMessages.SaveAsDialog_6 + file.getFullPath().toString() + PHPUIMessages.SaveAsDialog_7; 
-			MessageDialog d = new MessageDialog(getShell(),
-					PHPUIMessages.SaveAsDialog_saveFileMessage, null, question,
-					MessageDialog.QUESTION, buttons, 0); 
+			String[] buttons = new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL,
+					IDialogConstants.CANCEL_LABEL };
+			String question = PHPUIMessages.SaveAsDialog_6 + file.getFullPath().toString()
+					+ PHPUIMessages.SaveAsDialog_7;
+			MessageDialog d = new MessageDialog(getShell(), PHPUIMessages.SaveAsDialog_saveFileMessage, null, question,
+					MessageDialog.QUESTION, buttons, 0);
 			int overwrite = d.open();
 			switch (overwrite) {
 			case 0: // Yes
@@ -299,8 +290,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 		IPath fullPath = resourceGroup.getContainerFullPath();
 		if (fullPath != null) {
 			String projectName = fullPath.segment(0);
-			IStatus isValidProjectName = workspace.validateName(projectName,
-					IResource.PROJECT);
+			IStatus isValidProjectName = workspace.validateName(projectName, IResource.PROJECT);
 			if (isValidProjectName.isOK()) {
 				IProject project = workspace.getRoot().getProject(projectName);
 				if (!project.isOpen()) {
@@ -328,8 +318,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	 * @since 3.2
 	 */
 	protected IDialogSettings getDialogBoundsSettings() {
-		IDialogSettings settings = IDEWorkbenchPlugin.getDefault()
-				.getDialogSettings();
+		IDialogSettings settings = IDEWorkbenchPlugin.getDefault().getDialogSettings();
 		IDialogSettings section = settings.getSection(DIALOG_SETTINGS_SECTION);
 		if (section == null) {
 			section = settings.addNewSection(DIALOG_SETTINGS_SECTION);
@@ -345,8 +334,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 			cancelPressed();
 		} else if (NEW_PROJ_ID == buttonId) {
 			newProjectWizard = PHPProjectCreationWizardProxy.getProjectWizard();
-			newProjectWizard.init(PlatformUI.getWorkbench(),
-					StructuredSelection.EMPTY);
+			newProjectWizard.init(PlatformUI.getWorkbench(), StructuredSelection.EMPTY);
 			WizardDialog dialog = new WizardDialog(getShell(), newProjectWizard);
 			if (dialog.open() == Window.OK) {
 				resourceGroup.refresh();

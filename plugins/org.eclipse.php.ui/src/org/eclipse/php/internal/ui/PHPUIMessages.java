@@ -616,6 +616,10 @@ public final class PHPUIMessages extends NLS {
 	public static String SaveAsDialog_7;
 
 	public static String SaveAsDialog_createNewProject;
+
+	public static String SaveAsDialog_File_Name;
+
+	public static String SaveAsDialog_Message;
 	public static String OpenResource_error_messageArgs;
 	public static String deleteAction_confirm_title;
 	public static String AddBlockComment_label;
@@ -890,6 +894,8 @@ public final class PHPUIMessages extends NLS {
 	public static String ToggleLinkingAction_link_description;
 	public static String ProjectionModelNodeAdapterPHP_4;
 	public static String SaveAsDialog_saveFileMessage;
+
+	public static String SaveAsDialog_Title;
 	public static String ProjectionModelNodeAdapterPHP_3;
 	public static String ProjectionModelNodeAdapterPHP_2;
 	public static String PHPEditorHoverConfigurationBlock_description;
