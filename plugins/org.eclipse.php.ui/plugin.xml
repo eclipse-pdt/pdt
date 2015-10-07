@@ -1687,6 +1687,20 @@
          tooltip="%openSearchDialogAction.tooltip">
 			</action>			
 		</objectContribution>
+		<objectContribution
+			objectClass="org.eclipse.core.resources.IResource"
+			id="org.eclipse.php.ui.resourceSearchContribution">			
+			<action
+         class="org.eclipse.search.internal.ui.OpenSearchDialogAction"
+         definitionId="org.eclipse.search.ui.openSearchDialog"
+         helpContextId="open_search_dialog_action_context"
+         icon="icons/full/etool16/search.png"
+         id="org.eclipse.php.ui.actions.Search"
+         label="%openSearchDialogAction.label"
+         menubarPath="additions"
+         tooltip="%openSearchDialogAction.tooltip">
+			</action>			
+		</objectContribution>
 		
 	    <viewerContribution
 	          id="org.eclipse.php.refactoring.ui.editorPopupContribution"
