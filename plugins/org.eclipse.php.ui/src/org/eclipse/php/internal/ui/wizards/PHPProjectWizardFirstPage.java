@@ -36,9 +36,11 @@ import org.eclipse.dltk.internal.ui.wizards.dialogfields.*;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.environment.IEnvironmentUI;
 import org.eclipse.dltk.ui.util.ExceptionHandler;
+import org.eclipse.dltk.ui.wizards.NewElementWizard;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -46,6 +48,7 @@ import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.*;
+import org.eclipse.php.internal.ui.workingset.IWorkingSetIds;
 import org.eclipse.php.ui.util.PHPProjectUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -53,26 +56,27 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.ui.dialogs.WorkingSetGroup;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
  * The first page of the <code>SimpleProjectWizard</code>.
  */
-public class PHPProjectWizardFirstPage extends WizardPage implements
-		IPHPProjectCreateWizardPage {
+public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProjectCreateWizardPage {
 
 	public PHPProjectWizardFirstPage() {
 		super(PAGE_NAME);
 		setPageComplete(false);
 		setTitle(NewWizardMessages.ScriptProjectWizardFirstPage_page_title);
 		setDescription(NewWizardMessages.ScriptProjectWizardFirstPage_page_description);
-		fInitialName = ""; //$NON-NLS-1$ 
+		fInitialName = ""; //$NON-NLS-1$
 	}
 
-	private static final String FILENAME_PROJECT = ".project"; //$NON-NLS-1$ 
+	private static final String FILENAME_PROJECT = ".project"; //$NON-NLS-1$
 	protected static final String FILENAME_BUILDPATH = ".buildpath"; //$NON-NLS-1$
 	protected URI fCurrProjectLocation; // null if location is platform location
 
@@ -94,9 +98,11 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	protected JavaScriptSupportGroup fJavaScriptSupportGroup;
 	protected LayoutGroup fLayoutGroup;
 	protected LocationGroup fPHPLocationGroup;
+	protected WorkingSetGroup fWorkingSetGroup;
 	protected WizardFragment fragment;
 
 	public void createControl(Composite parent) {
+
 		initializeDialogUnits(parent);
 		final Composite composite = new Composite(parent, SWT.NULL);
 		composite.setFont(parent.getFont());
@@ -110,12 +116,15 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		data.setParetnt(composite);
 		data.setSettings(getDialogSettings());
 		data.setObserver(fPHPLocationGroup);
-		fragment = (WizardFragment) Platform.getAdapterManager().loadAdapter(
-				data, PHPProjectWizardFirstPage.class.getName());
+		fragment = (WizardFragment) Platform.getAdapterManager().loadAdapter(data,
+				PHPProjectWizardFirstPage.class.getName());
 
 		fVersionGroup = new VersionGroup(composite, PHPVersion.PHP5);
 		fLayoutGroup = new LayoutGroup(composite);
 		fJavaScriptSupportGroup = new JavaScriptSupportGroup(composite, this);
+
+		createWorkingSetGroup(composite, ((PHPProjectCreationWizard) getWizard()).getSelection(),
+				new String[] { IWorkingSetIds.PHP_ID, IWorkingSetIds.RESOURCE_ID, IWorkingSetIds.TASK_ID });
 
 		fDetectGroup = new DetectGroup(composite, fPHPLocationGroup, fNameGroup);
 
@@ -141,13 +150,20 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		setHelpContext(composite);
 	}
 
+	public WorkingSetGroup createWorkingSetGroup(Composite composite, IStructuredSelection selection,
+			String[] supportedWorkingSetTypes) {
+		if (fWorkingSetGroup != null)
+			return fWorkingSetGroup;
+		fWorkingSetGroup = new WorkingSetGroup(composite, selection, supportedWorkingSetTypes);
+		return fWorkingSetGroup;
+	}
+
 	public boolean isExistingLocation() {
 		return fPHPLocationGroup.isExistingLocation();
 	}
 
 	protected void setHelpContext(Composite parent) {
-		PlatformUI.getWorkbench().getHelpSystem()
-				.setHelp(parent, IPHPHelpContextIds.CREATING_PHP_PROJECTS);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.CREATING_PHP_PROJECTS);
 	}
 
 	public URI getLocationURI() {
@@ -171,8 +187,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	 * @return the new project resource handle
 	 */
 	public IProject getProjectHandle() {
-		return ResourcesPlugin.getWorkspace().getRoot()
-				.getProject(fNameGroup.getName());
+		return ResourcesPlugin.getWorkspace().getRoot().getProject(fNameGroup.getName());
 	}
 
 	public String getProjectName() {
@@ -232,8 +247,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 				return;
 			}
 			// check whether the project name is valid
-			final IStatus nameStatus = workspace.validateName(name,
-					IResource.PROJECT);
+			final IStatus nameStatus = workspace.validateName(name, IResource.PROJECT);
 			if (!nameStatus.isOK()) {
 				setErrorMessage(nameStatus.getMessage());
 				setPageComplete(false);
@@ -250,21 +264,18 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 				}
 			}
 
-			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
-					.getProjects();
+			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 			String newProjectNameLowerCase = name.toLowerCase();
 			for (IProject currentProject : projects) {
 				String existingProjectName = currentProject.getName();
-				if (existingProjectName.toLowerCase().equals(
-						newProjectNameLowerCase)) {
+				if (existingProjectName.toLowerCase().equals(newProjectNameLowerCase)) {
 					setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_projectAlreadyExists);
 					setPageComplete(false);
 					return;
 				}
 			}
 
-			final String location = fPHPLocationGroup.getLocation()
-					.toOSString();
+			final String location = fPHPLocationGroup.getLocation().toOSString();
 			// check whether location is empty
 			if (location.length() == 0) {
 				setErrorMessage(null);
@@ -280,8 +291,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			}
 			// check whether the location has the workspace as prefix
 			IPath projectPath = Path.fromOSString(location);
-			if (!fPHPLocationGroup.isInWorkspace()
-					&& Platform.getLocation().isPrefixOf(projectPath)) {
+			if (!fPHPLocationGroup.isInWorkspace() && Platform.getLocation().isPrefixOf(projectPath)) {
 				setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_cannotCreateInWorkspace);
 				setPageComplete(false);
 				return;
@@ -291,8 +301,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			if (!fPHPLocationGroup.isInWorkspace()) {
 				IEnvironment environment = getEnvironment();
 				if (EnvironmentManager.isLocal(environment)) {
-					final IStatus locationStatus = workspace
-							.validateProjectLocation(handle, projectPath);
+					final IStatus locationStatus = workspace.validateProjectLocation(handle, projectPath);
 					File file = projectPath.toFile();
 					if (!locationStatus.isOK()) {
 						setErrorMessage(locationStatus.getMessage());
@@ -312,8 +321,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 				fragment.getWizardModel().putObject("ProjectName", //$NON-NLS-1$
 						fNameGroup.getName());
 				if (!fragment.isComplete()) {
-					setErrorMessage((String) fragment.getWizardModel()
-							.getObject(ERROR_MESSAGE));
+					setErrorMessage((String) fragment.getWizardModel().getObject(ERROR_MESSAGE));
 					setPageComplete(false);
 					return;
 				}
@@ -352,25 +360,20 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 					.getBoolean((PreferenceConstants.JavaScriptSupportEnable));
 		}
 
-		public JavaScriptSupportGroup(Composite composite,
-				WizardPage projectWizardFirstPage) {
+		public JavaScriptSupportGroup(Composite composite, WizardPage projectWizardFirstPage) {
 			final int numColumns = 3;
 			fGroup = new Group(composite, SWT.NONE);
 			fGroup.setFont(composite.getFont());
 
 			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false),
-					true));
+			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false), true));
 			fGroup.setText(PHPUIMessages.JavaScriptSupportGroup_OptionBlockTitle);
 
 			fEnableJavaScriptSupport = new Button(fGroup, SWT.CHECK | SWT.RIGHT);
-			fEnableJavaScriptSupport
-					.setText(PHPUIMessages.JavaScriptSupportGroup_EnableSupport);
-			fEnableJavaScriptSupport.setLayoutData(new GridData(SWT.BEGINNING,
-					SWT.CENTER, false, false));
+			fEnableJavaScriptSupport.setText(PHPUIMessages.JavaScriptSupportGroup_EnableSupport);
+			fEnableJavaScriptSupport.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 			fEnableJavaScriptSupport.addSelectionListener(this);
-			fEnableJavaScriptSupport.setSelection(PHPUiPlugin.getDefault()
-					.getPreferenceStore()
+			fEnableJavaScriptSupport.setSelection(PHPUiPlugin.getDefault().getPreferenceStore()
 					.getBoolean((PreferenceConstants.JavaScriptSupportEnable)));
 		}
 
@@ -392,8 +395,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	/**
 	 * Request a project layout.
 	 */
-	public class LayoutGroup implements Observer, SelectionListener,
-			IDialogFieldListener {
+	public class LayoutGroup implements Observer, SelectionListener, IDialogFieldListener {
 
 		private final SelectionButtonDialogField fStdRadio, fSrcBinRadio;
 		private Group fGroup;
@@ -403,13 +405,11 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			final int numColumns = 3;
 
 			fStdRadio = new SelectionButtonDialogField(SWT.RADIO);
-			fStdRadio
-					.setLabelText(PHPUIMessages.LayoutGroup_OptionBlock_ProjectSrc);
+			fStdRadio.setLabelText(PHPUIMessages.LayoutGroup_OptionBlock_ProjectSrc);
 			fStdRadio.setDialogFieldListener(this);
 
 			fSrcBinRadio = new SelectionButtonDialogField(SWT.RADIO);
-			fSrcBinRadio
-					.setLabelText(PHPUIMessages.LayoutGroup_OptionBlock_SrcResources);
+			fSrcBinRadio.setLabelText(PHPUIMessages.LayoutGroup_OptionBlock_SrcResources);
 			fSrcBinRadio.setDialogFieldListener(this);
 
 			// getting Preferences default choice
@@ -423,21 +423,17 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			fGroup = new Group(composite, SWT.NONE);
 			fGroup.setFont(composite.getFont());
 			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false),
-					true));
+			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false), true));
 			fGroup.setText(PHPUIMessages.LayoutGroup_OptionBlock_Title);
 
 			fStdRadio.doFillIntoGrid(fGroup, 3);
-			LayoutUtil
-					.setHorizontalGrabbing(fStdRadio.getSelectionButton(null));
+			LayoutUtil.setHorizontalGrabbing(fStdRadio.getSelectionButton(null));
 
 			fSrcBinRadio.doFillIntoGrid(fGroup, 2);
 
 			fPreferenceLink = new Link(fGroup, SWT.NONE);
-			fPreferenceLink
-					.setText(PHPUIMessages.ToggleLinkingAction_link_description);
-			fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING,
-					true, false));
+			fPreferenceLink.setText(PHPUIMessages.ToggleLinkingAction_link_description);
+			fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, true, false));
 			fPreferenceLink.addSelectionListener(this);
 			fPreferenceLink.setEnabled(true);
 
@@ -506,8 +502,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			String prefID = PHPProjectLayoutPreferencePage.PREF_ID;
 
 			Map data = null;
-			PreferencesUtil.createPreferenceDialogOn(getShell(), prefID,
-					new String[] { prefID }, data).open();
+			PreferencesUtil.createPreferenceDialogOn(getShell(), prefID, new String[] { prefID }, data).open();
 		}
 	}
 
@@ -516,32 +511,28 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	 * field is changed, regardless of whether the change originates from the
 	 * user or has been invoked programmatically.
 	 */
-	public class VersionGroup extends Observable implements Observer,
-			IStringButtonAdapter, IDialogFieldListener, SelectionListener {
+	public class VersionGroup extends Observable
+			implements Observer, IStringButtonAdapter, IDialogFieldListener, SelectionListener {
 		public final SelectionButtonDialogField fDefaultValues;
 		protected final SelectionButtonDialogField fCustomValues;
 
 		public PHPVersionConfigurationBlock fConfigurationBlock;
 
-		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC = DLTKUIPlugin.PLUGIN_ID
-				+ ".last.external.project"; //$NON-NLS-1$ 
+		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC = DLTKUIPlugin.PLUGIN_ID + ".last.external.project"; //$NON-NLS-1$
 		private Link fPreferenceLink;
 
 		public VersionGroup(Composite composite, PHPVersion minimumVersion) {
 			final int numColumns = 3;
 			final Group group = new Group(composite, SWT.NONE);
 			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			group.setLayout(initGridLayout(new GridLayout(numColumns, false),
-					true));
+			group.setLayout(initGridLayout(new GridLayout(numColumns, false), true));
 			group.setText(PHPUIMessages.VersionGroup_OptionBlock_Title);
 			fDefaultValues = new SelectionButtonDialogField(SWT.RADIO);
 			fDefaultValues.setDialogFieldListener(this);
-			fDefaultValues
-					.setLabelText(PHPUIMessages.VersionGroup_OptionBlock_fDefaultValues);
+			fDefaultValues.setLabelText(PHPUIMessages.VersionGroup_OptionBlock_fDefaultValues);
 			fCustomValues = new SelectionButtonDialogField(SWT.RADIO);
 			fCustomValues.setDialogFieldListener(this);
-			fCustomValues
-					.setLabelText(PHPUIMessages.VersionGroup_OptionBlock_fCustomValues);
+			fCustomValues.setLabelText(PHPUIMessages.VersionGroup_OptionBlock_fCustomValues);
 
 			fDefaultValues.setSelection(true);
 			fCustomValues.setSelection(false);
@@ -549,11 +540,10 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			fDefaultValues.doFillIntoGrid(group, numColumns);
 			fCustomValues.doFillIntoGrid(group, 2);
 
-			fConfigurationBlock = createConfigurationBlock(
-					new IStatusChangeListener() {
-						public void statusChanged(IStatus status) {
-						}
-					}, (IProject) null, null);
+			fConfigurationBlock = createConfigurationBlock(new IStatusChangeListener() {
+				public void statusChanged(IStatus status) {
+				}
+			}, (IProject) null, null);
 			fConfigurationBlock.setMinimumVersion(minimumVersion);
 			fConfigurationBlock.createContents(group);
 			fConfigurationBlock.setEnabled(false);
@@ -568,11 +558,9 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 
 		}
 
-		protected PHPVersionConfigurationBlock createConfigurationBlock(
-				IStatusChangeListener listener, IProject project,
-				IWorkbenchPreferenceContainer container) {
-			return new PHPVersionConfigurationBlock(listener, project,
-					container, true);
+		protected PHPVersionConfigurationBlock createConfigurationBlock(IStatusChangeListener listener,
+				IProject project, IWorkbenchPreferenceContainer container) {
+			return new PHPVersionConfigurationBlock(listener, project, container, true);
 		}
 
 		protected void fireEvent() {
@@ -594,19 +582,13 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 
 		public void changeControlPressed(DialogField field) {
 			IEnvironment environment = getEnvironment();
-			IEnvironmentUI environmentUI = (IEnvironmentUI) environment
-					.getAdapter(IEnvironmentUI.class);
+			IEnvironmentUI environmentUI = (IEnvironmentUI) environment.getAdapter(IEnvironmentUI.class);
 			if (environmentUI != null) {
-				String selectedDirectory = environmentUI
-						.selectFolder(getShell());
+				String selectedDirectory = environmentUI.selectFolder(getShell());
 
 				if (selectedDirectory != null) {
 					// fLocation.setText(selectedDirectory);
-					DLTKUIPlugin
-							.getDefault()
-							.getDialogSettings()
-							.put(DIALOGSTORE_LAST_EXTERNAL_LOC,
-									selectedDirectory);
+					DLTKUIPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LAST_EXTERNAL_LOC, selectedDirectory);
 				}
 			}
 		}
@@ -628,8 +610,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		public void widgetDefaultSelected(SelectionEvent e) {
 			String prefID = PHPInterpreterPreferencePage.PREF_ID;
 			Map data = null;
-			PreferencesUtil.createPreferenceDialogOn(getShell(), prefID,
-					new String[] { prefID }, data).open();
+			PreferencesUtil.createPreferenceDialogOn(getShell(), prefID, new String[] { prefID }, data).open();
 			if (!fCustomValues.isSelected()) {
 				fConfigurationBlock.performRevert();
 			}
@@ -657,8 +638,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	}
 
 	private void removeProject() {
-		if (fNameGroup == null || fNameGroup.getName() == null
-				|| fNameGroup.getName().length() == 0) {
+		if (fNameGroup == null || fNameGroup.getName() == null || fNameGroup.getName().length() == 0) {
 			return;
 		}
 		if (getProjectHandle() == null || !getProjectHandle().exists()) {
@@ -666,15 +646,13 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		}
 
 		IRunnableWithProgress op = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor)
-					throws InvocationTargetException, InterruptedException {
+			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				doRemoveProject(monitor);
 			}
 		};
 
 		try {
-			getContainer().run(true, true,
-					new WorkspaceModifyDelegatingOperation(op));
+			getContainer().run(true, true, new WorkspaceModifyDelegatingOperation(op));
 		} catch (InvocationTargetException e) {
 			final String title = NewWizardMessages.ScriptProjectWizardSecondPage_error_remove_title;
 			final String message = NewWizardMessages.ScriptProjectWizardSecondPage_error_remove_message;
@@ -684,25 +662,19 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		}
 	}
 
-	final void doRemoveProject(IProgressMonitor monitor)
-			throws InvocationTargetException {
+	final void doRemoveProject(IProgressMonitor monitor) throws InvocationTargetException {
 		final boolean noProgressMonitor = (fCurrProjectLocation == null); // inside
 		// workspace
 		if (monitor == null || noProgressMonitor) {
 			monitor = new NullProgressMonitor();
 		}
-		monitor.beginTask(
-				NewWizardMessages.ScriptProjectWizardSecondPage_operation_remove,
-				3);
+		monitor.beginTask(NewWizardMessages.ScriptProjectWizardSecondPage_operation_remove, 3);
 		try {
 			try {
 				URI projLoc = getProjectHandle().getLocationURI();
 
-				boolean removeContent = !fKeepContent
-						&& getProjectHandle().isSynchronized(
-								IResource.DEPTH_INFINITE);
-				getProjectHandle().delete(removeContent, false,
-						new SubProgressMonitor(monitor, 2));
+				boolean removeContent = !fKeepContent && getProjectHandle().isSynchronized(IResource.DEPTH_INFINITE);
+				getProjectHandle().delete(removeContent, false, new SubProgressMonitor(monitor, 2));
 
 			} finally {
 				CoreUtility.enableAutoBuild(fIsAutobuild.booleanValue()); // fIsAutobuild
@@ -723,12 +695,10 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		fKeepContent = this.getDetect();
 
 		final IRunnableWithProgress op = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor)
-					throws InvocationTargetException, InterruptedException {
+			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				try {
 					if (fIsAutobuild == null) {
-						fIsAutobuild = Boolean.valueOf(CoreUtility
-								.enableAutoBuild(false));
+						fIsAutobuild = Boolean.valueOf(CoreUtility.enableAutoBuild(false));
 					}
 					updateProject(monitor);
 				} catch (CoreException e) {
@@ -742,8 +712,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		};
 
 		try {
-			getContainer().run(true, false,
-					new WorkspaceModifyDelegatingOperation(op));
+			getContainer().run(true, false, new WorkspaceModifyDelegatingOperation(op));
 		} catch (InvocationTargetException e) {
 			final String title = NewWizardMessages.ScriptProjectWizardSecondPage_error_title;
 			final String message = NewWizardMessages.ScriptProjectWizardSecondPage_error_message;
@@ -779,14 +748,12 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	 * @see org.eclipse.core.resources.IProjectDescription#setLocationURI(java.net.URI)
 	 * 
 	 */
-	public void createProject(IProject project, URI locationURI,
-			IProgressMonitor monitor) throws CoreException {
+	public void createProject(IProject project, URI locationURI, IProgressMonitor monitor) throws CoreException {
 		PHPProjectUtils.createProjectAt(project, locationURI, monitor);
 		fProjectCreated = true;
 	}
 
-	protected void rememberExistingFiles(URI projectLocation)
-			throws CoreException {
+	protected void rememberExistingFiles(URI projectLocation) throws CoreException {
 		fDotProjectBackup = null;
 		fDotBuildpathBackup = null;
 
@@ -794,86 +761,61 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		if (file.fetchInfo().exists()) {
 			IFileStore projectFile = file.getChild(FILENAME_PROJECT);
 			if (projectFile.fetchInfo().exists()) {
-				fDotProjectBackup = createBackup(projectFile, "project-desc"); //$NON-NLS-1$ 
+				fDotProjectBackup = createBackup(projectFile, "project-desc"); //$NON-NLS-1$
 			}
 			IFileStore buildpathFile = file.getChild(FILENAME_BUILDPATH);
 			if (buildpathFile.fetchInfo().exists()) {
-				fDotBuildpathBackup = createBackup(buildpathFile,
-						"buildpath-desc"); //$NON-NLS-1$ 
+				fDotBuildpathBackup = createBackup(buildpathFile, "buildpath-desc"); //$NON-NLS-1$
 			}
 		}
 	}
 
-	private void restoreExistingFiles(URI projectLocation,
-			IProgressMonitor monitor) throws CoreException {
-		int ticks = ((fDotProjectBackup != null ? 1 : 0) + (fDotBuildpathBackup != null ? 1
-				: 0)) * 2;
-		monitor.beginTask("", ticks); //$NON-NLS-1$ 
+	private void restoreExistingFiles(URI projectLocation, IProgressMonitor monitor) throws CoreException {
+		int ticks = ((fDotProjectBackup != null ? 1 : 0) + (fDotBuildpathBackup != null ? 1 : 0)) * 2;
+		monitor.beginTask("", ticks); //$NON-NLS-1$
 		try {
 			if (fDotProjectBackup != null) {
-				IFileStore projectFile = EFS.getStore(projectLocation)
-						.getChild(FILENAME_PROJECT);
-				projectFile
-						.delete(EFS.NONE, new SubProgressMonitor(monitor, 1));
-				copyFile(fDotProjectBackup, projectFile,
-						new SubProgressMonitor(monitor, 1));
+				IFileStore projectFile = EFS.getStore(projectLocation).getChild(FILENAME_PROJECT);
+				projectFile.delete(EFS.NONE, new SubProgressMonitor(monitor, 1));
+				copyFile(fDotProjectBackup, projectFile, new SubProgressMonitor(monitor, 1));
 			}
 		} catch (IOException e) {
-			IStatus status = new Status(
-					IStatus.ERROR,
-					DLTKUIPlugin.PLUGIN_ID,
-					IStatus.ERROR,
-					NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_project,
-					e);
+			IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR,
+					NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_project, e);
 			throw new CoreException(status);
 		}
 		try {
 			if (fDotBuildpathBackup != null) {
-				IFileStore buildpathFile = EFS.getStore(projectLocation)
-						.getChild(FILENAME_BUILDPATH);
-				buildpathFile.delete(EFS.NONE, new SubProgressMonitor(monitor,
-						1));
-				copyFile(fDotBuildpathBackup, buildpathFile,
-						new SubProgressMonitor(monitor, 1));
+				IFileStore buildpathFile = EFS.getStore(projectLocation).getChild(FILENAME_BUILDPATH);
+				buildpathFile.delete(EFS.NONE, new SubProgressMonitor(monitor, 1));
+				copyFile(fDotBuildpathBackup, buildpathFile, new SubProgressMonitor(monitor, 1));
 			}
 		} catch (IOException e) {
-			IStatus status = new Status(
-					IStatus.ERROR,
-					DLTKUIPlugin.PLUGIN_ID,
-					IStatus.ERROR,
-					NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_buildpath,
-					e);
+			IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR,
+					NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_buildpath, e);
 			throw new CoreException(status);
 		}
 	}
 
-	private File createBackup(IFileStore source, String name)
-			throws CoreException {
+	private File createBackup(IFileStore source, String name) throws CoreException {
 		try {
-			File bak = File.createTempFile("eclipse-" + name, ".bak"); //$NON-NLS-1$ //$NON-NLS-2$ 
+			File bak = File.createTempFile("eclipse-" + name, ".bak"); //$NON-NLS-1$ //$NON-NLS-2$
 			copyFile(source, bak);
 			return bak;
 		} catch (IOException e) {
-			IStatus status = new Status(
-					IStatus.ERROR,
-					DLTKUIPlugin.PLUGIN_ID,
-					IStatus.ERROR,
-					Messages.format(
-							NewWizardMessages.ScriptProjectWizardSecondPage_problem_backup,
-							name), e);
+			IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR,
+					Messages.format(NewWizardMessages.ScriptProjectWizardSecondPage_problem_backup, name), e);
 			throw new CoreException(status);
 		}
 	}
 
-	private void copyFile(IFileStore source, File target) throws IOException,
-			CoreException {
+	private void copyFile(IFileStore source, File target) throws IOException, CoreException {
 		InputStream is = source.openInputStream(EFS.NONE, null);
 		FileOutputStream os = new FileOutputStream(target);
 		copyFile(is, os);
 	}
 
-	private void copyFile(File source, IFileStore target,
-			IProgressMonitor monitor) throws IOException, CoreException {
+	private void copyFile(File source, IFileStore target, IProgressMonitor monitor) throws IOException, CoreException {
 		FileInputStream is = new FileInputStream(source);
 		OutputStream os = target.openOutputStream(EFS.NONE, monitor);
 		copyFile(is, os);
@@ -905,8 +847,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		return this.getLocationURI();
 	}
 
-	protected void updateProject(IProgressMonitor monitor)
-			throws CoreException, InterruptedException {
+	protected void updateProject(IProgressMonitor monitor) throws CoreException, InterruptedException {
 
 		IProject projectHandle = this.getProjectHandle();
 		DLTKCore.create(projectHandle);
@@ -916,9 +857,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			monitor = new NullProgressMonitor();
 		}
 		try {
-			monitor.beginTask(
-					NewWizardMessages.ScriptProjectWizardSecondPage_operation_initialize,
-					70);
+			monitor.beginTask(NewWizardMessages.ScriptProjectWizardSecondPage_operation_initialize, 70);
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
@@ -926,20 +865,18 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			URI realLocation = fCurrProjectLocation;
 			if (fCurrProjectLocation == null) { // inside workspace
 				try {
-					URI rootLocation = ResourcesPlugin.getWorkspace().getRoot()
-							.getLocationURI();
-					realLocation = new URI(rootLocation.getScheme(), null, Path
-							.fromPortableString(rootLocation.getPath())
-							.append(projectHandle.getName()).toString(), null);
+					URI rootLocation = ResourcesPlugin.getWorkspace().getRoot().getLocationURI();
+					realLocation = new URI(rootLocation.getScheme(), null,
+							Path.fromPortableString(rootLocation.getPath()).append(projectHandle.getName()).toString(),
+							null);
 				} catch (URISyntaxException e) {
-					Assert.isTrue(false, "Can't happen"); //$NON-NLS-1$ 
+					Assert.isTrue(false, "Can't happen"); //$NON-NLS-1$
 				}
 			}
 
 			rememberExistingFiles(realLocation);
 
-			createProject(projectHandle, fCurrProjectLocation,
-					new SubProgressMonitor(monitor, 20));
+			createProject(projectHandle, fCurrProjectLocation, new SubProgressMonitor(monitor, 20));
 		} finally {
 			monitor.done();
 		}
@@ -959,30 +896,27 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		Display.getDefault().asyncExec(new Runnable() {
 
 			public void run() {
-				PHPUiPlugin
-						.getDefault()
-						.getPreferenceStore()
-						.setValue(
-								(PreferenceConstants.JavaScriptSupportEnable),
-								fJavaScriptSupportGroup.getSelection());
+				PHPUiPlugin.getDefault().getPreferenceStore().setValue((PreferenceConstants.JavaScriptSupportEnable),
+						fJavaScriptSupportGroup.getSelection());
+				IWorkingSet[] workingSets = fWorkingSetGroup.getSelectedWorkingSets();
+				((NewElementWizard) getWizard()).getWorkbench().getWorkingSetManager()
+						.addToWorkingSets(getProjectHandle(), workingSets);
+
 			}
 		});
 	}
 
 	public boolean shouldSupportJavaScript() {
 
-		return fJavaScriptSupportGroup != null
-				&& fJavaScriptSupportGroup.shouldSupportJavaScript();
+		return fJavaScriptSupportGroup != null && fJavaScriptSupportGroup.shouldSupportJavaScript();
 	}
 
 	public boolean isDefaultVersionSelected() {
-		return fVersionGroup != null
-				&& fVersionGroup.fDefaultValues.isSelected();
+		return fVersionGroup != null && fVersionGroup.fDefaultValues.isSelected();
 	}
 
 	public boolean getUseAspTagsValue() {
-		return fVersionGroup != null
-				&& fVersionGroup.fConfigurationBlock.getUseAspTagsValue();
+		return fVersionGroup != null && fVersionGroup.fConfigurationBlock.getUseAspTagsValue();
 	}
 
 	public PHPVersion getPHPVersionValue() {
