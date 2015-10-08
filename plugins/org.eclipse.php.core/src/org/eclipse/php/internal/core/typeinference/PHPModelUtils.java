@@ -1883,9 +1883,11 @@ public class PHPModelUtils {
 				monitor, true);
 
 		for (String methodName : nonAbstractMethods) {
-			for (String key : abstractMethods.keySet()) {
-				if (methodName.equalsIgnoreCase(key)) {
-					abstractMethods.remove(key);
+			Iterator<Map.Entry<String, IMethod>> iterator = abstractMethods.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Map.Entry<String, IMethod> entry = iterator.next();
+				if (methodName.equalsIgnoreCase(entry.getKey())) {
+					iterator.remove();
 				}
 			}
 		}
