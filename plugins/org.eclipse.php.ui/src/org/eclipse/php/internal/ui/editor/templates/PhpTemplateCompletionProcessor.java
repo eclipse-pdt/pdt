@@ -116,8 +116,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 			}
 			enclosingType = (IType) enclosingElement;
 
-			if (enclosingMethod == null && enclosingType == null) {
-
+			if (enclosingMethod == null && enclosingType == null && !isFieldAccess) {
 				contextIds.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
 				contextIds.add(PhpTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
 			} else if (enclosingMethod == null && enclosingType != null && !isFieldAccess) {
@@ -323,18 +322,21 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 		return false;
 	}
 
-	private ICompletionProposal[] filterUsingPrefix(ICompletionProposal[] completionProposals, String prefix) {
-		List<PhpTemplateProposal> matches = new ArrayList<PhpTemplateProposal>();
-		for (int i = 0; i < completionProposals.length; i++) {
-			PhpTemplateProposal phpTemplateProposal = (PhpTemplateProposal) completionProposals[i];
-			Template template = phpTemplateProposal.getTemplateNew();
-			if (template.getName().startsWith(prefix)) {
-				matches.add(phpTemplateProposal);
-			}
-		}
-
-		return (ICompletionProposal[]) matches.toArray(new ICompletionProposal[matches.size()]);
-	}
+	// private ICompletionProposal[] filterUsingPrefix(ICompletionProposal[]
+	// completionProposals, String prefix) {
+	// List<PhpTemplateProposal> matches = new ArrayList<PhpTemplateProposal>();
+	// for (int i = 0; i < completionProposals.length; i++) {
+	// PhpTemplateProposal phpTemplateProposal = (PhpTemplateProposal)
+	// completionProposals[i];
+	// Template template = phpTemplateProposal.getTemplateNew();
+	// if (template.getName().startsWith(prefix)) {
+	// matches.add(phpTemplateProposal);
+	// }
+	// }
+	//
+	// return (ICompletionProposal[]) matches.toArray(new
+	// ICompletionProposal[matches.size()]);
+	// }
 
 	protected String extractPrefix(ITextViewer viewer, int offset) {
 		int i = offset;
