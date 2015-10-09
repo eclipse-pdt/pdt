@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.compare;
 
-import java.util.ArrayList;
-
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.TextViewer;
@@ -29,8 +27,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionin
  */
 public class PhpMergeViewer extends TextMergeViewer {
 
-	private ArrayList fSourceViewer;
-
 	public PhpMergeViewer(Composite parent, CompareConfiguration configuration) {
 		super(parent, configuration);
 	}
@@ -38,18 +34,12 @@ public class PhpMergeViewer extends TextMergeViewer {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.compare.contentmergeviewer.TextMergeViewer#configureTextViewer
-	 * (org.eclipse.jface.text.TextViewer)
+	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#
+	 * configureTextViewer (org.eclipse.jface.text.TextViewer)
 	 */
 	protected void configureTextViewer(TextViewer textViewer) {
 		if (textViewer instanceof SourceViewer) {
-			if (fSourceViewer == null)
-				fSourceViewer = new ArrayList();
-			fSourceViewer.add(textViewer);
-
-			((SourceViewer) textViewer)
-					.configure(new PHPStructuredTextViewerConfiguration());
+			((SourceViewer) textViewer).configure(new PHPStructuredTextViewerConfiguration());
 		}
 	}
 
