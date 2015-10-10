@@ -29,13 +29,10 @@ public class PHPEditorAdapterFactory implements IAdapterFactory {
 		boolean isPHPFile = false;
 
 		if (editorPart instanceof PHPStructuredEditor) {
-			IModelElement modelElement = ((PHPStructuredEditor) editorPart)
-					.getModelElement();
-			isPHPFile = modelElement != null
-					&& PHPToolkitUtil.isPhpElement(modelElement);
+			IModelElement modelElement = ((PHPStructuredEditor) editorPart).getModelElement();
+			isPHPFile = modelElement != null && PHPToolkitUtil.isPhpElement(modelElement);
 		} else {
-			IResource resource = (IResource) editorPart.getEditorInput()
-					.getAdapter(IResource.class);
+			IResource resource = (IResource) editorPart.getEditorInput().getAdapter(IResource.class);
 			if (resource instanceof IFile) {
 				isPHPFile = PHPToolkitUtil.isPhpFile((IFile) resource);
 			}

@@ -25,8 +25,7 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 /**
  * @author michael
  */
-public class GetCWDRequest extends DebugMessageRequestImpl implements
-		IDebugRequestMessage {
+public class GetCWDRequest extends DebugMessageRequestImpl implements IDebugRequestMessage {
 
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());

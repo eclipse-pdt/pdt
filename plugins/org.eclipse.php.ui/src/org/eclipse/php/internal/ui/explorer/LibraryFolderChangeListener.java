@@ -28,8 +28,7 @@ import org.eclipse.ui.*;
  * 
  * @author Kaloyan Raev
  */
-public class LibraryFolderChangeListener implements
-		ILibraryFolderChangeListener {
+public class LibraryFolderChangeListener implements ILibraryFolderChangeListener {
 
 	public void foldersChanged(IFolder[] folders) {
 		try {
@@ -81,8 +80,7 @@ public class LibraryFolderChangeListener implements
 	 */
 	private PHPExplorerPart getPhpExplorer() {
 		// find the active workbench window
-		IWorkbenchWindow window = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow();
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null)
 			return null;
 

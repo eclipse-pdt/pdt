@@ -28,8 +28,7 @@ import org.eclipse.php.internal.debug.core.Logger;
  * @author Shalom Gibly
  * @since PDT 1.0
  */
-public abstract class AbstractDebuggerCommunicationDaemon implements
-		ICommunicationDaemon {
+public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicationDaemon {
 
 	protected Object lock = new Object();
 	protected ServerSocket serverSocket;
@@ -78,8 +77,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 				} catch (SocketException se) {
 					// do nothing in this case
 				} catch (IOException e) {
-					Logger.logException(
-							"Problem while closing the debugger ServerSocket.", //$NON-NLS-1$
+					Logger.logException("Problem while closing the debugger ServerSocket.", //$NON-NLS-1$
 							e);
 				} finally {
 					serverSocket = null;
@@ -125,8 +123,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 		} catch (BindException exc) {
 			handleMultipleBindingError();
 		} catch (IOException e) {
-			Logger.logException(
-					"Error while restting the socket for the debug requests.", //$NON-NLS-1$
+			Logger.logException("Error while restting the socket for the debug requests.", //$NON-NLS-1$
 					e);
 		}
 		return false;
@@ -140,11 +137,8 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 	 */
 	public void handleMultipleBindingError() {
 		final int port = getReceiverPort();
-		Logger.log(
-				Logger.ERROR,
-				"The debug port " //$NON-NLS-1$
-						+ port
-						+ " is in use. Please select a different port for the debugger."); //$NON-NLS-1$
+		Logger.log(Logger.ERROR, "The debug port " //$NON-NLS-1$
+				+ port + " is in use. Please select a different port for the debugger."); //$NON-NLS-1$
 	}
 
 	/**
@@ -183,10 +177,8 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 			isAlive = true;
 		}
 		String port = " - Port: " //$NON-NLS-1$
-				+ ((serverSocket != null) ? String.valueOf(serverSocket
-						.getLocalPort()) : "??"); //$NON-NLS-1$
-		listenerThread = new Thread(new ReceiverThread(),
-				"PHP Debugger Daemon Thread " + port); //$NON-NLS-1$
+				+ ((serverSocket != null) ? String.valueOf(serverSocket.getLocalPort()) : "??"); //$NON-NLS-1$
+		listenerThread = new Thread(new ReceiverThread(), "PHP Debugger Daemon Thread " + port); //$NON-NLS-1$
 		listenerThread.setDaemon(true);
 		listenerThread.start();
 	}

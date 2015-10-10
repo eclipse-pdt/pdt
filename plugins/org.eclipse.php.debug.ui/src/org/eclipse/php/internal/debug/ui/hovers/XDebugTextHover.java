@@ -33,12 +33,10 @@ import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.w3c.dom.Node;
 
-public class XDebugTextHover extends AbstractScriptEditorTextHover implements
-		IPHPTextHover {
+public class XDebugTextHover extends AbstractScriptEditorTextHover implements IPHPTextHover {
 
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
-		if (hoverRegion == null || textViewer == null
-				|| textViewer.getDocument() == null) {
+		if (hoverRegion == null || textViewer == null || textViewer.getDocument() == null) {
 			return null;
 		}
 
@@ -47,8 +45,8 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements
 			DBGpStackFrame context = (DBGpStackFrame) adaptable;
 
 			int offset = hoverRegion.getOffset();
-			IStructuredDocumentRegion flatNode = ((IStructuredDocument) textViewer
-					.getDocument()).getRegionAtCharacterOffset(offset);
+			IStructuredDocumentRegion flatNode = ((IStructuredDocument) textViewer.getDocument())
+					.getRegionAtCharacterOffset(offset);
 			ITextRegion region = null;
 			if (flatNode != null) {
 				region = flatNode.getRegionAtCharacterOffset(offset);
@@ -63,28 +61,23 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements
 			if (region.getType() == PHPRegionContext.PHP_CONTENT) {
 				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) region;
 				try {
-					region = phpScriptRegion.getPhpToken(offset
-							- container.getStartOffset() - region.getStart());
+					region = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - region.getStart());
 				} catch (BadLocationException e) {
 					region = null;
 				}
 
 				if (region != null) {
 					String regionType = region.getType();
-					if (regionType == PHPRegionTypes.PHP_VARIABLE
-							|| regionType == PHPRegionTypes.PHP_THIS) {
+					if (regionType == PHPRegionTypes.PHP_VARIABLE || regionType == PHPRegionTypes.PHP_THIS) {
 						String variable = null;
 						try {
-							variable = textViewer.getDocument().get(
-									hoverRegion.getOffset(),
-									hoverRegion.getLength());
+							variable = textViewer.getDocument().get(hoverRegion.getOffset(), hoverRegion.getLength());
 							if (variable != null) {
 								variable = variable.trim();
 								variable = "<B>" + variable + " = </B>" + getPropertyValue(context, variable); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 						} catch (BadLocationException e) {
-							Logger.logException(
-									"Error retrieving the value\n", e); //$NON-NLS-1$
+							Logger.logException("Error retrieving the value\n", e); //$NON-NLS-1$
 						}
 						return variable;
 					}
@@ -137,8 +130,7 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements
 	protected String getPropertyValue(DBGpStackFrame context, String variable) {
 		String value = null;
 		DBGpTarget debugTarget = (DBGpTarget) context.getDebugTarget();
-		Node resp = debugTarget.getProperty(variable, context.getStackLevel(),
-				0);
+		Node resp = debugTarget.getProperty(variable, context.getStackLevel(), 0);
 		if (resp == null) {
 			return ""; //$NON-NLS-1$
 		}

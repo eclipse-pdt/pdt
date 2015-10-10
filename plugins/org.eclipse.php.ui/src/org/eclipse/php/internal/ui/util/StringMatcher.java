@@ -54,8 +54,8 @@ public class StringMatcher {
 	 * pattern. The pattern may contain '*' for 0 and many characters and '?'
 	 * for exactly one character.
 	 * 
-	 * Literal '*' and '?' characters must be escaped in the pattern e.g.,
-	 * "\*" means literal "*", etc.
+	 * Literal '*' and '?' characters must be escaped in the pattern e.g., "\*"
+	 * means literal "*", etc.
 	 * 
 	 * Escaping any other character (including the escape character itself),
 	 * just results in that character in the pattern. e.g., "\a" means "a" and
@@ -72,8 +72,7 @@ public class StringMatcher {
 	 *            if true, wild cards and their escape sequences are ignored
 	 *            (everything is taken literally).
 	 */
-	public StringMatcher(String pattern, boolean ignoreCase,
-			boolean ignoreWildCards) {
+	public StringMatcher(String pattern, boolean ignoreCase, boolean ignoreWildCards) {
 		if (pattern == null)
 			throw new IllegalArgumentException();
 		fIgnoreCase = ignoreCase;
@@ -180,9 +179,7 @@ public class StringMatcher {
 			return false;
 
 		if (fIgnoreWildCards)
-			return (end - start == fLength)
-					&& fPattern.regionMatches(fIgnoreCase, 0, text, start,
-							fLength);
+			return (end - start == fLength) && fPattern.regionMatches(fIgnoreCase, 0, text, start, fLength);
 		int segCount = fSegments.length;
 		if (segCount == 0 && (fHasLeadingStar || fHasTrailingStar)) // pattern
 																	// contains
@@ -217,8 +214,7 @@ public class StringMatcher {
 				tCurPos = tCurPos + segLength;
 			}
 		}
-		if ((fSegments.length == 1) && (!fHasLeadingStar)
-				&& (!fHasTrailingStar)) {
+		if ((fSegments.length == 1) && (!fHasLeadingStar) && (!fHasTrailingStar)) {
 			// only one segment to match, no wildcards specified
 			return tCurPos == end;
 		}
@@ -304,7 +300,9 @@ public class StringMatcher {
 				}
 				break;
 			case '?':
-				/* append special character representing single match wildcard */
+				/*
+				 * append special character representing single match wildcard
+				 */
 				buf.append(fSingleWildCard);
 				break;
 			default:
@@ -374,8 +372,7 @@ public class StringMatcher {
 		return -1;
 	}
 
-	protected boolean regExpRegionMatches(String text, int tStart, String p,
-			int pStart, int plen) {
+	protected boolean regExpRegionMatches(String text, int tStart, String p, int pStart, int plen) {
 		while (plen-- > 0) {
 			char tchar = text.charAt(tStart++);
 			char pchar = p.charAt(pStart++);
@@ -390,14 +387,12 @@ public class StringMatcher {
 			if (pchar == tchar)
 				continue;
 			if (fIgnoreCase) {
-				if (Character.toUpperCase(tchar) == Character
-						.toUpperCase(pchar))
+				if (Character.toUpperCase(tchar) == Character.toUpperCase(pchar))
 					continue;
 				// comparing after converting to upper case doesn't handle all
 				// cases;
 				// also compare after converting to lower case
-				if (Character.toLowerCase(tchar) == Character
-						.toLowerCase(pchar))
+				if (Character.toLowerCase(tchar) == Character.toLowerCase(pchar))
 					continue;
 			}
 			return false;

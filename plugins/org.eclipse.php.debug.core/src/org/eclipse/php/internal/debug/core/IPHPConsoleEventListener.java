@@ -28,8 +28,7 @@ public interface IPHPConsoleEventListener {
 	 * @param link
 	 *            Hyper link container
 	 */
-	public void init(ILaunch launch, DebugConsoleMonitor consoleMonitor,
-			PHPHyperLink link);
+	public void init(ILaunch launch, DebugConsoleMonitor consoleMonitor, PHPHyperLink link);
 
 	/**
 	 * Notification the given event occurred in the target program being

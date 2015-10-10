@@ -244,16 +244,13 @@ public class PHPDocAwareDeclarationTests {
 
 	private void parseAndTest(String str) throws Exception {
 		StringReader reader = new StringReader(str);
-		String declarationName = new Throwable().fillInStackTrace()
-				.getStackTrace()[1].getMethodName();
+		String declarationName = new Throwable().fillInStackTrace().getStackTrace()[1].getMethodName();
 		parseAndTest(reader, declarationName, str, true);
 	}
 
-	private void parseAndTest(String str, boolean positiveTest)
-			throws Exception {
+	private void parseAndTest(String str, boolean positiveTest) throws Exception {
 		StringReader reader = new StringReader(str);
-		String declarationName = new Throwable().fillInStackTrace()
-				.getStackTrace()[1].getMethodName();
+		String declarationName = new Throwable().fillInStackTrace().getStackTrace()[1].getMethodName();
 		parseAndTest(reader, declarationName, str, positiveTest);
 	}
 
@@ -265,30 +262,23 @@ public class PHPDocAwareDeclarationTests {
 	 * @param str
 	 * @throws Exception
 	 */
-	public void parseAndTest(Reader reader, String declarationName, String str,
-			boolean positiveTest) throws Exception {
+	public void parseAndTest(Reader reader, String declarationName, String str, boolean positiveTest) throws Exception {
 		IModuleDeclaration program = new PhpSourceParser().parse(reader, null,
 				ProjectOptions.useShortTags((IProject) null));
 		DeclarationSearcher searcher = new DeclarationSearcher(declarationName);
 		((PHPModuleDeclaration) program).traverse(searcher);
 		Declaration declaration = searcher.getResult();
 
-		assertNotNull(
-				"Can't find declaration AST node for: " + declarationName,
-				declaration);
+		assertNotNull("Can't find declaration AST node for: " + declarationName, declaration);
 		assertTrue("Declaration is not PHPDoc aware: " + declarationName,
 				declaration instanceof IPHPDocAwareDeclaration);
-		PHPDocBlock phpDoc = ((IPHPDocAwareDeclaration) declaration)
-				.getPHPDoc();
+		PHPDocBlock phpDoc = ((IPHPDocAwareDeclaration) declaration).getPHPDoc();
 
 		if (positiveTest) {
-			assertNotNull("No PHPDoc section found for:" + declarationName,
-					phpDoc);
-			assertNotNull("PHPDoc doesn't contain short description: "
-					+ declarationName, phpDoc.getShortDescription());
+			assertNotNull("No PHPDoc section found for:" + declarationName, phpDoc);
+			assertNotNull("PHPDoc doesn't contain short description: " + declarationName, phpDoc.getShortDescription());
 		} else {
-			assertNull("Declaration node: " + declarationName
-					+ " must not contain PHPDoc section", phpDoc);
+			assertNull("Declaration node: " + declarationName + " must not contain PHPDoc section", phpDoc);
 		}
 	}
 

@@ -22,8 +22,7 @@ public class PHPManualConfig {
 	private String extension;
 	private boolean contributed;
 
-	public PHPManualConfig(String label, String url, String extension,
-			boolean contributed) {
+	public PHPManualConfig(String label, String url, String extension, boolean contributed) {
 		this.label = label;
 		this.url = url;
 		this.contributed = contributed;

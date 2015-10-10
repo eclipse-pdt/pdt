@@ -34,8 +34,7 @@ public class CheckedListDialogField extends ListDialogField {
 
 	private List fCheckElements;
 
-	public CheckedListDialogField(IListAdapter adapter,
-			String[] customButtonLabels, ILabelProvider lprovider) {
+	public CheckedListDialogField(IListAdapter adapter, String[] customButtonLabels, ILabelProvider lprovider) {
 		super(adapter, customButtonLabels, lprovider);
 		fCheckElements = new ArrayList();
 
@@ -86,8 +85,7 @@ public class CheckedListDialogField extends ListDialogField {
 	public Control getListControl(Composite parent) {
 		Control control = super.getListControl(parent);
 		if (parent != null) {
-			((CheckboxTableViewer) fTable).setCheckedElements(fCheckElements
-					.toArray());
+			((CheckboxTableViewer) fTable).setCheckedElements(fCheckElements.toArray());
 		}
 		return control;
 	}
@@ -116,8 +114,7 @@ public class CheckedListDialogField extends ListDialogField {
 	public List getCheckedElements() {
 		if (isOkToUse(fTableControl)) {
 			// workaround for bug 53853
-			Object[] checked = ((CheckboxTableViewer) fTable)
-					.getCheckedElements();
+			Object[] checked = ((CheckboxTableViewer) fTable).getCheckedElements();
 			ArrayList res = new ArrayList(checked.length);
 			for (int i = 0; i < checked.length; i++) {
 				res.add(checked[i]);
@@ -212,8 +209,7 @@ public class CheckedListDialogField extends ListDialogField {
 	 * @seeorg.eclipse.jdt.internal.ui.wizards.dialogfields.ListDialogField#
 	 * replaceElement(java.lang.Object, java.lang.Object)
 	 */
-	public void replaceElement(Object oldElement, Object newElement)
-			throws IllegalArgumentException {
+	public void replaceElement(Object oldElement, Object newElement) throws IllegalArgumentException {
 		boolean wasChecked = isChecked(oldElement);
 		super.replaceElement(oldElement, newElement);
 		setChecked(newElement, wasChecked);

@@ -35,8 +35,7 @@ import org.eclipse.swt.widgets.Group;
  * @author Bartlomiej Laczkowski
  */
 @SuppressWarnings("restriction")
-public class AbstractDebugExeLaunchSettingsSection
-		implements IDebuggerLaunchSettingsSection {
+public class AbstractDebugExeLaunchSettingsSection implements IDebuggerLaunchSettingsSection {
 
 	protected WidgetListener widgetListener;
 	protected Group breakpointGroup;
@@ -69,8 +68,7 @@ public class AbstractDebugExeLaunchSettingsSection
 		this.configuration = configuration;
 		try {
 			if (breakpointGroup != null) {
-				breakOnFirstLine.setSelection(configuration.getAttribute(
-						IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
+				breakOnFirstLine.setSelection(configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 						PHPDebugPlugin.getStopAtFirstLine()));
 			}
 		} catch (final CoreException e) {
@@ -88,9 +86,7 @@ public class AbstractDebugExeLaunchSettingsSection
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		if (breakpointGroup != null) {
-			configuration.setAttribute(
-					IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
-					breakOnFirstLine.getSelection());
+			configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
 		}
 	}
 
@@ -121,13 +117,11 @@ public class AbstractDebugExeLaunchSettingsSection
 
 	protected void createBreakpointGroup(Composite parent) {
 		breakpointGroup = new Group(parent, SWT.NONE);
-		breakpointGroup.setText(
-				Messages.AbstractDebugExeLaunchSettingsSection_Breakpoint);
+		breakpointGroup.setText(Messages.AbstractDebugExeLaunchSettingsSection_Breakpoint);
 		breakpointGroup.setLayout(new GridLayout(1, false));
 		breakpointGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		breakOnFirstLine = SWTFactory.createCheckButton(breakpointGroup,
-				Messages.AbstractDebugExeLaunchSettingsSection_Break_at_first_line,
-				null, false, 1);
+				Messages.AbstractDebugExeLaunchSettingsSection_Break_at_first_line, null, false, 1);
 		breakOnFirstLine.addSelectionListener(widgetListener);
 	}
 

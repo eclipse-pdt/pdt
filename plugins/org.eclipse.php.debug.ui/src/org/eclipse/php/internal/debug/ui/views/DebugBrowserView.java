@@ -43,8 +43,7 @@ import org.eclipse.ui.progress.UIJob;
  * View for presenting debug output as rendered in a browser.
  */
 @SuppressWarnings("restriction")
-public class DebugBrowserView extends AbstractDebugOutputView implements
-		ISelectionListener {
+public class DebugBrowserView extends AbstractDebugOutputView implements ISelectionListener {
 
 	public static final String ID_PHPBrowserOutput = "org.eclipse.debug.ui.PHPBrowserOutput"; //$NON-NLS-1$
 
@@ -57,8 +56,7 @@ public class DebugBrowserView extends AbstractDebugOutputView implements
 				int oldcount = fUpdateCount;
 				DebugOutput debugOutput = null;
 				if (target != null) {
-					if ((target.isSuspended()) || (target.isTerminated())
-							|| target.isWaiting()) {
+					if ((target.isSuspended()) || (target.isTerminated()) || target.isWaiting()) {
 						debugOutput = target.getOutputBuffer();
 						fUpdateCount = debugOutput.getUpdateCount();
 						// check if output hasn't been updated
@@ -67,8 +65,7 @@ public class DebugBrowserView extends AbstractDebugOutputView implements
 						}
 						String contentType = debugOutput.getContentType();
 						// we don't show garbage anymore
-						if (contentType != null
-								&& !contentType.startsWith("text")) { //$NON-NLS-1$
+						if (contentType != null && !contentType.startsWith("text")) { //$NON-NLS-1$
 							return;
 						}
 						fSWTBrowser.setText(debugOutput.getOutput());
@@ -90,8 +87,7 @@ public class DebugBrowserView extends AbstractDebugOutputView implements
 		public void partVisible(IWorkbenchPartReference ref) {
 			IWorkbenchPart part = ref.getPart(false);
 			if (part == DebugBrowserView.this) {
-				IPHPDebugTarget target = fDebugViewHelper
-						.getSelectionElement(null);
+				IPHPDebugTarget target = fDebugViewHelper.getSelectionElement(null);
 				update(target);
 			}
 		}
@@ -143,10 +139,8 @@ public class DebugBrowserView extends AbstractDebugOutputView implements
 						// Update when debug target is done
 						if (events[i].getKind() == DebugEvent.TERMINATE) {
 							final IPHPDebugTarget target = (IPHPDebugTarget) obj;
-							Job job = new UIJob(
-									PHPDebugUIMessages.PHPDebugUIPlugin_0) {
-								public IStatus runInUIThread(
-										IProgressMonitor monitor) {
+							Job job = new UIJob(PHPDebugUIMessages.PHPDebugUIPlugin_0) {
+								public IStatus runInUIThread(IProgressMonitor monitor) {
 									update(target);
 									return Status.OK_STATUS;
 								}
@@ -158,14 +152,13 @@ public class DebugBrowserView extends AbstractDebugOutputView implements
 			}
 		};
 		DebugPlugin.getDefault().addDebugEventListener(fTerminateListener);
-		getSite().getWorkbenchWindow().getSelectionService()
-				.addSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
+		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW,
+				this);
 		if (fPartListener == null) {
 			fPartListener = new DebugViewPartListener();
 			getSite().getPage().addPartListener(fPartListener);
 		}
-		PlatformUI.getWorkbench().getHelpSystem()
-				.setHelp(parent, IPHPHelpContextIds.BROWSER_OUTPUT_VIEW);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.BROWSER_OUTPUT_VIEW);
 	}
 
 	/*
@@ -174,8 +167,8 @@ public class DebugBrowserView extends AbstractDebugOutputView implements
 	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
 	 */
 	public void dispose() {
-		getSite().getWorkbenchWindow().getSelectionService()
-				.removeSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
+		getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW,
+				this);
 		DebugPlugin.getDefault().removeDebugEventListener(fTerminateListener);
 		if (fSWTBrowser != null && !fSWTBrowser.isDisposed()) {
 			fSWTBrowser.dispose();
@@ -194,8 +187,7 @@ public class DebugBrowserView extends AbstractDebugOutputView implements
 	 * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		IPHPDebugTarget target = fDebugViewHelper
-				.getSelectionElement(selection);
+		IPHPDebugTarget target = fDebugViewHelper.getSelectionElement(selection);
 		update(target);
 	}
 
@@ -210,9 +202,8 @@ public class DebugBrowserView extends AbstractDebugOutputView implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.ui.views.AbstractDebugOutputView#createUpdater
-	 * ()
+	 * @see org.eclipse.php.internal.debug.ui.views.AbstractDebugOutputView#
+	 * createUpdater ()
 	 */
 	@Override
 	protected IUpdater createUpdater() {

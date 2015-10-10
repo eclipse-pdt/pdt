@@ -28,8 +28,7 @@ public class ExceptionHandler {
 	private static ExceptionHandler fgInstance = new ExceptionHandler();
 
 	public static void log(Throwable t, String message) {
-		PHPUiPlugin.log(new Status(IStatus.ERROR, PHPUiPlugin.ID,
-				PHPUiConstants.INTERNAL_ERROR, message, t));
+		PHPUiPlugin.log(new Status(IStatus.ERROR, PHPUiPlugin.ID, PHPUiConstants.INTERNAL_ERROR, message, t));
 	}
 
 	/**
@@ -59,8 +58,7 @@ public class ExceptionHandler {
 	 * @param message
 	 *            message to be displayed by the dialog window
 	 */
-	public static void handle(CoreException e, Shell parent, String title,
-			String message) {
+	public static void handle(CoreException e, Shell parent, String title, String message) {
 		fgInstance.perform(e, parent, title, message);
 	}
 
@@ -75,8 +73,7 @@ public class ExceptionHandler {
 	 * @param message
 	 *            message to be displayed by the dialog window
 	 */
-	public static void handle(InvocationTargetException e, String title,
-			String message) {
+	public static void handle(InvocationTargetException e, String title, String message) {
 		handle(e, PHPUiPlugin.getActiveWorkbenchShell(), title, message);
 	}
 
@@ -92,16 +89,14 @@ public class ExceptionHandler {
 	 * @param message
 	 *            message to be displayed by the dialog window
 	 */
-	public static void handle(InvocationTargetException e, Shell parent,
-			String title, String message) {
+	public static void handle(InvocationTargetException e, Shell parent, String title, String message) {
 		fgInstance.perform(e, parent, title, message);
 	}
 
 	// ---- Hooks for subclasses to control exception handling
 	// ------------------------------------
 
-	protected void perform(CoreException e, Shell shell, String title,
-			String message) {
+	protected void perform(CoreException e, Shell shell, String title, String message) {
 		PHPUiPlugin.log(e);
 		IStatus status = e.getStatus();
 		if (status != null) {
@@ -111,8 +106,7 @@ public class ExceptionHandler {
 		}
 	}
 
-	protected void perform(InvocationTargetException e, Shell shell,
-			String title, String message) {
+	protected void perform(InvocationTargetException e, Shell shell, String title, String message) {
 		Throwable target = e.getTargetException();
 		if (target instanceof CoreException) {
 			perform((CoreException) target, shell, title, message);
@@ -121,8 +115,7 @@ public class ExceptionHandler {
 			if (e.getMessage() != null && e.getMessage().length() > 0) {
 				displayMessageDialog(e, e.getMessage(), shell, title, message);
 			} else {
-				displayMessageDialog(e, target.getMessage(), shell, title,
-						message);
+				displayMessageDialog(e, target.getMessage(), shell, title, message);
 			}
 		}
 	}
@@ -130,8 +123,7 @@ public class ExceptionHandler {
 	// ---- Helper methods
 	// -----------------------------------------------------------------------
 
-	private void displayMessageDialog(Throwable t, String exceptionMessage,
-			Shell shell, String title, String message) {
+	private void displayMessageDialog(Throwable t, String exceptionMessage, Shell shell, String title, String message) {
 		StringWriter msg = new StringWriter();
 		if (message != null) {
 			msg.write(message);

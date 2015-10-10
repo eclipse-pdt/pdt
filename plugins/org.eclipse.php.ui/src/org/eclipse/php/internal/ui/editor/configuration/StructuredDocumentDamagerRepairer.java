@@ -36,16 +36,12 @@ public class StructuredDocumentDamagerRepairer extends DefaultDamagerRepairer {
 		if (fProvider instanceof LineStyleProviderForPhp) {
 			IStructuredDocumentRegion structuredDocumentRegion = ((LineStyleProviderForPhp) fProvider)
 					.getDamagedRegion(region);
-			ITextRegion textReg = structuredDocumentRegion
-					.getRegionAtCharacterOffset(region.getOffset());
-			if (textReg != null
-					&& textReg.getType() == PHPRegionContext.PHP_CONTENT
+			ITextRegion textReg = structuredDocumentRegion.getRegionAtCharacterOffset(region.getOffset());
+			if (textReg != null && textReg.getType() == PHPRegionContext.PHP_CONTENT
 					&& damageCoversWholeRegion(region, textReg, damage)) {
 				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textReg;
 				if (!phpScriptRegion.isFullReparsed()) {
-					Region r = new Region(
-							phpScriptRegion.getUpdatedTokensStart()
-									+ region.getOffset(),
+					Region r = new Region(phpScriptRegion.getUpdatedTokensStart() + region.getOffset(),
 							phpScriptRegion.getUpdatedTokensLength());
 					return new TextPresentation((IRegion) r, 1000);
 				}
@@ -54,8 +50,7 @@ public class StructuredDocumentDamagerRepairer extends DefaultDamagerRepairer {
 		return null;
 	}
 
-	private boolean damageCoversWholeRegion(ITypedRegion originalRegion,
-			ITextRegion textRegion, IRegion damage) {
+	private boolean damageCoversWholeRegion(ITypedRegion originalRegion, ITextRegion textRegion, IRegion damage) {
 		// if php content region is bigger than actual damaged
 		// region
 		if ((textRegion.getLength() == originalRegion.getLength())
@@ -64,21 +59,17 @@ public class StructuredDocumentDamagerRepairer extends DefaultDamagerRepairer {
 					&& (originalRegion.getLength() == damage.getLength())) {
 				return true;
 			}
-		} else if ((textRegion.getStart() == damage.getOffset())
-				&& (textRegion.getLength() == damage.getLength())) {
+		} else if ((textRegion.getStart() == damage.getOffset()) && (textRegion.getLength() == damage.getLength())) {
 			return true;
 		}
 		return false;
 	}
 
-	public void createPresentation(TextPresentation presentation,
-			ITypedRegion region) {
+	public void createPresentation(TextPresentation presentation, ITypedRegion region) {
 
-		PresentationCollector collector = new PresentationCollector(
-				presentation);
+		PresentationCollector collector = new PresentationCollector(presentation);
 
-		fProvider.prepareRegions(region, region.getOffset(),
-				region.getLength(), collector);
+		fProvider.prepareRegions(region, region.getOffset(), region.getLength(), collector);
 	}
 
 	public void setProvider(LineStyleProvider provider) {
@@ -88,8 +79,7 @@ public class StructuredDocumentDamagerRepairer extends DefaultDamagerRepairer {
 	public void setDocument(IDocument document) {
 		super.setDocument(document);
 		if (fProvider instanceof AbstractLineStyleProvider)
-			((AbstractLineStyleProvider) fProvider)
-					.setDocument((IStructuredDocument) document);
+			((AbstractLineStyleProvider) fProvider).setDocument((IStructuredDocument) document);
 	}
 
 }

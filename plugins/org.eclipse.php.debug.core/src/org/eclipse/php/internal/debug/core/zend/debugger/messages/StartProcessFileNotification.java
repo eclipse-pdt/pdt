@@ -23,8 +23,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
  * 
  * @author michael
  */
-public class StartProcessFileNotification extends DebugMessageNotificationImpl
-		implements IDebugNotificationMessage {
+public class StartProcessFileNotification extends DebugMessageNotificationImpl implements IDebugNotificationMessage {
 
 	private String fileName;
 

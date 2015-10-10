@@ -44,11 +44,9 @@ public class CreateProfileDialog extends StatusDialog {
 	private Button fEditCheckbox;
 
 	private final static StatusInfo fOk = new StatusInfo();
-	private final static StatusInfo fEmpty = new StatusInfo(
-			IStatus.ERROR,
+	private final static StatusInfo fEmpty = new StatusInfo(IStatus.ERROR,
 			FormatterMessages.CreateProfileDialog_status_message_profile_name_is_empty);
-	private final static StatusInfo fDuplicate = new StatusInfo(
-			IStatus.ERROR,
+	private final static StatusInfo fDuplicate = new StatusInfo(IStatus.ERROR,
 			FormatterMessages.CreateProfileDialog_status_message_profile_with_this_name_already_exists);
 
 	private final ProfileManager fProfileManager;
@@ -90,8 +88,7 @@ public class CreateProfileDialog extends StatusDialog {
 		gd.horizontalSpan = numColumns;
 		gd.widthHint = convertWidthInCharsToPixels(60);
 		final Label nameLabel = new Label(composite, SWT.WRAP);
-		nameLabel
-				.setText(FormatterMessages.CreateProfileDialog_profile_name_label_text);
+		nameLabel.setText(FormatterMessages.CreateProfileDialog_profile_name_label_text);
 		nameLabel.setLayoutData(gd);
 
 		// Create text field to enter name
@@ -109,8 +106,7 @@ public class CreateProfileDialog extends StatusDialog {
 		gd = new GridData();
 		gd.horizontalSpan = numColumns;
 		Label profileLabel = new Label(composite, SWT.WRAP);
-		profileLabel
-				.setText(FormatterMessages.CreateProfileDialog_base_profile_label_text);
+		profileLabel.setText(FormatterMessages.CreateProfileDialog_base_profile_label_text);
 		profileLabel.setLayoutData(gd);
 
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -122,8 +118,7 @@ public class CreateProfileDialog extends StatusDialog {
 		gd = new GridData();
 		gd.horizontalSpan = numColumns;
 		fEditCheckbox = new Button(composite, SWT.CHECK);
-		fEditCheckbox
-				.setText(FormatterMessages.CreateProfileDialog_open_edit_dialog_checkbox_text);
+		fEditCheckbox.setText(FormatterMessages.CreateProfileDialog_open_edit_dialog_checkbox_text);
 		fEditCheckbox.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				fOpenEditDialog = ((Button) e.widget).getSelection();
@@ -133,8 +128,7 @@ public class CreateProfileDialog extends StatusDialog {
 			}
 		});
 
-		final IDialogSettings dialogSettings = FormatterUIPlugin.getDefault()
-				.getDialogSettings();// .get(PREF_OPEN_EDIT_DIALOG);
+		final IDialogSettings dialogSettings = FormatterUIPlugin.getDefault().getDialogSettings();// .get(PREF_OPEN_EDIT_DIALOG);
 		if (dialogSettings.get(PREF_OPEN_EDIT_DIALOG) != null) {
 			fOpenEditDialog = dialogSettings.getBoolean(PREF_OPEN_EDIT_DIALOG);
 		} else {
@@ -143,8 +137,7 @@ public class CreateProfileDialog extends StatusDialog {
 		fEditCheckbox.setSelection(fOpenEditDialog);
 
 		fProfileCombo.setItems(fSortedNames);
-		fProfileCombo.setText(fProfileManager.getProfile(
-				ProfileManager.DEFAULT_PROFILE).getName());
+		fProfileCombo.setText(fProfileManager.getProfile(ProfileManager.DEFAULT_PROFILE).getName());
 		updateStatus(fEmpty);
 
 		applyDialogFont(composite);
@@ -175,11 +168,9 @@ public class CreateProfileDialog extends StatusDialog {
 		if (!getStatus().isOK())
 			return;
 
-		FormatterUIPlugin.getDefault().getDialogSettings()
-				.put(PREF_OPEN_EDIT_DIALOG, fOpenEditDialog);
+		FormatterUIPlugin.getDefault().getDialogSettings().put(PREF_OPEN_EDIT_DIALOG, fOpenEditDialog);
 
-		final Map<String, Object> preferences = fSortedProfiles.get(
-				fProfileCombo.getSelectionIndex()).getSettings();
+		final Map<String, Object> preferences = fSortedProfiles.get(fProfileCombo.getSelectionIndex()).getSettings();
 
 		final String profileName = fNameText.getText();
 

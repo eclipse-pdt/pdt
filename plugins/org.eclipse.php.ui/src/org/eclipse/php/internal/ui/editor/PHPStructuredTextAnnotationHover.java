@@ -44,8 +44,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextLineBreakingReader;
  * 
  * @author moshe, 2007
  */
-public class PHPStructuredTextAnnotationHover extends
-		StructuredTextAnnotationHover {
+public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHover {
 
 	/**
 	 * Provides a set of convenience methods for creating HTML pages. Taken from
@@ -102,8 +101,7 @@ public class PHPStructuredTextAnnotationHover extends
 		}
 
 		void insertPageProlog(StringBuffer buffer, int position) {
-			buffer.insert(position,
-					"<html><body text=\"#000000\" bgcolor=\"#FFFF88\"><font size=-1>"); //$NON-NLS-1$
+			buffer.insert(position, "<html><body text=\"#000000\" bgcolor=\"#FFFF88\"><font size=-1>"); //$NON-NLS-1$
 		}
 
 		String read(Reader rd) {
@@ -161,9 +159,7 @@ public class PHPStructuredTextAnnotationHover extends
 				int markerLine = document.getLineOfOffset(position.getOffset());
 				if (line == markerLine)
 					return 1;
-				if (markerLine <= line
-						&& line <= document.getLineOfOffset(position
-								.getOffset() + position.getLength()))
+				if (markerLine <= line && line <= document.getLineOfOffset(position.getOffset() + position.getLength()))
 					return 2;
 			} catch (BadLocationException x) {
 			}
@@ -197,8 +193,8 @@ public class PHPStructuredTextAnnotationHover extends
 		try {
 			StringBuffer buf = new StringBuffer();
 
-			StructuredTextLineBreakingReader reader = new StructuredTextLineBreakingReader(
-					textReader, gc, getHoverWidth(display));
+			StructuredTextLineBreakingReader reader = new StructuredTextLineBreakingReader(textReader, gc,
+					getHoverWidth(display));
 			String line = reader.readLine();
 			while (line != null) {
 				if (buf.length() != 0) {
@@ -223,7 +219,7 @@ public class PHPStructuredTextAnnotationHover extends
 
 		StringBuffer buffer = new StringBuffer();
 		printer.addPageProlog(buffer);
-		printer.addParagraph(buffer, SSEUIMessages.Multiple_errors); //$NON-NLS-1$
+		printer.addParagraph(buffer, SSEUIMessages.Multiple_errors); // $NON-NLS-1$
 
 		printer.startBulletList(buffer);
 		Iterator<String> e = messages.iterator();
@@ -238,14 +234,11 @@ public class PHPStructuredTextAnnotationHover extends
 	@Override
 	public String getHoverInfo(ISourceViewer sourceViewer, int lineNumber) {
 		// get all the marker messages
-		List<String> messages = dropDuplicateMessages(getMarkerMessages(
-				sourceViewer, lineNumber));
+		List<String> messages = dropDuplicateMessages(getMarkerMessages(sourceViewer, lineNumber));
 
-		List<ITemporaryAnnotation> temporaryAnnotations = getTemporaryAnnotationsForLine(
-				sourceViewer, lineNumber);
+		List<ITemporaryAnnotation> temporaryAnnotations = getTemporaryAnnotationsForLine(sourceViewer, lineNumber);
 		for (int i = 0; i < temporaryAnnotations.size(); i++) {
-			String message = ((Annotation) temporaryAnnotations.get(i))
-					.getText();
+			String message = ((Annotation) temporaryAnnotations.get(i)).getText();
 			if (message != null) {
 				boolean duplicated = false;
 				for (int j = 0; j < messages.size(); j++)
@@ -254,8 +247,7 @@ public class PHPStructuredTextAnnotationHover extends
 					messages.add(message);
 				}
 			} else {
-				messages.add(((ITemporaryAnnotation) temporaryAnnotations
-						.get(i)).toString());
+				messages.add(((ITemporaryAnnotation) temporaryAnnotations.get(i)).toString());
 			}
 		}
 		if (messages.size() > 1)
@@ -279,8 +271,7 @@ public class PHPStructuredTextAnnotationHover extends
 
 	private int getHoverWidth(Display display) {
 		Rectangle displayBounds = display.getBounds();
-		int hoverWidth = displayBounds.width
-				- (display.getCursorLocation().x - displayBounds.x);
+		int hoverWidth = displayBounds.width - (display.getCursorLocation().x - displayBounds.x);
 		hoverWidth -= 12; // XXX: Add some space to the border, Revisit
 		if (hoverWidth < 200) {
 			hoverWidth = 200;
@@ -315,10 +306,8 @@ public class PHPStructuredTextAnnotationHover extends
 						AnnotationBag bag = (AnnotationBag) a;
 						Iterator iterator = bag.iterator();
 						while (iterator.hasNext()) {
-							Annotation annotation = (Annotation) iterator
-									.next();
-							addText(model, annotation, messages,
-									messagesAtPosition);
+							Annotation annotation = (Annotation) iterator.next();
+							addText(model, annotation, messages, messagesAtPosition);
 						}
 					} else {
 						addText(model, a, messages, messagesAtPosition);
@@ -330,11 +319,10 @@ public class PHPStructuredTextAnnotationHover extends
 		return messages;
 	}
 
-	private void addText(IAnnotationModel model, Annotation annotation,
-			List<String> messages, HashMap messagesAtPosition) {
+	private void addText(IAnnotationModel model, Annotation annotation, List<String> messages,
+			HashMap messagesAtPosition) {
 		Position position = model.getPosition(annotation);
-		if (position != null
-				&& includeAnnotation(annotation, position, messagesAtPosition)) {
+		if (position != null && includeAnnotation(annotation, position, messagesAtPosition)) {
 			String text = getText(annotation);
 			if (text != null) {
 				messages.add(text);
@@ -356,8 +344,7 @@ public class PHPStructuredTextAnnotationHover extends
 	/**
 	 * Returns one marker which includes the ruler's line of activity.
 	 */
-	private List<ITemporaryAnnotation> getTemporaryAnnotationsForLine(
-			ISourceViewer viewer, int line) {
+	private List<ITemporaryAnnotation> getTemporaryAnnotationsForLine(ISourceViewer viewer, int line) {
 
 		IDocument document = viewer.getDocument();
 		IAnnotationModel model = viewer.getAnnotationModel();
@@ -388,21 +375,18 @@ public class PHPStructuredTextAnnotationHover extends
 	/**
 	 * Copy from DefaultAnnotationHover
 	 */
-	private boolean includeAnnotation(Annotation annotation, Position position,
-			HashMap messagesAtPosition) {
+	private boolean includeAnnotation(Annotation annotation, Position position, HashMap messagesAtPosition) {
 		if (!isIncluded(annotation))
 			return false;
 
 		String text = annotation.getText();
-		return (text != null && !isDuplicateAnnotation(messagesAtPosition,
-				position, text));
+		return (text != null && !isDuplicateAnnotation(messagesAtPosition, position, text));
 	}
 
 	/**
 	 * Copy from DefaultAnnotationHover
 	 */
-	private boolean isDuplicateAnnotation(Map messagesAtPosition,
-			Position position, String message) {
+	private boolean isDuplicateAnnotation(Map messagesAtPosition, Position position, String message) {
 		if (messagesAtPosition.containsKey(position)) {
 			Object value = messagesAtPosition.get(position);
 			if (message.equals(value))

@@ -26,9 +26,9 @@ public class RenameGlobalVariableProcessorTest extends AbstractRenameRefactoring
 	public RenameGlobalVariableProcessorTest(String[] fileNames) {
 		super(fileNames);
 	}
-	
+
 	@PDTTList.Parameters
-	public static String[] dirs = {"/resources/rename/renameGblVar/"}; //$NON-NLS-1$
+	public static String[] dirs = { "/resources/rename/renameGblVar/" }; //$NON-NLS-1$
 
 	@Test
 	public void test(String fileName) throws Exception {

@@ -31,7 +31,7 @@ public class PHPPreferencePageBlocksRegistry {
 
 	private static final String EXTENSION_POINT_NAME = "phpPreferencePageBlocks"; //$NON-NLS-1$
 	private static final String BLOCK_TAG = "block"; //$NON-NLS-1$
-	//	private static final String ID_ATTRIBUTE = "id"; 
+	// private static final String ID_ATTRIBUTE = "id";
 	private static final String NAME_ATTRIBUTE = "name"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 	private static final String PAGE_ID_ATTRIBUTE = "pageId"; //$NON-NLS-1$
@@ -51,22 +51,18 @@ public class PHPPreferencePageBlocksRegistry {
 	private PHPPreferencePageBlocksRegistry() {
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = registry
-				.getConfigurationElementsFor(PHPUiPlugin.ID,
-						EXTENSION_POINT_NAME);
+		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPUiPlugin.ID, EXTENSION_POINT_NAME);
 
 		for (int i = 0; i < elements.length; i++) {
 			final IConfigurationElement element = elements[i];
 			if (BLOCK_TAG.equals(element.getName())) {
-				String preferencesPageID = element
-						.getAttribute(PAGE_ID_ATTRIBUTE);
+				String preferencesPageID = element.getAttribute(PAGE_ID_ATTRIBUTE);
 				addBlock(pageBlocks, preferencesPageID, element);
 			}
 		}
 	}
 
-	private void addBlock(Dictionary dictionary, String preferencesPageID,
-			IConfigurationElement element) {
+	private void addBlock(Dictionary dictionary, String preferencesPageID, IConfigurationElement element) {
 		List list = (List) dictionary.get(preferencesPageID);
 		if (list == null) {
 			list = new ArrayList(5);
@@ -96,8 +92,7 @@ public class PHPPreferencePageBlocksRegistry {
 	 *         (an empty array, if non exists). Note: The returned order of the
 	 *         addons is by their ID.
 	 */
-	public static IPHPPreferencePageBlock[] getPHPPreferencePageBlock(
-			String pageId) throws Exception {
+	public static IPHPPreferencePageBlock[] getPHPPreferencePageBlock(String pageId) throws Exception {
 		List addonFactories = (List) getInstance().getPageBlocks().get(pageId);
 		IPHPPreferencePageBlock[] addons = getBlocks(addonFactories);
 		Arrays.sort(addons, pageBlockComparator);
@@ -118,8 +113,7 @@ public class PHPPreferencePageBlocksRegistry {
 				addons.add(pageBlock);
 			}
 		}
-		return (IPHPPreferencePageBlock[]) addons
-				.toArray(new IPHPPreferencePageBlock[addons.size()]);
+		return (IPHPPreferencePageBlock[]) addons.toArray(new IPHPPreferencePageBlock[addons.size()]);
 	}
 
 	/**
@@ -136,19 +130,17 @@ public class PHPPreferencePageBlocksRegistry {
 
 		public IPHPPreferencePageBlock createPHPPreferencePageBlock() {
 			SafeRunner.run(new SafeRunnable(
-					PHPUIMessages.PHPPreferencePageBlocksRegistry_0
-							+ PHPUiPlugin.ID + "." + EXTENSION_POINT_NAME) { //$NON-NLS-1$
-						public void run() throws Exception {
-							try {
-								preferencesPageBlock = (IPHPPreferencePageBlock) element
-										.createExecutableExtension(CLASS_ATTRIBUTE);
-								preferencesPageBlock.setComparableName(element
-										.getAttribute(NAME_ATTRIBUTE));
-							} catch (Exception e) {
-								// do nothing
-							}
-						}
-					});
+					PHPUIMessages.PHPPreferencePageBlocksRegistry_0 + PHPUiPlugin.ID + "." + EXTENSION_POINT_NAME) { //$NON-NLS-1$
+				public void run() throws Exception {
+					try {
+						preferencesPageBlock = (IPHPPreferencePageBlock) element
+								.createExecutableExtension(CLASS_ATTRIBUTE);
+						preferencesPageBlock.setComparableName(element.getAttribute(NAME_ATTRIBUTE));
+					} catch (Exception e) {
+						// do nothing
+					}
+				}
+			});
 			return preferencesPageBlock;
 		}
 	}
@@ -158,10 +150,8 @@ public class PHPPreferencePageBlocksRegistry {
 			IPHPPreferencePageBlock firstBlock = (IPHPPreferencePageBlock) o1;
 			IPHPPreferencePageBlock secondBlock = (IPHPPreferencePageBlock) o2;
 			if (firstBlock != null && secondBlock != null) {
-				boolean firstIsPDT = firstBlock.getClass().getName()
-						.startsWith(PDT_PREFIX);
-				boolean secondIsPDT = secondBlock.getClass().getName()
-						.startsWith(PDT_PREFIX);
+				boolean firstIsPDT = firstBlock.getClass().getName().startsWith(PDT_PREFIX);
+				boolean secondIsPDT = secondBlock.getClass().getName().startsWith(PDT_PREFIX);
 				if (firstIsPDT) {
 					if (!secondIsPDT) {
 						return -1;
@@ -171,8 +161,7 @@ public class PHPPreferencePageBlocksRegistry {
 						return 1;
 					}
 				}
-				return firstBlock.getComparableName().compareTo(
-						secondBlock.getComparableName());
+				return firstBlock.getComparableName().compareTo(secondBlock.getComparableName());
 			}
 			if (firstBlock == null) {
 				return secondBlock == null ? 0 : -1;

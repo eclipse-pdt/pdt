@@ -36,8 +36,7 @@ public class SelectionHistory {
 					flush();
 			}
 		};
-		fEditor.getSelectionProvider().addSelectionChangedListener(
-				fSelectionListener);
+		fEditor.getSelectionProvider().addSelectionChangedListener(fSelectionListener);
 	}
 
 	public void setHistoryAction(StructureSelectHistoryAction action) {
@@ -79,7 +78,6 @@ public class SelectionHistory {
 	}
 
 	public void dispose() {
-		fEditor.getSelectionProvider().removeSelectionChangedListener(
-				fSelectionListener);
+		fEditor.getSelectionProvider().removeSelectionChangedListener(fSelectionListener);
 	}
 }

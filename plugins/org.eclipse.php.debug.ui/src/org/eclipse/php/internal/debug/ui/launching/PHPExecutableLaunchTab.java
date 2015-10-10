@@ -77,8 +77,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 
 	}
 
-	protected class WidgetListener extends SelectionAdapter
-			implements ModifyListener {
+	protected class WidgetListener extends SelectionAdapter implements ModifyListener {
 		public void modifyText(final ModifyEvent e) {
 			updateLaunchConfigurationDialog();
 			phpsComboBlock.setProject(getFileProject(fileTextField.getText()));
@@ -138,10 +137,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	}
 
 	public void createControl(final Composite parent) {
-		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(
-				parent, SWT.V_SCROLL | SWT.H_SCROLL);
-		final Composite mainComposite = new Composite(scrolledCompositeImpl,
-				SWT.NONE);
+		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(parent, SWT.V_SCROLL | SWT.H_SCROLL);
+		final Composite mainComposite = new Composite(scrolledCompositeImpl, SWT.NONE);
 		setControl(scrolledCompositeImpl);
 		mainComposite.setFont(parent.getFont());
 		final GridLayout layout = new GridLayout();
@@ -160,8 +157,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		createVerticalSpacer(mainComposite, 1);
 		Dialog.applyDialogFont(parent);
 		// HELP
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.LOCALLY_DEBUGGING_A_PHP_SCRIPT);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.LOCALLY_DEBUGGING_A_PHP_SCRIPT);
 	}
 
 	/*
@@ -194,8 +190,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		if (enableFileSelection)
 			updateArgument(configuration);
 		try {
-			prgmArgumentsText.setText(configuration.getAttribute(
-					IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, "")); //$NON-NLS-1$
+			prgmArgumentsText
+					.setText(configuration.getAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, "")); //$NON-NLS-1$
 		} catch (final CoreException e) {
 			Logger.log(Logger.ERROR, "Error reading configuration", e); //$NON-NLS-1$
 		}
@@ -214,8 +210,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		setErrorMessage(null);
 		setWarningMessage(null);
 		try {
-			final String phpExe = launchConfig.getAttribute(
-					IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, ""); //$NON-NLS-1$
+			final String phpExe = launchConfig.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, ""); //$NON-NLS-1$
 			boolean phpExeExists = true;
 			try {
 				final File file = new File(phpExe);
@@ -230,17 +225,13 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			}
 
 			if (enableFileSelection) {
-				final String phpFile = launchConfig
-						.getAttribute(IPHPDebugConstants.ATTR_FILE, ""); //$NON-NLS-1$
+				final String phpFile = launchConfig.getAttribute(IPHPDebugConstants.ATTR_FILE, ""); //$NON-NLS-1$
 
 				if (FileUtils.resourceExists(phpFile)) {
-					IResource fileToData = ResourcesPlugin.getWorkspace()
-							.getRoot().findMember(phpFile);
+					IResource fileToData = ResourcesPlugin.getWorkspace().getRoot().findMember(phpFile);
 					// check if not a file (project, folder etc.)
-					if ((fileToData.getType() != IResource.FILE)
-							|| !PHPToolkitUtil.isPhpFile((IFile) fileToData)) {
-						setErrorMessage(phpFile
-								+ PHPDebugUIMessages.PHPExecutableLaunchTab_isNotPHPFile);
+					if ((fileToData.getType() != IResource.FILE) || !PHPToolkitUtil.isPhpFile((IFile) fileToData)) {
+						setErrorMessage(phpFile + PHPDebugUIMessages.PHPExecutableLaunchTab_isNotPHPFile);
 						return false;
 					}
 					// if valid PHP file, update text field data
@@ -249,15 +240,13 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 						if (fileToData.getLocation() == null) {
 							dataLocation = fileToData.getFullPath().toString();
 						} else {
-							dataLocation = fileToData.getLocation()
-									.toOSString();
+							dataLocation = fileToData.getLocation().toOSString();
 						}
 						fileTextField.setData(dataLocation);
 					}
 				} else if (new File(phpFile).exists()) {
 					if (!PHPToolkitUtil.hasPhpExtention(phpFile)) {
-						setErrorMessage(phpFile
-								+ PHPDebugUIMessages.PHPExecutableLaunchTab_isNotPHPFile);
+						setErrorMessage(phpFile + PHPDebugUIMessages.PHPExecutableLaunchTab_isNotPHPFile);
 						return false;
 					}
 				} else { // resource DOES NOT exist
@@ -265,35 +254,25 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 					return false;
 				}
 			}
-			PHPexeItem phpExeItem = phpsComboBlock != null
-					? phpsComboBlock.getPHPexe() : null;
+			PHPexeItem phpExeItem = phpsComboBlock != null ? phpsComboBlock.getPHPexe() : null;
 			if (phpExeItem == null) {
-				String storedPHPexePath = launchConfig
-						.getAttribute(PHPRuntime.PHP_CONTAINER, (String) null);
+				String storedPHPexePath = launchConfig.getAttribute(PHPRuntime.PHP_CONTAINER, (String) null);
 				phpExeItem = storedPHPexePath != null
-						? PHPRuntime.getPHPexeItem(
-								Path.fromPortableString(storedPHPexePath))
-						: null;
+						? PHPRuntime.getPHPexeItem(Path.fromPortableString(storedPHPexePath)) : null;
 			}
 			if (phpExeItem != null && isLaunchMode(ILaunchManager.DEBUG_MODE)
-					&& PHPDebuggersRegistry.NONE_DEBUGGER_ID
-							.equals(phpExeItem.getDebuggerID())) {
-				setErrorMessage(MessageFormat.format(
-						PHPDebugUIMessages.PHPExecutableLaunchTab_No_debugger_is_attached,
+					&& PHPDebuggersRegistry.NONE_DEBUGGER_ID.equals(phpExeItem.getDebuggerID())) {
+				setErrorMessage(MessageFormat.format(PHPDebugUIMessages.PHPExecutableLaunchTab_No_debugger_is_attached,
 						phpExeItem.getName()));
 				return false;
 			}
 			// Check if script arguments can be passed (CLI SAPI required)
-			String exeProgramArgs = prgmArgumentsText != null
-					? prgmArgumentsText.getText() : null;
+			String exeProgramArgs = prgmArgumentsText != null ? prgmArgumentsText.getText() : null;
 			if (exeProgramArgs == null)
-				exeProgramArgs = launchConfig.getAttribute(
-						IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, ""); //$NON-NLS-1$
+				exeProgramArgs = launchConfig.getAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, ""); //$NON-NLS-1$
 			if (!exeProgramArgs.isEmpty()) {
-				if (phpExeItem != null && !(PHPexeItem.SAPI_CLI
-						.equals(phpExeItem.getSapiType())))
-					setWarningMessage(
-							PHPDebugUIMessages.PHPExecutableLaunchTab_argumentsWillNotBePassed);
+				if (phpExeItem != null && !(PHPexeItem.SAPI_CLI.equals(phpExeItem.getSapiType())))
+					setWarningMessage(PHPDebugUIMessages.PHPExecutableLaunchTab_argumentsWillNotBePassed);
 			}
 		} catch (final CoreException e) {
 		}
@@ -308,8 +287,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 * org.eclipse.debug.ui.ILaunchConfigurationTab#performApply(org.eclipse
 	 * .debug.core.ILaunchConfigurationWorkingCopy)
 	 */
-	public void performApply(
-			final ILaunchConfigurationWorkingCopy configuration) {
+	public void performApply(final ILaunchConfigurationWorkingCopy configuration) {
 		if (phpsComboBlock.isDefaultPHP()) {
 			configuration.setAttribute(PHPRuntime.PHP_CONTAINER, (String) null);
 		} else {
@@ -322,44 +300,32 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		}
 		final String debuggerID = phpsComboBlock.getSelectedDebuggerId();
 		// Set the executable path
-		final String selectedExecutable = phpsComboBlock
-				.getSelectedExecutablePath();
+		final String selectedExecutable = phpsComboBlock.getSelectedExecutablePath();
 		if (selectedExecutable.length() == 0) {
-			configuration.setAttribute(
-					IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
+			configuration.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
 		} else {
-			configuration.setAttribute(
-					IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION,
-					selectedExecutable);
+			configuration.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, selectedExecutable);
 		}
 		// Set the PHP ini path
 		final String iniPath = phpsComboBlock.getSelectedIniPath();
 		if (iniPath.length() == 0) {
-			configuration.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION,
-					(String) null);
+			configuration.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
 		} else {
-			configuration.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION,
-					iniPath);
+			configuration.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, iniPath);
 		}
 
-		configuration.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-				debuggerID);
+		configuration.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerID);
 
 		String arguments = null;
-		if (!enableFileSelection
-				|| (arguments = fileTextField.getText().trim()).length() == 0) {
-			configuration.setAttribute(IPHPDebugConstants.ATTR_FILE,
-					(String) null);
-			configuration.setAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH,
-					(String) null);
+		if (!enableFileSelection || (arguments = fileTextField.getText().trim()).length() == 0) {
+			configuration.setAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
+			configuration.setAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, (String) null);
 		} else {
 			configuration.setAttribute(IPHPDebugConstants.ATTR_FILE, arguments);
-			configuration.setAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH,
-					fileTextField.getData().toString());
+			configuration.setAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, fileTextField.getData().toString());
 		}
 		String scriptArguments = prgmArgumentsText.getText().trim();
-		configuration.setAttribute(
-				IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS,
+		configuration.setAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS,
 				scriptArguments.length() > 0 ? scriptArguments : null);
 	}
 
@@ -370,33 +336,24 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 * org.eclipse.debug.ui.ILaunchConfigurationTab#setDefaults(org.eclipse.
 	 * debug.core.ILaunchConfigurationWorkingCopy)
 	 */
-	public void setDefaults(
-			final ILaunchConfigurationWorkingCopy configuration) {
+	public void setDefaults(final ILaunchConfigurationWorkingCopy configuration) {
 		try {
-			String executableLocation = configuration.getAttribute(
-					IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, ""); //$NON-NLS-1$
+			String executableLocation = configuration.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, ""); //$NON-NLS-1$
 			if (executableLocation.equals("")) { //$NON-NLS-1$
 				PHPexes phpExes = PHPexes.getInstance();
 				final PHPexeItem phpExeItem = phpExes.getDefaultItem();
 				if (phpExeItem == null)
 					return;
 				executableLocation = phpExeItem.getExecutable().toString();
-				configuration.setAttribute(
-						IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION,
-						executableLocation);
+				configuration.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, executableLocation);
 
-				String iniPath = phpExeItem.getINILocation() != null
-						? phpExeItem.getINILocation().toString() : null;
-				configuration.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION,
-						iniPath);
+				String iniPath = phpExeItem.getINILocation() != null ? phpExeItem.getINILocation().toString() : null;
+				configuration.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, iniPath);
 
-				configuration.setAttribute(
-						IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
+				configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 						PHPDebugPlugin.getStopAtFirstLine());
 			}
-			configuration.setAttribute(
-					IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS,
-					(String) null);
+			configuration.setAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, (String) null);
 		} catch (final CoreException e) {
 			Logger.log(Logger.ERROR, "Error setting default configuration", e); //$NON-NLS-1$
 		}
@@ -407,15 +364,13 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 * Fix for Bug 60163 Accessibility: New Builder Dialog missing object info
 	 * for textInput controls
 	 */
-	public void addControlAccessibleListener(final Control control,
-			final String controlName) {
+	public void addControlAccessibleListener(final Control control, final String controlName) {
 		// strip mnemonic (&)
 		final String[] strs = controlName.split("&"); //$NON-NLS-1$
 		final StringBuffer stripped = new StringBuffer();
 		for (String element : strs)
 			stripped.append(element);
-		control.getAccessible().addAccessibleListener(
-				new ControlAccessibleListener(stripped.toString()));
+		control.getAccessible().addAccessibleListener(new ControlAccessibleListener(stripped.toString()));
 	}
 
 	public void setEnableFileSelection(final boolean enabled) {
@@ -453,14 +408,12 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		fileTextField.addModifyListener(fListener);
 		addControlAccessibleListener(fileTextField, group.getText());
 
-		argumentVariablesButton = createPushButton(group,
-				PHPDebugUIMessages.Browse, null);
+		argumentVariablesButton = createPushButton(group, PHPDebugUIMessages.Browse, null);
 		gd = (GridData) argumentVariablesButton.getLayoutData();
 		gd.horizontalSpan = 1;
 		argumentVariablesButton.addSelectionListener(fListener);
 		// need to strip the mnemonic from buttons
-		addControlAccessibleListener(argumentVariablesButton,
-				argumentVariablesButton.getText());
+		addControlAccessibleListener(argumentVariablesButton, argumentVariablesButton.getText());
 	}
 
 	/**
@@ -496,11 +449,9 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		Group group = new Group(parent, SWT.NONE);
 		group.setLayout(new GridLayout());
 		group.setLayoutData(new GridData(GridData.FILL_BOTH));
-		group.setText(
-				PHPDebugUIMessages.PHPExecutableLaunchTab_scriptArguments);
+		group.setText(PHPDebugUIMessages.PHPExecutableLaunchTab_scriptArguments);
 
-		prgmArgumentsText = new Text(group,
-				SWT.MULTI | SWT.WRAP | SWT.BORDER | SWT.V_SCROLL);
+		prgmArgumentsText = new Text(group, SWT.MULTI | SWT.WRAP | SWT.BORDER | SWT.V_SCROLL);
 		prgmArgumentsText.setLayoutData(new GridData(GridData.FILL_BOTH));
 		prgmArgumentsText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent evt) {
@@ -509,14 +460,12 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		});
 		addControlAccessibleListener(prgmArgumentsText, group.getText());
 
-		Button pgrmArgVariableButton = createPushButton(group,
-				PHPDebugUIMessages.PHPExecutableLaunchTab_variables, null);
-		pgrmArgVariableButton
-				.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		Button pgrmArgVariableButton = createPushButton(group, PHPDebugUIMessages.PHPExecutableLaunchTab_variables,
+				null);
+		pgrmArgVariableButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		pgrmArgVariableButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				StringVariableSelectionDialog dialog = new StringVariableSelectionDialog(
-						getShell());
+				StringVariableSelectionDialog dialog = new StringVariableSelectionDialog(getShell());
 				dialog.open();
 				String variable = dialog.getVariableExpression();
 				if (variable != null) {
@@ -562,8 +511,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 * A callback method when changing the file to debug via 'Browse'
 	 */
 	protected void handleChangeFileToDebug(final Text textField) {
-		final IResource resource = LaunchUtilities.getFileFromDialog(null,
-				getShell(), LaunchUtil.getFileExtensions(),
+		final IResource resource = LaunchUtilities.getFileFromDialog(null, getShell(), LaunchUtil.getFileExtensions(),
 				LaunchUtil.getRequiredNatures(), true);
 		if (resource instanceof IFile) {
 			textField.setText(resource.getFullPath().toString());
@@ -591,8 +539,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			phpsComboBlock.setProject(getFileProject(fileTextField.getText()));
 		}
 		try {
-			String path = config.getAttribute(PHPRuntime.PHP_CONTAINER,
-					(String) null);
+			String path = config.getAttribute(PHPRuntime.PHP_CONTAINER, (String) null);
 			if (path != null) {
 				phpsComboBlock.setPath(Path.fromPortableString(path));
 			}
@@ -602,8 +549,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 
 	protected IProject getFileProject(String phpFile) {
 		if (FileUtils.resourceExists(phpFile)) {
-			IResource fileToData = ResourcesPlugin.getWorkspace().getRoot()
-					.findMember(phpFile);
+			IResource fileToData = ResourcesPlugin.getWorkspace().getRoot().findMember(phpFile);
 			return fileToData.getProject();
 		}
 		return null;
@@ -617,10 +563,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		String arguments = ""; //$NON-NLS-1$
 		String fullPath = ""; //$NON-NLS-1$
 		try {
-			arguments = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE,
-					""); //$NON-NLS-1$
-			fullPath = configuration
-					.getAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, ""); //$NON-NLS-1$
+			arguments = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE, ""); //$NON-NLS-1$
+			fullPath = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, ""); //$NON-NLS-1$
 		} catch (final CoreException ce) {
 			Logger.log(Logger.ERROR, "Error reading configuration", ce); //$NON-NLS-1$
 		}

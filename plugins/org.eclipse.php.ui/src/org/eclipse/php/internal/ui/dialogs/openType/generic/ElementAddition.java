@@ -74,8 +74,7 @@ public class ElementAddition implements Runnable {
 							if (!continueAddingElements) {
 								return;
 							}
-							tableViewer.setSelection(new StructuredSelection(
-									element));
+							tableViewer.setSelection(new StructuredSelection(element));
 						}
 					});
 				}

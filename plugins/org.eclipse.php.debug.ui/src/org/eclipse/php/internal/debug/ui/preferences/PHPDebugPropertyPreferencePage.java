@@ -33,8 +33,7 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Shalom Gibly
  */
-public class PHPDebugPropertyPreferencePage extends
-		AbstractPHPPropertyPreferencePage {
+public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferencePage {
 
 	private PHPDebugPreferencesBlock debugPreferencesBlock;
 	protected Label fDefaultURLLabel;
@@ -74,19 +73,16 @@ public class PHPDebugPropertyPreferencePage extends
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		comp.setLayoutData(gd);
 
-		debugPreferencesBlock = new PHPDebugPreferencesBlock(
-				getProject() == null);
+		debugPreferencesBlock = new PHPDebugPreferencesBlock(getProject() == null);
 
 		debugPreferencesBlock.setCompositeAddon(comp);
 		debugPreferencesBlock
-				.setIsProjectSpecific(fEnableProjectSettings != null
-						&& fEnableProjectSettings.getSelection());
+				.setIsProjectSpecific(fEnableProjectSettings != null && fEnableProjectSettings.getSelection());
 		debugPreferencesBlock.initializeValues(this);
 
 		debugPreferencesBlock.setValidator(new IPageValidator() {
 
-			public void validate(IPageControlValidator pageValidator)
-					throws ControlValidationException {
+			public void validate(IPageControlValidator pageValidator) throws ControlValidationException {
 
 				pageValidator.validate();
 				setValid(pageValidator.isValid());
@@ -103,22 +99,15 @@ public class PHPDebugPropertyPreferencePage extends
 			fEnableProjectSettings.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					debugPreferencesBlock
-							.setIsProjectSpecific(fEnableProjectSettings != null
-									&& fEnableProjectSettings.getSelection());
-					debugPreferencesBlock.initializeValues(
-							PHPDebugPropertyPreferencePage.this);
+					debugPreferencesBlock.setIsProjectSpecific(
+							fEnableProjectSettings != null && fEnableProjectSettings.getSelection());
+					debugPreferencesBlock.initializeValues(PHPDebugPropertyPreferencePage.this);
 				}
 			});
 		}
 
-		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(
-						getControl(),
-						getProject() != null ? IPHPHelpContextIds.PHP_DEBUG_PROPERTIES
-								: IPHPHelpContextIds.DEBUG_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
+				getProject() != null ? IPHPHelpContextIds.PHP_DEBUG_PROPERTIES : IPHPHelpContextIds.DEBUG_PREFERENCES);
 		return comp;
 	}
 
@@ -141,8 +130,7 @@ public class PHPDebugPropertyPreferencePage extends
 	@Override
 	public boolean performOk() {
 		boolean res = super.performOk();
-		boolean res2 = debugPreferencesBlock
-				.performOK(isElementSettingsEnabled());
+		boolean res2 = debugPreferencesBlock.performOK(isElementSettingsEnabled());
 		return res && res2;
 	}
 }

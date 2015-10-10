@@ -23,8 +23,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionGroup;
 
-public class WorkingSetShowActionGroup extends ActionGroup implements
-		IWorkingSetActionGroup {
+public class WorkingSetShowActionGroup extends ActionGroup implements IWorkingSetActionGroup {
 
 	private List fContributions = new ArrayList();
 	private ConfigureWorkingSetAction fConfigureWorkingSetAction;

@@ -19,8 +19,7 @@ import org.eclipse.php.internal.debug.ui.launching.LaunchConfigurationsTabsRegis
 /**
  * A debug tab group for launching debug on server.
  */
-public class ServerLaunchConfigurationTabGroup extends
-		AbstractLaunchConfigurationTabGroup {
+public class ServerLaunchConfigurationTabGroup extends AbstractLaunchConfigurationTabGroup {
 
 	protected final String CONFIGURATION_TAB_GROUP_ID = "org.eclipse.php.server.ui.launchConfigurationTabGroup"; //$NON-NLS-1$
 

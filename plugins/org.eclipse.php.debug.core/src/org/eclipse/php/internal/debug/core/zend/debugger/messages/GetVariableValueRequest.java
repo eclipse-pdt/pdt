@@ -26,8 +26,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
 /**
  * @author guy
  */
-public class GetVariableValueRequest extends DebugMessageRequestImpl implements
-		IDebugRequestMessage {
+public class GetVariableValueRequest extends DebugMessageRequestImpl implements IDebugRequestMessage {
 
 	private String var;
 	private int depth;
@@ -82,8 +81,7 @@ public class GetVariableValueRequest extends DebugMessageRequestImpl implements
 
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
-		setVar(CommunicationUtilities.readEncodedString(in,
-				getTransferEncoding()));
+		setVar(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
 		setDepth(in.readInt());
 		int pathSize = in.readInt();
 		if (pathSize > 0) {
@@ -102,8 +100,7 @@ public class GetVariableValueRequest extends DebugMessageRequestImpl implements
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());
-		CommunicationUtilities.writeEncodedString(out, getVar(),
-				getTransferEncoding());
+		CommunicationUtilities.writeEncodedString(out, getVar(), getTransferEncoding());
 		out.writeInt(getDepth());
 		String[] path = getPath();
 		out.writeInt(path.length);

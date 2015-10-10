@@ -54,8 +54,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 	 * name for a global variable.
 	 * 
 	 */
-	public PHPVariable(PHPDebugTarget target, Expression variable,
-			boolean global) {
+	public PHPVariable(PHPDebugTarget target, Expression variable, boolean global) {
 		super(target);
 		this.variable = variable;
 		this.global = global;
@@ -119,16 +118,14 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 	 */
 	public void setValue(String expression) throws DebugException {
 		PHPDebugTarget debugTarget = (PHPDebugTarget) getDebugTarget();
-		ExpressionsManager expressionManager = debugTarget
-				.getExpressionManager();
+		ExpressionsManager expressionManager = debugTarget.getExpressionManager();
 		Expression changeVar = variable;
 		if (global) {
 			String exp = "$GLOBALS[\"" + variable.getFullName().substring(1) //$NON-NLS-1$
 					+ "\"]"; //$NON-NLS-1$
 			changeVar = new DefaultExpression(exp);
 		}
-		boolean status = expressionManager
-				.assignValue(changeVar, expression, 1);
+		boolean status = expressionManager.assignValue(changeVar, expression, 1);
 		if (!status) {
 			Logger.debugMSG("[" + this //$NON-NLS-1$
 					+ "] PHPValue: Problem changing variable value"); //$NON-NLS-1$

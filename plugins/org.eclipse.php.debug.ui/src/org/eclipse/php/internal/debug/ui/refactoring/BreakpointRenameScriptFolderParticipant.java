@@ -18,15 +18,13 @@ import org.eclipse.dltk.core.ISourceModule;
  * 
  * @since 3.2
  */
-public class BreakpointRenameScriptFolderParticipant extends
-		BreakpointRenameParticipant {
+public class BreakpointRenameScriptFolderParticipant extends BreakpointRenameParticipant {
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.debug.core.refactoring.BreakpointRenameParticipant
-	 * #accepts(org.eclipse.jdt.core.IModelElement)
+	 * @see org.eclipse.jdt.internal.debug.core.refactoring.
+	 * BreakpointRenameParticipant #accepts(org.eclipse.jdt.core.IModelElement)
 	 */
 	protected boolean accepts(IModelElement element) {
 		return element instanceof ISourceModule;

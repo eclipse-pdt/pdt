@@ -36,32 +36,28 @@ public class OffOnTagsTabPage extends ModifyDialogTabPage {
 	private StringPreference disableTagPref;
 	private CheckboxPreference enablePref;
 
-	public OffOnTagsTabPage(ModifyDialog modifyDialog,
-			CodeFormatterPreferences codeFormatterPreferences) {
+	public OffOnTagsTabPage(ModifyDialog modifyDialog, CodeFormatterPreferences codeFormatterPreferences) {
 		super(modifyDialog, codeFormatterPreferences);
 	}
 
 	@Override
 	protected void doCreatePreferences(Composite composite, int numColumns) {
-		createLabel(numColumns, composite,
-				FormatterMessages.OffOnTagsTabPage_description);
+		createLabel(numColumns, composite, FormatterMessages.OffOnTagsTabPage_description);
 
 		// Add some vertical space
 		Label separator = new Label(composite, SWT.NONE);
 		separator.setVisible(false);
-		GridData data = new GridData(GridData.FILL, GridData.FILL, false,
-				false, numColumns, 1);
+		GridData data = new GridData(GridData.FILL, GridData.FILL, false, false, numColumns, 1);
 		data.heightHint = fPixelConverter.convertHeightInCharsToPixels(1) / 3;
 		separator.setLayoutData(data);
 
-		enablePref = createCheckboxPref(composite, numColumns,
-				FormatterMessages.OffOnTagsTabPage_enableOffOnTags);
+		enablePref = createCheckboxPref(composite, numColumns, FormatterMessages.OffOnTagsTabPage_enableOffOnTags);
 		enablePref.setIsChecked(codeFormatterPreferences.use_tags);
 
 		IInputValidator inputValidator = new IInputValidator() {
 			/*
-			 * @see
-			 * org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
+			 * @see org.eclipse.jdt.internal.ui.preferences.formatter.
+			 * ModifyDialogTabPage
 			 * .StringPreference.Validator#isValid(java.lang.String)
 			 * 
 			 * @since 3.6
@@ -88,20 +84,16 @@ public class OffOnTagsTabPage extends ModifyDialogTabPage {
 		layout.marginLeft = indent;
 		tagComposite.setLayout(layout);
 
-		disableTagPref = createStringPref(tagComposite, numColumns,
-				FormatterMessages.OffOnTagsTabPage_disableTag,
+		disableTagPref = createStringPref(tagComposite, numColumns, FormatterMessages.OffOnTagsTabPage_disableTag,
 				CodeFormatterConstants.FORMATTER_DISABLING_TAG, inputValidator);
 		if (codeFormatterPreferences.disabling_tag != null) {
-			disableTagPref.setValue(new String(
-					codeFormatterPreferences.disabling_tag));
+			disableTagPref.setValue(new String(codeFormatterPreferences.disabling_tag));
 		}
 
-		enableTagPref = createStringPref(tagComposite, numColumns,
-				FormatterMessages.OffOnTagsTabPage_enableTag,
+		enableTagPref = createStringPref(tagComposite, numColumns, FormatterMessages.OffOnTagsTabPage_enableTag,
 				CodeFormatterConstants.FORMATTER_ENABLING_TAG, inputValidator);
 		if (codeFormatterPreferences.enabling_tag != null) {
-			enableTagPref.setValue(new String(
-					codeFormatterPreferences.enabling_tag));
+			enableTagPref.setValue(new String(codeFormatterPreferences.enabling_tag));
 		}
 
 		enablePref.getControl().addListener(SWT.Selection, new Listener() {
@@ -128,14 +120,11 @@ public class OffOnTagsTabPage extends ModifyDialogTabPage {
 
 		final int numColumns = 2;
 		GridLayout layout = new GridLayout(numColumns, false);
-		layout.verticalSpacing = (int) (1.5 * fPixelConverter
-				.convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING));
-		layout.horizontalSpacing = fPixelConverter
-				.convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
-		layout.marginHeight = fPixelConverter
-				.convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
-		layout.marginWidth = fPixelConverter
-				.convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
+		layout.verticalSpacing = (int) (1.5
+				* fPixelConverter.convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING));
+		layout.horizontalSpacing = fPixelConverter.convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
+		layout.marginHeight = fPixelConverter.convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
+		layout.marginWidth = fPixelConverter.convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
 		composite.setLayout(layout);
 		doCreatePreferences(composite, numColumns);
 
@@ -173,13 +162,11 @@ public class OffOnTagsTabPage extends ModifyDialogTabPage {
 				if (idx == 0) {
 					codeFormatterPreferences.disabling_tag = null;
 				} else {
-					String tag = idx < 0 ? disableTagOption.trim()
-							: disableTagOption.substring(0, idx).trim();
+					String tag = idx < 0 ? disableTagOption.trim() : disableTagOption.substring(0, idx).trim();
 					if (tag.length() == 0) {
 						codeFormatterPreferences.disabling_tag = null;
 					} else {
-						codeFormatterPreferences.disabling_tag = tag
-								.toCharArray();
+						codeFormatterPreferences.disabling_tag = tag.toCharArray();
 					}
 				}
 			} else {
@@ -192,13 +179,11 @@ public class OffOnTagsTabPage extends ModifyDialogTabPage {
 				if (idx == 0) {
 					codeFormatterPreferences.enabling_tag = null;
 				} else {
-					String tag = idx < 0 ? enableTagOption.trim()
-							: enableTagOption.substring(0, idx).trim();
+					String tag = idx < 0 ? enableTagOption.trim() : enableTagOption.substring(0, idx).trim();
 					if (tag.length() == 0) {
 						codeFormatterPreferences.enabling_tag = null;
 					} else {
-						codeFormatterPreferences.enabling_tag = tag
-								.toCharArray();
+						codeFormatterPreferences.enabling_tag = tag.toCharArray();
 					}
 				}
 			} else {

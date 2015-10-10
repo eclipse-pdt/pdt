@@ -22,14 +22,11 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  * 
  * @author moshe, 2007
  */
-public class PHPFormatterConfigurationWrapper implements
-		IPHPFormatterConfigurationBlockWrapper {
+public class PHPFormatterConfigurationWrapper implements IPHPFormatterConfigurationBlockWrapper {
 	private CodeFormatterConfigurationBlock pConfigurationBlock;
 
-	public void init(IStatusChangeListener context, IProject project,
-			IWorkbenchPreferenceContainer container) {
-		pConfigurationBlock = new CodeFormatterConfigurationBlock(context,
-				project, container);
+	public void init(IStatusChangeListener context, IProject project, IWorkbenchPreferenceContainer container) {
+		pConfigurationBlock = new CodeFormatterConfigurationBlock(context, project, container);
 	}
 
 	public Control createContents(Composite composite) {
@@ -57,8 +54,7 @@ public class PHPFormatterConfigurationWrapper implements
 	}
 
 	public void useProjectSpecificSettings(boolean useProjectSpecificSettings) {
-		pConfigurationBlock
-				.useProjectSpecificSettings(useProjectSpecificSettings);
+		pConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
 	}
 
 	public String getDescription() {

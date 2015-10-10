@@ -77,16 +77,13 @@ public class LinkedProposalPositionGroup {
 			return null;
 		}
 
-		public TextEdit computeEdits(int offset, LinkedPosition position,
-				char trigger, int stateMask, LinkedModeModel model)
-				throws CoreException {
-			return new ReplaceEdit(position.getOffset(), position.getLength(),
-					fDisplayString);
+		public TextEdit computeEdits(int offset, LinkedPosition position, char trigger, int stateMask,
+				LinkedModeModel model) throws CoreException {
+			return new ReplaceEdit(position.getOffset(), position.getLength(), fDisplayString);
 		}
 	}
 
-	public static PositionInformation createPositionInformation(
-			ITrackedNodePosition pos, boolean isFirst) {
+	public static PositionInformation createPositionInformation(ITrackedNodePosition pos, boolean isFirst) {
 		return new TrackedNodePosition(pos, isFirst);
 	}
 
@@ -117,17 +114,13 @@ public class LinkedProposalPositionGroup {
 		private final ITypeBinding fTypeProposal;
 		private final ISourceModule fCompilationUnit;
 
-		public JavaLinkedModeProposal(ISourceModule unit,
-				ITypeBinding typeProposal, int relevance) {
+		public JavaLinkedModeProposal(ISourceModule unit, ITypeBinding typeProposal, int relevance) {
 			super(BindingLabelProvider.getBindingLabel(typeProposal,
-					ScriptElementLabels.ALL_DEFAULT
-							| ScriptElementLabels.ALL_POST_QUALIFIED), null,
-					relevance);
+					ScriptElementLabels.ALL_DEFAULT | ScriptElementLabels.ALL_POST_QUALIFIED), null, relevance);
 			fTypeProposal = typeProposal;
 			fCompilationUnit = unit;
-			ImageDescriptor desc = BindingLabelProvider
-					.getBindingImageDescriptor(fTypeProposal,
-							BindingLabelProvider.DEFAULT_IMAGEFLAGS);
+			ImageDescriptor desc = BindingLabelProvider.getBindingImageDescriptor(fTypeProposal,
+					BindingLabelProvider.DEFAULT_IMAGEFLAGS);
 			if (desc != null) {
 				setImage(DLTKUIPlugin.getImageDescriptorRegistry().get(desc));
 			}
@@ -136,14 +129,12 @@ public class LinkedProposalPositionGroup {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jdt.internal.corext.fix.PositionGroup.Proposal#computeEdits
-		 * (int, org.eclipse.jface.text.link.LinkedPosition, char, int,
-		 * org.eclipse.jface.text.link.LinkedModeModel)
+		 * @see org.eclipse.jdt.internal.corext.fix.PositionGroup.Proposal#
+		 * computeEdits (int, org.eclipse.jface.text.link.LinkedPosition, char,
+		 * int, org.eclipse.jface.text.link.LinkedModeModel)
 		 */
-		public TextEdit computeEdits(int offset, LinkedPosition position,
-				char trigger, int stateMask, LinkedModeModel model)
-				throws CoreException {
+		public TextEdit computeEdits(int offset, LinkedPosition position, char trigger, int stateMask,
+				LinkedModeModel model) throws CoreException {
 			// ImportRewrite impRewrite=
 			// StubUtility.createImportRewrite(fCompilationUnit, true);
 			// String replaceString= impRewrite.addImport(fTypeProposal);
@@ -157,8 +148,8 @@ public class LinkedProposalPositionGroup {
 	}
 
 	private final String fGroupId;
-	private final List/* <Position> */fPositions;
-	private final List/* <Proposal> */fProposals;
+	private final List/* <Position> */ fPositions;
+	private final List/* <Proposal> */ fProposals;
 
 	public LinkedProposalPositionGroup(String groupID) {
 		fGroupId = groupID;
@@ -191,8 +182,7 @@ public class LinkedProposalPositionGroup {
 	}
 
 	public PositionInformation[] getPositions() {
-		return (PositionInformation[]) fPositions
-				.toArray(new PositionInformation[fPositions.size()]);
+		return (PositionInformation[]) fPositions.toArray(new PositionInformation[fPositions.size()]);
 	}
 
 	public Proposal[] getProposals() {

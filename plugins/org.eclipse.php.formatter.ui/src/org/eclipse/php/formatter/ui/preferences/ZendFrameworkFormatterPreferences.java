@@ -18,8 +18,7 @@ import org.eclipse.php.formatter.core.ICodeFormatterPreferencesInitializer;
  * Utility class for populating a <code>CodeFormatterPreferences</code> with
  * Zend Framework default formatter settings
  */
-final public class ZendFrameworkFormatterPreferences implements
-		ICodeFormatterPreferencesInitializer {
+final public class ZendFrameworkFormatterPreferences implements ICodeFormatterPreferencesInitializer {
 
 	public ZendFrameworkFormatterPreferences() {
 	}

@@ -44,18 +44,14 @@ public class AlreadyExistsDialog extends StatusDialog {
 	private final CustomProfile fProfile;
 	private final ProfileManager fProfileManager;
 
-	public AlreadyExistsDialog(Shell parentShell, CustomProfile profile,
-			ProfileManager profileManager) {
+	public AlreadyExistsDialog(Shell parentShell, CustomProfile profile, ProfileManager profileManager) {
 		super(parentShell);
 		fProfile = profile;
 		fProfileManager = profileManager;
 		fOk = new StatusInfo();
-		fDuplicate = new StatusInfo(
-				IStatus.ERROR,
+		fDuplicate = new StatusInfo(IStatus.ERROR,
 				FormatterMessages.AlreadyExistsDialog_message_profile_already_exists);
-		fEmpty = new StatusInfo(
-				IStatus.ERROR,
-				FormatterMessages.AlreadyExistsDialog_message_profile_name_empty);
+		fEmpty = new StatusInfo(IStatus.ERROR, FormatterMessages.AlreadyExistsDialog_message_profile_name_empty);
 	}
 
 	public void create() {
@@ -67,9 +63,7 @@ public class AlreadyExistsDialog extends StatusDialog {
 
 		initializeComposite(parent);
 
-		createLabel(Messages.format(
-				FormatterMessages.AlreadyExistsDialog_dialog_label,
-				fProfile.getName()));
+		createLabel(Messages.format(FormatterMessages.AlreadyExistsDialog_dialog_label, fProfile.getName()));
 
 		fRenameRadio = createRadioButton(FormatterMessages.AlreadyExistsDialog_rename_radio_button_desc);
 		fNameText = createTextField();

@@ -20,6 +20,7 @@ public class Messages extends NLS {
 	public static String PHPsSearchResultDialog_Name;
 	public static String PHPsSearchResultDialog_PHP_executables_search;
 	public static String PHPsSearchResultDialog_Select_all;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -36,8 +36,7 @@ public class ValuedCombo extends Combo {
 	private void retrieveViewedItemsAsArray() {
 		viewedValues = new String[entryList.size()];
 		int i = 0;
-		for (Iterator entryIterator = entryList.iterator(); entryIterator
-				.hasNext(); ++i) {
+		for (Iterator entryIterator = entryList.iterator(); entryIterator.hasNext(); ++i) {
 			Entry entry = (Entry) entryIterator.next();
 			viewedValues[i] = entry.getViewedValue();
 		}
@@ -48,8 +47,7 @@ public class ValuedCombo extends Combo {
 	}
 
 	public void selectValue(String Value) {
-		for (Iterator entryIterator = entryList.iterator(); entryIterator
-				.hasNext();) {
+		for (Iterator entryIterator = entryList.iterator(); entryIterator.hasNext();) {
 			Entry entry = (Entry) entryIterator.next();
 			if (entry.getValue().equals(Value)) {
 				setText(entry.getViewedValue());

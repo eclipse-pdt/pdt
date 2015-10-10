@@ -52,8 +52,7 @@ public class IncludeHyperlinkVisitor extends ASTVisitor {
 				} else if (fileExpr instanceof Scalar) {
 					processScalar((Scalar) fileExpr);
 				}
-				selectRegion = new Region(fileExpr.sourceStart(),
-						fileExpr.sourceEnd() - fileExpr.sourceStart());
+				selectRegion = new Region(fileExpr.sourceStart(), fileExpr.sourceEnd() - fileExpr.sourceStart());
 				found = true;
 				return false;
 			}
@@ -110,8 +109,7 @@ public class IncludeHyperlinkVisitor extends ASTVisitor {
 
 	private String resolveScalarValue(Scalar scalar) {
 		if (scalar.getValue() == DIR_CONST) {
-			return sourceModule.getResource().getLocation()
-					.removeLastSegments(1).toOSString();
+			return sourceModule.getResource().getLocation().removeLastSegments(1).toOSString();
 		} else if (scalar.getValue() == FILE_CONST) {
 			return sourceModule.getResource().getLocation().toOSString();
 		} else {

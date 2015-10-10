@@ -54,19 +54,16 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 	/**
 	 * Proposal implementation
 	 */
-	private static class VarCommentCorrectionProposal
-			extends AbstractCorrectionProposal {
+	private static class VarCommentCorrectionProposal extends AbstractCorrectionProposal {
 
 		private static final String COMMAND_ID = "org.eclipse.php.ui.insertVarComment"; //$NON-NLS-1$
 		private static final Pattern noneSpacePattern = Pattern.compile("\\S+"); //$NON-NLS-1$
 		private ASTNode variableNode;
 		private ISourceModule sourceModule;
 
-		public VarCommentCorrectionProposal(ASTNode variableNode,
-				ISourceModule sourceModule) {
+		public VarCommentCorrectionProposal(ASTNode variableNode, ISourceModule sourceModule) {
 			super(Messages.VarCommentQuickAssistProcessor_name, 0,
-					DLTKPluginImages.get(DLTKPluginImages.IMG_CORRECTION_ADD),
-					COMMAND_ID);
+					DLTKPluginImages.get(DLTKPluginImages.IMG_CORRECTION_ADD), COMMAND_ID);
 			this.variableNode = variableNode;
 			this.sourceModule = sourceModule;
 		}
@@ -82,11 +79,9 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 
 			TextEdit textEdit = null;
 			Object[] types = dialog.getResult();
-			if (types != null && types.length == 1
-					&& types[0] instanceof IModelElement) {
+			if (types != null && types.length == 1 && types[0] instanceof IModelElement) {
 				try {
-					textEdit = createTextEditForType(document,
-							(IModelElement) types[0]);
+					textEdit = createTextEditForType(document, (IModelElement) types[0]);
 				} catch (BadLocationException e) {
 				}
 			}
@@ -103,14 +98,13 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 		/**
 		 * Creates the variable comment for given type
 		 */
-		private TextEdit createTextEditForType(IDocument document,
-				IModelElement selectedType) throws BadLocationException {
+		private TextEdit createTextEditForType(IDocument document, IModelElement selectedType)
+				throws BadLocationException {
 
 			String typeName = selectedType.getElementName();
 			IModelElement parent = selectedType.getParent();
 			try {
-				if (parent instanceof IMember && PHPFlags
-						.isNamespace(((IMember) parent).getFlags())) {
+				if (parent instanceof IMember && PHPFlags.isNamespace(((IMember) parent).getFlags())) {
 					typeName = parent.getElementName() + '\\' + typeName;
 				}
 			} catch (ModelException e) {
@@ -128,19 +122,15 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 
 			// inserts type hint
 			int selectionStartLine = document.getLineOfOffset(varOffset);
-			int selectionLineOffset = document
-					.getLineOffset(selectionStartLine);
-			IRegion selectionLineInfo = document
-					.getLineInformation(selectionStartLine);
+			int selectionLineOffset = document.getLineOffset(selectionStartLine);
+			IRegion selectionLineInfo = document.getLineInformation(selectionStartLine);
 			int selectionLineLength = selectionLineInfo.getLength();
-			String selectionLineText = document.get(selectionLineOffset,
-					selectionLineLength);
+			String selectionLineText = document.get(selectionLineOffset, selectionLineLength);
 
 			Matcher nonSpaceMatch = noneSpacePattern.matcher(selectionLineText);
 			StringBuilder varTypeHint = new StringBuilder(); // $NON-NLS-1$
 			if (nonSpaceMatch.find()) {
-				varTypeHint.append(
-						selectionLineText.substring(0, nonSpaceMatch.start()));
+				varTypeHint.append(selectionLineText.substring(0, nonSpaceMatch.start()));
 			}
 
 			varTypeHint.append("/** @var "); //$NON-NLS-1$
@@ -158,20 +148,15 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 		 */
 		private SelectionDialog createTypeDialog() {
 
-			IDLTKUILanguageToolkit languageToolkit = PHPUILanguageToolkit
-					.getInstance();
-			String languageName = languageToolkit.getCoreToolkit()
-					.getLanguageName();
+			IDLTKUILanguageToolkit languageToolkit = PHPUILanguageToolkit.getInstance();
+			String languageName = languageToolkit.getCoreToolkit().getLanguageName();
 
 			final Shell parent = DLTKUIPlugin.getActiveWorkbenchShell();
-			IDLTKSearchScope searchScope = SearchEngine
-					.createSearchScope(sourceModule.getScriptProject());
-			OpenTypeSelectionDialog2 dialog = new OpenTypeSelectionDialog2(
-					parent, true,
-					PlatformUI.getWorkbench().getProgressService(), searchScope,
-					IDLTKSearchConstants.TYPE, languageToolkit);
-			dialog.setTitle(NLS.bind(DLTKUIMessages.OpenTypeAction_dialogTitle,
-					languageName));
+			IDLTKSearchScope searchScope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
+			OpenTypeSelectionDialog2 dialog = new OpenTypeSelectionDialog2(parent, true,
+					PlatformUI.getWorkbench().getProgressService(), searchScope, IDLTKSearchConstants.TYPE,
+					languageToolkit);
+			dialog.setTitle(NLS.bind(DLTKUIMessages.OpenTypeAction_dialogTitle, languageName));
 			dialog.setMessage(DLTKUIMessages.OpenTypeAction_dialogMessage);
 			dialog.setFilter(""); //$NON-NLS-1$
 
@@ -225,8 +210,7 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 					state = FINISH;
 				} else {
 					// does expression start with a variable?
-					selectedNode = NodeFinder.perform(selectedNode,
-							selectedNode.getStart(), 0);
+					selectedNode = NodeFinder.perform(selectedNode, selectedNode.getStart(), 0);
 					state = PROCESS_EXPRESSION;
 				}
 				break;
@@ -259,13 +243,12 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 	 *      IProblemLocation[])
 	 */
 	@Override
-	public IScriptCompletionProposal[] getAssists(IInvocationContext context,
-			IProblemLocation[] locations) throws CoreException {
+	public IScriptCompletionProposal[] getAssists(IInvocationContext context, IProblemLocation[] locations)
+			throws CoreException {
 		ASTNode variableNode = getVariableNode(context.getCoveringNode());
 		if (null != variableNode) {
 			return new IScriptCompletionProposal[] {
-					new VarCommentCorrectionProposal(variableNode,
-							context.getCompilationUnit()) };
+					new VarCommentCorrectionProposal(variableNode, context.getCompilationUnit()) };
 		}
 		return null;
 	}

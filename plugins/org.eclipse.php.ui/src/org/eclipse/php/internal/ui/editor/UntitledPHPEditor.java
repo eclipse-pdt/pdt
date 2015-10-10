@@ -93,18 +93,15 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 		boolean success = false;
 		try {
 			provider.aboutToChange(newInput);
-			provider.saveDocument(progressMonitor, newInput, provider
-					.getDocument(input), true);
+			provider.saveDocument(progressMonitor, newInput, provider.getDocument(input), true);
 			success = true;
 
 		} catch (CoreException x) {
 			Logger.logException(x);
 			final IStatus status = x.getStatus();
 			if (status == null || status.getSeverity() != IStatus.CANCEL) {
-				String title = PHPUIMessages.UntitledPHPEditor_saveError; //$NON-NLS-1$
-				String msg = NLSUtility.format(
-						PHPUIMessages.UntitledPHPEditor_documentCannotBeSaved,
-						x.getMessage()); //$NON-NLS-1$
+				String title = PHPUIMessages.UntitledPHPEditor_saveError; // $NON-NLS-1$
+				String msg = NLSUtility.format(PHPUIMessages.UntitledPHPEditor_documentCannotBeSaved, x.getMessage()); // $NON-NLS-1$
 				MessageDialog.openError(shell, title, msg);
 			}
 		} finally {
@@ -144,13 +141,11 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 	 */
 	private void deleteUntitledStorageFile(IFile newFile) {
 		// delete temporary file
-		IPath oldPath = ((NonExistingPHPFileEditorInput) getEditorInput())
-				.getPath(getEditorInput());
+		IPath oldPath = ((NonExistingPHPFileEditorInput) getEditorInput()).getPath(getEditorInput());
 		File oldFile = new File(oldPath.toOSString());
 		if (oldFile.exists() && oldFile.canWrite()) {
 			if (!oldFile.delete()) {
-				Logger.log(Logger.WARNING,
-						PHPUIMessages.UntitledPHPEditor_deleteFailed); //$NON-NLS-1$
+				Logger.log(Logger.WARNING, PHPUIMessages.UntitledPHPEditor_deleteFailed); // $NON-NLS-1$
 			}
 		}
 
@@ -160,36 +155,28 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 		// copy markers
 		IWorkspaceRoot resource = ResourcesPlugin.getWorkspace().getRoot();
 		try {
-			IMarker[] markers = resource.findMarkers(null, true,
-					IResource.DEPTH_ZERO);
-			final IBreakpointManager breakpointManager = DebugPlugin
-					.getDefault().getBreakpointManager();
+			IMarker[] markers = resource.findMarkers(null, true, IResource.DEPTH_ZERO);
+			final IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 			for (IMarker marker : markers) {
 				String markerType = MarkerUtilities.getMarkerType(marker);
 				if (markerType != null) {
 					String fileName = (String) marker
 							.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
 					if (fileName != null && new File(fileName).equals(oldFile)) {
-						IBreakpoint breakpoint = breakpointManager
-								.getBreakpoint(marker);
+						IBreakpoint breakpoint = breakpointManager.getBreakpoint(marker);
 						if (breakpoint != null) {
 							if (newFile != null) {
-								IMarker createdMarker = newFile
-										.createMarker(markerType);
-								createdMarker.setAttributes(breakpoint
-										.getMarker().getAttributes());
-								breakpointManager.removeBreakpoint(breakpoint,
-										true);
+								IMarker createdMarker = newFile.createMarker(markerType);
+								createdMarker.setAttributes(breakpoint.getMarker().getAttributes());
+								breakpointManager.removeBreakpoint(breakpoint, true);
 								breakpoint.setMarker(createdMarker);
 								breakpointManager.addBreakpoint(breakpoint);
 							} else {
-								breakpointManager.removeBreakpoint(breakpoint,
-										true);
+								breakpointManager.removeBreakpoint(breakpoint, true);
 							}
 						} else {
 							if (newFile != null) {
-								MarkerUtilities.createMarker(newFile, marker
-										.getAttributes(), markerType);
+								MarkerUtilities.createMarker(newFile, marker.getAttributes(), markerType);
 							}
 						}
 					}

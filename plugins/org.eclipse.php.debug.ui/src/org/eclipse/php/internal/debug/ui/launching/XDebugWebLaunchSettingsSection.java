@@ -15,8 +15,7 @@ package org.eclipse.php.internal.debug.ui.launching;
  * 
  * @author Bartlomiej Laczkowski
  */
-public class XDebugWebLaunchSettingsSection
-		extends AbstractDebugWebLaunchSettingsSection {
+public class XDebugWebLaunchSettingsSection extends AbstractDebugWebLaunchSettingsSection {
 
 	// Currently there is nothing more than in abstract implementation.
 

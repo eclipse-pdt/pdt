@@ -27,8 +27,7 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author Bartlomiej Laczkowski
  */
-public class DebuggerLaunchSettingsSectionAdapter
-		implements IDebuggerLaunchSettingsSection {
+public class DebuggerLaunchSettingsSectionAdapter implements IDebuggerLaunchSettingsSection {
 
 	/*
 	 * (non-Javadoc)

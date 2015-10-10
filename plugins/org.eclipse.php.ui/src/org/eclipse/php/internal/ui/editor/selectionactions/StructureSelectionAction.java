@@ -37,8 +37,7 @@ public abstract class StructureSelectionAction extends Action {
 	private PHPStructuredEditor fEditor;
 	private SelectionHistory fSelectionHistory;
 
-	protected StructureSelectionAction(String text, PHPStructuredEditor editor,
-			SelectionHistory history) {
+	protected StructureSelectionAction(String text, PHPStructuredEditor editor, SelectionHistory history) {
 		super(text);
 		Assert.isNotNull(editor);
 		Assert.isNotNull(history);
@@ -58,8 +57,7 @@ public abstract class StructureSelectionAction extends Action {
 	 */
 	@Override
 	public final void run() {
-		ISourceModule inputElement = EditorUtility.getEditorInputModelElement(
-				fEditor, false);
+		ISourceModule inputElement = EditorUtility.getEditorInputModelElement(fEditor, false);
 		if (!(inputElement instanceof ISourceModule && inputElement.exists()))
 			return;
 
@@ -68,22 +66,18 @@ public abstract class StructureSelectionAction extends Action {
 		try {
 			sourceRange = inputElement.getSourceRange();
 			if (sourceRange == null || sourceRange.getLength() == 0) {
-				MessageDialog.openInformation(fEditor.getEditorSite()
-						.getShell(), Messages.StructureSelectionAction_0,
+				MessageDialog.openInformation(fEditor.getEditorSite().getShell(), Messages.StructureSelectionAction_0,
 						Messages.StructureSelectionAction_1);
 				return;
 			}
 		} catch (ModelException e) {
 		}
 		ITextSelection selection = getTextSelection();
-		ISourceRange newRange = getNewSelectionRange(
-				createSourceRange(selection), inputElement);
+		ISourceRange newRange = getNewSelectionRange(createSourceRange(selection), inputElement);
 		// Check if new selection differs from current selection
-		if (selection.getOffset() == newRange.getOffset()
-				&& selection.getLength() == newRange.getLength())
+		if (selection.getOffset() == newRange.getOffset() && selection.getLength() == newRange.getLength())
 			return;
-		fSelectionHistory.remember(new SourceRange(selection.getOffset(),
-				selection.getLength()));
+		fSelectionHistory.remember(new SourceRange(selection.getOffset(), selection.getLength()));
 		try {
 			fSelectionHistory.ignoreSelectionChanges();
 			fEditor.selectAndReveal(newRange.getOffset(), newRange.getLength());
@@ -92,22 +86,18 @@ public abstract class StructureSelectionAction extends Action {
 		}
 	}
 
-	public final ISourceRange getNewSelectionRange(ISourceRange oldSourceRange,
-			ISourceModule typeRoot) {
+	public final ISourceRange getNewSelectionRange(ISourceRange oldSourceRange, ISourceModule typeRoot) {
 		try {
 			Program root = getAST(typeRoot);
 			if (root == null)
 				return oldSourceRange;
-			Selection selection = Selection.createFromStartLength(
-					oldSourceRange.getOffset(), oldSourceRange.getLength());
-			SelectionAnalyzer selAnalyzer = new SelectionAnalyzer(selection,
-					true);
-			root.accept(selAnalyzer);
-			return internalGetNewSelectionRange(oldSourceRange, typeRoot,
-					selAnalyzer);
-		} catch (ModelException e) {
-			return new SourceRange(oldSourceRange.getOffset(),
+			Selection selection = Selection.createFromStartLength(oldSourceRange.getOffset(),
 					oldSourceRange.getLength());
+			SelectionAnalyzer selAnalyzer = new SelectionAnalyzer(selection, true);
+			root.accept(selAnalyzer);
+			return internalGetNewSelectionRange(oldSourceRange, typeRoot, selAnalyzer);
+		} catch (ModelException e) {
+			return new SourceRange(oldSourceRange.getOffset(), oldSourceRange.getLength());
 		}
 	}
 
@@ -124,8 +114,7 @@ public abstract class StructureSelectionAction extends Action {
 	 * @throws JavaModelException
 	 *             if getting the source range fails
 	 */
-	abstract ISourceRange internalGetNewSelectionRange(
-			ISourceRange oldSourceRange, ISourceReference sr,
+	abstract ISourceRange internalGetNewSelectionRange(ISourceRange oldSourceRange, ISourceReference sr,
 			SelectionAnalyzer selAnalyzer) throws ModelException;
 
 	protected final ITextSelection getTextSelection() {
@@ -135,21 +124,18 @@ public abstract class StructureSelectionAction extends Action {
 	// -- helper methods for subclasses to fit a node range into the source
 	// range
 
-	protected static ISourceRange getLastCoveringNodeRange(
-			ISourceRange oldSourceRange, ISourceReference sr,
+	protected static ISourceRange getLastCoveringNodeRange(ISourceRange oldSourceRange, ISourceReference sr,
 			SelectionAnalyzer selAnalyzer) throws ModelException {
 		if (selAnalyzer.getLastCoveringNode() == null)
 			return oldSourceRange;
 		else
-			return getSelectedNodeSourceRange(sr,
-					selAnalyzer.getLastCoveringNode());
+			return getSelectedNodeSourceRange(sr, selAnalyzer.getLastCoveringNode());
 	}
 
-	protected static ISourceRange getSelectedNodeSourceRange(
-			ISourceReference sr, ASTNode nodeToSelect) throws ModelException {
+	protected static ISourceRange getSelectedNodeSourceRange(ISourceReference sr, ASTNode nodeToSelect)
+			throws ModelException {
 		int offset = nodeToSelect.getStart();
-		int end = Math.min(sr.getSourceRange().getLength(),
-				nodeToSelect.getEnd() - 1);
+		int end = Math.min(sr.getSourceRange().getLength(), nodeToSelect.getEnd() - 1);
 		return createSourceRange(offset, end);
 	}
 
@@ -161,8 +147,7 @@ public abstract class StructureSelectionAction extends Action {
 
 	private static Program getAST(ISourceModule sr) {
 		try {
-			return SharedASTProvider.getAST(sr, SharedASTProvider.WAIT_YES,
-					null);
+			return SharedASTProvider.getAST(sr, SharedASTProvider.WAIT_YES, null);
 		} catch (ModelException e) {
 		} catch (IOException e) {
 		}
@@ -180,11 +165,9 @@ public abstract class StructureSelectionAction extends Action {
 
 	static ASTNode[] getSiblingNodes(ASTNode node) {
 		ASTNode parent = node.getParent();
-		StructuralPropertyDescriptor locationInParent = node
-				.getLocationInParent();
+		StructuralPropertyDescriptor locationInParent = node.getLocationInParent();
 		if (locationInParent.isChildListProperty()) {
-			List<? extends ASTNode> siblings = (List<? extends ASTNode>) parent
-					.getStructuralProperty(locationInParent);
+			List<? extends ASTNode> siblings = (List<? extends ASTNode>) parent.getStructuralProperty(locationInParent);
 			return siblings.toArray(new ASTNode[siblings.size()]);
 		}
 		return null;

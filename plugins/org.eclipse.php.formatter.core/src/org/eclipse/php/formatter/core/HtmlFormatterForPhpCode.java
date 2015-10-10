@@ -21,8 +21,8 @@ public class HtmlFormatterForPhpCode extends HTMLFormatProcessorImpl {
 
 	@Override
 	protected IStructuredFormatter getFormatter(Node node) {
-		IStructuredFormatter formatter = HTMLFormatterFactoryForPhpCode
-				.getInstance().createFormatter(node, getFormatPreferences());
+		IStructuredFormatter formatter = HTMLFormatterFactoryForPhpCode.getInstance().createFormatter(node,
+				getFormatPreferences());
 
 		return formatter;
 	}

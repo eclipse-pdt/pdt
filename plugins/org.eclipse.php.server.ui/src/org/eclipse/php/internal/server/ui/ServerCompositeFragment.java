@@ -50,29 +50,24 @@ public class ServerCompositeFragment extends CompositeFragment {
 	 * @param wizard
 	 *            the wizard handle
 	 */
-	public ServerCompositeFragment(Composite parent, IControlHandler handler,
-			boolean isForEditing) {
+	public ServerCompositeFragment(Composite parent, IControlHandler handler, boolean isForEditing) {
 		super(parent, handler, isForEditing);
 		createDescription();
 	}
 
 	protected void createDescription() {
-		setDisplayName(PHPServerUIMessages
-				.getString("ServerCompositeFragment.server")); //$NON-NLS-1$
-		setDescription(PHPServerUIMessages
-				.getString("ServerCompositeFragment.specifyInformation")); //$NON-NLS-1$
+		setDisplayName(PHPServerUIMessages.getString("ServerCompositeFragment.server")); //$NON-NLS-1$
+		setDescription(PHPServerUIMessages.getString("ServerCompositeFragment.specifyInformation")); //$NON-NLS-1$
 		controlHandler.setDescription(getDescription());
 		setImageDescriptor(ServersPluginImages.DESC_WIZ_SERVER);
 		controlHandler.setImageDescriptor(getImageDescriptor());
 		switch (controlHandler.getKind()) {
 		case WIZARD: {
-			setTitle(PHPServerUIMessages
-					.getString("ServerCompositeFragment.newPhpServer")); //$NON-NLS-1$
+			setTitle(PHPServerUIMessages.getString("ServerCompositeFragment.newPhpServer")); //$NON-NLS-1$
 			break;
 		}
 		case EDITOR: {
-			setTitle(PHPServerUIMessages
-					.getString("ServerCompositeFragment.phpServer")); //$NON-NLS-1$
+			setTitle(PHPServerUIMessages.getString("ServerCompositeFragment.phpServer")); //$NON-NLS-1$
 			break;
 		}
 		default:
@@ -89,8 +84,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 	 */
 	public void setData(Object server) throws IllegalArgumentException {
 		if (server != null && !(server instanceof Server)) {
-			throw new IllegalArgumentException(
-					"The given object is not a Server"); //$NON-NLS-1$
+			throw new IllegalArgumentException("The given object is not a Server"); //$NON-NLS-1$
 		}
 		super.setData(server);
 		init();
@@ -112,8 +106,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 		nameGroup.setLayout(layout);
 		nameGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		Label label = new Label(nameGroup, SWT.NONE);
-		label.setText(PHPServerUIMessages
-				.getString("ServerCompositeFragment.nameLabel")); //$NON-NLS-1$
+		label.setText(PHPServerUIMessages.getString("ServerCompositeFragment.nameLabel")); //$NON-NLS-1$
 		GridData data = new GridData();
 		label.setLayoutData(data);
 		name = new Text(nameGroup, SWT.BORDER);
@@ -173,9 +166,8 @@ public class ServerCompositeFragment extends CompositeFragment {
 				int port = originalURL.getPort();
 				getServer().setPort(String.valueOf(port));
 			} catch (Exception e) {
-				setMessage(
-						PHPServerUIMessages
-								.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
+				setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.enterValidURL"), //$NON-NLS-1$
+						IMessageProvider.ERROR);
 			}
 		} else {
 			baseURL = "http://" + server.getHost(); //$NON-NLS-1$
@@ -186,9 +178,8 @@ public class ServerCompositeFragment extends CompositeFragment {
 				int port = createdURL.getPort();
 				getServer().setPort(String.valueOf(port));
 			} catch (Exception e) {
-				setMessage(
-						PHPServerUIMessages
-								.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
+				setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.enterValidURL"), //$NON-NLS-1$
+						IMessageProvider.ERROR);
 			}
 		}
 	}
@@ -203,9 +194,8 @@ public class ServerCompositeFragment extends CompositeFragment {
 		if (urlStr != null && !urlStr.trim().equals("")) { //$NON-NLS-1$
 			boolean ok = checkServerUrl(urlStr);
 			if (!ok) {
-				setMessage(
-						PHPServerUIMessages
-								.getString("ServerCompositeFragment.duplicateServerUrl"), IMessageProvider.ERROR); //$NON-NLS-1$
+				setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.duplicateServerUrl"), //$NON-NLS-1$
+						IMessageProvider.ERROR);
 			}
 		}
 		try {
@@ -218,47 +208,39 @@ public class ServerCompositeFragment extends CompositeFragment {
 			urlStr = null;
 		}
 		if (urlStr == null || urlStr.equals("")) { //$NON-NLS-1$
-			setMessage(
-					PHPServerUIMessages
-							.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
+			setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
 			return;
 		}
 		try {
 			URL baseURL = new URL(urlStr);
 			String host = baseURL.getHost();
 			if (host.trim().length() == 0) {
-				setMessage(
-						PHPServerUIMessages
-								.getString("ServerCompositeFragment.serverURLEmpty"), IMessageProvider.ERROR); //$NON-NLS-1$
+				setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.serverURLEmpty"), //$NON-NLS-1$
+						IMessageProvider.ERROR);
 			}
 			int port = baseURL.getPort();
 
 			getServer().setHost(host);
 			getServer().setPort(String.valueOf(port));
 		} catch (Exception e) {
-			setMessage(
-					PHPServerUIMessages
-							.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
+			setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
 			return;
 		}
 		String serverName = getServer().getName();
 		if (serverName == null || serverName.trim().equals("")) { //$NON-NLS-1$
-			setMessage(
-					PHPServerUIMessages
-							.getString("ServerCompositeFragment.missingServerName"), IMessageProvider.ERROR); //$NON-NLS-1$
+			setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.missingServerName"), //$NON-NLS-1$
+					IMessageProvider.ERROR);
 		} else {
 			boolean ok = checkServerName(serverName);
 			if (!ok) {
-				setMessage(
-						PHPServerUIMessages
-								.getString("ServerCompositeFragment.duplicateServerName"), IMessageProvider.ERROR); //$NON-NLS-1$
+				setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.duplicateServerName"), //$NON-NLS-1$
+						IMessageProvider.ERROR);
 			}
 		}
 		String webrootStr = webroot.getText().trim();
 		if (webrootStr.length() != 0 && !new Path(webrootStr).toFile().exists()) {
-			setMessage(
-					PHPServerUIMessages
-							.getString("ServerCompositeFragment.webrootNotExists"), IMessageProvider.ERROR); //$NON-NLS-1$
+			setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.webrootNotExists"), //$NON-NLS-1$
+					IMessageProvider.ERROR);
 		}
 		controlHandler.update();
 	}
@@ -276,11 +258,9 @@ public class ServerCompositeFragment extends CompositeFragment {
 		group.setLayout(layout);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		group.setLayoutData(data);
-		group.setText(PHPServerUIMessages
-				.getString("ServerCompositeFragment.serverProperties")); //$NON-NLS-1$
+		group.setText(PHPServerUIMessages.getString("ServerCompositeFragment.serverProperties")); //$NON-NLS-1$
 		Label urlLabel = new Label(group, SWT.None);
-		urlLabel.setText(PHPServerUIMessages
-				.getString("ServerCompositeFragment.baseURL")); //$NON-NLS-1$
+		urlLabel.setText(PHPServerUIMessages.getString("ServerCompositeFragment.baseURL")); //$NON-NLS-1$
 		url = new Text(group, SWT.BORDER);
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 2;
@@ -299,8 +279,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 			}
 		});
 		Label labelRoot = new Label(group, SWT.None);
-		labelRoot.setText(PHPServerUIMessages
-				.getString("ServerCompositeFragment.localWebRoot")); //$NON-NLS-1$
+		labelRoot.setText(PHPServerUIMessages.getString("ServerCompositeFragment.localWebRoot")); //$NON-NLS-1$
 		labelRoot.setLayoutData(new GridData());
 		webroot = new Text(group, SWT.BORDER);
 		webroot.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -314,8 +293,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 			}
 		});
 		Button browseButton = new Button(group, SWT.PUSH);
-		browseButton.setText(PHPServerUIMessages
-				.getString("ServerCompositeFragment.browse")); //$NON-NLS-1$
+		browseButton.setText(PHPServerUIMessages.getString("ServerCompositeFragment.browse")); //$NON-NLS-1$
 		browseButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				DirectoryDialog dialog = new DirectoryDialog(getShell());
@@ -338,9 +316,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 			int size = allServers.length;
 			for (int i = 0; i < size; i++) {
 				Server server = allServers[i];
-				if (name.equals(server.getName())
-						&& !getServer().getUniqueId().equals(
-								server.getUniqueId()))
+				if (name.equals(server.getName()) && !getServer().getUniqueId().equals(server.getUniqueId()))
 					return false;
 			}
 		}
@@ -354,9 +330,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 			int size = allServers.length;
 			for (int i = 0; i < size; i++) {
 				Server server = allServers[i];
-				if (url.equals(server.getBaseURL())
-						&& !getServer().getUniqueId().equals(
-								server.getUniqueId()))
+				if (url.equals(server.getBaseURL()) && !getServer().getUniqueId().equals(server.getUniqueId()))
 					return false;
 			}
 		}

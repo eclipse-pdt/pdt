@@ -55,13 +55,10 @@ public class MapLocalFileDialog extends TrayDialog {
 		public Image getImage(Object element) {
 			if (element instanceof IBuildpathEntry) {
 				IBuildpathEntry includePathEntry = (IBuildpathEntry) element;
-				if (includePathEntry
-						.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-					return PHPPluginImages
-							.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
+				if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
 				} else {
-					return PHPPluginImages
-							.get(PHPPluginImages.IMG_OBJS_LIBRARY);
+					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 				}
 			}
 			if (element instanceof PathEntry) {
@@ -76,8 +73,7 @@ public class MapLocalFileDialog extends TrayDialog {
 			}
 			if (element instanceof IBuildpathEntry) {
 				IBuildpathEntry includePathEntry = (IBuildpathEntry) element;
-				return EnvironmentPathUtils
-						.getLocalPathString(includePathEntry.getPath());
+				return EnvironmentPathUtils.getLocalPathString(includePathEntry.getPath());
 			}
 			if (!(element instanceof PathEntry)) {
 				return super.getText(element);
@@ -92,16 +88,11 @@ public class MapLocalFileDialog extends TrayDialog {
 					path = path.substring(1);
 				}
 			}
-			if (entry.getType() == Type.INCLUDE_FOLDER
-					|| entry.getType() == Type.INCLUDE_VAR) {
-				IBuildpathEntry includePathEntry = (IBuildpathEntry) entry
-						.getContainer();
-				String includePath = EnvironmentPathUtils
-						.getLocalPathString(includePathEntry.getPath());
-				if (includePathEntry
-						.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-					IPath p = DLTKCore.getResolvedVariablePath(
-							includePathEntry.getPath());
+			if (entry.getType() == Type.INCLUDE_FOLDER || entry.getType() == Type.INCLUDE_VAR) {
+				IBuildpathEntry includePathEntry = (IBuildpathEntry) entry.getContainer();
+				String includePath = EnvironmentPathUtils.getLocalPathString(includePathEntry.getPath());
+				if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+					IPath p = DLTKCore.getResolvedVariablePath(includePathEntry.getPath());
 					if (p != null) {
 						includePath = p.toOSString();
 					}
@@ -129,12 +120,10 @@ public class MapLocalFileDialog extends TrayDialog {
 				for (PathEntry entry : pathEntries) {
 					if (entry.getType() == Type.EXTERNAL) {
 						containers.add(EXTERNAL_CONTAINER);
-					} else if (entry.getType() == Type.INCLUDE_VAR
-							|| entry.getType() == Type.INCLUDE_FOLDER) {
+					} else if (entry.getType() == Type.INCLUDE_VAR || entry.getType() == Type.INCLUDE_FOLDER) {
 						containers.add(entry.getContainer());
 					} else if (entry.getType() == Type.WORKSPACE) {
-						containers.add(((IResource) entry.getContainer())
-								.getProject());
+						containers.add(((IResource) entry.getContainer()).getProject());
 					}
 				}
 				return containers.toArray();
@@ -146,16 +135,13 @@ public class MapLocalFileDialog extends TrayDialog {
 
 			Set<PathEntry> entries = new HashSet<PathEntry>();
 			for (PathEntry entry : pathEntries) {
-				if (entry.getType() == Type.EXTERNAL
-						&& parentElement == EXTERNAL_CONTAINER) {
+				if (entry.getType() == Type.EXTERNAL && parentElement == EXTERNAL_CONTAINER) {
 					entries.add(entry);
-				} else if ((entry.getType() == Type.INCLUDE_VAR
-						|| entry.getType() == Type.INCLUDE_FOLDER)
+				} else if ((entry.getType() == Type.INCLUDE_VAR || entry.getType() == Type.INCLUDE_FOLDER)
 						&& entry.getContainer() == parentElement) {
 					entries.add(entry);
 				} else if (entry.getType() == Type.WORKSPACE
-						&& ((IResource) entry.getContainer())
-								.getProject() == parentElement) {
+						&& ((IResource) entry.getContainer()).getProject() == parentElement) {
 					entries.add(entry);
 				}
 			}
@@ -171,24 +157,20 @@ public class MapLocalFileDialog extends TrayDialog {
 
 				if (entry.getType() == Type.EXTERNAL) {
 					return EXTERNAL_CONTAINER;
-				} else if (entry.getType() == Type.INCLUDE_VAR
-						|| entry.getType() == Type.INCLUDE_FOLDER) {
+				} else if (entry.getType() == Type.INCLUDE_VAR || entry.getType() == Type.INCLUDE_FOLDER) {
 					return entry.getContainer();
 				} else if (entry.getType() == Type.WORKSPACE) {
 					return ((IResource) entry.getContainer()).getProject();
 				}
 			}
 			for (PathEntry entry : pathEntries) {
-				if (entry.getType() == Type.EXTERNAL
-						&& element == EXTERNAL_CONTAINER) {
+				if (entry.getType() == Type.EXTERNAL && element == EXTERNAL_CONTAINER) {
 					return entry;
 				} else if (entry.getType() == Type.INCLUDE_VAR
-						|| entry.getType() == Type.INCLUDE_FOLDER
-								&& entry.getContainer() == element) {
+						|| entry.getType() == Type.INCLUDE_FOLDER && entry.getContainer() == element) {
 					return entry;
 				} else if (entry.getType() == Type.WORKSPACE
-						&& ((IResource) entry.getContainer())
-								.getProject() == element) {
+						&& ((IResource) entry.getContainer()).getProject() == element) {
 					return entry;
 				}
 			}
@@ -209,8 +191,7 @@ public class MapLocalFileDialog extends TrayDialog {
 		public void dispose() {
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput,
-				Object newInput) {
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 
 	}
@@ -250,8 +231,7 @@ public class MapLocalFileDialog extends TrayDialog {
 	private PathEntry result;
 	private TreeViewer entriesViewer;
 
-	public MapLocalFileDialog(Shell shell, String title, VirtualPath path,
-			PathEntry[] pathEntries) {
+	public MapLocalFileDialog(Shell shell, String title, VirtualPath path, PathEntry[] pathEntries) {
 		super(shell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		this.title = title;
@@ -291,12 +271,10 @@ public class MapLocalFileDialog extends TrayDialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(title);
-		newShell.setData(WorkbenchHelpSystem.HELP_KEY,
-				IPHPHelpContextIds.PATH_MAPPING);
+		newShell.setData(WorkbenchHelpSystem.HELP_KEY, IPHPHelpContextIds.PATH_MAPPING);
 		newShell.addHelpListener(new HelpListener() {
 			public void helpRequested(HelpEvent arg0) {
-				org.eclipse.swt.program.Program
-						.launch(IPHPHelpContextIds.PATH_MAPPING);
+				org.eclipse.swt.program.Program.launch(IPHPHelpContextIds.PATH_MAPPING);
 			}
 		});
 	}
@@ -321,8 +299,7 @@ public class MapLocalFileDialog extends TrayDialog {
 		GridData layoutData;
 		final Font boldFont = new Font(parent.getFont().getDevice(), fontData);
 		Label remoteLabel = new Label(parent, SWT.NONE);
-		remoteLabel.setText(
-				Messages.OpenLocalFileSearchFilter_Select_the_local_resource_match);
+		remoteLabel.setText(Messages.OpenLocalFileSearchFilter_Select_the_local_resource_match);
 		layoutData = new GridData();
 		layoutData.horizontalSpan = 2;
 		remoteLabel.setLayoutData(layoutData);
@@ -333,8 +310,7 @@ public class MapLocalFileDialog extends TrayDialog {
 		layoutData.horizontalSpan = 2;
 		layoutData.horizontalIndent = convertVerticalDLUsToPixels(10);
 		label.setLayoutData(layoutData);
-		entriesViewer = new TreeViewer(parent,
-				SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		entriesViewer = new TreeViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_BOTH);
 		layoutData.horizontalSpan = 2;
 		layoutData.minimumHeight = convertVerticalDLUsToPixels(80);
@@ -344,12 +320,11 @@ public class MapLocalFileDialog extends TrayDialog {
 		entriesViewer.setLabelProvider(new LabelProvider());
 		entriesViewer.setSorter(new Sorter());
 		entriesViewer.setInput(this);
-		entriesViewer
-				.addSelectionChangedListener(new ISelectionChangedListener() {
-					public void selectionChanged(SelectionChangedEvent event) {
-						validate();
-					}
-				});
+		entriesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				validate();
+			}
+		});
 		entriesViewer.expandAll();
 		return parent;
 	}
@@ -373,8 +348,7 @@ public class MapLocalFileDialog extends TrayDialog {
 		Button okButton = getButton(IDialogConstants.OK_ID);
 		okButton.setEnabled(false);
 		result = null;
-		Object selectedElement = ((IStructuredSelection) entriesViewer
-				.getSelection()).getFirstElement();
+		Object selectedElement = ((IStructuredSelection) entriesViewer.getSelection()).getFirstElement();
 		if (selectedElement instanceof PathEntry) {
 			okButton.setEnabled(true);
 			result = (PathEntry) selectedElement;

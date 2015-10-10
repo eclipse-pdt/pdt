@@ -18,8 +18,7 @@ public class IndentationExtensionRegistry {
 
 	private IndentationExtensionRegistry() {
 
-		IConfigurationElement[] elements = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(EXTENSION_ID);
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_ID);
 
 		// first registered extension wins...
 		for (IConfigurationElement element : elements) {
@@ -27,8 +26,7 @@ public class IndentationExtensionRegistry {
 			try {
 				IIndentationStrategyExtension1 extension = (IIndentationStrategyExtension1) element
 						.createExecutableExtension("class");
-				Integer priority = Integer.parseInt(element
-						.getAttribute("priority"));
+				Integer priority = Integer.parseInt(element.getAttribute("priority"));
 				extensions.put(priority, extension);
 			} catch (CoreException e) {
 				PHPCorePlugin.log(e);

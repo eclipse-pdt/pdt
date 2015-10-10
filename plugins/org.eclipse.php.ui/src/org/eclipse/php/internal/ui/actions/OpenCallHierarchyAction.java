@@ -91,8 +91,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	 * @deprecated Use {@link #setSpecialSelectionProvider(ISelectionProvider)}
 	 *             instead. This API will be removed after 3.2 M5.
 	 */
-	public OpenCallHierarchyAction(IWorkbenchSite site,
-			ISelectionProvider provider) {
+	public OpenCallHierarchyAction(IWorkbenchSite site, ISelectionProvider provider) {
 		this(site);
 		setSpecialSelectionProvider(provider);
 	}
@@ -114,8 +113,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 
 		IJobManager jobManager = Job.getJobManager();
 		if (jobManager.find(PHPUiPlugin.OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME).length > 0) {
-			jobManager
-					.cancel(PHPUiPlugin.OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME);
+			jobManager.cancel(PHPUiPlugin.OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME);
 		}
 
 		Job job = new Job(PHPUiPlugin.OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME) {
@@ -175,10 +173,9 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 		if (fEditor == null || selection == null || selection.getLength() <= 0)
 			return false;
 		if (fEditor.getModelElement() instanceof ISourceModule) {
-			ISourceModule sourceModule = (ISourceModule) fEditor
-					.getModelElement();
-			IModelElement element = getSelectionModelElement(
-					selection.getOffset(), selection.getLength(), sourceModule);
+			ISourceModule sourceModule = (ISourceModule) fEditor.getModelElement();
+			IModelElement element = getSelectionModelElement(selection.getOffset(), selection.getLength(),
+					sourceModule);
 			if (element == null) {
 				return false;
 			}
@@ -201,26 +198,22 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 			return;
 
 		try {
-			IModelElement[] elements = SelectionConverter
-					.codeResolveOrInputForked(fEditor);
+			IModelElement[] elements = SelectionConverter.codeResolveOrInputForked(fEditor);
 			if (elements == null)
 				return;
 			List candidates = new ArrayList(elements.length);
 			for (int i = 0; i < elements.length; i++) {
-				IModelElement[] resolvedElements = CallHierarchyUI
-						.getCandidates(elements[i]);
+				IModelElement[] resolvedElements = CallHierarchyUI.getCandidates(elements[i]);
 				if (resolvedElements != null)
 					candidates.addAll(Arrays.asList(resolvedElements));
 			}
 			if (candidates.isEmpty()) {
-				IModelElement enclosingMethod = getEnclosingMethod(input,
-						selection);
+				IModelElement enclosingMethod = getEnclosingMethod(input, selection);
 				if (enclosingMethod != null) {
 					candidates.add(enclosingMethod);
 				}
 			}
-			run((IModelElement[]) candidates
-					.toArray(new IModelElement[candidates.size()]));
+			run((IModelElement[]) candidates.toArray(new IModelElement[candidates.size()]));
 		} catch (InvocationTargetException e) {
 			ExceptionHandler.handle(e, getShell(), getErrorDialogTitle(), ""); //$NON-NLS-1$
 		} catch (InterruptedException e) {
@@ -228,8 +221,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 		}
 	}
 
-	private IModelElement getEnclosingMethod(IModelElement input,
-			ITextSelection selection) {
+	private IModelElement getEnclosingMethod(IModelElement input, ITextSelection selection) {
 		IModelElement enclosingElement = null;
 		try {
 			switch (input.getElementType()) {
@@ -241,15 +233,13 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 			// }
 			// break;
 			case IModelElement.SOURCE_MODULE:
-				ISourceModule cu = (ISourceModule) input
-						.getAncestor(IModelElement.SOURCE_MODULE);
+				ISourceModule cu = (ISourceModule) input.getAncestor(IModelElement.SOURCE_MODULE);
 				if (cu != null) {
 					enclosingElement = cu.getElementAt(selection.getOffset());
 				}
 				break;
 			}
-			if (enclosingElement != null
-					&& enclosingElement.getElementType() == IModelElement.METHOD) {
+			if (enclosingElement != null && enclosingElement.getElementType() == IModelElement.METHOD) {
 				return enclosingElement;
 			}
 		} catch (ModelException e) {
@@ -267,18 +257,14 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	 * @param sourceModule
 	 * @return The {@link IModelElement} or null.
 	 */
-	protected IModelElement getSelectionModelElement(int offset, int length,
-			ISourceModule sourceModule) {
+	protected IModelElement getSelectionModelElement(int offset, int length, ISourceModule sourceModule) {
 		IModelElement element = null;
 		try {
-			Program ast = SharedASTProvider.getAST(sourceModule,
-					SharedASTProvider.WAIT_NO, null);
+			Program ast = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_NO, null);
 			if (ast != null) {
 				ASTNode selectedNode = NodeFinder.perform(ast, offset, length);
-				if (selectedNode != null
-						&& selectedNode.getType() == ASTNode.IDENTIFIER) {
-					IBinding binding = ((Identifier) selectedNode)
-							.resolveBinding();
+				if (selectedNode != null && selectedNode.getType() == ASTNode.IDENTIFIER) {
+					IBinding binding = ((Identifier) selectedNode).resolveBinding();
 					if (binding != null) {
 						element = binding.getPHPElement();
 					}
@@ -319,8 +305,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 			List result = new ArrayList(1);
 			IStatus status = compileCandidates(result, element);
 			if (status.isOK()) {
-				run((IModelElement[]) result.toArray(new IModelElement[result
-						.size()]));
+				run((IModelElement[]) result.toArray(new IModelElement[result.size()]));
 			} else {
 				openErrorDialog(status);
 			}
@@ -364,13 +349,11 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 			getShell().getDisplay().beep();
 			return;
 		}
-		CallHierarchyUI.open(elements, getSite().getWorkbenchWindow(),
-				getCallHierarchyID());
+		CallHierarchyUI.open(elements, getSite().getWorkbenchWindow(), getCallHierarchyID());
 	}
 
 	private static IStatus compileCandidates(List result, IModelElement elem) {
-		IStatus ok = new Status(IStatus.OK, DLTKUIPlugin.getPluginId(), 0,
-				"", null); //$NON-NLS-1$
+		IStatus ok = new Status(IStatus.OK, DLTKUIPlugin.getPluginId(), 0, "", null); //$NON-NLS-1$
 		switch (elem.getElementType()) {
 		case IModelElement.METHOD:
 			result.add(elem);
@@ -380,8 +363,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	}
 
 	private static IStatus createStatus(String message) {
-		return new Status(IStatus.INFO, DLTKUIPlugin.getPluginId(),
-				IDLTKStatusConstants.INTERNAL_ERROR, message, null);
+		return new Status(IStatus.INFO, DLTKUIPlugin.getPluginId(), IDLTKStatusConstants.INTERNAL_ERROR, message, null);
 	}
 
 	public String getCallHierarchyID() {

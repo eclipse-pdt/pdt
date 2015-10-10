@@ -24,9 +24,9 @@ public class RenameResourceProcessorTest extends AbstractRenameRefactoringTest {
 	public RenameResourceProcessorTest(String[] fileNames) {
 		super(fileNames);
 	}
-	
+
 	@PDTTList.Parameters
-	public static String[] dirs = {"/resources/rename/renameResource/"}; //$NON-NLS-1$
+	public static String[] dirs = { "/resources/rename/renameResource/" }; //$NON-NLS-1$
 
 	@Test
 	public void test(String fileName) throws Exception {
@@ -39,7 +39,7 @@ public class RenameResourceProcessorTest extends AbstractRenameRefactoringTest {
 
 		RenameFileProcessor processor = new RenameFileProcessor(file, program);
 		processor.setNewElementName(testFile.getConfig().get("newName"));
-		
+
 		processor.setUpdateRefernces(Boolean.valueOf(testFile.getConfig().get("updateReference")));
 		processor.setAttribute(RenameFileProcessor.UPDATECLASSNAME, testFile.getConfig().get("updateClassName"));
 

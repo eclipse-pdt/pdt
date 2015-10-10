@@ -42,8 +42,7 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * View of the PHP parameter stack
  */
-public class PHPStackView extends AbstractDebugView implements
-		ISelectionListener {
+public class PHPStackView extends AbstractDebugView implements ISelectionListener {
 
 	private PHPDebugTarget fTarget;
 	private boolean isVisible;
@@ -77,8 +76,7 @@ public class PHPStackView extends AbstractDebugView implements
 					if (eChildren == null)
 						return new Expression[0];
 					if (eChildren.length == 0) {
-						ExpressionsManager expressionManager = fTarget
-								.getExpressionManager();
+						ExpressionsManager expressionManager = fTarget.getExpressionManager();
 						expressionManager.update(eExp, 1);
 						value = eExp.getValue();
 						eChildren = value.getChildren();
@@ -88,8 +86,7 @@ public class PHPStackView extends AbstractDebugView implements
 					return eChildren;
 				}
 			} catch (DebugException e) {
-				Logger.logException(
-						"StackViewContentProvider unexpected error", e); //$NON-NLS-1$
+				Logger.logException("StackViewContentProvider unexpected error", e); //$NON-NLS-1$
 			}
 			return new Object[0];
 		}
@@ -169,16 +166,15 @@ public class PHPStackView extends AbstractDebugView implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.AbstractDebugView#createViewer(org.eclipse.swt.widgets
-	 * .Composite)
+	 * @see org.eclipse.debug.ui.AbstractDebugView#createViewer(org.eclipse.swt.
+	 * widgets .Composite)
 	 */
 	protected Viewer createViewer(Composite parent) {
 		TreeViewer viewer = new TreeViewer(parent);
 		viewer.setLabelProvider(new PHPStackLabelProvider());
 		viewer.setContentProvider(new StackViewContentProvider());
-		getSite().getWorkbenchWindow().getSelectionService()
-				.addSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
+		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW,
+				this);
 		getSite().setSelectionProvider(viewer);
 		return viewer;
 	}
@@ -209,8 +205,8 @@ public class PHPStackView extends AbstractDebugView implements
 	 * @see org.eclipse.ui.IWorkbenchPart#dispose()
 	 */
 	public void dispose() {
-		getSite().getWorkbenchWindow().getSelectionService()
-				.removeSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
+		getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW,
+				this);
 		fTarget = null;
 		super.dispose();
 	}
@@ -249,8 +245,7 @@ public class PHPStackView extends AbstractDebugView implements
 		if (adaptable != null) {
 			element = (IDebugElement) adaptable.getAdapter(IDebugElement.class);
 			if (element != null) {
-				if (element.getModelIdentifier().equals(
-						IPHPDebugConstants.ID_PHP_DEBUG_CORE)) {
+				if (element.getModelIdentifier().equals(IPHPDebugConstants.ID_PHP_DEBUG_CORE)) {
 					fTarget = (PHPDebugTarget) element.getDebugTarget();
 				}
 			}

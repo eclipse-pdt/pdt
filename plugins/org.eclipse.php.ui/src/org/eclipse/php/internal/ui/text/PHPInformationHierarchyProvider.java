@@ -36,8 +36,7 @@ import org.eclipse.ui.IEditorPart;
  * presenter. IMPORTANT : This class is for Open Hierarchy actions only ! This
  * class can handle IModelElements, unlike the {@link PHPElementProvider}.
  */
-public class PHPInformationHierarchyProvider implements IInformationProvider,
-		IInformationProviderExtension {
+public class PHPInformationHierarchyProvider implements IInformationProvider, IInformationProviderExtension {
 
 	private PHPStructuredEditor fEditor;
 	private boolean fUseCodeResolve;
@@ -48,8 +47,7 @@ public class PHPInformationHierarchyProvider implements IInformationProvider,
 			fEditor = (PHPStructuredEditor) editor;
 	}
 
-	public PHPInformationHierarchyProvider(IEditorPart editor,
-			boolean useCodeResolve) {
+	public PHPInformationHierarchyProvider(IEditorPart editor, boolean useCodeResolve) {
 		this(editor);
 		fUseCodeResolve = useCodeResolve;
 	}
@@ -59,8 +57,7 @@ public class PHPInformationHierarchyProvider implements IInformationProvider,
 	 */
 	public IRegion getSubject(ITextViewer textViewer, int offset) {
 		if (textViewer != null && fEditor != null) {
-			IRegion region = ScriptWordFinder.findWord(
-					textViewer.getDocument(), offset);
+			IRegion region = ScriptWordFinder.findWord(textViewer.getDocument(), offset);
 			if (region != null)
 				return region;
 			else
@@ -92,11 +89,10 @@ public class PHPInformationHierarchyProvider implements IInformationProvider,
 			IModelElement inputModelElement = fEditor.getModelElement();
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=471729
 			// exclude subject having subject.getLength() == 0
-			if (inputModelElement instanceof ISourceModule && subject != null
-					&& subject.getLength() > 0) {
+			if (inputModelElement instanceof ISourceModule && subject != null && subject.getLength() > 0) {
 				ISourceModule sourceModule = (ISourceModule) inputModelElement;
-				IModelElement modelElement = getSelectionModelElement(
-						subject.getOffset(), subject.getLength(), sourceModule);
+				IModelElement modelElement = getSelectionModelElement(subject.getOffset(), subject.getLength(),
+						sourceModule);
 
 				if (modelElement != null) {
 					if (modelElement instanceof ISourceType) {
@@ -123,18 +119,14 @@ public class PHPInformationHierarchyProvider implements IInformationProvider,
 	 * @param sourceModule
 	 * @return The {@link IModelElement} or null.
 	 */
-	protected IModelElement getSelectionModelElement(int offset, int length,
-			ISourceModule sourceModule) {
+	protected IModelElement getSelectionModelElement(int offset, int length, ISourceModule sourceModule) {
 		IModelElement element = null;
 		try {
-			Program ast = SharedASTProvider.getAST(sourceModule,
-					SharedASTProvider.WAIT_NO, null);
+			Program ast = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_NO, null);
 			if (ast != null) {
 				ASTNode selectedNode = NodeFinder.perform(ast, offset, length);
-				if (selectedNode != null
-						&& selectedNode.getType() == ASTNode.IDENTIFIER) {
-					element = ((Identifier) selectedNode).resolveBinding()
-							.getPHPElement();
+				if (selectedNode != null && selectedNode.getType() == ASTNode.IDENTIFIER) {
+					element = ((Identifier) selectedNode).resolveBinding().getPHPElement();
 				}
 			}
 		} catch (Exception e) {

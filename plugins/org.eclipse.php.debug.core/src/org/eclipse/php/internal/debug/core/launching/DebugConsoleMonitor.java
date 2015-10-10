@@ -54,8 +54,7 @@ public class DebugConsoleMonitor implements IFlushableStreamMonitor {
 		}
 		Enumeration enumObject = fListeners.elements();
 		while (enumObject.hasMoreElements()) {
-			IStreamListener listener = ((IStreamListener) enumObject
-					.nextElement());
+			IStreamListener listener = ((IStreamListener) enumObject.nextElement());
 			listener.streamAppended(message, this);
 		}
 	}

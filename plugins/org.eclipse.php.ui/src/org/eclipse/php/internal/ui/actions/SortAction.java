@@ -33,8 +33,7 @@ public class SortAction extends Action {
 	public static final String PREF_IS_SORTED = "SortingAction.isChecked"; //$NON-NLS-1$
 	private TreeViewer treeViewer;
 	private ModelElementSorter fComparator = new ModelElementSorter() {
-		public int compare(org.eclipse.jface.viewers.Viewer viewer, Object e1,
-				Object e2) {
+		public int compare(org.eclipse.jface.viewers.Viewer viewer, Object e1, Object e2) {
 
 			if (e1 instanceof UseStatementsNode) {
 				return -1;
@@ -47,8 +46,7 @@ public class SortAction extends Action {
 	};
 	private SourcePositionSorter fSourcePositonComparator = new SourcePositionSorter() {
 		public int compare(Viewer viewer, Object e1, Object e2) {
-			if (e1 instanceof IImportContainer
-					|| e2 instanceof IImportContainer) {
+			if (e1 instanceof IImportContainer || e2 instanceof IImportContainer) {
 				try {
 					ISourceRange sr1 = ((ISourceReference) e1).getSourceRange();
 					ISourceRange sr2 = ((ISourceReference) e2).getSourceRange();
@@ -69,15 +67,13 @@ public class SortAction extends Action {
 		super();
 
 		this.treeViewer = treeViewer;
-		PlatformUI.getWorkbench().getHelpSystem()
-				.setHelp(this, IPHPHelpContextIds.OUTLINE_VIEW);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.OUTLINE_VIEW);
 		setText(PHPUIMessages.PHPOutlinePage_Sort_label);
 		PHPPluginImages.setLocalImageDescriptors(this, "alphab_sort_co.png"); //$NON-NLS-1$
 		setToolTipText(PHPUIMessages.PHPOutlinePage_Sort_tooltip);
 		setDescription(PHPUIMessages.PHPOutlinePage_Sort_description);
 
-		boolean checked = PHPUiPlugin.getDefault().getPreferenceStore()
-				.getBoolean(PREF_IS_SORTED);
+		boolean checked = PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(PREF_IS_SORTED);
 		valueChanged(checked, false);
 	}
 
@@ -87,21 +83,19 @@ public class SortAction extends Action {
 
 	private void valueChanged(final boolean on, boolean store) {
 		setChecked(on);
-		BusyIndicator.showWhile(treeViewer.getControl().getDisplay(),
-				new Runnable() {
-					public void run() {
-						if (on) {
-							treeViewer.setComparator(fComparator);
-							// fDropSupport.setFeedbackEnabled(false);
-						} else {
-							treeViewer.setComparator(fSourcePositonComparator);
-							// fDropSupport.setFeedbackEnabled(true);
-						}
-					}
-				});
+		BusyIndicator.showWhile(treeViewer.getControl().getDisplay(), new Runnable() {
+			public void run() {
+				if (on) {
+					treeViewer.setComparator(fComparator);
+					// fDropSupport.setFeedbackEnabled(false);
+				} else {
+					treeViewer.setComparator(fSourcePositonComparator);
+					// fDropSupport.setFeedbackEnabled(true);
+				}
+			}
+		});
 
 		if (store)
-			PHPUiPlugin.getDefault().getPreferenceStore()
-					.setValue(PREF_IS_SORTED, on);
+			PHPUiPlugin.getDefault().getPreferenceStore().setValue(PREF_IS_SORTED, on);
 	}
 }

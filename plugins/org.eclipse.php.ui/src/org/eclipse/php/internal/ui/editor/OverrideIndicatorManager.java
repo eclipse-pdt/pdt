@@ -96,8 +96,7 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 		 */
 		public void open() {
 			try {
-				Program ast = SharedASTProvider.getAST(
-						(ISourceModule) fModelElement,
+				Program ast = SharedASTProvider.getAST((ISourceModule) fModelElement,
 						SharedASTProvider.WAIT_ACTIVE_ONLY, null);
 				if (ast != null) {
 					IModelElement modelElement = DLTKCore.create(fAstNodeKey);
@@ -105,24 +104,22 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 						IMethod method = (IMethod) modelElement;
 						int offset = method.getSourceRange().getOffset();
 						int length = method.getSourceRange().getLength();
-						IEditorPart editor = EditorUtility.openInEditor(method,
-								true);
+						IEditorPart editor = EditorUtility.openInEditor(method, true);
 						EditorUtility.revealInEditor(editor, offset, length);
 						return;
 					}
 				}
 			} catch (Exception e) {
-				ExceptionHandler
-						.handle(
-								new CoreException(new Status(IStatus.ERROR,
-										PHPUiPlugin.ID, 0,
-										"Exception occurred", e)), PHPUIMessages.OverrideIndicatorManager_open_error_title, PHPUIMessages.OverrideIndicatorManager_open_error_messageHasLogEntry);//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ExceptionHandler.handle(
+						new CoreException(new Status(IStatus.ERROR, PHPUiPlugin.ID, 0, "Exception occurred", e)), //$NON-NLS-1$
+						PHPUIMessages.OverrideIndicatorManager_open_error_title,
+						PHPUIMessages.OverrideIndicatorManager_open_error_messageHasLogEntry);// $NON-NLS-2$
+																								// //$NON-NLS-3$
 				return;
 			}
-			String title = PHPUIMessages.OverrideIndicatorManager_open_error_title;//$NON-NLS-1$
-			String message = PHPUIMessages.OverrideIndicatorManager_open_error_message;//$NON-NLS-1$
-			MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(),
-					title, message);
+			String title = PHPUIMessages.OverrideIndicatorManager_open_error_title;// $NON-NLS-1$
+			String message = PHPUIMessages.OverrideIndicatorManager_open_error_message;// $NON-NLS-1$
+			MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(), title, message);
 		}
 	}
 
@@ -133,8 +130,7 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 	private Annotation[] fOverrideAnnotations;
 	private IModelElement fModelElement;
 
-	public OverrideIndicatorManager(IAnnotationModel annotationModel,
-			IModelElement modelElement, Program ast) {
+	public OverrideIndicatorManager(IAnnotationModel annotationModel, IModelElement modelElement, Program ast) {
 		Assert.isNotNull(annotationModel);
 		Assert.isNotNull(modelElement);
 
@@ -171,21 +167,18 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 	 *            the progress monitor
 	 * @since 3.0
 	 */
-	protected void updateAnnotations(Program ast,
-			IProgressMonitor progressMonitor) {
+	protected void updateAnnotations(Program ast, IProgressMonitor progressMonitor) {
 
 		if (ast == null || progressMonitor.isCanceled())
 			return;
 
-		final Map<OverrideIndicator, Position> annotationMap = new HashMap<OverrideIndicator, Position>(
-				50);
+		final Map<OverrideIndicator, Position> annotationMap = new HashMap<OverrideIndicator, Position>(50);
 
 		// don't provide override indicators to external / read only files.
 		if (ast.getSourceModule().isReadOnly()) {
 			return;
 		}
-		if (!ast.getSourceModule().getScriptProject().isOnBuildpath(
-				ast.getSourceModule())) {
+		if (!ast.getSourceModule().getScriptProject().isOnBuildpath(ast.getSourceModule())) {
 			return;
 		}
 		ast.accept(new AbstractVisitor() {
@@ -198,35 +191,29 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 				IMethodBinding binding = node.resolveMethodBinding();
 
 				if (binding != null) {
-					IMethodBinding definingMethod = Bindings
-							.findOverriddenMethod(binding, true);
+					IMethodBinding definingMethod = Bindings.findOverriddenMethod(binding, true);
 
 					if (definingMethod != null) {
 
-						ITypeBinding definingType = definingMethod
-								.getDeclaringClass();
-						String qualifiedMethodName = definingType.getName()
-								+ "." + binding.getName(); //$NON-NLS-1$ [TODO - Use definingType.getQualifiedName()]
+						ITypeBinding definingType = definingMethod.getDeclaringClass();
+						String qualifiedMethodName = definingType.getName() + "." + binding.getName(); //$NON-NLS-1$ [TODO
+																										// -
+																										// Use
+																										// definingType.getQualifiedName()]
 
-						boolean isImplements = (Modifiers.AccAbstract & definingMethod
-								.getModifiers()) != 0;
+						boolean isImplements = (Modifiers.AccAbstract & definingMethod.getModifiers()) != 0;
 						String text;
 						if (isImplements)
-							text = Messages
-									.format(
-											PHPUIMessages.OverrideIndicatorManager_implements,
-											qualifiedMethodName);//$NON-NLS-1$
+							text = Messages.format(PHPUIMessages.OverrideIndicatorManager_implements,
+									qualifiedMethodName);// $NON-NLS-1$
 						else
-							text = Messages
-									.format(
-											PHPUIMessages.OverrideIndicatorManager_overrides,
-											qualifiedMethodName);//$NON-NLS-1$
+							text = Messages.format(PHPUIMessages.OverrideIndicatorManager_overrides,
+									qualifiedMethodName);// $NON-NLS-1$
 
 						Identifier name = node.getFunction().getFunctionName();
-						Position position = new Position(name.getStart(), name
-								.getLength());
-						OverrideIndicator indicator = new OverrideIndicator(
-								isImplements, text, definingMethod.getKey());
+						Position position = new Position(name.getStart(), name.getLength());
+						OverrideIndicator indicator = new OverrideIndicator(isImplements, text,
+								definingMethod.getKey());
 						annotationMap.put(indicator, position);
 					}
 				}
@@ -239,17 +226,13 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 
 		synchronized (fAnnotationModelLockObject) {
 			if (fAnnotationModel instanceof IAnnotationModelExtension) {
-				((IAnnotationModelExtension) fAnnotationModel)
-						.replaceAnnotations(fOverrideAnnotations, annotationMap);
+				((IAnnotationModelExtension) fAnnotationModel).replaceAnnotations(fOverrideAnnotations, annotationMap);
 			} else {
 				removeAnnotations();
-				Iterator<Map.Entry<OverrideIndicator, Position>> iter = annotationMap
-						.entrySet().iterator();
+				Iterator<Map.Entry<OverrideIndicator, Position>> iter = annotationMap.entrySet().iterator();
 				while (iter.hasNext()) {
-					Map.Entry<OverrideIndicator, Position> mapEntry = iter
-							.next();
-					fAnnotationModel.addAnnotation(mapEntry.getKey(), mapEntry
-							.getValue());
+					Map.Entry<OverrideIndicator, Position> mapEntry = iter.next();
+					fAnnotationModel.addAnnotation(mapEntry.getKey(), mapEntry.getValue());
 				}
 			}
 			fOverrideAnnotations = (Annotation[]) annotationMap.keySet()
@@ -266,8 +249,7 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 
 		synchronized (fAnnotationModelLockObject) {
 			if (fAnnotationModel instanceof IAnnotationModelExtension) {
-				((IAnnotationModelExtension) fAnnotationModel)
-						.replaceAnnotations(fOverrideAnnotations, null);
+				((IAnnotationModelExtension) fAnnotationModel).replaceAnnotations(fOverrideAnnotations, null);
 			} else {
 				for (int i = 0, length = fOverrideAnnotations.length; i < length; i++)
 					fAnnotationModel.removeAnnotation(fOverrideAnnotations[i]);
@@ -293,12 +275,10 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 	 * (org.eclipse.dltk.core.ISourceModule, boolean,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public void reconciled(ISourceModule sourceModule, boolean forced,
-			IProgressMonitor progressMonitor) {
+	public void reconciled(ISourceModule sourceModule, boolean forced, IProgressMonitor progressMonitor) {
 		Program ast;
 		try {
-			ast = SharedASTProvider.getAST(sourceModule,
-					SharedASTProvider.WAIT_YES, null);
+			ast = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_YES, null);
 			if (ast != null) {
 				updateAnnotations(ast, progressMonitor);
 			}
@@ -312,13 +292,11 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.editor.IPhpScriptReconcilingListener#reconciled
-	 * (org.eclipse.php.internal.core.ast.nodes.Program, boolean,
+	 * @see org.eclipse.php.internal.ui.editor.IPhpScriptReconcilingListener#
+	 * reconciled (org.eclipse.php.internal.core.ast.nodes.Program, boolean,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public void reconciled(Program ast, boolean forced,
-			IProgressMonitor progressMonitor) {
+	public void reconciled(Program ast, boolean forced, IProgressMonitor progressMonitor) {
 		if (ast != null) {
 			updateAnnotations(ast, progressMonitor);
 		}

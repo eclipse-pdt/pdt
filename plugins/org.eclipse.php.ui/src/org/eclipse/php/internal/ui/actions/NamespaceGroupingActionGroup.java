@@ -53,23 +53,20 @@ public class NamespaceGroupingActionGroup extends ActionGroup {
 			// IStudioHelpContextIds.EXECUTION_STATISTICS_VIEW);
 			// TODO : add help context
 
-			setChecked(fStore
-					.getBoolean(PreferenceConstants.EXPLORER_GROUP_BY_NAMESPACES));
+			setChecked(fStore.getBoolean(PreferenceConstants.EXPLORER_GROUP_BY_NAMESPACES));
 		}
 
 		public void run() {
 			final boolean on = isChecked();
-			fStore.setValue(PreferenceConstants.EXPLORER_GROUP_BY_NAMESPACES,
-					on);
+			fStore.setValue(PreferenceConstants.EXPLORER_GROUP_BY_NAMESPACES, on);
 
-			BusyIndicator.showWhile(fViewer.getControl().getDisplay(),
-					new Runnable() {
-						public void run() {
-							fViewer.getControl().setRedraw(false);
-							fViewer.refresh();
-							fViewer.getControl().setRedraw(true);
-						}
-					});
+			BusyIndicator.showWhile(fViewer.getControl().getDisplay(), new Runnable() {
+				public void run() {
+					fViewer.getControl().setRedraw(false);
+					fViewer.refresh();
+					fViewer.getControl().setRedraw(true);
+				}
+			});
 		}
 	}
 }

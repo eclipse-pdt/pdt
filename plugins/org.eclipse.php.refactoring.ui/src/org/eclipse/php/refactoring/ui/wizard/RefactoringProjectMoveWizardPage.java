@@ -52,9 +52,8 @@ public class RefactoringProjectMoveWizardPage extends UserInputWizardPage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-	 * .Composite)
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
+	 * widgets .Composite)
 	 */
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
@@ -62,8 +61,7 @@ public class RefactoringProjectMoveWizardPage extends UserInputWizardPage {
 		setControl(result);
 		result.setLayout(new GridLayout());
 
-		locationArea = new ProjectContentsLocationArea(getErrorReporter(),
-				result, this.project);
+		locationArea = new ProjectContentsLocationArea(getErrorReporter(), result, this.project);
 
 		// Scale the button based on the rest of the dialog
 		setButtonLayoutData(locationArea.getBrowseButton());
@@ -99,16 +97,14 @@ public class RefactoringProjectMoveWizardPage extends UserInputWizardPage {
 					}
 					setPageComplete(false);
 				} else {
-					verifyDestination(
-							new Path(locationArea.getProjectLocation()).append(
-									project.getName()).toString(), false);
+					verifyDestination(new Path(locationArea.getProjectLocation()).append(project.getName()).toString(),
+							false);
 				}
 			}
 		};
 	}
 
-	private final void verifyDestination(String selected,
-			boolean initialVerification) {
+	private final void verifyDestination(String selected, boolean initialVerification) {
 		try {
 			RefactoringStatus status = verifyDestination(selected);
 			if (initialVerification)
@@ -121,8 +117,7 @@ public class RefactoringProjectMoveWizardPage extends UserInputWizardPage {
 		}
 	}
 
-	protected RefactoringStatus verifyDestination(String selected)
-			throws Exception {
+	protected RefactoringStatus verifyDestination(String selected) throws Exception {
 		PHPProjectMoveProcessor processor = getPHPMoveProcessor();
 		final RefactoringStatus refactoringStatus;
 
@@ -132,16 +127,14 @@ public class RefactoringProjectMoveWizardPage extends UserInputWizardPage {
 	}
 
 	private PHPProjectMoveProcessor getPHPMoveProcessor() {
-		return (PHPProjectMoveProcessor) getRefactoring().getAdapter(
-				PHPProjectMoveProcessor.class);
+		return (PHPProjectMoveProcessor) getRefactoring().getAdapter(PHPProjectMoveProcessor.class);
 	}
 
 	private void addUpdateReferenceComponent(Composite result) {
 		final PHPProjectMoveProcessor processor = getPHPMoveProcessor();
 
 		fReferenceCheckbox = new Button(result, SWT.CHECK);
-		fReferenceCheckbox.setText(PHPRefactoringUIMessages
-				.getString("RefactoringMoveWizardPage.3")); //$NON-NLS-1$
+		fReferenceCheckbox.setText(PHPRefactoringUIMessages.getString("RefactoringMoveWizardPage.3")); //$NON-NLS-1$
 		fReferenceCheckbox.setSelection(processor.getUpdateReferences());
 		fReferenceCheckbox.setEnabled(true);
 		fReferenceCheckbox.setSelection(true);
@@ -150,10 +143,8 @@ public class RefactoringProjectMoveWizardPage extends UserInputWizardPage {
 
 		fReferenceCheckbox.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				processor.setUpdateReferences(((Button) e.widget)
-						.getSelection());
-				getRefactoringWizard().setForcePreviewReview(
-						processor.getUpdateReferences());
+				processor.setUpdateReferences(((Button) e.widget).getSelection());
+				getRefactoringWizard().setForcePreviewReview(processor.getUpdateReferences());
 			}
 		});
 	}

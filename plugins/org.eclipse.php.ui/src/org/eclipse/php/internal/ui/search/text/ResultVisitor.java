@@ -54,12 +54,9 @@ public class ResultVisitor extends TextSearchRequestor {
 		return fSearchInBinaries;
 	}
 
-	public boolean acceptPatternMatch(TextSearchMatchAccess matchRequestor)
-			throws CoreException {
-		fCachedMatches.add(new FileMatch(matchRequestor.getFile(),
-				matchRequestor.getMatchOffset(), matchRequestor
-						.getMatchLength(), getLineElement(matchRequestor
-						.getMatchOffset(), matchRequestor)));
+	public boolean acceptPatternMatch(TextSearchMatchAccess matchRequestor) throws CoreException {
+		fCachedMatches.add(new FileMatch(matchRequestor.getFile(), matchRequestor.getMatchOffset(),
+				matchRequestor.getMatchLength(), getLineElement(matchRequestor.getMatchOffset(), matchRequestor)));
 		return true;
 	}
 
@@ -93,14 +90,12 @@ public class ResultVisitor extends TextSearchRequestor {
 
 	// @see org.eclipse.search.internal.ui.text.FileSearchQuery
 	// added due to changes in eclipse 3.4 API with the addition of LineElement
-	private LineElement getLineElement(int offset,
-			TextSearchMatchAccess matchRequestor) {
+	private LineElement getLineElement(int offset, TextSearchMatchAccess matchRequestor) {
 		int lineNumber = 1;
 		int lineStart = 0;
 		if (!fCachedMatches.isEmpty()) {
 			// match on same line as last?
-			FileMatch last = (FileMatch) fCachedMatches.get(fCachedMatches
-					.size() - 1);
+			FileMatch last = (FileMatch) fCachedMatches.get(fCachedMatches.size() - 1);
 			LineElement lineElement = last.getLineElement();
 			if (lineElement.contains(offset)) {
 				return lineElement;
@@ -118,15 +113,14 @@ public class ResultVisitor extends TextSearchRequestor {
 		while (i < contentLength) {
 			char ch = matchRequestor.getFileContentChar(i++);
 			if (ch == '\n' || ch == '\r') {
-				if (ch == '\r' && i < contentLength
-						&& matchRequestor.getFileContentChar(i) == '\n') {
+				if (ch == '\r' && i < contentLength && matchRequestor.getFileContentChar(i) == '\n') {
 					i++;
 				}
 				if (offset < i) {
-					String lineContent = getContents(matchRequestor, lineStart,
-							i); // include line delimiter
-					return new LineElement(matchRequestor.getFile(),
-							lineNumber, lineStart, lineContent);
+					String lineContent = getContents(matchRequestor, lineStart, i); // include
+																					// line
+																					// delimiter
+					return new LineElement(matchRequestor.getFile(), lineNumber, lineStart, lineContent);
 				}
 				lineNumber++;
 				lineStart = i;
@@ -137,16 +131,14 @@ public class ResultVisitor extends TextSearchRequestor {
 			// end
 			// of
 			// file
-			return new LineElement(matchRequestor.getFile(), lineNumber,
-					lineStart, lineContent);
+			return new LineElement(matchRequestor.getFile(), lineNumber, lineStart, lineContent);
 		}
 		return null; // offset outside of range
 	}
 
 	// @see org.eclipse.search.internal.ui.text.FileSearchQuery
 	// added due to changes in eclipse 3.4 API with the addition of LineElement
-	private static String getContents(TextSearchMatchAccess matchRequestor,
-			int start, int end) {
+	private static String getContents(TextSearchMatchAccess matchRequestor, int start, int end) {
 		StringBuffer buf = new StringBuffer();
 		for (int i = start; i < end; i++) {
 			char ch = matchRequestor.getFileContentChar(i);

@@ -39,8 +39,7 @@ public abstract class AbstraceConciliatorTest {
 		return createProgramFromSource(source);
 	}
 
-	public Program createProgramFromSource(ISourceModule source)
-			throws Exception {
+	public Program createProgramFromSource(ISourceModule source) throws Exception {
 		IResource resource = source.getResource();
 		IProject project = null;
 		if (resource instanceof IFile) {
@@ -52,8 +51,7 @@ public abstract class AbstraceConciliatorTest {
 		} else {
 			version = ProjectOptions.getDefaultPhpVersion();
 		}
-		ASTParser newParser = ASTParser.newParser(version,
-				(ISourceModule) source);
+		ASTParser newParser = ASTParser.newParser(version, (ISourceModule) source);
 		return newParser.createAST(null);
 	}
 
@@ -63,16 +61,14 @@ public abstract class AbstraceConciliatorTest {
 	}
 
 	public IProject createProject(String name) {
-		IProject project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject(name);
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
 		if (project.exists()) {
 			return project;
 		}
 		try {
 			project.create(null);
 
-			project.open(IResource.BACKGROUND_REFRESH,
-					new NullProgressMonitor());
+			project.open(IResource.BACKGROUND_REFRESH, new NullProgressMonitor());
 			IProjectDescription desc = project.getDescription();
 			desc.setNatureIds(new String[] { PHPNature.ID });
 			project.setDescription(desc, null);
@@ -89,16 +85,14 @@ public abstract class AbstraceConciliatorTest {
 	}
 
 	public IProject createProject(String name, PHPVersion version) {
-		IProject project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject(name);
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
 		if (project.exists()) {
 			return project;
 		}
 		try {
 			project.create(null);
 
-			project.open(IResource.BACKGROUND_REFRESH,
-					new NullProgressMonitor());
+			project.open(IResource.BACKGROUND_REFRESH, new NullProgressMonitor());
 			IProjectDescription desc = project.getDescription();
 			desc.setNatureIds(new String[] { PHPNature.ID });
 			project.setDescription(desc, null);

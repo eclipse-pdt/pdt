@@ -55,50 +55,45 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	public static final String ID = "org.eclipse.php.debug.core.noneDebugger"; //$NON-NLS-1$
 	private static final String NAME = "<none>"; //$NON-NLS-1$
 
-	public static final class ScriptLaunchDelegate extends
-			LaunchConfigurationDelegate {
+	public static final class ScriptLaunchDelegate extends LaunchConfigurationDelegate {
 
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.debug.core.model.LaunchConfigurationDelegate#preLaunchCheck
-		 * (org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
-		 * org.eclipse.core.runtime.IProgressMonitor)
+		 * @see org.eclipse.debug.core.model.LaunchConfigurationDelegate#
+		 * preLaunchCheck (org.eclipse.debug.core.ILaunchConfiguration,
+		 * java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 		 */
 		@Override
-		public boolean preLaunchCheck(ILaunchConfiguration configuration,
-				String mode, IProgressMonitor monitor) throws CoreException {
+		public boolean preLaunchCheck(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
+				throws CoreException {
 			PHPexeItem phpExeItem = PHPLaunchUtilities.getPHPExe(configuration);
 			if (phpExeItem == null) {
-				displayError(MessageFormat
-						.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_There_is_no_PHP_runtime_environment,
+				displayError(MessageFormat.format(
+						PHPDebugCoreMessages.NoneDebuggerConfiguration_There_is_no_PHP_runtime_environment,
 						configuration.getName()));
 				return false;
 			}
-			String phpExeString = configuration.getAttribute(
-					IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
+			String phpExeString = configuration.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION,
+					(String) null);
 			if (phpExeString == null || !(new File(phpExeString)).exists()) {
-				displayError(MessageFormat
-						.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_PHP_executable_file_is_invalid,
+				displayError(MessageFormat.format(
+						PHPDebugCoreMessages.NoneDebuggerConfiguration_PHP_executable_file_is_invalid,
 						configuration.getName()));
 				return false;
 			}
-			String fileName = configuration.getAttribute(
-					IPHPDebugConstants.ATTR_FILE_FULL_PATH, (String) null);
+			String fileName = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, (String) null);
 			if (fileName == null || !(new File(fileName)).exists()) {
-				displayError(MessageFormat
-						.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_PHP_script_file_is_invalid,
-						configuration.getName()));
+				displayError(
+						MessageFormat.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_PHP_script_file_is_invalid,
+								configuration.getName()));
 				return false;
 			}
-			if ((mode.equals(ILaunchManager.DEBUG_MODE)
-					|| mode.equals(ILaunchManager.PROFILE_MODE))) {
+			if ((mode.equals(ILaunchManager.DEBUG_MODE) || mode.equals(ILaunchManager.PROFILE_MODE))) {
 				displayError(MessageFormat.format(
 						PHPDebugCoreMessages.NoneDebuggerConfiguration_There_is_no_debugger_attached_for_PHP_executable,
 						configuration.getName(), phpExeItem.getName()));
-				ILaunchConfigurationWorkingCopy wc = configuration
-						.getWorkingCopy();
+				ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 				wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, false);
 				wc.doSave();
 				return false;
@@ -116,35 +111,29 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 		 * org.eclipse.core.runtime.IProgressMonitor)
 		 */
 		@Override
-		public void launch(ILaunchConfiguration configuration, String mode,
-				ILaunch launch, IProgressMonitor monitor) throws CoreException {
+		public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
+				throws CoreException {
 			// Check for previous launches.
 			if (!PHPLaunchUtilities.notifyPreviousLaunches(launch)) {
 				monitor.setCanceled(true);
 				monitor.done();
 				return;
 			}
-			String phpExeString = configuration.getAttribute(
-					IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
-			String phpIniPath = configuration.getAttribute(
-					IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
-			String fileName = configuration.getAttribute(
-					IPHPDebugConstants.ATTR_FILE_FULL_PATH, (String) null);
+			String phpExeString = configuration.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION,
+					(String) null);
+			String phpIniPath = configuration.getAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
+			String fileName = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, (String) null);
 			IProject project = null;
-			String file = configuration.getAttribute(
-					IPHPDebugConstants.ATTR_FILE, (String) null);
+			String file = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
 			if (file != null) {
-				IResource resource = ResourcesPlugin.getWorkspace().getRoot()
-						.findMember(file);
+				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(file);
 				if (resource != null) {
 					project = resource.getProject();
 				} else {
-					String projectName = configuration
-							.getAttribute(IPHPDebugConstants.ATTR_PROJECT_NAME,
+					String projectName = configuration.getAttribute(IPHPDebugConstants.ATTR_PROJECT_NAME,
 							(String) null);
 					if (projectName != null) {
-						IProject resolved = ResourcesPlugin.getWorkspace()
-								.getRoot().getProject(projectName);
+						IProject resolved = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 						if (resolved != null && resolved.isAccessible()) {
 							project = resolved;
 						}
@@ -160,19 +149,15 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 			 * null, try to locate an php.ini that exists next to the
 			 * executable.
 			 */
-			File phpIni = (phpIniPath != null && new File(phpIniPath).exists()) ? new File(
-					phpIniPath) : PHPINIUtil.findPHPIni(phpExeString);
-			File tempIni = PHPINIUtil.prepareBeforeLaunch(phpIni, phpExeString,
-					project);
-			launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION,
-					tempIni.getAbsolutePath());
+			File phpIni = (phpIniPath != null && new File(phpIniPath).exists()) ? new File(phpIniPath)
+					: PHPINIUtil.findPHPIni(phpExeString);
+			File tempIni = PHPINIUtil.prepareBeforeLaunch(phpIni, phpExeString, project);
+			launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
 			// Resolve location
 			IPath phpExe = new Path(phpExeString);
-			String[] envp = DebugPlugin.getDefault().getLaunchManager()
-					.getEnvironment(configuration);
+			String[] envp = DebugPlugin.getDefault().getLaunchManager().getEnvironment(configuration);
 			File phpExeFile = new File(phpExeString);
-			String phpIniLocation = launch
-					.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION);
+			String phpIniLocation = launch.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION);
 			// Determine PHP configuration file location:
 			String phpConfigDir = phpExeFile.getParent();
 			if (phpIniLocation != null && !phpIniLocation.equals("")) { //$NON-NLS-1$
@@ -189,19 +174,13 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 					break;
 				}
 			}
-			String[] args = PHPLaunchUtilities.getProgramArguments(launch
-					.getLaunchConfiguration());
-			String[] cmdLine = PHPLaunchUtilities.getCommandLine(
-					launch.getLaunchConfiguration(), phpExeString,
-					phpConfigDir, fileName,
-					PHPexeItem.SAPI_CLI.equals(sapiType) ? args : null,
-					phpVersion);
+			String[] args = PHPLaunchUtilities.getProgramArguments(launch.getLaunchConfiguration());
+			String[] cmdLine = PHPLaunchUtilities.getCommandLine(launch.getLaunchConfiguration(), phpExeString,
+					phpConfigDir, fileName, PHPexeItem.SAPI_CLI.equals(sapiType) ? args : null, phpVersion);
 			// Set library search path:
-			String libPath = PHPLaunchUtilities
-					.getLibrarySearchPathEnv(phpExeFile.getParentFile());
+			String libPath = PHPLaunchUtilities.getLibrarySearchPathEnv(phpExeFile.getParentFile());
 			if (libPath != null) {
-				String[] envpNew = new String[envp == null ? 1
-						: envp.length + 1];
+				String[] envpNew = new String[envp == null ? 1 : envp.length + 1];
 				if (envp != null) {
 					System.arraycopy(envp, 0, envpNew, 0, envp.length);
 				}
@@ -212,8 +191,8 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 				return;
 			}
 			File workingDir = new File(fileName).getParentFile();
-			Process process = workingDir.exists() ? DebugPlugin.exec(cmdLine,
-					workingDir, envp) : DebugPlugin.exec(cmdLine, null, envp);
+			Process process = workingDir.exists() ? DebugPlugin.exec(cmdLine, workingDir, envp)
+					: DebugPlugin.exec(cmdLine, null, envp);
 			// Attach a crash detector
 			new Thread(new ProcessCrashDetector(launch, process)).start();
 			IProcess runtimeProcess = null;
@@ -222,26 +201,18 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 			String programName = phpExe.lastSegment();
 			String extension = phpExe.getFileExtension();
 			if (extension != null) {
-				programName = programName.substring(0, programName.length()
-						- (extension.length() + 1));
+				programName = programName.substring(0, programName.length() - (extension.length() + 1));
 			}
 			programName = programName.toLowerCase();
 			processAttributes.put(IProcess.ATTR_PROCESS_TYPE, programName);
 			if (process != null) {
 				subMonitor = new SubProgressMonitor(monitor, 90);
-				subMonitor
-						.beginTask(
-								MessageFormat
-										.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_Launching,
-												new Object[] { configuration
-														.getName() }),
-						IProgressMonitor.UNKNOWN);
-				runtimeProcess = DebugPlugin.newProcess(launch, process,
-						phpExe.toOSString(), processAttributes);
+				subMonitor.beginTask(MessageFormat.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_Launching,
+						new Object[] { configuration.getName() }), IProgressMonitor.UNKNOWN);
+				runtimeProcess = DebugPlugin.newProcess(launch, process, phpExe.toOSString(), processAttributes);
 				if (runtimeProcess == null) {
 					process.destroy();
-					throw new CoreException(new Status(IStatus.ERROR,
-							PHPDebugPlugin.getID(), 0, null, null));
+					throw new CoreException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), 0, null, null));
 				}
 				subMonitor.done();
 			}
@@ -250,8 +221,7 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 
 	}
 
-	public static final class WebLaunchDelegate extends
-			LaunchConfigurationDelegate {
+	public static final class WebLaunchDelegate extends LaunchConfigurationDelegate {
 
 		// Opens launch URL an gracefully dies.
 		private final class MockProcess extends Process {
@@ -329,38 +299,33 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.debug.core.model.LaunchConfigurationDelegate#preLaunchCheck
-		 * (org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
-		 * org.eclipse.core.runtime.IProgressMonitor)
+		 * @see org.eclipse.debug.core.model.LaunchConfigurationDelegate#
+		 * preLaunchCheck (org.eclipse.debug.core.ILaunchConfiguration,
+		 * java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 		 */
 		@Override
-		public boolean preLaunchCheck(ILaunchConfiguration configuration,
-				String mode, IProgressMonitor monitor) throws CoreException {
+		public boolean preLaunchCheck(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
+				throws CoreException {
 			Server server = PHPLaunchUtilities.getPHPServer(configuration);
 			if (server == null) {
-				displayError(MessageFormat
-						.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_There_is_no_PHP_server_specified,
+				displayError(MessageFormat.format(
+						PHPDebugCoreMessages.NoneDebuggerConfiguration_There_is_no_PHP_server_specified,
 						configuration.getName()));
 				return false;
 			}
-			String fileName = configuration.getAttribute(Server.FILE_NAME,
-					(String) null);
+			String fileName = configuration.getAttribute(Server.FILE_NAME, (String) null);
 			if (fileName == null) {
-				displayError(MessageFormat
-						.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_PHP_source_file_is_invalid,
-						configuration.getName()));
+				displayError(
+						MessageFormat.format(PHPDebugCoreMessages.NoneDebuggerConfiguration_PHP_source_file_is_invalid,
+								configuration.getName()));
 				return false;
 			}
-			if ((mode.equals(ILaunchManager.DEBUG_MODE)
-					|| mode.equals(ILaunchManager.PROFILE_MODE))) {
-				Server phpServer = PHPLaunchUtilities
-						.getPHPServer(configuration);
+			if ((mode.equals(ILaunchManager.DEBUG_MODE) || mode.equals(ILaunchManager.PROFILE_MODE))) {
+				Server phpServer = PHPLaunchUtilities.getPHPServer(configuration);
 				displayError(MessageFormat.format(
 						PHPDebugCoreMessages.NoneDebuggerConfiguration_There_is_no_debugger_attached_for_PHP_server,
 						configuration.getName(), phpServer.getName()));
-				ILaunchConfigurationWorkingCopy wc = configuration
-						.getWorkingCopy();
+				ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 				wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, false);
 				wc.doSave();
 				return false;
@@ -378,11 +343,10 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 		 * org.eclipse.core.runtime.IProgressMonitor)
 		 */
 		@Override
-		public void launch(ILaunchConfiguration configuration, String mode,
-				ILaunch launch, IProgressMonitor monitor) throws CoreException {
+		public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
+				throws CoreException {
 			// Notify all listeners of a pre-launch event.
-			int resultCode = notifyPreLaunch(configuration, mode, launch,
-					monitor);
+			int resultCode = notifyPreLaunch(configuration, mode, launch, monitor);
 			if (resultCode != 0) { // cancel launch
 				monitor.setCanceled(true);
 				monitor.done();
@@ -394,14 +358,12 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 				monitor.done();
 				return;
 			}
-			String fileName = configuration.getAttribute(Server.FILE_NAME,
-					(String) null);
+			String fileName = configuration.getAttribute(Server.FILE_NAME, (String) null);
 			// Get the project from the file name
 			IPath filePath = new Path(fileName);
 			IProject project = null;
 			try {
-				project = ResourcesPlugin.getWorkspace().getRoot()
-						.getProject(filePath.segment(0));
+				project = ResourcesPlugin.getWorkspace().getRoot().getProject(filePath.segment(0));
 			} catch (Throwable t) {
 				// ignore
 			}
@@ -409,28 +371,21 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 			String projectLocation = project.getFullPath().toString();
 			wc.setAttribute(IPHPDebugConstants.PHP_Project, projectLocation);
 			// Set transfer encoding:
-			wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING,
-					PHPProjectPreferences.getTransferEncoding(project));
-			wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING,
-					PHPProjectPreferences.getOutputEncoding(project));
-			wc.setAttribute(IDebugParametersKeys.PHP_DEBUG_TYPE,
-					IDebugParametersKeys.PHP_WEB_PAGE_DEBUG);
+			wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(project));
+			wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING, PHPProjectPreferences.getOutputEncoding(project));
+			wc.setAttribute(IDebugParametersKeys.PHP_DEBUG_TYPE, IDebugParametersKeys.PHP_WEB_PAGE_DEBUG);
 			wc.doSave();
-			final String launchURL = new String(configuration.getAttribute(
-					Server.BASE_URL, "") //$NON-NLS-1$
-							.getBytes());
-			launch.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER,
-					Boolean.toString(true));
+			final String launchURL = new String(configuration.getAttribute(Server.BASE_URL, "") //$NON-NLS-1$
+					.getBytes());
+			launch.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER, Boolean.toString(true));
 			launch.setAttribute(IDebugParametersKeys.ORIGINAL_URL, launchURL);
-			DebugPlugin.newProcess(launch, new MockProcess(launchURL),
-					launchURL, new HashMap<String, String>());
+			DebugPlugin.newProcess(launch, new MockProcess(launchURL), launchURL, new HashMap<String, String>());
 		}
 
-		protected int notifyPreLaunch(ILaunchConfiguration configuration,
-				String mode, ILaunch launch, IProgressMonitor monitor) {
+		protected int notifyPreLaunch(ILaunchConfiguration configuration, String mode, ILaunch launch,
+				IProgressMonitor monitor) {
 			for (ILaunchDelegateListener listener : preLaunchListeners) {
-				int returnCode = listener.preLaunch(configuration, mode, launch,
-						monitor);
+				int returnCode = listener.preLaunch(configuration, mode, launch, monitor);
 				if (returnCode != 0) {
 					return returnCode;
 				}
@@ -495,9 +450,8 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#getPort
-	 * ()
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
+	 * getPort ()
 	 */
 	@Override
 	public int getPort() {
@@ -508,9 +462,8 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#getName
-	 * ()
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
+	 * getName ()
 	 */
 	@Override
 	public String getName() {
@@ -565,8 +518,8 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration#setPort(int)
+	 * @see org.eclipse.php.internal.debug.core.debugger.
+	 * AbstractDebuggerConfiguration#setPort(int)
 	 */
 	@Override
 	public void setPort(int port) {
@@ -576,8 +529,8 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration#getModuleId()
+	 * @see org.eclipse.php.internal.debug.core.debugger.
+	 * AbstractDebuggerConfiguration#getModuleId()
 	 */
 	@Override
 	public String getModuleId() {
@@ -588,8 +541,8 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration#applyDefaults()
+	 * @see org.eclipse.php.internal.debug.core.debugger.
+	 * AbstractDebuggerConfiguration#applyDefaults()
 	 */
 	@Override
 	public void applyDefaults() {
@@ -599,8 +552,8 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration#validate(PHPexeItem)
+	 * @see org.eclipse.php.internal.debug.core.debugger.
+	 * AbstractDebuggerConfiguration#validate(PHPexeItem)
 	 */
 	@Override
 	public IStatus validate(PHPexeItem item) {
@@ -612,8 +565,7 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 		final Display display = Display.getDefault();
 		display.asyncExec(new Runnable() {
 			public void run() {
-				MessageDialog.openError(display.getActiveShell(),
-						PHPDebugCoreMessages.Debugger_LaunchError_title,
+				MessageDialog.openError(display.getActiveShell(), PHPDebugCoreMessages.Debugger_LaunchError_title,
 						message);
 			}
 		});

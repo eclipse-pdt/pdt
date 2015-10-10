@@ -34,7 +34,7 @@ public class StringButtonDialogField extends StringDialogField {
 	public StringButtonDialogField(IStringButtonAdapter adapter) {
 		super();
 		fStringButtonAdapter = adapter;
-		fBrowseButtonLabel = Messages.StringButtonDialogField_0; 
+		fBrowseButtonLabel = Messages.StringButtonDialogField_0;
 		fButtonEnabled = true;
 	}
 

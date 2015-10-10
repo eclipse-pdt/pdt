@@ -81,8 +81,7 @@ public class HighLoadTableViewer extends Composite {
 	private void addElementsToTableInNewThread() {
 
 		if (elementAddition == null) {
-			elementAddition = new ElementAddition(tableViewer,
-					defaultElementSelection);
+			elementAddition = new ElementAddition(tableViewer, defaultElementSelection);
 			Thread tableUpdater = new Thread(elementAddition);
 			tableUpdater.start();
 		}

@@ -31,8 +31,7 @@ import org.eclipse.dltk.internal.core.util.MethodOverrideTester;
  */
 public class SuperTypeHierarchyCache {
 
-	private static class HierarchyCacheEntry implements
-			ITypeHierarchyChangedListener {
+	private static class HierarchyCacheEntry implements ITypeHierarchyChangedListener {
 
 		private ITypeHierarchy fTypeHierarchy;
 		private long fLastAccess;
@@ -86,13 +85,11 @@ public class SuperTypeHierarchyCache {
 	/**
 	 * Get a hierarchy for the given type
 	 */
-	public static ITypeHierarchy getTypeHierarchy(IType type)
-			throws ModelException {
+	public static ITypeHierarchy getTypeHierarchy(IType type) throws ModelException {
 		return getTypeHierarchy(type, null);
 	}
 
-	public static MethodOverrideTester getMethodOverrideTester(IType type)
-			throws ModelException {
+	public static MethodOverrideTester getMethodOverrideTester(IType type) throws ModelException {
 		MethodOverrideTester test = null;
 		synchronized (fgMethodOverrideTesterCache) {
 			test = (MethodOverrideTester) fgMethodOverrideTesterCache.get(type);
@@ -101,8 +98,14 @@ public class SuperTypeHierarchyCache {
 			ITypeHierarchy hierarchy = getTypeHierarchy(type); // don't nest the
 			// locks
 			synchronized (fgMethodOverrideTesterCache) {
-				test = (MethodOverrideTester) fgMethodOverrideTesterCache
-						.get(type); // test again after waiting a long time for
+				test = (MethodOverrideTester) fgMethodOverrideTesterCache.get(type); // test
+																						// again
+																						// after
+																						// waiting
+																						// a
+																						// long
+																						// time
+																						// for
 				// 'getTypeHierarchy'
 				if (test == null) {
 					test = new MethodOverrideTester(type, hierarchy);
@@ -115,11 +118,9 @@ public class SuperTypeHierarchyCache {
 
 	private static void removeMethodOverrideTester(ITypeHierarchy hierarchy) {
 		synchronized (fgMethodOverrideTesterCache) {
-			for (Iterator iter = fgMethodOverrideTesterCache.values()
-					.iterator(); iter.hasNext();) {
+			for (Iterator iter = fgMethodOverrideTesterCache.values().iterator(); iter.hasNext();) {
 				MethodOverrideTester curr = (MethodOverrideTester) iter.next();
-				if (curr != null && curr.getTypeHierarchy() != null
-						&& curr.getTypeHierarchy().equals(hierarchy)) {
+				if (curr != null && curr.getTypeHierarchy() != null && curr.getTypeHierarchy().equals(hierarchy)) {
 					iter.remove();
 				}
 			}
@@ -129,8 +130,7 @@ public class SuperTypeHierarchyCache {
 	/**
 	 * Get a hierarchy for the given type
 	 */
-	public static ITypeHierarchy getTypeHierarchy(IType type,
-			IProgressMonitor progressMonitor) throws ModelException {
+	public static ITypeHierarchy getTypeHierarchy(IType type, IProgressMonitor progressMonitor) throws ModelException {
 		if (type == null) {
 			return null;
 		}
@@ -154,23 +154,19 @@ public class SuperTypeHierarchyCache {
 				HierarchyCacheEntry oldest = null;
 				ArrayList obsoleteHierarchies = new ArrayList(CACHE_SIZE);
 				for (int i = 0; i < nEntries; i++) {
-					HierarchyCacheEntry entry = (HierarchyCacheEntry) fgHierarchyCache
-							.get(i);
+					HierarchyCacheEntry entry = (HierarchyCacheEntry) fgHierarchyCache.get(i);
 					ITypeHierarchy curr = entry.getTypeHierarchy();
 					if (!curr.exists() || hierarchy.contains(curr.getType())) {
 						obsoleteHierarchies.add(entry);
 					} else {
-						if (oldest == null
-								|| entry.getLastAccess() < oldest
-										.getLastAccess()) {
+						if (oldest == null || entry.getLastAccess() < oldest.getLastAccess()) {
 							oldest = entry;
 						}
 					}
 				}
 				if (!obsoleteHierarchies.isEmpty()) {
 					for (int i = 0; i < obsoleteHierarchies.size(); i++) {
-						removeHierarchyEntryFromCache((HierarchyCacheEntry) obsoleteHierarchies
-								.get(i));
+						removeHierarchyEntryFromCache((HierarchyCacheEntry) obsoleteHierarchies.get(i));
 					}
 				} else if (oldest != null) {
 					removeHierarchyEntryFromCache(oldest);
@@ -196,8 +192,7 @@ public class SuperTypeHierarchyCache {
 		if (type != null) {
 			synchronized (fgHierarchyCache) {
 				for (int i = fgHierarchyCache.size() - 1; i >= 0; i--) {
-					HierarchyCacheEntry curr = (HierarchyCacheEntry) fgHierarchyCache
-							.get(i);
+					HierarchyCacheEntry curr = (HierarchyCacheEntry) fgHierarchyCache.get(i);
 					ITypeHierarchy hierarchy = curr.getTypeHierarchy();
 					if (!hierarchy.exists()) {
 						removeHierarchyEntryFromCache(curr);

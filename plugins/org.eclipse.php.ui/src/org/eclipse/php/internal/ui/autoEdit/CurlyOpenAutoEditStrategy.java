@@ -22,11 +22,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  * 
  */
 
-public class CurlyOpenAutoEditStrategy extends IndentLineAutoEditStrategy
-		implements IAutoEditStrategy {
+public class CurlyOpenAutoEditStrategy extends IndentLineAutoEditStrategy implements IAutoEditStrategy {
 
-	public void customizeDocumentCommand(IDocument document,
-			DocumentCommand command) {
+	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		if (command.text != null && command.text.endsWith("{")) { //$NON-NLS-1$
 			setIndentationObject(null); // reset
 			autoIndentBeforeCurlyOpen((IStructuredDocument) document, command);
@@ -35,15 +33,13 @@ public class CurlyOpenAutoEditStrategy extends IndentLineAutoEditStrategy
 
 	private StringBuffer helpBuffer = new StringBuffer();
 
-	private void autoIndentBeforeCurlyOpen(IStructuredDocument document,
-			DocumentCommand command) {
+	private void autoIndentBeforeCurlyOpen(IStructuredDocument document, DocumentCommand command) {
 
 		int startOffset = command.offset;
 		int endOffset = startOffset + command.length;
 		helpBuffer.setLength(0);
 		try {
-			IRegion startlineInfo = document
-					.getLineInformationOfOffset(startOffset);
+			IRegion startlineInfo = document.getLineInformationOfOffset(startOffset);
 			IRegion endlineInfo = null;
 
 			if (startlineInfo.getOffset() + startlineInfo.getLength() < endOffset) {
@@ -55,14 +51,11 @@ public class CurlyOpenAutoEditStrategy extends IndentLineAutoEditStrategy
 			}
 			int lineNumber = document.getLineOfOffset(startOffset);
 
-			if (IndentationUtils.isBlanks(document, startlineInfo.getOffset(),
-					startOffset)) {
-				placeMatchingBlanks(document, helpBuffer, lineNumber,
-						startOffset);
+			if (IndentationUtils.isBlanks(document, startlineInfo.getOffset(), startOffset)) {
+				placeMatchingBlanks(document, helpBuffer, lineNumber, startOffset);
 				int endSelection = command.offset + command.length;
 				command.offset = startlineInfo.getOffset();
-				command.length = (command.length == 0) ? endOffset
-						- command.offset : endSelection - command.offset;
+				command.length = (command.length == 0) ? endOffset - command.offset : endSelection - command.offset;
 			}
 		} catch (BadLocationException e) {
 			Logger.logException(e);

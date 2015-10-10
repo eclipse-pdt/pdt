@@ -28,8 +28,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  * @author guy.g
  * 
  */
-public abstract class AbstractMultiBlockPreferencePage extends PreferencePage
-		implements IWorkbenchPreferencePage {
+public abstract class AbstractMultiBlockPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	private IPHPPreferencePageBlock[] fConfigurationBlocks;
 
@@ -41,8 +40,7 @@ public abstract class AbstractMultiBlockPreferencePage extends PreferencePage
 
 	private void createConfigurationBlocks() {
 		try {
-			fConfigurationBlocks = PHPPreferencePageBlocksRegistry
-					.getPHPPreferencePageBlock(getPreferencePageID());
+			fConfigurationBlocks = PHPPreferencePageBlocksRegistry.getPHPPreferencePageBlock(getPreferencePageID());
 		} catch (Exception e) {
 			PHPUiPlugin.log(e);
 		}
@@ -66,14 +64,12 @@ public abstract class AbstractMultiBlockPreferencePage extends PreferencePage
 		int i = 0;
 		for (Iterator iter = keysList.iterator(); iter.hasNext(); i++) {
 			String comperableName = (String) iter.next();
-			fConfigurationBlocks[i] = (IPHPPreferencePageBlock) map
-					.get(comperableName);
+			fConfigurationBlocks[i] = (IPHPPreferencePageBlock) map.get(comperableName);
 		}
 	}
 
 	protected Control createContents(Composite composite) {
-		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(
-				composite, SWT.V_SCROLL | SWT.H_SCROLL);
+		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(composite, SWT.V_SCROLL | SWT.H_SCROLL);
 		Composite group = new Composite(scrolledCompositeImpl, SWT.NONE);
 		group.setLayout(new GridLayout());
 		try {

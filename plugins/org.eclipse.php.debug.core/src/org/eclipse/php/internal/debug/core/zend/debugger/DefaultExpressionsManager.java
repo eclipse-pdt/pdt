@@ -34,8 +34,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 	 */
 	public DefaultExpressionsManager(Debugger debugger, String transferEncoding) {
 		this.debugger = debugger;
-		expressionValueDeserializer = new ExpressionsValueDeserializer(
-				transferEncoding);
+		expressionValueDeserializer = new ExpressionsValueDeserializer(transferEncoding);
 	}
 
 	public byte[] getExpressionValue(Expression expression, int depth) {
@@ -70,8 +69,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 	public Expression[] getCurrentVariables(int depth) {
 		Expression contextExpression = new CurrentContextExpression();
 		byte[] value = getExpressionValue(contextExpression, depth);
-		ExpressionValue variableValue = expressionValueDeserializer
-				.deserializer(contextExpression, value);
+		ExpressionValue variableValue = expressionValueDeserializer.deserializer(contextExpression, value);
 		Expression[] variables = variableValue.getOriChildren();
 		if (variables == null || variables.length == 0) {
 			return EMPTY_VARIABLE_ARRAY;
@@ -93,13 +91,11 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		String className = (String) dummyClass.getValue().getValue();
 		// Check if we are in static context
 		if (!hasThis && className != null && !className.isEmpty()) {
-			Expression staticClassContext = ExpressionsUtil.fetchStaticContext(
-					className, this);
+			Expression staticClassContext = ExpressionsUtil.fetchStaticContext(className, this);
 			if (staticClassContext != null)
 				currentVariables.add(staticClassContext);
 		}
-		variables = currentVariables.toArray(new Expression[currentVariables
-				.size()]);
+		variables = currentVariables.toArray(new Expression[currentVariables.size()]);
 		// Sort by type (default order: this or class, locals, super globals)
 		VariablesUtil.sortContextMembers(variables);
 		hashResultDepthOne.put("LOCALS", variables); //$NON-NLS-1$
@@ -114,26 +110,20 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		if (expression.getValue().getType() == ExpressionValue.VIRTUAL_CLASS_TYPE)
 			return;
 		byte[] value = getExpressionValue(expression, depth);
-		ExpressionValue expressionValue = expressionValueDeserializer
-				.deserializer(expression, value);
+		ExpressionValue expressionValue = expressionValueDeserializer.deserializer(expression, value);
 		// Workaround for fetching static members for objects
 		if (expressionValue.getType() == ExpressionValue.OBJECT_TYPE) {
-			Expression[] expressionStaticNodes = ExpressionsUtil
-					.fetchStaticMembers((String) expressionValue.getValue(),
-							this);
+			Expression[] expressionStaticNodes = ExpressionsUtil.fetchStaticMembers((String) expressionValue.getValue(),
+					this);
 			List<Expression> allNodes = new ArrayList<Expression>();
 			allNodes.addAll(Arrays.asList(expressionStaticNodes));
 			allNodes.addAll(Arrays.asList(expressionValue.getChildren()));
-			expressionValue = new ExpressionValue(ExpressionValue.OBJECT_TYPE,
-					expressionValue.getValue(),
-					expressionValue.getValueAsString(),
-					allNodes.toArray(new Expression[allNodes.size()]),
-					expressionValue.getChildrenCount()
-							+ expressionStaticNodes.length);
+			expressionValue = new ExpressionValue(ExpressionValue.OBJECT_TYPE, expressionValue.getValue(),
+					expressionValue.getValueAsString(), allNodes.toArray(new Expression[allNodes.size()]),
+					expressionValue.getChildrenCount() + expressionStaticNodes.length);
 		}
 		// Sort object members by type & name
-		if (!PHPProjectPreferences.isSortByName()
-				&& expressionValue.getType() == ExpressionValue.OBJECT_TYPE)
+		if (!PHPProjectPreferences.isSortByName() && expressionValue.getType() == ExpressionValue.OBJECT_TYPE)
 			VariablesUtil.sortObjectMembers(expressionValue.getOriChildren());
 		expression.setValue(expressionValue);
 	}

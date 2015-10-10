@@ -29,13 +29,11 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModelFa
  * @author yaronm
  * 
  */
-public class PHPResourceMarkerAnnotationModelFactory extends
-		StructuredResourceMarkerAnnotationModelFactory implements
-		IAnnotationModelFactory {
+public class PHPResourceMarkerAnnotationModelFactory extends StructuredResourceMarkerAnnotationModelFactory
+		implements IAnnotationModelFactory {
 	/*
-	 * @see
-	 * org.eclipse.core.filebuffers.IAnnotationModelFactory#createAnnotationModel
-	 * (org.eclipse.core.runtime.IPath)
+	 * @see org.eclipse.core.filebuffers.IAnnotationModelFactory#
+	 * createAnnotationModel (org.eclipse.core.runtime.IPath)
 	 */
 	public IAnnotationModel createAnnotationModel(IPath location) {
 		IAnnotationModel model = null;

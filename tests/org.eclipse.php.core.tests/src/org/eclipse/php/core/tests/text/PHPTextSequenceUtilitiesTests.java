@@ -26,40 +26,35 @@ public class PHPTextSequenceUtilitiesTests {
 
 	@Test
 	public void singleArgument() {
-		String[] argNames = PHPTextSequenceUtilities.getArgNames(null,
-				"('MyArg')");
+		String[] argNames = PHPTextSequenceUtilities.getArgNames(null, "('MyArg')");
 		assertEquals(1, argNames.length);
 		assertEquals("'MyArg'", argNames[0]);
 	}
 
 	@Test
 	public void singleArgumentDoubleQuote() {
-		String[] argNames = PHPTextSequenceUtilities.getArgNames(null,
-				"(\"MyArg\")");
+		String[] argNames = PHPTextSequenceUtilities.getArgNames(null, "(\"MyArg\")");
 		assertEquals(1, argNames.length);
 		assertEquals("\"MyArg\"", argNames[0]);
 	}
 
 	@Test
 	public void singleArgumentIgnore() {
-		String[] argNames = PHPTextSequenceUtilities.getArgNames(null,
-				"($anyElement)");
+		String[] argNames = PHPTextSequenceUtilities.getArgNames(null, "($anyElement)");
 		assertEquals(1, argNames.length);
 		assertNull(argNames[0]);
 	}
 
 	@Test
 	public void singleArgumentIgnoreParenthesis() {
-		String[] argNames = PHPTextSequenceUtilities.getArgNames(null,
-				"'MyArg'");
+		String[] argNames = PHPTextSequenceUtilities.getArgNames(null, "'MyArg'");
 		assertEquals(1, argNames.length);
 		assertEquals("'MyArg'", argNames[0]);
 	}
 
 	@Test
 	public void multiArgumentIgnore() {
-		String[] argNames = PHPTextSequenceUtilities.getArgNames(null,
-				"('MyString', $anyElement)");
+		String[] argNames = PHPTextSequenceUtilities.getArgNames(null, "('MyString', $anyElement)");
 		assertEquals(2, argNames.length);
 		assertEquals("'MyString'", argNames[0]);
 		assertNull(argNames[1]);
@@ -67,8 +62,7 @@ public class PHPTextSequenceUtilitiesTests {
 
 	@Test
 	public void multiArgumentIgnore2() {
-		String[] argNames = PHPTextSequenceUtilities.getArgNames(null,
-				"($anyElement, 'MyString')");
+		String[] argNames = PHPTextSequenceUtilities.getArgNames(null, "($anyElement, 'MyString')");
 		assertEquals(2, argNames.length);
 		assertEquals("'MyString'", argNames[1]);
 		assertNull(argNames[0]);
@@ -76,8 +70,7 @@ public class PHPTextSequenceUtilitiesTests {
 
 	@Test
 	public void ignoreInternalCall() {
-		String[] argNames = PHPTextSequenceUtilities.getArgNames(null,
-				"(call('something'), 'MyString')");
+		String[] argNames = PHPTextSequenceUtilities.getArgNames(null, "(call('something'), 'MyString')");
 		assertEquals(2, argNames.length);
 		assertEquals("'MyString'", argNames[1]);
 		assertNull(argNames[0]);
@@ -95,20 +88,14 @@ public class PHPTextSequenceUtilitiesTests {
 	@Test
 	public void suggestObjectOperator() {
 		assertEquals(">", PHPTextSequenceUtilities.suggestObjectOperator("$x-"));
-		assertEquals(">",
-				PHPTextSequenceUtilities.suggestObjectOperator("$x -"));
+		assertEquals(">", PHPTextSequenceUtilities.suggestObjectOperator("$x -"));
 
 		assertEquals("->", PHPTextSequenceUtilities.suggestObjectOperator("$x"));
-		assertEquals("->",
-				PHPTextSequenceUtilities.suggestObjectOperator("$x->field"));
-		assertEquals("->",
-				PHPTextSequenceUtilities
-						.suggestObjectOperator("$x\n->call()\n"));
-		assertEquals("->",
-				PHPTextSequenceUtilities.suggestObjectOperator("X::$x"));
+		assertEquals("->", PHPTextSequenceUtilities.suggestObjectOperator("$x->field"));
+		assertEquals("->", PHPTextSequenceUtilities.suggestObjectOperator("$x\n->call()\n"));
+		assertEquals("->", PHPTextSequenceUtilities.suggestObjectOperator("X::$x"));
 
-		assertEquals("->",
-				PHPTextSequenceUtilities.suggestObjectOperator("$x[0]"));
+		assertEquals("->", PHPTextSequenceUtilities.suggestObjectOperator("$x[0]"));
 
 	}
 

@@ -60,16 +60,11 @@ public class PHPSourceLookupDirector extends AbstractSourceLookupDirector {
 			LocalFile localFile = (LocalFile) obj;
 			IProject project = null;
 			try {
-				if (stackFrame.getLaunch() != null
-						&& stackFrame.getLaunch().getLaunchConfiguration() != null) {
-					String file = stackFrame
-							.getLaunch()
-							.getLaunchConfiguration()
-							.getAttribute(IPHPDebugConstants.ATTR_FILE,
-									(String) null);
+				if (stackFrame.getLaunch() != null && stackFrame.getLaunch().getLaunchConfiguration() != null) {
+					String file = stackFrame.getLaunch().getLaunchConfiguration()
+							.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
 					if (file != null) {
-						IWorkspaceRoot workspaceRoot = ResourcesPlugin
-								.getWorkspace().getRoot();
+						IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 						IResource resource = workspaceRoot.findMember(file);
 						if (resource != null) {
 							project = resource.getProject();
@@ -79,36 +74,25 @@ public class PHPSourceLookupDirector extends AbstractSourceLookupDirector {
 			} catch (CoreException e1) {
 			}
 			if (project != null) {
-				IDebugTarget debugTarget = (IDebugTarget) stackFrame
-						.getDebugTarget();
+				IDebugTarget debugTarget = (IDebugTarget) stackFrame.getDebugTarget();
 				try {
-					ProjectDescription desc = ((Project) project)
-							.internalGetDescription();
+					ProjectDescription desc = ((Project) project).internalGetDescription();
 					if (desc != null) {
 						HashMap links = desc.getLinks();
 						if (links != null) {
 
 							for (Entry entry : (Set<Entry>) links.entrySet()) {
 								IPath relativePath = (IPath) entry.getKey();
-								LinkDescription linkDescription = (LinkDescription) entry
-										.getValue();
-								IPath linkPath = new Path(linkDescription
-										.getLocationURI().getPath());
-								IPath filePath = new Path(localFile
-										.toLocalFile(EFS.NONE, null)
-										.getAbsolutePath());
+								LinkDescription linkDescription = (LinkDescription) entry.getValue();
+								IPath linkPath = new Path(linkDescription.getLocationURI().getPath());
+								IPath filePath = new Path(localFile.toLocalFile(EFS.NONE, null).getAbsolutePath());
 								if (linkPath.isPrefixOf(filePath)) {
-									filePath = filePath.removeFirstSegments(
-											linkPath.segmentCount()).setDevice(
-											null);
-									relativePath = relativePath
-											.append(filePath);
+									filePath = filePath.removeFirstSegments(linkPath.segmentCount()).setDevice(null);
+									relativePath = relativePath.append(filePath);
 
 									IFile file = null;
 									if (debugTarget instanceof PHPDebugTarget) {
-										file = ((PHPDebugTarget) debugTarget)
-												.getProject().getFile(
-														relativePath);
+										file = ((PHPDebugTarget) debugTarget).getProject().getFile(relativePath);
 									} else {
 										// not sure what the logic here is
 										// trying to achieve but it

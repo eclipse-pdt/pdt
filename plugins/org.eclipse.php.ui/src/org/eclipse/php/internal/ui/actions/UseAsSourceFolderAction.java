@@ -82,8 +82,7 @@ public class UseAsSourceFolderAction extends Action {
 		// check if any of the selected library folders is an explicitly
 		// disabled library folder
 		for (IFolder folder : fFolders) {
-			IFolder explicitlyDisabledParent = lfm
-					.getExplicitlyDisabledParent(folder);
+			IFolder explicitlyDisabledParent = lfm.getExplicitlyDisabledParent(folder);
 			explicitlyDisabledFolders.add(explicitlyDisabledParent);
 
 			if (!folder.equals(explicitlyDisabledParent)) {
@@ -95,14 +94,12 @@ public class UseAsSourceFolderAction extends Action {
 			}
 		}
 
-		final IFolder[] folders = explicitlyDisabledFolders
-				.toArray(new IFolder[explicitlyDisabledFolders.size()]);
+		final IFolder[] folders = explicitlyDisabledFolders.toArray(new IFolder[explicitlyDisabledFolders.size()]);
 
 		if (askForConfirmation) {
 			// show the confirmation dialog
 			String title = Messages.LibraryFolderAction_Dialog_title;
-			String message = NLS.bind(
-					Messages.LibraryFolderAction_Dialog_description,
+			String message = NLS.bind(Messages.LibraryFolderAction_Dialog_description,
 					StringUtils.join(getSortedPaths(folders), ",\n\t"));
 
 			if (!MessageDialog.openConfirm(fSite.getShell(), title, message))
@@ -115,10 +112,8 @@ public class UseAsSourceFolderAction extends Action {
 		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 			@Override
 			protected void execute(IProgressMonitor monitor)
-					throws CoreException, InvocationTargetException,
-					InterruptedException {
-				LibraryFolderManager.getInstance().useAsSourceFolder(folders,
-						monitor);
+					throws CoreException, InvocationTargetException, InterruptedException {
+				LibraryFolderManager.getInstance().useAsSourceFolder(folders, monitor);
 			}
 		};
 

@@ -55,9 +55,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
  * Action to do simple code evaluation. The evaluation is done in the UI thread
  * and the expression and result are displayed using the IDataDisplay.
  */
-public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
-		IObjectActionDelegate, IEditorActionDelegate, IPartListener,
-		IViewActionDelegate {
+public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObjectActionDelegate, IEditorActionDelegate,
+		IPartListener, IViewActionDelegate {
 
 	/**
 	 * Handler that delegates execution to original command.
@@ -76,15 +75,13 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 			IWorkbenchSite activeSite = HandlerUtil.getActiveSite(event);
 			if (activeSite == null)
 				return null;
-			Command command = ((ICommandService) activeSite
-					.getService(ICommandService.class))
-							.getCommand(ACTION_DEFININITION_ID);
+			Command command = ((ICommandService) activeSite.getService(ICommandService.class))
+					.getCommand(ACTION_DEFININITION_ID);
 			if (!command.isEnabled())
 				return null;
 			final Event trigger = new Event();
-			ExecutionEvent executionEvent = ((IHandlerService) activeSite
-					.getService(IHandlerService.class))
-							.createExecutionEvent(command, trigger);
+			ExecutionEvent executionEvent = ((IHandlerService) activeSite.getService(IHandlerService.class))
+					.createExecutionEvent(command, trigger);
 			try {
 				command.executeWithChecks(executionEvent);
 			} catch (CommandException e) {
@@ -208,8 +205,7 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 				}
 
 				public Object getAdapter(Class adapter) {
-					return AdapterManager.getDefault()
-							.getAdapter(this, adapter);
+					return AdapterManager.getDefault().getAdapter(this, adapter);
 				}
 
 				public String getExpressionText() {
@@ -225,8 +221,7 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 					if (value != null) {
 						return getValue().getDebugTarget();
 					} else if (result instanceof IWatchExpressionResultExtension) {
-						return ((IWatchExpressionResultExtension) result)
-								.getDebugTarget();
+						return ((IWatchExpressionResultExtension) result).getDebugTarget();
 					}
 					// An expression should never be created with a null value
 					// *and*
@@ -253,18 +248,17 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 			fTextEditor = (ITextEditor) part;
 			fSelectionBeforeEvaluation = getTargetSelection();
 		}
-		DebugPopup displayPopup = new InspectPopupDialog(getShell(),
-				getPopupAnchor(textWidget), ACTION_DEFININITION_ID, expression) {
+		DebugPopup displayPopup = new InspectPopupDialog(getShell(), getPopupAnchor(textWidget), ACTION_DEFININITION_ID,
+				expression) {
 			IContextActivation contextActivation;
 
 			@Override
 			protected Control createDialogArea(Composite parent) {
 				Control result = super.createDialogArea(parent);
 				if (fTextEditor != null) {
-					IContextService contextService = (IContextService) fTextEditor
-							.getSite().getService(IContextService.class);
-					contextActivation = contextService
-							.activateContext("org.eclipse.php.debug.ui.xdebug"); //$NON-NLS-1$
+					IContextService contextService = (IContextService) fTextEditor.getSite()
+							.getService(IContextService.class);
+					contextActivation = contextService.activateContext("org.eclipse.php.debug.ui.xdebug"); //$NON-NLS-1$
 				}
 				return result;
 			}
@@ -272,8 +266,7 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 			public boolean close() {
 				boolean returnValue = super.close();
 				if (fTextEditor != null && fSelectionBeforeEvaluation != null) {
-					fTextEditor.getSelectionProvider().setSelection(
-							fSelectionBeforeEvaluation);
+					fTextEditor.getSelectionProvider().setSelection(fSelectionBeforeEvaluation);
 					fTextEditor = null;
 					fSelectionBeforeEvaluation = null;
 				}
@@ -300,21 +293,18 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 		setNewTargetPart(getTargetPart());
 		if (watchExpressionListener == null) {
 			watchExpressionListener = new IWatchExpressionListener() {
-				public void watchEvaluationFinished(
-						IWatchExpressionResult result) {
+				public void watchEvaluationFinished(IWatchExpressionResult result) {
 					evaluationComplete(result);
 				}
 			};
 		}
 		if (stackFrame instanceof DBGpStackFrame) {
 
-			new XDebugWatchExpressionDelegate().evaluateExpression(expression,
-					stackFrame, watchExpressionListener);
+			new XDebugWatchExpressionDelegate().evaluateExpression(expression, stackFrame, watchExpressionListener);
 
 		} else if (stackFrame instanceof PHPStackFrame) {
 
-			new PHPWatchExpressionDelegate().evaluateExpression(expression,
-					stackFrame, watchExpressionListener);
+			new PHPWatchExpressionDelegate().evaluateExpression(expression, stackFrame, watchExpressionListener);
 		}
 
 	}
@@ -348,11 +338,9 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 		if (sourceElement == null) {
 			return false;
 		}
-		IEditorInput sfEditorInput = getDebugModelPresentation()
-				.getEditorInput(sourceElement);
+		IEditorInput sfEditorInput = getDebugModelPresentation().getEditorInput(sourceElement);
 		if (getTargetPart() instanceof IEditorPart) {
-			return ((IEditorPart) getTargetPart()).getEditorInput().equals(
-					sfEditorInput);
+			return ((IEditorPart) getTargetPart()).getEditorInput().equals(sfEditorInput);
 		}
 		return false;
 	}
@@ -441,8 +429,7 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 	 */
 	protected IDebugModelPresentation getDebugModelPresentation() {
 		if (fPresentation == null) {
-			fPresentation = DebugUITools
-					.newDebugModelPresentation(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
+			fPresentation = DebugUITools.newDebugModelPresentation(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
 		}
 		return fPresentation;
 	}

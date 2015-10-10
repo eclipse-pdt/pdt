@@ -37,8 +37,7 @@ public class DaemonPlugin extends Plugin {
 	public static final boolean isDebugMode;
 
 	static {
-		String value = Platform
-				.getDebugOption("org.eclipse.php.debug.daemon/debug"); //$NON-NLS-1$
+		String value = Platform.getDebugOption("org.eclipse.php.debug.daemon/debug"); //$NON-NLS-1$
 		isDebugMode = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 
@@ -96,8 +95,8 @@ public class DaemonPlugin extends Plugin {
 		}
 		if (daemons != null) {
 			for (int i = 0; i < daemons.length; i++) {
-				if (debuggerID == null || (daemons[i].isDebuggerDaemon()
-						&& debuggerID.equals(daemons[i].getDebuggerID()))) {
+				if (debuggerID == null
+						|| (daemons[i].isDebuggerDaemon() && debuggerID.equals(daemons[i].getDebuggerID()))) {
 					daemons[i].init();
 					daemons[i].startListen();
 				}
@@ -108,8 +107,8 @@ public class DaemonPlugin extends Plugin {
 	public boolean isInitialized(String debuggerID) {
 		if (daemons != null) {
 			for (int i = 0; i < daemons.length; i++) {
-				if (debuggerID == null || (daemons[i].isDebuggerDaemon()
-						&& debuggerID.equals(daemons[i].getDebuggerID()))) {
+				if (debuggerID == null
+						|| (daemons[i].isDebuggerDaemon() && debuggerID.equals(daemons[i].getDebuggerID()))) {
 					if (!daemons[i].isInitialized()) {
 						return false;
 					}
@@ -147,8 +146,8 @@ public class DaemonPlugin extends Plugin {
 	public void stopDaemons(String debuggerID) {
 		if (daemons != null) {
 			for (int i = 0; i < daemons.length; i++) {
-				if (debuggerID == null || (daemons[i].isDebuggerDaemon()
-						&& debuggerID.equals(daemons[i].getDebuggerID()))) {
+				if (debuggerID == null
+						|| (daemons[i].isDebuggerDaemon() && debuggerID.equals(daemons[i].getDebuggerID()))) {
 					daemons[i].stopListen();
 				}
 			}
@@ -186,8 +185,8 @@ public class DaemonPlugin extends Plugin {
 		boolean validated = true;
 		if (daemons != null) {
 			for (int i = 0; i < daemons.length; i++) {
-				if (debuggerID == null || (daemons[i].isDebuggerDaemon()
-						&& debuggerID.equals(daemons[i].getDebuggerID()))) {
+				if (debuggerID == null
+						|| (daemons[i].isDebuggerDaemon() && debuggerID.equals(daemons[i].getDebuggerID()))) {
 					if (!daemons[i].isListening(port)) {
 						// Try to restart daemons
 						daemons[i].resetSocket();
@@ -218,8 +217,7 @@ public class DaemonPlugin extends Plugin {
 	}
 
 	public static void log(Throwable e) {
-		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR,
-				"Debug Daemon plugin internal error", e)); //$NON-NLS-1$
+		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR, "Debug Daemon plugin internal error", e)); //$NON-NLS-1$
 	}
 
 	public static void logErrorMessage(String message) {

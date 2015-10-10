@@ -45,8 +45,7 @@ public abstract class IncludepathRenameParticipant extends RenameParticipant {
 	 * initialize(java.lang.Object)
 	 */
 	protected boolean initialize(Object element) {
-		if (element instanceof IModelElement
-				&& accepts((IModelElement) element)) {
+		if (element instanceof IModelElement && accepts((IModelElement) element)) {
 			fElement = (IModelElement) element;
 		} else {
 			return false;
@@ -90,8 +89,8 @@ public abstract class IncludepathRenameParticipant extends RenameParticipant {
 	 * checkConditions(org.eclipse.core.runtime.IProgressMonitor,
 	 * org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
-	public RefactoringStatus checkConditions(IProgressMonitor pm,
-			CheckConditionsContext context) throws OperationCanceledException {
+	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context)
+			throws OperationCanceledException {
 		return new RefactoringStatus();
 	}
 
@@ -102,8 +101,7 @@ public abstract class IncludepathRenameParticipant extends RenameParticipant {
 	 * org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#
 	 * createChange(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public Change createChange(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		List changes = new ArrayList();
 		IResource resource = getBreakpointContainer();
 		gatherChanges(resource, changes, getArguments().getNewName());
@@ -129,8 +127,8 @@ public abstract class IncludepathRenameParticipant extends RenameParticipant {
 	 * @throws CoreException
 	 * @throws OperationCanceledException
 	 */
-	protected abstract void gatherChanges(IResource resource, List changes,
-			String destName) throws CoreException, OperationCanceledException;
+	protected abstract void gatherChanges(IResource resource, List changes, String destName)
+			throws CoreException, OperationCanceledException;
 
 	/**
 	 * Returns the resource that should be considered when searching for

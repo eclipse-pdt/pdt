@@ -36,8 +36,7 @@ import org.eclipse.wst.common.project.facet.core.util.FilterEvent;
 import org.eclipse.wst.common.project.facet.core.util.IFilter;
 import org.eclipse.wst.common.project.facet.ui.PresetSelectionPanel;
 
-public class PHPProjectWizardFacetsPage extends NewElementWizardPage implements
-		IPHPProjectCreateWizardPage {
+public class PHPProjectWizardFacetsPage extends NewElementWizardPage implements IPHPProjectCreateWizardPage {
 
 	private PHPProjectWizardFirstPage fFirstPage;
 
@@ -90,18 +89,15 @@ public class PHPProjectWizardFacetsPage extends NewElementWizardPage implements
 			}
 
 			public boolean check(final IPreset preset) {
-				final IProjectFacetVersion primaryFacetVersion = PHPFacets
-						.getCoreVersion();
+				final IProjectFacetVersion primaryFacetVersion = PHPFacets.getCoreVersion();
 				return preset.getProjectFacets().contains(primaryFacetVersion);
 			}
 
-			private void handleProjectFacetsChangedEvent(
-					final IProjectFacetsChangedEvent event) {
-				for (IProjectFacetVersion fv : event
-						.getFacetsWithChangedVersions()) {
+			private void handleProjectFacetsChangedEvent(final IProjectFacetsChangedEvent event) {
+				for (IProjectFacetVersion fv : event.getFacetsWithChangedVersions()) {
 					if (fv.getProjectFacet() == PHPFacets.getCoreVersion()) {
-						final IFilterEvent<IPreset> filterEvent = new FilterEvent<IPreset>(
-								this, IFilterEvent.Type.FILTER_CHANGED);
+						final IFilterEvent<IPreset> filterEvent = new FilterEvent<IPreset>(this,
+								IFilterEvent.Type.FILTER_CHANGED);
 
 						notifyListeners(filterEvent);
 					}
@@ -177,10 +173,8 @@ public class PHPProjectWizardFacetsPage extends NewElementWizardPage implements
 	}
 
 	private void internalInit() {
-		this.fpjwc.addListener(this.fpjwcListener,
-				IFacetedProjectEvent.Type.VALIDATION_PROBLEMS_CHANGED);
-		this.fpjwc.addListener(fpjwcListenerForPreset,
-				IFacetedProjectEvent.Type.PROJECT_FACETS_CHANGED);
+		this.fpjwc.addListener(this.fpjwcListener, IFacetedProjectEvent.Type.VALIDATION_PROBLEMS_CHANGED);
+		this.fpjwc.addListener(fpjwcListenerForPreset, IFacetedProjectEvent.Type.PROJECT_FACETS_CHANGED);
 	}
 
 	public void initPage() {
@@ -190,11 +184,8 @@ public class PHPProjectWizardFacetsPage extends NewElementWizardPage implements
 				ppanel.setVisible(false);
 				ppanel.dispose();
 			}
-			PHPFacets.createFacetedProject(project,
-					this.fFirstPage.getPHPVersionValue(),
-					new NullProgressMonitor());
-			this.fpjwc = ProjectFacetsManager.create(project)
-					.createWorkingCopy();
+			PHPFacets.createFacetedProject(project, this.fFirstPage.getPHPVersionValue(), new NullProgressMonitor());
+			this.fpjwc = ProjectFacetsManager.create(project).createWorkingCopy();
 			createPresetPanel(ppanelParent);
 			checkTabChanges();
 			top.layout(true);

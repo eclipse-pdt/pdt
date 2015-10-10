@@ -44,8 +44,8 @@ public class JFaceNodeAdapterForPHP extends JFaceNodeAdapterForHTML {
 		return fRefreshJob;
 	}
 
-	public void notifyChanged(INodeNotifier notifier, int eventType,
-			Object changedFeature, Object oldValue, Object newValue, int pos) {
+	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue,
+			Object newValue, int pos) {
 
 		if (notifier instanceof Node) {
 			Collection listeners = fAdapterFactory.getListeners();
@@ -53,15 +53,13 @@ public class JFaceNodeAdapterForPHP extends JFaceNodeAdapterForHTML {
 
 			while (iterator.hasNext()) {
 				Object listener = iterator.next();
-				if ((listener instanceof StructuredViewer)
-						&& (eventType == INodeNotifier.STRUCTURE_CHANGED
-								|| eventType == INodeNotifier.CONTENT_CHANGED || (eventType == INodeNotifier.CHANGE))) {
+				if ((listener instanceof StructuredViewer) && (eventType == INodeNotifier.STRUCTURE_CHANGED
+						|| eventType == INodeNotifier.CONTENT_CHANGED || (eventType == INodeNotifier.CHANGE))) {
 					// refresh on structural and "unknown" changes
 					StructuredViewer structuredViewer = (StructuredViewer) listener;
 
 					if (structuredViewer.getControl() != null) {
-						getRefreshJob().refresh(structuredViewer,
-								(Node) notifier);
+						getRefreshJob().refresh(structuredViewer, (Node) notifier);
 					}
 				}
 			}

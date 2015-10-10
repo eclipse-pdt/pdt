@@ -57,8 +57,7 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 				textEditor = (ITextEditor) o;
 		}
 		if (textEditor != null) {
-			IDocument document = textEditor.getDocumentProvider().getDocument(
-					textEditor.getEditorInput());
+			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 			if (document != null) {
 				// get current text selection
 				ITextSelection textSelection = getCurrentSelection(textEditor);
@@ -76,25 +75,21 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 						return addBlockCommentHandlerWST.execute(event);
 					}
 
-					IStructuredDocumentRegion sdRegion = sDoc
-							.getRegionAtCharacterOffset(selectionOffset);
-					ITextRegion textRegion = sdRegion
-							.getRegionAtCharacterOffset(selectionOffset);
+					IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selectionOffset);
+					ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selectionOffset);
 
 					ITextRegionCollection container = sdRegion;
 
 					if (textRegion instanceof ITextRegionContainer) {
 						container = (ITextRegionContainer) textRegion;
-						textRegion = container
-								.getRegionAtCharacterOffset(selectionOffset);
+						textRegion = container.getRegionAtCharacterOffset(selectionOffset);
 					}
 					boolean isJavaScriptRegion = false;
 
 					if (textRegion instanceof ForeignRegion) {
 						isJavaScriptRegion = (textRegion.getType() == DOMRegionContext.BLOCK_TEXT);
 					}
-					if (textRegion == null
-							|| textRegion.getType() == PHPRegionContext.PHP_CONTENT
+					if (textRegion == null || textRegion.getType() == PHPRegionContext.PHP_CONTENT
 							|| isJavaScriptRegion) {
 						processAction(textEditor, document, textSelection);
 					} else {
@@ -107,20 +102,16 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 		return null;
 	}
 
-	void processAction(ITextEditor textEditor, IDocument document,
-			ITextSelection textSelection) {
+	void processAction(ITextEditor textEditor, IDocument document, ITextSelection textSelection) {
 		// get text selection lines info
 		int selectionStartLine = textSelection.getStartLine();
 		int selectionEndLine = textSelection.getEndLine();
 		try {
-			int selectionEndLineOffset = document
-					.getLineOffset(selectionEndLine);
-			int selectionEndOffset = textSelection.getOffset()
-					+ textSelection.getLength();
+			int selectionEndLineOffset = document.getLineOffset(selectionEndLine);
+			int selectionEndOffset = textSelection.getOffset() + textSelection.getLength();
 
 			// adjust selection end line
-			if ((selectionEndLine > selectionStartLine)
-					&& (selectionEndLineOffset == selectionEndOffset)) {
+			if ((selectionEndLine > selectionStartLine) && (selectionEndLineOffset == selectionEndOffset)) {
 				selectionEndLine--;
 			}
 
@@ -135,17 +126,13 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 		boolean updateStartOffset = false;
 		try {
 			start = getLinePosition(document, textSelection.getOffset());
-			end = getLinePosition(document, textSelection.getOffset()
-					+ textSelection.getLength());
-			selectionPosition = new Position(textSelection.getOffset(),
-					textSelection.getLength());
+			end = getLinePosition(document, textSelection.getOffset() + textSelection.getLength());
+			selectionPosition = new Position(textSelection.getOffset(), textSelection.getLength());
 			document.addPosition(selectionPosition);
 
 			// extra check if commenting from beginning of line
-			int selectionStartLineOffset = document
-					.getLineOffset(selectionStartLine);
-			if ((textSelection.getLength() > 0)
-					&& (selectionStartLineOffset == textSelection.getOffset())
+			int selectionStartLineOffset = document.getLineOffset(selectionStartLine);
+			if ((textSelection.getLength() > 0) && (selectionStartLineOffset == textSelection.getOffset())
 					&& !isCommentLine(document, selectionStartLine)) {
 				updateStartOffset = true;
 			}
@@ -155,12 +142,10 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 
 		processAction(document, selectionStartLine, selectionEndLine);
 
-		updateCurrentSelection(textEditor, selectionPosition, start, end,
-				document, updateStartOffset);
+		updateCurrentSelection(textEditor, selectionPosition, start, end, document, updateStartOffset);
 	}
 
-	private LinePosition getLinePosition(IDocument document, int offset)
-			throws BadLocationException {
+	private LinePosition getLinePosition(IDocument document, int offset) throws BadLocationException {
 		LinePosition result = new LinePosition();
 		int line = document.getLineOfOffset(offset);
 		result.line = line;
@@ -168,8 +153,7 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 		return result;
 	}
 
-	private int getOffset(IDocument document, LinePosition position)
-			throws BadLocationException {
+	private int getOffset(IDocument document, LinePosition position) throws BadLocationException {
 		int result;
 		int lineLength = document.getLineLength(position.line);
 		if (position.offset <= lineLength) {
@@ -180,10 +164,8 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 		return result;
 	}
 
-	private void processAction(IDocument document, int selectionStartLine,
-			int selectionEndLine) {
-		IStructuredModel model = StructuredModelManager.getModelManager()
-				.getExistingModelForEdit(document);
+	private void processAction(IDocument document, int selectionStartLine, int selectionEndLine) {
+		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
 		if (model != null) {
 			try {
 				model.beginRecording(this, PHPUIMessages.ToggleComment_tooltip);
@@ -210,11 +192,9 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 
 				// If all lines are commented, uncomment all lines:
 				if (allLinesCommented) {
-					uncommentMultiLine(document, selectionStartLine,
-							selectionEndLine);
+					uncommentMultiLine(document, selectionStartLine, selectionEndLine);
 				} else { // comment all lines
-					commentMultiLine(document, selectionStartLine,
-							selectionEndLine);
+					commentMultiLine(document, selectionStartLine, selectionEndLine);
 				}
 			} finally {
 				model.changedModel();
@@ -224,16 +204,14 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 		}
 	}
 
-	private void updateCurrentSelection(ITextEditor textEditor,
-			Position selectionPosition, LinePosition start, LinePosition end,
-			IDocument document, boolean updateStartOffset) {
+	private void updateCurrentSelection(ITextEditor textEditor, Position selectionPosition, LinePosition start,
+			LinePosition end, IDocument document, boolean updateStartOffset) {
 		// update the selection if text selection changed
 		if (start != null && end != null) {
 			ITextSelection selection = null;
 			try {
 				int offset = getOffset(document, start);
-				selection = new TextSelection(document, offset, getOffset(
-						document, end) - offset);
+				selection = new TextSelection(document, offset, getOffset(document, end) - offset);
 			} catch (BadLocationException e) {
 				PHPUiPlugin.log(e);
 			}

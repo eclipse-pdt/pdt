@@ -87,11 +87,9 @@ public class PHPFileOperationActionGroup extends ActionGroup {
 
 		fDeleteAction = new DeleteAction(fSite);
 		fDeleteAction.setId(IWorkbenchActionDefinitionIds.DELETE);
-		fDeleteAction
-				.setActionDefinitionId(IWorkbenchActionDefinitionIds.DELETE);
+		fDeleteAction.setActionDefinitionId(IWorkbenchActionDefinitionIds.DELETE);
 
-		fActions = new SelectionDispatchAction[] { fCopyAction, fPasteAction,
-				fDeleteAction };
+		fActions = new SelectionDispatchAction[] { fCopyAction, fPasteAction, fDeleteAction };
 		registerActionsAsSelectionChangeListeners();
 	}
 
@@ -127,12 +125,9 @@ public class PHPFileOperationActionGroup extends ActionGroup {
 	 */
 	public void fillActionBars(IActionBars actionBars) {
 		super.fillActionBars(actionBars);
-		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(),
-				fDeleteAction);
-		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(),
-				fCopyAction);
-		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(),
-				fPasteAction);
+		actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), fDeleteAction);
+		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), fCopyAction);
+		actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), fPasteAction);
 	}
 
 	/*

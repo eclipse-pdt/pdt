@@ -61,10 +61,8 @@ public class BroadcastConnection {
 			try {
 				inputStream = socket.getInputStream();
 				outputStream = socket.getOutputStream();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream));
-				PrintWriter writer = new PrintWriter(
-						new OutputStreamWriter(outputStream));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+				PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream));
 				List<String> requestLines = new ArrayList<String>();
 				String currentLine;
 				while (true) {
@@ -73,8 +71,7 @@ public class BroadcastConnection {
 						break;
 					requestLines.add(currentLine);
 				}
-				String firstLine = requestLines.isEmpty() ? null
-						: requestLines.get(0);
+				String firstLine = requestLines.isEmpty() ? null : requestLines.get(0);
 				String host;
 				int port;
 				Server server = lookupServer(requestLines);
@@ -257,8 +254,7 @@ public class BroadcastConnection {
 	protected boolean isBiggerOrEqual(String value, String baseVersion) {
 		if (value == null)
 			return false;
-		return VersionUtils.equal(value, baseVersion, 3)
-				|| VersionUtils.greater(value, baseVersion, 3);
+		return VersionUtils.equal(value, baseVersion, 3) || VersionUtils.greater(value, baseVersion, 3);
 	}
 
 	protected String getPlatformValue(String line) {
@@ -283,8 +279,7 @@ public class BroadcastConnection {
 		return STANDARD_HTTP_RESPONSE;
 	}
 
-	protected String getResponseString(boolean addQuestionMark, String host,
-			int port) {
+	protected String getResponseString(boolean addQuestionMark, String host, int port) {
 		String result = addQuestionMark ? "?" : "&"; //$NON-NLS-1$ //$NON-NLS-2$
 		result += DEBUG_PORT + '=' + port;
 		result += '&' + DEBUG_HOST + '=' + host;
@@ -293,8 +288,7 @@ public class BroadcastConnection {
 		return result;
 	}
 
-	protected String getJSonResponseString(boolean addQuestionMark, String host,
-			int port) {
+	protected String getJSonResponseString(boolean addQuestionMark, String host, int port) {
 		String result = null;
 		JSONDescriptor descriptor = new JSONDescriptor();
 		descriptor.put(DEBUG_HOST, JSONDescriptor.quote(host));
@@ -305,17 +299,14 @@ public class BroadcastConnection {
 		return result;
 	}
 
-	protected String getHTMLContent(String platformValue, String host,
-			int port) {
+	protected String getHTMLContent(String platformValue, String host, int port) {
 		String platformPath = platformValue;
 		// There is no http:// or https:// in the value
 		if (platformValue.indexOf("://") == -1) //$NON-NLS-1$
 			platformPath = "http://" + platformValue; //$NON-NLS-1$
 		// Add question mark if not exists
-		platformPath += getResponseString(platformValue.indexOf('?') == -1,
-				host, port);
-		String htmlContent = MessageFormat.format(
-				Messages.BroadcastConnection_HTML_content_message, platformPath,
+		platformPath += getResponseString(platformValue.indexOf('?') == -1, host, port);
+		String htmlContent = MessageFormat.format(Messages.BroadcastConnection_HTML_content_message, platformPath,
 				platformPath);
 		return htmlContent;
 	}
@@ -334,11 +325,10 @@ public class BroadcastConnection {
 
 	protected String lookupHosts(Server server) {
 		if (server != null) {
-			IDebuggerSettings settings = DebuggerSettingsManager.INSTANCE
-					.findSettings(server.getUniqueId(), server.getDebuggerId());
+			IDebuggerSettings settings = DebuggerSettingsManager.INSTANCE.findSettings(server.getUniqueId(),
+					server.getDebuggerId());
 			if (settings instanceof ZendDebuggerServerSettings) {
-				return ZendDebuggerSettingsUtil
-						.getDebugHosts(server.getUniqueId());
+				return ZendDebuggerSettingsUtil.getDebugHosts(server.getUniqueId());
 			}
 		}
 		return PHPDebugUtil.getZendAllHosts();
@@ -346,15 +336,13 @@ public class BroadcastConnection {
 
 	protected int lookupPort(Server server) {
 		if (server != null) {
-			IDebuggerSettings settings = DebuggerSettingsManager.INSTANCE
-					.findSettings(server.getUniqueId(), server.getDebuggerId());
+			IDebuggerSettings settings = DebuggerSettingsManager.INSTANCE.findSettings(server.getUniqueId(),
+					server.getDebuggerId());
 			if (settings instanceof ZendDebuggerServerSettings) {
-				return ZendDebuggerSettingsUtil
-						.getDebugPort(server.getUniqueId());
+				return ZendDebuggerSettingsUtil.getDebugPort(server.getUniqueId());
 			}
 		}
-		return PHPDebugPlugin
-				.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+		return PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 	}
 
 }

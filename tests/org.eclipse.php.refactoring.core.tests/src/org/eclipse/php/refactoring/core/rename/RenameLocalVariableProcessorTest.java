@@ -26,9 +26,9 @@ public class RenameLocalVariableProcessorTest extends AbstractRenameRefactoringT
 	public RenameLocalVariableProcessorTest(String[] fileNames) {
 		super(fileNames);
 	}
-	
+
 	@PDTTList.Parameters
-	public static String[] dirs = {"/resources/rename/renameLocalVar/"}; //$NON-NLS-1$
+	public static String[] dirs = { "/resources/rename/renameLocalVar/" }; //$NON-NLS-1$
 
 	@Test
 	public void test(String fileName) throws Exception {
@@ -51,6 +51,6 @@ public class RenameLocalVariableProcessorTest extends AbstractRenameRefactoringT
 		checkInitCondition(processor);
 		performChange(processor);
 		checkTestResult(testFile);
-		
+
 	}
 }

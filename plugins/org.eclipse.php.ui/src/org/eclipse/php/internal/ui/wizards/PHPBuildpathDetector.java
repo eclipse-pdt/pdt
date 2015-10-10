@@ -24,8 +24,7 @@ import org.eclipse.dltk.internal.ui.wizards.BuildpathDetector;
  */
 public class PHPBuildpathDetector extends BuildpathDetector {
 
-	public PHPBuildpathDetector(IProject project, IDLTKLanguageToolkit toolkit)
-			throws CoreException {
+	public PHPBuildpathDetector(IProject project, IDLTKLanguageToolkit toolkit) throws CoreException {
 		super(project, toolkit);
 	}
 

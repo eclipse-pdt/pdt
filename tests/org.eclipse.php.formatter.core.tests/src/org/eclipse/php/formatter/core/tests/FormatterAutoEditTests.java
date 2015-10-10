@@ -41,6 +41,7 @@ public class FormatterAutoEditTests extends FormatterTests {
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/formatter-autoedit/php5" });
 	};

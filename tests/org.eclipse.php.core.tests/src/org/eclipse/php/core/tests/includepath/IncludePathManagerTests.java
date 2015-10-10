@@ -44,8 +44,7 @@ public class IncludePathManagerTests {
 		// Initialize include path manager:
 		IncludePathManager.getInstance();
 
-		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("IncludePathManagerTests");
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject("IncludePathManagerTests");
 		if (project.exists()) {
 			return;
 		}
@@ -70,8 +69,7 @@ public class IncludePathManagerTests {
 		IScriptProject scriptProject = DLTKCore.create(project);
 		scriptProject.setRawBuildpath(new IBuildpathEntry[0], null);
 
-		IncludePath[] includePath = IncludePathManager.getInstance()
-				.getIncludePaths(project);
+		IncludePath[] includePath = IncludePathManager.getInstance().getIncludePaths(project);
 		assertTrue(includePath.length == 0);
 	}
 
@@ -83,11 +81,9 @@ public class IncludePathManagerTests {
 		folder.create(true, true, null);
 
 		IScriptProject scriptProject = DLTKCore.create(project);
-		scriptProject.setRawBuildpath(new IBuildpathEntry[] { DLTKCore
-				.newSourceEntry(folder.getFullPath()) }, null);
+		scriptProject.setRawBuildpath(new IBuildpathEntry[] { DLTKCore.newSourceEntry(folder.getFullPath()) }, null);
 
-		IncludePath[] includePath = IncludePathManager.getInstance()
-				.getIncludePaths(project);
+		IncludePath[] includePath = IncludePathManager.getInstance().getIncludePaths(project);
 		assertTrue(includePath.length == 0);
 	}
 
@@ -100,21 +96,17 @@ public class IncludePathManagerTests {
 
 		IScriptProject scriptProject = DLTKCore.create(project);
 		scriptProject.setRawBuildpath(
-				new IBuildpathEntry[] { DLTKCore
-						.newExtLibraryEntry(EnvironmentPathUtils.getFullPath(
-								LocalEnvironment.getInstance(), new Path(
-										libraryPath))) }, null);
+				new IBuildpathEntry[] { DLTKCore.newExtLibraryEntry(
+						EnvironmentPathUtils.getFullPath(LocalEnvironment.getInstance(), new Path(libraryPath))) },
+				null);
 
-		IncludePath[] includePath = IncludePathManager.getInstance()
-				.getIncludePaths(project);
+		IncludePath[] includePath = IncludePathManager.getInstance().getIncludePaths(project);
 
 		assertTrue(includePath.length == 1);
 		assertTrue(includePath[0].isBuildpath());
 		assertEquals(
-				EnvironmentPathUtils
-						.getLocalPath(
-								((IBuildpathEntry) includePath[0].getEntry())
-										.getPath()).toOSString(), libraryPath);
+				EnvironmentPathUtils.getLocalPath(((IBuildpathEntry) includePath[0].getEntry()).getPath()).toOSString(),
+				libraryPath);
 	}
 
 	// This test checks how include path changes are saved:
@@ -129,8 +121,7 @@ public class IncludePathManagerTests {
 		IncludePathManager manager = IncludePathManager.getInstance();
 		IncludePath[] includePath = manager.getIncludePaths(project);
 		int count = includePath.length;
-		System.arraycopy(includePath, 0,
-				includePath = new IncludePath[count + 1], 0, count);
+		System.arraycopy(includePath, 0, includePath = new IncludePath[count + 1], 0, count);
 		includePath[count] = new IncludePath(folder, project);
 
 		setIncludePath(manager, includePath);
@@ -141,8 +132,7 @@ public class IncludePathManagerTests {
 		assertEquals(((IResource) includePath[0].getEntry()), folder);
 	}
 
-	private void setIncludePath(IncludePathManager manager,
-			IncludePath[] includePath) {
+	private void setIncludePath(IncludePathManager manager, IncludePath[] includePath) {
 		IncludePathWaiter waiter = new IncludePathWaiter();
 		manager.registerIncludepathListener(waiter);
 		manager.setIncludePath(project, includePath);

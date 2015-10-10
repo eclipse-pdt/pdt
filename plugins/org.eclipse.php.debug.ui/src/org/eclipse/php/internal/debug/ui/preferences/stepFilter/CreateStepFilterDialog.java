@@ -44,8 +44,7 @@ public class CreateStepFilterDialog extends StatusDialog {
 	private boolean okClicked;
 	private DebugStepFilter[] existingFilters;
 
-	private CreateStepFilterDialog(Shell parent, DebugStepFilter filter,
-			DebugStepFilter[] existingFilters) {
+	private CreateStepFilterDialog(Shell parent, DebugStepFilter filter, DebugStepFilter[] existingFilters) {
 		super(parent);
 		setShellStyle(getShellStyle());
 		this.filter = filter;
@@ -55,11 +54,9 @@ public class CreateStepFilterDialog extends StatusDialog {
 
 	}
 
-	static DebugStepFilter showCreateStepFilterDialog(Shell parent,
-			DebugStepFilter[] existingFilters) {
-		CreateStepFilterDialog createStepFilterDialog = new CreateStepFilterDialog(
-				parent, new DebugStepFilter(IStepFilterTypes.PATH_PATTERN,
-						true, false, ""), existingFilters); //$NON-NLS-1$
+	static DebugStepFilter showCreateStepFilterDialog(Shell parent, DebugStepFilter[] existingFilters) {
+		CreateStepFilterDialog createStepFilterDialog = new CreateStepFilterDialog(parent,
+				new DebugStepFilter(IStepFilterTypes.PATH_PATTERN, true, false, ""), existingFilters); //$NON-NLS-1$
 		createStepFilterDialog.create();
 		createStepFilterDialog.open();
 
@@ -67,11 +64,9 @@ public class CreateStepFilterDialog extends StatusDialog {
 	}
 
 	protected void createButtonsForButtonBar(Composite parent) {
-		okButton = createButton(parent, IDialogConstants.OK_ID,
-				IDialogConstants.OK_LABEL, true);
+		okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		okButton.setEnabled(false);
-		createButton(parent, IDialogConstants.CANCEL_ID,
-				IDialogConstants.CANCEL_LABEL, false);
+		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 
 	protected Control createDialogArea(Composite parent) {
@@ -85,8 +80,7 @@ public class CreateStepFilterDialog extends StatusDialog {
 
 		int textStyles = SWT.SINGLE | SWT.LEFT;
 		Label label = new Label(container, textStyles);
-		label
-				.setText(PHPDebugUIMessages.CreateStepFilterDialog_patternToFilter);
+		label.setText(PHPDebugUIMessages.CreateStepFilterDialog_patternToFilter);
 		label.setFont(container.getFont());
 
 		// create & configure Text widget for editor
@@ -112,13 +106,11 @@ public class CreateStepFilterDialog extends StatusDialog {
 			public void modifyText(ModifyEvent e) {
 				validateChange();
 				if (!filterValid) {
-					updateStatus(new StatusInfo(
-							IStatus.ERROR,
+					updateStatus(new StatusInfo(IStatus.ERROR,
 							PHPDebugUIMessages.CreateStepFilterDialog_invalidPathPattern));
 					return;
 				} else if (isDuplicateFilter(text.getText().trim())) {
-					updateStatus(new StatusInfo(
-							IStatus.ERROR,
+					updateStatus(new StatusInfo(IStatus.ERROR,
 							PHPDebugUIMessages.CreateStepFilterDialog_stepFilterAlreadyExists));
 					return;
 				} else {
@@ -160,8 +152,7 @@ public class CreateStepFilterDialog extends StatusDialog {
 	private boolean validateInput(String trimmedValue) {
 		// validate '*' locations, we allow only at start and at the end
 		for (int i = 0; i < trimmedValue.length(); i++) {
-			if (trimmedValue.charAt(i) == '*' && i != 0
-					&& i != trimmedValue.length() - 1) {
+			if (trimmedValue.charAt(i) == '*' && i != 0 && i != trimmedValue.length() - 1) {
 				return false;
 			} else if (trimmedValue.charAt(i) == ':' && i != 1) {
 				return false;

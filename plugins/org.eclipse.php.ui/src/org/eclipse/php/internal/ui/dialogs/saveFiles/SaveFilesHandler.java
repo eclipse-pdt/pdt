@@ -29,8 +29,8 @@ import org.eclipse.ui.*;
  * 
  */
 public class SaveFilesHandler {
-	public static SaveFilesResult handle(IProject project, boolean autoSave,
-			boolean promptAutoSave, IProgressMonitor monitor) {
+	public static SaveFilesResult handle(IProject project, boolean autoSave, boolean promptAutoSave,
+			IProgressMonitor monitor) {
 		SaveFilesResult result = new SaveFilesResult();
 		List dirtyEditors = getDirtyEditors(project);
 		if (dirtyEditors == null || dirtyEditors.size() == 0) {
@@ -38,17 +38,14 @@ public class SaveFilesHandler {
 			return result;
 		}
 		if (!autoSave) {
-			Display.getDefault().syncExec(
-					new SaveFilesDialogRunnable(dirtyEditors, result,
-							promptAutoSave));
+			Display.getDefault().syncExec(new SaveFilesDialogRunnable(dirtyEditors, result, promptAutoSave));
 		} else {
 			result.setAccepted(true);
 			result.setSaved(dirtyEditors);
 		}
 		List editorsToSave = result.getSaved();
 		if (editorsToSave.size() > 0) {
-			Display.getDefault().syncExec(
-					new SaveFilesRunnable(editorsToSave, monitor));
+			Display.getDefault().syncExec(new SaveFilesRunnable(editorsToSave, monitor));
 		}
 		if (monitor.isCanceled()) {
 			result.setAccepted(false);
@@ -100,8 +97,7 @@ public class SaveFilesHandler {
 		}
 
 		public void run() {
-			monitor.beginTask(PHPUIMessages.SaveFilesHandler_0, dirtyEditors
-					.size()); 
+			monitor.beginTask(PHPUIMessages.SaveFilesHandler_0, dirtyEditors.size());
 			for (Iterator i = dirtyEditors.iterator(); i.hasNext();) {
 				if (monitor.isCanceled()) {
 					return;
@@ -118,16 +114,15 @@ public class SaveFilesHandler {
 		SaveFilesResult result;
 		boolean promptAutoSave;
 
-		public SaveFilesDialogRunnable(List dirtyEditors,
-				SaveFilesResult result, boolean promptAutoSave) {
+		public SaveFilesDialogRunnable(List dirtyEditors, SaveFilesResult result, boolean promptAutoSave) {
 			this.dirtyEditors = dirtyEditors;
 			this.result = result;
 			this.promptAutoSave = promptAutoSave;
 		}
 
 		public void run() {
-			SaveFilesDialog sfDialog = new SaveFilesDialog(Display.getCurrent()
-					.getActiveShell(), dirtyEditors, result, promptAutoSave);
+			SaveFilesDialog sfDialog = new SaveFilesDialog(Display.getCurrent().getActiveShell(), dirtyEditors, result,
+					promptAutoSave);
 			if (sfDialog.open() == Window.OK) {
 				result.setAccepted(true);
 				result.setSaved(Arrays.asList(sfDialog.getResult()));

@@ -63,18 +63,12 @@ public class FormatterTests {
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 
 	static {
-		TESTS.put(PHPVersion.PHP5,
-				new String[] { "/workspace/formatter/php5" });
-		TESTS.put(PHPVersion.PHP5_3,
-				new String[] { "/workspace/formatter/php53" });
-		TESTS.put(PHPVersion.PHP5_4,
-				new String[] { "/workspace/formatter/php54" });
-		TESTS.put(PHPVersion.PHP5_5,
-				new String[] { "/workspace/formatter/php55" });
-		TESTS.put(PHPVersion.PHP5_6,
-				new String[] { "/workspace/formatter/php56" });
-		TESTS.put(PHPVersion.PHP7_0,
-				new String[] { "/workspace/formatter/php7" });
+		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/formatter/php5" });
+		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/formatter/php53" });
+		TESTS.put(PHPVersion.PHP5_4, new String[] { "/workspace/formatter/php54" });
+		TESTS.put(PHPVersion.PHP5_5, new String[] { "/workspace/formatter/php55" });
+		TESTS.put(PHPVersion.PHP5_6, new String[] { "/workspace/formatter/php56" });
+		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/formatter/php7" });
 	};
 
 	protected static int suiteCounter = 0;
@@ -94,16 +88,14 @@ public class FormatterTests {
 	protected final ProfileManager profileManager;
 	protected final String xmlFile;
 
-	public FormatterTests(PHPVersion version, String[] fileNames)
-			throws Exception {
+	public FormatterTests(PHPVersion version, String[] fileNames) throws Exception {
 		this.phpVersion = version;
 		this.fileNames = fileNames;
 		Bundle bundle = getContext();
 		if (fileNames.length > 0) {
 			IPath path = new Path(fileNames[0]);
 			path = path.removeLastSegments(1);
-			String[] formatterConfigurationFile = PDTTUtils
-					.getFiles(path.toString(), bundle, ".xml");
+			String[] formatterConfigurationFile = PDTTUtils.getFiles(path.toString(), bundle, ".xml");
 
 			if (formatterConfigurationFile.length > 0) {
 				xmlFile = formatterConfigurationFile[0];
@@ -114,14 +106,12 @@ public class FormatterTests {
 			xmlFile = null;
 		}
 		scopeContext = InstanceScope.INSTANCE;
-		profileManager = new ProfileManager(new ArrayList<Profile>(),
-				scopeContext);
+		profileManager = new ProfileManager(new ArrayList<Profile>(), scopeContext);
 	}
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("FormatterTests_" + suiteCounter++);
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject("FormatterTests_" + suiteCounter++);
 
 		project.create(null);
 		project.open(null);
@@ -154,8 +144,7 @@ public class FormatterTests {
 			// manager
 			String abcolutXmlFilePath = null;
 			try {
-				URL url = FileLocator.find(getContext(), new Path(xmlFile),
-						null);
+				URL url = FileLocator.find(getContext(), new Path(xmlFile), null);
 				URL resolved = FileLocator.resolve(url);
 				IPath path = Path.fromOSString(resolved.getFile());
 				abcolutXmlFilePath = path.toString();
@@ -164,24 +153,20 @@ public class FormatterTests {
 			}
 
 			final File file = new File(abcolutXmlFilePath);
-			assertTrue("Formatter Configuration Not Found " + file.toString(),
-					file.exists());
+			assertTrue("Formatter Configuration Not Found " + file.toString(), file.exists());
 
 			List<Profile> profiles = null;
 			try {
 
 				profiles = ProfileStore.readProfilesFromFile(file);
 			} catch (CoreException e) {
-				Logger.logException(
-						"Error while reading profile configuration xml file",
-						e);
+				Logger.logException("Error while reading profile configuration xml file", e);
 			}
 
 			// should be only one profile in file
 			if (profiles != null && profiles.size() > 0) {
 				// update formatter configuration profile
-				CustomProfile profile = (CustomProfile) profiles.iterator()
-						.next();
+				CustomProfile profile = (CustomProfile) profiles.iterator().next();
 				profileManager.addProfile(profile);
 				profileManager.setSelected(profile);
 				profileManager.commitChanges(scopeContext);
@@ -204,8 +189,7 @@ public class FormatterTests {
 	public void formatter(String fileName) throws Exception {
 		IFile file = files.get(fileName);
 
-		IStructuredModel modelForEdit = StructuredModelManager.getModelManager()
-				.getModelForEdit(file);
+		IStructuredModel modelForEdit = StructuredModelManager.getModelManager().getModelForEdit(file);
 		try {
 			IDocument document = modelForEdit.getStructuredDocument();
 			String beforeFormat = document.get();
@@ -213,8 +197,7 @@ public class FormatterTests {
 			PHPFormatProcessorProxy formatter = new PHPFormatProcessorProxy();
 			formatter.formatDocument(document, 0, document.getLength());
 
-			PDTTUtils.assertContents(pdttFiles.get(fileName).getExpected(),
-					document.get());
+			PDTTUtils.assertContents(pdttFiles.get(fileName).getExpected(), document.get());
 
 			// change the document text as
 			// was
@@ -229,13 +212,10 @@ public class FormatterTests {
 		}
 	}
 
-	private static void setDefaultFormatter(IScopeContext scopeContext,
-			ProfileManager profileManager) {
+	private static void setDefaultFormatter(IScopeContext scopeContext, ProfileManager profileManager) {
 		profileManager.clearAllSettings(scopeContext);
-		if (profileManager.getSelected()
-				.getID() != ProfileManager.PHP_PROFILE) {
-			profileManager.setSelected(
-					profileManager.getProfile(ProfileManager.PHP_PROFILE));
+		if (profileManager.getSelected().getID() != ProfileManager.PHP_PROFILE) {
+			profileManager.setSelected(profileManager.getProfile(ProfileManager.PHP_PROFILE));
 		}
 		profileManager.commitChanges(scopeContext);
 	}

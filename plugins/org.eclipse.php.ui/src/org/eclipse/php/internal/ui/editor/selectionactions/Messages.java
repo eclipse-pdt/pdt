@@ -32,6 +32,7 @@ public class Messages extends NLS {
 	public static String StructureSelectPreviousAction_3;
 	public static String StructureSelectPreviousAction_4;
 	public static String StructureSelectPreviousAction_5;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

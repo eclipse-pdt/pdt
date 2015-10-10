@@ -74,8 +74,7 @@ public class DBGpUtils {
 		try {
 			URI uri = new URI(fileURIStr);
 			filePath = uri.getPath();
-			if (filePath != null && filePath.length() > 2
-					&& filePath.charAt(2) == ':') {
+			if (filePath != null && filePath.length() > 2 && filePath.charAt(2) == ':') {
 				filePath = filePath.substring(1);
 			}
 		} catch (URISyntaxException e) {
@@ -99,8 +98,7 @@ public class DBGpUtils {
 			return false;
 		}
 
-		if (resp.getType() == DBGpResponse.RESPONSE
-				|| resp.getType() == DBGpResponse.STREAM) {
+		if (resp.getType() == DBGpResponse.RESPONSE || resp.getType() == DBGpResponse.STREAM) {
 
 			// ok, or cannot get property are good responses really.
 			if (resp.getErrorCode() == DBGpResponse.ERROR_OK
@@ -132,11 +130,9 @@ public class DBGpUtils {
 		final String viewId = "org.eclipse.ui.browser.view"; //$NON-NLS-1$
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
-				IWorkbenchWindow window = PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow();
+				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				try {
-					IViewPart viewPart = window.getActivePage()
-							.showView(viewId);
+					IViewPart viewPart = window.getActivePage().showView(viewId);
 					if (viewPart instanceof WebBrowserView)
 						((WebBrowserView) viewPart).setURL(url);
 				} catch (PartInitException e) {

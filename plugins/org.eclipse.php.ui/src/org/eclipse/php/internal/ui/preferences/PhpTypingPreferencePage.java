@@ -21,15 +21,12 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
  * @author guy.g
  * 
  */
-public class PhpTypingPreferencePage extends
-		AbstractConfigurationBlockPreferencePage {
+public class PhpTypingPreferencePage extends AbstractConfigurationBlockPreferencePage {
 
 	private TypingConfigurationBlock typingConfigurationBlock;
 
-	protected IPreferenceConfigurationBlock createConfigurationBlock(
-			OverlayPreferenceStore overlayPreferenceStore) {
-		typingConfigurationBlock = new TypingConfigurationBlock(this,
-				overlayPreferenceStore);
+	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
+		typingConfigurationBlock = new TypingConfigurationBlock(this, overlayPreferenceStore);
 		return typingConfigurationBlock;
 	}
 

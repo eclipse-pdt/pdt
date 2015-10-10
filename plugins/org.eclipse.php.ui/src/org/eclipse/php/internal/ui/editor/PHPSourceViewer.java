@@ -44,8 +44,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 
-public class PHPSourceViewer extends Composite implements
-		IPropertyChangeListener {
+public class PHPSourceViewer extends Composite implements IPropertyChangeListener {
 
 	private Color fDefaultBackground;
 	private Color fDefaultForeground;
@@ -64,16 +63,14 @@ public class PHPSourceViewer extends Composite implements
 
 		editorStore = EditorsPlugin.getDefault().getPreferenceStore();
 
-		fDefaultBackground = editorStore
-				.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT) ? null
-				: new Color(getDisplay(), PreferenceConverter.getColor(
-						editorStore,
-						AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND));
-		fDefaultForeground = editorStore
-				.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT) ? null
-				: new Color(getDisplay(), PreferenceConverter.getColor(
-						editorStore,
-						AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND));
+		fDefaultBackground = editorStore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT)
+				? null
+				: new Color(getDisplay(),
+						PreferenceConverter.getColor(editorStore, AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND));
+		fDefaultForeground = editorStore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT)
+				? null
+				: new Color(getDisplay(),
+						PreferenceConverter.getColor(editorStore, AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND));
 
 		editorStore.addPropertyChangeListener(this);
 
@@ -94,44 +91,33 @@ public class PHPSourceViewer extends Composite implements
 	 * .jface.util.PropertyChangeEvent)
 	 */
 	public void propertyChange(final PropertyChangeEvent event) {
-		if (AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT
-				.equals(event.getProperty())) {
-			if (editorStore
-					.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT))
+		if (AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT.equals(event.getProperty())) {
+			if (editorStore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT))
 				fDefaultBackground = null;
 			else
 				fDefaultBackground = new Color(Display.getCurrent(),
-						PreferenceConverter.getColor(editorStore,
-								AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND));
+						PreferenceConverter.getColor(editorStore, AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND));
 			refresh();
-		} else if (AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT
-				.equals(event.getProperty())) {
-			if (editorStore
-					.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT))
+		} else if (AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT.equals(event.getProperty())) {
+			if (editorStore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT))
 				fDefaultForeground = null;
 			else
 				fDefaultForeground = new Color(Display.getCurrent(),
-						PreferenceConverter.getColor(editorStore,
-								AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND));
+						PreferenceConverter.getColor(editorStore, AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND));
 			refresh();
-		} else if (AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND.equals(event
-				.getProperty())) {
+		} else if (AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND.equals(event.getProperty())) {
 			fDefaultBackground = new Color(Display.getCurrent(),
-					PreferenceConverter.getColor(editorStore,
-							AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND));
+					PreferenceConverter.getColor(editorStore, AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND));
 			refresh();
-		} else if (AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND.equals(event
-				.getProperty())) {
+		} else if (AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND.equals(event.getProperty())) {
 			fDefaultForeground = new Color(Display.getCurrent(),
-					PreferenceConverter.getColor(editorStore,
-							AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND));
+					PreferenceConverter.getColor(editorStore, AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND));
 			refresh();
 		}
 	}
 
 	public void createControls(Composite parent) {
-		fText = new StyledText(parent, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL
-				| SWT.BORDER);
+		fText = new StyledText(parent, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
 		fText.getContent().addTextChangeListener(new TextChangeListener() {
 
 			DocumentReader docReader;
@@ -161,7 +147,9 @@ public class PHPSourceViewer extends Composite implements
 		fText.setBackground(fDefaultBackground);
 		fText.setForeground(fDefaultForeground);
 		fText.setFont(JFaceResources.getTextFont());
-		setAccessible(fText, SSEUIMessages.Sample_text__UI_); //$NON-NLS-1$ = "&Sample text:"
+		setAccessible(fText, SSEUIMessages.Sample_text__UI_); // $NON-NLS-1$ =
+																// "&Sample
+																// text:"
 	}
 
 	public void setEditable(boolean editable) {
@@ -255,8 +243,7 @@ public class PHPSourceViewer extends Composite implements
 	}
 
 	public TextAttribute getAttribute(String namedStyle) {
-		TextAttribute ta = new TextAttribute(getDefaultForeground(),
-				getDefaultBackground(), SWT.NORMAL);
+		TextAttribute ta = new TextAttribute(getDefaultForeground(), getDefaultBackground(), SWT.NORMAL);
 		if (namedStyle != null && styleProvider != null) {
 			ta = styleProvider.getTextAttributeForColor(namedStyle);
 		}
@@ -264,8 +251,7 @@ public class PHPSourceViewer extends Composite implements
 	}
 
 	public void applyStyles() {
-		if (fText == null || fText.isDisposed() || fInput == null
-				|| fInput.length() == 0) {
+		if (fText == null || fText.isDisposed() || fInput == null || fInput.length() == 0) {
 			return;
 		}
 
@@ -274,8 +260,7 @@ public class PHPSourceViewer extends Composite implements
 		IStructuredDocumentRegion documentRegion = fNodes;
 		while (documentRegion != null) {
 			final Collection holdResults = new ArrayList();
-			styleProvider.prepareTextRegions(documentRegion, 0,
-					documentRegion.getEnd(), holdResults);
+			styleProvider.prepareTextRegions(documentRegion, 0, documentRegion.getEnd(), holdResults);
 
 			for (Iterator iter = holdResults.iterator(); iter.hasNext();) {
 				StyleRange element = (StyleRange) iter.next();
@@ -298,8 +283,7 @@ public class PHPSourceViewer extends Composite implements
 
 	public void setupViewer() {
 		IModelManager mmanager = StructuredModelManager.getModelManager();
-		setParser(mmanager.createStructuredDocumentFor(
-				ContentTypeIdForPHP.ContentTypeID_PHP).getParser());
+		setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP).getParser());
 
 		styleProvider = new LineStyleProviderForPhp();
 	}

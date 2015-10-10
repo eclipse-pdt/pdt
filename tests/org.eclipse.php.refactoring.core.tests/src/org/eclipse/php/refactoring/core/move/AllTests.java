@@ -17,15 +17,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({PHPMoveProcessorTestCase.class,
-	PHPMoveProcessorTestCase1.class,
-	PHPMoveProcessorTestCase0027202.class,
-	PHPMoveProcessorTestCase0029253.class,
-	PHPMoveProcessorRunConfigTestCase.class,
-	PHPMoveProcessorRunConfigTestCase1.class,
-	PHPMoveProcessorRunConfigTestCase2.class,
-	PHPMoveProcessorRunConfigTestCase0027489.class,
-	PHPMoveProcessorBreakPointTestCase.class,PHPMoveProcessorTest.class})
+@Suite.SuiteClasses({ PHPMoveProcessorTestCase.class, PHPMoveProcessorTestCase1.class,
+		PHPMoveProcessorTestCase0027202.class, PHPMoveProcessorTestCase0029253.class,
+		PHPMoveProcessorRunConfigTestCase.class, PHPMoveProcessorRunConfigTestCase1.class,
+		PHPMoveProcessorRunConfigTestCase2.class, PHPMoveProcessorRunConfigTestCase0027489.class,
+		PHPMoveProcessorBreakPointTestCase.class, PHPMoveProcessorTest.class })
 public class AllTests {
 
 	private static TestProject project;
@@ -33,7 +29,7 @@ public class AllTests {
 	@BeforeClass
 	public static void setUpSuite() {
 		project = new TestProject("RefactoringMove");
-		System.setProperty("disableStartupRunner","true");
+		System.setProperty("disableStartupRunner", "true");
 	}
 
 	@AfterClass
@@ -42,6 +38,6 @@ public class AllTests {
 			project.delete();
 		} catch (Exception e) {
 		}
-//		System.setProperty("disableStartupRunner",null);
+		// System.setProperty("disableStartupRunner",null);
 	}
 }

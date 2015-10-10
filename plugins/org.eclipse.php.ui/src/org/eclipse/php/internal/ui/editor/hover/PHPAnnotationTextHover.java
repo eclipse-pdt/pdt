@@ -18,8 +18,8 @@ import org.eclipse.php.internal.ui.editor.hover.PHPDocumentationHover.PresenterC
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 
-public class PHPAnnotationTextHover extends AbstractAnnotationHover implements
-		IPHPTextHover, IInformationProviderExtension2 {
+public class PHPAnnotationTextHover extends AbstractAnnotationHover
+		implements IPHPTextHover, IInformationProviderExtension2 {
 
 	public PHPAnnotationTextHover() {
 		super(true);

@@ -68,7 +68,8 @@ public class ExtractVariableRefactoringTest extends AbstractRefactoringTest {
 
 		String visibility = testFile.getConfig().get("visibility");
 
-		ExtractVariableRefactoring processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, start, length);
+		ExtractVariableRefactoring processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file),
+				structuredDocument, start, length);
 
 		processor.setNewVariableName(testFile.getConfig().get("newName"));
 

@@ -44,8 +44,7 @@ public class RenameUserInterfaceStarter extends UserInterfaceStarter {
 		}
 
 		private void init() {
-			IWorkbenchWindow dw = RefactoringUIPlugin
-					.getActiveWorkbenchWindow();
+			IWorkbenchWindow dw = RefactoringUIPlugin.getActiveWorkbenchWindow();
 			if (dw == null)
 				return;
 			fDisplay = dw.getShell().getDisplay();
@@ -67,15 +66,13 @@ public class RenameUserInterfaceStarter extends UserInterfaceStarter {
 				return;
 			ISetSelectionTarget target = null;
 			if (!(part instanceof ISetSelectionTarget)) {
-				target = (ISetSelectionTarget) part
-						.getAdapter(ISetSelectionTarget.class);
+				target = (ISetSelectionTarget) part.getAdapter(ISetSelectionTarget.class);
 				if (target == null)
 					return;
 			} else {
 				target = (ISetSelectionTarget) part;
 			}
-			ISelectionProvider selectionProvider = part.getSite()
-					.getSelectionProvider();
+			ISelectionProvider selectionProvider = part.getSite().getSelectionProvider();
 			if (selectionProvider == null)
 				return;
 			ISelection s = selectionProvider.getSelection();
@@ -92,11 +89,9 @@ public class RenameUserInterfaceStarter extends UserInterfaceStarter {
 			if (fDisplay == null)
 				return;
 			for (int i = 0; i < fParts.size(); i++) {
-				IStructuredSelection currentSelection = (IStructuredSelection) fSelections
-						.get(i);
+				IStructuredSelection currentSelection = (IStructuredSelection) fSelections.get(i);
 				boolean changed = false;
-				final ISetSelectionTarget target = (ISetSelectionTarget) fParts
-						.get(i);
+				final ISetSelectionTarget target = (ISetSelectionTarget) fParts.get(i);
 				final IStructuredSelection[] newSelection = new IStructuredSelection[1];
 				newSelection[0] = currentSelection;
 				if (currentSelection instanceof TreeSelection) {
@@ -104,15 +99,13 @@ public class RenameUserInterfaceStarter extends UserInterfaceStarter {
 					TreePath[] paths = treeSelection.getPaths();
 					for (int p = 0; p < paths.length; p++) {
 						TreePath path = paths[p];
-						if (path.getSegmentCount() > 0
-								&& path.getLastSegment().equals(fElement)) {
+						if (path.getSegmentCount() > 0 && path.getLastSegment().equals(fElement)) {
 							paths[p] = createTreePath(path, newElement);
 							changed = true;
 						}
 					}
 					if (changed) {
-						newSelection[0] = new TreeSelection(paths,
-								treeSelection.getElementComparer());
+						newSelection[0] = new TreeSelection(paths, treeSelection.getElementComparer());
 					}
 				} else {
 					Object[] elements = currentSelection.toArray();
@@ -148,16 +141,12 @@ public class RenameUserInterfaceStarter extends UserInterfaceStarter {
 		}
 	}
 
-	public boolean activate(Refactoring refactoring, Shell parent, boolean save)
-			throws CoreException {
-		RenameProcessor processor = (RenameProcessor) refactoring
-				.getAdapter(RenameProcessor.class);
+	public boolean activate(Refactoring refactoring, Shell parent, boolean save) throws CoreException {
+		RenameProcessor processor = (RenameProcessor) refactoring.getAdapter(RenameProcessor.class);
 		Object[] elements = processor.getElements();
-		SelectionState state = elements.length == 1 ? new SelectionState(
-				elements[0]) : null;
+		SelectionState state = elements.length == 1 ? new SelectionState(elements[0]) : null;
 		boolean executed = super.activate(refactoring, parent, save);
-		INameUpdating nameUpdating = (INameUpdating) refactoring
-				.getAdapter(INameUpdating.class);
+		INameUpdating nameUpdating = (INameUpdating) refactoring.getAdapter(INameUpdating.class);
 		if (executed && nameUpdating != null && state != null) {
 			Object newElement = nameUpdating.getNewElement();
 			if (newElement != null) {

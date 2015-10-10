@@ -27,7 +27,8 @@ public class TunnelTester {
 	 * Test SSH tunnel connection. This test will try to establish a connection
 	 * using a SSHTunnel. In case successful, the connection will be closed at
 	 * the end of the test. There are several return values possibilities to
-	 * this test, which are derived from the {@link SSHTunnel#connect()} method:<br>
+	 * this test, which are derived from the {@link SSHTunnel#connect()} method:
+	 * <br>
 	 * <ul>
 	 * <li>Status OK - Signals that the connection was successful with no errors
 	 * or warnings</li>
@@ -51,10 +52,9 @@ public class TunnelTester {
 	 * @return The IStatus for the connection creation.
 	 * @see SSHTunnel#connent
 	 */
-	public static IStatus test(String remoteHost, String userName,
-			String password, int localPort, int remotePort) {
-		SSHTunnel sshTunnel = SSHTunnelFactory.getSSHTunnel(remoteHost,
-				userName, password, localPort, remotePort, false);
+	public static IStatus test(String remoteHost, String userName, String password, int localPort, int remotePort) {
+		SSHTunnel sshTunnel = SSHTunnelFactory.getSSHTunnel(remoteHost, userName, password, localPort, remotePort,
+				false);
 		IStatus connectionResult = sshTunnel.connect();
 		if (connectionResult.getSeverity() != IStatus.ERROR) {
 			if (sshTunnel.isConnected()) {
@@ -62,11 +62,7 @@ public class TunnelTester {
 				return connectionResult;
 			} else {
 				sshTunnel.disconnect();
-				MultiStatus status = new MultiStatus(
-						Activator.PLUGIN_ID,
-						0,
-						Messages.TunnelTester_0,
-						null);
+				MultiStatus status = new MultiStatus(Activator.PLUGIN_ID, 0, Messages.TunnelTester_0, null);
 				status.add(connectionResult); // add any other statuses into the
 				// multi-status, so we can track a password change, for example.
 				return status;

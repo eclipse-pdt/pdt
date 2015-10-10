@@ -80,6 +80,5 @@ public interface IASTFragment {
 	 * @param textEditGroup
 	 *            a description or <code>null</code>
 	 */
-	public void replace(ASTRewrite rewrite, ASTNode replacement,
-			TextEditGroup textEditGroup);
+	public void replace(ASTRewrite rewrite, ASTNode replacement, TextEditGroup textEditGroup);
 }

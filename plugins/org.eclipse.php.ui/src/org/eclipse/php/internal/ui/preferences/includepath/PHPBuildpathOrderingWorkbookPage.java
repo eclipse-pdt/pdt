@@ -38,9 +38,7 @@ public class PHPBuildpathOrderingWorkbookPage extends BuildPathBasePage {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setFont(parent.getFont());
 
-		LayoutUtil.doDefaultLayout(composite,
-				new DialogField[] { fBuildpathList }, true, SWT.DEFAULT,
-				SWT.DEFAULT);
+		LayoutUtil.doDefaultLayout(composite, new DialogField[] { fBuildpathList }, true, SWT.DEFAULT, SWT.DEFAULT);
 		LayoutUtil.setHorizontalGrabbing(fBuildpathList.getListControl(null));
 
 		int buttonBarWidth = converter.convertWidthInCharsToPixels(24);

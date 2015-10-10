@@ -46,8 +46,7 @@ public class RenameFolderTestCase2 extends AbstractRenameRefactoringTest {
 		}
 		file = folder.getFile("RenameFolderTestCase21.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php class TestRenameClass{}?>".getBytes());
+		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -55,18 +54,15 @@ public class RenameFolderTestCase2 extends AbstractRenameRefactoringTest {
 			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
 
-		
 		file = project1.getFile("RenameFolderTestCase22.php");
 
-		source = new ByteArrayInputStream(
-				"<?php include './src/RenameFolderTestCase21.php'; ?>".getBytes());
+		source = new ByteArrayInputStream("<?php include './src/RenameFolderTestCase21.php'; ?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
 		} else {
 			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
-
 
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
@@ -74,8 +70,7 @@ public class RenameFolderTestCase2 extends AbstractRenameRefactoringTest {
 
 	@Test
 	public void testRename() {
-		RenameFolderProcessor processor = new RenameFolderProcessor(project1
-				.getFolder("src"));
+		RenameFolderProcessor processor = new RenameFolderProcessor(project1.getFolder("src"));
 		processor.setNewElementName("src1");
 		processor.setUpdateRefernces(true);
 
@@ -85,12 +80,9 @@ public class RenameFolderTestCase2 extends AbstractRenameRefactoringTest {
 		IFolder folder = project1.getFolder("src1");
 		assertTrue(folder.exists());
 
-		
 		try {
 			String content = FileUtils.getContents(file);
-			assertEquals(
-					"<?php include './src1/RenameFolderTestCase21.php'; ?>",
-					content);
+			assertEquals("<?php include './src1/RenameFolderTestCase21.php'; ?>", content);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

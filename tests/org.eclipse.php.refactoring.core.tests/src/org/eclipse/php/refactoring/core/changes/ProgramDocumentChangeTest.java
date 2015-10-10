@@ -49,7 +49,8 @@ public class ProgramDocumentChangeTest extends AbstractRenameRefactoringTest {
 		file = folder.getFile("ProgramDocument.php");
 
 		InputStream source = new ByteArrayInputStream(
-				"<?php class Item { public static function foo(){} } class ItemEx extends Item{public static function foo(){}} ItemEx::foo();?>".getBytes());
+				"<?php class Item { public static function foo(){} } class ItemEx extends Item{public static function foo(){}} ItemEx::foo();?>"
+						.getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());

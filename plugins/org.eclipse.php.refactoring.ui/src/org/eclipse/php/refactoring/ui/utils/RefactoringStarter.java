@@ -41,14 +41,13 @@ public class RefactoringStarter {
 	 * @param dialogTitle
 	 * @param mustSaveEditors
 	 */
-	public boolean activate(Refactoring refactoring, RefactoringWizard wizard,
-			Shell parent, String dialogTitle, boolean mustSaveEditors) {
+	public boolean activate(Refactoring refactoring, RefactoringWizard wizard, Shell parent, String dialogTitle,
+			boolean mustSaveEditors) {
 		if (!canActivate(mustSaveEditors, parent))
 			return false;
 
 		try {
-			RefactoringWizardOpenOperation op = new RefactoringWizardOpenOperation(
-					wizard);
+			RefactoringWizardOpenOperation op = new RefactoringWizardOpenOperation(wizard);
 			int result = op.run(parent, dialogTitle);
 			fStatus = op.getInitialConditionCheckingStatus();
 			if (result == IDialogConstants.CANCEL_ID
@@ -82,8 +81,7 @@ public class RefactoringStarter {
 	private boolean checkUnsavedFiles() {
 		boolean autoSave = false;
 
-		SaveFilesResult result = SaveFilesHandler.handle(null, autoSave, false,
-				new NullProgressMonitor());
+		SaveFilesResult result = SaveFilesHandler.handle(null, autoSave, false, new NullProgressMonitor());
 		if (!result.isAccepted())
 			return false;
 

@@ -25,17 +25,16 @@ import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.ui.IEditorPart;
 
-public class BestMatchHover extends AbstractPHPEditorTextHover implements
-		IPHPTextHover, ITextHoverExtension, IInformationProviderExtension2 {
+public class BestMatchHover extends AbstractPHPEditorTextHover
+		implements IPHPTextHover, ITextHoverExtension, IInformationProviderExtension2 {
 
 	private List<PHPEditorTextHoverDescriptor> fTextHoverSpecifications;
 	private List<ITextHover> fInstantiatedTextHovers;
 	private ITextHover fBestHover;
 
 	public BestMatchHover() {
-		this(PHPUiPlugin.getActivePage() == null ? null : PHPUiPlugin
-				.getActivePage().getActiveEditor(), PHPUiPlugin.getDefault()
-				.getPreferenceStore());
+		this(PHPUiPlugin.getActivePage() == null ? null : PHPUiPlugin.getActivePage().getActiveEditor(),
+				PHPUiPlugin.getDefault().getPreferenceStore());
 	}
 
 	public BestMatchHover(IEditorPart editor, IPreferenceStore store) {
@@ -50,17 +49,14 @@ public class BestMatchHover extends AbstractPHPEditorTextHover implements
 	private void installTextHovers() {
 
 		// initialize lists - indicates that the initialization happened
-		fTextHoverSpecifications = new ArrayList<PHPEditorTextHoverDescriptor>(
-				2);
+		fTextHoverSpecifications = new ArrayList<PHPEditorTextHoverDescriptor>(2);
 		fInstantiatedTextHovers = new ArrayList<ITextHover>(2);
 
 		// populate list
-		PHPEditorTextHoverDescriptor[] hoverDescs = PHPUiPlugin.getDefault()
-				.getPHPEditorTextHoverDescriptors();
+		PHPEditorTextHoverDescriptor[] hoverDescs = PHPUiPlugin.getDefault().getPHPEditorTextHoverDescriptors();
 		for (int i = 0; i < hoverDescs.length; i++) {
 			// ensure that we don't add ourselves to the list
-			if (!PreferenceConstants.ID_BESTMATCH_HOVER.equals(hoverDescs[i]
-					.getId()))
+			if (!PreferenceConstants.ID_BESTMATCH_HOVER.equals(hoverDescs[i].getId()))
 				fTextHoverSpecifications.add(hoverDescs[i]);
 		}
 	}
@@ -99,8 +95,7 @@ public class BestMatchHover extends AbstractPHPEditorTextHover implements
 		if (fInstantiatedTextHovers == null)
 			return null;
 
-		for (Iterator<ITextHover> iterator = fInstantiatedTextHovers.iterator(); iterator
-				.hasNext();) {
+		for (Iterator<ITextHover> iterator = fInstantiatedTextHovers.iterator(); iterator.hasNext();) {
 			ITextHover hover = (ITextHover) iterator.next();
 			String s = hover.getHoverInfo(textViewer, hoverRegion);
 			if (s != null && s.trim().length() > 0) {
@@ -124,13 +119,11 @@ public class BestMatchHover extends AbstractPHPEditorTextHover implements
 		if (fInstantiatedTextHovers == null)
 			return null;
 
-		for (Iterator iterator = fInstantiatedTextHovers.iterator(); iterator
-				.hasNext();) {
+		for (Iterator iterator = fInstantiatedTextHovers.iterator(); iterator.hasNext();) {
 			ITextHover hover = (ITextHover) iterator.next();
 
 			if (hover instanceof ITextHoverExtension2) {
-				Object info = ((ITextHoverExtension2) hover).getHoverInfo2(
-						textViewer, hoverRegion);
+				Object info = ((ITextHoverExtension2) hover).getHoverInfo2(textViewer, hoverRegion);
 				if (info != null) {
 					fBestHover = hover;
 					return info;
@@ -167,8 +160,7 @@ public class BestMatchHover extends AbstractPHPEditorTextHover implements
 	 */
 	public IInformationControlCreator getInformationPresenterControlCreator() {
 		if (fBestHover instanceof IInformationProviderExtension2)
-			return ((IInformationProviderExtension2) fBestHover)
-					.getInformationPresenterControlCreator();
+			return ((IInformationProviderExtension2) fBestHover).getInformationPresenterControlCreator();
 
 		return null;
 	}

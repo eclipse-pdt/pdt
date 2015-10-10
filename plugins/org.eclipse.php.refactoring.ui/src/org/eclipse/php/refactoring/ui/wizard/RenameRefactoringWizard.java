@@ -30,8 +30,7 @@ public class RenameRefactoringWizard extends RefactoringWizard {
 	private final String fPageContextHelpId;
 	private final ImageDescriptor fInputPageImageDescriptor;
 
-	public RenameRefactoringWizard(Refactoring refactoring,
-			String defaultPageTitle, String inputPageDescription,
+	public RenameRefactoringWizard(Refactoring refactoring, String defaultPageTitle, String inputPageDescription,
 			ImageDescriptor inputPageImageDescriptor, String pageContextHelpId) {
 		super(refactoring, DIALOG_BASED_USER_INTERFACE);
 		setDefaultPageTitle(defaultPageTitle);
@@ -47,8 +46,7 @@ public class RenameRefactoringWizard extends RefactoringWizard {
 	 */
 	protected void addUserInputPages() {
 		String initialSetting = getNameUpdating().getCurrentElementName();
-		RenameInputWizardPage inputPage = createInputPage(
-				fInputPageDescription, initialSetting);
+		RenameInputWizardPage inputPage = createInputPage(fInputPageDescription, initialSetting);
 		inputPage.setImageDescriptor(fInputPageImageDescriptor);
 		addPage(inputPage);
 	}
@@ -57,10 +55,8 @@ public class RenameRefactoringWizard extends RefactoringWizard {
 		return (INameUpdating) getRefactoring().getAdapter(INameUpdating.class);
 	}
 
-	protected RenameInputWizardPage createInputPage(String message,
-			String initialSetting) {
-		return new RenameInputWizardPage(message, fPageContextHelpId, true,
-				initialSetting) {
+	protected RenameInputWizardPage createInputPage(String message, String initialSetting) {
+		return new RenameInputWizardPage(message, fPageContextHelpId, true, initialSetting) {
 			protected RefactoringStatus validateTextField(String text) {
 				return validateNewName(text);
 			}
@@ -74,9 +70,8 @@ public class RenameRefactoringWizard extends RefactoringWizard {
 			return ref.checkNewElementName(newName);
 		} catch (CoreException e) {
 			RefactoringUIPlugin.log(e);
-			return RefactoringStatus
-					.createFatalErrorStatus(PHPRefactoringUIMessages
-							.getString("RenameRefactoringWizard_internal_error")); //$NON-NLS-1$
+			return RefactoringStatus.createFatalErrorStatus(
+					PHPRefactoringUIMessages.getString("RenameRefactoringWizard_internal_error")); //$NON-NLS-1$
 		}
 	}
 

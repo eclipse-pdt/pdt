@@ -34,8 +34,7 @@ public class CodeFormatterPreview extends PhpPreview {
 	 * @param workingValues
 	 * @param parent
 	 */
-	public CodeFormatterPreview(
-			CodeFormatterPreferences codeFormatterPreferences, Composite parent) {
+	public CodeFormatterPreview(CodeFormatterPreferences codeFormatterPreferences, Composite parent) {
 		super(codeFormatterPreferences, parent);
 
 		fPreviewDocument = new Document();
@@ -46,10 +45,8 @@ public class CodeFormatterPreview extends PhpPreview {
 		try {
 			fPreviewDocument.set(fOriInput);
 			IRegion region = new Region(0, fPreviewDocument.getLength());
-			CodeFormatterVisitor codeFormatter = new CodeFormatterVisitor(
-					fPreviewDocument, codeFormatterPreferences,
-					System.getProperty(Platform.PREF_LINE_SEPARATOR),
-					PHPVersion.PHP5_6, true, region);
+			CodeFormatterVisitor codeFormatter = new CodeFormatterVisitor(fPreviewDocument, codeFormatterPreferences,
+					System.getProperty(Platform.PREF_LINE_SEPARATOR), PHPVersion.PHP5_6, true, region);
 			List<?> changes = codeFormatter.getChanges();
 			fInput = applyChanges(fOriInput, changes);
 
@@ -72,8 +69,7 @@ public class CodeFormatterPreview extends PhpPreview {
 		StringBuffer result = new StringBuffer(content);
 		for (int i = changes.size() - 1; i >= 0; i--) {
 			ReplaceEdit replace = (ReplaceEdit) changes.get(i);
-			result = result.replace(replace.getOffset(),
-					replace.getExclusiveEnd(), replace.getText());
+			result = result.replace(replace.getOffset(), replace.getExclusiveEnd(), replace.getText());
 		}
 		return result.toString();
 	}

@@ -52,16 +52,14 @@ public class ConvertToPDTProjectAction extends SelectionDispatchAction {
 			if (element instanceof IProject) {
 				IProject project = (IProject) element;
 				try {
-					if (project.isOpen()
-							&& project.hasNature(PHPECLIPSE_NATURE)) {
+					if (project.isOpen() && project.hasNature(PHPECLIPSE_NATURE)) {
 						phpEclipseProjects.add(project);
 					}
 				} catch (CoreException e) {
 				}
 			}
 		}
-		return (IProject[]) phpEclipseProjects
-				.toArray(new IProject[phpEclipseProjects.size()]);
+		return (IProject[]) phpEclipseProjects.toArray(new IProject[phpEclipseProjects.size()]);
 	}
 
 	public void run(IStructuredSelection selection) {
@@ -69,21 +67,17 @@ public class ConvertToPDTProjectAction extends SelectionDispatchAction {
 		if (projects.length > 0) {
 			WorkspaceJob convertJob = new WorkspaceJob(
 					PHPUIMessages.ConvertToPDTProjectAction_converting_project_job_title) {
-				public IStatus runInWorkspace(IProgressMonitor monitor)
-						throws CoreException {
+				public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 
 					for (int i = 0; i < projects.length; ++i) {
 						IProject project = projects[i];
-						IProjectDescription projectDescription = project
-								.getDescription();
+						IProjectDescription projectDescription = project.getDescription();
 
 						// Configure builders:
 						List newBuildSpec = new LinkedList();
-						ICommand[] buildSpec = projectDescription
-								.getBuildSpec();
+						ICommand[] buildSpec = projectDescription.getBuildSpec();
 						for (int c = 0; c < buildSpec.length; ++c) {
-							if (!buildSpec[c].getBuilderName().equals(
-									PHPECLIPSE_BUILDER)) {
+							if (!buildSpec[c].getBuilderName().equals(PHPECLIPSE_BUILDER)) {
 								newBuildSpec.add(buildSpec[c]);
 							}
 						}
@@ -95,9 +89,7 @@ public class ConvertToPDTProjectAction extends SelectionDispatchAction {
 						newBuildSpec.add(command);
 
 						projectDescription
-								.setBuildSpec((ICommand[]) newBuildSpec
-										.toArray(new ICommand[newBuildSpec
-												.size()]));
+								.setBuildSpec((ICommand[]) newBuildSpec.toArray(new ICommand[newBuildSpec.size()]));
 
 						// Configure natures:
 						List newNatures = new LinkedList();
@@ -108,8 +100,7 @@ public class ConvertToPDTProjectAction extends SelectionDispatchAction {
 							}
 						}
 						newNatures.add(PHPNature.ID);
-						projectDescription.setNatureIds((String[]) newNatures
-								.toArray(new String[newNatures.size()]));
+						projectDescription.setNatureIds((String[]) newNatures.toArray(new String[newNatures.size()]));
 
 						// Save project description:
 						project.setDescription(projectDescription, monitor);

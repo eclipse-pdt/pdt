@@ -25,8 +25,7 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
  * 
  * @since 3.0
  */
-public class PHPEditorHoverPreferencePage extends
-		AbstractConfigurationBlockPreferencePage {
+public class PHPEditorHoverPreferencePage extends AbstractConfigurationBlockPreferencePage {
 	/*
 	 * @seeorg.eclipse.ui.internal.editors.text.
 	 * AbstractConfigureationBlockPreferencePage#getHelpId()
@@ -36,9 +35,8 @@ public class PHPEditorHoverPreferencePage extends
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.ui.internal.editors.text.AbstractConfigurationBlockPreferencePage
-	 * #setDescription()
+	 * @see org.eclipse.ui.internal.editors.text.
+	 * AbstractConfigurationBlockPreferencePage #setDescription()
 	 */
 	protected void setDescription() {
 		String description = PHPUIMessages.PHPEditorPreferencePage_hoverTab_title;
@@ -63,9 +61,7 @@ public class PHPEditorHoverPreferencePage extends
 	 * #createConfigurationBlock(org.eclipse
 	 * .ui.internal.editors.text.OverlayPreferenceStore)
 	 */
-	protected IPreferenceConfigurationBlock createConfigurationBlock(
-			OverlayPreferenceStore overlayPreferenceStore) {
-		return new PHPEditorHoverConfigurationBlock(this,
-				overlayPreferenceStore);
+	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
+		return new PHPEditorHoverConfigurationBlock(this, overlayPreferenceStore);
 	}
 }

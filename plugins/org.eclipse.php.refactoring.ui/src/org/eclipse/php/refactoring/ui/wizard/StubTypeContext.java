@@ -17,8 +17,7 @@ public class StubTypeContext {
 	private String fAfterString;
 	private final Program fCuHandle;
 
-	public StubTypeContext(Program cuHandle, String beforeString,
-			String afterString) {
+	public StubTypeContext(Program cuHandle, String beforeString, String afterString) {
 		fCuHandle = cuHandle;
 		fBeforeString = beforeString;
 		fAfterString = afterString;

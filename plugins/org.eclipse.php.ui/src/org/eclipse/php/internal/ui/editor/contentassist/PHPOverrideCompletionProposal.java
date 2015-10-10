@@ -30,19 +30,16 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 
 @SuppressWarnings("restriction")
-public class PHPOverrideCompletionProposal extends
-		ScriptOverrideCompletionProposal implements
-		ICompletionProposalExtension4 {
+public class PHPOverrideCompletionProposal extends ScriptOverrideCompletionProposal
+		implements ICompletionProposalExtension4 {
 	/**
 	 * The control creator.
 	 */
 	private IInformationControlCreator fCreator;
 
-	public PHPOverrideCompletionProposal(IScriptProject jproject,
-			ISourceModule cu, String methodName, String[] paramTypes,
-			int start, int length, String displayName, String completionProposal) {
-		super(jproject, cu, methodName, paramTypes, start, length, displayName,
-				completionProposal);
+	public PHPOverrideCompletionProposal(IScriptProject jproject, ISourceModule cu, String methodName,
+			String[] paramTypes, int start, int length, String displayName, String completionProposal) {
+		super(jproject, cu, methodName, paramTypes, start, length, displayName, completionProposal);
 	}
 
 	public void apply(IDocument document, char trigger, int offset) {
@@ -55,8 +52,8 @@ public class PHPOverrideCompletionProposal extends
 	}
 
 	public boolean isAutoInsertable() {
-		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
-				PHPCoreConstants.CODEASSIST_AUTOINSERT, false, null);
+		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_AUTOINSERT,
+				false, null);
 	}
 
 	protected boolean insertCompletion() {
@@ -138,10 +135,8 @@ public class PHPOverrideCompletionProposal extends
 					}
 					String infoDisplayString = sb.toString();
 					if (infoDisplayString.length() > 0) {
-						infoDisplayString = infoDisplayString.substring(0,
-								infoDisplayString.length() - 2);
-						return new ContextInformation(displayString,
-								infoDisplayString);
+						infoDisplayString = infoDisplayString.substring(0, infoDisplayString.length() - 2);
+						return new ContextInformation(displayString, infoDisplayString);
 					}
 
 				}
@@ -176,21 +171,16 @@ public class PHPOverrideCompletionProposal extends
 
 	public IInformationControlCreator getInformationControlCreator() {
 		if (fCreator == null) {
-			fCreator = new CompletionHoverControlCreator(
-					new IInformationControlCreator() {
-						public IInformationControl createInformationControl(
-								Shell parent) {
-							if (BrowserInformationControl.isAvailable(parent)) {
-								return new BrowserInformationControl(
-										parent,
-										PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT,
-										true);
-							} else {
-								return new DefaultInformationControl(parent,
-										true);
-							}
-						}
-					}, true);
+			fCreator = new CompletionHoverControlCreator(new IInformationControlCreator() {
+				public IInformationControl createInformationControl(Shell parent) {
+					if (BrowserInformationControl.isAvailable(parent)) {
+						return new BrowserInformationControl(parent, PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT,
+								true);
+					} else {
+						return new DefaultInformationControl(parent, true);
+					}
+				}
+			}, true);
 		}
 		return fCreator;
 	}

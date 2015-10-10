@@ -28,8 +28,8 @@ public class CollapseAllAction extends Action {
 		super(ScriptMessages.CollapseAllAction_label);
 		setDescription(ScriptMessages.CollapseAllAction_description);
 		setToolTipText(ScriptMessages.CollapseAllAction_tooltip);
-		setImageDescriptor(PlatformUI.getWorkbench().getSharedImages()
-				.getImageDescriptor(ISharedImages.IMG_ELCL_COLLAPSEALL));
+		setImageDescriptor(
+				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ELCL_COLLAPSEALL));
 
 		fPackageExplorer = part;
 		if (DLTKCore.DEBUG) {

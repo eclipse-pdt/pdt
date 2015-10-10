@@ -38,8 +38,7 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 	private static PHPSessionLaunchMapper getInstance() {
 		if (instance == null) {
 			instance = new PHPSessionLaunchMapper();
-			DebugPlugin.getDefault().getLaunchManager().addLaunchListener(
-					instance);
+			DebugPlugin.getDefault().getLaunchManager().addLaunchListener(instance);
 		}
 		return instance;
 	}

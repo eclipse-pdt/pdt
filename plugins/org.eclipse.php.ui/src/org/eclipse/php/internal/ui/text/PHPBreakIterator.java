@@ -213,8 +213,7 @@ public class PHPBreakIterator extends BreakIterator {
 		 * @see PHPBreakIterator.Run#isValid(char)
 		 */
 		protected boolean isValid(char ch) {
-			return !Character.isWhitespace(ch)
-					&& !Character.isJavaIdentifierPart(ch);
+			return !Character.isWhitespace(ch) && !Character.isJavaIdentifierPart(ch);
 		}
 	}
 
@@ -415,8 +414,7 @@ public class PHPBreakIterator extends BreakIterator {
 			fIterator.setText(newText);
 			first();
 		} else {
-			throw new UnsupportedOperationException(
-					"CharacterIterator not supported"); //$NON-NLS-1$
+			throw new UnsupportedOperationException("CharacterIterator not supported"); //$NON-NLS-1$
 		}
 	}
 }

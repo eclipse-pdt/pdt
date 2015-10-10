@@ -22,8 +22,7 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
  * 
  * @author shalom
  */
-public class ServersPreferencesInitializer extends
-		AbstractPreferenceInitializer {
+public class ServersPreferencesInitializer extends AbstractPreferenceInitializer {
 
 	/*
 	 * (non-Javadoc)
@@ -32,10 +31,8 @@ public class ServersPreferencesInitializer extends
 	 * initializeDefaultPreferences()
 	 */
 	public void initializeDefaultPreferences() {
-		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(Activator
-				.getDefault().getBundle().getSymbolicName());
-		node.put(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY, ServersManager
-				.getDefaultServer(null).getName());
+		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(Activator.getDefault().getBundle().getSymbolicName());
+		node.put(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY, ServersManager.getDefaultServer(null).getName());
 	}
 
 }

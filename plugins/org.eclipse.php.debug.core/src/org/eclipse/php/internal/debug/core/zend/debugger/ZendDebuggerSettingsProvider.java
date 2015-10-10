@@ -24,18 +24,15 @@ import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsWorkingCopy
  * 
  * @author Bartlomiej Laczkowski
  */
-public class ZendDebuggerSettingsProvider extends
-		AbstractDebuggerSettingsProvider {
+public class ZendDebuggerSettingsProvider extends AbstractDebuggerSettingsProvider {
 
-	private class ServerSettingsWorkingCopy extends ZendDebuggerServerSettings
-			implements IDebuggerSettingsWorkingCopy {
+	private class ServerSettingsWorkingCopy extends ZendDebuggerServerSettings implements IDebuggerSettingsWorkingCopy {
 
 		private IDebuggerSettings original;
 		private boolean dirty = false;
 
 		protected ServerSettingsWorkingCopy(IDebuggerSettings original) {
-			super(original.getOwnerId(), new HashMap<String, String>(
-					original.getAttributes()));
+			super(original.getOwnerId(), new HashMap<String, String>(original.getAttributes()));
 			this.original = original;
 		}
 
@@ -57,15 +54,13 @@ public class ZendDebuggerSettingsProvider extends
 
 	}
 
-	private class ExeSettingsWorkingCopy extends ZendDebuggerExeSettings
-			implements IDebuggerSettingsWorkingCopy {
+	private class ExeSettingsWorkingCopy extends ZendDebuggerExeSettings implements IDebuggerSettingsWorkingCopy {
 
 		private IDebuggerSettings original;
 		private boolean dirty = false;
 
 		protected ExeSettingsWorkingCopy(IDebuggerSettings original) {
-			super(original.getOwnerId(), new HashMap<String, String>(
-					original.getAttributes()));
+			super(original.getOwnerId(), new HashMap<String, String>(original.getAttributes()));
 			this.original = original;
 		}
 
@@ -88,8 +83,7 @@ public class ZendDebuggerSettingsProvider extends
 	}
 
 	@Override
-	protected IDebuggerSettings createSettings(DebuggerSettingsKind kind,
-			String ownerId) {
+	protected IDebuggerSettings createSettings(DebuggerSettingsKind kind, String ownerId) {
 		switch (kind) {
 		case PHP_SERVER:
 			return new ZendDebuggerServerSettings(ownerId);
@@ -102,15 +96,13 @@ public class ZendDebuggerSettingsProvider extends
 	}
 
 	@Override
-	protected IDebuggerSettings createSettings(DebuggerSettingsKind kind,
-			String ownerId, Map<String, String> attributes) {
+	protected IDebuggerSettings createSettings(DebuggerSettingsKind kind, String ownerId,
+			Map<String, String> attributes) {
 		switch (kind) {
 		case PHP_SERVER:
-			return new ZendDebuggerServerSettings(ownerId,
-					Collections.unmodifiableMap(attributes));
+			return new ZendDebuggerServerSettings(ownerId, Collections.unmodifiableMap(attributes));
 		case PHP_EXE:
-			return new ZendDebuggerExeSettings(ownerId,
-					Collections.unmodifiableMap(attributes));
+			return new ZendDebuggerExeSettings(ownerId, Collections.unmodifiableMap(attributes));
 		default:
 			break;
 		}
@@ -126,8 +118,7 @@ public class ZendDebuggerSettingsProvider extends
 	 * (org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings)
 	 */
 	@Override
-	public IDebuggerSettingsWorkingCopy createWorkingCopy(
-			IDebuggerSettings settings) {
+	public IDebuggerSettingsWorkingCopy createWorkingCopy(IDebuggerSettings settings) {
 		switch (settings.getKind()) {
 		case PHP_SERVER:
 			return new ServerSettingsWorkingCopy(settings);

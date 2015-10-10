@@ -36,12 +36,10 @@ public class ProjectSelectionDialog extends ElementListSelectionDialog {
 	 * @param parent
 	 * @param renderer
 	 */
-	public ProjectSelectionDialog(Shell parent, String[] requiredNatures,
-			String title, String message) {
+	public ProjectSelectionDialog(Shell parent, String[] requiredNatures, String title, String message) {
 		super(parent, new ProjectLabelProvider());
 		this.requiredNatures = requiredNatures;
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
-				.getProjects();
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		if (requiredNatures != null && requiredNatures.length > 0) {
 			Vector filteredProjects = new Vector();
 			int numProjects = projects == null ? 0 : projects.length;
@@ -58,13 +56,12 @@ public class ProjectSelectionDialog extends ElementListSelectionDialog {
 			setElements(projects);
 		}
 
-		setTitle(title); 
-		setMessage(message); 
+		setTitle(title);
+		setMessage(message);
 
 	}
 
-	private boolean projectHasRequiredNatures(IProject project)
-			throws CoreException {
+	private boolean projectHasRequiredNatures(IProject project) throws CoreException {
 		if (requiredNatures != null) {
 			for (int i = 0; i < requiredNatures.length; i++) {
 				if (!project.hasNature(requiredNatures[i]))
@@ -86,10 +83,8 @@ class ProjectLabelProvider extends LabelProvider {
 	public Image getImage(Object element) {
 		if (element instanceof IProject) {
 			IProject proj = (IProject) element;
-			String imgDesc = proj.isOpen() ? IDE.SharedImages.IMG_OBJ_PROJECT
-					: IDE.SharedImages.IMG_OBJ_PROJECT_CLOSED;
-			return PlatformUI.getWorkbench().getSharedImages()
-					.getImage(imgDesc);
+			String imgDesc = proj.isOpen() ? IDE.SharedImages.IMG_OBJ_PROJECT : IDE.SharedImages.IMG_OBJ_PROJECT_CLOSED;
+			return PlatformUI.getWorkbench().getSharedImages().getImage(imgDesc);
 		}
 		return super.getImage(element);
 	}

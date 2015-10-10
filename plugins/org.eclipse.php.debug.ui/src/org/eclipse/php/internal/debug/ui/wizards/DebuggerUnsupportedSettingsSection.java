@@ -30,8 +30,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
  * @author Bartlomiej Laczkowski
  */
 @SuppressWarnings("restriction")
-public class DebuggerUnsupportedSettingsSection implements
-		IDebuggerSettingsSection {
+public class DebuggerUnsupportedSettingsSection implements IDebuggerSettingsSection {
 
 	private static final String DEBUGGERS_PAGE_ID = "org.eclipse.php.debug.ui.installedDebuggersPage"; //$NON-NLS-1$
 
@@ -41,8 +40,7 @@ public class DebuggerUnsupportedSettingsSection implements
 	/**
 	 * Creates new unsupported settings section.
 	 */
-	public DebuggerUnsupportedSettingsSection(
-			CompositeFragment compositeFragment, Composite settingsComposite) {
+	public DebuggerUnsupportedSettingsSection(CompositeFragment compositeFragment, Composite settingsComposite) {
 		this.compositeFragment = compositeFragment;
 		this.settingsComposite = settingsComposite;
 		createContents();
@@ -51,9 +49,8 @@ public class DebuggerUnsupportedSettingsSection implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#performOK
-	 * ()
+	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
+	 * performOK ()
 	 */
 	@Override
 	public boolean performOK() {
@@ -74,23 +71,20 @@ public class DebuggerUnsupportedSettingsSection implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#validate
-	 * ()
+	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
+	 * validate ()
 	 */
 	@Override
 	public void validate() {
 		// Reset state
-		compositeFragment.setMessage(compositeFragment.getDescription(),
-				IMessageProvider.NONE);
+		compositeFragment.setMessage(compositeFragment.getDescription(), IMessageProvider.NONE);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#canTest
-	 * ()
+	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
+	 * canTest ()
 	 */
 	@Override
 	public boolean canTest() {
@@ -116,8 +110,7 @@ public class DebuggerUnsupportedSettingsSection implements
 		scGridData.horizontalSpan = 2;
 		sectionComposite.setLayoutData(scGridData);
 		Label unsupportedLabel = new Label(sectionComposite, SWT.NONE);
-		unsupportedLabel
-				.setText(Messages.DebuggerUnsupportedSettingsSection_Settings_unsupported_for_debugger_type);
+		unsupportedLabel.setText(Messages.DebuggerUnsupportedSettingsSection_Settings_unsupported_for_debugger_type);
 		Link link = new Link(sectionComposite, SWT.NONE);
 		link.setText(Messages.DebuggerUnsupportedSettingsSection_Check_global_settings_in_preferences);
 		link.addSelectionListener(new SelectionAdapter() {
@@ -130,8 +123,7 @@ public class DebuggerUnsupportedSettingsSection implements
 
 	private void openLink() {
 		PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(
-				PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-				DEBUGGERS_PAGE_ID, null, null);
+				PlatformUI.getWorkbench().getDisplay().getActiveShell(), DEBUGGERS_PAGE_ID, null, null);
 		dialog.open();
 	}
 

@@ -32,8 +32,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RenameProcessorTestCase0026942 extends
-		AbstractRenameRefactoringTest {
+public class RenameProcessorTestCase0026942 extends AbstractRenameRefactoringTest {
 	private IProject project1;
 	private IFile file;
 
@@ -52,7 +51,8 @@ public class RenameProcessorTestCase0026942 extends
 		file = folder.getFile("test1.php");
 
 		InputStream source = new ByteArrayInputStream(
-				"<?php class Visitor{ public function isAllowed ($pPermissionCode){return true;}} class NonVisitor{public function isAllowed ($pPermissionCode){return false;}} class EditPage{private $isAllowed = false;public function __construct (){$lVisitor = new Visitor();$this->isAllowed = $lVisitor->isAllowed('EDIT_PAGE');}}class ViewPage{private $isAllowed = false;public function __construct (){$lVisitor = new NonVisitor();$this->isAllowed = $lVisitor->isAllowed('VIEW_PAGE');}}?>".getBytes());
+				"<?php class Visitor{ public function isAllowed ($pPermissionCode){return true;}} class NonVisitor{public function isAllowed ($pPermissionCode){return false;}} class EditPage{private $isAllowed = false;public function __construct (){$lVisitor = new Visitor();$this->isAllowed = $lVisitor->isAllowed('EDIT_PAGE');}}class ViewPage{private $isAllowed = false;public function __construct (){$lVisitor = new NonVisitor();$this->isAllowed = $lVisitor->isAllowed('VIEW_PAGE');}}?>"
+						.getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -73,14 +73,13 @@ public class RenameProcessorTestCase0026942 extends
 		int start = 184;
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
-		
+
 		RenameClassMemberProcessor processor = new RenameClassMemberProcessor(file, selectedNode);
 		processor.setNewElementName("isAllowed1");
-		
+
 		checkInitCondition(processor);
-		
+
 		performChange(processor);
-		
 
 		try {
 			String content = FileUtils.getContents(file);
@@ -101,14 +100,13 @@ public class RenameProcessorTestCase0026942 extends
 		int start = 290;
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
-		
+
 		RenameClassMemberProcessor processor = new RenameClassMemberProcessor(file, selectedNode);
 		processor.setNewElementName("isAllowed1");
-		
+
 		checkInitCondition(processor);
-		
+
 		performChange(processor);
-		
 
 		try {
 			String content = FileUtils.getContents(file);
@@ -119,7 +117,7 @@ public class RenameProcessorTestCase0026942 extends
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	protected Program createProgram(IFile file) {
 		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);

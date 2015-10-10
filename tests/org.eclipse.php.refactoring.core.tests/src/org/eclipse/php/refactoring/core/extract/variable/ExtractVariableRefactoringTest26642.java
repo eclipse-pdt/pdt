@@ -58,7 +58,8 @@ public class ExtractVariableRefactoringTest26642 extends AbstractRefactoringTest
 		file = folder.getFile("ExtractVariableRefactoringTest26642.php");
 
 		InputStream source = new ByteArrayInputStream(
-				"<?php function tests ($oppp){  return $oppp;}$test = 123;$test1 = 124;echo $test;$test = \"test\" $paste = tests ($test);?>".getBytes());
+				"<?php function tests ($oppp){  return $oppp;}$test = 123;$test1 = 124;echo $test;$test = \"test\" $paste = tests ($test);?>"
+						.getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -91,7 +92,8 @@ public class ExtractVariableRefactoringTest26642 extends AbstractRefactoringTest
 
 		ExtractVariableRefactoring processor;
 		try {
-			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 47, 0);
+			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 47,
+					0);
 			processor.setNewVariableName("c");
 
 			checkInitCondition(processor);

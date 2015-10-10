@@ -51,18 +51,16 @@ public abstract class PhpPreview {
 	 * @param workingValues
 	 * @param parent
 	 */
-	public PhpPreview(CodeFormatterPreferences codeFormatterPreferences,
-			Composite parent) {
+	public PhpPreview(CodeFormatterPreferences codeFormatterPreferences, Composite parent) {
 		// set the PHP parser
 		IModelManager mmanager = StructuredModelManager.getModelManager();
-		fParser = mmanager.createStructuredDocumentFor(
-				ContentTypeIdForPHP.ContentTypeID_PHP).getParser();
+		fParser = mmanager.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP).getParser();
 
 		this.codeFormatterPreferences = codeFormatterPreferences;
 
 		// create the text area
-		fText = new StyledText(parent, SWT.LEFT_TO_RIGHT | SWT.MULTI
-				| SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.READ_ONLY);
+		fText = new StyledText(parent,
+				SWT.LEFT_TO_RIGHT | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.READ_ONLY);
 		GridData data = new GridData(GridData.FILL_BOTH);
 		fText.setLayoutData(data);
 		fText.setEditable(false);
@@ -78,18 +76,15 @@ public abstract class PhpPreview {
 		final int top0 = fText.getTopPixel();
 
 		final int totalPixels0 = getHeightOfAllLines(fText);
-		final int topPixelRange0 = totalPixels0 > height ? totalPixels0
-				- height : 0;
+		final int topPixelRange0 = totalPixels0 > height ? totalPixels0 - height : 0;
 
 		fText.setRedraw(false);
 		doFormatPreview();
 
 		final int totalPixels1 = getHeightOfAllLines(fText);
-		final int topPixelRange1 = totalPixels1 > height ? totalPixels1
-				- height : 0;
+		final int topPixelRange1 = totalPixels1 > height ? totalPixels1 - height : 0;
 
-		final int top1 = topPixelRange0 > 0 ? (int) (topPixelRange1 * top0 / (double) topPixelRange0)
-				: 0;
+		final int top1 = topPixelRange0 > 0 ? (int) (topPixelRange1 * top0 / (double) topPixelRange0) : 0;
 		fText.setTopPixel(top1);
 		fText.setRedraw(true);
 	}
@@ -98,8 +93,7 @@ public abstract class PhpPreview {
 		int height = 0;
 		int lineCount = styledText.getLineCount();
 		for (int i = 0; i < lineCount; i++) {
-			height = height
-					+ styledText.getLineHeight(styledText.getOffsetAtLine(i));
+			height = height + styledText.getLineHeight(styledText.getOffsetAtLine(i));
 		}
 		return height;
 	}
@@ -107,25 +101,20 @@ public abstract class PhpPreview {
 	protected abstract void doFormatPreview();
 
 	protected void applyStyles() {
-		if (fText == null || fText.isDisposed() || fInput == null
-				|| fInput.length() == 0) {
+		if (fText == null || fText.isDisposed() || fInput == null || fInput.length() == 0) {
 			return;
 		}
 
-		final IPreferenceStore editorStore = EditorsPlugin.getDefault()
-				.getPreferenceStore();
-		fText.setBackground(editorStore
-				.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT) ? null
-				: new Color(fText.getDisplay(), PreferenceConverter.getColor(
-						editorStore,
-						AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND)));
+		final IPreferenceStore editorStore = EditorsPlugin.getDefault().getPreferenceStore();
+		fText.setBackground(editorStore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT) ? null
+				: new Color(fText.getDisplay(),
+						PreferenceConverter.getColor(editorStore, AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND)));
 
 		fStyleProvider.loadColors();
 
 		IStructuredDocumentRegion node = fNodes;
 		final Collection<StyleRange> holdResults = new ArrayList<StyleRange>();
-		fStyleProvider
-				.prepareTextRegions(node, 0, fInput.length(), holdResults);
+		fStyleProvider.prepareTextRegions(node, 0, fInput.length(), holdResults);
 
 		for (Iterator<StyleRange> iter = holdResults.iterator(); iter.hasNext();) {
 			StyleRange element = iter.next();
@@ -151,8 +140,7 @@ public abstract class PhpPreview {
 		return codeFormatterPreferences;
 	}
 
-	public final void setPreferences(
-			CodeFormatterPreferences codeFormatterPreferences) {
+	public final void setPreferences(CodeFormatterPreferences codeFormatterPreferences) {
 		this.codeFormatterPreferences = codeFormatterPreferences;
 	}
 

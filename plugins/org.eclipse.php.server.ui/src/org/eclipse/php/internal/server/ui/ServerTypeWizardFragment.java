@@ -34,8 +34,7 @@ public class ServerTypeWizardFragment extends CompositeWizardFragment {
 	 * @see org.eclipse.wst.server.ui.task.WizardFragment#createComposite()
 	 */
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
-		comp = new ServerTypeCompositeFragment(parent,
-				new WizardControlWrapper(wizard), false);
+		comp = new ServerTypeCompositeFragment(parent, new WizardControlWrapper(wizard), false);
 		return comp;
 	}
 
@@ -54,8 +53,7 @@ public class ServerTypeWizardFragment extends CompositeWizardFragment {
 				Logger.logException(e);
 			}
 		} else {
-			Logger.log(Logger.ERROR,
-					"Could not display the Servers wizard (component is null)."); //$NON-NLS-1$
+			Logger.log(Logger.ERROR, "Could not display the Servers wizard (component is null)."); //$NON-NLS-1$
 		}
 	}
 

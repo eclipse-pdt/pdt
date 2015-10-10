@@ -23,8 +23,7 @@ import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.*;
 
-public class RenameAction implements IWorkbenchWindowActionDelegate,
-		IEditorActionDelegate {
+public class RenameAction implements IWorkbenchWindowActionDelegate, IEditorActionDelegate {
 
 	private IActionDelegate fRenamePHPElement;
 	private RenameResourceAction resourceAction;
@@ -43,13 +42,11 @@ public class RenameAction implements IWorkbenchWindowActionDelegate,
 				IWorkbenchPage page = window.getActivePage();
 				if (page != null) {
 					if (page.getActivePart() != null)
-						resourceAction = new RenameResourceAction(page
-								.getActivePart().getSite());
+						resourceAction = new RenameResourceAction(page.getActivePart().getSite());
 				}
 			} else {
 				if (fRenamePHPElement instanceof IWorkbenchWindowActionDelegate) {
-					((IWorkbenchWindowActionDelegate) fRenamePHPElement)
-							.init(window);
+					((IWorkbenchWindowActionDelegate) fRenamePHPElement).init(window);
 				}
 			}
 		}
@@ -57,15 +54,13 @@ public class RenameAction implements IWorkbenchWindowActionDelegate,
 	}
 
 	private void init() {
-		fRenamePHPElement = PHPActionDelegatorRegistry
-				.getActionDelegator(RENAME_ELEMENT_ACTION_ID);
+		fRenamePHPElement = PHPActionDelegatorRegistry.getActionDelegator(RENAME_ELEMENT_ACTION_ID);
 	}
 
 	public void run(IAction action) {
 		if (resourceAction != null) {
 			if (!selection.isEmpty()) {
-				Object object = ((IStructuredSelection) selection)
-						.getFirstElement();
+				Object object = ((IStructuredSelection) selection).getFirstElement();
 				IResource resource = null;
 				if (object instanceof IModelElement) {
 					resource = ((IModelElement) object).getResource();
@@ -74,16 +69,13 @@ public class RenameAction implements IWorkbenchWindowActionDelegate,
 					resource = (IResource) object;
 				}
 				if (object instanceof ElementImplForPhp) {
-					resource = ((ElementImplForPhp) object).getModelElement()
-							.getResource();
+					resource = ((ElementImplForPhp) object).getModelElement().getResource();
 				}
 				if (resource != null) {
-					IStructuredSelection resourceSel = new StructuredSelection(
-							resource);
+					IStructuredSelection resourceSel = new StructuredSelection(resource);
 					resourceAction.run(resourceSel);
 				} else {
-					MessageDialog.openInformation(PlatformUI.getWorkbench()
-							.getDisplay().getActiveShell(),
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
 							PHPUIMessages.RenamePHPElementAction_name,
 							PHPUIMessages.RenamePHPElementAction_not_available);
 				}
@@ -107,14 +99,12 @@ public class RenameAction implements IWorkbenchWindowActionDelegate,
 		if (fRenamePHPElement == null) {
 			init();
 		}
-		if (targetEditor != null && resourceAction == null
-				&& fRenamePHPElement == null) {
+		if (targetEditor != null && resourceAction == null && fRenamePHPElement == null) {
 			resourceAction = new RenameResourceAction(targetEditor.getSite());
 		}
 
 		if (fRenamePHPElement instanceof IEditorActionDelegate) {
-			((IEditorActionDelegate) fRenamePHPElement).setActiveEditor(action,
-					targetEditor);
+			((IEditorActionDelegate) fRenamePHPElement).setActiveEditor(action, targetEditor);
 		}
 	}
 

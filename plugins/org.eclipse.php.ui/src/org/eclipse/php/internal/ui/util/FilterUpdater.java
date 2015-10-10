@@ -39,8 +39,7 @@ public class FilterUpdater implements IResourceChangeListener {
 		if (delta == null)
 			return;
 
-		IResourceDelta[] projDeltas = delta
-				.getAffectedChildren(IResourceDelta.CHANGED);
+		IResourceDelta[] projDeltas = delta.getAffectedChildren(IResourceDelta.CHANGED);
 		for (int i = 0; i < projDeltas.length; i++) {
 			IResourceDelta pDelta = projDeltas[i];
 			if ((pDelta.getFlags() & IResourceDelta.DESCRIPTION) != 0) {

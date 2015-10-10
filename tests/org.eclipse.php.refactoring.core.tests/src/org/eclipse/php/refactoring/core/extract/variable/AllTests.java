@@ -17,8 +17,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ ExtractVariableRefactoringTest.class, ExtractVariableRefactoringTest1.class, ExtractVariableRefactoringTest2.class,
-		ExtractVariableRefactoringTest3.class, ExtractVariableRefactoringTest27457.class, ExtractVariableRefactoringTest26642.class,
+@Suite.SuiteClasses({ ExtractVariableRefactoringTest.class, ExtractVariableRefactoringTest1.class,
+		ExtractVariableRefactoringTest2.class, ExtractVariableRefactoringTest3.class,
+		ExtractVariableRefactoringTest27457.class, ExtractVariableRefactoringTest26642.class,
 		ExtractVariableRefactoringTestGetVariableName.class })
 public class AllTests {
 

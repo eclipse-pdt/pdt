@@ -25,10 +25,8 @@ import java.util.regex.Pattern;
  */
 public class VirtualPath implements Cloneable {
 
-	private static final Pattern VOLNAME = Pattern
-			.compile("([A-Za-z]:)[/\\\\](.*)"); //$NON-NLS-1$
-	private static final Pattern PROTOCOL = Pattern
-			.compile("([A-Za-z]*://)(.*)"); //$NON-NLS-1$
+	private static final Pattern VOLNAME = Pattern.compile("([A-Za-z]:)[/\\\\](.*)"); //$NON-NLS-1$
+	private static final Pattern PROTOCOL = Pattern.compile("([A-Za-z]*://)(.*)"); //$NON-NLS-1$
 	private LinkedList<String> segments;
 	private String device;
 	private char sepChar;
@@ -56,7 +54,8 @@ public class VirtualPath implements Cloneable {
 			Matcher m = VOLNAME.matcher(path);
 			if (m.matches()) { // Windows path
 				sepChar = '\\';
-				device = m.group(1) + "\\"; // correct path from C:/ to C:\ //$NON-NLS-1$
+				device = m.group(1) + "\\"; // correct path from //$NON-NLS-1$
+											// C:/ to C:\
 				path = m.group(2);
 			} else if (path.startsWith("/")) { // Unix path //$NON-NLS-1$
 				sepChar = '/';
@@ -68,8 +67,7 @@ public class VirtualPath implements Cloneable {
 					device = m.group(1);
 					path = m.group(2);
 				} else {
-					throw new IllegalArgumentException(
-							"Illegal or not full path: " + path);//$NON-NLS-1$
+					throw new IllegalArgumentException("Illegal or not full path: " + path);//$NON-NLS-1$
 				}
 			}
 		}
@@ -96,8 +94,7 @@ public class VirtualPath implements Cloneable {
 				|| path.startsWith("/") || PROTOCOL.matcher(path).matches()); //$NON-NLS-1$
 	}
 
-	protected VirtualPath(String device, char sepChar,
-			LinkedList<String> segments) {
+	protected VirtualPath(String device, char sepChar, LinkedList<String> segments) {
 		this.device = device;
 		this.sepChar = sepChar;
 		this.segments = segments;
@@ -181,7 +178,6 @@ public class VirtualPath implements Cloneable {
 				segmentsEqual &= i.next().equalsIgnoreCase(j.next());
 			}
 		}
-		return other.device.equalsIgnoreCase(device) && segmentsEqual
-				&& other.sepChar == sepChar;
+		return other.device.equalsIgnoreCase(device) && segmentsEqual && other.sepChar == sepChar;
 	}
 }

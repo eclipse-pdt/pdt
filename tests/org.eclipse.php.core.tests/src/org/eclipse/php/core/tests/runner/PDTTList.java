@@ -93,8 +93,7 @@ public class PDTTList extends AbstractPDTTRunner {
 		protected Object createTestInstance() {
 			if (testInstance == null) {
 				try {
-					testInstance = getTestClass().getOnlyConstructor()
-							.newInstance(getConstructorArgs());
+					testInstance = getTestClass().getOnlyConstructor().newInstance(getConstructorArgs());
 				} catch (Exception e) {
 					System.out.println("This is not possible!");
 				}
@@ -110,11 +109,9 @@ public class PDTTList extends AbstractPDTTRunner {
 
 		@Override
 		protected Statement withBeforeClasses(Statement statement) {
-			List<FrameworkMethod> annotatedMethods = getTestClass()
-					.getAnnotatedMethods(BeforeList.class);
+			List<FrameworkMethod> annotatedMethods = getTestClass().getAnnotatedMethods(BeforeList.class);
 			if (fFileList.length > 0 && !annotatedMethods.isEmpty()) {
-				statement = new BeforeStatement(statement, annotatedMethods,
-						createTestInstance());
+				statement = new BeforeStatement(statement, annotatedMethods, createTestInstance());
 			}
 			return super.withBeforeClasses(statement);
 		}
@@ -123,11 +120,9 @@ public class PDTTList extends AbstractPDTTRunner {
 		protected Statement withAfterClasses(Statement statement) {
 			statement = super.withAfterClasses(statement);
 
-			List<FrameworkMethod> annotatedMethods = getTestClass()
-					.getAnnotatedMethods(AfterList.class);
+			List<FrameworkMethod> annotatedMethods = getTestClass().getAnnotatedMethods(AfterList.class);
 			if (fFileList.length > 0 && !annotatedMethods.isEmpty()) {
-				statement = new AfterStatement(statement, annotatedMethods,
-						createTestInstance());
+				statement = new AfterStatement(statement, annotatedMethods, createTestInstance());
 			}
 
 			return statement;
@@ -141,8 +136,7 @@ public class PDTTList extends AbstractPDTTRunner {
 		private final String fTestName;
 		private final PHPVersion fPHPVersion;
 
-		public DirRunner(Class<?> klass, PHPVersion phpVersion, String dir,
-				String testName) throws Throwable {
+		public DirRunner(Class<?> klass, PHPVersion phpVersion, String dir, String testName) throws Throwable {
 			super(klass);
 			fTestName = testName;
 			fPHPVersion = phpVersion;
@@ -160,11 +154,9 @@ public class PDTTList extends AbstractPDTTRunner {
 					if (!path.endsWith("/")) {
 						continue;
 					}
-					final String namePath = path
-							.substring(0, path.length() - 1);
+					final String namePath = path.substring(0, path.length() - 1);
 					int pos = namePath.lastIndexOf('/');
-					final String name = (pos >= 0 ? namePath.substring(pos + 1)
-							: namePath);
+					final String name = (pos >= 0 ? namePath.substring(pos + 1) : namePath);
 					try {
 						bundle.getEntry(path); // test Only
 						runners.add(new DirRunner(klass, phpVersion, path, name));
@@ -192,14 +184,12 @@ public class PDTTList extends AbstractPDTTRunner {
 	private class PHPVersionRunner extends ParentRunner {
 		private final PHPVersion fPHPVersion;
 
-		public PHPVersionRunner(Class<?> klass, PHPVersion phpVersion,
-				String[] dirs) throws Throwable {
+		public PHPVersionRunner(Class<?> klass, PHPVersion phpVersion, String[] dirs) throws Throwable {
 			super(klass);
 			fPHPVersion = phpVersion;
 			if (isRecursive) {
 				for (String dirName : dirs) {
-					runners.add(new DirRunner(klass, phpVersion, dirName,
-							dirName));
+					runners.add(new DirRunner(klass, phpVersion, dirName, dirName));
 				}
 			} else {
 				fFileList = buildFileList(dirs);
@@ -225,20 +215,16 @@ public class PDTTList extends AbstractPDTTRunner {
 			return statement;
 		}
 
-		protected void collectInitializationErrors(
-				java.util.List<Throwable> errors) {
+		protected void collectInitializationErrors(java.util.List<Throwable> errors) {
 			super.collectInitializationErrors(errors);
 			validatePublicVoidWithNoArguments(BeforeList.class, errors);
 			validatePublicVoidWithNoArguments(AfterList.class, errors);
 		}
 
-		protected void validatePublicVoidWithNoArguments(
-				Class<? extends Annotation> clazz, List<Throwable> errors) {
-			for (FrameworkMethod method : getTestClass().getAnnotatedMethods(
-					clazz)) {
+		protected void validatePublicVoidWithNoArguments(Class<? extends Annotation> clazz, List<Throwable> errors) {
+			for (FrameworkMethod method : getTestClass().getAnnotatedMethods(clazz)) {
 				if (!method.isPublic() || method.isStatic()) {
-					errors.add(new Exception(
-							"Method have to be public not static"));
+					errors.add(new Exception("Method have to be public not static"));
 				}
 				if (method.getMethod().getParameterTypes().length != 0) {
 					errors.add(new Exception("Method must be without arguments"));
@@ -258,8 +244,7 @@ public class PDTTList extends AbstractPDTTRunner {
 		private final List<FrameworkMethod> fBefores;
 		private final Object fTest;
 
-		public BeforeStatement(Statement next, List<FrameworkMethod> befores,
-				Object test) {
+		public BeforeStatement(Statement next, List<FrameworkMethod> befores, Object test) {
 			fNext = next;
 			fBefores = befores;
 			fTest = test;
@@ -279,8 +264,7 @@ public class PDTTList extends AbstractPDTTRunner {
 		private final List<FrameworkMethod> fAfters;
 		private final Object fTest;
 
-		public AfterStatement(Statement before, List<FrameworkMethod> afters,
-				Object test) {
+		public AfterStatement(Statement before, List<FrameworkMethod> afters, Object test) {
 			fBefore = before;
 			fAfters = afters;
 			fTest = test;
@@ -316,8 +300,7 @@ public class PDTTList extends AbstractPDTTRunner {
 
 		private final ParentRunner fParentRunner;
 
-		public FileTestClassRunner(ParentRunner parentRunner, String name)
-				throws InitializationError {
+		public FileTestClassRunner(ParentRunner parentRunner, String name) throws InitializationError {
 			super(parentRunner.getTestClass().getJavaClass());
 			fName = name;
 			// to avoid jUnit limitation
@@ -344,12 +327,9 @@ public class PDTTList extends AbstractPDTTRunner {
 			}
 			Constructor<?> constructor = javaClass.getConstructors()[0];
 			if (constructor.getParameterTypes().length != 2
-					|| !constructor.getParameterTypes()[0]
-							.isAssignableFrom(PHPVersion.class)
-					|| !constructor.getParameterTypes()[1]
-							.isAssignableFrom(String[].class)) {
-				errors.add(new Exception(
-						"Public constructor with phpVersion and String[] argument is required"));
+					|| !constructor.getParameterTypes()[0].isAssignableFrom(PHPVersion.class)
+					|| !constructor.getParameterTypes()[1].isAssignableFrom(String[].class)) {
+				errors.add(new Exception("Public constructor with phpVersion and String[] argument is required"));
 			}
 		}
 
@@ -370,21 +350,17 @@ public class PDTTList extends AbstractPDTTRunner {
 
 		@Override
 		protected void validateTestMethods(List<Throwable> errors) {
-			for (FrameworkMethod method : getTestClass().getAnnotatedMethods(
-					Test.class)) {
+			for (FrameworkMethod method : getTestClass().getAnnotatedMethods(Test.class)) {
 				method.validatePublicVoid(false, errors);
 				Class<?>[] types = method.getMethod().getParameterTypes();
-				if (!(types.length == 0 || (types.length == 1 && types[0]
-						.isAssignableFrom(String.class)))) {
-					errors.add(new Exception(method.toString()
-							+ ": Dirs list must by empty or one string"));
+				if (!(types.length == 0 || (types.length == 1 && types[0].isAssignableFrom(String.class)))) {
+					errors.add(new Exception(method.toString() + ": Dirs list must by empty or one string"));
 				}
 			}
 		}
 
 		@Override
-		protected Statement methodInvoker(final FrameworkMethod method,
-				final Object test) {
+		protected Statement methodInvoker(final FrameworkMethod method, final Object test) {
 			return new Statement() {
 
 				@Override
@@ -400,16 +376,14 @@ public class PDTTList extends AbstractPDTTRunner {
 
 		@Override
 		protected Description describeChild(FrameworkMethod method) {
-			return Description.createTestDescription(getTestClass().getName(),
-					method.getName() + '[' + fName + ']', getTestClass()
-							.getName() + '#' + fName + fIndex);
+			return Description.createTestDescription(getTestClass().getName(), method.getName() + '[' + fName + ']',
+					getTestClass().getName() + '#' + fName + fIndex);
 		}
 	}
 
 	private class SimpleFileRunner extends FileTestClassRunner {
 
-		public SimpleFileRunner(ParentRunner parentRunner, String name)
-				throws InitializationError {
+		public SimpleFileRunner(ParentRunner parentRunner, String name) throws InitializationError {
 			super(parentRunner, name);
 		}
 
@@ -422,10 +396,8 @@ public class PDTTList extends AbstractPDTTRunner {
 			}
 			Constructor<?> constructor = javaClass.getConstructors()[0];
 			if (constructor.getParameterTypes().length != 1
-					|| !constructor.getParameterTypes()[0]
-							.isAssignableFrom(String[].class)) {
-				errors.add(new Exception(
-						"Public constructor with String[] argument is required"));
+					|| !constructor.getParameterTypes()[0].isAssignableFrom(String[].class)) {
+				errors.add(new Exception("Public constructor with String[] argument is required"));
 			}
 		}
 	}
@@ -449,8 +421,7 @@ public class PDTTList extends AbstractPDTTRunner {
 
 	private class FakeFlatRunner extends ParentRunner {
 
-		public FakeFlatRunner(Class<?> klass, String[] fileList)
-				throws Exception {
+		public FakeFlatRunner(Class<?> klass, String[] fileList) throws Exception {
 			super(klass);
 			fFileList = fileList;
 		}
@@ -471,18 +442,15 @@ public class PDTTList extends AbstractPDTTRunner {
 
 	private void buildRunners() throws Throwable {
 		for (Entry<PHPVersion, String[]> entry : parameters.entrySet()) {
-			runners.add(new PHPVersionRunner(getTestClass().getJavaClass(),
-					entry.getKey(), entry.getValue()));
+			runners.add(new PHPVersionRunner(getTestClass().getJavaClass(), entry.getKey(), entry.getValue()));
 		}
 	}
 
 	private void readParameters() throws Exception {
-		for (FrameworkField field : getTestClass().getAnnotatedFields(
-				Parameters.class)) {
+		for (FrameworkField field : getTestClass().getAnnotatedFields(Parameters.class)) {
 			if (field.isPublic() && field.isPublic()) {
 				if (field.getType().isAssignableFrom(Map.class)) {
-					parameters = (Map<PHPVersion, String[]>) field.getField()
-							.get(null);
+					parameters = (Map<PHPVersion, String[]>) field.getField().get(null);
 				} else if (field.getType().isAssignableFrom(String[].class)) {
 					dirs = (String[]) field.getField().get(null);
 					isArray = true;
@@ -499,9 +467,8 @@ public class PDTTList extends AbstractPDTTRunner {
 			}
 		}
 
-		throw new Exception(
-				getTestClass().getName()
-						+ ": Public static Map<PHPVersion, String[]>|String[] field with @Parameters is required");
+		throw new Exception(getTestClass().getName()
+				+ ": Public static Map<PHPVersion, String[]>|String[] field with @Parameters is required");
 	}
 
 	@Override

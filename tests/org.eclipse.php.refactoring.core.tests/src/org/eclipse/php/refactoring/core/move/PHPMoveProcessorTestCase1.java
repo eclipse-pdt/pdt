@@ -46,22 +46,20 @@ public class PHPMoveProcessorTestCase1 {
 
 	@Before
 	public void setUp() throws Exception {
-		System.setProperty("disableStartupRunner","true");
+		System.setProperty("disableStartupRunner", "true");
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
-		
 
 		project1 = FileUtils.createProject("TestProject11");
-		
+
 		IFolder folder = project1.getFolder("src");
-		
-		if(!folder.exists()){
+
+		if (!folder.exists()) {
 			folder.create(true, true, new NullProgressMonitor());
 		}
 		IFile file = folder.getFile("test1.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php class TestRenameClass{}?>".getBytes());
+		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -74,9 +72,8 @@ public class PHPMoveProcessorTestCase1 {
 		IAccessRule[] accesRules = new IAccessRule[0];
 
 		boolean combineAccessRules = false;
-		IBuildpathEntry buildPath = DLTKCore.newProjectEntry(project1
-				.getProject().getFullPath(), accesRules, combineAccessRules,
-				new IBuildpathAttribute[0], false);
+		IBuildpathEntry buildPath = DLTKCore.newProjectEntry(project1.getProject().getFullPath(), accesRules,
+				combineAccessRules, new IBuildpathAttribute[0], false);
 
 		final IScriptProject scriptProject = DLTKCore.create(project2.getProject());
 
@@ -90,40 +87,37 @@ public class PHPMoveProcessorTestCase1 {
 			e.printStackTrace();
 		}
 
-		final IBuildpathEntry[] newEntries = new IBuildpathEntry[entriesList
-				.size()];
+		final IBuildpathEntry[] newEntries = new IBuildpathEntry[entriesList.size()];
 
-		scriptProject.setRawBuildpath(null,
-				new NullProgressMonitor());
-		scriptProject.setRawBuildpath(entriesList
-				.toArray(newEntries), new NullProgressMonitor());
+		scriptProject.setRawBuildpath(null, new NullProgressMonitor());
+		scriptProject.setRawBuildpath(entriesList.toArray(newEntries), new NullProgressMonitor());
 
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
 	}
-	
+
 	@Test
-	public void testMoveing(){
+	public void testMoveing() {
 		PHPMoveProcessor processor = new PHPMoveProcessor(project1.getProject().getFolder("src"));
-		
+
 		RefactoringStatus status = processor.checkInitialConditions(new NullProgressMonitor());
-		
+
 		assertEquals(IStatus.OK, status.getSeverity());
-		
+
 		processor.setDestination(project2);
 		processor.setUpdateReferences(true);
-		
+
 		try {
 			Change change = processor.createChange(new NullProgressMonitor());
 			change.perform(new NullProgressMonitor());
 			PHPCoreTests.waitForAutoBuild();
-			
+
 			assertTrue(project2.getFolder("src").exists());
-			
+
 			IMarker[] marks = project2.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-			
-			assertEquals(0,marks.length);
-			
+
+			assertEquals(0, marks.length);
+
 		} catch (OperationCanceledException e) {
 			fail(e.getMessage());
 		} catch (CoreException e) {
@@ -131,6 +125,6 @@ public class PHPMoveProcessorTestCase1 {
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
-		
+
 	}
 }

@@ -101,13 +101,11 @@ public class DeleteModifications extends RefactoringModifications {
 			ISourceModule unit = type.getSourceModule();
 			// TODO: Looks like a bug:
 			// unit.getElementName().endsWith(type.getElementName())
-			if (type.getDeclaringType() == null
-					&& unit.getElementName().endsWith(type.getElementName())) {
+			if (type.getDeclaringType() == null && unit.getElementName().endsWith(type.getElementName())) {
 				if (unit.getTypes().length == 1) {
 					fDelete.add(unit);
 					if (unit.getResource() != null)
-						getResourceModifications()
-								.addDelete(unit.getResource());
+						getResourceModifications().addDelete(unit.getResource());
 				}
 			}
 			return;
@@ -136,19 +134,15 @@ public class DeleteModifications extends RefactoringModifications {
 		getResourceModifications().buildDelta(deltaFactory);
 	}
 
-	public RefactoringParticipant[] loadParticipants(RefactoringStatus status,
-			RefactoringProcessor owner, String[] natures,
-			SharableParticipants shared) {
+	public RefactoringParticipant[] loadParticipants(RefactoringStatus status, RefactoringProcessor owner,
+			String[] natures, SharableParticipants shared) {
 		List result = new ArrayList();
 		for (Iterator iter = fDelete.iterator(); iter.hasNext();) {
-			result.addAll(Arrays.asList(ParticipantManager
-					.loadDeleteParticipants(status, owner, iter.next(),
-							new DeleteArguments(), natures, shared)));
+			result.addAll(Arrays.asList(ParticipantManager.loadDeleteParticipants(status, owner, iter.next(),
+					new DeleteArguments(), natures, shared)));
 		}
-		result.addAll(Arrays.asList(getResourceModifications().getParticipants(
-				status, owner, natures, shared)));
-		return (RefactoringParticipant[]) result
-				.toArray(new RefactoringParticipant[result.size()]);
+		result.addAll(Arrays.asList(getResourceModifications().getParticipants(status, owner, natures, shared)));
+		return (RefactoringParticipant[]) result.toArray(new RefactoringParticipant[result.size()]);
 	}
 
 	/**
@@ -162,8 +156,7 @@ public class DeleteModifications extends RefactoringModifications {
 	 * @param resourcesCollector
 	 * 
 	 */
-	private void handleScriptFolderDelete(IScriptFolder pack,
-			ArrayList resourcesCollector) throws CoreException {
+	private void handleScriptFolderDelete(IScriptFolder pack, ArrayList resourcesCollector) throws CoreException {
 		final IContainer container = (IContainer) pack.getResource();
 		if (container == null)
 			return;
@@ -181,8 +174,7 @@ public class DeleteModifications extends RefactoringModifications {
 			// deletion
 			// if the parent folder of this folder will not be deleted as well:
 			boolean parentIsMarked = false;
-			final IScriptFolder parent = ModelElementUtil
-					.getParentSubpackage(pack);
+			final IScriptFolder parent = ModelElementUtil.getParentSubpackage(pack);
 			if (parent == null) {
 				// "Parent" is the default package which will never be
 				// deleted physically
@@ -220,16 +212,12 @@ public class DeleteModifications extends RefactoringModifications {
 					IFile file = (IFile) member;
 					if ("class".equals(file.getFileExtension()) && file.isDerived()) //$NON-NLS-1$
 						continue;
-					IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-							.getLanguageToolkit(pack);
+					IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(pack);
 					if (DLTKCore.DEBUG) {
-						System.err
-								.println(Messages.DeleteModifications_1); 
+						System.err.println(Messages.DeleteModifications_1);
 					}
-					if (pack.isRootFolder()
-							&& (toolkit == null || (toolkit != null && (!DLTKContentTypeManager
-									.isValidResourceForContentType(toolkit,
-											file)))))
+					if (pack.isRootFolder() && (toolkit == null || (toolkit != null
+							&& (!DLTKContentTypeManager.isValidResourceForContentType(toolkit, file)))))
 						continue;
 					resourcesCollector.add(member);
 					getResourceModifications().addDelete(member);
@@ -239,8 +227,7 @@ public class DeleteModifications extends RefactoringModifications {
 					// as well, but in case they have been removed from the
 					// build
 					// path, notify the participant
-					IScriptFolder frag = (IScriptFolder) DLTKCore
-							.create(member);
+					IScriptFolder frag = (IScriptFolder) DLTKCore.create(member);
 					if (frag == null) {
 						resourcesCollector.add(member);
 						getResourceModifications().addDelete(member);
@@ -254,13 +241,10 @@ public class DeleteModifications extends RefactoringModifications {
 	 * Returns true if this initially selected package is really deletable (if
 	 * it has non-selected sub packages, it may only be cleared).
 	 */
-	private boolean canRemoveCompletely(IScriptFolder pack)
-			throws ModelException {
-		final IScriptFolder[] subPackages = ModelElementUtil
-				.getPackageAndSubpackages(pack);
+	private boolean canRemoveCompletely(IScriptFolder pack) throws ModelException {
+		final IScriptFolder[] subPackages = ModelElementUtil.getPackageAndSubpackages(pack);
 		for (int i = 0; i < subPackages.length; i++) {
-			if (!(subPackages[i].equals(pack))
-					&& !(fPackagesToDelete.contains(subPackages[i])))
+			if (!(subPackages[i].equals(pack)) && !(fPackagesToDelete.contains(subPackages[i])))
 				return false;
 		}
 		return true;

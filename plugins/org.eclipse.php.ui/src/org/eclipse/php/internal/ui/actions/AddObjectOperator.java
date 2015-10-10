@@ -55,16 +55,14 @@ public class AddObjectOperator extends AbstractHandler implements IHandler {
 			}
 		}
 		if (textEditor != null) {
-			IDocument document = textEditor.getDocumentProvider().getDocument(
-					textEditor.getEditorInput());
+			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 
 			if (document != null) {
 				if (textEditor.getSelectionProvider() == null
 						|| !(textEditor.getSelectionProvider().getSelection() instanceof ITextSelection)) {
 					return null;
 				}
-				ITextSelection textSelection = (ITextSelection) textEditor
-						.getSelectionProvider().getSelection();
+				ITextSelection textSelection = (ITextSelection) textEditor.getSelectionProvider().getSelection();
 
 				if (textSelection.isEmpty()) {
 					return null;
@@ -72,25 +70,21 @@ public class AddObjectOperator extends AbstractHandler implements IHandler {
 				if (document instanceof IStructuredDocument) {
 					int selectionOffset = textSelection.getOffset() - 1;
 					IStructuredDocument sDoc = (IStructuredDocument) document;
-					IStructuredDocumentRegion sdRegion = sDoc
-							.getRegionAtCharacterOffset(selectionOffset);
-					ITextRegion textRegion = sdRegion
-							.getRegionAtCharacterOffset(selectionOffset);
+					IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selectionOffset);
+					ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selectionOffset);
 
 					ITextRegionCollection container = sdRegion;
 
 					if (textRegion instanceof ITextRegionContainer) {
 						container = (ITextRegionContainer) textRegion;
-						textRegion = container
-								.getRegionAtCharacterOffset(selectionOffset);
+						textRegion = container.getRegionAtCharacterOffset(selectionOffset);
 					}
 					if (textRegion == null) {
 						return null;
 					}
 					if (sdRegion instanceof IStructuredDocumentRegion
 							&& textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-						run(textEditor, document, textSelection,
-								(IStructuredDocumentRegion) sdRegion);
+						run(textEditor, document, textSelection, (IStructuredDocumentRegion) sdRegion);
 					}
 				}
 			}
@@ -98,33 +92,29 @@ public class AddObjectOperator extends AbstractHandler implements IHandler {
 		return null;
 	}
 
-	private void run(ITextEditor textEditor, IDocument document,
-			ITextSelection textSelection, IStructuredDocumentRegion textRegion) {
+	private void run(ITextEditor textEditor, IDocument document, ITextSelection textSelection,
+			IStructuredDocumentRegion textRegion) {
 
 		if (textSelection.getLength() != 0) {
 			return;
 		}
 
-		IStructuredModel model = StructuredModelManager.getModelManager()
-				.getExistingModelForEdit(document);
+		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
 		if (model != null) {
 			try {
 				AutoActivationTrigger.register(document);
 
-				TextSequence statement = PHPTextSequenceUtilities.getStatement(
-						textSelection.getOffset(), textRegion, true);
-				String insert = PHPTextSequenceUtilities
-						.suggestObjectOperator(statement);
+				TextSequence statement = PHPTextSequenceUtilities.getStatement(textSelection.getOffset(), textRegion,
+						true);
+				String insert = PHPTextSequenceUtilities.suggestObjectOperator(statement);
 				if (insert == null) {
 					return;
 				}
-				model.beginRecording(this,
-						PHPUIMessages.AddObjectOperator_tooltip);
+				model.beginRecording(this, PHPUIMessages.AddObjectOperator_tooltip);
 				model.aboutToChangeModel();
 				try {
 					document.replace(textSelection.getOffset(), 0, insert);
-					textEditor.selectAndReveal(textSelection.getOffset()
-							+ insert.length(), 0);
+					textEditor.selectAndReveal(textSelection.getOffset() + insert.length(), 0);
 				} catch (BadLocationException e) {
 					Logger.logException(e);
 				} finally {

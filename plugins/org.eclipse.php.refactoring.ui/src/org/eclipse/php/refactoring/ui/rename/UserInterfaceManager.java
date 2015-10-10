@@ -42,21 +42,17 @@ public class UserInterfaceManager {
 	}
 
 	public UserInterfaceStarter getStarter(Refactoring refactoring) {
-		RefactoringProcessor processor = (RefactoringProcessor) refactoring
-				.getAdapter(RefactoringProcessor.class);
+		RefactoringProcessor processor = (RefactoringProcessor) refactoring.getAdapter(RefactoringProcessor.class);
 		if (processor == null)
 			return null;
 		Tuple tuple = (Tuple) fMap.get(processor.getClass());
 		if (tuple == null)
 			return null;
 		try {
-			UserInterfaceStarter starter = (UserInterfaceStarter) tuple.starter
-					.newInstance();
+			UserInterfaceStarter starter = (UserInterfaceStarter) tuple.starter.newInstance();
 			Class wizardClass = tuple.wizard;
-			Constructor constructor = wizardClass
-					.getConstructor(new Class[] { Refactoring.class });
-			RefactoringWizard wizard = (RefactoringWizard) constructor
-					.newInstance(new Object[] { refactoring });
+			Constructor constructor = wizardClass.getConstructor(new Class[] { Refactoring.class });
+			RefactoringWizard wizard = (RefactoringWizard) constructor.newInstance(new Object[] { refactoring });
 			starter.initialize(wizard);
 			return starter;
 		} catch (NoSuchMethodException e) {

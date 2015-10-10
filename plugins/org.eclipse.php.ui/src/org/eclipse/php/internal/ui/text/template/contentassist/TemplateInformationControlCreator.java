@@ -29,8 +29,8 @@ import org.eclipse.swt.widgets.Shell;
 //import org.eclipse.jdt.internal.ui.JavaPlugin;
 //import org.eclipse.jdt.internal.ui.text.java.hover.SourceViewerInformationControl;
 
-public final class TemplateInformationControlCreator implements
-		IInformationControlCreator, IInformationControlCreatorExtension {
+public final class TemplateInformationControlCreator
+		implements IInformationControlCreator, IInformationControlCreatorExtension {
 
 	private PHPSourceViewerInformationControl fControl;
 
@@ -48,22 +48,19 @@ public final class TemplateInformationControlCreator implements
 	 *            SWT#LEFT_TO_RIGHT
 	 */
 	public TemplateInformationControlCreator(int orientation) {
-		Assert.isLegal(orientation == SWT.RIGHT_TO_LEFT
-				|| orientation == SWT.LEFT_TO_RIGHT);
+		Assert.isLegal(orientation == SWT.RIGHT_TO_LEFT || orientation == SWT.LEFT_TO_RIGHT);
 		fOrientation = orientation;
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.IInformationControlCreator#createInformationControl
-	 * (org.eclipse.swt.widgets.Shell)
+	 * @see org.eclipse.jface.text.IInformationControlCreator#
+	 * createInformationControl (org.eclipse.swt.widgets.Shell)
 	 */
 	public IInformationControl createInformationControl(Shell parent) {
 		fControl = new PHPSourceViewerInformationControl(parent, fOrientation) {
 			public void setInformation(String content) {
 				TextPresentation presentation = new TextPresentation();
-				HTML2TextReader reader = new HTML2TextReader(new StringReader(
-						content), presentation);
+				HTML2TextReader reader = new HTML2TextReader(new StringReader(content), presentation);
 				try {
 					super.setInformation(reader.getString());
 				} catch (IOException e) {

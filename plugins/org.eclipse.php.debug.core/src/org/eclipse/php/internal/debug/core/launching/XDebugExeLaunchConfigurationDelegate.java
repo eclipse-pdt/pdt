@@ -47,8 +47,7 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandle
 import org.eclipse.php.internal.debug.core.zend.debugger.ProcessCrashDetector;
 import org.eclipse.swt.widgets.Display;
 
-public class XDebugExeLaunchConfigurationDelegate extends
-		LaunchConfigurationDelegate {
+public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 
 	/*
 	 * (non-Javadoc)
@@ -58,8 +57,7 @@ public class XDebugExeLaunchConfigurationDelegate extends
 	 * eclipse.debug.core.ILaunchConfiguration, java.lang.String)
 	 */
 	@Override
-	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode)
-			throws CoreException {
+	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
 		return new XDebugLaunch(configuration, mode, null);
 	}
 
@@ -72,8 +70,8 @@ public class XDebugExeLaunchConfigurationDelegate extends
 	 * org.eclipse.debug.core.ILaunch,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public void launch(ILaunchConfiguration configuration, String mode,
-			ILaunch launch, IProgressMonitor monitor) throws CoreException {
+	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
+			throws CoreException {
 
 		if (monitor.isCanceled()) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
@@ -81,19 +79,16 @@ public class XDebugExeLaunchConfigurationDelegate extends
 		}
 		PHPexeItem phpExeItem = PHPLaunchUtilities.getPHPExe(configuration);
 		if (phpExeItem == null) {
-			Logger.log(Logger.ERROR,
-					"Launch configuration could not find PHP exe item"); //$NON-NLS-1$
+			Logger.log(Logger.ERROR, "Launch configuration could not find PHP exe item"); //$NON-NLS-1$
 			monitor.setCanceled(true);
 			monitor.done();
 			return;
 		}
 		// get the launch info: php exe, php ini
-		final String phpExeString = configuration.getAttribute(
-				IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
-		final String phpIniString = configuration.getAttribute(
-				IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
-		final String phpScriptString = configuration.getAttribute(
-				IPHPDebugConstants.ATTR_FILE, (String) null);
+		final String phpExeString = configuration.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION,
+				(String) null);
+		final String phpIniString = configuration.getAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
+		final String phpScriptString = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
 		if (phpScriptString == null || phpScriptString.trim().length() == 0) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 			displayErrorMessage(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_0);
@@ -105,8 +100,7 @@ public class XDebugExeLaunchConfigurationDelegate extends
 		}
 
 		// locate the project from the php script
-		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
-				.getRoot();
+		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		final IPath filePath = new Path(phpScriptString);
 		final IResource scriptRes = workspaceRoot.findMember(filePath);
 		if (scriptRes == null) {
@@ -131,10 +125,8 @@ public class XDebugExeLaunchConfigurationDelegate extends
 			wc = configuration.getWorkingCopy();
 		}
 		wc.setAttribute(IPHPDebugConstants.PHP_Project, projectString);
-		wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING,
-				PHPProjectPreferences.getTransferEncoding(project));
-		wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING,
-				PHPProjectPreferences.getOutputEncoding(project));
+		wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(project));
+		wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING, PHPProjectPreferences.getOutputEncoding(project));
 		wc.doSave();
 
 		if (monitor.isCanceled()) {
@@ -158,12 +150,10 @@ public class XDebugExeLaunchConfigurationDelegate extends
 		// Resolve the PHP ini location
 		// Locate the php ini by using the attribute. If the attribute was null,
 		// try to locate an ini that exists next to the executable.
-		File phpIni = (phpIniString != null && new File(phpIniString).exists()) ? new File(
-				phpIniString) : PHPINIUtil.findPHPIni(phpExeString);
-		File tempIni = PHPINIUtil.prepareBeforeLaunch(phpIni, phpExeString,
-				project);
-		launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION,
-				tempIni.getAbsolutePath());
+		File phpIni = (phpIniString != null && new File(phpIniString).exists()) ? new File(phpIniString)
+				: PHPINIUtil.findPHPIni(phpExeString);
+		File tempIni = PHPINIUtil.prepareBeforeLaunch(phpIni, phpExeString, project);
+		launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
 
 		// add process type to process attributes, basically the name of the exe
 		// that was launched
@@ -171,8 +161,7 @@ public class XDebugExeLaunchConfigurationDelegate extends
 		String programName = phpExe.lastSegment();
 		final String extension = phpExe.getFileExtension();
 		if (extension != null) {
-			programName = programName.substring(0, programName.length()
-					- (extension.length() + 1));
+			programName = programName.substring(0, programName.length() - (extension.length() + 1));
 		}
 		programName = programName.toLowerCase();
 
@@ -196,62 +185,48 @@ public class XDebugExeLaunchConfigurationDelegate extends
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 			// check the launch for stop at first line, if not there go to
 			// project specifics
-			boolean stopAtFirstLine = PHPProjectPreferences
-					.getStopAtFirstLine(project);
-			stopAtFirstLine = configuration
-					.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
-							stopAtFirstLine);
-			String sessionID = DBGpSessionHandler.getInstance()
-					.generateSessionId();
+			boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
+			stopAtFirstLine = configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, stopAtFirstLine);
+			String sessionID = DBGpSessionHandler.getInstance().generateSessionId();
 			String ideKey = null;
 			if (phpExeItem != null) {
-				DBGpProxyHandler proxyHandler = DBGpProxyHandlersManager.INSTANCE
-						.getHandler(phpExeItem.getUniqueId());
+				DBGpProxyHandler proxyHandler = DBGpProxyHandlersManager.INSTANCE.getHandler(phpExeItem.getUniqueId());
 				if (proxyHandler != null && proxyHandler.useProxy()) {
 					ideKey = proxyHandler.getCurrentIdeKey();
 					if (proxyHandler.registerWithProxy() == false) {
 						displayErrorMessage(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_2
 								+ proxyHandler.getErrorMsg());
-						DebugPlugin.getDefault().getLaunchManager()
-								.removeLaunch(launch);
+						DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 						return;
 					}
 				} else {
 					ideKey = DBGpSessionHandler.getInstance().getIDEKey();
 				}
 			}
-			target = new DBGpTarget(launch, phpFile.lastSegment(), ideKey,
-					sessionID, stopAtFirstLine);
-			target.setPathMapper(PathMapperRegistry
-					.getByLaunchConfiguration(configuration));
+			target = new DBGpTarget(launch, phpFile.lastSegment(), ideKey, sessionID, stopAtFirstLine);
+			target.setPathMapper(PathMapperRegistry.getByLaunchConfiguration(configuration));
 			DBGpSessionHandler.getInstance().addSessionListener(target);
-			envVarString = createDebugLaunchEnvironment(configuration,
-					sessionID, ideKey, phpExe);
+			envVarString = createDebugLaunchEnvironment(configuration, sessionID, ideKey, phpExe);
 
 			int requestPort = getDebugPort(phpExeItem);
 			// Check that the debug daemon is functional
 			// DEBUGGER - Make sure that the active debugger id is indeed Zend's
 			// debugger
-			if (!PHPLaunchUtilities.isDebugDaemonActive(requestPort,
-					XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID)) {
+			if (!PHPLaunchUtilities.isDebugDaemonActive(requestPort, XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID)) {
 				PHPLaunchUtilities
-						.showLaunchErrorMessage(NLS
-								.bind(PHPDebugCoreMessages.ExeLaunchConfigurationDelegate_PortInUse,
-										requestPort, phpExeItem.getName()));
+						.showLaunchErrorMessage(NLS.bind(PHPDebugCoreMessages.ExeLaunchConfigurationDelegate_PortInUse,
+								requestPort, phpExeItem.getName()));
 				monitor.setCanceled(true);
 				monitor.done();
 				return;
 			}
 
 		} else {
-			envVarString = PHPLaunchUtilities.getEnvironment(configuration,
-					new String[] { getLibraryPath(phpExe) });
+			envVarString = PHPLaunchUtilities.getEnvironment(configuration, new String[] { getLibraryPath(phpExe) });
 		}
 
 		IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 30);
-		subMonitor.beginTask(
-				PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_3,
-				10);
+		subMonitor.beginTask(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_3, 10);
 
 		// determine the working directory. default is the location of the
 		// script
@@ -286,19 +261,16 @@ public class XDebugExeLaunchConfigurationDelegate extends
 		}
 		String[] args = null;
 		if (PHPexeItem.SAPI_CLI.equals(sapiType)) {
-			args = PHPLaunchUtilities.getProgramArguments(launch
-					.getLaunchConfiguration());
+			args = PHPLaunchUtilities.getProgramArguments(launch.getLaunchConfiguration());
 		}
 
 		// define the command line for launching
 		String[] cmdLine = null;
-		cmdLine = PHPLaunchUtilities.getCommandLine(configuration,
-				phpExe.toOSString(), tempIni.toString(), phpFile.toOSString(),
-				args, phpV);
+		cmdLine = PHPLaunchUtilities.getCommandLine(configuration, phpExe.toOSString(), tempIni.toString(),
+				phpFile.toOSString(), args, phpV);
 
 		// Launch the process
-		final Process phpExeProcess = DebugPlugin.exec(cmdLine, workingDir,
-				envVarString);
+		final Process phpExeProcess = DebugPlugin.exec(cmdLine, workingDir, envVarString);
 		// Attach a crash detector
 		new Thread(new ProcessCrashDetector(launch, phpExeProcess)).start();
 
@@ -306,20 +278,15 @@ public class XDebugExeLaunchConfigurationDelegate extends
 		if (phpExeProcess != null) {
 			subMonitor.worked(10);
 			String processName = mode.equals(ILaunchManager.DEBUG_MODE)
-					? (phpExe.toOSString() + ' '
-							+ PHPDebugCoreMessages.PHPProcess_XDebug_suffix)
-					: phpExe.toOSString();
-			eclipseProcessWrapper = DebugPlugin.newProcess(launch,
-					phpExeProcess, processName, processAttributes);
+					? (phpExe.toOSString() + ' ' + PHPDebugCoreMessages.PHPProcess_XDebug_suffix) : phpExe.toOSString();
+			eclipseProcessWrapper = DebugPlugin.newProcess(launch, phpExeProcess, processName, processAttributes);
 			if (eclipseProcessWrapper == null) {
 
 				// another error so we stop everything somehow
 				phpExeProcess.destroy();
 				subMonitor.done();
-				DebugPlugin.getDefault().getLaunchManager()
-						.removeLaunch(launch);
-				throw new CoreException(new Status(IStatus.ERROR,
-						PHPDebugPlugin.ID, 0, null, null));
+				DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
+				throw new CoreException(new Status(IStatus.ERROR, PHPDebugPlugin.ID, 0, null, null));
 			}
 
 			// if launching in debug mode, create the debug infrastructure and
@@ -327,10 +294,8 @@ public class XDebugExeLaunchConfigurationDelegate extends
 			if (mode.equals(ILaunchManager.DEBUG_MODE) && target != null) {
 				target.setProcess(eclipseProcessWrapper);
 				launch.addDebugTarget(target);
-				subMonitor
-						.subTask(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_4);
-				target.waitForInitialSession(
-						(DBGpBreakpointFacade) IDELayerFactory.getIDELayer(),
+				subMonitor.subTask(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_4);
+				target.waitForInitialSession((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(),
 						XDebugPreferenceMgr.createSessionPreferences(), monitor);
 			}
 
@@ -357,9 +322,8 @@ public class XDebugExeLaunchConfigurationDelegate extends
 	 * @throws CoreException
 	 *             rethrown exception
 	 */
-	public String[] createDebugLaunchEnvironment(
-			ILaunchConfiguration configuration, String sessionID,
-			String ideKey, IPath phpExe) throws CoreException {
+	public String[] createDebugLaunchEnvironment(ILaunchConfiguration configuration, String sessionID, String ideKey,
+			IPath phpExe) throws CoreException {
 		// create XDebug required environment variables, need the
 		// session handler to start listening and generate a session id
 
@@ -369,9 +333,8 @@ public class XDebugExeLaunchConfigurationDelegate extends
 
 		Logger.debugMSG("env=" + configEnv + ", Cookie=" + sessEnv); //$NON-NLS-1$ //$NON-NLS-2$
 
-		String[] envVarString = PHPLaunchUtilities.getEnvironment(
-				configuration, new String[] { configEnv, extraDBGpEnv, sessEnv,
-						getLibraryPath(phpExe) });
+		String[] envVarString = PHPLaunchUtilities.getEnvironment(configuration,
+				new String[] { configEnv, extraDBGpEnv, sessEnv, getLibraryPath(phpExe) });
 		return envVarString;
 	}
 
@@ -398,12 +361,10 @@ public class XDebugExeLaunchConfigurationDelegate extends
 	 * @throws CoreException
 	 */
 	protected int getDebugPort(PHPexeItem phpExe) throws CoreException {
-		int customRequestPort = XDebugDebuggerSettingsUtil.getDebugPort(phpExe
-				.getUniqueId());
+		int customRequestPort = XDebugDebuggerSettingsUtil.getDebugPort(phpExe.getUniqueId());
 		if (customRequestPort != -1)
 			return customRequestPort;
-		return PHPDebugPlugin
-				.getDebugPort(XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID);
+		return PHPDebugPlugin.getDebugPort(XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID);
 	}
 
 	/**

@@ -24,8 +24,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.ui.IEditorPart;
 
-public class AssistContext extends TextInvocationContext implements
-		IInvocationContext {
+public class AssistContext extends TextInvocationContext implements IInvocationContext {
 
 	private final ISourceModule fProgram;
 	private final IEditorPart fEditor;
@@ -36,8 +35,7 @@ public class AssistContext extends TextInvocationContext implements
 	/*
 	 * @since 3.5
 	 */
-	public AssistContext(ISourceModule cu, ISourceViewer sourceViewer,
-			IEditorPart editor, int offset, int length,
+	public AssistContext(ISourceModule cu, ISourceViewer sourceViewer, IEditorPart editor, int offset, int length,
 			SharedASTProvider.WAIT_FLAG waitFlag) {
 		super(sourceViewer, offset, length);
 		fProgram = cu;
@@ -49,18 +47,16 @@ public class AssistContext extends TextInvocationContext implements
 	/*
 	 * @since 3.5
 	 */
-	public AssistContext(ISourceModule cu, ISourceViewer sourceViewer,
-			int offset, int length, SharedASTProvider.WAIT_FLAG waitFlag) {
+	public AssistContext(ISourceModule cu, ISourceViewer sourceViewer, int offset, int length,
+			SharedASTProvider.WAIT_FLAG waitFlag) {
 		this(cu, sourceViewer, null, offset, length, waitFlag);
 	}
 
 	/*
 	 * @since 3.5
 	 */
-	public AssistContext(ISourceModule cu, ISourceViewer sourceViewer,
-			IEditorPart editor, int offset, int length) {
-		this(cu, sourceViewer, editor, offset, length,
-				SharedASTProvider.WAIT_YES);
+	public AssistContext(ISourceModule cu, ISourceViewer sourceViewer, IEditorPart editor, int offset, int length) {
+		this(cu, sourceViewer, editor, offset, length, SharedASTProvider.WAIT_YES);
 	}
 
 	/*
@@ -68,8 +64,7 @@ public class AssistContext extends TextInvocationContext implements
 	 * 
 	 * @since 3.4
 	 */
-	public AssistContext(ISourceModule cu, ISourceViewer sourceViewer,
-			int offset, int length) {
+	public AssistContext(ISourceModule cu, ISourceViewer sourceViewer, int offset, int length) {
 		this(cu, sourceViewer, null, offset, length);
 	}
 

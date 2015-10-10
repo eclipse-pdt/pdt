@@ -29,22 +29,17 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
-public class SaveActionsConfigurationBlock extends
-		PHPCoreOptionsConfigurationBlock {
+public class SaveActionsConfigurationBlock extends PHPCoreOptionsConfigurationBlock {
 
 	private static final int INDENT_VALUE = 20;
-	private static final Key PREF_REMOVE_TRAILING_WHITESPACES = new Key(
-			PHPUiPlugin.ID,
+	private static final Key PREF_REMOVE_TRAILING_WHITESPACES = new Key(PHPUiPlugin.ID,
 			PreferenceConstants.FORMAT_REMOVE_TRAILING_WHITESPACES);
-	private static final Key PREF_REMOVE_TRAILING_WHITESPACES_ALL = new Key(
-			PHPUiPlugin.ID,
+	private static final Key PREF_REMOVE_TRAILING_WHITESPACES_ALL = new Key(PHPUiPlugin.ID,
 			PreferenceConstants.FORMAT_REMOVE_TRAILING_WHITESPACES_ALL);
-	private static final Key PREF_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY = new Key(
-			PHPUiPlugin.ID,
+	private static final Key PREF_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY = new Key(PHPUiPlugin.ID,
 			PreferenceConstants.FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY);
 
-	private static final Key PREF_FORMAT_ON_SAVE = new Key(PHPUiPlugin.ID,
-			PreferenceConstants.FORMAT_ON_SAVE);
+	private static final Key PREF_FORMAT_ON_SAVE = new Key(PHPUiPlugin.ID, PreferenceConstants.FORMAT_ON_SAVE);
 
 	private Button removeTrailingWsCheckbox;
 	private Button allCheckbox;
@@ -60,14 +55,12 @@ public class SaveActionsConfigurationBlock extends
 	private Group removeWhitespacesGroup;
 
 	private static Key[] getKeys() {
-		return new Key[] { PREF_REMOVE_TRAILING_WHITESPACES,
-				PREF_REMOVE_TRAILING_WHITESPACES_ALL,
-				PREF_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY,
-				PREF_FORMAT_ON_SAVE };
+		return new Key[] { PREF_REMOVE_TRAILING_WHITESPACES, PREF_REMOVE_TRAILING_WHITESPACES_ALL,
+				PREF_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY, PREF_FORMAT_ON_SAVE };
 	}
 
-	public SaveActionsConfigurationBlock(IStatusChangeListener context,
-			IProject project, IWorkbenchPreferenceContainer container) {
+	public SaveActionsConfigurationBlock(IStatusChangeListener context, IProject project,
+			IWorkbenchPreferenceContainer container) {
 		super(context, project, getKeys(), container);
 		fSaveActionsStatus = new StatusInfo();
 	}
@@ -91,12 +84,10 @@ public class SaveActionsConfigurationBlock extends
 		layout.marginBottom = 5;
 
 		whiteSpacesComposite.setLayout(layout);
-		whiteSpacesComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP,
-				true, false));
+		whiteSpacesComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
 		removeTrailingWsCheckbox = new Button(whiteSpacesComposite, SWT.CHECK);
-		removeTrailingWsCheckbox
-				.setText(PHPUIMessages.SaveActionsConfigurationBlock_0);
+		removeTrailingWsCheckbox.setText(PHPUIMessages.SaveActionsConfigurationBlock_0);
 		removeTrailingWsCheckbox.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				fRemoveWhitespaces = !fRemoveWhitespaces;
@@ -119,8 +110,7 @@ public class SaveActionsConfigurationBlock extends
 			}
 		});
 		ignoreEmptyCheckbox = new Button(removeWhitespacesGroup, SWT.RADIO);
-		ignoreEmptyCheckbox
-				.setText(PHPUIMessages.SaveActionsConfigurationBlock_3);
+		ignoreEmptyCheckbox.setText(PHPUIMessages.SaveActionsConfigurationBlock_3);
 		ignoreEmptyCheckbox.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				fAllLines = false;
@@ -130,8 +120,7 @@ public class SaveActionsConfigurationBlock extends
 		});
 
 		formatOnSaveCheckbox = new Button(whiteSpacesComposite, SWT.CHECK);
-		formatOnSaveCheckbox
-				.setText(PHPUIMessages.SaveActionsConfigurationBlock_1);
+		formatOnSaveCheckbox.setText(PHPUIMessages.SaveActionsConfigurationBlock_1);
 		formatOnSaveCheckbox.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				fFormatOnSave = !fFormatOnSave;
@@ -188,8 +177,7 @@ public class SaveActionsConfigurationBlock extends
 	}
 
 	@Override
-	protected void validateSettings(Key changedKey, String oldValue,
-			String newValue) {
+	protected void validateSettings(Key changedKey, String oldValue, String newValue) {
 		if (changedKey != null) {
 		} else {
 			fSaveActionsStatus = new StatusInfo();
@@ -201,8 +189,7 @@ public class SaveActionsConfigurationBlock extends
 	private void savePreferences() {
 		setValue(PREF_REMOVE_TRAILING_WHITESPACES, fRemoveWhitespaces);
 		setValue(PREF_REMOVE_TRAILING_WHITESPACES_ALL, fAllLines);
-		setValue(PREF_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY,
-				fIgnoreEmptyLines);
+		setValue(PREF_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY, fIgnoreEmptyLines);
 		setValue(PREF_FORMAT_ON_SAVE, fFormatOnSave);
 	}
 

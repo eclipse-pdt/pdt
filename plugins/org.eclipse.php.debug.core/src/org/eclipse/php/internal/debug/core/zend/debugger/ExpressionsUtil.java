@@ -35,16 +35,13 @@ public class ExpressionsUtil {
 		}
 
 		@Override
-		public Expression createChildExpression(String endName,
-				String endRepresentation, Facet... facets) {
-			return new DefaultExpression(this, endName, endRepresentation,
-					KIND_OBJECT_MEMBER, MOD_STATIC);
+		public Expression createChildExpression(String endName, String endRepresentation, Facet... facets) {
+			return new DefaultExpression(this, endName, endRepresentation, KIND_OBJECT_MEMBER, MOD_STATIC);
 		}
 
 	}
 
-	private static final class FetchStaticsVisibilityExpression extends
-			DefaultExpression {
+	private static final class FetchStaticsVisibilityExpression extends DefaultExpression {
 
 		static final String FETCH_STATICS_MODIFIERS = "eval(''if (class_exists(\"ReflectionProperty\")) return array({0}); else return array();'');"; //$NON-NLS-1$
 		static final String TUPLE_ELEMENT = "(new ReflectionProperty(\"{0}\", \"{1}\"))->getModifiers()"; //$NON-NLS-1$
@@ -75,16 +72,14 @@ public class ExpressionsUtil {
 	 * @param expressionsManager
 	 * @return expressions of static members for given class
 	 */
-	public static Expression[] fetchStaticMembers(String className,
-			ExpressionsManager expressionsManager) {
+	public static Expression[] fetchStaticMembers(String className, ExpressionsManager expressionsManager) {
 		Expression staticMembers = new FetchStaticsExpression(className);
 		expressionsManager.update(staticMembers, 1);
 		Expression[] members = staticMembers.getValue().getChildren();
 		// Possibly interrupted, crash, etc.
 		if (members == null)
 			return new Expression[0];
-		int[] mods = fetchStaticMembersVisibility(className, members,
-				expressionsManager);
+		int[] mods = fetchStaticMembersVisibility(className, members, expressionsManager);
 		// Possibly interrupted, crash, etc.
 		if (mods == null)
 			return new Expression[0];
@@ -121,42 +116,36 @@ public class ExpressionsUtil {
 	 * @param expressionsManager
 	 * @return "virtual class" expression with child static members
 	 */
-	public static Expression fetchStaticContext(String className,
-			ExpressionsManager expressionsManager) {
-		Expression[] staticMembers = fetchStaticMembers(className,
-				expressionsManager);
+	public static Expression fetchStaticContext(String className, ExpressionsManager expressionsManager) {
+		Expression[] staticMembers = fetchStaticMembers(className, expressionsManager);
 		if (staticMembers.length == 0)
 			return null;
-		Expression classStaticContext = new DefaultExpression(
-				VariablesUtil.CLASS_INDICATOR, VIRTUAL_CLASS);
-		ExpressionValue classStaticContextValue = new ExpressionValue(
-				ExpressionValue.VIRTUAL_CLASS_TYPE, className, "Class of: " //$NON-NLS-1$
-						+ className, staticMembers, staticMembers.length);
+		Expression classStaticContext = new DefaultExpression(VariablesUtil.CLASS_INDICATOR, VIRTUAL_CLASS);
+		ExpressionValue classStaticContextValue = new ExpressionValue(ExpressionValue.VIRTUAL_CLASS_TYPE, className,
+				"Class of: " //$NON-NLS-1$
+						+ className,
+				staticMembers, staticMembers.length);
 		classStaticContext.setValue(classStaticContextValue);
 		return classStaticContext;
 	}
 
-	private static int[] fetchStaticMembersVisibility(String className,
-			Expression[] members, ExpressionsManager expressionsManager) {
+	private static int[] fetchStaticMembersVisibility(String className, Expression[] members,
+			ExpressionsManager expressionsManager) {
 		StringBuffer tuple = new StringBuffer();
 		for (int i = 0; i < members.length; i++) {
-			tuple.append(MessageFormat.format(
-					FetchStaticsVisibilityExpression.TUPLE_ELEMENT, className,
+			tuple.append(MessageFormat.format(FetchStaticsVisibilityExpression.TUPLE_ELEMENT, className,
 					members[i].getLastName()));
 			if (i < members.length - 1)
 				tuple.append(',');
 		}
-		Expression fetchModifiersExpression = new FetchStaticsVisibilityExpression(
-				tuple.toString());
+		Expression fetchModifiersExpression = new FetchStaticsVisibilityExpression(tuple.toString());
 		expressionsManager.update(fetchModifiersExpression, 1);
-		Expression[] computed = fetchModifiersExpression.getValue()
-				.getOriChildren();
+		Expression[] computed = fetchModifiersExpression.getValue().getOriChildren();
 		if (computed == null)
 			return null;
 		int[] mods = new int[computed.length];
 		for (int i = 0; i < computed.length; i++)
-			mods[i] = Integer.valueOf((String) computed[i].getValue()
-					.getValue());
+			mods[i] = Integer.valueOf((String) computed[i].getValue().getValue());
 		return mods;
 	}
 

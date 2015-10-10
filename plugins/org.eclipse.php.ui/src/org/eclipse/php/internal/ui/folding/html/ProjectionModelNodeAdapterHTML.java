@@ -41,7 +41,8 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	// copies of this class located in:
 	// org.eclipse.wst.html.ui.internal.projection
 	// org.eclipse.jst.jsp.ui.internal.projection
-	private final static boolean debugProjectionPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.html.ui/projectionperf")); //$NON-NLS-1$ //$NON-NLS-2$
+	private final static boolean debugProjectionPerf = "true" //$NON-NLS-1$
+			.equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.html.ui/projectionperf")); //$NON-NLS-1$
 
 	private class TagProjectionAnnotation extends ProjectionAnnotation {
 		private boolean fIsVisible = false; /* workaround for BUG85874 */
@@ -111,8 +112,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	ProjectionModelNodeAdapterFactoryHTML fAdapterFactory;
 	private Map fTagAnnotations = new HashMap();
 
-	public ProjectionModelNodeAdapterHTML(
-			ProjectionModelNodeAdapterFactoryHTML factory) {
+	public ProjectionModelNodeAdapterHTML(ProjectionModelNodeAdapterFactoryHTML factory) {
 		fAdapterFactory = factory;
 	}
 
@@ -125,8 +125,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	 */
 	private Position createProjectionPosition(Node node) {
 		Position pos = null;
-		if (fAdapterFactory.isNodeProjectable(node)
-				&& node instanceof IndexedRegion) {
+		if (fAdapterFactory.isNodeProjectable(node) && node instanceof IndexedRegion) {
 			// IDocument document =
 			// fAdapterFactory.getProjectionViewer().getDocument();
 			// if (document != null) {
@@ -135,10 +134,8 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 			// range
 			if (inode.getStartOffset() >= 0 && inode.getLength() >= 0) {
 				IDOMNode node1 = (IDOMNode) inode;
-				IStructuredDocumentRegion startRegion = node1
-						.getStartStructuredDocumentRegion();
-				IStructuredDocumentRegion endRegion = node1
-						.getEndStructuredDocumentRegion();
+				IStructuredDocumentRegion startRegion = node1.getStartStructuredDocumentRegion();
+				IStructuredDocumentRegion endRegion = node1.getEndStructuredDocumentRegion();
 				// if the node has an endRegion (end tag) then folding region is
 				// between the start and end tag
 				// else if the region is a comment
@@ -182,16 +179,15 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 		return type == ProjectionModelNodeAdapterHTML.class;
 	}
 
-	public void notifyChanged(INodeNotifier notifier, int eventType,
-			Object changedFeature, Object oldValue, Object newValue, int pos) {
+	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue,
+			Object newValue, int pos) {
 		// check if folding is even enabled, if not, just ignore notifyChanged
 		// events
 		if (!fAdapterFactory.isActive()) {
 			return;
 		}
 
-		if ((eventType == INodeNotifier.STRUCTURE_CHANGED)
-				&& (notifier instanceof Node)) {
+		if ((eventType == INodeNotifier.STRUCTURE_CHANGED) && (notifier instanceof Node)) {
 			updateAdapter((Node) notifier);
 		}
 	}
@@ -227,8 +223,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 			while (childNode != null) {
 				Position newPos = createProjectionPosition(childNode);
 				if (newPos != null) {
-					TagProjectionAnnotation newAnnotation = new TagProjectionAnnotation(
-							childNode, false);
+					TagProjectionAnnotation newAnnotation = new TagProjectionAnnotation(childNode, false);
 					TagProjectionAnnotation existing = getExistingAnnotation(childNode);
 					if (existing == null) {
 						// add to map containing all annotations for this
@@ -252,27 +247,23 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 			// projectionAnnotations
 			ProjectionAnnotation[] oldList = null;
 			if (!fTagAnnotations.isEmpty()) {
-				oldList = (ProjectionAnnotation[]) fTagAnnotations.keySet()
-						.toArray(new ProjectionAnnotation[0]);
+				oldList = (ProjectionAnnotation[]) fTagAnnotations.keySet().toArray(new ProjectionAnnotation[0]);
 			}
 			ProjectionAnnotation[] modifyList = null;
 			if (!projectionAnnotations.isEmpty()) {
-				modifyList = (ProjectionAnnotation[]) projectionAnnotations
-						.keySet().toArray(new ProjectionAnnotation[0]);
+				modifyList = (ProjectionAnnotation[]) projectionAnnotations.keySet()
+						.toArray(new ProjectionAnnotation[0]);
 			}
 
 			// specifically add all annotations to viewer
 			if (viewer != null && !projectionAnnotations.isEmpty()) {
-				fAdapterFactory.queueAnnotationModelChanges(node, null,
-						projectionAnnotations, null, viewer);
+				fAdapterFactory.queueAnnotationModelChanges(node, null, projectionAnnotations, null, viewer);
 			}
 
 			// only update when there is something to update
-			if ((oldList != null && oldList.length > 0)
-					|| (!additions.isEmpty())
+			if ((oldList != null && oldList.length > 0) || (!additions.isEmpty())
 					|| (modifyList != null && modifyList.length > 0))
-				fAdapterFactory.queueAnnotationModelChanges(node, oldList,
-						additions, modifyList);
+				fAdapterFactory.queueAnnotationModelChanges(node, oldList, additions, modifyList);
 		}
 
 		// save new list of annotations
@@ -281,8 +272,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 		if (debugProjectionPerf) {
 			long end = System.currentTimeMillis();
 			String nodeName = node != null ? node.getNodeName() : "null"; //$NON-NLS-1$
-			System.out
-					.println("ProjectionModelNodeAdapterHTML.updateAdapter (" + nodeName + "):" + (end - start)); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("ProjectionModelNodeAdapterHTML.updateAdapter (" + nodeName + "):" + (end - start)); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 }

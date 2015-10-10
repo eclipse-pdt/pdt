@@ -37,8 +37,7 @@ public class MultiVariableGuess {
 	 * Implementation of the <code>ICompletionProposal</code> interface and
 	 * extension.
 	 */
-	private static class Proposal implements ICompletionProposal,
-			ICompletionProposalExtension2 {
+	private static class Proposal implements ICompletionProposal, ICompletionProposalExtension2 {
 
 		/** The string to be displayed in the completion proposal popup */
 		private String fDisplayString;
@@ -72,10 +71,8 @@ public class MultiVariableGuess {
 		 *            the position of the cursor following the insert relative
 		 *            to replacementOffset
 		 */
-		public Proposal(String replacementString, int replacementOffset,
-				int replacementLength, int cursorPosition) {
-			this(replacementString, replacementOffset, replacementLength,
-					cursorPosition, null, null, null, null);
+		public Proposal(String replacementString, int replacementOffset, int replacementLength, int cursorPosition) {
+			this(replacementString, replacementOffset, replacementLength, cursorPosition, null, null, null, null);
 		}
 
 		/**
@@ -100,9 +97,8 @@ public class MultiVariableGuess {
 		 * @param additionalProposalInfo
 		 *            the additional information associated with this proposal
 		 */
-		public Proposal(String replacementString, int replacementOffset,
-				int replacementLength, int cursorPosition, Image image,
-				String displayString, IContextInformation contextInformation,
+		public Proposal(String replacementString, int replacementOffset, int replacementLength, int cursorPosition,
+				Image image, String displayString, IContextInformation contextInformation,
 				String additionalProposalInfo) {
 			Assert.isNotNull(replacementString);
 			Assert.isTrue(replacementOffset >= 0);
@@ -124,8 +120,7 @@ public class MultiVariableGuess {
 		 */
 		public void apply(IDocument document) {
 			try {
-				document.replace(fReplacementOffset, fReplacementLength,
-						fReplacementString);
+				document.replace(fReplacementOffset, fReplacementLength, fReplacementString);
 			} catch (BadLocationException x) {
 				// ignore
 			}
@@ -173,8 +168,7 @@ public class MultiVariableGuess {
 		 * org.eclipse.jface.text.contentassist.ICompletionProposalExtension2
 		 * #apply(org.eclipse.jface.text.ITextViewer, char, int, int)
 		 */
-		public void apply(ITextViewer viewer, char trigger, int stateMask,
-				int offset) {
+		public void apply(ITextViewer viewer, char trigger, int stateMask, int offset) {
 			apply(viewer.getDocument());
 		}
 
@@ -200,11 +194,9 @@ public class MultiVariableGuess {
 		 * #validate(org.eclipse.jface.text.IDocument, int,
 		 * org.eclipse.jface.text.DocumentEvent)
 		 */
-		public boolean validate(IDocument document, int offset,
-				DocumentEvent event) {
+		public boolean validate(IDocument document, int offset, DocumentEvent event) {
 			try {
-				String content = document.get(fReplacementOffset,
-						fReplacementLength);
+				String content = document.get(fReplacementOffset, fReplacementLength);
 				if (content.startsWith(fReplacementString))
 					return true;
 			} catch (BadLocationException e) {
@@ -221,8 +213,7 @@ public class MultiVariableGuess {
 	public MultiVariableGuess() {
 	}
 
-	public ICompletionProposal[] getProposals(final MultiVariable variable,
-			int offset, int length) {
+	public ICompletionProposal[] getProposals(final MultiVariable variable, int offset, int length) {
 		MultiVariable master = (MultiVariable) fBackwardDeps.get(variable);
 		Object[] choices;
 		if (master == null)
@@ -237,8 +228,7 @@ public class MultiVariableGuess {
 			ICompletionProposal[] ret = new ICompletionProposal[choices.length];
 			for (int i = 0; i < ret.length; i++) {
 				final Object choice = choices[i];
-				ret[i] = new Proposal(variable.toString(choice), offset,
-						length, offset + length) {
+				ret[i] = new Proposal(variable.toString(choice), offset, length, offset + length) {
 					public void apply(IDocument document) {
 						super.apply(document);
 						Object oldChoice = variable.getCurrentChoice();
@@ -256,15 +246,13 @@ public class MultiVariableGuess {
 
 			ICompletionProposal[] ret = new ICompletionProposal[choices.length];
 			for (int i = 0; i < ret.length; i++)
-				ret[i] = new Proposal(variable.toString(choices[i]), offset,
-						length, offset + length);
+				ret[i] = new Proposal(variable.toString(choices[i]), offset, length, offset + length);
 
 			return ret;
 		}
 	}
 
-	private void updateSlaves(MultiVariable variable, IDocument document,
-			Object oldChoice) {
+	private void updateSlaves(MultiVariable variable, IDocument document, Object oldChoice) {
 		Object choice = variable.getCurrentChoice();
 		if (!oldChoice.equals(choice)) {
 			Set slaves = (Set) fDependencies.get(variable);
@@ -275,8 +263,7 @@ public class MultiVariableGuess {
 				Object slavesOldChoice = slave.getCurrentChoice();
 				slave.setKey(choice); // resets the current choice
 				try {
-					document.replace(pos.getOffset(), pos.getLength(), slave
-							.getDefaultValue());
+					document.replace(pos.getOffset(), pos.getLength(), slave.getDefaultValue());
 				} catch (BadLocationException x) {
 					// ignore and continue
 				}
@@ -302,8 +289,7 @@ public class MultiVariableGuess {
 	public void addDependency(MultiVariable master, MultiVariable slave) {
 		// check for cycles and multi-slaves
 		if (fBackwardDeps.containsKey(slave))
-			throw new IllegalArgumentException(
-					"slave can only serve one master"); //$NON-NLS-1$
+			throw new IllegalArgumentException("slave can only serve one master"); //$NON-NLS-1$
 		Object parent = master;
 		while (parent != null) {
 			parent = fBackwardDeps.get(parent);

@@ -32,8 +32,7 @@ abstract public class AbstractPDTTTest extends TestCase {
 	}
 
 	protected static String[] getPDTTFiles(String testsDirectory) {
-		return PDTTUtils.getPDTTFiles(testsDirectory, PHPCoreTests.getDefault()
-				.getBundle());
+		return PDTTUtils.getPDTTFiles(testsDirectory, PHPCoreTests.getDefault().getBundle());
 	}
 
 	protected static String[] getPDTTFiles(String testsDirectory, Bundle bundle) {
@@ -41,12 +40,10 @@ abstract public class AbstractPDTTTest extends TestCase {
 	}
 
 	protected static String[] getFiles(String testsDirectory, String ext) {
-		return PDTTUtils.getFiles(testsDirectory, PHPCoreTests.getDefault()
-				.getBundle(), ext);
+		return PDTTUtils.getFiles(testsDirectory, PHPCoreTests.getDefault().getBundle(), ext);
 	}
 
-	protected static String[] getFiles(String testsDirectory, Bundle bundle,
-			String ext) {
+	protected static String[] getFiles(String testsDirectory, Bundle bundle, String ext) {
 		return PDTTUtils.getFiles(testsDirectory, bundle, ext);
 	}
 

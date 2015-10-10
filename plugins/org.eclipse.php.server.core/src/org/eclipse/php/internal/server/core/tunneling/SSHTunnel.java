@@ -56,9 +56,8 @@ public class SSHTunnel {
 	 *             In case one of the variables is null or off limits (null
 	 *             passwords are not verified).
 	 */
-	public SSHTunnel(String localHost, String remoteHost, String userName,
-			String password, int localPort, int remotePort)
-			throws IllegalArgumentException {
+	public SSHTunnel(String localHost, String remoteHost, String userName, String password, int localPort,
+			int remotePort) throws IllegalArgumentException {
 		validateInput(localHost, remoteHost, localPort, remotePort);
 		this.remoteHost = remoteHost;
 		this.localHost = localHost;
@@ -80,7 +79,8 @@ public class SSHTunnel {
 	 * Create the tunnel connection. If the tunnel is already connected, nothing
 	 * happens. This call will potentially change the password value of this
 	 * class in case the user is prompted to enter a valid one. There are
-	 * several return values possibilities to this call (as IStatus instances):<br>
+	 * several return values possibilities to this call (as IStatus instances):
+	 * <br>
 	 * <ul>
 	 * <li>Status OK - Signals that the connection was successful with no errors
 	 * or warnings</li>
@@ -105,8 +105,8 @@ public class SSHTunnel {
 		String newPassword = null;
 		while (true) {
 			try {
-				session = SSHTunnelSession.getSession(userName, password,
-						remoteHost, SSH_DEFAULT_PORT, null).getSession();
+				session = SSHTunnelSession.getSession(userName, password, remoteHost, SSH_DEFAULT_PORT, null)
+						.getSession();
 				// This might throw exception because of binary compatibility
 				// issues.
 				// The JSCH API for the port forwarding was different in eclipse
@@ -118,26 +118,21 @@ public class SSHTunnel {
 					newPassword = actualPassword;
 				}
 				Class sessionClass = session.getClass();
-				Class[] parameterTypes = new Class[] { int.class, String.class,
-						int.class };
+				Class[] parameterTypes = new Class[] { int.class, String.class, int.class };
 				try {
 					// session.setPortForwardingR(rport, host, lport)
-					Object[] values = new Object[] {
-							Integer.valueOf(remotePort), localHost,
+					Object[] values = new Object[] { Integer.valueOf(remotePort), localHost,
 							Integer.valueOf(localPort) };
-					java.lang.reflect.Method mSetPortForwarding = sessionClass
-							.getMethod("setPortForwardingR", //$NON-NLS-1$
-									parameterTypes);
+					java.lang.reflect.Method mSetPortForwarding = sessionClass.getMethod("setPortForwardingR", //$NON-NLS-1$
+							parameterTypes);
 					mSetPortForwarding.invoke(session, values);
 				} catch (NoSuchMethodException nsme) {
 					// it will not be thrown.
 				} catch (InvocationTargetException e) {
 					// this can be thrown if we already binded the remote port.
 					// if this is the case, ignore it. If not, log it.
-					if (e.getCause() != null
-							&& e.getCause().getMessage() != null
-							&& e.getCause().getMessage().toLowerCase()
-									.indexOf(Messages.SSHTunnel_2) == -1) {
+					if (e.getCause() != null && e.getCause().getMessage() != null
+							&& e.getCause().getMessage().toLowerCase().indexOf(Messages.SSHTunnel_2) == -1) {
 						ex = e;
 					}
 				} catch (Exception e) {
@@ -145,20 +140,18 @@ public class SSHTunnel {
 				}
 				if (ex != null) {
 					if (isConnected()) {
-						status = new Status(IStatus.WARNING,
-								Activator.PLUGIN_ID, CONNECTION_WARNING_CODE,
+						status = new Status(IStatus.WARNING, Activator.PLUGIN_ID, CONNECTION_WARNING_CODE,
 								Messages.SSHTunnel_3, ex);
 					} else {
-						status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-								CONNECTION_ERROR_CODE, Messages.SSHTunnel_4, ex);
+						status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, CONNECTION_ERROR_CODE,
+								Messages.SSHTunnel_4, ex);
 					}
 				}
 			} catch (JSchException ee) {
 				retry--;
 				if (retry < 0) {
-					status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-							CONNECTION_ERROR_CODE, Messages.SSHTunnel_5
-									+ remoteHost, ee);
+					status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, CONNECTION_ERROR_CODE,
+							Messages.SSHTunnel_5 + remoteHost, ee);
 					break;
 				}
 				if (session != null && session.isConnected()) {
@@ -175,8 +168,7 @@ public class SSHTunnel {
 		if (status.isOK() && newPassword != null) {
 			// Change the Status to INFO and deliver the accurate password to
 			// the caller.
-			status = new Status(IStatus.INFO, Activator.PLUGIN_ID,
-					CONNECTION_PASSWORD_CHANGED_CODE, newPassword, null);
+			status = new Status(IStatus.INFO, Activator.PLUGIN_ID, CONNECTION_PASSWORD_CHANGED_CODE, newPassword, null);
 		}
 
 		return status;
@@ -263,8 +255,7 @@ public class SSHTunnel {
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
-		return remoteHost.hashCode() * localHost.hashCode()
-				* userName.hashCode() * (localPort + 1) * (remotePort + 1);
+		return remoteHost.hashCode() * localHost.hashCode() * userName.hashCode() * (localPort + 1) * (remotePort + 1);
 	}
 
 	/**
@@ -276,10 +267,8 @@ public class SSHTunnel {
 	public boolean equals(Object o) {
 		if (o instanceof SSHTunnel) {
 			SSHTunnel other = (SSHTunnel) o;
-			return remoteHost.equals(other.remoteHost)
-					&& localHost.equals(other.localHost)
-					&& userName.equals(other.userName)
-					&& localPort == other.localPort
+			return remoteHost.equals(other.remoteHost) && localHost.equals(other.localHost)
+					&& userName.equals(other.userName) && localPort == other.localPort
 					&& remotePort == other.remotePort;
 		}
 		return false;
@@ -298,16 +287,13 @@ public class SSHTunnel {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	private void validateInput(String localHost, String remoteHost,
-			int localPort, int remotePort) throws IllegalArgumentException {
+	private void validateInput(String localHost, String remoteHost, int localPort, int remotePort)
+			throws IllegalArgumentException {
 		if (localHost == null || remoteHost == null) {
-			throw new IllegalArgumentException(
-					"Null arument was passed to the SSHTunnel"); //$NON-NLS-1$
+			throw new IllegalArgumentException("Null arument was passed to the SSHTunnel"); //$NON-NLS-1$
 		}
-		if (localPort < 0 || localPort > 65535 || remotePort < 0
-				|| remotePort > 65535) {
-			throw new IllegalArgumentException(
-					"Illegal port was passed to the SSHTunnel"); //$NON-NLS-1$
+		if (localPort < 0 || localPort > 65535 || remotePort < 0 || remotePort > 65535) {
+			throw new IllegalArgumentException("Illegal port was passed to the SSHTunnel"); //$NON-NLS-1$
 		}
 		// user names and password may be empty, so we do not check it here
 	}

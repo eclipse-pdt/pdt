@@ -32,22 +32,18 @@ import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
  *         based selection in the PHP explorer, to an Eclipse-based
  *         (IModelElement -> IResource).
  */
-public class FormatActionDelegate extends
-		org.eclipse.wst.sse.ui.internal.actions.FormatActionDelegate {
+public class FormatActionDelegate extends org.eclipse.wst.sse.ui.internal.actions.FormatActionDelegate {
 	private IWorkbenchSiteProgressService getActiveProgressService() {
 		IWorkbenchSiteProgressService service = null;
 		if (PlatformUI.isWorkbenchRunning()) {
-			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow();
+			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			if (activeWorkbenchWindow != null) {
-				IWorkbenchPage activePage = activeWorkbenchWindow
-						.getActivePage();
+				IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
 				if (activePage != null) {
 					IWorkbenchPart activePart = activePage.getActivePart();
 					if (activePart != null) {
-						service = (IWorkbenchSiteProgressService) activePart
-								.getSite().getAdapter(
-										IWorkbenchSiteProgressService.class);
+						service = (IWorkbenchSiteProgressService) activePart.getSite()
+								.getAdapter(IWorkbenchSiteProgressService.class);
 					}
 				}
 			}
@@ -65,7 +61,7 @@ public class FormatActionDelegate extends
 			IStatus status = Status.OK_STATUS;
 
 			Object[] elements = fSelection.toArray();
-			monitor.beginTask("", elements.length); //$NON-NLS-1$ 
+			monitor.beginTask("", elements.length); //$NON-NLS-1$
 			for (int i = 0; i < elements.length; i++) {
 				IResource resource = null;
 				if (elements[i] instanceof IModelElement) {
@@ -85,8 +81,7 @@ public class FormatActionDelegate extends
 			if (fErrorStatus.getChildren().length > 0) {
 				status = fErrorStatus;
 				fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR,
-						SSEUIMessages.FormatActionDelegate_errorStatusMessage,
-						null);
+						SSEUIMessages.FormatActionDelegate_errorStatusMessage, null);
 			}
 
 			return status;
@@ -94,8 +89,7 @@ public class FormatActionDelegate extends
 
 	}
 
-	private MultiStatus fErrorStatus = new MultiStatus(SSEUIPlugin.ID,
-			IStatus.ERROR,
+	private MultiStatus fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR,
 			SSEUIMessages.FormatActionDelegate_errorStatusMessage, null);
 
 	protected Job getJob() {
@@ -128,17 +122,14 @@ public class FormatActionDelegate extends
 			for (int i = 0; i < elements.length; i++) {
 				if (elements[i] instanceof IResource) {
 					IResource resource = (IResource) elements[i];
-					available = (null != resource) ? processorAvailable(resource)
-							: false;
+					available = (null != resource) ? processorAvailable(resource) : false;
 
 					if (available)
 						break;
 				}
 				if (elements[i] instanceof IModelElement) {
-					IResource resource = ((IModelElement) elements[i])
-							.getResource();
-					available = (null != resource) ? processorAvailable(resource)
-							: false;
+					IResource resource = ((IModelElement) elements[i]).getResource();
+					available = (null != resource) ? processorAvailable(resource) : false;
 
 					if (available)
 						break;

@@ -25,12 +25,11 @@ import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.util.PHPModelLabelProvider;
 
-public class PHPCompletionProposalLabelProvider extends
-		CompletionProposalLabelProvider {
+public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelProvider {
 	private static final PHPModelLabelProvider fLabelProvider = new PHPModelLabelProvider();
 
 	private static final String ENCLOSING_TYPE_SEPARATOR = new String(
-			new char[] { NamespaceReference.NAMESPACE_SEPARATOR }); //$NON-NLS-1$
+			new char[] { NamespaceReference.NAMESPACE_SEPARATOR }); // $NON-NLS-1$
 
 	protected String createMethodProposalLabel(CompletionProposal methodProposal) {
 		StringBuffer nameBuffer = new StringBuffer();
@@ -38,8 +37,7 @@ public class PHPCompletionProposalLabelProvider extends
 
 		// method name
 		if (isAlias) {
-			AliasMethod aliasMethod = (AliasMethod) methodProposal
-					.getModelElement();
+			AliasMethod aliasMethod = (AliasMethod) methodProposal.getModelElement();
 			nameBuffer.append(aliasMethod.getAlias());
 		} else {
 			nameBuffer.append(methodProposal.getName());
@@ -60,8 +58,7 @@ public class PHPCompletionProposalLabelProvider extends
 		IModelElement parent = method.getParent();
 		if (parent instanceof IType) {
 			IType type = (IType) parent;
-			nameBuffer.append(type
-					.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR)); //$NON-NLS-1$
+			nameBuffer.append(type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR)); // $NON-NLS-1$
 		} else {
 			nameBuffer.append(parent.getElementName());
 		}
@@ -69,8 +66,7 @@ public class PHPCompletionProposalLabelProvider extends
 		return nameBuffer.toString();
 	}
 
-	protected String createOverrideMethodProposalLabel(
-			CompletionProposal methodProposal) {
+	protected String createOverrideMethodProposalLabel(CompletionProposal methodProposal) {
 		StringBuffer nameBuffer = new StringBuffer();
 		IMethod method = (IMethod) methodProposal.getModelElement();
 
@@ -95,7 +91,7 @@ public class PHPCompletionProposalLabelProvider extends
 		// parameters
 		nameBuffer.append('(');
 		appendParameterList(nameBuffer, methodProposal);
-		nameBuffer.append(')'); //$NON-NLS-1$
+		nameBuffer.append(')'); // $NON-NLS-1$
 
 		if (isAlias) {
 			return nameBuffer.toString();
@@ -106,8 +102,7 @@ public class PHPCompletionProposalLabelProvider extends
 		IModelElement parent = method.getParent();
 		if (parent instanceof IType) {
 			IType type = (IType) parent;
-			nameBuffer.append(type
-					.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR)); //$NON-NLS-1$
+			nameBuffer.append(type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR)); // $NON-NLS-1$
 		} else {
 			nameBuffer.append(parent.getElementName());
 		}
@@ -141,8 +136,7 @@ public class PHPCompletionProposalLabelProvider extends
 		return nameBuffer.toString();
 	}
 
-	protected String createLabelWithTypeAndDeclaration(
-			CompletionProposal proposal) {
+	protected String createLabelWithTypeAndDeclaration(CompletionProposal proposal) {
 		StringBuffer nameBuffer = new StringBuffer();
 
 		nameBuffer.append(proposal.getName());
@@ -167,8 +161,7 @@ public class PHPCompletionProposalLabelProvider extends
 		if (proposal.getModelElement() instanceof ArchiveProjectFragment) {
 			return DLTKPluginImages.DESC_OBJS_JAR;
 		}
-		ImageDescriptor imageDescriptor = fLabelProvider.getImageDescriptor(
-				proposal.getModelElement(),
+		ImageDescriptor imageDescriptor = fLabelProvider.getImageDescriptor(proposal.getModelElement(),
 				PHPModelLabelProvider.DEFAULT_IMAGEFLAGS);
 		if (imageDescriptor != null) {
 			return imageDescriptor;
@@ -178,8 +171,7 @@ public class PHPCompletionProposalLabelProvider extends
 
 	@Override
 	public ImageDescriptor createTypeImageDescriptor(CompletionProposal proposal) {
-		ImageDescriptor imageDescriptor = fLabelProvider.getImageDescriptor(
-				proposal.getModelElement(),
+		ImageDescriptor imageDescriptor = fLabelProvider.getImageDescriptor(proposal.getModelElement(),
 				PHPModelLabelProvider.DEFAULT_IMAGEFLAGS);
 		if (imageDescriptor != null) {
 			return imageDescriptor;
@@ -211,10 +203,8 @@ public class PHPCompletionProposalLabelProvider extends
 	}
 
 	@Override
-	public ImageDescriptor createFieldImageDescriptor(
-			CompletionProposal proposal) {
-		ImageDescriptor imageDescriptor = fLabelProvider.getImageDescriptor(
-				proposal.getModelElement(),
+	public ImageDescriptor createFieldImageDescriptor(CompletionProposal proposal) {
+		ImageDescriptor imageDescriptor = fLabelProvider.getImageDescriptor(proposal.getModelElement(),
 				PHPModelLabelProvider.DEFAULT_IMAGEFLAGS);
 		if (imageDescriptor != null) {
 			return imageDescriptor;
@@ -223,10 +213,8 @@ public class PHPCompletionProposalLabelProvider extends
 	}
 
 	@Override
-	public ImageDescriptor createMethodImageDescriptor(
-			CompletionProposal proposal) {
-		ImageDescriptor imageDescriptor = fLabelProvider.getImageDescriptor(
-				proposal.getModelElement(),
+	public ImageDescriptor createMethodImageDescriptor(CompletionProposal proposal) {
+		ImageDescriptor imageDescriptor = fLabelProvider.getImageDescriptor(proposal.getModelElement(),
 				PHPModelLabelProvider.DEFAULT_IMAGEFLAGS);
 		if (imageDescriptor != null) {
 			return imageDescriptor;

@@ -70,20 +70,17 @@ public class RenameConstantProcessorTest extends AbstractRenameRefactoringTest {
 		int start = 28;
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
-		
+
 		RenameClassMemberProcessor processor = new RenameClassMemberProcessor(file, selectedNode);
 		processor.setNewElementName("constant1");
-		
+
 		checkInitCondition(processor);
-		
+
 		performChange(processor);
-		
 
 		try {
 			String content = FileUtils.getContents(file);
-			assertEquals(
-					"<?php class Visitor {const constant1 = 'constant value';} Visitor::constant1;?>",
-					content);
+			assertEquals("<?php class Visitor {const constant1 = 'constant value';} Visitor::constant1;?>", content);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

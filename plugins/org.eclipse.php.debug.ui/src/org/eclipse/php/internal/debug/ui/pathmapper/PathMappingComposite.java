@@ -45,14 +45,12 @@ public class PathMappingComposite extends Composite {
 	private static final int IDX_ADD = 0;
 	private static final int IDX_EDIT = 1;
 	private static final int IDX_REMOVE = 2;
-	private static final String[] buttonLabels = {
-			Messages.PathMappingComposite_0, Messages.PathMappingComposite_1,
+	private static final String[] buttonLabels = { Messages.PathMappingComposite_0, Messages.PathMappingComposite_1,
 			Messages.PathMappingComposite_2 };
-	private static final String[] columnHeaders = { Messages.PathMappingComposite_5,
-			Messages.PathMappingComposite_3, Messages.PathMappingComposite_4 };
-	private static final ColumnLayoutData[] columnLayoutData = new ColumnLayoutData[] {
-			new ColumnWeightData(15), new ColumnWeightData(50),
-			new ColumnWeightData(50) };
+	private static final String[] columnHeaders = { Messages.PathMappingComposite_5, Messages.PathMappingComposite_3,
+			Messages.PathMappingComposite_4 };
+	private static final ColumnLayoutData[] columnLayoutData = new ColumnLayoutData[] { new ColumnWeightData(15),
+			new ColumnWeightData(50), new ColumnWeightData(50) };
 
 	private ListDialogField fMapList;
 
@@ -62,11 +60,9 @@ public class PathMappingComposite extends Composite {
 	}
 
 	protected void initializeControls() {
-		fMapList = new ListDialogField(new ListAdapter(), buttonLabels,
-				new LabelProvider(), new TableSorter());
+		fMapList = new ListDialogField(new ListAdapter(), buttonLabels, new LabelProvider(), new TableSorter());
 		fMapList.setRemoveButtonIndex(IDX_REMOVE);
-		fMapList.setTableColumns(new ListDialogField.ColumnsDescription(
-				columnLayoutData, columnHeaders, true));
+		fMapList.setTableColumns(new ListDialogField.ColumnsDescription(columnLayoutData, columnHeaders, true));
 
 		GridLayout layout = new GridLayout();
 		setLayout(layout);
@@ -76,11 +72,9 @@ public class PathMappingComposite extends Composite {
 
 		PixelConverter conv = new PixelConverter(this);
 
-		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(
-				this, SWT.V_SCROLL | SWT.H_SCROLL);
+		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(this, SWT.V_SCROLL | SWT.H_SCROLL);
 		scrolledCompositeImpl.setLayout(layout);
-		scrolledCompositeImpl
-				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		scrolledCompositeImpl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		Composite composite = new Composite(scrolledCompositeImpl, SWT.NONE);
 		layout = new GridLayout();
@@ -98,9 +92,7 @@ public class PathMappingComposite extends Composite {
 		listControl.setLayoutData(data);
 
 		Control buttonsControl = fMapList.getButtonBox(composite);
-		buttonsControl.setLayoutData(new GridData(
-				GridData.HORIZONTAL_ALIGN_FILL
-						| GridData.VERTICAL_ALIGN_BEGINNING));
+		buttonsControl.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING));
 
 		Point size = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		scrolledCompositeImpl.setMinSize(size.x, size.y);
@@ -128,8 +120,7 @@ public class PathMappingComposite extends Composite {
 		List l = fMapList.getSelectedElements();
 		if (l.size() == 1) {
 			Mapping oldElement = (Mapping) l.get(0);
-			PathMapperEntryDialog dialog = new PathMapperEntryDialog(
-					getShell(), oldElement);
+			PathMapperEntryDialog dialog = new PathMapperEntryDialog(getShell(), oldElement);
 			if (dialog.open() == Window.OK) {
 				Mapping newElement = dialog.getResult();
 				fMapList.replaceElement(oldElement, newElement);
@@ -147,8 +138,7 @@ public class PathMappingComposite extends Composite {
 	 */
 	public void setData(Object data) {
 		if (!(data instanceof Mapping[])) {
-			throw new IllegalArgumentException(
-					"Data must be instance of Mapping[]"); //$NON-NLS-1$
+			throw new IllegalArgumentException("Data must be instance of Mapping[]"); //$NON-NLS-1$
 		}
 		Mapping[] mappings = (Mapping[]) data;
 		fMapList.setElements(Arrays.asList(mappings));
@@ -191,27 +181,22 @@ public class PathMappingComposite extends Composite {
 		}
 	}
 
-	class LabelProvider extends org.eclipse.jface.viewers.LabelProvider
-			implements ITableLabelProvider {
+	class LabelProvider extends org.eclipse.jface.viewers.LabelProvider implements ITableLabelProvider {
 		private ScriptUILabelProvider phpLabelProvider = new ScriptUILabelProvider();
 
 		public Image getColumnImage(Object element, int columnIndex) {
 			if (columnIndex == 2) { // local path
 				PathMapper.Mapping mapping = (PathMapper.Mapping) element;
 				if (mapping.type == Type.EXTERNAL) {
-					return PlatformUI.getWorkbench().getSharedImages()
-							.getImage(ISharedImages.IMG_OBJ_FOLDER);
+					return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
 				}
 				if (mapping.type == Type.INCLUDE_VAR) {
-					return PHPPluginImages
-							.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
+					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
 				}
 				if (mapping.type == Type.INCLUDE_FOLDER) {
-					return PHPPluginImages
-							.get(PHPPluginImages.IMG_OBJS_LIBRARY);
+					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 				}
-				IResource resource = ResourcesPlugin.getWorkspace().getRoot()
-						.findMember(mapping.localPath.toString());
+				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(mapping.localPath.toString());
 				if (resource != null) {
 					return phpLabelProvider.getImage(resource);
 				}

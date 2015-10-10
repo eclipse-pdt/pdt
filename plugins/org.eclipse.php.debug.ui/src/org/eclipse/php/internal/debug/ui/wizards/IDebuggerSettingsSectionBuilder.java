@@ -29,7 +29,7 @@ public interface IDebuggerSettingsSectionBuilder {
 	 * @param settingsWorkingCopy
 	 * @return debugger settings section composite
 	 */
-	public IDebuggerSettingsSection build(CompositeFragment compositeFragment,
-			Composite debuggerSettingsComposite, IDebuggerSettingsWorkingCopy settingsWorkingCopy);
+	public IDebuggerSettingsSection build(CompositeFragment compositeFragment, Composite debuggerSettingsComposite,
+			IDebuggerSettingsWorkingCopy settingsWorkingCopy);
 
 }

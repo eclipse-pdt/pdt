@@ -65,30 +65,26 @@ public class ExpressionsValueDeserializer {
 	private ExpressionValue buildIntType(VariableReader reader) {
 		String value = reader.readToken();
 		String valueAsString = "(int) " + value; //$NON-NLS-1$
-		return new ExpressionValue(ExpressionValue.INT_TYPE, value,
-				valueAsString, null);
+		return new ExpressionValue(ExpressionValue.INT_TYPE, value, valueAsString, null);
 	}
 
 	private ExpressionValue buildDoubleType(VariableReader reader) {
 		String value = reader.readToken();
 		String valueAsString = "(double) " + value; //$NON-NLS-1$
-		return new ExpressionValue(ExpressionValue.DOUBLE_TYPE, value,
-				valueAsString, null);
+		return new ExpressionValue(ExpressionValue.DOUBLE_TYPE, value, valueAsString, null);
 	}
 
 	private ExpressionValue buildSringType(VariableReader reader) {
 		String value = reader.readString();
 		String valueAsString = "(string:" + value.length() + ") " + value; //$NON-NLS-1$ //$NON-NLS-2$
-		return new ExpressionValue(ExpressionValue.STRING_TYPE, value,
-				valueAsString, null);
+		return new ExpressionValue(ExpressionValue.STRING_TYPE, value, valueAsString, null);
 	}
 
 	private ExpressionValue buildBooleanType(VariableReader reader) {
 		String value = reader.readToken();
 		String valueAsString = "(boolean) " //$NON-NLS-1$
 				+ ((value.equals("0")) ? "false" : "true"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		return new ExpressionValue(ExpressionValue.BOOLEAN_TYPE, value,
-				valueAsString, null);
+		return new ExpressionValue(ExpressionValue.BOOLEAN_TYPE, value, valueAsString, null);
 	}
 
 	private ExpressionValue buildResourceType(VariableReader reader) {
@@ -98,12 +94,10 @@ public class ExpressionsValueDeserializer {
 		String value = reader.readToken();
 		String valueAsString = "resource (" + resourceNumber + ") of type (" //$NON-NLS-1$ //$NON-NLS-2$
 				+ value + ')';
-		return new ExpressionValue(ExpressionValue.RESOURCE_TYPE, value,
-				valueAsString, null);
+		return new ExpressionValue(ExpressionValue.RESOURCE_TYPE, value, valueAsString, null);
 	}
 
-	private ExpressionValue buildArrayType(Expression expression,
-			VariableReader reader) {
+	private ExpressionValue buildArrayType(Expression expression, VariableReader reader) {
 		int objectLength = reader.readInt();
 		int originalLength = objectLength;
 		if (reader.isLastEnd()) {
@@ -125,8 +119,7 @@ public class ExpressionsValueDeserializer {
 			if (expression == null) {
 				variableNodes[i] = createDefaultVariable(name);
 			} else {
-				variableNodes[i] = expression.createChildExpression(name,
-						'[' + name + ']', KIND_ARRAY_MEMBER);
+				variableNodes[i] = expression.createChildExpression(name, '[' + name + ']', KIND_ARRAY_MEMBER);
 			}
 			variableNodes[i].setValue(build(expression, reader));
 		}
@@ -134,8 +127,7 @@ public class ExpressionsValueDeserializer {
 				"Array [" + originalLength + ']', variableNodes, originalLength); //$NON-NLS-1$
 	}
 
-	private ExpressionValue buildObjectType(Expression expression,
-			VariableReader reader) {
+	private ExpressionValue buildObjectType(Expression expression, VariableReader reader) {
 		String className = reader.readString();
 		int objectLength = reader.readInt();
 		int originalLength = objectLength;
@@ -158,14 +150,13 @@ public class ExpressionsValueDeserializer {
 			if (expression == null) {
 				expressionNodes[i] = createDefaultVariable(name);
 			} else {
-				expressionNodes[i] = expression.createChildExpression(name,
-						"->" + name, KIND_OBJECT_MEMBER); //$NON-NLS-1$
+				expressionNodes[i] = expression.createChildExpression(name, "->" + name, KIND_OBJECT_MEMBER); //$NON-NLS-1$
 			}
 			expressionNodes[i].setValue(build(expression, reader));
 		}
 		String valueAsString = "Object of: " + className; //$NON-NLS-1$
-		return new ExpressionValue(ExpressionValue.OBJECT_TYPE, className,
-				valueAsString, expressionNodes, originalLength);
+		return new ExpressionValue(ExpressionValue.OBJECT_TYPE, className, valueAsString, expressionNodes,
+				originalLength);
 	}
 
 	private Expression createDefaultVariable(String name) {

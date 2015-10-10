@@ -31,19 +31,16 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
  * 
  */
 
-public class MatchingBracketAutoEditStrategy extends
-		MatchingCharAutoEditStrategy {
+public class MatchingBracketAutoEditStrategy extends MatchingCharAutoEditStrategy {
 
-	public void customizeDocumentCommand(IDocument document,
-			DocumentCommand command) {
+	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		if (TypingPreferences.closeBrackets && command.text != null) {
 			int length = command.text.length();
 			if (length == 0 && command.length == 1) {
 				try {
 					char removedChar = document.getChar(command.offset);
 					if (removedChar == ROUND_OPEN || removedChar == SQUARE_OPEN) {
-						deletePairBreaket((IStructuredDocument) document,
-								command, removedChar);
+						deletePairBreaket((IStructuredDocument) document, command, removedChar);
 					}
 
 				} catch (BadLocationException e) {
@@ -61,8 +58,7 @@ public class MatchingBracketAutoEditStrategy extends
 		}
 	}
 
-	private void autoAddPairBracket(IStructuredDocument document,
-			DocumentCommand command) {
+	private void autoAddPairBracket(IStructuredDocument document, DocumentCommand command) {
 		int currentPosition = command.offset;
 		int commandLength = command.length;
 		char c = command.text.charAt(0);
@@ -71,8 +67,7 @@ public class MatchingBracketAutoEditStrategy extends
 
 		try {
 			if (currentPosition + commandLength < document.getLength()) {
-				if (!shouldAddClosingBracket(document, currentPosition
-						+ commandLength, false)) {
+				if (!shouldAddClosingBracket(document, currentPosition + commandLength, false)) {
 					return;
 				}
 			}
@@ -121,24 +116,19 @@ public class MatchingBracketAutoEditStrategy extends
 
 	}
 
-	protected int isMatchingCharNeeded(IStructuredDocument document,
-			int offset, char bracketChar) {
+	protected int isMatchingCharNeeded(IStructuredDocument document, int offset, char bracketChar) {
 		try {
-			String postCharState = FormatterUtils.getPartitionType(document,
-					offset + 1);
-			if (!(postCharState == PHPPartitionTypes.PHP_DEFAULT
-					|| postCharState == PHPRegionTypes.PHP_OPENTAG || postCharState == PHPRegionTypes.PHP_CLOSETAG)) {
+			String postCharState = FormatterUtils.getPartitionType(document, offset + 1);
+			if (!(postCharState == PHPPartitionTypes.PHP_DEFAULT || postCharState == PHPRegionTypes.PHP_OPENTAG
+					|| postCharState == PHPRegionTypes.PHP_CLOSETAG)) {
 				if (isSpecialOpenCurlyInQuotes(document, offset)) {
-					postCharState = FormatterUtils.getPartitionType(document,
-							offset + 2);
+					postCharState = FormatterUtils.getPartitionType(document, offset + 2);
 				}
 			}
 			if (document.getLength() == offset + 1) { // if we are in the end of
 														// the document
-				postCharState = FormatterUtils.getPartitionType(document,
-						offset);
-				if (postCharState == PHPPartitionTypes.PHP_DEFAULT
-						|| postCharState == PHPRegionTypes.PHP_OPENTAG
+				postCharState = FormatterUtils.getPartitionType(document, offset);
+				if (postCharState == PHPPartitionTypes.PHP_DEFAULT || postCharState == PHPRegionTypes.PHP_OPENTAG
 						|| postCharState == PHPRegionTypes.PHP_CLOSETAG) {
 					if (document.getChar(offset) == getMatchingChar(bracketChar)) {
 						return MATCHING_BRACKET_NOT_NEEDED;
@@ -148,19 +138,16 @@ public class MatchingBracketAutoEditStrategy extends
 				return MATCHING_BRACKET_NOT_NEEDED;
 			}
 
-			if (postCharState != PHPPartitionTypes.PHP_DEFAULT
-					&& postCharState != PHPRegionTypes.PHP_OPENTAG
+			if (postCharState != PHPPartitionTypes.PHP_DEFAULT && postCharState != PHPRegionTypes.PHP_OPENTAG
 					&& postCharState != PHPRegionTypes.PHP_CLOSETAG) {
 				return SEARCH_NOT_VALID;
 			}
 
 			int currOffset = offset + 1;
 			// Find the structured document region:
-			IStructuredDocumentRegion sdRegion = document
-					.getRegionAtCharacterOffset(currOffset);
+			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(currOffset);
 
-			ITextRegion tRegion = sdRegion != null ? sdRegion
-					.getRegionAtCharacterOffset(currOffset) : null;
+			ITextRegion tRegion = sdRegion != null ? sdRegion.getRegionAtCharacterOffset(currOffset) : null;
 
 			while (currOffset >= 0 && tRegion != null) {
 				int regionStart = sdRegion.getStartOffset(tRegion);
@@ -175,18 +162,15 @@ public class MatchingBracketAutoEditStrategy extends
 				// This text region must be of type PhpScriptRegion:
 				if (tRegion.getType() == PHPRegionTypes.PHP_CONTENT) {
 					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-					tRegion = scriptRegion
-							.getPhpToken(currOffset - regionStart);
+					tRegion = scriptRegion.getPhpToken(currOffset - regionStart);
 
 					while (true) {
 						String regionType = tRegion.getType();
 						if (regionType == PHPRegionTypes.PHP_TOKEN) {
-							char token = document.getChar(regionStart
-									+ tRegion.getStart());
+							char token = document.getChar(regionStart + tRegion.getStart());
 							if (token == ROUND_OPEN || token == SQUARE_OPEN) {
 								if (token == bracketChar) {
-									if (matcher.match(document, regionStart
-											+ tRegion.getStart() + 1) == null) {
+									if (matcher.match(document, regionStart + tRegion.getStart() + 1) == null) {
 										return MATCHING_BRACKET_NEEDED;
 									}
 								}
@@ -196,8 +180,7 @@ public class MatchingBracketAutoEditStrategy extends
 							return MATCHING_BRACKET_NOT_NEEDED;
 						}
 						if (tRegion.getStart() > 0) {
-							tRegion = scriptRegion.getPhpToken(tRegion
-									.getStart() - 1);
+							tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
 						} else {
 							break;
 						}
@@ -215,8 +198,7 @@ public class MatchingBracketAutoEditStrategy extends
 		return MATCHING_BRACKET_NOT_NEEDED;
 	}
 
-	private void insertClosingChar(IStructuredDocument document,
-			DocumentCommand command) {
+	private void insertClosingChar(IStructuredDocument document, DocumentCommand command) {
 		int endSelection = command.offset + command.length;
 		char addedChar = command.text.charAt(0);
 		if (endSelection == document.getLength()) // nothing to match
@@ -225,15 +207,13 @@ public class MatchingBracketAutoEditStrategy extends
 			char nextChar = document.getChar(endSelection);
 			if (nextChar == addedChar) {
 				int result;
-				result = isMatchingCharNeeded(document, endSelection,
-						getMatchingChar(addedChar));
+				result = isMatchingCharNeeded(document, endSelection, getMatchingChar(addedChar));
 				// this check means that all opening brackets has a closing one
 				if (result == MATCHING_BRACKET_NOT_NEEDED) {
 					// this check is for the case of ()) when the caret is
 					// between the two ')'
 					// typing ')' will add another ')' to the document
-					if (matcher.match(document, endSelection + 1) != null
-							|| document.getLength() == endSelection + 1) {
+					if (matcher.match(document, endSelection + 1) != null || document.getLength() == endSelection + 1) {
 						if (command.length == 0) {
 							adjustDocumentOffset(command);
 							command.text = ""; //$NON-NLS-1$
@@ -249,13 +229,10 @@ public class MatchingBracketAutoEditStrategy extends
 		return;
 	}
 
-	private void deletePairBreaket(IStructuredDocument document,
-			DocumentCommand command, char deletedChar) {
+	private void deletePairBreaket(IStructuredDocument document, DocumentCommand command, char deletedChar) {
 		int offset = command.offset;
-		IStructuredDocumentRegion sdRegion = document
-				.getRegionAtCharacterOffset(offset);
-		if (sdRegion == null
-				|| sdRegion.getType() != PHPRegionTypes.PHP_CONTENT) {
+		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
+		if (sdRegion == null || sdRegion.getType() != PHPRegionTypes.PHP_CONTENT) {
 			return;
 		}
 		try {
@@ -269,8 +246,7 @@ public class MatchingBracketAutoEditStrategy extends
 
 			if (tRegion instanceof IPhpScriptRegion) {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-				tRegion = scriptRegion.getPhpToken(offset
-						- sdRegion.getStartOffset(scriptRegion));
+				tRegion = scriptRegion.getPhpToken(offset - sdRegion.getStartOffset(scriptRegion));
 
 				if (tRegion.getType() != PHPRegionTypes.PHP_TOKEN) {
 					return;

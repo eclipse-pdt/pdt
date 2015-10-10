@@ -75,25 +75,19 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 			boolean streamerReqd = false;
 			try {
 				ILaunchConfiguration config = launch.getLaunchConfiguration();
-				if (config.getAttribute(
-						PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, "") //$NON-NLS-1$
+				if (config.getAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, "") //$NON-NLS-1$
 						.equals(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
-					streamerReqd = config.getAttribute(
-							IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true)
-							|| launch.getLaunchMode().equals(
-									ILaunchManager.DEBUG_MODE);
+					streamerReqd = config.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true)
+							|| launch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE);
 				}
 			} catch (CoreException e) {
 			}
 			if (streamerReqd) {
 
-				StreamGobbler errorGobbler = new StreamGobbler(
-						process.getErrorStream(), true);
-				StreamGobbler inputGobbler = new StreamGobbler(
-						process.getInputStream(), false);
+				StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), true);
+				StreamGobbler inputGobbler = new StreamGobbler(process.getInputStream(), false);
 
-				ConsolePlugin.getDefault().getConsoleManager()
-						.addConsoleListener(this);
+				ConsolePlugin.getDefault().getConsoleManager().addConsoleListener(this);
 
 				errorGobbler.start();
 				inputGobbler.start();
@@ -109,8 +103,7 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 
 		} catch (Throwable t) {
 		} finally {
-			ConsolePlugin.getDefault().getConsoleManager()
-					.removeConsoleListener(this);
+			ConsolePlugin.getDefault().getConsoleManager().removeConsoleListener(this);
 		}
 	}
 

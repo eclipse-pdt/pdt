@@ -42,8 +42,8 @@ public class TextSearcher {
 	 * @param visitor
 	 * @param searchPattern
 	 */
-	TextSearcher(TextSearchEngine engine, TextSearchScope newSearchScope,
-			ResultVisitor visitor, Pattern searchPattern) {
+	TextSearcher(TextSearchEngine engine, TextSearchScope newSearchScope, ResultVisitor visitor,
+			Pattern searchPattern) {
 		if (engine == null || newSearchScope == null || visitor == null) {
 			throw new IllegalArgumentException();
 		}
@@ -71,34 +71,28 @@ public class TextSearcher {
 	 * @param searchPattern
 	 * @return
 	 */
-	public final static TextSearcher createSearcher(TextSearchEngine engine,
-			TextSearchScope newSearchScope, ResultVisitor visitor,
-			Pattern searchPattern) {
+	public final static TextSearcher createSearcher(TextSearchEngine engine, TextSearchScope newSearchScope,
+			ResultVisitor visitor, Pattern searchPattern) {
 		return new TextSearcher(engine, newSearchScope, visitor, searchPattern);
 	}
 
-	public final static TextSearcher createSearcher(
-			TextSearchScope newSearchScope, ResultVisitor visitor,
+	public final static TextSearcher createSearcher(TextSearchScope newSearchScope, ResultVisitor visitor,
 			Pattern searchPattern) {
 		final TextSearchEngine engine = TextSearchEngine.createDefault();
 		return createSearcher(engine, newSearchScope, visitor, searchPattern);
 	}
 
-	public final static TextSearcher createSearcher(IResource resource,
-			ResultVisitor visitor, Pattern searchPattern) {
-		TextSearchScope searchScope = TextSearchScope.newSearchScope(
-				new IResource[] { resource }, null, true);
+	public final static TextSearcher createSearcher(IResource resource, ResultVisitor visitor, Pattern searchPattern) {
+		TextSearchScope searchScope = TextSearchScope.newSearchScope(new IResource[] { resource }, null, true);
 		return createSearcher(searchScope, visitor, searchPattern);
 	}
 
-	public final static TextSearcher createSearcher(IResource resource,
-			Pattern searchPattern) {
+	public final static TextSearcher createSearcher(IResource resource, Pattern searchPattern) {
 		ResultVisitor visitor = new ResultVisitor();
 		return createSearcher(resource, visitor, searchPattern);
 	}
 
-	public final static TextSearcher createSearcher(IResource resource,
-			String searchText) {
+	public final static TextSearcher createSearcher(IResource resource, String searchText) {
 		Pattern searchPattern = Pattern.compile(searchText);
 		return createSearcher(resource, searchPattern);
 	}

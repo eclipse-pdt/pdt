@@ -44,8 +44,7 @@ import org.eclipse.ui.IWorkbenchPart;
  * @version 2.0 (by NirC, 2008)
  */
 @SuppressWarnings("restriction")
-public class ProjectOutlinePart extends ScriptExplorerPart implements
-		IPartListener {
+public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListener {
 
 	@Override
 	public ProjectOutlineContentProvider createContentProvider() {
@@ -67,8 +66,7 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements
 
 	@Override
 	protected ScriptExplorerLabelProvider createLabelProvider() {
-		final IPreferenceStore store = DLTKUIPlugin.getDefault()
-				.getPreferenceStore();
+		final IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
 
 		return new ProjectOutlineLabelProvider(getContentProvider(), store);
 	}
@@ -81,9 +79,8 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart#createPartControl
-	 * (org.eclipse.swt.widgets.Composite)
+	 * @see org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart#
+	 * createPartControl (org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
@@ -103,7 +100,8 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements
 	// private void activateContext() {
 	// IContextService contextService = (IContextService) getSite()
 	// .getService(IContextService.class);
-	//		contextService.activateContext("org.eclipse.php.ui.contexts.window"); //$NON-NLS-1$
+	// contextService.activateContext("org.eclipse.php.ui.contexts.window");
+	// //$NON-NLS-1$
 	// }
 
 	@Override
@@ -114,8 +112,7 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements
 
 	private void setInputAsEditor(IScriptProject scriptProject) {
 		final TreeViewer treeViewer = getTreeViewer();
-		if (null == treeViewer.getInput()
-				|| !treeViewer.getInput().equals(scriptProject)) {
+		if (null == treeViewer.getInput() || !treeViewer.getInput().equals(scriptProject)) {
 			treeViewer.setInput(scriptProject);
 		}
 	}
@@ -165,20 +162,17 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements
 	}
 
 	private void setInputAsExplorerProject(IWorkbenchPart part) {
-		final TreeSelection input = (TreeSelection) ((ScriptExplorerPart) part)
-				.getTreeViewer().getSelection();
+		final TreeSelection input = (TreeSelection) ((ScriptExplorerPart) part).getTreeViewer().getSelection();
 		IScriptProject scriptProject = null;
 		// getting selected project (from ScriptExplorerPart selection.
 		if (input.getFirstElement() instanceof IModelElement) {
-			scriptProject = (IScriptProject) ((IModelElement) input
-					.getFirstElement())
+			scriptProject = (IScriptProject) ((IModelElement) input.getFirstElement())
 					.getAncestor(IModelElement.SCRIPT_PROJECT);
 		}
 
 		if (null == scriptProject) {
 			// If no project is selected - choosing the first project
-			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
-					.getProjects();
+			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 			if (null != projects && projects.length != 0) {
 				scriptProject = DLTKCore.create(projects[0]);
 			}
@@ -206,12 +200,10 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements
 	 * Enable lazy loading for group elements
 	 */
 	protected ProblemTreeViewer createViewer(Composite composite) {
-		return new ProjectOutlineProblemTreeViewer(composite, SWT.MULTI
-				| SWT.H_SCROLL | SWT.V_SCROLL);
+		return new ProjectOutlineProblemTreeViewer(composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 	}
 
-	protected class ProjectOutlineProblemTreeViewer extends
-			PackageExplorerProblemTreeViewer {
+	protected class ProjectOutlineProblemTreeViewer extends PackageExplorerProblemTreeViewer {
 
 		public ProjectOutlineProblemTreeViewer(Composite parent, int style) {
 			super(parent, style);

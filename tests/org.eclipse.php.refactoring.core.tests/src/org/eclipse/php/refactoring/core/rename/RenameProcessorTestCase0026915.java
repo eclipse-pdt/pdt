@@ -36,8 +36,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RenameProcessorTestCase0026915 extends
-		AbstractRenameRefactoringTest {
+public class RenameProcessorTestCase0026915 extends AbstractRenameRefactoringTest {
 	private IProject project1;
 
 	@Before
@@ -54,8 +53,7 @@ public class RenameProcessorTestCase0026915 extends
 		}
 		IFile file = folder.getFile("test1.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php class TestRenameClass{}?>".getBytes());
+		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -66,26 +64,24 @@ public class RenameProcessorTestCase0026915 extends
 		IPath fPath = new Path("/project1/src");
 		IPath[] inclusionPattern = new IPath[0];
 		IPath[] exclusionPattern = new IPath[0];
-		IBuildpathEntry sourceEntry = DLTKCore.newSourceEntry(fPath,
-				inclusionPattern, exclusionPattern, new IBuildpathAttribute[0]);
+		IBuildpathEntry sourceEntry = DLTKCore.newSourceEntry(fPath, inclusionPattern, exclusionPattern,
+				new IBuildpathAttribute[0]);
 
 		fPath = new Path("/project1");
 		inclusionPattern = new IPath[0];
 		exclusionPattern = new IPath[1];
 		exclusionPattern[0] = new Path("src/");
-		IBuildpathEntry sourceEntry1 = DLTKCore.newSourceEntry(fPath,
-				inclusionPattern, exclusionPattern, new IBuildpathAttribute[0]);
+		IBuildpathEntry sourceEntry1 = DLTKCore.newSourceEntry(fPath, inclusionPattern, exclusionPattern,
+				new IBuildpathAttribute[0]);
 
-		final IScriptProject scriptProject = DLTKCore.create(project1
-				.getProject());
+		final IScriptProject scriptProject = DLTKCore.create(project1.getProject());
 
 		final List<IBuildpathEntry> entriesList = new ArrayList<IBuildpathEntry>();
 		IBuildpathEntry[] entries;
 		try {
 			entries = scriptProject.getRawBuildpath();
 
-			entries = FileUtils.removeEntryFromBuildPath(entries, project1
-					.getFullPath());
+			entries = FileUtils.removeEntryFromBuildPath(entries, project1.getFullPath());
 
 			entriesList.addAll(Arrays.asList(entries));
 
@@ -95,12 +91,10 @@ public class RenameProcessorTestCase0026915 extends
 			e.printStackTrace();
 		}
 
-		final IBuildpathEntry[] newEntries = new IBuildpathEntry[entriesList
-				.size()];
+		final IBuildpathEntry[] newEntries = new IBuildpathEntry[entriesList.size()];
 
 		scriptProject.setRawBuildpath(null, new NullProgressMonitor());
-		scriptProject.setRawBuildpath(entriesList.toArray(newEntries),
-				new NullProgressMonitor());
+		scriptProject.setRawBuildpath(entriesList.toArray(newEntries), new NullProgressMonitor());
 
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
@@ -117,9 +111,9 @@ public class RenameProcessorTestCase0026915 extends
 		performChange(processor);
 		IFolder folder = project1.getFolder("src1");
 		assertTrue(folder.exists());
-		
+
 		final IScriptProject scriptProject = DLTKCore.create(project1);
-		
+
 		FileUtils.isInBuildpath(folder.getFullPath(), scriptProject, IBuildpathEntry.BPE_SOURCE);
 
 	}

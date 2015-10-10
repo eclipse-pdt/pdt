@@ -21,23 +21,20 @@ import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
-public class IncludePathProperties extends BuildPathsPropertyPage implements
-		IWorkbenchPropertyPage {
+public class IncludePathProperties extends BuildPathsPropertyPage implements IWorkbenchPropertyPage {
 
 	public IncludePathProperties() {
 	}
 
-	protected AbstractIncludepathsBlock createBuildPathBlock(
-			IWorkbenchPreferenceContainer pageContainer) {
-		return new PHPIncludePathsBlock(new BusyIndicatorRunnableContext(),
-				this, getSettings().getInt(INDEX), false, pageContainer);
+	protected AbstractIncludepathsBlock createBuildPathBlock(IWorkbenchPreferenceContainer pageContainer) {
+		return new PHPIncludePathsBlock(new BusyIndicatorRunnableContext(), this, getSettings().getInt(INDEX), false,
+				pageContainer);
 	}
 
 	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
-				IPHPHelpContextIds.PHP_INCLUDE_PATH_PROPERTIES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PHP_INCLUDE_PATH_PROPERTIES);
 	}
 
 	public IDLTKLanguageToolkit getLanguageToolkit() {

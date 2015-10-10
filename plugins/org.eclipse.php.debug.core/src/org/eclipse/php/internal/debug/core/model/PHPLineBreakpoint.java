@@ -47,8 +47,7 @@ public class PHPLineBreakpoint extends LineBreakpoint {
 	 * @throws CoreException
 	 *             if unable to create the breakpoint
 	 */
-	public PHPLineBreakpoint(final IResource resource, final int lineNumber)
-			throws CoreException {
+	public PHPLineBreakpoint(final IResource resource, final int lineNumber) throws CoreException {
 
 		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
@@ -56,10 +55,8 @@ public class PHPLineBreakpoint extends LineBreakpoint {
 				marker.setAttribute(IBreakpoint.ENABLED, Boolean.TRUE);
 				marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
 				marker.setAttribute(IBreakpoint.ID, getModelIdentifier());
-				marker.setAttribute(IMarker.MESSAGE, NLS.bind(
-						PHPDebugCoreMessages.LineBreakPointMessage_1,
-						new String[] { resource.getName(),
-								Integer.toString(lineNumber) }));
+				marker.setAttribute(IMarker.MESSAGE, NLS.bind(PHPDebugCoreMessages.LineBreakPointMessage_1,
+						new String[] { resource.getName(), Integer.toString(lineNumber) }));
 				setMarker(marker);
 				setEnabled(true);
 				register(true);
@@ -87,15 +84,14 @@ public class PHPLineBreakpoint extends LineBreakpoint {
 
 	protected void createRuntimeBreakpoint(IMarker marker) throws CoreException {
 
-		String fileName = (String) marker
-				.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
+		String fileName = (String) marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
 		if (fileName == null) {
 			fileName = (String) marker.getAttribute(IMarker.LOCATION);
 		}
 
 		Integer lineNumber = (Integer) marker.getAttribute(IMarker.LINE_NUMBER);
-		fBreakpoint = new org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint(
-				fileName, (lineNumber.intValue()));
+		fBreakpoint = new org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint(fileName,
+				(lineNumber.intValue()));
 		fBreakpoint.setEnable(true);
 	}
 

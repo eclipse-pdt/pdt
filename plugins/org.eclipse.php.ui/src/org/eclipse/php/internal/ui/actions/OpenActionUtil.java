@@ -34,8 +34,7 @@ public class OpenActionUtil {
 	 * 
 	 * @throws ModelException
 	 */
-	public static void open(Object element) throws PartInitException,
-			ModelException {
+	public static void open(Object element) throws PartInitException, ModelException {
 		open(element, true);
 	}
 
@@ -49,16 +48,14 @@ public class OpenActionUtil {
 	 * @throws PartInitException
 	 * @throws ModelException
 	 */
-	public static void open(Object element, boolean activate)
-			throws PartInitException, ModelException {
+	public static void open(Object element, boolean activate) throws PartInitException, ModelException {
 		IEditorPart part = EditorUtility.openInEditor(element, activate);
 		if (element instanceof IModelElement)
 			EditorUtility.revealInEditor(part, ((IModelElement) element));
 		if (element instanceof TreeItem) {
 			TreeItem item = (TreeItem) element;
 			if (item.getData() instanceof IModelElement)
-				EditorUtility.revealInEditor(part, ((IModelElement) (item
-						.getData())));
+				EditorUtility.revealInEditor(part, ((IModelElement) (item.getData())));
 		}
 	}
 
@@ -66,8 +63,7 @@ public class OpenActionUtil {
 	 * Shows a dialog for resolving an ambiguous php element. Utility method
 	 * that can be called by subclasses.
 	 */
-	public static IModelElement selectPHPElement(IModelElement[] elements,
-			Shell shell, String title, String message) {
+	public static IModelElement selectPHPElement(IModelElement[] elements, Shell shell, String title, String message) {
 
 		int nResults = elements.length;
 
@@ -77,12 +73,10 @@ public class OpenActionUtil {
 		if (nResults == 1)
 			return elements[0];
 
-		int flags = ModelElementLabelProvider.SHOW_DEFAULT
-				| ModelElementLabelProvider.SHOW_QUALIFIED
+		int flags = ModelElementLabelProvider.SHOW_DEFAULT | ModelElementLabelProvider.SHOW_QUALIFIED
 				| ModelElementLabelProvider.SHOW_ROOT;
 
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
-				shell, new ModelElementLabelProvider(flags));
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(shell, new ModelElementLabelProvider(flags));
 		dialog.setTitle(title);
 		dialog.setMessage(message);
 		dialog.setElements(elements);

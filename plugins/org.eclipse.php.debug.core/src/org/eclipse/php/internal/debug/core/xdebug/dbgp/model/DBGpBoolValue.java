@@ -55,9 +55,8 @@ public class DBGpBoolValue extends DBGpValue {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#setValue(java.lang.String
-	 * )
+	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#setValue(java.lang.
+	 * String )
 	 */
 	public void setValue(String expression) throws DebugException {
 		String data;

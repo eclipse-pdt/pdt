@@ -33,15 +33,15 @@ import org.junit.runner.RunWith;
 
 @RunWith(PDTTList.class)
 public class ExtractFunctionRefactoringTest extends AbstractRefactoringTest {
-	
+
 	@Override
 	protected TestProject getProject() {
 		return new TestProject("RefactoringExtractFunc");
 	}
-	
+
 	@PDTTList.Parameters
-	public static String[] dirs = {"/resources/extractfunc/"}; //$NON-NLS-1$
-	
+	public static String[] dirs = { "/resources/extractfunc/" }; //$NON-NLS-1$
+
 	public ExtractFunctionRefactoringTest(String[] fileNames) {
 		super(fileNames);
 	}
@@ -69,25 +69,25 @@ public class ExtractFunctionRefactoringTest extends AbstractRefactoringTest {
 		int length = Integer.valueOf(testFile.getConfig().get("length"));
 
 		String visibility = testFile.getConfig().get("visibility");
-		
-		ExtractFunctionRefactoring processor = new ExtractFunctionRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, start, length);
 
-		if("default".equals(visibility)){
+		ExtractFunctionRefactoring processor = new ExtractFunctionRefactoring(DLTKCore.createSourceModuleFrom(file),
+				structuredDocument, start, length);
+
+		if ("default".equals(visibility)) {
 			processor.setVisibility(Modifiers.AccDefault);
 		}
 
-		if("public".equals(visibility)){
+		if ("public".equals(visibility)) {
 			processor.setVisibility(Modifiers.AccPublic);
 		}
 
-		if("prvate".equals(visibility)){
+		if ("prvate".equals(visibility)) {
 			processor.setVisibility(Modifiers.AccPrivate);
 		}
-		
-		if("protected".equals(visibility)){
+
+		if ("protected".equals(visibility)) {
 			processor.setVisibility(Modifiers.AccProtected);
 		}
-
 
 		processor.setNewFunctionName(testFile.getConfig().get("newName"));
 
@@ -101,13 +101,13 @@ public class ExtractFunctionRefactoringTest extends AbstractRefactoringTest {
 		for (FileInfo expFile : files) {
 			IFile file = project.findFile(expFile.getName());
 			assertTrue(file.exists());
-			
+
 			String content = structuredDocument.get();
-			
-//			String newLine = System.getProperty("line.separator");
-//			content = content.replaceAll(newLine, "").replaceAll(" ", "");
-//			content = content.replaceAll("\n", "").replaceAll(" ", "");
-			
+
+			// String newLine = System.getProperty("line.separator");
+			// content = content.replaceAll(newLine, "").replaceAll(" ", "");
+			// content = content.replaceAll("\n", "").replaceAll(" ", "");
+
 			String diff = PHPCoreTests.compareContentsIgnoreWhitespace(expFile.getContents(), content);
 			if (diff != null) {
 				fail(diff);

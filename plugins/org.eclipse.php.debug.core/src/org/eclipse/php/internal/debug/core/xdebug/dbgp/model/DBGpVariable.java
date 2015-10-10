@@ -30,11 +30,18 @@ public class DBGpVariable extends AbstractDBGpBaseVariable implements IVariable 
 	static final String PHP_BOOL = "bool"; //$NON-NLS-1$
 	static final String PHP_INT = "int"; //$NON-NLS-1$
 	static final String PHP_FLOAT = "float"; //$NON-NLS-1$
-	static final String PHP_STRING = "string"; //size attribute //$NON-NLS-1$
-	static final String PHP_NULL = "null"; // unknown variable type //$NON-NLS-1$
-	static final String PHP_ARRAY = "array"; // children, numchildren, page, pagesize, recursive attribute //$NON-NLS-1$
-	static final String PHP_OBJECT = "object"; //children, classname, numchildren, page, pagesize, recursive attribute //$NON-NLS-1$
-	static final String PHP_RESOURCE = "resource"; // pre-rendered string for information, cannot be changed //$NON-NLS-1$
+	static final String PHP_STRING = "string"; // size attribute //$NON-NLS-1$
+	static final String PHP_NULL = "null"; // unknown variable //$NON-NLS-1$
+											// type
+	static final String PHP_ARRAY = "array"; // children, //$NON-NLS-1$
+												// numchildren, page, pagesize,
+												// recursive attribute
+	static final String PHP_OBJECT = "object"; // children, //$NON-NLS-1$
+												// classname, numchildren, page,
+												// pagesize, recursive attribute
+	static final String PHP_RESOURCE = "resource"; // pre-rendered //$NON-NLS-1$
+													// string for information,
+													// cannot be changed
 
 	private DBGpValue value;
 	private String name;
@@ -42,8 +49,7 @@ public class DBGpVariable extends AbstractDBGpBaseVariable implements IVariable 
 	private String type;
 	private boolean hasChanged = false;
 
-	public DBGpVariable(DBGpTarget target, Node property, String level,
-			Facet... facets) {
+	public DBGpVariable(DBGpTarget target, Node property, String level, Facet... facets) {
 		super(target, level, facets);
 		parseProperty(property);
 		hasChanged = target.storeValue(value, property);
@@ -89,8 +95,7 @@ public class DBGpVariable extends AbstractDBGpBaseVariable implements IVariable 
 		else if (facets.contains("private")) //$NON-NLS-1$
 			addFacets(Facet.MOD_PRIVATE);
 		// Hopefully this will put the $ at appropriate point in the name
-		if (getFullName().length() > 1
-				&& name.equals(getFullName().substring(1))) {
+		if (getFullName().length() > 1 && name.equals(getFullName().substring(1))) {
 			name = getFullName();
 		}
 		if (hasFacet(KIND_ARRAY_MEMBER))
@@ -160,8 +165,7 @@ public class DBGpVariable extends AbstractDBGpBaseVariable implements IVariable 
 		 */
 		if (!verifyValue(expression)) {
 			// setValue called, but verifyValue failed
-			Status stat = new Status(Status.WARNING, PHPDebugPlugin.ID,
-					PHPDebugCoreMessages.XDebug_DBGpVariable_0);
+			Status stat = new Status(Status.WARNING, PHPDebugPlugin.ID, PHPDebugCoreMessages.XDebug_DBGpVariable_0);
 			throw new DebugException(stat);
 		} else {
 			// attempt to set the property
@@ -170,10 +174,8 @@ public class DBGpVariable extends AbstractDBGpBaseVariable implements IVariable 
 				fireChangeEvent(DebugEvent.CONTENT);
 			} else {
 				// program under debug rejected value change
-				throw new DebugException(new Status(IStatus.ERROR,
-						PHPDebugPlugin.ID,
-						DebugException.TARGET_REQUEST_FAILED,
-						PHPDebugCoreMessages.XDebug_DBGpVariable_1, null));
+				throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.ID,
+						DebugException.TARGET_REQUEST_FAILED, PHPDebugCoreMessages.XDebug_DBGpVariable_1, null));
 			}
 		}
 	}
@@ -198,8 +200,7 @@ public class DBGpVariable extends AbstractDBGpBaseVariable implements IVariable 
 	 * ()
 	 */
 	public boolean supportsValueModification() {
-		return value.isModifiable() && getFullName() != null
-				&& getFullName().trim().length() != 0;
+		return value.isModifiable() && getFullName() != null && getFullName().trim().length() != 0;
 	}
 
 	/*

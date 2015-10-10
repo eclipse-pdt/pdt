@@ -37,8 +37,7 @@ public class PHPViewerDropSupport {
 		fDelegatingDropAdapter = new DelegatingDropAdapter();
 		fReorgDropListener = new PHPSelectionTransferDropAdapter(fViewer);
 		fDelegatingDropAdapter.addDropTargetListener(fReorgDropListener);
-		fDelegatingDropAdapter
-				.addDropTargetListener(new FileTransferDropAdapter(fViewer));
+		fDelegatingDropAdapter.addDropTargetListener(new FileTransferDropAdapter(fViewer));
 		// fDelegatingDropAdapter.addDropTargetListener(new
 		// PluginTransferDropAdapter(fViewer));
 
@@ -54,12 +53,10 @@ public class PHPViewerDropSupport {
 	public void start() {
 		Assert.isLegal(!fStarted);
 
-		int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK
-				| DND.DROP_DEFAULT;
+		int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_DEFAULT;
 
-		Transfer[] transfers = new Transfer[] {
-				LocalSelectionTransfer.getInstance(),
-				FileTransfer.getInstance(), PluginTransfer.getInstance() };
+		Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance(), FileTransfer.getInstance(),
+				PluginTransfer.getInstance() };
 
 		fViewer.addDropSupport(ops, transfers, fDelegatingDropAdapter);
 

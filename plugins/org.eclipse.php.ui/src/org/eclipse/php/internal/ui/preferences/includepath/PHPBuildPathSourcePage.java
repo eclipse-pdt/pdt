@@ -30,8 +30,7 @@ public class PHPBuildPathSourcePage extends PHPSourceContainerWorkbookPage {
 	private List<BPListElement> fRemovedElements = new ArrayList<BPListElement>();
 	private boolean removeFromIncludePath = false;
 
-	private List<IChangeListener> removedElementListeners = new ArrayList<IChangeListener>(
-			1);
+	private List<IChangeListener> removedElementListeners = new ArrayList<IChangeListener>(1);
 
 	public List<BPListElement> getRemovedElements() {
 		return fRemovedElements;
@@ -58,8 +57,7 @@ public class PHPBuildPathSourcePage extends PHPSourceContainerWorkbookPage {
 				BPListElementAttribute attrib = (BPListElementAttribute) elem;
 				String key = attrib.getKey();
 				Object value = null;
-				if (key.equals(BPListElement.EXCLUSION)
-						|| key.equals(BPListElement.INCLUSION)) {
+				if (key.equals(BPListElement.EXCLUSION) || key.equals(BPListElement.INCLUSION)) {
 					value = new Path[0];
 				}
 				attrib.getParent().setAttribute(key, value);
@@ -79,18 +77,14 @@ public class PHPBuildPathSourcePage extends PHPSourceContainerWorkbookPage {
 					// in case it is, add the entry to the removed elements list
 					// and ask the user if he would like to remove it to the
 					// include path as well
-					if (null != IncludePathManager.isInIncludePath(
-							fCurrJProject.getProject(), element.getPath())) {
+					if (null != IncludePathManager.isInIncludePath(fCurrJProject.getProject(), element.getPath())) {
 						// add to removed elements list
 						fRemovedElements.add(element);
 					}
-					List list = BuildpathModifier.removeFilters(element
-							.getPath(), fCurrJProject, fFoldersList
-							.getElements());
-					for (Iterator iterator = list.iterator(); iterator
-							.hasNext();) {
-						BPListElement modified = (BPListElement) iterator
-								.next();
+					List list = BuildpathModifier.removeFilters(element.getPath(), fCurrJProject,
+							fFoldersList.getElements());
+					for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+						BPListElement modified = (BPListElement) iterator.next();
 						fFoldersList.refresh(modified);
 						fFoldersList.expandElement(modified, 3);
 					}
@@ -98,11 +92,9 @@ public class PHPBuildPathSourcePage extends PHPSourceContainerWorkbookPage {
 			}
 			if (fRemovedElements.size() > 0) {
 				fFoldersList.removeElements(fRemovedElements);
-				removeFromIncludePath = IncludePathUtils
-						.openConfirmationDialog(
-								getShell(),
-								PHPUIMessages.IncludePath_RemoveEntryTitle,
-								PHPUIMessages.IncludePath_RemoveEntryFromIncludePathMessage); //
+				removeFromIncludePath = IncludePathUtils.openConfirmationDialog(getShell(),
+						PHPUIMessages.IncludePath_RemoveEntryTitle,
+						PHPUIMessages.IncludePath_RemoveEntryFromIncludePathMessage); //
 				for (IChangeListener listener : removedElementListeners) {
 					listener.update(true);
 				}

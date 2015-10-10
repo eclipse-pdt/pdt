@@ -18,8 +18,7 @@ import java.io.IOException;
 
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
 
-public class SetProtocolResponse extends DebugMessageResponseImpl implements
-		IDebugResponseMessage {
+public class SetProtocolResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
 
 	private int fProtocolID;
 

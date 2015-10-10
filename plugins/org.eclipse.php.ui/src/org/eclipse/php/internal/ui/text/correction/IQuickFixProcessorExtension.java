@@ -21,6 +21,5 @@ import org.eclipse.dltk.core.ISourceModule;
  * @since 3.2.1
  */
 public interface IQuickFixProcessorExtension {
-	public boolean hasCorrections(ISourceModule unit,
-			IProblemIdentifier identifier);
+	public boolean hasCorrections(ISourceModule unit, IProblemIdentifier identifier);
 }

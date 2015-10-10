@@ -37,7 +37,6 @@ public interface ICompositeFragmentFactory {
 	 * @param controlHandler
 	 * @return
 	 */
-	public CompositeFragment createComposite(Composite parent,
-			IControlHandler controlHandler);
+	public CompositeFragment createComposite(Composite parent, IControlHandler controlHandler);
 
 }

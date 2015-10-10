@@ -61,8 +61,7 @@ public class PHPBreakpointImageDescriptor extends CompositeImageDescriptor {
 		}
 
 		PHPBreakpointImageDescriptor other = (PHPBreakpointImageDescriptor) object;
-		return (getBaseImage().equals(other.getBaseImage()) && getFlags() == other
-				.getFlags());
+		return (getBaseImage().equals(other.getBaseImage()) && getFlags() == other.getFlags());
 	}
 
 	/**
@@ -99,8 +98,7 @@ public class PHPBreakpointImageDescriptor extends CompositeImageDescriptor {
 	}
 
 	private ImageData getImageData(String imageDescriptorKey) {
-		return PHPDebugUIImages.getImageDescriptor(imageDescriptorKey)
-				.getImageData();
+		return PHPDebugUIImages.getImageDescriptor(imageDescriptorKey).getImageData();
 	}
 
 	protected Point getSize() {

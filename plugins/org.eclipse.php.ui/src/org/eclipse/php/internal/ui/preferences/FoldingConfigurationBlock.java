@@ -111,11 +111,9 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 	}
 
 	private Map createListModel() {
-		PHPFoldingStructureProviderRegistry reg = PHPUiPlugin.getDefault()
-				.getFoldingStructureProviderRegistry();
+		PHPFoldingStructureProviderRegistry reg = PHPUiPlugin.getDefault().getFoldingStructureProviderRegistry();
 		reg.reloadExtensions();
-		PHPFoldingStructureProviderDescriptor[] descs = reg
-				.getFoldingProviderDescriptors();
+		PHPFoldingStructureProviderDescriptor[] descs = reg.getFoldingProviderDescriptors();
 		Map map = new HashMap();
 		for (PHPFoldingStructureProviderDescriptor element : descs) {
 			map.put(element.getId(), element);
@@ -127,15 +125,12 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 		ArrayList overlayKeys = new ArrayList();
 
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.BOOLEAN,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
 				PreferenceConstants.EDITOR_FOLDING_ENABLED));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.STRING,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING,
 				PreferenceConstants.EDITOR_FOLDING_PROVIDER));
 
-		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys
-				.size()];
+		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
 		overlayKeys.toArray(keys);
 		return keys;
 	}
@@ -151,8 +146,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 		Composite composite = new Composite(parent, SWT.NULL);
 		// assume parent page uses griddata
-		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_CENTER
-				| GridData.VERTICAL_ALIGN_FILL);
+		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_CENTER | GridData.VERTICAL_ALIGN_FILL);
 		composite.setLayoutData(gd);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
@@ -162,16 +156,13 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 		/* check box for new editors */
 		fFoldingCheckbox = new Button(composite, SWT.CHECK);
-		fFoldingCheckbox
-				.setText(PHPUIMessages.FoldingConfigurationBlock_enable);
-		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING
-				| GridData.VERTICAL_ALIGN_BEGINNING);
+		fFoldingCheckbox.setText(PHPUIMessages.FoldingConfigurationBlock_enable);
+		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING);
 		fFoldingCheckbox.setLayoutData(gd);
 		fFoldingCheckbox.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				boolean enabled = fFoldingCheckbox.getSelection();
-				fStore.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED,
-						enabled);
+				fStore.setValue(PreferenceConstants.EDITOR_FOLDING_ENABLED, enabled);
 				updateCheckboxDependencies();
 			}
 
@@ -180,34 +171,28 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 		});
 
 		Label label = new Label(composite, SWT.CENTER);
-		gd = new GridData(GridData.FILL_HORIZONTAL
-				| GridData.VERTICAL_ALIGN_BEGINNING);
+		gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
 		label.setLayoutData(gd);
 
 		if (fProviderDescriptors.size() > 1) {
 			/* list */
 			Composite comboComp = new Composite(composite, SWT.NONE);
-			gd = new GridData(GridData.FILL_HORIZONTAL
-					| GridData.VERTICAL_ALIGN_BEGINNING);
+			gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
 			GridLayout gridLayout = new GridLayout(2, false);
 			gridLayout.marginWidth = 0;
 			comboComp.setLayout(gridLayout);
 
 			Label comboLabel = new Label(comboComp, SWT.CENTER);
-			gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING
-					| GridData.VERTICAL_ALIGN_CENTER);
+			gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_CENTER);
 			comboLabel.setLayoutData(gd);
-			comboLabel
-					.setText(PHPUIMessages.FoldingConfigurationBlock_combo_caption);
+			comboLabel.setText(PHPUIMessages.FoldingConfigurationBlock_combo_caption);
 
 			label = new Label(composite, SWT.CENTER);
-			gd = new GridData(GridData.FILL_HORIZONTAL
-					| GridData.VERTICAL_ALIGN_BEGINNING);
+			gd = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
 			label.setLayoutData(gd);
 
 			fProviderCombo = new Combo(comboComp, SWT.READ_ONLY | SWT.DROP_DOWN);
-			gd = new GridData(GridData.HORIZONTAL_ALIGN_END
-					| GridData.VERTICAL_ALIGN_CENTER);
+			gd = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_CENTER);
 			fProviderCombo.setLayoutData(gd);
 
 			fProviderViewer = createProviderViewer();
@@ -223,14 +208,12 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 		/* contributed provider preferences. */
 		fGroup = new Composite(groupComp, SWT.NONE);
-		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING
-				| GridData.VERTICAL_ALIGN_BEGINNING);
+		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING);
 		fGroup.setLayoutData(gd);
 		fStackLayout = new StackLayout();
 		fGroup.setLayout(fStackLayout);
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite,
-				IPHPHelpContextIds.FOLDING_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IPHPHelpContextIds.FOLDING_PREFERENCES);
 		return composite;
 	}
 
@@ -246,9 +229,9 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 			}
 
 			/*
-			 * @see
-			 * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
-			 * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+			 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.
+			 * eclipse .jface.viewers.Viewer, java.lang.Object,
+			 * java.lang.Object)
 			 */
 			public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 			}
@@ -277,20 +260,16 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 			 * org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
 			 */
 			public String getText(Object element) {
-				return ((PHPFoldingStructureProviderDescriptor) element)
-						.getName();
+				return ((PHPFoldingStructureProviderDescriptor) element).getName();
 			}
 		});
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection sel = (IStructuredSelection) event
-						.getSelection();
+				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
 				if (!sel.isEmpty()) {
-					fStore.setValue(
-							PreferenceConstants.EDITOR_FOLDING_PROVIDER,
-							((PHPFoldingStructureProviderDescriptor) sel
-									.getFirstElement()).getId());
+					fStore.setValue(PreferenceConstants.EDITOR_FOLDING_PROVIDER,
+							((PHPFoldingStructureProviderDescriptor) sel.getFirstElement()).getId());
 					updateListDependencies();
 				}
 			}
@@ -305,8 +284,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 	}
 
 	void updateListDependencies() {
-		String id = fStore
-				.getString(PreferenceConstants.EDITOR_FOLDING_PROVIDER);
+		String id = fStore.getString(PreferenceConstants.EDITOR_FOLDING_PROVIDER);
 		PHPFoldingStructureProviderDescriptor desc = (PHPFoldingStructureProviderDescriptor) fProviderDescriptors
 				.get(id);
 		IPHPFoldingPreferenceBlock prefs;
@@ -314,8 +292,7 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 		if (desc == null) {
 			// safety in case there is no such descriptor
 			String message = PHPUIMessages.FoldingConfigurationBlock_error_not_exist;
-			PHPUiPlugin.log(new Status(IStatus.WARNING, PHPUiPlugin
-					.getPluginId(), IStatus.OK, message, null));
+			PHPUiPlugin.log(new Status(IStatus.WARNING, PHPUiPlugin.getPluginId(), IStatus.OK, message, null));
 			prefs = new ErrorPreferences(message);
 		} else {
 			prefs = (IPHPFoldingPreferenceBlock) fProviderPreferences.get(id);
@@ -355,55 +332,44 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 	public void performOk() {
 		fStore.propagate();
-		for (Iterator it = fProviderPreferences.values().iterator(); it
-				.hasNext();) {
-			IPHPFoldingPreferenceBlock prefs = (IPHPFoldingPreferenceBlock) it
-					.next();
+		for (Iterator it = fProviderPreferences.values().iterator(); it.hasNext();) {
+			IPHPFoldingPreferenceBlock prefs = (IPHPFoldingPreferenceBlock) it.next();
 			prefs.performOk();
 		}
 		// TODO - Might need a fix after the WST will support code folding
 		// officially.
-		boolean foldingEnabled = fStore
-				.getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
-		SSEUIPlugin.getDefault().getPreferenceStore().setValue(
-				AbstractStructuredFoldingStrategy.FOLDING_ENABLED,
+		boolean foldingEnabled = fStore.getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
+		SSEUIPlugin.getDefault().getPreferenceStore().setValue(AbstractStructuredFoldingStrategy.FOLDING_ENABLED,
 				foldingEnabled);
 	}
 
 	public void performDefaults() {
 		restoreFromPreferences();
-		for (Iterator it = fProviderPreferences.values().iterator(); it
-				.hasNext();) {
-			IPHPFoldingPreferenceBlock prefs = (IPHPFoldingPreferenceBlock) it
-					.next();
+		for (Iterator it = fProviderPreferences.values().iterator(); it.hasNext();) {
+			IPHPFoldingPreferenceBlock prefs = (IPHPFoldingPreferenceBlock) it.next();
 			prefs.performDefaults();
 		}
 	}
 
 	public void dispose() {
-		for (Iterator it = fProviderPreferences.values().iterator(); it
-				.hasNext();) {
-			IPHPFoldingPreferenceBlock prefs = (IPHPFoldingPreferenceBlock) it
-					.next();
+		for (Iterator it = fProviderPreferences.values().iterator(); it.hasNext();) {
+			IPHPFoldingPreferenceBlock prefs = (IPHPFoldingPreferenceBlock) it.next();
 			prefs.dispose();
 		}
 	}
 
 	private void restoreFromPreferences() {
-		boolean enabled = fStore
-				.getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
+		boolean enabled = fStore.getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
 		fFoldingCheckbox.setSelection(enabled);
 		updateCheckboxDependencies();
 
-		String id = fStore
-				.getString(PreferenceConstants.EDITOR_FOLDING_PROVIDER);
+		String id = fStore.getString(PreferenceConstants.EDITOR_FOLDING_PROVIDER);
 		Object provider = fProviderDescriptors.get(id);
 		if (provider != null) {
 			if (fProviderViewer == null)
 				updateListDependencies();
 			else
-				fProviderViewer.setSelection(new StructuredSelection(provider),
-						true);
+				fProviderViewer.setSelection(new StructuredSelection(provider), true);
 		}
 	}
 }

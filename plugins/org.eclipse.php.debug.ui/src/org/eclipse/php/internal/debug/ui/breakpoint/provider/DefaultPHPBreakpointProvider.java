@@ -45,11 +45,10 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingText
 
 import com.ibm.icu.text.MessageFormat;
 
-public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
-		IExecutableExtension {
+public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider, IExecutableExtension {
 
-	public IStatus addBreakpoint(IDocument document, IEditorInput input,
-			int lineNumber, int offset) throws CoreException {
+	public IStatus addBreakpoint(IDocument document, IEditorInput input, int lineNumber, int offset)
+			throws CoreException {
 
 		// check if there is a valid position to set breakpoint
 		int pos = getValidPosition(document, lineNumber);
@@ -71,12 +70,10 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 			IResource resource = getResourceFromInput(input);
 
 			Map<String, String> attributes = new HashMap<String, String>();
-			ISourceModule modelElement = DLTKUIPlugin
-					.getEditorInputModelElement(input);
+			ISourceModule modelElement = DLTKUIPlugin.getEditorInputModelElement(input);
 
 			if (modelElement != null) {
-				attributes.put(IMarker.LOCATION, modelElement.getPath()
-						.toString());
+				attributes.put(IMarker.LOCATION, modelElement.getPath().toString());
 			}
 
 			// Calculate secondary ID
@@ -84,36 +81,28 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 			if (input instanceof IFileEditorInput) {
 				IFileEditorInput fileEditorInput = (IFileEditorInput) input;
 				if (fileEditorInput.getFile().isLinked()) {
-					secondaryId = fileEditorInput.getFile().getRawLocation()
-							.toString();
+					secondaryId = fileEditorInput.getFile().getRawLocation().toString();
 				}
-			} else if (input instanceof IURIEditorInput
-					|| (input instanceof NonExistingPHPFileEditorInput)) {
+			} else if (input instanceof IURIEditorInput || (input instanceof NonExistingPHPFileEditorInput)) {
 
 				if (input instanceof IPlatformIndependentPathEditorInput) {
-					secondaryId = ((IPlatformIndependentPathEditorInput) input)
-							.getPath();
+					secondaryId = ((IPlatformIndependentPathEditorInput) input).getPath();
 				} else if (input instanceof IURIEditorInput) {
-					secondaryId = URIUtil.toPath(
-							((IURIEditorInput) input).getURI()).toOSString();
+					secondaryId = URIUtil.toPath(((IURIEditorInput) input).getURI()).toOSString();
 				} else {
-					secondaryId = ((NonExistingPHPFileEditorInput) input)
-							.getPath(input).toString();
+					secondaryId = ((NonExistingPHPFileEditorInput) input).getPath(input).toString();
 				}
 
 			} else if (input instanceof IStorageEditorInput) {
 				IStorage storage = ((IStorageEditorInput) input).getStorage();
 				if (storage instanceof IModelElement) {
 					IModelElement element = (IModelElement) storage;
-					secondaryId = EnvironmentPathUtils.getFile(element)
-							.getFullPath().toPortableString();
+					secondaryId = EnvironmentPathUtils.getFile(element).getFullPath().toPortableString();
 				}
 			}
 
 			if (secondaryId != null) {
-				attributes
-						.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY,
-								secondaryId);
+				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, secondaryId);
 			}
 
 			if (findBreakpointMarker(secondaryId, resource, lineNumber) == null) {
@@ -127,8 +116,7 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 				} catch (BadLocationException e) {
 					PHPDebugUIPlugin.log(e);
 				}
-				point = createBreakpoint(input, resource, lineNumber,
-						charStart, charEnd, attributes);
+				point = createBreakpoint(input, resource, lineNumber, charStart, charEnd, attributes);
 			}
 		}
 
@@ -137,30 +125,24 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 		}
 
 		if (status == null) {
-			status = new Status(IStatus.OK, PHPDebugUIPlugin.getID(),
-					IStatus.OK, MessageFormat.format(
-							PHPDebugUIMessages.BreakpointCreated_1,
-							new Object[] {}), null);
+			status = new Status(IStatus.OK, PHPDebugUIPlugin.getID(), IStatus.OK,
+					MessageFormat.format(PHPDebugUIMessages.BreakpointCreated_1, new Object[] {}), null);
 		}
 		return status;
 	}
 
 	protected void showErrorMessage() {
 		// hide message after one second:
-		StatusLineMessageTimerManager.setErrorMessage(
-				PHPDebugUIMessages.ErrorCreatingBreakpoint_1, 1000, true);
+		StatusLineMessageTimerManager.setErrorMessage(PHPDebugUIMessages.ErrorCreatingBreakpoint_1, 1000, true);
 	}
 
-	protected IMarker findBreakpointMarker(String secondaryId,
-			IResource resource, int lineNumber) throws CoreException {
-		IMarker[] breakpoints = resource.findMarkers(
-				IBreakpoint.LINE_BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
+	protected IMarker findBreakpointMarker(String secondaryId, IResource resource, int lineNumber)
+			throws CoreException {
+		IMarker[] breakpoints = resource.findMarkers(IBreakpoint.LINE_BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
 		for (IMarker breakpoint : breakpoints) {
-			if (breakpoint.getAttribute(IMarker.LINE_NUMBER).equals(
-					Integer.valueOf(lineNumber))
-					&& (secondaryId == null || secondaryId
-							.equals(breakpoint
-									.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY)))) {
+			if (breakpoint.getAttribute(IMarker.LINE_NUMBER).equals(Integer.valueOf(lineNumber))
+					&& (secondaryId == null || secondaryId.equals(
+							breakpoint.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY)))) {
 				return breakpoint;
 			}
 		}
@@ -168,11 +150,9 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 	}
 
 	@Override
-	public IBreakpoint createBreakpoint(IEditorInput input, IResource resource,
-			int lineNumber, int charStart, int charEnd,
-			Map<String, String> attributes) throws CoreException {
-		return new PHPConditionalBreakpoint(resource, lineNumber, charStart,
-				charEnd, attributes);
+	public IBreakpoint createBreakpoint(IEditorInput input, IResource resource, int lineNumber, int charStart,
+			int charEnd, Map<String, String> attributes) throws CoreException {
+		return new PHPConditionalBreakpoint(resource, lineNumber, charStart, charEnd, attributes);
 	}
 
 	public IResource getResource(IEditorInput input) {
@@ -213,32 +193,28 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 				do {
 					line = idoc.getLineInformation(editorLineNumber - 1);
 					startOffset = line.getOffset();
-					endOffset = Math.max(line.getOffset(), line.getOffset()
-							+ line.getLength());
+					endOffset = Math.max(line.getOffset(), line.getOffset() + line.getLength());
 
 					ITypedRegion[] partitions = null;
 
-					partitions = idoc.computePartitioning(startOffset,
-							endOffset - startOffset);
+					partitions = idoc.computePartitioning(startOffset, endOffset - startOffset);
 
 					for (int i = 0; i < partitions.length; ++i) {
 						partitionType = partitions[i].getType();
 						if (partitionType.equals(PHPPartitionTypes.PHP_DEFAULT)) {
 							phpPartitionVisited = true;
 							startOffset = partitions[i].getOffset();
-							linePart = idoc.get(startOffset,
-									partitions[i].getLength()).trim();
+							linePart = idoc.get(startOffset, partitions[i].getLength()).trim();
 							if (Pattern.matches(".*[a-zA-Z0-0_]+.*", linePart) //$NON-NLS-1$
-									&& !linePart.trim().toLowerCase()
-											.equals("<?php")) { //$NON-NLS-1$
+									&& !linePart.trim().toLowerCase().equals("<?php")) { //$NON-NLS-1$
 								result = startOffset;
 								break;
 							}
 						}
 					}
 					++editorLineNumber;
-				} while ((!phpPartitionVisited || PHPStructuredTextPartitioner
-						.isPHPPartitionType(partitionType)) && result == -1);
+				} while ((!phpPartitionVisited || PHPStructuredTextPartitioner.isPHPPartitionType(partitionType))
+						&& result == -1);
 			} catch (BadLocationException e) {
 				result = -1;
 			}
@@ -250,8 +226,7 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
 	 *      java.lang.String, java.lang.Object)
 	 */
-	public void setInitializationData(IConfigurationElement config,
-			String propertyName, Object data) {
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) {
 		// not used
 	}
 

@@ -126,8 +126,7 @@ public class NewPHPsComboBlock {
 
 	private IStatus fStatus = OK_STATUS;
 
-	private static IStatus OK_STATUS = new Status(IStatus.OK,
-			PHPDebugUIPlugin.getID(), 0, "", null); //$NON-NLS-1$
+	private static IStatus OK_STATUS = new Status(IStatus.OK, PHPDebugUIPlugin.getID(), 0, "", null); //$NON-NLS-1$
 	// private PHPexeItem[] phpItems = exes.getAllItems();
 
 	private IProject project;
@@ -162,8 +161,7 @@ public class NewPHPsComboBlock {
 	}
 
 	private void firePropertyChange() {
-		PropertyChangeEvent event = new PropertyChangeEvent(this, PROPERTY_PHP,
-				null, getPHPexe());
+		PropertyChangeEvent event = new PropertyChangeEvent(this, PROPERTY_PHP, null, getPHPexe());
 		Object[] listeners = fListeners.getListeners();
 		for (int i = 0; i < listeners.length; i++) {
 			IPropertyChangeListener listener = (IPropertyChangeListener) listeners[i];
@@ -178,15 +176,12 @@ public class NewPHPsComboBlock {
 	 *            containing control
 	 */
 	public void createControl(Composite ancestor) {
-		fControl = SWTFactory.createComposite(ancestor, 1, 1,
-				GridData.FILL_BOTH);
+		fControl = SWTFactory.createComposite(ancestor, 1, 1, GridData.FILL_BOTH);
 		if (fTitle == null) {
 			fTitle = PHPDebugUIMessages.PHPexesComboBlock_3;
 		}
-		Group group = SWTFactory.createGroup(fControl, fTitle, 1, 1,
-				GridData.FILL_HORIZONTAL);
-		Composite comp = SWTFactory.createComposite(group, group.getFont(), 3,
-				1, GridData.FILL_BOTH, 0, 0);
+		Group group = SWTFactory.createGroup(fControl, fTitle, 1, 1, GridData.FILL_HORIZONTAL);
+		Composite comp = SWTFactory.createComposite(group, group.getFont(), 3, 1, GridData.FILL_BOTH, 0, 0);
 
 		createDefaultPHPControls(comp);
 		createEEControls(comp);
@@ -195,14 +190,12 @@ public class NewPHPsComboBlock {
 	}
 
 	private void createEEControls(Composite comp) {
-		fEnvironmentsButton = SWTFactory.createRadioButton(comp,
-				PHPDebugUIMessages.PHPexesComboBlock_4);
+		fEnvironmentsButton = SWTFactory.createRadioButton(comp, PHPDebugUIMessages.PHPexesComboBlock_4);
 		fEnvironmentsButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				if (fEnvironmentsButton.getSelection()) {
 					fExecutablesCombo.setEnabled(false);
-					if (fEnvironmentsCombo.getText().length() == 0
-							&& !fEnvironments.isEmpty()) {
+					if (fEnvironmentsCombo.getText().length() == 0 && !fEnvironments.isEmpty()) {
 						fEnvironmentsCombo.select(0);
 					}
 					fEnvironmentsCombo.setEnabled(true);
@@ -216,8 +209,7 @@ public class NewPHPsComboBlock {
 			}
 		});
 
-		fEnvironmentsCombo = SWTFactory.createCombo(comp, SWT.DROP_DOWN
-				| SWT.READ_ONLY, 1, null);
+		fEnvironmentsCombo = SWTFactory.createCombo(comp, SWT.DROP_DOWN | SWT.READ_ONLY, 1, null);
 		fEnvironmentsCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				// TODO
@@ -226,8 +218,7 @@ public class NewPHPsComboBlock {
 			}
 		});
 
-		fManageEnvironmentsButton = SWTFactory.createPushButton(comp,
-				PHPDebugUIMessages.PHPexesComboBlock_14, null);
+		fManageEnvironmentsButton = SWTFactory.createPushButton(comp, PHPDebugUIMessages.PHPexesComboBlock_14, null);
 		fManageEnvironmentsButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				showPrefPage(PHPInterpreterExecutionPreferencePage.PREF_ID);
@@ -247,8 +238,7 @@ public class NewPHPsComboBlock {
 			public void widgetSelected(SelectionEvent e) {
 				if (fSpecificButton.getSelection()) {
 					fExecutablesCombo.setEnabled(true);
-					if (fExecutablesCombo.getText().length() == 0
-							&& !phpExecutables.isEmpty()) {
+					if (fExecutablesCombo.getText().length() == 0 && !phpExecutables.isEmpty()) {
 						fExecutablesCombo.select(0);
 					}
 					if (phpExecutables.isEmpty()) {
@@ -261,10 +251,8 @@ public class NewPHPsComboBlock {
 				}
 			}
 		});
-		fExecutablesCombo = SWTFactory.createCombo(comp, SWT.DROP_DOWN
-				| SWT.READ_ONLY, 1, null);
-		ControlAccessibleListener.addListener(fExecutablesCombo,
-				fSpecificButton.getText());
+		fExecutablesCombo = SWTFactory.createCombo(comp, SWT.DROP_DOWN | SWT.READ_ONLY, 1, null);
+		ControlAccessibleListener.addListener(fExecutablesCombo, fSpecificButton.getText());
 		fExecutablesCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				setStatus(OK_STATUS);
@@ -272,8 +260,7 @@ public class NewPHPsComboBlock {
 			}
 		});
 
-		fManageButton = SWTFactory.createPushButton(comp,
-				PHPDebugUIMessages.PHPexesComboBlock_2, null);
+		fManageButton = SWTFactory.createPushButton(comp, PHPDebugUIMessages.PHPexesComboBlock_2, null);
 		fManageButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				showPrefPage(PHPsPreferencePage.ID);
@@ -284,8 +271,7 @@ public class NewPHPsComboBlock {
 
 	private void createDefaultPHPControls(Composite comp) {
 		if (fDefaultDescriptor != null) {
-			fDefaultButton = SWTFactory.createRadioButton(comp,
-					fDefaultDescriptor.getDescription(), 3);
+			fDefaultButton = SWTFactory.createRadioButton(comp, fDefaultDescriptor.getDescription(), 3);
 			fDefaultButton.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					if (fDefaultButton.getSelection()) {
@@ -309,8 +295,7 @@ public class NewPHPsComboBlock {
 	private void showPrefPage(String id/* , IPreferencePage page */) {
 		PHPexeItem prevPHP = getPHPexe();
 		PHPVersion prevEnv = getEnvironment();
-		PreferencesUtil.createPreferenceDialogOn(getShell(), id,
-				new String[] { id }, null).open();
+		PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id }, null).open();
 		// PHPDebugUIPlugin.showPreferencePage(id);
 		fillWithWorkspacePHPexes();
 		// fillWithWorkspacePHPs();
@@ -532,8 +517,7 @@ public class NewPHPsComboBlock {
 		setButtonTextFromDescriptor(fDefaultButton, descriptor);
 	}
 
-	private void setButtonTextFromDescriptor(Button button,
-			PHPexeDescriptor descriptor) {
+	private void setButtonTextFromDescriptor(Button button, PHPexeDescriptor descriptor) {
 		if (button != null) {
 			// update the description & PHP in case it has changed
 			String currentText = button.getText();
@@ -638,19 +622,16 @@ public class NewPHPsComboBlock {
 	public void setPath(IPath containerPath) {
 		fErrorPath = null;
 		setStatus(OK_STATUS);
-		if (containerPath == null
-				|| PHPRuntime.newDefaultPHPContainerPath()
-						.equals(containerPath)) {
+		if (containerPath == null || PHPRuntime.newDefaultPHPContainerPath().equals(containerPath)) {
 			setUseDefaultPHP();
 		} else {
 			PHPVersion version = PHPRuntime.getPHPVersion(containerPath);
 			if (version != null) {
 				selectEnvironment(version);
-				PHPexeItem[] items = PHPexes.getInstance().getCompatibleItems(
-						PHPexes.getInstance().getAllItems(), version);
+				PHPexeItem[] items = PHPexes.getInstance().getCompatibleItems(PHPexes.getInstance().getAllItems(),
+						version);
 				if (items.length == 0) {
-					setError(MessageFormat.format(
-							PHPDebugUIMessages.PHPexesComboBlock_7,
+					setError(MessageFormat.format(PHPDebugUIMessages.PHPexesComboBlock_7,
 							new String[] { version.getAlias() }));
 				}
 			} else {
@@ -709,8 +690,7 @@ public class NewPHPsComboBlock {
 	}
 
 	private void setError(String message) {
-		setStatus(new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(), 150,
-				message, null));
+		setStatus(new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(), 150, message, null));
 	}
 
 	/**
@@ -783,8 +763,7 @@ public class NewPHPsComboBlock {
 		fExecutablesCombo.setItems(names);
 		PHPexeItem defaultExe = exes.getDefaultItem();
 		if (defaultExe != null) {
-			String defaultName = defaultExe.getName()
-					+ " (" + defaultExe.getExecutable().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+			String defaultName = defaultExe.getName() + " (" + defaultExe.getExecutable().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 			fExecutablesCombo.select(fExecutablesCombo.indexOf(defaultName));
 		} else {
 			fExecutablesCombo.select(0);
@@ -801,8 +780,7 @@ public class NewPHPsComboBlock {
 			if (project != null) {
 				defaultPrefix = PHPDebugUIMessages.NewPHPsComboBlock_14;
 			}
-			return defaultPrefix + PHPDebugUIMessages.NewPHPsComboBlock_15
-					+ " " + name; //$NON-NLS-1$
+			return defaultPrefix + PHPDebugUIMessages.NewPHPsComboBlock_15 + " " + name; //$NON-NLS-1$
 		}
 		return name;
 	}
@@ -817,12 +795,10 @@ public class NewPHPsComboBlock {
 	}
 
 	private PHPexeItem getPHPexe(IProject project) {
-		if (fSpecificButton.getSelection() && !phpExecutables.isEmpty()
-				&& fExecutablesCombo.getSelectionIndex() >= 0) {
+		if (fSpecificButton.getSelection() && !phpExecutables.isEmpty() && fExecutablesCombo.getSelectionIndex() >= 0) {
 			return phpExecutables.get(fExecutablesCombo.getSelectionIndex());
 		} else if (fEnvironmentsButton.getSelection()) {
-			return PHPDebugPlugin.getPHPexeItem(PHPVersion
-					.byAlias(fEnvironmentsCombo.getText()));
+			return PHPDebugPlugin.getPHPexeItem(PHPVersion.byAlias(fEnvironmentsCombo.getText()));
 		}
 		return PHPDebugPlugin.getPHPexeItem(project);
 	}
@@ -833,8 +809,7 @@ public class NewPHPsComboBlock {
 	 * @return PHPexes currently being displayed in this block
 	 */
 	public PHPexeItem[] getPHPexes() {
-		return (PHPexeItem[]) phpExecutables
-				.toArray(new PHPexeItem[phpExecutables.size()]);
+		return (PHPexeItem[]) phpExecutables.toArray(new PHPexeItem[phpExecutables.size()]);
 	}
 
 	/**
@@ -843,13 +818,10 @@ public class NewPHPsComboBlock {
 	 * @return The debugger's id.
 	 */
 	public String getSelectedDebuggerId() {
-		if (fSpecificButton.getSelection() && !phpExecutables.isEmpty()
-				&& fExecutablesCombo.getSelectionIndex() >= 0) {
-			return phpExecutables.get(fExecutablesCombo.getSelectionIndex())
-					.getDebuggerID();
+		if (fSpecificButton.getSelection() && !phpExecutables.isEmpty() && fExecutablesCombo.getSelectionIndex() >= 0) {
+			return phpExecutables.get(fExecutablesCombo.getSelectionIndex()).getDebuggerID();
 		} else if (fEnvironmentsButton.getSelection()) {
-			return PHPDebugPlugin.getCurrentDebuggerId(PHPVersion
-					.byAlias(fEnvironmentsCombo.getText()));
+			return PHPDebugPlugin.getCurrentDebuggerId(PHPVersion.byAlias(fEnvironmentsCombo.getText()));
 		} else {
 			PHPexeItem defaultItem = PHPDebugPlugin.getPHPexeItem(project);
 			if (defaultItem != null) {

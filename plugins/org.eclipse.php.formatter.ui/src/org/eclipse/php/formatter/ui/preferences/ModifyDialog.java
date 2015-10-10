@@ -74,9 +74,8 @@ public class ModifyDialog extends StatusDialog {
 	private ProfileManager fProfileManager;
 	private Button fApplyButton;
 
-	protected ModifyDialog(CodeFormatterConfigurationBlock configBlock,
-			Shell parentShell, Profile profile, ProfileManager profileManager,
-			boolean newProfile) {
+	protected ModifyDialog(CodeFormatterConfigurationBlock configBlock, Shell parentShell, Profile profile,
+			ProfileManager profileManager, boolean newProfile) {
 		super(parentShell);
 		fProfileManager = profileManager;
 		fNewProfile = newProfile;
@@ -84,19 +83,12 @@ public class ModifyDialog extends StatusDialog {
 
 		fProfile = profile;
 		if (fProfile.isBuiltInProfile()) {
-			fStandardStatus = new Status(IStatus.INFO,
-					FormatterUIPlugin.PLUGIN_ID, IStatus.OK,
-					FormatterMessages.ModifyDialog_dialog_show_warning_builtin,
-					null);
-			fTitle = Messages.format(
-					FormatterMessages.ModifyDialog_dialog_show_title,
-					profile.getName());
+			fStandardStatus = new Status(IStatus.INFO, FormatterUIPlugin.PLUGIN_ID, IStatus.OK,
+					FormatterMessages.ModifyDialog_dialog_show_warning_builtin, null);
+			fTitle = Messages.format(FormatterMessages.ModifyDialog_dialog_show_title, profile.getName());
 		} else {
-			fStandardStatus = new Status(IStatus.OK,
-					FormatterUIPlugin.PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$
-			fTitle = Messages.format(
-					FormatterMessages.ModifyDialog_dialog_title,
-					profile.getName());
+			fStandardStatus = new Status(IStatus.OK, FormatterUIPlugin.PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$
+			fTitle = Messages.format(FormatterMessages.ModifyDialog_dialog_title, profile.getName());
 		}
 		preferences = fProfile.getSettings();
 		codeFormatterPreferences = new CodeFormatterPreferences(preferences);
@@ -121,16 +113,14 @@ public class ModifyDialog extends StatusDialog {
 
 		if (!fNewProfile) {
 			fTabFolder.setSelection(lastFocusNr);
-			((ModifyDialogTabPage) fTabFolder.getSelection()[0].getData())
-					.setInitialFocus();
+			((ModifyDialogTabPage) fTabFolder.getSelection()[0].getData()).setInitialFocus();
 		}
 	}
 
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
 		shell.setText(fTitle);
-		PlatformUI.getWorkbench().getHelpSystem()
-				.setHelp(shell, IPHPHelpContextIds.FORMATTER_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(shell, IPHPHelpContextIds.FORMATTER_PREFERENCES);
 	}
 
 	protected Control createDialogArea(Composite parent) {
@@ -141,33 +131,23 @@ public class ModifyDialog extends StatusDialog {
 		fTabFolder.setFont(composite.getFont());
 		fTabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		addTabPage(fTabFolder,
-				FormatterMessages.ModifyDialog_tabpage_indentation_title,
+		addTabPage(fTabFolder, FormatterMessages.ModifyDialog_tabpage_indentation_title,
 				new IndentationTabPage(this, codeFormatterPreferences));
-		addTabPage(fTabFolder,
-				FormatterMessages.ModifyDialog_tabpage_braces_title,
+		addTabPage(fTabFolder, FormatterMessages.ModifyDialog_tabpage_braces_title,
 				new BracesTabPage(this, codeFormatterPreferences));
-		addTabPage(fTabFolder,
-				FormatterMessages.ModifyDialog_tabpage_whitespace_title,
+		addTabPage(fTabFolder, FormatterMessages.ModifyDialog_tabpage_whitespace_title,
 				new WhiteSpaceTabPage(this, codeFormatterPreferences));
-		addTabPage(fTabFolder,
-				FormatterMessages.ModifyDialog_tabpage_blank_lines_title,
+		addTabPage(fTabFolder, FormatterMessages.ModifyDialog_tabpage_blank_lines_title,
 				new BlankLinesTabPage(this, codeFormatterPreferences));
-		addTabPage(fTabFolder,
-				FormatterMessages.ModifyDialog_tabpage_new_lines_title,
+		addTabPage(fTabFolder, FormatterMessages.ModifyDialog_tabpage_new_lines_title,
 				new NewLinesTabPage(this, codeFormatterPreferences));
-		addTabPage(
-				fTabFolder,
-				FormatterMessages.ModifyDialog_tabpage_control_statements_title,
+		addTabPage(fTabFolder, FormatterMessages.ModifyDialog_tabpage_control_statements_title,
 				new ControlStatementsTabPage(this, codeFormatterPreferences));
-		addTabPage(fTabFolder,
-				FormatterMessages.ModifyDialog_tabpage_line_wrapping_title,
+		addTabPage(fTabFolder, FormatterMessages.ModifyDialog_tabpage_line_wrapping_title,
 				new LineWrappingTabPage(this, codeFormatterPreferences));
 
-		addTabPage(fTabFolder, "Comments", new CommentsTabPage(this,
-				codeFormatterPreferences));
-		addTabPage(fTabFolder, "Off/On tags", new OffOnTagsTabPage(this,
-				codeFormatterPreferences));
+		addTabPage(fTabFolder, "Comments", new CommentsTabPage(this, codeFormatterPreferences));
+		addTabPage(fTabFolder, "Off/On tags", new OffOnTagsTabPage(this, codeFormatterPreferences));
 		// addTabPage(fTabFolder,
 		// FormatterMessages.ModifyDialog_tabpage_comments_title, new
 		// CommentsTabPage(this, fWorkingValues));
@@ -180,8 +160,7 @@ public class ModifyDialog extends StatusDialog {
 
 			public void widgetSelected(SelectionEvent e) {
 				final TabItem tabItem = (TabItem) e.item;
-				final ModifyDialogTabPage page = (ModifyDialogTabPage) tabItem
-						.getData();
+				final ModifyDialogTabPage page = (ModifyDialogTabPage) tabItem.getData();
 				// page.fSashForm.setWeights();
 				fDialogSettings.put(DS_KEY_LAST_FOCUS, fTabPages.indexOf(page));
 				page.makeVisible();
@@ -217,14 +196,12 @@ public class ModifyDialog extends StatusDialog {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.window.Window#getInitialLocation(org.eclipse.swt.graphics
-	 * .Point)
+	 * @see org.eclipse.jface.window.Window#getInitialLocation(org.eclipse.swt.
+	 * graphics .Point)
 	 */
 	protected Point getInitialLocation(Point initialSize) {
 		try {
-			return new Point(fDialogSettings.getInt(DS_KEY_PREFERRED_X),
-					fDialogSettings.getInt(DS_KEY_PREFERRED_Y));
+			return new Point(fDialogSettings.getInt(DS_KEY_PREFERRED_X), fDialogSettings.getInt(DS_KEY_PREFERRED_Y));
 		} catch (NumberFormatException ex) {
 			return super.getInitialLocation(initialSize);
 		}
@@ -261,16 +238,14 @@ public class ModifyDialog extends StatusDialog {
 
 	private void applyPressed() {
 		if (fProfile.isBuiltInProfile()) {
-			RenameProfileDialog dialog = new RenameProfileDialog(getShell(),
-					fProfile, fProfileManager);
+			RenameProfileDialog dialog = new RenameProfileDialog(getShell(), fProfile, fProfileManager);
 			if (dialog.open() != Window.OK) {
 				return;
 			}
 
 			fProfile = dialog.getRenamedProfile();
 
-			fStandardStatus = new Status(IStatus.OK,
-					FormatterUIPlugin.PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$
+			fStandardStatus = new Status(IStatus.OK, FormatterUIPlugin.PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$
 			updateStatus(fStandardStatus);
 		}
 		// configBlock.updatePDTPreferences(codeFormatterPreferences);
@@ -279,8 +254,8 @@ public class ModifyDialog extends StatusDialog {
 	}
 
 	protected void createButtonsForButtonBar(Composite parent) {
-		fApplyButton = createButton(parent, IDialogConstants.CLIENT_ID,
-				FormatterMessages.ModifyDialog_apply_button, false);
+		fApplyButton = createButton(parent, IDialogConstants.CLIENT_ID, FormatterMessages.ModifyDialog_apply_button,
+				false);
 		fApplyButton.setEnabled(false);
 
 		GridLayout layout = (GridLayout) parent.getLayout();
@@ -293,8 +268,7 @@ public class ModifyDialog extends StatusDialog {
 		super.createButtonsForButtonBar(parent);
 	}
 
-	private final void addTabPage(TabFolder tabFolder, String title,
-			ModifyDialogTabPage tabPage) {
+	private final void addTabPage(TabFolder tabFolder, String title, ModifyDialogTabPage tabPage) {
 		final TabItem tabItem = new TabItem(tabFolder, SWT.NONE);
 		applyDialogFont(tabItem.getControl());
 		tabItem.setText(title);

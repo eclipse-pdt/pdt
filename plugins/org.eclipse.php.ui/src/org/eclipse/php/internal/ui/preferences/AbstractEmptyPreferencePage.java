@@ -22,8 +22,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 
-abstract public class AbstractEmptyPreferencePage extends
-		PropertyAndPreferencePage implements IWorkbenchPreferencePage {
+abstract public class AbstractEmptyPreferencePage extends PropertyAndPreferencePage
+		implements IWorkbenchPreferencePage {
 
 	public AbstractEmptyPreferencePage() {
 		super();
@@ -58,13 +58,8 @@ abstract public class AbstractEmptyPreferencePage extends
 		Label descLabel = new Label(comp, SWT.NONE);
 		descLabel.setText(getBodyText());
 
-		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(
-						getControl(),
-						getProject() != null ? getPropertiesHelpId()
-								: getPreferenceHelpId());
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
+				getProject() != null ? getPropertiesHelpId() : getPreferenceHelpId());
 
 		return comp;
 	}

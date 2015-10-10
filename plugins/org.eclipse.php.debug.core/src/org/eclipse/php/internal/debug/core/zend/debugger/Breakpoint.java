@@ -87,8 +87,7 @@ public class Breakpoint implements Cloneable {
 		if (this.id != id) {
 			int oldValue = this.id;
 			this.id = id;
-			fireBreakpointChanged(this, ID_CHANGED_PROPERTY,
-					Integer.valueOf(oldValue), Integer.valueOf(id));
+			fireBreakpointChanged(this, ID_CHANGED_PROPERTY, Integer.valueOf(oldValue), Integer.valueOf(id));
 		}
 	}
 
@@ -111,8 +110,7 @@ public class Breakpoint implements Cloneable {
 		}
 		String oldFileName = fileName;
 		this.fileName = newFileName;
-		fireBreakpointChanged(this, NAME_CHANGED_PROPERTY, oldFileName,
-				newFileName);
+		fireBreakpointChanged(this, NAME_CHANGED_PROPERTY, oldFileName, newFileName);
 	}
 
 	public int getLineNumber() {
@@ -125,8 +123,8 @@ public class Breakpoint implements Cloneable {
 		}
 		int oldLineNumber = lineNumber;
 		lineNumber = newLineNumber;
-		fireBreakpointChanged(this, LINE_CHANGED_PROPERTY,
-				Integer.valueOf(oldLineNumber), Integer.valueOf(newLineNumber));
+		fireBreakpointChanged(this, LINE_CHANGED_PROPERTY, Integer.valueOf(oldLineNumber),
+				Integer.valueOf(newLineNumber));
 	}
 
 	/**
@@ -156,8 +154,7 @@ public class Breakpoint implements Cloneable {
 				this.type = type;
 				conditionalFlag = (type >= 2) ? true : false;
 				staticFlag = (type == 1 || type == 3) ? true : false;
-				fireBreakpointChanged(this, TYPE_CHANGED_PROPERTY,
-						Integer.valueOf(oldValue), Integer.valueOf(id));
+				fireBreakpointChanged(this, TYPE_CHANGED_PROPERTY, Integer.valueOf(oldValue), Integer.valueOf(id));
 			}
 		}
 	}
@@ -178,13 +175,11 @@ public class Breakpoint implements Cloneable {
 	 * ZEND_ONETIME_BREAKPOINT or ZEND_PERMANENT_BREAKPOINT .
 	 */
 	public void setLifeTime(int lifetime) {
-		if (lifetime == ZEND_ONETIME_BREAKPOINT
-				|| lifetime == ZEND_PERMANENT_BREAKPOINT) {
+		if (lifetime == ZEND_ONETIME_BREAKPOINT || lifetime == ZEND_PERMANENT_BREAKPOINT) {
 			if (this.lifetime != lifetime) {
 				int oldValue = lifetime;
 				this.lifetime = lifetime;
-				fireBreakpointChanged(this, LIFETIME_CHANGED_PROPERTY,
-						Integer.valueOf(oldValue), Integer.valueOf(id));
+				fireBreakpointChanged(this, LIFETIME_CHANGED_PROPERTY, Integer.valueOf(oldValue), Integer.valueOf(id));
 			}
 		}
 	}
@@ -211,8 +206,7 @@ public class Breakpoint implements Cloneable {
 			} else {
 				setConditionalFlag(false);
 			}
-			fireBreakpointChanged(this, EXPRESSION_CHANGED_PROPERTY, oldValue,
-					expression);
+			fireBreakpointChanged(this, EXPRESSION_CHANGED_PROPERTY, oldValue, expression);
 		}
 	}
 
@@ -227,8 +221,7 @@ public class Breakpoint implements Cloneable {
 		if (this.enable != enable) {
 			boolean oldValue = this.enable;
 			this.enable = enable;
-			fireBreakpointChanged(this, ENABLE_CHANGED_PROPERTY, new Boolean(
-					oldValue), new Boolean(enable));
+			fireBreakpointChanged(this, ENABLE_CHANGED_PROPERTY, new Boolean(oldValue), new Boolean(enable));
 		}
 	}
 
@@ -249,14 +242,11 @@ public class Breakpoint implements Cloneable {
 			return false;
 		}
 		Breakpoint other = (Breakpoint) obj;
-		return this.id == other.id && this.type == other.type
-				&& this.lifetime == other.lifetime
-				&& fileName.equals(other.getFileName())
-				&& lineNumber == other.getLineNumber();
+		return this.id == other.id && this.type == other.type && this.lifetime == other.lifetime
+				&& fileName.equals(other.getFileName()) && lineNumber == other.getLineNumber();
 	}
 
-	protected void fireBreakpointChanged(Breakpoint breakpoint,
-			String property, Object oldValue, Object newValue) {
+	protected void fireBreakpointChanged(Breakpoint breakpoint, String property, Object oldValue, Object newValue) {
 		if (listeners != null) {
 			Iterator i = listeners.iterator();
 			while (i.hasNext()) {
@@ -296,8 +286,7 @@ public class Breakpoint implements Cloneable {
 
 	public interface BreakpointListener {
 
-		public void breakpointChanged(Breakpoint breakpoint, String property,
-				Object oldValue, Object newValue);
+		public void breakpointChanged(Breakpoint breakpoint, String property, Object oldValue, Object newValue);
 
 	}
 

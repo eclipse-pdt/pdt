@@ -26,8 +26,7 @@ public class NavigateActionGroup extends ActionGroup {
 	/**
 	 * Creates a new <code>NavigateActionGroup</code>. The group requires that
 	 * the selection provided by the part's selection provider is of type <code>
-	 * org.eclipse.jface.viewers.IStructuredSelection</code>
-	 * .
+	 * org.eclipse.jface.viewers.IStructuredSelection</code> .
 	 * 
 	 * @param part
 	 *            the view part that owns this action group

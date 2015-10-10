@@ -50,8 +50,7 @@ public class SearchUtil {
 	 * loading of a plug-in (in this case ISearchQuery results in Search plug-in
 	 * being loaded).
 	 */
-	public static IStatus runQueryInForeground(IRunnableContext context,
-			Object query) {
+	public static IStatus runQueryInForeground(IRunnableContext context, Object query) {
 		return NewSearchUI.runQueryInForeground(context, (ISearchQuery) query);
 	}
 
@@ -65,8 +64,7 @@ public class SearchUtil {
 		for (int i = 0; i < workingSets.length; i++) {
 			String workingSetName = workingSets[i].getName();
 			if (firstFound)
-				result = Messages.format(
-						PHPUIMessages.SearchUtil_workingSetConcatenation,
+				result = Messages.format(PHPUIMessages.SearchUtil_workingSetConcatenation,
 						new String[] { result, workingSetName });
 			else {
 				result = workingSetName;

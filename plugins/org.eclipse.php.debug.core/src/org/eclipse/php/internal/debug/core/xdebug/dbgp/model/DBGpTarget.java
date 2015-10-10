@@ -53,9 +53,8 @@ import org.eclipse.swt.widgets.Display;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
-		IDBGpDebugTarget, IStep, IBreakpointManagerListener,
-		IDBGpSessionListener {
+public class DBGpTarget extends DBGpElement
+		implements IPHPDebugTarget, IDBGpDebugTarget, IStep, IBreakpointManagerListener, IDBGpSessionListener {
 
 	private static class DBGpBreakpointCmd {
 		private String cmd;
@@ -100,15 +99,15 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 				// - expression
 				// - hit(condition value)
 				String bpExpression = bp.getExpression().trim();
-				if (bpExpression.endsWith(")") && (bpExpression.startsWith("hit(") || bpExpression.startsWith("HIT("))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				if (bpExpression.endsWith(")") //$NON-NLS-1$
+						&& (bpExpression.startsWith("hit(") || bpExpression.startsWith("HIT("))) { //$NON-NLS-1$ //$NON-NLS-2$
 					if (bpExpression.length() > 5) {
 						// support the following formats
 						// - >= x, >=x
 						// - ==x == x
 						// - %x % x
 						type = HIT;
-						String internal = bpExpression.substring(4,
-								bpExpression.length() - 1).trim();
+						String internal = bpExpression.substring(4, bpExpression.length() - 1).trim();
 						if (internal.startsWith("%")) { //$NON-NLS-1$
 							hitCondition = "%"; //$NON-NLS-1$
 							hitValue = internal.substring(1).trim();
@@ -220,11 +219,9 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 					chain.insert(0, element + KEY_SEPARATOR);
 					next = next.getParentNode();
 				}
-				key = TAG_WATCH + KEY_SEPARATOR + level + KEY_SEPARATOR
-						+ chain.toString();
+				key = TAG_WATCH + KEY_SEPARATOR + level + KEY_SEPARATOR + chain.toString();
 			} else {
-				key = TAG_CONTEXT + KEY_SEPARATOR + level + KEY_SEPARATOR
-						+ valuePath;
+				key = TAG_CONTEXT + KEY_SEPARATOR + level + KEY_SEPARATOR + valuePath;
 			}
 			return key;
 		}
@@ -347,8 +344,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @param stopAtStart
 	 * @throws CoreException
 	 */
-	public DBGpTarget(ILaunch launch, String projectRelativeScript,
-			String ideKey, String sessionID, boolean stopAtStart) {
+	public DBGpTarget(ILaunch launch, String projectRelativeScript, String ideKey, String sessionID,
+			boolean stopAtStart) {
 		this();
 		this.stopAtStart = stopAtStart;
 		this.launch = launch;
@@ -369,9 +366,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @param sessionID
 	 * @param stopAtStart
 	 */
-	public DBGpTarget(ILaunch launch, String workspaceRelativeScript,
-			String stopDebugURL, String ideKey, String sessionID,
-			boolean stopAtStart) {
+	public DBGpTarget(ILaunch launch, String workspaceRelativeScript, String stopDebugURL, String ideKey,
+			String sessionID, boolean stopAtStart) {
 		this();
 		this.stopAtStart = stopAtStart;
 		this.launch = launch;
@@ -388,13 +384,12 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * 
 	 * @param launchMonitor
 	 */
-	public void waitForInitialSession(DBGpBreakpointFacade facade,
-			DBGpPreferences sessionPrefs, IProgressMonitor launchMonitor) {
+	public void waitForInitialSession(DBGpBreakpointFacade facade, DBGpPreferences sessionPrefs,
+			IProgressMonitor launchMonitor) {
 		configureInitialState(facade, sessionPrefs);
 
 		try {
-			while (session == null && !launch.isTerminated()
-					&& !isTerminating()
+			while (session == null && !launch.isTerminated() && !isTerminating()
 					&& (launchMonitor != null && !launchMonitor.isCanceled())) {
 
 				// if we got here then session has not been updated
@@ -412,14 +407,12 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		}
 	}
 
-	public void sessionReceived(DBGpBreakpointFacade facade,
-			DBGpPreferences sessionPrefs) {
+	public void sessionReceived(DBGpBreakpointFacade facade, DBGpPreferences sessionPrefs) {
 		configureInitialState(facade, sessionPrefs);
 		sessionReceived(null);
 	}
 
-	public void configureInitialState(DBGpBreakpointFacade facade,
-			DBGpPreferences sessionPrefs) {
+	public void configureInitialState(DBGpBreakpointFacade facade, DBGpPreferences sessionPrefs) {
 		bpFacade = facade;
 		sessionPreferences = sessionPrefs;
 		setState(STATE_INIT_SESSION_WAIT);
@@ -436,8 +429,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 				langThread = new DBGpThread(this);
 				allThreads = new IThread[] { langThread };
 				langThread.fireCreationEvent();
-				IBreakpointManager bpmgr = DebugPlugin.getDefault()
-						.getBreakpointManager();
+				IBreakpointManager bpmgr = DebugPlugin.getDefault().getBreakpointManager();
 				bpmgr.addBreakpointListener(this);
 				bpmgr.addBreakpointManagerListener(this);
 
@@ -474,8 +466,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		String initScript = session.getInitialScript();
 		if (initScript != null) {
 			// see if the file is in the workspace.
-			IFile file = ResourcesPlugin.getWorkspace().getRoot()
-					.getFileForLocation(new Path(initScript));
+			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(initScript));
 			if (file == null) {
 				// ok initial script is not in the workspace
 				// we could do a search or do an automatic path mapping
@@ -507,9 +498,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		VirtualPath vpInit = new VirtualPath(initScript);
 		// TODO: What happens if there is a difference in case ?
 		if (vpScr.getLastSegment().equals(vpInit.getLastSegment())) {
-			PathEntry pe = new PathEntry(projectScript,
-					PathEntry.Type.WORKSPACE, ResourcesPlugin.getWorkspace()
-							.getRoot());
+			PathEntry pe = new PathEntry(projectScript, PathEntry.Type.WORKSPACE,
+					ResourcesPlugin.getWorkspace().getRoot());
 			pathMapper.addEntry(initScript, pe, MappingSource.ENVIRONMENT);
 		} else {
 			// ok, the initial script doesn't match what was passed into
@@ -535,19 +525,17 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 	private void handleRemoteSessionInitiation(String initScript) {
 		try {
-			PathEntry pe = DebugSearchEngine.find(pathMapper, initScript, null,
-					this);
+			PathEntry pe = DebugSearchEngine.find(pathMapper, initScript, null, this);
 			if (pe != null) {
 				Object container = pe.getContainer();
 				if (container != null && container instanceof IResource) {
 					IResource res = (IResource) container;
 					IProject prj = res.getProject();
-					PHPSourceLookupDirector dir = (PHPSourceLookupDirector) getLaunch()
-							.getSourceLocator();
+					PHPSourceLookupDirector dir = (PHPSourceLookupDirector) getLaunch().getSourceLocator();
 					// ISourceContainer[] containers = new ISourceContainer[]
 					// {new ProjectSourceContainer(prj, false)};
-					ISourceContainer[] containers = new ISourceContainer[] { new PHPCompositeSourceContainer(
-							prj, null) };
+					ISourceContainer[] containers = new ISourceContainer[] {
+							new PHPCompositeSourceContainer(prj, null) };
 					dir.setSourceContainers(containers);
 				}
 			} else {
@@ -559,10 +547,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 						public void run() {
 							// No appropriate file located or no file selected.
 							// Debug Terminated
-							MessageDialog
-									.openError(
-											Display.getDefault()
-													.getActiveShell(),
+							MessageDialog.openError(Display.getDefault().getActiveShell(),
 									PHPDebugCoreMessages.XDebugMessage_debugError,
 									PHPDebugCoreMessages.XDebug_DBGpTarget_0);
 						}
@@ -582,11 +567,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * 
 	 */
 	private void initiateSession() {
-		if (targetState != STATE_INIT_SESSION_WAIT
-				&& targetState != STATE_STARTED_SESSION_WAIT) {
-			DBGpLogger
-					.logWarning(
-							"initiateSession in Wrong State: " + targetState, this, null); //$NON-NLS-1$
+		if (targetState != STATE_INIT_SESSION_WAIT && targetState != STATE_STARTED_SESSION_WAIT) {
+			DBGpLogger.logWarning("initiateSession in Wrong State: " + targetState, this, null); //$NON-NLS-1$
 		}
 		stackFrames = null;
 		currentVariables = null;
@@ -711,8 +693,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	public boolean canTerminate() {
 		// can only terminate if we have not terminated (allow for terminating
 		// state as well to be safe).
-		boolean canTerminate = (STATE_TERMINATED != targetState
-				&& STATE_CREATE != targetState
+		boolean canTerminate = (STATE_TERMINATED != targetState && STATE_CREATE != targetState
 				&& STATE_DISCONNECTED != targetState);
 		if (!canTerminate && process != null) {
 			canTerminate = canTerminate && process.canTerminate();
@@ -740,8 +721,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @return
 	 */
 	public boolean isTerminating() {
-		boolean terminating = (targetState == STATE_TERMINATED)
-				|| (targetState == STATE_TERMINATING);
+		boolean terminating = (targetState == STATE_TERMINATED) || (targetState == STATE_TERMINATING);
 		return terminating;
 	}
 
@@ -751,8 +731,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @return
 	 */
 	public boolean hasStarted() {
-		boolean started = (STATE_STARTED_RUNNING == targetState)
-				|| (STATE_STARTED_SESSION_WAIT == targetState)
+		boolean started = (STATE_STARTED_RUNNING == targetState) || (STATE_STARTED_SESSION_WAIT == targetState)
 				|| (STATE_STARTED_SUSPENDED == targetState);
 		return started;
 	}
@@ -809,9 +788,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		try {
 			PHPDebugUtil.openLaunchURL(stopDebugURL);
 		} catch (DebugException e) {
-			DBGpLogger
-					.logException(
-							"Failed to send stop XDebug session URL: " + stopDebugURL, this, e); //$NON-NLS-1$
+			DBGpLogger.logException("Failed to send stop XDebug session URL: " + stopDebugURL, this, e); //$NON-NLS-1$
 		}
 	}
 
@@ -870,15 +847,13 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		if (unexpectedTermination) {
 			// an unexpected termination occurred, so put out a message.
 			final String errorMessage = PHPDebugCoreMessages.XDebugMessage_unexpectedTermination;
-			Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(),
-					IPHPDebugConstants.INTERNAL_ERROR, errorMessage, null);
+			Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR,
+					errorMessage, null);
 			DebugPlugin.log(status);
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openError(Display.getDefault()
-							.getActiveShell(),
-							PHPDebugCoreMessages.XDebugMessage_debugError,
-							errorMessage);
+					MessageDialog.openError(Display.getDefault().getActiveShell(),
+							PHPDebugCoreMessages.XDebugMessage_debugError, errorMessage);
 				}
 			});
 
@@ -896,8 +871,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		// check we haven't already terminated
 		if (STATE_TERMINATED != targetState) {
 			DBGpSessionHandler.getInstance().removeSessionListener(this);
-			IBreakpointManager bpmgr = DebugPlugin.getDefault()
-					.getBreakpointManager();
+			IBreakpointManager bpmgr = DebugPlugin.getDefault().getBreakpointManager();
 			bpmgr.removeBreakpointListener(this);
 			bpmgr.removeBreakpointManagerListener(this);
 
@@ -935,7 +909,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 			fireTerminateEvent();
 		}
 		if (!isMultiSessionManaged())
-			// Terminate corresponding launch if target is not multi-session managed
+			// Terminate corresponding launch if target is not multi-session
+			// managed
 			try {
 				getLaunch().terminate();
 			} catch (DebugException e) {
@@ -945,9 +920,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.IMemoryBlockRetrieval#supportsStorageRetrieval
-	 * ()
+	 * @see org.eclipse.debug.core.model.IMemoryBlockRetrieval#
+	 * supportsStorageRetrieval ()
 	 */
 	public boolean supportsStorageRetrieval() {
 		return false;
@@ -960,8 +934,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * org.eclipse.debug.core.model.IMemoryBlockRetrieval#getMemoryBlock(long,
 	 * long)
 	 */
-	public IMemoryBlock getMemoryBlock(long startAddress, long length)
-			throws DebugException {
+	public IMemoryBlock getMemoryBlock(long startAddress, long length) throws DebugException {
 		return null;
 	}
 
@@ -1020,8 +993,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		// can only step return if there is a method above it, ie there is
 		// at least one stack frame above the current stack frame.
 		try {
-			if (!isStepping() && isSuspended()
-					&& getCurrentStackFrames().length > 1) {
+			if (!isStepping() && isSuspended() && getCurrentStackFrames().length > 1) {
 				return true;
 			}
 		} catch (DebugException e) {
@@ -1126,8 +1098,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @see org.eclipse.debug.core.model.IDisconnect#canDisconnect()
 	 */
 	public boolean canDisconnect() {
-		boolean canDisconnect = STATE_STARTED_RUNNING == targetState
-				|| STATE_STARTED_SUSPENDED == targetState;
+		boolean canDisconnect = STATE_STARTED_RUNNING == targetState || STATE_STARTED_SUSPENDED == targetState;
 		return canDisconnect;
 	}
 
@@ -1140,8 +1111,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		if (isTerminating()) {
 			return;
 		}
-		if (STATE_STARTED_RUNNING == targetState
-				|| STATE_STARTED_SUSPENDED == targetState) {
+		if (STATE_STARTED_RUNNING == targetState || STATE_STARTED_SUSPENDED == targetState) {
 			// we are in the middle of a debug session, single or multi
 			// makes no difference, we should stop it
 			setState(STATE_DISCONNECTED);
@@ -1150,10 +1120,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 				if (!isWebLaunch()) {
 					// not a web launch, but could be multi session so we
 					// can't just detach
-					if (multiSessionManaged
-							&& session.getEngineType() == EngineTypes.Xdebug
-							&& versionCheckLT(session.getEngineVersion(),
-									"2.0.2")) { //$NON-NLS-1$
+					if (multiSessionManaged && session.getEngineType() == EngineTypes.Xdebug
+							&& versionCheckLT(session.getEngineVersion(), "2.0.2")) { //$NON-NLS-1$
 						// we have to do a stop if xdebug and < 2.0.2
 						session.sendSyncCmd(DBGpCommand.stop);
 					} else {
@@ -1164,8 +1132,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 					// detaching xdebug on apache prior to version 2.0.2
 					// causes debug to stop working on the server.
 					if (session.getEngineType() == EngineTypes.Xdebug
-							&& versionCheckLT(session.getEngineVersion(),
-									"2.0.2")) { //$NON-NLS-1$
+							&& versionCheckLT(session.getEngineVersion(), "2.0.2")) { //$NON-NLS-1$
 
 						// we have to do a stop if xdebug and < 2.0.2
 						session.sendSyncCmd(DBGpCommand.stop);
@@ -1261,8 +1228,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @see org.eclipse.debug.core.model.IDisconnect#isDisconnected()
 	 */
 	public boolean isDisconnected() {
-		return STATE_DISCONNECTED == targetState
-				|| STATE_TERMINATED == targetState;
+		return STATE_DISCONNECTED == targetState || STATE_TERMINATED == targetState;
 	}
 
 	/**
@@ -1299,18 +1265,14 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 */
 	private void negotiateDBGpFeatures() {
 		DBGpResponse resp;
-		resp = session.sendSyncCmd(DBGpCommand.featureSet,
-				"-n show_hidden -v 1"); //$NON-NLS-1$
+		resp = session.sendSyncCmd(DBGpCommand.featureSet, "-n show_hidden -v 1"); //$NON-NLS-1$
 		// check the responses, but keep going.
 		DBGpUtils.isGoodDBGpResponse(this, resp);
-		resp = session.sendSyncCmd(DBGpCommand.featureSet,
-				"-n max_depth -v " + getMaxDepth()); //$NON-NLS-1$
+		resp = session.sendSyncCmd(DBGpCommand.featureSet, "-n max_depth -v " + getMaxDepth()); //$NON-NLS-1$
 		DBGpUtils.isGoodDBGpResponse(this, resp);
-		resp = session.sendSyncCmd(DBGpCommand.featureSet,
-				"-n max_children -v " + getMaxChildren()); //$NON-NLS-1$
+		resp = session.sendSyncCmd(DBGpCommand.featureSet, "-n max_children -v " + getMaxChildren()); //$NON-NLS-1$
 		DBGpUtils.isGoodDBGpResponse(this, resp);
-		resp = session.sendSyncCmd(DBGpCommand.featureSet,
-				"-n max_data -v " + getMaxData()); //$NON-NLS-1$
+		resp = session.sendSyncCmd(DBGpCommand.featureSet, "-n max_data -v " + getMaxData()); //$NON-NLS-1$
 		DBGpUtils.isGoodDBGpResponse(this, resp);
 		resp = session.sendSyncCmd(DBGpCommand.featureGet, "-n encoding"); //$NON-NLS-1$
 		if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
@@ -1321,8 +1283,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 					"abcdefg".getBytes(data); //$NON-NLS-1$
 					session.setSessionEncoding(data);
 				} catch (UnsupportedEncodingException uee) {
-					DBGpLogger.logWarning(
-							"encoding from debug engine invalid", this, uee); //$NON-NLS-1$
+					DBGpLogger.logWarning("encoding from debug engine invalid", this, uee); //$NON-NLS-1$
 				}
 			}
 		}
@@ -1342,11 +1303,9 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 			}
 		}
 
-		resp = session.sendSyncCmd(DBGpCommand.stdout,
-				"-c " + getCaptureStdout()); //$NON-NLS-1$
+		resp = session.sendSyncCmd(DBGpCommand.stdout, "-c " + getCaptureStdout()); //$NON-NLS-1$
 		DBGpUtils.isGoodDBGpResponse(this, resp);
-		resp = session.sendSyncCmd(DBGpCommand.stderr,
-				"-c " + getCaptureStderr()); //$NON-NLS-1$
+		resp = session.sendSyncCmd(DBGpCommand.stderr, "-c " + getCaptureStderr()); //$NON-NLS-1$
 		DBGpUtils.isGoodDBGpResponse(this, resp);
 	}
 
@@ -1357,8 +1316,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @throws DebugException
 	 *             if unable to perform the request
 	 */
-	protected synchronized IStackFrame[] getCurrentStackFrames()
-			throws DebugException {
+	protected synchronized IStackFrame[] getCurrentStackFrames() throws DebugException {
 		/*
 		 * <response command="stack_get" transaction_id="transaction_id"> <stack
 		 * level="{NUM}" type="file|eval|?" filename="..." lineno="{NUM}"
@@ -1377,8 +1335,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 			stackFrames = new IStackFrame[0];
 			synchronized (sessionMutex) {
 				if (session != null && session.isActive()) {
-					DBGpResponse resp = session
-							.sendSyncCmd(DBGpCommand.stackGet);
+					DBGpResponse resp = session.sendSyncCmd(DBGpCommand.stackGet);
 					if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
 						Node parent = resp.getParentNode();
 						NodeList stackNodes = parent.getChildNodes();
@@ -1389,14 +1346,11 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 							// merge top frame
 							if (i == 0 && previousFrames != null && previousFrames.length != 0) {
 								// merge top frame
-								stackFrames[0] = mergeFrame(
-										(DBGpStackFrame) previousFrames[0],
-										new DBGpStackFrame(langThread,
-												stackNode));
+								stackFrames[0] = mergeFrame((DBGpStackFrame) previousFrames[0],
+										new DBGpStackFrame(langThread, stackNode));
 								continue;
 							}
-							stackFrames[i] = new DBGpStackFrame(langThread,
-									stackNode);
+							stackFrames[i] = new DBGpStackFrame(langThread, stackNode);
 						}
 						currentStackLevel = stackNodes.getLength() - 1;
 					}
@@ -1416,16 +1370,12 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @return merged frame
 	 * @throws DebugException
 	 */
-	private IStackFrame mergeFrame(DBGpStackFrame previousFrame,
-			DBGpStackFrame incomingFrame) throws DebugException {
+	private IStackFrame mergeFrame(DBGpStackFrame previousFrame, DBGpStackFrame incomingFrame) throws DebugException {
 		if (previousFrame.getThread() == incomingFrame.getThread()
 				&& previousFrame.getName().equals(incomingFrame.getName())
-				&& previousFrame.getStackLevel().equals(
-						incomingFrame.getStackLevel())
-				&& previousFrame.getSourceName().equals(
-						incomingFrame.getSourceName())
-				&& previousFrame.getQualifiedFile().equals(
-						incomingFrame.getQualifiedFile())) {
+				&& previousFrame.getStackLevel().equals(incomingFrame.getStackLevel())
+				&& previousFrame.getSourceName().equals(incomingFrame.getSourceName())
+				&& previousFrame.getQualifiedFile().equals(incomingFrame.getQualifiedFile())) {
 			previousFrame.update(incomingFrame.getLineNumber());
 			return previousFrame;
 		}
@@ -1440,8 +1390,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @return
 	 */
 	private IVariable[] getContextLocalVars(String level) {
-		DBGpResponse resp = session.sendSyncCmd(DBGpCommand.contextGet,
-				"-d " + level); //$NON-NLS-1$
+		DBGpResponse resp = session.sendSyncCmd(DBGpCommand.contextGet, "-d " + level); //$NON-NLS-1$
 		return parseVarResp(resp, level);
 	}
 
@@ -1454,8 +1403,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 */
 	private IVariable[] getSuperGlobalVars() {
 		if (superGlobalVars == null) {
-			DBGpResponse resp = session.sendSyncCmd(DBGpCommand.contextGet,
-					"-c 1"); //$NON-NLS-1$
+			DBGpResponse resp = session.sendSyncCmd(DBGpCommand.contextGet, "-c 1"); //$NON-NLS-1$
 			// Parse this into a variables block, switch on preload just for
 			// this
 			superGlobalVars = parseVarResp(resp, "-1"); //$NON-NLS-1$
@@ -1484,8 +1432,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 						currentVariables = getContextAtLevel(level);
 						return currentVariables;
 					}
-					DBGpLogger
-							.debug("getVariables: returning cached variables"); //$NON-NLS-1$
+					DBGpLogger.debug("getVariables: returning cached variables"); //$NON-NLS-1$
 					return currentVariables;
 				} else {
 					return getContextAtLevel(level);
@@ -1553,8 +1500,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		// no information as their is a child node, if there are no variables
 		// this method creates a 0 size array which is good.
 		List<DBGpVariable> variables = new ArrayList<DBGpVariable>();
-		if (DBGpUtils.isGoodDBGpResponse(this, resp)
-				&& resp.getErrorCode() == DBGpResponse.ERROR_OK) {
+		if (DBGpUtils.isGoodDBGpResponse(this, resp) && resp.getErrorCode() == DBGpResponse.ERROR_OK) {
 			Node parent = resp.getParentNode();
 			NodeList properties = parent.getChildNodes();
 			for (int i = 0; i < properties.getLength(); i++) {
@@ -1683,8 +1629,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 			// spec says you should use getValue to retrieve the entire data
 			// but xdebug won't work without it.
 			args += " -m " + length; //$NON-NLS-1$
-			DBGpResponse resp = session
-					.sendSyncCmd(DBGpCommand.propValue, args);
+			DBGpResponse resp = session.sendSyncCmd(DBGpCommand.propValue, args);
 			if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
 				return resp.getParentNode();
 			}
@@ -1813,8 +1758,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		}
 
 		if (mappedFileName == null) {
-			DBGpLogger
-					.debug("outbound File '" + internalFile + "' Not remapped"); //$NON-NLS-1$ //$NON-NLS-2$
+			DBGpLogger.debug("outbound File '" + internalFile + "' Not remapped"); //$NON-NLS-1$ //$NON-NLS-2$
 			mappedFileName = bp.getFileName(); // use the fully qualified
 												// location of the file
 		} else {
@@ -1852,8 +1796,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 				if (projectScript != null) {
 					mappedPathEntry = DebugSearchEngine.find(decodedFile, this);
 				} else {
-					mappedPathEntry = DebugSearchEngine.find(pathMapper,
-							decodedFile, null, this);
+					mappedPathEntry = DebugSearchEngine.find(pathMapper, decodedFile, null, this);
 				}
 			} catch (Exception e1) {
 			}
@@ -1861,21 +1804,17 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 		// do we now have a remapped file ?
 		if (mappedPathEntry == null) {
-			final PharPath pharPath = PharPath.getPharPath(new Path(
-					"phar:" + decodedFile)); //$NON-NLS-1$
+			final PharPath pharPath = PharPath.getPharPath(new Path("phar:" + decodedFile)); //$NON-NLS-1$
 			if (pharPath != null) {
-				DBGpLogger
-						.debug("inbound File '" + decodedFile + "' remapped to phar file"); //$NON-NLS-1$ //$NON-NLS-2$
+				DBGpLogger.debug("inbound File '" + decodedFile + "' remapped to phar file"); //$NON-NLS-1$ //$NON-NLS-2$
 				mappedFile = "phar:" + decodedFile; //$NON-NLS-1$
 			} else {
-				DBGpLogger
-						.debug("inbound File '" + decodedFile + "' Not remapped"); //$NON-NLS-1$ //$NON-NLS-2$
+				DBGpLogger.debug("inbound File '" + decodedFile + "' Not remapped"); //$NON-NLS-1$ //$NON-NLS-2$
 				mappedFile = decodedFile;
 			}
 		} else {
 			mappedFile = mappedPathEntry.getResolvedPath();
-			IResource file = ResourcesPlugin.getWorkspace().getRoot()
-					.findMember(new Path(mappedFile));
+			IResource file = ResourcesPlugin.getWorkspace().getRoot().findMember(new Path(mappedFile));
 			if (file != null) {
 				// changed as RSE resources return null for RawLocation.
 				IPath t = file.getRawLocation();
@@ -1931,14 +1870,12 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		if (supportsBreakpoint(breakpoint)) {
 			try {
 				if (breakpoint.isEnabled()) {
-					DBGpBreakpoint bp = bpFacade
-							.createDBGpBreakpoint(breakpoint);
+					DBGpBreakpoint bp = bpFacade.createDBGpBreakpoint(breakpoint);
 					if (isSuspended() || (asyncSupported && isRunning())) {
 						// we are suspended or async mode is supported and we
 						// are running, so send the breakpoint.
 						if (DBGpLogger.debugBP()) {
-							DBGpLogger
-									.debug("Breakpoint Add requested immediately"); //$NON-NLS-1$
+							DBGpLogger.debug("Breakpoint Add requested immediately"); //$NON-NLS-1$
 						}
 						sendBreakpointAddCmd(bp, false);
 					} else if (isRunning()) {
@@ -1956,11 +1893,9 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 						// multiple requests, so the best bet is to
 						// queue the requests until we suspend.
 						if (DBGpLogger.debugBP()) {
-							DBGpLogger
-									.debug("Breakpoint Add deferred until suspended"); //$NON-NLS-1$
+							DBGpLogger.debug("Breakpoint Add deferred until suspended"); //$NON-NLS-1$
 						}
-						DBGpBreakpointCmd bpSet = new DBGpBreakpointCmd(
-								DBGpCommand.breakPointSet, bp);
+						DBGpBreakpointCmd bpSet = new DBGpBreakpointCmd(DBGpCommand.breakPointSet, bp);
 						queueBpCmd(bpSet);
 					}
 				}
@@ -1976,8 +1911,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @param bp
 	 * @param onResponseThread
 	 */
-	private void sendBreakpointAddCmd(DBGpBreakpoint bp,
-			boolean onResponseThread) {
+	private void sendBreakpointAddCmd(DBGpBreakpoint bp, boolean onResponseThread) {
 		bp.resetConditionChanged();
 		String fileName = bp.getFileName();
 		int lineNumber = bp.getLineNumber();
@@ -2011,8 +1945,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 		DBGpResponse resp;
 		if (onResponseThread) {
-			resp = session.sendSyncCmdOnResponseThread(
-					DBGpCommand.breakPointSet, args);
+			resp = session.sendSyncCmdOnResponseThread(DBGpCommand.breakPointSet, args);
 		} else {
 			resp = session.sendSyncCmd(DBGpCommand.breakPointSet, args);
 		}
@@ -2053,8 +1986,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 				// aysnc mode and running or we are suspended so send the remove
 				// request
 				if (DBGpLogger.debugBP()) {
-					DBGpLogger
-							.debug("Immediately removing of breakpoint with ID: " + bp.getID()); //$NON-NLS-1$
+					DBGpLogger.debug("Immediately removing of breakpoint with ID: " + bp.getID()); //$NON-NLS-1$
 				}
 				sendBreakpointRemoveCmd(bp, false);
 			} else if (isRunning()) {
@@ -2062,11 +1994,9 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 				// running and not suspended and no async support, so we must
 				// defer the removal.
 				if (DBGpLogger.debugBP()) {
-					DBGpLogger
-							.debug("Deferring Removing of breakpoint with ID: " + bp.getID()); //$NON-NLS-1$
+					DBGpLogger.debug("Deferring Removing of breakpoint with ID: " + bp.getID()); //$NON-NLS-1$
 				}
-				DBGpBreakpointCmd bpRemove = new DBGpBreakpointCmd(
-						DBGpCommand.breakPointRemove, bp);
+				DBGpBreakpointCmd bpRemove = new DBGpBreakpointCmd(DBGpCommand.breakPointRemove, bp);
 				queueBpCmd(bpRemove);
 			}
 
@@ -2079,8 +2009,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @param bp
 	 * @param onResponseThread
 	 */
-	private void sendBreakpointRemoveCmd(DBGpBreakpoint bp,
-			boolean onResponseThread) {
+	private void sendBreakpointRemoveCmd(DBGpBreakpoint bp, boolean onResponseThread) {
 		// we are suspended
 		String args = "-d " + bp.getID(); //$NON-NLS-1$
 		if (DBGpLogger.debugBP()) {
@@ -2088,8 +2017,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		}
 		DBGpResponse resp;
 		if (onResponseThread) {
-			resp = session.sendSyncCmdOnResponseThread(
-					DBGpCommand.breakPointRemove, args);
+			resp = session.sendSyncCmdOnResponseThread(DBGpCommand.breakPointRemove, args);
 		} else {
 			resp = session.sendSyncCmd(DBGpCommand.breakPointRemove, args);
 		}
@@ -2105,8 +2033,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * .debug.core.model.IBreakpoint, org.eclipse.core.resources.IMarkerDelta)
 	 */
 	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
-		IBreakpointManager bmgr = DebugPlugin.getDefault()
-				.getBreakpointManager();
+		IBreakpointManager bmgr = DebugPlugin.getDefault().getBreakpointManager();
 		if (!bmgr.isEnabled()) {
 			return;
 		}
@@ -2120,8 +2047,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 				DBGpBreakpoint bp = bpFacade.createDBGpBreakpoint(breakpoint);
 				if (bp.hasConditionChanged()) {
 					if (DBGpLogger.debugBP()) {
-						DBGpLogger
-								.debug("condition changed for breakpoint with ID: " + bp.getID()); //$NON-NLS-1$
+						DBGpLogger.debug("condition changed for breakpoint with ID: " + bp.getID()); //$NON-NLS-1$
 					}
 					bp.resetConditionChanged();
 					if (breakpoint.isEnabled()) {
@@ -2134,8 +2060,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 				// did the line number change ?
 				if (lineNumber != deltaLNumber) {
 					if (DBGpLogger.debugBP()) {
-						DBGpLogger
-								.debug("line number changed for breakpoint with ID: " + bp.getID()); //$NON-NLS-1$
+						DBGpLogger.debug("line number changed for breakpoint with ID: " + bp.getID()); //$NON-NLS-1$
 					}
 
 					if (breakpoint.isEnabled()) {
@@ -2153,8 +2078,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 					breakpointRemoved(breakpoint, null);
 				}
 			} catch (CoreException e) {
-				DBGpLogger.logException(
-						"Exception Changing Breakpoint", this, e); //$NON-NLS-1$
+				DBGpLogger.logException("Exception Changing Breakpoint", this, e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -2197,13 +2121,11 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * script.
 	 */
 	private void loadPredefinedBreakpoints() {
-		IBreakpointManager bmgr = DebugPlugin.getDefault()
-				.getBreakpointManager();
+		IBreakpointManager bmgr = DebugPlugin.getDefault().getBreakpointManager();
 		if (!bmgr.isEnabled()) {
 			return;
 		}
-		IBreakpoint[] breakpoints = bmgr.getBreakpoints(bpFacade
-				.getBreakpointModelID());
+		IBreakpoint[] breakpoints = bmgr.getBreakpoints(bpFacade.getBreakpointModelID());
 		for (int i = 0; i < breakpoints.length; i++) {
 			breakpointAdded(breakpoints[i]);
 		}
@@ -2222,10 +2144,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 		if (isSuspended()) {
 			try {
-				IBreakpoint breakpoint = bpFacade.createRunToLineBreakpoint(
-						fileName, lineNumber);
-				IBreakpointManager bmgr = DebugPlugin.getDefault()
-						.getBreakpointManager();
+				IBreakpoint breakpoint = bpFacade.createRunToLineBreakpoint(fileName, lineNumber);
+				IBreakpointManager bmgr = DebugPlugin.getDefault().getBreakpointManager();
 				bmgr.addBreakpoint(breakpoint);
 				resume();
 			} catch (DebugException e) {
@@ -2243,8 +2163,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * breakpointManagerEnablementChanged(boolean)
 	 */
 	public void breakpointManagerEnablementChanged(boolean enabled) {
-		IBreakpoint[] breakpoints = DebugPlugin.getDefault()
-				.getBreakpointManager()
+		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager()
 				.getBreakpoints(bpFacade.getBreakpointModelID());
 		for (int i = 0; i < breakpoints.length; i++) {
 			if (supportsBreakpoint(breakpoints[i])) {
@@ -2284,13 +2203,10 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 			if (DBGpCmdQueue.size() > 0) {
 
 				for (int i = DBGpCmdQueue.size() - 1; i >= 0 && !foundAdd; i--) {
-					DBGpBreakpointCmd entry = (DBGpBreakpointCmd) DBGpCmdQueue
-							.get(i);
+					DBGpBreakpointCmd entry = (DBGpBreakpointCmd) DBGpCmdQueue.get(i);
 					if (entry.getCmd().equals(DBGpCommand.breakPointSet)) {
-						if (bpCmd.getBp().getFileName()
-								.equals(entry.getBp().getFileName())
-								&& bpCmd.getBp().getLineNumber() == entry
-										.getBp().getLineNumber()) {
+						if (bpCmd.getBp().getFileName().equals(entry.getBp().getFileName())
+								&& bpCmd.getBp().getLineNumber() == entry.getBp().getLineNumber()) {
 
 							// ok we have an entry that is an Add, the filename
 							// and lineNumber are
@@ -2299,8 +2215,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 							foundAdd = true;
 							DBGpCmdQueue.remove(i);
 							if (DBGpLogger.debugBP()) {
-								DBGpLogger
-										.debug("removed a breakpoint command: " + entry); //$NON-NLS-1$
+								DBGpLogger.debug("removed a breakpoint command: " + entry); //$NON-NLS-1$
 							}
 						}
 					}
@@ -2342,9 +2257,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.xdebug.core.dbgp.session.DBGpSessionListener#SessionCreated
-	 * (org.eclipse.php.xdebug.core.session.DBGpSession)
+	 * @see org.eclipse.php.xdebug.core.dbgp.session.DBGpSessionListener#
+	 * SessionCreated (org.eclipse.php.xdebug.core.session.DBGpSession)
 	 */
 	public boolean SessionCreated(DBGpSession session) {
 		// need to determine if the session is one we want, but only if we
@@ -2352,15 +2266,13 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		// we already have a session, the debugtarget is would have to be
 		// reset to handle this new session, so safer to ignore it.
 		boolean isMine = false;
-		isMine = DBGpSessionHandler.getInstance().isCorrectSession(session,
-				this);
+		isMine = DBGpSessionHandler.getInstance().isCorrectSession(session, this);
 		if (isMine) {
 			if (this.session == null && !isTerminating()) {
 				session.setDebugTarget(this);
 				this.session = session;
 
-				if (STATE_INIT_SESSION_WAIT == targetState
-						|| STATE_CREATE == targetState) {
+				if (STATE_INIT_SESSION_WAIT == targetState || STATE_CREATE == targetState) {
 
 					// if we are in initial session wait, fire the event to
 					// unblock if we haven't even got that far, fire the event
@@ -2425,8 +2337,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 	private int getMaxDepth() {
 		if (sessionPreferences != null) {
-			return sessionPreferences.getInt(
-					DBGpPreferences.DBGP_MAX_DEPTH_PROPERTY,
+			return sessionPreferences.getInt(DBGpPreferences.DBGP_MAX_DEPTH_PROPERTY,
 					DBGpPreferences.DBGP_MAX_DEPTH_DEFAULT);
 		}
 		return DBGpPreferences.DBGP_MAX_DEPTH_DEFAULT;
@@ -2434,8 +2345,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 	public int getMaxChildren() {
 		if (sessionPreferences != null) {
-			return sessionPreferences.getInt(
-					DBGpPreferences.DBGP_MAX_CHILDREN_PROPERTY,
+			return sessionPreferences.getInt(DBGpPreferences.DBGP_MAX_CHILDREN_PROPERTY,
 					DBGpPreferences.DBGP_MAX_CHILDREN_DEFAULT);
 		}
 		return DBGpPreferences.DBGP_MAX_CHILDREN_DEFAULT;
@@ -2443,8 +2353,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 	public int getMaxData() {
 		if (sessionPreferences != null) {
-			return sessionPreferences.getInt(
-					DBGpPreferences.DBGP_MAX_DATA_PROPERTY,
+			return sessionPreferences.getInt(DBGpPreferences.DBGP_MAX_DATA_PROPERTY,
 					DBGpPreferences.DBGP_MAX_DATA_DEFAULT);
 		}
 		return DBGpPreferences.DBGP_MAX_CHILDREN_DEFAULT;
@@ -2452,8 +2361,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 	private int getCaptureStdout() {
 		if (sessionPreferences != null) {
-			return sessionPreferences.getInt(
-					DBGpPreferences.DBGP_CAPTURE_STDOUT_PROPERTY,
+			return sessionPreferences.getInt(DBGpPreferences.DBGP_CAPTURE_STDOUT_PROPERTY,
 					DBGpPreferences.DBGP_CAPTURE_DEFAULT);
 		}
 		return DBGpPreferences.DBGP_CAPTURE_DEFAULT;
@@ -2461,8 +2369,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 	private int getCaptureStderr() {
 		if (sessionPreferences != null) {
-			return sessionPreferences.getInt(
-					DBGpPreferences.DBGP_CAPTURE_STDERR_PROPERTY,
+			return sessionPreferences.getInt(DBGpPreferences.DBGP_CAPTURE_STDERR_PROPERTY,
 					DBGpPreferences.DBGP_CAPTURE_DEFAULT);
 		}
 		return DBGpPreferences.DBGP_CAPTURE_DEFAULT;
@@ -2470,8 +2377,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 	private boolean showGLobals() {
 		if (sessionPreferences != null) {
-			return sessionPreferences.getBoolean(
-					DBGpPreferences.DBGP_SHOW_GLOBALS_PROPERTY,
+			return sessionPreferences.getBoolean(DBGpPreferences.DBGP_SHOW_GLOBALS_PROPERTY,
 					DBGpPreferences.DBGP_SHOW_GLOBALS_DEFAULT);
 		}
 		return DBGpPreferences.DBGP_SHOW_GLOBALS_DEFAULT;

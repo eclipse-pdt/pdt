@@ -46,12 +46,10 @@ public class ASTRewriteTestsPHP7 extends ASTRewriteTestsPHP56 {
 		String str = "<?php MyClass::$$a[5];?>";
 		initialize(str);
 
-		List<ArrayAccess> arrayAccess = getAllOfType(program,
-				ArrayAccess.class);
+		List<ArrayAccess> arrayAccess = getAllOfType(program, ArrayAccess.class);
 		assertTrue("Unexpected list size.", arrayAccess.size() == 1);
 		((StaticFieldAccess) arrayAccess.get(0).getName())
-				.setField(ast.newReflectionVariable(ast.newArrayAccess(
-						ast.newVariable("bar"), ast.newScalar("333"))));
+				.setField(ast.newReflectionVariable(ast.newArrayAccess(ast.newVariable("bar"), ast.newScalar("333"))));
 		rewrite();
 		checkResult("<?php MyClass::$$bar[333][5];?>");
 	}
@@ -61,8 +59,7 @@ public class ASTRewriteTestsPHP7 extends ASTRewriteTestsPHP56 {
 		String str = "<?php function test($tmp) {} \n ?>";
 		initialize(str);
 
-		List<FunctionDeclaration> statements = getAllOfType(program,
-				FunctionDeclaration.class);
+		List<FunctionDeclaration> statements = getAllOfType(program, FunctionDeclaration.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		Identifier identifier = ast.newIdentifier("MyClass");
 		statements.get(0).setReturnType(identifier);
@@ -76,8 +73,7 @@ public class ASTRewriteTestsPHP7 extends ASTRewriteTestsPHP56 {
 		String str = "<?php function test($tmp): MyClass {} \n ?>";
 		initialize(str);
 
-		List<FunctionDeclaration> statements = getAllOfType(program,
-				FunctionDeclaration.class);
+		List<FunctionDeclaration> statements = getAllOfType(program, FunctionDeclaration.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).setReturnType(null);
 
@@ -90,15 +86,13 @@ public class ASTRewriteTestsPHP7 extends ASTRewriteTestsPHP56 {
 		String str = "<?php class Test { public function test($tmp) {} }\n ?>";
 		initialize(str);
 
-		List<FunctionDeclaration> statements = getAllOfType(program,
-				FunctionDeclaration.class);
+		List<FunctionDeclaration> statements = getAllOfType(program, FunctionDeclaration.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		Identifier identifier = ast.newIdentifier("MyClass");
 		statements.get(0).setReturnType(identifier);
 
 		rewrite();
-		checkResult(
-				"<?php class Test { public function test($tmp): MyClass {} }\n ?>");
+		checkResult("<?php class Test { public function test($tmp): MyClass {} }\n ?>");
 	}
 
 	@Test
@@ -106,8 +100,7 @@ public class ASTRewriteTestsPHP7 extends ASTRewriteTestsPHP56 {
 		String str = "<?php class Test { public function test($tmp): MyClass {} }\n ?>";
 		initialize(str);
 
-		List<FunctionDeclaration> statements = getAllOfType(program,
-				FunctionDeclaration.class);
+		List<FunctionDeclaration> statements = getAllOfType(program, FunctionDeclaration.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).setReturnType(null);
 

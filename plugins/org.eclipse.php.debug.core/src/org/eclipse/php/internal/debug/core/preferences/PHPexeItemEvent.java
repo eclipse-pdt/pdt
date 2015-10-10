@@ -20,7 +20,7 @@ import java.util.EventObject;
 public class PHPexeItemEvent extends EventObject {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private final String property;
 	private final Object oldValue;
 	private final Object newValue;
@@ -33,8 +33,7 @@ public class PHPexeItemEvent extends EventObject {
 	 * @param oldValue
 	 * @param newValue
 	 */
-	public PHPexeItemEvent(Object source, String property, Object oldValue,
-			Object newValue) {
+	public PHPexeItemEvent(Object source, String property, Object oldValue, Object newValue) {
 		super(source);
 		this.property = property;
 		this.oldValue = oldValue;

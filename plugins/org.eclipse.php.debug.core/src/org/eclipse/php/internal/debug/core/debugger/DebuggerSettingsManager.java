@@ -52,20 +52,17 @@ public enum DebuggerSettingsManager {
 			switch (kind) {
 			case ADDED: {
 				for (Object listener : listeners.getListeners())
-					((IDebuggerSettingsListener) listener)
-							.settingsAdded(settings);
+					((IDebuggerSettingsListener) listener).settingsAdded(settings);
 				break;
 			}
 			case REMOVED: {
 				for (Object listener : listeners.getListeners())
-					((IDebuggerSettingsListener) listener)
-							.settingsRemoved(settings);
+					((IDebuggerSettingsListener) listener).settingsRemoved(settings);
 				break;
 			}
 			case CHANGED: {
 				for (Object listener : listeners.getListeners())
-					((IDebuggerSettingsListener) listener)
-							.settingsChanged(events);
+					((IDebuggerSettingsListener) listener).settingsChanged(events);
 				break;
 			}
 			default:
@@ -75,8 +72,7 @@ public enum DebuggerSettingsManager {
 
 		void fireChanged(List<PropertyChangeEvent> events) {
 			kind = CHANGED;
-			this.events = events
-					.toArray(new PropertyChangeEvent[events.size()]);
+			this.events = events.toArray(new PropertyChangeEvent[events.size()]);
 			fireEvent();
 		}
 
@@ -94,14 +90,12 @@ public enum DebuggerSettingsManager {
 
 	}
 
-	private class OwnersListener implements IServersManagerListener,
-			IPHPExesListener {
+	private class OwnersListener implements IServersManagerListener, IPHPExesListener {
 
 		@Override
 		public void phpExeAdded(PHPExesEvent event) {
 			for (String debuggerId : PHPDebuggersRegistry.getDebuggersIds()) {
-				IDebuggerSettings settings = findSettings(event.getPHPExeItem()
-						.getUniqueId(), debuggerId);
+				IDebuggerSettings settings = findSettings(event.getPHPExeItem().getUniqueId(), debuggerId);
 				if (settings != null)
 					save(settings);
 			}
@@ -110,8 +104,7 @@ public enum DebuggerSettingsManager {
 		@Override
 		public void phpExeRemoved(PHPExesEvent event) {
 			for (String debuggerId : PHPDebuggersRegistry.getDebuggersIds()) {
-				IDebuggerSettings settings = findSettings(event.getPHPExeItem()
-						.getUniqueId(), debuggerId);
+				IDebuggerSettings settings = findSettings(event.getPHPExeItem().getUniqueId(), debuggerId);
 				if (settings != null)
 					delete(settings);
 			}
@@ -120,8 +113,7 @@ public enum DebuggerSettingsManager {
 		@Override
 		public void serverAdded(ServerManagerEvent event) {
 			for (String debuggerId : PHPDebuggersRegistry.getDebuggersIds()) {
-				IDebuggerSettings settings = findSettings(event.getServer()
-						.getUniqueId(), debuggerId);
+				IDebuggerSettings settings = findSettings(event.getServer().getUniqueId(), debuggerId);
 				if (settings != null)
 					save(settings);
 			}
@@ -130,8 +122,7 @@ public enum DebuggerSettingsManager {
 		@Override
 		public void serverRemoved(ServerManagerEvent event) {
 			for (String debuggerId : PHPDebuggersRegistry.getDebuggersIds()) {
-				IDebuggerSettings settings = findSettings(event.getServer()
-						.getUniqueId(), debuggerId);
+				IDebuggerSettings settings = findSettings(event.getServer().getUniqueId(), debuggerId);
 				if (settings != null)
 					delete(settings);
 			}
@@ -154,8 +145,7 @@ public enum DebuggerSettingsManager {
 	 */
 	private DebuggerSettingsManager() {
 		for (String debuggerId : PHPDebuggersRegistry.getDebuggersIds()) {
-			settingsCache.put(debuggerId,
-					DebuggerSettingsProviderRegistry.getProvider(debuggerId));
+			settingsCache.put(debuggerId, DebuggerSettingsProviderRegistry.getProvider(debuggerId));
 		}
 	}
 
@@ -225,12 +215,10 @@ public enum DebuggerSettingsManager {
 	 * @param settings
 	 * @return settings working copy
 	 */
-	public IDebuggerSettingsWorkingCopy fetchWorkingCopy(
-			IDebuggerSettings settings) {
+	public IDebuggerSettingsWorkingCopy fetchWorkingCopy(IDebuggerSettings settings) {
 		IDebuggerSettingsWorkingCopy workingCopy = settingsCopies.get(settings);
 		if (workingCopy == null) {
-			IDebuggerSettingsProvider provider = settingsCache.get(settings
-					.getDebuggerId());
+			IDebuggerSettingsProvider provider = settingsCache.get(settings.getDebuggerId());
 			workingCopy = provider.createWorkingCopy(settings);
 			settingsCopies.put(settings, workingCopy);
 		}
@@ -280,22 +268,20 @@ public enum DebuggerSettingsManager {
 		// Find the differences to send change notifications
 		IDebuggerSettings settings = settingsWorkingCopy.getOriginal();
 		Map<String, String> attributes = settings.getAttributes();
-		Map<String, String> attributesCopy = settingsWorkingCopy
-				.getAttributes();
+		Map<String, String> attributesCopy = settingsWorkingCopy.getAttributes();
 		List<PropertyChangeEvent> events = new ArrayList<PropertyChangeEvent>();
 		// Check if there are some new ones that were not in original
 		for (String key : attributesCopy.keySet()) {
 			if (!attributes.keySet().contains(key)) {
-				PropertyChangeEvent event = new PropertyChangeEvent(settings,
-						key, null, attributesCopy.get(key));
+				PropertyChangeEvent event = new PropertyChangeEvent(settings, key, null, attributesCopy.get(key));
 				events.add(event);
 			}
 		}
 		// Check & compare original attributes with the ones from WC
 		for (String key : attributes.keySet()) {
 			if (!attributes.get(key).equals(attributesCopy.get(key))) {
-				PropertyChangeEvent event = new PropertyChangeEvent(settings,
-						key, attributes.get(key), attributesCopy.get(key));
+				PropertyChangeEvent event = new PropertyChangeEvent(settings, key, attributes.get(key),
+						attributesCopy.get(key));
 				events.add(event);
 			}
 		}
@@ -330,8 +316,7 @@ public enum DebuggerSettingsManager {
 	private void delete(IDebuggerSettings settings) {
 		String debuggerId = settings.getDebuggerId();
 		// Delegate deleting to appropriate settings provider
-		DebuggerSettingsProviderRegistry.getProvider(debuggerId).delete(
-				settings);
+		DebuggerSettingsProviderRegistry.getProvider(debuggerId).delete(settings);
 		(new EventNotifier()).fireRemoved(settings);
 	}
 
@@ -341,8 +326,7 @@ public enum DebuggerSettingsManager {
 	 * @param settings
 	 * @return settings working copy or <code>null</code>
 	 */
-	private IDebuggerSettingsWorkingCopy findWorkingCopy(
-			IDebuggerSettings settings) {
+	private IDebuggerSettingsWorkingCopy findWorkingCopy(IDebuggerSettings settings) {
 		for (IDebuggerSettings key : settingsCopies.keySet()) {
 			if (key == settings)
 				return settingsCopies.get(key);

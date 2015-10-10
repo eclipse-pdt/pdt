@@ -38,8 +38,7 @@ public interface IPHPFormatterConfigurationBlockWrapper {
 
 	void dispose();
 
-	void init(IStatusChangeListener statusChangedListener, IProject project,
-			IWorkbenchPreferenceContainer container);
+	void init(IStatusChangeListener statusChangedListener, IProject project, IWorkbenchPreferenceContainer container);
 
 	/**
 	 * The Description for this configuration block that will be presented in

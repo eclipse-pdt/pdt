@@ -35,8 +35,7 @@ public class PHPElementLinkedPosition extends LinkedPosition {
 	 * @param sequence
 	 *            the iteration sequence rank
 	 */
-	public PHPElementLinkedPosition(IDocument document, int offset, int length,
-			int sequence) {
+	public PHPElementLinkedPosition(IDocument document, int offset, int length, int sequence) {
 		super(document, offset, length, sequence);
 		if (isDollared()) {
 			setOffset(offset + 1);
@@ -72,8 +71,8 @@ public class PHPElementLinkedPosition extends LinkedPosition {
 
 		}
 
-		return stringValue != null
-				&& stringValue.indexOf("\"") == 0 && stringValue.lastIndexOf("\"") == stringValue.length() - 1; //$NON-NLS-1$ //$NON-NLS-2$
+		return stringValue != null && stringValue.indexOf("\"") == 0 //$NON-NLS-1$
+				&& stringValue.lastIndexOf("\"") == stringValue.length() - 1; //$NON-NLS-1$
 	}
 
 	private boolean isSingleQuoted() {
@@ -84,8 +83,8 @@ public class PHPElementLinkedPosition extends LinkedPosition {
 
 		}
 
-		return stringValue != null
-				&& stringValue.indexOf("\'") == 0 && stringValue.lastIndexOf("\'") == stringValue.length() - 1; //$NON-NLS-1$ //$NON-NLS-2$
+		return stringValue != null && stringValue.indexOf("\'") == 0 //$NON-NLS-1$
+				&& stringValue.lastIndexOf("\'") == stringValue.length() - 1; //$NON-NLS-1$
 	}
 
 }

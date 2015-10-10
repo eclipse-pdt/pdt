@@ -32,8 +32,7 @@ import org.eclipse.swt.widgets.*;
  * @author Shalom Gibly
  * @since PDT 1.0
  */
-public abstract class AbstractDebuggerConfigurationDialog extends
-		TitleAreaDialog {
+public abstract class AbstractDebuggerConfigurationDialog extends TitleAreaDialog {
 
 	/**
 	 * Constructor.
@@ -131,8 +130,7 @@ public abstract class AbstractDebuggerConfigurationDialog extends
 	 * 
 	 * @return
 	 */
-	protected Text addTextField(Composite parent, String key, int textlimit,
-			int horizontalIndent) {
+	protected Text addTextField(Composite parent, String key, int textlimit, int horizontalIndent) {
 		Text textBox = new Text(parent, SWT.BORDER | SWT.SINGLE);
 		textBox.setData(key);
 
@@ -158,8 +156,7 @@ public abstract class AbstractDebuggerConfigurationDialog extends
 	 * @param horizontalIndent
 	 * @return
 	 */
-	protected Button addCheckBox(Composite parent, String label,
-			String prefKey, int horizontalIndent) {
+	protected Button addCheckBox(Composite parent, String label, String prefKey, int horizontalIndent) {
 		Button checkBox = new Button(parent, SWT.CHECK);
 		checkBox.setText(label);
 
@@ -186,8 +183,8 @@ public abstract class AbstractDebuggerConfigurationDialog extends
 	 *            the message for the note
 	 * @return the composite for the note
 	 */
-	protected Composite createNoteComposite(Font font, Composite composite,
-			String title, String message, int horizontalSpan) {
+	protected Composite createNoteComposite(Font font, Composite composite, String title, String message,
+			int horizontalSpan) {
 		Composite messageComposite = new Composite(composite, SWT.NONE);
 		GridLayout messageLayout = new GridLayout();
 		messageLayout.numColumns = 2;
@@ -197,17 +194,14 @@ public abstract class AbstractDebuggerConfigurationDialog extends
 		messageComposite.setLayout(messageLayout);
 		GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		gridData.horizontalSpan = horizontalSpan;
-		gridData.widthHint = convertWidthInCharsToPixels(title.length()
-				+ message.length() + 1);
+		gridData.widthHint = convertWidthInCharsToPixels(title.length() + message.length() + 1);
 		messageComposite.setLayoutData(gridData);
 		messageComposite.setFont(font);
 
 		final Label noteLabel = new Label(messageComposite, SWT.BOLD);
 		noteLabel.setText(title);
-		noteLabel.setFont(JFaceResources.getFontRegistry().getBold(
-				JFaceResources.DIALOG_FONT));
-		noteLabel
-				.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
+		noteLabel.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
+		noteLabel.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
 
 		Label messageLabel = new Label(messageComposite, SWT.WRAP);
 		messageLabel.setText(message);

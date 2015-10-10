@@ -31,26 +31,21 @@ import org.eclipse.text.edits.TextEditGroup;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
-public class UnusedUseStatementProcessor
-		implements IQuickFixProcessor, IQuickFixProcessorExtension {
+public class UnusedUseStatementProcessor implements IQuickFixProcessor, IQuickFixProcessorExtension {
 	private final static String ORGANIZE_USE_STATEMENTS_ID = "org.eclipse.php.ui.editor.organize.use.statements"; //$NON-NLS-1$
 
 	private class RunCommandProposal extends AbstractCorrectionProposal {
 
 		public RunCommandProposal() {
 			super(Messages.UnusedUseStatementProcessor_CommandName, 10,
-					DLTKPluginImages
-							.get(DLTKPluginImages.IMG_CORRECTION_CHANGE),
-					ORGANIZE_USE_STATEMENTS_ID);
+					DLTKPluginImages.get(DLTKPluginImages.IMG_CORRECTION_CHANGE), ORGANIZE_USE_STATEMENTS_ID);
 		}
 
 		@Override
 		public void apply(IDocument document) {
-			ICommandService service = (ICommandService) PlatformUI
-					.getWorkbench().getService(ICommandService.class);
+			ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 			try {
-				service.getCommand(getCommandId())
-						.executeWithChecks(new ExecutionEvent());
+				service.getCommand(getCommandId()).executeWithChecks(new ExecutionEvent());
 			} catch (Exception e) {
 				Logger.logException(e);
 			}
@@ -67,17 +62,15 @@ public class UnusedUseStatementProcessor
 		private final IInvocationContext context;
 
 		public RemoveImportProposal(IInvocationContext context) {
-			super(Messages.UnusedUseStatementProcessor_RemoveImport,
-					context.getCompilationUnit(), null, 9, DLTKPluginImages.get(
-							DLTKPluginImages.IMG_CORRECTION_DELETE_IMPORT));
+			super(Messages.UnusedUseStatementProcessor_RemoveImport, context.getCompilationUnit(), null, 9,
+					DLTKPluginImages.get(DLTKPluginImages.IMG_CORRECTION_DELETE_IMPORT));
 			this.context = context;
 		}
 
 		protected ASTRewrite getRewrite() throws CoreException {
 			ASTNode coveringNode = context.getCoveringNode();
 			ASTRewrite rewrite = ASTRewrite.create(coveringNode.getAST());
-			TextEditGroup editGroup = new TextEditGroup(
-					Messages.UnusedUseStatementProcessor_RemoveImport);
+			TextEditGroup editGroup = new TextEditGroup(Messages.UnusedUseStatementProcessor_RemoveImport);
 			if (coveringNode != null) {
 				if (coveringNode instanceof Identifier) {
 					coveringNode = coveringNode.getParent();
@@ -101,8 +94,7 @@ public class UnusedUseStatementProcessor
 	}
 
 	@Override
-	public boolean hasCorrections(ISourceModule unit,
-			IProblemIdentifier identifier) {
+	public boolean hasCorrections(ISourceModule unit, IProblemIdentifier identifier) {
 		return identifier == PhpProblemIdentifier.USE_STATEMENTS;
 	}
 
@@ -112,16 +104,14 @@ public class UnusedUseStatementProcessor
 	}
 
 	@Override
-	public IScriptCompletionProposal[] getCorrections(
-			IInvocationContext context, IProblemLocation[] locations)
-					throws CoreException {
+	public IScriptCompletionProposal[] getCorrections(IInvocationContext context, IProblemLocation[] locations)
+			throws CoreException {
 		if (locations.length == 0) {
 			return null;
 		}
 		boolean detect = false;
 		for (int i = 0; i < locations.length; i++) {
-			if (hasCorrections(context.getCompilationUnit(),
-					locations[i].getProblemIdentifier())) {
+			if (hasCorrections(context.getCompilationUnit(), locations[i].getProblemIdentifier())) {
 				detect = true;
 				break;
 			}
@@ -129,8 +119,7 @@ public class UnusedUseStatementProcessor
 		if (!detect) {
 			return null;
 		}
-		return new IScriptCompletionProposal[] { new RunCommandProposal(),
-				new RemoveImportProposal(context) };
+		return new IScriptCompletionProposal[] { new RunCommandProposal(), new RemoveImportProposal(context) };
 	}
 
 }

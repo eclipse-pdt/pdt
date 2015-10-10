@@ -40,10 +40,8 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 	 * org.eclipse.jface.text.ITextViewer, org.eclipse.jface.text.IRegion,
 	 * boolean)
 	 */
-	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
-			IRegion region, boolean canShowMultipleHyperlinks) {
-		final PHPStructuredEditor editor = org.eclipse.php.internal.ui.util.EditorUtility
-				.getPHPEditor(textViewer);
+	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
+		final PHPStructuredEditor editor = org.eclipse.php.internal.ui.util.EditorUtility.getPHPEditor(textViewer);
 		if (editor == null) {
 			return null;
 		}
@@ -52,14 +50,12 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 			return null;
 		}
 
-		IModelElement input = EditorUtility.getEditorInputModelElement(editor,
-				false);
+		IModelElement input = EditorUtility.getEditorInputModelElement(editor, false);
 		if (input == null) {
 			return null;
 		}
 
-		PHPVersion phpVersion = ProjectOptions.getPhpVersion(input
-				.getScriptProject().getProject());
+		PHPVersion phpVersion = ProjectOptions.getPhpVersion(input.getScriptProject().getProject());
 		// PHP 5.3 and greater
 		boolean namespacesSupported = phpVersion.isGreaterThan(PHPVersion.PHP5);
 
@@ -71,68 +67,50 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 				return null;
 
 			try {
-				String text = document.get(wordRegion.getOffset(),
-						wordRegion.getLength());
+				String text = document.get(wordRegion.getOffset(), wordRegion.getLength());
 				if (text.equals(NEW)) {
 					return null;
 				}
 			} catch (BadLocationException e) {
 			}
 			IModelElement[] elements = null;
-			elements = ((ICodeAssist) input).codeSelect(wordRegion.getOffset(),
-					wordRegion.getLength());
-			if ((elements == null || elements.length == 0)
-					&& input instanceof ISourceModule) {
-				elements = PHPModelUtils.getTypeInString((ISourceModule) input,
-						wordRegion);
+			elements = ((ICodeAssist) input).codeSelect(wordRegion.getOffset(), wordRegion.getLength());
+			if ((elements == null || elements.length == 0) && input instanceof ISourceModule) {
+				elements = PHPModelUtils.getTypeInString((ISourceModule) input, wordRegion);
 
 			}
 			if (elements != null && elements.length > 0) {
 				final IHyperlink link;
 				if (elements.length == 1) {
-					link = new ModelElementHyperlink(wordRegion, elements[0],
-							new OpenAction(editor));
+					link = new ModelElementHyperlink(wordRegion, elements[0], new OpenAction(editor));
 				} else {
-					link = new ModelElementHyperlink(wordRegion,
-							new ModelElementArray(elements), new OpenAction(
-									editor) {
+					link = new ModelElementHyperlink(wordRegion, new ModelElementArray(elements),
+							new OpenAction(editor) {
 
-								public void selectAndOpen(
-										IModelElement[] elements) {
-									if (elements == null
-											|| elements.length == 0) {
+								public void selectAndOpen(IModelElement[] elements) {
+									if (elements == null || elements.length == 0) {
 										IEditorStatusLine statusLine = null;
 										if (editor != null)
-											statusLine = (IEditorStatusLine) editor
-													.getAdapter(IEditorStatusLine.class);
+											statusLine = (IEditorStatusLine) editor.getAdapter(IEditorStatusLine.class);
 										if (statusLine != null)
-											statusLine
-													.setMessage(
-															true,
-															ActionMessages.OpenAction_error_messageBadSelection,
-															null);
+											statusLine.setMessage(true,
+													ActionMessages.OpenAction_error_messageBadSelection, null);
 										getShell().getDisplay().beep();
 										return;
 									}
 									IModelElement element = elements[0];
 									if (elements.length > 1) {
-										element = OpenActionUtil
-												.selectModelElement(
-														elements,
-														getShell(),
-														ActionMessages.OpenAction_error_title,
-														ActionMessages.OpenAction_select_element);
+										element = OpenActionUtil.selectModelElement(elements, getShell(),
+												ActionMessages.OpenAction_error_title,
+												ActionMessages.OpenAction_select_element);
 										if (element == null)
 											return;
 									}
 
 									int type = element.getElementType();
-									if (type == IModelElement.SCRIPT_PROJECT
-											|| type == IModelElement.PROJECT_FRAGMENT
+									if (type == IModelElement.SCRIPT_PROJECT || type == IModelElement.PROJECT_FRAGMENT
 											|| type == IModelElement.SCRIPT_FOLDER)
-										element = EditorUtility
-												.getEditorInputModelElement(
-														editor, false);
+										element = EditorUtility.getEditorInputModelElement(editor, false);
 									run(new Object[] { element });
 								}
 
@@ -147,8 +125,7 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 		return null;
 	}
 
-	public static IRegion findWord(IDocument document, int offset,
-			boolean namespacesSupported) {
+	public static IRegion findWord(IDocument document, int offset, boolean namespacesSupported) {
 
 		int start = -2;
 		int end = -1;
@@ -160,12 +137,10 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 			int rightmostNsSeparator = -1;
 			while (pos >= 0) {
 				c = document.getChar(pos);
-				if (!Character.isJavaIdentifierPart(c)
-						&& (!namespacesSupported || c != '\\')) {
+				if (!Character.isJavaIdentifierPart(c) && (!namespacesSupported || c != '\\')) {
 					break;
 				}
-				if (namespacesSupported && c == '\\'
-						&& rightmostNsSeparator == -1) {
+				if (namespacesSupported && c == '\\' && rightmostNsSeparator == -1) {
 					rightmostNsSeparator = pos;
 				}
 				--pos;
@@ -177,8 +152,7 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 
 			while (pos < length) {
 				c = document.getChar(pos);
-				if (!Character.isJavaIdentifierPart(c)
-						&& (!namespacesSupported || c != '\\')) {
+				if (!Character.isJavaIdentifierPart(c) && (!namespacesSupported || c != '\\')) {
 					break;
 				}
 				if (namespacesSupported && c == '\\') {

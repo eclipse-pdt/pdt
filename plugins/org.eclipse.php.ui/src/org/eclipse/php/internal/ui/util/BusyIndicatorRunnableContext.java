@@ -89,14 +89,12 @@ public class BusyIndicatorRunnableContext implements IRunnableContext {
 			}
 		}
 
-		private void internalRun(boolean fork,
-				final IRunnableWithProgress runnable)
+		private void internalRun(boolean fork, final IRunnableWithProgress runnable)
 				throws InvocationTargetException, InterruptedException {
 			Thread thread = Thread.currentThread();
 			// Do not spawn another thread if we are already in a modal context
 			// thread or inside a busy context thread.
-			if (thread instanceof ThreadContext
-					|| ModalContext.isModalContextThread(thread))
+			if (thread instanceof ThreadContext || ModalContext.isModalContextThread(thread))
 				fork = false;
 
 			if (fork) {
@@ -129,9 +127,8 @@ public class BusyIndicatorRunnableContext implements IRunnableContext {
 	/*
 	 * (non-Javadoc) Method declared on IRunnableContext.
 	 */
-	public void run(boolean fork, boolean cancelable,
-			IRunnableWithProgress runnable) throws InvocationTargetException,
-			InterruptedException {
+	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable)
+			throws InvocationTargetException, InterruptedException {
 		BusyRunnable busyRunnable = new BusyRunnable(fork, runnable);
 		BusyIndicator.showWhile(null, busyRunnable);
 		Throwable throwable = busyRunnable.fThrowable;

@@ -49,8 +49,7 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 	private IConsole fConsole;
 	private ILaunch fLaunch;
 	private PHPHyperLink fPHPHyperLink;
-	private final static String PHP_DEBUG_STREAM = PHPDebugUIPlugin.getID()
-			+ ".PHP_CONSOLE_STREAM"; //$NON-NLS-1$
+	private final static String PHP_DEBUG_STREAM = PHPDebugUIPlugin.getID() + ".PHP_CONSOLE_STREAM"; //$NON-NLS-1$
 
 	/*
 	 * (non-Javadoc)
@@ -74,8 +73,7 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 
 		DebugConsoleMonitor debugMonitor;
 		if (proxy != null) {
-			debugMonitor = (DebugConsoleMonitor) proxy
-					.getConsoleStreamMonitor();
+			debugMonitor = (DebugConsoleMonitor) proxy.getConsoleStreamMonitor();
 			fConsole.connect(debugMonitor, PHP_DEBUG_STREAM);
 		} else {
 			debugMonitor = null;
@@ -101,26 +99,21 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 		if (fConsoleEventListeners == null) {
 			Map<String, IPHPConsoleEventListener> listeners = new HashMap<String, IPHPConsoleEventListener>();
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
-			IConfigurationElement[] elements = registry
-					.getConfigurationElementsFor(PHPDebugUIPlugin.getID(),
-							"phpConsoleListeners"); //$NON-NLS-1$
+			IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugUIPlugin.getID(),
+					"phpConsoleListeners"); //$NON-NLS-1$
 			for (IConfigurationElement element : elements) {
 				if ("listener".equals(element.getName())) { //$NON-NLS-1$
 					String id = element.getAttribute("id"); //$NON-NLS-1$
 					if (!listeners.containsKey(id)) {
-						String overridesIds = element
-								.getAttribute("overridesId"); //$NON-NLS-1$
+						String overridesIds = element.getAttribute("overridesId"); //$NON-NLS-1$
 						if (overridesIds != null) {
-							StringTokenizer st = new StringTokenizer(
-									overridesIds, ", "); //$NON-NLS-1$
+							StringTokenizer st = new StringTokenizer(overridesIds, ", "); //$NON-NLS-1$
 							while (st.hasMoreTokens()) {
 								listeners.put(st.nextToken(), null);
 							}
 						}
 						try {
-							listeners
-									.put(id, (IPHPConsoleEventListener) element
-											.createExecutableExtension("class")); //$NON-NLS-1$
+							listeners.put(id, (IPHPConsoleEventListener) element.createExecutableExtension("class")); //$NON-NLS-1$
 						} catch (CoreException e) {
 							PHPDebugUIPlugin.log(e);
 						}
@@ -130,8 +123,7 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 			Collection<IPHPConsoleEventListener> l = listeners.values();
 			while (l.remove(null))
 				; // remove null elements
-			fConsoleEventListeners = l
-					.toArray(new IPHPConsoleEventListener[listeners.size()]);
+			fConsoleEventListeners = l.toArray(new IPHPConsoleEventListener[listeners.size()]);
 		}
 		return fConsoleEventListeners;
 	}
@@ -165,8 +157,7 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 	public Color getColor(String streamIdentifer) {
 		if (PHP_DEBUG_STREAM.equals(streamIdentifer)) {
 			// TODO: fix to use own preferences.
-			return DebugUIPlugin
-					.getPreferenceColor(IDebugPreferenceConstants.CONSOLE_SYS_ERR_COLOR);
+			return DebugUIPlugin.getPreferenceColor(IDebugPreferenceConstants.CONSOLE_SYS_ERR_COLOR);
 		}
 		return null;
 	}

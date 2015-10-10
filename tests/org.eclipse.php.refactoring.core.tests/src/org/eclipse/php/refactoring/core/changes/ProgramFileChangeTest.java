@@ -73,8 +73,7 @@ public class ProgramFileChangeTest extends AbstractRenameRefactoringTest {
 
 		assertNotNull(program);
 
-		ProgramFileChange change = new ProgramFileChange("TestFile", file,
-				program);
+		ProgramFileChange change = new ProgramFileChange("TestFile", file, program);
 		assertEquals(program, change.getProgram());
 
 		assertEquals(program, change.getAdapter(Program.class));
@@ -86,12 +85,10 @@ public class ProgramFileChangeTest extends AbstractRenameRefactoringTest {
 
 		assertNotNull(program);
 
-		ProgramFileChange change = new ProgramFileChange("TestFile", file,
-				program);
+		ProgramFileChange change = new ProgramFileChange("TestFile", file, program);
 
 		try {
-			String content = change.getCurrentContent(new Region(0, 126), true,
-					2, new NullProgressMonitor());
+			String content = change.getCurrentContent(new Region(0, 126), true, 2, new NullProgressMonitor());
 			assertEquals(
 					"<?php class Item { public static function foo(){} } class ItemEx extends Item{public static function foo(){}} ItemEx::foo();?>",
 					content);

@@ -33,13 +33,12 @@ class ActionFilterContributorsRegistry {
 	private Map contributorElements = new HashMap();
 
 	private ActionFilterContributorsRegistry() {
-		IConfigurationElement[] elements = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(PHPUiPlugin.ID, EXTENSION_POINT);
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPUiPlugin.ID,
+				EXTENSION_POINT);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (element.getName().equals(CONTRIBUTOR_ELEMENT)) {
-				contributorElements.put(element.getAttribute(ID_ATTRIBUTE),
-						element);
+				contributorElements.put(element.getAttribute(ID_ATTRIBUTE), element);
 			}
 		}
 	}
@@ -60,18 +59,14 @@ class ActionFilterContributorsRegistry {
 	 *         <code>null</code>
 	 */
 	public IActionFilterContributor getContributor(String id) {
-		final IConfigurationElement element = (IConfigurationElement) contributorElements
-				.get(id);
+		final IConfigurationElement element = (IConfigurationElement) contributorElements.get(id);
 		if (element != null) {
 			final IActionFilterContributor contributor[] = new IActionFilterContributor[1];
-			SafeRunner.run(new SafeRunnable(
-					PHPUIMessages.ActionFilterContributorsRegistry_0
-							+ EXTENSION_POINT) { 
-						public void run() throws Exception {
-							contributor[0] = (IActionFilterContributor) element
-									.createExecutableExtension(CLASS_ATTRIBUTE);
-						}
-					});
+			SafeRunner.run(new SafeRunnable(PHPUIMessages.ActionFilterContributorsRegistry_0 + EXTENSION_POINT) {
+				public void run() throws Exception {
+					contributor[0] = (IActionFilterContributor) element.createExecutableExtension(CLASS_ATTRIBUTE);
+				}
+			});
 			return contributor[0];
 		}
 		return null;

@@ -43,8 +43,7 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
  * 
  * @since 2.0
  */
-public class OpenProjectAction extends SelectionDispatchAction implements
-		IResourceChangeListener {
+public class OpenProjectAction extends SelectionDispatchAction implements IResourceChangeListener {
 
 	private static final int EMPTY_SELECTION = 1;
 	private static final int ELEMENT_SELECTION = 2;
@@ -66,8 +65,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements
 		setText(fWorkbenchAction.getText());
 		setToolTipText(fWorkbenchAction.getToolTipText());
 		setEnabled(hasCloseProjects());
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
-				IPHPHelpContextIds.PROJECT);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.PROJECT);
 	}
 
 	/*
@@ -88,8 +86,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements
 	private void internalResourceChanged(IResourceChangeEvent event) {
 		IResourceDelta delta = event.getDelta();
 		if (delta != null) {
-			IResourceDelta[] projDeltas = delta
-					.getAffectedChildren(IResourceDelta.CHANGED);
+			IResourceDelta[] projDeltas = delta.getAffectedChildren(IResourceDelta.CHANGED);
 			for (int i = 0; i < projDeltas.length; ++i) {
 				IResourceDelta projDelta = projDeltas[i];
 				if ((projDelta.getFlags() & IResourceDelta.OPEN) != 0) {
@@ -133,8 +130,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements
 	}
 
 	private void internalRun() {
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
-				getShell(), new ModelElementLabelProvider());
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getShell(), new ModelElementLabelProvider());
 		dialog.setTitle(PHPUIMessages.OpenProjectAction_dialog_title);
 		dialog.setMessage(PHPUIMessages.OpenProjectAction_dialog_message);
 		dialog.setElements(getClosedProjects());
@@ -145,11 +141,9 @@ public class OpenProjectAction extends SelectionDispatchAction implements
 		final Object[] projects = dialog.getResult();
 		IWorkspaceRunnable runnable = createRunnable(projects);
 		try {
-			PlatformUI.getWorkbench().getProgressService().run(true, true,
-					new WorkbenchRunnableAdapter(runnable));
+			PlatformUI.getWorkbench().getProgressService().run(true, true, new WorkbenchRunnableAdapter(runnable));
 		} catch (InvocationTargetException e) {
-			ExceptionHandler.handle(e, getShell(),
-					PHPUIMessages.OpenProjectAction_dialog_title,
+			ExceptionHandler.handle(e, getShell(), PHPUIMessages.OpenProjectAction_dialog_title,
 					PHPUIMessages.OpenProjectAction_error_message);
 		} catch (InterruptedException e) {
 		}
@@ -166,11 +160,8 @@ public class OpenProjectAction extends SelectionDispatchAction implements
 						project.open(new SubProgressMonitor(monitor, 1));
 					} catch (CoreException e) {
 						if (errorStatus == null)
-							errorStatus = new MultiStatus(
-									PHPUiPlugin.ID,
-									IStatus.ERROR,
-									PHPUIMessages.OpenProjectAction_error_message,
-									e);
+							errorStatus = new MultiStatus(PHPUiPlugin.ID, IStatus.ERROR,
+									PHPUIMessages.OpenProjectAction_error_message, e);
 						errorStatus.merge(e.getStatus());
 					}
 				}
@@ -182,8 +173,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements
 	}
 
 	private Object[] getClosedProjects() {
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
-				.getProjects();
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		List result = new ArrayList(5);
 		for (int i = 0; i < projects.length; i++) {
 			IProject project = projects[i];
@@ -194,8 +184,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements
 	}
 
 	private boolean hasCloseProjects() {
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
-				.getProjects();
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		for (int i = 0; i < projects.length; i++) {
 			if (!projects[i].isOpen())
 				return true;

@@ -36,16 +36,14 @@ public class PHPDebugElementAdapterFactory extends DebugElementAdapterFactory {
 	 * Override the default one to provide the PHP specific adapters.
 	 */
 	@SuppressWarnings("unchecked")
-	public Object getAdapter(Object adaptableObject,
-			@SuppressWarnings("rawtypes") Class adapterType) {
+	public Object getAdapter(Object adaptableObject, @SuppressWarnings("rawtypes") Class adapterType) {
 		if (adapterType.equals(IElementEditor.class)) {
 			if (adaptableObject instanceof PHPVariable) {
 				return fElementEditor;
 			}
 		}
 		if (adapterType.equals(IModelProxyFactory.class)) {
-			if (adaptableObject instanceof PHPLaunch
-					|| adaptableObject instanceof PHPMultiDebugTarget
+			if (adaptableObject instanceof PHPLaunch || adaptableObject instanceof PHPMultiDebugTarget
 					|| adaptableObject instanceof DBGpMultiSessionTarget)
 				return fgModelFactory;
 		}

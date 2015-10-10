@@ -15,6 +15,7 @@ public class Messages extends NLS {
 	public static String PHPWebPageLaunchShortcut_3;
 	public static String PHPWebPageLaunchShortcut_4;
 	public static String PHPWebPageLaunchShortcut_9;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

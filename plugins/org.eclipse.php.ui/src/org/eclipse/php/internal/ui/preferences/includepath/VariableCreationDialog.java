@@ -47,8 +47,7 @@ public class VariableCreationDialog extends StatusDialog {
 
 	private List fExistingNames;
 
-	public VariableCreationDialog(Shell parent, IPVariableElement element,
-			List existingNames) {
+	public VariableCreationDialog(Shell parent, IPVariableElement element, List existingNames) {
 		super(parent);
 		if (element == null) {
 			setTitle(PHPUIMessages.VariableCreationDialog_titlenew);
@@ -66,15 +65,12 @@ public class VariableCreationDialog extends StatusDialog {
 		NewVariableAdapter adapter = new NewVariableAdapter();
 		fNameField = new StringDialogField();
 		fNameField.setDialogFieldListener(adapter);
-		fNameField
-				.setLabelText(PHPUIMessages.VariableCreationDialog_name_label);
+		fNameField.setLabelText(PHPUIMessages.VariableCreationDialog_name_label);
 
 		fPathField = new StringButtonDialogField(adapter);
 		fPathField.setDialogFieldListener(adapter);
-		fPathField
-				.setLabelText(PHPUIMessages.VariableCreationDialog_path_label);
-		fPathField
-				.setButtonLabel(PHPUIMessages.VariableCreationDialog_path_dir_button);
+		fPathField.setLabelText(PHPUIMessages.VariableCreationDialog_path_label);
+		fPathField.setButtonLabel(PHPUIMessages.VariableCreationDialog_path_dir_button);
 
 		// fDirButton = new SelectionButtonDialogField(SWT.PUSH);
 		// fDirButton.setDialogFieldListener(adapter);
@@ -97,8 +93,7 @@ public class VariableCreationDialog extends StatusDialog {
 	 */
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell,
-				IPHPHelpContextIds.PATH_VARIABLES_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IPHPHelpContextIds.PATH_VARIABLES_PREFERENCES);
 	}
 
 	public IPVariableElement getIncludePathElement() {
@@ -126,15 +121,13 @@ public class VariableCreationDialog extends StatusDialog {
 		int fieldWidthHint = convertWidthInCharsToPixels(50);
 
 		fNameField.doFillIntoGrid(inner, 2);
-		LayoutUtil
-				.setWidthHint(fNameField.getTextControl(null), fieldWidthHint);
+		LayoutUtil.setWidthHint(fNameField.getTextControl(null), fieldWidthHint);
 		LayoutUtil.setHorizontalGrabbing(fNameField.getTextControl(null));
 
 		DialogField.createEmptySpace(inner, 1);
 
 		fPathField.doFillIntoGrid(inner, 3);
-		LayoutUtil
-				.setWidthHint(fPathField.getTextControl(null), fieldWidthHint);
+		LayoutUtil.setWidthHint(fPathField.getTextControl(null), fieldWidthHint);
 
 		// DialogField.createEmptySpace(inner, 2);
 		// fDirButton.doFillIntoGrid(inner, 1);
@@ -147,8 +140,7 @@ public class VariableCreationDialog extends StatusDialog {
 
 	// -------- NewVariableAdapter --------
 
-	private class NewVariableAdapter implements IDialogFieldListener,
-			IStringButtonAdapter {
+	private class NewVariableAdapter implements IDialogFieldListener, IStringButtonAdapter {
 
 		// -------- IDialogFieldListener
 		public void dialogFieldChanged(DialogField field) {
@@ -253,7 +245,7 @@ public class VariableCreationDialog extends StatusDialog {
 	//
 	// FileDialog dialog = new FileDialog(getShell());
 	// dialog.setText(PHPUIMessages.getString("VariableCreationDialog_extjardialog_text"));
-	//		dialog.setFilterExtensions(new String[] { "*.zip", "*.jar" }); 
+	// dialog.setFilterExtensions(new String[] { "*.zip", "*.jar" });
 	// dialog.setFilterPath(initPath);
 	// String res = dialog.open();
 	// if (res != null) {
@@ -267,8 +259,7 @@ public class VariableCreationDialog extends StatusDialog {
 	private IPath chooseExtDirectory() {
 		String initPath = getInitPath();
 
-		DirectoryDialog dialog = new DirectoryDialog(getParentShell(),
-				SWT.APPLICATION_MODAL);
+		DirectoryDialog dialog = new DirectoryDialog(getParentShell(), SWT.APPLICATION_MODAL);
 		dialog.setText(PHPUIMessages.VariableCreationDialog_extdirdialog_text);
 		dialog.setMessage(PHPUIMessages.VariableCreationDialog_extdirdialog_message);
 		dialog.setFilterPath(initPath);

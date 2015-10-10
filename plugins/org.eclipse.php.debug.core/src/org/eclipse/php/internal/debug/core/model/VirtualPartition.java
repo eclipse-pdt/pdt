@@ -47,8 +47,7 @@ public class VirtualPartition implements IVariable, IVariableFacet {
 		private final IDebugElement debugElement;
 		private final IVariableProvider variableProvider;
 
-		private Value(IDebugElement debugElement,
-				IVariableProvider variableProvider) {
+		private Value(IDebugElement debugElement, IVariableProvider variableProvider) {
 			this.debugElement = debugElement;
 			this.variableProvider = variableProvider;
 		}
@@ -112,8 +111,7 @@ public class VirtualPartition implements IVariable, IVariableFacet {
 	 * @param start
 	 * @param end
 	 */
-	public VirtualPartition(IDebugElement element,
-			IVariableProvider variableProvider, int start, int end) {
+	public VirtualPartition(IDebugElement element, IVariableProvider variableProvider, int start, int end) {
 		this.value = new Value(element, variableProvider);
 		this.startIndex = start;
 		this.endIndex = end;
@@ -171,7 +169,8 @@ public class VirtualPartition implements IVariable, IVariableFacet {
 
 	@Override
 	public String getName() throws DebugException {
-		return "[" + startIndex + "..." + endIndex + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$;
+		return "[" + startIndex + "..." + endIndex + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+															// ;
 	}
 
 	@Override

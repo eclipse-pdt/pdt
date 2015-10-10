@@ -59,7 +59,8 @@ public class ExtractVariableRefactoringTest1 extends AbstractRefactoringTest {
 		}
 		file = folder.getFile("ExtractVariableRefactoringTest1.php");
 
-		InputStream source = new ByteArrayInputStream("<?php try{checkNum(2);}catch(Exception $e){$e->getMessage();} $var = NULL;?>".getBytes());
+		InputStream source = new ByteArrayInputStream(
+				"<?php try{checkNum(2);}catch(Exception $e){$e->getMessage();} $var = NULL;?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -91,7 +92,8 @@ public class ExtractVariableRefactoringTest1 extends AbstractRefactoringTest {
 
 		ExtractVariableRefactoring processor;
 		try {
-			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 39, 2);
+			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 39,
+					2);
 			processor.setNewVariableName("c");
 
 			checkInitCondition(processor);
@@ -119,7 +121,8 @@ public class ExtractVariableRefactoringTest1 extends AbstractRefactoringTest {
 
 		ExtractVariableRefactoring processor;
 		try {
-			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 69, 4);
+			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 69,
+					4);
 			processor.setNewVariableName("c");
 
 			checkInitCondition(processor);

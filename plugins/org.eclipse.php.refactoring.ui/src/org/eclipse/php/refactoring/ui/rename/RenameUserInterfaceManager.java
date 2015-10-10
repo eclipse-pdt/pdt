@@ -27,25 +27,14 @@ public class RenameUserInterfaceManager extends UserInterfaceManager {
 	}
 
 	private RenameUserInterfaceManager() {
-		put(RenameGlobalVariableProcessor.class,
-				RenameUserInterfaceStarter.class,
-				RenameGlobalVariableWizard.class);
-		put(RenameFunctionProcessor.class, RenameUserInterfaceStarter.class,
-				RenameFunctionWizard.class);
-		put(RenameLocalVariableProcessor.class,
-				RenameUserInterfaceStarter.class,
-				RenameLocalVariableWizard.class);
-		put(RenameClassProcessor.class, RenameUserInterfaceStarter.class,
-				RenameClassNameWizard.class);
-		put(RenameTraitProcessor.class, RenameUserInterfaceStarter.class,
-				RenameTraitNameWizard.class);
-		put(RenameGlobalConstantProcessor.class,
-				RenameUserInterfaceStarter.class, RenameDefinedWizard.class);
-		put(RenameClassMemberProcessor.class, RenameUserInterfaceStarter.class,
-				RenameClassPropertyWizard.class);
-		put(RenameFileProcessor.class, RenameUserInterfaceStarter.class,
-				RenameFileWizard.class);
-		put(RenameFolderProcessor.class, RenameUserInterfaceStarter.class,
-				RenameFileWizard.class);
+		put(RenameGlobalVariableProcessor.class, RenameUserInterfaceStarter.class, RenameGlobalVariableWizard.class);
+		put(RenameFunctionProcessor.class, RenameUserInterfaceStarter.class, RenameFunctionWizard.class);
+		put(RenameLocalVariableProcessor.class, RenameUserInterfaceStarter.class, RenameLocalVariableWizard.class);
+		put(RenameClassProcessor.class, RenameUserInterfaceStarter.class, RenameClassNameWizard.class);
+		put(RenameTraitProcessor.class, RenameUserInterfaceStarter.class, RenameTraitNameWizard.class);
+		put(RenameGlobalConstantProcessor.class, RenameUserInterfaceStarter.class, RenameDefinedWizard.class);
+		put(RenameClassMemberProcessor.class, RenameUserInterfaceStarter.class, RenameClassPropertyWizard.class);
+		put(RenameFileProcessor.class, RenameUserInterfaceStarter.class, RenameFileWizard.class);
+		put(RenameFolderProcessor.class, RenameUserInterfaceStarter.class, RenameFileWizard.class);
 	}
 }

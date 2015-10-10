@@ -49,17 +49,13 @@ public class ModelStructureTests {
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
-		TESTS.put(PHPVersion.PHP5_3,
-				new String[] { "/workspace/model_structure/php53" });
-		TESTS.put(PHPVersion.PHP5_4,
-				new String[] { "/workspace/model_structure/php53" });
-		TESTS.put(PHPVersion.PHP5_5,
-				new String[] { "/workspace/model_structure/php53" });
-		TESTS.put(PHPVersion.PHP5_6,
-				new String[] { "/workspace/model_structure/php53" });
-		TESTS.put(PHPVersion.PHP7_0,
-				new String[] { "/workspace/model_structure/php53" });
+		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/model_structure/php53" });
+		TESTS.put(PHPVersion.PHP5_4, new String[] { "/workspace/model_structure/php53" });
+		TESTS.put(PHPVersion.PHP5_5, new String[] { "/workspace/model_structure/php53" });
+		TESTS.put(PHPVersion.PHP5_6, new String[] { "/workspace/model_structure/php53" });
+		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/model_structure/php53" });
 	};
 
 	protected IProject project;
@@ -72,8 +68,7 @@ public class ModelStructureTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("ModelStructureTests");
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject("ModelStructureTests");
 		if (project.exists()) {
 			return;
 		}
@@ -164,8 +159,7 @@ public class ModelStructureTests {
 				} else if (element.getElementType() == IModelElement.METHOD) {
 					IMethod method = (IMethod) element;
 					IType declaringType = method.getDeclaringType();
-					if (declaringType == null
-							|| (declaringType.getFlags() & Modifiers.AccNameSpace) != 0) {
+					if (declaringType == null || (declaringType.getFlags() & Modifiers.AccNameSpace) != 0) {
 						stream.print("FUNCTION: ");
 					} else {
 						stream.print("METHOD: ");

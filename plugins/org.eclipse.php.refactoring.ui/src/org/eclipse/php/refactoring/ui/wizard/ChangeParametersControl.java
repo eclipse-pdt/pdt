@@ -43,10 +43,8 @@ public class ChangeParametersControl extends Composite {
 		}
 
 		public static final Mode EXTRACT_METHOD = new Mode("EXTRACT_METHOD"); //$NON-NLS-1$
-		public static final Mode CHANGE_METHOD_SIGNATURE = new Mode(
-				"CHANGE_METHOD_SIGNATURE"); //$NON-NLS-1$
-		public static final Mode INTRODUCE_PARAMETER = new Mode(
-				"INTRODUCE_PARAMETER"); //$NON-NLS-1$
+		public static final Mode CHANGE_METHOD_SIGNATURE = new Mode("CHANGE_METHOD_SIGNATURE"); //$NON-NLS-1$
+		public static final Mode INTRODUCE_PARAMETER = new Mode("INTRODUCE_PARAMETER"); //$NON-NLS-1$
 
 		public String toString() {
 			return fName;
@@ -65,8 +63,7 @@ public class ChangeParametersControl extends Composite {
 		}
 	}
 
-	private static class ParameterInfoContentProvider implements
-			IStructuredContentProvider {
+	private static class ParameterInfoContentProvider implements IStructuredContentProvider {
 		public Object[] getElements(Object inputElement) {
 			return removeMarkedAsDeleted((List) inputElement);
 		}
@@ -78,8 +75,7 @@ public class ChangeParametersControl extends Composite {
 				if (!info.isDeleted())
 					result.add(info);
 			}
-			return (ParameterInfo[]) result.toArray(new ParameterInfo[result
-					.size()]);
+			return (ParameterInfo[]) result.toArray(new ParameterInfo[result.size()]);
 		}
 
 		public void dispose() {
@@ -116,8 +112,7 @@ public class ChangeParametersControl extends Composite {
 		public Font getFont(Object element, int columnIndex) {
 			ParameterInfo info = (ParameterInfo) element;
 			if (info.isAdded())
-				return JFaceResources.getFontRegistry().getBold(
-						JFaceResources.DIALOG_FONT);
+				return JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT);
 			else
 				return null;
 		}
@@ -161,15 +156,14 @@ public class ChangeParametersControl extends Composite {
 				throw new IllegalStateException();
 			}
 			if (!unchanged) {
-				ChangeParametersControl.this.fListener
-						.parameterChanged(parameterInfo);
-				ChangeParametersControl.this.fTableViewer.update(parameterInfo,
-						new String[] { property });
+				ChangeParametersControl.this.fListener.parameterChanged(parameterInfo);
+				ChangeParametersControl.this.fTableViewer.update(parameterInfo, new String[] { property });
 			}
 		}
 	}
 
-	private static final String[] PROPERTIES = { "new", "default" }; //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-3$
+	private static final String[] PROPERTIES = { "new", "default" }; //$NON-NLS-2$ //$NON-NLS-1$
+																		// //$NON-NLS-3$
 
 	private static final int NEWNAME_PROP = 0;
 	private static final int DEFAULT_PROP = 1;
@@ -190,20 +184,18 @@ public class ChangeParametersControl extends Composite {
 	private Button fAddButton;
 	private Button fRemoveButton;
 
-	public ChangeParametersControl(Composite parent, int style, String label,
-			IParameterListChangeListener listener, Mode mode,
-			StubTypeContext typeContext) {
+	public ChangeParametersControl(Composite parent, int style, String label, IParameterListChangeListener listener,
+			Mode mode, StubTypeContext typeContext) {
 		this(parent, style, label, listener, mode, typeContext, new String[0]);
 	}
 
-	public ChangeParametersControl(Composite parent, int style, String label,
-			IParameterListChangeListener listener, Mode mode) {
+	public ChangeParametersControl(Composite parent, int style, String label, IParameterListChangeListener listener,
+			Mode mode) {
 		this(parent, style, label, listener, mode, null, new String[0]);
 	}
 
-	public ChangeParametersControl(Composite parent, int style, String label,
-			IParameterListChangeListener listener, Mode mode,
-			String[] paramNameProposals) {
+	public ChangeParametersControl(Composite parent, int style, String label, IParameterListChangeListener listener,
+			Mode mode, String[] paramNameProposals) {
 		this(parent, style, label, listener, mode, null, paramNameProposals);
 	}
 
@@ -213,9 +205,8 @@ public class ChangeParametersControl extends Composite {
 	 * @param typeContext
 	 *            the package in which to complete types
 	 */
-	private ChangeParametersControl(Composite parent, int style, String label,
-			IParameterListChangeListener listener, Mode mode,
-			StubTypeContext typeContext, String[] paramNameProposals) {
+	private ChangeParametersControl(Composite parent, int style, String label, IParameterListChangeListener listener,
+			Mode mode, StubTypeContext typeContext, String[] paramNameProposals) {
 		super(parent, style);
 		Assert.isNotNull(listener);
 		fListener = listener;
@@ -246,8 +237,7 @@ public class ChangeParametersControl extends Composite {
 		fParameterInfos = parameterInfos;
 		fTableViewer.setInput(fParameterInfos);
 		if (fParameterInfos.size() > 0)
-			fTableViewer.setSelection(new StructuredSelection(fParameterInfos
-					.get(0)));
+			fTableViewer.setSelection(new StructuredSelection(fParameterInfos.get(0)));
 	}
 
 	public void editParameter(ParameterInfo info) {
@@ -264,12 +254,10 @@ public class ChangeParametersControl extends Composite {
 	// -----------------------------------------------------------------------------------
 
 	private void createParameterList(Composite parent) {
-		TableLayoutComposite layouter = new TableLayoutComposite(parent,
-				SWT.NONE);
+		TableLayoutComposite layouter = new TableLayoutComposite(parent, SWT.NONE);
 		addColumnLayoutData(layouter);
 
-		final Table table = new Table(layouter, SWT.MULTI | SWT.BORDER
-				| SWT.FULL_SELECTION);
+		final Table table = new Table(layouter, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		TableColumn tc;
@@ -296,12 +284,11 @@ public class ChangeParametersControl extends Composite {
 		fTableViewer.setUseHashlookup(true);
 		fTableViewer.setContentProvider(new ParameterInfoContentProvider());
 		fTableViewer.setLabelProvider(new ParameterInfoLabelProvider());
-		fTableViewer
-				.addSelectionChangedListener(new ISelectionChangedListener() {
-					public void selectionChanged(SelectionChangedEvent event) {
-						updateButtonsEnabledState();
-					}
-				});
+		fTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				updateButtonsEnabledState();
+			}
+		});
 
 		table.addTraverseListener(new TraverseListener() {
 			public void keyTraversed(TraverseEvent e) {
@@ -377,8 +364,7 @@ public class ChangeParametersControl extends Composite {
 			return new ParameterInfo[0];
 
 		List selected = ((IStructuredSelection) selection).toList();
-		return (ParameterInfo[]) selected.toArray(new ParameterInfo[selected
-				.size()]);
+		return (ParameterInfo[]) selected.toArray(new ParameterInfo[selected.size()]);
 	}
 
 	// ---- Button bar
@@ -403,11 +389,8 @@ public class ChangeParametersControl extends Composite {
 		if (buttonComposite.getChildren().length != 0)
 			addSpacer(buttonComposite);
 
-		fUpButton = createButton(buttonComposite,
-				RefactoringMessages.ChangeParametersControl_buttons_move_up,
-				true);
-		fDownButton = createButton(buttonComposite,
-				RefactoringMessages.ChangeParametersControl_buttons_move_down,
+		fUpButton = createButton(buttonComposite, RefactoringMessages.ChangeParametersControl_buttons_move_up, true);
+		fDownButton = createButton(buttonComposite, RefactoringMessages.ChangeParametersControl_buttons_move_down,
 				false);
 
 		updateButtonsEnabledState();
@@ -454,8 +437,7 @@ public class ChangeParametersControl extends Composite {
 					ParameterInfo[] selected = getSelectedElements();
 					Assert.isTrue(selected.length == 1);
 					ParameterInfo parameterInfo = selected[0];
-					ParameterEditDialog dialog = new ParameterEditDialog(
-							getShell(), parameterInfo,
+					ParameterEditDialog dialog = new ParameterEditDialog(getShell(), parameterInfo,
 							fMode.canChangeDefault(), fTypeContext);
 					dialog.open();
 					fListener.parameterChanged(parameterInfo);
@@ -487,9 +469,7 @@ public class ChangeParametersControl extends Composite {
 				// StubUtility.suggestArgumentName(javaProject, "default name",
 				// excludedParamNames);
 				String newParamName = "argu"; //$NON-NLS-1$
-				ParameterInfo newInfo = ParameterInfo
-						.createInfoForAddedParameter(
-								"Object", newParamName, "null"); //$NON-NLS-1$ //$NON-NLS-2$
+				ParameterInfo newInfo = ParameterInfo.createInfoForAddedParameter("Object", newParamName, "null"); //$NON-NLS-1$ //$NON-NLS-2$
 				int insertIndex = fParameterInfos.size();
 				for (int i = fParameterInfos.size() - 1; i >= 0; i--) {
 					ParameterInfo info = (ParameterInfo) fParameterInfos.get(i);
@@ -502,8 +482,7 @@ public class ChangeParametersControl extends Composite {
 				fListener.parameterAdded(newInfo);
 				fTableViewer.refresh();
 				fTableViewer.getControl().setFocus();
-				fTableViewer.setSelection(new StructuredSelection(newInfo),
-						true);
+				fTableViewer.setSelection(new StructuredSelection(newInfo), true);
 				updateButtonsEnabledState();
 				editColumnOrNextPossible(0);
 			}
@@ -545,8 +524,7 @@ public class ChangeParametersControl extends Composite {
 		return button;
 	}
 
-	private Button createButton(Composite buttonComposite, String text,
-			final boolean up) {
+	private Button createButton(Composite buttonComposite, String text, final boolean up) {
 		Button button = new Button(buttonComposite, SWT.PUSH);
 		button.setText(text);
 		button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -584,10 +562,8 @@ public class ChangeParametersControl extends Composite {
 
 		// editors[TYPE_PROP] = new TableTextCellEditor(fTableViewer,
 		// TYPE_PROP);
-		editors[NEWNAME_PROP] = new TableTextCellEditor(fTableViewer,
-				NEWNAME_PROP);
-		editors[DEFAULT_PROP] = new TableTextCellEditor(fTableViewer,
-				DEFAULT_PROP);
+		editors[NEWNAME_PROP] = new TableTextCellEditor(fTableViewer, NEWNAME_PROP);
+		editors[DEFAULT_PROP] = new TableTextCellEditor(fTableViewer, DEFAULT_PROP);
 
 		// if (fMode.canChangeTypes()) {
 		// SubjectControlContentAssistant assistant =
@@ -595,8 +571,8 @@ public class ChangeParametersControl extends Composite {
 		// // editors[TYPE_PROP].setContentAssistant(assistant);
 		// }
 		if (fParamNameProposals.length > 0) {
-			SubjectControlContentAssistant assistant = installParameterNameContentAssist(editors[NEWNAME_PROP]
-					.getText());
+			SubjectControlContentAssistant assistant = installParameterNameContentAssist(
+					editors[NEWNAME_PROP].getText());
 			// editors[NEWNAME_PROP].setContentAssistant(assistant);
 		}
 
@@ -625,24 +601,20 @@ public class ChangeParametersControl extends Composite {
 			TextFieldNavigationHandler.install(editor.getText());
 		}
 
-		editors[NEWNAME_PROP]
-				.setActivationListener(new TableTextCellEditor.IActivationListener() {
-					public void activate() {
-						ParameterInfo[] selected = getSelectedElements();
-						if (selected.length == 1
-								&& fNameContentAssistHandler != null) {
-							fNameContentAssistHandler.setEnabled(selected[0]
-									.isAdded());
-						}
-					}
-				});
+		editors[NEWNAME_PROP].setActivationListener(new TableTextCellEditor.IActivationListener() {
+			public void activate() {
+				ParameterInfo[] selected = getSelectedElements();
+				if (selected.length == 1 && fNameContentAssistHandler != null) {
+					fNameContentAssistHandler.setEnabled(selected[0].isAdded());
+				}
+			}
+		});
 
 		fTableViewer.setCellEditors(editors);
 		fTableViewer.setCellModifier(new ParametersCellModifier());
 	}
 
-	private SubjectControlContentAssistant installParameterTypeContentAssist(
-			Text text) {
+	private SubjectControlContentAssistant installParameterTypeContentAssist(Text text) {
 		// JavaTypeCompletionProcessor processor= new
 		// JavaTypeCompletionProcessor(true, false);
 		// if (fTypeContext == null)
@@ -657,8 +629,7 @@ public class ChangeParametersControl extends Composite {
 		return null;
 	}
 
-	private SubjectControlContentAssistant installParameterNameContentAssist(
-			Text text) {
+	private SubjectControlContentAssistant installParameterNameContentAssist(Text text) {
 		// VariableNamesProcessor processor= new
 		// VariableNamesProcessor(fParamNameProposals);
 		// SubjectControlContentAssistant contentAssistant=

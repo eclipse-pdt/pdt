@@ -33,12 +33,9 @@ public class InternalFunctionHighlighting extends AbstractSemanticHighlighting {
 		 * skip static call invocation, and add to changes list the global calls
 		 */
 		public boolean visit(FunctionInvocation functionInvocation) {
-			final Expression functionName = functionInvocation
-					.getFunctionName().getName();
-			final int invocationParent = functionInvocation.getParent()
-					.getType();
-			if ((functionName.getType() == ASTNode.IDENTIFIER || functionName
-					.getType() == ASTNode.NAMESPACE_NAME)
+			final Expression functionName = functionInvocation.getFunctionName().getName();
+			final int invocationParent = functionInvocation.getParent().getType();
+			if ((functionName.getType() == ASTNode.IDENTIFIER || functionName.getType() == ASTNode.NAMESPACE_NAME)
 					&& invocationParent != ASTNode.STATIC_METHOD_INVOCATION) {
 				final Identifier identifier = (Identifier) functionName;
 				dealIdentifier(identifier);
@@ -50,8 +47,7 @@ public class InternalFunctionHighlighting extends AbstractSemanticHighlighting {
 		 * @param identifier
 		 */
 		private void dealIdentifier(Identifier identifier) {
-			IModelElement[] elements = findMethods(identifier,
-					fCurrentNamespace);
+			IModelElement[] elements = findMethods(identifier, fCurrentNamespace);
 			if (elements == null || elements.length == 0) {
 				elements = findMethods(identifier, null);
 			}
@@ -67,12 +63,9 @@ public class InternalFunctionHighlighting extends AbstractSemanticHighlighting {
 			}
 		}
 
-		private IModelElement[] findMethods(Identifier identifier,
-				NamespaceDeclaration namespace) {
-			String fullName = AbstractOccurrencesFinder.getFullName(identifier,
-					fLastUseParts, namespace);
-			return PhpModelAccess.getDefault().findMethods(fullName,
-					MatchRule.EXACT, 0, 0, createSearchScope(), null);
+		private IModelElement[] findMethods(Identifier identifier, NamespaceDeclaration namespace) {
+			String fullName = AbstractOccurrencesFinder.getFullName(identifier, fLastUseParts, namespace);
+			return PhpModelAccess.getDefault().findMethods(fullName, MatchRule.EXACT, 0, 0, createSearchScope(), null);
 		}
 	}
 
@@ -83,8 +76,7 @@ public class InternalFunctionHighlighting extends AbstractSemanticHighlighting {
 
 	@Override
 	public void initDefaultPreferences() {
-		getStyle().setEnabledByDefault(false).setDefaultTextColor(
-				new RGB(0, 0, 192));
+		getStyle().setEnabledByDefault(false).setDefaultTextColor(new RGB(0, 0, 192));
 	}
 
 	public String getDisplayName() {

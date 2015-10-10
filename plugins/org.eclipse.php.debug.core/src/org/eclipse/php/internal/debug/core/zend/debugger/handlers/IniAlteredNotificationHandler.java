@@ -45,26 +45,21 @@ public class IniAlteredNotificationHandler implements IDebugMessageHandler {
 				}
 			}
 			if (newValues.size() > 0) {
-				RemoteDebugger debugger = (RemoteDebugger) debugTarget
-						.getRemoteDebugger();
+				RemoteDebugger debugger = (RemoteDebugger) debugTarget.getRemoteDebugger();
 				List<IProject> toAddFiles = new ArrayList<IProject>();
 				for (String newValue : newValues) {
-					String localPath = debugger.convertToLocalFilename(
-							newValue, debugger.getCurrentWorkingDirectory(),
+					String localPath = debugger.convertToLocalFilename(newValue, debugger.getCurrentWorkingDirectory(),
 							debugTarget.getLastFileName());
-					IResource member = ResourcesPlugin.getWorkspace().getRoot()
-							.findMember(localPath);
+					IResource member = ResourcesPlugin.getWorkspace().getRoot().findMember(localPath);
 					if (member != null) {
 						IProject project = member.getProject();
-						if (project != null
-								&& !project.equals(debugTarget.getProject())) {
+						if (project != null && !project.equals(debugTarget.getProject())) {
 							toAddFiles.add(project);
 						}
 					}
 				}
 				if (toAddFiles.size() > 0) {
-					debugTarget.addBreakpointFiles(toAddFiles
-							.toArray(new IProject[toAddFiles.size()]));
+					debugTarget.addBreakpointFiles(toAddFiles.toArray(new IProject[toAddFiles.size()]));
 				}
 			}
 		}

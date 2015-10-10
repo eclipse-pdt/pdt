@@ -65,10 +65,9 @@ public class PHPExeVerifier extends Job {
 		private PHPexeItem exeItem;
 
 		public ErrorDialog(PHPexeItem exeItem) {
-			super(PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getShell(),
-					Messages.PHPExeVerifier_PHP_executable_verification, null,
-					null, MessageDialog.ERROR, new String[] { "OK" }, 0); //$NON-NLS-1$
+			super(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					Messages.PHPExeVerifier_PHP_executable_verification, null, null, MessageDialog.ERROR,
+					new String[] { "OK" }, 0); //$NON-NLS-1$
 			this.exeItem = exeItem;
 		}
 
@@ -79,8 +78,7 @@ public class PHPExeVerifier extends Job {
 				imageLabel = new Label(composite, SWT.NULL);
 				image.setBackground(imageLabel.getBackground());
 				imageLabel.setImage(image);
-				GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING)
-						.applyTo(imageLabel);
+				GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING).applyTo(imageLabel);
 			}
 			Composite descriptionComposite = new Composite(composite, SWT.NONE);
 			GridLayout layout = new GridLayout(1, true);
@@ -91,47 +89,37 @@ public class PHPExeVerifier extends Job {
 			// create message
 			Link messageError = new Link(descriptionComposite, SWT.WRAP);
 			messageError.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			messageError
-					.setText(MessageFormat
-							.format(Messages.PHPExeVerifier_Unable_to_verify_PHP_exe_error_message,
-									exeItem.getName()));
+			messageError.setText(MessageFormat.format(Messages.PHPExeVerifier_Unable_to_verify_PHP_exe_error_message,
+					exeItem.getName()));
 			messageError.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
-					PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(),
-							exeItem, PHPexes.getInstance().getAllItems());
+					PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(), exeItem,
+							PHPexes.getInstance().getAllItems());
 					if (dialog.open() != Window.OK) {
 						return;
 					}
 					PHPexes.getInstance().save();
 				};
 			});
-			GridDataFactory
-					.fillDefaults()
-					.align(SWT.FILL, SWT.BEGINNING)
-					.grab(true, false)
-					.hint(convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH),
-							SWT.DEFAULT).applyTo(messageError);
+			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).grab(true, false)
+					.hint(convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH), SWT.DEFAULT)
+					.applyTo(messageError);
 
 			Link messageReason = new Link(descriptionComposite, SWT.WRAP);
 			messageReason.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			messageReason
-					.setText(Messages.PHPExeVerifier_Unable_to_verify_PHP_exe_reason_message);
+			messageReason.setText(Messages.PHPExeVerifier_Unable_to_verify_PHP_exe_reason_message);
 			messageReason.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					try {
-						PlatformUI.getWorkbench().getBrowserSupport()
-								.getExternalBrowser()
+						PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser()
 								.openURL(new URL(WIN_VC_DOWNLOAD));
 					} catch (Exception ex) {
 					}
 				};
 			});
-			GridDataFactory
-					.fillDefaults()
-					.align(SWT.FILL, SWT.BEGINNING)
-					.grab(true, false)
-					.hint(convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH),
-							SWT.DEFAULT).applyTo(messageReason);
+			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).grab(true, false)
+					.hint(convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH), SWT.DEFAULT)
+					.applyTo(messageReason);
 
 			return composite;
 		}
@@ -155,8 +143,7 @@ public class PHPExeVerifier extends Job {
 	 */
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
-		monitor.beginTask(Messages.PHPExeVerifier_Verifying_PHP_exes,
-				exeItems.length);
+		monitor.beginTask(Messages.PHPExeVerifier_Verifying_PHP_exes, exeItems.length);
 		for (int i = 0; i < exeItems.length; i++) {
 			verify(exeItems[i]);
 			monitor.worked(1);
@@ -173,13 +160,11 @@ public class PHPExeVerifier extends Job {
 		 */
 		if (Platform.getOS().equals(Platform.OS_WIN32)) {
 			File exeLocation = exeItem.getExecutable();
-			if (exeLocation == null || !exeLocation.exists()
-					|| !exeLocation.getName().contains("php")) //$NON-NLS-1$
+			if (exeLocation == null || !exeLocation.exists() || !exeLocation.getName().contains("php")) //$NON-NLS-1$
 				return;
 			boolean valid = true;
 			try {
-				String version = PHPExeUtil.exec(exeLocation.getAbsolutePath(),
-						"-v"); //$NON-NLS-1$
+				String version = PHPExeUtil.exec(exeLocation.getAbsolutePath(), "-v"); //$NON-NLS-1$
 				if (version == null || version.isEmpty()) {
 					valid = false;
 				}
@@ -187,13 +172,12 @@ public class PHPExeVerifier extends Job {
 				valid = false;
 			}
 			if (!valid) {
-				PlatformUI.getWorkbench().getDisplay()
-						.asyncExec(new Runnable() {
-							@Override
-							public void run() {
-								(new ErrorDialog(exeItem)).open();
-							}
-						});
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						(new ErrorDialog(exeItem)).open();
+					}
+				});
 			}
 		}
 	}

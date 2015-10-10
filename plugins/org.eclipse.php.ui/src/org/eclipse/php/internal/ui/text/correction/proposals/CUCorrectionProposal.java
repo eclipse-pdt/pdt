@@ -81,12 +81,10 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 	 *            the image that is displayed for this proposal or
 	 *            <code>null</code> if no image is desired.
 	 */
-	public CUCorrectionProposal(String name, ISourceModule cu,
-			TextChange change, int relevance, Image image) {
+	public CUCorrectionProposal(String name, ISourceModule cu, TextChange change, int relevance, Image image) {
 		super(name, change, relevance, image);
 		if (cu == null) {
-			throw new IllegalArgumentException(
-					CorrectionMessages.CUCorrectionProposal_0); 
+			throw new IllegalArgumentException(CorrectionMessages.CUCorrectionProposal_0);
 		}
 		fCompilationUnit = cu;
 		fLinkedProposalModel = null;
@@ -109,8 +107,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 	 *            The image that is displayed for this proposal or
 	 *            <code>null</code> if no image is desired.
 	 */
-	protected CUCorrectionProposal(String name, ISourceModule cu,
-			int relevance, Image image) {
+	protected CUCorrectionProposal(String name, ISourceModule cu, int relevance, Image image) {
 		this(name, cu, null, relevance, image);
 	}
 
@@ -130,8 +127,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 	 * @throws CoreException
 	 *             can be thrown if adding the edits is failing.
 	 */
-	protected void addEdits(IDocument document, TextEdit editRoot)
-			throws CoreException {
+	protected void addEdits(IDocument document, TextEdit editRoot) throws CoreException {
 	}
 
 	protected LinkedProposalModel getLinkedProposalModel() {
@@ -161,8 +157,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 
 				public void unchangedUntil(int pos) {
 					if (pos > fWrittenToPos) {
-						appendContent(previewContent, fWrittenToPos, pos, buf,
-								true);
+						appendContent(previewContent, fWrittenToPos, pos, buf, true);
 						fWrittenToPos = pos;
 					}
 				}
@@ -201,8 +196,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 				private boolean rangeAdded(TextEdit edit) {
 					unchangedUntil(edit.getOffset());
 					buf.append("<b>"); //$NON-NLS-1$
-					appendContent(previewContent, edit.getOffset(), edit
-							.getExclusiveEnd(), buf, false);
+					appendContent(previewContent, edit.getOffset(), edit.getExclusiveEnd(), buf, false);
 					buf.append("</b>"); //$NON-NLS-1$
 					fWrittenToPos = edit.getExclusiveEnd();
 					return false;
@@ -221,8 +215,8 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 
 	private final int surroundLines = 1;
 
-	private void appendContent(IDocument text, int startOffset, int endOffset,
-			StringBuffer buf, boolean surroundLinesOnly) {
+	private void appendContent(IDocument text, int startOffset, int endOffset, StringBuffer buf,
+			boolean surroundLinesOnly) {
 		try {
 			int startLine = text.getLineOfOffset(startOffset);
 			int endLine = text.getLineOfOffset(endOffset);
@@ -238,8 +232,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 
 			for (int i = startLine; i <= endLine; i++) {
 				if (surroundLinesOnly) {
-					if ((i - startLine > surroundLines)
-							&& (endLine - i > surroundLines)) {
+					if ((i - startLine > surroundLines) && (endLine - i > surroundLines)) {
 						if (!dotsAdded) {
 							buf.append("...<br>"); //$NON-NLS-1$
 							dotsAdded = true;
@@ -258,8 +251,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 				int from = Math.max(start, startOffset);
 				int to = Math.min(end, endOffset);
 				String content = text.get(from, to - from);
-				if (surroundLinesOnly && (from == start)
-						&& Strings.containsOnlyWhitespaces(content)) {
+				if (surroundLinesOnly && (from == start) && Strings.containsOnlyWhitespaces(content)) {
 					continue; // ignore empty lines except when range started in
 								// the middle of a line
 				}
@@ -287,9 +279,8 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.text.contentassist.ICompletionProposal#apply(org.eclipse
-	 * .jface.text.IDocument)
+	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#apply(org.
+	 * eclipse .jface.text.IDocument)
 	 */
 	public void apply(IDocument document) {
 		try {
@@ -304,8 +295,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 				if (part == null) {
 					part = DLTKUIPlugin.openInEditor(unit);
 					if (part != null) {
-						document = DLTKUIPlugin.getDocumentProvider()
-								.getDocument(part.getEditorInput());
+						document = DLTKUIPlugin.getDocumentProvider().getDocument(part.getEditorInput());
 					}
 				}
 				IWorkbenchPage page = DLTKUIPlugin.getActivePage();
@@ -318,20 +308,17 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 			}
 			performChange(part, document);
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e,
-					CorrectionMessages.CUCorrectionProposal_error_title,
+			ExceptionHandler.handle(e, CorrectionMessages.CUCorrectionProposal_error_title,
 					CorrectionMessages.CUCorrectionProposal_error_message);
 		}
 	}
 
 	private boolean performValidateEdit(ISourceModule unit) {
-		IStatus status = Resources.makeCommittable(unit.getResource(),
-				DLTKUIPlugin.getActiveWorkbenchShell());
+		IStatus status = Resources.makeCommittable(unit.getResource(), DLTKUIPlugin.getActiveWorkbenchShell());
 		if (!status.isOK()) {
 			String label = CorrectionMessages.CUCorrectionProposal_error_title;
 			String message = CorrectionMessages.CUCorrectionProposal_error_message;
-			ErrorDialog.openError(DLTKUIPlugin.getActiveWorkbenchShell(),
-					label, message, status);
+			ErrorDialog.openError(DLTKUIPlugin.getActiveWorkbenchShell(), label, message, status);
 			return false;
 		}
 		return true;
@@ -345,8 +332,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 	 * performChange(org.eclipse.jface.text.IDocument,
 	 * org.eclipse.ui.IEditorPart)
 	 */
-	protected void performChange(IEditorPart part, IDocument document)
-			throws CoreException {
+	protected void performChange(IEditorPart part, IDocument document) throws CoreException {
 		try {
 			super.performChange(part, document);
 			if (part == null) {
@@ -354,20 +340,15 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 			}
 
 			if (fLinkedProposalModel != null) {
-				if (fLinkedProposalModel.hasLinkedPositions()
-						&& part instanceof PHPStructuredEditor) {
+				if (fLinkedProposalModel.hasLinkedPositions() && part instanceof PHPStructuredEditor) {
 					// enter linked mode
-					ITextViewer viewer = ((PHPStructuredEditor) part)
-							.getViewer();
-					new LinkedProposalModelPresenter().enterLinkedMode(viewer,
-							part, fLinkedProposalModel);
+					ITextViewer viewer = ((PHPStructuredEditor) part).getViewer();
+					new LinkedProposalModelPresenter().enterLinkedMode(viewer, part, fLinkedProposalModel);
 				} else if (part instanceof ITextEditor) {
-					LinkedProposalPositionGroup.PositionInformation endPosition = fLinkedProposalModel
-							.getEndPosition();
+					LinkedProposalPositionGroup.PositionInformation endPosition = fLinkedProposalModel.getEndPosition();
 					if (endPosition != null) {
 						// select a result
-						int pos = endPosition.getOffset()
-								+ endPosition.getLength();
+						int pos = endPosition.getOffset() + endPosition.getLength();
 						((ITextEditor) part).selectAndReveal(pos, 0);
 					}
 				}
@@ -400,8 +381,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 				source = new String(); // empty
 			}
 			Document document = new Document(source);
-			document.setInitialLineDelimiter(StubUtility
-					.getLineDelimiterUsed(cu.getScriptProject()));
+			document.setInitialLineDelimiter(StubUtility.getLineDelimiterUsed(cu.getScriptProject()));
 			change = new DocumentChange(name, document);
 		} else {
 			SourceModuleChange cuChange = new SourceModuleChange(name, cu);
@@ -412,8 +392,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 		change.setEdit(rootEdit);
 
 		// initialize text change
-		IDocument document = change
-				.getCurrentDocument(new NullProgressMonitor());
+		IDocument document = change.getCurrentDocument(new NullProgressMonitor());
 		addEdits(document, rootEdit);
 		return change;
 	}

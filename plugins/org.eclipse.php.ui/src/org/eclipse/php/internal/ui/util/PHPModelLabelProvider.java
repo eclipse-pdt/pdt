@@ -32,8 +32,7 @@ import org.eclipse.swt.graphics.Point;
  * @author Dawid zulus Pakula <zulus@w3des.net>
  * @since 3.3
  */
-public class PHPModelLabelProvider extends LabelProvider implements
-		ILabelProvider {
+public class PHPModelLabelProvider extends LabelProvider implements ILabelProvider {
 
 	private ImageDescriptorRegistry fRegistry;
 	final private int fImageFlags;
@@ -70,8 +69,7 @@ public class PHPModelLabelProvider extends LabelProvider implements
 	@Override
 	public Image getImage(Object element) {
 		if (element instanceof IModelElement) {
-			ImageDescriptor baseImage = getImageDescriptor(
-					(IModelElement) element, fImageFlags);
+			ImageDescriptor baseImage = getImageDescriptor((IModelElement) element, fImageFlags);
 			if (baseImage != null) {
 				return getRegistry().get(baseImage);
 			}
@@ -80,24 +78,21 @@ public class PHPModelLabelProvider extends LabelProvider implements
 		return null;
 	}
 
-	public ImageDescriptor getImageDescriptor(IModelElement element,
-			int imageFlags) {
+	public ImageDescriptor getImageDescriptor(IModelElement element, int imageFlags) {
 		if (element == null) {
 			return null;
 		}
 		ImageDescriptor baseImage = getBaseImageDescriptor(element, imageFlags);
 		if (baseImage != null) {
 			int adornmentFlags = getAdornmentFlags(element);
-			Point size = ((imageFlags & ScriptElementImageProvider.SMALL_ICONS) != 0) ? ScriptElementImageProvider.SMALL_SIZE
-					: ScriptElementImageProvider.BIG_SIZE;
-			return new PHPElementImageDescriptor(baseImage, adornmentFlags,
-					size);
+			Point size = ((imageFlags & ScriptElementImageProvider.SMALL_ICONS) != 0)
+					? ScriptElementImageProvider.SMALL_SIZE : ScriptElementImageProvider.BIG_SIZE;
+			return new PHPElementImageDescriptor(baseImage, adornmentFlags, size);
 		}
 		return null;
 	}
 
-	private ImageDescriptor getBaseImageDescriptor(IModelElement element,
-			int imageFlags) {
+	private ImageDescriptor getBaseImageDescriptor(IModelElement element, int imageFlags) {
 
 		return fImageProvider.getBaseImageDescriptor(element, imageFlags);
 	}
@@ -116,8 +111,7 @@ public class PHPModelLabelProvider extends LabelProvider implements
 			}
 		}
 		try {
-			if (element.getElementType() == IModelElement.METHOD
-					&& ((IMethod) element).isConstructor())
+			if (element.getElementType() == IModelElement.METHOD && ((IMethod) element).isConstructor())
 				adornments |= PHPElementImageDescriptor.CONSTRUCTOR;
 		} catch (ModelException e) {
 			if (e.isDoesNotExist()) {

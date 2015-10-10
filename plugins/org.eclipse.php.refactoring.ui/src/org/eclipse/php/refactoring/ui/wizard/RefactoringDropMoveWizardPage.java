@@ -43,9 +43,8 @@ public class RefactoringDropMoveWizardPage extends UserInputWizardPage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-	 * .Composite)
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
+	 * widgets .Composite)
 	 */
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
@@ -66,8 +65,7 @@ public class RefactoringDropMoveWizardPage extends UserInputWizardPage {
 		Dialog.applyDialogFont(result);
 	}
 
-	private final void verifyDestination(Object selected,
-			boolean initialVerification) {
+	private final void verifyDestination(Object selected, boolean initialVerification) {
 		try {
 			RefactoringStatus status = verifyDestination(selected);
 			if (initialVerification)
@@ -80,8 +78,7 @@ public class RefactoringDropMoveWizardPage extends UserInputWizardPage {
 		}
 	}
 
-	protected RefactoringStatus verifyDestination(Object selected)
-			throws Exception {
+	protected RefactoringStatus verifyDestination(Object selected) throws Exception {
 
 		final RefactoringStatus refactoringStatus;
 
@@ -89,23 +86,20 @@ public class RefactoringDropMoveWizardPage extends UserInputWizardPage {
 			refactoringStatus = processor.setDestination((IContainer) selected);
 		else
 			refactoringStatus = RefactoringStatus
-					.createFatalErrorStatus(PHPRefactoringUIMessages
-							.getString("RefactoringMoveWizardPage.2")); //$NON-NLS-1$
+					.createFatalErrorStatus(PHPRefactoringUIMessages.getString("RefactoringMoveWizardPage.2")); //$NON-NLS-1$
 
 		return refactoringStatus;
 	}
 
 	private PHPMoveProcessor getPHPMoveProcessor() {
-		return (PHPMoveProcessor) getRefactoring().getAdapter(
-				PHPMoveProcessor.class);
+		return (PHPMoveProcessor) getRefactoring().getAdapter(PHPMoveProcessor.class);
 	}
 
 	private void addUpdateReferenceComponent(Composite result) {
 		final PHPMoveProcessor processor = getPHPMoveProcessor();
 
 		fReferenceCheckbox = new Button(result, SWT.CHECK);
-		fReferenceCheckbox.setText(PHPRefactoringUIMessages
-				.getString("RefactoringMoveWizardPage.3")); //$NON-NLS-1$
+		fReferenceCheckbox.setText(PHPRefactoringUIMessages.getString("RefactoringMoveWizardPage.3")); //$NON-NLS-1$
 		fReferenceCheckbox.setSelection(processor.getUpdateReferences());
 		fReferenceCheckbox.setEnabled(true);
 		fReferenceCheckbox.setSelection(true);
@@ -114,10 +108,8 @@ public class RefactoringDropMoveWizardPage extends UserInputWizardPage {
 
 		fReferenceCheckbox.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				processor.setUpdateReferences(((Button) e.widget)
-						.getSelection());
-				getRefactoringWizard().setForcePreviewReview(
-						processor.getUpdateReferences());
+				processor.setUpdateReferences(((Button) e.widget).getSelection());
+				getRefactoringWizard().setForcePreviewReview(processor.getUpdateReferences());
 			}
 		});
 	}

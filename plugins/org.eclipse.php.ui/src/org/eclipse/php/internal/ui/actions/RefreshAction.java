@@ -51,8 +51,7 @@ public class RefreshAction extends SelectionDispatchAction {
 		setText(PHPUIMessages.RefreshAction_label);
 		setToolTipText(PHPUIMessages.RefreshAction_toolTip);
 		PHPPluginImages.setLocalImageDescriptors(this, "refresh_nav.png"); //$NON-NLS-1$
-		PlatformUI.getWorkbench().getHelpSystem()
-				.setHelp(this, IIDEHelpContextIds.REFRESH_ACTION);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IIDEHelpContextIds.REFRESH_ACTION);
 	}
 
 	/*
@@ -68,12 +67,10 @@ public class RefreshAction extends SelectionDispatchAction {
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			if (element instanceof IAdaptable) {
-				IResource resource = (IResource) ((IAdaptable) element)
-						.getAdapter(IResource.class);
+				IResource resource = (IResource) ((IAdaptable) element).getAdapter(IResource.class);
 				if (resource == null)
 					return false;
-				if (resource.getType() == IResource.PROJECT
-						&& !((IProject) resource).isOpen())
+				if (resource.getType() == IResource.PROJECT && !((IProject) resource).isOpen())
 					return false;
 			} else {
 				return false;
@@ -89,32 +86,27 @@ public class RefreshAction extends SelectionDispatchAction {
 		final IResource[] resources = getResources(selection);
 		IWorkspaceRunnable operation = new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
-				monitor.beginTask(PHPUIMessages.RefreshAction_progressMessage,
-						resources.length * 2);
+				monitor.beginTask(PHPUIMessages.RefreshAction_progressMessage, resources.length * 2);
 				monitor.subTask(""); //$NON-NLS-1$
 				for (int r = 0; r < resources.length; r++) {
 					IResource resource = resources[r];
 					if (resource.getType() == IResource.PROJECT) {
 						checkLocationDeleted((IProject) resource);
 					} else if (resource.getType() == IResource.ROOT) {
-						IProject[] projects = ((IWorkspaceRoot) resource)
-								.getProjects();
+						IProject[] projects = ((IWorkspaceRoot) resource).getProjects();
 						for (int p = 0; p < projects.length; p++) {
 							checkLocationDeleted(projects[p]);
 						}
 					}
-					resource.refreshLocal(IResource.DEPTH_INFINITE,
-							new SubProgressMonitor(monitor, 1));
+					resource.refreshLocal(IResource.DEPTH_INFINITE, new SubProgressMonitor(monitor, 1));
 				}
 			}
 		};
 
 		try {
-			PlatformUI.getWorkbench().getProgressService()
-					.run(true, true, new WorkbenchRunnableAdapter(operation));
+			PlatformUI.getWorkbench().getProgressService().run(true, true, new WorkbenchRunnableAdapter(operation));
 		} catch (InvocationTargetException e) {
-			ExceptionHandler.handle(e, getShell(),
-					PHPUIMessages.RefreshAction_error_title,
+			ExceptionHandler.handle(e, getShell(), PHPUIMessages.RefreshAction_error_title,
 					PHPUIMessages.RefreshAction_error_message);
 		} catch (InterruptedException e) {
 			// canceled
@@ -130,8 +122,7 @@ public class RefreshAction extends SelectionDispatchAction {
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			if (element instanceof IAdaptable) {
-				IResource resource = (IResource) ((IAdaptable) element)
-						.getAdapter(IResource.class);
+				IResource resource = (IResource) ((IAdaptable) element).getAdapter(IResource.class);
 				if (resource != null)
 					result.add(resource);
 			}
@@ -164,18 +155,15 @@ public class RefreshAction extends SelectionDispatchAction {
 			return;
 		IFileStore store = EFS.getStore(location);
 		if (!store.fetchInfo().exists()) {
-			final String message = MessageFormat.format(
-					PHPUIMessages.RefreshAction_locationDeleted_message,
-					new Object[] { project.getName(),
-							Resources.getLocationString(project) });
+			final String message = MessageFormat.format(PHPUIMessages.RefreshAction_locationDeleted_message,
+					new Object[] { project.getName(), Resources.getLocationString(project) });
 			final boolean[] result = new boolean[1];
 			// Must prompt user in UI thread (we're in the operation thread
 			// here).
 			getShell().getDisplay().syncExec(new Runnable() {
 				public void run() {
 					result[0] = MessageDialog.openQuestion(getShell(),
-							PHPUIMessages.RefreshAction_locationDeleted_title,
-							message);
+							PHPUIMessages.RefreshAction_locationDeleted_title, message);
 				}
 			});
 			if (result[0]) {

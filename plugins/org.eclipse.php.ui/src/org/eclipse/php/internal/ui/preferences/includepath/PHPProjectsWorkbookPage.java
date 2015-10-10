@@ -53,25 +53,20 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 
 	private final IWorkbenchPreferenceContainer fPageContainer;
 
-	public PHPProjectsWorkbookPage(ListDialogField buildpathList,
-			IWorkbenchPreferenceContainer pageContainer) {
+	public PHPProjectsWorkbookPage(ListDialogField buildpathList, IWorkbenchPreferenceContainer pageContainer) {
 		fBuildpathList = buildpathList;
 		fPageContainer = pageContainer;
 		fSWTControl = null;
 
-		String[] buttonLabels = new String[] {
-				NewWizardMessages.ProjectsWorkbookPage_projects_add_button,
-				null,
+		String[] buttonLabels = new String[] { NewWizardMessages.ProjectsWorkbookPage_projects_add_button, null,
 				NewWizardMessages.ProjectsWorkbookPage_projects_edit_button,
 				NewWizardMessages.ProjectsWorkbookPage_projects_remove_button };
 
 		ProjectsAdapter adapter = new ProjectsAdapter();
 
-		fProjectsList = new TreeListDialogField(adapter, buttonLabels,
-				new PHPIPListLabelProvider());
+		fProjectsList = new TreeListDialogField(adapter, buttonLabels, new PHPIPListLabelProvider());
 		fProjectsList.setDialogFieldListener(adapter);
-		fProjectsList
-				.setLabelText(NewWizardMessages.ProjectsWorkbookPage_projects_label);
+		fProjectsList.setLabelText(NewWizardMessages.ProjectsWorkbookPage_projects_label);
 
 		fProjectsList.enableButton(IDX_REMOVE, false);
 		fProjectsList.enableButton(IDX_EDIT, false);
@@ -117,9 +112,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 
 		Composite composite = new Composite(parent, SWT.NONE);
 
-		LayoutUtil.doDefaultLayout(composite,
-				new DialogField[] { fProjectsList }, true, SWT.DEFAULT,
-				SWT.DEFAULT);
+		LayoutUtil.doDefaultLayout(composite, new DialogField[] { fProjectsList }, true, SWT.DEFAULT, SWT.DEFAULT);
 		LayoutUtil.setHorizontalGrabbing(fProjectsList.getTreeControl(null));
 
 		int buttonBarWidth = converter.convertWidthInCharsToPixels(24);
@@ -176,8 +169,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 		return kind == IBuildpathEntry.BPE_PROJECT;
 	}
 
-	private class ProjectsAdapter implements IDialogFieldListener,
-			ITreeListAdapter {
+	private class ProjectsAdapter implements IDialogFieldListener, ITreeListAdapter {
 
 		private final Object[] EMPTY_ARR = new Object[0];
 
@@ -280,8 +272,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 			for (Iterator iterator = selElements.iterator(); iterator.hasNext();) {
 				BPListElement entry = (BPListElement) iterator.next();
 				try {
-					BuildPathUtils.removeEntryFromBuildPath(fCurrJProject,
-							entry.getBuildpathEntry());
+					BuildPathUtils.removeEntryFromBuildPath(fCurrJProject, entry.getBuildpathEntry());
 				} catch (ModelException e) {
 					PHPCorePlugin.log(e);
 				}
@@ -311,8 +302,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 				elements++;
 			}
 		}
-		return attributes == selElements.size()
-				|| elements == selElements.size();
+		return attributes == selElements.size() || elements == selElements.size();
 	}
 
 	private boolean canEdit(List selElements) {
@@ -364,14 +354,11 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 	}
 
 	private void showAccessRestrictionDialog(BPListElement selElement) {
-		AccessRulesDialog dialog = new AccessRulesDialog(getShell(),
-				selElement, fCurrJProject, fPageContainer != null);
+		AccessRulesDialog dialog = new AccessRulesDialog(getShell(), selElement, fCurrJProject, fPageContainer != null);
 		int res = dialog.open();
 		if (res == Window.OK || res == AccessRulesDialog.SWITCH_PAGE) {
-			selElement.setAttribute(BPListElement.ACCESSRULES, dialog
-					.getAccessRules());
-			selElement.setAttribute(BPListElement.COMBINE_ACCESSRULES,
-					new Boolean(dialog.doCombineAccessRules()));
+			selElement.setAttribute(BPListElement.ACCESSRULES, dialog.getAccessRules());
+			selElement.setAttribute(BPListElement.COMBINE_ACCESSRULES, new Boolean(dialog.doCombineAccessRules()));
 			fProjectsList.refresh();
 			fBuildpathList.dialogFieldChanged(); // validate
 
@@ -403,41 +390,33 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 		try {
 			ArrayList selectable = new ArrayList();
 			final IScriptModel model = fCurrJProject.getModel();
-			final IDLTKLanguageToolkit toolkit = fCurrJProject
-					.getLanguageToolkit();
-			selectable.addAll(Arrays.asList(toolkit != null ? model
-					.getScriptProjects(toolkit.getNatureId()) : model
-					.getScriptProjects()));
+			final IDLTKLanguageToolkit toolkit = fCurrJProject.getLanguageToolkit();
+			selectable.addAll(Arrays.asList(
+					toolkit != null ? model.getScriptProjects(toolkit.getNatureId()) : model.getScriptProjects()));
 			selectable.remove(fCurrJProject);
 
 			List elements = fProjectsList.getElements();
 			for (int i = 0; i < elements.size(); i++) {
 				BPListElement curr = (BPListElement) elements.get(i);
-				IScriptProject proj = (IScriptProject) DLTKCore.create(curr
-						.getResource());
+				IScriptProject proj = (IScriptProject) DLTKCore.create(curr.getResource());
 				selectable.remove(proj);
 			}
 			Object[] selectArr = selectable.toArray();
 			new ModelElementSorter().sort(null, selectArr);
 			// IScriptProject project = elem.getScriptProject();
 			ScriptUILabelProvider labelProvider = new ScriptUILabelProvider();
-			ListSelectionDialog dialog = new ListSelectionDialog(
-					getShell(),
-					Arrays.asList(selectArr),
-					new ArrayContentProvider(),
-					labelProvider,
+			ListSelectionDialog dialog = new ListSelectionDialog(getShell(), Arrays.asList(selectArr),
+					new ArrayContentProvider(), labelProvider,
 					NewWizardMessages.ProjectsWorkbookPage_chooseProjects_message);
-			dialog
-					.setTitle(NewWizardMessages.ProjectsWorkbookPage_chooseProjects_title);
+			dialog.setTitle(NewWizardMessages.ProjectsWorkbookPage_chooseProjects_title);
 			dialog.setHelpAvailable(false);
 			if (dialog.open() == Window.OK) {
 				Object[] result = dialog.getResult();
 				BPListElement[] cpElements = new BPListElement[result.length];
 				for (int i = 0; i < result.length; i++) {
 					IScriptProject curr = (IScriptProject) result[i];
-					cpElements[i] = new BPListElement(fCurrJProject,
-							IBuildpathEntry.BPE_PROJECT, curr.getPath(), curr
-									.getResource(), false);
+					cpElements[i] = new BPListElement(fCurrJProject, IBuildpathEntry.BPE_PROJECT, curr.getPath(),
+							curr.getResource(), false);
 				}
 				return cpElements;
 			}
@@ -454,8 +433,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 		}
 	}
 
-	protected void projectPageKeyPressed(TreeListDialogField field,
-			KeyEvent event) {
+	protected void projectPageKeyPressed(TreeListDialogField field, KeyEvent event) {
 		if (field == fProjectsList) {
 			if (event.character == SWT.DEL && event.stateMask == 0) {
 				List selection = field.getSelectedElements();

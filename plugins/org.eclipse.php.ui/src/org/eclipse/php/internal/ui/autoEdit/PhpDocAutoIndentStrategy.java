@@ -94,14 +94,12 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 
 			int lineOffset = line.getOffset();
 			int firstNonWS = findEndOfWhiteSpace(d, lineOffset, offset);
-			Assert.isTrue(firstNonWS >= lineOffset,
-					"indentation must not be negative"); //$NON-NLS-1$
+			Assert.isTrue(firstNonWS >= lineOffset, "indentation must not be negative"); //$NON-NLS-1$
 
 			StringBuffer buf = new StringBuffer(c.text);
 			IRegion prefix = findPrefixRange(d, line);
 			String indentation = d.get(prefix.getOffset(), prefix.getLength());
-			int lengthToAdd = Math.min(offset - prefix.getOffset(),
-					prefix.getLength());
+			int lengthToAdd = Math.min(offset - prefix.getOffset(), prefix.getLength());
 
 			buf.append(indentation.substring(0, lengthToAdd));
 
@@ -110,12 +108,10 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 					// phpdoc started on this line
 					buf.append(" * "); //$NON-NLS-1$
 
-					if (TypingPreferences.closePhpdoc
-							&& isNewComment(d, offset)) {
+					if (TypingPreferences.closePhpdoc && isNewComment(d, offset)) {
 						c.shiftsCaret = false;
 						c.caretOffset = c.offset + buf.length();
-						String lineDelimiter = TextUtilities
-								.getDefaultLineDelimiter(d);
+						String lineDelimiter = TextUtilities.getDefaultLineDelimiter(d);
 
 						int replacementLength = 0;
 						String restOfLine = d.get(p, replacementLength);
@@ -138,25 +134,18 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 									ScriptModelUtil.reconcile(unit);
 									// PHPUiPlugin.getDefault().getASTProvider().reconciled(null,
 									// unit, new NullProgressMonitor());
-									String partitionType = FormatterUtils
-											.getPartitionType(
-													(IStructuredDocument) d,
-													c.offset);
+									String partitionType = FormatterUtils.getPartitionType((IStructuredDocument) d,
+											c.offset);
 									String commentBlockBody;
-									if (partitionType
-											.equals(PHPPartitionTypes.PHP_DOC)) {
-										commentBlockBody = createScriptdocTags(
-												d, c, indentation,
-												lineDelimiter, unit);
+									if (partitionType.equals(PHPPartitionTypes.PHP_DOC)) {
+										commentBlockBody = createScriptdocTags(d, c, indentation, lineDelimiter, unit);
 									} else {// Multiline comment
 										commentBlockBody = PHP_COMMENT_BLOCK_MID;
 									}
 									buf.append(restOfLine);
 									// only add tags if they are non-empty - the
 									// empty line has already been added above.
-									if (commentBlockBody != null
-											&& !commentBlockBody.trim().equals(
-													"*")) //$NON-NLS-1$
+									if (commentBlockBody != null && !commentBlockBody.trim().equals("*")) //$NON-NLS-1$
 										buf.append(commentBlockBody);
 								} catch (CoreException e) {
 									Logger.logException(e);
@@ -192,8 +181,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 *         preference store
 	 */
 	private boolean isPreferenceTrue(String preference) {
-		return PHPUiPlugin.getDefault().getPreferenceStore()
-				.getBoolean(preference);
+		return PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(preference);
 	}
 
 	/**
@@ -212,8 +200,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 * @throws BadLocationException
 	 *             if accessing the document fails
 	 */
-	private IRegion findPrefixRange(IDocument document, IRegion line)
-			throws BadLocationException {
+	private IRegion findPrefixRange(IDocument document, IRegion line) throws BadLocationException {
 		int lineOffset = line.getOffset();
 		int lineEnd = lineOffset + line.getLength();
 		int indentEnd = findEndOfWhiteSpace(document, lineOffset, lineEnd);
@@ -241,8 +228,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 * @throws BadLocationException
 	 *             if accessing the document fails
 	 */
-	private IRegion findCommentBlockStartPrefixRange(IDocument document,
-			IRegion line) throws BadLocationException {
+	private IRegion findCommentBlockStartPrefixRange(IDocument document, IRegion line) throws BadLocationException {
 		int lineOffset = line.getOffset();
 		int lineEnd = lineOffset + line.getLength();
 		int indentEnd = findEndOfWhiteSpace(document, lineOffset, lineEnd);
@@ -269,12 +255,10 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 *             if accessing the document fails
 	 */
 
-	private String createScriptdocTags(IDocument document,
-			DocumentCommand command, String indentation, String lineDelimiter,
-			ISourceModule unit) throws CoreException, BadLocationException {
+	private String createScriptdocTags(IDocument document, DocumentCommand command, String indentation,
+			String lineDelimiter, ISourceModule unit) throws CoreException, BadLocationException {
 		// searching for next element's start point
-		int nextElementOffset = getEndOfWhiteSpacesOffset(document,
-				command.caretOffset, document.getLength());
+		int nextElementOffset = getEndOfWhiteSpacesOffset(document, command.caretOffset, document.getLength());
 
 		IModelElement element = getElementAt(unit, nextElementOffset);
 		if (element == null) {
@@ -288,8 +272,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		}
 
 		int type = element != null ? element.getElementType() : -1;
-		if (type != IModelElement.METHOD && type != IModelElement.TYPE
-				&& type != IModelElement.FIELD
+		if (type != IModelElement.METHOD && type != IModelElement.TYPE && type != IModelElement.FIELD
 				&& type != IModelElement.IMPORT_CONTAINER) {
 			assert false;
 			return null;
@@ -304,16 +287,13 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 			case IModelElement.TYPE:
 				IType sourceType = (IType) element;
 				if (PHPFlags.isNamespace(sourceType.getFlags())) {
-					comment = createFileComment(unit, indentation,
-							lineDelimiter);
+					comment = createFileComment(unit, indentation, lineDelimiter);
 				} else {
-					comment = createTypeTags(document, command, indentation,
-							lineDelimiter, (IType) element);
+					comment = createTypeTags(document, command, indentation, lineDelimiter, (IType) element);
 				}
 				break;
 			case IModelElement.FIELD:
-				comment = creatFieldTags(document, command, indentation,
-						lineDelimiter, (IField) element);
+				comment = creatFieldTags(document, command, indentation, lineDelimiter, (IField) element);
 				// bug: 430784
 				if (comment == null) {
 					comment = prepareTemplateComment("", indentation, //$NON-NLS-1$
@@ -321,8 +301,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 				}
 				break;
 			case IModelElement.METHOD:
-				comment = createMethodTags(document, command, indentation,
-						lineDelimiter, (IMethod) element);
+				comment = createMethodTags(document, command, indentation, lineDelimiter, (IMethod) element);
 				break;
 			default:
 				comment = createDefaultComment(lineDelimiter);
@@ -335,8 +314,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		return indentPattern(comment, indentation, lineDelimiter);
 	}
 
-	private int getEndOfWhiteSpacesOffset(IDocument document, int offset,
-			int end) throws BadLocationException {
+	private int getEndOfWhiteSpacesOffset(IDocument document, int offset, int end) throws BadLocationException {
 		while (offset < end) {
 			if (!Character.isWhitespace(document.getChar(offset))) {
 				return offset;
@@ -346,8 +324,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		return -1;
 	}
 
-	private IModelElement getElementAt(ISourceModule unit, int nextElementOffset)
-			throws ModelException {
+	private IModelElement getElementAt(ISourceModule unit, int nextElementOffset) throws ModelException {
 		IModelElement modelElement = unit.getElementAt(nextElementOffset);
 		if (modelElement == null) {
 			// look for first in file use statement also
@@ -374,8 +351,8 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 *            the line delimiter
 	 * @return a trimmed version of <code>comment</code>
 	 */
-	private String prepareTemplateComment(String comment, String indentation,
-			IScriptProject project, String lineDelimiter) {
+	private String prepareTemplateComment(String comment, String indentation, IScriptProject project,
+			String lineDelimiter) {
 		// trim comment start and end if any
 		if (comment.endsWith("*/")) //$NON-NLS-1$
 			comment = comment.substring(0, comment.length() - 2);
@@ -390,8 +367,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		// trim leading spaces, but not new lines
 		int nonSpace = 0;
 		int len = comment.length();
-		while (nonSpace < len
-				&& Character.getType(comment.charAt(nonSpace)) == Character.SPACE_SEPARATOR)
+		while (nonSpace < len && Character.getType(comment.charAt(nonSpace)) == Character.SPACE_SEPARATOR)
 			nonSpace++;
 		comment = comment.substring(nonSpace);
 
@@ -401,53 +377,45 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		// lineDelimiter);
 	}
 
-	private String createFileComment(ISourceModule sourceModule,
-			String indentation, String lineDelimiter) throws CoreException {
-		String comment = CodeGeneration.getFileComment(sourceModule,
-				lineDelimiter);
+	private String createFileComment(ISourceModule sourceModule, String indentation, String lineDelimiter)
+			throws CoreException {
+		String comment = CodeGeneration.getFileComment(sourceModule, lineDelimiter);
 		if (comment != null) {
 			comment = comment.trim();
-			return prepareTemplateComment(comment.trim(), indentation,
-					sourceModule.getScriptProject(), lineDelimiter);
+			return prepareTemplateComment(comment.trim(), indentation, sourceModule.getScriptProject(), lineDelimiter);
 		}
 		return comment;
 	}
 
-	private String createTypeTags(IDocument document, DocumentCommand command,
-			String indentation, String lineDelimiter, IType type)
-			throws CoreException, BadLocationException {
+	private String createTypeTags(IDocument document, DocumentCommand command, String indentation, String lineDelimiter,
+			IType type) throws CoreException, BadLocationException {
 		String comment = createTypeComment(type, lineDelimiter);
 		if (comment != null) {
 			comment = comment.trim();
-			return prepareTemplateComment(comment.trim(), indentation,
-					type.getScriptProject(), lineDelimiter);
+			return prepareTemplateComment(comment.trim(), indentation, type.getScriptProject(), lineDelimiter);
 		}
 		return null;
 	}
 
-	private String creatFieldTags(IDocument document, DocumentCommand command,
-			String indentation, String lineDelimiter, IField field)
-			throws CoreException, BadLocationException {
+	private String creatFieldTags(IDocument document, DocumentCommand command, String indentation, String lineDelimiter,
+			IField field) throws CoreException, BadLocationException {
 		String comment = createFieldComment(field, lineDelimiter);
 		if (comment != null) {
 			comment = comment.trim();
-			return prepareTemplateComment(comment.trim(), indentation,
-					field.getScriptProject(), lineDelimiter);
+			return prepareTemplateComment(comment.trim(), indentation, field.getScriptProject(), lineDelimiter);
 		}
 		return null;
 	}
 
-	private String createMethodTags(IDocument document,
-			DocumentCommand command, String indentation, String lineDelimiter,
-			IMethod method) throws CoreException, BadLocationException {
+	private String createMethodTags(IDocument document, DocumentCommand command, String indentation,
+			String lineDelimiter, IMethod method) throws CoreException, BadLocationException {
 		// IMethod inheritedMethod = getInheritedMethod(method);
 		String comment = createMethodComment(method, lineDelimiter);// CodeGeneration.getMethodComment(method,
 																	// inheritedMethod,
 																	// lineDelimiter);
 		if (comment != null) {
 			comment = comment.trim();
-			return prepareTemplateComment(comment, indentation,
-					method.getScriptProject(), lineDelimiter);
+			return prepareTemplateComment(comment, indentation, method.getScriptProject(), lineDelimiter);
 		}
 		return null;
 	}
@@ -475,18 +443,14 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 				if (offset == d.getLength()) {
 					fixedOffset -= 1;
 				}
-				IStructuredDocumentRegion sdRegion = ((IStructuredDocument) d)
-						.getRegionAtCharacterOffset(fixedOffset);
+				IStructuredDocumentRegion sdRegion = ((IStructuredDocument) d).getRegionAtCharacterOffset(fixedOffset);
 
-				ITextRegion tRegion = sdRegion
-						.getRegionAtCharacterOffset(fixedOffset);
+				ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(fixedOffset);
 
 				int regionOffset = offset;
 				if (tRegion instanceof ITextRegionContainer) {
-					tRegion = ((ITextRegionContainer) tRegion)
-							.getRegionAtCharacterOffset(fixedOffset);
-					regionOffset -= (sdRegion.getStartOffset(tRegion) + tRegion
-							.getStart());
+					tRegion = ((ITextRegionContainer) tRegion).getRegionAtCharacterOffset(fixedOffset);
+					regionOffset -= (sdRegion.getStartOffset(tRegion) + tRegion.getStart());
 				}
 				int regionStart = sdRegion.getStartOffset(tRegion);
 
@@ -494,18 +458,15 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 					regionOffset -= scriptRegion.getStart();
 
-					ITextRegion commentRegion = scriptRegion
-							.getPhpToken(regionOffset);
+					ITextRegion commentRegion = scriptRegion.getPhpToken(regionOffset);
 					int phpScriptEndOffset = scriptRegion.getLength();
 					boolean isSpaceDeletionNeeded = false;
 					do {
 						int currentRegionEndOffset = commentRegion.getEnd();
-						commentRegion = scriptRegion
-								.getPhpToken(currentRegionEndOffset);
+						commentRegion = scriptRegion.getPhpToken(currentRegionEndOffset);
 						String tokenType = commentRegion.getType();
 						if (tokenType.equals(PHPRegionTypes.PHP_COMMENT_END)
-								|| PHPRegionTypes.PHPDOC_COMMENT_END
-										.equals(tokenType)) {
+								|| PHPRegionTypes.PHPDOC_COMMENT_END.equals(tokenType)) {
 							break;
 						} else if (currentRegionEndOffset >= phpScriptEndOffset) {
 							isSpaceDeletionNeeded = true;
@@ -545,8 +506,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 				return true;
 
 			IRegion line = document.getLineInformation(lineIndex);
-			ITypedRegion partition = TextUtilities.getPartition(document,
-					fPartitioning, commandOffset, false);
+			ITypedRegion partition = TextUtilities.getPartition(document, fPartitioning, commandOffset, false);
 			int partitionEnd = partition.getOffset() + partition.getLength();
 			if (line.getOffset() >= partitionEnd)
 				return false;
@@ -555,8 +515,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 				return true; // partition goes to end of document - probably a
 								// new comment
 
-			String comment = document.get(partition.getOffset(),
-					partition.getLength());
+			String comment = document.get(partition.getOffset(), partition.getLength());
 			if (comment.indexOf("/*", 2) != -1) //$NON-NLS-1$
 				return true; // enclosed another comment -> probably a new
 								// comment
@@ -583,8 +542,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	/*
 	 * @see IAutoIndentStrategy#customizeDocumentCommand
 	 */
-	public void customizeDocumentCommand(IDocument document,
-			DocumentCommand command) {
+	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 
 		if (!isSmartMode())
 			return;
@@ -594,8 +552,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 				// get legal end of line set
 				String[] lineDelimiters = document.getLegalLineDelimiters();
 				// get the the last index of end of line in the command
-				int index = TextUtilities
-						.endsWith(lineDelimiters, command.text);
+				int index = TextUtilities.endsWith(lineDelimiters, command.text);
 				int offset = command.offset;
 
 				// if end of line exists in the command
@@ -611,39 +568,31 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 							if (offset == document.getLength()) {
 								fixedOffset -= 1;
 							}
-							ITextRegion tRegion = sdRegion
-									.getRegionAtCharacterOffset(fixedOffset);
+							ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(fixedOffset);
 
 							int regionOffset = offset;
 							// if netsed html/php structure exists
 							if (tRegion instanceof ITextRegionContainer) {
-								tRegion = ((ITextRegionContainer) tRegion)
-										.getRegionAtCharacterOffset(fixedOffset);
+								tRegion = ((ITextRegionContainer) tRegion).getRegionAtCharacterOffset(fixedOffset);
 								// update region offset for in order to get
 								// phpdoc region later
-								regionOffset -= (sdRegion
-										.getStartOffset(tRegion) + tRegion
-										.getStart());
+								regionOffset -= (sdRegion.getStartOffset(tRegion) + tRegion.getStart());
 							}
 
-							if (tRegion != null
-									&& tRegion instanceof IPhpScriptRegion) {
+							if (tRegion != null && tRegion instanceof IPhpScriptRegion) {
 								IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 
 								// update region offset for in order to get
 								// phpdoc region later
 								regionOffset -= scriptRegion.getStart();
 
-								ITextRegion commentRegion = scriptRegion
-										.getPhpToken(regionOffset);
+								ITextRegion commentRegion = scriptRegion.getPhpToken(regionOffset);
 
 								String tokenType = commentRegion.getType();
 								if (document.getLength() == offset
-										&& (tokenType
-												.equals(PHPRegionTypes.PHPDOC_COMMENT_END) || tokenType
-												.equals(PHPRegionTypes.PHP_COMMENT_END))
-										&& document.get(offset - 2, 2).equals(
-												"*/")) { //$NON-NLS-1$
+										&& (tokenType.equals(PHPRegionTypes.PHPDOC_COMMENT_END)
+												|| tokenType.equals(PHPRegionTypes.PHP_COMMENT_END))
+										&& document.get(offset - 2, 2).equals("*/")) { //$NON-NLS-1$
 
 									ITextRegion region = commentRegion;
 									// go up in document and search for the
@@ -653,37 +602,27 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 									do {
 										if (region.getType() == PHPRegionTypes.PHPDOC_COMMENT_START
 												|| region.getType() == PHPRegionTypes.PHP_COMMENT_START
-												|| region.getStart() <= scriptRegion
-														.getStart()) {
+												|| region.getStart() <= scriptRegion.getStart()) {
 											break;
 										}
 										// get previous region
 										region = scriptRegion
-												.getPhpToken(region.getStart()
-														- lineDelimiters[index]
-																.length());
+												.getPhpToken(region.getStart() - lineDelimiters[index].length());
 
 									} while (true);
 
 									// get the line region
-									IRegion line = document
-											.getLineInformationOfOffset(region
-													.getStart());
-									StringBuffer buf = new StringBuffer(
-											command.text);
+									IRegion line = document.getLineInformationOfOffset(region.getStart());
+									StringBuffer buf = new StringBuffer(command.text);
 									// extract indentation from the found line
-									IRegion prefix = findCommentBlockStartPrefixRange(
-											document, line);
+									IRegion prefix = findCommentBlockStartPrefixRange(document, line);
 									// build indentation based on the prefix
 									// length
-									String indentation = document.get(
-											prefix.getOffset(),
-											prefix.getLength());
+									String indentation = document.get(prefix.getOffset(), prefix.getLength());
 									buf.append(indentation);
 									// perform the actual work
 									command.shiftsCaret = false;
-									command.caretOffset = command.offset
-											+ buf.length();
+									command.caretOffset = command.offset + buf.length();
 									command.text = buf.toString();
 									return;
 								}
@@ -719,13 +658,11 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 * @throws ModelException
 	 *             if accessing the PHP model fails
 	 */
-	private static IMethod getInheritedMethod(IMethod method)
-			throws ModelException {
+	private static IMethod getInheritedMethod(IMethod method) throws ModelException {
 		IType declaringType = method.getDeclaringType();
 		if (null == declaringType)
 			return null;
-		MethodOverrideTester tester = SuperTypeHierarchyCache
-				.getMethodOverrideTester(declaringType);
+		MethodOverrideTester tester = SuperTypeHierarchyCache.getMethodOverrideTester(declaringType);
 		return tester.findOverriddenMethod(method, true);
 	}
 
@@ -737,8 +674,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 */
 	private static ISourceModule getCompilationUnit() {
 
-		IWorkbenchWindow window = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow();
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null)
 			return null;
 
@@ -767,8 +703,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 *         line this method will throw BadLocationException
 	 */
 
-	private int getCommentEnd(IDocument d, int offset)
-			throws BadLocationException {
+	private int getCommentEnd(IDocument d, int offset) throws BadLocationException {
 		int endOfDoc = d.getLength();
 		while (offset + 1 < endOfDoc) {
 			if (d.getChar(offset) == '*' && d.getChar(offset + 1) == '/') {
@@ -781,26 +716,21 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		return -2;
 	}
 
-	private String createTypeComment(IType type, String lineDelimiter)
-			throws CoreException {
+	private String createTypeComment(IType type, String lineDelimiter) throws CoreException {
 		// String[] typeParameterNames=
 		// StubUtility.getTypeParameterNames(type.getFields());
-		return CodeGeneration.getTypeComment(type.getScriptProject(),
-				type.getTypeQualifiedName(), /* typeParameterNames */null,
-				lineDelimiter);
+		return CodeGeneration.getTypeComment(type.getScriptProject(), type.getTypeQualifiedName(),
+				/* typeParameterNames */null, lineDelimiter);
 	}
 
-	private String createMethodComment(IMethod meth, String lineDelimiter)
-			throws CoreException {
+	private String createMethodComment(IMethod meth, String lineDelimiter) throws CoreException {
 		IType declaringType = meth.getDeclaringType();
 		IMethod overridden = null;
 
 		if (!meth.isConstructor() && null != declaringType) {
 			try {
-				ITypeHierarchy hierarchy = SuperTypeHierarchyCache
-						.getTypeHierarchy(declaringType);
-				MethodOverrideTester tester = new MethodOverrideTester(
-						declaringType, hierarchy);
+				ITypeHierarchy hierarchy = SuperTypeHierarchyCache.getTypeHierarchy(declaringType);
+				MethodOverrideTester tester = new MethodOverrideTester(declaringType, hierarchy);
 				overridden = tester.findOverriddenMethod(meth, true);
 			} catch (CoreException e) {
 				Logger.logException(e);
@@ -810,15 +740,13 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		return CodeGeneration.getMethodComment(meth, overridden, lineDelimiter);
 	}
 
-	private String createFieldComment(IField field, String lineDelimiter)
-			throws ModelException, CoreException {
-		return CodeGeneration.getFieldComment(field.getScriptProject(), field,
-				lineDelimiter);
+	private String createFieldComment(IField field, String lineDelimiter) throws ModelException, CoreException {
+		return CodeGeneration.getFieldComment(field.getScriptProject(), field, lineDelimiter);
 	}
 
 	private String createDefaultComment(String lineDelimiter) {
-		return PHPDOC_COMMENT_BLOCK_START + lineDelimiter
-				+ PHP_COMMENT_BLOCK_MID + lineDelimiter + PHP_COMMENT_BLOCK_END;
+		return PHPDOC_COMMENT_BLOCK_START + lineDelimiter + PHP_COMMENT_BLOCK_MID + lineDelimiter
+				+ PHP_COMMENT_BLOCK_END;
 	}
 
 	/**
@@ -831,16 +759,13 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 * 
 	 * @return String to be used as leading indentation
 	 */
-	private String getIndentString(IDocument document, IModelElement modelElem)
-			throws BadLocationException {
+	private String getIndentString(IDocument document, IModelElement modelElem) throws BadLocationException {
 		int elementOffset = 0;
 		String leadingString = null;
 		try {
 			elementOffset = getCodeDataOffset(modelElem);
-			int lineStartOffset = document.getLineInformationOfOffset(
-					elementOffset).getOffset();
-			leadingString = document.get(lineStartOffset, elementOffset
-					- lineStartOffset);
+			int lineStartOffset = document.getLineInformationOfOffset(elementOffset).getOffset();
+			leadingString = document.get(lineStartOffset, elementOffset - lineStartOffset);
 		} catch (ModelException e) {
 			Logger.logException(e);
 			return null;
@@ -852,34 +777,26 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		return leadingString;
 	}
 
-	private int getCodeDataOffset(IModelElement modelElem)
-			throws ModelException {
+	private int getCodeDataOffset(IModelElement modelElem) throws ModelException {
 		if (modelElem instanceof ISourceModule) {
-			ISourceReference primaryModelElem = (ISourceReference) (((ISourceModule) modelElem)
-					.getPrimaryElement());// .getPHPBlocks();
-			return primaryModelElem != null ? primaryModelElem.getSourceRange()
-					.getOffset()
-					+ primaryModelElem.getSourceRange().getLength()/*
-																	 * getPHPStartTag
-																	 * ( ).
-																	 * getEndPosition
-																	 * ()
-																	 */: -1;
+			ISourceReference primaryModelElem = (ISourceReference) (((ISourceModule) modelElem).getPrimaryElement());// .getPHPBlocks();
+			return primaryModelElem != null
+					? primaryModelElem.getSourceRange().getOffset() + primaryModelElem.getSourceRange().getLength()
+					/*
+					 * getPHPStartTag ( ). getEndPosition ()
+					 */ : -1;
 		}
 		if (modelElem instanceof ISourceReference) {
-			int dataOffset = ((ISourceReference) modelElem).getSourceRange()
-					.getOffset();
+			int dataOffset = ((ISourceReference) modelElem).getSourceRange().getOffset();
 			return dataOffset;
 		}
 		assert false;
 		return -1;
 	}
 
-	private String indentPattern(String originalPattern, String indentation,
-			String lineDelim) {
+	private String indentPattern(String originalPattern, String indentation, String lineDelim) {
 		String delimPlusIndent = lineDelim + indentation;
-		String indentedPattern = originalPattern.replaceAll(lineDelim,
-				delimPlusIndent);
+		String indentedPattern = originalPattern.replaceAll(lineDelim, delimPlusIndent);
 
 		return indentedPattern;
 	}

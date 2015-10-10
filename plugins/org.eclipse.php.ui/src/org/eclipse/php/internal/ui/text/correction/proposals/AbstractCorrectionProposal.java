@@ -30,8 +30,7 @@ import org.eclipse.swt.graphics.Point;
  * @since 3.6
  */
 abstract public class AbstractCorrectionProposal
-		implements IScriptCompletionProposal, ICommandAccess,
-		ICompletionProposalExtension6 {
+		implements IScriptCompletionProposal, ICommandAccess, ICompletionProposalExtension6 {
 
 	private String fName;
 	private int fRelevance;
@@ -66,11 +65,9 @@ abstract public class AbstractCorrectionProposal
 	 * @param commandId
 	 *            Command id for {@link CorrectionCommandHandler}
 	 */
-	public AbstractCorrectionProposal(String name, int relevance, Image image,
-			String commandId) {
+	public AbstractCorrectionProposal(String name, int relevance, Image image, String commandId) {
 		if (name == null) {
-			throw new IllegalArgumentException(
-					CorrectionMessages.ChangeCorrectionProposal_0);
+			throw new IllegalArgumentException(CorrectionMessages.ChangeCorrectionProposal_0);
 		}
 		fName = name;
 		fRelevance = relevance;
@@ -89,13 +86,11 @@ abstract public class AbstractCorrectionProposal
 	 * @see ICompletionProposal#getDisplayString()
 	 */
 	public String getDisplayString() {
-		return CorrectionCommandHandler.appendShortcut(getName(),
-				this.getCommandId());
+		return CorrectionCommandHandler.appendShortcut(getName(), this.getCommandId());
 	}
 
 	public StyledString getStyledDisplayString() {
-		return CorrectionCommandHandler.styleWithShortcut(getName(),
-				this.getCommandId());
+		return CorrectionCommandHandler.styleWithShortcut(getName(), this.getCommandId());
 	}
 
 	/**
@@ -139,8 +134,7 @@ abstract public class AbstractCorrectionProposal
 	 */
 	public void setDisplayName(String name) {
 		if (name == null) {
-			throw new IllegalArgumentException(
-					CorrectionMessages.ChangeCorrectionProposal_5);
+			throw new IllegalArgumentException(CorrectionMessages.ChangeCorrectionProposal_5);
 		}
 		fName = name;
 	}

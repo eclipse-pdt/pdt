@@ -51,7 +51,7 @@ public class CompilationUnitRewrite {
 
 	// TODO: add RefactoringStatus fStatus;?
 	private ISourceModule fCu;
-	private List/* <TextEditGroup> */fTextEditGroups = new ArrayList();
+	private List/* <TextEditGroup> */ fTextEditGroups = new ArrayList();
 
 	private Program fRoot; // lazily initialized
 	private ASTRewrite fRewrite; // lazily initialized
@@ -75,8 +75,7 @@ public class CompilationUnitRewrite {
 		this(null, cu, root);
 	}
 
-	public CompilationUnitRewrite(WorkingCopyOwner owner, ISourceModule cu,
-			Program root) {
+	public CompilationUnitRewrite(WorkingCopyOwner owner, ISourceModule cu, Program root) {
 		fOwner = owner;
 		fCu = cu;
 		fRoot = root;
@@ -158,10 +157,8 @@ public class CompilationUnitRewrite {
 		// fImportRewrite= null;
 	}
 
-	public CategorizedTextEditGroup createCategorizedGroupDescription(
-			String name, GroupCategorySet set) {
-		CategorizedTextEditGroup result = new CategorizedTextEditGroup(name,
-				set);
+	public CategorizedTextEditGroup createCategorizedGroupDescription(String name, GroupCategorySet set) {
+		CategorizedTextEditGroup result = new CategorizedTextEditGroup(name, set);
 		fTextEditGroups.add(result);
 		return result;
 	}
@@ -205,8 +202,7 @@ public class CompilationUnitRewrite {
 	 * @throws IllegalArgumentException
 	 *             when the AST rewrite encounters problems
 	 */
-	public SourceModuleChange createChange(boolean generateGroups,
-			IProgressMonitor monitor) throws CoreException {
+	public SourceModuleChange createChange(boolean generateGroups, IProgressMonitor monitor) throws CoreException {
 		return createChange(fCu.getElementName(), generateGroups, monitor);
 	}
 
@@ -229,8 +225,8 @@ public class CompilationUnitRewrite {
 	 * @throws IllegalArgumentException
 	 *             when the AST rewrite encounters problems
 	 */
-	public SourceModuleChange createChange(String name, boolean generateGroups,
-			IProgressMonitor monitor) throws CoreException {
+	public SourceModuleChange createChange(String name, boolean generateGroups, IProgressMonitor monitor)
+			throws CoreException {
 		SourceModuleChange cuChange = new SourceModuleChange(name, fCu);
 		MultiTextEdit multiEdit = new MultiTextEdit();
 		cuChange.setEdit(multiEdit);
@@ -257,9 +253,8 @@ public class CompilationUnitRewrite {
 	 *             when text buffer acquisition or import rewrite text edit
 	 *             creation fails
 	 */
-	public SourceModuleChange attachChange(SourceModuleChange cuChange,
-			boolean generateGroups, IProgressMonitor monitor)
-			throws CoreException {
+	public SourceModuleChange attachChange(SourceModuleChange cuChange, boolean generateGroups,
+			IProgressMonitor monitor) throws CoreException {
 		try {
 			boolean needsAstRewrite = fRewrite != null; // TODO: do we need
 														// something like
@@ -269,7 +264,9 @@ public class CompilationUnitRewrite {
 			// fImportRemover.hasRemovedNodes();
 			// boolean needsImportRewrite= fImportRewrite != null &&
 			// fImportRewrite.hasRecordedChanges() || needsImportRemoval;
-			if (!needsAstRewrite/* && !needsImportRemoval && !needsImportRewrite */)
+			if (!needsAstRewrite/*
+								 * && !needsImportRemoval && !needsImportRewrite
+								 */)
 				return null;
 
 			MultiTextEdit multiEdit = (MultiTextEdit) cuChange.getEdit();
@@ -281,16 +278,14 @@ public class CompilationUnitRewrite {
 			if (needsAstRewrite) {
 				TextEdit rewriteEdit;
 				if (fRememberContent != null) {
-					rewriteEdit = fRewrite.rewriteAST(fRememberContent, fCu
-							.getScriptProject().getOptions(true));
+					rewriteEdit = fRewrite.rewriteAST(fRememberContent, fCu.getScriptProject().getOptions(true));
 				} else {
 					rewriteEdit = fRewrite.rewriteAST();
 				}
 				if (!isEmptyEdit(rewriteEdit)) {
 					multiEdit.addChild(rewriteEdit);
 					if (generateGroups) {
-						for (Iterator iter = fTextEditGroups.iterator(); iter
-								.hasNext();) {
+						for (Iterator iter = fTextEditGroups.iterator(); iter.hasNext();) {
 							TextEditGroup group = (TextEditGroup) iter.next();
 							cuChange.addTextEditGroup(group);
 						}
@@ -332,11 +327,8 @@ public class CompilationUnitRewrite {
 	public Program getRoot() {
 		if (fRoot == null) {
 			try {
-				fRoot = new RefactoringASTParser(
-						ProjectOptions.getPhpVersion(fCu),
-						ProjectOptions.useShortTags(fCu)).parse(fCu, fOwner,
-						fResolveBindings, fStatementsRecovery,
-						fBindingsRecovery, null);
+				fRoot = new RefactoringASTParser(ProjectOptions.getPhpVersion(fCu), ProjectOptions.useShortTags(fCu))
+						.parse(fCu, fOwner, fResolveBindings, fStatementsRecovery, fBindingsRecovery, null);
 			} catch (Exception e) {
 				RefactoringUIPlugin.log(e);
 			}

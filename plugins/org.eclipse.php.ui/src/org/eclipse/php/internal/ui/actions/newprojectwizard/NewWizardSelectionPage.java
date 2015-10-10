@@ -58,11 +58,9 @@ class NewWizardSelectionPage extends WorkbenchWizardSelectionPage {
 	 * @param projectsOnly
 	 *            if only projects should be shown
 	 */
-	public NewWizardSelectionPage(IWorkbench workbench,
-			IStructuredSelection selection, IWizardCategory root,
+	public NewWizardSelectionPage(IWorkbench workbench, IStructuredSelection selection, IWizardCategory root,
 			IWizardDescriptor[] primary, boolean projectsOnly) {
-		super(
-				"newWizardSelectionPage", workbench, selection, null, WorkbenchTriggerPoints.NEW_WIZARDS); //$NON-NLS-1$
+		super("newWizardSelectionPage", workbench, selection, null, WorkbenchTriggerPoints.NEW_WIZARDS); //$NON-NLS-1$
 
 		setTitle(WorkbenchMessages.NewWizardSelectionPage_description);
 		wizardCategories = root;
@@ -88,13 +86,11 @@ class NewWizardSelectionPage extends WorkbenchWizardSelectionPage {
 	 */
 	public void createControl(Composite parent) {
 		IDialogSettings settings = getDialogSettings();
-		newResourcePage = new NewWizardNewPage(this, wizardCategories,
-				primaryWizards, projectsOnly);
+		newResourcePage = new NewWizardNewPage(this, wizardCategories, primaryWizards, projectsOnly);
 		newResourcePage.setDialogSettings(settings);
 
 		Control control = newResourcePage.createControl(parent);
-		getWorkbench().getHelpSystem().setHelp(control,
-				IWorkbenchHelpContextIds.NEW_WIZARD_SELECTION_WIZARD_PAGE);
+		getWorkbench().getHelpSystem().setHelp(control, IWorkbenchHelpContextIds.NEW_WIZARD_SELECTION_WIZARD_PAGE);
 		setControl(control);
 	}
 

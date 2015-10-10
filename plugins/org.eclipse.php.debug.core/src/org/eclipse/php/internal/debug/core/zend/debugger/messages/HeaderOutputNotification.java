@@ -26,8 +26,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
 /**
  * @author guy
  */
-public class HeaderOutputNotification extends DebugMessageNotificationImpl
-		implements IDebugNotificationMessage {
+public class HeaderOutputNotification extends DebugMessageNotificationImpl implements IDebugNotificationMessage {
 
 	private String output;
 

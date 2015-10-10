@@ -51,8 +51,7 @@ public class BracesTabPage extends ModifyDialogTabPage {
 	private ComboPreference blocks;
 	private ComboPreference switchCase;
 
-	private final String[] fBracePositionNames = {
-			FormatterMessages.BracesTabPage_position_same_line,
+	private final String[] fBracePositionNames = { FormatterMessages.BracesTabPage_position_same_line,
 			FormatterMessages.BracesTabPage_position_next_line,
 			FormatterMessages.BracesTabPage_position_next_line_indented };
 
@@ -62,8 +61,7 @@ public class BracesTabPage extends ModifyDialogTabPage {
 	 * @param modifyDialog
 	 * @param workingValues
 	 */
-	public BracesTabPage(ModifyDialog modifyDialog,
-			CodeFormatterPreferences preferences) {
+	public BracesTabPage(ModifyDialog modifyDialog, CodeFormatterPreferences preferences) {
 		super(modifyDialog, preferences);
 	}
 
@@ -73,25 +71,17 @@ public class BracesTabPage extends ModifyDialogTabPage {
 				FormatterMessages.BracesTabPage_group_brace_positions_title);
 		classDeclaration = createBracesCombo(group, numColumns,
 				FormatterMessages.BracesTabPage_option_class_declaration);
-		setComboValue(classDeclaration,
-				codeFormatterPreferences.brace_position_for_class);
+		setComboValue(classDeclaration, codeFormatterPreferences.brace_position_for_class);
 		methodDeclaration = createBracesCombo(group, numColumns,
 				FormatterMessages.BracesTabPage_option_method_declaration);
-		setComboValue(methodDeclaration,
-				codeFormatterPreferences.brace_position_for_function);
-		lambdaFunctionDeclaration = createBracesCombo(
-				group,
-				numColumns,
+		setComboValue(methodDeclaration, codeFormatterPreferences.brace_position_for_function);
+		lambdaFunctionDeclaration = createBracesCombo(group, numColumns,
 				FormatterMessages.BracesTabPage_option_lambda_function_declaration);
-		setComboValue(lambdaFunctionDeclaration,
-				codeFormatterPreferences.brace_position_for_lambda_function);
-		blocks = createBracesCombo(group, numColumns,
-				FormatterMessages.BracesTabPage_option_blocks);
+		setComboValue(lambdaFunctionDeclaration, codeFormatterPreferences.brace_position_for_lambda_function);
+		blocks = createBracesCombo(group, numColumns, FormatterMessages.BracesTabPage_option_blocks);
 		setComboValue(blocks, codeFormatterPreferences.brace_position_for_block);
-		switchCase = createBracesCombo(group, numColumns,
-				FormatterMessages.BracesTabPage_option_switch_case);
-		setComboValue(switchCase,
-				codeFormatterPreferences.brace_position_for_switch);
+		switchCase = createBracesCombo(group, numColumns, FormatterMessages.BracesTabPage_option_switch_case);
+		setComboValue(switchCase, codeFormatterPreferences.brace_position_for_switch);
 
 		isInitialized = true;
 	}
@@ -105,10 +95,8 @@ public class BracesTabPage extends ModifyDialogTabPage {
 		return fPreview;
 	}
 
-	private ComboPreference createBracesCombo(Composite composite,
-			int numColumns, String message) {
-		return createComboPref(composite, numColumns, message,
-				fBracePositionNames);
+	private ComboPreference createBracesCombo(Composite composite, int numColumns, String message) {
+		return createComboPref(composite, numColumns, message, fBracePositionNames);
 	}
 
 	protected void doUpdatePreview() {

@@ -73,8 +73,7 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 	 *            the size of the resulting image
 	 * @see #setAdornments(int)
 	 */
-	public PHPElementImageDescriptor(ImageDescriptor baseImage, int flags,
-			Point size) {
+	public PHPElementImageDescriptor(ImageDescriptor baseImage, int flags, Point size) {
 		fBaseImage = baseImage;
 		Assert.isNotNull(fBaseImage);
 		fFlags = flags;
@@ -138,13 +137,11 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 	}
 
 	public boolean equals(Object object) {
-		if (object == null
-				|| !PHPElementImageDescriptor.class.equals(object.getClass()))
+		if (object == null || !PHPElementImageDescriptor.class.equals(object.getClass()))
 			return false;
 
 		PHPElementImageDescriptor other = (PHPElementImageDescriptor) object;
-		return (fBaseImage.equals(other.fBaseImage) && fFlags == other.fFlags && fSize
-				.equals(other.fSize));
+		return (fBaseImage.equals(other.fBaseImage) && fFlags == other.fFlags && fSize.equals(other.fSize));
 	}
 
 	public int hashCode() {
@@ -171,8 +168,7 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 		ImageData data = descriptor.getImageData();
 		if (data == null) {
 			data = DEFAULT_IMAGE_DATA;
-			PHPUiPlugin
-					.logErrorMessage("Image data not available: " + descriptor.toString()); //$NON-NLS-1$
+			PHPUiPlugin.logErrorMessage("Image data not available: " + descriptor.toString()); //$NON-NLS-1$
 		}
 		return data;
 	}

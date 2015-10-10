@@ -22,8 +22,7 @@ import org.eclipse.php.internal.ui.PHPUILanguageToolkit;
  * 
  * @author shalom
  */
-public class OpenTypeInHierarchyAction extends
-		org.eclipse.dltk.ui.actions.OpenTypeInHierarchyAction {
+public class OpenTypeInHierarchyAction extends org.eclipse.dltk.ui.actions.OpenTypeInHierarchyAction {
 
 	/*
 	 * (non-Javadoc)

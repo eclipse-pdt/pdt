@@ -55,18 +55,14 @@ public class VariableBlock {
 		fInPreferencePage = inPreferencePage;
 		fAskToBuild = true;
 
-		String[] buttonLabels = new String[] {
-				PHPUIMessages.VariableBlock_vars_add_button,
-				PHPUIMessages.VariableBlock_vars_edit_button,
-				PHPUIMessages.VariableBlock_vars_remove_button };
+		String[] buttonLabels = new String[] { PHPUIMessages.VariableBlock_vars_add_button,
+				PHPUIMessages.VariableBlock_vars_edit_button, PHPUIMessages.VariableBlock_vars_remove_button };
 
 		VariablesAdapter adapter = new VariablesAdapter();
 
-		IPVariableElementLabelProvider labelProvider = new IPVariableElementLabelProvider(
-				!inPreferencePage);
+		IPVariableElementLabelProvider labelProvider = new IPVariableElementLabelProvider(!inPreferencePage);
 
-		fVariablesList = new ListDialogField(adapter, buttonLabels,
-				labelProvider);
+		fVariablesList = new ListDialogField(adapter, buttonLabels, labelProvider);
 		fVariablesList.setDialogFieldListener(adapter);
 		fVariablesList.setLabelText(PHPUIMessages.VariableBlock_vars_label);
 		fVariablesList.setRemoveButtonIndex(2);
@@ -75,10 +71,8 @@ public class VariableBlock {
 
 		fVariablesList.setViewerSorter(new ViewerSorter() {
 			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof IPVariableElement
-						&& e2 instanceof IPVariableElement) {
-					return ((IPVariableElement) e1).getName().compareTo(
-							((IPVariableElement) e2).getName());
+				if (e1 instanceof IPVariableElement && e2 instanceof IPVariableElement) {
+					return ((IPVariableElement) e1).getName().compareTo(((IPVariableElement) e2).getName());
 				}
 				return super.compare(viewer, e1, e2);
 			}
@@ -98,8 +92,7 @@ public class VariableBlock {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setFont(parent.getFont());
 
-		LayoutUtil.doDefaultLayout(composite,
-				new DialogField[] { fVariablesList }, true, 0, 0);
+		LayoutUtil.doDefaultLayout(composite, new DialogField[] { fVariablesList }, true, 0, 0);
 		LayoutUtil.setHorizontalGrabbing(fVariablesList.getListControl(null));
 
 		fControl = composite;
@@ -121,8 +114,7 @@ public class VariableBlock {
 		return PHPUiPlugin.getActiveWorkbenchShell();
 	}
 
-	private class VariablesAdapter implements IDialogFieldListener,
-			IListAdapter {
+	private class VariablesAdapter implements IDialogFieldListener, IListAdapter {
 
 		// -------- IListAdapter --------
 
@@ -192,8 +184,7 @@ public class VariableBlock {
 	private void editEntries(IPVariableElement entry) {
 		List existingEntries = fVariablesList.getElements();
 
-		VariableCreationDialog dialog = new VariableCreationDialog(getShell(),
-				entry, existingEntries);
+		VariableCreationDialog dialog = new VariableCreationDialog(getShell(), entry, existingEntries);
 		if (dialog.open() != Window.OK) {
 			return;
 		}
@@ -203,8 +194,8 @@ public class VariableBlock {
 			entry = newEntry;
 			fHasChanges = true;
 		} else {
-			boolean hasChanges = !(entry.getName().equals(newEntry.getName()) && entry
-					.getPath().equals(newEntry.getPath()));
+			boolean hasChanges = !(entry.getName().equals(newEntry.getName())
+					&& entry.getPath().equals(newEntry.getPath()));
 			if (hasChanges) {
 				fHasChanges = true;
 				entry.setName(newEntry.getName());
@@ -223,8 +214,7 @@ public class VariableBlock {
 		fVariablesList.removeAllElements();
 		String[] reservedName = {}; // IncludePathVariableManager.instance().getReservedVariables();
 		for (int i = 0; i < reservedName.length; i++) {
-			IPVariableElement elem = new IPVariableElement(reservedName[i],
-					Path.EMPTY, true);
+			IPVariableElement elem = new IPVariableElement(reservedName[i], Path.EMPTY, true);
 			elem.setReserved(true);
 			fVariablesList.addElement(elem);
 		}
@@ -261,17 +251,14 @@ public class VariableBlock {
 		if (steps > 0) {
 
 			boolean needsBuild = false;
-			if (fAskToBuild
-					&& doesChangeRequireFullBuild(removedVariables,
-							changedVariables)) {
+			if (fAskToBuild && doesChangeRequireFullBuild(removedVariables, changedVariables)) {
 				String title = PHPUIMessages.VariableBlock_needsbuild_title;
 				String message = PHPUIMessages.VariableBlock_needsbuild_message;
 
-				MessageDialog buildDialog = new MessageDialog(getShell(),
-						title, null, message, MessageDialog.QUESTION,
-						new String[] { IDialogConstants.YES_LABEL,
-								IDialogConstants.NO_LABEL,
-								IDialogConstants.CANCEL_LABEL }, 2);
+				MessageDialog buildDialog = new MessageDialog(
+						getShell(), title, null, message, MessageDialog.QUESTION, new String[] {
+								IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL },
+						2);
 				int res = buildDialog.open();
 				if (res != 0 && res != 1) {
 					return false;
@@ -279,9 +266,8 @@ public class VariableBlock {
 				needsBuild = (res == 0);
 			}
 
-			final VariableBlockRunnable runnable = new VariableBlockRunnable(
-					removedVariables, changedElements, unchangedElements,
-					needsBuild);
+			final VariableBlockRunnable runnable = new VariableBlockRunnable(removedVariables, changedElements,
+					unchangedElements, needsBuild);
 			Job buildJob = new Job(PHPUIMessages.VariableBlock_job_description) {
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
@@ -297,8 +283,7 @@ public class VariableBlock {
 				}
 			};
 
-			buildJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory()
-					.buildRule());
+			buildJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
 			buildJob.setUser(true);
 			buildJob.schedule();
 			return true;
@@ -307,7 +292,9 @@ public class VariableBlock {
 		// try {
 		// dialog.run(true, true, runnable);
 		// } catch (InvocationTargetException e) {
-		//				ExceptionHandler.handle(e, getShell(), PHPUIMessages.getString("VariableBlock.operation_errror.title"), PHPUIMessages.getString("VariableBlock.operation_errror.message")); 
+		// ExceptionHandler.handle(e, getShell(),
+		// PHPUIMessages.getString("VariableBlock.operation_errror.title"),
+		// PHPUIMessages.getString("VariableBlock.operation_errror.message"));
 		// return false;
 		// } catch (InterruptedException e) {
 		// return false;
@@ -337,8 +324,7 @@ public class VariableBlock {
 		private List fUnchanged;
 		private boolean fDoBuild;
 
-		public VariableBlockRunnable(List toRemove, List toChange,
-				List unchanged, boolean doBuild) {
+		public VariableBlockRunnable(List toRemove, List toChange, List unchanged, boolean doBuild) {
 			fToRemove = toRemove;
 			fToChange = toChange;
 			fUnchanged = unchanged;
@@ -349,10 +335,8 @@ public class VariableBlock {
 		/*
 		 * @see IRunnableWithProgress#run(IProgressMonitor)
 		 */
-		public void run(IProgressMonitor monitor)
-				throws InvocationTargetException, InterruptedException {
-			monitor.beginTask(PHPUIMessages.VariableBlock_operation_desc,
-					fDoBuild ? 2 : 1);
+		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+			monitor.beginTask(PHPUIMessages.VariableBlock_operation_desc, fDoBuild ? 2 : 1);
 			try {
 				setVariables(monitor);
 
@@ -366,8 +350,7 @@ public class VariableBlock {
 		}
 
 		public void setVariables(IProgressMonitor monitor) throws CoreException {
-			int nVariables = fToChange.size() + fToRemove.size()
-					+ fUnchanged.size();
+			int nVariables = fToChange.size() + fToRemove.size() + fUnchanged.size();
 
 			String[] names = new String[nVariables];
 			IPath[] paths = new IPath[nVariables];
@@ -394,8 +377,7 @@ public class VariableBlock {
 			// SubProgressMonitor(monitor, 1));
 
 			if (fDoBuild) {
-				ResourcesPlugin.getWorkspace().build(
-						IncrementalProjectBuilder.FULL_BUILD,
+				ResourcesPlugin.getWorkspace().build(IncrementalProjectBuilder.FULL_BUILD,
 						new SubProgressMonitor(monitor, 1));
 			}
 		}
@@ -431,9 +413,9 @@ public class VariableBlock {
 		 * null) { elem = new IPVariableElement(name, entryPath,
 		 * reserved.contains(name)); elements.add(elem); if
 		 * (name.equals(initSelection)) { initSelectedElement = elem; } } else {
-		 * PHPCorePlugin
-		 * .logErrorMessage("VariableBlock: IncludePath variable with null value: "
-		 * + name); } } fVariablesList.setElements(elements);
+		 * PHPCorePlugin .logErrorMessage(
+		 * "VariableBlock: IncludePath variable with null value: " + name); } }
+		 * fVariablesList.setElements(elements);
 		 */
 		if (initSelectedElement != null) {
 			ISelection sel = new StructuredSelection(initSelectedElement);

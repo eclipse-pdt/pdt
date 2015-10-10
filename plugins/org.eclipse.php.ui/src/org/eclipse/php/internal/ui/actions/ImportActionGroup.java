@@ -45,8 +45,7 @@ public class ImportActionGroup extends ActionGroup {
 	 * (non-Javadoc) Method declared in ActionGroup
 	 */
 	public void fillContextMenu(IMenuManager menu) {
-		menu.appendToGroup(IContextMenuConstants.GROUP_REORGANIZE,
-				new Separator(GROUP_IMPORT));
+		menu.appendToGroup(IContextMenuConstants.GROUP_REORGANIZE, new Separator(GROUP_IMPORT));
 		menu.appendToGroup(GROUP_IMPORT, fImportAction);
 		menu.appendToGroup(GROUP_IMPORT, fExportAction);
 		super.fillContextMenu(menu);

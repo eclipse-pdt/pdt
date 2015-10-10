@@ -20,8 +20,7 @@ import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
  * @author Bartlomiej Laczkowski
  */
 @SuppressWarnings("restriction")
-public class ZendDebuggerExeLaunchSettingsSection
-		extends AbstractDebugExeLaunchSettingsSection {
+public class ZendDebuggerExeLaunchSettingsSection extends AbstractDebugExeLaunchSettingsSection {
 
 	/*
 	 * (non-Javadoc)
@@ -33,8 +32,7 @@ public class ZendDebuggerExeLaunchSettingsSection
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		super.performApply(configuration);
-		configuration.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO,
-				true);
+		configuration.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
 	}
 
 	/*
@@ -47,8 +45,7 @@ public class ZendDebuggerExeLaunchSettingsSection
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		super.setDefaults(configuration);
-		configuration.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO,
-				true);
+		configuration.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
 	}
 
 }

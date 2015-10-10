@@ -48,24 +48,19 @@ public class SelectionEngineTests {
 	protected static final char SELECTION_CHAR = '|';
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/selection/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] {
-				"/workspace/selection/php5", "/workspace/selection/php53" });
-		TESTS.put(PHPVersion.PHP5_4, new String[] {
-				"/workspace/selection/php5", "/workspace/selection/php53",
+		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/selection/php5", "/workspace/selection/php53" });
+		TESTS.put(PHPVersion.PHP5_4, new String[] { "/workspace/selection/php5", "/workspace/selection/php53",
 				"/workspace/selection/php54" });
-		TESTS.put(PHPVersion.PHP5_5, new String[] {
-				"/workspace/selection/php5", "/workspace/selection/php53",
+		TESTS.put(PHPVersion.PHP5_5, new String[] { "/workspace/selection/php5", "/workspace/selection/php53",
 				"/workspace/selection/php54", "/workspace/selection/php55" });
-		TESTS.put(PHPVersion.PHP5_6, new String[] {
-				"/workspace/selection/php5", "/workspace/selection/php53",
-				"/workspace/selection/php54", "/workspace/selection/php55",
-				"/workspace/selection/php56" });
-		TESTS.put(PHPVersion.PHP7_0, new String[] {
-				"/workspace/selection/php5", "/workspace/selection/php53",
-				"/workspace/selection/php54", "/workspace/selection/php55",
-				"/workspace/selection/php56", "/workspace/selection/php7" });
+		TESTS.put(PHPVersion.PHP5_6, new String[] { "/workspace/selection/php5", "/workspace/selection/php53",
+				"/workspace/selection/php54", "/workspace/selection/php55", "/workspace/selection/php56" });
+		TESTS.put(PHPVersion.PHP7_0,
+				new String[] { "/workspace/selection/php5", "/workspace/selection/php53", "/workspace/selection/php54",
+						"/workspace/selection/php55", "/workspace/selection/php56", "/workspace/selection/php7" });
 	};
 
 	protected IProject project;
@@ -78,8 +73,7 @@ public class SelectionEngineTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("AutoSelectionEngine_" + version.toString());
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject("AutoSelectionEngine_" + version.toString());
 		if (project.exists()) {
 			return;
 		}
@@ -110,13 +104,11 @@ public class SelectionEngineTests {
 
 		boolean proposalsEqual = true;
 		if (elements.length == expectedProposals.length) {
-			for (ExpectedProposal expectedProposal : pdttFile
-					.getExpectedProposals()) {
+			for (ExpectedProposal expectedProposal : pdttFile.getExpectedProposals()) {
 				boolean found = false;
 				for (IModelElement modelElement : elements) {
 					if (modelElement.getElementType() == expectedProposal.type
-							&& modelElement.getElementName().equalsIgnoreCase(
-									expectedProposal.name)) {
+							&& modelElement.getElementName().equalsIgnoreCase(expectedProposal.name)) {
 						found = true;
 						break;
 					}
@@ -147,8 +139,7 @@ public class SelectionEngineTests {
 					errorBuf.append("type");
 					break;
 				}
-				errorBuf.append('(').append(modelElement.getElementName())
-						.append(")\n");
+				errorBuf.append('(').append(modelElement.getElementName()).append(")\n");
 			}
 			fail(errorBuf.toString());
 		}
@@ -174,8 +165,7 @@ public class SelectionEngineTests {
 	protected ISourceRange createFile(String data) throws Exception {
 		int left = data.indexOf(SELECTION_CHAR);
 		if (left == -1) {
-			throw new IllegalArgumentException(
-					"Selection characters are not set");
+			throw new IllegalArgumentException("Selection characters are not set");
 		}
 		// replace the left character
 		data = data.substring(0, left) + data.substring(left + 1);
@@ -204,8 +194,7 @@ public class SelectionEngineTests {
 	protected IModelElement[] getSelection(String data) throws Exception {
 		ISourceRange range = createFile(data);
 		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(testFile);
-		IModelElement[] elements = sourceModule.codeSelect(range.getOffset(),
-				range.getLength());
+		IModelElement[] elements = sourceModule.codeSelect(range.getOffset(), range.getLength());
 		return elements;
 	}
 }

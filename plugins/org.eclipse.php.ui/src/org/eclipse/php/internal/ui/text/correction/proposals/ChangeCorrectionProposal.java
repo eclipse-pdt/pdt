@@ -34,8 +34,7 @@ public class ChangeCorrectionProposal extends AbstractCorrectionProposal {
 
 	private Change fChange;
 
-	public ChangeCorrectionProposal(String name, Change change, int relevance,
-			Image image) {
+	public ChangeCorrectionProposal(String name, Change change, int relevance, Image image) {
 		this(name, change, relevance, image, null);
 	}
 
@@ -57,8 +56,7 @@ public class ChangeCorrectionProposal extends AbstractCorrectionProposal {
 	 * 
 	 * @since 3.6
 	 */
-	public ChangeCorrectionProposal(String name, Change change, int relevance,
-			Image image, String commandId) {
+	public ChangeCorrectionProposal(String name, Change change, int relevance, Image image, String commandId) {
 		super(name, relevance, image, commandId);
 		fChange = change;
 	}
@@ -66,11 +64,9 @@ public class ChangeCorrectionProposal extends AbstractCorrectionProposal {
 	@Override
 	public void apply(IDocument document) {
 		try {
-			performChange(PHPUiPlugin.getActivePage().getActiveEditor(),
-					document);
+			performChange(PHPUiPlugin.getActivePage().getActiveEditor(), document);
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e,
-					CorrectionMessages.ChangeCorrectionProposal_error_title,
+			ExceptionHandler.handle(e, CorrectionMessages.ChangeCorrectionProposal_error_title,
 					CorrectionMessages.ChangeCorrectionProposal_error_message);
 		}
 	}
@@ -87,8 +83,7 @@ public class ChangeCorrectionProposal extends AbstractCorrectionProposal {
 	 * @throws CoreException
 	 *             Thrown when the invocation of the change failed.
 	 */
-	protected void performChange(IEditorPart activeEditor, IDocument document)
-			throws CoreException {
+	protected void performChange(IEditorPart activeEditor, IDocument document) throws CoreException {
 		Change change = null;
 		IRewriteTarget rewriteTarget = null;
 		try {
@@ -98,21 +93,17 @@ public class ChangeCorrectionProposal extends AbstractCorrectionProposal {
 					LinkedModeModel.closeAllModels(document);
 				}
 				if (activeEditor != null) {
-					rewriteTarget = (IRewriteTarget) activeEditor
-							.getAdapter(IRewriteTarget.class);
+					rewriteTarget = (IRewriteTarget) activeEditor.getAdapter(IRewriteTarget.class);
 					if (rewriteTarget != null) {
 						rewriteTarget.beginCompoundChange();
 					}
 				}
 
 				change.initializeValidationData(new NullProgressMonitor());
-				RefactoringStatus valid = change
-						.isValid(new NullProgressMonitor());
+				RefactoringStatus valid = change.isValid(new NullProgressMonitor());
 				if (valid.hasFatalError()) {
-					IStatus status = new Status(IStatus.ERROR, PHPUiPlugin.ID,
-							IStatus.ERROR, valid.getMessageMatchingSeverity(
-									RefactoringStatus.FATAL),
-							null);
+					IStatus status = new Status(IStatus.ERROR, PHPUiPlugin.ID, IStatus.ERROR,
+							valid.getMessageMatchingSeverity(RefactoringStatus.FATAL), null);
 					throw new CoreException(status);
 				} else {
 					IUndoManager manager = RefactoringCore.getUndoManager();
@@ -126,8 +117,7 @@ public class ChangeCorrectionProposal extends AbstractCorrectionProposal {
 						manager.changePerformed(change, successful);
 					}
 					if (undoChange != null) {
-						undoChange.initializeValidationData(
-								new NullProgressMonitor());
+						undoChange.initializeValidationData(new NullProgressMonitor());
 						manager.addUndo(getName(), undoChange);
 					}
 				}

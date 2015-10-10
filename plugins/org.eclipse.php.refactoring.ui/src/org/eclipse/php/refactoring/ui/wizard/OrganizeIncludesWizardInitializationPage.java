@@ -20,12 +20,10 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * @author seva
  */
-public class OrganizeIncludesWizardInitializationPage extends
-		UserInputWizardPage {
+public class OrganizeIncludesWizardInitializationPage extends UserInputWizardPage {
 
 	protected OrganizeIncludesWizardInitializationPage() {
-		super(PHPRefactoringUIMessages
-				.getString("OrganizeIncludesWizardInitializationPage.0")); //$NON-NLS-1$
+		super(PHPRefactoringUIMessages.getString("OrganizeIncludesWizardInitializationPage.0")); //$NON-NLS-1$
 	}
 
 	/**

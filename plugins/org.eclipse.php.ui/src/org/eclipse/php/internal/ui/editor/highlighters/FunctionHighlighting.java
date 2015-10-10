@@ -34,12 +34,9 @@ public class FunctionHighlighting extends AbstractSemanticHighlighting {
 		 * skip static call invocation, and add to changes list the global calls
 		 */
 		public boolean visit(FunctionInvocation functionInvocation) {
-			final Expression functionName = functionInvocation
-					.getFunctionName().getName();
-			final int invocationParent = functionInvocation.getParent()
-					.getType();
-			if (invocationParent != ASTNode.METHOD_INVOCATION
-					&& invocationParent != ASTNode.STATIC_METHOD_INVOCATION) {
+			final Expression functionName = functionInvocation.getFunctionName().getName();
+			final int invocationParent = functionInvocation.getParent().getType();
+			if (invocationParent != ASTNode.METHOD_INVOCATION && invocationParent != ASTNode.STATIC_METHOD_INVOCATION) {
 				highlightFunctionName(functionName);
 			}
 			return true;
@@ -47,8 +44,7 @@ public class FunctionHighlighting extends AbstractSemanticHighlighting {
 
 		private void highlightFunctionName(Expression functionName) {
 			if (functionName instanceof NamespaceName) {
-				List<Identifier> segments = ((NamespaceName) functionName)
-						.segments();
+				List<Identifier> segments = ((NamespaceName) functionName).segments();
 				Identifier segment = segments.get(segments.size() - 1);
 				highlight(segment);
 			} else {

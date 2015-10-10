@@ -50,8 +50,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(
-					DLTKUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
+			if (event.getProperty().equals(DLTKUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
 				if (event.getNewValue().equals(Boolean.TRUE.toString())) {
 					enabled = true;
 				} else {
@@ -65,8 +64,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	public ActiveFoldingListener(PHPStructuredEditor editor) {
 		this.editor = editor;
 		ContextCore.getContextManager().addListener(this);
-		DLTKUiBridgePlugin.getDefault().getPluginPreferences()
-				.addPropertyChangeListener(PREFERENCE_LISTENER);
+		DLTKUiBridgePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
 
 		enabled = DLTKUiBridgePlugin.getDefault().getPreferenceStore()
 				.getBoolean(DLTKUiBridgePlugin.AUTO_FOLDING_ENABLED);
@@ -76,8 +74,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	public void dispose() {
 		ContextCore.getContextManager().removeListener(this);
-		DLTKUiBridgePlugin.getDefault().getPluginPreferences()
-				.removePropertyChangeListener(PREFERENCE_LISTENER);
+		DLTKUiBridgePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 	}
 
 	public static void resetProjection(IEditorPart javaEditor) {
@@ -96,18 +93,14 @@ public class ActiveFoldingListener extends AbstractContextListener {
 				List<IModelElement> toExpand = new ArrayList<IModelElement>();
 				List<IModelElement> toCollapse = new ArrayList<IModelElement>();
 
-				IModelElement element = DLTKUIPlugin
-						.getEditorInputModelElement(editor.getEditorInput());
+				IModelElement element = DLTKUIPlugin.getEditorInputModelElement(editor.getEditorInput());
 				if (element instanceof ISourceModule) {
 					ISourceModule compilationUnit = (ISourceModule) element;
 					List<IModelElement> allChildren = getAllChildren(compilationUnit);
 					for (IModelElement child : allChildren) {
-						IInteractionElement interactionElement = ContextCore
-								.getContextManager().getElement(
-										bridge.getHandleIdentifier(child));
-						if (interactionElement != null
-								&& interactionElement.getInterest()
-										.isInteresting()) {
+						IInteractionElement interactionElement = ContextCore.getContextManager()
+								.getElement(bridge.getHandleIdentifier(child));
+						if (interactionElement != null && interactionElement.getInterest().isInteresting()) {
 							toExpand.add(child);
 						} else {
 							toCollapse.add(child);
@@ -119,13 +112,11 @@ public class ActiveFoldingListener extends AbstractContextListener {
 				if (updater != null) {
 					updater.collapseComments();
 					updater.collapseMembers();
-					updater.expandElements(toExpand
-							.toArray(new IModelElement[toExpand.size()]));
+					updater.expandElements(toExpand.toArray(new IModelElement[toExpand.size()]));
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR,
-						DLTKUiBridgePlugin.ID_PLUGIN,
-						"Could not update folding", e)); //$NON-NLS-1$
+				StatusHandler
+						.log(new Status(IStatus.ERROR, DLTKUiBridgePlugin.ID_PLUGIN, "Could not update folding", e)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -152,8 +143,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 			if (updater == null || !enabled) {
 				return;
 			} else {
-				Object object = bridge.getObjectForHandle(element
-						.getHandleIdentifier());
+				Object object = bridge.getObjectForHandle(element.getHandleIdentifier());
 				if (object instanceof IMember) {
 					IMember member = (IMember) object;
 					if (element.getInterest().isInteresting()) {
@@ -161,13 +151,11 @@ public class ActiveFoldingListener extends AbstractContextListener {
 						// expand the next 2 children down (e.g. anonymous
 						// types)
 						try {
-							IModelElement[] children = ((IParent) member)
-									.getChildren();
+							IModelElement[] children = ((IParent) member).getChildren();
 							if (children.length == 1) {
 								updater.expandElements(new IModelElement[] { children[0] });
 								if (children[0] instanceof IParent) {
-									IModelElement[] childsChildren = ((IParent) children[0])
-											.getChildren();
+									IModelElement[] childsChildren = ((IParent) children[0]).getChildren();
 									if (childsChildren.length == 1) {
 										updater.expandElements(new IModelElement[] { childsChildren[0] });
 									}

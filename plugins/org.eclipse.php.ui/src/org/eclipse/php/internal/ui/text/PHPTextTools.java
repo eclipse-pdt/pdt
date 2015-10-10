@@ -21,20 +21,16 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 public class PHPTextTools extends ScriptTextTools {
 
-	private static final String[] LEGAL_CONTENT_TYPES = {
-			PHPPartitionTypes.PHP_DEFAULT, PHPPartitionTypes.PHP_DOC,
-			PHPPartitionTypes.PHP_MULTI_LINE_COMMENT,
-			PHPPartitionTypes.PHP_QUOTED_STRING,
+	private static final String[] LEGAL_CONTENT_TYPES = { PHPPartitionTypes.PHP_DEFAULT, PHPPartitionTypes.PHP_DOC,
+			PHPPartitionTypes.PHP_MULTI_LINE_COMMENT, PHPPartitionTypes.PHP_QUOTED_STRING,
 			PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT, };
 
 	public PHPTextTools(boolean autoDisposeOnDisplayDispose) {
-		super(PHPPartitionTypes.PHP_DEFAULT, LEGAL_CONTENT_TYPES,
-				autoDisposeOnDisplayDispose);
+		super(PHPPartitionTypes.PHP_DEFAULT, LEGAL_CONTENT_TYPES, autoDisposeOnDisplayDispose);
 	}
 
-	public ScriptSourceViewerConfiguration createSourceViewerConfiguraton(
-			IPreferenceStore preferenceStore, ITextEditor editor,
-			String partitioning) {
+	public ScriptSourceViewerConfiguration createSourceViewerConfiguraton(IPreferenceStore preferenceStore,
+			ITextEditor editor, String partitioning) {
 		return null;
 	}
 

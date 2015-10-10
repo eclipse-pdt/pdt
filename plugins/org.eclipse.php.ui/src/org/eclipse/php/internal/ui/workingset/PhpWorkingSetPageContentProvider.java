@@ -22,8 +22,7 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ExternalProjectFragment;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
 
-class PhpWorkingSetPageContentProvider extends
-		StandardModelElementContentProvider {
+class PhpWorkingSetPageContentProvider extends StandardModelElementContentProvider {
 
 	public boolean hasChildren(Object element) {
 
@@ -36,16 +35,13 @@ class PhpWorkingSetPageContentProvider extends
 	public Object[] getChildren(Object parentElement) {
 		try {
 			if (parentElement instanceof IScriptModel)
-				return concatenate(super.getChildren(parentElement),
-						getForeignProjects((IScriptModel) parentElement));
+				return concatenate(super.getChildren(parentElement), getForeignProjects((IScriptModel) parentElement));
 
 			if (parentElement instanceof IProject)
 				return ((IProject) parentElement).members();
 
 			if (parentElement instanceof IScriptProject)
-				return concatenate(
-						((IScriptProject) parentElement).getProject().members(
-								IContainer.FOLDER),
+				return concatenate(((IScriptProject) parentElement).getProject().members(IContainer.FOLDER),
 						getExternalProjectFragments((IScriptProject) parentElement));
 
 			return super.getChildren(parentElement);
@@ -54,8 +50,7 @@ class PhpWorkingSetPageContentProvider extends
 		}
 	}
 
-	private Object[] getExternalProjectFragments(IScriptProject project)
-			throws ModelException {
+	private Object[] getExternalProjectFragments(IScriptProject project) throws ModelException {
 
 		IProjectFragment[] fragments = project.getProjectFragments();
 		IProjectFragment[] externalFragments;
@@ -78,8 +73,7 @@ class PhpWorkingSetPageContentProvider extends
 
 	}
 
-	private Object[] getForeignProjects(IScriptModel model)
-			throws ModelException {
+	private Object[] getForeignProjects(IScriptModel model) throws ModelException {
 		return model.getForeignResources();
 	}
 

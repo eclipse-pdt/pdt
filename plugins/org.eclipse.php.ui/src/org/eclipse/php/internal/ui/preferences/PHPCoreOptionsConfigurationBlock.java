@@ -25,22 +25,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
-public abstract class PHPCoreOptionsConfigurationBlock extends
-		OptionsConfigurationBlock {
+public abstract class PHPCoreOptionsConfigurationBlock extends OptionsConfigurationBlock {
 
-	public PHPCoreOptionsConfigurationBlock(IStatusChangeListener context,
-			IProject project, Key[] allKeys,
+	public PHPCoreOptionsConfigurationBlock(IStatusChangeListener context, IProject project, Key[] allKeys,
 			IWorkbenchPreferenceContainer container) {
 		super(context, project, allKeys, container);
 	}
 
 	protected abstract Control createContents(Composite parent);
 
-	protected abstract void validateSettings(Key changedKey, String oldValue,
-			String newValue);
+	protected abstract void validateSettings(Key changedKey, String oldValue, String newValue);
 
-	protected abstract String[] getFullBuildDialogStrings(
-			boolean workspaceSettings);
+	protected abstract String[] getFullBuildDialogStrings(boolean workspaceSettings);
 
 	protected final static Key getPHPCoreKey(String key) {
 		return getKey(PHPCorePlugin.ID, key);
@@ -50,19 +46,15 @@ public abstract class PHPCoreOptionsConfigurationBlock extends
 		if (fProject != null) {
 			final Key versionKey = getPHPCoreKey(Keys.PHP_VERSION);
 			// synch the php facets version if needed
-			String newVersion = versionKey
-					.getStoredValue(currContext, fManager);
+			String newVersion = versionKey.getStoredValue(currContext, fManager);
 			if (newVersion == null) {
 				newVersion = getValue(versionKey);
 			}
-			final IStatus status = PHPFacets.setFacetedVersion(fProject,
-					PHPVersion.byAlias(newVersion));
+			final IStatus status = PHPFacets.setFacetedVersion(fProject, PHPVersion.byAlias(newVersion));
 			if (!status.isOK()) {
-				MessageDialog dialog = new MessageDialog(
-						getShell(),
-						PreferencesMessages.PHPCoreOptionsConfigurationBlock_SettingVersionFailed_Title,
-						null, status.getMessage(), MessageDialog.ERROR,
-						new String[] { IDialogConstants.CANCEL_LABEL }, 0);
+				MessageDialog dialog = new MessageDialog(getShell(),
+						PreferencesMessages.PHPCoreOptionsConfigurationBlock_SettingVersionFailed_Title, null,
+						status.getMessage(), MessageDialog.ERROR, new String[] { IDialogConstants.CANCEL_LABEL }, 0);
 				dialog.open();
 			}
 			return status.isOK();

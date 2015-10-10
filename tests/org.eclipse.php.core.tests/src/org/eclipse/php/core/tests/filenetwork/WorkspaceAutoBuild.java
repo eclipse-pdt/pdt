@@ -46,11 +46,9 @@ public class WorkspaceAutoBuild {
 		do {
 			try {
 				IJobManager jobManager = Job.getJobManager();
-				Job[] jobs = Job.getJobManager().find(
-						ResourcesPlugin.FAMILY_AUTO_BUILD);
+				Job[] jobs = Job.getJobManager().find(ResourcesPlugin.FAMILY_AUTO_BUILD);
 				jobManager.join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
-				jobs = Job.getJobManager().find(
-						ResourcesPlugin.FAMILY_AUTO_BUILD);
+				jobs = Job.getJobManager().find(ResourcesPlugin.FAMILY_AUTO_BUILD);
 				for (int j = 0; j < jobs.length; j++) {
 					System.out.println("#2" + jobs[j]);
 				}

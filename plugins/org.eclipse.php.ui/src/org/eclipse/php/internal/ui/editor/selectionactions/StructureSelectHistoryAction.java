@@ -19,8 +19,7 @@ public class StructureSelectHistoryAction extends Action implements IUpdate {
 	private PHPStructuredEditor fEditor;
 	private SelectionHistory fHistory;
 
-	public StructureSelectHistoryAction(PHPStructuredEditor editor,
-			SelectionHistory history) {
+	public StructureSelectHistoryAction(PHPStructuredEditor editor, SelectionHistory history) {
 		super(Messages.StructureSelectHistoryAction_3);
 		setToolTipText(Messages.StructureSelectHistoryAction_4);
 		setDescription(Messages.StructureSelectHistoryAction_5);

@@ -18,9 +18,12 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ org.eclipse.php.refactoring.core.rename.AllTests.class, org.eclipse.php.refactoring.core.move.AllTests.class,
-		org.eclipse.php.refactoring.core.extract.function.AllTests.class, org.eclipse.php.refactoring.core.extract.variable.AllTests.class,
-		org.eclipse.php.refactoring.ui.actions.AllTests.class, org.eclipse.php.refactoring.core.changes.AllTests.class })
+@Suite.SuiteClasses({ org.eclipse.php.refactoring.core.rename.AllTests.class,
+		org.eclipse.php.refactoring.core.move.AllTests.class,
+		org.eclipse.php.refactoring.core.extract.function.AllTests.class,
+		org.eclipse.php.refactoring.core.extract.variable.AllTests.class,
+		org.eclipse.php.refactoring.ui.actions.AllTests.class,
+		org.eclipse.php.refactoring.core.changes.AllTests.class })
 public class AllTests {
 
 }

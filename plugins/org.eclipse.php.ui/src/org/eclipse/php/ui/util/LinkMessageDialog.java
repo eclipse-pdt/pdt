@@ -40,11 +40,10 @@ public abstract class LinkMessageDialog extends MessageDialog {
 	 * @param dialogButtonLabels
 	 * @param defaultIndex
 	 */
-	public LinkMessageDialog(Shell parentShell, String dialogTitle,
-			Image dialogTitleImage, String dialogMessage, int dialogImageType,
-			String[] dialogButtonLabels, int defaultIndex) {
-		super(parentShell, dialogTitle, dialogTitleImage, dialogMessage,
-				dialogImageType, dialogButtonLabels, defaultIndex);
+	public LinkMessageDialog(Shell parentShell, String dialogTitle, Image dialogTitleImage, String dialogMessage,
+			int dialogImageType, String[] dialogButtonLabels, int defaultIndex) {
+		super(parentShell, dialogTitle, dialogTitleImage, dialogMessage, dialogImageType, dialogButtonLabels,
+				defaultIndex);
 		this.dialogMessage = dialogMessage;
 	}
 
@@ -63,8 +62,7 @@ public abstract class LinkMessageDialog extends MessageDialog {
 			image.setBackground(imageLabel.getBackground());
 			imageLabel.setImage(image);
 			imageLabel
-					.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER
-							| GridData.VERTICAL_ALIGN_BEGINNING));
+					.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER | GridData.VERTICAL_ALIGN_BEGINNING));
 		}
 		// Create message with link
 		if (message != null) {
@@ -77,10 +75,8 @@ public abstract class LinkMessageDialog extends MessageDialog {
 				}
 			});
 			GridData data = new GridData(
-					GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL
-							| GridData.VERTICAL_ALIGN_BEGINNING);
-			data.widthHint = convertHorizontalDLUsToPixels(
-					IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
+					GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING);
+			data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
 			messageLabel.setLayoutData(data);
 		}
 		return composite;

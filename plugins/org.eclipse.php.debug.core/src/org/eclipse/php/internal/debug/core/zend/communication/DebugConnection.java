@@ -102,8 +102,7 @@ public class DebugConnection {
 				if (monitor.isCanceled())
 					return Status.OK_STATUS;
 				try {
-					IDebugMessage incomingMessage = (IDebugMessage) inputMessageQueue
-							.queueOut();
+					IDebugMessage incomingMessage = (IDebugMessage) inputMessageQueue.queueOut();
 					Logger.debugMSG("NEW MESSAGE RECEIVED: " + incomingMessage); //$NON-NLS-1$
 					try {
 						boolean isDebugConnectionTest = false;
@@ -111,28 +110,19 @@ public class DebugConnection {
 						if (incomingMessage instanceof DebugSessionStartedNotification) {
 							DebugSessionStartedNotification sessionStartedMessage = (DebugSessionStartedNotification) incomingMessage;
 							setResponseTimeout(sessionStartedMessage);
-							isDebugConnectionTest = sessionStartedMessage
-									.getQuery()
+							isDebugConnectionTest = sessionStartedMessage.getQuery()
 									.indexOf("testConnection=true") != -1; //$NON-NLS-1$
 							// This is a connection test...
 							if (isDebugConnectionTest) {
-								String sourceHost = DebugConnection.this.socket
-										.getInetAddress().getHostAddress();
+								String sourceHost = DebugConnection.this.socket.getInetAddress().getHostAddress();
 								// Notify success
-								if (verifyProtocolID(sessionStartedMessage
-										.getServerProtocolID())) {
+								if (verifyProtocolID(sessionStartedMessage.getServerProtocolID())) {
 									sendRequest(new StartRequest());
-									DebugServerTestController.getInstance()
-											.notifyTestListener(
-													new DebugServerTestEvent(
-															sourceHost,
-															DebugServerTestEvent.TEST_SUCCEEDED));
+									DebugServerTestController.getInstance().notifyTestListener(
+											new DebugServerTestEvent(sourceHost, DebugServerTestEvent.TEST_SUCCEEDED));
 								} else {
-									DebugServerTestController.getInstance()
-											.notifyTestListener(
-													new DebugServerTestEvent(
-															sourceHost,
-															DebugServerTestEvent.TEST_FAILED_DEBUGER_VERSION));
+									DebugServerTestController.getInstance().notifyTestListener(new DebugServerTestEvent(
+											sourceHost, DebugServerTestEvent.TEST_FAILED_DEBUGER_VERSION));
 								}
 							}
 							// START DEBUG (create debug target)
@@ -143,15 +133,12 @@ public class DebugConnection {
 						// Creation of debug session has succeeded
 						if (debugTarget != null) {
 							// Try to find relevant handler for the message:
-							IDebugMessageHandler messageHandler = createMessageHandler(
-									incomingMessage);
+							IDebugMessageHandler messageHandler = createMessageHandler(incomingMessage);
 							if (messageHandler != null) {
 								Logger.debugMSG("CREATING MESSAGE HANDLER: " //$NON-NLS-1$
-										+ messageHandler.getClass().getName()
-												.replaceFirst(".*\\.", "")); //$NON-NLS-1$ //$NON-NLS-2$
+										+ messageHandler.getClass().getName().replaceFirst(".*\\.", "")); //$NON-NLS-1$ //$NON-NLS-2$
 								// Handle the request
-								messageHandler.handle(incomingMessage,
-										debugTarget);
+								messageHandler.handle(incomingMessage, debugTarget);
 								if (messageHandler instanceof IDebugRequestHandler) {
 									// Create response
 									IDebugResponseMessage response = ((IDebugRequestHandler) messageHandler)
@@ -160,8 +147,7 @@ public class DebugConnection {
 									synchronized (connectionOut) {
 										byteArray.reset();
 										response.serialize(outArray);
-										connectionOut
-												.writeInt(byteArray.size());
+										connectionOut.writeInt(byteArray.size());
 										byteArray.writeTo(connectionOut);
 										connectionOut.flush();
 									}
@@ -173,11 +159,9 @@ public class DebugConnection {
 								// Take the request ID from the response.
 								int requestId = r.getID();
 								// Find the request.
-								IDebugRequestMessage req = (IDebugRequestMessage) requestsTable
-										.remove(requestId);
+								IDebugRequestMessage req = (IDebugRequestMessage) requestsTable.remove(requestId);
 								// Find the handler.
-								ResponseHandler handler = responseHandlers
-										.remove(Integer.valueOf(requestId));
+								ResponseHandler handler = responseHandlers.remove(Integer.valueOf(requestId));
 								handler.handleResponse(req, r);
 							}
 							// Handle dummy connection close
@@ -288,8 +272,7 @@ public class DebugConnection {
 					}
 					isValidProtocol = true;
 					// Create message with the use of registry
-					IDebugMessage message = DebugMessagesRegistry
-							.getMessage(messageType);
+					IDebugMessage message = DebugMessagesRegistry.getMessage(messageType);
 					if (message != null) {
 						if (message instanceof OutputNotification) {
 							message.setTransferEncoding(outputEncoding);
@@ -304,21 +287,17 @@ public class DebugConnection {
 						messageHandler.queueIn(message);
 					} else if (message instanceof IDebugResponseMessage) {
 						message.deserialize(connectionIn);
-						int messageId = ((IDebugResponseMessage) message)
-								.getID();
+						int messageId = ((IDebugResponseMessage) message).getID();
 						/*
 						 * INSERT RESPONSE TO TABLE AND RELEASE THE THREAD
 						 * WAITING FOR THE REQUEST
 						 */
 						// Find the handler.
-						ResponseHandler handler = responseHandlers
-								.get(Integer.valueOf(messageId));
+						ResponseHandler handler = responseHandlers.get(Integer.valueOf(messageId));
 						if (handler == null) {
-							responseTable.put(/* requestId */messageId,
-									message);
+							responseTable.put(/* requestId */messageId, message);
 							// Find the request.
-							IDebugRequestMessage request = (IDebugRequestMessage) requestsTable
-									.remove(messageId);
+							IDebugRequestMessage request = (IDebugRequestMessage) requestsTable.remove(messageId);
 							if (request != null) {
 								// Notify the RESPONSE is here.
 								synchronized (request) {
@@ -376,18 +355,14 @@ public class DebugConnection {
 		}
 
 		private void showProtocolError() {
-			final String errorMessage = MessageFormat.format(
-					PHPDebugCoreMessages.Debugger_Incompatible_Protocol,
-					new Object[] { String
-							.valueOf(RemoteDebugger.PROTOCOL_ID_LATEST) });
-			Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(),
-					IPHPDebugConstants.INTERNAL_ERROR, errorMessage, null);
+			final String errorMessage = MessageFormat.format(PHPDebugCoreMessages.Debugger_Incompatible_Protocol,
+					new Object[] { String.valueOf(RemoteDebugger.PROTOCOL_ID_LATEST) });
+			Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR,
+					errorMessage, null);
 			DebugPlugin.log(status);
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openError(
-							Display.getDefault().getActiveShell(),
-							"Debugger Error", errorMessage); //$NON-NLS-1$
+					MessageDialog.openError(Display.getDefault().getActiveShell(), "Debugger Error", errorMessage); //$NON-NLS-1$
 				}
 			});
 		}
@@ -400,8 +375,7 @@ public class DebugConnection {
 		private int ordinal;
 		private DebugSessionStartedNotification startedNotification;
 
-		public SessionDescriptor(
-				DebugSessionStartedNotification startedNotification) {
+		public SessionDescriptor(DebugSessionStartedNotification startedNotification) {
 			this.startedNotification = startedNotification;
 			this.id = -1;
 			this.ordinal = -1;
@@ -414,8 +388,7 @@ public class DebugConnection {
 
 		private void build() {
 			String params;
-			if (startedNotification.getQuery().contains(
-					AbstractDebugParametersInitializer.DEBUG_SESSION_ID))
+			if (startedNotification.getQuery().contains(AbstractDebugParametersInitializer.DEBUG_SESSION_ID))
 				params = startedNotification.getQuery();
 			else
 				params = startedNotification.getOptions();
@@ -423,8 +396,7 @@ public class DebugConnection {
 			Iterator<String> i = parameters.iterator();
 			while (i.hasNext()) {
 				String parameter = i.next();
-				if (parameter.startsWith(
-						AbstractDebugParametersInitializer.DEBUG_SESSION_ID)) {
+				if (parameter.startsWith(AbstractDebugParametersInitializer.DEBUG_SESSION_ID)) {
 					int idx = parameter.indexOf('=');
 					Integer parsedId = parseInt(parameter.substring(idx + 1));
 					if (parsedId != null)
@@ -484,8 +456,7 @@ public class DebugConnection {
 		}
 
 	};
-	protected static final int START_MESSAGE_ID = (new DebugSessionStartedNotification())
-			.getType();
+	protected static final int START_MESSAGE_ID = (new DebugSessionStartedNotification()).getType();
 	protected int debugResponseTimeout;
 	protected PHPDebugTarget debugTarget;
 	protected boolean isValidProtocol;
@@ -501,8 +472,7 @@ public class DebugConnection {
 	private IntHashtable responseTable;
 	private Hashtable<Integer, ResponseHandler> responseHandlers;
 	private ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-	private DataOutputStream dataOutputStream = new DataOutputStream(
-			byteArrayOutputStream);
+	private DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
 	private int lastRequestID = 1000;
 	private Map<Integer, IDebugMessageHandler> messageHandlers;
 	private boolean isConnected = true;
@@ -607,8 +577,7 @@ public class DebugConnection {
 			int waitedTime = 0;
 			while (response == null && isConnected()) {
 				synchronized (request) {
-					response = (IDebugResponseMessage) responseTable
-							.remove(theMsg.getID());
+					response = (IDebugResponseMessage) responseTable.remove(theMsg.getID());
 					if (response == null) {
 						/*
 						 * Display a progress dialog after a quarter of the
@@ -629,8 +598,7 @@ public class DebugConnection {
 					}
 				}
 				if (response == null) {
-					response = (IDebugResponseMessage) responseTable
-							.remove(theMsg.getID());
+					response = (IDebugResponseMessage) responseTable.remove(theMsg.getID());
 				}
 				/*
 				 * if the response is null. it means that there is no answer
@@ -638,8 +606,7 @@ public class DebugConnection {
 				 * peerResponseTimeout.
 				 */
 				if (response == null && isConnected()) {
-					Logger.debugMSG(
-							"COMMUNICATION PROBLEMS (response is null)"); //$NON-NLS-1$
+					Logger.debugMSG("COMMUNICATION PROBLEMS (response is null)"); //$NON-NLS-1$
 					// Handle time out will stop the communication if needed.
 					if (waitedTime < debugResponseTimeout - timeoutTick) {
 						waitedTime += timeoutTick;
@@ -679,8 +646,7 @@ public class DebugConnection {
 		IDebugRequestMessage theMsg = (IDebugRequestMessage) request;
 		try {
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-			DataOutputStream dataOutputStream = new DataOutputStream(
-					byteArrayOutputStream);
+			DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
 			theMsg.setID(msgId);
 			theMsg.serialize(dataOutputStream);
 			int messageSize = byteArrayOutputStream.size();
@@ -707,8 +673,7 @@ public class DebugConnection {
 	 * 
 	 * @param admin
 	 */
-	public void setCommunicationAdministrator(
-			CommunicationAdministrator admin) {
+	public void setCommunicationAdministrator(CommunicationAdministrator admin) {
 		communicationAdministrator = admin;
 	}
 
@@ -721,8 +686,7 @@ public class DebugConnection {
 		this.communicationClient = client;
 	}
 
-	protected boolean hookLaunch(SessionDescriptor sessionDescriptor)
-			throws CoreException {
+	protected boolean hookLaunch(SessionDescriptor sessionDescriptor) throws CoreException {
 		// Try to hook any of the existing launches
 		ILaunch launch = PHPSessionLaunchMapper.get(sessionDescriptor.getId());
 		/*
@@ -765,34 +729,27 @@ public class DebugConnection {
 	 * @param startedNotification
 	 *            A DebugSessionStartedNotification
 	 */
-	protected void hookServerLaunch(final ILaunch launch,
-			SessionDescriptor sessionDescriptor) throws CoreException {
-		ILaunchConfiguration launchConfiguration = launch
-				.getLaunchConfiguration();
+	protected void hookServerLaunch(final ILaunch launch, SessionDescriptor sessionDescriptor) throws CoreException {
+		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		IProject project = getProject(launchConfiguration);
-		messageReceiver.setTransferEncoding(launchConfiguration
-				.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, "")); //$NON-NLS-1$
-		messageReceiver.setOutputEncoding(launchConfiguration
-				.getAttribute(IDebugParametersKeys.OUTPUT_ENCODING, "")); //$NON-NLS-1$
+		messageReceiver
+				.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, "")); //$NON-NLS-1$
+		messageReceiver.setOutputEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.OUTPUT_ENCODING, "")); //$NON-NLS-1$
 		String URL = launchConfiguration.getAttribute(Server.BASE_URL, ""); //$NON-NLS-1$
-		boolean stopAtFirstLine = project == null ? true
-				: PHPProjectPreferences.getStopAtFirstLine(project);
-		int requestPort = PHPDebugPlugin
-				.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+		boolean stopAtFirstLine = project == null ? true : PHPProjectPreferences.getStopAtFirstLine(project);
+		int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 		try {
-			requestPort = Integer
-					.valueOf(launch.getAttribute(IDebugParametersKeys.PORT));
+			requestPort = Integer.valueOf(launch.getAttribute(IDebugParametersKeys.PORT));
 		} catch (Exception e) {
 			// should not happen
 		}
-		boolean runWithDebug = launchConfiguration
-				.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
+		boolean runWithDebug = launchConfiguration.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
 		if (launch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE)) {
 			runWithDebug = false;
 		}
 		PHPProcess process = new PHPProcess(launch, URL);
-		debugTarget = (PHPDebugTarget) createDebugTarget(this, launch, URL,
-				requestPort, process, runWithDebug, stopAtFirstLine, project);
+		debugTarget = (PHPDebugTarget) createDebugTarget(this, launch, URL, requestPort, process, runWithDebug,
+				stopAtFirstLine, project);
 		// Bind debug target to the launch
 		bindTarget(launch);
 	}
@@ -805,24 +762,18 @@ public class DebugConnection {
 	 * @param startedNotification
 	 *            A DebugSessionStartedNotification
 	 */
-	protected void hookPHPExeLaunch(final ILaunch launch,
-			SessionDescriptor sessionDescriptor) throws CoreException {
-		ILaunchConfiguration launchConfiguration = launch
-				.getLaunchConfiguration();
-		messageReceiver.setTransferEncoding(launchConfiguration
-				.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, "")); //$NON-NLS-1$
-		messageReceiver.setOutputEncoding(launchConfiguration
-				.getAttribute(IDebugParametersKeys.OUTPUT_ENCODING, "")); //$NON-NLS-1$
-		String phpExeString = launchConfiguration.getAttribute(
-				IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
-		String fileNameString = launchConfiguration
-				.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
-		boolean runWithDebugInfo = launchConfiguration
-				.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
+	protected void hookPHPExeLaunch(final ILaunch launch, SessionDescriptor sessionDescriptor) throws CoreException {
+		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
+		messageReceiver
+				.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, "")); //$NON-NLS-1$
+		messageReceiver.setOutputEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.OUTPUT_ENCODING, "")); //$NON-NLS-1$
+		String phpExeString = launchConfiguration.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION,
+				(String) null);
+		String fileNameString = launchConfiguration.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
+		boolean runWithDebugInfo = launchConfiguration.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		IProject project = null;
-		String file = launchConfiguration
-				.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
+		String file = launchConfiguration.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
 		if (file != null) {
 			IResource resource = workspaceRoot.findMember(file);
 			if (resource != null) {
@@ -839,21 +790,17 @@ public class DebugConnection {
 			IFile fileToDebug = (IFile) res;
 			debugFileName = fileToDebug.getName();
 		}
-		boolean stopAtFirstLine = PHPProjectPreferences
-				.getStopAtFirstLine(project);
-		int requestPort = PHPDebugPlugin
-				.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
+		int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 		try {
-			requestPort = Integer
-					.valueOf(launch.getAttribute(IDebugParametersKeys.PORT));
+			requestPort = Integer.valueOf(launch.getAttribute(IDebugParametersKeys.PORT));
 		} catch (Exception e) {
 			// should not happen
 		}
 		IPath phpExe = new Path(phpExeString);
 		PHPProcess process = new PHPProcess(launch, phpExe.toOSString());
-		debugTarget = (PHPDebugTarget) createDebugTarget(this, launch,
-				phpExeString, debugFileName, requestPort, process,
-				runWithDebugInfo, stopAtFirstLine, project);
+		debugTarget = (PHPDebugTarget) createDebugTarget(this, launch, phpExeString, debugFileName, requestPort,
+				process, runWithDebugInfo, stopAtFirstLine, project);
 		// Bind debug target to the launch
 		bindTarget(launch);
 	}
@@ -868,13 +815,11 @@ public class DebugConnection {
 	 * @param lineNumber
 	 *            Line number
 	 */
-	protected void hookFileContentSession(
-			DebugSessionStartedNotification notification, String fileName,
+	protected void hookFileContentSession(DebugSessionStartedNotification notification, String fileName,
 			int lineNumber) {
 		try {
 			FileContentDebugHandler handler = new FileContentDebugHandler(this);
-			RemoteDebugger debugger = (RemoteDebugger) handler
-					.getRemoteDebugger();
+			RemoteDebugger debugger = (RemoteDebugger) handler.getRemoteDebugger();
 			if (!debugger.isActive()) {
 				throw new IllegalStateException(
 						"Could not read the content of the file. The debugger is not connected."); //$NON-NLS-1$
@@ -889,8 +834,7 @@ public class DebugConnection {
 				if (content == null) {
 					content = new byte[0];
 				}
-				IFileContentRequestor requester = new OpenRemoteFileRequestor(
-						notification);
+				IFileContentRequestor requester = new OpenRemoteFileRequestor(notification);
 				requester.fileContentReceived(content, fileName, lineNumber);
 			} finally {
 				debugger.closeDebugSession();
@@ -915,26 +859,22 @@ public class DebugConnection {
 		// Nothing to hook yet
 	}
 
-	protected ILaunch fetchLaunch(SessionDescriptor sessionDescriptor)
-			throws CoreException {
-		final String query = sessionDescriptor.getStartedNotification()
-				.getQuery();
-		String additionalOptions = sessionDescriptor.getStartedNotification()
-				.getOptions();
+	protected ILaunch fetchLaunch(SessionDescriptor sessionDescriptor) throws CoreException {
+		final String query = sessionDescriptor.getStartedNotification().getQuery();
+		String additionalOptions = sessionDescriptor.getStartedNotification().getOptions();
 		int sessionID = sessionDescriptor.getId();
 		// Check for a file content request session.
 		String fileContentRequestFile = getFileContentRequestPath(query);
 		if (fileContentRequestFile != null) {
-			hookFileContentSession(sessionDescriptor.getStartedNotification(),
-					fileContentRequestFile, getLineNumber(query));
+			hookFileContentSession(sessionDescriptor.getStartedNotification(), fileContentRequestFile,
+					getLineNumber(query));
 			return null;
 		}
 		/*
 		 * First, find out if the session ID is not an older one that was sent
 		 * because the browser cached a cookie which is no longer valid for us.
 		 */
-		if (sessionID > 0
-				&& sessionID <= DebugSessionIdGenerator.getLastGenerated()) {
+		if (sessionID > 0 && sessionID <= DebugSessionIdGenerator.getLastGenerated()) {
 			if (PHPDebugPlugin.DEBUG) {
 				Logger.log(Logger.ERROR,
 						"Terminating a requested session.\nThe session id received is lower than the last generated."); //$NON-NLS-1$
@@ -945,16 +885,14 @@ public class DebugConnection {
 		 * In this case we can assume that the launch is similar to a web server
 		 * debug or profile session.
 		 */
-		ILaunchConfigurationType lcType = DebugPlugin.getDefault()
-				.getLaunchManager()
+		ILaunchConfigurationType lcType = DebugPlugin.getDefault().getLaunchManager()
 				.getLaunchConfigurationType(REMOTE_LAUNCH_TYPE_ID);
 		DebugUITools.setLaunchPerspective(lcType, LaunchManager.DEBUG_MODE, // $NON-NLS-1$
 				"org.eclipse.debug.ui.DebugPerspective"); //$NON-NLS-1$
-		ILaunchConfigurationWorkingCopy wc = lcType.newInstance(null,
-				REMOTE_DEBUG_LAUNCH_NAME);
+		ILaunchConfigurationWorkingCopy wc = lcType.newInstance(null, REMOTE_DEBUG_LAUNCH_NAME);
 		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
-		if (additionalOptions != null && additionalOptions
-				.indexOf(IPHPDebugConstants.DEBUGGING_NO_REMOTE + "=1") > -1) { //$NON-NLS-1$
+		if (additionalOptions != null
+				&& additionalOptions.indexOf(IPHPDebugConstants.DEBUGGING_NO_REMOTE + "=1") > -1) { //$NON-NLS-1$
 			wc.setAttribute(IPHPDebugConstants.DEBUGGING_DEBUG_NO_REMOTE, true);
 		}
 		String originalURL = getOriginalURL(additionalOptions);
@@ -962,16 +900,14 @@ public class DebugConnection {
 			// Use the URI instead
 			originalURL = sessionDescriptor.getStartedNotification().getUri();
 		}
-		wc.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER,
-				Boolean.toString(true));
+		wc.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER, Boolean.toString(true));
 		wc.setAttribute(Server.BASE_URL, originalURL);
 		// Try to find related server configuration
 		Server serverLookup = ServersManager.findByURL(originalURL);
 		if (serverLookup != null)
 			wc.setAttribute(Server.NAME, serverLookup.getName());
 		wc.doSave();
-		ILaunch launch = DebugUITools.buildAndLaunch(wc,
-				ILaunchManager.DEBUG_MODE, new NullProgressMonitor());
+		ILaunch launch = DebugUITools.buildAndLaunch(wc, ILaunchManager.DEBUG_MODE, new NullProgressMonitor());
 		/*
 		 * In case we got here, we need to update the PHPSessionLaunchMapper
 		 * with the new launch and the acquired launch id. This is a case when
@@ -981,9 +917,8 @@ public class DebugConnection {
 			sessionID = DebugSessionIdGenerator.generateSessionID();
 		PHPSessionLaunchMapper.put(sessionID, launch);
 		if (PHPDebugPlugin.DEBUG)
-			System.out.println(
-					"Added a remote launch mapping to session with ID: " //$NON-NLS-1$
-							+ sessionID);
+			System.out.println("Added a remote launch mapping to session with ID: " //$NON-NLS-1$
+					+ sessionID);
 		return launch;
 	}
 
@@ -993,12 +928,9 @@ public class DebugConnection {
 	 * 
 	 * @throws CoreException
 	 */
-	protected IDebugTarget createDebugTarget(DebugConnection thread,
-			ILaunch launch, String url, int requestPort, PHPProcess process,
-			boolean runWithDebug, boolean stopAtFirstLine, IProject project)
-					throws CoreException {
-		return new PHPDebugTarget(thread, launch, url, requestPort, process,
-				runWithDebug, stopAtFirstLine, project);
+	protected IDebugTarget createDebugTarget(DebugConnection thread, ILaunch launch, String url, int requestPort,
+			PHPProcess process, boolean runWithDebug, boolean stopAtFirstLine, IProject project) throws CoreException {
+		return new PHPDebugTarget(thread, launch, url, requestPort, process, runWithDebug, stopAtFirstLine, project);
 	}
 
 	/**
@@ -1007,13 +939,11 @@ public class DebugConnection {
 	 * 
 	 * @throws CoreException
 	 */
-	protected IDebugTarget createDebugTarget(DebugConnection thread,
-			ILaunch launch, String phpExeString, String debugFileName,
-			int requestPort, PHPProcess process, boolean runWithDebugInfo,
+	protected IDebugTarget createDebugTarget(DebugConnection thread, ILaunch launch, String phpExeString,
+			String debugFileName, int requestPort, PHPProcess process, boolean runWithDebugInfo,
 			boolean stopAtFirstLine, IProject project) throws CoreException {
-		return new PHPDebugTarget(thread, launch, phpExeString, debugFileName,
-				requestPort, process, runWithDebugInfo, stopAtFirstLine,
-				project);
+		return new PHPDebugTarget(thread, launch, phpExeString, debugFileName, requestPort, process, runWithDebugInfo,
+				stopAtFirstLine, project);
 	}
 
 	/**
@@ -1023,13 +953,10 @@ public class DebugConnection {
 	 * @return {@link IProject}
 	 * @throws CoreException
 	 */
-	protected IProject getProject(ILaunchConfiguration configuration)
-			throws CoreException {
-		String projectName = configuration
-				.getAttribute(IPHPDebugConstants.PHP_Project, (String) null);
+	protected IProject getProject(ILaunchConfiguration configuration) throws CoreException {
+		String projectName = configuration.getAttribute(IPHPDebugConstants.PHP_Project, (String) null);
 		if (projectName != null) {
-			return ResourcesPlugin.getWorkspace().getRoot()
-					.getProject(projectName);
+			return ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 		}
 		return null;
 	}
@@ -1040,8 +967,7 @@ public class DebugConnection {
 		try {
 			Object response = sendRequest(request);
 			if (response != null && response instanceof SetProtocolResponse) {
-				int responceProtocolID = ((SetProtocolResponse) response)
-						.getProtocolID();
+				int responceProtocolID = ((SetProtocolResponse) response).getProtocolID();
 				if (responceProtocolID == protocolID) {
 					return true;
 				}
@@ -1074,8 +1000,7 @@ public class DebugConnection {
 	 *         <code>false</code>
 	 */
 	protected boolean isServerLaunch(ILaunch launch) {
-		return Boolean.toString(true).equals(
-				launch.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER));
+		return Boolean.toString(true).equals(launch.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER));
 	}
 
 	/**
@@ -1084,9 +1009,8 @@ public class DebugConnection {
 	 * @param debugSessionStartedNotification
 	 * @return True, if the debug session hook was successful; False, otherwise.
 	 */
-	private void hookDebugSession(
-			DebugSessionStartedNotification debugSessionStartedNotification)
-					throws CoreException {
+	private void hookDebugSession(DebugSessionStartedNotification debugSessionStartedNotification)
+			throws CoreException {
 		/*
 		 * Try to hook (debug session -> launch) only one at a time, just to
 		 * avoid an ugly mess with debug events.
@@ -1094,8 +1018,7 @@ public class DebugConnection {
 		try {
 			// Do not lock forever
 			HOOK_LOCK.tryLock(HOOK_TIMEOUT, TimeUnit.MILLISECONDS);
-			SessionDescriptor sessionDescriptor = new SessionDescriptor(
-					debugSessionStartedNotification);
+			SessionDescriptor sessionDescriptor = new SessionDescriptor(debugSessionStartedNotification);
 			if (!hookLaunch(sessionDescriptor))
 				// May happen
 				hookError("No session id"); //$NON-NLS-1$
@@ -1135,10 +1058,8 @@ public class DebugConnection {
 				for (IProcess p : processes)
 					launch.removeProcess(p);
 				// Create 'multi' process & target
-				PHPProcess process = new PHPProcess(launch,
-						"Parallel Requests' Process"); //$NON-NLS-1$
-				PHPMultiDebugTarget multi = new PHPMultiDebugTarget(launch,
-						process);
+				PHPProcess process = new PHPProcess(launch, "Parallel Requests' Process"); //$NON-NLS-1$
+				PHPMultiDebugTarget multi = new PHPMultiDebugTarget(launch, process);
 				multi.addSubTarget(single);
 				multi.addSubTarget(debugTarget);
 				// Connect to launch
@@ -1175,8 +1096,7 @@ public class DebugConnection {
 
 	private IDebugMessageHandler createMessageHandler(IDebugMessage message) {
 		if (!messageHandlers.containsKey(message.getType())) {
-			IDebugMessageHandler requestHandler = DebugMessagesRegistry
-					.getHandler(message);
+			IDebugMessageHandler requestHandler = DebugMessagesRegistry.getHandler(message);
 			messageHandlers.put(message.getType(), requestHandler);
 		}
 		return messageHandlers.get(message.getType());
@@ -1277,15 +1197,11 @@ public class DebugConnection {
 		Logger.debugMSG("DEBUG CONNECTION: Socket Cleaned"); //$NON-NLS-1$
 	}
 
-	private void setResponseTimeout(
-			DebugSessionStartedNotification startedNotification) {
+	private void setResponseTimeout(DebugSessionStartedNotification startedNotification) {
 		// Set default from preferences first
-		debugResponseTimeout = Platform.getPreferencesService().getInt(
-				PHPDebugPlugin.ID,
-				PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT, 60000,
-				null);
-		int customResponseTimeout = ZendDebuggerSettingsUtil
-				.getResponseTimeout(startedNotification);
+		debugResponseTimeout = Platform.getPreferencesService().getInt(PHPDebugPlugin.ID,
+				PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT, 60000, null);
+		int customResponseTimeout = ZendDebuggerSettingsUtil.getResponseTimeout(startedNotification);
 		if (customResponseTimeout != -1)
 			debugResponseTimeout = customResponseTimeout;
 	}
@@ -1308,8 +1224,7 @@ public class DebugConnection {
 		if (startIndex < 0) {
 			return null;
 		}
-		additionalOptions = additionalOptions
-				.substring(startIndex + optionKey.length());
+		additionalOptions = additionalOptions.substring(startIndex + optionKey.length());
 		int endIndex = additionalOptions.indexOf('&');
 		if (endIndex > -1) {
 			additionalOptions = additionalOptions.substring(0, endIndex);
@@ -1329,8 +1244,7 @@ public class DebugConnection {
 	 * @return The file content request path, or null, if non was found.
 	 */
 	protected String getFileContentRequestPath(String query) {
-		return extractParameterFromQuery(query,
-				IPHPDebugConstants.DEBUGGING_GET_FILE_CONTENT);
+		return extractParameterFromQuery(query, IPHPDebugConstants.DEBUGGING_GET_FILE_CONTENT);
 	}
 
 	/**
@@ -1338,8 +1252,7 @@ public class DebugConnection {
 	 */
 	protected int getLineNumber(String query) {
 		try {
-			return Integer.parseInt(extractParameterFromQuery(query,
-					IPHPDebugConstants.DEBUGGING_LINE_NUMBER));
+			return Integer.parseInt(extractParameterFromQuery(query, IPHPDebugConstants.DEBUGGING_LINE_NUMBER));
 		} catch (NumberFormatException e) {
 		}
 		return 0;
@@ -1357,8 +1270,7 @@ public class DebugConnection {
 	protected String extractParameterFromQuery(String query, String parameter) {
 		int queryStartIndex = query.indexOf(parameter + "="); //$NON-NLS-1$
 		if (queryStartIndex > -1) {
-			String value = query
-					.substring(queryStartIndex + parameter.length() + 1);
+			String value = query.substring(queryStartIndex + parameter.length() + 1);
 			int paramSeparatorIndex = value.indexOf('&');
 			if (paramSeparatorIndex > -1) {
 				value = value.substring(0, paramSeparatorIndex);

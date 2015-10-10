@@ -30,8 +30,7 @@ import org.eclipse.ui.views.navigator.ResourceComparator;
 
 /**
   */
-public class MultipleFolderSelectionDialog extends SelectionStatusDialog
-		implements ISelectionChangedListener {
+public class MultipleFolderSelectionDialog extends SelectionStatusDialog implements ISelectionChangedListener {
 
 	private CheckboxTreeViewer fViewer;
 
@@ -45,8 +44,8 @@ public class MultipleFolderSelectionDialog extends SelectionStatusDialog
 	private Set fExisting;
 	private Object fFocusElement;
 
-	public MultipleFolderSelectionDialog(Shell parent,
-			ILabelProvider labelProvider, ITreeContentProvider contentProvider) {
+	public MultipleFolderSelectionDialog(Shell parent, ILabelProvider labelProvider,
+			ITreeContentProvider contentProvider) {
 		super(parent);
 		fLabelProvider = labelProvider;
 		fContentProvider = contentProvider;
@@ -139,8 +138,7 @@ public class MultipleFolderSelectionDialog extends SelectionStatusDialog
 			public void run() {
 				access$superCreate();
 
-				fViewer.setCheckedElements(getInitialElementSelections()
-						.toArray());
+				fViewer.setCheckedElements(getInitialElementSelections().toArray());
 
 				fViewer.expandToLevel(2);
 				if (fExisting != null) {
@@ -192,7 +190,7 @@ public class MultipleFolderSelectionDialog extends SelectionStatusDialog
 		if (getResult() != null) {
 			updateStatus(new StatusInfo());
 		} else {
-			updateStatus(new StatusInfo(IStatus.ERROR, "")); //$NON-NLS-1$ 
+			updateStatus(new StatusInfo(IStatus.ERROR, "")); //$NON-NLS-1$
 		}
 	}
 
@@ -235,8 +233,7 @@ public class MultipleFolderSelectionDialog extends SelectionStatusDialog
 			setInitialSelections(existing);
 		}
 		if (fFocusElement != null) {
-			treeViewer.setSelection(new StructuredSelection(fFocusElement),
-					true);
+			treeViewer.setSelection(new StructuredSelection(fFocusElement), true);
 		}
 		treeViewer.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
@@ -258,8 +255,7 @@ public class MultipleFolderSelectionDialog extends SelectionStatusDialog
 	}
 
 	private void updateNewFolderButtonState() {
-		IStructuredSelection selection = (IStructuredSelection) fViewer
-				.getSelection();
+		IStructuredSelection selection = (IStructuredSelection) fViewer.getSelection();
 		fSelectedContainer = null;
 		if (selection.size() == 1) {
 			Object first = selection.getFirstElement();

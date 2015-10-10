@@ -15,11 +15,9 @@ import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
-public class PHPManualPreferencePage extends
-		AbstractConfigurationBlockPreferencePage {
+public class PHPManualPreferencePage extends AbstractConfigurationBlockPreferencePage {
 
-	protected IPreferenceConfigurationBlock createConfigurationBlock(
-			OverlayPreferenceStore overlayPreferenceStore) {
+	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
 		return new PHPManualConfigurationBlock(this, overlayPreferenceStore);
 	}
 
@@ -28,7 +26,7 @@ public class PHPManualPreferencePage extends
 	}
 
 	protected void setDescription() {
-		setDescription(PHPUIMessages.PHPManualPreferencePage_0); 
+		setDescription(PHPUIMessages.PHPManualPreferencePage_0);
 	}
 
 	protected void setPreferenceStore() {

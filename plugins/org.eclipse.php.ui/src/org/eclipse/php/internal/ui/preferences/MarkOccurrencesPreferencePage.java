@@ -21,8 +21,7 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 /**
  * The page for setting the editor options for occurrences marking.
  */
-public final class MarkOccurrencesPreferencePage extends
-		AbstractConfigurationBlockPreferencePage {
+public final class MarkOccurrencesPreferencePage extends AbstractConfigurationBlockPreferencePage {
 
 	/*
 	 * @seeorg.eclipse.ui.internal.editors.text.
@@ -33,9 +32,8 @@ public final class MarkOccurrencesPreferencePage extends
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.ui.internal.editors.text.AbstractConfigurationBlockPreferencePage
-	 * #setDescription()
+	 * @see org.eclipse.ui.internal.editors.text.
+	 * AbstractConfigurationBlockPreferencePage #setDescription()
 	 */
 	protected void setDescription() {
 		setDescription(PHPUIMessages.MarkOccurrencesConfigurationBlock_title);
@@ -59,8 +57,7 @@ public final class MarkOccurrencesPreferencePage extends
 	 * #createConfigurationBlock(org.eclipse
 	 * .ui.internal.editors.text.OverlayPreferenceStore)
 	 */
-	protected IPreferenceConfigurationBlock createConfigurationBlock(
-			OverlayPreferenceStore overlayPreferenceStore) {
+	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
 		return new MarkOccurrencesConfigurationBlock(overlayPreferenceStore);
 	}
 

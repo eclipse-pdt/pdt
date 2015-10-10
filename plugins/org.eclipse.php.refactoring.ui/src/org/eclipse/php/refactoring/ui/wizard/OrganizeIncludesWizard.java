@@ -19,8 +19,7 @@ import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 public class OrganizeIncludesWizard extends RefactoringWizard {
 
 	public OrganizeIncludesWizard(ProcessorBasedRefactoring refactoring) {
-		super(refactoring, DIALOG_BASED_USER_INTERFACE
-				| PREVIEW_EXPAND_FIRST_NODE);
+		super(refactoring, DIALOG_BASED_USER_INTERFACE | PREVIEW_EXPAND_FIRST_NODE);
 		setDefaultPageTitle("Organize Includes"); //$NON-NLS-1$
 		// setForcePreviewReview(true);
 	}

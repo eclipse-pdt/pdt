@@ -35,8 +35,7 @@ import org.eclipse.ui.dialogs.PropertyPage;
  * 
  * @author shalom
  */
-public abstract class AbstractPHPPreferencePageBlock implements
-		IPHPPreferencePageBlock {
+public abstract class AbstractPHPPreferencePageBlock implements IPHPPreferencePageBlock {
 
 	private String comparableName;
 
@@ -59,8 +58,7 @@ public abstract class AbstractPHPPreferencePageBlock implements
 		return group;
 	}
 
-	protected Button addCheckBox(Composite parent, String label,
-			String prefKey, int horizontalIndent) {
+	protected Button addCheckBox(Composite parent, String label, String prefKey, int horizontalIndent) {
 		Button checkBox = new Button(parent, SWT.CHECK);
 		checkBox.setText(label);
 
@@ -84,11 +82,9 @@ public abstract class AbstractPHPPreferencePageBlock implements
 	protected IScopeContext[] createPreferenceScopes(PreferencePage propertyPage) {
 		IProject project = getProject(propertyPage);
 		if (project != null) {
-			return new IScopeContext[] { new ProjectScope(project),
-					InstanceScope.INSTANCE, DefaultScope.INSTANCE };
+			return new IScopeContext[] { new ProjectScope(project), InstanceScope.INSTANCE, DefaultScope.INSTANCE };
 		}
-		return new IScopeContext[] { InstanceScope.INSTANCE,
-				DefaultScope.INSTANCE };
+		return new IScopeContext[] { InstanceScope.INSTANCE, DefaultScope.INSTANCE };
 	}
 
 	protected IProject getProject(PreferencePage preferencePage) {

@@ -18,7 +18,6 @@ public class PHPFileStatusContextViewer extends FileStatusContextViewer {
 
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		getSourceViewer().getControl().setFont(
-				JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
+		getSourceViewer().getControl().setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
 	}
 }

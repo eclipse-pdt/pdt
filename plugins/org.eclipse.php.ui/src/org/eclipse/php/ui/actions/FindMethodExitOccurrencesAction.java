@@ -39,8 +39,7 @@ import org.eclipse.ui.texteditor.IEditorStatusLine;
  * 
  * @since 3.4
  */
-public class FindMethodExitOccurrencesAction extends
-		org.eclipse.dltk.ui.actions.SelectionDispatchAction {
+public class FindMethodExitOccurrencesAction extends org.eclipse.dltk.ui.actions.SelectionDispatchAction {
 
 	private PHPStructuredEditor fEditor;
 
@@ -91,12 +90,10 @@ public class FindMethodExitOccurrencesAction extends
 		try {
 			IModelElement resolveEnclosingElement;
 			resolveEnclosingElement = selection.resolveEnclosingElement();
-			Program astRoot = ASTProvider.getASTProvider().getAST(
-					(ISourceModule) resolveEnclosingElement,
+			Program astRoot = ASTProvider.getASTProvider().getAST((ISourceModule) resolveEnclosingElement,
 					SharedASTProvider.WAIT_YES, null);
-			setEnabled(astRoot != null
-					&& new MethodExitsFinder().initialize(astRoot, selection
-							.getOffset(), selection.getLength()) == null);
+			setEnabled(astRoot != null && new MethodExitsFinder().initialize(astRoot, selection.getOffset(),
+					selection.getLength()) == null);
 		} catch (ModelException e) {
 			PHPUiPlugin.log(e);
 		}
@@ -116,8 +113,7 @@ public class FindMethodExitOccurrencesAction extends
 		ISourceModule input = getEditorInput(fEditor);
 		if (!ActionUtil.isProcessable(getShell(), input))
 			return;
-		FindOccurrencesEngine engine = FindOccurrencesEngine
-				.create(new MethodExitsFinder());
+		FindOccurrencesEngine engine = FindOccurrencesEngine.create(new MethodExitsFinder());
 		try {
 			String result = engine.run(input, ts.getOffset(), ts.getLength());
 			if (result != null)
@@ -133,10 +129,8 @@ public class FindMethodExitOccurrencesAction extends
 		return PHPUiPlugin.getEditorInputTypeRoot(editor.getEditorInput());
 	}
 
-	private static void showMessage(Shell shell, PHPStructuredEditor editor,
-			String msg) {
-		IEditorStatusLine statusLine = (IEditorStatusLine) editor
-				.getAdapter(IEditorStatusLine.class);
+	private static void showMessage(Shell shell, PHPStructuredEditor editor, String msg) {
+		IEditorStatusLine statusLine = (IEditorStatusLine) editor.getAdapter(IEditorStatusLine.class);
 		if (statusLine != null)
 			statusLine.setMessage(true, msg, null);
 		shell.getDisplay().beep();

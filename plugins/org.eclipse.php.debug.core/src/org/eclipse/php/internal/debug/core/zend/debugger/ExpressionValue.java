@@ -30,8 +30,7 @@ public class ExpressionValue {
 	public static final int RESOURCE_TYPE = 7;
 	public static final int VIRTUAL_CLASS_TYPE = 8;
 
-	public static final ExpressionValue NULL_VALUE = new ExpressionValue(
-			NULL_TYPE, null, "null", null); //$NON-NLS-1$
+	public static final ExpressionValue NULL_VALUE = new ExpressionValue(NULL_TYPE, null, "null", null); //$NON-NLS-1$
 
 	protected int type;
 	protected Expression[] children;
@@ -39,16 +38,14 @@ public class ExpressionValue {
 	protected Object value;
 	protected String valueAsString;
 
-	public ExpressionValue(int type, Object value, String valueAsString,
-			Expression[] children) {
+	public ExpressionValue(int type, Object value, String valueAsString, Expression[] children) {
 		this.type = type;
 		this.value = value;
 		this.valueAsString = valueAsString;
 		this.children = children;
 	}
 
-	public ExpressionValue(int type, Object value, String valueAsString,
-			Expression[] children, int childrenCount) {
+	public ExpressionValue(int type, Object value, String valueAsString, Expression[] children, int childrenCount) {
 		this.type = type;
 		this.value = value;
 		this.valueAsString = valueAsString;
@@ -113,8 +110,7 @@ public class ExpressionValue {
 	}
 
 	public boolean isPrimitive() {
-		return type == NULL_TYPE
-				|| (type != ARRAY_TYPE && type != OBJECT_TYPE && type != VIRTUAL_CLASS_TYPE);
+		return type == NULL_TYPE || (type != ARRAY_TYPE && type != OBJECT_TYPE && type != VIRTUAL_CLASS_TYPE);
 	}
 
 }

@@ -95,8 +95,7 @@ public class DBGpLogger {
 		ByteArrayOutputStream bs = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(bs);
 		exc.printStackTrace(ps);
-		IStatus stat = new Status(IStatus.ERROR, PHPDebugPlugin.ID,
-				IStatus.ERROR, msg + "\n" + bs.toString(), null); //$NON-NLS-1$
+		IStatus stat = new Status(IStatus.ERROR, PHPDebugPlugin.ID, IStatus.ERROR, msg + "\n" + bs.toString(), null); //$NON-NLS-1$
 		theLog.log(stat);
 	}
 
@@ -180,8 +179,7 @@ public class DBGpLogger {
 			msg.append(" msg: "); //$NON-NLS-1$
 			msg.append(exc.getMessage());
 		}
-		IStatus stat = new Status(type, PHPDebugPlugin.ID, type,
-				msg.toString(), exc);
+		IStatus stat = new Status(type, PHPDebugPlugin.ID, type, msg.toString(), exc);
 		debug(msg.toString());
 		if (exc != null) {
 			debugException(exc);

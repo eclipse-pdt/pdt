@@ -33,8 +33,7 @@ public class RefactoringAdapterFactory implements IAdapterFactory {
 	public Object getAdapter(Object object, Class key) {
 		if (!TextEditChangeNode.class.equals(key))
 			return null;
-		if ((object instanceof TextFileChange)
-				|| (object instanceof MultiStateTextFileChange)
+		if ((object instanceof TextFileChange) || (object instanceof MultiStateTextFileChange)
 				|| (object instanceof ProgramDocumentChange))
 			return new PhpRefactoringChangeNode((TextEditBasedChange) object);
 		return null;

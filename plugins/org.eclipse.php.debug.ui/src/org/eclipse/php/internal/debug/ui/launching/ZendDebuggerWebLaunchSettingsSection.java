@@ -37,8 +37,7 @@ import org.eclipse.swt.widgets.*;
  * @author Bartlomiej Laczkowski
  */
 @SuppressWarnings("restriction")
-public class ZendDebuggerWebLaunchSettingsSection
-		extends AbstractDebugWebLaunchSettingsSection {
+public class ZendDebuggerWebLaunchSettingsSection extends AbstractDebugWebLaunchSettingsSection {
 
 	private Group browserGroup;
 	private Button openBrowser;
@@ -75,33 +74,28 @@ public class ZendDebuggerWebLaunchSettingsSection
 	public void initialize(ILaunchConfiguration configuration) {
 		super.initialize(configuration);
 		try {
-			boolean isOpenInBrowser = configuration.getAttribute(
-					IPHPDebugConstants.OPEN_IN_BROWSER,
+			boolean isOpenInBrowser = configuration.getAttribute(IPHPDebugConstants.OPEN_IN_BROWSER,
 					PHPDebugPlugin.getOpenInBrowserOption());
 			openBrowser.setSelection(isOpenInBrowser);
-			String debugSetting = configuration.getAttribute(
-					IPHPDebugConstants.DEBUGGING_PAGES,
+			String debugSetting = configuration.getAttribute(IPHPDebugConstants.DEBUGGING_PAGES,
 					IPHPDebugConstants.DEBUGGING_ALL_PAGES);
 			if (IPHPDebugConstants.DEBUGGING_ALL_PAGES.equals(debugSetting)) {
 				debugFirstPageBt.setSelection(false);
 				debugAllPagesBt.setSelection(true);
 				debugStartFromBt.setSelection(false);
-			} else if (IPHPDebugConstants.DEBUGGING_FIRST_PAGE
-					.equals(debugSetting)) {
+			} else if (IPHPDebugConstants.DEBUGGING_FIRST_PAGE.equals(debugSetting)) {
 				debugFirstPageBt.setSelection(true);
 				debugAllPagesBt.setSelection(false);
 				debugStartFromBt.setSelection(false);
-			} else if (IPHPDebugConstants.DEBUGGING_START_FROM
-					.equals(debugSetting)) {
+			} else if (IPHPDebugConstants.DEBUGGING_START_FROM.equals(debugSetting)) {
 				debugFirstPageBt.setSelection(false);
 				debugAllPagesBt.setSelection(false);
 				debugStartFromBt.setSelection(true);
-				boolean shouldContinue = configuration.getAttribute(
-						IPHPDebugConstants.DEBUGGING_SHOULD_CONTINUE, false);
+				boolean shouldContinue = configuration.getAttribute(IPHPDebugConstants.DEBUGGING_SHOULD_CONTINUE,
+						false);
 				debugContinueBt.setSelection(shouldContinue);
 			}
-			String startFromURL = configuration.getAttribute(
-					IPHPDebugConstants.DEBUGGING_START_FROM_URL, ""); //$NON-NLS-1$
+			String startFromURL = configuration.getAttribute(IPHPDebugConstants.DEBUGGING_START_FROM_URL, ""); //$NON-NLS-1$
 			debugFromTxt.setText(startFromURL);
 			updateDebugFrom();
 			enableSessionSettingButtons(isOpenInBrowser);
@@ -120,29 +114,21 @@ public class ZendDebuggerWebLaunchSettingsSection
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		super.performApply(configuration);
 		boolean isOpenInBrowser = openBrowser.getSelection();
-		configuration.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER,
-				isOpenInBrowser);
+		configuration.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER, isOpenInBrowser);
 		if (isOpenInBrowser) {
 			if (debugAllPagesBt.getSelection()) {
-				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES,
-						IPHPDebugConstants.DEBUGGING_ALL_PAGES);
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_ALL_PAGES);
 			} else if (debugFirstPageBt.getSelection()) {
-				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES,
-						IPHPDebugConstants.DEBUGGING_FIRST_PAGE);
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_FIRST_PAGE);
 			} else {
-				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES,
-						IPHPDebugConstants.DEBUGGING_START_FROM);
-				configuration.setAttribute(
-						IPHPDebugConstants.DEBUGGING_START_FROM_URL,
-						debugFromTxt.getText());
-				configuration.setAttribute(
-						IPHPDebugConstants.DEBUGGING_SHOULD_CONTINUE,
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_START_FROM);
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_START_FROM_URL, debugFromTxt.getText());
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_SHOULD_CONTINUE,
 						debugContinueBt.getSelection());
 			}
 		} else {
 			// Allow only debug-first-page
-			configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES,
-					IPHPDebugConstants.DEBUGGING_FIRST_PAGE);
+			configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_FIRST_PAGE);
 		}
 	}
 
@@ -156,8 +142,7 @@ public class ZendDebuggerWebLaunchSettingsSection
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		super.setDefaults(configuration);
-		configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES,
-				IPHPDebugConstants.DEBUGGING_ALL_PAGES);
+		configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_ALL_PAGES);
 	}
 
 	/*
@@ -192,12 +177,10 @@ public class ZendDebuggerWebLaunchSettingsSection
 		browserGroup = new Group(parent, SWT.NONE);
 		browserGroup.setLayout(new GridLayout(1, false));
 		browserGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		browserGroup
-				.setText(Messages.ZendDebuggerWebLaunchSettingsSection_Browser);
+		browserGroup.setText(Messages.ZendDebuggerWebLaunchSettingsSection_Browser);
 		// Add the Browser group controls
 		openBrowser = new Button(browserGroup, SWT.CHECK);
-		openBrowser.setText(
-				Messages.ZendDebuggerWebLaunchSettingsSection_Open_in_browser);
+		openBrowser.setText(Messages.ZendDebuggerWebLaunchSettingsSection_Open_in_browser);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 3;
 		openBrowser.setLayoutData(data);
@@ -237,22 +220,20 @@ public class ZendDebuggerWebLaunchSettingsSection
 		data.horizontalIndent = 20;
 		debugFromTxt = new Text(sessionGroup, SWT.SINGLE | SWT.BORDER);
 		debugFromTxt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		resetBt = SWTFactory.createPushButton(sessionGroup,
-				Messages.ZendDebuggerWebLaunchSettingsSection_Default, null);
+		resetBt = SWTFactory.createPushButton(sessionGroup, Messages.ZendDebuggerWebLaunchSettingsSection_Default,
+				null);
 		resetBt.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				if (getConfiguration() != null) {
 					try {
-						debugFromTxt.setText(getConfiguration()
-								.getAttribute(Server.BASE_URL, "")); //$NON-NLS-1$
+						debugFromTxt.setText(getConfiguration().getAttribute(Server.BASE_URL, "")); //$NON-NLS-1$
 					} catch (CoreException e1) {
 					}
 				}
 			}
 		});
 		debugContinueBt = SWTFactory.createCheckButton(sessionGroup,
-				Messages.ZendDebuggerWebLaunchSettingsSection_Continue_debug_from,
-				null, false, 1);
+				Messages.ZendDebuggerWebLaunchSettingsSection_Continue_debug_from, null, false, 1);
 		data = (GridData) debugContinueBt.getLayoutData();
 		data.horizontalSpan = 3;
 		data.horizontalIndent = 40;
@@ -282,11 +263,9 @@ public class ZendDebuggerWebLaunchSettingsSection
 	}
 
 	private void updateDebugFrom() {
-		if (getConfiguration() != null
-				&& debugFromTxt.getText().trim().equals("")) { //$NON-NLS-1$
+		if (getConfiguration() != null && debugFromTxt.getText().trim().equals("")) { //$NON-NLS-1$
 			try {
-				debugFromTxt.setText(
-						getConfiguration().getAttribute(Server.BASE_URL, "")); //$NON-NLS-1$
+				debugFromTxt.setText(getConfiguration().getAttribute(Server.BASE_URL, "")); //$NON-NLS-1$
 			} catch (CoreException e) {
 			}
 		}

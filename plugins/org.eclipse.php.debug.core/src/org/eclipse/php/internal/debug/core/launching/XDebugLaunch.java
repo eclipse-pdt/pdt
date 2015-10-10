@@ -31,8 +31,7 @@ public class XDebugLaunch extends Launch {
 	 * @param mode
 	 * @param locator
 	 */
-	public XDebugLaunch(ILaunchConfiguration launchConfiguration, String mode,
-			ISourceLocator locator) {
+	public XDebugLaunch(ILaunchConfiguration launchConfiguration, String mode, ISourceLocator locator) {
 		super(launchConfiguration, mode, locator);
 	}
 

@@ -92,48 +92,33 @@ public class PHPDebugUIImages {
 	}
 
 	private static void initializeImageRegistry() {
-		fgImageRegistry = new ImageRegistry(
-				PHPDebugUIPlugin.getStandardDisplay());
+		fgImageRegistry = new ImageRegistry(PHPDebugUIPlugin.getStandardDisplay());
 		declareImages();
 	}
 
 	private static void declareImages() {
-		declareRegistryImage(IMG_OVR_CONDITIONAL_BREAKPOINT, T_OVR
-				+ "conditional_ovr.png"); //$NON-NLS-1$
-		declareRegistryImage(IMG_OVR_CONDITIONAL_BREAKPOINT_DISABLED, T_OVR
-				+ "conditional_ovr_disabled.png"); //$NON-NLS-1$
-		declareRegistryImage(IMG_OVR_MEMBER_CONSTANT, T_OVR
-				+ "constant_ovr.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OVR_CONDITIONAL_BREAKPOINT, T_OVR + "conditional_ovr.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OVR_CONDITIONAL_BREAKPOINT_DISABLED, T_OVR + "conditional_ovr_disabled.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OVR_MEMBER_CONSTANT, T_OVR + "constant_ovr.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OVR_MEMBER_STATIC, T_OVR + "static_ovr.png"); //$NON-NLS-1$
-		declareRegistryImage(IMG_WIZBAN_XDEBUG_CONF, T_WIZBAN
-				+ "xdebug_conf_wiz.png"); //$NON-NLS-1$
-		declareRegistryImage(IMG_WIZBAN_ZEND_DEBUGGER_CONF, T_WIZBAN
-				+ "zend_debugger_conf_wiz.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_WIZBAN_XDEBUG_CONF, T_WIZBAN + "xdebug_conf_wiz.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_WIZBAN_ZEND_DEBUGGER_CONF, T_WIZBAN + "zend_debugger_conf_wiz.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_WIZBAN_PHPEXE, T_WIZBAN + "php_exe_wiz.png"); //$NON-NLS-1$
-		declareRegistryImage(IMG_WIZBAN_DEBUG_PHPEXE,
-				T_WIZBAN + "php_exe_debug_wiz.png"); //$NON-NLS-1$
-		declareRegistryImage(IMG_WIZBAN_DEBUG_SERVER,
-				T_WIZBAN + "server_debug_wiz.png"); //$NON-NLS-1$
-		declareRegistryImage(IMG_WIZBAN_MAPPING_SERVER,
-				T_WIZBAN + "server_mapping_wiz.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_WIZBAN_DEBUG_PHPEXE, T_WIZBAN + "php_exe_debug_wiz.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_WIZBAN_DEBUG_SERVER, T_WIZBAN + "server_debug_wiz.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_WIZBAN_MAPPING_SERVER, T_WIZBAN + "server_mapping_wiz.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_DEBUG_CONF, T_OBJ + "debug_conf.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_PHP_EXE, T_OBJ + "php_exe.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_PHP_EXE_LAUNCH, T_OBJ + "php_exec.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_PATH_MAPPING, T_OBJ + "path_mapping.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_MEMBER_LOCAL, T_OBJ + "member_local.png"); //$NON-NLS-1$
-		declareRegistryImage(IMG_OBJ_MEMBER_SUPER_GLOBAL, T_OBJ
-				+ "member_super_global.png"); //$NON-NLS-1$
-		declareRegistryImage(IMG_OBJ_MEMBER_VIRTUAL_CLASS, T_OBJ
-				+ "member_virtual_class.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_MEMBER_SUPER_GLOBAL, T_OBJ + "member_super_global.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_MEMBER_VIRTUAL_CLASS, T_OBJ + "member_virtual_class.png"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OBJ_MEMBER_ARRAY, T_OBJ + "member_array.png"); //$NON-NLS-1$
-		declareRegistryImage(IMG_OBJ_MEMBER_VIRTUAL_CONTAINER, T_OBJ
-				+ "member_virtual_container.png"); //$NON-NLS-1$
-		declareRegistryImage(IMG_OBJ_MEMBER_PUBLIC_ACCESS, T_OBJ
-				+ "member_public_access.png"); //$NON-NLS-1$
-		declareRegistryImage(IMG_OBJ_MEMBER_PROTECTED_ACCESS, T_OBJ
-				+ "member_protected_access.png"); //$NON-NLS-1$
-		declareRegistryImage(IMG_OBJ_MEMBER_PRIVATE_ACCESS, T_OBJ
-				+ "member_private_access.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_MEMBER_VIRTUAL_CONTAINER, T_OBJ + "member_virtual_container.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_MEMBER_PUBLIC_ACCESS, T_OBJ + "member_public_access.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_MEMBER_PROTECTED_ACCESS, T_OBJ + "member_protected_access.png"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_MEMBER_PRIVATE_ACCESS, T_OBJ + "member_private_access.png"); //$NON-NLS-1$
 	}
 
 	/**

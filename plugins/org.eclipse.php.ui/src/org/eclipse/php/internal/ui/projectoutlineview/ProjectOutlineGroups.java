@@ -39,12 +39,12 @@ public enum ProjectOutlineGroups {
 
 	GROUP_CLASSES(PHPPluginImages.DESC_OBJ_PHP_CLASSES_GROUP.createImage(),
 			PHPUIMessages.PHPProjectOutline_nodes_classes), GROUP_NAMESPACES(
-			PHPPluginImages.DESC_OBJ_PHP_NAMESPACES_GROUP.createImage(),
-			PHPUIMessages.PHPProjectOutline_nodes_namespaces), GROUP_CONSTANTS(
-			PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP.createImage(),
-			PHPUIMessages.PHPProjectOutline_nodes_constants), GROUP_FUNCTIONS(
-			PHPPluginImages.DESC_OBJ_PHP_FUNCTIONS_GROUP.createImage(),
-			PHPUIMessages.PHPProjectOutline_nodes_functions);
+					PHPPluginImages.DESC_OBJ_PHP_NAMESPACES_GROUP.createImage(),
+					PHPUIMessages.PHPProjectOutline_nodes_namespaces), GROUP_CONSTANTS(
+							PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP.createImage(),
+							PHPUIMessages.PHPProjectOutline_nodes_constants), GROUP_FUNCTIONS(
+									PHPPluginImages.DESC_OBJ_PHP_FUNCTIONS_GROUP.createImage(),
+									PHPUIMessages.PHPProjectOutline_nodes_functions);
 
 	private final Image image;
 	private final String text;
@@ -67,8 +67,7 @@ public enum ProjectOutlineGroups {
 	protected Object[] getChildren() {
 		if (ProjectOutlineContentProvider.scripProject != null) {
 
-			IProject project = ProjectOutlineContentProvider.scripProject
-					.getProject();
+			IProject project = ProjectOutlineContentProvider.scripProject.getProject();
 			try {
 				if (!project.isAccessible() || !project.hasNature(PHPNature.ID)) {
 					return NO_CHILDREN;
@@ -78,37 +77,27 @@ public enum ProjectOutlineGroups {
 				e.printStackTrace();
 			}
 
-			IDLTKSearchScope scope = SearchEngine.createSearchScope(
-					ProjectOutlineContentProvider.scripProject,
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(ProjectOutlineContentProvider.scripProject,
 					IDLTKSearchScope.SOURCES);
 
-			TreeSet<IModelElement> childrenList = new TreeSet<IModelElement>(
-					new Comparator<IModelElement>() {
-						public int compare(IModelElement o1, IModelElement o2) {
-							int res = o1.getElementName().compareTo(
-									o2.getElementName());
-							if (res == 0) {
-								String label1 = ScriptElementLabels
-										.getDefault()
-										.getElementLabel(
-												o1,
-												ScriptElementLabels.T_FULLY_QUALIFIED);
-								String label2 = ScriptElementLabels
-										.getDefault()
-										.getElementLabel(
-												o2,
-												ScriptElementLabels.T_FULLY_QUALIFIED);
-								return label1.compareTo(label2);
-							}
-							return res;
+			TreeSet<IModelElement> childrenList = new TreeSet<IModelElement>(new Comparator<IModelElement>() {
+				public int compare(IModelElement o1, IModelElement o2) {
+					int res = o1.getElementName().compareTo(o2.getElementName());
+					if (res == 0) {
+						String label1 = ScriptElementLabels.getDefault().getElementLabel(o1,
+								ScriptElementLabels.T_FULLY_QUALIFIED);
+						String label2 = ScriptElementLabels.getDefault().getElementLabel(o2,
+								ScriptElementLabels.T_FULLY_QUALIFIED);
+						return label1.compareTo(label2);
+					}
+					return res;
 
-						}
-					});
+				}
+			});
 			switch (this) {
 			case GROUP_NAMESPACES:
-				IType[] namespaces = PhpModelAccess.getDefault()
-						.findNamespaces(null, null, MatchRule.PREFIX, 0, 0,
-								scope, null);
+				IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null, null, MatchRule.PREFIX, 0, 0,
+						scope, null);
 				Map<String, List<IType>> nsByName = new HashMap<String, List<IType>>();
 				if (namespaces != null) {
 					for (IType namespace : namespaces) {
@@ -122,27 +111,23 @@ public enum ProjectOutlineGroups {
 					}
 				}
 				for (Entry<String, List<IType>> entry : nsByName.entrySet()) {
-					childrenList.add(new NamespaceNode(
-							ProjectOutlineContentProvider.scripProject, entry
-									.getKey(), entry.getValue().toArray(
-									new IType[entry.getValue().size()])));
+					childrenList.add(new NamespaceNode(ProjectOutlineContentProvider.scripProject, entry.getKey(),
+							entry.getValue().toArray(new IType[entry.getValue().size()])));
 				}
 
 				break;
 
 			case GROUP_CLASSES:
-				IType[] findTypes = PhpModelAccess.getDefault().findTypes(null,
-						MatchRule.PREFIX, 0, Modifiers.AccNameSpace, scope,
-						null);
+				IType[] findTypes = PhpModelAccess.getDefault().findTypes(null, MatchRule.PREFIX, 0,
+						Modifiers.AccNameSpace, scope, null);
 				if (findTypes != null) {
 					childrenList.addAll(Arrays.asList(findTypes));
 				}
 				break;
 
 			case GROUP_FUNCTIONS:
-				IMethod[] findMethods = PhpModelAccess.getDefault()
-						.findMethods(null, MatchRule.PREFIX,
-								Modifiers.AccGlobal, 0, scope, null);
+				IMethod[] findMethods = PhpModelAccess.getDefault().findMethods(null, MatchRule.PREFIX,
+						Modifiers.AccGlobal, 0, scope, null);
 				if (findMethods != null) {
 					childrenList.addAll(Arrays.asList(findMethods));
 				}
@@ -150,20 +135,17 @@ public enum ProjectOutlineGroups {
 
 			case GROUP_CONSTANTS:
 				// find all constants
-				IField[] findFields = PhpModelAccess.getDefault().findFields(
-						null, MatchRule.PREFIX, Modifiers.AccConstant, 0,
-						scope, null);
+				IField[] findFields = PhpModelAccess.getDefault().findFields(null, MatchRule.PREFIX,
+						Modifiers.AccConstant, 0, scope, null);
 				if (findFields != null) {
 					for (IField field : findFields) {
 						try {
 							IModelElement element = field;
 							if (field.getParent() instanceof ISourceModule) {
 								element = ((ISourceModule) field.getParent())
-										.getElementAt(field.getNameRange()
-												.getOffset());
+										.getElementAt(field.getNameRange().getOffset());
 							}
-							if (element != null
-									&& element.getParent() instanceof ISourceModule) {
+							if (element != null && element.getParent() instanceof ISourceModule) {
 								// display constants defined in GLOBAL scope
 								childrenList.add(element);
 							}

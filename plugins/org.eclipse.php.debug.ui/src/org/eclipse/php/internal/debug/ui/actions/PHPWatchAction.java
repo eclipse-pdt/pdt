@@ -32,8 +32,8 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
  * 
  * @author shalom
  */
-public class PHPWatchAction extends WatchExpressionAction implements
-		IWorkbenchWindowActionDelegate, IEditorActionDelegate {
+public class PHPWatchAction extends WatchExpressionAction
+		implements IWorkbenchWindowActionDelegate, IEditorActionDelegate {
 
 	public void init(IWorkbenchWindow window) {
 	}
@@ -52,17 +52,14 @@ public class PHPWatchAction extends WatchExpressionAction implements
 		IStructuredSelection selection = getCurrentSelection();
 		if (selection instanceof TextSelection) {
 			TextSelection textSelection = (TextSelection) selection;
-			IExpressionManager expressionManager = DebugPlugin.getDefault()
-					.getExpressionManager();
+			IExpressionManager expressionManager = DebugPlugin.getDefault().getExpressionManager();
 			IDOMNode domNode = (IDOMNode) selection.getFirstElement();
 			String expression;
 			try {
-				expression = domNode.getFirstStructuredDocumentRegion()
-						.getParentDocument().get(textSelection.getOffset(),
-								textSelection.getLength());
+				expression = domNode.getFirstStructuredDocumentRegion().getParentDocument()
+						.get(textSelection.getOffset(), textSelection.getLength());
 				// create the new watch expression
-				IWatchExpression watchExpression = expressionManager
-						.newWatchExpression(expression.trim());
+				IWatchExpression watchExpression = expressionManager.newWatchExpression(expression.trim());
 				expressionManager.addExpression(watchExpression);
 				// refresh and re-evaluate
 				watchExpression.setExpressionContext(getContext());

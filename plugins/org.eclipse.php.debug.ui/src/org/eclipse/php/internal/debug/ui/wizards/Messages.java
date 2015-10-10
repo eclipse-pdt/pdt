@@ -36,6 +36,7 @@ public class Messages extends NLS {
 	public static String ZendDebuggerServerSettingsSection_Connection_settings;
 	public static String ZendDebuggerServerSettingsSection_Response_timeout;
 	public static String ZendDebuggerServerSettingsSection_Response_timeout_is_missing;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -34,8 +34,7 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
 @SuppressWarnings("restriction")
 public class PathMapperRegistry implements IXMLPreferencesStorable {
 
-	private class MapperOwnerListener
-			implements IServersManagerListener, IPHPExesListener {
+	private class MapperOwnerListener implements IServersManagerListener, IPHPExesListener {
 
 		/*
 		 * (non-Javadoc)
@@ -102,8 +101,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 
 	}
 
-	private static final String PATH_MAPPER_PREF_KEY = PHPDebugPlugin.getID()
-			+ ".pathMapper"; //$NON-NLS-1$
+	private static final String PATH_MAPPER_PREF_KEY = PHPDebugPlugin.getID() + ".pathMapper"; //$NON-NLS-1$
 
 	private static PathMapperRegistry instance;
 	private final Map<Server, PathMapper> serverPathMapper;
@@ -118,9 +116,8 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 		phpExePathMapper = new HashMap<PHPexeItem, PathMapper>();
 		ownerListener = new MapperOwnerListener();
 		// Load persistent mappings from preferences
-		List<Map<String, Object>> elements = XMLPreferencesReader.read(
-				InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID),
-				PATH_MAPPER_PREF_KEY, true);
+		List<Map<String, Object>> elements = XMLPreferencesReader
+				.read(InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID), PATH_MAPPER_PREF_KEY, true);
 		if (elements.size() == 1) {
 			restoreFromMap(elements.get(0));
 		}
@@ -150,8 +147,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 		if (result == null) {
 			result = new PathMapper();
 			getInstance().phpExePathMapper.put(phpExe, result);
-			PHPexes.getInstance()
-					.addPHPExesListener(getInstance().ownerListener);
+			PHPexes.getInstance().addPHPExesListener(getInstance().ownerListener);
 		}
 		return result;
 	}
@@ -184,32 +180,27 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 	 *            Launch configuration
 	 * @return path mapper
 	 */
-	public static PathMapper getByLaunchConfiguration(
-			ILaunchConfiguration launchConfiguration) {
+	public static PathMapper getByLaunchConfiguration(ILaunchConfiguration launchConfiguration) {
 		PathMapper pathMapper = null;
 		try {
-			String serverName = launchConfiguration.getAttribute(Server.NAME,
-					(String) null);
+			String serverName = launchConfiguration.getAttribute(Server.NAME, (String) null);
 			if (serverName != null) {
 				/*
 				 * Try to find path mapper with the use of the server that might
 				 * be bound to the corresponding launch configuration.
 				 */
 				pathMapper = getByServer(ServersManager.getServer(serverName));
-			} else if (PHPLaunchUtilities.isLaunchConfigurationTypeOf(
-					launchConfiguration,
+			} else if (PHPLaunchUtilities.isLaunchConfigurationTypeOf(launchConfiguration,
 					IPHPDebugConstants.PHPRemoteLaunchType)) {
 				/*
 				 * If no server could be found (launch configuration for
 				 * externally triggered sessions), create temporary one and bind
 				 * it with the launch configuration.
 				 */
-				pathMapper = getInstance().launchConfigPathMapper
-						.get(launchConfiguration);
+				pathMapper = getInstance().launchConfigPathMapper.get(launchConfiguration);
 				if (pathMapper == null) {
 					pathMapper = new PathMapper();
-					getInstance().launchConfigPathMapper
-							.put(launchConfiguration, pathMapper);
+					getInstance().launchConfigPathMapper.put(launchConfiguration, pathMapper);
 				}
 			}
 		} catch (CoreException e) {
@@ -222,9 +213,8 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 	 * Persist settings to preference file.
 	 */
 	public static void storeToPreferences() {
-		XMLPreferencesWriter.write(
-				InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID),
-				PATH_MAPPER_PREF_KEY, getInstance());
+		XMLPreferencesWriter.write(InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID), PATH_MAPPER_PREF_KEY,
+				getInstance());
 	}
 
 	/*
@@ -247,22 +237,19 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 		}
 		Iterator<String> i = map.keySet().iterator();
 		while (i.hasNext()) {
-			Map<String, Object> entryMap = (Map<String, Object>) map.get(i
-					.next());
+			Map<String, Object> entryMap = (Map<String, Object>) map.get(i.next());
 			String serverName = (String) entryMap.get("server"); //$NON-NLS-1$
 			String phpExeFile = (String) entryMap.get("phpExe"); //$NON-NLS-1$
 			String phpIniFile = (String) entryMap.get("phpIni"); //$NON-NLS-1$
 			PathMapper pathMapper = new PathMapper();
-			pathMapper.restoreFromMap((Map<String, Object>) entryMap
-					.get("mapper")); //$NON-NLS-1$
+			pathMapper.restoreFromMap((Map<String, Object>) entryMap.get("mapper")); //$NON-NLS-1$
 			if (serverName != null) {
 				Server server = ServersManager.getServer(serverName);
 				if (server != null) {
 					serverPathMapper.put(server, pathMapper);
 				}
 			} else if (phpExeFile != null) {
-				PHPexeItem phpExeItem = PHPexes.getInstance().getItemForFile(
-						phpExeFile, phpIniFile);
+				PHPexeItem phpExeItem = PHPexes.getInstance().getItemForFile(phpExeFile, phpIniFile);
 				if (phpExeItem != null) {
 					phpExePathMapper.put(phpExeItem, pathMapper);
 				}

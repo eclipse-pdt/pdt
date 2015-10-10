@@ -37,8 +37,7 @@ public class ServerEditWizardRunner {
 		return runWizard(parentShell, wizard);
 	}
 
-	public static int runWizard(Shell parentShell, Server server,
-			String tabId) {
+	public static int runWizard(Shell parentShell, Server server, String tabId) {
 		ServerEditWizard wizard = new ServerEditWizard(server, tabId);
 		return runWizard(parentShell, wizard);
 	}
@@ -48,11 +47,10 @@ public class ServerEditWizardRunner {
 	}
 
 	public static int runWizard(Shell parentShell, ServerEditWizard wizard) {
-		IDialogSettings dialogSettings = DialogSettings.getOrCreateSection(
-				Activator.getDefault().getDialogSettings(),
+		IDialogSettings dialogSettings = DialogSettings.getOrCreateSection(Activator.getDefault().getDialogSettings(),
 				ServerEditWizard.class.getSimpleName());
-		PersistingSizeAndLocationWizardDialog dialog = new PersistingSizeAndLocationWizardDialog(
-				parentShell, wizard, dialogSettings);
+		PersistingSizeAndLocationWizardDialog dialog = new PersistingSizeAndLocationWizardDialog(parentShell, wizard,
+				dialogSettings);
 		return dialog.open();
 	}
 

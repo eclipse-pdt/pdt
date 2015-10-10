@@ -61,8 +61,8 @@ public class CustomFiltersDialog extends SelectionDialog {
 	 * @param enabledFilterIds
 	 *            the Ids of the enabled filters
 	 */
-	public CustomFiltersDialog(Shell shell, String viewId,
-			boolean enablePatterns, String[] patterns, String[] enabledFilterIds) {
+	public CustomFiltersDialog(Shell shell, String viewId, boolean enablePatterns, String[] patterns,
+			String[] enabledFilterIds) {
 
 		super(shell);
 		Assert.isNotNull(viewId);
@@ -83,10 +83,8 @@ public class CustomFiltersDialog extends SelectionDialog {
 	 * Returns all element filters which are contributed to the given view.
 	 */
 	public static FilterDescriptor[] getFilterDescriptors(String targetId) {
-		FilterDescriptor[] filterDescs = FilterDescriptor
-				.getFilterDescriptors();
-		List<FilterDescriptor> result = new ArrayList<FilterDescriptor>(
-				filterDescs.length);
+		FilterDescriptor[] filterDescs = FilterDescriptor.getFilterDescriptors();
+		List<FilterDescriptor> result = new ArrayList<FilterDescriptor>(filterDescs.length);
 		for (int i = 0; i < filterDescs.length; i++) {
 			String tid = filterDescs[i].getTargetId();
 			if (WorkbenchActivityHelper.filterItem(filterDescs[i]))
@@ -128,13 +126,11 @@ public class CustomFiltersDialog extends SelectionDialog {
 		// Checkbox
 		fEnableUserDefinedPatterns = new Button(group, SWT.CHECK);
 		fEnableUserDefinedPatterns.setFocus();
-		fEnableUserDefinedPatterns
-				.setText(FilterMessages.CustomFiltersDialog_enableUserDefinedPattern);
+		fEnableUserDefinedPatterns.setText(FilterMessages.CustomFiltersDialog_enableUserDefinedPattern);
 
 		// Pattern field
 		fUserDefinedPatterns = new Text(group, SWT.SINGLE | SWT.BORDER);
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
-				| GridData.GRAB_HORIZONTAL);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
 		data.widthHint = convertWidthInCharsToPixels(59);
 		fUserDefinedPatterns.setLayoutData(data);
 		String patterns = convertToString(fPatterns, SEPARATOR);
@@ -191,25 +187,21 @@ public class CustomFiltersDialog extends SelectionDialog {
 		// Description
 		info = new Label(parent, SWT.LEFT);
 		info.setText(FilterMessages.CustomFiltersDialog_description_label);
-		final Text description = new Text(parent, SWT.LEFT | SWT.WRAP
-				| SWT.MULTI | SWT.READ_ONLY | SWT.BORDER | SWT.V_SCROLL);
+		final Text description = new Text(parent,
+				SWT.LEFT | SWT.WRAP | SWT.MULTI | SWT.READ_ONLY | SWT.BORDER | SWT.V_SCROLL);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.heightHint = convertHeightInCharsToPixels(3);
 		description.setLayoutData(data);
-		fCheckBoxList
-				.addSelectionChangedListener(new ISelectionChangedListener() {
-					public void selectionChanged(SelectionChangedEvent event) {
-						ISelection selection = event.getSelection();
-						if (selection instanceof IStructuredSelection) {
-							Object selectedElement = ((IStructuredSelection) selection)
-									.getFirstElement();
-							if (selectedElement instanceof FilterDescriptor)
-								description
-										.setText(((FilterDescriptor) selectedElement)
-												.getDescription());
-						}
-					}
-				});
+		fCheckBoxList.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				ISelection selection = event.getSelection();
+				if (selection instanceof IStructuredSelection) {
+					Object selectedElement = ((IStructuredSelection) selection).getFirstElement();
+					if (selectedElement instanceof FilterDescriptor)
+						description.setText(((FilterDescriptor) selectedElement).getDescription());
+				}
+			}
+		});
 		fCheckBoxList.addCheckStateListener(new ICheckStateListener() {
 			/*
 			 * @see
@@ -237,15 +229,13 @@ public class CustomFiltersDialog extends SelectionDialog {
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		buttonComposite.setLayout(layout);
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_END
-				| GridData.GRAB_HORIZONTAL);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL);
 		data.grabExcessHorizontalSpace = true;
 		composite.setData(data);
 
 		// Select All button
 		String label = FilterMessages.CustomFiltersDialog_SelectAllButton_label;
-		Button selectButton = createButton(buttonComposite,
-				IDialogConstants.SELECT_ALL_ID, label, false);
+		Button selectButton = createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID, label, false);
 		SWTUtil.setButtonDimensionHint(selectButton);
 		SelectionListener listener = new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -259,8 +249,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 
 		// De-select All button
 		label = FilterMessages.CustomFiltersDialog_DeselectAllButton_label;
-		Button deselectButton = createButton(buttonComposite,
-				IDialogConstants.DESELECT_ALL_ID, label, false);
+		Button deselectButton = createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID, label, false);
 		SWTUtil.setButtonDimensionHint(deselectButton);
 		listener = new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -313,8 +302,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		super.setResult(newResult);
 		if (fUserDefinedPatterns.getText().length() > 0) {
 			fEnablePatterns = fEnableUserDefinedPatterns.getSelection();
-			fPatterns = convertFromString(fUserDefinedPatterns.getText(),
-					SEPARATOR);
+			fPatterns = convertFromString(fUserDefinedPatterns.getText(), SEPARATOR);
 		} else {
 			fEnablePatterns = false;
 			fPatterns = new String[0];
@@ -356,8 +344,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 
 	private FilterDescriptor[] getEnabledFilterDescriptors() {
 		FilterDescriptor[] filterDescs = fBuiltInFilters;
-		List<FilterDescriptor> result = new ArrayList<FilterDescriptor>(
-				filterDescs.length);
+		List<FilterDescriptor> result = new ArrayList<FilterDescriptor>(filterDescs.length);
 		List<String> enabledFilterIds = Arrays.asList(fEnabledFilterIds);
 		for (int i = 0; i < filterDescs.length; i++) {
 			String id = filterDescs[i].getId();
@@ -368,8 +355,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 	}
 
 	public static String[] convertFromString(String patterns, String separator) {
-		StringTokenizer tokenizer = new StringTokenizer(patterns, separator,
-				true);
+		StringTokenizer tokenizer = new StringTokenizer(patterns, separator, true);
 		int tokenCount = tokenizer.countTokens();
 		List<String> result = new ArrayList<String>(tokenCount);
 		boolean escape = false;
@@ -410,7 +396,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		if (length > 0)
 			strBuf.append(escapeSeparator(patterns[0], separator));
 		else
-			return ""; //$NON-NLS-1$ 
+			return ""; //$NON-NLS-1$
 		int i = 1;
 		while (i < length) {
 			strBuf.append(separator);

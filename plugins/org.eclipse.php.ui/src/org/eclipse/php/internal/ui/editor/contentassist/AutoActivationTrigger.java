@@ -46,26 +46,22 @@ public class AutoActivationTrigger implements ISelectionChangedListener {
 			}
 		}
 		if (textViewer != null && textViewer.getDocument() == document) {
-			textViewer.addSelectionChangedListener(new AutoActivationTrigger(
-					textViewer));
+			textViewer.addSelectionChangedListener(new AutoActivationTrigger(textViewer));
 		}
 	}
 
 	public void selectionChanged(SelectionChangedEvent event) {
 		textViewer.removeSelectionChangedListener(this);
 
-		final long delay = Platform.getPreferencesService().getLong(
-				PHPCorePlugin.ID,
+		final long delay = Platform.getPreferencesService().getLong(PHPCorePlugin.ID,
 				PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 200, null);
 		new Timer("Temporary Completion Delay").schedule(new TimerTask() { //$NON-NLS-1$
 			public void run() {
 				textViewer.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						BusyIndicator.showWhile(textViewer.getControl()
-								.getDisplay(), new Runnable() {
+						BusyIndicator.showWhile(textViewer.getControl().getDisplay(), new Runnable() {
 							public void run() {
-								textViewer
-										.doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
+								textViewer.doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
 							}
 						});
 					}

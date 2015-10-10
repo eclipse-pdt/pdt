@@ -32,10 +32,9 @@ public class ContainerFilter extends ViewerFilter {
 		boolean isContainer = element instanceof IContainer;
 		if (!isContainer && element instanceof IModelElement) {
 			int type = ((IModelElement) element).getElementType();
-			isContainer = type == IModelElement.PROJECT_FRAGMENT
-					|| type == IModelElement.SCRIPT_FOLDER
+			isContainer = type == IModelElement.PROJECT_FRAGMENT || type == IModelElement.SCRIPT_FOLDER
 					|| type == IModelElement.SCRIPT_PROJECT
-			/* || type == IModelElement.SOURCE_MODULE */;
+					/* || type == IModelElement.SOURCE_MODULE */;
 		}
 
 		if (parent instanceof Model) {
@@ -47,8 +46,7 @@ public class ContainerFilter extends ViewerFilter {
 			}
 			if (project != null) {
 				try {
-					if (project.isAccessible()
-							&& project.hasNature(PHPNature.ID)) {
+					if (project.isAccessible() && project.hasNature(PHPNature.ID)) {
 						return true;
 					} else {
 						return false;
@@ -59,7 +57,6 @@ public class ContainerFilter extends ViewerFilter {
 				}
 			}
 		}
-		return (fFilterContainers && !isContainer)
-				|| (!fFilterContainers && isContainer);
+		return (fFilterContainers && !isContainer) || (!fFilterContainers && isContainer);
 	}
 }

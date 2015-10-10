@@ -49,33 +49,28 @@ public class LaunchConfigurationsTabsRegistry {
 	 *            The launch mode requested.
 	 * @return An array of AbstractLaunchConfigurationTab.
 	 */
-	public static AbstractLaunchConfigurationTab[] getLaunchTabs(
-			String launchConfigurationTabGroupId, String mode) {
+	public static AbstractLaunchConfigurationTab[] getLaunchTabs(String launchConfigurationTabGroupId, String mode) {
 		LaunchConfigurationsTabsRegistry registry = getInstance();
 		List fragments = registry.factories;
 		List factoriesList = new ArrayList();
 		for (int i = 0; i < fragments.size(); i++) {
 			TabFactory factory = (TabFactory) fragments.get(i);
-			boolean modeOK = factory.getModes().length() == 0
-					|| factory.getModes().indexOf(mode) > -1;
+			boolean modeOK = factory.getModes().length() == 0 || factory.getModes().indexOf(mode) > -1;
 			// Sort out only the tabs that are related to the requested
 			// configuration tab group and launch mode.
-			if (factory.getGroupID().equals(launchConfigurationTabGroupId)
-					&& modeOK) {
+			if (factory.getGroupID().equals(launchConfigurationTabGroupId) && modeOK) {
 				factoriesList.add(factory.createFragmentFactory());
 			}
 		}
-		AbstractLaunchConfigurationTab[] tabs = new AbstractLaunchConfigurationTab[factoriesList
-				.size()];
+		AbstractLaunchConfigurationTab[] tabs = new AbstractLaunchConfigurationTab[factoriesList.size()];
 		factoriesList.toArray(tabs);
 		return tabs;
 	}
 
 	private LaunchConfigurationsTabsRegistry() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = registry
-				.getConfigurationElementsFor(PHPDebugUIPlugin.ID,
-						EXTENSION_POINT_NAME);
+		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugUIPlugin.ID,
+				EXTENSION_POINT_NAME);
 		ArrayList mightOverride = new ArrayList(5);
 
 		for (int i = 0; i < elements.length; i++) {
@@ -85,15 +80,12 @@ public class LaunchConfigurationsTabsRegistry {
 				String groupId = element.getAttribute(GROUP_ID_ATTRIBUTE);
 				String placeAfter = element.getAttribute(PLACE_AFTER_ATTRIBUTE);
 				String modes = element.getAttribute(MODES_ATTRIBUTE);
-				if (element.getNamespaceIdentifier()
-						.equals(PHPDebugUIPlugin.ID)
-						|| element.getNamespaceIdentifier().startsWith(
-								"org.eclipse.php.server.")) { //$NON-NLS-1$
+				if (element.getNamespaceIdentifier().equals(PHPDebugUIPlugin.ID)
+						|| element.getNamespaceIdentifier().startsWith("org.eclipse.php.server.")) { //$NON-NLS-1$
 					// Make sure that extentions that exists in this plugin will
 					// appear ahead of all others
 					// when the user-class calls for getLaunchTabs().
-					factories.add(0, new TabFactory(element, groupId, id,
-							placeAfter, modes));
+					factories.add(0, new TabFactory(element, groupId, id, placeAfter, modes));
 				} else {
 					boolean override = false;
 					for (int j = 0; !override && j < factories.size(); j++) {
@@ -105,18 +97,15 @@ public class LaunchConfigurationsTabsRegistry {
 						TabFactory factory = (TabFactory) factories.get(j);
 						if (id.equals(factory.id)) {
 							override = true;
-							if (!element.getNamespaceIdentifier().startsWith(
-									"org.eclipse.php.")) { //$NON-NLS-1$
+							if (!element.getNamespaceIdentifier().startsWith("org.eclipse.php.")) { //$NON-NLS-1$
 								factories.remove(j);
-								factories.add(new TabFactory(element, groupId,
-										id, placeAfter, modes));
+								factories.add(new TabFactory(element, groupId, id, placeAfter, modes));
 								break;
 							}
 						}
 					}
 					if (!override) {
-						mightOverride.add(new TabFactory(element, groupId, id,
-								placeAfter, modes));
+						mightOverride.add(new TabFactory(element, groupId, id, placeAfter, modes));
 					}
 				}
 			}
@@ -148,8 +137,7 @@ public class LaunchConfigurationsTabsRegistry {
 		ArrayList nonRootFragments = new ArrayList(factories.size());
 		for (int i = 0; i < factories.size(); i++) {
 			TabFactory factory = (TabFactory) factories.get(i);
-			if (factory.getPlaceAfter() == null
-					|| factory.getPlaceAfter().equals("")) { //$NON-NLS-1$
+			if (factory.getPlaceAfter() == null || factory.getPlaceAfter().equals("")) { //$NON-NLS-1$
 				addAsList(rootsFragments, factory);
 			} else {
 				addAsList(nonRootFragments, factory);
@@ -170,10 +158,7 @@ public class LaunchConfigurationsTabsRegistry {
 				// move it to the roots anyway, since there is an error in the
 				// extention definitions.
 				addAsList(rootsFragments, factory);
-				Logger
-						.log(
-								Logger.WARNING,
-								"Invalid 'placeAfter' id (" + factory.getPlaceAfter() + ')'); //$NON-NLS-1$
+				Logger.log(Logger.WARNING, "Invalid 'placeAfter' id (" + factory.getPlaceAfter() + ')'); //$NON-NLS-1$
 			}
 		}
 
@@ -232,8 +217,7 @@ public class LaunchConfigurationsTabsRegistry {
 		private String placeAfter;
 		private String modes;
 
-		public TabFactory(IConfigurationElement element, String groupId,
-				String id, String placeAfter, String modes) {
+		public TabFactory(IConfigurationElement element, String groupId, String id, String placeAfter, String modes) {
 			this.element = element;
 			this.groupId = groupId;
 			this.id = id;
@@ -242,14 +226,12 @@ public class LaunchConfigurationsTabsRegistry {
 		}
 
 		public AbstractLaunchConfigurationTab createFragmentFactory() {
-			SafeRunner
-					.run(new SafeRunnable(
-							"Error creation extension for extension-point org.eclipse.php.server.ui.serverTabs") { //$NON-NLS-1$
-						public void run() throws Exception {
-							factory = (AbstractLaunchConfigurationTab) element
-									.createExecutableExtension(CLASS_ATTRIBUTE);
-						}
-					});
+			SafeRunner.run(new SafeRunnable(
+					"Error creation extension for extension-point org.eclipse.php.server.ui.serverTabs") { //$NON-NLS-1$
+				public void run() throws Exception {
+					factory = (AbstractLaunchConfigurationTab) element.createExecutableExtension(CLASS_ATTRIBUTE);
+				}
+			});
 			return factory;
 		}
 

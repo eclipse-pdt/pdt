@@ -36,10 +36,8 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 	private IStructuredSelection fSelection;
 
 	public PharPackageWizard() {
-		IDialogSettings workbenchSettings = PHPUiPlugin.getDefault()
-				.getDialogSettings();
-		IDialogSettings section = workbenchSettings
-				.getSection(DIALOG_SETTINGS_KEY);
+		IDialogSettings workbenchSettings = PHPUiPlugin.getDefault().getDialogSettings();
+		IDialogSettings section = workbenchSettings.getSection(DIALOG_SETTINGS_KEY);
 		if (section == null)
 			fHasNewDialogSettings = true;
 		else {
@@ -50,19 +48,15 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 
 	@Override
 	public boolean performFinish() {
-		pharPackage.setElements(pharPackageWizardPage
-				.getSelectedElementsWithoutContainedChildren());
+		pharPackage.setElements(pharPackageWizardPage.getSelectedElementsWithoutContainedChildren());
 
-		if (!executeExportOperation(new PharFileExportOperation(pharPackage,
-				getShell())))
+		if (!executeExportOperation(new PharFileExportOperation(pharPackage, getShell())))
 			return false;
 
 		// Save the dialog settings
 		if (fHasNewDialogSettings) {
-			IDialogSettings workbenchSettings = PHPUiPlugin.getDefault()
-					.getDialogSettings();
-			IDialogSettings section = workbenchSettings
-					.addNewSection(DIALOG_SETTINGS_KEY);
+			IDialogSettings workbenchSettings = PHPUiPlugin.getDefault().getDialogSettings();
+			IDialogSettings section = workbenchSettings.addNewSection(DIALOG_SETTINGS_KEY);
 			setDialogSettings(section);
 		}
 		IWizardPage[] pages = getPages();
@@ -104,8 +98,7 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 
 	public void addPages() {
 		super.addPages();
-		pharPackageWizardPage = new PharPackageWizardPage(pharPackage,
-				fSelection);
+		pharPackageWizardPage = new PharPackageWizardPage(pharPackage, fSelection);
 		addPage(pharPackageWizardPage);
 	}
 
@@ -128,8 +121,7 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 	 * @return a valid structured selection based on the current selection
 	 */
 	protected IStructuredSelection getValidSelection() {
-		ISelection currentSelection = PHPUiPlugin.getActiveWorkbenchWindow()
-				.getSelectionService().getSelection();
+		ISelection currentSelection = PHPUiPlugin.getActiveWorkbenchWindow().getSelectionService().getSelection();
 		if (currentSelection instanceof IStructuredSelection) {
 			IStructuredSelection structuredSelection = (IStructuredSelection) currentSelection;
 			List selectedElements = new ArrayList(structuredSelection.size());
@@ -141,11 +133,9 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 				else if (selectedElement instanceof IResource)
 					addResource(selectedElements, (IResource) selectedElement);
 				else if (selectedElement instanceof IScriptProject) {
-					addProject(selectedElements,
-							((IScriptProject) selectedElement).getProject());
+					addProject(selectedElements, ((IScriptProject) selectedElement).getProject());
 				} else if (selectedElement instanceof IModelElement)
-					addJavaElement(selectedElements,
-							(IModelElement) selectedElement);
+					addJavaElement(selectedElements, (IModelElement) selectedElement);
 
 			}
 			return new StructuredSelection(selectedElements);
@@ -153,24 +143,21 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 			return StructuredSelection.EMPTY;
 	}
 
-	private void addJavaElement(List selectedElements,
-			IModelElement selectedElement) {
+	private void addJavaElement(List selectedElements, IModelElement selectedElement) {
 		// if (selectedElement.getResource().getParent() instanceof IProject) {
 		// selectedElements.add(selectedElement.getResource());
 		// return;
 		// }
-		if (selectedElement != null
-				&& selectedElement.exists()
-				&& (selectedElement.getElementType() == IModelElement.SOURCE_MODULE || selectedElement
-						.getElementType() == IModelElement.SCRIPT_FOLDER))
+		if (selectedElement != null && selectedElement.exists()
+				&& (selectedElement.getElementType() == IModelElement.SOURCE_MODULE
+						|| selectedElement.getElementType() == IModelElement.SCRIPT_FOLDER))
 			selectedElements.add(selectedElement);
 	}
 
 	private void addResource(List selectedElements, IResource resource) {
 
 		IModelElement je = DLTKCore.create(resource);
-		if (je != null && je.exists()
-				&& je.getElementType() == IModelElement.SOURCE_MODULE)
+		if (je != null && je.exists() && je.getElementType() == IModelElement.SOURCE_MODULE)
 			selectedElements.add(je);
 		else
 			selectedElements.add(resource);

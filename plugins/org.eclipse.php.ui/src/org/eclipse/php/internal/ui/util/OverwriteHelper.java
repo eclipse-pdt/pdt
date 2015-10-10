@@ -79,15 +79,13 @@ class OverwriteHelper {
 		return fScriptFolders;
 	}
 
-	public void confirmOverwritting(IReorgQueries reorgQueries,
-			IModelElement destination) {
+	public void confirmOverwritting(IReorgQueries reorgQueries, IModelElement destination) {
 		Assert.isNotNull(destination);
 		fDestination = destination;
 		confirmOverwritting(reorgQueries);
 	}
 
-	public void confirmOverwritting(IReorgQueries reorgQueries,
-			IResource destination) {
+	public void confirmOverwritting(IReorgQueries reorgQueries, IResource destination) {
 		Assert.isNotNull(destination);
 		Assert.isNotNull(reorgQueries);
 		fDestination = destination;
@@ -95,12 +93,9 @@ class OverwriteHelper {
 	}
 
 	private void confirmOverwritting(IReorgQueries reorgQueries) {
-		IConfirmQuery overwriteQuery = reorgQueries
-				.createYesYesToAllNoNoToAllQuery(
-						RefactoringCoreMessages.OverwriteHelper_0, true,
-						IReorgQueries.CONFIRM_OVERWRITTING);
-		IConfirmQuery skipQuery = reorgQueries.createSkipQuery(
-				RefactoringCoreMessages.OverwriteHelper_2,
+		IConfirmQuery overwriteQuery = reorgQueries.createYesYesToAllNoNoToAllQuery(
+				RefactoringCoreMessages.OverwriteHelper_0, true, IReorgQueries.CONFIRM_OVERWRITTING);
+		IConfirmQuery skipQuery = reorgQueries.createSkipQuery(RefactoringCoreMessages.OverwriteHelper_2,
 				IReorgQueries.CONFIRM_SKIPPING);
 		confirmFileOverwritting(overwriteQuery);
 		confirmFolderOverwritting(skipQuery);
@@ -113,14 +108,12 @@ class OverwriteHelper {
 		List toNotOverwrite = new ArrayList(1);
 		for (int i = 0; i < fRoots.length; i++) {
 			IProjectFragment root = fRoots[i];
-			if (canOverwrite(root)
-					&& !skip(root.getElementName(), overwriteQuery))
+			if (canOverwrite(root) && !skip(root.getElementName(), overwriteQuery))
 				toNotOverwrite.add(root);
 		}
 		IProjectFragment[] roots = (IProjectFragment[]) toNotOverwrite
 				.toArray(new IProjectFragment[toNotOverwrite.size()]);
-		fRoots = ArrayTypeConverter.toProjectFragmentArray(ReorgUtils.setMinus(
-				fRoots, roots));
+		fRoots = ArrayTypeConverter.toProjectFragmentArray(ReorgUtils.setMinus(fRoots, roots));
 	}
 
 	private void confirmCuOverwritting(IConfirmQuery overwriteQuery) {
@@ -130,8 +123,7 @@ class OverwriteHelper {
 			if (canOverwrite(cu) && !overwrite(cu, overwriteQuery))
 				cusToNotOverwrite.add(cu);
 		}
-		ISourceModule[] cus = (ISourceModule[]) cusToNotOverwrite
-				.toArray(new ISourceModule[cusToNotOverwrite.size()]);
+		ISourceModule[] cus = (ISourceModule[]) cusToNotOverwrite.toArray(new ISourceModule[cusToNotOverwrite.size()]);
 		fCus = ArrayTypeConverter.toCuArray(ReorgUtils.setMinus(fCus, cus));
 	}
 
@@ -142,10 +134,8 @@ class OverwriteHelper {
 			if (canOverwrite(folder) && !skip(folder.getName(), overwriteQuery))
 				foldersToNotOverwrite.add(folder);
 		}
-		IFolder[] folders = (IFolder[]) foldersToNotOverwrite
-				.toArray(new IFolder[foldersToNotOverwrite.size()]);
-		fFolders = ArrayTypeConverter.toFolderArray(ReorgUtils.setMinus(
-				fFolders, folders));
+		IFolder[] folders = (IFolder[]) foldersToNotOverwrite.toArray(new IFolder[foldersToNotOverwrite.size()]);
+		fFolders = ArrayTypeConverter.toFolderArray(ReorgUtils.setMinus(fFolders, folders));
 	}
 
 	private void confirmFileOverwritting(IConfirmQuery overwriteQuery) {
@@ -155,10 +145,8 @@ class OverwriteHelper {
 			if (canOverwrite(file) && !overwrite(file, overwriteQuery))
 				filesToNotOverwrite.add(file);
 		}
-		IFile[] files = (IFile[]) filesToNotOverwrite
-				.toArray(new IFile[filesToNotOverwrite.size()]);
-		fFiles = ArrayTypeConverter.toFileArray(ReorgUtils.setMinus(fFiles,
-				files));
+		IFile[] files = (IFile[]) filesToNotOverwrite.toArray(new IFile[filesToNotOverwrite.size()]);
+		fFiles = ArrayTypeConverter.toFileArray(ReorgUtils.setMinus(fFiles, files));
 	}
 
 	private void confirmPackageOverwritting(IConfirmQuery overwriteQuery) {
@@ -168,17 +156,14 @@ class OverwriteHelper {
 			if (canOverwrite(pack) && !overwrite(pack, overwriteQuery))
 				toNotOverwrite.add(pack);
 		}
-		IScriptFolder[] packages = (IScriptFolder[]) toNotOverwrite
-				.toArray(new IScriptFolder[toNotOverwrite.size()]);
-		fScriptFolders = ArrayTypeConverter.toPackageArray(ReorgUtils.setMinus(
-				fScriptFolders, packages));
+		IScriptFolder[] packages = (IScriptFolder[]) toNotOverwrite.toArray(new IScriptFolder[toNotOverwrite.size()]);
+		fScriptFolders = ArrayTypeConverter.toPackageArray(ReorgUtils.setMinus(fScriptFolders, packages));
 	}
 
 	private boolean canOverwrite(IScriptFolder pack) {
 		Assert.isTrue(fDestination instanceof IProjectFragment);
 		IProjectFragment destination = (IProjectFragment) fDestination;
-		return !destination.equals(pack.getParent())
-				&& destination.getScriptFolder(pack.getElementName()).exists();
+		return !destination.equals(pack.getParent()) && destination.getScriptFolder(pack.getElementName()).exists();
 	}
 
 	private boolean canOverwrite(IResource resource) {
@@ -208,11 +193,9 @@ class OverwriteHelper {
 	private boolean canOverwrite(IProjectFragment root) {
 		Assert.isTrue(fDestination instanceof IScriptProject);
 		IScriptProject destination = (IScriptProject) fDestination;
-		IFolder conflict = destination.getProject().getFolder(
-				root.getElementName());
+		IFolder conflict = destination.getProject().getFolder(root.getElementName());
 		try {
-			return !destination.equals(root.getParent()) && conflict.exists()
-					&& conflict.members().length > 0;
+			return !destination.equals(root.getParent()) && conflict.exists() && conflict.members().length > 0;
 		} catch (CoreException e) {
 			return true;
 		}
@@ -221,33 +204,27 @@ class OverwriteHelper {
 	private boolean canOverwrite(ISourceModule cu) {
 		if (fDestination instanceof IScriptFolder) {
 			IScriptFolder destination = (IScriptFolder) fDestination;
-			return !destination.equals(cu.getParent())
-					&& destination.getSourceModule(cu.getElementName())
-							.exists();
+			return !destination.equals(cu.getParent()) && destination.getSourceModule(cu.getElementName()).exists();
 		} else {
 			return canOverwrite(ReorgUtils.getResource(cu));
 		}
 	}
 
-	private static boolean overwrite(IResource resource,
-			IConfirmQuery overwriteQuery) {
+	private static boolean overwrite(IResource resource, IConfirmQuery overwriteQuery) {
 		return overwrite(resource.getName(), overwriteQuery);
 	}
 
-	private static boolean overwrite(IModelElement element,
-			IConfirmQuery overwriteQuery) {
+	private static boolean overwrite(IModelElement element, IConfirmQuery overwriteQuery) {
 		return overwrite(element.getElementName(), overwriteQuery);
 	}
 
 	private static boolean overwrite(String name, IConfirmQuery overwriteQuery) {
-		String question = Messages.format(
-				RefactoringCoreMessages.OverwriteHelper_1, name);
+		String question = Messages.format(RefactoringCoreMessages.OverwriteHelper_1, name);
 		return overwriteQuery.confirm(question);
 	}
 
 	private static boolean skip(String name, IConfirmQuery overwriteQuery) {
-		String question = Messages.format(
-				RefactoringCoreMessages.OverwriteHelper_3, name);
+		String question = Messages.format(RefactoringCoreMessages.OverwriteHelper_3, name);
 		return overwriteQuery.confirm(question);
 	}
 }

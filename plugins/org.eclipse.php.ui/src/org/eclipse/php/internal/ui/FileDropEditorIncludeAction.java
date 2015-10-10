@@ -47,11 +47,9 @@ public class FileDropEditorIncludeAction extends FileDropAction {
 		if (fileNames == null || fileNames.length == 0) {
 			return false;
 		}
-		IModelElement editorElement = ((PHPStructuredEditor) targetEditor)
-				.getModelElement();
+		IModelElement editorElement = ((PHPStructuredEditor) targetEditor).getModelElement();
 		if (editorElement != null) {
-			ISourceModule sourceModule = ((ModelElement) editorElement)
-					.getSourceModule();
+			ISourceModule sourceModule = ((ModelElement) editorElement).getSourceModule();
 			ASTParser parser = ASTParser.newParser(sourceModule);
 
 			Program program;
@@ -60,20 +58,18 @@ public class FileDropEditorIncludeAction extends FileDropAction {
 				program.recordModifications();
 
 				AST ast = program.getAST();
-				IDocument document = ((PHPStructuredEditor) targetEditor)
-						.getDocument();
+				IDocument document = ((PHPStructuredEditor) targetEditor).getDocument();
 				for (int i = 0; i < fileNames.length; ++i) {
 
 					// resolve the relative path from include path
-					String relativeLocationFromIncludePath = getFileName(
-							fileNames[i], sourceModule);
+					String relativeLocationFromIncludePath = getFileName(fileNames[i], sourceModule);
 
 					if (relativeLocationFromIncludePath != null) {
-						Include include = ast.newInclude(ast.newScalar("'" //$NON-NLS-1$
-								+ relativeLocationFromIncludePath.toString()
-								+ "'"), Include.IT_REQUIRE_ONCE); //$NON-NLS-1$
-						program.statements().add(i,
-								ast.newExpressionStatement(include));
+						Include include = ast.newInclude(
+								ast.newScalar("'" //$NON-NLS-1$
+										+ relativeLocationFromIncludePath.toString() + "'"), //$NON-NLS-1$
+								Include.IT_REQUIRE_ONCE);
+						program.statements().add(i, ast.newExpressionStatement(include));
 						TextEdit edits = program.rewrite(document, null);
 						edits.apply(document);
 					}
@@ -93,14 +89,12 @@ public class FileDropEditorIncludeAction extends FileDropAction {
 	 * @return
 	 */
 	private String getFileName(String input, IModelElement sourceModule) {
-		final IFile fileForLocation = ResourcesPlugin.getWorkspace().getRoot()
-				.getFileForLocation(new Path(input));
+		final IFile fileForLocation = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(input));
 		if (fileForLocation == null) {
 			return null;
 		}
 		final IPath relativeLocationFromIncludePath = IncludePathUtils
-				.getRelativeLocationFromIncludePath(sourceModule
-						.getScriptProject(), DLTKCore.create(fileForLocation));
+				.getRelativeLocationFromIncludePath(sourceModule.getScriptProject(), DLTKCore.create(fileForLocation));
 
 		if (relativeLocationFromIncludePath.isEmpty()) {
 			return null;

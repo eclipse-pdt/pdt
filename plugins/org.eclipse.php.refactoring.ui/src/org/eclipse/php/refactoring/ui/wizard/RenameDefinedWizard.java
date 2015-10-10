@@ -23,8 +23,7 @@ import org.eclipse.php.refactoring.ui.PHPRefactoringUIMessages;
 public class RenameDefinedWizard extends RenameRefactoringWizard {
 
 	public RenameDefinedWizard(Refactoring refactoring) {
-		super(
-				refactoring,
-				PHPRefactoringUIMessages.getString("RenameDefinedWizard_title"), PHPRefactoringUIMessages.getString("RenameGlobalVariableWizard_inputPageDescription"), null, null); //$NON-NLS-1$ //$NON-NLS-2$		
+		super(refactoring, PHPRefactoringUIMessages.getString("RenameDefinedWizard_title"), //$NON-NLS-1$
+				PHPRefactoringUIMessages.getString("RenameGlobalVariableWizard_inputPageDescription"), null, null); //$NON-NLS-1$
 	}
 }

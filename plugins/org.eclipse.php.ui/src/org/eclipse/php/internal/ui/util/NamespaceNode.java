@@ -26,14 +26,12 @@ import org.eclipse.dltk.internal.core.SourceType;
 public class NamespaceNode extends SourceType {
 	private IType[] namespaces;
 
-	public NamespaceNode(IModelElement modelElement, String name,
-			IType[] namespaces) {
+	public NamespaceNode(IModelElement modelElement, String name, IType[] namespaces) {
 		super((ModelElement) modelElement, name);
 		this.namespaces = namespaces;
 	}
 
-	public IModelElement[] getChildren(IProgressMonitor monitor)
-			throws ModelException {
+	public IModelElement[] getChildren(IProgressMonitor monitor) throws ModelException {
 		List<IModelElement> children = new LinkedList<IModelElement>();
 		for (IType namespace : namespaces) {
 			children.addAll(Arrays.asList(namespace.getChildren()));

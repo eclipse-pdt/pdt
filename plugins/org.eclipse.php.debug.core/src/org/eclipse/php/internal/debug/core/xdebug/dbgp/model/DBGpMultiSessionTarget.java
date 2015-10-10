@@ -32,9 +32,8 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
 
-public class DBGpMultiSessionTarget extends DBGpElement implements
-		IPHPDebugTarget, IDBGpDebugTarget, IDBGpSessionListener,
-		IDebugEventSetListener {
+public class DBGpMultiSessionTarget extends DBGpElement
+		implements IPHPDebugTarget, IDBGpDebugTarget, IDBGpSessionListener, IDebugEventSetListener {
 
 	// used to identify this debug target with the associated
 	// script being debugged.
@@ -109,8 +108,7 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 	 * @param sessionID
 	 * @param stopAtStart
 	 */
-	public DBGpMultiSessionTarget(ILaunch launch,
-			String workspaceRelativeScript, String stopDebugURL, String ideKey,
+	public DBGpMultiSessionTarget(ILaunch launch, String workspaceRelativeScript, String stopDebugURL, String ideKey,
 			boolean stopAtStart) {
 		this();
 		this.stopAtStart = stopAtStart;
@@ -118,16 +116,15 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 		this.scriptName = workspaceRelativeScript;
 		this.ideKey = ideKey;
 		this.webLaunch = true;
-		this.sessionID = null; // in the web launch we have no need for the session ID.
+		this.sessionID = null; // in the web launch we have no need for the
+								// session ID.
 		createMockProcess(launch, stopDebugURL);
 	}
 
 	private void createMockProcess(ILaunch launch, String stopDebugURL) {
 		this.stopDebugURL = stopDebugURL;
-		this.process = new PHPProcess(launch,
-				PHPDebugCoreMessages.DBGpMultiSessionTarget_Multisession_PHP_process);
-		this.process.setAttribute(IProcess.ATTR_PROCESS_TYPE,
-				IPHPDebugConstants.PHPProcessType);
+		this.process = new PHPProcess(launch, PHPDebugCoreMessages.DBGpMultiSessionTarget_Multisession_PHP_process);
+		this.process.setAttribute(IProcess.ATTR_PROCESS_TYPE, IPHPDebugConstants.PHPProcessType);
 		((PHPProcess) this.process).setDebugTarget(this);
 		launch.addProcess(process);
 	}
@@ -309,8 +306,7 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 		}
 	}
 
-	public IMemoryBlock getMemoryBlock(long startAddress, long length)
-			throws DebugException {
+	public IMemoryBlock getMemoryBlock(long startAddress, long length) throws DebugException {
 		return null;
 	}
 
@@ -324,17 +320,16 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 	 * @return
 	 */
 	private boolean isTerminating() {
-		boolean terminating = (targetState == STATE_TERMINATED)
-				|| (targetState == STATE_TERMINATING);
+		boolean terminating = (targetState == STATE_TERMINATED) || (targetState == STATE_TERMINATING);
 		return terminating;
 	}
 
-	public void waitForInitialSession(DBGpBreakpointFacade facade,
-			DBGpPreferences sessionPrefs, IProgressMonitor launchMonitor) {
+	public void waitForInitialSession(DBGpBreakpointFacade facade, DBGpPreferences sessionPrefs,
+			IProgressMonitor launchMonitor) {
 		configureInitialState(facade, sessionPrefs);
 		try {
-			while (debugTargets.size() == 0 && !launch.isTerminated()
-					&& !isTerminating() && !launchMonitor.isCanceled()) {
+			while (debugTargets.size() == 0 && !launch.isTerminated() && !isTerminating()
+					&& !launchMonitor.isCanceled()) {
 				te.waitForEvent(DBGpPreferences.DBGP_TIMEOUT_DEFAULT);
 			}
 		} catch (InterruptedException e) {
@@ -345,8 +340,7 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 		}
 	}
 
-	public void sessionReceived(DBGpBreakpointFacade facade,
-			DBGpPreferences sessionPrefs, DBGpTarget owningTarget,
+	public void sessionReceived(DBGpBreakpointFacade facade, DBGpPreferences sessionPrefs, DBGpTarget owningTarget,
 			PathMapper globalMapper) {
 		configureInitialState(facade, sessionPrefs);
 		owningTarget.setMultiSessionManaged(true);
@@ -355,8 +349,7 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 		owningTarget.sessionReceived(facade, sessionPrefs);
 	}
 
-	public void configureInitialState(DBGpBreakpointFacade facade,
-			DBGpPreferences sessionPrefs) {
+	public void configureInitialState(DBGpBreakpointFacade facade, DBGpPreferences sessionPrefs) {
 		bpFacade = facade;
 		sessionPreferences = sessionPrefs;
 	}
@@ -369,9 +362,8 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 			 * terminate when complete and don't hang around waiting for another
 			 * session they won't receive.
 			 */
-			DBGpTarget target = new DBGpTarget(this.launch, this.scriptName,
-					this.stopDebugURL, this.ideKey, this.sessionID,
-					this.stopAtStart);
+			DBGpTarget target = new DBGpTarget(this.launch, this.scriptName, this.stopDebugURL, this.ideKey,
+					this.sessionID, this.stopAtStart);
 			target.setMultiSessionManaged(true);
 			target.setPathMapper(pathMapper);
 			accepted = target.SessionCreated(session);
@@ -381,8 +373,7 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 				 * launch monitor here, unless this is the first launch, but it
 				 * doesn't matter.
 				 */
-				target.waitForInitialSession(bpFacade, sessionPreferences,
-						null);
+				target.waitForInitialSession(bpFacade, sessionPreferences, null);
 				if (!target.isTerminated()) {
 					addDebugTarget(target);
 					if (targetState == STATE_INIT_SESSION_WAIT) {
@@ -469,8 +460,7 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 		try {
 			PHPDebugUtil.openLaunchURL(stopDebugURL);
 		} catch (DebugException e) {
-			DBGpLogger.logException(
-					"Failed to send stop XDebug session URL: " + stopDebugURL, //$NON-NLS-1$
+			DBGpLogger.logException("Failed to send stop XDebug session URL: " + stopDebugURL, //$NON-NLS-1$
 					this, e);
 		}
 	}

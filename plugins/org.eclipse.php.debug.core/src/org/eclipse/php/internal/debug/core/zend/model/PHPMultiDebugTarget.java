@@ -32,8 +32,7 @@ import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
  * 
  * @author Bartlomiej Laczkowski
  */
-public class PHPMultiDebugTarget extends PHPDebugElement implements
-		IPHPDebugTarget, IDebugEventSetListener {
+public class PHPMultiDebugTarget extends PHPDebugElement implements IPHPDebugTarget, IDebugEventSetListener {
 
 	private ILaunch fLaunch;
 	private IProcess fProcess;
@@ -48,13 +47,11 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	 * @param process
 	 * @throws CoreException
 	 */
-	public PHPMultiDebugTarget(ILaunch launch, IProcess process)
-			throws CoreException {
+	public PHPMultiDebugTarget(ILaunch launch, IProcess process) throws CoreException {
 		super(null);
 		fLaunch = launch;
 		fProcess = process;
-		fProcess.setAttribute(IProcess.ATTR_PROCESS_TYPE,
-				IPHPDebugConstants.PHPProcessType);
+		fProcess.setAttribute(IProcess.ATTR_PROCESS_TYPE, IPHPDebugConstants.PHPProcessType);
 		((PHPProcess) fProcess).setDebugTarget(this);
 		fireCreationEvent();
 		DebugPlugin.getDefault().addDebugEventListener(this);
@@ -141,8 +138,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
 		boolean supports = false;
 		// Supports if any of sub-targets supports
-		if (breakpoint.getModelIdentifier()
-				.equals(IPHPDebugConstants.ID_PHP_DEBUG_CORE)) {
+		if (breakpoint.getModelIdentifier().equals(IPHPDebugConstants.ID_PHP_DEBUG_CORE)) {
 			for (IPHPDebugTarget target : fDebugTargets)
 				if (target.supportsBreakpoint(breakpoint))
 					supports = true;
@@ -321,9 +317,8 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.IMemoryBlockRetrieval#supportsStorageRetrieval
-	 * ()
+	 * @see org.eclipse.debug.core.model.IMemoryBlockRetrieval#
+	 * supportsStorageRetrieval ()
 	 */
 	@Override
 	public boolean supportsStorageRetrieval() {
@@ -338,8 +333,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	 * long)
 	 */
 	@Override
-	public IMemoryBlock getMemoryBlock(long startAddress, long length)
-			throws DebugException {
+	public IMemoryBlock getMemoryBlock(long startAddress, long length) throws DebugException {
 		return null;
 	}
 
@@ -372,9 +366,8 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.IDebugEventSetListener#handleDebugEvents(org.eclipse
-	 * .debug.core.DebugEvent[])
+	 * @see org.eclipse.debug.core.IDebugEventSetListener#handleDebugEvents(org.
+	 * eclipse .debug.core.DebugEvent[])
 	 */
 	@Override
 	public void handleDebugEvents(DebugEvent[] events) {

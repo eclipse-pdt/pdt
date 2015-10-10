@@ -31,8 +31,7 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 
-public class PHPContentAssistant extends StructuredContentAssistant implements
-		IScriptContentAssistExtension {
+public class PHPContentAssistant extends StructuredContentAssistant implements IScriptContentAssistExtension {
 
 	private static final int DEFAULT_AUTO_ACTIVATION_DELAY = 200;
 	private int fAutoActivationDelay = DEFAULT_AUTO_ACTIVATION_DELAY;
@@ -61,8 +60,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 		super.setAutoActivationDelay(delay);
 	}
 
-	class AutoAssistListener2 extends AutoAssistListener implements
-			KeyListener, Runnable, VerifyKeyListener {
+	class AutoAssistListener2 extends AutoAssistListener implements KeyListener, Runnable, VerifyKeyListener {
 
 		private Thread fThread;
 		private boolean fIsReset = false;
@@ -127,11 +125,10 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 				return;
 			}
 			try {
-				int pos = ((Point) evaluatePrivateMemberMethod(
-						"fContentAssistSubjectControlAdapter", "getSelectedRange", new Class[0], new Object[0])).x; //$NON-NLS-1$ //$NON-NLS-2$
+				int pos = ((Point) evaluatePrivateMemberMethod("fContentAssistSubjectControlAdapter", //$NON-NLS-1$
+						"getSelectedRange", new Class[0], new Object[0])).x; //$NON-NLS-1$
 				IDocument document = fViewer.getDocument();
-				String type = TextUtilities.getContentType(document,
-						getDocumentPartitioning(), pos, true);
+				String type = TextUtilities.getContentType(document, getDocumentPartitioning(), pos, true);
 				boolean activated = true;
 				if (type != PHPPartitionTypes.PHP_DEFAULT) {
 					if (fViewer instanceof PHPStructuredTextViewer) {
@@ -139,8 +136,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 						if (phpViewer.getViewerConfiguration() instanceof PHPStructuredTextViewerConfiguration) {
 							PHPStructuredTextViewerConfiguration viewerConfiguration = (PHPStructuredTextViewerConfiguration) phpViewer
 									.getViewerConfiguration();
-							IContentAssistProcessor[] processors = viewerConfiguration
-									.getProcessorMap().get(type);
+							IContentAssistProcessor[] processors = viewerConfiguration.getProcessorMap().get(type);
 							if (processors != null) {
 								StringBuffer sb = new StringBuffer();
 								for (int i = 0; i < processors.length; i++) {
@@ -152,8 +148,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 								}
 							} else {
 								IContentAssistProcessor processor = getContentAssistProcessor(type);
-								if (computeAllAutoActivationTriggers(processor)
-										.indexOf(e.character) < 0) {
+								if (computeAllAutoActivationTriggers(processor).indexOf(e.character) < 0) {
 									stop();
 									return;
 								}
@@ -161,25 +156,23 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 						}
 					}
 					char[] activation;
-					activation = (char[]) evaluatePrivateMemberMethod(
-							"fContentAssistSubjectControlAdapter", "getCompletionProposalAutoActivationCharacters", new Class[] { ContentAssistant.class, int.class }, new Object[] { PHPContentAssistant.super, pos }); //$NON-NLS-1$ //$NON-NLS-2$
+					activation = (char[]) evaluatePrivateMemberMethod("fContentAssistSubjectControlAdapter", //$NON-NLS-1$
+							"getCompletionProposalAutoActivationCharacters", //$NON-NLS-1$
+							new Class[] { ContentAssistant.class, int.class },
+							new Object[] { PHPContentAssistant.super, pos });
 					activated = contains(activation, e.character);
 				} else
 				// just '>' or just '-' will not trigger proposal pop-up
-				if ((pos > 0 && e.character == '>' && document.getChar(pos - 1) != '-')
-						|| (e.character == '-')) {
+				if ((pos > 0 && e.character == '>' && document.getChar(pos - 1) != '-') || (e.character == '-')) {
 					stop();
 					return;
 
 				} else
 				// Bug 458285 - do not run auto assist with empty identifier
 				if (Character.isWhitespace(e.character)
-						|| (pos > 0 && e.character == '\\' && Character
-								.isWhitespace(document.getChar(pos - 1)))
-						|| e.character == ',' || e.character == '('
-						|| e.character == ')' || e.character == '{'
-						|| e.character == '}' || e.character == '['
-						|| e.character == ']' || e.character == '\''
+						|| (pos > 0 && e.character == '\\' && Character.isWhitespace(document.getChar(pos - 1)))
+						|| e.character == ',' || e.character == '(' || e.character == ')' || e.character == '{'
+						|| e.character == '}' || e.character == '[' || e.character == ']' || e.character == '\''
 						|| e.character == '"') {
 					stop();
 					return;
@@ -207,20 +200,17 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 			}
 		}
 
-		private String computeAllAutoActivationTriggers(
-				IContentAssistProcessor processor) {
+		private String computeAllAutoActivationTriggers(IContentAssistProcessor processor) {
 			if (processor == null) {
 				return ""; //$NON-NLS-1$
 			}
 
 			StringBuffer buf = new StringBuffer(5);
-			char[] triggers = processor
-					.getCompletionProposalAutoActivationCharacters();
+			char[] triggers = processor.getCompletionProposalAutoActivationCharacters();
 			if (triggers != null) {
 				buf.append(triggers);
 			}
-			triggers = processor
-					.getContextInformationAutoActivationCharacters();
+			triggers = processor.getContextInformationAutoActivationCharacters();
 			if (triggers != null) {
 				buf.append(triggers);
 			}
@@ -239,18 +229,16 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 		}
 
 		private Object getPrivateMember(String member) throws Exception {
-			Field declaredField = PHPContentAssistant.this.getClass()
-					.getSuperclass().getSuperclass().getDeclaredField(member);
+			Field declaredField = PHPContentAssistant.this.getClass().getSuperclass().getSuperclass()
+					.getDeclaredField(member);
 			declaredField.setAccessible(true);
 			Object fProposalPopup = declaredField.get(PHPContentAssistant.this);
 			return fProposalPopup;
 		}
 
-		private Object evaluatePrivateMemberMethod(String privateMember,
-				String method, Class<?>[] params, Object[] args)
-				throws Exception {
-			Method declaredMethod = getPrivateMemberMethod(privateMember,
-					method, params);
+		private Object evaluatePrivateMemberMethod(String privateMember, String method, Class<?>[] params,
+				Object[] args) throws Exception {
+			Method declaredMethod = getPrivateMemberMethod(privateMember, method, params);
 			if (declaredMethod == null) {
 				return null;
 			}
@@ -258,8 +246,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 			return declaredMethod.invoke(member, args);
 		}
 
-		private Method getPrivateMemberMethod(String privateMember,
-				String method, Class<?>[] params) throws Exception {
+		private Method getPrivateMemberMethod(String privateMember, String method, Class<?>[] params) throws Exception {
 			Object member = getPrivateMember(privateMember);
 			if (member == null) {
 				return null;
@@ -267,10 +254,8 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 			return getPrivateMetod(member, method, params);
 		}
 
-		private Method getPrivateMetod(Object obj, String method,
-				Class<?>[] params) throws Exception {
-			Method declaredMethod = obj.getClass().getDeclaredMethod(method,
-					params);
+		private Method getPrivateMetod(Object obj, String method, Class<?>[] params) throws Exception {
+			Method declaredMethod = obj.getClass().getDeclaredMethod(method, params);
 			declaredMethod.setAccessible(true);
 			return declaredMethod;
 		}

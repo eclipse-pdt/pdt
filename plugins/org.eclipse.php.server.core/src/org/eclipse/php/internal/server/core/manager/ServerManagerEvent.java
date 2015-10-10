@@ -55,8 +55,7 @@ public class ServerManagerEvent extends EventObject {
 	 * @param server
 	 * @param modifiedAttribute
 	 */
-	public ServerManagerEvent(int type, Server server, String attributeKey,
-			String oldAttribute, String newAttribute) {
+	public ServerManagerEvent(int type, Server server, String attributeKey, String oldAttribute, String newAttribute) {
 		this(type, server);
 		this.attributeKey = attributeKey;
 		this.oldAttribute = oldAttribute;

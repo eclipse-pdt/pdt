@@ -41,27 +41,22 @@ public final class ContributedProcessorDescriptor {
 	private static final String MARKER_TYPE = "markerType"; //$NON-NLS-1$
 	private static final String COMMAND = "command"; //$NON-NLS-1$
 
-	public ContributedProcessorDescriptor(IConfigurationElement element,
-			boolean testMarkerTypes) {
+	public ContributedProcessorDescriptor(IConfigurationElement element, boolean testMarkerTypes) {
 		fConfigurationElement = element;
 		fProcessorInstance = null;
 		fStatus = null; // undefined
-		if (fConfigurationElement
-				.getChildren(ExpressionTagNames.ENABLEMENT).length == 0) {
+		if (fConfigurationElement.getChildren(ExpressionTagNames.ENABLEMENT).length == 0) {
 			fStatus = Boolean.TRUE;
 		}
 		// fRequiredSourceLevel= element.getAttribute(REQUIRED_SOURCE_LEVEL);
-		fHandledMarkerTypes = testMarkerTypes ? getHandledMarkerTypes(element)
-				: null;
+		fHandledMarkerTypes = testMarkerTypes ? getHandledMarkerTypes(element) : null;
 	}
 
 	private Set<String> getHandledMarkerTypes(IConfigurationElement element) {
 		HashSet<String> map = new HashSet<String>(7);
-		IConfigurationElement[] children = element
-				.getChildren(HANDLED_MARKER_TYPES);
+		IConfigurationElement[] children = element.getChildren(HANDLED_MARKER_TYPES);
 		for (int i = 0; i < children.length; i++) {
-			IConfigurationElement[] types = children[i]
-					.getChildren(MARKER_TYPE);
+			IConfigurationElement[] types = children[i].getChildren(MARKER_TYPE);
 			for (int k = 0; k < types.length; k++) {
 				String attribute = types[k].getAttribute(ID);
 				if (attribute != null) {
@@ -78,15 +73,12 @@ public final class ContributedProcessorDescriptor {
 	}
 
 	public IStatus checkSyntax() {
-		IConfigurationElement[] children = fConfigurationElement
-				.getChildren(ExpressionTagNames.ENABLEMENT);
+		IConfigurationElement[] children = fConfigurationElement.getChildren(ExpressionTagNames.ENABLEMENT);
 		if (children.length > 1) {
 			String id = fConfigurationElement.getAttribute(ID);
-			return new StatusInfo(IStatus.ERROR,
-					Messages.ContributedProcessorDescriptor_4 + id);
+			return new StatusInfo(IStatus.ERROR, Messages.ContributedProcessorDescriptor_4 + id);
 		}
-		return new StatusInfo(IStatus.OK,
-				Messages.ContributedProcessorDescriptor_5);
+		return new StatusInfo(IStatus.OK, Messages.ContributedProcessorDescriptor_5);
 	}
 
 	private boolean matches(ISourceModule cunit) {
@@ -102,24 +94,20 @@ public final class ContributedProcessorDescriptor {
 			return fStatus.booleanValue();
 		}
 
-		IConfigurationElement[] children = fConfigurationElement
-				.getChildren(ExpressionTagNames.ENABLEMENT);
+		IConfigurationElement[] children = fConfigurationElement.getChildren(ExpressionTagNames.ENABLEMENT);
 		if (children.length == 1) {
 			try {
 				ExpressionConverter parser = ExpressionConverter.getDefault();
 				Expression expression = parser.perform(children[0]);
-				EvaluationContext evalContext = new EvaluationContext(null,
-						cunit);
+				EvaluationContext evalContext = new EvaluationContext(null, cunit);
 				evalContext.addVariable("compilationUnit", cunit); //$NON-NLS-1$
 				IScriptProject javaProject = cunit.getScriptProject();
-				String[] natures = javaProject.getProject().getDescription()
-						.getNatureIds();
+				String[] natures = javaProject.getProject().getDescription().getNatureIds();
 				evalContext.addVariable("projectNatures", //$NON-NLS-1$
 						Arrays.asList(natures));
 				// evalContext.addVariable("sourceLevel",
 				// javaProject.getOption(JavaCore.COMPILER_SOURCE, true));
-				return expression
-						.evaluate(evalContext) == EvaluationResult.TRUE;
+				return expression.evaluate(evalContext) == EvaluationResult.TRUE;
 			} catch (CoreException e) {
 				PHPUiPlugin.log(e);
 			}
@@ -133,19 +121,14 @@ public final class ContributedProcessorDescriptor {
 		if (matches(cunit)) {
 			if (fProcessorInstance == null) {
 				try {
-					Object extension = fConfigurationElement
-							.createExecutableExtension(CLASS);
+					Object extension = fConfigurationElement.createExecutableExtension(CLASS);
 					if (expectedType.isInstance(extension)) {
 						fProcessorInstance = extension;
 					} else {
-						String message = Messages.ContributedProcessorDescriptor_8
-								+ fConfigurationElement.getName()
-								+ Messages.ContributedProcessorDescriptor_9
-								+ expectedType.getName() + "'." //$NON-NLS-1$
-								+ fConfigurationElement.getContributor()
-										.getName();
-						PHPUiPlugin.log(new Status(IStatus.ERROR,
-								PHPUiPlugin.ID, message));
+						String message = Messages.ContributedProcessorDescriptor_8 + fConfigurationElement.getName()
+								+ Messages.ContributedProcessorDescriptor_9 + expectedType.getName() + "'." //$NON-NLS-1$
+								+ fConfigurationElement.getContributor().getName();
+						PHPUiPlugin.log(new Status(IStatus.ERROR, PHPUiPlugin.ID, message));
 						fStatus = Boolean.FALSE;
 						return null;
 					}
@@ -161,14 +144,12 @@ public final class ContributedProcessorDescriptor {
 	}
 
 	public boolean canHandleMarkerType(String markerType) {
-		return fHandledMarkerTypes == null
-				|| fHandledMarkerTypes.contains(markerType);
+		return fHandledMarkerTypes == null || fHandledMarkerTypes.contains(markerType);
 	}
 
 	public String[] getSupportedCommands() {
 		List<String> result = new LinkedList<String>();
-		for (IConfigurationElement el : fConfigurationElement
-				.getChildren(COMMAND)) {
+		for (IConfigurationElement el : fConfigurationElement.getChildren(COMMAND)) {
 			String id = el.getAttribute(ID);
 			if (id != null) {
 				result.add(id);

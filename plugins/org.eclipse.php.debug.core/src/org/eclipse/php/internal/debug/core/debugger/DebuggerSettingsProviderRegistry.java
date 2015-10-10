@@ -35,8 +35,7 @@ public class DebuggerSettingsProviderRegistry {
 		String debuggerId;
 		String overridenProviderId;
 
-		public Entry(IConfigurationElement element, String id,
-				String debuggerId, String overridenProviderId) {
+		public Entry(IConfigurationElement element, String id, String debuggerId, String overridenProviderId) {
 			this.element = element;
 			this.id = id;
 			this.debuggerId = debuggerId;
@@ -53,8 +52,7 @@ public class DebuggerSettingsProviderRegistry {
 	/**
 	 * The name of extension point to read providers from
 	 */
-	public static final String EXTENSION_POINT_ID = PHPDebugPlugin.getDefault()
-			.getBundle().getSymbolicName()
+	public static final String EXTENSION_POINT_ID = PHPDebugPlugin.getDefault().getBundle().getSymbolicName()
 			+ ".phpDebuggerSettingsProviders"; //$NON-NLS-1$
 
 	/**
@@ -69,8 +67,7 @@ public class DebuggerSettingsProviderRegistry {
 	 *            the related debugger id
 	 * @return a debugger settings provider or <code>null</code>
 	 */
-	public static synchronized final IDebuggerSettingsProvider getProvider(
-			String debuggerId) {
+	public static synchronized final IDebuggerSettingsProvider getProvider(String debuggerId) {
 		Map<String, IDebuggerSettingsProvider> providers = getProviders();
 		return providers.get(debuggerId);
 	}
@@ -97,9 +94,8 @@ public class DebuggerSettingsProviderRegistry {
 	 */
 	protected Map<String, IDebuggerSettingsProvider> readFromExtensionPoint() {
 		final List<Entry> entries = new ArrayList<Entry>();
-		IConfigurationElement[] configurationElements = Platform
-				.getExtensionRegistry().getConfigurationElementsFor(
-						EXTENSION_POINT_ID);
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(EXTENSION_POINT_ID);
 		for (final IConfigurationElement element : configurationElements) {
 			String id = element.getAttribute(PROP_ID);
 			String overridenProviderId = element.getAttribute(PROP_OVERRIDES);
@@ -110,21 +106,19 @@ public class DebuggerSettingsProviderRegistry {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected Object createInstance(IConfigurationElement element,
-			String propertyName, Class instanceClass) throws CoreException {
+	protected Object createInstance(IConfigurationElement element, String propertyName, Class instanceClass)
+			throws CoreException {
 		final Object object = element.createExecutableExtension(propertyName);
 		if (!instanceClass.isAssignableFrom(object.getClass())) {
-			String message = String
-					.format("Invalid typecast for %s", element.getAttribute(propertyName)); //$NON-NLS-1$
-			IStatus status = new Status(IStatus.ERROR, PHPDebugPlugin
-					.getDefault().getBundle().getSymbolicName(), message);
+			String message = String.format("Invalid typecast for %s", element.getAttribute(propertyName)); //$NON-NLS-1$
+			IStatus status = new Status(IStatus.ERROR, PHPDebugPlugin.getDefault().getBundle().getSymbolicName(),
+					message);
 			throw new CoreException(status);
 		}
 		return object;
 	}
 
-	private Map<String, IDebuggerSettingsProvider> fetchProviders(
-			List<Entry> entries) {
+	private Map<String, IDebuggerSettingsProvider> fetchProviders(List<Entry> entries) {
 		Map<String, IDebuggerSettingsProvider> providers = new HashMap<String, IDebuggerSettingsProvider>();
 		List<Entry> highestLevelEntries = new ArrayList<Entry>();
 		for (Entry entry : entries) {
@@ -141,12 +135,10 @@ public class DebuggerSettingsProviderRegistry {
 		for (Entry entry : highestLevelEntries) {
 			IDebuggerSettingsProvider provider;
 			try {
-				provider = (IDebuggerSettingsProvider) createInstance(
-						entry.element, PROP_PROVIDER,
+				provider = (IDebuggerSettingsProvider) createInstance(entry.element, PROP_PROVIDER,
 						IDebuggerSettingsProvider.class);
 			} catch (CoreException e) {
-				Logger.logException(
-						"Could not instantiate debugger settings provider from extension point data.", e); //$NON-NLS-1$
+				Logger.logException("Could not instantiate debugger settings provider from extension point data.", e); //$NON-NLS-1$
 				continue;
 			}
 			if (provider instanceof AbstractDebuggerSettingsProvider) {

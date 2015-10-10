@@ -77,20 +77,16 @@ public class ServerHelper {
 	 * @param newValue
 	 *            the new value
 	 */
-	public void firePropertyChangeEvent(String propertyName, Object oldValue,
-			Object newValue) {
+	public void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {
 		if (propertyListeners == null)
 			return;
 
-		PropertyChangeEvent event = new PropertyChangeEvent(server,
-				propertyName, oldValue, newValue);
+		PropertyChangeEvent event = new PropertyChangeEvent(server, propertyName, oldValue, newValue);
 		try {
-			Iterator<PropertyChangeListener> iterator = propertyListeners
-					.iterator();
+			Iterator<PropertyChangeListener> iterator = propertyListeners.iterator();
 			while (iterator.hasNext()) {
 				try {
-					PropertyChangeListener listener = (PropertyChangeListener) iterator
-							.next();
+					PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
 					listener.propertyChange(event);
 				} catch (Exception e) {
 					Logger.logException("Error firing property change event", //$NON-NLS-1$

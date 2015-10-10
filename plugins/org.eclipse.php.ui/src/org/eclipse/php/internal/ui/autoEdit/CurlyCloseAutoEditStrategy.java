@@ -21,11 +21,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  * 
  */
 
-public class CurlyCloseAutoEditStrategy extends CurlyCloseIndentationStrategy
-		implements IAutoEditStrategy {
+public class CurlyCloseAutoEditStrategy extends CurlyCloseIndentationStrategy implements IAutoEditStrategy {
 
-	public void customizeDocumentCommand(IDocument document,
-			DocumentCommand command) {
+	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		if (command.text != null && command.text.trim().endsWith("}")) { //$NON-NLS-1$
 			autoIndentAfterCurlyClose((IStructuredDocument) document, command);
 		}
@@ -33,8 +31,7 @@ public class CurlyCloseAutoEditStrategy extends CurlyCloseIndentationStrategy
 
 	private StringBuffer helpBuffer = new StringBuffer();
 
-	private void autoIndentAfterCurlyClose(IStructuredDocument document,
-			DocumentCommand command) {
+	private void autoIndentAfterCurlyClose(IStructuredDocument document, DocumentCommand command) {
 		helpBuffer.setLength(0);
 		int currentOffset = command.offset;
 
@@ -42,8 +39,7 @@ public class CurlyCloseAutoEditStrategy extends CurlyCloseIndentationStrategy
 		try {
 			IRegion lineInfo = document.getLineInformation(lineNumber);
 			if (isBlanks(document, lineInfo.getOffset(), command.offset)) {
-				placeMatchingBlanks(document, helpBuffer, lineNumber,
-						currentOffset);
+				placeMatchingBlanks(document, helpBuffer, lineNumber, currentOffset);
 
 				// removing the whiteSpaces in the begining of the line
 				command.offset = lineInfo.getOffset();
@@ -88,10 +84,9 @@ public class CurlyCloseAutoEditStrategy extends CurlyCloseIndentationStrategy
 		// command.text = sb.toString();
 	}
 
-	protected static boolean isBlanks(IStructuredDocument document,
-			int startOffset, int endOffset) throws BadLocationException {
-		return document.get(startOffset, endOffset - startOffset).trim()
-				.length() == 0;
+	protected static boolean isBlanks(IStructuredDocument document, int startOffset, int endOffset)
+			throws BadLocationException {
+		return document.get(startOffset, endOffset - startOffset).trim().length() == 0;
 	}
 
 }

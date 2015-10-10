@@ -24,7 +24,7 @@ public class PathEntry {
 	public enum Type {
 		WORKSPACE("Workspace File"), INCLUDE_VAR("Include Path Variable"), INCLUDE_FOLDER( //$NON-NLS-1$ //$NON-NLS-2$
 				"Include Path Folder"), EXTERNAL("External File"), SERVER( //$NON-NLS-1$ //$NON-NLS-2$
-				"Server File"), ; //$NON-NLS-1$
+						"Server File"),; //$NON-NLS-1$
 
 		private String name;
 

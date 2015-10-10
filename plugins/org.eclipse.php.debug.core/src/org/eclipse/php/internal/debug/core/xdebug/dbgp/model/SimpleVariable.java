@@ -21,15 +21,13 @@ import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.model.IVariableFacet;
 
-public class SimpleVariable extends DBGpElement implements IVariable,
-		IVariableFacet {
+public class SimpleVariable extends DBGpElement implements IVariable, IVariableFacet {
 
 	private String name;
 	private IValue value;
 	private Set<Facet> facets = new HashSet<Facet>();
 
-	public SimpleVariable(String name, IValue value, IDebugTarget debugTarget,
-			Facet... facets) {
+	public SimpleVariable(String name, IValue value, IDebugTarget debugTarget, Facet... facets) {
 		super(debugTarget);
 		this.name = name;
 		this.value = value;

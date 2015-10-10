@@ -39,8 +39,7 @@ public interface IPharBuilder {
 	 * @throws CoreException
 	 *             thrown when the JAR could not be opened
 	 */
-	public void open(PharPackage jarPackage, Shell shell, MultiStatus status)
-			throws CoreException;
+	public void open(PharPackage jarPackage, Shell shell, MultiStatus status) throws CoreException;
 
 	/**
 	 * Add the given resource to the archive at the given path
@@ -52,8 +51,7 @@ public interface IPharBuilder {
 	 * @throws CoreException
 	 *             thrown when the file could not be written
 	 */
-	public void writeFile(IFile resource, IPath destinationPath)
-			throws CoreException;
+	public void writeFile(IFile resource, IPath destinationPath) throws CoreException;
 
 	/**
 	 * write the given stub to the archive
@@ -63,8 +61,7 @@ public interface IPharBuilder {
 	 * @param monitor
 	 *            a monitor to report progress to
 	 */
-	public void writeStub(IStub stub, IProgressMonitor monitor)
-			throws CoreException;
+	public void writeStub(IStub stub, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * write the given stub to the archive
@@ -84,7 +81,6 @@ public interface IPharBuilder {
 	 */
 	public void close() throws CoreException;
 
-	public void writeFile(IFolder resource, IPath destinationPath)
-			throws CoreException;
+	public void writeFile(IFolder resource, IPath destinationPath) throws CoreException;
 
 }

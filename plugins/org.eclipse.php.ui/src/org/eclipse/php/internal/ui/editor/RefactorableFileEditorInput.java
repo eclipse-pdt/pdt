@@ -11,59 +11,67 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.FileEditorInputFactory;
 
-public class RefactorableFileEditorInput implements IFileEditorInput, IPathEditorInput, IURIEditorInput,
-IPersistableElement {
+public class RefactorableFileEditorInput
+		implements IFileEditorInput, IPathEditorInput, IURIEditorInput, IPersistableElement {
 	private boolean isRefactor = false;
 	private FileEditorInput innerEidtorInput;
+
 	public RefactorableFileEditorInput(IFile file) {
 		this.innerEidtorInput = new FileEditorInput(file);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on IPersistableElement.
+	/*
+	 * (non-Javadoc) Method declared on IPersistableElement.
 	 */
 	public String getFactoryId() {
 		return FileEditorInputFactory.getFactoryId();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IPathEditorInput#getPath()
 	 */
 	public IPath getPath() {
 		return innerEidtorInput.getPath();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IURIEditorInput#getURI()
 	 */
 	public URI getURI() {
 		return innerEidtorInput.getURI();
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on Object.
+	/*
+	 * (non-Javadoc) Method declared on Object.
 	 */
 	public int hashCode() {
 		return innerEidtorInput.hashCode();
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on IPersistableElement.
+	/*
+	 * (non-Javadoc) Method declared on IPersistableElement.
 	 */
 	public void saveState(IMemento memento) {
 		FileEditorInputFactory.saveState(memento, innerEidtorInput);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return innerEidtorInput.toString(); //$NON-NLS-1$ //$NON-NLS-2$
+		return innerEidtorInput.toString(); // $NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public void setFile(IFile file) {
 		this.innerEidtorInput = new FileEditorInput(file);
 	}
+
 	public boolean isRefactor() {
 		return isRefactor;
 	}
@@ -104,8 +112,9 @@ IPersistableElement {
 	}
 
 	public IPersistableElement getPersistable() {
-		//if the file has been deleted,return null will make this EidtorInput be removed from NavigationHistory
-		if(!innerEidtorInput.getFile().exists())
+		// if the file has been deleted,return null will make this EidtorInput
+		// be removed from NavigationHistory
+		if (!innerEidtorInput.getFile().exists())
 			return null;
 		return innerEidtorInput.getPersistable();
 	}

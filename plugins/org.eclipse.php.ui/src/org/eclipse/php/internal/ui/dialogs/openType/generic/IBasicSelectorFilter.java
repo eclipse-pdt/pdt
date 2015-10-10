@@ -19,11 +19,9 @@ public interface IBasicSelectorFilter {
 
 	public boolean select(Object element);
 
-	public void addFilterChangeListener(
-			IFilterChangeListener filterChangeListener);
+	public void addFilterChangeListener(IFilterChangeListener filterChangeListener);
 
-	public void removeFilterChangeListener(
-			IFilterChangeListener filterChangeListener);
+	public void removeFilterChangeListener(IFilterChangeListener filterChangeListener);
 
 	public List getFilterChangeListeners();
 }

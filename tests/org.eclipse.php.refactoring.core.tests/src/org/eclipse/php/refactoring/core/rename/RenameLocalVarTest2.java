@@ -48,8 +48,7 @@ public class RenameLocalVarTest2 extends AbstractRenameRefactoringTest {
 		}
 		file = folder.getFile("RenameFolderTest1.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php $a = 1; function Sum(){global $a;}?>".getBytes());
+		InputStream source = new ByteArrayInputStream("<?php $a = 1; function Sum(){global $a;}?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -71,19 +70,16 @@ public class RenameLocalVarTest2 extends AbstractRenameRefactoringTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		
-		RenameLocalVariableProcessor processor = new RenameLocalVariableProcessor(file,selectedNode );
+		RenameLocalVariableProcessor processor = new RenameLocalVariableProcessor(file, selectedNode);
 		processor.setNewElementName("b");
 
 		checkInitCondition(processor);
 
 		performChange(processor);
-		
+
 		try {
 			String content = FileUtils.getContents(file);
-			assertEquals(
-					"<?php $a = 1; function Sum(){global $a;}?>",
-					content);
+			assertEquals("<?php $a = 1; function Sum(){global $a;}?>", content);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

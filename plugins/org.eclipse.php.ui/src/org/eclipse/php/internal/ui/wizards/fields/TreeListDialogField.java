@@ -65,8 +65,7 @@ public class TreeListDialogField extends DialogField {
 	 * @param adapter
 	 *            Can be <code>null</code>.
 	 */
-	public TreeListDialogField(ITreeListAdapter adapter, String[] buttonLabels,
-			ILabelProvider lprovider) {
+	public TreeListDialogField(ITreeListAdapter adapter, String[] buttonLabels, ILabelProvider lprovider) {
 		super();
 		fTreeAdapter = adapter;
 
@@ -294,8 +293,7 @@ public class TreeListDialogField extends DialogField {
 		return new TreeViewer(tree);
 	}
 
-	protected Button createButton(Composite parent, String label,
-			SelectionListener listener) {
+	protected Button createButton(Composite parent, String label, SelectionListener listener) {
 		Button button = new Button(parent, SWT.PUSH);
 		button.setFont(parent.getFont());
 		button.setText(label);
@@ -357,10 +355,8 @@ public class TreeListDialogField extends DialogField {
 				for (int i = 0; i < fButtonLabels.length; i++) {
 					String currLabel = fButtonLabels[i];
 					if (currLabel != null) {
-						fButtonControls[i] = createButton(contents, currLabel,
-								listener);
-						fButtonControls[i].setEnabled(isEnabled()
-								&& fButtonsEnabled[i]);
+						fButtonControls[i] = createButton(contents, currLabel, listener);
+						fButtonControls[i].setEnabled(isEnabled() && fButtonsEnabled[i]);
 					} else {
 						fButtonControls[i] = null;
 						createSeparator(contents);
@@ -394,8 +390,7 @@ public class TreeListDialogField extends DialogField {
 	 */
 	protected void handleKeyPressed(KeyEvent event) {
 		if (event.character == SWT.DEL && event.stateMask == 0) {
-			if (fRemoveButtonIndex != -1
-					&& isButtonEnabled(fTree.getSelection(), fRemoveButtonIndex)) {
+			if (fRemoveButtonIndex != -1 && isButtonEnabled(fTree.getSelection(), fRemoveButtonIndex)) {
 				managedButtonPressed(fRemoveButtonIndex);
 				return;
 			}
@@ -524,8 +519,7 @@ public class TreeListDialogField extends DialogField {
 	/**
 	 * Replace an element.
 	 */
-	public void replaceElement(Object oldElement, Object newElement)
-			throws IllegalArgumentException {
+	public void replaceElement(Object oldElement, Object newElement) throws IllegalArgumentException {
 		int idx = fElements.indexOf(oldElement);
 		if (idx != -1) {
 			fElements.set(idx, newElement);
@@ -828,8 +822,7 @@ public class TreeListDialogField extends DialogField {
 
 	// ------- TreeViewerAdapter
 
-	private class TreeViewerAdapter implements ITreeContentProvider,
-			ISelectionChangedListener, IDoubleClickListener {
+	private class TreeViewerAdapter implements ITreeContentProvider, ISelectionChangedListener, IDoubleClickListener {
 
 		private final Object[] NO_ELEMENTS = new Object[0];
 
@@ -852,24 +845,21 @@ public class TreeListDialogField extends DialogField {
 
 		public Object[] getChildren(Object element) {
 			if (fTreeAdapter != null) {
-				return fTreeAdapter.getChildren(TreeListDialogField.this,
-						element);
+				return fTreeAdapter.getChildren(TreeListDialogField.this, element);
 			}
 			return NO_ELEMENTS;
 		}
 
 		public Object getParent(Object element) {
 			if (!fElements.contains(element) && fTreeAdapter != null) {
-				return fTreeAdapter
-						.getParent(TreeListDialogField.this, element);
+				return fTreeAdapter.getParent(TreeListDialogField.this, element);
 			}
 			return fParentElement;
 		}
 
 		public boolean hasChildren(Object element) {
 			if (fTreeAdapter != null) {
-				return fTreeAdapter.hasChildren(TreeListDialogField.this,
-						element);
+				return fTreeAdapter.hasChildren(TreeListDialogField.this, element);
 			}
 			return false;
 		}
@@ -883,9 +873,8 @@ public class TreeListDialogField extends DialogField {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse
-		 * .jface.viewers.DoubleClickEvent)
+		 * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.
+		 * eclipse .jface.viewers.DoubleClickEvent)
 		 */
 		public void doubleClick(DoubleClickEvent event) {
 			doDoubleClick(event);

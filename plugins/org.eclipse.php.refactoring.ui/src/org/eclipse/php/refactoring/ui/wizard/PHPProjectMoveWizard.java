@@ -25,13 +25,10 @@ import org.eclipse.php.refactoring.ui.PHPRefactoringUIMessages;
 public class PHPProjectMoveWizard extends RefactoringWizard {
 	private IProject project;
 
-	public PHPProjectMoveWizard(Refactoring refactoring,
-			IProject existingProject) {
-		super(refactoring, DIALOG_BASED_USER_INTERFACE
-				| PREVIEW_EXPAND_FIRST_NODE);
+	public PHPProjectMoveWizard(Refactoring refactoring, IProject existingProject) {
+		super(refactoring, DIALOG_BASED_USER_INTERFACE | PREVIEW_EXPAND_FIRST_NODE);
 		this.project = existingProject;
-		setDefaultPageTitle(PHPRefactoringUIMessages
-				.getString("PHPMoveWizard.0")); //$NON-NLS-1$
+		setDefaultPageTitle(PHPRefactoringUIMessages.getString("PHPMoveWizard.0")); //$NON-NLS-1$
 	}
 
 	protected void addUserInputPages() {

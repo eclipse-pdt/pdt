@@ -60,8 +60,7 @@ public class StructureSelectNextAction extends StructureSelectionAction {
 		}
 	}
 
-	public StructureSelectNextAction(PHPStructuredEditor editor,
-			SelectionHistory history) {
+	public StructureSelectNextAction(PHPStructuredEditor editor, SelectionHistory history) {
 		super(Messages.StructureSelectNextAction_3, editor, history);
 		setToolTipText(Messages.StructureSelectNextAction_4);
 		setDescription(Messages.StructureSelectNextAction_5);
@@ -84,36 +83,29 @@ public class StructureSelectNextAction extends StructureSelectionAction {
 	 * @see StructureSelectionAction#internalGetNewSelectionRange(ISourceRange,
 	 * ICompilationUnit, SelectionAnalyzer)
 	 */
-	public ISourceRange internalGetNewSelectionRange(
-			ISourceRange oldSourceRange, ISourceReference sr,
+	public ISourceRange internalGetNewSelectionRange(ISourceRange oldSourceRange, ISourceReference sr,
 			SelectionAnalyzer selAnalyzer) throws ModelException {
-		if (oldSourceRange.getLength() == 0
-				&& selAnalyzer.getLastCoveringNode() != null) {
-			ASTNode previousNode = NextNodeAnalyzer.perform(
-					oldSourceRange.getOffset(),
+		if (oldSourceRange.getLength() == 0 && selAnalyzer.getLastCoveringNode() != null) {
+			ASTNode previousNode = NextNodeAnalyzer.perform(oldSourceRange.getOffset(),
 					selAnalyzer.getLastCoveringNode());
 			if (previousNode != null)
 				return getSelectedNodeSourceRange(sr, previousNode);
 		}
-		org.eclipse.php.internal.core.ast.nodes.ASTNode first = selAnalyzer
-				.getFirstSelectedNode();
+		org.eclipse.php.internal.core.ast.nodes.ASTNode first = selAnalyzer.getFirstSelectedNode();
 		if (first == null)
 			return getLastCoveringNodeRange(oldSourceRange, sr, selAnalyzer);
 
-		org.eclipse.php.internal.core.ast.nodes.ASTNode parent = first
-				.getParent();
+		org.eclipse.php.internal.core.ast.nodes.ASTNode parent = first.getParent();
 		if (parent == null)
 			return getLastCoveringNodeRange(oldSourceRange, sr, selAnalyzer);
 
 		org.eclipse.php.internal.core.ast.nodes.ASTNode lastSelectedNode = selAnalyzer
 				.getSelectedNodes()[selAnalyzer.getSelectedNodes().length - 1];
-		org.eclipse.php.internal.core.ast.nodes.ASTNode nextNode = getNextNode(
-				parent, lastSelectedNode);
+		org.eclipse.php.internal.core.ast.nodes.ASTNode nextNode = getNextNode(parent, lastSelectedNode);
 		if (nextNode == parent)
 			return getSelectedNodeSourceRange(sr, first.getParent());
 		int offset = oldSourceRange.getOffset();
-		int end = Math.min(sr.getSourceRange().getLength(),
-				nextNode.getEnd() - 1);
+		int end = Math.min(sr.getSourceRange().getLength(), nextNode.getEnd() - 1);
 		return createSourceRange(offset, end);
 	}
 

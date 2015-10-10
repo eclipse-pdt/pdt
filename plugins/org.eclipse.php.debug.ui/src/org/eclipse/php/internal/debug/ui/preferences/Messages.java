@@ -7,6 +7,7 @@ public class Messages extends NLS {
 	public static String BasePathValidator_1;
 	public static String BasePathValidator_3;
 	public static String BasePathValidator_4;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

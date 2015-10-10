@@ -25,11 +25,10 @@ public class XDebugDebuggerSettingsUtil {
 	}
 
 	public static boolean getProxyEnabled(String phpServerOrExeId) {
-		IDebuggerSettings debuggerSettings = DebuggerSettingsManager.INSTANCE
-				.findSettings(phpServerOrExeId, XDebugDebuggerConfiguration.ID);
+		IDebuggerSettings debuggerSettings = DebuggerSettingsManager.INSTANCE.findSettings(phpServerOrExeId,
+				XDebugDebuggerConfiguration.ID);
 		String proxyEnabled = null;
-		proxyEnabled = debuggerSettings
-				.getAttribute(XDebugDebuggerSettingsConstants.PROP_PROXY_ENABLE);
+		proxyEnabled = debuggerSettings.getAttribute(XDebugDebuggerSettingsConstants.PROP_PROXY_ENABLE);
 		boolean debugProxyEnabled = false;
 		try {
 			debugProxyEnabled = Boolean.valueOf(proxyEnabled);
@@ -40,29 +39,26 @@ public class XDebugDebuggerSettingsUtil {
 	}
 
 	public static String getProxyIdeKey(String phpServerOrExeId) {
-		IDebuggerSettings debuggerSettings = DebuggerSettingsManager.INSTANCE
-				.findSettings(phpServerOrExeId, XDebugDebuggerConfiguration.ID);
+		IDebuggerSettings debuggerSettings = DebuggerSettingsManager.INSTANCE.findSettings(phpServerOrExeId,
+				XDebugDebuggerConfiguration.ID);
 		String proxyIdeKey = ""; //$NON-NLS-1$
-		proxyIdeKey = debuggerSettings
-				.getAttribute(XDebugDebuggerSettingsConstants.PROP_PROXY_IDE_KEY);
+		proxyIdeKey = debuggerSettings.getAttribute(XDebugDebuggerSettingsConstants.PROP_PROXY_IDE_KEY);
 		return proxyIdeKey;
 	}
 
 	public static String getProxyAddress(String phpServerOrExeId) {
-		IDebuggerSettings debuggerSettings = DebuggerSettingsManager.INSTANCE
-				.findSettings(phpServerOrExeId, XDebugDebuggerConfiguration.ID);
+		IDebuggerSettings debuggerSettings = DebuggerSettingsManager.INSTANCE.findSettings(phpServerOrExeId,
+				XDebugDebuggerConfiguration.ID);
 		String proxyAddress = ""; //$NON-NLS-1$
-		proxyAddress = debuggerSettings
-				.getAttribute(XDebugDebuggerSettingsConstants.PROP_PROXY_ADDRESS);
+		proxyAddress = debuggerSettings.getAttribute(XDebugDebuggerSettingsConstants.PROP_PROXY_ADDRESS);
 		return proxyAddress;
 	}
 
 	public static int getDebugPort(String phpServerOrExeId) {
-		IDebuggerSettings debuggerSettings = DebuggerSettingsManager.INSTANCE
-				.findSettings(phpServerOrExeId, XDebugDebuggerConfiguration.ID);
+		IDebuggerSettings debuggerSettings = DebuggerSettingsManager.INSTANCE.findSettings(phpServerOrExeId,
+				XDebugDebuggerConfiguration.ID);
 		String debugClientPort = null;
-		debugClientPort = debuggerSettings
-				.getAttribute(XDebugDebuggerSettingsConstants.PROP_CLIENT_PORT);
+		debugClientPort = debuggerSettings.getAttribute(XDebugDebuggerSettingsConstants.PROP_CLIENT_PORT);
 		int debugPort = -1;
 		try {
 			debugPort = Integer.valueOf(debugClientPort);

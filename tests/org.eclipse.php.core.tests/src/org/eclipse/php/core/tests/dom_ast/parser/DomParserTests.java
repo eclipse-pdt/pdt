@@ -34,36 +34,28 @@ public class DomParserTests {
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
-		TESTS.put(PHPVersion.PHP5,
-				new String[] { "/workspace/dom_parser/php5" });
-		TESTS.put(PHPVersion.PHP5_3,
-				new String[] { "/workspace/dom_parser/php53" });
-		TESTS.put(PHPVersion.PHP5_4, new String[] {
-				"/workspace/dom_parser/php53", "/workspace/dom_parser/php54" });
-		TESTS.put(PHPVersion.PHP5_5, new String[] {
-				"/workspace/dom_parser/php53", "/workspace/dom_parser/php54",
+		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/dom_parser/php5" });
+		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/dom_parser/php53" });
+		TESTS.put(PHPVersion.PHP5_4, new String[] { "/workspace/dom_parser/php53", "/workspace/dom_parser/php54" });
+		TESTS.put(PHPVersion.PHP5_5, new String[] { "/workspace/dom_parser/php53", "/workspace/dom_parser/php54",
 				"/workspace/dom_parser/php55" });
-		TESTS.put(PHPVersion.PHP5_6, new String[] {
-				"/workspace/dom_parser/php53", "/workspace/dom_parser/php54",
+		TESTS.put(PHPVersion.PHP5_6, new String[] { "/workspace/dom_parser/php53", "/workspace/dom_parser/php54",
 				"/workspace/dom_parser/php55", "/workspace/dom_parser/php56" });
-		TESTS.put(PHPVersion.PHP7_0, new String[] {
-				"/workspace/dom_parser/php53", "/workspace/dom_parser/php54",
-				"/workspace/dom_parser/php55", "/workspace/dom_parser/php56",
-				"/workspace/dom_parser/php7"  });
+		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/dom_parser/php53", "/workspace/dom_parser/php54",
+				"/workspace/dom_parser/php55", "/workspace/dom_parser/php56", "/workspace/dom_parser/php7" });
 	};
 
 	private ASTParser parser;
 
 	public DomParserTests(PHPVersion phpVersion, String fileNames[]) {
-		parser = ASTParser.newParser(phpVersion,
-				ProjectOptions.useShortTags((IProject) null));
+		parser = ASTParser.newParser(phpVersion, ProjectOptions.useShortTags((IProject) null));
 	}
 
 	@Test
 	public void parserTest(String fileName) throws Exception {
-		PdttFile file = new PdttFile(PHPCoreTests.getDefault().getBundle(),
-				fileName, "UTF-8");
+		PdttFile file = new PdttFile(PHPCoreTests.getDefault().getBundle(), fileName, "UTF-8");
 
 		parser.setSource(file.getFile().trim().toCharArray());
 		Program program = parser.createAST(new NullProgressMonitor());

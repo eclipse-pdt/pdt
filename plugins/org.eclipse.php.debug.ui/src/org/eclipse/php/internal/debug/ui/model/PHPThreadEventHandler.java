@@ -68,9 +68,8 @@ public class PHPThreadEventHandler extends DebugEventHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.internal.ui.viewers.update.DebugEventHandler#handlesEvent
-	 * (org.eclipse.debug.core.DebugEvent)
+	 * @see org.eclipse.debug.internal.ui.viewers.update.DebugEventHandler#
+	 * handlesEvent (org.eclipse.debug.core.DebugEvent)
 	 */
 	@Override
 	protected boolean handlesEvent(DebugEvent event) {
@@ -80,9 +79,8 @@ public class PHPThreadEventHandler extends DebugEventHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.internal.ui.viewers.update.DebugEventHandler#handleSuspend
-	 * (org.eclipse.debug.core.DebugEvent)
+	 * @see org.eclipse.debug.internal.ui.viewers.update.DebugEventHandler#
+	 * handleSuspend (org.eclipse.debug.core.DebugEvent)
 	 */
 	@Override
 	protected void handleSuspend(DebugEvent event) {
@@ -100,36 +98,31 @@ public class PHPThreadEventHandler extends DebugEventHandler {
 			default:
 				break;
 			}
-			fireDeltaUpdatingSelectedFrame(thread, IModelDelta.NO_CHANGE
-					| extras, event);
+			fireDeltaUpdatingSelectedFrame(thread, IModelDelta.NO_CHANGE | extras, event);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.internal.ui.viewers.update.DebugEventHandler#handleResume
-	 * (org.eclipse.debug.core.DebugEvent)
+	 * @see org.eclipse.debug.internal.ui.viewers.update.DebugEventHandler#
+	 * handleResume (org.eclipse.debug.core.DebugEvent)
 	 */
 	@Override
 	protected void handleResume(DebugEvent event) {
 		IThread thread = (IThread) event.getSource();
-		fireDeltaAndClearTopFrame(thread, IModelDelta.STATE
-				| IModelDelta.CONTENT | IModelDelta.SELECT);
+		fireDeltaAndClearTopFrame(thread, IModelDelta.STATE | IModelDelta.CONTENT | IModelDelta.SELECT);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.internal.ui.viewers.update.DebugEventHandler#handleCreate
-	 * (org.eclipse.debug.core.DebugEvent)
+	 * @see org.eclipse.debug.internal.ui.viewers.update.DebugEventHandler#
+	 * handleCreate (org.eclipse.debug.core.DebugEvent)
 	 */
 	@Override
 	protected void handleCreate(DebugEvent event) {
-		fireDeltaAndClearTopFrame((IThread) event.getSource(),
-				IModelDelta.ADDED | IModelDelta.STATE);
+		fireDeltaAndClearTopFrame((IThread) event.getSource(), IModelDelta.ADDED | IModelDelta.STATE);
 	}
 
 	/*
@@ -151,27 +144,23 @@ public class PHPThreadEventHandler extends DebugEventHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.internal.ui.viewers.update.DebugEventHandler#handleChange
-	 * (org.eclipse.debug.core.DebugEvent)
+	 * @see org.eclipse.debug.internal.ui.viewers.update.DebugEventHandler#
+	 * handleChange (org.eclipse.debug.core.DebugEvent)
 	 */
 	@Override
 	protected void handleChange(DebugEvent event) {
 		if (event.getDetail() == DebugEvent.STATE) {
-			fireDeltaUpdatingThread((IThread) event.getSource(),
-					IModelDelta.STATE);
+			fireDeltaUpdatingThread((IThread) event.getSource(), IModelDelta.STATE);
 		} else {
-			fireDeltaUpdatingThread((IThread) event.getSource(),
-					IModelDelta.CONTENT);
+			fireDeltaUpdatingThread((IThread) event.getSource(), IModelDelta.CONTENT);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.internal.ui.viewers.update.DebugEventHandler#handleOther
-	 * (org.eclipse.debug.core.DebugEvent)
+	 * @see org.eclipse.debug.internal.ui.viewers.update.DebugEventHandler#
+	 * handleOther (org.eclipse.debug.core.DebugEvent)
 	 */
 	@Override
 	protected void handleOther(DebugEvent event) {
@@ -188,8 +177,7 @@ public class PHPThreadEventHandler extends DebugEventHandler {
 	@Override
 	protected void handleLateSuspend(DebugEvent suspend, DebugEvent resume) {
 		IThread thread = queueSuspendedThread(suspend);
-		if (suspend.isEvaluation()
-				&& suspend.getDetail() == DebugEvent.EVALUATION_IMPLICIT) {
+		if (suspend.isEvaluation() && suspend.getDetail() == DebugEvent.EVALUATION_IMPLICIT) {
 			// late implicit evaluation - update thread and frame
 			ModelDelta delta = buildRootDelta();
 			ModelDelta node = addPathToThread(delta, thread);
@@ -203,8 +191,7 @@ public class PHPThreadEventHandler extends DebugEventHandler {
 			} catch (DebugException e) {
 			}
 		} else {
-			fireDeltaUpdatingSelectedFrame(thread, IModelDelta.STATE
-					| IModelDelta.EXPAND, suspend);
+			fireDeltaUpdatingSelectedFrame(thread, IModelDelta.STATE | IModelDelta.EXPAND, suspend);
 		}
 	}
 
@@ -250,17 +237,15 @@ public class PHPThreadEventHandler extends DebugEventHandler {
 	protected ModelDelta addPathToThread(ModelDelta delta, IThread thread) {
 		ILaunch launch = thread.getLaunch();
 		Object[] children = launch.getChildren();
-		delta = delta.addNode(launch,
-				indexOf(getLaunchManager().getLaunches(), launch),
-				IModelDelta.CONTENT, children.length);
+		delta = delta.addNode(launch, indexOf(getLaunchManager().getLaunches(), launch), IModelDelta.CONTENT,
+				children.length);
 		IDebugTarget debugTarget = launch.getDebugTarget();
 		int numThreads = -1;
 		try {
 			numThreads = debugTarget.getThreads().length;
 		} catch (DebugException e) {
 		}
-		return delta.addNode(debugTarget, indexOf(children, debugTarget),
-				IModelDelta.NO_CHANGE, numThreads);
+		return delta.addNode(debugTarget, indexOf(children, debugTarget), IModelDelta.NO_CHANGE, numThreads);
 	}
 
 	/**
@@ -273,8 +258,7 @@ public class PHPThreadEventHandler extends DebugEventHandler {
 	 */
 	protected int indexOf(IThread thread) {
 		try {
-			return indexOf(thread.getLaunch().getDebugTarget().getThreads(),
-					thread);
+			return indexOf(thread.getLaunch().getDebugTarget().getThreads(), thread);
 		} catch (DebugException e) {
 		}
 		return -1;
@@ -345,8 +329,7 @@ public class PHPThreadEventHandler extends DebugEventHandler {
 		fireDelta(delta);
 	}
 
-	private void fireDeltaUpdatingSelectedFrame(IThread thread, int flags,
-			DebugEvent event) {
+	private void fireDeltaUpdatingSelectedFrame(IThread thread, int flags, DebugEvent event) {
 		ModelDelta delta = buildRootDelta();
 		ModelDelta node = addPathToThread(delta, thread);
 		IStackFrame prev = null;
@@ -356,8 +339,7 @@ public class PHPThreadEventHandler extends DebugEventHandler {
 		IStackFrame frame = null;
 		try {
 			Object frameToSelect = event.getData();
-			if (frameToSelect == null
-					|| !(frameToSelect instanceof IStackFrame)) {
+			if (frameToSelect == null || !(frameToSelect instanceof IStackFrame)) {
 				frame = thread.getTopStackFrame();
 			} else {
 				frame = (IStackFrame) frameToSelect;
@@ -370,8 +352,7 @@ public class PHPThreadEventHandler extends DebugEventHandler {
 			if (frame == null) {
 				if (thread.isSuspended()) {
 					// no frames, but suspended - update & select
-					node = node.addNode(thread, threadIndex, flags
-							| IModelDelta.STATE | IModelDelta.SELECT,
+					node = node.addNode(thread, threadIndex, flags | IModelDelta.STATE | IModelDelta.SELECT,
 							childCount);
 				}
 			} else {
@@ -385,12 +366,10 @@ public class PHPThreadEventHandler extends DebugEventHandler {
 					return;
 				}
 			}
-			node = node.addNode(thread, threadIndex, flags
-					| IModelDelta.CONTENT, childCount);
+			node = node.addNode(thread, threadIndex, flags | IModelDelta.CONTENT, childCount);
 		}
 		if (frame != null) {
-			node.addNode(frame, indexOf(frame), IModelDelta.STATE
-					| IModelDelta.SELECT, childCount(frame));
+			node.addNode(frame, indexOf(frame), IModelDelta.STATE | IModelDelta.SELECT, childCount(frame));
 		}
 		synchronized (this) {
 			if (!isDisposed()) {

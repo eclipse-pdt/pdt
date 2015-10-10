@@ -44,28 +44,21 @@ public class StringDialogField extends DialogField {
 	public void setContentAssistProcessor(IContentAssistProcessor processor) {
 		fContentAssistProcessor = processor;
 		if (fContentAssistProcessor != null && isOkToUse(fTextControl)) {
-			ContentAssistHandler.createHandlerForText(fTextControl,
-					createPHPContentAssistant(fContentAssistProcessor));
+			ContentAssistHandler.createHandlerForText(fTextControl, createPHPContentAssistant(fContentAssistProcessor));
 		}
 	}
 
-	public static SubjectControlContentAssistant createPHPContentAssistant(
-			IContentAssistProcessor processor) {
+	public static SubjectControlContentAssistant createPHPContentAssistant(IContentAssistProcessor processor) {
 		final SubjectControlContentAssistant contentAssistant = new SubjectControlContentAssistant();
 
-		contentAssistant.setContentAssistProcessor(processor,
-				IDocument.DEFAULT_CONTENT_TYPE);
+		contentAssistant.setContentAssistProcessor(processor, IDocument.DEFAULT_CONTENT_TYPE);
 
-		contentAssistant
-				.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
-		contentAssistant
-				.setInformationControlCreator(new IInformationControlCreator() {
-					public IInformationControl createInformationControl(
-							Shell parent) {
-						return new DefaultInformationControl(parent, SWT.NONE,
-								new HTMLTextPresenter(true));
-					}
-				});
+		contentAssistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
+		contentAssistant.setInformationControlCreator(new IInformationControlCreator() {
+			public IInformationControl createInformationControl(Shell parent) {
+				return new DefaultInformationControl(parent, SWT.NONE, new HTMLTextPresenter(true));
+			}
+		});
 
 		return contentAssistant;
 	}

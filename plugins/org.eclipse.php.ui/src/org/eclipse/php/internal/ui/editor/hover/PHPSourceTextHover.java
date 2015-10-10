@@ -23,8 +23,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.EditorsUI;
 
-public class PHPSourceTextHover extends ScriptSourceHover implements
-		IPHPTextHover, IInformationProviderExtension2, ITextHoverExtension {
+public class PHPSourceTextHover extends ScriptSourceHover
+		implements IPHPTextHover, IInformationProviderExtension2, ITextHoverExtension {
 
 	/**
 	 * The hover control creator.
@@ -55,12 +55,10 @@ public class PHPSourceTextHover extends ScriptSourceHover implements
 				 * AbstractReusableInformationControlCreator
 				 * #doCreateInformationControl(org.eclipse.swt.widgets.Shell)
 				 */
-				public IInformationControl doCreateInformationControl(
-						Shell parent) {
+				public IInformationControl doCreateInformationControl(Shell parent) {
 					int shellStyle = SWT.RESIZE | SWT.TOOL;
 					int style = SWT.V_SCROLL | SWT.H_SCROLL;
-					return new PHPSourceViewerInformationControl(parent,
-							shellStyle, style);
+					return new PHPSourceViewerInformationControl(parent, shellStyle, style);
 				}
 			};
 		}
@@ -80,10 +78,9 @@ public class PHPSourceTextHover extends ScriptSourceHover implements
 				 * AbstractReusableInformationControlCreator
 				 * #doCreateInformationControl(org.eclipse.swt.widgets.Shell)
 				 */
-				public IInformationControl doCreateInformationControl(
-						Shell parent) {
-					return new PHPSourceViewerInformationControl(parent,
-							SWT.NONE, EditorsUI.getTooltipAffordanceString());
+				public IInformationControl doCreateInformationControl(Shell parent) {
+					return new PHPSourceViewerInformationControl(parent, SWT.NONE,
+							EditorsUI.getTooltipAffordanceString());
 				}
 			};
 		}

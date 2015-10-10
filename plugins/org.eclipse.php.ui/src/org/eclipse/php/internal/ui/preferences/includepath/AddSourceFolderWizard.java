@@ -28,23 +28,17 @@ public class AddSourceFolderWizard extends BuildPathWizard {
 	private final boolean fCanCommitConflict;
 	private final IContainer fParent;
 
-	public AddSourceFolderWizard(BPListElement[] existingEntries,
-			BPListElement newEntry, boolean linkedMode,
-			boolean canCommitConflict, boolean allowConflict,
-			boolean allowRemoveProjectFolder, boolean allowAddExclusionPatterns) {
-		this(existingEntries, newEntry, linkedMode, canCommitConflict,
-				allowConflict, allowRemoveProjectFolder,
-				allowAddExclusionPatterns, newEntry.getScriptProject()
-						.getProject());
+	public AddSourceFolderWizard(BPListElement[] existingEntries, BPListElement newEntry, boolean linkedMode,
+			boolean canCommitConflict, boolean allowConflict, boolean allowRemoveProjectFolder,
+			boolean allowAddExclusionPatterns) {
+		this(existingEntries, newEntry, linkedMode, canCommitConflict, allowConflict, allowRemoveProjectFolder,
+				allowAddExclusionPatterns, newEntry.getScriptProject().getProject());
 	}
 
-	public AddSourceFolderWizard(BPListElement[] existingEntries,
-			BPListElement newEntry, boolean linkedMode,
-			boolean canCommitConflict, boolean allowConflict,
-			boolean allowRemoveProjectFolder,
+	public AddSourceFolderWizard(BPListElement[] existingEntries, BPListElement newEntry, boolean linkedMode,
+			boolean canCommitConflict, boolean allowConflict, boolean allowRemoveProjectFolder,
 			boolean allowAddExclusionPatterns, IContainer parent) {
-		super(existingEntries, newEntry, getTitel(newEntry, linkedMode),
-				DLTKPluginImages.DESC_WIZBAN_NEWSRCFOLDR);
+		super(existingEntries, newEntry, getTitel(newEntry, linkedMode), DLTKPluginImages.DESC_WIZBAN_NEWSRCFOLDR);
 		fLinkedMode = linkedMode;
 		fCanCommitConflict = canCommitConflict;
 		fAllowConflict = allowConflict;
@@ -71,10 +65,8 @@ public class AddSourceFolderWizard extends BuildPathWizard {
 	public void addPages() {
 		super.addPages();
 
-		fAddFolderPage = new AddSourceFolderWizardPage(getEntryToEdit(),
-				getExistingEntries(), fLinkedMode, fCanCommitConflict,
-				fAllowConflict, fAllowRemoveProjectFolder,
-				fAllowAddExclusionPatterns, fParent);
+		fAddFolderPage = new AddSourceFolderWizardPage(getEntryToEdit(), getExistingEntries(), fLinkedMode,
+				fCanCommitConflict, fAllowConflict, fAllowRemoveProjectFolder, fAllowAddExclusionPatterns, fParent);
 		addPage(fAddFolderPage);
 
 	}

@@ -42,10 +42,8 @@ public class PhpTemplateVariables {
 		}
 
 		protected String resolve(TemplateContext context) {
-			ISourceModule module = ((ScriptTemplateContext) context)
-					.getSourceModule();
-			int offset = ((ScriptTemplateContext) context)
-					.getCompletionOffset();
+			ISourceModule module = ((ScriptTemplateContext) context).getSourceModule();
+			int offset = ((ScriptTemplateContext) context).getCompletionOffset();
 			CodeCompletionRequestor requestor = new VariableCodeCompletionRequestor();
 			try {
 				module.codeComplete(offset, requestor, 1000);
@@ -68,9 +66,7 @@ public class PhpTemplateVariables {
 		public static final String NAME = "new_variable"; //$NON-NLS-1$
 
 		public NewVariable() {
-			super(
-					NAME,
-					Messages.PhpTemplateVariables_17);
+			super(NAME, Messages.PhpTemplateVariables_17);
 		}
 
 		protected String resolve(TemplateContext context) {
@@ -78,10 +74,8 @@ public class PhpTemplateVariables {
 		}
 
 		public void resolve(TemplateVariable variable, TemplateContext context) {
-			ISourceModule module = ((ScriptTemplateContext) context)
-					.getSourceModule();
-			int offset = ((ScriptTemplateContext) context)
-					.getCompletionOffset();
+			ISourceModule module = ((ScriptTemplateContext) context).getSourceModule();
+			int offset = ((ScriptTemplateContext) context).getCompletionOffset();
 			CodeCompletionRequestor requestor = new VariableCodeCompletionRequestor();
 			try {
 				module.codeComplete(offset, requestor, 1000);
@@ -118,10 +112,8 @@ public class PhpTemplateVariables {
 		}
 
 		protected String[] resolveAll(TemplateContext context) {
-			ISourceModule module = ((ScriptTemplateContext) context)
-					.getSourceModule();
-			int offset = ((ScriptTemplateContext) context)
-					.getCompletionOffset();
+			ISourceModule module = ((ScriptTemplateContext) context).getSourceModule();
+			int offset = ((ScriptTemplateContext) context).getCompletionOffset();
 			CodeCompletionRequestor requestor = new VariableCodeCompletionRequestor();
 			try {
 				module.codeComplete(offset, requestor, 1000);
@@ -179,12 +171,10 @@ public class PhpTemplateVariables {
 			if (module == null)
 				return null;
 
-			int position = ((ScriptTemplateContext) context)
-					.getCompletionOffset();
+			int position = ((ScriptTemplateContext) context).getCompletionOffset();
 			try {
 				IModelElement element = module.getElementAt(position);
-				while ((element != null)
-						&& (element.getElementType() != IModelElement.METHOD)) {
+				while ((element != null) && (element.getElementType() != IModelElement.METHOD)) {
 					element = element.getParent();
 				}
 
@@ -213,12 +203,10 @@ public class PhpTemplateVariables {
 			if (module == null)
 				return null;
 
-			int position = ((ScriptTemplateContext) context)
-					.getCompletionOffset();
+			int position = ((ScriptTemplateContext) context).getCompletionOffset();
 			try {
 				IModelElement element = module.getElementAt(position);
-				while ((element != null)
-						&& (element.getElementType() != IModelElement.TYPE)) {
+				while ((element != null) && (element.getElementType() != IModelElement.TYPE)) {
 					element = element.getParent();
 				}
 
@@ -243,10 +231,8 @@ public class PhpTemplateVariables {
 		}
 
 		protected String[] resolveAll(TemplateContext context) {
-			ISourceModule module = ((ScriptTemplateContext) context)
-					.getSourceModule();
-			int offset = ((ScriptTemplateContext) context)
-					.getCompletionOffset();
+			ISourceModule module = ((ScriptTemplateContext) context).getSourceModule();
+			int offset = ((ScriptTemplateContext) context).getCompletionOffset();
 			CodeCompletionRequestor requestor = new CodeCompletionRequestor() {
 				@Override
 				public void accept(CompletionProposal proposal) {
@@ -255,8 +241,7 @@ public class PhpTemplateVariables {
 					switch (proposal.getKind()) {
 					case CompletionProposal.TYPE_REF:
 						try {
-							if (!PHPFlags.isNamespace(((IType) proposal
-									.getModelElement()).getFlags())) {
+							if (!PHPFlags.isNamespace(((IType) proposal.getModelElement()).getFlags())) {
 								addProposal(proposal);
 							}
 						} catch (ModelException e) {
@@ -298,10 +283,8 @@ public class PhpTemplateVariables {
 		}
 
 		public void resolve(TemplateVariable variable, TemplateContext context) {
-			ISourceModule module = ((ScriptTemplateContext) context)
-					.getSourceModule();
-			int offset = ((ScriptTemplateContext) context)
-					.getCompletionOffset();
+			ISourceModule module = ((ScriptTemplateContext) context).getSourceModule();
+			int offset = ((ScriptTemplateContext) context).getCompletionOffset();
 			CodeCompletionRequestor requestor = new VariableCodeCompletionRequestor();
 			try {
 				module.codeComplete(offset, requestor, 1000);
@@ -369,8 +352,8 @@ public class PhpTemplateVariables {
 		return proposal;
 	}
 
-	public static class VariableCodeCompletionRequestor extends
-			CodeCompletionRequestor implements CompletionRequestorExtension {
+	public static class VariableCodeCompletionRequestor extends CodeCompletionRequestor
+			implements CompletionRequestorExtension {
 
 		public VariableCodeCompletionRequestor() {
 		}
@@ -395,8 +378,7 @@ public class PhpTemplateVariables {
 
 		public ICompletionContext[] createContexts() {
 			return new ICompletionContext[] { new ClassObjMemberContext(),
-					new GlobalMethodStatementContextForTemplate(),
-					new GlobalStatementContextForTemplate(), };
+					new GlobalMethodStatementContextForTemplate(), new GlobalStatementContextForTemplate(), };
 		}
 	}
 

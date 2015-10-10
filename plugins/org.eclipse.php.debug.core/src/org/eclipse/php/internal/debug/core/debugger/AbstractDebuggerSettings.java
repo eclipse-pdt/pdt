@@ -47,8 +47,7 @@ public abstract class AbstractDebuggerSettings implements IDebuggerSettings {
 	 * @param owner
 	 * @param attributes
 	 */
-	public AbstractDebuggerSettings(String ownerId,
-			Map<String, String> attributes) {
+	public AbstractDebuggerSettings(String ownerId, Map<String, String> attributes) {
 		this.ownerId = ownerId;
 		this.attributes = attributes;
 	}
@@ -68,9 +67,8 @@ public abstract class AbstractDebuggerSettings implements IDebuggerSettings {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings#getAttribute
-	 * (java.lang.String)
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings#
+	 * getAttribute (java.lang.String)
 	 */
 	@Override
 	public String getAttribute(String key) {
@@ -80,9 +78,8 @@ public abstract class AbstractDebuggerSettings implements IDebuggerSettings {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings#getAttributes
-	 * ()
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings#
+	 * getAttributes ()
 	 */
 	@Override
 	public Map<String, String> getAttributes() {
@@ -102,8 +99,7 @@ public abstract class AbstractDebuggerSettings implements IDebuggerSettings {
 	 * @param settingsWorkingCopy
 	 */
 	void update(IDebuggerSettingsWorkingCopy settingsWorkingCopy) {
-		attributes = Collections.unmodifiableMap(settingsWorkingCopy
-				.getAttributes());
+		attributes = Collections.unmodifiableMap(settingsWorkingCopy.getAttributes());
 	}
 
 }

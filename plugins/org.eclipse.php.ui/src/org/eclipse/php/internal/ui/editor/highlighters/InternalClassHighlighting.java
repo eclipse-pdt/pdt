@@ -74,8 +74,7 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 		}
 
 		public boolean visit(ClassDeclaration classDeclaration) {
-			checkSuper(classDeclaration.getSuperClass(),
-					classDeclaration.interfaces());
+			checkSuper(classDeclaration.getSuperClass(), classDeclaration.interfaces());
 			return true;
 		}
 
@@ -85,8 +84,7 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 		 * @param superClass
 		 * @param interfaces
 		 */
-		private void checkSuper(Expression superClass,
-				List<Identifier> interfaces) {
+		private void checkSuper(Expression superClass, List<Identifier> interfaces) {
 			if (superClass instanceof Identifier) {
 				dealIdentifier((Identifier) superClass);
 			}
@@ -109,17 +107,13 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 					namespace = null;
 				}
 			}
-			String fullName = AbstractOccurrencesFinder.getFullName(identifier,
-					fLastUseParts, namespace);
+			String fullName = AbstractOccurrencesFinder.getFullName(identifier, fLastUseParts, namespace);
 			FileContext context = new FileContext(getSourceModule(),
-					SourceParserUtil.getModuleDeclaration(getSourceModule(),
-							null), identifier.getStart());
+					SourceParserUtil.getModuleDeclaration(getSourceModule(), null), identifier.getStart());
 
 			IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(
-					PHPClassType.fromTypeName(fullName, getSourceModule(),
-							identifier.getStart()), context, identifier
-							.getAST().getBindingResolver()
-							.getModelAccessCache());
+					PHPClassType.fromTypeName(fullName, getSourceModule(), identifier.getStart()), context,
+					identifier.getAST().getBindingResolver().getModelAccessCache());
 			/*
 			 * PhpModelAccess.getDefault().findTypes( fullName, MatchRule.EXACT,
 			 * 0, 0, createSearchScope(), null);
@@ -140,8 +134,7 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 
 	@Override
 	public void initDefaultPreferences() {
-		getStyle().setEnabledByDefault(false).setDefaultTextColor(
-				new RGB(0, 0, 192));
+		getStyle().setEnabledByDefault(false).setDefaultTextColor(new RGB(0, 0, 192));
 	}
 
 	public String getDisplayName() {

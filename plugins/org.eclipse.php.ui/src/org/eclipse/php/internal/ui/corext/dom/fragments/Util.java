@@ -31,8 +31,7 @@ import org.eclipse.php.internal.core.documentModel.parser.php5.PhpLexer;
 class Util {
 
 	static boolean covers(ISourceRange range, ISourceRange nodeRange) {
-		return range.getOffset() <= nodeRange.getOffset()
-				&& getEndInclusive(range) >= getEndInclusive(nodeRange);
+		return range.getOffset() <= nodeRange.getOffset() && getEndInclusive(range) >= getEndInclusive(nodeRange);
 	}
 
 	static int getEndExclusive(ISourceRange range) {
@@ -43,9 +42,8 @@ class Util {
 		return getEndExclusive(range) - 1;
 	}
 
-	static boolean rangeIncludesNonWhitespaceOutsideRange(
-			ISourceRange selection, ISourceRange nodes, IDocument document)
-			throws BadLocationException {
+	static boolean rangeIncludesNonWhitespaceOutsideRange(ISourceRange selection, ISourceRange nodes,
+			IDocument document) throws BadLocationException {
 		if (!covers(selection, nodes))
 			return false;
 
@@ -53,8 +51,7 @@ class Util {
 		// be followed by newline!
 
 		// check the start of the nodes and the selection
-		if (!isJustWhitespace(selection.getOffset(), nodes.getOffset(),
-				document))
+		if (!isJustWhitespace(selection.getOffset(), nodes.getOffset(), document))
 			return true;
 
 		// check the end of the nodes and the selection
@@ -64,16 +61,14 @@ class Util {
 		return false;
 	}
 
-	private static boolean isJustWhitespace(int start, int end, IDocument buffer)
-			throws BadLocationException {
+	private static boolean isJustWhitespace(int start, int end, IDocument buffer) throws BadLocationException {
 		if (start == end)
 			return true;
 		Assert.isTrue(start <= end);
 		return 0 == buffer.get(start, end - start).trim().length();
 	}
 
-	private static boolean isJustWhitespaceOrComment(int start, int end,
-			IDocument document) {
+	private static boolean isJustWhitespaceOrComment(int start, int end, IDocument document) {
 		if (start == end)
 			return true;
 		Assert.isTrue(start <= end);

@@ -30,8 +30,7 @@ public class SuperGlobalHighlighting extends AbstractSemanticHighlighting {
 		}
 
 		private boolean isSuperGlobal(VariableBase n) {
-			if (n instanceof Variable
-					&& ((Variable) n).getName() instanceof Identifier) {
+			if (n instanceof Variable && ((Variable) n).getName() instanceof Identifier) {
 				String name = "$" //$NON-NLS-1$
 						+ ((Identifier) ((Variable) n).getName()).getName();
 				String[] globals = PHPVariables.getVariables(PHPVersion.PHP5_3);
@@ -52,8 +51,7 @@ public class SuperGlobalHighlighting extends AbstractSemanticHighlighting {
 
 	@Override
 	public void initDefaultPreferences() {
-		getStyle().setEnabledByDefault(false).setDefaultTextColor(127, 0, 85)
-				.setBoldByDefault(true);
+		getStyle().setEnabledByDefault(false).setDefaultTextColor(127, 0, 85).setBoldByDefault(true);
 	}
 
 	public String getDisplayName() {

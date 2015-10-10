@@ -36,8 +36,7 @@ import org.eclipse.ui.IWorkbench;
  * @author guy.g
  * 
  */
-public abstract class AbstractPHPPreferenceBlock extends
-		AbstractPHPPreferencePageBlock {
+public abstract class AbstractPHPPreferenceBlock extends AbstractPHPPreferencePageBlock {
 
 	protected PreferencePage preferencePage;
 
@@ -72,13 +71,11 @@ public abstract class AbstractPHPPreferenceBlock extends
 	}
 
 	protected void restoreDefaultComboTextValues() {
-		for (Iterator comboIterator = this.combos.iterator(); comboIterator
-				.hasNext();) {
+		for (Iterator comboIterator = this.combos.iterator(); comboIterator.hasNext();) {
 			ValuedCombo valuedCombo = (ValuedCombo) comboIterator.next();
 			Object data = valuedCombo.getData();
 			if (data != null) {
-				valuedCombo.selectValue(getPreferenceStore().getDefaultString(
-						(String) data));
+				valuedCombo.selectValue(getPreferenceStore().getDefaultString((String) data));
 			}
 		}
 	}
@@ -89,8 +86,7 @@ public abstract class AbstractPHPPreferenceBlock extends
 			Text text = (Text) controlsArray[i];
 			Object data = text.getData();
 			if (data != null) {
-				text.setText(getPreferenceStore().getDefaultString(
-						(String) data));
+				text.setText(getPreferenceStore().getDefaultString((String) data));
 			}
 		}
 
@@ -102,8 +98,7 @@ public abstract class AbstractPHPPreferenceBlock extends
 			Button button = (Button) controlsArray[i];
 			Object data = button.getData();
 			if (data != null) {
-				button.setSelection(getPreferenceStore().getDefaultBoolean(
-						(String) data));
+				button.setSelection(getPreferenceStore().getDefaultBoolean((String) data));
 			}
 		}
 	}
@@ -118,13 +113,11 @@ public abstract class AbstractPHPPreferenceBlock extends
 	}
 
 	protected void initializeComboValues() {
-		for (Iterator comboIterator = this.combos.iterator(); comboIterator
-				.hasNext();) {
+		for (Iterator comboIterator = this.combos.iterator(); comboIterator.hasNext();) {
 			ValuedCombo valuedCombo = (ValuedCombo) comboIterator.next();
 			Object data = valuedCombo.getData();
 			if (data != null) {
-				valuedCombo.selectValue(getPreferenceStore().getString(
-						(String) data));
+				valuedCombo.selectValue(getPreferenceStore().getString((String) data));
 			}
 		}
 	}
@@ -146,8 +139,7 @@ public abstract class AbstractPHPPreferenceBlock extends
 			Button button = (Button) controlsArray[i];
 			Object data = button.getData();
 			if (data != null) {
-				button.setSelection(getPreferenceStore().getBoolean(
-						(String) data));
+				button.setSelection(getPreferenceStore().getBoolean((String) data));
 			}
 		}
 	}
@@ -162,13 +154,11 @@ public abstract class AbstractPHPPreferenceBlock extends
 	}
 
 	protected void storeCombosValues() {
-		for (Iterator comboIterator = this.combos.iterator(); comboIterator
-				.hasNext();) {
+		for (Iterator comboIterator = this.combos.iterator(); comboIterator.hasNext();) {
 			ValuedCombo valuedCombo = (ValuedCombo) comboIterator.next();
 			Object data = valuedCombo.getData();
 			if (data != null) {
-				getPreferenceStore().setValue((String) data,
-						valuedCombo.getSelectionValue());
+				getPreferenceStore().setValue((String) data, valuedCombo.getSelectionValue());
 			}
 		}
 	}
@@ -190,8 +180,7 @@ public abstract class AbstractPHPPreferenceBlock extends
 			Button button = (Button) controlsArray[i];
 			Object data = button.getData();
 			if (data != null) {
-				getPreferenceStore().setValue((String) data,
-						button.getSelection());
+				getPreferenceStore().setValue((String) data, button.getSelection());
 			}
 		}
 
@@ -207,10 +196,8 @@ public abstract class AbstractPHPPreferenceBlock extends
 		setControlsEnabled(combos, key, enabled);
 	}
 
-	private void setControlsEnabled(ArrayList controls, String key,
-			boolean enabled) {
-		for (Iterator controlIterator = controls.iterator(); controlIterator
-				.hasNext();) {
+	private void setControlsEnabled(ArrayList controls, String key, boolean enabled) {
+		for (Iterator controlIterator = controls.iterator(); controlIterator.hasNext();) {
 			Control control = (Control) controlIterator.next();
 			Object data = control.getData();
 			if (data != null && ((String) data).equals(key)) {
@@ -248,8 +235,7 @@ public abstract class AbstractPHPPreferenceBlock extends
 	/**
 	 * Create new checkbox and associate a preference key with it
 	 */
-	protected Button addCheckBox(Composite parent, String label,
-			String prefKey, int horizontalIndent) {
+	protected Button addCheckBox(Composite parent, String label, String prefKey, int horizontalIndent) {
 		Button checkBox = new Button(parent, SWT.CHECK);
 		checkBox.setText(label);
 
@@ -272,8 +258,7 @@ public abstract class AbstractPHPPreferenceBlock extends
 		}
 
 		public void modifyText(ModifyEvent e) {
-			ValidationStatus status = stringValidator
-					.validate(((Text) e.widget).getText());
+			ValidationStatus status = stringValidator.validate(((Text) e.widget).getText());
 			if (!status.isOK()) {
 				getPreferencePage().setErrorMessage(status.getError());
 				getPreferencePage().setValid(false);
@@ -287,8 +272,7 @@ public abstract class AbstractPHPPreferenceBlock extends
 	/**
 	 * Add text box with label with input validator
 	 */
-	protected Text addLabelledTextField(Composite parent, String label,
-			String key, int textlimit, int horizontalIndent,
+	protected Text addLabelledTextField(Composite parent, String label, String key, int textlimit, int horizontalIndent,
 			IStringValidator stringValidator) {
 		Label labelControl = new Label(parent, SWT.WRAP);
 		labelControl.setText(label);
@@ -303,15 +287,13 @@ public abstract class AbstractPHPPreferenceBlock extends
 		data = new GridData();
 		if (textlimit != 0) {
 			textBox.setTextLimit(textlimit);
-			data.widthHint = Dialog.convertWidthInCharsToPixels(
-					getFontMetrics(parent), textlimit + 1);
+			data.widthHint = Dialog.convertWidthInCharsToPixels(getFontMetrics(parent), textlimit + 1);
 		}
 		data.horizontalSpan = 2;
 		textBox.setLayoutData(data);
 
 		if (stringValidator != null) {
-			textBox.addModifyListener(new TextFieldValidateListener(
-					stringValidator));
+			textBox.addModifyListener(new TextFieldValidateListener(stringValidator));
 		}
 		add(textBox);
 		return textBox;
@@ -320,10 +302,9 @@ public abstract class AbstractPHPPreferenceBlock extends
 	/**
 	 * Add text box with label
 	 */
-	protected Text addLabelledTextField(Composite parent, String label,
-			String key, int textlimit, int horizontalIndent) {
-		return addLabelledTextField(parent, label, key, textlimit,
-				horizontalIndent, null);
+	protected Text addLabelledTextField(Composite parent, String label, String key, int textlimit,
+			int horizontalIndent) {
+		return addLabelledTextField(parent, label, key, textlimit, horizontalIndent, null);
 	}
 
 	protected Control createContents(Composite parent) {

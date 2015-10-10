@@ -46,12 +46,11 @@ import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
  * includes templates that represent the best guess completion for each
  * parameter of a method.
  */
-public final class ParameterGuessingProposal extends
-		PHPOverrideCompletionProposal implements
-		IPHPCompletionProposalExtension {
+public final class ParameterGuessingProposal extends PHPOverrideCompletionProposal
+		implements IPHPCompletionProposalExtension {
 	private static final char[] NO_TRIGGERS = new char[0];
-	protected static final char LPAREN = '('; //$NON-NLS-1$
-	protected static final char RPAREN = ')'; //$NON-NLS-1$
+	protected static final char LPAREN = '('; // $NON-NLS-1$
+	protected static final char RPAREN = ')'; // $NON-NLS-1$
 	protected static final String COMMA = ", "; //$NON-NLS-1$
 	private CompletionProposal fProposal;
 	private IMethod method;
@@ -71,13 +70,10 @@ public final class ParameterGuessingProposal extends
 	private IRegion fSelectedRegion; // initialized by apply()
 	private IPositionUpdater fUpdater;
 
-	public ParameterGuessingProposal(CompletionProposal proposal,
-			IScriptProject jproject, ISourceModule cu, String methodName,
-			String[] paramTypes, int start, int length, String displayName,
-			String completionProposal, boolean fillBestGuess, Object extraInfo,
-			IDocument document) {
-		super(jproject, cu, methodName, paramTypes, start, length, displayName,
-				completionProposal);
+	public ParameterGuessingProposal(CompletionProposal proposal, IScriptProject jproject, ISourceModule cu,
+			String methodName, String[] paramTypes, int start, int length, String displayName,
+			String completionProposal, boolean fillBestGuess, Object extraInfo, IDocument document) {
+		super(jproject, cu, methodName, paramTypes, start, length, displayName, completionProposal);
 		this.fProposal = proposal;
 		method = (IMethod) fProposal.getModelElement();
 		guessingMethod = method;
@@ -99,8 +95,7 @@ public final class ParameterGuessingProposal extends
 			// super class, this needs better solution
 			int lengthChange = getReplacementString().length();
 			super.apply(document, trigger, offset);
-			lengthChange = Math.max(0, getReplacementString().length()
-					- lengthChange);
+			lengthChange = Math.max(0, getReplacementString().length() - lengthChange);
 
 			int baseOffset = getReplacementOffset();
 			String replacement = getReplacementString();
@@ -117,27 +112,23 @@ public final class ParameterGuessingProposal extends
 				if ((fPositions != null && fPositions.length > 0)) {
 					for (int i = 0; i < fPositions.length; i++) {
 						LinkedPositionGroup group = new LinkedPositionGroup();
-						int positionOffset = fPositions[i].getOffset()
-								+ lengthChange;
+						int positionOffset = fPositions[i].getOffset() + lengthChange;
 						int positionLength = fPositions[i].getLength();
 
 						if (fChoices[i].length < 2) {
-							group.addPosition(new LinkedPosition(document,
-									positionOffset, positionLength,
+							group.addPosition(new LinkedPosition(document, positionOffset, positionLength,
 									LinkedPositionGroup.NO_STOP));
 						} else {
 							ensurePositionCategoryInstalled(document, model);
 							document.addPosition(getCategory(), fPositions[i]);
-							group.addPosition(new ProposalPosition(document,
-									positionOffset, positionLength,
+							group.addPosition(new ProposalPosition(document, positionOffset, positionLength,
 									LinkedPositionGroup.NO_STOP, fChoices[i]));
 						}
 						model.addGroup(group);
 					}
 				} else {
 					LinkedPositionGroup group = new LinkedPositionGroup();
-					group.addPosition(new LinkedPosition(document,
-							getReplacementOffset() + getCursorPosition(), 0,
+					group.addPosition(new LinkedPosition(document, getReplacementOffset() + getCursorPosition(), 0,
 							LinkedPositionGroup.NO_STOP));
 					model.addGroup(group);
 				}
@@ -145,15 +136,13 @@ public final class ParameterGuessingProposal extends
 				model.forceInstall();
 
 				LinkedModeUI ui = new EditorLinkedModeUI(model, getTextViewer());
-				ui.setExitPosition(getTextViewer(),
-						baseOffset + replacement.length(), 0, Integer.MAX_VALUE);
+				ui.setExitPosition(getTextViewer(), baseOffset + replacement.length(), 0, Integer.MAX_VALUE);
 				ui.setCyclingMode(LinkedModeUI.CYCLE_WHEN_NO_PARENT);
 				ui.setDoContextInfo(true);
 				ui.enter();
 				fSelectedRegion = ui.getSelectedRegion();
 			} else {
-				fSelectedRegion = new Region(baseOffset + getCursorPosition(),
-						0);
+				fSelectedRegion = new Region(baseOffset + getCursorPosition(), 0);
 			}
 
 		} catch (BadLocationException e) {
@@ -178,10 +167,8 @@ public final class ParameterGuessingProposal extends
 			return;
 		}
 
-		IEclipsePreferences prefs = InstanceScope.INSTANCE
-				.getNode(PHPCorePlugin.ID);
-		boolean fileArgumentNames = prefs.getBoolean(
-				PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, true);
+		IEclipsePreferences prefs = InstanceScope.INSTANCE.getNode(PHPCorePlugin.ID);
+		boolean fileArgumentNames = prefs.getBoolean(PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, true);
 		if (fileArgumentNames && !fReplacementStringComputed)
 			setReplacementString(computeReplacementString(prefix));
 		if (!fileArgumentNames)
@@ -189,24 +176,19 @@ public final class ParameterGuessingProposal extends
 	}
 
 	private boolean shouldHaveGlobalNamespace() {
-		if (ProjectOptions.getPhpVersion(sProject.getProject()).isLessThan(
-				PHPVersion.PHP5_3)) {
+		if (ProjectOptions.getPhpVersion(sProject.getProject()).isLessThan(PHPVersion.PHP5_3)) {
 			return false;
 		}
 		IType type = method.getDeclaringType();
-		boolean isInNamespace = PHPModelUtils.getCurrentNamespaceIfAny(
-				fSourceModule, getReplacementOffset()) != null;
+		boolean isInNamespace = PHPModelUtils.getCurrentNamespaceIfAny(fSourceModule, getReplacementOffset()) != null;
 
 		boolean isNotAlias = !(type instanceof AliasType);
 		boolean isNamespacedType = PHPModelUtils.getCurrentNamespace(type) != null;
 
 		try {
 			boolean globalMethod = (type == null && method.getNamespace() == null);
-			boolean globalConstructor = type != null && !isNamespacedType
-					&& method.isConstructor();
-			if (((globalMethod && prefixGlobalFunctionCall()) || globalConstructor)
-					&& isInNamespace
-					&& isNotAlias
+			boolean globalConstructor = type != null && !isNamespacedType && method.isConstructor();
+			if (((globalMethod && prefixGlobalFunctionCall()) || globalConstructor) && isInNamespace && isNotAlias
 					&& document.getChar(getReplacementOffset() - 1) != NamespaceReference.NAMESPACE_SEPARATOR) {
 				return true;
 			}
@@ -220,8 +202,7 @@ public final class ParameterGuessingProposal extends
 
 	private boolean prefixGlobalFunctionCall() {
 		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
-				PHPCoreConstants.CODEASSIST_PREFIX_GLOBAL_FUNCTION_CALL, false,
-				null);
+				PHPCoreConstants.CODEASSIST_PREFIX_GLOBAL_FUNCTION_CALL, false, null);
 	}
 
 	private void dealSuffix(IDocument document, int offset) {
@@ -229,8 +210,7 @@ public final class ParameterGuessingProposal extends
 		boolean insertCompletion = insertCompletion();
 		String replacement = getReplacementString();
 		int posReplacementLP = replacement.indexOf(LPAREN);
-		if (posReplacementLP >= 0
-				&& replacement.endsWith(String.valueOf(RPAREN))) {
+		if (posReplacementLP >= 0 && replacement.endsWith(String.valueOf(RPAREN))) {
 			int searchOffset;
 			if (!insertCompletion || toggleEating) {
 				searchOffset = getReplacementOffset() + getReplacementLength();
@@ -240,8 +220,7 @@ public final class ParameterGuessingProposal extends
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=459377
 			int posLP = getRelativePositionOf(document, searchOffset, LPAREN);
 			if (posLP >= 0) {
-				int posRP = getRelativePositionOf(document, searchOffset
-						+ (posLP + 1), RPAREN);
+				int posRP = getRelativePositionOf(document, searchOffset + (posLP + 1), RPAREN);
 				if (posRP < 0) {
 					// unset all parameters that have to be written in the
 					// document, they should not collide with the text
@@ -258,8 +237,7 @@ public final class ParameterGuessingProposal extends
 					setReplacementLength(getReplacementLength() + posLP);
 				} else {
 					// put the cursor after right parenthesis in document
-					setReplacementLength(getReplacementLength() + (posLP + 1)
-							+ (posRP + 1));
+					setReplacementLength(getReplacementLength() + (posLP + 1) + (posRP + 1));
 				}
 			}
 		} else {
@@ -298,8 +276,7 @@ public final class ParameterGuessingProposal extends
 	 *         found or if there are non-whitespace characters between "offset"
 	 *         position and the first occurrence of the "search" character
 	 */
-	private int getRelativePositionOf(IDocument document, int offset,
-			char search) {
+	private int getRelativePositionOf(IDocument document, int offset, char search) {
 		try {
 			IRegion line = document.getLineInformationOfOffset(offset);
 			int lineEnd = line.getOffset() + line.getLength();
@@ -325,8 +302,7 @@ public final class ParameterGuessingProposal extends
 	 */
 	public final int getReplacementLength() {
 		if (!fReplacementLengthComputed)
-			setReplacementLength(fProposal.getReplaceEnd()
-					- fProposal.getReplaceStart());
+			setReplacementLength(fProposal.getReplaceEnd() - fProposal.getReplaceStart());
 		return super.getReplacementLength();
 	}
 
@@ -378,17 +354,14 @@ public final class ParameterGuessingProposal extends
 				AliasType aliasType = (AliasType) fc.getParent();
 				alias = aliasType.getAlias();
 				if (aliasType.getParent() instanceof IType) {
-					fc = FakeConstructor.createFakeConstructor(null,
-							(IType) aliasType.getParent(), false);
+					fc = FakeConstructor.createFakeConstructor(null, (IType) aliasType.getParent(), false);
 				}
 			}
 			IType type = fc.getDeclaringType();
-			IMethod[] ctors = FakeConstructor.getConstructors(type,
-					fc.isEnclosingClass());
+			IMethod[] ctors = FakeConstructor.getConstructors(type, fc.isEnclosingClass());
 			// here we must make sure ctors[1] != null,
 			// it means there is an available FakeConstructor for ctors[0]
-			if (ctors != null && ctors.length == 2 && ctors[0] != null
-					&& ctors[1] != null) {
+			if (ctors != null && ctors.length == 2 && ctors[0] != null && ctors[1] != null) {
 				return ctors[0];
 			}
 			return fc;
@@ -436,8 +409,7 @@ public final class ParameterGuessingProposal extends
 	}
 
 	private boolean hasParameters() throws ModelException {
-		return method.getParameters() != null
-				&& hasNondefaultValues(method.getParameters());
+		return method.getParameters() != null && hasNondefaultValues(method.getParameters());
 	}
 
 	private boolean hasNondefaultValues(IParameter[] parameters) {
@@ -460,8 +432,7 @@ public final class ParameterGuessingProposal extends
 	 * @throws ModelException
 	 *             if parameter guessing failed
 	 */
-	private String computeGuessingCompletion(String prefix)
-			throws ModelException {
+	private String computeGuessingCompletion(String prefix) throws ModelException {
 		StringBuffer buffer = new StringBuffer(prefix);
 		appendMethodNameReplacement(buffer);
 
@@ -528,8 +499,7 @@ public final class ParameterGuessingProposal extends
 		}
 	}
 
-	private ICompletionProposal[][] guessParameters(char[][] parameterNames)
-			throws ModelException {
+	private ICompletionProposal[][] guessParameters(char[][] parameterNames) throws ModelException {
 		// find matches in reverse order. Do this because people tend to declare
 		// the variable meant for the last
 		// parameter last. That is, local variables for the last parameter in
@@ -556,9 +526,8 @@ public final class ParameterGuessingProposal extends
 			String paramName = new String(parameterNames[i]);
 			Position position = new Position(0, 0);
 
-			ICompletionProposal[] argumentProposals = parameterProposals(
-					parameters[i].getDefaultValue(), paramName, position,
-					fFillBestGuess);
+			ICompletionProposal[] argumentProposals = parameterProposals(parameters[i].getDefaultValue(), paramName,
+					position, fFillBestGuess);
 
 			fPositions[i] = position;
 			fChoices[i] = argumentProposals;
@@ -574,18 +543,15 @@ public final class ParameterGuessingProposal extends
 		if (fSelectedRegion == null)
 			return new Point(getReplacementOffset(), 0);
 
-		return new Point(fSelectedRegion.getOffset(),
-				fSelectedRegion.getLength());
+		return new Point(fSelectedRegion.getOffset(), fSelectedRegion.getLength());
 	}
 
 	private void openErrorDialog(Exception e) {
 		Shell shell = getTextViewer().getTextWidget().getShell();
-		MessageDialog.openError(shell, Messages.ParameterGuessingProposal_0,
-				e.getMessage());
+		MessageDialog.openError(shell, Messages.ParameterGuessingProposal_0, e.getMessage());
 	}
 
-	private void ensurePositionCategoryInstalled(final IDocument document,
-			LinkedModeModel model) {
+	private void ensurePositionCategoryInstalled(final IDocument document, LinkedModeModel model) {
 		if (!document.containsPositionCategory(getCategory())) {
 			document.addPositionCategory(getCategory());
 			fUpdater = new InclusivePositionUpdater(getCategory());
@@ -644,9 +610,8 @@ public final class ParameterGuessingProposal extends
 	 * @throws JavaModelException
 	 *             if it fails
 	 */
-	public ICompletionProposal[] parameterProposals(String initialValue,
-			String paramName, Position pos, boolean fillBestGuess)
-			throws ModelException {
+	public ICompletionProposal[] parameterProposals(String initialValue, String paramName, Position pos,
+			boolean fillBestGuess) throws ModelException {
 		List<String> typeMatches = new ArrayList<String>();
 		if (initialValue != null) {
 			typeMatches.add(initialValue);
@@ -663,16 +628,15 @@ public final class ParameterGuessingProposal extends
 			final char[] triggers = new char[1];
 			triggers[triggers.length - 1] = ';';
 
-			ret[i++] = new PositionBasedCompletionProposal(name, pos,
-					replacementLength, getImage(), name, null, null, triggers);
+			ret[i++] = new PositionBasedCompletionProposal(name, pos, replacementLength, getImage(), name, null, null,
+					triggers);
 		}
 		if (!fillBestGuess) {
 			// insert a proposal with the argument name
 			ICompletionProposal[] extended = new ICompletionProposal[ret.length + 1];
 			System.arraycopy(ret, 0, extended, 1, ret.length);
 			extended[0] = new PositionBasedCompletionProposal(paramName, pos,
-					replacementLength/* paramName.length() */, null, paramName,
-					null, null, NO_TRIGGERS);
+					replacementLength/* paramName.length() */, null, paramName, null, null, NO_TRIGGERS);
 			return extended;
 		}
 		return ret;
@@ -683,8 +647,7 @@ public final class ParameterGuessingProposal extends
 		int oldReplacementOffset = getReplacementOffset();
 		if (fPositions != null && fPositions.length > 0) {
 			for (Position position : fPositions) {
-				position.offset = position.offset
-						+ (replacementOffset - oldReplacementOffset);
+				position.offset = position.offset + (replacementOffset - oldReplacementOffset);
 			}
 		}
 

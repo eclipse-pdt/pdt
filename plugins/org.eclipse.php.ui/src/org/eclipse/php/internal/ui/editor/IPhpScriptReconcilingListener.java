@@ -36,6 +36,5 @@ public interface IPhpScriptReconcilingListener {
 	 * @param progressMonitor
 	 *            the progress monitor
 	 */
-	void reconciled(Program program, boolean forced,
-			IProgressMonitor progressMonitor);
+	void reconciled(Program program, boolean forced, IProgressMonitor progressMonitor);
 }

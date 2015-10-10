@@ -17,8 +17,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ PHP5LanguageModelTest.class, PHP53LanguageModelTest.class,
-		SearchFieldTests.class })
+@SuiteClasses({ PHP5LanguageModelTest.class, PHP53LanguageModelTest.class, SearchFieldTests.class })
 public class AllTests {
 
 }

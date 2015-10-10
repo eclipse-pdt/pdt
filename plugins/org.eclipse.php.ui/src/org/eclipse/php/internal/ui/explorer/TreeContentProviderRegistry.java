@@ -39,26 +39,21 @@ public class TreeContentProviderRegistry {
 
 	private TreeContentProviderRegistry() {
 
-		IExtensionPoint extension = Platform.getExtensionRegistry()
-				.getExtensionPoint(PHPUiPlugin.ID, EXTENSION_POINT);
+		IExtensionPoint extension = Platform.getExtensionRegistry().getExtensionPoint(PHPUiPlugin.ID, EXTENSION_POINT);
 		if (extension != null) {
 			IExtension[] extensions = extension.getExtensions();
 			for (int i = 0; i < extensions.length; i++) {
-				IConfigurationElement[] configElements = extensions[i]
-						.getConfigurationElements();
+				IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
 				for (int j = 0; j < configElements.length; j++) {
 					IConfigurationElement configElement = configElements[j];
 					try {
 
-						Object execExt = configElement
-								.createExecutableExtension(CONTENT_PROVIDER); 
+						Object execExt = configElement.createExecutableExtension(CONTENT_PROVIDER);
 						if (execExt instanceof ITreeContentProvider) {
-							contentProviders
-									.add((ITreeContentProvider) execExt);
+							contentProviders.add((ITreeContentProvider) execExt);
 						}
 
-						Object labelProvider = configElement
-								.createExecutableExtension(LABEL_PROVIDER); 
+						Object labelProvider = configElement.createExecutableExtension(LABEL_PROVIDER);
 						if (labelProvider instanceof ILabelProvider) {
 							labelProviders.add((ILabelProvider) labelProvider);
 						}

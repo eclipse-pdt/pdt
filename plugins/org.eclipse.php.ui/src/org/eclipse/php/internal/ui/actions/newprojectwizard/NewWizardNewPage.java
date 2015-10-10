@@ -52,18 +52,14 @@ class NewWizardNewPage implements ISelectionChangedListener {
 
 	private static final List<String> PROJECT_WIZARD_ID = new ArrayList<String>();
 	private static final Set<String> PROJECT_WIZARD_ID_SET = new HashSet<String>();
+
 	static {
 
-		PROJECT_WIZARD_ID
-				.add("org.eclipse.php.ui.wizards.PHPFileCreationWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID
-				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPClassWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID
-				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPInterfaceWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID
-				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPTraitWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID
-				.add("org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.eclipse.php.ui.wizards.PHPFileCreationWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPClassWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPInterfaceWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPTraitWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard"); //$NON-NLS-1$
 
 		PROJECT_WIZARD_ID.add("com.zend.php.ccm.ui.ccmProjectWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID.add("com.zend.php.ide.ui.project.wizard.localphp"); //$NON-NLS-1$
@@ -72,20 +68,18 @@ class NewWizardNewPage implements ISelectionChangedListener {
 		PROJECT_WIZARD_ID.add("com.zend.php.ide.git.ui.projectWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID.add("com.zend.php.ide.github.ui.projectWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID.add("com.zend.php.ide.openshift.ui.projectWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID
-				.add("com.zend.php.ui.wizards.PHPRemoteProjectCreationWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.ui.wizards.PHPRemoteProjectCreationWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID.add("com.zend.php.ide.svn.ui.SVNProjectWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID.add("com.zend.php.ide.phpcloud.ui.projectWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID.add("com.zend.php.ccm.ui.restfulProjectWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID_SET.addAll(PROJECT_WIZARD_ID);
 
-		PROJECT_WIZARD_ID
-				.add("org.zend.php.framework.ui.wizards.ZendFrameworkProjectCreationWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID
-				.add("org.zend.php.framework.ui.wizards.NewZendItemWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.zend.php.framework.ui.wizards.ZendFrameworkProjectCreationWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.zend.php.framework.ui.wizards.NewZendItemWizard"); //$NON-NLS-1$
 	}
+
 	// id constants
-	private static final String DIALOG_SETTING_SECTION_NAME = "NewWizardSelectionPage."; //$NON-NLS-1$ 
+	private static final String DIALOG_SETTING_SECTION_NAME = "NewWizardSelectionPage."; //$NON-NLS-1$
 
 	private final static int SIZING_LISTS_HEIGHT = 200;
 
@@ -94,8 +88,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	private final static String STORE_EXPANDED_CATEGORIES_ID = DIALOG_SETTING_SECTION_NAME
 			+ "STORE_EXPANDED_CATEGORIES_ID"; //$NON-NLS-1$
 
-	private final static String STORE_SELECTED_ID = DIALOG_SETTING_SECTION_NAME
-			+ "STORE_SELECTED_ID"; //$NON-NLS-1$
+	private final static String STORE_SELECTED_ID = DIALOG_SETTING_SECTION_NAME + "STORE_SELECTED_ID"; //$NON-NLS-1$
 
 	private NewWizardSelectionPage page;
 
@@ -126,8 +119,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 
 	private boolean projectsOnly;
 
-	private ViewerFilter projectFilter = new WizardTagFilter(
-			new String[] { WorkbenchWizardElement.TAG_PROJECT });
+	private ViewerFilter projectFilter = new WizardTagFilter(new String[] { WorkbenchWizardElement.TAG_PROJECT });
 
 	/**
 	 * Create an instance of this class
@@ -137,8 +129,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	 * @param primaryWizards
 	 * @param projectsOnly
 	 */
-	public NewWizardNewPage(NewWizardSelectionPage mainPage,
-			IWizardCategory wizardCategories,
+	public NewWizardNewPage(NewWizardSelectionPage mainPage, IWizardCategory wizardCategories,
 			IWizardDescriptor[] primaryWizards, boolean projectsOnly) {
 		this.page = mainPage;
 		this.wizardCategories = wizardCategories;
@@ -327,9 +318,8 @@ class NewWizardNewPage implements ISelectionChangedListener {
 		composite.setLayoutData(data);
 
 		filteredTreeFilter = new WizardPatternFilter();
-		FilteredTree filterTree = new FilteredTree(composite, SWT.SINGLE
-				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, filteredTreeFilter,
-				true);
+		FilteredTree filterTree = new FilteredTree(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER,
+				filteredTreeFilter, true);
 
 		final TreeViewer treeViewer = filterTree.getViewer();
 		treeViewer.setContentProvider(new WizardContentProvider());
@@ -344,8 +334,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 
 		if (!projectsOnly) {
 
-			IWizardCategory phpCategory = wizardCategories
-					.findCategory(new Path("org.eclipse.php.project.ui")); //$NON-NLS-1$
+			IWizardCategory phpCategory = wizardCategories.findCategory(new Path("org.eclipse.php.project.ui")); //$NON-NLS-1$
 			// IWizardCategory[] children = wizardCategories.getCategories();
 			// for (int i = 0; i < children.length; i++) {
 			// if ("org.eclipse.php.project.ui".equals(children[i].getId())) {
@@ -362,8 +351,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 				for (int i = 0; i < categories.length; i++) {
 					inputArray.add(categories[i]);
 				}
-				IWizardDescriptor folder = wizardCategories
-						.findWizard("org.eclipse.ui.wizards.new.folder"); //$NON-NLS-1$
+				IWizardDescriptor folder = wizardCategories.findWizard("org.eclipse.ui.wizards.new.folder"); //$NON-NLS-1$
 				if (folder != null) {
 					inputArray.add(folder);
 				}
@@ -406,8 +394,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 
 		treeViewer.setInput(input);
 
-		filterTree.setBackground(parent.getDisplay().getSystemColor(
-				SWT.COLOR_WIDGET_BACKGROUND));
+		filterTree.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 
 		treeViewer.getTree().setFont(parent.getFont());
 
@@ -420,14 +407,12 @@ class NewWizardNewPage implements ISelectionChangedListener {
 			 * .eclipse.jface.viewers.DoubleClickEvent)
 			 */
 			public void doubleClick(DoubleClickEvent event) {
-				IStructuredSelection s = (IStructuredSelection) event
-						.getSelection();
+				IStructuredSelection s = (IStructuredSelection) event.getSelection();
 				selectionChanged(new SelectionChangedEvent(event.getViewer(), s));
 
 				Object element = s.getFirstElement();
 				if (treeViewer.isExpandable(element)) {
-					treeViewer.setExpandedState(element,
-							!treeViewer.getExpandedState(element));
+					treeViewer.setExpandedState(element, !treeViewer.getExpandedState(element));
 				} else if (element instanceof WorkbenchWizardElement) {
 					page.advanceToNextPageOrFinish();
 				}
@@ -482,31 +467,23 @@ class NewWizardNewPage implements ISelectionChangedListener {
 					try {
 						if (showAll) {
 							filteredTree.getViewer().resetFilters();
-							filteredTree.getViewer().addFilter(
-									filteredTreeFilter);
+							filteredTree.getViewer().addFilter(filteredTreeFilter);
 							if (projectsOnly) {
-								filteredTree.getViewer().addFilter(
-										projectFilter);
+								filteredTree.getViewer().addFilter(projectFilter);
 							}
 
 							// restore the expanded elements that were present
 							// in the last show all state but not in the 'no
 							// show all' state.
-							Object[] currentExpanded = filteredTree.getViewer()
-									.getExpandedElements();
-							Object[] expanded = new Object[delta.length
-									+ currentExpanded.length];
-							System.arraycopy(currentExpanded, 0, expanded, 0,
-									currentExpanded.length);
-							System.arraycopy(delta, 0, expanded,
-									currentExpanded.length, delta.length);
-							filteredTree.getViewer().setExpandedElements(
-									expanded);
+							Object[] currentExpanded = filteredTree.getViewer().getExpandedElements();
+							Object[] expanded = new Object[delta.length + currentExpanded.length];
+							System.arraycopy(currentExpanded, 0, expanded, 0, currentExpanded.length);
+							System.arraycopy(delta, 0, expanded, currentExpanded.length, delta.length);
+							filteredTree.getViewer().setExpandedElements(expanded);
 						} else {
 							filteredTree.getViewer().addFilter(filter);
 							if (projectsOnly) {
-								filteredTree.getViewer().addFilter(
-										projectFilter);
+								filteredTree.getViewer().addFilter(projectFilter);
 							}
 						}
 						filteredTree.getViewer().refresh(false);
@@ -516,15 +493,13 @@ class NewWizardNewPage implements ISelectionChangedListener {
 							// record the elements that were expanded in the
 							// 'show all' state but not the 'no show all' state
 							// (because they didnt exist).
-							Object[] newExpanded = filteredTree.getViewer()
-									.getExpandedElements();
+							Object[] newExpanded = filteredTree.getViewer().getExpandedElements();
 							List deltaList = new ArrayList(Arrays.asList(delta));
 							deltaList.removeAll(Arrays.asList(newExpanded));
 						}
 					} finally {
 						if (showAll) {
-							filteredTree.getViewer().getControl()
-									.setRedraw(true);
+							filteredTree.getViewer().getControl().setRedraw(true);
 						}
 					}
 				}
@@ -541,8 +516,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	 */
 	private void createImage(Composite parent) {
 		descImageCanvas = new CLabel(parent, SWT.NONE);
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING
-				| GridData.VERTICAL_ALIGN_BEGINNING);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING);
 		data.widthHint = 0;
 		data.heightHint = 0;
 		descImageCanvas.setLayoutData(data);
@@ -572,8 +546,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	 * expanded no longer exists then it is ignored.
 	 */
 	protected void expandPreviouslyExpandedCategories() {
-		String[] expandedCategoryPaths = settings
-				.getArray(STORE_EXPANDED_CATEGORIES_ID);
+		String[] expandedCategoryPaths = settings.getArray(STORE_EXPANDED_CATEGORIES_ID);
 		if (expandedCategoryPaths == null || expandedCategoryPaths.length == 0) {
 			return;
 		}
@@ -582,8 +555,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 
 		if (wizardCategories != null) {
 			for (int i = 0; i < expandedCategoryPaths.length; i++) {
-				IWizardCategory category = wizardCategories
-						.findCategory(new Path(expandedCategoryPaths[i]));
+				IWizardCategory category = wizardCategories.findCategory(new Path(expandedCategoryPaths[i]));
 				if (category != null) {
 					categoriesToExpand.add(category);
 				}
@@ -591,8 +563,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 		}
 
 		if (!categoriesToExpand.isEmpty()) {
-			filteredTree.getViewer().setExpandedElements(
-					categoriesToExpand.toArray());
+			filteredTree.getViewer().setExpandedElements(categoriesToExpand.toArray());
 		}
 
 	}
@@ -637,8 +608,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 		page.setErrorMessage(null);
 		page.setMessage(null);
 
-		Object selectedObject = getSingleSelection((IStructuredSelection) selectionEvent
-				.getSelection());
+		Object selectedObject = getSingleSelection((IStructuredSelection) selectionEvent.getSelection());
 
 		if (selectedObject instanceof IWizardDescriptor) {
 			if (selectedObject == selectedElement) {
@@ -682,12 +652,11 @@ class NewWizardNewPage implements ISelectionChangedListener {
 
 		// work around for 62039
 		final StructuredSelection selection = new StructuredSelection(selected);
-		filteredTree.getViewer().getControl().getDisplay()
-				.asyncExec(new Runnable() {
-					public void run() {
-						filteredTree.getViewer().setSelection(selection, true);
-					}
-				});
+		filteredTree.getViewer().getControl().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				filteredTree.getViewer().setSelection(selection, true);
+			}
+		});
 	}
 
 	/**
@@ -706,19 +675,15 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	 * of this page.
 	 */
 	protected void storeExpandedCategories() {
-		Object[] expandedElements = filteredTree.getViewer()
-				.getExpandedElements();
+		Object[] expandedElements = filteredTree.getViewer().getExpandedElements();
 		List expandedElementPaths = new ArrayList(expandedElements.length);
 		for (int i = 0; i < expandedElements.length; ++i) {
 			if (expandedElements[i] instanceof IWizardCategory) {
-				expandedElementPaths
-						.add(((IWizardCategory) expandedElements[i]).getPath()
-								.toString());
+				expandedElementPaths.add(((IWizardCategory) expandedElements[i]).getPath().toString());
 			}
 		}
 		settings.put(STORE_EXPANDED_CATEGORIES_ID,
-				(String[]) expandedElementPaths
-						.toArray(new String[expandedElementPaths.size()]));
+				(String[]) expandedElementPaths.toArray(new String[expandedElementPaths.size()]));
 	}
 
 	/**
@@ -726,17 +691,14 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	 * order to recreate this page's state in the next instance of this page.
 	 */
 	protected void storeSelectedCategoryAndWizard() {
-		Object selected = getSingleSelection((IStructuredSelection) filteredTree
-				.getViewer().getSelection());
+		Object selected = getSingleSelection((IStructuredSelection) filteredTree.getViewer().getSelection());
 
 		if (selected != null) {
 			if (selected instanceof IWizardCategory) {
-				settings.put(STORE_SELECTED_ID, ((IWizardCategory) selected)
-						.getPath().toString());
+				settings.put(STORE_SELECTED_ID, ((IWizardCategory) selected).getPath().toString());
 			} else {
 				// else its a wizard
-				settings.put(STORE_SELECTED_ID,
-						((IWizardDescriptor) selected).getId());
+				settings.put(STORE_SELECTED_ID, ((IWizardDescriptor) selected).getId());
 			}
 		}
 	}
@@ -749,7 +711,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	 * @since 3.0
 	 */
 	private void updateDescription(IWizardDescriptor selectedObject) {
-		String string = ""; //$NON-NLS-1$ 
+		String string = ""; //$NON-NLS-1$
 		if (selectedObject != null) {
 			string = selectedObject.getDescription();
 		}
@@ -815,8 +777,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 		selectedElement = selectedObject;
 		WorkbenchWizardNode selectedNode;
 		if (selectedWizards.containsKey(selectedObject)) {
-			selectedNode = (WorkbenchWizardNode) selectedWizards
-					.get(selectedObject);
+			selectedNode = (WorkbenchWizardNode) selectedWizards.get(selectedObject);
 		} else {
 			selectedNode = new WorkbenchWizardNode(page, selectedObject) {
 				public IWorkbenchWizard createWizard() throws CoreException {
@@ -838,8 +799,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 		for (String id : PROJECT_WIZARD_ID) {
 			for (int i = 0; i < wizards.size(); i++) {
 				if (wizards.get(i) instanceof IWizardDescriptor) {
-					IWizardDescriptor iWizardDescriptor = (IWizardDescriptor) wizards
-							.get(i);
+					IWizardDescriptor iWizardDescriptor = (IWizardDescriptor) wizards.get(i);
 					if (id.equals(iWizardDescriptor.getId())) {
 						result.add(iWizardDescriptor);
 					}

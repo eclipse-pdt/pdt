@@ -71,8 +71,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 	 * @param files
 	 *            Files to choose
 	 */
-	public PathEntrySelectionDialog(Shell shell, VirtualPath path,
-			PathEntry[] pathEntries) {
+	public PathEntrySelectionDialog(Shell shell, VirtualPath path, PathEntry[] pathEntries) {
 		super(shell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 
@@ -84,11 +83,9 @@ public class PathEntrySelectionDialog extends TrayDialog {
 		super.configureShell(newShell);
 
 		newShell.setText(Messages.PathEntrySelectionDialog_0);
-		newShell.setImage(PHPDebugUIImages
-				.get(PHPDebugUIImages.IMG_OBJ_PATH_MAPPING));
+		newShell.setImage(PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_PATH_MAPPING));
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell,
-				IPHPHelpContextIds.PATH_MAPPING);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IPHPHelpContextIds.PATH_MAPPING);
 	}
 
 	protected Control createDialogArea(Composite parent) {
@@ -106,8 +103,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 
 		selectMappingBtn = new Button(parent, SWT.RADIO);
 		selectMappingBtn.setSelection(true);
-		selectMappingBtn
-				.setText(Messages.PathEntrySelectionDialog_1);
+		selectMappingBtn.setText(Messages.PathEntrySelectionDialog_1);
 		GridData layoutData = new GridData();
 		layoutData.horizontalSpan = 2;
 		selectMappingBtn.setLayoutData(layoutData);
@@ -131,8 +127,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 		label.setFont(boldFont);
 		label.setText(path.toString());
 
-		entriesViewer = new TreeViewer(parent, SWT.SINGLE | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.BORDER);
+		entriesViewer = new TreeViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_BOTH);
 		layoutData.horizontalSpan = 2;
 		layoutData.verticalIndent = convertHeightInCharsToPixels(1);
@@ -143,17 +138,15 @@ public class PathEntrySelectionDialog extends TrayDialog {
 		entriesViewer.setLabelProvider(new LabelProvider());
 		entriesViewer.setSorter(new Sorter());
 		entriesViewer.setInput(this);
-		entriesViewer
-				.addSelectionChangedListener(new ISelectionChangedListener() {
-					public void selectionChanged(SelectionChangedEvent event) {
-						validate();
-					}
-				});
+		entriesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				validate();
+			}
+		});
 		entriesViewer.expandAll();
 
 		ignoreMappingBtn = new Button(parent, SWT.RADIO);
-		ignoreMappingBtn
-				.setText(Messages.PathEntrySelectionDialog_2);
+		ignoreMappingBtn.setText(Messages.PathEntrySelectionDialog_2);
 		layoutData = new GridData();
 		layoutData.horizontalSpan = 2;
 		ignoreMappingBtn.setLayoutData(layoutData);
@@ -181,12 +174,10 @@ public class PathEntrySelectionDialog extends TrayDialog {
 		configurePathBtn.setText(Messages.PathEntrySelectionDialog_3);
 		configurePathBtn.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				ConfigurePathDialog dialog = new ConfigurePathDialog(
-						ignorePathResult);
+				ConfigurePathDialog dialog = new ConfigurePathDialog(ignorePathResult);
 				if (dialog.open() == Window.OK) {
 					ignorePathResult = dialog.getResult();
-					ignorePathText
-							.setText(getIgnorePathString(ignorePathResult));
+					ignorePathText.setText(getIgnorePathString(ignorePathResult));
 					validate();
 				}
 			}
@@ -196,21 +187,17 @@ public class PathEntrySelectionDialog extends TrayDialog {
 	}
 
 	protected void createButtonsForButtonBar(Composite parent) {
-		Button okButton = createButton(parent, IDialogConstants.OK_ID,
-				IDialogConstants.OK_LABEL, true);
+		Button okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		okButton.setEnabled(false);
 
-		createButton(parent, IDialogConstants.CANCEL_ID, Messages.PathEntrySelectionDialog_4,
-				false);
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.PathEntrySelectionDialog_4, false);
 	}
 
 	private String getIgnorePathString(VirtualPath path) {
-		if (path.getSegmentsCount() == PathEntrySelectionDialog.this.path
-				.getSegmentsCount()) {
+		if (path.getSegmentsCount() == PathEntrySelectionDialog.this.path.getSegmentsCount()) {
 			return path.toString();
 		}
-		return new StringBuilder(path.toString()).append(
-				path.getSeparatorChar()).append('*').toString();
+		return new StringBuilder(path.toString()).append(path.getSeparatorChar()).append('*').toString();
 	}
 
 	/**
@@ -237,8 +224,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 
 		if (selectMappingBtn.getSelection()) {
 
-			Object selectedElement = ((IStructuredSelection) entriesViewer
-					.getSelection()).getFirstElement();
+			Object selectedElement = ((IStructuredSelection) entriesViewer.getSelection()).getFirstElement();
 			if (selectedElement instanceof PathEntry) {
 				okButton.setEnabled(true);
 				result = (PathEntry) selectedElement;
@@ -275,13 +261,9 @@ public class PathEntrySelectionDialog extends TrayDialog {
 			initializeDialogUnits(parent);
 
 			getShell().setText(Messages.PathEntrySelectionDialog_5);
-			getShell()
-					.setImage(
-							PHPDebugUIImages
-									.get(PHPDebugUIImages.IMG_OBJ_PATH_MAPPING));
+			getShell().setImage(PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_PATH_MAPPING));
 
-			TreeViewer treeViewer = new TreeViewer(parent, SWT.SINGLE
-					| SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+			TreeViewer treeViewer = new TreeViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 			GridData layoutData = new GridData(GridData.FILL_BOTH);
 			layoutData.heightHint = convertHeightInCharsToPixels(15);
 			layoutData.widthHint = convertWidthInCharsToPixels(60);
@@ -290,27 +272,24 @@ public class PathEntrySelectionDialog extends TrayDialog {
 			treeViewer.setContentProvider(new ContentProvider());
 			treeViewer.setLabelProvider(new LabelProvider());
 			treeViewer.setInput(Integer.valueOf(0));
-			treeViewer
-					.addSelectionChangedListener(new ISelectionChangedListener() {
-						public void selectionChanged(SelectionChangedEvent event) {
-							Integer segmentNum = (Integer) ((IStructuredSelection) event
-									.getSelection()).getFirstElement();
-							if (segmentNum != null) {
-								result = path.clone();
-								for (int i = path.getSegmentsCount(); i > segmentNum; --i) {
-									result.removeLastSegment();
-								}
-								pathText.setText(getIgnorePathString(result));
-							}
+			treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+				public void selectionChanged(SelectionChangedEvent event) {
+					Integer segmentNum = (Integer) ((IStructuredSelection) event.getSelection()).getFirstElement();
+					if (segmentNum != null) {
+						result = path.clone();
+						for (int i = path.getSegmentsCount(); i > segmentNum; --i) {
+							result.removeLastSegment();
 						}
-					});
+						pathText.setText(getIgnorePathString(result));
+					}
+				}
+			});
 
 			pathText = new Text(parent, SWT.BORDER | SWT.READ_ONLY);
 			layoutData = new GridData(GridData.FILL_HORIZONTAL);
 			pathText.setLayoutData(layoutData);
 
-			treeViewer.setSelection(new StructuredSelection(result
-					.getSegmentsCount()));
+			treeViewer.setSelection(new StructuredSelection(result.getSegmentsCount()));
 
 			treeViewer.expandAll();
 
@@ -347,8 +326,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 			public void dispose() {
 			}
 
-			public void inputChanged(Viewer viewer, Object oldInput,
-					Object newInput) {
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 		}
 
@@ -359,8 +337,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 			public Image getImage(Object element) {
 				Integer segmentNum = (Integer) element;
 				if (segmentNum < path.getSegmentsCount()) {
-					return PlatformUI.getWorkbench().getSharedImages()
-							.getImage(ISharedImages.IMG_OBJ_FOLDER);
+					return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
 				}
 				String lastSegment = path.getLastSegment();
 				int idx = lastSegment.lastIndexOf('.');
@@ -379,8 +356,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 						}
 					}
 				}
-				return PlatformUI.getWorkbench().getSharedImages().getImage(
-						ISharedImages.IMG_OBJ_FILE);
+				return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
 			}
 
 			public String getText(Object element) {
@@ -432,11 +408,9 @@ public class PathEntrySelectionDialog extends TrayDialog {
 			if (element instanceof IBuildpathEntry) {
 				IBuildpathEntry includePathEntry = (IBuildpathEntry) element;
 				if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-					return PHPPluginImages
-							.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
+					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
 				} else {
-					return PHPPluginImages
-							.get(PHPPluginImages.IMG_OBJS_LIBRARY);
+					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 				}
 			}
 
@@ -454,8 +428,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 
 			if (element instanceof IBuildpathEntry) {
 				IBuildpathEntry includePathEntry = (IBuildpathEntry) element;
-				return EnvironmentPathUtils.getLocalPathString(includePathEntry
-						.getPath());
+				return EnvironmentPathUtils.getLocalPathString(includePathEntry.getPath());
 			}
 
 			if (!(element instanceof PathEntry)) {
@@ -473,15 +446,11 @@ public class PathEntrySelectionDialog extends TrayDialog {
 					path = path.substring(1);
 				}
 			}
-			if (entry.getType() == Type.INCLUDE_FOLDER
-					|| entry.getType() == Type.INCLUDE_VAR) {
-				IBuildpathEntry includePathEntry = (IBuildpathEntry) entry
-						.getContainer();
-				String includePath = EnvironmentPathUtils
-						.getLocalPathString(includePathEntry.getPath());
+			if (entry.getType() == Type.INCLUDE_FOLDER || entry.getType() == Type.INCLUDE_VAR) {
+				IBuildpathEntry includePathEntry = (IBuildpathEntry) entry.getContainer();
+				String includePath = EnvironmentPathUtils.getLocalPathString(includePathEntry.getPath());
 				if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-					IPath p = DLTKCore.getResolvedVariablePath(includePathEntry
-							.getPath());
+					IPath p = DLTKCore.getResolvedVariablePath(includePathEntry.getPath());
 					if (p != null) {
 						includePath = p.toOSString();
 					}
@@ -509,12 +478,10 @@ public class PathEntrySelectionDialog extends TrayDialog {
 				for (PathEntry entry : pathEntries) {
 					if (entry.getType() == Type.EXTERNAL) {
 						containers.add(EXTERNAL_CONTAINER);
-					} else if (entry.getType() == Type.INCLUDE_VAR
-							|| entry.getType() == Type.INCLUDE_FOLDER) {
+					} else if (entry.getType() == Type.INCLUDE_VAR || entry.getType() == Type.INCLUDE_FOLDER) {
 						containers.add(entry.getContainer());
 					} else if (entry.getType() == Type.WORKSPACE) {
-						containers.add(((IResource) entry.getContainer())
-								.getProject());
+						containers.add(((IResource) entry.getContainer()).getProject());
 					}
 				}
 				return containers.toArray();
@@ -526,11 +493,9 @@ public class PathEntrySelectionDialog extends TrayDialog {
 
 			Set<PathEntry> entries = new HashSet<PathEntry>();
 			for (PathEntry entry : pathEntries) {
-				if (entry.getType() == Type.EXTERNAL
-						&& parentElement == EXTERNAL_CONTAINER) {
+				if (entry.getType() == Type.EXTERNAL && parentElement == EXTERNAL_CONTAINER) {
 					entries.add(entry);
-				} else if ((entry.getType() == Type.INCLUDE_VAR || entry
-						.getType() == Type.INCLUDE_FOLDER)
+				} else if ((entry.getType() == Type.INCLUDE_VAR || entry.getType() == Type.INCLUDE_FOLDER)
 						&& entry.getContainer() == parentElement) {
 					entries.add(entry);
 				} else if (entry.getType() == Type.WORKSPACE
@@ -552,8 +517,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 
 				if (entry.getType() == Type.EXTERNAL) {
 					return EXTERNAL_CONTAINER;
-				} else if (entry.getType() == Type.INCLUDE_VAR
-						|| entry.getType() == Type.INCLUDE_FOLDER) {
+				} else if (entry.getType() == Type.INCLUDE_VAR || entry.getType() == Type.INCLUDE_FOLDER) {
 					return entry.getContainer();
 				} else if (entry.getType() == Type.WORKSPACE) {
 					return ((IResource) entry.getContainer()).getProject();
@@ -561,12 +525,10 @@ public class PathEntrySelectionDialog extends TrayDialog {
 			}
 
 			for (PathEntry entry : pathEntries) {
-				if (entry.getType() == Type.EXTERNAL
-						&& element == EXTERNAL_CONTAINER) {
+				if (entry.getType() == Type.EXTERNAL && element == EXTERNAL_CONTAINER) {
 					return entry;
 				} else if (entry.getType() == Type.INCLUDE_VAR
-						|| entry.getType() == Type.INCLUDE_FOLDER
-						&& entry.getContainer() == element) {
+						|| entry.getType() == Type.INCLUDE_FOLDER && entry.getContainer() == element) {
 					return entry;
 				} else if (entry.getType() == Type.WORKSPACE
 						&& ((IResource) entry.getContainer()).getProject() == element) {

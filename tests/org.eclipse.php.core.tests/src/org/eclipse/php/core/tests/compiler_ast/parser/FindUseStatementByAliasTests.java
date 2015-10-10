@@ -35,10 +35,9 @@ public class FindUseStatementByAliasTests {
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
-		TESTS.put(
-				PHPVersion.PHP5_3,
-				new String[] { "/workspace/astutils/find_use_statement_by_alias/php53" }); //$NON-NLS-1$
+		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/astutils/find_use_statement_by_alias/php53" }); //$NON-NLS-1$
 	};
 
 	private AbstractPHPSourceParser parser;
@@ -50,17 +49,14 @@ public class FindUseStatementByAliasTests {
 	@Test
 	public void find(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(fileName);
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdttFile
-				.getFile().trim().getBytes());
-		ModuleDeclaration moduleDeclaration = (ModuleDeclaration) parser.parse(
-				new InputStreamReader(inputStream), null,
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdttFile.getFile().trim().getBytes());
+		ModuleDeclaration moduleDeclaration = (ModuleDeclaration) parser.parse(new InputStreamReader(inputStream), null,
 				ProjectOptions.useShortTags((IProject) null));
 
 		String alias = pdttFile.getConfig().get("alias"); //$NON-NLS-1$
 		int offset = Integer.parseInt(pdttFile.getConfig().get("offset")); //$NON-NLS-1$
 
-		UsePart usePart = ASTUtils.findUseStatementByAlias(moduleDeclaration,
-				alias, offset);
+		UsePart usePart = ASTUtils.findUseStatementByAlias(moduleDeclaration, alias, offset);
 
 		String actual = (usePart == null) ? "null" : usePart.toString(); //$NON-NLS-1$
 		PDTTUtils.assertContents(pdttFile.getExpected(), actual);

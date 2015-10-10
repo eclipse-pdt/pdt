@@ -28,12 +28,10 @@ import org.eclipse.ui.actions.ActionGroup;
 /**
  * An action group to provide access to the working sets.
  */
-public class ViewActionGroup extends
-		org.eclipse.dltk.internal.ui.workingsets.ViewActionGroup {
+public class ViewActionGroup extends org.eclipse.dltk.internal.ui.workingsets.ViewActionGroup {
 
 	private static final Integer INT_SHOW_PROJECTS = Integer.valueOf(SHOW_PROJECTS);
-	private static final Integer INT_SHOW_WORKING_SETS = Integer.valueOf(
-			SHOW_WORKING_SETS);
+	private static final Integer INT_SHOW_WORKING_SETS = Integer.valueOf(SHOW_WORKING_SETS);
 
 	private IPropertyChangeListener fChangeListener;
 
@@ -43,8 +41,7 @@ public class ViewActionGroup extends
 	private WorkingSetShowActionGroup fShowActionGroup;
 	private PHPWorkingSetFilterActionGroup fFilterActionGroup;
 
-	public ViewActionGroup(int mode, IPropertyChangeListener changeListener,
-			IWorkbenchPartSite site) {
+	public ViewActionGroup(int mode, IPropertyChangeListener changeListener, IWorkbenchPartSite site) {
 		super(mode, changeListener, site);
 		fChangeListener = changeListener;
 		if (fChangeListener == null) {
@@ -53,8 +50,7 @@ public class ViewActionGroup extends
 				}
 			};
 		}
-		fFilterActionGroup = new PHPWorkingSetFilterActionGroup(site,
-				fChangeListener);
+		fFilterActionGroup = new PHPWorkingSetFilterActionGroup(site, fChangeListener);
 		fShowActionGroup = new WorkingSetShowActionGroup(site);
 		fMode = mode;
 		if (showWorkingSets())
@@ -88,8 +84,7 @@ public class ViewActionGroup extends
 	}
 
 	private void fillViewMenu(IMenuManager menu) {
-		IMenuManager showMenu = new MenuManager(
-				WorkingSetMessages.ViewActionGroup_show_label);
+		IMenuManager showMenu = new MenuManager(WorkingSetMessages.ViewActionGroup_show_label);
 		fillShowMenu(showMenu);
 		menu.add(showMenu);
 		menu.add(new Separator(IWorkingSetActionGroup.ACTION_GROUP));
@@ -100,8 +95,7 @@ public class ViewActionGroup extends
 		projects.setText(WorkingSetMessages.ViewActionGroup_projects_label);
 		menu.add(projects);
 		ViewAction workingSets = new ViewAction(this, SHOW_WORKING_SETS);
-		workingSets
-				.setText(WorkingSetMessages.ViewActionGroup_workingSets_label);
+		workingSets.setText(WorkingSetMessages.ViewActionGroup_workingSets_label);
 		menu.add(workingSets);
 		if (fMode == SHOW_PROJECTS) {
 			projects.setChecked(true);
@@ -111,8 +105,7 @@ public class ViewActionGroup extends
 	}
 
 	public void fillFilters(StructuredViewer viewer) {
-		ViewerFilter workingSetFilter = fFilterActionGroup
-				.getWorkingSetFilter();
+		ViewerFilter workingSetFilter = fFilterActionGroup.getWorkingSetFilter();
 		if (showProjects()) {
 			viewer.addFilter(workingSetFilter);
 		} else if (showWorkingSets()) {
@@ -126,12 +119,10 @@ public class ViewActionGroup extends
 		PropertyChangeEvent event;
 		if (mode == SHOW_PROJECTS) {
 			fActiveActionGroup = fFilterActionGroup;
-			event = new PropertyChangeEvent(this, MODE_CHANGED,
-					INT_SHOW_WORKING_SETS, INT_SHOW_PROJECTS);
+			event = new PropertyChangeEvent(this, MODE_CHANGED, INT_SHOW_WORKING_SETS, INT_SHOW_PROJECTS);
 		} else {
 			fActiveActionGroup = fShowActionGroup;
-			event = new PropertyChangeEvent(this, MODE_CHANGED,
-					INT_SHOW_PROJECTS, INT_SHOW_WORKING_SETS);
+			event = new PropertyChangeEvent(this, MODE_CHANGED, INT_SHOW_PROJECTS, INT_SHOW_WORKING_SETS);
 		}
 		fActiveActionGroup.fillViewMenu(fMenuManager);
 		fMenuManager.updateAll(true);

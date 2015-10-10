@@ -50,8 +50,7 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal {
 	 *            The image that is displayed for this proposal or
 	 *            <code>null</code> if no image is desired.
 	 */
-	public ASTRewriteCorrectionProposal(String name, ISourceModule cu,
-			ASTRewrite rewrite, int relevance, Image image) {
+	public ASTRewriteCorrectionProposal(String name, ISourceModule cu, ASTRewrite rewrite, int relevance, Image image) {
 		super(name, cu, relevance, image);
 		fRewrite = rewrite;
 	}
@@ -95,8 +94,7 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal {
 	 * org.eclipse.jdt.internal.ui.text.correction.CUCorrectionProposal#addEdits
 	 * (org.eclipse.jface.text.IDocument)
 	 */
-	protected void addEdits(IDocument document, TextEdit editRoot)
-			throws CoreException {
+	protected void addEdits(IDocument document, TextEdit editRoot) throws CoreException {
 		super.addEdits(document, editRoot);
 		ASTRewrite rewrite = getRewrite();
 		if (rewrite != null) {
@@ -104,8 +102,7 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal {
 				TextEdit edit = rewrite.rewriteAST(document, null);
 				editRoot.addChild(edit);
 			} catch (IllegalArgumentException e) {
-				throw new CoreException(DLTKUIStatus.createError(IStatus.ERROR,
-						e));
+				throw new CoreException(DLTKUIStatus.createError(IStatus.ERROR, e));
 			}
 		}
 		// if (fImportRewrite != null) {
@@ -126,8 +123,7 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal {
 	 */
 	protected ASTRewrite getRewrite() throws CoreException {
 		if (fRewrite == null) {
-			IStatus status = DLTKUIStatus.createError(IStatus.ERROR,
-					Messages.ASTRewriteCorrectionProposal_0, null); 
+			IStatus status = DLTKUIStatus.createError(IStatus.ERROR, Messages.ASTRewriteCorrectionProposal_0, null);
 			throw new CoreException(status);
 		}
 		return fRewrite;

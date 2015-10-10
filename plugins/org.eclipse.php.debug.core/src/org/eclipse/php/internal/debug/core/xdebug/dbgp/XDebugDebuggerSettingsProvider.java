@@ -24,19 +24,16 @@ import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsWorkingCopy
  * 
  * @author Bartlomiej Laczkowski
  */
-public class XDebugDebuggerSettingsProvider extends
-		AbstractDebuggerSettingsProvider {
+public class XDebugDebuggerSettingsProvider extends AbstractDebuggerSettingsProvider {
 
-	private class ServerSettingsWorkingCopy extends
-			XDebugDebuggerServerSettings implements
-			IDebuggerSettingsWorkingCopy {
+	private class ServerSettingsWorkingCopy extends XDebugDebuggerServerSettings
+			implements IDebuggerSettingsWorkingCopy {
 
 		private IDebuggerSettings original;
 		private boolean dirty = false;
 
 		protected ServerSettingsWorkingCopy(IDebuggerSettings original) {
-			super(original.getOwnerId(), new HashMap<String, String>(
-					original.getAttributes()));
+			super(original.getOwnerId(), new HashMap<String, String>(original.getAttributes()));
 			this.original = original;
 		}
 
@@ -58,15 +55,13 @@ public class XDebugDebuggerSettingsProvider extends
 
 	}
 
-	private class ExeSettingsWorkingCopy extends XDebugDebuggerExeSettings
-			implements IDebuggerSettingsWorkingCopy {
+	private class ExeSettingsWorkingCopy extends XDebugDebuggerExeSettings implements IDebuggerSettingsWorkingCopy {
 
 		private IDebuggerSettings original;
 		private boolean dirty = false;
 
 		protected ExeSettingsWorkingCopy(IDebuggerSettings original) {
-			super(original.getOwnerId(), new HashMap<String, String>(
-					original.getAttributes()));
+			super(original.getOwnerId(), new HashMap<String, String>(original.getAttributes()));
 			this.original = original;
 		}
 
@@ -91,15 +86,14 @@ public class XDebugDebuggerSettingsProvider extends
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerSettingsProvider
+	 * @see org.eclipse.php.internal.debug.core.debugger.
+	 * AbstractDebuggerSettingsProvider
 	 * #createSettings(org.eclipse.php.internal.debug.core.debugger.
 	 * DebuggerSettingsKind,
 	 * org.eclipse.php.internal.core.IUniqueIdentityElement)
 	 */
 	@Override
-	protected IDebuggerSettings createSettings(DebuggerSettingsKind kind,
-			String ownerId) {
+	protected IDebuggerSettings createSettings(DebuggerSettingsKind kind, String ownerId) {
 		switch (kind) {
 		case PHP_SERVER:
 			return new XDebugDebuggerServerSettings(ownerId);
@@ -114,22 +108,20 @@ public class XDebugDebuggerSettingsProvider extends
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerSettingsProvider
+	 * @see org.eclipse.php.internal.debug.core.debugger.
+	 * AbstractDebuggerSettingsProvider
 	 * #createSettings(org.eclipse.php.internal.debug.core.debugger.
 	 * DebuggerSettingsKind,
 	 * org.eclipse.php.internal.core.IUniqueIdentityElement, java.util.Map)
 	 */
 	@Override
-	protected IDebuggerSettings createSettings(DebuggerSettingsKind kind,
-			String ownerId, Map<String, String> attributes) {
+	protected IDebuggerSettings createSettings(DebuggerSettingsKind kind, String ownerId,
+			Map<String, String> attributes) {
 		switch (kind) {
 		case PHP_SERVER:
-			return new XDebugDebuggerServerSettings(ownerId,
-					Collections.unmodifiableMap(attributes));
+			return new XDebugDebuggerServerSettings(ownerId, Collections.unmodifiableMap(attributes));
 		case PHP_EXE:
-			return new XDebugDebuggerExeSettings(ownerId,
-					Collections.unmodifiableMap(attributes));
+			return new XDebugDebuggerExeSettings(ownerId, Collections.unmodifiableMap(attributes));
 		default:
 			break;
 		}
@@ -145,8 +137,7 @@ public class XDebugDebuggerSettingsProvider extends
 	 * (org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings)
 	 */
 	@Override
-	public IDebuggerSettingsWorkingCopy createWorkingCopy(
-			IDebuggerSettings settings) {
+	public IDebuggerSettingsWorkingCopy createWorkingCopy(IDebuggerSettings settings) {
 		switch (settings.getKind()) {
 		case PHP_SERVER:
 			return new ServerSettingsWorkingCopy(settings);

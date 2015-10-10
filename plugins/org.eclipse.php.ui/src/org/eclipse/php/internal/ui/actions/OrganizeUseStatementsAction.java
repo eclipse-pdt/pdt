@@ -33,8 +33,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  * @see IWorkbenchWindowActionDelegate
  * @author Yannick de Lange <yannickl88@gmail.com>
  */
-public class OrganizeUseStatementsAction
-		implements IWorkbenchWindowActionDelegate {
+public class OrganizeUseStatementsAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 
 	/**
@@ -54,12 +53,10 @@ public class OrganizeUseStatementsAction
 
 		if (input instanceof PHPStructuredEditor) {
 			PHPStructuredEditor ite = (PHPStructuredEditor) input;
-			IDocument doc = ite.getDocumentProvider()
-					.getDocument(ite.getEditorInput());
+			IDocument doc = ite.getDocumentProvider().getDocument(ite.getEditorInput());
 
 			ModuleDeclaration moduleDeclaration = SourceParserUtil
-					.getModuleDeclaration(
-							(ISourceModule) ite.getModelElement());
+					.getModuleDeclaration((ISourceModule) ite.getModelElement());
 
 			DocumentUtils.sortUseStatements(moduleDeclaration, doc);
 		}

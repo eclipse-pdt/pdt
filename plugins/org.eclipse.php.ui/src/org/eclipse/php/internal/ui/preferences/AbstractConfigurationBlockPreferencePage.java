@@ -28,8 +28,8 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
  * 
  * @since 3.0
  */
-public abstract class AbstractConfigurationBlockPreferencePage extends
-		PreferencePage implements IWorkbenchPreferencePage {
+public abstract class AbstractConfigurationBlockPreferencePage extends PreferencePage
+		implements IWorkbenchPreferencePage {
 
 	private IPreferenceConfigurationBlock fConfigurationBlock;
 	private OverlayPreferenceStore fOverlayStore;
@@ -40,8 +40,7 @@ public abstract class AbstractConfigurationBlockPreferencePage extends
 	public AbstractConfigurationBlockPreferencePage() {
 		setDescription();
 		setPreferenceStore();
-		fOverlayStore = new OverlayPreferenceStore(getPreferenceStore(),
-				new OverlayPreferenceStore.OverlayKey[] {});
+		fOverlayStore = new OverlayPreferenceStore(getPreferenceStore(), new OverlayPreferenceStore.OverlayKey[] {});
 		fConfigurationBlock = createConfigurationBlock(fOverlayStore);
 	}
 
@@ -65,8 +64,7 @@ public abstract class AbstractConfigurationBlockPreferencePage extends
 	 */
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
-				getHelpId());
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), getHelpId());
 	}
 
 	/*

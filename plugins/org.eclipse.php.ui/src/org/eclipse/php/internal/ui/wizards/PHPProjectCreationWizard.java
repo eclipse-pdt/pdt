@@ -29,8 +29,7 @@ import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
-public class PHPProjectCreationWizard extends NewElementWizard implements
-		INewWizard, IExecutableExtension {
+public class PHPProjectCreationWizard extends NewElementWizard implements INewWizard, IExecutableExtension {
 
 	public static final String SELECTED_PROJECT = "SelectedProject"; //$NON-NLS-1$
 
@@ -58,36 +57,30 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 
 		// First page
 		fFirstPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_Page1Title);
-		fFirstPage
-				.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page1Description);
+		fFirstPage.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page1Description);
 		addPage(fFirstPage);
 
 		fFacetsPage = new PHPProjectWizardFacetsPage(fFirstPage);
-		fFacetsPage
-				.setTitle(PHPUIMessages.PHPProjectCreationWizard_PageFacetsTitle);
-		fFacetsPage
-				.setDescription(PHPUIMessages.PHPProjectCreationWizard_PageFacetsDescription);
+		fFacetsPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_PageFacetsTitle);
+		fFacetsPage.setDescription(PHPUIMessages.PHPProjectCreationWizard_PageFacetsDescription);
 		addPage(fFacetsPage);
 
 		// Second page (Include Path)
 		fSecondPage = new PHPProjectWizardSecondPage(fFirstPage);
 		fSecondPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_Page2Title);
-		fSecondPage
-				.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page2Description);
+		fSecondPage.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page2Description);
 		addPage(fSecondPage);
 
 		// Third page (Include Path)
 		fThirdPage = new PHPProjectWizardThirdPage(fFirstPage);
 		fThirdPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_Page3Title);
-		fThirdPage
-				.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page3Description);
+		fThirdPage.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page3Description);
 		addPage(fThirdPage);
 
 		fLastPage = fSecondPage;
 	}
 
-	protected void finishPage(IProgressMonitor monitor)
-			throws InterruptedException, CoreException {
+	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
 		if (fFirstPage != null)
 			fFirstPage.performFinish(monitor); // use the full progress monitor
 		if (fSecondPage != null)
@@ -110,8 +103,7 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 				version = ProjectOptions.getDefaultPhpVersion();
 			}
 			try {
-				PHPFacets.createFacetedProject(project, version,
-						new NullProgressMonitor());
+				PHPFacets.createFacetedProject(project, version, new NullProgressMonitor());
 			} catch (CoreException ex) {
 				PHPCorePlugin.log(ex);
 			}
@@ -120,18 +112,15 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 
 			Object eanblement = null;
 			if (model != null) {
-				eanblement = model
-						.getObject("REMOTE_GROUP_REMOTE_PROJECT_ENABLED"); //$NON-NLS-1$
+				eanblement = model.getObject("REMOTE_GROUP_REMOTE_PROJECT_ENABLED"); //$NON-NLS-1$
 			}
 
 			if (model != null && eanblement != null && (Boolean) eanblement) {
 
-				model.putObject(SELECTED_PROJECT, fLastPage.getScriptProject()
-						.getProject());
+				model.putObject(SELECTED_PROJECT, fLastPage.getScriptProject().getProject());
 
-				IRunnableWithProgress run = (IRunnableWithProgress) Platform
-						.getAdapterManager().getAdapter(model,
-								IRunnableWithProgress.class);
+				IRunnableWithProgress run = (IRunnableWithProgress) Platform.getAdapterManager().getAdapter(model,
+						IRunnableWithProgress.class);
 
 				if (run != null) {
 					try {
@@ -152,8 +141,7 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 	 * Stores the configuration element for the wizard. The config element will
 	 * be used in <code>performFinish</code> to set the result perspective.
 	 */
-	public void setInitializationData(IConfigurationElement cfig,
-			String propertyName, Object data) {
+	public void setInitializationData(IConfigurationElement cfig, String propertyName, Object data) {
 		fConfigElement = cfig;
 	}
 

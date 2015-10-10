@@ -35,8 +35,7 @@ public class XMLPreferencesReaderUI extends XMLPreferencesReader {
 	 */
 	public static HashMap[] read(IPreferenceStore store, String prefsKey) {
 		ArrayList maps = new ArrayList();
-		StringTokenizer st = new StringTokenizer(store.getString(prefsKey),
-				new String(new char[] { DELIMITER }));
+		StringTokenizer st = new StringTokenizer(store.getString(prefsKey), new String(new char[] { DELIMITER }));
 		while (st.hasMoreTokens()) {
 			maps.add(read(st.nextToken()));
 		}
@@ -53,11 +52,9 @@ public class XMLPreferencesReaderUI extends XMLPreferencesReader {
 	 * @param workingCopyManager
 	 * @return
 	 */
-	public static HashMap[] read(Key prefKey, ProjectScope projectScope,
-			IWorkingCopyManager workingCopyManager) {
+	public static HashMap[] read(Key prefKey, ProjectScope projectScope, IWorkingCopyManager workingCopyManager) {
 
-		String storedValue = prefKey.getStoredValue(projectScope,
-				workingCopyManager);
+		String storedValue = prefKey.getStoredValue(projectScope, workingCopyManager);
 		if (storedValue == null)
 			storedValue = STRING_DEFAULT;
 		return getHashFromStoredValue(storedValue);

@@ -21,6 +21,7 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.server.core.manager.messages"; //$NON-NLS-1$
 	public static String ServersManager_Saving_upgraded_configurations;
 	public static String ServersManager_Upgrading_server_configurations;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

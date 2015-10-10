@@ -11,22 +11,17 @@ import org.eclipse.debug.ui.actions.IWatchExpressionFactoryAdapter;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
 import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionsUtil;
 
-public class WatchExpressionFactoryAdapter implements
-		IWatchExpressionFactoryAdapter {
+public class WatchExpressionFactoryAdapter implements IWatchExpressionFactoryAdapter {
 
 	private final String STATIC_MEMBER_PATTERN = "{0}::${1}"; //$NON-NLS-1$
 
-	public String createWatchExpression(IVariable variable)
-			throws CoreException {
+	public String createWatchExpression(IVariable variable) throws CoreException {
 		if (variable instanceof PHPVariable) {
 			PHPVariable phpVariable = (PHPVariable) variable;
-			Expression expression = (Expression) phpVariable
-					.getAdapter(Expression.class);
+			Expression expression = (Expression) phpVariable.getAdapter(Expression.class);
 			if (expression.hasFacet(MOD_STATIC)) {
-				String className = ExpressionsUtil
-						.fetchStaticMemberClassName(expression);
-				return MessageFormat.format(STATIC_MEMBER_PATTERN, className,
-						expression.getLastName());
+				String className = ExpressionsUtil.fetchStaticMemberClassName(expression);
+				return MessageFormat.format(STATIC_MEMBER_PATTERN, className, expression.getLastName());
 			}
 		}
 		IValue value = variable.getValue();

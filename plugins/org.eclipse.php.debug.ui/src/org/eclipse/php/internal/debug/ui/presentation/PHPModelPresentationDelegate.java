@@ -62,9 +62,8 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.IDebugModelPresentation#setAttribute(java.lang.String
-	 * , java.lang.Object)
+	 * @see org.eclipse.debug.ui.IDebugModelPresentation#setAttribute(java.lang.
+	 * String , java.lang.Object)
 	 */
 	public void setAttribute(String attribute, Object value) {
 		getPresentation().setAttribute(attribute, value);
@@ -136,8 +135,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	// Returns the best match presentation.
 	private IDebugModelPresentation getPresentation() {
 		if (bestMatchPresentation == null) {
-			bestMatchPresentation = PHPModelPresentationRegistry
-					.getBestMatchPresentation();
+			bestMatchPresentation = PHPModelPresentationRegistry.getBestMatchPresentation();
 		}
 		return bestMatchPresentation;
 	}

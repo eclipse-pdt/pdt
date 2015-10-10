@@ -48,7 +48,7 @@ public interface IQuickAssistProcessor {
 	 * @throws CoreException
 	 *             CoreException can be thrown if the operation fails
 	 */
-	IScriptCompletionProposal[] getAssists(IInvocationContext context,
-			IProblemLocation[] locations) throws CoreException;
+	IScriptCompletionProposal[] getAssists(IInvocationContext context, IProblemLocation[] locations)
+			throws CoreException;
 
 }

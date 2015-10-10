@@ -47,8 +47,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 
-public class PHPSelectionTransferDropAdapter extends
-		SelectionTransferDropAdapter {
+public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapter {
 
 	public PHPSelectionTransferDropAdapter(StructuredViewer viewer) {
 		super(viewer);
@@ -68,15 +67,11 @@ public class PHPSelectionTransferDropAdapter extends
 				break;
 			}
 		} catch (ModelException e) {
-			ExceptionHandler.handle(e,
-					ScriptMessages.SelectionTransferDropAdapter_error_title,
+			ExceptionHandler.handle(e, ScriptMessages.SelectionTransferDropAdapter_error_title,
 					ScriptMessages.SelectionTransferDropAdapter_error_message);
 		} catch (InvocationTargetException e) {
-			ExceptionHandler
-					.handle(
-							e,
-							RefactoringMessages.OpenRefactoringWizardAction_refactoring,
-							RefactoringMessages.OpenRefactoringWizardAction_exception);
+			ExceptionHandler.handle(e, RefactoringMessages.OpenRefactoringWizardAction_refactoring,
+					RefactoringMessages.OpenRefactoringWizardAction_exception);
 		} catch (InterruptedException e) {
 			// ok
 		}
@@ -87,8 +82,8 @@ public class PHPSelectionTransferDropAdapter extends
 
 	}
 
-	private void handleDropMove(final Object target) throws ModelException,
-			InvocationTargetException, InterruptedException {
+	private void handleDropMove(final Object target)
+			throws ModelException, InvocationTargetException, InterruptedException {
 		List<?> elements = ((IStructuredSelection) getSelection()).toList();
 		IResource[] resources = getResources(elements);
 
@@ -109,18 +104,16 @@ public class PHPSelectionTransferDropAdapter extends
 		action.run((Action) null);
 	}
 
-	private void handleDropCopy(final Object target) throws ModelException,
-			InvocationTargetException, InterruptedException {
+	private void handleDropCopy(final Object target)
+			throws ModelException, InvocationTargetException, InterruptedException {
 		List elements = ((IStructuredSelection) getSelection()).toList();
 		IModelElement[] modelElements = ReorgUtils.getModelElements(elements);
 		IResource[] resources = getResources(modelElements);
 		ReorgCopyStarter starter = null;
 		if (target instanceof IModelElement) {
-			starter = ReorgCopyStarter.create(modelElements, resources,
-					(IModelElement) target);
+			starter = ReorgCopyStarter.create(modelElements, resources, (IModelElement) target);
 		} else if (target instanceof IResource) {
-			starter = ReorgCopyStarter.create(modelElements, resources,
-					(IResource) target);
+			starter = ReorgCopyStarter.create(modelElements, resources, (IResource) target);
 		}
 
 		if (starter != null)
@@ -135,8 +128,7 @@ public class PHPSelectionTransferDropAdapter extends
 				resultArray.add(res);
 			}
 		}
-		return (IResource[]) resultArray.toArray(new IResource[resultArray
-				.size()]);
+		return (IResource[]) resultArray.toArray(new IResource[resultArray.size()]);
 	}
 
 	public IResource getResource(IModelElement element) {
@@ -195,8 +187,7 @@ public class PHPSelectionTransferDropAdapter extends
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean validateDrop(Object target, int operation,
-			TransferData transferType) {
+	public boolean validateDrop(Object target, int operation, TransferData transferType) {
 		return determineOperation(target, operation, transferType,
 				DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_COPY) != DND.DROP_NONE;
 	}
@@ -204,8 +195,7 @@ public class PHPSelectionTransferDropAdapter extends
 	/**
 	 * {@inheritDoc}
 	 */
-	protected int determineOperation(Object target, int operation,
-			TransferData transferType, int operations) {
+	protected int determineOperation(Object target, int operation, TransferData transferType, int operations) {
 		int result = internalDetermineOperation(target, operation, operations);
 
 		if (result == DND.DROP_NONE) {
@@ -217,8 +207,7 @@ public class PHPSelectionTransferDropAdapter extends
 		return result;
 	}
 
-	private int internalDetermineOperation(Object target, int operation,
-			int operations) {
+	private int internalDetermineOperation(Object target, int operation, int operations) {
 
 		initializeSelection();
 
@@ -228,8 +217,7 @@ public class PHPSelectionTransferDropAdapter extends
 		IResource[] resources = getResources(fElements);
 		// Do not allow to drop on itself, bug 14228
 		if (getCurrentLocation() == LOCATION_ON) {
-			IModelElement[] javaElements = ReorgUtils
-					.getModelElements(fElements);
+			IModelElement[] javaElements = ReorgUtils.getModelElements(fElements);
 			if (contains(javaElements, target))
 				return DND.DROP_NONE;
 
@@ -238,10 +226,8 @@ public class PHPSelectionTransferDropAdapter extends
 		}
 
 		if (target instanceof IModelElement) {
-			IResource targetResource = ReorgUtils
-					.getResource((IModelElement) target);
-			if ((targetResource instanceof IContainer)
-					&& isParentOfAny((IContainer) targetResource, resources)) {
+			IResource targetResource = ReorgUtils.getResource((IModelElement) target);
+			if ((targetResource instanceof IContainer) && isParentOfAny((IContainer) targetResource, resources)) {
 				return DND.DROP_NONE;
 			}
 
@@ -257,8 +243,7 @@ public class PHPSelectionTransferDropAdapter extends
 				return handleValidateMove(target);
 			}
 		} catch (ModelException e) {
-			ExceptionHandler.handle(e,
-					ScriptMessages.SelectionTransferDropAdapter_error_title,
+			ExceptionHandler.handle(e, ScriptMessages.SelectionTransferDropAdapter_error_title,
 					ScriptMessages.SelectionTransferDropAdapter_error_message);
 		}
 
@@ -324,8 +309,7 @@ public class PHPSelectionTransferDropAdapter extends
 		return fSelection;
 	}
 
-	private int handleValidateDefault(Object target, int operations)
-			throws ModelException {
+	private int handleValidateDefault(Object target, int operations) throws ModelException {
 		if ((operations & DND.DROP_MOVE) != 0) {
 			int result = handleValidateMove(target);
 			if (result != DND.DROP_NONE)
@@ -337,9 +321,8 @@ public class PHPSelectionTransferDropAdapter extends
 
 	private int handleValidateMove(Object target) throws ModelException {
 		if (fMoveProcessor == null) {
-			IMovePolicy policy = ReorgPolicyFactory.createMovePolicy(
-					getResources(fElements), ReorgUtils
-							.getModelElements(fElements));
+			IMovePolicy policy = ReorgPolicyFactory.createMovePolicy(getResources(fElements),
+					ReorgUtils.getModelElements(fElements));
 			if (policy.canEnable())
 				fMoveProcessor = new ScriptMoveProcessor(policy);
 		}
@@ -380,11 +363,9 @@ public class PHPSelectionTransferDropAdapter extends
 	private int handleValidateCopy(Object target) throws ModelException {
 
 		if (fCopyProcessor == null) {
-			final ICopyPolicy policy = ReorgPolicyFactory.createCopyPolicy(
-					getResources(fElements), ReorgUtils
-							.getModelElements(fElements));
-			fCopyProcessor = policy.canEnable() ? new ScriptCopyProcessor(
-					policy) : null;
+			final ICopyPolicy policy = ReorgPolicyFactory.createCopyPolicy(getResources(fElements),
+					ReorgUtils.getModelElements(fElements));
+			fCopyProcessor = policy.canEnable() ? new ScriptCopyProcessor(policy) : null;
 		}
 
 		if (!canCopyElements())

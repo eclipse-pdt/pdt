@@ -21,16 +21,15 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Position;
 
-public class DummyDocument implements IDocument{
+public class DummyDocument implements IDocument {
 
 	@Override
 	public void addDocumentListener(IDocumentListener listener) {
-		
+
 	}
 
 	@Override
-	public void addDocumentPartitioningListener(
-			IDocumentPartitioningListener listener) {
+	public void addDocumentPartitioningListener(IDocumentPartitioningListener listener) {
 	}
 
 	@Override
@@ -51,8 +50,7 @@ public class DummyDocument implements IDocument{
 	}
 
 	@Override
-	public void addPrenotifiedDocumentListener(
-			IDocumentListener documentAdapter) {
+	public void addPrenotifiedDocumentListener(IDocumentListener documentAdapter) {
 	}
 
 	@Override
@@ -67,8 +65,7 @@ public class DummyDocument implements IDocument{
 	}
 
 	@Override
-	public ITypedRegion[] computePartitioning(int offset, int length)
-			throws BadLocationException {
+	public ITypedRegion[] computePartitioning(int offset, int length) throws BadLocationException {
 		return null;
 	}
 
@@ -133,8 +130,7 @@ public class DummyDocument implements IDocument{
 	}
 
 	@Override
-	public IRegion getLineInformationOfOffset(int offset)
-			throws BadLocationException {
+	public IRegion getLineInformationOfOffset(int offset) throws BadLocationException {
 		return null;
 	}
 
@@ -159,14 +155,12 @@ public class DummyDocument implements IDocument{
 	}
 
 	@Override
-	public int getNumberOfLines(int offset, int length)
-			throws BadLocationException {
+	public int getNumberOfLines(int offset, int length) throws BadLocationException {
 		return 0;
 	}
 
 	@Override
-	public ITypedRegion getPartition(int offset)
-			throws BadLocationException {
+	public ITypedRegion getPartition(int offset) throws BadLocationException {
 		return null;
 	}
 
@@ -181,8 +175,7 @@ public class DummyDocument implements IDocument{
 	}
 
 	@Override
-	public Position[] getPositions(String category)
-			throws BadPositionCategoryException {
+	public Position[] getPositions(String category) throws BadPositionCategoryException {
 		return null;
 	}
 
@@ -195,8 +188,7 @@ public class DummyDocument implements IDocument{
 	}
 
 	@Override
-	public void removeDocumentPartitioningListener(
-			IDocumentPartitioningListener listener) {
+	public void removeDocumentPartitioningListener(IDocumentPartitioningListener listener) {
 	}
 
 	@Override
@@ -204,13 +196,11 @@ public class DummyDocument implements IDocument{
 	}
 
 	@Override
-	public void removePosition(String category, Position position)
-			throws BadPositionCategoryException {
+	public void removePosition(String category, Position position) throws BadPositionCategoryException {
 	}
 
 	@Override
-	public void removePositionCategory(String category)
-			throws BadPositionCategoryException {
+	public void removePositionCategory(String category) throws BadPositionCategoryException {
 	}
 
 	@Override
@@ -218,19 +208,16 @@ public class DummyDocument implements IDocument{
 	}
 
 	@Override
-	public void removePrenotifiedDocumentListener(
-			IDocumentListener documentAdapter) {
+	public void removePrenotifiedDocumentListener(IDocumentListener documentAdapter) {
 	}
 
 	@Override
-	public void replace(int offset, int length, String text)
-			throws BadLocationException {
+	public void replace(int offset, int length, String text) throws BadLocationException {
 	}
 
 	@Override
-	public int search(int startOffset, String findString,
-			boolean forwardSearch, boolean caseSensitive, boolean wholeWord)
-			throws BadLocationException {
+	public int search(int startOffset, String findString, boolean forwardSearch, boolean caseSensitive,
+			boolean wholeWord) throws BadLocationException {
 		return 0;
 	}
 

@@ -40,8 +40,7 @@ public class SemanticHighlightingManager {
 	private SemanticHighlightingManager() {
 		super();
 		IConfigurationElement[] elements = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(
-						"org.eclipse.wst.sse.ui.semanticHighlighting"); //$NON-NLS-1$
+				.getConfigurationElementsFor("org.eclipse.wst.sse.ui.semanticHighlighting"); //$NON-NLS-1$
 		try {
 			loadContributor(elements);
 			// Sort the contributors according to their priority
@@ -55,8 +54,7 @@ public class SemanticHighlightingManager {
 		}
 	}
 
-	private SemanticHighlightingManager loadContributor(
-			IConfigurationElement[] elements) throws Exception {
+	private SemanticHighlightingManager loadContributor(IConfigurationElement[] elements) throws Exception {
 		for (IConfigurationElement element : elements) {
 			String target = element.getAttribute("target"); //$NON-NLS-1$
 			if ("org.eclipse.php.core.phpsource".equals(target)) { //$NON-NLS-1$
@@ -81,26 +79,19 @@ public class SemanticHighlightingManager {
 	 *            The preference store
 	 */
 	public SemanticHighlightingManager initDefaults(IPreferenceStore store) {
-		Collection<AbstractSemanticHighlighting> semanticHighlightings = highlightings
-				.values();
+		Collection<AbstractSemanticHighlighting> semanticHighlightings = highlightings.values();
 		for (AbstractSemanticHighlighting rule : semanticHighlightings) {
 			rule.initDefaultPreferences();
 			SemanticHighlightingStyle style = rule.getStyle();
-			setDefaultAndFireEvent(store, rule.getColorPreferenceKey(),
-					style.getDefaultTextColor());
+			setDefaultAndFireEvent(store, rule.getColorPreferenceKey(), style.getDefaultTextColor());
 			// setDefaultAndFireEvent(store,
 			// rule.getBackgroundColorPreferenceKey(), style
 			// .);
-			store.setDefault(rule.getBoldPreferenceKey(),
-					style.isBoldByDefault());
-			store.setDefault(rule.getItalicPreferenceKey(),
-					style.isItalicByDefault());
-			store.setDefault(rule.getStrikethroughPreferenceKey(),
-					style.isStrikethroughByDefault());
-			store.setDefault(rule.getUnderlinePreferenceKey(),
-					style.isUnderlineByDefault());
-			store.setDefault(rule.getEnabledPreferenceKey(),
-					style.isEnabledByDefault());
+			store.setDefault(rule.getBoldPreferenceKey(), style.isBoldByDefault());
+			store.setDefault(rule.getItalicPreferenceKey(), style.isItalicByDefault());
+			store.setDefault(rule.getStrikethroughPreferenceKey(), style.isStrikethroughByDefault());
+			store.setDefault(rule.getUnderlinePreferenceKey(), style.isUnderlineByDefault());
+			store.setDefault(rule.getEnabledPreferenceKey(), style.isEnabledByDefault());
 		}
 		return this;
 	}
@@ -115,8 +106,7 @@ public class SemanticHighlightingManager {
 	 * @param newValue
 	 *            the new value
 	 */
-	private static void setDefaultAndFireEvent(IPreferenceStore store,
-			String key, RGB newValue) {
+	private static void setDefaultAndFireEvent(IPreferenceStore store, String key, RGB newValue) {
 		RGB oldValue = null;
 		if (store.isDefault(key))
 			oldValue = PreferenceConverter.getDefaultColor(store, key);

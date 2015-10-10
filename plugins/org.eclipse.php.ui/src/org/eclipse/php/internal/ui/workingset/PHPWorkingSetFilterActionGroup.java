@@ -27,13 +27,11 @@ public class PHPWorkingSetFilterActionGroup extends WorkingSetFilterActionGroup 
 
 	private PHPWorkingSetFilter fWorkingSetFilter;
 
-	public PHPWorkingSetFilterActionGroup(IWorkbenchPartSite site,
-			IPropertyChangeListener changeListener) {
+	public PHPWorkingSetFilterActionGroup(IWorkbenchPartSite site, IPropertyChangeListener changeListener) {
 		super(site, changeListener);
 	}
 
-	public PHPWorkingSetFilterActionGroup(Shell shell, IWorkbenchPage page,
-			IPropertyChangeListener changeListener) {
+	public PHPWorkingSetFilterActionGroup(Shell shell, IWorkbenchPage page, IPropertyChangeListener changeListener) {
 		super(shell, page, changeListener);
 	}
 

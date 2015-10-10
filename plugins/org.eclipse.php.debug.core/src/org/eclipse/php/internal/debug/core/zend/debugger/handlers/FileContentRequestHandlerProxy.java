@@ -52,8 +52,7 @@ public class FileContentRequestHandlerProxy implements IDebugRequestHandler {
 
 	private IDebugRequestHandler getHandler() {
 		if (handler == null) {
-			if (debugTarget.getRemoteDebugger()
-					.canDo(IDebugFeatures.START_PROCESS_FILE_NOTIFICATION)) {
+			if (debugTarget.getRemoteDebugger().canDo(IDebugFeatures.START_PROCESS_FILE_NOTIFICATION)) {
 				handler = new FileContentRequestCurrentHandler();
 			} else {
 				handler = new FileContentRequestStaleHandler();

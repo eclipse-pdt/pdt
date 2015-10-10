@@ -12,8 +12,7 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.wizards.datatransfer.DataTransferMessages;
 import org.eclipse.ui.internal.wizards.datatransfer.ILeveledImportStructureProvider;
 
-public class PharLeveledStructureProvider implements
-		ILeveledImportStructureProvider {
+public class PharLeveledStructureProvider implements ILeveledImportStructureProvider {
 	private PharFile tarFile;
 
 	private PharEntry root = new PharEntry();
@@ -80,8 +79,7 @@ public class PharLeveledStructureProvider implements
 		if (pathname.segmentCount() == 1) {
 			parent = root;
 		} else {
-			parent = (PharEntry) directoryEntryCache.get(pathname
-					.removeLastSegments(1));
+			parent = (PharEntry) directoryEntryCache.get(pathname.removeLastSegments(1));
 		}
 
 		List childList = (List) children.get(parent);
@@ -140,8 +138,7 @@ public class PharLeveledStructureProvider implements
 			return ((PharEntry) element).getName();
 		}
 
-		return stripPath(new Path(((PharEntry) element).getName())
-				.lastSegment());
+		return stripPath(new Path(((PharEntry) element).getName()).lastSegment());
 	}
 
 	/**
@@ -165,16 +162,14 @@ public class PharLeveledStructureProvider implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.internal.wizards.datatransfer.ILeveledImportStructureProvider
-	 * #closeArchive()
+	 * @see org.eclipse.ui.internal.wizards.datatransfer.
+	 * ILeveledImportStructureProvider #closeArchive()
 	 */
 	public boolean closeArchive() {
 		try {
 			getPharFile().close();
 		} catch (IOException e) {
-			IDEWorkbenchPlugin.log(DataTransferMessages.ZipImport_couldNotClose
-					+ getPharFile().getName(), e);
+			IDEWorkbenchPlugin.log(DataTransferMessages.ZipImport_couldNotClose + getPharFile().getName(), e);
 			return false;
 		}
 		return true;
@@ -188,8 +183,7 @@ public class PharLeveledStructureProvider implements
 		children = new HashMap(1000);
 
 		children.put(root, new ArrayList());
-		Iterator<PharEntry> entries = tarFile.getPharEntryMap().values()
-				.iterator();
+		Iterator<PharEntry> entries = tarFile.getPharEntryMap().values().iterator();
 		while (entries.hasNext()) {
 			PharEntry entry = (PharEntry) entries.next();
 			IPath path = new Path(entry.getName()).addTrailingSeparator();

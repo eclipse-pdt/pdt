@@ -30,8 +30,7 @@ public class CheckedTreeListDialogField extends TreeListDialogField {
 
 	private List fCheckElements;
 
-	public CheckedTreeListDialogField(ITreeListAdapter adapter,
-			String[] buttonLabels, ILabelProvider lprovider) {
+	public CheckedTreeListDialogField(ITreeListAdapter adapter, String[] buttonLabels, ILabelProvider lprovider) {
 		super(adapter, buttonLabels, lprovider);
 
 		fCheckElements = new ArrayList();
@@ -72,8 +71,7 @@ public class CheckedTreeListDialogField extends TreeListDialogField {
 		// TODO Auto-generated method stub
 		Tree tree = new Tree(parent, SWT.CHECK + getTreeStyle());
 		tree.setFont(parent.getFont());
-		ContainerCheckedTreeViewer treeViewer = new ContainerCheckedTreeViewer(
-				tree);
+		ContainerCheckedTreeViewer treeViewer = new ContainerCheckedTreeViewer(tree);
 		treeViewer.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent e) {
 				doCheckStateChanged(e);
@@ -85,15 +83,13 @@ public class CheckedTreeListDialogField extends TreeListDialogField {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.wizards.fields.TreeListDialogField#getTreeControl
-	 * (org.eclipse.swt.widgets.Composite)
+	 * @see org.eclipse.php.internal.ui.wizards.fields.TreeListDialogField#
+	 * getTreeControl (org.eclipse.swt.widgets.Composite)
 	 */
 	public Control getTreeControl(Composite parent) {
 		Control control = super.getTreeControl(parent);
 		if (parent != null) {
-			((ContainerCheckedTreeViewer) fTree)
-					.setCheckedElements(fCheckElements.toArray());
+			((ContainerCheckedTreeViewer) fTree).setCheckedElements(fCheckElements.toArray());
 		}
 		return control;
 	}
@@ -124,8 +120,7 @@ public class CheckedTreeListDialogField extends TreeListDialogField {
 	public List getCheckedElements() {
 		if (isOkToUse(fTreeControl)) {
 			// workaround for bug 53853
-			Object[] checked = ((ContainerCheckedTreeViewer) fTree)
-					.getCheckedElements();
+			Object[] checked = ((ContainerCheckedTreeViewer) fTree).getCheckedElements();
 			ArrayList res = new ArrayList(checked.length);
 			for (int i = 0; i < checked.length; i++) {
 				res.add(checked[i]);
@@ -163,8 +158,7 @@ public class CheckedTreeListDialogField extends TreeListDialogField {
 			fCheckElements.addAll(list);
 		}
 		if (isOkToUse(fTreeControl)) {
-			((ContainerCheckedTreeViewer) fTree).setCheckedElements(list
-					.toArray());
+			((ContainerCheckedTreeViewer) fTree).setCheckedElements(list.toArray());
 		}
 		checkStateChanged();
 	}
@@ -221,12 +215,10 @@ public class CheckedTreeListDialogField extends TreeListDialogField {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.wizards.fields.TreeListDialogField#replaceElement
-	 * (java.lang.Object, java.lang.Object)
+	 * @see org.eclipse.php.internal.ui.wizards.fields.TreeListDialogField#
+	 * replaceElement (java.lang.Object, java.lang.Object)
 	 */
-	public void replaceElement(Object oldElement, Object newElement)
-			throws IllegalArgumentException {
+	public void replaceElement(Object oldElement, Object newElement) throws IllegalArgumentException {
 		boolean wasChecked = isChecked(oldElement);
 		super.replaceElement(oldElement, newElement);
 		setChecked(newElement, wasChecked);

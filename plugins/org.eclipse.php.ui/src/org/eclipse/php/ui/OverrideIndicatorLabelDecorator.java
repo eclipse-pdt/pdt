@@ -36,8 +36,7 @@ import org.eclipse.swt.graphics.Rectangle;
  * 
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class OverrideIndicatorLabelDecorator implements ILabelDecorator,
-		ILightweightLabelDecorator {
+public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightweightLabelDecorator {
 
 	private ImageDescriptorRegistry fRegistry;
 	private boolean fUseNewRegistry = false;
@@ -71,8 +70,7 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator,
 
 	private ImageDescriptorRegistry getRegistry() {
 		if (fRegistry == null) {
-			fRegistry = fUseNewRegistry ? new ImageDescriptorRegistry()
-					: PHPUiPlugin.getImageDescriptorRegistry();
+			fRegistry = fUseNewRegistry ? new ImageDescriptorRegistry() : PHPUiPlugin.getImageDescriptorRegistry();
 		}
 		return fRegistry;
 	}
@@ -99,9 +97,8 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator,
 		if (adornmentFlags != 0) {
 			ImageDescriptor baseImage = new ImageImageDescriptor(image);
 			Rectangle bounds = image.getBounds();
-			return getRegistry().get(
-					new ScriptElementImageDescriptor(baseImage, adornmentFlags,
-							new Point(bounds.width, bounds.height)));
+			return getRegistry().get(new ScriptElementImageDescriptor(baseImage, adornmentFlags,
+					new Point(bounds.width, bounds.height)));
 		}
 		return image;
 	}
@@ -126,8 +123,7 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator,
 					return 0;
 				}
 				int flags = method.getFlags();
-				if (!method.isConstructor() && !Flags.isPrivate(flags)
-						&& !Flags.isStatic(flags)) {
+				if (!method.isConstructor() && !Flags.isPrivate(flags) && !Flags.isStatic(flags)) {
 					int res = getOverrideIndicators(method);
 					return res;
 				}
@@ -156,10 +152,8 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator,
 	 * 
 	 * @noreference This method is not intended to be referenced by clients.
 	 */
-	protected int getOverrideIndicators(IMethod method) throws ModelException,
-			IOException {
-		Program astRoot = SharedASTProvider.getAST(method.getSourceModule(),
-				SharedASTProvider.WAIT_NO, null);
+	protected int getOverrideIndicators(IMethod method) throws ModelException, IOException {
+		Program astRoot = SharedASTProvider.getAST(method.getSourceModule(), SharedASTProvider.WAIT_NO, null);
 		// XXX: WAIT_NO (instead of WAIT_ACTIVE_ONLY) due bug 443712 and until
 		// bug 438661 will be fixed (PHPReconcilingStrategy require access to
 		// UI thread)
@@ -173,10 +167,8 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator,
 		IType type = method.getDeclaringType();
 
 		if (type != null) {
-			MethodOverrideTester methodOverrideTester = SuperTypeHierarchyCache
-					.getMethodOverrideTester(type);
-			IMethod defining = methodOverrideTester.findOverriddenMethod(
-					method, true);
+			MethodOverrideTester methodOverrideTester = SuperTypeHierarchyCache.getMethodOverrideTester(type);
+			IMethod defining = methodOverrideTester.findOverriddenMethod(method, true);
 			if (defining != null) {
 				if (isAbstract(defining)) {
 					return ScriptElementImageDescriptor.IMPLEMENTS;
@@ -188,19 +180,13 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator,
 		return 0;
 	}
 
-	private int findInHierarchyWithAST(Program astRoot, IMethod method)
-			throws ModelException {
-		SourceRange range = new SourceRange(
-				method.getSourceRange().getOffset(), method.getSourceRange()
-						.getLength());
+	private int findInHierarchyWithAST(Program astRoot, IMethod method) throws ModelException {
+		SourceRange range = new SourceRange(method.getSourceRange().getOffset(), method.getSourceRange().getLength());
 		ASTNode node = NodeFinder.perform(astRoot, range);
-		if (node instanceof Identifier
-				&& node.getParent() instanceof MethodDeclaration) {
-			IMethodBinding binding = ((MethodDeclaration) node.getParent())
-					.resolveMethodBinding();
+		if (node instanceof Identifier && node.getParent() instanceof MethodDeclaration) {
+			IMethodBinding binding = ((MethodDeclaration) node.getParent()).resolveMethodBinding();
 			if (binding != null) {
-				IMethodBinding defining = Bindings.findOverriddenMethod(
-						binding, true);
+				IMethodBinding defining = Bindings.findOverriddenMethod(binding, true);
 				if (defining != null) {
 					if (isAbstract(defining)) {
 						return ScriptElementImageDescriptor.IMPLEMENTS;

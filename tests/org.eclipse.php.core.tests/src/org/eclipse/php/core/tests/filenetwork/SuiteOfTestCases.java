@@ -53,16 +53,13 @@ public abstract class SuiteOfTestCases extends TestCase {
 		 * @param theClass
 		 * @param methodNames
 		 */
-		public Suite(Class<? extends SuiteOfTestCases> theClass,
-				String... methodNames) {
+		public Suite(Class<? extends SuiteOfTestCases> theClass, String... methodNames) {
 			super(theClass.getName());
 			for (int i = 0; i < methodNames.length; ++i) {
 				final String methodName = methodNames[i];
 				try {
-					final Method method = theClass.getMethod(methodName,
-							new Class[0]);
-					if (Modifier.isPublic(method.getModifiers())
-							&& !Modifier.isStatic(method.getModifiers())) {
+					final Method method = theClass.getMethod(methodName, new Class[0]);
+					if (Modifier.isPublic(method.getModifiers()) && !Modifier.isStatic(method.getModifiers())) {
 						addTest(createTest(theClass, methodName));
 					} else {
 						warning(methodName, "Wrong modifiers");
@@ -89,16 +86,14 @@ public abstract class SuiteOfTestCases extends TestCase {
 
 		void initialize(SuiteOfTestCases test) {
 			Class<?> currentClass = test.getClass();
-			while (currentClass != null
-					&& !currentClass.equals(SuiteOfTestCases.class)) {
+			while (currentClass != null && !currentClass.equals(SuiteOfTestCases.class)) {
 				Field[] fields = currentClass.getDeclaredFields();
 				for (int i = 0, length = fields.length; i < length; i++) {
 					Field field = fields[i];
 
 					// skip static and final fields
 					int modifiers = field.getModifiers();
-					if (Modifier.isStatic(modifiers)
-							|| Modifier.isFinal(modifiers))
+					if (Modifier.isStatic(modifiers) || Modifier.isFinal(modifiers))
 						continue;
 
 					// make the field accessible

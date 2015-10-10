@@ -31,13 +31,11 @@ import org.eclipse.swt.widgets.Composite;
 public class RenameFileWizard extends RenameRefactoringWizard {
 
 	public RenameFileWizard(Refactoring refactoring) {
-		super(
-				refactoring,
-				PHPRefactoringUIMessages.getString("RenameFileWizard.0"), PHPRefactoringUIMessages.getString("RenameGlobalVariableWizard_inputPageDescription"), null, null); //$NON-NLS-1$//$NON-NLS-2$
+		super(refactoring, PHPRefactoringUIMessages.getString("RenameFileWizard.0"), //$NON-NLS-1$
+				PHPRefactoringUIMessages.getString("RenameGlobalVariableWizard_inputPageDescription"), null, null); //$NON-NLS-1$
 	}
 
-	protected RenameInputWizardPage createInputPage(String message,
-			String initialSetting) {
+	protected RenameInputWizardPage createInputPage(String message, String initialSetting) {
 		return new RenameInputWizardPage(message, null, true, initialSetting) {
 
 			private static final String UPDATE_REFERENCES = "updateReferences"; //$NON-NLS-1$
@@ -49,55 +47,41 @@ public class RenameFileWizard extends RenameRefactoringWizard {
 			}
 
 			@Override
-			protected void addAdditionalOptions(Composite composite,
-					RowLayouter layouter) {
+			protected void addAdditionalOptions(Composite composite, RowLayouter layouter) {
 				final IReferenceUpdating refactoring = (IReferenceUpdating) getRefactoring()
 						.getAdapter(IReferenceUpdating.class);
-				String title = PHPRefactoringUIMessages
-						.getString("RenameFileWizard.1"); //$NON-NLS-1$
-				boolean defaultValue = getBooleanSetting(UPDATE_REFERENCES,
-						refactoring.getUpdateReferences());
-				fUpdateReferences = createCheckbox(composite, title,
-						defaultValue, layouter);
+				String title = PHPRefactoringUIMessages.getString("RenameFileWizard.1"); //$NON-NLS-1$
+				boolean defaultValue = getBooleanSetting(UPDATE_REFERENCES, refactoring.getUpdateReferences());
+				fUpdateReferences = createCheckbox(composite, title, defaultValue, layouter);
 				// the default is update references
 				fUpdateReferences.setSelection(true);
 				refactoring.setUpdateRefernces(true);
 				getRefactoringWizard().setForcePreviewReview(true);
 				fUpdateReferences.addSelectionListener(new SelectionAdapter() {
 					public void widgetSelected(SelectionEvent e) {
-						refactoring.setUpdateRefernces(fUpdateReferences
-								.getSelection());
+						refactoring.setUpdateRefernces(fUpdateReferences.getSelection());
 						updateForcePreview();
 					}
 				});
 
-				String updateClass = refactoring
-						.getAttribute(RenameFileProcessor.NEEDUPDATECLASSNAME);
+				String updateClass = refactoring.getAttribute(RenameFileProcessor.NEEDUPDATECLASSNAME);
 
 				if (updateClass != null && Boolean.valueOf(updateClass)) {
 					defaultValue = true;
-					fUPdateClassName = createCheckbox(
-							composite,
-							PHPRefactoringUIMessages
-									.getString("RenameFileWizard.3"), defaultValue, layouter); //$NON-NLS-1$
+					fUPdateClassName = createCheckbox(composite,
+							PHPRefactoringUIMessages.getString("RenameFileWizard.3"), defaultValue, layouter); //$NON-NLS-1$
 					// the default is update references
 					fUPdateClassName.setSelection(true);
-					refactoring
-							.setAttribute(RenameFileProcessor.UPDATECLASSNAME,
-									Boolean.toString((fUPdateClassName
-											.getSelection())));
+					refactoring.setAttribute(RenameFileProcessor.UPDATECLASSNAME,
+							Boolean.toString((fUPdateClassName.getSelection())));
 					getRefactoringWizard().setForcePreviewReview(true);
-					fUPdateClassName
-							.addSelectionListener(new SelectionAdapter() {
-								public void widgetSelected(SelectionEvent e) {
-									refactoring
-											.setAttribute(
-													RenameFileProcessor.UPDATECLASSNAME,
-													Boolean.toString(fUPdateClassName
-															.getSelection()));
-									updateForcePreview();
-								}
-							});
+					fUPdateClassName.addSelectionListener(new SelectionAdapter() {
+						public void widgetSelected(SelectionEvent e) {
+							refactoring.setAttribute(RenameFileProcessor.UPDATECLASSNAME,
+									Boolean.toString(fUPdateClassName.getSelection()));
+							updateForcePreview();
+						}
+					});
 				}
 			}
 
@@ -105,8 +89,7 @@ public class RenameFileWizard extends RenameRefactoringWizard {
 				super.updateForcePreview();
 				boolean forcePreview = false;
 				Refactoring refactoring = getRefactoring();
-				IReferenceUpdating refUpdate = (IReferenceUpdating) refactoring
-						.getAdapter(IReferenceUpdating.class);
+				IReferenceUpdating refUpdate = (IReferenceUpdating) refactoring.getAdapter(IReferenceUpdating.class);
 				if (refUpdate != null) {
 					forcePreview = refUpdate.getUpdateReferences();
 				}
@@ -128,11 +111,9 @@ public class RenameFileWizard extends RenameRefactoringWizard {
 		ref.setNewElementName(newName);
 		ResourcesPlugin.getWorkspace().validateName(newName, IResource.FILE);
 		// check if the name is a valid file name
-		IStatus nameStatus = ResourcesPlugin.getWorkspace().validateName(
-				newName, IResource.FILE);
+		IStatus nameStatus = ResourcesPlugin.getWorkspace().validateName(newName, IResource.FILE);
 		if (!nameStatus.isOK()) {
-			return RefactoringStatus.createFatalErrorStatus(nameStatus
-					.getMessage());
+			return RefactoringStatus.createFatalErrorStatus(nameStatus.getMessage());
 		}
 		return new RefactoringStatus();
 	}

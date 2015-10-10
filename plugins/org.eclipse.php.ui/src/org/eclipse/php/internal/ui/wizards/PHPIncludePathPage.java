@@ -28,8 +28,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
 
-public class PHPIncludePathPage extends DataModelWizardPage implements
-/* ISimpleWebModuleCreationDataModelProperties, */IStatusChangeListener {
+public class PHPIncludePathPage extends DataModelWizardPage
+		implements/* ISimpleWebModuleCreationDataModelProperties, */IStatusChangeListener {
 
 	protected PHPBuildPathsBlock fIncludePathsBlock;
 
@@ -43,14 +43,12 @@ public class PHPIncludePathPage extends DataModelWizardPage implements
 	}
 
 	protected void createIncludePathsBlock() {
-		fIncludePathsBlock = new PHPBuildPathsBlock(
-				new BusyIndicatorRunnableContext(), this, 1, false, null);
+		fIncludePathsBlock = new PHPBuildPathsBlock(new BusyIndicatorRunnableContext(), this, 1, false, null);
 		fIncludePathsBlock.init(getDummyProject(), null);
 	}
 
 	public IScriptProject getDummyProject() {
-		IProject project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("DUMMY______________Project"); //$NON-NLS-1$
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("DUMMY______________Project"); //$NON-NLS-1$
 		return DLTKCore.create(project);
 	}
 
@@ -61,8 +59,7 @@ public class PHPIncludePathPage extends DataModelWizardPage implements
 			// set scrollbar composite's min size so page is expandable but has
 			// scrollbars when needed
 			if (composite.getParent() instanceof ScrolledComposite) {
-				ScrolledComposite sc1 = (ScrolledComposite) composite
-						.getParent();
+				ScrolledComposite sc1 = (ScrolledComposite) composite.getParent();
 				sc1.setMinSize(minSize);
 				sc1.setExpandHorizontal(true);
 				sc1.setExpandVertical(true);

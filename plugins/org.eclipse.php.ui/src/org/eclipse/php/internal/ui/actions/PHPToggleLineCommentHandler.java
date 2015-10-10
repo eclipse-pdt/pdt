@@ -41,8 +41,8 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 	 *      org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument,
 	 *      org.eclipse.jface.text.ITextSelection)
 	 */
-	protected void processAction(final ITextEditor textEditor,
-			final IStructuredDocument document, ITextSelection textSelection) {
+	protected void processAction(final ITextEditor textEditor, final IStructuredDocument document,
+			ITextSelection textSelection) {
 
 		IStructuredModel model = null;
 		DocumentRewriteSession session = null;
@@ -60,48 +60,35 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 				isSingleLine = true;
 			}
 
-			int selectionEndLineOffset = document
-					.getLineOffset(selectionEndLine);
-			int selectionEndOffset = textSelection.getOffset()
-					+ textSelection.getLength();
+			int selectionEndLineOffset = document.getLineOffset(selectionEndLine);
+			int selectionEndOffset = textSelection.getOffset() + textSelection.getLength();
 
 			// adjust selection end line
-			if ((selectionEndLine > selectionStartLine)
-					&& (selectionEndLineOffset == selectionEndOffset)) {
+			if ((selectionEndLine > selectionStartLine) && (selectionEndLineOffset == selectionEndOffset)) {
 				selectionEndLine--;
-				selectionEndLineOffset = document.getLineInformation(
-						selectionEndLine).getOffset();
+				selectionEndLineOffset = document.getLineInformation(selectionEndLine).getOffset();
 			}
 
-			int selectionStartLineOffset = document
-					.getLineOffset(selectionStartLine);
+			int selectionStartLineOffset = document.getLineOffset(selectionStartLine);
 			if (selectionEndLineOffset == selectionStartLineOffset) {
-				selectionEndLineOffset = document.getLineInformation(
-						selectionEndLine).getOffset()
-						+ document.getLineInformation(selectionEndLine)
-								.getLength();
+				selectionEndLineOffset = document.getLineInformation(selectionEndLine).getOffset()
+						+ document.getLineInformation(selectionEndLine).getLength();
 			}
-			ITypedRegion[] lineTypedRegions = document.computePartitioning(
-					selectionStartLineOffset, selectionEndLineOffset
-							- selectionStartLineOffset);
-			if (lineTypedRegions != null
-					&& lineTypedRegions.length == 1
-					&& lineTypedRegions[0].getType().equals(
-							"org.eclipse.php.PHP_DEFAULT")) { //$NON-NLS-1$
+			ITypedRegion[] lineTypedRegions = document.computePartitioning(selectionStartLineOffset,
+					selectionEndLineOffset - selectionStartLineOffset);
+			if (lineTypedRegions != null && lineTypedRegions.length == 1
+					&& lineTypedRegions[0].getType().equals("org.eclipse.php.PHP_DEFAULT")) { //$NON-NLS-1$
 
 				// save the selection position since it will be changing
 				Position selectionPosition = null;
-				selectionPosition = new Position(textSelection.getOffset(),
-						textSelection.getLength());
+				selectionPosition = new Position(textSelection.getOffset(), textSelection.getLength());
 				document.addPosition(selectionPosition);
 
-				model = StructuredModelManager.getModelManager()
-						.getModelForEdit(document);
+				model = StructuredModelManager.getModelManager().getModelForEdit(document);
 				if (model != null) {
 					// makes it so one undo will undo all the edits to the
 					// document
-					model.beginRecording(this,
-							SSEUIMessages.ToggleComment_label,
+					model.beginRecording(this, SSEUIMessages.ToggleComment_label,
 							SSEUIMessages.ToggleComment_description);
 
 					// keeps listeners from doing anything until updates are all
@@ -116,8 +103,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 					// get the display for the editor if we can
 					Display display = null;
 					if (textEditor instanceof StructuredTextEditor) {
-						StructuredTextViewer viewer = ((StructuredTextEditor) textEditor)
-								.getTextViewer();
+						StructuredTextViewer viewer = ((StructuredTextEditor) textEditor).getTextViewer();
 						if (viewer != null) {
 							display = viewer.getControl().getDisplay();
 						}
@@ -125,8 +111,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 
 					// create the toggling operation
 					IRunnableWithProgress toggleCommentsRunnable = new ToggleLinesRunnable(
-							model.getContentTypeIdentifier(), document,
-							selectionStartLine, selectionEndLine, display,
+							model.getContentTypeIdentifier(), document, selectionStartLine, selectionEndLine, display,
 							isSingleLine);
 
 					// if toggling lots of lines then use progress monitor else
@@ -134,8 +119,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 					// run the operation
 					if ((selectionEndLine - selectionStartLine) > TOGGLE_LINES_MAX_NO_BUSY_INDICATOR
 							&& display != null) {
-						ProgressMonitorDialog dialog = new ProgressMonitorDialog(
-								display.getActiveShell());
+						ProgressMonitorDialog dialog = new ProgressMonitorDialog(display.getActiveShell());
 						dialog.run(false, true, toggleCommentsRunnable);
 					} else {
 						toggleCommentsRunnable.run(new NullProgressMonitor());
@@ -153,20 +137,16 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 					}
 				};
 				org.eclipse.core.commands.ExecutionEvent executionEvent = new org.eclipse.core.commands.ExecutionEvent(
-						null, Collections.EMPTY_MAP, new Event(),
-						evaluationContext);
+						null, Collections.EMPTY_MAP, new Event(), evaluationContext);
 				toggleLineCommentHandler.execute(executionEvent);
 			}
 
 		} catch (InvocationTargetException e) {
-			Logger.logException(
-					"Problem running toggle comment progess dialog.", e); //$NON-NLS-1$ 
+			Logger.logException("Problem running toggle comment progess dialog.", e); //$NON-NLS-1$
 		} catch (InterruptedException e) {
-			Logger.logException(
-					"Problem running toggle comment progess dialog.", e); //$NON-NLS-1$
+			Logger.logException("Problem running toggle comment progess dialog.", e); //$NON-NLS-1$
 		} catch (BadLocationException e) {
-			Logger.logException(
-					"The given selection " + textSelection + " must be invalid", e); //$NON-NLS-1$  //$NON-NLS-2$
+			Logger.logException("The given selection " + textSelection + " must be invalid", e); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (ExecutionException e) {
 		} finally {
 			// clean everything up
@@ -184,14 +164,12 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 		}
 	}
 
-	public static boolean isCommentLine(IDocument document, int line,
-			boolean isSingleLine) {
+	public static boolean isCommentLine(IDocument document, int line, boolean isSingleLine) {
 		boolean isComment = false;
 
 		try {
 			IRegion region = document.getLineInformation(line);
-			String string = document
-					.get(region.getOffset(), region.getLength()).trim();
+			String string = document.get(region.getOffset(), region.getLength()).trim();
 			boolean phpStrat = false;
 			// if (isSingleLine) {
 			if (string.startsWith(PHP)) {
@@ -203,12 +181,9 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 			}
 			// }
 
-			isComment = !phpStrat
-					&& string.trim().length() == 0
-					|| (string.length() >= OPEN_COMMENT.length() && string
-							.startsWith(OPEN_COMMENT))
-					|| (string.length() >= SINGLE_LINE_COMMENT.length() && string
-							.startsWith(SINGLE_LINE_COMMENT));
+			isComment = !phpStrat && string.trim().length() == 0
+					|| (string.length() >= OPEN_COMMENT.length() && string.startsWith(OPEN_COMMENT))
+					|| (string.length() >= SINGLE_LINE_COMMENT.length() && string.startsWith(SINGLE_LINE_COMMENT));
 		} catch (BadLocationException e) {
 			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 		}
@@ -255,9 +230,8 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 		 *            {@link Display}, so that it can be updated during a long
 		 *            operation
 		 */
-		protected ToggleLinesRunnable(String contentTypeIdentifier,
-				IStructuredDocument document, int selectionStartLine,
-				int selectionEndLine, Display display, boolean isSingleLine) {
+		protected ToggleLinesRunnable(String contentTypeIdentifier, IStructuredDocument document,
+				int selectionStartLine, int selectionEndLine, Display display, boolean isSingleLine) {
 
 			this.fContentType = contentTypeIdentifier;
 			this.fDocument = document;
@@ -272,8 +246,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 		 */
 		public void run(IProgressMonitor monitor) {
 			// start work
-			monitor.beginTask(SSEUIMessages.ToggleComment_progress,
-					this.fSelectionEndLine - this.fSelectionStartLine);
+			monitor.beginTask(SSEUIMessages.ToggleComment_progress, this.fSelectionEndLine - this.fSelectionStartLine);
 			try {
 				boolean allLinesCommented = true;
 				for (int i = fSelectionStartLine; i <= fSelectionEndLine; i++) {
@@ -296,19 +269,16 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 					readAndDispatch(this.fDisplay);
 
 					// get the line region
-					IRegion lineRegion = this.fDocument
-							.getLineInformation(line);
+					IRegion lineRegion = this.fDocument.getLineInformation(line);
 
 					// don't toggle empty lines
-					String content = this.fDocument.get(lineRegion.getOffset(),
-							lineRegion.getLength());
+					String content = this.fDocument.get(lineRegion.getOffset(), lineRegion.getLength());
 					if (content.trim().length() > 0) {
 						// try to get a line comment type
 
 						// toggle the comment on the line
 						if (allLinesCommented) {
-							remove(this.fDocument, lineRegion.getOffset(),
-									lineRegion.getLength(), true);
+							remove(this.fDocument, lineRegion.getOffset(), lineRegion.getLength(), true);
 						} else {
 							int offset = 0;
 							String string = content.trim();
@@ -316,8 +286,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 							if (string.startsWith(PHP_WITH_BLANK)) {
 								// string =
 								// string.substring("<?php".length()).trim();
-								offset = content.indexOf(PHP_WITH_BLANK)
-										+ PHP_WITH_BLANK.length();
+								offset = content.indexOf(PHP_WITH_BLANK) + PHP_WITH_BLANK.length();
 								commentStr = SINGLE_LINE_COMMENT;
 							} else if (string.startsWith(PHP)) {
 								// string =
@@ -327,26 +296,23 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 							} else if (string.startsWith(SHORT_TAG_WITH_BLANK)) {
 								// string =
 								// string.substring("<?".length()).trim();
-								offset = content.indexOf(SHORT_TAG_WITH_BLANK)
-										+ SHORT_TAG_WITH_BLANK.length();
+								offset = content.indexOf(SHORT_TAG_WITH_BLANK) + SHORT_TAG_WITH_BLANK.length();
 								commentStr = SINGLE_LINE_COMMENT;
 							} else if (string.startsWith(SHORT_TAG)) {
 								// string =
 								// string.substring("<?".length()).trim();
-								offset = content.indexOf(SHORT_TAG)
-										+ SHORT_TAG.length();
+								offset = content.indexOf(SHORT_TAG) + SHORT_TAG.length();
 								commentStr = BLANK + SINGLE_LINE_COMMENT;
 							} else {
 								commentStr = SINGLE_LINE_COMMENT;
 							}
-							this.fDocument.replace(lineRegion.getOffset()
-									+ offset, 0, commentStr + BLANK);
+							this.fDocument.replace(lineRegion.getOffset() + offset, 0, commentStr + BLANK);
 						}
 					}
 					monitor.worked(1);
 				}
 			} catch (BadLocationException e) {
-				Logger.logException("Bad location while toggling comments.", e); //$NON-NLS-1$ 
+				Logger.logException("Bad location while toggling comments.", e); //$NON-NLS-1$
 			}
 			// done work
 			monitor.done();
@@ -359,8 +325,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 		 * </p>
 		 * 
 		 */
-		public void apply(IStructuredDocument document, int offset, int length)
-				throws BadLocationException {
+		public void apply(IStructuredDocument document, int offset, int length) throws BadLocationException {
 
 			document.replace(offset, 0, SINGLE_LINE_COMMENT + BLANK);
 		}
@@ -374,8 +339,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 		 * </p>
 		 * 
 		 */
-		public void remove(IStructuredDocument document, int offset,
-				int length, boolean removeEnclosing)
+		public void remove(IStructuredDocument document, int offset, int length, boolean removeEnclosing)
 				throws BadLocationException {
 			String content = document.get(offset, length);
 			int innerOffset = content.indexOf(SINGLE_LINE_COMMENT);
@@ -415,22 +379,20 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 		 *            given offset, or null if there is not suffix to remove for
 		 *            this comment
 		 */
-		protected static void uncomment(IDocument document,
-				int commentPrefixOffset, String commentPrefix,
+		protected static void uncomment(IDocument document, int commentPrefixOffset, String commentPrefix,
 				int commentSuffixOffset, String commentSuffix) {
 
 			try {
 				// determine if there is a space after the comment prefix that
 				// should also be removed
 				int commentPrefixLength = commentPrefix.length();
-				String postCommentPrefixChar = document.get(commentPrefixOffset
-						+ commentPrefix.length(), 1);
+				String postCommentPrefixChar = document.get(commentPrefixOffset + commentPrefix.length(), 1);
 				if (postCommentPrefixChar.equals(BLANK)) {
 					commentPrefixLength++;
 				}
 
 				// remove the comment prefix
-				document.replace(commentPrefixOffset, commentPrefixLength, ""); //$NON-NLS-1$ 
+				document.replace(commentPrefixOffset, commentPrefixLength, ""); //$NON-NLS-1$
 
 				if (commentSuffix != null) {
 					commentSuffixOffset -= commentPrefixLength;
@@ -438,16 +400,14 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 					// determine if there is a space before the comment suffix
 					// that should also be removed
 					int commentSuffixLength = commentSuffix.length();
-					String preCommentSuffixChar = document.get(
-							commentSuffixOffset - 1, 1);
+					String preCommentSuffixChar = document.get(commentSuffixOffset - 1, 1);
 					if (preCommentSuffixChar.equals(BLANK)) {
 						commentSuffixLength++;
 						commentSuffixOffset--;
 					}
 
 					// remove the comment suffix
-					document.replace(commentSuffixOffset, commentSuffixLength,
-							""); //$NON-NLS-1$
+					document.replace(commentSuffixOffset, commentSuffixLength, ""); //$NON-NLS-1$
 				}
 			} catch (BadLocationException e) {
 				Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
@@ -473,14 +433,10 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 			try {
 				display.readAndDispatch();
 			} catch (Exception e) {
-				Logger.log(
-						Logger.WARNING,
-						"Exception caused by readAndDispatch, not caused by or fatal to caller", //$NON-NLS-1$
+				Logger.log(Logger.WARNING, "Exception caused by readAndDispatch, not caused by or fatal to caller", //$NON-NLS-1$
 						e);
 			} catch (LinkageError e) {
-				Logger.log(
-						Logger.WARNING,
-						"LinkageError caused by readAndDispatch, not caused by or fatal to caller", //$NON-NLS-1$
+				Logger.log(Logger.WARNING, "LinkageError caused by readAndDispatch, not caused by or fatal to caller", //$NON-NLS-1$
 						e);
 			} catch (VirtualMachineError e) {
 				// re-throw these
@@ -491,9 +447,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 			} catch (Error e) {
 				// catch every error, except for a few that we don't want to
 				// handle
-				Logger.log(
-						Logger.WARNING,
-						"Error caused by readAndDispatch, not caused by or fatal to caller", //$NON-NLS-1$
+				Logger.log(Logger.WARNING, "Error caused by readAndDispatch, not caused by or fatal to caller", //$NON-NLS-1$
 						e);
 			}
 		}

@@ -18,8 +18,7 @@ import java.io.IOException;
 import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtilities;
 
-public class AddFilesRequest extends DebugMessageRequestImpl implements
-		IDebugRequestMessage {
+public class AddFilesRequest extends DebugMessageRequestImpl implements IDebugRequestMessage {
 
 	private int counter;
 	private String[] paths;

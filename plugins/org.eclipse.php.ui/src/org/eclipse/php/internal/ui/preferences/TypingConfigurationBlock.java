@@ -47,8 +47,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 	private final PreferencePage fMainPreferencePage;
 
-	public TypingConfigurationBlock(PreferencePage mainPreferencePage,
-			OverlayPreferenceStore store) {
+	public TypingConfigurationBlock(PreferencePage mainPreferencePage, OverlayPreferenceStore store) {
 		Assert.isNotNull(mainPreferencePage);
 		Assert.isNotNull(store);
 		fMainPreferencePage = mainPreferencePage;
@@ -100,44 +99,33 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 		ArrayList<OverlayPreferenceStore.OverlayKey> overlayKeys = new ArrayList<OverlayPreferenceStore.OverlayKey>();
 
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.STRING,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING,
 				PreferenceConstants.EDITOR_CLOSE_STRINGS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.STRING,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING,
 				PreferenceConstants.EDITOR_CLOSE_BRACES));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.STRING,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING,
 				PreferenceConstants.EDITOR_CLOSE_BRACKETS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.STRING,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING,
 				PreferenceConstants.EDITOR_CLOSE_PHPDOCS_AND_COMMENTS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.STRING,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING,
 				PreferenceConstants.EDITOR_ADD_PHPDOC_TAGS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.STRING,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING,
 				PreferenceConstants.EDITOR_SMART_TAB));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.STRING,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING,
 				PreferenceConstants.EDITOR_ADD_PHPCLOSE_TAGS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.STRING,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING,
 				PreferenceConstants.EDITOR_ADD_PHP_FOR_PHPSTART_TAGS));
 
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.STRING,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING,
 				PreferenceConstants.EDITOR_SMART_PASTE));
 
-		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys
-				.size()];
+		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
 		overlayKeys.toArray(keys);
 		return keys;
 	}
 
 	public Control createControl(Composite parent) {
-		ScrolledPageContent scrolled = new ScrolledPageContent(parent,
-				SWT.H_SCROLL | SWT.V_SCROLL);
+		ScrolledPageContent scrolled = new ScrolledPageContent(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 		scrolled.setExpandHorizontal(true);
 		scrolled.setExpandVertical(true);
 
@@ -146,18 +134,15 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		control.setLayout(layout);
 
 		Composite autoCloseComposite;
-		autoCloseComposite = createSubsection(control,
-				PHPUIMessages.typingPage_autoClose_title);
+		autoCloseComposite = createSubsection(control, PHPUIMessages.typingPage_autoClose_title);
 		addAutoclosingSection(autoCloseComposite);
 
 		Composite smartPasteSection;
-		smartPasteSection = createSubsection(control,
-				PHPUIMessages.typingPage_smartPaste_title);
+		smartPasteSection = createSubsection(control, PHPUIMessages.typingPage_smartPaste_title);
 		addSmartPasteSection(smartPasteSection);
 
 		Composite smartTabSection;
-		smartTabSection = createSubsection(control,
-				PHPUIMessages.typingPage_smartTab_title);
+		smartTabSection = createSubsection(control, PHPUIMessages.typingPage_smartTab_title);
 		addSmartTabSection(smartTabSection);
 
 		scrolled.setContent(control);
@@ -173,8 +158,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 		String label;
 		label = PHPUIMessages.PHPEditorPreferencePage_typing_smartPaste;
-		addCheckBox(smartPasteComposite, label,
-				PreferenceConstants.EDITOR_SMART_PASTE, 0);
+		addCheckBox(smartPasteComposite, label, PreferenceConstants.EDITOR_SMART_PASTE, 0);
 
 	}
 
@@ -184,8 +168,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 		String label;
 		label = PHPUIMessages.PHPEditorPreferencePage_typing_smartTab;
-		addCheckBox(smartTabComposite, label,
-				PreferenceConstants.EDITOR_SMART_TAB, 0);
+		addCheckBox(smartTabComposite, label, PreferenceConstants.EDITOR_SMART_TAB, 0);
 
 		createAutoIndentMessage(smartTabComposite);
 
@@ -196,21 +179,16 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 	private void createAutoIndentMessage(final Composite composite) {
 		String linkTooltip = PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tooltip;
-		char indentChar = FormatterUtils.getFormatterCommonPrferences()
-				.getIndentationChar(null);
+		char indentChar = FormatterUtils.getFormatterCommonPrferences().getIndentationChar(null);
 
 		if (indentChar == '\t') {
 
-			autoIndentDetails = Messages
-					.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text,
-							new String[] { Integer.toString(4) });
+			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text,
+					new String[] { Integer.toString(4) });
 		} else {
-			int indentSize = FormatterUtils.getFormatterCommonPrferences()
-					.getIndentationSize(null);
-			autoIndentDetails = Messages
-					.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text,
-							new String[] { Integer.toString(4),
-									Integer.toString(indentSize), "space" }); //$NON-NLS-1$
+			int indentSize = FormatterUtils.getFormatterCommonPrferences().getIndentationSize(null);
+			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text,
+					new String[] { Integer.toString(4), Integer.toString(indentSize), "space" }); //$NON-NLS-1$
 		}
 
 		formatterPageLink = new Link(composite, SWT.NONE);
@@ -222,8 +200,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		formatterPageLink.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				PreferencesUtil.createPreferenceDialogOn(
-						formatterPageLink.getShell(),
+				PreferencesUtil.createPreferenceDialogOn(formatterPageLink.getShell(),
 						"org.eclipse.php.ui.preferences.PHPFormatterPreferencePage", null, null); //$NON-NLS-1$
 			}
 		});
@@ -248,38 +225,30 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		Button master, slave;
 
 		label = PHPUIMessages.typingPage_autoClose_string;
-		addCheckBox(composite, label, PreferenceConstants.EDITOR_CLOSE_STRINGS,
-				0);
+		addCheckBox(composite, label, PreferenceConstants.EDITOR_CLOSE_STRINGS, 0);
 
 		label = PHPUIMessages.typingPage_autoClose_brackets;
-		addCheckBox(composite, label,
-				PreferenceConstants.EDITOR_CLOSE_BRACKETS, 0);
+		addCheckBox(composite, label, PreferenceConstants.EDITOR_CLOSE_BRACKETS, 0);
 
 		label = PHPUIMessages.typingPage_autoClose_braces;
-		addCheckBox(composite, label, PreferenceConstants.EDITOR_CLOSE_BRACES,
-				0);
+		addCheckBox(composite, label, PreferenceConstants.EDITOR_CLOSE_BRACES, 0);
 
 		label = PHPUIMessages.typingPage_autoClose_phpDoc_and_commens;
-		master = addCheckBox(composite, label,
-				PreferenceConstants.EDITOR_CLOSE_PHPDOCS_AND_COMMENTS, 0);
+		master = addCheckBox(composite, label, PreferenceConstants.EDITOR_CLOSE_PHPDOCS_AND_COMMENTS, 0);
 
 		label = PHPUIMessages.typingPage_autoAdd_phpDoc_tags;
-		slave = addCheckBox(composite, label,
-				PreferenceConstants.EDITOR_ADD_PHPDOC_TAGS, 0);
+		slave = addCheckBox(composite, label, PreferenceConstants.EDITOR_ADD_PHPDOC_TAGS, 0);
 
 		label = PHPUIMessages.typingPage_autoAdd_phpClose_tags;
-		addCheckBox(composite, label,
-				PreferenceConstants.EDITOR_ADD_PHPCLOSE_TAGS, 0);
+		addCheckBox(composite, label, PreferenceConstants.EDITOR_ADD_PHPCLOSE_TAGS, 0);
 
 		label = PHPUIMessages.typingPage_autoAdd_php_for_phpstart_tags;
-		addCheckBox(composite, label,
-				PreferenceConstants.EDITOR_ADD_PHP_FOR_PHPSTART_TAGS, 0);
+		addCheckBox(composite, label, PreferenceConstants.EDITOR_ADD_PHP_FOR_PHPSTART_TAGS, 0);
 
 		createDependency(master, slave);
 	}
 
-	protected Button addCheckBox(Composite parent, String label, String key,
-			int indentation) {
+	protected Button addCheckBox(Composite parent, String label, String key, int indentation) {
 		Button checkBox = new Button(parent, SWT.CHECK);
 		checkBox.setText(label);
 
@@ -302,8 +271,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		}
 	}
 
-	protected final ScrolledPageContent getParentScrolledComposite(
-			Control control) {
+	protected final ScrolledPageContent getParentScrolledComposite(Control control) {
 		Control parent = control.getParent();
 		while (!(parent instanceof ScrolledPageContent) && parent != null) {
 			parent = parent.getParent();
@@ -357,21 +325,16 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 	private final Map<Text, String> fTextFields = new HashMap<Text, String>();
 
 	public void refreshValues() {
-		char indentChar = FormatterUtils.getFormatterCommonPrferences()
-				.getIndentationChar(null);
+		char indentChar = FormatterUtils.getFormatterCommonPrferences().getIndentationChar(null);
 
 		if (indentChar == '\t') {
 
-			autoIndentDetails = Messages
-					.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text,
-							new String[] { Integer.toString(4) });
+			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text,
+					new String[] { Integer.toString(4) });
 		} else {
-			int indentSize = FormatterUtils.getFormatterCommonPrferences()
-					.getIndentationSize(null);
-			autoIndentDetails = Messages
-					.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text,
-							new String[] { Integer.toString(4),
-									Integer.toString(indentSize), "space" }); //$NON-NLS-1$
+			int indentSize = FormatterUtils.getFormatterCommonPrferences().getIndentationSize(null);
+			autoIndentDetails = Messages.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text,
+					new String[] { Integer.toString(4), Integer.toString(indentSize), "space" }); //$NON-NLS-1$
 		}
 		formatterPageLink.setText(autoIndentDetails);
 	}

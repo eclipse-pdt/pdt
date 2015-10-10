@@ -33,8 +33,7 @@ public class PHPActionDelegatorRegistry {
 	private static PHPActionDelegatorRegistry instance = new PHPActionDelegatorRegistry();
 
 	private PHPActionDelegatorRegistry() {
-		IConfigurationElement[] elements = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(EXTENSION_POINT); 
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_POINT);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (ACTION_ELEMENT.equals(element.getName())) {
@@ -66,21 +65,16 @@ public class PHPActionDelegatorRegistry {
 			int topPriority = 0;
 			Iterator i = elementsList.iterator();
 			while (i.hasNext()) {
-				IConfigurationElement element = (IConfigurationElement) i
-						.next();
-				int currentPriority = Integer.valueOf(
-						element.getAttribute(PRIORITY_ATTRIBUTE)).intValue();
+				IConfigurationElement element = (IConfigurationElement) i.next();
+				int currentPriority = Integer.valueOf(element.getAttribute(PRIORITY_ATTRIBUTE)).intValue();
 				// the final action should be the one with the highest priority
 				if (currentPriority > topPriority) {
 					try {
-						action = (IPHPActionDelegator) element
-								.createExecutableExtension(CLASS_ATTRIBUTE);
+						action = (IPHPActionDelegator) element.createExecutableExtension(CLASS_ATTRIBUTE);
 						topPriority = currentPriority;
 					} catch (CoreException e) {
 						Logger.logException(
-								PHPUIMessages.PHPActionDelegatorRegistry_0
-										+ element.getAttribute(CLASS_ATTRIBUTE),
-								e); 
+								PHPUIMessages.PHPActionDelegatorRegistry_0 + element.getAttribute(CLASS_ATTRIBUTE), e);
 					}
 				}
 			}
@@ -99,29 +93,23 @@ public class PHPActionDelegatorRegistry {
 	 *         {@link IRenamePHPElementActionFactory} with the highest priority,
 	 *         or <code>null</code> if no pages where contributed.
 	 */
-	public static IRenamePHPElementActionFactory getActionDelegatorFactory(
-			String id) {
+	public static IRenamePHPElementActionFactory getActionDelegatorFactory(String id) {
 		final List elementsList = (List) instance.actionDelegators.get(id);
 		IRenamePHPElementActionFactory action = null;
 		if (elementsList != null) {
 			int topPriority = 0;
 			Iterator i = elementsList.iterator();
 			while (i.hasNext()) {
-				IConfigurationElement element = (IConfigurationElement) i
-						.next();
-				int currentPriority = Integer.valueOf(
-						element.getAttribute(PRIORITY_ATTRIBUTE)).intValue();
+				IConfigurationElement element = (IConfigurationElement) i.next();
+				int currentPriority = Integer.valueOf(element.getAttribute(PRIORITY_ATTRIBUTE)).intValue();
 				// the final action should be the one with the highest priority
 				if (currentPriority > topPriority) {
 					try {
-						action = (IRenamePHPElementActionFactory) element
-								.createExecutableExtension(CLASS_ATTRIBUTE);
+						action = (IRenamePHPElementActionFactory) element.createExecutableExtension(CLASS_ATTRIBUTE);
 						topPriority = currentPriority;
 					} catch (CoreException e) {
 						Logger.logException(
-								PHPUIMessages.PHPActionDelegatorRegistry_1
-										+ element.getAttribute(CLASS_ATTRIBUTE),
-								e); 
+								PHPUIMessages.PHPActionDelegatorRegistry_1 + element.getAttribute(CLASS_ATTRIBUTE), e);
 					}
 				}
 			}

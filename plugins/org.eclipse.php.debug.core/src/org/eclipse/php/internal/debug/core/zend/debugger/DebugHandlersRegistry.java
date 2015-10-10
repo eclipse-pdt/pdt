@@ -41,19 +41,16 @@ public class DebugHandlersRegistry {
 	private DebugHandlersRegistry() {
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = registry
-				.getConfigurationElementsFor(PHPDebugPlugin.getID(),
-						EXTENSION_POINT_NAME);
+		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(),
+				EXTENSION_POINT_NAME);
 
 		for (int i = 0; i < elements.length; i++) {
 			final IConfigurationElement element = elements[i];
 			if (HANDLER_TAG.equals(element.getName())) {
 
-				actions.put(element.getAttribute(ID_ATTRIBUTE),
-						new DebugHandlerFactory(element));
+				actions.put(element.getAttribute(ID_ATTRIBUTE), new DebugHandlerFactory(element));
 
-				String debugger = element
-						.getAttribute(REMOTE_DEBUGGER_ATTRIBUTE);
+				String debugger = element.getAttribute(REMOTE_DEBUGGER_ATTRIBUTE);
 				if (debugger != null) {
 					debuggers.put(element.getAttribute(ID_ATTRIBUTE), debugger);
 				}
@@ -78,8 +75,7 @@ public class DebugHandlersRegistry {
 	 * @return handler Debug handler
 	 */
 	public static IDebugHandler getHandler(String id) throws Exception {
-		return ((DebugHandlerFactory) getInstance().getHandlers().get(id))
-				.createHandler();
+		return ((DebugHandlerFactory) getInstance().getHandlers().get(id)).createHandler();
 	}
 
 	/**
@@ -106,14 +102,12 @@ public class DebugHandlersRegistry {
 		}
 
 		public IDebugHandler createHandler() {
-			Platform
-					.run(new SafeRunnable(
-							"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugHandlers") { //$NON-NLS-1$							
-						public void run() throws Exception {
-							handler = (IDebugHandler) element
-									.createExecutableExtension(CLASS_ATTRIBUTE);
-						}
-					});
+			Platform.run(new SafeRunnable(
+					"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugHandlers") { //$NON-NLS-1$
+				public void run() throws Exception {
+					handler = (IDebugHandler) element.createExecutableExtension(CLASS_ATTRIBUTE);
+				}
+			});
 			return handler;
 		}
 	}

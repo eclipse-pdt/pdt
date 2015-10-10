@@ -25,14 +25,13 @@ public class VariablePosition extends ProposalPosition {
 	private MultiVariableGuess fGuess;
 	private MultiVariable fVariable;
 
-	public VariablePosition(IDocument document, int offset, int length,
-			MultiVariableGuess guess, MultiVariable variable) {
-		this(document, offset, length, LinkedPositionGroup.NO_STOP, guess,
-				variable);
+	public VariablePosition(IDocument document, int offset, int length, MultiVariableGuess guess,
+			MultiVariable variable) {
+		this(document, offset, length, LinkedPositionGroup.NO_STOP, guess, variable);
 	}
 
-	public VariablePosition(IDocument document, int offset, int length,
-			int sequence, MultiVariableGuess guess, MultiVariable variable) {
+	public VariablePosition(IDocument document, int offset, int length, int sequence, MultiVariableGuess guess,
+			MultiVariable variable) {
 		super(document, offset, length, sequence, null);
 		Assert.isNotNull(guess);
 		Assert.isNotNull(variable);

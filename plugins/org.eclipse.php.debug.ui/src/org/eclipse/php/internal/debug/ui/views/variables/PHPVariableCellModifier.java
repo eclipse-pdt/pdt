@@ -25,8 +25,7 @@ import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
  * @author shalom
  * 
  */
-public class PHPVariableCellModifier extends DefaultVariableCellModifier
-		implements ICellModifier {
+public class PHPVariableCellModifier extends DefaultVariableCellModifier implements ICellModifier {
 
 	/**
 	 * Overrides the default cell modifier to support PHPVariables. (The method

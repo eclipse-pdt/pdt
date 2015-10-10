@@ -60,20 +60,17 @@ public class ASTFragmentFactory {
 	 *         within the AST subtree identified by <code>scope</code>.
 	 * @throws JavaModelException
 	 */
-	public static IASTFragment createFragmentForSourceRange(SourceRange range,
-			ASTNode scope, IDocument document) throws Exception {
+	public static IASTFragment createFragmentForSourceRange(SourceRange range, ASTNode scope, IDocument document)
+			throws Exception {
 		SelectionAnalyzer sa = new SelectionAnalyzer(
-				Selection.createFromStartLength(range.getOffset(),
-						range.getLength()), false);
+				Selection.createFromStartLength(range.getOffset(), range.getLength()), false);
 		scope.accept(sa);
 		if (isSingleNodeSelected(sa, range, document, scope))
-			return ASTFragmentFactory.createFragmentForFullSubtree(
-					sa.getFirstSelectedNode(), null);
+			return ASTFragmentFactory.createFragmentForFullSubtree(sa.getFirstSelectedNode(), null);
 		if (isEmptySelectionCoveredByANode(range, sa))
-			return ASTFragmentFactory.createFragmentForFullSubtree(
-					sa.getLastCoveringNode(), null);
-		return ASTFragmentFactory.createFragmentForSubPartBySourceRange(
-				sa.getLastCoveringNode(), range, scope, document);
+			return ASTFragmentFactory.createFragmentForFullSubtree(sa.getLastCoveringNode(), null);
+		return ASTFragmentFactory.createFragmentForSubPartBySourceRange(sa.getLastCoveringNode(), range, scope,
+				document);
 	}
 
 	/**
@@ -83,32 +80,25 @@ public class ASTFragmentFactory {
 	 * @param document
 	 * @throws Exception
 	 */
-	private static IASTFragment createFragmentForSubPartBySourceRange(
-			ASTNode node, ISourceRange range, ASTNode scope, IDocument document)
-			throws Exception {
-		return FragmentForSubPartBySourceRangeFactory.createFragmentFor(node,
-				range, scope, document);
+	private static IASTFragment createFragmentForSubPartBySourceRange(ASTNode node, ISourceRange range, ASTNode scope,
+			IDocument document) throws Exception {
+		return FragmentForSubPartBySourceRangeFactory.createFragmentFor(node, range, scope, document);
 	}
 
-	private static boolean isEmptySelectionCoveredByANode(ISourceRange range,
-			SelectionAnalyzer sa) {
-		return range.getLength() == 0 && sa.getFirstSelectedNode() == null
-				&& sa.getLastCoveringNode() != null;
+	private static boolean isEmptySelectionCoveredByANode(ISourceRange range, SelectionAnalyzer sa) {
+		return range.getLength() == 0 && sa.getFirstSelectedNode() == null && sa.getLastCoveringNode() != null;
 	}
 
-	private static boolean isSingleNodeSelected(SelectionAnalyzer sa,
-			ISourceRange range, IDocument document, ASTNode scope)
-			throws BadLocationException {
+	private static boolean isSingleNodeSelected(SelectionAnalyzer sa, ISourceRange range, IDocument document,
+			ASTNode scope) throws BadLocationException {
 		return sa.getSelectedNodes().length == 1
-				&& !rangeIncludesNonWhitespaceOutsideNode(range,
-						sa.getFirstSelectedNode(), document, scope);
+				&& !rangeIncludesNonWhitespaceOutsideNode(range, sa.getFirstSelectedNode(), document, scope);
 	}
 
-	private static boolean rangeIncludesNonWhitespaceOutsideNode(
-			ISourceRange range, ASTNode node, IDocument document, ASTNode scope)
-			throws BadLocationException {
-		return Util.rangeIncludesNonWhitespaceOutsideRange(range,
-				new SourceRange(node.getStart(), node.getLength()), document);
+	private static boolean rangeIncludesNonWhitespaceOutsideNode(ISourceRange range, ASTNode node, IDocument document,
+			ASTNode scope) throws BadLocationException {
+		return Util.rangeIncludesNonWhitespaceOutsideRange(range, new SourceRange(node.getStart(), node.getLength()),
+				document);
 	}
 
 	/**
@@ -121,33 +111,27 @@ public class ASTFragmentFactory {
 	 * 
 	 * @param astFragment
 	 */
-	public static IASTFragment createFragmentForFullSubtree(ASTNode node,
-			IASTFragment astFragment) {
-		IASTFragment result = FragmentForFullSubtreeFactory.createFragmentFor(
-				node, astFragment);
+	public static IASTFragment createFragmentForFullSubtree(ASTNode node, IASTFragment astFragment) {
+		IASTFragment result = FragmentForFullSubtreeFactory.createFragmentFor(node, astFragment);
 		Assert.isNotNull(result);
 		return result;
 	}
 
-	private static class FragmentForSubPartBySourceRangeFactory extends
-			FragmentFactory {
+	private static class FragmentForSubPartBySourceRangeFactory extends FragmentFactory {
 		private ISourceRange fRange;
 		private ASTNode fScope;
 
 		private Exception modelException = null;
 		private IDocument fDocument;
 
-		public static IASTFragment createFragmentFor(ASTNode node,
-				ISourceRange range, ASTNode scope, IDocument document)
-				throws Exception {
-			return new FragmentForSubPartBySourceRangeFactory().createFragment(
-					node, range, scope, document);
+		public static IASTFragment createFragmentFor(ASTNode node, ISourceRange range, ASTNode scope,
+				IDocument document) throws Exception {
+			return new FragmentForSubPartBySourceRangeFactory().createFragment(node, range, scope, document);
 		}
 
 		public boolean visit(InfixExpression node) {
 			try {
-				setFragment(createInfixExpressionSubPartFragmentBySourceRange(
-						node, fRange, fScope, fDocument));
+				setFragment(createInfixExpressionSubPartFragmentBySourceRange(node, fRange, fScope, fDocument));
 			} catch (Exception e) {
 				modelException = e;
 			}
@@ -159,8 +143,8 @@ public class ASTFragmentFactory {
 			return false;
 		}
 
-		protected IASTFragment createFragment(ASTNode node, ISourceRange range,
-				ASTNode scope, IDocument document) throws Exception {
+		protected IASTFragment createFragment(ASTNode node, ISourceRange range, ASTNode scope, IDocument document)
+				throws Exception {
 			fRange = range;
 			fScope = scope;
 			fDocument = document;
@@ -170,20 +154,16 @@ public class ASTFragmentFactory {
 			return result;
 		}
 
-		private static IExpressionFragment createInfixExpressionSubPartFragmentBySourceRange(
-				InfixExpression node, ISourceRange range, ASTNode scope,
-				IDocument document) throws Exception {
-			return AssociativeInfixExpressionFragment
-					.createSubPartFragmentBySourceRange(node, range, document);
+		private static IExpressionFragment createInfixExpressionSubPartFragmentBySourceRange(InfixExpression node,
+				ISourceRange range, ASTNode scope, IDocument document) throws Exception {
+			return AssociativeInfixExpressionFragment.createSubPartFragmentBySourceRange(node, range, document);
 		}
 	}
 
 	private static class FragmentForFullSubtreeFactory extends FragmentFactory {
 
-		public static IASTFragment createFragmentFor(ASTNode node,
-				IASTFragment astFragment) {
-			return new FragmentForFullSubtreeFactory().createFragment(node,
-					astFragment);
+		public static IASTFragment createFragmentFor(ASTNode node, IASTFragment astFragment) {
+			return new FragmentForFullSubtreeFactory().createFragment(node, astFragment);
 		}
 
 		public boolean visit(InfixExpression node) {
@@ -192,8 +172,7 @@ public class ASTFragmentFactory {
 			 * full subtree. If this is not applicable, try something more
 			 * generic.
 			 */
-			IASTFragment fragment = AssociativeInfixExpressionFragment
-					.createFragmentForFullSubtree(node);
+			IASTFragment fragment = AssociativeInfixExpressionFragment.createFragmentForFullSubtree(node);
 			if (fragment == null)
 				return visit((Expression) node);
 			if (oldFragment instanceof AssociativeInfixExpressionFragment
@@ -224,8 +203,7 @@ public class ASTFragmentFactory {
 		private IASTFragment fFragment;
 		protected IASTFragment oldFragment;
 
-		protected IASTFragment createFragment(ASTNode node,
-				IASTFragment astFragment) {
+		protected IASTFragment createFragment(ASTNode node, IASTFragment astFragment) {
 			oldFragment = astFragment;
 			fFragment = null;
 			node.accept(this);

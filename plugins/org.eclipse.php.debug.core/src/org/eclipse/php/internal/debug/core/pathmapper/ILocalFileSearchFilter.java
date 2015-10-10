@@ -32,7 +32,7 @@ public interface ILocalFileSearchFilter {
 	 *            Related server configuration unique ID
 	 * @return best match search result
 	 */
-	public LocalFileSearchResult filter(final PathEntry[] entries,
-			final VirtualPath remotePath, final String serverUniqueId);
+	public LocalFileSearchResult filter(final PathEntry[] entries, final VirtualPath remotePath,
+			final String serverUniqueId);
 
 }

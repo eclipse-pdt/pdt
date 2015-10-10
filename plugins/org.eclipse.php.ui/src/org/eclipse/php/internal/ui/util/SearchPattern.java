@@ -41,8 +41,7 @@ public class SearchPattern {
 	 * @return True, if there is a pattern match; False, otherwise.
 	 * @see
 	 */
-	public static boolean match(String pattern, String str,
-			boolean simulateWildcard) {
+	public static boolean match(String pattern, String str, boolean simulateWildcard) {
 		if (pattern.length() == 0) {
 			if (simulateWildcard) {
 				return true;
@@ -60,8 +59,7 @@ public class SearchPattern {
 		switch (pattern.charAt(0)) {
 		case '?': // '?' we matched one letter - continue matching the rest of
 					// the pattern with the rest of str
-			return match(pattern.substring(1), str.substring(1),
-					simulateWildcard);
+			return match(pattern.substring(1), str.substring(1), simulateWildcard);
 		case '*': // '*' we can match 0 letters or more: match the rest of the
 					// pattern with str (0 letters match) OR the pattern with
 					// the rest of str (1 or more letters match)
@@ -70,8 +68,7 @@ public class SearchPattern {
 		default: // we have a letter in the pattern: check that the letter match
 					// and the rest of the pattern match the rest of str
 			return str.charAt(0) == pattern.charAt(0)
-					&& match(pattern.substring(1), str.substring(1),
-							simulateWildcard);
+					&& match(pattern.substring(1), str.substring(1), simulateWildcard);
 		}
 	}
 
@@ -93,8 +90,7 @@ public class SearchPattern {
 	 *            simulate a wildcard at the end of the pattern
 	 * @return True, if there is a pattern match; False, otherwise.
 	 */
-	public static boolean match(String pattern, String str,
-			boolean caseSensitive, boolean simulateWildcard) {
+	public static boolean match(String pattern, String str, boolean caseSensitive, boolean simulateWildcard) {
 		if (pattern == null) {
 			return str == null;
 		}
@@ -104,8 +100,7 @@ public class SearchPattern {
 		if (caseSensitive) {
 			return match(pattern, str, simulateWildcard);
 		} else {
-			return match(pattern.toLowerCase(), str.toLowerCase(),
-					simulateWildcard);
+			return match(pattern.toLowerCase(), str.toLowerCase(), simulateWildcard);
 		}
 	}
 

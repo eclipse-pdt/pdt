@@ -48,22 +48,19 @@ public class XDebugVariableValueEditor implements IVariableValueEditor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.actions.IVariableValueEditor#editVariable(org.eclipse
-	 * .debug.core.model.IVariable, org.eclipse.swt.widgets.Shell)
+	 * @see org.eclipse.debug.ui.actions.IVariableValueEditor#editVariable(org.
+	 * eclipse .debug.core.model.IVariable, org.eclipse.swt.widgets.Shell)
 	 */
 	public boolean editVariable(IVariable variable, Shell shell) {
 		try {
 			String name = variable.getName();
 			String title = PHPDebugUIMessages.PHPPrimitiveValueEditor_0;
-			String message = MessageFormat.format(
-					PHPDebugUIMessages.PHPPrimitiveValueEditor_1,
-					new Object[] { name }); 
+			String message = MessageFormat.format(PHPDebugUIMessages.PHPPrimitiveValueEditor_1, new Object[] { name });
 			String initialValue = getValueString(variable);
 
 			PrimitiveValidator validator = new PrimitiveValidator(variable);
-			ChangeVariableValueInputDialog dialog = new ChangeVariableValueInputDialog(
-					shell, title, message, initialValue, validator);
+			ChangeVariableValueInputDialog dialog = new ChangeVariableValueInputDialog(shell, title, message,
+					initialValue, validator);
 			if (dialog.open() == Window.OK) {
 				String stringValue = dialog.getValue();
 				variable.setValue(stringValue);
@@ -72,8 +69,7 @@ public class XDebugVariableValueEditor implements IVariableValueEditor {
 			}
 		} catch (DebugException e) {
 			IStatus status = e.getStatus();
-			ErrorDialog.openError(shell,
-					PHPDebugUIMessages.PHPPrimitiveValueEditor_2,
+			ErrorDialog.openError(shell, PHPDebugUIMessages.PHPPrimitiveValueEditor_2,
 					PHPDebugUIMessages.PHPPrimitiveValueEditor_3, status);
 		}
 		return true;
@@ -89,11 +85,9 @@ public class XDebugVariableValueEditor implements IVariableValueEditor {
 				DBGpTarget target = (DBGpTarget) value.getDebugTarget();
 				DBGpVariable dbgpVar = (DBGpVariable) variable;
 				String stackLevel = dbgpVar.getStackLevel();
-				Node result = target.getCompleteString(dbgpVar.getFullName(),
-						stackLevel, strValue.getRequiredBytes());
+				Node result = target.getCompleteString(dbgpVar.getFullName(), stackLevel, strValue.getRequiredBytes());
 				if (result != null) {
-					IVariable tempVar = new DBGpVariable(target, result,
-							stackLevel);
+					IVariable tempVar = new DBGpVariable(target, result, stackLevel);
 					IValue valRes = null;
 					try {
 						valRes = tempVar.getValue();
@@ -113,13 +107,11 @@ public class XDebugVariableValueEditor implements IVariableValueEditor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.actions.IVariableValueEditor#saveVariable(org.eclipse
-	 * .debug.core.model.IVariable, java.lang.String,
+	 * @see org.eclipse.debug.ui.actions.IVariableValueEditor#saveVariable(org.
+	 * eclipse .debug.core.model.IVariable, java.lang.String,
 	 * org.eclipse.swt.widgets.Shell)
 	 */
-	public boolean saveVariable(IVariable variable, String expression,
-			Shell shell) {
+	public boolean saveVariable(IVariable variable, String expression, Shell shell) {
 		return false;
 	}
 

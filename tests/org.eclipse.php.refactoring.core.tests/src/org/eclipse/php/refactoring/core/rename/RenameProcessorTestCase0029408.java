@@ -30,8 +30,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RenameProcessorTestCase0029408 extends
-		AbstractRenameRefactoringTest {
+public class RenameProcessorTestCase0029408 extends AbstractRenameRefactoringTest {
 	private IProject project1;
 	private IFile file;
 
@@ -80,8 +79,7 @@ public class RenameProcessorTestCase0029408 extends
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		RenameClassProcessor processor = new RenameClassProcessor(file,
-				selectedNode);
+		RenameClassProcessor processor = new RenameClassProcessor(file, selectedNode);
 
 		processor.setNewElementName("MyClassNewName");
 		processor.setUpdateTextualMatches(true);

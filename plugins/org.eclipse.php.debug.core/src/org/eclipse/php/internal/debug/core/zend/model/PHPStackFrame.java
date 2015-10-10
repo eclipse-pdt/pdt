@@ -28,8 +28,7 @@ import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
  */
 public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
-	private static final Pattern LAMBDA_FUNC_PATTERN = Pattern
-			.compile("(.*)\\((\\d+)\\) : runtime-created function"); //$NON-NLS-1$
+	private static final Pattern LAMBDA_FUNC_PATTERN = Pattern.compile("(.*)\\((\\d+)\\) : runtime-created function"); //$NON-NLS-1$
 
 	private PHPThread fThread;
 	private String fFunctionName;
@@ -59,17 +58,14 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	 * @param localVariables
 	 *            All local function variables
 	 */
-	public PHPStackFrame(IThread thread, String fileName,
-			String resolvedFileName, String funcName, int lineNumber,
+	public PHPStackFrame(IThread thread, String fileName, String resolvedFileName, String funcName, int lineNumber,
 			int depth, Expression[] localVariables) {
 		super((PHPDebugTarget) thread.getDebugTarget());
 
-		baseInit(thread, fileName, resolvedFileName, funcName, lineNumber,
-				depth, localVariables);
+		baseInit(thread, fileName, resolvedFileName, funcName, lineNumber, depth, localVariables);
 	}
 
-	private void baseInit(IThread thread, String fileName,
-			String resolvedFileName, String funcName, int lineNumber,
+	private void baseInit(IThread thread, String fileName, String resolvedFileName, String funcName, int lineNumber,
 			int depth, Expression[] localVariables) {
 
 		Matcher matcher = LAMBDA_FUNC_PATTERN.matcher(fileName);
@@ -87,8 +83,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		fLocalVariables = localVariables;
 	}
 
-	void update(int lineNumber, Expression[] localVariables)
-			throws DebugException {
+	void update(int lineNumber, Expression[] localVariables) throws DebugException {
 		fLineNumber = lineNumber;
 		fVariables = null;
 		fLocalVariables = localVariables;
@@ -122,9 +117,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		if (fVariables == null) {
 			fVariables = new PHPVariable[localVariables.length];
 			for (int i = 0; i < localVariables.length; i++) {
-				fVariables[i] = new PHPVariable(
-						(PHPDebugTarget) fThread.getDebugTarget(),
-						localVariables[i], false);
+				fVariables[i] = new PHPVariable((PHPDebugTarget) fThread.getDebugTarget(), localVariables[i], false);
 			}
 		}
 		return fVariables;

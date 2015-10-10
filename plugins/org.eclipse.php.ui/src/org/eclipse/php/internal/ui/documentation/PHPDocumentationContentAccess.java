@@ -50,8 +50,7 @@ import org.eclipse.text.edits.ReplaceEdit;
 @SuppressWarnings({ "restriction", "unchecked", "rawtypes" })
 public class PHPDocumentationContentAccess {
 
-	private static final Pattern INLINE_LINK_PATTERN = Pattern
-			.compile("\\{@link[\\s]+[^\\}]*\\}"); //$NON-NLS-1$
+	private static final Pattern INLINE_LINK_PATTERN = Pattern.compile("\\{@link[\\s]+[^\\}]*\\}"); //$NON-NLS-1$
 
 	private static final String BLOCK_TAG_START = "<dl>"; //$NON-NLS-1$
 	private static final String BLOCK_TAG_END = "</dl>"; //$NON-NLS-1$
@@ -77,9 +76,9 @@ public class PHPDocumentationContentAccess {
 	 * 
 	 * <p>
 	 * Unfortunately, the implementation is broken in Javadoc implementations
-	 * since 1.5, see <a
-	 * href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6376959">Sun's
-	 * bug</a>.
+	 * since 1.5, see
+	 * <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6376959">Sun'
+	 * s bug</a>.
 	 * </p>
 	 * 
 	 * <p>
@@ -89,11 +88,13 @@ public class PHPDocumentationContentAccess {
 	private static abstract class InheritDocVisitor {
 		public static final Object STOP_BRANCH = new Object() {
 			public String toString() {
-				return "STOP_BRANCH";} //$NON-NLS-1$
+				return "STOP_BRANCH"; //$NON-NLS-1$
+			}
 		};
 		public static final Object CONTINUE = new Object() {
 			public String toString() {
-				return "CONTINUE";} //$NON-NLS-1$
+				return "CONTINUE"; //$NON-NLS-1$
+			}
 		};
 
 		/**
@@ -101,7 +102,8 @@ public class PHPDocumentationContentAccess {
 		 * 
 		 * @param currType
 		 *            the current type
-		 * @return <ul>
+		 * @return
+		 * 		<ul>
 		 *         <li>{@link #STOP_BRANCH} to indicate that no Javadoc has been
 		 *         found and visiting super types should stop here</li>
 		 *         <li>{@link #CONTINUE} to indicate that no Javadoc has been
@@ -130,8 +132,7 @@ public class PHPDocumentationContentAccess {
 		 * @throws ModelException
 		 *             unexpected problem
 		 */
-		public Object visitInheritDoc(IType currentType,
-				ITypeHierarchy typeHierarchy) throws ModelException {
+		public Object visitInheritDoc(IType currentType, ITypeHierarchy typeHierarchy) throws ModelException {
 			ArrayList visited = new ArrayList();
 			visited.add(currentType);
 			// Object result = visitInheritDocInterfaces(visited, currentType,
@@ -147,13 +148,11 @@ public class PHPDocumentationContentAccess {
 						return null;
 					} else if (result == InheritDocVisitor.CONTINUE) {
 						visited.add(superClass);
-						result = visitInheritDocInterfaces(visited, superClass,
-								typeHierarchy);
+						result = visitInheritDocInterfaces(visited, superClass, typeHierarchy);
 						if (result != InheritDocVisitor.CONTINUE)
 							return result;
 						else
-							superClasses = typeHierarchy
-									.getSuperclass(superClass);
+							superClasses = typeHierarchy.getSuperclass(superClass);
 					} else {
 						return result;
 					}
@@ -176,8 +175,7 @@ public class PHPDocumentationContentAccess {
 		 * @throws ModelException
 		 *             unexpected problem
 		 */
-		private Object visitInheritDocInterfaces(ArrayList visited,
-				IType currentType, ITypeHierarchy typeHierarchy)
+		private Object visitInheritDocInterfaces(ArrayList visited, IType currentType, ITypeHierarchy typeHierarchy)
 				throws ModelException {
 			ArrayList toVisitChildren = new ArrayList();
 			IType[] superInterfaces = typeHierarchy.getSuperclass(currentType);
@@ -197,8 +195,7 @@ public class PHPDocumentationContentAccess {
 			}
 			for (Iterator iter = toVisitChildren.iterator(); iter.hasNext();) {
 				IType child = (IType) iter.next();
-				Object result = visitInheritDocInterfaces(visited, child,
-						typeHierarchy);
+				Object result = visitInheritDocInterfaces(visited, child, typeHierarchy);
 				if (result != InheritDocVisitor.CONTINUE)
 					return result;
 			}
@@ -212,8 +209,7 @@ public class PHPDocumentationContentAccess {
 				return null;
 			}
 
-			public CharSequence getInheritedParamDescription(IMethod method,
-					int i) {
+			public CharSequence getInheritedParamDescription(IMethod method, int i) {
 				return null;
 			}
 
@@ -221,8 +217,7 @@ public class PHPDocumentationContentAccess {
 				return null;
 			}
 
-			public CharSequence getInheritedExceptionDescription(
-					IMethod method, String name) {
+			public CharSequence getInheritedExceptionDescription(IMethod method, String name) {
 				return null;
 			}
 
@@ -241,8 +236,7 @@ public class PHPDocumentationContentAccess {
 			 * @throws ModelException
 			 *             unexpected problem
 			 */
-			Object getDescription(PHPDocumentationContentAccess contentAccess)
-					throws ModelException;
+			Object getDescription(PHPDocumentationContentAccess contentAccess) throws ModelException;
 		}
 
 		private final IType fStartingType;
@@ -267,13 +261,11 @@ public class PHPDocumentationContentAccess {
 		 *         none could be found
 		 */
 		public CharSequence getInheritedMainDescription(IMethod method) {
-			return (CharSequence) getInheritedDescription(method,
-					new DescriptionGetter() {
-						public Object getDescription(
-								PHPDocumentationContentAccess contentAccess) {
-							return contentAccess.getMainDescription();
-						}
-					});
+			return (CharSequence) getInheritedDescription(method, new DescriptionGetter() {
+				public Object getDescription(PHPDocumentationContentAccess contentAccess) {
+					return contentAccess.getMainDescription();
+				}
+			});
 		}
 
 		/**
@@ -288,17 +280,12 @@ public class PHPDocumentationContentAccess {
 		 *         <code>{&#64;inheritDoc}</code> tag, or <code>null</code> if
 		 *         none could be found
 		 */
-		public CharSequence getInheritedParamDescription(IMethod method,
-				final int paramIndex) {
-			return (CharSequence) getInheritedDescription(method,
-					new DescriptionGetter() {
-						public Object getDescription(
-								PHPDocumentationContentAccess contentAccess)
-								throws ModelException {
-							return contentAccess
-									.getInheritedParamDescription(paramIndex);
-						}
-					});
+		public CharSequence getInheritedParamDescription(IMethod method, final int paramIndex) {
+			return (CharSequence) getInheritedDescription(method, new DescriptionGetter() {
+				public Object getDescription(PHPDocumentationContentAccess contentAccess) throws ModelException {
+					return contentAccess.getInheritedParamDescription(paramIndex);
+				}
+			});
 		}
 
 		/**
@@ -313,17 +300,12 @@ public class PHPDocumentationContentAccess {
 		 *         <code>{&#64;inheritDoc}</code> tag, or <code>null</code> if
 		 *         none could be found
 		 */
-		public CharSequence getInheritedParamType(IMethod method,
-				final int paramIndex) {
-			return (CharSequence) getInheritedDescription(method,
-					new DescriptionGetter() {
-						public Object getDescription(
-								PHPDocumentationContentAccess contentAccess)
-								throws ModelException {
-							return contentAccess
-									.getInheritedParamType(paramIndex);
-						}
-					});
+		public CharSequence getInheritedParamType(IMethod method, final int paramIndex) {
+			return (CharSequence) getInheritedDescription(method, new DescriptionGetter() {
+				public Object getDescription(PHPDocumentationContentAccess contentAccess) throws ModelException {
+					return contentAccess.getInheritedParamType(paramIndex);
+				}
+			});
 		}
 
 		/**
@@ -337,13 +319,11 @@ public class PHPDocumentationContentAccess {
 		 *         none could be found
 		 */
 		public CharSequence getInheritedReturnDescription(IMethod method) {
-			return (CharSequence) getInheritedDescription(method,
-					new DescriptionGetter() {
-						public Object getDescription(
-								PHPDocumentationContentAccess contentAccess) {
-							return contentAccess.getReturnDescription();
-						}
-					});
+			return (CharSequence) getInheritedDescription(method, new DescriptionGetter() {
+				public Object getDescription(PHPDocumentationContentAccess contentAccess) {
+					return contentAccess.getReturnDescription();
+				}
+			});
 		}
 
 		/**
@@ -358,16 +338,12 @@ public class PHPDocumentationContentAccess {
 		 *         <code>{&#64;inheritDoc}</code> tag, or <code>null</code> if
 		 *         none could be found
 		 */
-		public CharSequence getInheritedExceptionDescription(IMethod method,
-				final String simpleName) {
-			return (CharSequence) getInheritedDescription(method,
-					new DescriptionGetter() {
-						public Object getDescription(
-								PHPDocumentationContentAccess contentAccess) {
-							return contentAccess
-									.getExceptionDescription(simpleName);
-						}
-					});
+		public CharSequence getInheritedExceptionDescription(IMethod method, final String simpleName) {
+			return (CharSequence) getInheritedDescription(method, new DescriptionGetter() {
+				public Object getDescription(PHPDocumentationContentAccess contentAccess) {
+					return contentAccess.getExceptionDescription(simpleName);
+				}
+			});
 		}
 
 		/**
@@ -381,22 +357,18 @@ public class PHPDocumentationContentAccess {
 		 *         none could be found
 		 */
 		public List<PHPDocTag> getInheritedExceptions(IMethod method) {
-			return (List<PHPDocTag>) getInheritedDescription(method,
-					new DescriptionGetter() {
-						public Object getDescription(
-								PHPDocumentationContentAccess contentAccess) {
-							return contentAccess.getExceptions();
-						}
-					});
+			return (List<PHPDocTag>) getInheritedDescription(method, new DescriptionGetter() {
+				public Object getDescription(PHPDocumentationContentAccess contentAccess) {
+					return contentAccess.getExceptions();
+				}
+			});
 		}
 
-		private Object getInheritedDescription(final IMethod method,
-				final DescriptionGetter descriptionGetter) {
+		private Object getInheritedDescription(final IMethod method, final DescriptionGetter descriptionGetter) {
 			try {
 				return new InheritDocVisitor() {
 					public Object visit(IType currType) throws ModelException {
-						IMethod overridden = getOverrideTester()
-								.findOverriddenMethodInType(currType, method);
+						IMethod overridden = getOverrideTester().findOverriddenMethodInType(currType, method);
 						if (overridden == null)
 							return InheritDocVisitor.CONTINUE;
 
@@ -411,8 +383,7 @@ public class PHPDocumentationContentAccess {
 							return InheritDocVisitor.CONTINUE;
 						}
 
-						Object overriddenDescription = descriptionGetter
-								.getDescription(contentAccess);
+						Object overriddenDescription = descriptionGetter.getDescription(contentAccess);
 						if (overriddenDescription != null)
 							return overriddenDescription;
 						else
@@ -433,8 +404,7 @@ public class PHPDocumentationContentAccess {
 		 * @throws ModelException
 		 *             unexpected problem
 		 */
-		private PHPDocumentationContentAccess getJavadocContentAccess(
-				IMethod method) throws ModelException {
+		private PHPDocumentationContentAccess getJavadocContentAccess(IMethod method) throws ModelException {
 			Object cached = fContentAccesses.get(method);
 			if (cached != null)
 				return (PHPDocumentationContentAccess) cached;
@@ -453,23 +423,20 @@ public class PHPDocumentationContentAccess {
 				return null;
 			}
 
-			PHPDocumentationContentAccess contentAccess = new PHPDocumentationContentAccess(
-					method, javadoc, this);
+			PHPDocumentationContentAccess contentAccess = new PHPDocumentationContentAccess(method, javadoc, this);
 			fContentAccesses.put(method, contentAccess);
 			return contentAccess;
 		}
 
 		private ITypeHierarchy getTypeHierarchy() throws ModelException {
 			if (fTypeHierarchy == null)
-				fTypeHierarchy = SuperTypeHierarchyCache
-						.getTypeHierarchy(fStartingType);
+				fTypeHierarchy = SuperTypeHierarchyCache.getTypeHierarchy(fStartingType);
 			return fTypeHierarchy;
 		}
 
 		private MethodOverrideTester getOverrideTester() throws ModelException {
 			if (fOverrideTester == null)
-				fOverrideTester = SuperTypeHierarchyCache
-						.getMethodOverrideTester(fStartingType);
+				fOverrideTester = SuperTypeHierarchyCache.getMethodOverrideTester(fStartingType);
 			return fOverrideTester;
 		}
 	}
@@ -491,8 +458,7 @@ public class PHPDocumentationContentAccess {
 	private HashMap<String, StringBuffer> fExceptionDescriptions;
 	private List<PHPDocTag> fExceptions;
 
-	private PHPDocumentationContentAccess(IMethod method, PHPDocBlock javadoc,
-			JavadocLookup lookup) {
+	private PHPDocumentationContentAccess(IMethod method, PHPDocBlock javadoc, JavadocLookup lookup) {
 		fMember = method;
 		fMethod = method;
 		fJavadoc = javadoc;
@@ -527,20 +493,16 @@ public class PHPDocumentationContentAccess {
 		return getHTMLContentFromSource(member);
 	}
 
-	private static StringBuffer createSuperMethodReferences(final IMethod method)
-			throws ModelException {
+	private static StringBuffer createSuperMethodReferences(final IMethod method) throws ModelException {
 		IType type = method.getDeclaringType();
-		ITypeHierarchy hierarchy = SuperTypeHierarchyCache
-				.getTypeHierarchy(type);
-		final MethodOverrideTester tester = SuperTypeHierarchyCache
-				.getMethodOverrideTester(type);
+		ITypeHierarchy hierarchy = SuperTypeHierarchyCache.getTypeHierarchy(type);
+		final MethodOverrideTester tester = SuperTypeHierarchyCache.getMethodOverrideTester(type);
 
 		final ArrayList<IMethod> superInterfaceMethods = new ArrayList<IMethod>();
 		final IMethod[] superClassMethod = { null };
 		new InheritDocVisitor() {
 			public Object visit(IType currType) throws ModelException {
-				IMethod overridden = tester.findOverriddenMethodInType(
-						currType, method);
+				IMethod overridden = tester.findOverriddenMethodInType(currType, method);
 				if (overridden == null)
 					return InheritDocVisitor.CONTINUE;
 
@@ -563,8 +525,7 @@ public class PHPDocumentationContentAccess {
 			buf.append("<b>"); //$NON-NLS-1$
 			buf.append(PHPDocumentationMessages.JavaDoc2HTMLTextReader_specified_by_section);
 			buf.append("</b> "); //$NON-NLS-1$
-			for (Iterator<IMethod> iter = superInterfaceMethods.iterator(); iter
-					.hasNext();) {
+			for (Iterator<IMethod> iter = superInterfaceMethods.iterator(); iter.hasNext();) {
 				IMethod overridden = (IMethod) iter.next();
 				buf.append(createMethodInTypeLinks(overridden));
 				if (iter.hasNext())
@@ -585,10 +546,8 @@ public class PHPDocumentationContentAccess {
 
 	private static String createMethodInTypeLinks(IMethod overridden) {
 		CharSequence methodLink = createSimpleMemberLink(overridden);
-		CharSequence typeLink = createSimpleMemberLink(overridden
-				.getDeclaringType());
-		String methodInType = MessageFormat.format(
-				PHPDocumentationMessages.JavaDoc2HTMLTextReader_method_in_type,
+		CharSequence typeLink = createSimpleMemberLink(overridden.getDeclaringType());
+		String methodInType = MessageFormat.format(PHPDocumentationMessages.JavaDoc2HTMLTextReader_method_in_type,
 				new Object[] { methodLink, typeLink });
 		return methodInType;
 	}
@@ -597,8 +556,7 @@ public class PHPDocumentationContentAccess {
 		StringBuffer buf = new StringBuffer();
 		buf.append("<a href='"); //$NON-NLS-1$
 		try {
-			String uri = PHPElementLinks.createURI(
-					PHPElementLinks.PHPDOC_SCHEME, member);
+			String uri = PHPElementLinks.createURI(PHPElementLinks.PHPDOC_SCHEME, member);
 			buf.append(uri);
 		} catch (URISyntaxException e) {
 			PHPUiPlugin.log(e);
@@ -609,8 +567,7 @@ public class PHPDocumentationContentAccess {
 		return buf;
 	}
 
-	private static String getHTMLContentFromSource(IMember member)
-			throws ModelException {
+	private static String getHTMLContentFromSource(IMember member) throws ModelException {
 		return javadoc2HTML(member);
 	}
 
@@ -651,14 +608,12 @@ public class PHPDocumentationContentAccess {
 			} else {
 				lookup = new JavadocLookup(method.getDeclaringType());
 			}
-			return new PHPDocumentationContentAccess(method, javadoc, lookup)
-					.toHTML();
+			return new PHPDocumentationContentAccess(method, javadoc, lookup).toHTML();
 		}
 		return new PHPDocumentationContentAccess(member, javadoc).toHTML();
 	}
 
-	private static String getHTMLForMagicMember(IMember member,
-			MagicMember magicMember) {
+	private static String getHTMLForMagicMember(IMember member, MagicMember magicMember) {
 
 		StringBuffer fBuf = new StringBuffer();
 
@@ -682,8 +637,7 @@ public class PHPDocumentationContentAccess {
 			fBuf.append(magicMethod.desc);
 			fBuf.append(BLOCK_TAG_START);
 
-			if (magicMethod.parameterNames != null
-					&& magicMethod.parameterNames.length > 0) {
+			if (magicMethod.parameterNames != null && magicMethod.parameterNames.length > 0) {
 
 				fBuf.append("<dt>"); //$NON-NLS-1$
 				fBuf.append(PHPDocumentationMessages.JavaDoc2HTMLTextReader_parameters_section);
@@ -738,20 +692,15 @@ public class PHPDocumentationContentAccess {
 			if (member instanceof IMethod && tagKind == PHPDocTag.METHOD) {
 				// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
 				String docTagValue = docTag.getValue().trim();
-				int index = docTagValue.indexOf('('); //$NON-NLS-1$
+				int index = docTagValue.indexOf('('); // $NON-NLS-1$
 				if (index != -1) {
-					String[] split = WHITESPACE_SEPERATOR.split(docTagValue
-							.substring(0, index).trim());
+					String[] split = WHITESPACE_SEPERATOR.split(docTagValue.substring(0, index).trim());
 					if (split.length == 1) {
-						docTagValue = new StringBuilder(
-								MagicMemberUtil.VOID_RETURN_TYPE)
-								.append(Constants.SPACE).append(docTagValue)
-								.toString();
-					} else if (split.length == 2
-							&& Constants.STATIC.equals(split[0])) {
+						docTagValue = new StringBuilder(MagicMemberUtil.VOID_RETURN_TYPE).append(Constants.SPACE)
+								.append(docTagValue).toString();
+					} else if (split.length == 2 && Constants.STATIC.equals(split[0])) {
 						StringBuilder sb = new StringBuilder(Constants.STATIC);
-						sb.append(Constants.SPACE).append(
-								MagicMemberUtil.VOID_RETURN_TYPE);
+						sb.append(Constants.SPACE).append(MagicMemberUtil.VOID_RETURN_TYPE);
 						sb.append(docTagValue.substring(6));
 						docTagValue = sb.toString();
 					}
@@ -768,17 +717,14 @@ public class PHPDocumentationContentAccess {
 					docTagValue = docTagValue.substring(7);
 				}
 
-				if (MagicMemberUtil.removeParenthesis(split).equals(
-						member.getElementName())) {
+				if (MagicMemberUtil.removeParenthesis(split).equals(member.getElementName())) {
 					return MagicMemberUtil.getMagicMethod(docTagValue);
-				} else if (MagicMemberUtil.removeParenthesis2(split).equals(
-						member.getElementName())) {
+				} else if (MagicMemberUtil.removeParenthesis2(split).equals(member.getElementName())) {
 					return MagicMemberUtil.getMagicMethod2(docTagValue);
 				}
 			} else if (member instanceof IField) {
 				// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.property.pkg.html
-				final MagicField magicField = MagicMemberUtil
-						.getMagicPropertiesField(docTag);
+				final MagicField magicField = MagicMemberUtil.getMagicPropertiesField(docTag);
 				if (magicField == null) {
 					// it's not a @property, @property-read or @property-write
 					// tag
@@ -841,8 +787,7 @@ public class PHPDocumentationContentAccess {
 					if (parameterNames.size() > parameters.indexOf(tag))
 						parameterNames.set(parameters.indexOf(tag), null);
 				} else {
-					int paramIndex = parameterNames.indexOf(tag
-							.getVariableReference().getName());
+					int paramIndex = parameterNames.indexOf(tag.getVariableReference().getName());
 					if (paramIndex != -1) {
 						parameterNames.set(paramIndex, null);
 					}
@@ -886,76 +831,52 @@ public class PHPDocumentationContentAccess {
 			fBuf.append(shortDescription);
 		if (longDescription != null && longDescription.length() > 0) {
 			fBuf.append("<p>"); //$NON-NLS-1$
-			longDescription = longDescription.replaceAll(
-					"(\r\n){2,}|\n{2,}|\r{2,}", "</p><p>"); //$NON-NLS-1$ //$NON-NLS-2$
+			longDescription = longDescription.replaceAll("(\r\n){2,}|\n{2,}|\r{2,}", "</p><p>"); //$NON-NLS-1$ //$NON-NLS-2$
 			fBuf.append(longDescription);
 			fBuf.append("</p>"); //$NON-NLS-1$
 		} else if (fMethod != null) {
-			CharSequence inherited = fJavadocLookup
-					.getInheritedMainDescription(fMethod);
+			CharSequence inherited = fJavadocLookup.getInheritedMainDescription(fMethod);
 			handleInherited(inherited);
 		}
 		handleInlineLinks();
 
-		CharSequence[] parameterDescriptions = new CharSequence[parameterNames
-				.size()];
+		CharSequence[] parameterDescriptions = new CharSequence[parameterNames.size()];
 		CharSequence[] parameterTypes = new CharSequence[parameterNames.size()];
-		boolean hasInheritedParameters = inheritParameterDescriptions(
-				parameterNames, parameterDescriptions, parameterTypes);
+		boolean hasInheritedParameters = inheritParameterDescriptions(parameterNames, parameterDescriptions,
+				parameterTypes);
 		boolean hasParameters = parameters.size() > 0 || hasInheritedParameters;
 
 		CharSequence returnDescription = null;
 		if (returnTag == null)
-			returnDescription = fJavadocLookup
-					.getInheritedReturnDescription(fMethod);
+			returnDescription = fJavadocLookup.getInheritedReturnDescription(fMethod);
 		boolean hasReturnTag = returnTag != null || returnDescription != null;
 
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=418890
 		// http://phpdoc.org/docs/latest/guides/inheritance.html
 		if (fMethod != null && exceptions.size() == 0) {
-			List<PHPDocTag> inheritedExceptions = fJavadocLookup
-					.getInheritedExceptions(fMethod);
+			List<PHPDocTag> inheritedExceptions = fJavadocLookup.getInheritedExceptions(fMethod);
 			if (inheritedExceptions != null) {
 				exceptions.addAll(inheritedExceptions);
 			}
 		}
-		CharSequence[] exceptionDescriptions = new CharSequence[exceptionNames
-				.size()];
-		boolean hasInheritedExceptions = inheritExceptionDescriptions(
-				exceptionNames, exceptionDescriptions);
+		CharSequence[] exceptionDescriptions = new CharSequence[exceptionNames.size()];
+		boolean hasInheritedExceptions = inheritExceptionDescriptions(exceptionNames, exceptionDescriptions);
 		boolean hasExceptions = exceptions.size() > 0 || hasInheritedExceptions;
 		boolean hasNamespace = namespaceTag != null;
 
-		if (hasParameters
-				|| hasReturnTag
-				|| hasExceptions
-				|| hasNamespace
-				|| versions.size() > 0
-				|| authors.size() > 0
-				|| since.size() > 0
-				|| sees.size() > 0
-				|| rest.size() > 0
+		if (hasParameters || hasReturnTag || hasExceptions || hasNamespace || versions.size() > 0 || authors.size() > 0
+				|| since.size() > 0 || sees.size() > 0 || rest.size() > 0
 				|| (fBuf.length() > 0 && (parameterDescriptions.length > 0 || exceptionDescriptions.length > 0))) {
 			handleSuperMethodReferences();
 			fBuf.append(BLOCK_TAG_START);
-			handleParameterTags(parameters, parameterNames, parameterTypes,
-					parameterDescriptions);
+			handleParameterTags(parameters, parameterNames, parameterTypes, parameterDescriptions);
 			handleReturnTag(returnTag, returnDescription);
 			handleNamespaceTag(namespaceTag);
-			handleExceptionTags(exceptions, exceptionNames,
-					exceptionDescriptions);
-			handleBlockTags(
-					PHPDocumentationMessages.JavaDoc2HTMLTextReader_since_section,
-					since);
-			handleBlockTags(
-					PHPDocumentationMessages.JavaDoc2HTMLTextReader_version_section,
-					versions);
-			handleBlockTags(
-					PHPDocumentationMessages.JavaDoc2HTMLTextReader_author_section,
-					authors);
-			handleBlockTags(
-					PHPDocumentationMessages.JavaDoc2HTMLTextReader_see_section,
-					sees);
+			handleExceptionTags(exceptions, exceptionNames, exceptionDescriptions);
+			handleBlockTags(PHPDocumentationMessages.JavaDoc2HTMLTextReader_since_section, since);
+			handleBlockTags(PHPDocumentationMessages.JavaDoc2HTMLTextReader_version_section, versions);
+			handleBlockTags(PHPDocumentationMessages.JavaDoc2HTMLTextReader_author_section, authors);
+			handleBlockTags(PHPDocumentationMessages.JavaDoc2HTMLTextReader_see_section, sees);
 			handleBlockTags(rest);
 			fBuf.append(BLOCK_TAG_END);
 
@@ -982,19 +903,17 @@ public class PHPDocumentationContentAccess {
 				} else {
 					description = url;
 				}
-				link = String.format("<a href=\"%s\">%s</a>", url, description); //$NON-NLS-1$ 
+				link = String.format("<a href=\"%s\">%s</a>", url, description); //$NON-NLS-1$
 			} else {
-				link = handleLinks(Arrays.asList(new TypeReference(0, 0, url)))
-						.toString();
+				link = handleLinks(Arrays.asList(new TypeReference(0, 0, url))).toString();
 			}
-			replaceLinks.add(new ReplaceEdit(m.start(), m.end() - m.start(),
-					link));
+			replaceLinks.add(new ReplaceEdit(m.start(), m.end() - m.start(), link));
 		}
 
 		for (int i = replaceLinks.size() - 1; i >= 0; i--) {
 			ReplaceEdit replaceLink = replaceLinks.get(i);
-			fBuf.replace(replaceLink.getOffset(), replaceLink.getOffset()
-					+ replaceLink.getLength(), replaceLink.getText());
+			fBuf.replace(replaceLink.getOffset(), replaceLink.getOffset() + replaceLink.getLength(),
+					replaceLink.getText());
 		}
 	}
 
@@ -1028,8 +947,7 @@ public class PHPDocumentationContentAccess {
 	private List<String> initParameterNames() {
 		if (fMethod != null) {
 			try {
-				return new ArrayList<String>(Arrays.asList(fMethod
-						.getParameterNames()));
+				return new ArrayList<String>(Arrays.asList(fMethod.getParameterNames()));
 			} catch (ModelException e) {
 				PHPUiPlugin.log(e);
 			}
@@ -1037,8 +955,8 @@ public class PHPDocumentationContentAccess {
 		return Collections.EMPTY_LIST;
 	}
 
-	private boolean inheritParameterDescriptions(List<String> parameterNames,
-			CharSequence[] parameterDescriptions, CharSequence[] parameterTypes) {
+	private boolean inheritParameterDescriptions(List<String> parameterNames, CharSequence[] parameterDescriptions,
+			CharSequence[] parameterTypes) {
 		boolean hasInheritedParameters = false;
 		if (fMethod != null && fMethod.getDeclaringType() == null) {
 			return hasInheritedParameters;
@@ -1046,10 +964,8 @@ public class PHPDocumentationContentAccess {
 		for (int i = 0; i < parameterNames.size(); i++) {
 			String name = (String) parameterNames.get(i);
 			if (name != null) {
-				parameterDescriptions[i] = fJavadocLookup
-						.getInheritedParamDescription(fMethod, i);
-				parameterTypes[i] = fJavadocLookup.getInheritedParamType(
-						fMethod, i);
+				parameterDescriptions[i] = fJavadocLookup.getInheritedParamDescription(fMethod, i);
+				parameterTypes[i] = fJavadocLookup.getInheritedParamType(fMethod, i);
 				if (parameterDescriptions[i] != null)
 					hasInheritedParameters = true;
 			}
@@ -1057,8 +973,7 @@ public class PHPDocumentationContentAccess {
 		return hasInheritedParameters;
 	}
 
-	private boolean inheritExceptionDescriptions(List<String> exceptionNames,
-			CharSequence[] exceptionDescriptions) {
+	private boolean inheritExceptionDescriptions(List<String> exceptionNames, CharSequence[] exceptionDescriptions) {
 		boolean hasInheritedExceptions = false;
 		if (fMethod != null && fMethod.getDeclaringType() == null) {
 			return hasInheritedExceptions;
@@ -1066,8 +981,7 @@ public class PHPDocumentationContentAccess {
 		for (int i = 0; i < exceptionNames.size(); i++) {
 			String name = (String) exceptionNames.get(i);
 			if (name != null) {
-				exceptionDescriptions[i] = fJavadocLookup
-						.getInheritedExceptionDescription(fMethod, name);
+				exceptionDescriptions[i] = fJavadocLookup.getInheritedExceptionDescription(fMethod, name);
 				if (exceptionDescriptions[i] != null)
 					hasInheritedExceptions = true;
 			}
@@ -1104,8 +1018,7 @@ public class PHPDocumentationContentAccess {
 		return fReturnDescription.length() > 0 ? fReturnDescription : null;
 	}
 
-	CharSequence getInheritedParamDescription(int paramIndex)
-			throws ModelException {
+	CharSequence getInheritedParamDescription(int paramIndex) throws ModelException {
 		if (fMethod != null) {
 			String[] parameterNames = fMethod.getParameterNames();
 			if (paramIndex >= parameterNames.length) {
@@ -1125,8 +1038,7 @@ public class PHPDocumentationContentAccess {
 			fBuf = description;
 
 			String paramName = parameterNames[paramIndex];
-			String info = getParameterInfo(fJavadoc, paramName,
-					PARAMETER_DESCRIPTION_TYPE);
+			String info = getParameterInfo(fJavadoc, paramName, PARAMETER_DESCRIPTION_TYPE);
 			if (info != null)
 				description.append(info);
 			fBuf = null;
@@ -1155,8 +1067,7 @@ public class PHPDocumentationContentAccess {
 			fBuf = typeName;
 
 			String paramName = parameterNames[paramIndex];
-			String info = getParameterInfo(fJavadoc, paramName,
-					PARAMETER_TYPE_TYPE);
+			String info = getParameterInfo(fJavadoc, paramName, PARAMETER_TYPE_TYPE);
 			if (info != null)
 				typeName.append(info);
 
@@ -1171,8 +1082,7 @@ public class PHPDocumentationContentAccess {
 			cacheAllNewExceptionsAndDescriptions();
 
 			StringBuffer description = fExceptionDescriptions.get(simpleName);
-			return description != null && description.length() > 0 ? description
-					: null;
+			return description != null && description.length() > 0 ? description : null;
 		}
 		return null;
 	}
@@ -1181,8 +1091,7 @@ public class PHPDocumentationContentAccess {
 		if (fMethod != null) {
 			cacheAllNewExceptionsAndDescriptions();
 
-			return fExceptions != null && fExceptions.size() > 0 ? fExceptions
-					: null;
+			return fExceptions != null && fExceptions.size() > 0 ? fExceptions : null;
 		}
 		return null;
 	}
@@ -1281,13 +1190,11 @@ public class PHPDocumentationContentAccess {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=454140
 				// only print @var tags having empty variable name or
 				// having variable name matching the field description
-				if (fMethod == null
-						&& tag.getVariableReference() != null
-						&& !(tag.getVariableReference().getName()
-								.equals(fMember.getElementName()) ||
-						// also handle const fields (never prefixed by '$')
-						tag.getVariableReference().getName()
-								.equals('$' + fMember.getElementName()))) {
+				if (fMethod == null && tag.getVariableReference() != null
+						&& !(tag.getVariableReference().getName().equals(fMember.getElementName()) ||
+								// also handle const fields (never prefixed by
+								// '$')
+				tag.getVariableReference().getName().equals('$' + fMember.getElementName()))) {
 					continue;
 				}
 				handleBlockTagTitle("Type"); //$NON-NLS-1$
@@ -1311,8 +1218,7 @@ public class PHPDocumentationContentAccess {
 		fBuf.append("</dt>"); //$NON-NLS-1$
 	}
 
-	private void handleExceptionTags(List tags, List exceptionNames,
-			CharSequence[] exceptionDescriptions) {
+	private void handleExceptionTags(List tags, List exceptionNames, CharSequence[] exceptionDescriptions) {
 		if (tags.size() == 0 && containsOnlyNull(exceptionNames))
 			return;
 
@@ -1353,8 +1259,8 @@ public class PHPDocumentationContentAccess {
 		}
 	}
 
-	private void handleParameterTags(List tags, List parameterNames,
-			CharSequence[] parameterTypes, CharSequence[] parameterDescriptions) {
+	private void handleParameterTags(List tags, List parameterNames, CharSequence[] parameterTypes,
+			CharSequence[] parameterDescriptions) {
 		if (tags.size() == 0 && containsOnlyNull(parameterNames))
 			return;
 
@@ -1453,18 +1359,15 @@ public class PHPDocumentationContentAccess {
 			if (argsListStart == -1) {
 				refMemberName = name.substring(typeNameEnd + "::".length()); //$NON-NLS-1$
 			} else {
-				refMemberName = name.substring(
-						typeNameEnd + "::".length(), argsListStart); //$NON-NLS-1$
+				refMemberName = name.substring(typeNameEnd + "::".length(), argsListStart); //$NON-NLS-1$
 
 				int argsListEnd = name.indexOf(')', argsListStart);
 				if (argsListEnd == -1) {
 					refMethodParamTypes = new String[0];
 				} else {
-					String argsList = name.substring(
-							argsListStart + ")".length(), argsListEnd); //$NON-NLS-1$
+					String argsList = name.substring(argsListStart + ")".length(), argsListEnd); //$NON-NLS-1$
 					List<String> args = new ArrayList<String>();
-					StringTokenizer tokenizer = new StringTokenizer(argsList,
-							","); //$NON-NLS-1$
+					StringTokenizer tokenizer = new StringTokenizer(argsList, ","); //$NON-NLS-1$
 					while (tokenizer.hasMoreElements()) {
 						args.add(tokenizer.nextToken().trim());
 					}
@@ -1477,8 +1380,8 @@ public class PHPDocumentationContentAccess {
 			sb.append("<a href='"); //$NON-NLS-1$
 			try {
 				String scheme = PHPElementLinks.PHPDOC_SCHEME;
-				String uri = PHPElementLinks.createURI(scheme, fMember,
-						refTypeName, refMemberName, refMethodParamTypes);
+				String uri = PHPElementLinks.createURI(scheme, fMember, refTypeName, refMemberName,
+						refMethodParamTypes);
 				sb.append(uri);
 			} catch (URISyntaxException e) {
 				PHPUiPlugin.log(e);
@@ -1515,8 +1418,7 @@ public class PHPDocumentationContentAccess {
 		return true;
 	}
 
-	private String getParameterInfo(PHPDocBlock phpDoc, String paramName,
-			int infoType) {
+	private String getParameterInfo(PHPDocBlock phpDoc, String paramName, int infoType) {
 		for (PHPDocTag tag : phpDoc.getTags(PHPDocTag.PARAM)) {
 			String name = getParameterInfo(tag, PARAMETER_NAME_TYPE);
 			if (name != null && name.equals(paramName)) {
@@ -1537,9 +1439,8 @@ public class PHPDocumentationContentAccess {
 		if (infoType == PARAMETER_DESCRIPTION_TYPE) {
 			int typeRefIndex = value.indexOf(typeRef.getName());
 			int variableRefIndex = value.indexOf(variableRef.getName());
-			int lastRefIndex = typeRefIndex > variableRefIndex ? typeRefIndex
-					+ typeRef.getName().length() : variableRefIndex
-					+ variableRef.getName().length();
+			int lastRefIndex = typeRefIndex > variableRefIndex ? typeRefIndex + typeRef.getName().length()
+					: variableRefIndex + variableRef.getName().length();
 			return value.substring(lastRefIndex).trim();
 		} else if (infoType == PARAMETER_TYPE_TYPE) {
 			return typeRef.getName();

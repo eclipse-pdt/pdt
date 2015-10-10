@@ -47,9 +47,8 @@ public class PHPLaunchProxy extends LaunchProxy {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.internal.ui.viewers.update.LaunchProxy#launchesTerminated
-	 * (org.eclipse.debug.core.ILaunch[])
+	 * @see org.eclipse.debug.internal.ui.viewers.update.LaunchProxy#
+	 * launchesTerminated (org.eclipse.debug.core.ILaunch[])
 	 */
 	@Override
 	public void launchesTerminated(ILaunch[] launches) {
@@ -77,10 +76,8 @@ public class PHPLaunchProxy extends LaunchProxy {
 	protected void uninstallModelProxies(ILaunch[] launches) {
 		for (ILaunch launch : launches) {
 			if (this.fLaunch == launch) {
-				ILaunchManager manager = DebugPlugin.getDefault()
-						.getLaunchManager();
-				ModelDelta delta = new ModelDelta(manager, 0,
-						IModelDelta.NO_CHANGE, manager.getLaunches().length);
+				ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
+				ModelDelta delta = new ModelDelta(manager, 0, IModelDelta.NO_CHANGE, manager.getLaunches().length);
 				for (Object element : fLaunch.getChildren())
 					delta.addNode(element, IModelDelta.UNINSTALL);
 				fireModelChanged(delta);

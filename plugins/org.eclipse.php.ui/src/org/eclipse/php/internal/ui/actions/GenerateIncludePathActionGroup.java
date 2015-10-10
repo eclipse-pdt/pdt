@@ -46,15 +46,11 @@ import org.eclipse.ui.texteditor.IUpdate;
  * 
  * 
  */
-public class GenerateIncludePathActionGroup extends ActionGroup /*
-																 * org.eclipse.dltk
-																 * .internal.ui.
-																 * wizards
-																 * .buildpath
-																 * .newsourcepage
-																 * .
-																 * GenerateBuildPathActionGroup
-																 */{
+public class GenerateIncludePathActionGroup
+		extends ActionGroup /*
+							 * org.eclipse.dltk .internal.ui. wizards .buildpath
+							 * .newsourcepage . GenerateBuildPathActionGroup
+							 */ {
 	/**
 	 * Pop-up menu: id of the source sub menu (value
 	 * <code>org.eclipse.dltk.ui.buildpath.menu</code>).
@@ -96,8 +92,8 @@ public class GenerateIncludePathActionGroup extends ActionGroup /*
 
 	private Action fNoActionAvailable = new NoActionAvailable();
 
-	private static abstract class OpenPHPIncludePathWizardAction extends
-			AbstractOpenWizardAction implements ISelectionChangedListener {
+	private static abstract class OpenPHPIncludePathWizardAction extends AbstractOpenWizardAction
+			implements ISelectionChangedListener {
 		/**
 		 * {@inheritDoc}
 		 */
@@ -114,8 +110,7 @@ public class GenerateIncludePathActionGroup extends ActionGroup /*
 		public abstract boolean selectionChanged(IStructuredSelection selection);
 	}
 
-	private abstract static class CreateSourceFolderAction extends
-			OpenPHPIncludePathWizardAction {
+	private abstract static class CreateSourceFolderAction extends OpenPHPIncludePathWizardAction {
 
 		private AddSourceFolderWizard fAddSourceFolderWizard;
 		private IScriptProject fSelectedProject;
@@ -129,15 +124,11 @@ public class GenerateIncludePathActionGroup extends ActionGroup /*
 		 * {@inheritDoc}
 		 */
 		protected INewWizard createWizard() throws CoreException {
-			BPListElement newEntrie = new BPListElement(fSelectedProject,
-					IBuildpathEntry.BPE_SOURCE, false);
-			BPListElement[] existing = BPListElement
-					.createFromExisting(fSelectedProject);
-			boolean isProjectSrcFolder = BPListElement.isProjectSourceFolder(
-					existing, fSelectedProject);
-			fAddSourceFolderWizard = new AddSourceFolderWizard(existing,
-					newEntrie, fIsLinked, false, false, isProjectSrcFolder,
-					isProjectSrcFolder);
+			BPListElement newEntrie = new BPListElement(fSelectedProject, IBuildpathEntry.BPE_SOURCE, false);
+			BPListElement[] existing = BPListElement.createFromExisting(fSelectedProject);
+			boolean isProjectSrcFolder = BPListElement.isProjectSourceFolder(existing, fSelectedProject);
+			fAddSourceFolderWizard = new AddSourceFolderWizard(existing, newEntrie, fIsLinked, false, false,
+					isProjectSrcFolder, isProjectSrcFolder);
 			return fAddSourceFolderWizard;
 		}
 
@@ -145,8 +136,7 @@ public class GenerateIncludePathActionGroup extends ActionGroup /*
 		 * {@inheritDoc}
 		 */
 		public boolean selectionChanged(IStructuredSelection selection) {
-			if (selection.size() == 1
-					&& selection.getFirstElement() instanceof IScriptProject) {
+			if (selection.size() == 1 && selection.getFirstElement() instanceof IScriptProject) {
 				fSelectedProject = (IScriptProject) selection.getFirstElement();
 				return true;
 			}
@@ -159,14 +149,13 @@ public class GenerateIncludePathActionGroup extends ActionGroup /*
 
 	}
 
-	public static class CreateLocalSourceFolderAction extends
-			CreateSourceFolderAction {
+	public static class CreateLocalSourceFolderAction extends CreateSourceFolderAction {
 
 		public CreateLocalSourceFolderAction() {
 			super(false);
-			setText(ActionMessages.OpenNewSourceFolderWizardAction_text2); //$NON-NLS-1$
-			setDescription(ActionMessages.OpenNewSourceFolderWizardAction_description); //$NON-NLS-1$
-			setToolTipText(ActionMessages.OpenNewSourceFolderWizardAction_tooltip); //$NON-NLS-1$
+			setText(ActionMessages.OpenNewSourceFolderWizardAction_text2); // $NON-NLS-1$
+			setDescription(ActionMessages.OpenNewSourceFolderWizardAction_description); // $NON-NLS-1$
+			setToolTipText(ActionMessages.OpenNewSourceFolderWizardAction_tooltip); // $NON-NLS-1$
 			setImageDescriptor(DLTKPluginImages.DESC_TOOL_NEWPACKROOT);
 			if (DLTKCore.DEBUG) {
 				System.err.println(Messages.GenerateIncludePathActionGroup_0);
@@ -176,8 +165,7 @@ public class GenerateIncludePathActionGroup extends ActionGroup /*
 		}
 	}
 
-	public static class CreateLinkedSourceFolderAction extends
-			CreateSourceFolderAction {
+	public static class CreateLinkedSourceFolderAction extends CreateSourceFolderAction {
 
 		public CreateLinkedSourceFolderAction() {
 			super(true);
@@ -189,7 +177,7 @@ public class GenerateIncludePathActionGroup extends ActionGroup /*
 	}
 
 	private IWorkbenchSite fSite;
-	private List/* <Action> */fActions;
+	private List/* <Action> */ fActions;
 
 	private String fGroupName = IContextMenuConstants.GROUP_REORGANIZE;
 
@@ -221,12 +209,10 @@ public class GenerateIncludePathActionGroup extends ActionGroup /*
 		fSite = site;
 		fActions = new ArrayList();
 
-		final RemoveFromIncludepathAction remove = new RemoveFromIncludepathAction(
-				site);
+		final RemoveFromIncludepathAction remove = new RemoveFromIncludepathAction(site);
 		fActions.add(remove);
 
-		final ConfigurePHPIncludePathAction configure = new ConfigurePHPIncludePathAction(
-				site);
+		final ConfigurePHPIncludePathAction configure = new ConfigurePHPIncludePathAction(site);
 		fActions.add(configure);
 
 		final ISelectionProvider provider = fSite.getSelectionProvider();

@@ -55,8 +55,7 @@ public class ExtractVariableRefactoringTest3 extends AbstractRefactoringTest {
 		}
 		file = folder.getFile("ExtractVariableRefactoringTest3.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php function foo(){$a = 4; $c = $a;} ?>".getBytes());
+		InputStream source = new ByteArrayInputStream("<?php function foo(){$a = 4; $c = $a;} ?>".getBytes());
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
 		} else {
@@ -75,8 +74,7 @@ public class ExtractVariableRefactoringTest3 extends AbstractRefactoringTest {
 
 		IStructuredModel model = null;
 		try {
-			model = StructuredModelManager.getModelManager()
-					.createUnManagedStructuredModelFor(file);
+			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
 		} catch (IOException e) {
 			fail(e.getMessage());
 		} catch (CoreException e) {
@@ -89,12 +87,11 @@ public class ExtractVariableRefactoringTest3 extends AbstractRefactoringTest {
 
 		ExtractVariableRefactoring processor;
 		try {
-			processor = new ExtractVariableRefactoring(DLTKCore
-					.createSourceModuleFrom(file), structuredDocument, 26, 1);
+			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 26,
+					1);
 			processor.setNewVariableName("c");
 
-			RefactoringStatus status = processor
-					.checkInitialConditions(new NullProgressMonitor());
+			RefactoringStatus status = processor.checkInitialConditions(new NullProgressMonitor());
 			assertEquals(Status.OK, status.getSeverity());
 
 			status = processor.checkFinalConditions(new NullProgressMonitor());

@@ -41,8 +41,7 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.osgi.service.prefs.BackingStoreException;
 
-public abstract class UseProjectSpecificSettingsPropertyPage extends
-		PropertyPage implements IWorkbenchPreferencePage {
+public abstract class UseProjectSpecificSettingsPropertyPage extends PropertyPage implements IWorkbenchPreferencePage {
 	/*
 	 * Disable link data, prevents the display of a "workspace" or "project"
 	 * settings link to prevent recursive dialog launching
@@ -78,18 +77,15 @@ public abstract class UseProjectSpecificSettingsPropertyPage extends
 		composite.setLayoutData(data);
 
 		Composite checkLinkComposite = new Composite(composite, SWT.NONE);
-		checkLinkComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-				true, false));
+		checkLinkComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		checkLinkComposite.setLayout(new GridLayout(2, false));
 
 		if (getProject() != null) {
 			fEnableProjectSettings = new Button(checkLinkComposite, SWT.CHECK);
 			fEnableProjectSettings.setText(SSEUIMessages.EnableProjectSettings);
-			fEnableProjectSettings.setLayoutData(new GridData(SWT.BEGINNING,
-					SWT.CENTER, false, false));
-			boolean enabledForProject = new ProjectScope(getProject()).getNode(
-					getPreferenceNodeQualifier()).getBoolean(
-					getProjectSettingsKey(), false);
+			fEnableProjectSettings.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+			boolean enabledForProject = new ProjectScope(getProject()).getNode(getPreferenceNodeQualifier())
+					.getBoolean(getProjectSettingsKey(), false);
 			fEnableProjectSettings.setSelection(enabledForProject);
 		} else {
 			Label spacer = new Label(checkLinkComposite, SWT.CHECK);
@@ -98,19 +94,16 @@ public abstract class UseProjectSpecificSettingsPropertyPage extends
 
 		fProjectSettingsLink = new Link(checkLinkComposite, SWT.NONE);
 		fProjectSettingsLink.setFont(composite.getFont());
-		fProjectSettingsLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING,
-				true, false));
+		fProjectSettingsLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, true, false));
 
 		/*
 		 * "element" should be a project, if null, link to per-project
 		 * properties
 		 */
 		if (getProject() != null) {
-			fProjectSettingsLink
-					.setText("<a>" + SSEUIMessages.ConfigureWorkspaceSettings + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$ 
+			fProjectSettingsLink.setText("<a>" + SSEUIMessages.ConfigureWorkspaceSettings + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
-			fProjectSettingsLink
-					.setText("<a>" + SSEUIMessages.ConfigureProjectSettings + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+			fProjectSettingsLink.setText("<a>" + SSEUIMessages.ConfigureProjectSettings + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		updateLinkEnablement();
@@ -179,8 +172,7 @@ public abstract class UseProjectSpecificSettingsPropertyPage extends
 	protected abstract String getPropertyPageID();
 
 	protected boolean isElementSettingsEnabled() {
-		return fEnableProjectSettings != null
-				&& fEnableProjectSettings.getSelection();
+		return fEnableProjectSettings != null && fEnableProjectSettings.getSelection();
 	}
 
 	void openProjectSettings() {
@@ -188,8 +180,7 @@ public abstract class UseProjectSpecificSettingsPropertyPage extends
 
 			protected Control createDialogArea(Composite container) {
 				Control area = super.createDialogArea(container);
-				getTableViewer().setSorter(
-						new ResourceSorter(ResourceSorter.NAME));
+				getTableViewer().setSorter(new ResourceSorter(ResourceSorter.NAME));
 				return area;
 			}
 		};
@@ -202,14 +193,11 @@ public abstract class UseProjectSpecificSettingsPropertyPage extends
 				return ((IWorkspace) inputElement).getRoot().getProjects();
 			}
 
-			public void inputChanged(Viewer viewer, Object oldInput,
-					Object newInput) {
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 		});
-		dialog.setLabelProvider(new DecoratingLabelProvider(
-				new WorkbenchLabelProvider(), SSEUIPlugin.getDefault()
-						.getWorkbench().getDecoratorManager()
-						.getLabelDecorator()));
+		dialog.setLabelProvider(new DecoratingLabelProvider(new WorkbenchLabelProvider(),
+				SSEUIPlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator()));
 		dialog.setInput(ResourcesPlugin.getWorkspace());
 		dialog.setTitle(SSEUIMessages.PropertyPreferencePage_01);
 		if (dialog.open() == Window.OK) {
@@ -218,8 +206,7 @@ public abstract class UseProjectSpecificSettingsPropertyPage extends
 				IProject project = (IProject) dialog.getResult()[0];
 				Map data = new HashMap();
 				data.put(DISABLE_LINK, Boolean.TRUE);
-				PreferencesUtil.createPropertyDialogOn(getShell(), project,
-						getPropertyPageID(),
+				PreferencesUtil.createPropertyDialogOn(getShell(), project, getPropertyPageID(),
 						new String[] { getPropertyPageID() }, data).open();
 			}
 		}
@@ -228,31 +215,24 @@ public abstract class UseProjectSpecificSettingsPropertyPage extends
 	void openWorkspaceSettings() {
 		Map data = new HashMap();
 		data.put(DISABLE_LINK, Boolean.TRUE);
-		PreferencesUtil.createPreferenceDialogOn(getShell(),
-				getPreferencePageID(), new String[] { getPreferencePageID() },
-				data).open();
+		PreferencesUtil.createPreferenceDialogOn(getShell(), getPreferencePageID(),
+				new String[] { getPreferencePageID() }, data).open();
 	}
 
 	public boolean performOk() {
 		boolean ok = super.performOk();
 		if (getProject() != null) {
 			if (isElementSettingsEnabled()) {
-				new ProjectScope(getProject()).getNode(
-						getPreferenceNodeQualifier()).putBoolean(
-						getProjectSettingsKey(),
+				new ProjectScope(getProject()).getNode(getPreferenceNodeQualifier()).putBoolean(getProjectSettingsKey(),
 						fEnableProjectSettings.getSelection());
 			} else {
-				new ProjectScope(getProject()).getNode(
-						getPreferenceNodeQualifier()).remove(
-						getProjectSettingsKey());
+				new ProjectScope(getProject()).getNode(getPreferenceNodeQualifier()).remove(getProjectSettingsKey());
 			}
 			try {
-				new ProjectScope(getProject()).getNode(
-						getPreferenceNodeQualifier()).flush();
+				new ProjectScope(getProject()).getNode(getPreferenceNodeQualifier()).flush();
 			} catch (BackingStoreException e) {
-				Logger.logException(
-						"problem saving preference settings to scope " //$NON-NLS-1$
-								+ new ProjectScope(getProject()).getName(), e);
+				Logger.logException("problem saving preference settings to scope " //$NON-NLS-1$
+						+ new ProjectScope(getProject()).getName(), e);
 				ok = false;
 			}
 		}
@@ -261,8 +241,7 @@ public abstract class UseProjectSpecificSettingsPropertyPage extends
 
 	private void updateLinkEnablement() {
 		if (fData != null && fProjectSettingsLink != null) {
-			fProjectSettingsLink.setEnabled(!Boolean.TRUE.equals(fData
-					.get(DISABLE_LINK)));
+			fProjectSettingsLink.setEnabled(!Boolean.TRUE.equals(fData.get(DISABLE_LINK)));
 		}
 	}
 }

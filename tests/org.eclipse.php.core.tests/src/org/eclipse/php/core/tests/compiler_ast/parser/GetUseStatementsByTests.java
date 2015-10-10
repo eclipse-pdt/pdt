@@ -35,9 +35,9 @@ public class GetUseStatementsByTests {
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
-		TESTS.put(PHPVersion.PHP5_3,
-				new String[] { "/workspace/astutils/get_use_statements/php53" });
+		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/astutils/get_use_statements/php53" });
 	};
 
 	private AbstractPHPSourceParser parser;
@@ -50,16 +50,13 @@ public class GetUseStatementsByTests {
 	public void getUse(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(fileName);
 
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdttFile
-				.getFile().trim().getBytes());
-		ModuleDeclaration moduleDeclaration = (ModuleDeclaration) parser.parse(
-				new InputStreamReader(inputStream), null,
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdttFile.getFile().trim().getBytes());
+		ModuleDeclaration moduleDeclaration = (ModuleDeclaration) parser.parse(new InputStreamReader(inputStream), null,
 				ProjectOptions.useShortTags((IProject) null));
 
 		int offset = Integer.parseInt(pdttFile.getConfig().get("offset"));
 
-		UseStatement[] useStatements = ASTUtils.getUseStatements(
-				moduleDeclaration, offset);
+		UseStatement[] useStatements = ASTUtils.getUseStatements(moduleDeclaration, offset);
 
 		StringBuilder builder = new StringBuilder();
 		for (UseStatement s : useStatements) {

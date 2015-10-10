@@ -26,16 +26,13 @@ import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
  */
 public class VariablesUtil {
 
-	private static final class ContextMembersComparator implements
-			Comparator<Object> {
+	private static final class ContextMembersComparator implements Comparator<Object> {
 
 		@Override
 		public int compare(Object o1, Object o2) {
-			if (!(o1 instanceof IVariableFacet)
-					&& !(o2 instanceof IVariableFacet))
+			if (!(o1 instanceof IVariableFacet) && !(o2 instanceof IVariableFacet))
 				return 0;
-			return getPriority((IVariableFacet) o1)
-					- getPriority((IVariableFacet) o2);
+			return getPriority((IVariableFacet) o1) - getPriority((IVariableFacet) o2);
 		}
 
 		private int getPriority(IVariableFacet facet) {
@@ -50,29 +47,24 @@ public class VariablesUtil {
 
 	}
 
-	private static final class ObjectMembersComparator implements
-			Comparator<Object> {
+	private static final class ObjectMembersComparator implements Comparator<Object> {
 
 		@Override
 		public int compare(Object o1, Object o2) {
-			if (!(o1 instanceof IVariableFacet)
-					&& !(o2 instanceof IVariableFacet))
+			if (!(o1 instanceof IVariableFacet) && !(o2 instanceof IVariableFacet))
 				return 0;
 			// Check by type first
-			int facetOrderDiff = getPriority((IVariableFacet) o1)
-					- getPriority((IVariableFacet) o2);
+			int facetOrderDiff = getPriority((IVariableFacet) o1) - getPriority((IVariableFacet) o2);
 			// Same type, check alphabetically
 			if (facetOrderDiff == 0) {
 				if ((o1 instanceof IVariable) && (o2 instanceof IVariable))
 					try {
-						return ((IVariable) o1).getName().compareToIgnoreCase(
-								((IVariable) o2).getName());
+						return ((IVariable) o1).getName().compareToIgnoreCase(((IVariable) o2).getName());
 					} catch (DebugException e) {
 						return 0;
 					}
 				// TODO - should be done better in future at variable level
-				else if ((o1 instanceof Expression)
-						&& (o2 instanceof Expression)) {
+				else if ((o1 instanceof Expression) && (o2 instanceof Expression)) {
 					String o1name = ((Expression) o1).getLastName();
 					int o1idx = o1name.lastIndexOf(':');
 					if (o1idx != -1)
@@ -97,9 +89,8 @@ public class VariablesUtil {
 	}
 
 	@SuppressWarnings("nls")
-	public static final String[] SUPER_GLOBAL_NAMES = new String[] {
-			"$GLOBALS", "$_SERVER", "$_GET", "$_POST", "$_FILES", "$_COOKIE",
-			"$_SESSION", "$_REQUEST", "$_ENV" };
+	public static final String[] SUPER_GLOBAL_NAMES = new String[] { "$GLOBALS", "$_SERVER", "$_GET", "$_POST",
+			"$_FILES", "$_COOKIE", "$_SESSION", "$_REQUEST", "$_ENV" };
 
 	public static final String THIS = "$this"; //$NON-NLS-1$
 	public static final String CLASS_INDICATOR = "<class>"; //$NON-NLS-1$

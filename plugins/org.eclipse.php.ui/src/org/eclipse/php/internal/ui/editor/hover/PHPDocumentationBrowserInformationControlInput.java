@@ -9,8 +9,7 @@ import org.eclipse.jface.internal.text.html.BrowserInformationControlInput;
  * 
  * @since 3.4
  */
-public class PHPDocumentationBrowserInformationControlInput extends
-		BrowserInformationControlInput {
+public class PHPDocumentationBrowserInformationControlInput extends BrowserInformationControlInput {
 
 	private final IModelElement fElement;
 	private final String fHtml;
@@ -28,8 +27,7 @@ public class PHPDocumentationBrowserInformationControlInput extends
 	 * @param leadingImageWidth
 	 *            the indent required for the element image
 	 */
-	public PHPDocumentationBrowserInformationControlInput(
-			PHPDocumentationBrowserInformationControlInput previous,
+	public PHPDocumentationBrowserInformationControlInput(PHPDocumentationBrowserInformationControlInput previous,
 			IModelElement element, String html, int leadingImageWidth) {
 		super(previous);
 		Assert.isNotNull(html);

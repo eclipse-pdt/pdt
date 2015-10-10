@@ -22,8 +22,7 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 			+ "use test1;\n" //$NON-NLS-1$
 			+ "use test2;\n" //$NON-NLS-1$
 			+ "use test3;\n" //$NON-NLS-1$
-			+ createPreviewHeader(FormatterMessages.BlankLinesTabPage_preview_header)
-			+ "class Example {" + //$NON-NLS-1$
+			+ createPreviewHeader(FormatterMessages.BlankLinesTabPage_preview_header) + "class Example {" + //$NON-NLS-1$
 			"  const CONST2 = 3;" + "  var $theInt= 1;" + //$NON-NLS-1$
 			"  public function foo($a, $b) {" + //$NON-NLS-1$
 			"    switch($a) {" + //$NON-NLS-1$
@@ -70,29 +69,19 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 	 * @param workingValues
 	 *            The values wherein the options are stored.
 	 */
-	public BlankLinesTabPage(ModifyDialog modifyDialog,
-			CodeFormatterPreferences codeFormatterPreferences) {
+	public BlankLinesTabPage(ModifyDialog modifyDialog, CodeFormatterPreferences codeFormatterPreferences) {
 		super(modifyDialog, codeFormatterPreferences);
 	}
 
 	protected void doCreatePreferences(Composite composite, int numColumns) {
-		Group group = createGroup(numColumns, composite,
-				FormatterMessages.BlankLinesTabPage_namespace_group_title);
-		namespaceDecl = createNumberPref(
-				group,
-				numColumns,
-				FormatterMessages.BlankLinesTabPage_namespace_option_before_namespace,
-				0, 32);
-		namespaceDecl
-				.setValue(codeFormatterPreferences.blank_lines_before_namespace);
+		Group group = createGroup(numColumns, composite, FormatterMessages.BlankLinesTabPage_namespace_group_title);
+		namespaceDecl = createNumberPref(group, numColumns,
+				FormatterMessages.BlankLinesTabPage_namespace_option_before_namespace, 0, 32);
+		namespaceDecl.setValue(codeFormatterPreferences.blank_lines_before_namespace);
 
-		namespaceDeclAfter = createNumberPref(
-				group,
-				numColumns,
-				FormatterMessages.BlankLinesTabPage_namespace_option_after_namespace,
-				0, 32);
-		namespaceDeclAfter
-				.setValue(codeFormatterPreferences.blank_lines_after_namespace);
+		namespaceDeclAfter = createNumberPref(group, numColumns,
+				FormatterMessages.BlankLinesTabPage_namespace_option_after_namespace, 0, 32);
+		namespaceDeclAfter.setValue(codeFormatterPreferences.blank_lines_after_namespace);
 
 		// useStatementsBefore = createNumberPref(
 		// group,
@@ -102,13 +91,9 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 		// useStatementsBefore
 		// .setValue(codeFormatterPreferences.blank_lines_before_use_statements);
 
-		useStatementsAfter = createNumberPref(
-				group,
-				numColumns,
-				FormatterMessages.BlankLinesTabPage_namespace_option_after_use_statements,
-				0, 32);
-		useStatementsAfter
-				.setValue(codeFormatterPreferences.blank_lines_after_use_statements);
+		useStatementsAfter = createNumberPref(group, numColumns,
+				FormatterMessages.BlankLinesTabPage_namespace_option_after_use_statements, 0, 32);
+		useStatementsAfter.setValue(codeFormatterPreferences.blank_lines_after_use_statements);
 
 		// useStatementsBetween = createNumberPref(
 		// group,
@@ -118,79 +103,42 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 		// useStatementsBetween
 		// .setValue(codeFormatterPreferences.blank_lines_between_use_statements);
 
-		namespaceDeclBetween = createNumberPref(
-				group,
-				numColumns,
-				FormatterMessages.BlankLinesTabPage_namespace_option_between_namespaces,
-				0, 32);
-		namespaceDeclBetween
-				.setValue(codeFormatterPreferences.blank_lines_between_namespaces);
+		namespaceDeclBetween = createNumberPref(group, numColumns,
+				FormatterMessages.BlankLinesTabPage_namespace_option_between_namespaces, 0, 32);
+		namespaceDeclBetween.setValue(codeFormatterPreferences.blank_lines_between_namespaces);
 
-		group = createGroup(numColumns, composite,
-				FormatterMessages.BlankLinesTabPage_class_group_title);
-		classDecl = createNumberPref(
-				group,
-				numColumns,
-				FormatterMessages.BlankLinesTabPage_class_option_before_class_declarations,
-				0, 32);
-		classDecl
-				.setValue(codeFormatterPreferences.blank_line_before_class_declaration);
+		group = createGroup(numColumns, composite, FormatterMessages.BlankLinesTabPage_class_group_title);
+		classDecl = createNumberPref(group, numColumns,
+				FormatterMessages.BlankLinesTabPage_class_option_before_class_declarations, 0, 32);
+		classDecl.setValue(codeFormatterPreferences.blank_line_before_class_declaration);
 
-		constantDecl = createNumberPref(
-				group,
-				numColumns,
-				FormatterMessages.BlankLinesTabPage_class_option_before_constant_decls,
-				0, 32);
-		constantDecl
-				.setValue(codeFormatterPreferences.blank_line_before_constant_declaration);
+		constantDecl = createNumberPref(group, numColumns,
+				FormatterMessages.BlankLinesTabPage_class_option_before_constant_decls, 0, 32);
+		constantDecl.setValue(codeFormatterPreferences.blank_line_before_constant_declaration);
 
-		fieldDecl = createNumberPref(
-				group,
-				numColumns,
-				FormatterMessages.BlankLinesTabPage_class_option_before_field_decls,
-				0, 32);
-		fieldDecl
-				.setValue(codeFormatterPreferences.blank_line_before_field_declaration);
+		fieldDecl = createNumberPref(group, numColumns,
+				FormatterMessages.BlankLinesTabPage_class_option_before_field_decls, 0, 32);
+		fieldDecl.setValue(codeFormatterPreferences.blank_line_before_field_declaration);
 
-		methodDecl = createNumberPref(
-				group,
-				numColumns,
-				FormatterMessages.BlankLinesTabPage_class_option_before_method_decls,
-				0, 32);
-		methodDecl
-				.setValue(codeFormatterPreferences.blank_line_before_method_declaration);
+		methodDecl = createNumberPref(group, numColumns,
+				FormatterMessages.BlankLinesTabPage_class_option_before_method_decls, 0, 32);
+		methodDecl.setValue(codeFormatterPreferences.blank_line_before_method_declaration);
 
-		methodBegin = createNumberPref(
-				group,
-				numColumns,
-				FormatterMessages.BlankLinesTabPage_class_option_at_beginning_of_method_body,
-				0, 32);
-		methodBegin
-				.setValue(codeFormatterPreferences.blank_line_at_begin_of_method);
+		methodBegin = createNumberPref(group, numColumns,
+				FormatterMessages.BlankLinesTabPage_class_option_at_beginning_of_method_body, 0, 32);
+		methodBegin.setValue(codeFormatterPreferences.blank_line_at_begin_of_method);
 
-		methodEnd = createNumberPref(
-				group,
-				numColumns,
-				FormatterMessages.BlankLinesTabPage_class_option_at_end_of_method_body,
-				0, 32);
-		methodEnd
-				.setValue(codeFormatterPreferences.blank_line_at_end_of_method);
+		methodEnd = createNumberPref(group, numColumns,
+				FormatterMessages.BlankLinesTabPage_class_option_at_end_of_method_body, 0, 32);
+		methodEnd.setValue(codeFormatterPreferences.blank_line_at_end_of_method);
 
-		classEnd = createNumberPref(
-				group,
-				numColumns,
-				FormatterMessages.BlankLinesTabPage_class_option_at_end_of_class_body,
-				0, 32);
+		classEnd = createNumberPref(group, numColumns,
+				FormatterMessages.BlankLinesTabPage_class_option_at_end_of_class_body, 0, 32);
 		classEnd.setValue(codeFormatterPreferences.blank_line_at_end_of_class);
-		group = createGroup(numColumns, composite,
-				FormatterMessages.BlankLinesTabPage_blank_lines_group_title);
-		emptyLinesToPreserve = createNumberPref(
-				group,
-				numColumns,
-				FormatterMessages.BlankLinesTabPage_blank_lines_option_empty_lines_to_preserve,
-				0, 32);
-		emptyLinesToPreserve
-				.setValue(codeFormatterPreferences.blank_line_preserve_empty_lines);
+		group = createGroup(numColumns, composite, FormatterMessages.BlankLinesTabPage_blank_lines_group_title);
+		emptyLinesToPreserve = createNumberPref(group, numColumns,
+				FormatterMessages.BlankLinesTabPage_blank_lines_option_empty_lines_to_preserve, 0, 32);
+		emptyLinesToPreserve.setValue(codeFormatterPreferences.blank_line_preserve_empty_lines);
 
 		isInitialized = true;
 	}
@@ -226,38 +174,26 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 
 	protected void updatePreferences() {
 		if (isInitialized) {
-			codeFormatterPreferences.blank_line_before_class_declaration = classDecl
-					.getValue();
-			codeFormatterPreferences.blank_line_before_constant_declaration = constantDecl
-					.getValue();
-			codeFormatterPreferences.blank_line_before_field_declaration = fieldDecl
-					.getValue();
-			codeFormatterPreferences.blank_line_before_method_declaration = methodDecl
-					.getValue();
-			codeFormatterPreferences.blank_line_at_begin_of_method = methodBegin
-					.getValue();
-			codeFormatterPreferences.blank_line_preserve_empty_lines = emptyLinesToPreserve
-					.getValue();
+			codeFormatterPreferences.blank_line_before_class_declaration = classDecl.getValue();
+			codeFormatterPreferences.blank_line_before_constant_declaration = constantDecl.getValue();
+			codeFormatterPreferences.blank_line_before_field_declaration = fieldDecl.getValue();
+			codeFormatterPreferences.blank_line_before_method_declaration = methodDecl.getValue();
+			codeFormatterPreferences.blank_line_at_begin_of_method = methodBegin.getValue();
+			codeFormatterPreferences.blank_line_preserve_empty_lines = emptyLinesToPreserve.getValue();
 
-			codeFormatterPreferences.blank_line_at_end_of_class = classEnd
-					.getValue();
-			codeFormatterPreferences.blank_line_at_end_of_method = methodEnd
-					.getValue();
+			codeFormatterPreferences.blank_line_at_end_of_class = classEnd.getValue();
+			codeFormatterPreferences.blank_line_at_end_of_method = methodEnd.getValue();
 			// namespace
-			codeFormatterPreferences.blank_lines_before_namespace = namespaceDecl
-					.getValue();
-			codeFormatterPreferences.blank_lines_after_namespace = namespaceDeclAfter
-					.getValue();
+			codeFormatterPreferences.blank_lines_before_namespace = namespaceDecl.getValue();
+			codeFormatterPreferences.blank_lines_after_namespace = namespaceDeclAfter.getValue();
 			// codeFormatterPreferences.blank_lines_before_use_statements =
 			// useStatementsBefore
 			// .getValue();
-			codeFormatterPreferences.blank_lines_after_use_statements = useStatementsAfter
-					.getValue();
+			codeFormatterPreferences.blank_lines_after_use_statements = useStatementsAfter.getValue();
 			// codeFormatterPreferences.blank_lines_between_use_statements =
 			// useStatementsBetween
 			// .getValue();
-			codeFormatterPreferences.blank_lines_between_namespaces = namespaceDeclBetween
-					.getValue();
+			codeFormatterPreferences.blank_lines_between_namespaces = namespaceDeclBetween.getValue();
 
 		}
 	}

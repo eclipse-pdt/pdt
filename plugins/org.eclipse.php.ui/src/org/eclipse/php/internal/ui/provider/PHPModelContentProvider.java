@@ -11,16 +11,14 @@ public class PHPModelContentProvider implements IModelContentProvider {
 	public PHPModelContentProvider() {
 	}
 
-	public void provideModelChanges(Object parentElement, List children,
-			ITreeContentProvider iTreeContentProvider) {
+	public void provideModelChanges(Object parentElement, List children, ITreeContentProvider iTreeContentProvider) {
 		if (parentElement instanceof IMethod) {
 			children.clear();
 		}
 
 	}
 
-	public Object getParentElement(Object element,
-			ITreeContentProvider iTreeContentProvider) {
+	public Object getParentElement(Object element, ITreeContentProvider iTreeContentProvider) {
 		return null;
 	}
 

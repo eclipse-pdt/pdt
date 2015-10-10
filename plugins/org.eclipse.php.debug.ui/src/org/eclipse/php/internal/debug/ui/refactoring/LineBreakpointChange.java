@@ -31,8 +31,7 @@ public abstract class LineBreakpointChange extends BreakpointChange {
 	 * @param breakpoint
 	 * @throws CoreException
 	 */
-	public LineBreakpointChange(PHPLineBreakpoint breakpoint)
-			throws CoreException {
+	public LineBreakpointChange(PHPLineBreakpoint breakpoint) throws CoreException {
 		super(breakpoint);
 		fCharEnd = breakpoint.getCharEnd();
 		fCharStart = breakpoint.getCharStart();

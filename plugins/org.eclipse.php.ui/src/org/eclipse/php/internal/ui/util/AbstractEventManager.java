@@ -56,16 +56,13 @@ public abstract class AbstractEventManager extends EventManager {
 	 * 
 	 * @see IPropertyChangeListener#propertyChange
 	 */
-	protected final void firePropertyChange(final String propertyName,
-			final Object oldValue, final Object newValue) {
+	protected final void firePropertyChange(final String propertyName, final Object oldValue, final Object newValue) {
 		if (isListenerAttached()) {
-			firePropertyChange(new PropertyChangeEvent(this, propertyName,
-					oldValue, newValue));
+			firePropertyChange(new PropertyChangeEvent(this, propertyName, oldValue, newValue));
 		}
 	}
 
-	public void removePropertyChangeListener(
-			final IPropertyChangeListener listener) {
+	public void removePropertyChangeListener(final IPropertyChangeListener listener) {
 		removeListenerObject(listener);
 	}
 }

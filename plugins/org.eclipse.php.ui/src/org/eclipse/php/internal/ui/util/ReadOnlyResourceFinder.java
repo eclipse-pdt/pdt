@@ -26,44 +26,39 @@ class ReadOnlyResourceFinder {
 	private ReadOnlyResourceFinder() {
 	}
 
-	static boolean confirmDeleteOfReadOnlyElements(
-			IModelElement[] modelElements, IResource[] resources,
+	static boolean confirmDeleteOfReadOnlyElements(IModelElement[] modelElements, IResource[] resources,
 			IReorgQueries queries) throws CoreException {
 		String queryTitle = RefactoringCoreMessages.ReadOnlyResourceFinder_0;
 		String question = RefactoringCoreMessages.ReadOnlyResourceFinder_1;
-		return ReadOnlyResourceFinder.confirmOperationOnReadOnlyElements(
-				queryTitle, question, modelElements, resources, queries);
+		return ReadOnlyResourceFinder.confirmOperationOnReadOnlyElements(queryTitle, question, modelElements, resources,
+				queries);
 	}
 
-	static boolean confirmMoveOfReadOnlyElements(IModelElement[] modelElements,
-			IResource[] resources, IReorgQueries queries) throws CoreException {
+	static boolean confirmMoveOfReadOnlyElements(IModelElement[] modelElements, IResource[] resources,
+			IReorgQueries queries) throws CoreException {
 		String queryTitle = RefactoringCoreMessages.ReadOnlyResourceFinder_2;
 		String question = RefactoringCoreMessages.ReadOnlyResourceFinder_3;
-		return ReadOnlyResourceFinder.confirmOperationOnReadOnlyElements(
-				queryTitle, question, modelElements, resources, queries);
+		return ReadOnlyResourceFinder.confirmOperationOnReadOnlyElements(queryTitle, question, modelElements, resources,
+				queries);
 	}
 
-	private static boolean confirmOperationOnReadOnlyElements(
-			String queryTitle, String question, IModelElement[] modelElements,
-			IResource[] resources, IReorgQueries queries) throws CoreException {
-		boolean hasReadOnlyResources = ReadOnlyResourceFinder
-				.hasReadOnlyResourcesAndSubResources(modelElements, resources);
+	private static boolean confirmOperationOnReadOnlyElements(String queryTitle, String question,
+			IModelElement[] modelElements, IResource[] resources, IReorgQueries queries) throws CoreException {
+		boolean hasReadOnlyResources = ReadOnlyResourceFinder.hasReadOnlyResourcesAndSubResources(modelElements,
+				resources);
 		if (hasReadOnlyResources) {
-			IConfirmQuery query = queries.createYesNoQuery(queryTitle, false,
-					IReorgQueries.CONFIRM_READ_ONLY_ELEMENTS);
+			IConfirmQuery query = queries.createYesNoQuery(queryTitle, false, IReorgQueries.CONFIRM_READ_ONLY_ELEMENTS);
 			return query.confirm(question);
 		}
 		return true;
 	}
 
-	private static boolean hasReadOnlyResourcesAndSubResources(
-			IModelElement[] modelElements, IResource[] resources)
+	private static boolean hasReadOnlyResourcesAndSubResources(IModelElement[] modelElements, IResource[] resources)
 			throws CoreException {
 		return (hasReadOnlyResourcesAndSubResources(resources) || hasReadOnlyResourcesAndSubResources(modelElements));
 	}
 
-	private static boolean hasReadOnlyResourcesAndSubResources(
-			IModelElement[] modelElements) throws CoreException {
+	private static boolean hasReadOnlyResourcesAndSubResources(IModelElement[] modelElements) throws CoreException {
 		for (int i = 0; i < modelElements.length; i++) {
 			if (hasReadOnlyResourcesAndSubResources(modelElements[i]))
 				return true;
@@ -71,8 +66,7 @@ class ReadOnlyResourceFinder {
 		return false;
 	}
 
-	private static boolean hasReadOnlyResourcesAndSubResources(
-			IModelElement modelElement) throws CoreException {
+	private static boolean hasReadOnlyResourcesAndSubResources(IModelElement modelElement) throws CoreException {
 		switch (modelElement.getElementType()) {
 		case IModelElement.SOURCE_MODULE:
 			IResource resource = ReorgUtils.getResource(modelElement);
@@ -87,8 +81,7 @@ class ReadOnlyResourceFinder {
 			Object[] nonScript = pack.getForeignResources();
 			for (int i = 0; i < nonScript.length; i++) {
 				Object object = nonScript[i];
-				if (object instanceof IResource
-						&& hasReadOnlyResourcesAndSubResources((IResource) object))
+				if (object instanceof IResource && hasReadOnlyResourcesAndSubResources((IResource) object))
 					return true;
 			}
 			return hasReadOnlyResourcesAndSubResources(pack.getChildren());
@@ -104,8 +97,7 @@ class ReadOnlyResourceFinder {
 			Object[] nonScript1 = root.getForeignResources();
 			for (int i = 0; i < nonScript1.length; i++) {
 				Object object = nonScript1[i];
-				if (object instanceof IResource
-						&& hasReadOnlyResourcesAndSubResources((IResource) object))
+				if (object instanceof IResource && hasReadOnlyResourcesAndSubResources((IResource) object))
 					return true;
 			}
 			return hasReadOnlyResourcesAndSubResources(root.getChildren());
@@ -124,8 +116,7 @@ class ReadOnlyResourceFinder {
 		}
 	}
 
-	private static boolean hasReadOnlyResourcesAndSubResources(
-			IResource[] resources) throws CoreException {
+	private static boolean hasReadOnlyResourcesAndSubResources(IResource[] resources) throws CoreException {
 		for (int i = 0; i < resources.length; i++) {
 			if (hasReadOnlyResourcesAndSubResources(resources[i]))
 				return true;
@@ -133,16 +124,14 @@ class ReadOnlyResourceFinder {
 		return false;
 	}
 
-	private static boolean hasReadOnlyResourcesAndSubResources(
-			IResource resource) throws CoreException {
+	private static boolean hasReadOnlyResourcesAndSubResources(IResource resource) throws CoreException {
 		if (resource.isLinked()) // we don't want to count these because we
 									// never actually delete linked resources
 			return false;
 		if (Resources.isReadOnly(resource))
 			return true;
 		if (resource instanceof IContainer)
-			return hasReadOnlyResourcesAndSubResources(((IContainer) resource)
-					.members());
+			return hasReadOnlyResourcesAndSubResources(((IContainer) resource).members());
 		return false;
 	}
 }

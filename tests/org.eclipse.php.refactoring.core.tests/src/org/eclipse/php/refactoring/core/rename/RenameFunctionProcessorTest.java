@@ -26,9 +26,9 @@ public class RenameFunctionProcessorTest extends AbstractRenameRefactoringTest {
 	public RenameFunctionProcessorTest(String[] fileNames) {
 		super(fileNames);
 	}
-	
+
 	@PDTTList.Parameters
-	public static String[] dirs = { "/resources/rename/renameFunction/"}; //$NON-NLS-1$
+	public static String[] dirs = { "/resources/rename/renameFunction/" }; //$NON-NLS-1$
 
 	@Test
 	public void rename(String fileName) throws Exception {

@@ -15,6 +15,7 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.ui.breakpoint.messages"; //$NON-NLS-1$
 	public static String PHPToggleBreakpointsTargetFactory_1;
 	public static String PHPToggleBreakpointsTargetFactory_2;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

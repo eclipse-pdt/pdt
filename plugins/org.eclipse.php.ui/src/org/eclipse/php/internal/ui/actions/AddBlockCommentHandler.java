@@ -51,8 +51,7 @@ public class AddBlockCommentHandler extends CommentHandler implements IHandler {
 				textEditor = (ITextEditor) o;
 		}
 		if (textEditor != null) {
-			IDocument document = textEditor.getDocumentProvider().getDocument(
-					textEditor.getEditorInput());
+			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 
 			if (document != null) {
 				// get current text selection
@@ -74,17 +73,14 @@ public class AddBlockCommentHandler extends CommentHandler implements IHandler {
 				if (document instanceof IStructuredDocument) {
 					int selectionOffset = textSelection.getOffset();
 					IStructuredDocument sDoc = (IStructuredDocument) document;
-					IStructuredDocumentRegion sdRegion = sDoc
-							.getRegionAtCharacterOffset(selectionOffset);
-					ITextRegion textRegion = sdRegion
-							.getRegionAtCharacterOffset(selectionOffset);
+					IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selectionOffset);
+					ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selectionOffset);
 
 					ITextRegionCollection container = sdRegion;
 
 					if (textRegion instanceof ITextRegionContainer) {
 						container = (ITextRegionContainer) textRegion;
-						textRegion = container
-								.getRegionAtCharacterOffset(selectionOffset);
+						textRegion = container.getRegionAtCharacterOffset(selectionOffset);
 					}
 					if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 						processAction(textEditor, document, textSelection);
@@ -98,8 +94,7 @@ public class AddBlockCommentHandler extends CommentHandler implements IHandler {
 		return null;
 	}
 
-	void processAction(ITextEditor textEditor, IDocument document,
-			ITextSelection textSelection) {
+	void processAction(ITextEditor textEditor, IDocument document, ITextSelection textSelection) {
 		int openCommentOffset = textSelection.getOffset();
 		int closeCommentOffset = openCommentOffset + textSelection.getLength();
 
@@ -107,12 +102,10 @@ public class AddBlockCommentHandler extends CommentHandler implements IHandler {
 			return;
 		}
 
-		IStructuredModel model = StructuredModelManager.getModelManager()
-				.getExistingModelForEdit(document);
+		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
 		if (model != null) {
 			try {
-				model.beginRecording(this,
-						PHPUIMessages.AddBlockComment_tooltip);
+				model.beginRecording(this, PHPUIMessages.AddBlockComment_tooltip);
 				model.aboutToChangeModel();
 
 				try {

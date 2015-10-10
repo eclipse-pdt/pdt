@@ -33,16 +33,15 @@ import org.eclipse.php.internal.ui.util.EditorUtility;
 
 public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 
-	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
-			IRegion region, boolean canShowMultipleHyperlinks) {
+	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 
 		PHPStructuredEditor editor = EditorUtility.getPHPEditor(textViewer);
 		if (editor == null) {
 			return null;
 		}
 
-		IModelElement input = org.eclipse.dltk.internal.ui.editor.EditorUtility
-				.getEditorInputModelElement(editor, false);
+		IModelElement input = org.eclipse.dltk.internal.ui.editor.EditorUtility.getEditorInputModelElement(editor,
+				false);
 		if (!(input instanceof ISourceModule)) {
 			return null;
 		}
@@ -50,14 +49,12 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 		final int offset = region.getOffset();
 
 		final ISourceModule sourceModule = (ISourceModule) input;
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sourceModule, null);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 		if (moduleDeclaration == null) {
 			return null;
 		}
 
-		IncludeHyperlinkVisitor includeVisitor = new IncludeHyperlinkVisitor(
-				offset, sourceModule);
+		IncludeHyperlinkVisitor includeVisitor = new IncludeHyperlinkVisitor(offset, sourceModule);
 		try {
 			moduleDeclaration.traverse(includeVisitor);
 		} catch (Exception e) {
@@ -74,13 +71,11 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 			if (resource != null && resource.getLocation() != null) {
 				set.add(resource.getLocation().toOSString());
 			}
-			ISourceModule includedSourceModule = FileNetworkUtility
-					.findSourceModule(sourceModule, includeVisitor.getFile(),
-							set);
+			ISourceModule includedSourceModule = FileNetworkUtility.findSourceModule(sourceModule,
+					includeVisitor.getFile(), set);
 			if (includedSourceModule != null) {
-				return new IHyperlink[] { new ModelElementHyperlink(
-						includeVisitor.getSelectRegion(), includedSourceModule,
-						new OpenAction(editor)) };
+				return new IHyperlink[] { new ModelElementHyperlink(includeVisitor.getSelectRegion(),
+						includedSourceModule, new OpenAction(editor)) };
 			}
 		}
 		return null;
@@ -94,7 +89,6 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 			return false;
 		}
 		return (region1.getOffset() >= region2.getOffset())
-				&& (region1.getOffset() + region1.getLength() <= region2
-						.getOffset() + region2.getLength());
+				&& (region1.getOffset() + region1.getLength() <= region2.getOffset() + region2.getLength());
 	}
 }

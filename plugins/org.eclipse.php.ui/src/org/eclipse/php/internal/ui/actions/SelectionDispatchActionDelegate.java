@@ -20,8 +20,7 @@ public class SelectionDispatchActionDelegate extends SelectionDispatchAction {
 
 	private IPHPActionDelegator action;
 
-	protected SelectionDispatchActionDelegate(IWorkbenchSite site,
-			IPHPActionDelegator action) {
+	protected SelectionDispatchActionDelegate(IWorkbenchSite site, IPHPActionDelegator action) {
 		super(site);
 		this.action = action;
 	}

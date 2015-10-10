@@ -133,8 +133,7 @@ public abstract class SemanticHighlighting {
 		if (!PlatformUI.isWorkbenchRunning())
 			return defaultRGB;
 
-		ColorRegistry registry = PlatformUI.getWorkbench().getThemeManager()
-				.getCurrentTheme().getColorRegistry();
+		ColorRegistry registry = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry();
 		RGB rgb = registry.getRGB(key);
 		if (rgb != null)
 			return rgb;

@@ -26,8 +26,7 @@ public class PHPProjectCreationWizardProxy {
 	private static IWorkbenchWizard phpProjectWizard;
 
 	static {
-		IConfigurationElement[] elements = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(WIZARD_POINT);
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(WIZARD_POINT);
 		for (IConfigurationElement element : elements) {
 			String name = element.getName();
 			if (WIZARD.equals(name)) {
@@ -39,8 +38,7 @@ public class PHPProjectCreationWizardProxy {
 	public static IWorkbenchWizard getProjectWizard() {
 		if (phpProjectWizard == null && phpProjectWizardElement != null) {
 			try {
-				phpProjectWizard = (IWorkbenchWizard) phpProjectWizardElement
-						.createExecutableExtension(CLASS_ATTR);
+				phpProjectWizard = (IWorkbenchWizard) phpProjectWizardElement.createExecutableExtension(CLASS_ATTR);
 			} catch (CoreException e) {
 				e.printStackTrace();
 			}

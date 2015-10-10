@@ -119,8 +119,7 @@ public abstract class BreakpointChange extends Change {
 	 * org.eclipse.ltk.core.refactoring.Change#isValid(org.eclipse.core.runtime
 	 * .IProgressMonitor)
 	 */
-	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		return new RefactoringStatus();
 	}
 
@@ -140,8 +139,7 @@ public abstract class BreakpointChange extends Change {
 	 * @param member
 	 * @return array of 3 ints or <code>null</code>
 	 */
-	protected int[] getNewLineNumberAndRange(IMember member)
-			throws CoreException {
+	protected int[] getNewLineNumberAndRange(IMember member) throws CoreException {
 		ISourceRange nameRange = member.getNameRange();
 		int offset = nameRange.getOffset();
 		int lineNumber = getNewLineNumber(member, offset);
@@ -159,8 +157,7 @@ public abstract class BreakpointChange extends Change {
 	 * @return the new line number
 	 * @throws ModelException
 	 */
-	private int getNewLineNumber(IMember member, int offset)
-			throws ModelException {
+	private int getNewLineNumber(IMember member, int offset) throws ModelException {
 		int lineNumber = getLineNumber();
 		Document document = new Document(member.getSource());
 		try {
@@ -305,7 +302,6 @@ public abstract class BreakpointChange extends Change {
 	 * @return standard label for the breakpoint
 	 */
 	protected String getBreakpointLabel(IBreakpoint breakpoint) {
-		return PHPDebugUIPlugin.getDefault().getModelPresentation().getText(
-				breakpoint);
+		return PHPDebugUIPlugin.getDefault().getModelPresentation().getText(breakpoint);
 	}
 }

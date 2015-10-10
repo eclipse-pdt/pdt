@@ -45,9 +45,8 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 /**
  * Extends the JFace SourceViewer with some convenience methods.
  */
-public class MergeSourceViewer extends StructuredTextViewer implements
-		ISelectionChangedListener, ITextListener, IMenuListener,
-		IOperationHistoryListener {
+public class MergeSourceViewer extends StructuredTextViewer
+		implements ISelectionChangedListener, ITextListener, IMenuListener, IOperationHistoryListener {
 
 	public static final String UNDO_ID = "undo"; //$NON-NLS-1$
 	public static final String REDO_ID = "redo"; //$NON-NLS-1$
@@ -63,14 +62,12 @@ public class MergeSourceViewer extends StructuredTextViewer implements
 
 		private int fOperationCode;
 
-		TextOperationAction(int operationCode, boolean mutable,
-				boolean selection, boolean content) {
+		TextOperationAction(int operationCode, boolean mutable, boolean selection, boolean content) {
 			this(operationCode, null, mutable, selection, content);
 
 		}
 
-		public TextOperationAction(int operationCode,
-				String actionDefinitionId, boolean mutable, boolean selection,
+		public TextOperationAction(int operationCode, String actionDefinitionId, boolean mutable, boolean selection,
 				boolean content) {
 			super(mutable, selection, content);
 			if (actionDefinitionId != null)
@@ -108,10 +105,8 @@ public class MergeSourceViewer extends StructuredTextViewer implements
 	private LineNumberRulerColumn fLineNumberColumn;
 	private List textActions = new ArrayList();
 
-	public MergeSourceViewer(Composite parent, int style,
-			ResourceBundle bundle, ICompareContainer container) {
-		super(parent, new CompositeRuler(), null, false, style | SWT.H_SCROLL
-				| SWT.V_SCROLL);
+	public MergeSourceViewer(Composite parent, int style, ResourceBundle bundle, ICompareContainer container) {
+		super(parent, new CompositeRuler(), null, false, style | SWT.H_SCROLL | SWT.V_SCROLL);
 
 		fResourceBundle = bundle;
 
@@ -128,12 +123,9 @@ public class MergeSourceViewer extends StructuredTextViewer implements
 				MergeSourceViewer.this.handlePropertyChangeEvent(event);
 			}
 		};
-		EditorsUI.getPreferenceStore().addPropertyChangeListener(
-				fPreferenceChangeListener);
-		fShowLineNumber = EditorsUI
-				.getPreferenceStore()
-				.getBoolean(
-						AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER);
+		EditorsUI.getPreferenceStore().addPropertyChangeListener(fPreferenceChangeListener);
+		fShowLineNumber = EditorsUI.getPreferenceStore()
+				.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER);
 		if (fShowLineNumber) {
 			updateLineNumberRuler();
 		}
@@ -145,7 +137,8 @@ public class MergeSourceViewer extends StructuredTextViewer implements
 
 	public void rememberDocument(IDocument doc) {
 		// if (doc != null && fRememberedDocument != null) {
-		//			System.err.println("MergeSourceViewer.rememberDocument: fRememberedDocument != null: shouldn't happen"); //$NON-NLS-1$
+		// System.err.println("MergeSourceViewer.rememberDocument:
+		// fRememberedDocument != null: shouldn't happen"); //$NON-NLS-1$
 		// }
 		fRememberedDocument = doc;
 	}
@@ -183,8 +176,7 @@ public class MergeSourceViewer extends StructuredTextViewer implements
 			if (c != null) {
 				c.setEnabled(enabled);
 				Display d = c.getDisplay();
-				c.setBackground(enabled ? d
-						.getSystemColor(SWT.COLOR_LIST_BACKGROUND) : null);
+				c.setBackground(enabled ? d.getSystemColor(SWT.COLOR_LIST_BACKGROUND) : null);
 			}
 		}
 	}
@@ -299,8 +291,7 @@ public class MergeSourceViewer extends StructuredTextViewer implements
 	public int getVerticalScrollOffset() {
 		StyledText st = getTextWidget();
 		int lineHeight = st.getLineHeight();
-		return getTopInset()
-				- ((getDocumentRegionOffset() * lineHeight) + st.getTopPixel());
+		return getTopInset() - ((getDocumentRegionOffset() * lineHeight) + st.getTopPixel());
 	}
 
 	/*
@@ -390,8 +381,7 @@ public class MergeSourceViewer extends StructuredTextViewer implements
 				if (mva.isSelectionDependent())
 					addSelectionChangedListener(this);
 
-				Utilities.initAction(action, fResourceBundle,
-						"action." + actionId + "."); //$NON-NLS-1$ //$NON-NLS-2$
+				Utilities.initAction(action, fResourceBundle, "action." + actionId + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			addAction(actionId, action);
 
@@ -406,26 +396,19 @@ public class MergeSourceViewer extends StructuredTextViewer implements
 
 	protected IAction createAction(String actionId) {
 		if (UNDO_ID.equals(actionId))
-			return new TextOperationAction(UNDO,
-					"org.eclipse.ui.edit.undo", true, false, true); //$NON-NLS-1$
+			return new TextOperationAction(UNDO, "org.eclipse.ui.edit.undo", true, false, true); //$NON-NLS-1$
 		if (REDO_ID.equals(actionId))
-			return new TextOperationAction(REDO,
-					"org.eclipse.ui.edit.redo", true, false, true); //$NON-NLS-1$
+			return new TextOperationAction(REDO, "org.eclipse.ui.edit.redo", true, false, true); //$NON-NLS-1$
 		if (CUT_ID.equals(actionId))
-			return new TextOperationAction(CUT,
-					"org.eclipse.ui.edit.cut", true, true, false); //$NON-NLS-1$
+			return new TextOperationAction(CUT, "org.eclipse.ui.edit.cut", true, true, false); //$NON-NLS-1$
 		if (COPY_ID.equals(actionId))
-			return new TextOperationAction(COPY,
-					"org.eclipse.ui.edit.copy", false, true, false); //$NON-NLS-1$
+			return new TextOperationAction(COPY, "org.eclipse.ui.edit.copy", false, true, false); //$NON-NLS-1$
 		if (PASTE_ID.equals(actionId))
-			return new TextOperationAction(PASTE,
-					"org.eclipse.ui.edit.paste", true, false, false); //$NON-NLS-1$
+			return new TextOperationAction(PASTE, "org.eclipse.ui.edit.paste", true, false, false); //$NON-NLS-1$
 		if (DELETE_ID.equals(actionId))
-			return new TextOperationAction(DELETE,
-					"org.eclipse.ui.edit.delete", true, false, false); //$NON-NLS-1$
+			return new TextOperationAction(DELETE, "org.eclipse.ui.edit.delete", true, false, false); //$NON-NLS-1$
 		if (SELECT_ALL_ID.equals(actionId))
-			return new TextOperationAction(SELECT_ALL,
-					"org.eclipse.ui.edit.selectAll", false, false, false); //$NON-NLS-1$
+			return new TextOperationAction(SELECT_ALL, "org.eclipse.ui.edit.selectAll", false, false, false); //$NON-NLS-1$
 		return null;
 	}
 
@@ -506,8 +489,7 @@ public class MergeSourceViewer extends StructuredTextViewer implements
 
 		removeTextListener(this);
 		removeSelectionChangedListener(this);
-		EditorsUI.getPreferenceStore().removePropertyChangeListener(
-				fPreferenceChangeListener);
+		EditorsUI.getPreferenceStore().removePropertyChangeListener(fPreferenceChangeListener);
 
 		IOperationHistory history = getHistory();
 		if (history != null)
@@ -567,17 +549,13 @@ public class MergeSourceViewer extends StructuredTextViewer implements
 
 		String key = event.getProperty();
 
-		if (key
-				.equals(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER)) {
-			boolean b = EditorsUI
-					.getPreferenceStore()
-					.getBoolean(
-							AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER);
+		if (key.equals(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER)) {
+			boolean b = EditorsUI.getPreferenceStore()
+					.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER);
 			if (b != fShowLineNumber) {
 				toggleLineNumberRuler();
 			}
-		} else if (key
-				.equals(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER_COLOR)) {
+		} else if (key.equals(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER_COLOR)) {
 			updateLineNumberColumnPresentation(true);
 		}
 	}
@@ -607,8 +585,7 @@ public class MergeSourceViewer extends StructuredTextViewer implements
 	private void updateLineNumberColumnPresentation(boolean refresh) {
 		if (fLineNumberColumn == null)
 			return;
-		RGB rgb = getColorFromStore(
-				EditorsUI.getPreferenceStore(),
+		RGB rgb = getColorFromStore(EditorsUI.getPreferenceStore(),
 				AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER_COLOR);
 		if (rgb == null)
 			rgb = new RGB(0, 0, 0);
@@ -661,8 +638,7 @@ public class MergeSourceViewer extends StructuredTextViewer implements
 		if (PlatformUI.getWorkbench() == null) {
 			return null;
 		}
-		return PlatformUI.getWorkbench().getOperationSupport()
-				.getOperationHistory();
+		return PlatformUI.getWorkbench().getOperationSupport().getOperationHistory();
 	}
 
 	public void historyNotification(OperationHistoryEvent event) {

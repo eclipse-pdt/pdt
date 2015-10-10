@@ -47,19 +47,15 @@ public class ASTRewriteTestsPHP55 extends ASTRewriteTestsPHP54 {
 		String str = "<?php try { $error = 'Always throw this error'; } finally { echo '' }\n ?>";
 		initialize(str);
 
-		List<TryStatement> statements = getAllOfType(program,
-				TryStatement.class);
+		List<TryStatement> statements = getAllOfType(program, TryStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		Block newBlock = ast.newBlock();
-		newBlock.statements().add(
-				ast.newEchoStatement(ast.newScalar("'Hello'")));
-		statements
-				.get(0)
-				.catchClauses()
-				.add(ast.newCatchClause(ast.newIdentifier("Boobo"),
-						ast.newVariable("b"), newBlock));
+		newBlock.statements().add(ast.newEchoStatement(ast.newScalar("'Hello'")));
+		statements.get(0).catchClauses()
+				.add(ast.newCatchClause(ast.newIdentifier("Boobo"), ast.newVariable("b"), newBlock));
 		rewrite();
-		checkResult("<?php try { $error = 'Always throw this error'; } catch (Boobo $b) {\necho 'Hello';\n} finally { echo '' }\n  ?>");
+		checkResult(
+				"<?php try { $error = 'Always throw this error'; } catch (Boobo $b) {\necho 'Hello';\n} finally { echo '' }\n  ?>");
 	}
 
 	@Test
@@ -67,8 +63,7 @@ public class ASTRewriteTestsPHP55 extends ASTRewriteTestsPHP54 {
 		String str = "<?php yield; ?>";
 		initialize(str);
 
-		List<YieldExpression> yieldStatements = getAllOfType(program,
-				YieldExpression.class);
+		List<YieldExpression> yieldStatements = getAllOfType(program, YieldExpression.class);
 		assertTrue("Unexpected list size.", yieldStatements.size() == 1);
 		yieldStatements.get(0).setExpression(ast.newVariable("a"));
 		rewrite();
@@ -81,8 +76,7 @@ public class ASTRewriteTestsPHP55 extends ASTRewriteTestsPHP54 {
 		String str = "<?php yield $a; ?>";
 		initialize(str);
 
-		List<YieldExpression> yieldStatements = getAllOfType(program,
-				YieldExpression.class);
+		List<YieldExpression> yieldStatements = getAllOfType(program, YieldExpression.class);
 		assertTrue("Unexpected list size.", yieldStatements.size() == 1);
 		yieldStatements.get(0).setKey(ast.newVariable("b"));
 		rewrite();
@@ -94,11 +88,9 @@ public class ASTRewriteTestsPHP55 extends ASTRewriteTestsPHP54 {
 		String str = "<?php yield $a; ?>";
 		initialize(str);
 
-		List<YieldExpression> yieldStatements = getAllOfType(program,
-				YieldExpression.class);
+		List<YieldExpression> yieldStatements = getAllOfType(program, YieldExpression.class);
 		assertTrue("Unexpected list size.", yieldStatements.size() == 1);
-		((Variable) yieldStatements.get(0).getExpression()).setName(ast
-				.newScalar("b"));
+		((Variable) yieldStatements.get(0).getExpression()).setName(ast.newScalar("b"));
 		rewrite();
 		checkResult("<?php yield $b; ?>");
 	}
@@ -108,11 +100,9 @@ public class ASTRewriteTestsPHP55 extends ASTRewriteTestsPHP54 {
 		String str = "<?php yield $a => $b; ?>";
 		initialize(str);
 
-		List<YieldExpression> yieldStatements = getAllOfType(program,
-				YieldExpression.class);
+		List<YieldExpression> yieldStatements = getAllOfType(program, YieldExpression.class);
 		assertTrue("Unexpected list size.", yieldStatements.size() == 1);
-		((Variable) yieldStatements.get(0).getKey())
-				.setName(ast.newScalar("c"));
+		((Variable) yieldStatements.get(0).getKey()).setName(ast.newScalar("c"));
 		rewrite();
 		checkResult("<?php yield $c => $b; ?>");
 	}

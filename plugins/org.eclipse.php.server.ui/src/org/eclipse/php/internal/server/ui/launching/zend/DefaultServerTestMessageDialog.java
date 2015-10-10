@@ -38,8 +38,7 @@ public class DefaultServerTestMessageDialog extends MessageDialog {
 			image.setBackground(imageLabel.getBackground());
 			imageLabel.setImage(image);
 			addAccessibleListeners(imageLabel, image);
-			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING)
-					.applyTo(imageLabel);
+			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.BEGINNING).applyTo(imageLabel);
 		}
 		// create message
 		if (message != null) {
@@ -57,21 +56,18 @@ public class DefaultServerTestMessageDialog extends MessageDialog {
 	protected void addLinksToMessage(Composite labelComposite) {
 		Link link = new Link(labelComposite, SWT.NONE);
 		link.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		link
-				.setText(org.eclipse.php.internal.server.ui.launching.zend.JFaceResources.DefaultServerTestMessageDialog_0); 
+		link.setText(org.eclipse.php.internal.server.ui.launching.zend.JFaceResources.DefaultServerTestMessageDialog_0);
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				PlatformUI.getWorkbench().getHelpSystem().displayHelp(
-						IPHPHelpContextIds.SETTING_UP_REMOTE_DEBUGGING);
+				PlatformUI.getWorkbench().getHelpSystem().displayHelp(IPHPHelpContextIds.SETTING_UP_REMOTE_DEBUGGING);
 			}
 		});
 	}
 
-	public DefaultServerTestMessageDialog(Shell parentShell,
-			String dialogTitle, Image dialogTitleImage, String dialogMessage,
-			int dialogImageType, String[] dialogButtonLabels, int defaultIndex) {
-		super(parentShell, dialogTitle, dialogTitleImage, dialogMessage,
-				dialogImageType, dialogButtonLabels, defaultIndex);
+	public DefaultServerTestMessageDialog(Shell parentShell, String dialogTitle, Image dialogTitleImage,
+			String dialogMessage, int dialogImageType, String[] dialogButtonLabels, int defaultIndex) {
+		super(parentShell, dialogTitle, dialogTitleImage, dialogMessage, dialogImageType, dialogButtonLabels,
+				defaultIndex);
 	}
 
 	/**

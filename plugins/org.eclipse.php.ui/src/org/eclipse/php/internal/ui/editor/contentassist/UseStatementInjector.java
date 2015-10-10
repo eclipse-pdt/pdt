@@ -85,14 +85,12 @@ public class UseStatementInjector {
 				return offset;
 			}
 
-		} else if (modelElement instanceof AliasType
-				|| modelElement instanceof AliasMethod
+		} else if (modelElement instanceof AliasType || modelElement instanceof AliasMethod
 				|| modelElement instanceof AliasField) {
 			return offset;
 		}
 		try {
-			if (modelElement.getElementType() == IModelElement.METHOD
-					&& (((IMethod) modelElement).isConstructor())) {
+			if (modelElement.getElementType() == IModelElement.METHOD && (((IMethod) modelElement).isConstructor())) {
 				modelElement = modelElement.getAncestor(IModelElement.TYPE);
 			}
 		} catch (ModelException e) {
@@ -102,58 +100,44 @@ public class UseStatementInjector {
 			return offset;
 		if (proposal instanceof IPHPCompletionProposalExtension) {
 			IPHPCompletionProposalExtension phpCompletionProposal = (IPHPCompletionProposalExtension) proposal;
-			if (ProposalExtraInfo.isNotInsertUse(phpCompletionProposal
-					.getExtraInfo())) {
+			if (ProposalExtraInfo.isNotInsertUse(phpCompletionProposal.getExtraInfo())) {
 				return offset;
 			}
 		}
 
 		try {
 			// qualified namespace should return offset directly
-			if (proposal.getReplacementOffset() > 0
-					&& document.getChar(proposal.getReplacementOffset() - 1) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			if (proposal.getReplacementOffset() > 0 && document
+					.getChar(proposal.getReplacementOffset() - 1) == NamespaceReference.NAMESPACE_SEPARATOR) {
 				return offset;
 			}
 			if (modelElement.getElementType() == IModelElement.TYPE
 					&& PHPFlags.isNamespace(((IType) modelElement).getFlags())) {
 				if (offset > 0) {
-					String prefix = document.get(
-							proposal.getReplacementOffset(),
-							proposal.getReplacementLength());
+					String prefix = document.get(proposal.getReplacementOffset(), proposal.getReplacementLength());
 					String fullName = ((IType) modelElement).getElementName();
-					if (fullName.startsWith(prefix)
-							&& prefix
-									.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
+					if (fullName.startsWith(prefix) && prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
 						// int
-						ITextEditor textEditor = ((PHPStructuredTextViewer) textViewer)
-								.getTextEditor();
+						ITextEditor textEditor = ((PHPStructuredTextViewer) textViewer).getTextEditor();
 						if (textEditor instanceof PHPStructuredEditor) {
-							IModelElement editorElement = ((PHPStructuredEditor) textEditor)
-									.getModelElement();
+							IModelElement editorElement = ((PHPStructuredEditor) textEditor).getModelElement();
 							if (editorElement != null) {
-								ISourceModule sourceModule = ((ModelElement) editorElement)
-										.getSourceModule();
+								ISourceModule sourceModule = ((ModelElement) editorElement).getSourceModule();
 
 								String namespaceName = fullName;
-								int nsSeparatorIndex = fullName
-										.indexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+								int nsSeparatorIndex = fullName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 								if (nsSeparatorIndex > 0) {
-									namespaceName = fullName.substring(0,
-											nsSeparatorIndex);
+									namespaceName = fullName.substring(0, nsSeparatorIndex);
 								}
 								String usePartName = namespaceName;
-								boolean useAlias = !Platform
-										.getPreferencesService()
-										.getBoolean(
-												PHPCorePlugin.ID,
-												PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE,
-												true, null);
+								boolean useAlias = !Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
+										PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE, true,
+										null);
 
 								ModuleDeclaration moduleDeclaration = SourceParserUtil
 										.getModuleDeclaration(sourceModule);
 
-								ASTParser parser = ASTParser
-										.newParser(sourceModule);
+								ASTParser parser = ASTParser.newParser(sourceModule);
 								parser.setSource(document.get().toCharArray());
 								Program program = parser.createAST(null);
 
@@ -161,61 +145,44 @@ public class UseStatementInjector {
 								// namespace.
 								// "program != null" is a workaround for bug
 								// 465687.
-								if (program != null
-										&& isSameNamespace(namespaceName,
-												program, sourceModule, offset)) {
+								if (program != null && isSameNamespace(namespaceName, program, sourceModule, offset)) {
 									return offset;
 								}
 
 								// find existing use statement:
-								UsePart usePart = ASTUtils
-										.findUseStatementByNamespace(
-												moduleDeclaration, usePartName,
-												offset);
+								UsePart usePart = ASTUtils.findUseStatementByNamespace(moduleDeclaration, usePartName,
+										offset);
 
-								List<String> importedTypeName = getImportedTypeName(
-										moduleDeclaration, offset);
+								List<String> importedTypeName = getImportedTypeName(moduleDeclaration, offset);
 								String typeName = namespaceName;
 
 								// if the class/namespace has not been imported
 								// add use statement
-								if (program != null
-										&& !importedTypeName.contains(typeName)) {
+								if (program != null && !importedTypeName.contains(typeName)) {
 
 									program.recordModifications();
 									AST ast = program.getAST();
 									NamespaceName newNamespaceName = ast
-											.newNamespaceName(
-													createIdentifiers(ast,
-															usePartName),
-													false, false);
-									UseStatementPart newUseStatementPart = ast
-											.newUseStatementPart(
-													newNamespaceName, null);
-									UseStatement newUseStatement = ast
-											.newUseStatement(
-													Arrays.asList(new UseStatementPart[] { newUseStatementPart }),
-													UseStatement.T_NONE);
+											.newNamespaceName(createIdentifiers(ast, usePartName), false, false);
+									UseStatementPart newUseStatementPart = ast.newUseStatementPart(newNamespaceName,
+											null);
+									UseStatement newUseStatement = ast.newUseStatement(
+											Arrays.asList(new UseStatementPart[] { newUseStatementPart }),
+											UseStatement.T_NONE);
 
-									NamespaceDeclaration currentNamespace = getCurrentNamespace(
-											program, sourceModule, offset - 1);
+									NamespaceDeclaration currentNamespace = getCurrentNamespace(program, sourceModule,
+											offset - 1);
 									if (currentNamespace != null) {
-										List<Statement> statements = currentNamespace
-												.getBody().statements();
+										List<Statement> statements = currentNamespace.getBody().statements();
 										// insert in the beginning of the
 										// current namespace:
-										addUseStatement(offset,
-												newUseStatement, statements,
-												document);
+										addUseStatement(offset, newUseStatement, statements, document);
 									} else {
-										addUseStatement(offset,
-												newUseStatement,
-												program.statements(), document);
+										addUseStatement(offset, newUseStatement, program.statements(), document);
 									}
 
 									ast.setInsertUseStatement(true);
-									TextEdit edits = program.rewrite(document,
-											createOptions(modelElement));
+									TextEdit edits = program.rewrite(document, createOptions(modelElement));
 									// workaround for bug 400976:
 									// when current offset is in a php section
 									// that only contains AstErrors, the use
@@ -233,45 +200,32 @@ public class UseStatementInjector {
 									// detect use statements that will be
 									// wrongly inserted outside any existing php
 									// section...
-									if (new Region(0, 0).equals(edits
-											.getRegion())) {
-										String lineDelim = TextUtilities
-												.getDefaultLineDelimiter(document);
+									if (new Region(0, 0).equals(edits.getRegion())) {
+										String lineDelim = TextUtilities.getDefaultLineDelimiter(document);
 										MultiTextEdit newEdits = new MultiTextEdit();
-										newEdits.addChild(new InsertEdit(0,
-												"<?php"));
-										newEdits.addChild(new InsertEdit(0,
-												lineDelim));
-										for (TextEdit edit : edits
-												.getChildren()) {
+										newEdits.addChild(new InsertEdit(0, "<?php"));
+										newEdits.addChild(new InsertEdit(0, lineDelim));
+										for (TextEdit edit : edits.getChildren()) {
 											// we have to copy the text edit to
 											// reset its parent
 											newEdits.addChild(edit.copy());
 										}
-										newEdits.addChild(new InsertEdit(0,
-												"?>"));
-										newEdits.addChild(new InsertEdit(0,
-												lineDelim));
+										newEdits.addChild(new InsertEdit(0, "?>"));
+										newEdits.addChild(new InsertEdit(0, lineDelim));
 										edits = newEdits;
 									}
 									edits.apply(document);
 									ast.setInsertUseStatement(false);
 
-									int replacementOffset = proposal
-											.getReplacementOffset()
-											+ edits.getLength();
+									int replacementOffset = proposal.getReplacementOffset() + edits.getLength();
 									offset += edits.getLength();
 									proposal.setReplacementOffset(replacementOffset);
-								} else if (!useAlias
-										&& (usePart == null || !usePartName
-												.equals(usePart
-														.getNamespace()
-														.getFullyQualifiedName()))) {
+								} else if (!useAlias && (usePart == null
+										|| !usePartName.equals(usePart.getNamespace().getFullyQualifiedName()))) {
 									// if the type name already exists, use
 									// fully
 									// qualified name to replace
-									proposal.setReplacementString(NamespaceReference.NAMESPACE_SEPARATOR
-											+ fullName);
+									proposal.setReplacementString(NamespaceReference.NAMESPACE_SEPARATOR + fullName);
 								}
 							}
 						}
@@ -282,12 +236,9 @@ public class UseStatementInjector {
 				return offset;
 			} else
 			// class members should return offset directly
-			if (modelElement.getElementType() != IModelElement.TYPE
-					&& !(modelElement instanceof FakeConstructor)) {
-				IModelElement type = modelElement
-						.getAncestor(IModelElement.TYPE);
-				if (type != null
-						&& !PHPFlags.isNamespace(((IType) type).getFlags())) {
+			if (modelElement.getElementType() != IModelElement.TYPE && !(modelElement instanceof FakeConstructor)) {
+				IModelElement type = modelElement.getAncestor(IModelElement.TYPE);
+				if (type != null && !PHPFlags.isNamespace(((IType) type).getFlags())) {
 					return offset;
 				}
 			}
@@ -298,8 +249,7 @@ public class UseStatementInjector {
 		return addUseStatement(modelElement, document, textViewer, offset);
 	}
 
-	private int addUseStatement(IModelElement modelElement, IDocument document,
-			ITextViewer textViewer, int offset) {
+	private int addUseStatement(IModelElement modelElement, IDocument document, ITextViewer textViewer, int offset) {
 		// add use statement if needed:
 		IType namespace = PHPModelUtils.getCurrentNamespace(modelElement);
 		if (namespace == null) {
@@ -310,36 +260,26 @@ public class UseStatementInjector {
 		if (!(textViewer instanceof PHPStructuredTextViewer)) {
 			return offset;
 		}
-		ITextEditor textEditor = ((PHPStructuredTextViewer) textViewer)
-				.getTextEditor();
+		ITextEditor textEditor = ((PHPStructuredTextViewer) textViewer).getTextEditor();
 		if (!(textEditor instanceof PHPStructuredEditor)) {
 			return offset;
 
 		}
-		IModelElement editorElement = ((PHPStructuredEditor) textEditor)
-				.getModelElement();
+		IModelElement editorElement = ((PHPStructuredEditor) textEditor).getModelElement();
 		if (editorElement == null) {
 			return offset;
 		}
-		ISourceModule sourceModule = ((ModelElement) editorElement)
-				.getSourceModule();
+		ISourceModule sourceModule = ((ModelElement) editorElement).getSourceModule();
 
 		try {
 			String namespaceName = namespace.getElementName();
 			String usePartName = namespaceName;
-			boolean useAlias = !Platform
-					.getPreferencesService()
-					.getBoolean(
-							PHPCorePlugin.ID,
-							PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE,
-							true, null);
+			boolean useAlias = !Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
+					PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE, true, null);
 			if (!useAlias) {
-				usePartName = usePartName
-						+ NamespaceReference.NAMESPACE_SEPARATOR
-						+ modelElement.getElementName();
+				usePartName = usePartName + NamespaceReference.NAMESPACE_SEPARATOR + modelElement.getElementName();
 			}
-			ModuleDeclaration moduleDeclaration = SourceParserUtil
-					.getModuleDeclaration(sourceModule);
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 
 			ASTParser parser = ASTParser.newParser(sourceModule);
 			parser.setSource(document.get().toCharArray());
@@ -347,67 +287,51 @@ public class UseStatementInjector {
 
 			// Don't insert USE statement for current namespace.
 			// "program != null" is a workaround for bug 465687.
-			if (program != null
-					&& isSameNamespace(namespaceName, program, sourceModule,
-							offset)) {
+			if (program != null && isSameNamespace(namespaceName, program, sourceModule, offset)) {
 				return offset;
 			}
 
 			// find existing use statement:
-			UsePart usePart = ASTUtils.findUseStatementByNamespace(
-					moduleDeclaration, usePartName, offset);
+			UsePart usePart = ASTUtils.findUseStatementByNamespace(moduleDeclaration, usePartName, offset);
 
-			List<String> importedTypeName = getImportedTypeName(
-					moduleDeclaration, offset);
+			List<String> importedTypeName = getImportedTypeName(moduleDeclaration, offset);
 			String typeName = ""; //$NON-NLS-1$
 			if (!useAlias) {
 				typeName = modelElement.getElementName().toLowerCase();
 			} else {
-				if (usePart != null && usePart.getAlias() != null
-						&& usePart.getAlias().getName() != null) {
+				if (usePart != null && usePart.getAlias() != null && usePart.getAlias().getName() != null) {
 					typeName = usePart.getAlias().getName();
 				} else {
-					typeName = PHPModelUtils.extractElementName(namespaceName)
-							.toLowerCase();
+					typeName = PHPModelUtils.extractElementName(namespaceName).toLowerCase();
 				}
 			}
 
 			PHPVersion phpVersion = ProjectOptions.getPhpVersion(modelElement);
 			// if the class/namespace has not been imported
 			// add use statement
-			if (program != null
-					&& !importedTypeName.contains(typeName)
-					&& canInsertUseStatement(getUseStatementType(modelElement),
-							phpVersion)) {
+			if (program != null && !importedTypeName.contains(typeName)
+					&& canInsertUseStatement(getUseStatementType(modelElement), phpVersion)) {
 				program.recordModifications();
 				AST ast = program.getAST();
-				NamespaceName newNamespaceName = ast.newNamespaceName(
-						createIdentifiers(ast, usePartName), false, false);
-				UseStatementPart newUseStatementPart = ast.newUseStatementPart(
-						newNamespaceName, null);
+				NamespaceName newNamespaceName = ast.newNamespaceName(createIdentifiers(ast, usePartName), false,
+						false);
+				UseStatementPart newUseStatementPart = ast.newUseStatementPart(newNamespaceName, null);
 				int type = getUseStatementType(modelElement);
 				UseStatement newUseStatement = ast
-						.newUseStatement(
-								Arrays.asList(new UseStatementPart[] { newUseStatementPart }),
-								type);
+						.newUseStatement(Arrays.asList(new UseStatementPart[] { newUseStatementPart }), type);
 
-				NamespaceDeclaration currentNamespace = getCurrentNamespace(
-						program, sourceModule, offset - 1);
+				NamespaceDeclaration currentNamespace = getCurrentNamespace(program, sourceModule, offset - 1);
 				if (currentNamespace != null) {
-					List<Statement> statements = currentNamespace.getBody()
-							.statements();
+					List<Statement> statements = currentNamespace.getBody().statements();
 					// insert in the beginning of the current
 					// namespace:
-					addUseStatement(offset, newUseStatement, statements,
-							document);
+					addUseStatement(offset, newUseStatement, statements, document);
 				} else {
-					addUseStatement(offset, newUseStatement,
-							program.statements(), document);
+					addUseStatement(offset, newUseStatement, program.statements(), document);
 				}
 
 				ast.setInsertUseStatement(true);
-				TextEdit edits = program.rewrite(document,
-						createOptions(modelElement));
+				TextEdit edits = program.rewrite(document, createOptions(modelElement));
 				// workaround for bug 400976:
 				// when current offset is in a php section that only contains
 				// AstErrors, the use statements will be added at the beginning
@@ -421,8 +345,7 @@ public class UseStatementInjector {
 				// should be enough to detect use statements that will be
 				// wrongly inserted outside any existing php section...
 				if (new Region(0, 0).equals(edits.getRegion())) {
-					String lineDelim = TextUtilities
-							.getDefaultLineDelimiter(document);
+					String lineDelim = TextUtilities.getDefaultLineDelimiter(document);
 					MultiTextEdit newEdits = new MultiTextEdit();
 					newEdits.addChild(new InsertEdit(0, "<?php"));
 					newEdits.addChild(new InsertEdit(0, lineDelim));
@@ -441,43 +364,35 @@ public class UseStatementInjector {
 
 					// update replacement string: add namespace
 					// alias prefix
-					String namespacePrefix = typeName
-							+ NamespaceReference.NAMESPACE_SEPARATOR;
+					String namespacePrefix = typeName + NamespaceReference.NAMESPACE_SEPARATOR;
 					String replacementString = proposal.getReplacementString();
 
-					String existingNamespacePrefix = readNamespacePrefix(
-							sourceModule, document, offset, phpVersion);
+					String existingNamespacePrefix = readNamespacePrefix(sourceModule, document, offset, phpVersion);
 
 					// Add alias to the replacement string:
 					if (existingNamespacePrefix == null
-							|| !usePartName.toLowerCase().equals(
-									existingNamespacePrefix.toLowerCase())) {
+							|| !usePartName.toLowerCase().equals(existingNamespacePrefix.toLowerCase())) {
 						replacementString = namespacePrefix + replacementString;
 					}
 					proposal.setReplacementString(replacementString);
 				}
 
-				int replacementOffset = proposal.getReplacementOffset()
-						+ edits.getLength();
+				int replacementOffset = proposal.getReplacementOffset() + edits.getLength();
 				offset += edits.getLength();
 				proposal.setReplacementOffset(replacementOffset);
 			} else if (!useAlias
-					&& (usePart == null || !usePartName.equals(usePart
-							.getNamespace().getFullyQualifiedName()))) {
-				String namespacePrefix = NamespaceReference.NAMESPACE_SEPARATOR
-						+ namespaceName
+					&& (usePart == null || !usePartName.equals(usePart.getNamespace().getFullyQualifiedName()))) {
+				String namespacePrefix = NamespaceReference.NAMESPACE_SEPARATOR + namespaceName
 						+ NamespaceReference.NAMESPACE_SEPARATOR;
 				String replacementString = proposal.getReplacementString();
 
-				String existingNamespacePrefix = readNamespacePrefix(
-						sourceModule, document, offset, phpVersion);
+				String existingNamespacePrefix = readNamespacePrefix(sourceModule, document, offset, phpVersion);
 
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=459306
 				// if the type name already exists, use fully
 				// qualified name to replace:
 				if (existingNamespacePrefix == null
-						|| !namespaceName.toLowerCase().equals(
-								existingNamespacePrefix.toLowerCase())) {
+						|| !namespaceName.toLowerCase().equals(existingNamespacePrefix.toLowerCase())) {
 					replacementString = namespacePrefix + replacementString;
 				}
 				proposal.setReplacementString(replacementString);
@@ -489,8 +404,7 @@ public class UseStatementInjector {
 		return offset;
 	}
 
-	private Collection<Identifier> createIdentifiers(AST ast,
-			String namespaceName) {
+	private Collection<Identifier> createIdentifiers(AST ast, String namespaceName) {
 		String[] split = namespaceName.split("\\\\"); //$NON-NLS-1$
 		List<Identifier> identifiers = new ArrayList<Identifier>(split.length);
 		for (String s : split) {
@@ -499,16 +413,12 @@ public class UseStatementInjector {
 		return identifiers;
 	}
 
-	private NamespaceDeclaration getCurrentNamespace(Program program,
-			ISourceModule sourceModule, int offset) {
-		SourceType ns = (SourceType) PHPModelUtils.getPossibleCurrentNamespace(
-				sourceModule, offset);
+	private NamespaceDeclaration getCurrentNamespace(Program program, ISourceModule sourceModule, int offset) {
+		SourceType ns = (SourceType) PHPModelUtils.getPossibleCurrentNamespace(sourceModule, offset);
 		if (ns == null) {
-			if (program.statements() != null
-					&& !program.statements().isEmpty()
+			if (program.statements() != null && !program.statements().isEmpty()
 					&& (program.statements().get(0) instanceof NamespaceDeclaration)) {
-				NamespaceDeclaration result = (NamespaceDeclaration) program
-						.statements().get(0);
+				NamespaceDeclaration result = (NamespaceDeclaration) program.statements().get(0);
 				for (Statement statement : program.statements()) {
 					if (statement.getStart() >= offset) {
 						return result;
@@ -556,15 +466,13 @@ public class UseStatementInjector {
 		return nameBuf.toString();
 	}
 
-	private boolean needsAliasPrepend(IModelElement modelElement)
-			throws ModelException {
+	private boolean needsAliasPrepend(IModelElement modelElement) throws ModelException {
 		if (modelElement instanceof IMethod) {
 			if (modelElement instanceof FakeConstructor) {
 				return true;
 			}
 			IType declaringType = ((IMethod) modelElement).getDeclaringType();
-			return declaringType == null
-					|| PHPFlags.isNamespace(declaringType.getFlags());
+			return declaringType == null || PHPFlags.isNamespace(declaringType.getFlags());
 		}
 		if (modelElement instanceof IField) {
 			IField field = (IField) modelElement;
@@ -572,21 +480,19 @@ public class UseStatementInjector {
 				return false;
 			}
 			IType declaringType = ((IField) modelElement).getDeclaringType();
-			return declaringType == null
-					|| PHPFlags.isNamespace(declaringType.getFlags());
+			return declaringType == null || PHPFlags.isNamespace(declaringType.getFlags());
 		}
 		return true;
 	}
 
-	private String readNamespacePrefix(ISourceModule sourceModule,
-			IDocument document, int offset, PHPVersion phpVersion) {
+	private String readNamespacePrefix(ISourceModule sourceModule, IDocument document, int offset,
+			PHPVersion phpVersion) {
 
 		if (offset > 0) {
 			--offset;
 		}
 
-		IStructuredDocumentRegion sRegion = ((IStructuredDocument) document)
-				.getRegionAtCharacterOffset(offset);
+		IStructuredDocumentRegion sRegion = ((IStructuredDocument) document).getRegionAtCharacterOffset(offset);
 		if (sRegion != null) {
 			ITextRegion tRegion = sRegion.getRegionAtCharacterOffset(offset);
 
@@ -596,33 +502,26 @@ public class UseStatementInjector {
 				tRegion = container.getRegionAtCharacterOffset(offset);
 			}
 
-			if (tRegion != null
-					&& tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+			if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
 				try {
-					tRegion = phpScriptRegion.getPhpToken(offset
-							- container.getStartOffset()
-							- phpScriptRegion.getStart());
+					tRegion = phpScriptRegion
+							.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
 				} catch (BadLocationException e) {
 					return null;
 				}
 
 				// Determine element name:
-				int elementStart = container.getStartOffset()
-						+ phpScriptRegion.getStart() + tRegion.getStart();
-				TextSequence statement = PHPTextSequenceUtilities.getStatement(
-						elementStart + tRegion.getLength(), sRegion, true);
+				int elementStart = container.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart();
+				TextSequence statement = PHPTextSequenceUtilities.getStatement(elementStart + tRegion.getLength(),
+						sRegion, true);
 				if (statement.length() != 0) {
-					int endPosition = PHPTextSequenceUtilities
-							.readBackwardSpaces(statement, statement.length());
-					int startPosition = PHPTextSequenceUtilities
-							.readIdentifierStartIndex(phpVersion, statement,
-									endPosition, true);
-					String elementName = statement.subSequence(startPosition,
-							endPosition).toString();
+					int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statement, statement.length());
+					int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statement,
+							endPosition, true);
+					String elementName = statement.subSequence(startPosition, endPosition).toString();
 					if (elementName.length() > 0) {
-						return PHPModelUtils.extractNamespaceName(elementName,
-								sourceModule, offset);
+						return PHPModelUtils.extractNamespaceName(elementName, sourceModule, offset);
 					}
 				}
 			}
@@ -634,8 +533,7 @@ public class UseStatementInjector {
 		int result = 0;
 		for (int i = 0; i < statements.size(); i++) {
 			Statement statement = statements.get(i);
-			if (statement.getEnd() <= offset
-					&& statement instanceof UseStatement) {
+			if (statement.getEnd() <= offset && statement instanceof UseStatement) {
 				result = i + 1;
 			}
 		}
@@ -650,8 +548,7 @@ public class UseStatementInjector {
 	 * @param offset
 	 * @return
 	 */
-	private List<String> getImportedTypeName(
-			ModuleDeclaration moduleDeclaration, final int offset) {
+	private List<String> getImportedTypeName(ModuleDeclaration moduleDeclaration, final int offset) {
 		org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement[] useStatements = ASTUtils
 				.getUseStatements(moduleDeclaration, offset);
 		List<String> importedClass = new ArrayList<String>();
@@ -671,10 +568,8 @@ public class UseStatementInjector {
 		return importedClass;
 	}
 
-	public int getUseStatementType(IModelElement modelElement)
-			throws ModelException {
-		if (modelElement.getElementType() != IModelElement.TYPE
-				&& !(modelElement instanceof FakeConstructor)) {
+	public int getUseStatementType(IModelElement modelElement) throws ModelException {
+		if (modelElement.getElementType() != IModelElement.TYPE && !(modelElement instanceof FakeConstructor)) {
 			if (modelElement.getElementType() == IModelElement.METHOD) {
 				return UseStatement.T_FUNCTION;
 			} else if (modelElement.getElementType() == IModelElement.FIELD
@@ -685,25 +580,21 @@ public class UseStatementInjector {
 		return UseStatement.T_NONE;
 	}
 
-	private void addUseStatement(int offset, UseStatement newUseStatement,
-			List<Statement> statements, IDocument document) {
+	private void addUseStatement(int offset, UseStatement newUseStatement, List<Statement> statements,
+			IDocument document) {
 		int index = getLastUsestatementIndex(statements, offset);
 		if (index > 0) { // workaround for bug 393253
 			try {
-				int beginLine = document.getLineOfOffset(statements.get(
-						index - 1).getEnd()) + 1;
-				newUseStatement.setSourceRange(
-						document.getLineOffset(beginLine), 0);
+				int beginLine = document.getLineOfOffset(statements.get(index - 1).getEnd()) + 1;
+				newUseStatement.setSourceRange(document.getLineOffset(beginLine), 0);
 			} catch (Exception e) {
 			}
 		}
 		statements.add(index, newUseStatement);
 	}
 
-	private boolean isSameNamespace(String namespaceName, Program program,
-			ISourceModule sourceModule, int offset) {
-		NamespaceDeclaration currentNamespace = getCurrentNamespace(program,
-				sourceModule, offset - 1);
+	private boolean isSameNamespace(String namespaceName, Program program, ISourceModule sourceModule, int offset) {
+		NamespaceDeclaration currentNamespace = getCurrentNamespace(program, sourceModule, offset - 1);
 		if (currentNamespace == null) {
 			return false;
 		}
@@ -713,10 +604,8 @@ public class UseStatementInjector {
 		return false;
 	}
 
-	private boolean canInsertUseStatement(int statementType,
-			PHPVersion phpVersion) {
-		return statementType == UseStatement.T_NONE
-				|| phpVersion.isGreaterThan(PHPVersion.PHP5_5);
+	private boolean canInsertUseStatement(int statementType, PHPVersion phpVersion) {
+		return statementType == UseStatement.T_NONE || phpVersion.isGreaterThan(PHPVersion.PHP5_5);
 	}
 
 	private Map<Object, Object> createOptions(IModelElement modelElement) {
@@ -726,29 +615,22 @@ public class UseStatementInjector {
 			return options;
 		}
 
-		IScopeContext[] contents = new IScopeContext[] {
-				new ProjectScope(modelElement.getScriptProject().getProject()),
+		IScopeContext[] contents = new IScopeContext[] { new ProjectScope(modelElement.getScriptProject().getProject()),
 				InstanceScope.INSTANCE, DefaultScope.INSTANCE };
 		for (int i = 0; i < contents.length; i++) {
 			IScopeContext scopeContext = contents[i];
 			IEclipsePreferences node = scopeContext.getNode(PHPCorePlugin.ID);
 			if (node != null) {
 				if (!options.containsKey(PHPCoreConstants.FORMATTER_USE_TABS)) {
-					String useTabs = node.get(
-							PHPCoreConstants.FORMATTER_USE_TABS, null);
+					String useTabs = node.get(PHPCoreConstants.FORMATTER_USE_TABS, null);
 					if (useTabs != null) {
-						options.put(PHPCoreConstants.FORMATTER_USE_TABS,
-								useTabs);
+						options.put(PHPCoreConstants.FORMATTER_USE_TABS, useTabs);
 					}
 				}
-				if (!options
-						.containsKey(PHPCoreConstants.FORMATTER_INDENTATION_SIZE)) {
-					String size = node.get(
-							PHPCoreConstants.FORMATTER_INDENTATION_SIZE, null);
+				if (!options.containsKey(PHPCoreConstants.FORMATTER_INDENTATION_SIZE)) {
+					String size = node.get(PHPCoreConstants.FORMATTER_INDENTATION_SIZE, null);
 					if (size != null) {
-						options.put(
-								PHPCoreConstants.FORMATTER_INDENTATION_SIZE,
-								size);
+						options.put(PHPCoreConstants.FORMATTER_INDENTATION_SIZE, size);
 					}
 				}
 			}

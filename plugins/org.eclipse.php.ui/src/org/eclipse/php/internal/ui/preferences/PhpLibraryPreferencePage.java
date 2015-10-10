@@ -75,11 +75,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 
 	@Override
 	public void performHelp() {
-		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(getControl(),
-						IPHPHelpContextIds.PHP_LIBRARIES_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PHP_LIBRARIES_PREFERENCES);
 		super.performHelp();
 	}
 
@@ -124,8 +120,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 	private class AddZipButtonHandler implements IPHPLibraryButtonHandler {
 
 		public boolean selectionChanged(TreeListDialogField field) {
-			return canAdd(field.getSelectedElements())
-					&& getLanguageToolkit().languageSupportZIPBuildpath();
+			return canAdd(field.getSelectedElements()) && getLanguageToolkit().languageSupportZIPBuildpath();
 		}
 
 		public void handleSelection(TreeListDialogField field) {
@@ -280,8 +275,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 		setPreferenceStore(DLTKUIPlugin.getDefault().getPreferenceStore());
 		fDummyProject = createPlaceholderProject();
 
-		fAttributeDescriptors = DLTKUIPlugin.getDefault()
-				.getClasspathAttributeConfigurationDescriptors();
+		fAttributeDescriptors = DLTKUIPlugin.getDefault().getClasspathAttributeConfigurationDescriptors();
 
 		// title only used when page is shown programatically
 		setTitle(PreferencesMessages.UserLibraryPreferencePage_title);
@@ -334,31 +328,24 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 			buttonLabels[i] = handlers.get(i).getLabel();
 		}
 
-		IDecoratorManager decoratorManager = PlatformUI.getWorkbench()
-				.getDecoratorManager();
+		IDecoratorManager decoratorManager = PlatformUI.getWorkbench().getDecoratorManager();
 		fLibraryList = new TreeListDialogField(adapter, buttonLabels,
-				new DecoratingLabelProvider(new BPListLabelProvider(),
-						decoratorManager));
-		fLibraryList
-				.setLabelText(PreferencesMessages.UserLibraryPreferencePage_libraries_label);
+				new DecoratingLabelProvider(new BPListLabelProvider(), decoratorManager));
+		fLibraryList.setLabelText(PreferencesMessages.UserLibraryPreferencePage_libraries_label);
 
 		String[] names = DLTKCore.getUserLibraryNames(getLanguageToolkit());
 		ArrayList elements = new ArrayList();
 
 		for (int i = 0; i < names.length; i++) {
-			UserLibrary lib = ModelManager.getUserLibraryManager()
-					.getUserLibrary(names[i], getLanguageToolkit());
+			UserLibrary lib = ModelManager.getUserLibraryManager().getUserLibrary(names[i], getLanguageToolkit());
 
 			if (lib != null) {
 				IPath path = new Path(DLTKCore.USER_LIBRARY_CONTAINER_ID)
-						.append(UserLibraryManager.makeLibraryName(names[i],
-								getLanguageToolkit()));
+						.append(UserLibraryManager.makeLibraryName(names[i], getLanguageToolkit()));
 
 				try {
-					IBuildpathContainer container = DLTKCore
-							.getBuildpathContainer(path, fDummyProject);
-					elements.add(new BPUserLibraryElement(names[i], container,
-							fDummyProject, lib.getAttributes()));
+					IBuildpathContainer container = DLTKCore.getBuildpathContainer(path, fDummyProject);
+					elements.add(new BPUserLibraryElement(names[i], container, fDummyProject, lib.getAttributes()));
 				} catch (ModelException e) {
 					DLTKUIPlugin.log(e);
 					// ignore
@@ -412,8 +399,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 	}
 
 	private BPUserLibraryElement getSingleSelectedLibrary(List selected) {
-		if (selected.size() == 1
-				&& selected.get(0) instanceof BPUserLibraryElement) {
+		if (selected.size() == 1 && selected.get(0) instanceof BPUserLibraryElement) {
 			return (BPUserLibraryElement) selected.get(0);
 		}
 		return null;
@@ -423,20 +409,16 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 		String key = elem.getKey();
 		BPListElement selElement = elem.getParent();
 		if (key.equals(BPListElement.ACCESSRULES)) {
-			AccessRulesDialog dialog = new AccessRulesDialog(getShell(),
-					selElement, null, false);
+			AccessRulesDialog dialog = new AccessRulesDialog(getShell(), selElement, null, false);
 			if (dialog.open() == Window.OK) {
-				selElement.setAttribute(BPListElement.ACCESSRULES,
-						dialog.getAccessRules());
+				selElement.setAttribute(BPListElement.ACCESSRULES, dialog.getAccessRules());
 				fLibraryList.refresh(elem);
 				fLibraryList.expandElement(elem, 2);
 			}
 		} else if (!elem.isBuiltIn()) {
-			BuildpathAttributeConfiguration config = fAttributeDescriptors
-					.get(key);
+			BuildpathAttributeConfiguration config = fAttributeDescriptors.get(key);
 			if (config != null) {
-				IBuildpathAttribute result = config.performEdit(getShell(),
-						elem.getBuildpathAttributeAccess());
+				IBuildpathAttribute result = config.performEdit(getShell(), elem.getBuildpathAttributeAccess());
 				if (result != null) {
 					elem.setValue(result.getValue());
 					fLibraryList.refresh(elem);
@@ -455,11 +437,9 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 			} else if (curr instanceof BPListElement) {
 				BPListElement elem = (BPListElement) curr;
 				if (((BPListElement) curr).isExternalFolder()) {
-					editExternalElement(elem,
-							(BPUserLibraryElement) elem.getParentContainer());
+					editExternalElement(elem, (BPUserLibraryElement) elem.getParentContainer());
 				} else {
-					editArchiveElement(elem,
-							(BPUserLibraryElement) elem.getParentContainer());
+					editArchiveElement(elem, (BPUserLibraryElement) elem.getParentContainer());
 				}
 			}
 			doSelectionChanged(fLibraryList);
@@ -467,8 +447,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 	}
 
 	private void editUserLibraryElement(BPUserLibraryElement element) {
-		LibraryNameDialog dialog = new LibraryNameDialog(getShell(), element,
-				fLibraryList.getElements());
+		LibraryNameDialog dialog = new LibraryNameDialog(getShell(), element, fLibraryList.getElements());
 		if (dialog.open() == Window.OK) {
 			BPUserLibraryElement newLibrary = dialog.getNewLibrary();
 			if (element != null) {
@@ -476,14 +455,12 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 			} else {
 				fLibraryList.addElement(newLibrary);
 			}
-			fLibraryList.expandElement(newLibrary,
-					AbstractTreeViewer.ALL_LEVELS);
+			fLibraryList.expandElement(newLibrary, AbstractTreeViewer.ALL_LEVELS);
 			fLibraryList.selectElements(new StructuredSelection(newLibrary));
 		}
 	}
 
-	private void editArchiveElement(BPListElement existingElement,
-			BPUserLibraryElement parent) {
+	private void editArchiveElement(BPListElement existingElement, BPUserLibraryElement parent) {
 		BPListElement[] elements = openExtZipFileDialog(existingElement, parent);
 		if (elements != null) {
 			for (int i = 0; i < elements.length; i++) {
@@ -494,16 +471,13 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 				}
 			}
 			fLibraryList.refresh(parent);
-			fLibraryList.selectElements(new StructuredSelection(Arrays
-					.asList(elements)));
+			fLibraryList.selectElements(new StructuredSelection(Arrays.asList(elements)));
 			fLibraryList.expandElement(parent, 2);
 		}
 	}
 
-	private void editExternalElement(BPListElement existingElement,
-			BPUserLibraryElement parent) {
-		BPListElement[] elements = openExtSourceFolderDialog(existingElement,
-				parent);
+	private void editExternalElement(BPListElement existingElement, BPUserLibraryElement parent) {
+		BPListElement[] elements = openExtSourceFolderDialog(existingElement, parent);
 		if (elements != null) {
 			for (int i = 0; i < elements.length; i++) {
 				if (existingElement != null) {
@@ -513,8 +487,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 				}
 			}
 			fLibraryList.refresh(parent);
-			fLibraryList.selectElements(new StructuredSelection(Arrays
-					.asList(elements)));
+			fLibraryList.selectElements(new StructuredSelection(Arrays.asList(elements)));
 			fLibraryList.expandElement(parent, 2);
 		}
 	}
@@ -544,12 +517,9 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 					attrib.getParent().setAttribute(key, value);
 					fLibraryList.refresh(attrib);
 				} else {
-					BuildpathAttributeConfiguration config = fAttributeDescriptors
-							.get(attrib.getKey());
+					BuildpathAttributeConfiguration config = fAttributeDescriptors.get(attrib.getKey());
 					if (config != null) {
-						IBuildpathAttribute result = config
-								.performRemove(attrib
-										.getBuildpathAttributeAccess());
+						IBuildpathAttribute result = config.performRemove(attrib.getBuildpathAttributeAccess());
 						if (result != null) {
 							attrib.setValue(result.getValue());
 							fLibraryList.refresh(attrib);
@@ -560,8 +530,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 		}
 		if (fLibraryList.getSelectedElements().isEmpty()) {
 			if (selectionAfter != null) {
-				fLibraryList.selectElements(new StructuredSelection(
-						selectionAfter));
+				fLibraryList.selectElements(new StructuredSelection(selectionAfter));
 			} else {
 				fLibraryList.selectFirstElement();
 			}
@@ -586,21 +555,18 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 
 	private void doLoad() {
 		List existing = fLibraryList.getElements();
-		LoadSaveDialog dialog = new LoadSaveDialog(getShell(), false, existing,
-				fDialogSettings);
+		LoadSaveDialog dialog = new LoadSaveDialog(getShell(), false, existing, fDialogSettings);
 		if (dialog.open() == Window.OK) {
 			HashMap map = new HashMap(existing.size());
 			for (int k = 0; k < existing.size(); k++) {
-				BPUserLibraryElement elem = (BPUserLibraryElement) existing
-						.get(k);
+				BPUserLibraryElement elem = (BPUserLibraryElement) existing.get(k);
 				map.put(elem.getName(), elem);
 			}
 
 			List list = dialog.getLoadedLibraries();
 			for (int i = 0; i < list.size(); i++) {
 				BPUserLibraryElement elem = (BPUserLibraryElement) list.get(i);
-				BPUserLibraryElement found = (BPUserLibraryElement) map
-						.get(elem.getName());
+				BPUserLibraryElement found = (BPUserLibraryElement) map.get(elem.getName());
 				if (found == null) {
 					existing.add(elem);
 					map.put(elem.getName(), elem);
@@ -614,8 +580,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 	}
 
 	private void doSave() {
-		LoadSaveDialog dialog = new LoadSaveDialog(getShell(), true,
-				fLibraryList.getElements(), fDialogSettings);
+		LoadSaveDialog dialog = new LoadSaveDialog(getShell(), true, fLibraryList.getElements(), fDialogSettings);
 		dialog.open();
 	}
 
@@ -667,15 +632,12 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 		if (firstElement instanceof BPListElementAttribute) {
 			BPListElementAttribute attrib = (BPListElementAttribute) firstElement;
 			if (attrib.getParent().getParentContainer() instanceof BPUserLibraryElement) {
-				if (isBuiltIn((BPUserLibraryElement) attrib.getParent()
-						.getParentContainer())) {
+				if (isBuiltIn((BPUserLibraryElement) attrib.getParent().getParentContainer())) {
 					return false;
 				}
 			} else if (!attrib.isBuiltIn()) {
-				BuildpathAttributeConfiguration config = fAttributeDescriptors
-						.get(attrib.getKey());
-				return config != null
-						&& config.canEdit(attrib.getBuildpathAttributeAccess());
+				BuildpathAttributeConfiguration config = fAttributeDescriptors.get(attrib.getKey());
+				return config != null && config.canEdit(attrib.getBuildpathAttributeAccess());
 			}
 		}
 		return true;
@@ -700,11 +662,8 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 						return false;
 					}
 				} else {
-					BuildpathAttributeConfiguration config = fAttributeDescriptors
-							.get(attrib.getKey());
-					if (config == null
-							|| !config.canRemove(attrib
-									.getBuildpathAttributeAccess())) {
+					BuildpathAttributeConfiguration config = fAttributeDescriptors.get(attrib.getKey());
+					if (config == null || !config.canRemove(attrib.getBuildpathAttributeAccess())) {
 						return false;
 					}
 				}
@@ -800,8 +759,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 		BPUserLibraryElement parent = getCommonParent(list);
 		if (parent != null) {
 			BPListElement[] children = parent.getChildren();
-			for (int i = children.length - 1, end = Math.max(0, children.length
-					- list.size()); i >= end; i--) {
+			for (int i = children.length - 1, end = Math.max(0, children.length - list.size()); i >= end; i--) {
 				if (!list.contains(children[i])) {
 					return true;
 				}
@@ -810,15 +768,12 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 		return false;
 	}
 
-	private BPListElement[] openExtZipFileDialog(BPListElement existing,
-			Object parent) {
+	private BPListElement[] openExtZipFileDialog(BPListElement existing, Object parent) {
 		String lastUsedPath;
 		if (existing != null) {
-			lastUsedPath = existing.getPath().removeLastSegments(1)
-					.toOSString();
+			lastUsedPath = existing.getPath().removeLastSegments(1).toOSString();
 		} else {
-			lastUsedPath = fDialogSettings
-					.get(IUIConstants.DIALOGSTORE_LASTEXTZIP);
+			lastUsedPath = fDialogSettings.get(IUIConstants.DIALOGSTORE_LASTEXTZIP);
 			if (lastUsedPath == null) {
 				lastUsedPath = ""; //$NON-NLS-1$
 			}
@@ -826,8 +781,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 		String title = (existing == null) ? PreferencesMessages.UserLibraryPreferencePage_browsejar_new_title
 				: PreferencesMessages.UserLibraryPreferencePage_browsejar_edit_title;
 
-		FileDialog dialog = new FileDialog(getShell(),
-				existing == null ? SWT.MULTI : SWT.SINGLE);
+		FileDialog dialog = new FileDialog(getShell(), existing == null ? SWT.MULTI : SWT.SINGLE);
 		dialog.setText(title);
 		dialog.setFilterExtensions(new String[] { "*.zip" }); //$NON-NLS-1$
 		dialog.setFilterPath(lastUsedPath);
@@ -855,27 +809,21 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 				path = file.getFullPath();
 			}
 
-			path = EnvironmentPathUtils.getFullPath(
-					EnvironmentManager.getLocalEnvironment(), path);
-			BPListElement curr = new BPListElement(parent, null,
-					IBuildpathEntry.BPE_LIBRARY, path, file, true);
+			path = EnvironmentPathUtils.getFullPath(EnvironmentManager.getLocalEnvironment(), path);
+			BPListElement curr = new BPListElement(parent, null, IBuildpathEntry.BPE_LIBRARY, path, file, true);
 			elems[i] = curr;
 		}
-		fDialogSettings.put(IUIConstants.DIALOGSTORE_LASTEXTZIP,
-				dialog.getFilterPath());
+		fDialogSettings.put(IUIConstants.DIALOGSTORE_LASTEXTZIP, dialog.getFilterPath());
 
 		return elems;
 	}
 
-	private BPListElement[] openExtSourceFolderDialog(BPListElement existing,
-			Object parent) {
+	private BPListElement[] openExtSourceFolderDialog(BPListElement existing, Object parent) {
 		String lastUsedPath;
 		if (existing != null) {
-			lastUsedPath = EnvironmentPathUtils.getLocalPath(
-					existing.getPath().removeLastSegments(1)).toOSString();
+			lastUsedPath = EnvironmentPathUtils.getLocalPath(existing.getPath().removeLastSegments(1)).toOSString();
 		} else {
-			lastUsedPath = fDialogSettings
-					.get(IUIConstants.DIALOGSTORE_LASTEXTSOURCE);
+			lastUsedPath = fDialogSettings.get(IUIConstants.DIALOGSTORE_LASTEXTSOURCE);
 			if (lastUsedPath == null) {
 				lastUsedPath = ""; //$NON-NLS-1$
 			}
@@ -883,8 +831,7 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 		String title = (existing == null) ? PreferencesMessages.UserLibraryPreferencePage_browseext_new_title
 				: PreferencesMessages.UserLibraryPreferencePage_browseext_edit_title;
 
-		DirectoryDialog dialog = new DirectoryDialog(getShell(),
-				existing == null ? SWT.MULTI : SWT.SINGLE);
+		DirectoryDialog dialog = new DirectoryDialog(getShell(), existing == null ? SWT.MULTI : SWT.SINGLE);
 		dialog.setText(title);
 		// dialog.setFilterExtensions(new String[] { "*.zip" }); //$NON-NLS-1$
 		dialog.setFilterPath(lastUsedPath);
@@ -904,22 +851,18 @@ public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 		BPListElement[] elems = new BPListElement[1];
 		IPath path = Path.fromOSString(res).makeAbsolute();
 
-		BPListElement curr = new BPListElement(parent, null,
-				IBuildpathEntry.BPE_LIBRARY, EnvironmentPathUtils.getFullPath(
-						EnvironmentManager.getLocalEnvironment(), path), null,
-				true);
+		BPListElement curr = new BPListElement(parent, null, IBuildpathEntry.BPE_LIBRARY,
+				EnvironmentPathUtils.getFullPath(EnvironmentManager.getLocalEnvironment(), path), null, true);
 		elems[0] = curr;
 
-		fDialogSettings.put(IUIConstants.DIALOGSTORE_LASTEXTSOURCE,
-				dialog.getFilterPath());
+		fDialogSettings.put(IUIConstants.DIALOGSTORE_LASTEXTSOURCE, dialog.getFilterPath());
 
 		return elems;
 	}
 
 	private List<IPHPLibraryButtonHandler> getHandlers() {
-		IConfigurationElement[] elements = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(PHPUiPlugin.ID,
-						BTN_HANDLERS_EXTENSION_POINT);
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPUiPlugin.ID,
+				BTN_HANDLERS_EXTENSION_POINT);
 		List<IPHPLibraryButtonHandler> result = new ArrayList<IPHPLibraryButtonHandler>();
 		for (IConfigurationElement element : elements) {
 			if ("handler".equals(element.getName())) { //$NON-NLS-1$

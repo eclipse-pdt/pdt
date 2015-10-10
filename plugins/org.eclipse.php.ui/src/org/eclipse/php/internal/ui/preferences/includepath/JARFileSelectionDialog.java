@@ -40,8 +40,7 @@ public class JARFileSelectionDialog extends FilteredElementTreeSelectionDialog {
 	 * @param acceptFolders
 	 *            specifies if folders can be selected as well
 	 */
-	public JARFileSelectionDialog(Shell parent, boolean multiSelect,
-			boolean acceptFolders) {
+	public JARFileSelectionDialog(Shell parent, boolean multiSelect, boolean acceptFolders) {
 		this(parent, multiSelect, acceptFolders, false);
 	}
 
@@ -58,8 +57,7 @@ public class JARFileSelectionDialog extends FilteredElementTreeSelectionDialog {
 	 *            specifies if all archives (not just jar and zip) can be
 	 *            selected
 	 */
-	public JARFileSelectionDialog(Shell parent, boolean multiSelect,
-			boolean acceptFolders, boolean acceptAllArchives) {
+	public JARFileSelectionDialog(Shell parent, boolean multiSelect, boolean acceptFolders, boolean acceptAllArchives) {
 		super(parent, new FileLabelProvider(), new FileContentProvider(), false);
 		setComparator(new FileViewerComparator());
 		if (!acceptAllArchives) {
@@ -73,10 +71,9 @@ public class JARFileSelectionDialog extends FilteredElementTreeSelectionDialog {
 	}
 
 	private static class FileLabelProvider extends LabelProvider {
-		private final Image IMG_FOLDER = PlatformUI.getWorkbench()
-				.getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
-		private final Image IMG_JAR = PHPPluginImages
-				.get(PHPPluginImages.IMG_OBJS_EXTJAR);
+		private final Image IMG_FOLDER = PlatformUI.getWorkbench().getSharedImages()
+				.getImage(ISharedImages.IMG_OBJ_FOLDER);
+		private final Image IMG_JAR = PHPPluginImages.get(PHPPluginImages.IMG_OBJS_EXTJAR);
 
 		public Image getImage(Object element) {
 			if (element instanceof File) {
@@ -93,8 +90,7 @@ public class JARFileSelectionDialog extends FilteredElementTreeSelectionDialog {
 
 		public String getText(Object element) {
 			if (element instanceof File) {
-				return BasicElementLabels.getResourceName(((File) element)
-						.getName());
+				return BasicElementLabels.getResourceName(((File) element).getName());
 			}
 			return super.getText(element);
 		}
@@ -168,8 +164,7 @@ public class JARFileSelectionDialog extends FilteredElementTreeSelectionDialog {
 		private static boolean isArchive(File file) {
 			String name = file.getName();
 			int detIndex = name.lastIndexOf('.');
-			return (detIndex != -1 && PHPToolkitUtil.isPharExtention(name
-					.substring(detIndex + 1)));
+			return (detIndex != -1 && PHPToolkitUtil.isPharExtention(name.substring(detIndex + 1)));
 		}
 	}
 
@@ -184,8 +179,7 @@ public class JARFileSelectionDialog extends FilteredElementTreeSelectionDialog {
 		}
 	}
 
-	private static class FileSelectionValidator implements
-			ISelectionStatusValidator {
+	private static class FileSelectionValidator implements ISelectionStatusValidator {
 		private boolean fMultiSelect;
 		private boolean fAcceptFolders;
 

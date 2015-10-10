@@ -88,18 +88,15 @@ public class SWTUtil {
 	 */
 	public static CTabFolder createTabFolder(Composite parent) {
 		Display display = getStandardDisplay();
-		Color c1 = display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND), c2 = display
-				.getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
-		CTabFolder tabs = new CTabFolder(parent, SWT.NO_REDRAW_RESIZE
-				| SWT.NO_TRIM | SWT.FLAT);
+		Color c1 = display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND),
+				c2 = display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
+		CTabFolder tabs = new CTabFolder(parent, SWT.NO_REDRAW_RESIZE | SWT.NO_TRIM | SWT.FLAT);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 2;
-		tabs.setSelectionBackground(new Color[] { c1, c2 }, new int[] { 100 },
-				true);
-		tabs.setSelectionForeground(getStandardDisplay().getSystemColor(
-				SWT.COLOR_TITLE_FOREGROUND));
-		tabs.setSimple(PlatformUI.getPreferenceStore().getBoolean(
-				IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS));
+		tabs.setSelectionBackground(new Color[] { c1, c2 }, new int[] { 100 }, true);
+		tabs.setSelectionForeground(getStandardDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
+		tabs.setSimple(
+				PlatformUI.getPreferenceStore().getBoolean(IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS));
 		tabs.setLayoutData(gd);
 		tabs.setBorderVisible(true);
 		tabs.setFont(parent.getFont());
@@ -120,16 +117,14 @@ public class SWTUtil {
 		final IPreferenceNode targetNode = new PreferenceNode(id, page);
 		PreferenceManager manager = new PreferenceManager();
 		manager.addToRoot(targetNode);
-		final PreferenceDialog dialog = new PreferenceDialog(DebugUIPlugin
-				.getShell(), manager);
-		BusyIndicator.showWhile(DebugUIPlugin.getStandardDisplay(),
-				new Runnable() {
-					public void run() {
-						dialog.create();
-						dialog.setMessage(targetNode.getLabelText());
-						dialog.open();
-					}
-				});
+		final PreferenceDialog dialog = new PreferenceDialog(DebugUIPlugin.getShell(), manager);
+		BusyIndicator.showWhile(DebugUIPlugin.getStandardDisplay(), new Runnable() {
+			public void run() {
+				dialog.create();
+				dialog.setMessage(targetNode.getLabelText());
+				dialog.open();
+			}
+		});
 	}
 
 	/**
@@ -138,10 +133,8 @@ public class SWTUtil {
 	public static int getButtonWidthHint(Button button) {
 		button.setFont(JFaceResources.getDialogFont());
 		PixelConverter converter = new PixelConverter(button);
-		int widthHint = converter
-				.convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
-		return Math.max(widthHint, button.computeSize(SWT.DEFAULT, SWT.DEFAULT,
-				true).x);
+		int widthHint = converter.convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
+		return Math.max(widthHint, button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
 	}
 
 	/**
@@ -173,8 +166,7 @@ public class SWTUtil {
 	 * 
 	 * @return a new push button
 	 */
-	public static Button createPushButton(Composite parent, String label,
-			Image image) {
+	public static Button createPushButton(Composite parent, String label, Image image) {
 		Button button = new Button(parent, SWT.PUSH);
 		button.setFont(parent.getFont());
 		if (image != null) {
@@ -271,8 +263,7 @@ public class SWTUtil {
 	 * @since 3.2
 	 * 
 	 */
-	public static Group createGroup(Composite parent, String text, int columns,
-			int hspan, int fill) {
+	public static Group createGroup(Composite parent, String text, int columns, int hspan, int fill) {
 		Group g = new Group(parent, SWT.NONE);
 		g.setLayout(new GridLayout(columns, false));
 		g.setText(text);

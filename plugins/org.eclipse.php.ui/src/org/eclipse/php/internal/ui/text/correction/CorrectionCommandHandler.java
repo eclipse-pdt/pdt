@@ -51,20 +51,15 @@ public class CorrectionCommandHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		final String commandId = event.getCommand().getId();
-		final IEvaluationContext context = (IEvaluationContext) event
-				.getApplicationContext();
+		final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
-		final PHPStructuredEditor editor = (PHPStructuredEditor) context
-				.getVariable(ISources.ACTIVE_PART_NAME);
-		final ITextSelection selection = (ITextSelection) editor
-				.getSelectionProvider().getSelection();
+		final PHPStructuredEditor editor = (PHPStructuredEditor) context.getVariable(ISources.ACTIVE_PART_NAME);
+		final ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
 
-		final StructuredTextInvocationContext assistInvocation = new StructuredTextInvocationContext(
-				editor.getViewer(), selection.getOffset(),
-				selection.getLength(), new HashMap<Object, Object>());
+		final StructuredTextInvocationContext assistInvocation = new StructuredTextInvocationContext(editor.getViewer(),
+				selection.getOffset(), selection.getLength(), new HashMap<Object, Object>());
 
-		final ICompletionProposal[] proposals = phpCorrectionProcessor
-				.computeQuickAssistProposals(assistInvocation);
+		final ICompletionProposal[] proposals = phpCorrectionProcessor.computeQuickAssistProposals(assistInvocation);
 
 		if (proposals == null || proposals.length == 0) {
 			return null;
@@ -73,8 +68,7 @@ public class CorrectionCommandHandler extends AbstractHandler {
 		for (ICompletionProposal proposal : proposals) {
 			if (proposal instanceof ICommandAccess) {
 				final ICommandAccess command = (ICommandAccess) proposal;
-				if (command.getCommandId() != null
-						&& command.getCommandId().equals(commandId)) {
+				if (command.getCommandId() != null && command.getCommandId().equals(commandId)) {
 					runProposal(editor, proposal, assistInvocation);
 					return null;
 				}
@@ -87,16 +81,12 @@ public class CorrectionCommandHandler extends AbstractHandler {
 	/**
 	 * Triggers are ignored
 	 */
-	private void runProposal(PHPStructuredEditor editor,
-			ICompletionProposal proposal,
+	private void runProposal(PHPStructuredEditor editor, ICompletionProposal proposal,
 			StructuredTextInvocationContext context) {
 		if (proposal instanceof ICompletionProposalExtension2) {
-			((ICompletionProposalExtension2) proposal).apply(
-					editor.getTextViewer(), (char) 0, 0, context.getOffset());
-		} else if (proposal instanceof ICompletionProposalExtension
-				&& editor.getDocument() != null) {
-			((ICompletionProposalExtension) proposal)
-					.apply(editor.getDocument(), (char) 0, context.getOffset());
+			((ICompletionProposalExtension2) proposal).apply(editor.getTextViewer(), (char) 0, 0, context.getOffset());
+		} else if (proposal instanceof ICompletionProposalExtension && editor.getDocument() != null) {
+			((ICompletionProposalExtension) proposal).apply(editor.getDocument(), (char) 0, context.getOffset());
 		} else {
 			proposal.apply(editor.getDocument());
 		}
@@ -107,24 +97,20 @@ public class CorrectionCommandHandler extends AbstractHandler {
 
 		try {
 			IEvaluationContext context = (IEvaluationContext) evaluationContext;
-			if (!(context.getVariable(
-					ISources.ACTIVE_PART_NAME) instanceof PHPStructuredEditor)) {
+			if (!(context.getVariable(ISources.ACTIVE_PART_NAME) instanceof PHPStructuredEditor)) {
 				setBaseEnabled(false);
 				return;
 			}
-			PHPStructuredEditor editor = (PHPStructuredEditor) context
-					.getVariable(ISources.ACTIVE_PART_NAME);
+			PHPStructuredEditor editor = (PHPStructuredEditor) context.getVariable(ISources.ACTIVE_PART_NAME);
 
-			final ISelection selection = editor.getSelectionProvider()
-					.getSelection();
+			final ISelection selection = editor.getSelectionProvider().getSelection();
 			if (!(selection instanceof ITextSelection)) {
 				setBaseEnabled(false);
 				return;
 			}
 			final int offset = ((ITextSelection) selection).getOffset();
 			ITypedRegion partition = editor.getDocument().getPartition(offset);
-			setBaseEnabled(
-					partition.getType().equals(PHPPartitionTypes.PHP_DEFAULT));
+			setBaseEnabled(partition.getType().equals(PHPPartitionTypes.PHP_DEFAULT));
 			return;
 		} catch (IllegalArgumentException e) {
 		} catch (BadLocationException e) {
@@ -137,8 +123,7 @@ public class CorrectionCommandHandler extends AbstractHandler {
 	 * 
 	 */
 	public static String getShortcut(String commandId) {
-		final IBindingService keys = (IBindingService) PlatformUI.getWorkbench()
-				.getService(IBindingService.class);
+		final IBindingService keys = (IBindingService) PlatformUI.getWorkbench().getService(IBindingService.class);
 
 		if (commandId != null && keys != null) {
 			TriggerSequence trigger = keys.getBestActiveBindingFor(commandId);
@@ -154,27 +139,23 @@ public class CorrectionCommandHandler extends AbstractHandler {
 		if (commandId != null && commandId.isEmpty()) {
 			String shortcut = getShortcut(commandId);
 			if (shortcut != null) {
-				return NLS.bind(
-						CorrectionMessages.ChangeCorrectionProposal_name_with_shortcut,
+				return NLS.bind(CorrectionMessages.ChangeCorrectionProposal_name_with_shortcut,
 						new String[] { name, shortcut });
 			}
 		}
 		return name;
 	}
 
-	public static StyledString styleWithShortcut(String name,
-			String commandId) {
+	public static StyledString styleWithShortcut(String name, String commandId) {
 		StyledString str = new StyledString(name);
 		if (commandId != null && !commandId.isEmpty()) {
 			String keys = getShortcut(commandId);
 			if (keys == null) {
 				return str;
 			}
-			String decorated = NLS.bind(
-					CorrectionMessages.ChangeCorrectionProposal_name_with_shortcut,
+			String decorated = NLS.bind(CorrectionMessages.ChangeCorrectionProposal_name_with_shortcut,
 					new String[] { name, keys });
-			return StyledCellLabelProvider.styleDecoratedString(decorated,
-					StyledString.QUALIFIER_STYLER, str);
+			return StyledCellLabelProvider.styleDecoratedString(decorated, StyledString.QUALIFIER_STYLER, str);
 
 		}
 

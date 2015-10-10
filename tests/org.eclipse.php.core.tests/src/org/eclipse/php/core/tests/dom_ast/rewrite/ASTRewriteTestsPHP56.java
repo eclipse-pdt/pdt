@@ -44,8 +44,7 @@ public class ASTRewriteTestsPHP56 extends ASTRewriteTestsPHP55 {
 		String str = "<?php function test($tmp) {} \n ?>";
 		initialize(str);
 
-		List<FormalParameter> statements = getAllOfType(program,
-				FormalParameter.class);
+		List<FormalParameter> statements = getAllOfType(program, FormalParameter.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).setIsVariadic(true);
 
@@ -58,8 +57,7 @@ public class ASTRewriteTestsPHP56 extends ASTRewriteTestsPHP55 {
 		String str = "<?php function test(...$tmp) {} \n ?>";
 		initialize(str);
 
-		List<FormalParameter> statements = getAllOfType(program,
-				FormalParameter.class);
+		List<FormalParameter> statements = getAllOfType(program, FormalParameter.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).setIsVariadic(false);
 
@@ -72,8 +70,7 @@ public class ASTRewriteTestsPHP56 extends ASTRewriteTestsPHP55 {
 		String str = "<?php function test(&$tmp) {} \n ?>";
 		initialize(str);
 
-		List<FormalParameter> statements = getAllOfType(program,
-				FormalParameter.class);
+		List<FormalParameter> statements = getAllOfType(program, FormalParameter.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).setIsVariadic(true);
 
@@ -86,8 +83,7 @@ public class ASTRewriteTestsPHP56 extends ASTRewriteTestsPHP55 {
 		String str = "<?php function test(&...$tmp) {} \n ?>";
 		initialize(str);
 
-		List<FormalParameter> statements = getAllOfType(program,
-				FormalParameter.class);
+		List<FormalParameter> statements = getAllOfType(program, FormalParameter.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).setIsVariadic(false);
 
@@ -100,8 +96,7 @@ public class ASTRewriteTestsPHP56 extends ASTRewriteTestsPHP55 {
 		String str = "<?php use Foo\\Bar; \n ?>";
 		initialize(str);
 
-		List<UseStatement> statements = getAllOfType(program,
-				UseStatement.class);
+		List<UseStatement> statements = getAllOfType(program, UseStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).setStatementType(UseStatement.T_FUNCTION);
 
@@ -114,8 +109,7 @@ public class ASTRewriteTestsPHP56 extends ASTRewriteTestsPHP55 {
 		String str = "<?php use Foo\\Bar; \n ?>";
 		initialize(str);
 
-		List<UseStatement> statements = getAllOfType(program,
-				UseStatement.class);
+		List<UseStatement> statements = getAllOfType(program, UseStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).setStatementType(UseStatement.T_CONST);
 
@@ -128,8 +122,7 @@ public class ASTRewriteTestsPHP56 extends ASTRewriteTestsPHP55 {
 		String str = "<?php use function Foo\\Bar; \n ?>";
 		initialize(str);
 
-		List<UseStatement> statements = getAllOfType(program,
-				UseStatement.class);
+		List<UseStatement> statements = getAllOfType(program, UseStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).setStatementType(UseStatement.T_NONE);
 
@@ -142,8 +135,7 @@ public class ASTRewriteTestsPHP56 extends ASTRewriteTestsPHP55 {
 		String str = "<?php use function Foo\\Bar, Foo\\Bar2; \n ?>";
 		initialize(str);
 
-		List<UseStatement> statements = getAllOfType(program,
-				UseStatement.class);
+		List<UseStatement> statements = getAllOfType(program, UseStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).setStatementType(UseStatement.T_CONST);
 
@@ -156,8 +148,7 @@ public class ASTRewriteTestsPHP56 extends ASTRewriteTestsPHP55 {
 		String str = "<?php use function Foo\\Bar, Foo\\Bar2; \n ?>";
 		initialize(str);
 
-		List<UseStatement> statements = getAllOfType(program,
-				UseStatement.class);
+		List<UseStatement> statements = getAllOfType(program, UseStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).setStatementType(UseStatement.T_NONE);
 

@@ -58,8 +58,7 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 	 *         <code>true<code> if the property is equal to the expected value; 
 	 *  otherwise <code>false</code> is returned
 	 */
-	public boolean test(Object receiver, String property, Object[] args,
-			Object expectedValue) {
+	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		if (receiver instanceof List<?>) {
 			List<?> list = (List<?>) receiver;
 			if (list.size() > 0) {
@@ -67,18 +66,14 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 
 				if (PROPERTY.equals(property)) {
 					if (obj instanceof IEditorInput) {
-						return test(DLTKUIPlugin
-								.getEditorInputModelElement((IEditorInput) obj));
+						return test(DLTKUIPlugin.getEditorInputModelElement((IEditorInput) obj));
 					} else if (obj instanceof IAdaptable) {
 						IResource resource = getResource((IAdaptable) obj);
-						if (resource != null
-								&& resource.getType() == IResource.FILE) {
+						if (resource != null && resource.getType() == IResource.FILE) {
 							return PHPToolkitUtil.isPhpFile((IFile) resource);
 						}
-						if (resource != null
-								&& resource.getType() == IResource.PROJECT) {
-							return isWebPageProjectLaunch(args,
-									(IProject) resource);
+						if (resource != null && resource.getType() == IResource.PROJECT) {
+							return isWebPageProjectLaunch(args, (IProject) resource);
 						}
 					}
 				}
@@ -88,8 +83,7 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 	}
 
 	private IResource getResource(IAdaptable obj) {
-		IModelElement modelElement = (IModelElement) ((IAdaptable) obj)
-				.getAdapter(IModelElement.class);
+		IModelElement modelElement = (IModelElement) ((IAdaptable) obj).getAdapter(IModelElement.class);
 		if (modelElement != null) {
 			return modelElement.getResource();
 		} else {
@@ -98,8 +92,7 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 	}
 
 	private boolean test(IModelElement modelElement) {
-		return modelElement != null
-				&& modelElement.getElementType() == IModelElement.SOURCE_MODULE
+		return modelElement != null && modelElement.getElementType() == IModelElement.SOURCE_MODULE
 				&& PHPToolkitUtil.isPhpElement(modelElement);
 	}
 
@@ -114,8 +107,7 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 			if (localServer == null) {
 				return false;
 			}
-			return PHPToolkitUtil.isPhpProject((IProject) resource)
-					&& args.length > 0 && "webPage".equals(args[0]); //$NON-NLS-1$
+			return PHPToolkitUtil.isPhpProject((IProject) resource) && args.length > 0 && "webPage".equals(args[0]); //$NON-NLS-1$
 
 		} catch (CoreException e) {
 			PHPDebugUIPlugin.log(e);

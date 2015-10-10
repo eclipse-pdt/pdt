@@ -71,14 +71,12 @@ public class FormatterAutoEditTests {
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
-		TESTS.put(PHPVersion.PHP5, new String[] {
-				"/workspace/formatter-autoedit",
-				"/workspace/phpdoc-generation/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] {
-				"/workspace/formatter-autoedit",
-				"/workspace/phpdoc-generation/php5",
-				"/workspace/phpdoc-generation/php53" });
+		TESTS.put(PHPVersion.PHP5,
+				new String[] { "/workspace/formatter-autoedit", "/workspace/phpdoc-generation/php5" });
+		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/formatter-autoedit",
+				"/workspace/phpdoc-generation/php5", "/workspace/phpdoc-generation/php53" });
 	};
 
 	public FormatterAutoEditTests(PHPVersion version, String[] fileNames) {
@@ -88,8 +86,7 @@ public class FormatterAutoEditTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("FormatterTests" + phpVersion.name());
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject("FormatterTests" + phpVersion.name());
 		if (project.exists()) {
 			return;
 		}
@@ -108,8 +105,7 @@ public class FormatterAutoEditTests {
 				IResource resource = original.getResource();
 				if (resource != null) {
 					if (resource instanceof IFile) {
-						return new DocumentAdapter(workingCopy,
-								(IFile) resource);
+						return new DocumentAdapter(workingCopy, (IFile) resource);
 					}
 				}
 				return DocumentAdapter.NULL;
@@ -141,11 +137,9 @@ public class FormatterAutoEditTests {
 	@Test
 	public void formatter(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(fileName);
-		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile)
-				: DEFAULT_CURSOR;
+		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile) : DEFAULT_CURSOR;
 		final IFile file = createFile(pdttFile.getFile().trim());
-		final ISourceModule modelElement = (ISourceModule) DLTKCore
-				.create(file);
+		final ISourceModule modelElement = (ISourceModule) DLTKCore.create(file);
 		if (ScriptModelUtil.isPrimary(modelElement))
 			modelElement.becomeWorkingCopy(new IProblemRequestor() {
 
@@ -166,8 +160,7 @@ public class FormatterAutoEditTests {
 		final Exception[] err = new Exception[1];
 		final IEditorPart[] part = new IEditorPart[1];
 
-		IStructuredModel modelForEdit = StructuredModelManager
-				.getModelManager().getModelForEdit(file);
+		IStructuredModel modelForEdit = StructuredModelManager.getModelManager().getModelForEdit(file);
 		try {
 			final IDocument document = modelForEdit.getStructuredDocument();
 			String beforeFormat = document.get();
@@ -175,8 +168,7 @@ public class FormatterAutoEditTests {
 			int firstOffset = data.indexOf(cursor);
 			int lastOffset = data.lastIndexOf(cursor);
 			if (lastOffset == -1) {
-				throw new IllegalArgumentException(
-						"Offset character is not set");
+				throw new IllegalArgumentException("Offset character is not set");
 			}
 
 			final DocumentCommand cmd = new DocumentCommand() {
@@ -184,14 +176,11 @@ public class FormatterAutoEditTests {
 
 			// replace the offset character(s)
 			if (firstOffset == lastOffset) {
-				data = data.substring(0, lastOffset)
-						+ data.substring(lastOffset + cursor.length());
+				data = data.substring(0, lastOffset) + data.substring(lastOffset + cursor.length());
 				cmd.offset = lastOffset;
 				cmd.length = 0;
 			} else {
-				data = data.substring(0, firstOffset)
-						+ data.substring(firstOffset + cursor.length(),
-								lastOffset)
+				data = data.substring(0, firstOffset) + data.substring(firstOffset + cursor.length(), lastOffset)
 						+ data.substring(lastOffset + cursor.length());
 				cmd.offset = firstOffset;
 				cmd.length = lastOffset - (firstOffset + cursor.length());
@@ -203,11 +192,9 @@ public class FormatterAutoEditTests {
 				@Override
 				public void run() {
 					try {
-						IWorkbenchWindow window = PlatformUI.getWorkbench()
-								.getActiveWorkbenchWindow();
+						IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 						IWorkbenchPage page = window.getActivePage();
-						part[0] = page.openEditor(new FileEditorInput(file),
-								PHPUiConstants.PHP_EDITOR_ID);
+						part[0] = page.openEditor(new FileEditorInput(file), PHPUiConstants.PHP_EDITOR_ID);
 						part[0].setFocus();
 
 						document.set(newContent);
@@ -221,8 +208,7 @@ public class FormatterAutoEditTests {
 				throw err[0];
 			}
 
-			SharedASTProvider.getAST(modelElement, SharedASTProvider.WAIT_YES,
-					null);
+			SharedASTProvider.getAST(modelElement, SharedASTProvider.WAIT_YES, null);
 
 			Display.getDefault().syncExec(new Runnable() {
 
@@ -233,8 +219,7 @@ public class FormatterAutoEditTests {
 
 						if (pdttFile.getOther() != null) {
 							cmd.text = pdttFile.getOther();
-							if (cmd.text != null
-									&& cmd.text.trim().length() == 1) {
+							if (cmd.text != null && cmd.text.trim().length() == 1) {
 								// support single (non-blank) character
 								// insertion
 								cmd.text = cmd.text.trim();
@@ -247,8 +232,7 @@ public class FormatterAutoEditTests {
 						cmd.shiftsCaret = true;
 						cmd.caretOffset = -1;
 
-						indentLineAutoEditStrategy.customizeDocumentCommand(
-								document, cmd);
+						indentLineAutoEditStrategy.customizeDocumentCommand(document, cmd);
 						document.replace(cmd.offset, cmd.length, cmd.text);
 					} catch (Exception e) {
 						err[0] = e;
@@ -275,8 +259,7 @@ public class FormatterAutoEditTests {
 					@Override
 					public void run() {
 						try {
-							IWorkbenchWindow window = PlatformUI.getWorkbench()
-									.getActiveWorkbenchWindow();
+							IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 							IWorkbenchPage page = window.getActivePage();
 							page.closeEditor(part[0], false);
 						} catch (Exception e) {

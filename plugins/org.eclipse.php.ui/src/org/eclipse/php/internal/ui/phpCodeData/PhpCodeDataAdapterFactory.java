@@ -21,6 +21,7 @@ import org.eclipse.ui.IActionFilter;
 public class PhpCodeDataAdapterFactory implements IAdapterFactory {
 
 	private static Map adapterType2Object = new HashMap(4);
+
 	static {
 		adapterType2Object.put(IActionFilter.class, new GenericActionFilter());
 	}

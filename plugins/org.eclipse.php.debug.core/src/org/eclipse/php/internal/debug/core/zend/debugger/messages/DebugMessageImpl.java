@@ -26,8 +26,8 @@ public abstract class DebugMessageImpl implements IDebugMessage {
 	}
 
 	public String toString() {
-		return new StringBuilder(this.getClass().getName().replaceFirst(
-				".*\\.", "")).append(" [ID=").append(getType()).append(']') //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return new StringBuilder(this.getClass().getName().replaceFirst(".*\\.", "")).append(" [ID=").append(getType()) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				.append(']')
 				.toString();
 	}
 }

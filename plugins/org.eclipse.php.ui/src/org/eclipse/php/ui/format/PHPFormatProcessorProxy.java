@@ -48,8 +48,7 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 	private static IContentFormatter phpFormatter;
 
 	static {
-		IConfigurationElement[] elements = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(FORMATTER_POINT);
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(FORMATTER_POINT);
 		for (IConfigurationElement element : elements) {
 			String name = element.getName();
 			if (FORMATTER_PROCESSOR.equals(name)) {
@@ -62,16 +61,14 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 	public static IContentFormatter getFormatter() {
 		if (phpFormatter == null && phpFormatterElement != null) {
 			try {
-				phpFormatter = (IContentFormatter) phpFormatterElement
-						.createExecutableExtension(CLASS_ATTR);
+				phpFormatter = (IContentFormatter) phpFormatterElement.createExecutableExtension(CLASS_ATTR);
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		if (phpFormatter == null) {
-			phpFormatter = new MultiPassContentFormatter(
-					IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING,
+			phpFormatter = new MultiPassContentFormatter(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING,
 					IHTMLPartitions.HTML_DEFAULT);
 		}
 		return phpFormatter;
@@ -83,8 +80,7 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 	 * @seeorg.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor#
 	 * formatDocument(org.eclipse.jface.text.IDocument, int, int)
 	 */
-	public void formatDocument(IDocument document, int start, int length)
-			throws IOException, CoreException {
+	public void formatDocument(IDocument document, int start, int length) throws IOException, CoreException {
 		IRegion region = new Region(start, length);
 		getFormatter().format(document, region);
 	}
@@ -101,13 +97,11 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 		try {
 			if (file != null) {
 				if (file.exists()) {
-					structuredModel = StructuredModelManager.getModelManager()
-							.getModelForRead(file);
+					structuredModel = StructuredModelManager.getModelManager().getModelForRead(file);
 					if (structuredModel != null) {
 						document = structuredModel.getStructuredDocument();
 					} else {
-						document = StructuredModelManager.getModelManager()
-								.createStructuredDocumentFor(file);
+						document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file);
 					}
 				}
 			}
@@ -152,8 +146,7 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 	 * (org.eclipse.wst.sse.core.internal.provisional.IStructuredModel, int,
 	 * int)
 	 */
-	public void formatModel(IStructuredModel structuredModel, int start,
-			int length) {
+	public void formatModel(IStructuredModel structuredModel, int start, int length) {
 		IStructuredDocument document = structuredModel.getStructuredDocument();
 		Region region = new Region(start, length);
 		IContentFormatter formatter = getFormatter();

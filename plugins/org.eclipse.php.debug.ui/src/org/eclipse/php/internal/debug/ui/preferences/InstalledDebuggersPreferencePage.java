@@ -23,8 +23,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 
-public class InstalledDebuggersPreferencePage extends PreferencePage implements
-		IWorkbenchPreferencePage {
+public class InstalledDebuggersPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	private PHPDebuggersTable table;
 
@@ -42,8 +41,7 @@ public class InstalledDebuggersPreferencePage extends PreferencePage implements
 		// Add the debuggers table
 		createDebuggersTable(comp);
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.INSTALLED_DEBUGGERS);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.INSTALLED_DEBUGGERS);
 		return comp;
 	}
 

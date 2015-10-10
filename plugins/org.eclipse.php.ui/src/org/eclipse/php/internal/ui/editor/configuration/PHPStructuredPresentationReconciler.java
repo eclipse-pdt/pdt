@@ -11,34 +11,28 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.wst.sse.core.internal.text.rules.SimpleStructuredTypedRegion;
 import org.eclipse.wst.sse.ui.internal.provisional.style.StructuredPresentationReconciler;
 
-public class PHPStructuredPresentationReconciler extends
-		StructuredPresentationReconciler {
+public class PHPStructuredPresentationReconciler extends StructuredPresentationReconciler {
 	private Map fRepairers;
 	private static final Set<String> fTypeSet = new HashSet<String>();
+
 	static {
 		fTypeSet.add(FormatterUtils.PARTITION_CSS_STYLE);
 		fTypeSet.add(FormatterUtils.PARTITION_JS_SCRIPT);
 	}
 
-	ITypedRegion getWholeRegion(ITypedRegion[] wholePartitions,
-			ITypedRegion originalRegion) {
+	ITypedRegion getWholeRegion(ITypedRegion[] wholePartitions, ITypedRegion originalRegion) {
 		if (fTypeSet.contains(originalRegion.getType())) {
 			int i = 0;
 			int jumpto = -1;
 			while (i < wholePartitions.length) {
 				ITypedRegion r = wholePartitions[i];
-				if (wholePartitions[i].getType().equals(
-						originalRegion.getType())) {
-					jumpto = getFollowingCSS(wholePartitions, i,
-							originalRegion.getType());
+				if (wholePartitions[i].getType().equals(originalRegion.getType())) {
+					jumpto = getFollowingCSS(wholePartitions, i, originalRegion.getType());
 					r = new SimpleStructuredTypedRegion(r.getOffset(),
-							wholePartitions[jumpto].getOffset()
-									+ wholePartitions[jumpto].getLength()
-									- r.getOffset(), originalRegion.getType());
-					if (originalRegion.getOffset() >= r.getOffset()
-							&& originalRegion.getOffset()
-									+ originalRegion.getLength() <= r
-									.getOffset() + r.getLength()) {
+							wholePartitions[jumpto].getOffset() + wholePartitions[jumpto].getLength() - r.getOffset(),
+							originalRegion.getType());
+					if (originalRegion.getOffset() >= r.getOffset() && originalRegion.getOffset()
+							+ originalRegion.getLength() <= r.getOffset() + r.getLength()) {
 						return r;
 					} else {
 						i = jumpto + 2;
@@ -53,25 +47,21 @@ public class PHPStructuredPresentationReconciler extends
 	}
 
 	@Override
-	protected TextPresentation createPresentation(IRegion damage,
-			IDocument document) {
+	protected TextPresentation createPresentation(IRegion damage, IDocument document) {
 		try {
-			int validLength = Math.min(damage.getLength(), document.getLength()
-					- damage.getOffset());
+			int validLength = Math.min(damage.getLength(), document.getLength() - damage.getOffset());
 
 			if (fRepairers == null || fRepairers.isEmpty()) {
 				TextPresentation presentation = new TextPresentation(damage, 1);
-				presentation.setDefaultStyleRange(new StyleRange(damage
-						.getOffset(), validLength, null, null));
+				presentation.setDefaultStyleRange(new StyleRange(damage.getOffset(), validLength, null, null));
 				return presentation;
 			}
 
 			// TextPresentation presentation = new TextPresentation(damage,
 			// 1000);
 
-			ITypedRegion[] partitions = TextUtilities.computePartitioning(
-					document, getDocumentPartitioning(), damage.getOffset(),
-					validLength, false);
+			ITypedRegion[] partitions = TextUtilities.computePartitioning(document, getDocumentPartitioning(),
+					damage.getOffset(), validLength, false);
 
 			if (containSpecialType(partitions)) {
 				// when modify editor content the damage region is not equal to
@@ -80,36 +70,28 @@ public class PHPStructuredPresentationReconciler extends
 				if (partitions != null && partitions.length > 0) {
 					int start = damage.getOffset();
 					int length = validLength;
-					ITypedRegion[] wholePartitions = TextUtilities
-							.computePartitioning(document,
-									getDocumentPartitioning(), 0,
-									document.getLength(), false);
+					ITypedRegion[] wholePartitions = TextUtilities.computePartitioning(document,
+							getDocumentPartitioning(), 0, document.getLength(), false);
 					// determine start
 					ITypedRegion startTypedRegion = partitions[0];
 					ITypedRegion endTypedRegion = partitions[partitions.length - 1];
-					if (PHPPartitionTypes.PHP_DEFAULT.equals(startTypedRegion
-							.getType()) && partitions.length >= 2) {
+					if (PHPPartitionTypes.PHP_DEFAULT.equals(startTypedRegion.getType()) && partitions.length >= 2) {
 						startTypedRegion = partitions[1];
 					}
-					ITypedRegion newRegion = getWholeRegion(wholePartitions,
-							startTypedRegion);
+					ITypedRegion newRegion = getWholeRegion(wholePartitions, startTypedRegion);
 					if (newRegion != null) {
 						start = newRegion.getOffset();
-						length = endTypedRegion.getOffset()
-								+ endTypedRegion.getLength() - start;
+						length = endTypedRegion.getOffset() + endTypedRegion.getLength() - start;
 					}
-					if (PHPPartitionTypes.PHP_DEFAULT.equals(endTypedRegion
-							.getType()) && partitions.length >= 2) {
+					if (PHPPartitionTypes.PHP_DEFAULT.equals(endTypedRegion.getType()) && partitions.length >= 2) {
 						endTypedRegion = partitions[partitions.length - 2];
 					}
 					newRegion = getWholeRegion(wholePartitions, endTypedRegion);
 					if (newRegion != null) {
-						length = newRegion.getOffset() + newRegion.getLength()
-								- start;
+						length = newRegion.getOffset() + newRegion.getLength() - start;
 					}
 					if (start != damage.getOffset() || length != validLength) {
-						partitions = TextUtilities.computePartitioning(
-								document, getDocumentPartitioning(), start,
+						partitions = TextUtilities.computePartitioning(document, getDocumentPartitioning(), start,
 								length, false);
 					}
 
@@ -123,106 +105,59 @@ public class PHPStructuredPresentationReconciler extends
 				int jumpto = -1;
 				for (int i = 0; i < partitions.length; i++) {
 					ITypedRegion r = partitions[i];
-					if (fTypeSet.contains(r.getType())
-							&& (i + 2 < partitions.length)
-							&& PHPPartitionTypes.PHP_DEFAULT
-									.equals(partitions[i + 1].getType())
+					if (fTypeSet.contains(r.getType()) && (i + 2 < partitions.length)
+							&& PHPPartitionTypes.PHP_DEFAULT.equals(partitions[i + 1].getType())
 							&& r.getType().equals(partitions[i + 2].getType())) {
 						if (i > jumpto) {
 							jumpto = getFollowingCSS(partitions, i, r.getType());
 							r = new SimpleStructuredTypedRegion(r.getOffset(),
-									partitions[jumpto].getOffset()
-											+ partitions[jumpto].getLength()
-											- r.getOffset(), r.getType());
-							IPresentationRepairer repairer = getRepairer(r
-									.getType());
+									partitions[jumpto].getOffset() + partitions[jumpto].getLength() - r.getOffset(),
+									r.getType());
+							IPresentationRepairer repairer = getRepairer(r.getType());
 							if (repairer != null) {
-								TextPresentation presentation = new TextPresentation(
-										damage, 1000);
+								TextPresentation presentation = new TextPresentation(damage, 1000);
 								repairer.createPresentation(presentation, r);
-								for (Iterator iterator = presentation
-										.getAllStyleRangeIterator(); iterator
-										.hasNext();) {
-									StyleRange styleRange = (StyleRange) iterator
-											.next();
+								for (Iterator iterator = presentation.getAllStyleRangeIterator(); iterator.hasNext();) {
+									StyleRange styleRange = (StyleRange) iterator.next();
 									// the styleRange's scope may be out of
 									// the
 									// region see
 									// https://bugs.eclipse.org/bugs/attachment.cgi?id=179715
 									if (styleRange.start < r.getOffset()
-											|| (styleRange.start
-													+ styleRange.length > r
-													.getOffset()
-													+ r.getLength())) {
+											|| (styleRange.start + styleRange.length > r.getOffset() + r.getLength())) {
 										continue;
 									}
 
 									for (int j = i + 1; j < jumpto; j = j + 2) {
 										ITypedRegion typedRegion = partitions[j];
-										if (styleRange.start < typedRegion
-												.getOffset()
-												&& styleRange.start
-														+ styleRange.length > typedRegion
-														.getOffset()
-														+ typedRegion
-																.getLength()) {
-											int end = styleRange.start
-													+ styleRange.length;
-											styleRange.length = typedRegion
-													.getOffset()
-													- styleRange.start;
+										if (styleRange.start < typedRegion.getOffset()
+												&& styleRange.start + styleRange.length > typedRegion.getOffset()
+														+ typedRegion.getLength()) {
+											int end = styleRange.start + styleRange.length;
+											styleRange.length = typedRegion.getOffset() - styleRange.start;
 											fRangeSet.add(styleRange);
 											styleRange = new StyleRange(
-													typedRegion.getOffset()
-															+ typedRegion
-																	.getLength(),
-													end
-															- (typedRegion
-																	.getOffset() + typedRegion
-																	.getLength()),
-													styleRange.foreground,
-													styleRange.background,
-													styleRange.fontStyle);
-										} else if (styleRange.start < typedRegion
-												.getOffset()
-												&& styleRange.start
-														+ styleRange.length > typedRegion
-															.getOffset()) {
-											styleRange.length = typedRegion
-													.getOffset()
-													- styleRange.start;
+													typedRegion.getOffset() + typedRegion.getLength(),
+													end - (typedRegion.getOffset() + typedRegion.getLength()),
+													styleRange.foreground, styleRange.background, styleRange.fontStyle);
+										} else if (styleRange.start < typedRegion.getOffset()
+												&& styleRange.start + styleRange.length > typedRegion.getOffset()) {
+											styleRange.length = typedRegion.getOffset() - styleRange.start;
 											break;
-										} else if (styleRange.start >= typedRegion
-												.getOffset()
-												&& styleRange.start
-														+ styleRange.length <= typedRegion
-														.getOffset()
-														+ typedRegion
-																.getLength()) {
+										} else if (styleRange.start >= typedRegion.getOffset()
+												&& styleRange.start + styleRange.length <= typedRegion.getOffset()
+														+ typedRegion.getLength()) {
 											styleRange = null;
 											break;
-										} else if (styleRange.start > typedRegion
-												.getOffset()
-												&& styleRange.start < typedRegion
-														.getOffset()
-														+ typedRegion
-																.getLength()
-												&& styleRange.start
-														+ styleRange.length > typedRegion
-														.getOffset()
-														+ typedRegion
-																.getLength()) {
-											styleRange.length = styleRange.start
-													+ styleRange.length
-													- (typedRegion.getOffset() + typedRegion
-															.getLength());
-											styleRange.start = typedRegion
-													.getOffset()
-													+ typedRegion.getLength();
+										} else if (styleRange.start > typedRegion.getOffset()
+												&& styleRange.start < typedRegion.getOffset() + typedRegion.getLength()
+												&& styleRange.start + styleRange.length > typedRegion.getOffset()
+														+ typedRegion.getLength()) {
+											styleRange.length = styleRange.start + styleRange.length
+													- (typedRegion.getOffset() + typedRegion.getLength());
+											styleRange.start = typedRegion.getOffset() + typedRegion.getLength();
 
-										} else if (styleRange.start
-												+ styleRange.length < typedRegion
-													.getOffset()) {
+										} else if (styleRange.start + styleRange.length < typedRegion.getOffset()) {
 											break;
 										}
 									}
@@ -234,25 +169,17 @@ public class PHPStructuredPresentationReconciler extends
 						}
 
 					} else {
-						if (i > jumpto
-								|| i < jumpto
-								&& !r.getType().equals(
-										partitions[jumpto].getType())) {// jumpto
-																		// partition
-																		// has
-																		// been
-																		// added
-							IPresentationRepairer repairer = getRepairer(r
-									.getType());
+						if (i > jumpto || i < jumpto && !r.getType().equals(partitions[jumpto].getType())) {// jumpto
+																											// partition
+																											// has
+																											// been
+																											// added
+							IPresentationRepairer repairer = getRepairer(r.getType());
 							if (repairer != null) {
-								TextPresentation presentation = new TextPresentation(
-										damage, 1000);
+								TextPresentation presentation = new TextPresentation(damage, 1000);
 								repairer.createPresentation(presentation, r);
-								for (Iterator iterator = presentation
-										.getAllStyleRangeIterator(); iterator
-										.hasNext();) {
-									StyleRange styleRange = (StyleRange) iterator
-											.next();
+								for (Iterator iterator = presentation.getAllStyleRangeIterator(); iterator.hasNext();) {
+									StyleRange styleRange = (StyleRange) iterator.next();
 									fRangeSet.add(styleRange);
 								}
 							}
@@ -271,68 +198,55 @@ public class PHPStructuredPresentationReconciler extends
 
 				});
 				List<StyleRange> fRanges = new ArrayList<StyleRange>();
-				StyleRange[] rangeArray = fRangeSet
-						.toArray(new StyleRange[fRangeSet.size()]);
+				StyleRange[] rangeArray = fRangeSet.toArray(new StyleRange[fRangeSet.size()]);
 				StyleRange lastRange = rangeArray[0];
 				fRanges.add(lastRange);
 				for (int i = 1; i < rangeArray.length; i++) {
 					StyleRange styleRange = rangeArray[i];
 					// do not add duplicate ranges
-					if (styleRange.start == lastRange.start
-							&& styleRange.length == lastRange.length) {
+					if (styleRange.start == lastRange.start && styleRange.length == lastRange.length) {
 						continue;
 					} else {
 						fRanges.add(styleRange);
 						lastRange = styleRange;
 					}
 				}
-				TextPresentation presentation = new TextPresentation(damage,
-						1000);
+				TextPresentation presentation = new TextPresentation(damage, 1000);
 				presentation = new TextPresentation(damage, fRanges.size());
 				for (Iterator iterator = fRanges.iterator(); iterator.hasNext();) {
 					StyleRange styleRange = (StyleRange) iterator.next();
-					if (styleRange.start + styleRange.length <= damage
-							.getOffset()) {
+					if (styleRange.start + styleRange.length <= damage.getOffset()) {
 						continue;
 					} else if (styleRange.start <= damage.getOffset()
-							&& styleRange.start + styleRange.length > damage
-									.getOffset()
-							&& styleRange.start + styleRange.length <= damage
-									.getOffset() + validLength) {
+							&& styleRange.start + styleRange.length > damage.getOffset()
+							&& styleRange.start + styleRange.length <= damage.getOffset() + validLength) {
 						int rangeEnd = styleRange.start + styleRange.length;
 						styleRange.start = damage.getOffset();
 						styleRange.length = rangeEnd - damage.getOffset();
 						addStyleRange(presentation, styleRange);
 					} else if (styleRange.start >= damage.getOffset()
-							&& styleRange.start < damage.getOffset()
-									+ validLength
-							&& styleRange.start + styleRange.length > damage
-									.getOffset() + validLength) {
-						styleRange.length = damage.getOffset() + validLength
-								- styleRange.start;
+							&& styleRange.start < damage.getOffset() + validLength
+							&& styleRange.start + styleRange.length > damage.getOffset() + validLength) {
+						styleRange.length = damage.getOffset() + validLength - styleRange.start;
 						addStyleRange(presentation, styleRange);
 					} else if (styleRange.start >= damage.getOffset()
-							&& styleRange.start + styleRange.length <= damage
-									.getOffset() + validLength) {
+							&& styleRange.start + styleRange.length <= damage.getOffset() + validLength) {
 						addStyleRange(presentation, styleRange);
 					}
 
 				}
 				return presentation;
 			} else {
-				TextPresentation presentation = new TextPresentation(damage,
-						1000);
+				TextPresentation presentation = new TextPresentation(damage, 1000);
 
-				List<ITypedRegion> damagedPartitions = findDamagedPartitions(
-						partitions, damage);
+				List<ITypedRegion> damagedPartitions = findDamagedPartitions(partitions, damage);
 
 				// performance optimisation: if only PHPScriptRegion has been
 				// damaged and not fully reparsed we can try to create
 				// presentation for updated tokens only.
 				if (damagedPartitions.size() == 1) {
 					ITypedRegion r = damagedPartitions.get(0);
-					IPresentationRepairer repairer = getRepairer(damagedPartitions
-							.get(0).getType());
+					IPresentationRepairer repairer = getRepairer(damagedPartitions.get(0).getType());
 					if (repairer != null) {
 						if (r.getType().equals(PHPPartitionTypes.PHP_DEFAULT)) {
 							if (repairer instanceof StructuredDocumentDamagerRepairer) {
@@ -348,8 +262,7 @@ public class PHPStructuredPresentationReconciler extends
 				} else {
 					for (int i = 0; i < damagedPartitions.size(); i++) {
 						ITypedRegion r = damagedPartitions.get(i);
-						IPresentationRepairer repairer = getRepairer(r
-								.getType());
+						IPresentationRepairer repairer = getRepairer(r.getType());
 						if (repairer != null)
 							repairer.createPresentation(presentation, r);
 					}
@@ -371,16 +284,14 @@ public class PHPStructuredPresentationReconciler extends
 		return null;
 	}
 
-	private List<ITypedRegion> findDamagedPartitions(ITypedRegion[] partitions,
-			IRegion damage) {
+	private List<ITypedRegion> findDamagedPartitions(ITypedRegion[] partitions, IRegion damage) {
 		List<ITypedRegion> damagedPartitions = new ArrayList<ITypedRegion>();
 		int damageEnd = damage.getOffset() + damage.getLength();
 		for (int i = 0; i < partitions.length; i++) {
 			ITypedRegion p = partitions[i];
 			int pEnd = p.getOffset() + p.getLength();
 			// damage starts within current partition
-			if (damage.getOffset() >= p.getOffset()
-					&& damage.getOffset() <= pEnd) {
+			if (damage.getOffset() >= p.getOffset() && damage.getOffset() <= pEnd) {
 				damagedPartitions.add(p);
 				if (damageEnd < pEnd) {
 					// damage covers only this one partition
@@ -410,8 +321,7 @@ public class PHPStructuredPresentationReconciler extends
 		return false;
 	}
 
-	private void addStyleRange(TextPresentation presentation,
-			StyleRange styleRange) {
+	private void addStyleRange(TextPresentation presentation, StyleRange styleRange) {
 		if (styleRange.length > 0) {
 			presentation.addStyleRange(styleRange);
 		}
@@ -455,9 +365,7 @@ public class PHPStructuredPresentationReconciler extends
 		int result = i;
 		i++;
 		for (; i < partitions.length; i = i + 2) {
-			if (i + 1 < partitions.length
-					&& partitions[i].getType().equals(
-							PHPPartitionTypes.PHP_DEFAULT)
+			if (i + 1 < partitions.length && partitions[i].getType().equals(PHPPartitionTypes.PHP_DEFAULT)
 					&& partitions[i + 1].getType().equals(type)) {
 				result = result + 2;
 			} else {

@@ -27,16 +27,14 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 
-public class PHPCodeRefactorPreferencePage extends PreferencePage implements
-		IWorkbenchPreferencePage {
+public class PHPCodeRefactorPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	public static String ID = "org.eclipse.php.refactoring.ui.preferencePage"; //$NON-NLS-1$
 	private Button renameBtn;
 
 	public PHPCodeRefactorPreferencePage() {
 		super();
-		setPreferenceStore(RefactoringUIPlugin.getDefault()
-				.getPreferenceStore());
+		setPreferenceStore(RefactoringUIPlugin.getDefault().getPreferenceStore());
 		setDescription(Messages.PHPCodeRefactorPreferencePage_1);
 	}
 
@@ -64,16 +62,11 @@ public class PHPCodeRefactorPreferencePage extends PreferencePage implements
 		renameBtn.setText(Messages.PHPCodeRefactorPreferencePage_3);
 		renameBtn.setLayoutData(gd);
 
-		renameBtn.setSelection(getPreferenceStore().getBoolean(
-				PreferenceConstants.REFACTOR_LIGHTWEIGHT));
+		renameBtn.setSelection(getPreferenceStore().getBoolean(PreferenceConstants.REFACTOR_LIGHTWEIGHT));
 
 		Dialog.applyDialogFont(result);
 
-		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(getControl(),
-						IPHPHelpContextIds.CODE_REFACTOR_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.CODE_REFACTOR_PREFERENCES);
 		return result;
 	}
 
@@ -84,15 +77,13 @@ public class PHPCodeRefactorPreferencePage extends PreferencePage implements
 	protected void performDefaults() {
 		super.performDefaults();
 		IPreferenceStore store = getPreferenceStore();
-		renameBtn.setSelection(store
-				.getDefaultBoolean(PreferenceConstants.REFACTOR_LIGHTWEIGHT));
+		renameBtn.setSelection(store.getDefaultBoolean(PreferenceConstants.REFACTOR_LIGHTWEIGHT));
 	}
 
 	@Override
 	public boolean performOk() {
 		IPreferenceStore store = getPreferenceStore();
-		store.setValue(PreferenceConstants.REFACTOR_LIGHTWEIGHT,
-				renameBtn.getSelection());
+		store.setValue(PreferenceConstants.REFACTOR_LIGHTWEIGHT, renameBtn.getSelection());
 		return super.performOk();
 	}
 

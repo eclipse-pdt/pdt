@@ -53,7 +53,8 @@ public class ExtractVariableRefactoringTestGetVariableName extends AbstractRefac
 		}
 		file = folder.getFile("ExtractVariableRefactoringTestGetVariableName.php");
 
-		InputStream source = new ByteArrayInputStream("<?php function foo(){} foo(); $a = 1; $b=1.1; $c=true;$d=\"ab\"; $e = __LINE__;?>".getBytes());
+		InputStream source = new ByteArrayInputStream(
+				"<?php function foo(){} foo(); $a = 1; $b=1.1; $c=true;$d=\"ab\"; $e = __LINE__;?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -86,7 +87,8 @@ public class ExtractVariableRefactoringTestGetVariableName extends AbstractRefac
 
 		ExtractVariableRefactoring processor;
 		try {
-			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 23, 6);
+			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 23,
+					6);
 
 			processor.checkInitialConditions(new NullProgressMonitor());
 			String[] names = processor.guessTempNames();
@@ -118,7 +120,8 @@ public class ExtractVariableRefactoringTestGetVariableName extends AbstractRefac
 
 		ExtractVariableRefactoring processor;
 		try {
-			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 35, 1);
+			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 35,
+					1);
 
 			processor.checkInitialConditions(new NullProgressMonitor());
 			String[] names = processor.guessTempNames();
@@ -150,7 +153,8 @@ public class ExtractVariableRefactoringTestGetVariableName extends AbstractRefac
 
 		ExtractVariableRefactoring processor;
 		try {
-			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 41, 3);
+			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 41,
+					3);
 
 			processor.checkInitialConditions(new NullProgressMonitor());
 			String[] names = processor.guessTempNames();
@@ -182,7 +186,8 @@ public class ExtractVariableRefactoringTestGetVariableName extends AbstractRefac
 
 		ExtractVariableRefactoring processor;
 		try {
-			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 49, 4);
+			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 49,
+					4);
 
 			processor.checkInitialConditions(new NullProgressMonitor());
 			String[] names = processor.guessTempNames();
@@ -213,7 +218,8 @@ public class ExtractVariableRefactoringTestGetVariableName extends AbstractRefac
 
 		ExtractVariableRefactoring processor;
 		try {
-			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 57, 4);
+			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 57,
+					4);
 
 			processor.checkInitialConditions(new NullProgressMonitor());
 			String[] names = processor.guessTempNames();
@@ -245,7 +251,8 @@ public class ExtractVariableRefactoringTestGetVariableName extends AbstractRefac
 
 		ExtractVariableRefactoring processor;
 		try {
-			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 68, 8);
+			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 68,
+					8);
 
 			processor.checkInitialConditions(new NullProgressMonitor());
 			String[] names = processor.guessTempNames();

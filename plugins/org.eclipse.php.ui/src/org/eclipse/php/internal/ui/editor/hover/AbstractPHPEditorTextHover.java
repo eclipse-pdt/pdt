@@ -17,8 +17,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.editors.text.EditorsUI;
 
-public class AbstractPHPEditorTextHover extends AbstractScriptEditorTextHover
-		implements ITextHoverExtension2 {
+public class AbstractPHPEditorTextHover extends AbstractScriptEditorTextHover implements ITextHoverExtension2 {
 
 	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
 		return getHoverInfo(textViewer, hoverRegion);
@@ -32,8 +31,7 @@ public class AbstractPHPEditorTextHover extends AbstractScriptEditorTextHover
 	public IInformationControlCreator getHoverControlCreator() {
 		return new IInformationControlCreator() {
 			public IInformationControl createInformationControl(Shell parent) {
-				return new DefaultInformationControl(parent,
-						EditorsUI.getTooltipAffordanceString());
+				return new DefaultInformationControl(parent, EditorsUI.getTooltipAffordanceString());
 			}
 		};
 	}
@@ -68,8 +66,7 @@ public class AbstractPHPEditorTextHover extends AbstractScriptEditorTextHover
 				}
 			}
 
-			IWorkingCopyManager manager = DLTKUIPlugin.getDefault()
-					.getWorkingCopyManager();
+			IWorkingCopyManager manager = DLTKUIPlugin.getDefault().getWorkingCopyManager();
 			return manager.getWorkingCopy(input, false);
 		}
 
@@ -86,8 +83,7 @@ public class AbstractPHPEditorTextHover extends AbstractScriptEditorTextHover
 	 * @return the array with the Java elements or <code>null</code>
 	 * @since 3.4
 	 */
-	protected IModelElement[] getElementsAt(ITextViewer textViewer,
-			IRegion hoverRegion) {
+	protected IModelElement[] getElementsAt(ITextViewer textViewer, IRegion hoverRegion) {
 		/*
 		 * The region should be a word region an not of length 0. This check is
 		 * needed because codeSelect(...) also finds the Java element if the
@@ -99,13 +95,10 @@ public class AbstractPHPEditorTextHover extends AbstractScriptEditorTextHover
 		ICodeAssist resolve = getCodeAssist();
 		if (resolve != null) {
 			try {
-				elements = resolve.codeSelect(hoverRegion.getOffset(),
-						hoverRegion.getLength());
+				elements = resolve.codeSelect(hoverRegion.getOffset(), hoverRegion.getLength());
 
-				if ((elements == null || elements.length == 0)
-						&& resolve instanceof ISourceModule) {
-					elements = PHPModelUtils.getTypeInString(
-							(ISourceModule) resolve, hoverRegion);
+				if ((elements == null || elements.length == 0) && resolve instanceof ISourceModule) {
+					elements = PHPModelUtils.getTypeInString((ISourceModule) resolve, hoverRegion);
 
 				}
 			} catch (ModelException x) {

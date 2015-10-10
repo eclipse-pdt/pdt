@@ -60,31 +60,19 @@ public class MarkOccurrenceTests {
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
-		TESTS.put(PHPVersion.PHP5,
-				new String[] { "/workspace/markoccurrence/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] {
-				"/workspace/markoccurrence/php5",
-				"/workspace/markoccurrence/php53" });
-		TESTS.put(PHPVersion.PHP5_4, new String[] {
-				"/workspace/markoccurrence/php5",
-				"/workspace/markoccurrence/php53",
+		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/markoccurrence/php5" });
+		TESTS.put(PHPVersion.PHP5_3,
+				new String[] { "/workspace/markoccurrence/php5", "/workspace/markoccurrence/php53" });
+		TESTS.put(PHPVersion.PHP5_4, new String[] { "/workspace/markoccurrence/php5", "/workspace/markoccurrence/php53",
 				"/workspace/markoccurrence/php54" });
-		TESTS.put(PHPVersion.PHP5_5, new String[] {
-				"/workspace/markoccurrence/php5",
-				"/workspace/markoccurrence/php53",
-				"/workspace/markoccurrence/php54",
-				"/workspace/markoccurrence/php55" });
-		TESTS.put(PHPVersion.PHP5_6, new String[] {
-				"/workspace/markoccurrence/php5",
-				"/workspace/markoccurrence/php53",
-				"/workspace/markoccurrence/php54",
-				"/workspace/markoccurrence/php56" });
-		TESTS.put(PHPVersion.PHP7_0, new String[] {
-				"/workspace/markoccurrence/php5",
-				"/workspace/markoccurrence/php53",
-				"/workspace/markoccurrence/php54",
-				"/workspace/markoccurrence/php56" });
+		TESTS.put(PHPVersion.PHP5_5, new String[] { "/workspace/markoccurrence/php5", "/workspace/markoccurrence/php53",
+				"/workspace/markoccurrence/php54", "/workspace/markoccurrence/php55" });
+		TESTS.put(PHPVersion.PHP5_6, new String[] { "/workspace/markoccurrence/php5", "/workspace/markoccurrence/php53",
+				"/workspace/markoccurrence/php54", "/workspace/markoccurrence/php56" });
+		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/markoccurrence/php5", "/workspace/markoccurrence/php53",
+				"/workspace/markoccurrence/php54", "/workspace/markoccurrence/php56" });
 	};
 
 	protected IProject project;
@@ -93,8 +81,7 @@ public class MarkOccurrenceTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("MarkOccurrenceTests_" + phpVersion.toString());
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject("MarkOccurrenceTests_" + phpVersion.toString());
 		if (project.exists()) {
 			return;
 		}
@@ -187,12 +174,10 @@ public class MarkOccurrenceTests {
 		Program astRoot = createProgramFromSource(testFile);
 		ASTNode selectedNode = NodeFinder.perform(astRoot, offset, 0);
 		OccurrenceLocation[] locations = null;
-		if (selectedNode != null
-				&& (selectedNode instanceof Identifier || (isScalarButNotInString(selectedNode)))) {
+		if (selectedNode != null && (selectedNode instanceof Identifier || (isScalarButNotInString(selectedNode)))) {
 			int type = PhpElementConciliator.concile(selectedNode);
 			if (markOccurrencesOfType(type)) {
-				IOccurrencesFinder finder = OccurrencesFinderFactory
-						.getOccurrencesFinder(type);
+				IOccurrencesFinder finder = OccurrencesFinderFactory.getOccurrencesFinder(type);
 				if (finder != null) {
 					if (finder.initialize(astRoot, selectedNode) == null) {
 						locations = finder.getOccurrences();
@@ -236,8 +221,7 @@ public class MarkOccurrenceTests {
 	 * @return
 	 */
 	public static boolean isScalarButNotInString(ASTNode node) {
-		return (node.getType() == ASTNode.SCALAR)
-				&& (node.getParent().getType() != ASTNode.QUOTE);
+		return (node.getType() == ASTNode.SCALAR) && (node.getParent().getType() != ASTNode.QUOTE);
 	}
 
 	public Program createProgramFromSource(IFile file) throws Exception {
@@ -245,16 +229,14 @@ public class MarkOccurrenceTests {
 		return createProgramFromSource(source);
 	}
 
-	public Program createProgramFromSource(ISourceModule source)
-			throws Exception {
+	public Program createProgramFromSource(ISourceModule source) throws Exception {
 		PHPVersion version;
 		if (project != null) {
 			version = ProjectOptions.getPhpVersion(project);
 		} else {
 			version = ProjectOptions.getDefaultPhpVersion();
 		}
-		ASTParser newParser = ASTParser.newParser(version,
-				(ISourceModule) source);
+		ASTParser newParser = ASTParser.newParser(version, (ISourceModule) source);
 		return newParser.createAST(null);
 	}
 
@@ -262,8 +244,7 @@ public class MarkOccurrenceTests {
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}
 
-	public static void compareProposals(OccurrenceLocation[] proposals,
-			List<Integer> starts) throws Exception {
+	public static void compareProposals(OccurrenceLocation[] proposals, List<Integer> starts) throws Exception {
 		// String[] lines = pdttFile.getExpected().split("\n");
 		proposals = olderLocations(proposals);
 		boolean proposalsEqual = true;
@@ -271,9 +252,8 @@ public class MarkOccurrenceTests {
 			// proposalsEqual = true;
 		} else if (proposals.length == starts.size() / 2) {
 			for (int i = 0; i < proposals.length; i++) {
-				if (!(proposals[i].getOffset() == starts.get(i * 2) && (proposals[i]
-						.getOffset() + proposals[i].getLength()) == starts
-						.get(i * 2 + 1))) {
+				if (!(proposals[i].getOffset() == starts.get(i * 2)
+						&& (proposals[i].getOffset() + proposals[i].getLength()) == starts.get(i * 2 + 1))) {
 					proposalsEqual = false;
 					break;
 				}
@@ -287,20 +267,17 @@ public class MarkOccurrenceTests {
 			errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
 			for (int i = 0; i < starts.size() / 2; i++) {
 				errorBuf.append('[').append(starts.get(i * 2)).append(',')
-						.append(starts.get(i * 2 + 1) - starts.get(i * 2))
-						.append(']').append("\n");
+						.append(starts.get(i * 2 + 1) - starts.get(i * 2)).append(']').append("\n");
 			}
 			errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
 			for (OccurrenceLocation p : proposals) {
-				errorBuf.append('[').append(p.getOffset()).append(',')
-						.append(p.getLength()).append(']').append("\n");
+				errorBuf.append('[').append(p.getOffset()).append(',').append(p.getLength()).append(']').append("\n");
 			}
 			fail(errorBuf.toString());
 		}
 	}
 
-	private static OccurrenceLocation[] olderLocations(
-			OccurrenceLocation[] proposals) {
+	private static OccurrenceLocation[] olderLocations(OccurrenceLocation[] proposals) {
 		if (proposals == null) {
 			return new OccurrenceLocation[0];
 		}

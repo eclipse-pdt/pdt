@@ -49,28 +49,20 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 			boolean shouldSpellcheck = false;
 
 			if (model instanceof DOMModelForPHP) {
-				IStructuredDocument doc = ((DOMModelForPHP) model)
-						.getStructuredDocument();
+				IStructuredDocument doc = ((DOMModelForPHP) model).getStructuredDocument();
 				if (doc instanceof BasicStructuredDocument) {
 					IStructuredDocumentRegion sdRegion = ((BasicStructuredDocument) doc)
 							.getRegionAtCharacterOffset(offset);
-					ITextRegion textRegion = sdRegion != null ? sdRegion
-							.getRegionAtCharacterOffset(offset) : null;
+					ITextRegion textRegion = sdRegion != null ? sdRegion.getRegionAtCharacterOffset(offset) : null;
 					try {
 						if (textRegion instanceof IPhpScriptRegion) {
 							IPhpScriptRegion phpReg = (IPhpScriptRegion) textRegion;
-							String partition = phpReg.getPartition(offset
-									- sdRegion.getStart());
-							if (partition
-									.equals(PHPPartitionTypes.PHP_QUOTED_STRING)
-									|| partition
-											.equals(PHPPartitionTypes.PHP_COMMENT)
-									|| partition
-											.equals(PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)
-									|| partition
-											.equals(PHPPartitionTypes.PHP_MULTI_LINE_COMMENT)
-									|| partition
-											.equals(PHPPartitionTypes.PHP_DOC)) {
+							String partition = phpReg.getPartition(offset - sdRegion.getStart());
+							if (partition.equals(PHPPartitionTypes.PHP_QUOTED_STRING)
+									|| partition.equals(PHPPartitionTypes.PHP_COMMENT)
+									|| partition.equals(PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)
+									|| partition.equals(PHPPartitionTypes.PHP_MULTI_LINE_COMMENT)
+									|| partition.equals(PHPPartitionTypes.PHP_DOC)) {
 								shouldSpellcheck = true;
 							}
 						} else {
@@ -100,8 +92,7 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		ISpellcheckDelegate decision = null;
 
-		if (adaptableObject instanceof IDOMModel
-				&& ISpellcheckDelegate.class.equals(adapterType)) {
+		if (adaptableObject instanceof IDOMModel && ISpellcheckDelegate.class.equals(adapterType)) {
 			decision = DELEGATE;
 		}
 

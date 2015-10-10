@@ -54,9 +54,9 @@ public class SearchFieldTests {
 	// protected static final char SELECTION_CHAR = '|';
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
-		TESTS.put(PHPVersion.PHP5,
-				new String[] { "/workspace/searchEngine/php5" });
+		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/searchEngine/php5" });
 		// TESTS.put(PHPVersion.PHP5_3, new String[] {
 		// "/workspace/searchEngine/php5",
 		// "/workspace/searchEngine/php53" });
@@ -72,8 +72,7 @@ public class SearchFieldTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("AutoSelectionEngine_" + phpVersion.toString());
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject("AutoSelectionEngine_" + phpVersion.toString());
 		if (project.exists()) {
 			return;
 		}
@@ -152,8 +151,7 @@ public class SearchFieldTests {
 	}
 
 	protected static int getSearchFlags(boolean includeInterp) {
-		int flags = IDLTKSearchScope.SOURCES
-				| IDLTKSearchScope.APPLICATION_LIBRARIES;
+		int flags = IDLTKSearchScope.SOURCES | IDLTKSearchScope.APPLICATION_LIBRARIES;
 		if (includeInterp)
 			flags |= IDLTKSearchScope.SYSTEM_LIBRARIES;
 		return flags;
@@ -163,26 +161,21 @@ public class SearchFieldTests {
 		createFile(data);
 		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(testFile);
 
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule,
-				getSearchFlags(false));
-		ISearchEngine searchEngine = ModelAccess.getSearchEngine(scope
-				.getLanguageToolkit());
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule, getSearchFlags(false));
+		ISearchEngine searchEngine = ModelAccess.getSearchEngine(scope.getLanguageToolkit());
 		final List<String> paths = new ArrayList<String>();
 		if (searchEngine != null) {
 			ISearchRequestor requestor = new ISearchRequestor() {
-				public void match(int elementType, int flags, int offset,
-						int length, int nameOffset, int nameLength,
-						String elementName, String metadata, String doc,
-						String qualifier, String parent,
+				public void match(int elementType, int flags, int offset, int length, int nameOffset, int nameLength,
+						String elementName, String metadata, String doc, String qualifier, String parent,
 						ISourceModule sourceModule, boolean isReference) {
 
 					paths.add(sourceModule.getPath().toString());
 				}
 			};
 
-			searchEngine.search(IModelElement.FIELD, null, "$testField", 0, 0,
-					0, SearchFor.ALL_OCCURRENCES, MatchRule.EXACT, scope,
-					requestor, new NullProgressMonitor());
+			searchEngine.search(IModelElement.FIELD, null, "$testField", 0, 0, 0, SearchFor.ALL_OCCURRENCES,
+					MatchRule.EXACT, scope, requestor, new NullProgressMonitor());
 
 		}
 		return paths;

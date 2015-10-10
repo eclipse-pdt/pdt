@@ -18,8 +18,7 @@ import org.eclipse.osgi.util.NLS;
  */
 final class PHPDocumentationMessages extends NLS {
 
-	private static final String BUNDLE_NAME = PHPDocumentationMessages.class
-			.getName();
+	private static final String BUNDLE_NAME = PHPDocumentationMessages.class.getName();
 
 	private PHPDocumentationMessages() {
 		// Do not instantiate

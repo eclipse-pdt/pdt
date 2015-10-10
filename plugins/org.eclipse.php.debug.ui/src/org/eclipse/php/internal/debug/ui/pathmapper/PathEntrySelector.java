@@ -32,27 +32,23 @@ public class PathEntrySelector implements IPathEntryFilter {
 	public PathEntrySelector() {
 	}
 
-	public PathEntry[] filter(final PathEntry[] entries,
-			final VirtualPath remotePath, final IDebugTarget debugTarget) {
+	public PathEntry[] filter(final PathEntry[] entries, final VirtualPath remotePath, final IDebugTarget debugTarget) {
 		final List<PathEntry> l = new LinkedList<PathEntry>();
 		Runnable r = new Runnable() {
 			public void run() {
 				// grab usable shell from somewhere:
 				Shell shell = Display.getDefault().getActiveShell();
 				if (shell == null) {
-					IWorkbenchWindow window = PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow();
+					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 					if (window == null) {
-						IWorkbenchWindow windows[] = PlatformUI.getWorkbench()
-								.getWorkbenchWindows();
+						IWorkbenchWindow windows[] = PlatformUI.getWorkbench().getWorkbenchWindows();
 						window = windows[0];
 					}
 					if (window != null) {
 						shell = window.getShell();
 					}
 				}
-				PathEntry entry = runFilterDialog(shell, remotePath, entries,
-						debugTarget);
+				PathEntry entry = runFilterDialog(shell, remotePath, entries, debugTarget);
 				if (entry != null) {
 					l.add(entry);
 				}
@@ -66,15 +62,13 @@ public class PathEntrySelector implements IPathEntryFilter {
 		return l.toArray(new PathEntry[l.size()]);
 	}
 
-	protected PathEntrySelectionDialog createSelectionDialog(Shell shell,
-			VirtualPath remotePath, PathEntry[] entries) {
+	protected PathEntrySelectionDialog createSelectionDialog(Shell shell, VirtualPath remotePath, PathEntry[] entries) {
 		return new PathEntrySelectionDialog(shell, remotePath, entries);
 	}
 
-	protected PathEntry runFilterDialog(Shell shell, VirtualPath remotePath,
-			PathEntry[] entries, IDebugTarget debugTarget) {
-		PathEntrySelectionDialog selectDialog = createSelectionDialog(shell,
-				remotePath, entries);
+	protected PathEntry runFilterDialog(Shell shell, VirtualPath remotePath, PathEntry[] entries,
+			IDebugTarget debugTarget) {
+		PathEntrySelectionDialog selectDialog = createSelectionDialog(shell, remotePath, entries);
 		if (shell != null) {
 			shell.forceActive();
 			shell.setActive();
@@ -91,8 +85,7 @@ public class PathEntrySelector implements IPathEntryFilter {
 			result = new PathEntry(ignorePath, PathEntry.Type.SERVER, null);
 			if (debugTarget instanceof PHPDebugTarget) {
 				PHPDebugTarget phpDebugTarget = (PHPDebugTarget) debugTarget;
-				phpDebugTarget.getContextManager()
-						.addToResolveBlacklist(ignorePath, Type.RECURSIVE);
+				phpDebugTarget.getContextManager().addToResolveBlacklist(ignorePath, Type.RECURSIVE);
 			}
 			return result;
 		} else {

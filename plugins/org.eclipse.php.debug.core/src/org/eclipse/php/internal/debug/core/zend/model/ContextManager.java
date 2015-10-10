@@ -41,24 +41,18 @@ public class ContextManager {
 	}
 
 	public void addToResolveBlacklist(VirtualPath path, Type type) {
-		ResolveBlackList.getInstance().add(
-				fDebugger.getDebugHandler().getDebugTarget().getLaunch(), path,
-				type);
+		ResolveBlackList.getInstance().add(fDebugger.getDebugHandler().getDebugTarget().getLaunch(), path, type);
 	}
 
 	public boolean isResolveBlacklisted(String remoteFile) {
-		return ResolveBlackList.getInstance().containsEntry(
-				fDebugger.getDebugHandler().getDebugTarget().getLaunch(),
+		return ResolveBlackList.getInstance().containsEntry(fDebugger.getDebugHandler().getDebugTarget().getLaunch(),
 				remoteFile);
 	}
 
 	private void copyVariablesFromPreviousFrames(IStackFrame[] frames) {
 		if (fFrames != null) {
-			for (int i = frames.length - 1, c = fFrames.length - 1; i > 0
-					&& c >= 0; --i, --c) {
-				((PHPStackFrame) frames[i])
-						.setStackVariables(((PHPStackFrame) fFrames[c])
-								.getStackVariables());
+			for (int i = frames.length - 1, c = fFrames.length - 1; i > 0 && c >= 0; --i, --c) {
+				((PHPStackFrame) frames[i]).setStackVariables(((PHPStackFrame) fFrames[c]).getStackVariables());
 			}
 		}
 	}
@@ -73,9 +67,7 @@ public class ContextManager {
 			PHPstack stack = fDebugger.getCallStack();
 			if (stack != null) {
 				StackLayer[] layers = stack.getLayers();
-				if (layers.length == 1
-						&& layers[0].getCalledFileName().endsWith(
-								DUMMY_PHP_FILE)) {
+				if (layers.length == 1 && layers[0].getCalledFileName().endsWith(DUMMY_PHP_FILE)) {
 					fDebugger.finish();// reached dummy file --> finish debug !
 					return fFrames;
 				}
@@ -86,8 +78,7 @@ public class ContextManager {
 					return fFrames;
 				}
 				PHPThread thread = (PHPThread) threads[0];
-				IStackFrame[] newFrames = applyDebugFilters(createNewFrames(
-						layers, thread));
+				IStackFrame[] newFrames = applyDebugFilters(createNewFrames(layers, thread));
 				copyVariablesFromPreviousFrames(newFrames);
 				fFrames = newFrames;
 			} else {
@@ -105,8 +96,7 @@ public class ContextManager {
 		ArrayList<IStackFrame> tempStackFrames = new ArrayList<IStackFrame>();
 		for (int i = 0; i < previousFrames.length; i++) {
 			if (i == previousFrames.length - 1) {
-				String stackFrameName = ((PHPStackFrame) previousFrames[i])
-						.getAbsoluteFileName();
+				String stackFrameName = ((PHPStackFrame) previousFrames[i]).getAbsoluteFileName();
 				if (stackFrameName.endsWith(DUMMY_PHP_FILE)) {
 					continue;// do not add it to stack view, filter it out.
 				}
@@ -131,8 +121,7 @@ public class ContextManager {
 		return variables == null ? new IVariable[0] : variables;
 	}
 
-	private IStackFrame[] createNewFrames(StackLayer[] layers, PHPThread thread)
-			throws DebugException {
+	private IStackFrame[] createNewFrames(StackLayer[] layers, PHPThread thread) throws DebugException {
 
 		RemoteDebugger remoteDebugger = (RemoteDebugger) fDebugger;
 		String cwd = null;
@@ -145,37 +134,28 @@ public class ContextManager {
 			String sName = layers[i].getCallerFileName();
 			String rName = layers[i].getResolvedCallerFileName();
 			if (rName == null) {
-				rName = remoteDebugger
-						.convertToLocalFilename(
-								sName,
-								cwd,
-								frameCt < frames.length ? ((PHPStackFrame) frames[frameCt])
-										.getSourceName() : null);
+				rName = remoteDebugger.convertToLocalFilename(sName, cwd,
+						frameCt < frames.length ? ((PHPStackFrame) frames[frameCt]).getSourceName() : null);
 				if (rName == null) {
 					rName = sName;
 				}
 				layers[i].setResolvedCallerFileName(rName);
 			}
 
-			frames[frameCt - 1] = new PHPStackFrame(thread, sName, rName,
-					layers[i].getCallerFunctionName(),
-					layers[i].getCallerLineNumber() + 1, layers[i].getDepth(),
-					layers[i - 1].getVariables());
+			frames[frameCt - 1] = new PHPStackFrame(thread, sName, rName, layers[i].getCallerFunctionName(),
+					layers[i].getCallerLineNumber() + 1, layers[i].getDepth(), layers[i - 1].getVariables());
 			frameCt--;
 
-			if (!layers[i].getCalledFileName()
-					.equals(fTarget.getLastFileName())) {
+			if (!layers[i].getCalledFileName().equals(fTarget.getLastFileName())) {
 				currentScript = rName;
 			}
 		}
 
-		String resolvedFile = remoteDebugger.convertToLocalFilename(
-				fTarget.getLastFileName(), cwd, currentScript);
+		String resolvedFile = remoteDebugger.convertToLocalFilename(fTarget.getLastFileName(), cwd, currentScript);
 		if (resolvedFile == null) {
 			resolvedFile = fTarget.getLastFileName();
 		}
-		PHPStackFrame topFrame = new PHPStackFrame(thread,
-				fTarget.getLastFileName(), resolvedFile,
+		PHPStackFrame topFrame = new PHPStackFrame(thread, fTarget.getLastFileName(), resolvedFile,
 				(layers.length == 1) ? "" //$NON-NLS-1$
 						: layers[layers.length - 1].getCalledFunctionName(),
 				fTarget.getLastStop(), frameCt, getLocalVariables());
@@ -198,25 +178,20 @@ public class ContextManager {
 	 * @return merged frame
 	 * @throws DebugException
 	 */
-	private IStackFrame mergeFrame(PHPStackFrame existingFrame,
-			PHPStackFrame incomingFrame) throws DebugException {
+	private IStackFrame mergeFrame(PHPStackFrame existingFrame, PHPStackFrame incomingFrame) throws DebugException {
 		if (existingFrame.getName().equals(incomingFrame.getName())
-				&& existingFrame.getAbsoluteFileName().equals(
-						incomingFrame.getAbsoluteFileName())
-				&& existingFrame.getSourceName().equals(
-						incomingFrame.getSourceName())
+				&& existingFrame.getAbsoluteFileName().equals(incomingFrame.getAbsoluteFileName())
+				&& existingFrame.getSourceName().equals(incomingFrame.getSourceName())
 				&& existingFrame.getThread() == incomingFrame.getThread()
 				&& existingFrame.getDepth() == incomingFrame.getDepth()) {
-			existingFrame.update(incomingFrame.getLineNumber(),
-					incomingFrame.getStackVariables());
+			existingFrame.update(incomingFrame.getLineNumber(), incomingFrame.getStackVariables());
 			return existingFrame;
 		}
 		return incomingFrame;
 	}
 
 	private Expression[] getLocalVariables() {
-		DefaultExpressionsManager expressionsManager = fTarget
-				.getExpressionManager();
+		DefaultExpressionsManager expressionsManager = fTarget.getExpressionManager();
 		if (expressionsManager == null) {
 			return new Expression[0];
 		}

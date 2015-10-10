@@ -44,8 +44,7 @@ public class PHPVariableSourceContainer extends CompositeSourceContainer {
 		} else {
 			String fileName = file.getName();
 			if (fileName.toLowerCase().endsWith(".zip")) { //$NON-NLS-1$
-				container[0] = new ExternalArchiveSourceContainer(file
-						.getPath(), false);
+				container[0] = new ExternalArchiveSourceContainer(file.getPath(), false);
 			} else if (isPhpFile(fileName)) {
 				container[0] = new PHPFileSourceContainer(file);
 			}
@@ -76,8 +75,7 @@ public class PHPVariableSourceContainer extends CompositeSourceContainer {
 	}
 
 	private void updateExtentionList() {
-		IContentType type = Platform.getContentTypeManager().getContentType(
-				ContentTypeIdForPHP.ContentTypeID_PHP);
+		IContentType type = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 		validExtensions = type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 	}
 }

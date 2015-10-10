@@ -44,17 +44,16 @@ public class RenameFolderTestCase30346 extends AbstractRenameRefactoringTest {
 		if (!folder.exists()) {
 			folder.create(true, true, new NullProgressMonitor());
 		}
-		
+
 		folder = project1.getFolder("src/src1");
 
 		if (!folder.exists()) {
 			folder.create(true, true, new NullProgressMonitor());
 		}
-		
+
 		file = folder.getFile("RenameFolderTest1.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php class TestRenameClass{}?>".getBytes());
+		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -62,18 +61,15 @@ public class RenameFolderTestCase30346 extends AbstractRenameRefactoringTest {
 			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
 
-		
 		file = project1.getFile("src/src1/RenameFolderTest2.php");
 
-		source = new ByteArrayInputStream(
-				"<?php include '../RenameFolderTest1.php'; ?>".getBytes());
+		source = new ByteArrayInputStream("<?php include '../RenameFolderTest1.php'; ?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
 		} else {
 			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
-
 
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
@@ -81,8 +77,7 @@ public class RenameFolderTestCase30346 extends AbstractRenameRefactoringTest {
 
 	@Test
 	public void testRename() {
-		RenameFolderProcessor processor = new RenameFolderProcessor(project1
-				.getFolder("src"));
+		RenameFolderProcessor processor = new RenameFolderProcessor(project1.getFolder("src"));
 		processor.setNewElementName("src11");
 		processor.setUpdateRefernces(true);
 
@@ -92,14 +87,11 @@ public class RenameFolderTestCase30346 extends AbstractRenameRefactoringTest {
 		IFolder folder = project1.getFolder("src11");
 		assertTrue(folder.exists());
 
-		
 		try {
 			file = folder.getFile("src1/RenameFolderTest2.php");
 			assertTrue(file.exists());
 			String content = FileUtils.getContents(file);
-			assertEquals(
-					"<?php include '../RenameFolderTest1.php'; ?>",
-					content);
+			assertEquals("<?php include '../RenameFolderTest1.php'; ?>", content);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

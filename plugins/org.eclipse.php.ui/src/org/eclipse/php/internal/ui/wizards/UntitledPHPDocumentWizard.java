@@ -74,11 +74,9 @@ public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 		IPath path = stateLocation.append("/_" + new Object().hashCode()); //$NON-NLS-1$
 		IFileStore fileStore = EFS.getLocalFileSystem().getStore(path);
 
-		NonExistingPHPFileEditorInput input = new NonExistingPHPFileEditorInput(
-				fileStore, UNTITLED_PHP_DOC_PREFIX);
+		NonExistingPHPFileEditorInput input = new NonExistingPHPFileEditorInput(fileStore, UNTITLED_PHP_DOC_PREFIX);
 
-		File realFile = ((NonExistingPHPFileEditorInput) input).getPath(input)
-				.toFile();
+		File realFile = ((NonExistingPHPFileEditorInput) input).getPath(input).toFile();
 		realFile.deleteOnExit();
 
 		IWorkbenchPage page = fWindow.getActivePage();
@@ -94,23 +92,18 @@ public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 			if (templateName == null || templateName.length() == 0) {
 				return true;
 			}
-			TemplateStore templateStore = PHPUiPlugin.getDefault()
-					.getCodeTemplateStore();
+			TemplateStore templateStore = PHPUiPlugin.getDefault().getCodeTemplateStore();
 			Template template = templateStore.findTemplate(templateName);
 			if (template == null) {
 				return true;
 			}
 			// compile the template and insert the text into the new document
 			CompiledTemplate compiledTemplate = PHPTemplateStore
-					.compileTemplate(PHPUiPlugin.getDefault()
-							.getCodeTemplateContextRegistry(), template);
-			IDocumentProvider documentProvider = textEditor
-					.getDocumentProvider();
-			IDocument document = textEditor.getDocumentProvider().getDocument(
-					textEditor.getEditorInput());
+					.compileTemplate(PHPUiPlugin.getDefault().getCodeTemplateContextRegistry(), template);
+			IDocumentProvider documentProvider = textEditor.getDocumentProvider();
+			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 			document.set(compiledTemplate.string);
-			documentProvider.saveDocument(null, textEditor.getEditorInput(),
-					document, true);
+			documentProvider.saveDocument(null, textEditor.getEditorInput(), document, true);
 			textEditor.selectAndReveal(compiledTemplate.offset, 0);
 
 			// set document dirty

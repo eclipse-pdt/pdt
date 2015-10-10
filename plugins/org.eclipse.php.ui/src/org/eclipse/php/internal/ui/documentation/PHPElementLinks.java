@@ -104,8 +104,7 @@ public class PHPElementLinks {
 	 *            the handler to use to handle links
 	 * @return a new {@link LocationListener}
 	 */
-	public static LocationListener createLocationListener(
-			final ILinkHandler handler) {
+	public static LocationListener createLocationListener(final ILinkHandler handler) {
 		return new LocationAdapter() {
 			public void changing(LocationEvent event) {
 				String loc = event.location;
@@ -160,8 +159,7 @@ public class PHPElementLinks {
 					handler.handleDeclarationLink(linkTarget);
 				} else {
 					try {
-						if (handler.handleExternalLink(new URL(loc),
-								event.display))
+						if (handler.handleExternalLink(new URL(loc), event.display))
 							return;
 
 						event.doit = true;
@@ -179,8 +177,7 @@ public class PHPElementLinks {
 
 		// replace '[' manually, since URI confuses it for an IPv6 address as
 		// per RFC 2732:
-		IModelElement element = DLTKCore.create(segments[1].replace(
-				LINK_BRACKET_REPLACEMENT, '['));
+		IModelElement element = DLTKCore.create(segments[1].replace(LINK_BRACKET_REPLACEMENT, '['));
 
 		if ((segments.length > 2) && (element instanceof IMember)) {
 			IMember member = (IMember) element;
@@ -190,10 +187,8 @@ public class PHPElementLinks {
 
 			try {
 
-				int offset = member.getSourceRange() != null ? member
-						.getSourceRange().getOffset() : 0;
-				types = PHPModelUtils.getTypes(refTypeName,
-						member.getSourceModule(), offset,
+				int offset = member.getSourceRange() != null ? member.getSourceRange().getOffset() : 0;
+				types = PHPModelUtils.getTypes(refTypeName, member.getSourceModule(), offset,
 						new NullProgressMonitor());
 			} catch (ModelException e) {
 				PHPUiPlugin.log(e);
@@ -236,8 +231,7 @@ public class PHPElementLinks {
 	 * @throws URISyntaxException
 	 *             if the arguments were invalid
 	 */
-	public static String createURI(String scheme, IModelElement element)
-			throws URISyntaxException {
+	public static String createURI(String scheme, IModelElement element) throws URISyntaxException {
 		return createURI(scheme, element, null, null, null);
 	}
 
@@ -263,9 +257,8 @@ public class PHPElementLinks {
 	 * @throws URISyntaxException
 	 *             if the arguments were invalid
 	 */
-	public static String createURI(String scheme, IModelElement element,
-			String refTypeName, String refMemberName, String[] refParameterTypes)
-			throws URISyntaxException {
+	public static String createURI(String scheme, IModelElement element, String refTypeName, String refMemberName,
+			String[] refParameterTypes) throws URISyntaxException {
 		/*
 		 * We use an opaque URI, not ssp and fragments (to work around Safari
 		 * bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=212527 (wrongly
@@ -278,8 +271,7 @@ public class PHPElementLinks {
 
 		// replace '[' manually, since URI confuses it for an IPv6 address as
 		// per RFC 2732:
-		ssp.append(element.getHandleIdentifier().replace('[',
-				LINK_BRACKET_REPLACEMENT)); // segments[1]
+		ssp.append(element.getHandleIdentifier().replace('[', LINK_BRACKET_REPLACEMENT)); // segments[1]
 
 		if (refTypeName != null) {
 			ssp.append(LINK_SEPARATOR);

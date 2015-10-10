@@ -46,9 +46,8 @@ public class DebugMessagesRegistry {
 	private DebugMessagesRegistry() {
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = registry
-				.getConfigurationElementsFor(PHPDebugPlugin.getID(),
-						EXTENSION_POINT_NAME);
+		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(),
+				EXTENSION_POINT_NAME);
 
 		Map<String, IConfigurationElement> configElementsMap = new HashMap<String, IConfigurationElement>();
 		for (final IConfigurationElement element : elements) {
@@ -64,34 +63,27 @@ public class DebugMessagesRegistry {
 			}
 		}
 
-		Collection<IConfigurationElement> configElements = configElementsMap
-				.values();
+		Collection<IConfigurationElement> configElements = configElementsMap.values();
 		while (configElements.remove(null))
 			; // remove null elements
 
 		for (final IConfigurationElement element : configElements) {
 			final IDebugMessage messages[] = new IDebugMessage[1];
 
-			SafeRunnable
-					.run(new SafeRunnable(
-							"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugMessages") { //$NON-NLS-1$
-						public void run() throws Exception {
-							messages[0] = (IDebugMessage) element
-									.createExecutableExtension(CLASS_ATTRIBUTE);
-						}
-					});
+			SafeRunnable.run(new SafeRunnable(
+					"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugMessages") { //$NON-NLS-1$
+				public void run() throws Exception {
+					messages[0] = (IDebugMessage) element.createExecutableExtension(CLASS_ATTRIBUTE);
+				}
+			});
 
-			if (messages[0] != null
-					&& !this.messagesHash.containsKey(messages[0].getType())) {
+			if (messages[0] != null && !this.messagesHash.containsKey(messages[0].getType())) {
 				messagesHash.put(messages[0].getType(), messages[0]);
-				messagesTypes.put(element.getAttribute(ID_ATTRIBUTE),
-						Integer.valueOf(messages[0].getType()));
+				messagesTypes.put(element.getAttribute(ID_ATTRIBUTE), Integer.valueOf(messages[0].getType()));
 
 				String handlerClass = element.getAttribute(HANDLER_ATTRIBUTE);
-				if (handlerClass != null
-						&& !handlers.containsKey(messages[0].getType())) {
-					handlers.put(messages[0].getType(),
-							new DebugMessageHandlerFactory(element));
+				if (handlerClass != null && !handlers.containsKey(messages[0].getType())) {
+					handlers.put(messages[0].getType(), new DebugMessageHandlerFactory(element));
 				}
 			}
 		}
@@ -135,8 +127,7 @@ public class DebugMessagesRegistry {
 	 * Return message according to its ID
 	 */
 	public static IDebugMessage getMessage(String id) throws Exception {
-		return (IDebugMessage) getInstance().getMessages().get(
-				(getInstance().getMessagesTypes().get(id)).intValue())
+		return (IDebugMessage) getInstance().getMessages().get((getInstance().getMessagesTypes().get(id)).intValue())
 				.getClass().newInstance();
 	}
 
@@ -165,14 +156,12 @@ public class DebugMessagesRegistry {
 
 		public IDebugMessageHandler createHandler() {
 			final IDebugMessageHandler[] handler = new IDebugMessageHandler[1];
-			SafeRunnable
-					.run(new SafeRunnable(
-							"Error creation handler for extension-point org.eclipse.php.internal.debug.core.phpDebugMessages") { //$NON-NLS-1$
-						public void run() throws Exception {
-							handler[0] = (IDebugMessageHandler) element
-									.createExecutableExtension(HANDLER_ATTRIBUTE);
-						}
-					});
+			SafeRunnable.run(new SafeRunnable(
+					"Error creation handler for extension-point org.eclipse.php.internal.debug.core.phpDebugMessages") { //$NON-NLS-1$
+				public void run() throws Exception {
+					handler[0] = (IDebugMessageHandler) element.createExecutableExtension(HANDLER_ATTRIBUTE);
+				}
+			});
 			return handler[0];
 		}
 	}

@@ -36,26 +36,21 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
 @SuppressWarnings("restriction")
-public class PHPCompletionProposal extends ScriptCompletionProposal implements
-		IPHPCompletionProposalExtension {
+public class PHPCompletionProposal extends ScriptCompletionProposal implements IPHPCompletionProposalExtension {
 
 	/**
 	 * The control creator.
 	 */
 	private IInformationControlCreator fCreator;
 
-	public PHPCompletionProposal(String replacementString,
-			int replacementOffset, int replacementLength, Image image,
+	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image,
 			String displayString, int relevance) {
-		super(replacementString, replacementOffset, replacementLength, image,
-				displayString, relevance);
+		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance);
 	}
 
-	public PHPCompletionProposal(String replacementString,
-			int replacementOffset, int replacementLength, Image image,
+	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image,
 			String displayString, int relevance, boolean indoc) {
-		super(replacementString, replacementOffset, replacementLength, image,
-				displayString, relevance, indoc);
+		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance, indoc);
 	}
 
 	protected boolean isValidPrefix(String prefix) {
@@ -64,8 +59,7 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements
 			word = word.substring(1);
 		}
 		boolean result = isPrefix(prefix, word);
-		if (!result && ProposalExtraInfo.isClassInNamespace(getExtraInfo())
-				&& (getModelElement() instanceof IType)) {
+		if (!result && ProposalExtraInfo.isClassInNamespace(getExtraInfo()) && (getModelElement() instanceof IType)) {
 			IType type = (IType) getModelElement();
 			result = isPrefix(prefix, PHPModelUtils.getFullName(type));
 		}
@@ -90,20 +84,16 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements
 		boolean activateCodeAssist = false;
 		String replacementString = getReplacementString();
 		if (modelElement instanceof IScriptProject
-				&& replacementString
-						.endsWith(IncludeStatementStrategy.FOLDER_SEPARATOR)) {
+				&& replacementString.endsWith(IncludeStatementStrategy.FOLDER_SEPARATOR)) {
 			// workaround for:
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=269634
 			activateCodeAssist = true;
 		} else {
-			IPreferencesService preferencesService = Platform
-					.getPreferencesService();
-			boolean enableAutoactivation = preferencesService.getBoolean(
-					PHPCorePlugin.ID,
+			IPreferencesService preferencesService = Platform.getPreferencesService();
+			boolean enableAutoactivation = preferencesService.getBoolean(PHPCorePlugin.ID,
 					PHPCoreConstants.CODEASSIST_AUTOACTIVATION, false, null);
 			if (enableAutoactivation) {
-				char lastChar = replacementString.charAt(replacementString
-						.length() - 1);
+				char lastChar = replacementString.charAt(replacementString.length() - 1);
 				for (char autoActivationChar : PHPCompletionProcessor.completionAutoActivationChars) {
 					if (autoActivationChar == lastChar) {
 						activateCodeAssist = true;
@@ -164,21 +154,16 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements
 
 	public IInformationControlCreator getInformationControlCreator() {
 		if (fCreator == null) {
-			fCreator = new CompletionHoverControlCreator(
-					new IInformationControlCreator() {
-						public IInformationControl createInformationControl(
-								Shell parent) {
-							if (BrowserInformationControl.isAvailable(parent)) {
-								return new BrowserInformationControl(
-										parent,
-										PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT,
-										true);
-							} else {
-								return new DefaultInformationControl(parent,
-										true);
-							}
-						}
-					}, true);
+			fCreator = new CompletionHoverControlCreator(new IInformationControlCreator() {
+				public IInformationControl createInformationControl(Shell parent) {
+					if (BrowserInformationControl.isAvailable(parent)) {
+						return new BrowserInformationControl(parent, PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT,
+								true);
+					} else {
+						return new DefaultInformationControl(parent, true);
+					}
+				}
+			}, true);
 		}
 		return fCreator;
 	}

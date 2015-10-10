@@ -38,12 +38,10 @@ public class PHPDocParserTests {
 	public void parser(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(fileName);
 		byte[] code = pdttFile.getFile().trim().getBytes();
-		InputStreamReader reader = new InputStreamReader(
-				new ByteArrayInputStream(code));
+		InputStreamReader reader = new InputStreamReader(new ByteArrayInputStream(code));
 		DocumentorLexer lexer = new DocumentorLexer(reader);
 		PHPDocBlock phpDocBlock = lexer.parse();
-		PDTTUtils.assertContents(pdttFile.getExpected(),
-				ASTPrintVisitor.toXMLString(phpDocBlock));
+		PDTTUtils.assertContents(pdttFile.getExpected(), ASTPrintVisitor.toXMLString(phpDocBlock));
 	}
 
 }

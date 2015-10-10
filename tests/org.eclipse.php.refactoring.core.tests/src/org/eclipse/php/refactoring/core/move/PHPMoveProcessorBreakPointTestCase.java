@@ -55,8 +55,7 @@ public class PHPMoveProcessorBreakPointTestCase {
 		}
 		IFile file = folder.getFile("RunBreakPoint.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php class TestRenameClass{}?>".getBytes());
+		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -64,22 +63,21 @@ public class PHPMoveProcessorBreakPointTestCase {
 			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
 
-//		IMarker marker = file
-//				.createMarker("org.eclipse.php.debug.core.PHPConditionalBreakpointMarker");
-//		marker.setAttribute("org.eclipse.wst.sse.ui.extensions.breakpoint.path", file.getFullPath().toString());
-//		System.out.println(marker.getAttribute("org.eclipse.wst.sse.ui.extensions.breakpoint.path"));
+		// IMarker marker = file
+		// .createMarker("org.eclipse.php.debug.core.PHPConditionalBreakpointMarker");
+		// marker.setAttribute("org.eclipse.wst.sse.ui.extensions.breakpoint.path",
+		// file.getFullPath().toString());
+		// System.out.println(marker.getAttribute("org.eclipse.wst.sse.ui.extensions.breakpoint.path"));
 
-		final IBreakpointManager breakpointManager = DebugPlugin.getDefault()
-				.getBreakpointManager();
+		final IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 
 		Map<String, String> attributes = new HashMap<String, String>();
 		attributes.put(IMarker.LOCATION, file.getFullPath().toString());
 		attributes.put("org.eclipse.wst.sse.ui.extensions.breakpoint.path", file.getFullPath().toString());
 
-		PHPConditionalBreakpoint bp = new PHPConditionalBreakpoint(file, 1, -1,
-				-1, attributes);
+		PHPConditionalBreakpoint bp = new PHPConditionalBreakpoint(file, 1, -1, -1, attributes);
 
-//		bp.setMarker(marker);
+		// bp.setMarker(marker);
 		breakpointManager.addBreakpoint(bp);
 
 		folder = project1.getFolder("src1");
@@ -94,11 +92,9 @@ public class PHPMoveProcessorBreakPointTestCase {
 
 	@Test
 	public void testMoveing() {
-		PHPMoveProcessor processor = new PHPMoveProcessor(project1.getProject()
-				.getFolder("src"));
+		PHPMoveProcessor processor = new PHPMoveProcessor(project1.getProject().getFolder("src"));
 
-		RefactoringStatus status = processor
-				.checkInitialConditions(new NullProgressMonitor());
+		RefactoringStatus status = processor.checkInitialConditions(new NullProgressMonitor());
 
 		assertEquals(IStatus.OK, status.getSeverity());
 
@@ -115,8 +111,7 @@ public class PHPMoveProcessorBreakPointTestCase {
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
-		
-		
+
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e1) {
@@ -124,15 +119,12 @@ public class PHPMoveProcessorBreakPointTestCase {
 
 		IFile file = project1.getFile("src1/src/RunBreakPoint.php");
 		try {
-			IMarker[] markers = file
-					.findMarkers(
-							"org.eclipse.php.debug.core.PHPConditionalBreakpointMarker",
-							false, IResource.DEPTH_ONE);
+			IMarker[] markers = file.findMarkers("org.eclipse.php.debug.core.PHPConditionalBreakpointMarker", false,
+					IResource.DEPTH_ONE);
 			assertNotNull(markers);
 			assertTrue(markers.length > 0);
 
-			final IBreakpointManager breakpointManager = DebugPlugin
-					.getDefault().getBreakpointManager();
+			final IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 			IBreakpoint bp = breakpointManager.getBreakpoint(markers[0]);
 
 			assertTrue(bp instanceof PHPConditionalBreakpoint);

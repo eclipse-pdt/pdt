@@ -73,11 +73,10 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 * org.eclipse.debug.core.ILaunch,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	protected int notifyPreLaunch(ILaunchConfiguration configuration,
-			String mode, ILaunch launch, IProgressMonitor monitor) {
+	protected int notifyPreLaunch(ILaunchConfiguration configuration, String mode, ILaunch launch,
+			IProgressMonitor monitor) {
 		for (ILaunchDelegateListener listener : preLaunchListeners) {
-			int returnCode = listener.preLaunch(configuration, mode, launch,
-					monitor);
+			int returnCode = listener.preLaunch(configuration, mode, launch, monitor);
 			if (returnCode != 0) {
 				return returnCode;
 			}
@@ -117,8 +116,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	/**
 	 * Override the extended getLaunch to create a PHPLaunch.
 	 */
-	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode)
-			throws CoreException {
+	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
 		return new PHPLaunch(configuration, mode, null);
 	}
 
@@ -131,8 +129,8 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 * org.eclipse.debug.core.ILaunch,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public void launch(ILaunchConfiguration configuration, String mode,
-			ILaunch launch, IProgressMonitor monitor) throws CoreException {
+	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
+			throws CoreException {
 		// Notify all listeners of a preLaunch event.
 		int resultCode = notifyPreLaunch(configuration, mode, launch, monitor);
 		if (resultCode != 0) { // cancel launch
@@ -153,23 +151,19 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		}
 		PHPLaunchUtilities.showDebugView();
 		this.launch = launch;
-		Server server = ServersManager.getServer(configuration.getAttribute(
-				Server.NAME, "")); //$NON-NLS-1$
+		Server server = ServersManager.getServer(configuration.getAttribute(Server.NAME, "")); //$NON-NLS-1$
 		if (server == null) {
-			Logger.log(Logger.ERROR,
-					"Launch configuration could not find server"); //$NON-NLS-1$
+			Logger.log(Logger.ERROR, "Launch configuration could not find server"); //$NON-NLS-1$
 			terminated();
 			// throw CoreException();
 			return;
 		}
-		String fileName = configuration.getAttribute(Server.FILE_NAME,
-				(String) null);
+		String fileName = configuration.getAttribute(Server.FILE_NAME, (String) null);
 		// Get the project from the file name
 		IPath filePath = new Path(fileName);
 		IProject proj = null;
 		try {
-			proj = ResourcesPlugin.getWorkspace().getRoot()
-					.getProject(filePath.segment(0));
+			proj = ResourcesPlugin.getWorkspace().getRoot().getProject(filePath.segment(0));
 		} catch (Throwable t) {
 		}
 
@@ -178,23 +172,18 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		wc.setAttribute(IPHPDebugConstants.PHP_Project, project);
 
 		// Set transfer encoding:
-		wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING,
-				PHPProjectPreferences.getTransferEncoding(proj));
-		wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING,
-				PHPProjectPreferences.getOutputEncoding(proj));
-		wc.setAttribute(IDebugParametersKeys.PHP_DEBUG_TYPE,
-				IDebugParametersKeys.PHP_WEB_PAGE_DEBUG);
+		wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(proj));
+		wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING, PHPProjectPreferences.getOutputEncoding(proj));
+		wc.setAttribute(IDebugParametersKeys.PHP_DEBUG_TYPE, IDebugParametersKeys.PHP_WEB_PAGE_DEBUG);
 		wc.doSave();
 
 		String URL = new String(configuration.getAttribute(Server.BASE_URL, "") //$NON-NLS-1$
 				.getBytes());
 		boolean isDebugLaunch = mode.equals(ILaunchManager.DEBUG_MODE);
 		if (isDebugLaunch) {
-			boolean stopAtFirstLine = wc.getAttribute(
-					IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
+			boolean stopAtFirstLine = wc.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 					PHPProjectPreferences.getStopAtFirstLine(proj));
-			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
-					Boolean.toString(stopAtFirstLine));
+			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.toString(stopAtFirstLine));
 		}
 		int requestPort = getDebugPort(server);
 
@@ -203,23 +192,17 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		PHPSessionLaunchMapper.put(sessionID, launch);
 
 		// Fill all rest of the attributes:
-		launch.setAttribute(IDebugParametersKeys.PORT,
-				Integer.toString(requestPort));
-		launch.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER,
-				Boolean.toString(true));
+		launch.setAttribute(IDebugParametersKeys.PORT, Integer.toString(requestPort));
+		launch.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER, Boolean.toString(true));
 		launch.setAttribute(IDebugParametersKeys.ORIGINAL_URL, URL);
-		launch.setAttribute(IDebugParametersKeys.SESSION_ID,
-				Integer.toString(sessionID));
+		launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer.toString(sessionID));
 
 		// Check that the debug daemon is functional
 		// DEBUGGER - Make sure that the active debugger id is indeed Zend's
 		// debugger
-		if (!PHPLaunchUtilities.isDebugDaemonActive(requestPort,
-				DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
-			PHPLaunchUtilities
-					.showLaunchErrorMessage(NLS
-							.bind(PHPDebugCoreMessages.WebLaunchConfigurationDelegate_PortInUse,
-					requestPort, server.getName()));
+		if (!PHPLaunchUtilities.isDebugDaemonActive(requestPort, DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
+			PHPLaunchUtilities.showLaunchErrorMessage(NLS.bind(
+					PHPDebugCoreMessages.WebLaunchConfigurationDelegate_PortInUse, requestPort, server.getName()));
 			monitor.setCanceled(true);
 			monitor.done();
 			return;
@@ -240,23 +223,19 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 * (org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public boolean preLaunchCheck(final ILaunchConfiguration configuration,
-			final String mode, IProgressMonitor monitor) throws CoreException {
+	public boolean preLaunchCheck(final ILaunchConfiguration configuration, final String mode, IProgressMonitor monitor)
+			throws CoreException {
 		// Check if the server exists
 		final String serverName = configuration.getAttribute(Server.NAME, ""); //$NON-NLS-1$
 		Server server = ServersManager.getServer(serverName);
 		if (server == null) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog
-							.openWarning(
-							Display.getDefault().getActiveShell(),
+					MessageDialog.openWarning(Display.getDefault().getActiveShell(),
 							PHPDebugCoreMessages.PHPLaunchUtilities_phpLaunchTitle,
-							NLS.bind(
-									PHPDebugCoreMessages.PHPWebPageLaunchDelegate_serverNotFound,
+							NLS.bind(PHPDebugCoreMessages.PHPWebPageLaunchDelegate_serverNotFound,
 									new String[] { serverName }));
-					PHPLaunchUtilities.openLaunchConfigurationDialog(
-							configuration, mode);
+					PHPLaunchUtilities.openLaunchConfigurationDialog(configuration, mode);
 				}
 			});
 			return false;
@@ -274,8 +253,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		try {
 			// Initiate a debug tunnel in case needed.
 			if (!ILaunchManager.RUN_MODE.equals(launch.getLaunchMode())) {
-				SSHTunnel tunnel = PHPLaunchUtilities.getSSHTunnel(launch
-						.getLaunchConfiguration());
+				SSHTunnel tunnel = PHPLaunchUtilities.getSSHTunnel(launch.getLaunchConfiguration());
 				if (tunnel != null) {
 					tunnel.connect();
 				}
@@ -285,8 +263,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			IStatus status = e.getStatus();
 			String errorMessage = null;
 			if (status == null) {
-				Logger.traceException(
-						"Unexpected Error return from debuggerInitializer ", e); //$NON-NLS-1$
+				Logger.traceException("Unexpected Error return from debuggerInitializer ", e); //$NON-NLS-1$
 				fireError(PHPDebugCoreMessages.Debugger_Unexpected_Error_1, e);
 				errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;
 			} else {
@@ -319,12 +296,10 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 * @throws CoreException
 	 */
 	protected int getDebugPort(Server server) throws CoreException {
-		int customRequestPort = ZendDebuggerSettingsUtil.getDebugPort(server
-				.getUniqueId());
+		int customRequestPort = ZendDebuggerSettingsUtil.getDebugPort(server.getUniqueId());
 		if (customRequestPort != -1)
 			return customRequestPort;
-		return PHPDebugPlugin
-				.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+		return PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 	}
 
 	/**
@@ -336,8 +311,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	protected void displayErrorMessage(final String title, final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				MessageDialog.openError(Display.getDefault().getActiveShell(),
-						title, message);
+				MessageDialog.openError(Display.getDefault().getActiveShell(), title, message);
 			}
 		});
 	}
@@ -357,8 +331,8 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 * 
 	 */
 	public void fireError(String errorMessage, Exception e) {
-		Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(),
-				IPHPDebugConstants.INTERNAL_ERROR, errorMessage, e);
+		Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR,
+				errorMessage, e);
 		DebugEvent event = new DebugEvent(this, DebugEvent.MODEL_SPECIFIC);
 		event.setData(status);
 		fireEvent(event);
@@ -514,8 +488,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			return false;
 		}
 
-		public IMemoryBlock getMemoryBlock(long startAddress, long length)
-				throws DebugException {
+		public IMemoryBlock getMemoryBlock(long startAddress, long length) throws DebugException {
 			return null;
 		}
 

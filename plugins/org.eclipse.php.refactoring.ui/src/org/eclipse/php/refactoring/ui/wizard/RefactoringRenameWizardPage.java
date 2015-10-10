@@ -48,8 +48,8 @@ abstract class RenameInputWizardPage extends TextInputWizardPage {
 	 * @param initialValue
 	 *            the initial value
 	 */
-	public RenameInputWizardPage(String description, String contextHelpId,
-			boolean isLastUserPage, String initialValue) {
+	public RenameInputWizardPage(String description, String contextHelpId, boolean isLastUserPage,
+			String initialValue) {
 		super(description, isLastUserPage, initialValue);
 		fHelpContextID = contextHelpId;
 	}
@@ -112,8 +112,7 @@ abstract class RenameInputWizardPage extends TextInputWizardPage {
 	 * @param layouter
 	 *            the row layouter to use
 	 */
-	protected void addAdditionalOptions(Composite composite,
-			RowLayouter layouter) {
+	protected void addAdditionalOptions(Composite composite, RowLayouter layouter) {
 		// none by default
 	}
 
@@ -121,12 +120,10 @@ abstract class RenameInputWizardPage extends TextInputWizardPage {
 		// visible
 
 		if (visible) {
-			INameUpdating nameUpdating = (INameUpdating) getRefactoring()
-					.getAdapter(INameUpdating.class);
+			INameUpdating nameUpdating = (INameUpdating) getRefactoring().getAdapter(INameUpdating.class);
 			if (nameUpdating != null) {
 				String newName = getNewName(nameUpdating);
-				if (newName != null && newName.length() > 0
-						&& !newName.equals(getInitialValue())) {
+				if (newName != null && newName.length() > 0 && !newName.equals(getInitialValue())) {
 					Text textField = getTextField();
 					textField.setText(newName);
 					textField.setSelection(0, newName.length());
@@ -165,51 +162,40 @@ abstract class RenameInputWizardPage extends TextInputWizardPage {
 		super.dispose();
 	}
 
-	private void addOptionalUpdateTextualMatches(Composite result,
-			RowLayouter layouter) {
-		final ITextUpdating refactoring = (ITextUpdating) getRefactoring()
-				.getAdapter(ITextUpdating.class);
+	private void addOptionalUpdateTextualMatches(Composite result, RowLayouter layouter) {
+		final ITextUpdating refactoring = (ITextUpdating) getRefactoring().getAdapter(ITextUpdating.class);
 		if (refactoring == null || !refactoring.canEnableTextUpdating())
 			return;
-		String title = PHPRefactoringUIMessages
-				.getString("RenameInputWizardPage_update_textual_matches"); //$NON-NLS-1$
-		boolean defaultValue = getBooleanSetting(UPDATE_TEXTUAL_MATCHES,
-				refactoring.getUpdateTextualMatches());
-		fUpdateTextualMatches = createCheckbox(result, title, defaultValue,
-				layouter);
-		refactoring.setUpdateTextualMatches(fUpdateTextualMatches
-				.getSelection());
+		String title = PHPRefactoringUIMessages.getString("RenameInputWizardPage_update_textual_matches"); //$NON-NLS-1$
+		boolean defaultValue = getBooleanSetting(UPDATE_TEXTUAL_MATCHES, refactoring.getUpdateTextualMatches());
+		fUpdateTextualMatches = createCheckbox(result, title, defaultValue, layouter);
+		refactoring.setUpdateTextualMatches(fUpdateTextualMatches.getSelection());
 		fUpdateTextualMatches.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				refactoring.setUpdateTextualMatches(fUpdateTextualMatches
-						.getSelection());
+				refactoring.setUpdateTextualMatches(fUpdateTextualMatches.getSelection());
 				updateForcePreview();
 			}
 		});
 	}
 
-	private void addOptionalUpdateQualifiedNameComponent(Composite parent,
-			RowLayouter layouter, int marginWidth) {
+	private void addOptionalUpdateQualifiedNameComponent(Composite parent, RowLayouter layouter, int marginWidth) {
 		final IQualifiedNameUpdating ref = (IQualifiedNameUpdating) getRefactoring()
 				.getAdapter(IQualifiedNameUpdating.class);
 		if (ref == null || !ref.canEnableQualifiedNameUpdating())
 			return;
 		fUpdateQualifiedNames = new Button(parent, SWT.CHECK);
-		int indent = marginWidth
-				+ fUpdateQualifiedNames.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
-		fUpdateQualifiedNames.setText(PHPRefactoringUIMessages
-				.getString("RenameInputWizardPage_update_qualified_names")); //$NON-NLS-1$
+		int indent = marginWidth + fUpdateQualifiedNames.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
+		fUpdateQualifiedNames
+				.setText(PHPRefactoringUIMessages.getString("RenameInputWizardPage_update_qualified_names")); //$NON-NLS-1$
 		layouter.perform(fUpdateQualifiedNames);
 
-		fQualifiedNameComponent = new QualifiedNameComponent(parent, SWT.NONE,
-				ref, getRefactoringSettings());
+		fQualifiedNameComponent = new QualifiedNameComponent(parent, SWT.NONE, ref, getRefactoringSettings());
 		layouter.perform(fQualifiedNameComponent);
 		GridData gd = (GridData) fQualifiedNameComponent.getLayoutData();
 		gd.horizontalAlignment = GridData.FILL;
 		gd.horizontalIndent = indent;
 
-		boolean defaultSelection = getBooleanSetting(UPDATE_QUALIFIED_NAMES,
-				ref.getUpdateQualifiedNames());
+		boolean defaultSelection = getBooleanSetting(UPDATE_QUALIFIED_NAMES, ref.getUpdateQualifiedNames());
 		fUpdateQualifiedNames.setSelection(defaultSelection);
 		updateQulifiedNameUpdating(ref, defaultSelection);
 
@@ -221,16 +207,14 @@ abstract class RenameInputWizardPage extends TextInputWizardPage {
 		});
 	}
 
-	private void updateQulifiedNameUpdating(final IQualifiedNameUpdating ref,
-			boolean enabled) {
+	private void updateQulifiedNameUpdating(final IQualifiedNameUpdating ref, boolean enabled) {
 		fQualifiedNameComponent.setEnabled(enabled);
 		ref.setUpdateQualifiedNames(enabled);
 		updateForcePreview();
 	}
 
 	protected String getLabelText() {
-		return PHPRefactoringUIMessages
-				.getString("RenameInputWizardPage_new_name"); //$NON-NLS-1$
+		return PHPRefactoringUIMessages.getString("RenameInputWizardPage_new_name"); //$NON-NLS-1$
 	}
 
 	protected boolean getBooleanSetting(String key, boolean defaultValue) {
@@ -246,8 +230,7 @@ abstract class RenameInputWizardPage extends TextInputWizardPage {
 			getRefactoringSettings().put(key, checkBox.getSelection());
 	}
 
-	protected static Button createCheckbox(Composite parent, String title,
-			boolean value, RowLayouter layouter) {
+	protected static Button createCheckbox(Composite parent, String title, boolean value, RowLayouter layouter) {
 		Button checkBox = new Button(parent, SWT.CHECK);
 		checkBox.setText(title);
 		checkBox.setSelection(value);
@@ -258,10 +241,8 @@ abstract class RenameInputWizardPage extends TextInputWizardPage {
 	protected void updateForcePreview() {
 		boolean forcePreview = false;
 		Refactoring refactoring = getRefactoring();
-		ITextUpdating tu = (ITextUpdating) refactoring
-				.getAdapter(ITextUpdating.class);
-		IQualifiedNameUpdating qu = (IQualifiedNameUpdating) refactoring
-				.getAdapter(IQualifiedNameUpdating.class);
+		ITextUpdating tu = (ITextUpdating) refactoring.getAdapter(ITextUpdating.class);
+		IQualifiedNameUpdating qu = (IQualifiedNameUpdating) refactoring.getAdapter(IQualifiedNameUpdating.class);
 		if (tu != null) {
 			forcePreview = tu.getUpdateTextualMatches();
 		}

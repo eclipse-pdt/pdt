@@ -42,37 +42,33 @@ public class SaveFilesDialog extends ListSelectionDialog {
 	boolean promptAutoSave;
 	SaveFilesResult result;
 
-	public SaveFilesDialog(Shell parent, List dirtyEditors,
-			SaveFilesResult result, boolean promptAutoSave) {
-		super(parent, dirtyEditors, new ListContentProvider(),
-				new LabelProvider() {
-					public Image getImage(Object element) {
-						return ((IEditorPart) element).getTitleImage();
-					}
+	public SaveFilesDialog(Shell parent, List dirtyEditors, SaveFilesResult result, boolean promptAutoSave) {
+		super(parent, dirtyEditors, new ListContentProvider(), new LabelProvider() {
+			public Image getImage(Object element) {
+				return ((IEditorPart) element).getTitleImage();
+			}
 
-					public String getText(Object element) {
-						IEditorPart editor = (IEditorPart) element;
-						IFile file = (IFile) editor.getEditorInput()
-								.getAdapter(IResource.class);
-						String title = editor.getTitle();
-						if (file == null) {
-							return title;
-						}
-						return NLS
-								.bind("{0} [{1}]", new String[] { title, file.getFullPath().toString() }); //$NON-NLS-1$
-					}
-				}, PHPUIMessages.SaveFilesDialog_1); 
+			public String getText(Object element) {
+				IEditorPart editor = (IEditorPart) element;
+				IFile file = (IFile) editor.getEditorInput().getAdapter(IResource.class);
+				String title = editor.getTitle();
+				if (file == null) {
+					return title;
+				}
+				return NLS.bind("{0} [{1}]", new String[] { title, file.getFullPath().toString() }); //$NON-NLS-1$
+			}
+		}, PHPUIMessages.SaveFilesDialog_1);
 		this.promptAutoSave = promptAutoSave;
 		this.result = result;
-		setTitle(PHPUIMessages.SaveFilesDialog_2); 
-		setMessage(PHPUIMessages.SaveFilesDialog_3); 
+		setTitle(PHPUIMessages.SaveFilesDialog_2);
+		setMessage(PHPUIMessages.SaveFilesDialog_3);
 	}
 
 	protected Control createDialogArea(Composite container) {
 		Composite area = (Composite) super.createDialogArea(container);
 		if (promptAutoSave) {
 			final Button check = new Button(area, SWT.CHECK);
-			check.setText(PHPUIMessages.SaveFilesDialog_4); 
+			check.setText(PHPUIMessages.SaveFilesDialog_4);
 			check.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					result.setAutoSave(check.getSelection());

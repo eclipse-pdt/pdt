@@ -15,6 +15,5 @@ import org.eclipse.debug.core.model.IDebugTarget;
 
 public interface IPathEntryFilter {
 
-	public PathEntry[] filter(PathEntry[] entries, VirtualPath remotePath,
-			IDebugTarget debugTarget);
+	public PathEntry[] filter(PathEntry[] entries, VirtualPath remotePath, IDebugTarget debugTarget);
 }

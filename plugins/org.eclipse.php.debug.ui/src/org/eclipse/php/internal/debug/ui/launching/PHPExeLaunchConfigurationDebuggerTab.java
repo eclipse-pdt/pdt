@@ -31,8 +31,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Bartlomiej Laczkowski
  */
 @SuppressWarnings("restriction")
-public class PHPExeLaunchConfigurationDebuggerTab
-		extends AbstractPHPLaunchConfigurationDebuggerTab {
+public class PHPExeLaunchConfigurationDebuggerTab extends AbstractPHPLaunchConfigurationDebuggerTab {
 
 	/*
 	 * (non-Javadoc)
@@ -44,11 +43,9 @@ public class PHPExeLaunchConfigurationDebuggerTab
 	protected void handleConfigureDebugger() {
 		PHPexeItem phpExe = getPHPExe();
 		if (phpExe != null) {
-			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getShell();
+			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			NullProgressMonitor monitor = new NullProgressMonitor();
-			PHPExeEditDialog dialog = new PHPExeEditDialog(shell, phpExe,
-					PHPexes.getInstance().getAllItems(),
+			PHPExeEditDialog dialog = new PHPExeEditDialog(shell, phpExe, PHPexes.getInstance().getAllItems(),
 					DebuggerCompositeFragment.ID);
 			if (dialog.open() == Window.CANCEL) {
 				monitor.setCanceled(true);
@@ -80,11 +77,9 @@ public class PHPExeLaunchConfigurationDebuggerTab
 	 */
 	@Override
 	protected String getNoDebuggerMessage() {
-		return MessageFormat
-				.format(Messages.PHPExeLaunchConfigurationDebuggerTab_No_debugger_is_attached_to_configuration,
-						getPHPExe() != null ? getPHPExe()
-								.getName()
-								: Messages.PHPExeLaunchConfigurationDebuggerTab_none);
+		return MessageFormat.format(
+				Messages.PHPExeLaunchConfigurationDebuggerTab_No_debugger_is_attached_to_configuration,
+				getPHPExe() != null ? getPHPExe().getName() : Messages.PHPExeLaunchConfigurationDebuggerTab_none);
 	}
 
 	/*

@@ -7,6 +7,7 @@ public class Messages extends NLS {
 	public static String PathMapperCompositeFragment_0;
 	public static String PathMapperCompositeFragment_1;
 	public static String PathMapperCompositeFragment_2;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

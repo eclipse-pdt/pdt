@@ -38,17 +38,15 @@ public class ZendDebuggerExeSettings extends AbstractDebuggerSettings {
 	/**
 	 * See {@link AbstractDebuggerSettings}.
 	 */
-	public ZendDebuggerExeSettings(String ownerId,
-			Map<String, String> attributes) {
+	public ZendDebuggerExeSettings(String ownerId, Map<String, String> attributes) {
 		super(ownerId, attributes);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings#getDebuggerId
-	 * ()
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings#
+	 * getDebuggerId ()
 	 */
 	@Override
 	public String getDebuggerId() {
@@ -79,8 +77,7 @@ public class ZendDebuggerExeSettings extends AbstractDebuggerSettings {
 		// Set up initial attributes
 		Map<String, String> attributes = new HashMap<String, String>();
 		String clientPort = debuggerConf.getAttribute(ZEND_DEBUG_PORT);
-		attributes.put(PROP_CLIENT_PORT, clientPort != null ? clientPort
-				: DEFAULT_CLIENT_PORT);
+		attributes.put(PROP_CLIENT_PORT, clientPort != null ? clientPort : DEFAULT_CLIENT_PORT);
 		return attributes;
 	}
 

@@ -140,8 +140,7 @@ public class ResourceSorter extends ViewerSorter {
 	 *         is greater than the second element
 	 */
 	protected int compareNames(IResource resource1, IResource resource2) {
-		return getComparator()
-				.compare(resource1.getName(), resource2.getName());
+		return getComparator().compare(resource1.getName(), resource2.getName());
 	}
 
 	/**

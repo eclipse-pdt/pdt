@@ -65,11 +65,9 @@ public class FileSelectionDialog extends MessageDialog {
 	 *            the message to be displayed at the top of this dialog, or
 	 *            <code>null</code> to display a default message
 	 */
-	public FileSelectionDialog(Shell parentShell, IAdaptable rootElement,
-			String message) {
-		super(
-				parentShell,
-				Messages.FileSelectionDialog_0, null, message, MessageDialog.NONE, new String[] { Messages.FileSelectionDialog_1, Messages.FileSelectionDialog_2 }, 0); 
+	public FileSelectionDialog(Shell parentShell, IAdaptable rootElement, String message) {
+		super(parentShell, Messages.FileSelectionDialog_0, null, message, MessageDialog.NONE,
+				new String[] { Messages.FileSelectionDialog_1, Messages.FileSelectionDialog_2 }, 0);
 		root = rootElement;
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
@@ -124,17 +122,13 @@ public class FileSelectionDialog extends MessageDialog {
 		// create the input element, which has the root resource
 		// as its only child
 		selectionGroup = new TreeAndListGroup(composite, root,
-				getResourceProvider(IResource.FOLDER | IResource.PROJECT
-						| IResource.ROOT),
-				new WorkbenchLabelProvider(),
-				getResourceProvider(IResource.FILE),
-				new WorkbenchLabelProvider(),
+				getResourceProvider(IResource.FOLDER | IResource.PROJECT | IResource.ROOT),
+				new WorkbenchLabelProvider(), getResourceProvider(IResource.FILE), new WorkbenchLabelProvider(),
 				SWT.NONE,
 				// since this page has no other significantly-sized
 				// widgets we need to hardcode the combined widget's
 				// size, otherwise it will open too small
-				SIZING_SELECTION_WIDGET_WIDTH, SIZING_SELECTION_WIDGET_HEIGHT,
-				allowMultiselection);
+				SIZING_SELECTION_WIDGET_WIDTH, SIZING_SELECTION_WIDGET_HEIGHT, allowMultiselection);
 
 		composite.addControlListener(new ControlListener() {
 			public void controlMoved(ControlEvent e) {
@@ -142,8 +136,7 @@ public class FileSelectionDialog extends MessageDialog {
 
 			public void controlResized(ControlEvent e) {
 				// Also try and reset the size of the columns as appropriate
-				TableColumn[] columns = selectionGroup.getListTable()
-						.getColumns();
+				TableColumn[] columns = selectionGroup.getListTable().getColumns();
 				for (int i = 0; i < columns.length; i++) {
 					columns[i].pack();
 				}
@@ -171,8 +164,7 @@ public class FileSelectionDialog extends MessageDialog {
 								accessibleMembers.add(resource);
 							}
 						}
-						members = (IResource[]) accessibleMembers
-								.toArray(new IResource[accessibleMembers.size()]);
+						members = (IResource[]) accessibleMembers.toArray(new IResource[accessibleMembers.size()]);
 					} catch (CoreException e) {
 						// just return an empty set of children
 						return new Object[0];
@@ -184,10 +176,8 @@ public class FileSelectionDialog extends MessageDialog {
 						// And the test bits with the resource types to see if
 						// they are what we want
 						if ((members[i].getType() & resourceType) > 0) {
-							if (members[i].getType() == IResource.FILE
-									&& fPattern != null
-									&& !fPattern.matcher(members[i].getName())
-											.find()) {
+							if (members[i].getType() == IResource.FILE && fPattern != null
+									&& !fPattern.matcher(members[i].getName()).find()) {
 								continue;
 							}
 							results.add(members[i]);
@@ -205,14 +195,11 @@ public class FileSelectionDialog extends MessageDialog {
 	 * Initializes this dialog's controls.
 	 */
 	private void initializeDialog() {
-		selectionGroup
-				.addSelectionChangedListener(new ISelectionChangedListener() {
-					public void selectionChanged(SelectionChangedEvent event) {
-						getButton(IDialogConstants.OK_ID).setEnabled(
-								!selectionGroup.getListTableSelection()
-										.isEmpty());
-					}
-				});
+		selectionGroup.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				getButton(IDialogConstants.OK_ID).setEnabled(!selectionGroup.getListTableSelection().isEmpty());
+			}
+		});
 		selectionGroup.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				buttonPressed(IDialogConstants.OK_ID);

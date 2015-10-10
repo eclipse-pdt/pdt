@@ -39,17 +39,15 @@ public class XDebugDebuggerServerSettings extends AbstractDebuggerSettings {
 	/**
 	 * See {@link AbstractDebuggerSettings}.
 	 */
-	public XDebugDebuggerServerSettings(String ownerId,
-			Map<String, String> attributes) {
+	public XDebugDebuggerServerSettings(String ownerId, Map<String, String> attributes) {
 		super(ownerId, attributes);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings#getDebuggerId
-	 * ()
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings#
+	 * getDebuggerId ()
 	 */
 	@Override
 	public String getDebuggerId() {
@@ -79,19 +77,14 @@ public class XDebugDebuggerServerSettings extends AbstractDebuggerSettings {
 				.getDebuggerConfiguration(getDebuggerId());
 		// Set up initial attributes
 		Map<String, String> attributes = new HashMap<String, String>();
-		String clientPort = debuggerConf
-				.getAttribute(XDebugPreferenceMgr.XDEBUG_PREF_PORT);
-		attributes.put(PROP_CLIENT_PORT, clientPort != null ? clientPort
-				: DEFAULT_CLIENT_PORT);
+		String clientPort = debuggerConf.getAttribute(XDebugPreferenceMgr.XDEBUG_PREF_PORT);
+		attributes.put(PROP_CLIENT_PORT, clientPort != null ? clientPort : DEFAULT_CLIENT_PORT);
 		String useProxy = String.valueOf(XDebugPreferenceMgr.useProxy());
-		attributes.put(PROP_PROXY_ENABLE, useProxy != null ? useProxy
-				: DEFAULT_PROXY_ENABLE);
+		attributes.put(PROP_PROXY_ENABLE, useProxy != null ? useProxy : DEFAULT_PROXY_ENABLE);
 		String ideKey = debuggerConf.getAttribute(XDEBUG_PREF_IDEKEY);
-		attributes.put(PROP_PROXY_IDE_KEY, ideKey != null ? ideKey
-				: DEFAULT_PROXY_IDE_KEY);
+		attributes.put(PROP_PROXY_IDE_KEY, ideKey != null ? ideKey : DEFAULT_PROXY_IDE_KEY);
 		String proxyAddress = debuggerConf.getAttribute(XDEBUG_PREF_PROXY);
-		attributes.put(PROP_PROXY_ADDRESS, proxyAddress != null ? proxyAddress
-				: DEFAULT_PROXY_ADDRESS);
+		attributes.put(PROP_PROXY_ADDRESS, proxyAddress != null ? proxyAddress : DEFAULT_PROXY_ADDRESS);
 		return attributes;
 	}
 

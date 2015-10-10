@@ -52,21 +52,15 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 	private static String fgStyleSheet;
 
 	private static final long LABEL_FLAGS = ScriptElementLabels.ALL_FULLY_QUALIFIED
-			| ScriptElementLabels.M_PRE_RETURNTYPE
-			| ScriptElementLabels.M_PARAMETER_TYPES
-			| ScriptElementLabels.M_PARAMETER_NAMES
-			| ScriptElementLabels.M_EXCEPTIONS
-			| ScriptElementLabels.F_PRE_TYPE_SIGNATURE
-			| ScriptElementLabels.M_PRE_TYPE_PARAMETERS
-			| ScriptElementLabels.T_TYPE_PARAMETERS
-			| ScriptElementLabels.USE_RESOLVED;
+			| ScriptElementLabels.M_PRE_RETURNTYPE | ScriptElementLabels.M_PARAMETER_TYPES
+			| ScriptElementLabels.M_PARAMETER_NAMES | ScriptElementLabels.M_EXCEPTIONS
+			| ScriptElementLabels.F_PRE_TYPE_SIGNATURE | ScriptElementLabels.M_PRE_TYPE_PARAMETERS
+			| ScriptElementLabels.T_TYPE_PARAMETERS | ScriptElementLabels.USE_RESOLVED;
 
-	private static final long LOCAL_VARIABLE_FLAGS = LABEL_FLAGS
-			& ~ScriptElementLabels.F_FULLY_QUALIFIED
+	private static final long LOCAL_VARIABLE_FLAGS = LABEL_FLAGS & ~ScriptElementLabels.F_FULLY_QUALIFIED
 			| ScriptElementLabels.F_POST_QUALIFIED;
 
-	public Reader getInfo(IMember element, boolean lookIntoParents,
-			boolean lookIntoExternal) {
+	public Reader getInfo(IMember element, boolean lookIntoParents, boolean lookIntoExternal) {
 		if (element instanceof FakeConstructor) {
 			IType type = (IType) element.getParent();
 			if (type instanceof AliasType) {
@@ -101,8 +95,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 				constantValue = HTMLPrinter.convertToHTMLContent(constantValue);
 		}
 
-		HTMLPrinter.addSmallHeader(buffer,
-				getInfoText(element, constantValue, true));
+		HTMLPrinter.addSmallHeader(buffer, getInfoText(element, constantValue, true));
 		Reader reader = null;
 		try {
 			reader = getHTMLContent(element);
@@ -134,10 +127,8 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 	}
 
 	private static StringBuffer getInfoText(IMember member) {
-		long flags = member.getElementType() == IModelElement.FIELD ? LOCAL_VARIABLE_FLAGS
-				: LABEL_FLAGS;
-		String label = PHPElementLabels.getDefault().getElementLabel(member,
-				flags);
+		long flags = member.getElementType() == IModelElement.FIELD ? LOCAL_VARIABLE_FLAGS : LABEL_FLAGS;
+		String label = PHPElementLabels.getDefault().getElementLabel(member, flags);
 		return new StringBuffer(label);
 	}
 
@@ -149,8 +140,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		return null;
 	}
 
-	private static String getInfoText(IMember element, String constantValue,
-			boolean allowImage) {
+	private static String getInfoText(IMember element, String constantValue, boolean allowImage) {
 		StringBuffer label = getInfoText(element);
 		if (element.getElementType() == IModelElement.FIELD) {
 			if (constantValue != null) {
@@ -163,16 +153,14 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 
 		String imageName = null;
 		if (allowImage) {
-			URL imageUrl = PHPUiPlugin.getDefault().getImagesOnFSRegistry()
-					.getImageURL(element);
+			URL imageUrl = PHPUiPlugin.getDefault().getImagesOnFSRegistry().getImageURL(element);
 			if (imageUrl != null) {
 				imageName = imageUrl.toExternalForm();
 			}
 		}
 
 		StringBuffer buf = new StringBuffer();
-		PHPDocumentationHover.addImageAndLabel(buf, imageName, 16, 16, 2, 2,
-				label.toString(), 20, 2);
+		PHPDocumentationHover.addImageAndLabel(buf, imageName, 16, 16, 2, 2, label.toString(), 20, 2);
 		return buf.toString();
 	}
 
@@ -187,8 +175,8 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 			fgStyleSheet = loadStyleSheet();
 		String css = fgStyleSheet;
 		if (css != null) {
-			FontData fontData = JFaceResources.getFontRegistry().getFontData(
-					PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT)[0];
+			FontData fontData = JFaceResources.getFontRegistry()
+					.getFontData(PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT)[0];
 			css = HTMLPrinter.convertTopLevelFont(css, fontData);
 		}
 
@@ -202,13 +190,11 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 	 */
 	private static String loadStyleSheet() {
 		Bundle bundle = Platform.getBundle(PHPUiPlugin.getPluginId());
-		URL styleSheetURL = bundle
-				.getEntry("/PHPDocumentationHoverStyleSheet.css"); //$NON-NLS-1$
+		URL styleSheetURL = bundle.getEntry("/PHPDocumentationHoverStyleSheet.css"); //$NON-NLS-1$
 		if (styleSheetURL != null) {
 			BufferedReader reader = null;
 			try {
-				reader = new BufferedReader(new InputStreamReader(
-						styleSheetURL.openStream()));
+				reader = new BufferedReader(new InputStreamReader(styleSheetURL.openStream()));
 				StringBuffer buffer = new StringBuffer(1500);
 				String line = reader.readLine();
 				while (line != null) {
@@ -237,21 +223,17 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		}
 		ISourceModule sourceModule = field.getSourceModule();
 
-		ModuleDeclaration module = SourceParserUtil
-				.getModuleDeclaration(sourceModule);
+		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule);
 		ASTNode node = PHPModelUtils.getNodeByField(module, field);
 
 		if (node == null) {// define constant
-			PHPCallExpression callExpression = DefineMethodUtils
-					.getDefineNodeByField(module, field);
+			PHPCallExpression callExpression = DefineMethodUtils.getDefineNodeByField(module, field);
 			if (callExpression != null) {
 				CallArgumentsList args = callExpression.getArgs();
-				if (args != null && args.getChilds() != null
-						&& args.getChilds().size() >= 2) {
+				if (args != null && args.getChilds() != null && args.getChilds().size() >= 2) {
 					ASTNode argument = (ASTNode) args.getChilds().get(1);
 					if (argument instanceof Scalar) {
-						String value = ASTUtils.stripQuotes(((Scalar) argument)
-								.getValue());
+						String value = ASTUtils.stripQuotes(((Scalar) argument).getValue());
 						return value;
 					}
 				}

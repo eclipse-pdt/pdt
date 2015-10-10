@@ -34,8 +34,7 @@ public abstract class SimpleDebugHandler implements IDebugHandler {
 				+ debugError);
 	}
 
-	public void sessionStarted(String remoteFile, String uri, String query,
-			String options) {
+	public void sessionStarted(String remoteFile, String uri, String query, String options) {
 		Logger.debugMSG("PHPSimpleDebugHandler: sessionStarted "); //$NON-NLS-1$
 		Logger.debugMSG("                       fileName: " + remoteFile); //$NON-NLS-1$
 		Logger.debugMSG("                       uri: " + uri); //$NON-NLS-1$

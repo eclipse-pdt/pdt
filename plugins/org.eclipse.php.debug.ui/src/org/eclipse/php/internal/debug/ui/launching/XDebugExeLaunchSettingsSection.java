@@ -15,8 +15,7 @@ package org.eclipse.php.internal.debug.ui.launching;
  * 
  * @author Bartlomiej Laczkowski
  */
-public class XDebugExeLaunchSettingsSection
-		extends AbstractDebugExeLaunchSettingsSection {
+public class XDebugExeLaunchSettingsSection extends AbstractDebugExeLaunchSettingsSection {
 
 	// Currently there is nothing more than in abstract implementation.
 

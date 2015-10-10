@@ -51,8 +51,7 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	 * initialize(java.lang.Object)
 	 */
 	protected boolean initialize(Object element) {
-		if (element instanceof IModelElement
-				&& accepts((IModelElement) element)) {
+		if (element instanceof IModelElement && accepts((IModelElement) element)) {
 			fElement = (IModelElement) element;
 		} else {
 			return false;
@@ -96,8 +95,8 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	 * checkConditions(org.eclipse.core.runtime.IProgressMonitor,
 	 * org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
-	public RefactoringStatus checkConditions(IProgressMonitor pm,
-			CheckConditionsContext context) throws OperationCanceledException {
+	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context)
+			throws OperationCanceledException {
 		return new RefactoringStatus();
 	}
 
@@ -108,16 +107,13 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	 * org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#
 	 * createChange(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public Change createChange(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		List changes = new ArrayList();
 		IResource resource = getBreakpointContainer();
-		IMarker[] markers = resource.findMarkers(IBreakpoint.BREAKPOINT_MARKER,
-				true, IResource.DEPTH_INFINITE);
+		IMarker[] markers = resource.findMarkers(IBreakpoint.BREAKPOINT_MARKER, true, IResource.DEPTH_INFINITE);
 		gatherChanges(markers, changes, getArguments().getNewName());
 		if (changes.size() > 1) {
-			return new CompositeChange(
-					RefactoringMessages.BreakpointRenameParticipant_1,
+			return new CompositeChange(RefactoringMessages.BreakpointRenameParticipant_1,
 					(Change[]) changes.toArray(new Change[changes.size()]));
 		} else if (changes.size() == 1) {
 			return (Change) changes.get(0);
@@ -138,17 +134,15 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	 * @throws CoreException
 	 * @throws OperationCanceledException
 	 */
-	protected void gatherChanges(IMarker[] markers, List changes,
-			String destPackageName) throws CoreException,
-			OperationCanceledException {
+	protected void gatherChanges(IMarker[] markers, List changes, String destPackageName)
+			throws CoreException, OperationCanceledException {
 		for (int i = 0; i < markers.length; i++) {
 			IMarker marker = markers[i];
 			IBreakpoint breakpoint = getBreakpoint(marker);
 			if (breakpoint instanceof PHPLineBreakpoint) {
 				PHPLineBreakpoint javaBreakpoint = (PHPLineBreakpoint) breakpoint;
-				changes.add(createTypeChange(javaBreakpoint, marker
-						.getResource(), getDestResource(marker.getResource(),
-						destPackageName)));
+				changes.add(createTypeChange(javaBreakpoint, marker.getResource(),
+						getDestResource(marker.getResource(), destPackageName)));
 			}
 		}
 	}
@@ -160,11 +154,8 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 		if (oldRes != null) {
 			IPath renamedPath = oldRes.getFullPath();
 			renamedPath = renamedPath.removeLastSegments(1).append(destName)
-					.append(
-							resource.getFullPath().removeFirstSegments(
-									renamedPath.segmentCount()));
-			newRes = ResourcesPlugin.getWorkspace().getRoot().getFile(
-					renamedPath);
+					.append(resource.getFullPath().removeFirstSegments(renamedPath.segmentCount()));
+			newRes = ResourcesPlugin.getWorkspace().getRoot().getFile(renamedPath);
 		}
 		return newRes;
 	}
@@ -187,8 +178,7 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	 * @return breakpoint or <code>null</code>
 	 */
 	protected IBreakpoint getBreakpoint(IMarker marker) {
-		return DebugPlugin.getDefault().getBreakpointManager().getBreakpoint(
-				marker);
+		return DebugPlugin.getDefault().getBreakpointManager().getBreakpoint(marker);
 	}
 
 	/**
@@ -197,8 +187,8 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	 * 
 	 * @return type change or <code>null</code>
 	 */
-	protected Change createTypeChange(PHPLineBreakpoint breakpoint,
-			IResource originalType, IResource destType) throws CoreException {
+	protected Change createTypeChange(PHPLineBreakpoint breakpoint, IResource originalType, IResource destType)
+			throws CoreException {
 		return new LineBreakpointTypeChange(breakpoint, originalType, destType);
 	}
 

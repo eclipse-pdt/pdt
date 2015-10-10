@@ -48,8 +48,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
  * View for presenting debug output as raw text.
  */
 @SuppressWarnings("restriction")
-public class DebugOutputView extends AbstractDebugOutputView implements
-		ISelectionListener {
+public class DebugOutputView extends AbstractDebugOutputView implements ISelectionListener {
 
 	public static final String ID_PHPDebugOutput = "org.eclipse.debug.ui.PHPDebugOutput"; //$NON-NLS-1$
 
@@ -60,19 +59,17 @@ public class DebugOutputView extends AbstractDebugOutputView implements
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.php.internal.debug.ui.views.AbstractDebugOutputView.IUpdater
+		 * @see org.eclipse.php.internal.debug.ui.views.AbstractDebugOutputView.
+		 * IUpdater
 		 * #update(org.eclipse.php.internal.debug.core.model.IPHPDebugTarget)
 		 */
 		@Override
 		public void update(IPHPDebugTarget target) {
 			int oldcount = fUpdateCount;
 			HTMLDocumentLoader ss = new HTMLDocumentLoader();
-			BasicStructuredDocument input = (BasicStructuredDocument) ss
-					.createNewStructuredDocument();
+			BasicStructuredDocument input = (BasicStructuredDocument) ss.createNewStructuredDocument();
 			if (target != null) {
-				if ((target.isSuspended()) || (target.isTerminated())
-						|| (target.isWaiting())) {
+				if ((target.isSuspended()) || (target.isTerminated()) || (target.isWaiting())) {
 					DebugOutput debugOutput = target.getOutputBuffer();
 					fUpdateCount = debugOutput.getUpdateCount();
 					// check if output hasn't been updated
@@ -107,8 +104,7 @@ public class DebugOutputView extends AbstractDebugOutputView implements
 		public void partVisible(IWorkbenchPartReference ref) {
 			IWorkbenchPart part = ref.getPart(false);
 			if (part == DebugOutputView.this) {
-				IPHPDebugTarget target = fDebugViewHelper
-						.getSelectionElement(null);
+				IPHPDebugTarget target = fDebugViewHelper.getSelectionElement(null);
 				update(target);
 			}
 		}
@@ -126,20 +122,17 @@ public class DebugOutputView extends AbstractDebugOutputView implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets
-	 * .Composite)
+	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
+	 * widgets .Composite)
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-		int styles = SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI
-				| SWT.FULL_SELECTION;
-		fSourceViewer = new StructuredTextViewer(parent, null, null, false,
-				styles);
+		int styles = SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION;
+		fSourceViewer = new StructuredTextViewer(parent, null, null, false, styles);
 		fSourceViewer.setEditable(false);
 		fSourceViewer.configure(new StructuredTextViewerConfigurationHTML());
-		getSite().getWorkbenchWindow().getSelectionService()
-				.addSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
+		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW,
+				this);
 		getSite().setSelectionProvider(fSourceViewer.getSelectionProvider());
 		setBackgroundColor();
 		fTerminateListener = new IDebugEventSetListener() {
@@ -150,19 +143,15 @@ public class DebugOutputView extends AbstractDebugOutputView implements
 						Object obj = events[i].getSource();
 						if (!(obj instanceof IPHPDebugTarget || obj instanceof PHPThread))
 							continue;
-						if (events[i].getKind() == DebugEvent.TERMINATE
-								|| events[i].getKind() == DebugEvent.SUSPEND) {
+						if (events[i].getKind() == DebugEvent.TERMINATE || events[i].getKind() == DebugEvent.SUSPEND) {
 							final IPHPDebugTarget target;
 							if (obj instanceof IPHPDebugTarget) {
 								target = (IPHPDebugTarget) obj;
 							} else {
-								target = (IPHPDebugTarget) ((PHPThread) obj)
-										.getDebugTarget();
+								target = (IPHPDebugTarget) ((PHPThread) obj).getDebugTarget();
 							}
-							Job job = new UIJob(
-									PHPDebugUIMessages.PHPDebugUIPlugin_1) {
-								public IStatus runInUIThread(
-										IProgressMonitor monitor) {
+							Job job = new UIJob(PHPDebugUIMessages.PHPDebugUIPlugin_1) {
+								public IStatus runInUIThread(IProgressMonitor monitor) {
 									update(target);
 									return Status.OK_STATUS;
 								}
@@ -186,16 +175,15 @@ public class DebugOutputView extends AbstractDebugOutputView implements
 	 * @see org.eclipse.ui.IWorkbenchPart#dispose()
 	 */
 	public void dispose() {
-		getSite().getWorkbenchWindow().getSelectionService()
-				.removeSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
+		getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW,
+				this);
 		DebugPlugin.getDefault().removeDebugEventListener(fTerminateListener);
 		if (fPartListener != null) {
 			getSite().getPage().removePartListener(fPartListener);
 			fPartListener = null;
 		}
 		if (fPropertyChangeListener != null) {
-			EditorsPlugin.getDefault().getPreferenceStore()
-					.removePropertyChangeListener(fPropertyChangeListener);
+			EditorsPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(fPropertyChangeListener);
 			fPropertyChangeListener = null;
 		}
 		super.dispose();
@@ -208,8 +196,7 @@ public class DebugOutputView extends AbstractDebugOutputView implements
 	 * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		IPHPDebugTarget target = fDebugViewHelper
-				.getSelectionElement(selection);
+		IPHPDebugTarget target = fDebugViewHelper.getSelectionElement(selection);
 		update(target);
 	}
 
@@ -225,9 +212,8 @@ public class DebugOutputView extends AbstractDebugOutputView implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.ui.views.AbstractDebugOutputView#createUpdater
-	 * ()
+	 * @see org.eclipse.php.internal.debug.ui.views.AbstractDebugOutputView#
+	 * createUpdater ()
 	 */
 	@Override
 	protected IUpdater createUpdater() {
@@ -240,23 +226,19 @@ public class DebugOutputView extends AbstractDebugOutputView implements
 	 * @return background color
 	 */
 	private Color getBackgroundColor(IPreferenceStore store) {
-		String useDefault = store
-				.getString(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT);
-		Color dflt = Display.getDefault().getSystemColor(
-				SWT.COLOR_LIST_BACKGROUND);
+		String useDefault = store.getString(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT);
+		Color dflt = Display.getDefault().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
 		if ("true".equalsIgnoreCase(useDefault)) { //$NON-NLS-1$
 			return dflt;
 		}
-		String bgColor = store
-				.getString(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND);
+		String bgColor = store.getString(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND);
 		if (bgColor == null || bgColor.equals("")) { //$NON-NLS-1$
 			return dflt;
 		}
 		String[] rgb = bgColor.split(","); //$NON-NLS-1$
 		RGB color;
 		try {
-			color = new RGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]),
-					Integer.parseInt(rgb[2]));
+			color = new RGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
 		} catch (Throwable ex) {
 			return dflt;
 		}
@@ -264,24 +246,20 @@ public class DebugOutputView extends AbstractDebugOutputView implements
 	}
 
 	private void setBackgroundColor() {
-		IPreferenceStore store = EditorsPlugin.getDefault()
-				.getPreferenceStore();
+		IPreferenceStore store = EditorsPlugin.getDefault().getPreferenceStore();
 		fSourceViewer.getTextWidget().setBackground(getBackgroundColor(store));
 		if (fPropertyChangeListener == null) {
 			fPropertyChangeListener = new IPropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent event) {
-					IPreferenceStore store = EditorsPlugin.getDefault()
-							.getPreferenceStore();
+					IPreferenceStore store = EditorsPlugin.getDefault().getPreferenceStore();
 					String prop = event.getProperty();
 					if (prop.equals(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT)
 							|| prop.equals(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND)) {
-						if (fSourceViewer == null
-								|| fSourceViewer.getTextWidget() == null
+						if (fSourceViewer == null || fSourceViewer.getTextWidget() == null
 								|| fSourceViewer.getTextWidget().isDisposed()) {
 							return;
 						}
-						fSourceViewer.getTextWidget().setBackground(
-								getBackgroundColor(store));
+						fSourceViewer.getTextWidget().setBackground(getBackgroundColor(store));
 					}
 
 				}

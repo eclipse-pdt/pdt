@@ -18,10 +18,10 @@ public class ViewAction extends Action {
 
 	public ViewAction(ViewActionGroup group, int mode) {
 		super("", AS_RADIO_BUTTON); //$NON-NLS-1$
-		fActionGroup= group;
-		fMode= mode;
+		fActionGroup = group;
+		fMode = mode;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

@@ -63,12 +63,9 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 	 * @param allowMultiselection
 	 *            Whether to allow multi-selection in the list viewer.
 	 */
-	public TreeAndListGroup(Composite parent, Object rootObject,
-			ITreeContentProvider treeContentProvider,
-			ILabelProvider treeLabelProvider,
-			IStructuredContentProvider listContentProvider,
-			ILabelProvider listLabelProvider, int style, int width, int height,
-			boolean allowMultiselection) {
+	public TreeAndListGroup(Composite parent, Object rootObject, ITreeContentProvider treeContentProvider,
+			ILabelProvider treeLabelProvider, IStructuredContentProvider listContentProvider,
+			ILabelProvider listLabelProvider, int style, int width, int height, boolean allowMultiselection) {
 
 		root = rootObject;
 		this.treeContentProvider = treeContentProvider;
@@ -148,8 +145,7 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 	 * @param height
 	 *            int
 	 */
-	protected void createContents(Composite parent, int width, int height,
-			int style) {
+	protected void createContents(Composite parent, int width, int height, int style) {
 		// group pane
 		Composite composite = new Composite(parent, style);
 		composite.setFont(parent.getFont());
@@ -262,8 +258,7 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 	 * org.eclipse.jface.viewers.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent event) {
-		IStructuredSelection selection = (IStructuredSelection) event
-				.getSelection();
+		IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 		Object selectedElement = selection.getFirstElement();
 		if (selectedElement == null) {
 			currentTreeSelection = null;
@@ -287,8 +282,7 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 	 * @param labelProvider
 	 *            ILabelProvider
 	 */
-	public void setListProviders(IStructuredContentProvider contentProvider,
-			ILabelProvider labelProvider) {
+	public void setListProviders(IStructuredContentProvider contentProvider, ILabelProvider labelProvider) {
 		listViewer.setContentProvider(contentProvider);
 		listViewer.setLabelProvider(labelProvider);
 	}
@@ -319,8 +313,7 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 	 * @param labelProvider
 	 *            ILabelProvider
 	 */
-	public void setTreeProviders(ITreeContentProvider contentProvider,
-			ILabelProvider labelProvider) {
+	public void setTreeProviders(ITreeContentProvider contentProvider, ILabelProvider labelProvider) {
 		treeViewer.setContentProvider(contentProvider);
 		treeViewer.setLabelProvider(labelProvider);
 	}

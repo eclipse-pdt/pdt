@@ -44,14 +44,14 @@ public class FragmentedWizardPage extends WizardPage implements IWizardHandle {
 		try {
 			comp = fragment.createComposite(parentComp, this);
 		} catch (Exception e) {
-			PHPUiPlugin.log(new Status(IStatus.WARNING, PHPUiPlugin.ID, 0,
-					"Could not create wizard page composite", e)); //$NON-NLS-1$
+			PHPUiPlugin
+					.log(new Status(IStatus.WARNING, PHPUiPlugin.ID, 0, "Could not create wizard page composite", e)); //$NON-NLS-1$
 		}
 		if (comp == null) {
 			comp = new Composite(parentComp, SWT.NONE);
 			comp.setLayout(new FillLayout(SWT.VERTICAL));
 			Label label = new Label(comp, SWT.NONE);
-			label.setText(Messages.FragmentedWizardPage_0); 
+			label.setText(Messages.FragmentedWizardPage_0);
 		}
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.widthHint = convertHorizontalDLUsToPixels(150);
@@ -107,16 +107,14 @@ public class FragmentedWizardPage extends WizardPage implements IWizardHandle {
 		} else
 			isEmptyError = false;
 		super.setMessage(message, type);
-		WizardFragment frag = ((FragmentedWizard) getWizard())
-				.getCurrentWizardFragment();
+		WizardFragment frag = ((FragmentedWizard) getWizard()).getCurrentWizardFragment();
 		if (!fragment.equals(frag))
 			return;
 		getContainer().updateButtons();
 	}
 
-	public void run(boolean fork, boolean cancelable,
-			IRunnableWithProgress runnable) throws InterruptedException,
-			InvocationTargetException {
+	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable)
+			throws InterruptedException, InvocationTargetException {
 		getWizard().getContainer().run(fork, cancelable, runnable);
 	}
 

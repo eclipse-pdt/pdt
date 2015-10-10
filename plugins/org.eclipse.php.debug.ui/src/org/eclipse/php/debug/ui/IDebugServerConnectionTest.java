@@ -19,7 +19,8 @@ import org.eclipse.swt.widgets.Shell;
  * Servers Implementors of this class should handle all cases of tests
  * completions: Success, Failure AND Timeout
  * 
- * @see org.eclipse.php.internal.debug.core.zend.testConnection.DebugServerTestEvent
+ * @see org.eclipse.php.internal.debug.core.zend.testConnection.
+ *      DebugServerTestEvent
  * @author yaronm
  */
 public interface IDebugServerConnectionTest {

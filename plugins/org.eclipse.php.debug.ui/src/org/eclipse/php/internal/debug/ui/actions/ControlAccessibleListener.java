@@ -33,7 +33,6 @@ public class ControlAccessibleListener extends AccessibleAdapter {
 		for (int i = 0; i < strs.length; i++) {
 			stripped.append(strs[i]);
 		}
-		comp.getAccessible().addAccessibleListener(
-				new ControlAccessibleListener(stripped.toString()));
+		comp.getAccessible().addAccessibleListener(new ControlAccessibleListener(stripped.toString()));
 	}
 }

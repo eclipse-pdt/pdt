@@ -45,9 +45,8 @@ public class PerspectiveManager {
 		try {
 			window.getWorkbench().showPerspective(id, window);
 		} catch (WorkbenchException e) {
-			MessageDialog.openError(window.getShell(),
-					PHPUIMessages.PerspectiveManager_PerspectiveError_Title,
-					PHPUIMessages.PerspectiveManager_PerspectiveError_Message); 
+			MessageDialog.openError(window.getShell(), PHPUIMessages.PerspectiveManager_PerspectiveError_Title,
+					PHPUIMessages.PerspectiveManager_PerspectiveError_Message);
 		}
 	}
 
@@ -61,13 +60,10 @@ public class PerspectiveManager {
 	 * @return whether or not the user wishes to switch to the specified
 	 *         perspective automatically
 	 */
-	public static boolean shouldSwitchPerspective(IWorkbenchWindow window,
-			String perspectiveId) {
+	public static boolean shouldSwitchPerspective(IWorkbenchWindow window, String perspectiveId) {
 
 		String perspectiveName = getPerspectiveLabel(perspectiveId);
-		String message = NLS.bind(
-				PHPUIMessages.PerspectiveManager_Switch_Dialog_Message,
-				perspectiveName); 
+		String message = NLS.bind(PHPUIMessages.PerspectiveManager_Switch_Dialog_Message, perspectiveName);
 
 		final String preferenceKey = perspectiveId + ".switch_to_perspective"; //$NON-NLS-1$
 
@@ -79,8 +75,7 @@ public class PerspectiveManager {
 			return false;
 		}
 
-		String switchPerspective = PHPUiPlugin.getDefault()
-				.getPreferenceStore().getString(preferenceKey);
+		String switchPerspective = PHPUiPlugin.getDefault().getPreferenceStore().getString(preferenceKey);
 		if (MessageDialogWithToggle.ALWAYS.equals(switchPerspective)) {
 			return true;
 		} else if (MessageDialogWithToggle.NEVER.equals(switchPerspective)) {
@@ -97,11 +92,9 @@ public class PerspectiveManager {
 			shell.setMinimized(false);
 		}
 
-		MessageDialogWithToggle dialog = MessageDialogWithToggle
-				.openYesNoQuestion(shell,
-						PHPUIMessages.PerspectiveManager_Switch_Dialog_Title,
-						message, null, false, PHPUiPlugin.getDefault()
-								.getPreferenceStore(), preferenceKey); 
+		MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoQuestion(shell,
+				PHPUIMessages.PerspectiveManager_Switch_Dialog_Title, message, null, false,
+				PHPUiPlugin.getDefault().getPreferenceStore(), preferenceKey);
 		boolean answer = (dialog.getReturnCode() == IDialogConstants.YES_ID);
 		synchronized (PerspectiveManager.class) {
 			fPrompting = false;
@@ -125,17 +118,14 @@ public class PerspectiveManager {
 	 * @return whether the given perspective identifier matches the identifier
 	 *         of the current perspective
 	 */
-	public static boolean isCurrentPerspective(IWorkbenchWindow window,
-			String perspectiveId) {
+	public static boolean isCurrentPerspective(IWorkbenchWindow window, String perspectiveId) {
 		boolean isCurrent = false;
 		if (window != null) {
 			IWorkbenchPage page = window.getActivePage();
 			if (page != null) {
-				IPerspectiveDescriptor perspectiveDescriptor = page
-						.getPerspective();
+				IPerspectiveDescriptor perspectiveDescriptor = page.getPerspective();
 				if (perspectiveDescriptor != null) {
-					isCurrent = perspectiveId.equals(perspectiveDescriptor
-							.getId());
+					isCurrent = perspectiveId.equals(perspectiveDescriptor.getId());
 				}
 			}
 		}
@@ -152,8 +142,8 @@ public class PerspectiveManager {
 	 *         <code>null</code> if no such perspective exists
 	 */
 	public static String getPerspectiveLabel(String perspectiveId) {
-		IPerspectiveDescriptor newPerspective = PlatformUI.getWorkbench()
-				.getPerspectiveRegistry().findPerspectiveWithId(perspectiveId);
+		IPerspectiveDescriptor newPerspective = PlatformUI.getWorkbench().getPerspectiveRegistry()
+				.findPerspectiveWithId(perspectiveId);
 		if (newPerspective == null) {
 			return null;
 		}

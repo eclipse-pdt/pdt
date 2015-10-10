@@ -24,8 +24,7 @@ import org.eclipse.swt.graphics.Image;
  * @author Dawid zulus Pakula <zulus@w3des.net>
  * @since 3.3
  */
-public class PHPScriptElementLabelProvider extends LabelProvider implements
-		ILabelProvider {
+public class PHPScriptElementLabelProvider extends LabelProvider implements ILabelProvider {
 	@Override
 	public Image getImage(Object o) {
 		try {

@@ -19,8 +19,7 @@ import org.eclipse.php.internal.ui.PHPUILanguageToolkit;
  * 
  * @author Roy, 2008
  */
-public class OpenMethodAction extends
-		org.eclipse.dltk.ui.actions.OpenMethodAction {
+public class OpenMethodAction extends org.eclipse.dltk.ui.actions.OpenMethodAction {
 
 	/*
 	 * (non-Javadoc)

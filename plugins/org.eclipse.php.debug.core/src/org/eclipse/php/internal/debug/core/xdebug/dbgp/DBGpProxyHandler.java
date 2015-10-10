@@ -50,8 +50,7 @@ public class DBGpProxyHandler {
 		public void settingsChanged(PropertyChangeEvent[] events) {
 			boolean configure = false;
 			for (PropertyChangeEvent event : events) {
-				IDebuggerSettings source = (IDebuggerSettings) event
-						.getSource();
+				IDebuggerSettings source = (IDebuggerSettings) event.getSource();
 				if (!source.getOwnerId().equals(getOwnerId()))
 					continue;
 				configure = true;
@@ -78,8 +77,7 @@ public class DBGpProxyHandler {
 
 	public DBGpProxyHandler(String ownerId) {
 		this.ownerId = ownerId;
-		DebuggerSettingsManager.INSTANCE
-				.addSettingsListener(ownerSettingsListener);
+		DebuggerSettingsManager.INSTANCE.addSettingsListener(ownerSettingsListener);
 	}
 
 	public String getOwnerId() {
@@ -109,10 +107,10 @@ public class DBGpProxyHandler {
 		 * </error> </proxyinit>
 		 */
 		if (!registered) {
-			DBGpResponse resp = sendcmd("proxyinit -p " + idePort + " -k " + currentIdeKey + " -m " + (multisession ? "1" : "0")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			DBGpResponse resp = sendcmd(
+					"proxyinit -p " + idePort + " -k " + currentIdeKey + " -m " + (multisession ? "1" : "0")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 			if (resp != null) {
-				if (resp.getType() == DBGpResponse.PROXY_INIT
-						&& resp.getErrorCode() == DBGpResponse.ERROR_OK) {
+				if (resp.getType() == DBGpResponse.PROXY_INIT && resp.getErrorCode() == DBGpResponse.ERROR_OK) {
 					registered = true;
 				} else {
 					errorCode = resp.getErrorCode();
@@ -136,19 +134,16 @@ public class DBGpProxyHandler {
 			if (resp == null)
 				// Proxy could be shutdown externally
 				return;
-			String isOk = DBGpResponse.getAttribute(resp.getParentNode(),
-					"success"); //$NON-NLS-1$
+			String isOk = DBGpResponse.getAttribute(resp.getParentNode(), "success"); //$NON-NLS-1$
 			if (isOk == null || !isOk.equals("1")) { //$NON-NLS-1$
-				DBGpLogger
-						.logWarning(
-								"Unexpected response from proxystop. ErrorCode=" + resp.getErrorCode() + ". msg=" + resp.getErrorMessage(), this, null); //$NON-NLS-1$ //$NON-NLS-2$
+				DBGpLogger.logWarning("Unexpected response from proxystop. ErrorCode=" + resp.getErrorCode() + ". msg=" //$NON-NLS-1$ //$NON-NLS-2$
+						+ resp.getErrorMessage(), this, null);
 			}
 		}
 	}
 
 	public void dispose() {
-		DebuggerSettingsManager.INSTANCE
-				.removeSettingsListener(ownerSettingsListener);
+		DebuggerSettingsManager.INSTANCE.removeSettingsListener(ownerSettingsListener);
 	}
 
 	/**
@@ -186,11 +181,9 @@ public class DBGpProxyHandler {
 			unregister();
 		} else {
 			int idePort = XDebugDebuggerSettingsUtil.getDebugPort(getOwnerId());
-			String ideKey = XDebugDebuggerSettingsUtil
-					.getProxyIdeKey(getOwnerId());
+			String ideKey = XDebugDebuggerSettingsUtil.getProxyIdeKey(getOwnerId());
 			boolean multisession = XDebugPreferenceMgr.useMultiSession();
-			String proxy = XDebugDebuggerSettingsUtil
-					.getProxyAddress(getOwnerId());
+			String proxy = XDebugDebuggerSettingsUtil.getProxyAddress(getOwnerId());
 			String proxyHost = proxy;
 			int proxyPort = DEFAULT_PROXY_PORT;
 			int split = proxy.indexOf(':');
@@ -207,20 +200,17 @@ public class DBGpProxyHandler {
 			if (proxyPort == idePort) {
 				displayErrorMessage(PHPDebugCoreMessages.XDebug_DBGpProxyHandler_0);
 			} else {
-				setProxyInfo(proxyHost, proxyPort, ideKey, idePort,
-						multisession);
+				setProxyInfo(proxyHost, proxyPort, ideKey, idePort, multisession);
 				if (XDebugPreferenceMgr.getAcceptRemoteSession() != AcceptRemoteSession.off) {
 					/*
 					 * if JIT we must register with the proxy straight away
 					 * rather than wait for the first launch
 					 */
-					Job job = new Job(
-							PHPDebugCoreMessages.DBGpProxyConnection_Registering_DBGp_proxy) {
+					Job job = new Job(PHPDebugCoreMessages.DBGpProxyConnection_Registering_DBGp_proxy) {
 						@Override
 						protected IStatus run(IProgressMonitor monitor) {
 							if (registerWithProxy() == false) {
-								displayErrorMessage(PHPDebugCoreMessages.XDebug_DBGpProxyHandler_1
-										+ getErrorMsg());
+								displayErrorMessage(PHPDebugCoreMessages.XDebug_DBGpProxyHandler_1 + getErrorMsg());
 								XDebugPreferenceMgr.setUseProxy(false);
 							}
 							return Status.OK_STATUS;
@@ -241,11 +231,9 @@ public class DBGpProxyHandler {
 	 * @param listeningPort
 	 * @param multisession
 	 */
-	private void setProxyInfo(String host, int port, String idekey,
-			int listeningPort, boolean multisession) {
-		if (!host.equalsIgnoreCase(proxyHost) || port != proxyPort
-				|| !idekey.equals(currentIdeKey) || idePort != listeningPort
-				|| this.multisession != multisession) {
+	private void setProxyInfo(String host, int port, String idekey, int listeningPort, boolean multisession) {
+		if (!host.equalsIgnoreCase(proxyHost) || port != proxyPort || !idekey.equals(currentIdeKey)
+				|| idePort != listeningPort || this.multisession != multisession) {
 			unregister(); // checks for connection
 			proxyHost = host;
 			proxyPort = port;
@@ -277,8 +265,7 @@ public class DBGpProxyHandler {
 		try {
 			// TODO: look at reducing the timeout for connection failure.
 			Socket s = new Socket();
-			InetSocketAddress server = new InetSocketAddress(proxyHost,
-					proxyPort);
+			InetSocketAddress server = new InetSocketAddress(proxyHost, proxyPort);
 			InetSocketAddress local = new InetSocketAddress(0);
 			s.bind(local);
 			s.connect(server, PROXY_CONNECT_TIMEOUT);
@@ -287,7 +274,8 @@ public class DBGpProxyHandler {
 			if (DBGpLogger.debugCmd()) {
 				DBGpLogger.debug("cmd: " + cmd); //$NON-NLS-1$
 			}
-			os.write(cmd.getBytes("ASCII")); //command will always be ASCII //$NON-NLS-1$
+			os.write(cmd.getBytes("ASCII")); // command will //$NON-NLS-1$
+												// always be ASCII
 			os.flush();
 			byte[] resp = readResponse(is);
 			dbgpResp = new DBGpResponse();
@@ -348,10 +336,8 @@ public class DBGpProxyHandler {
 	private void displayErrorMessage(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				MessageDialog
-						.openError(Display.getDefault().getActiveShell(),
-								PHPDebugCoreMessages.XDebug_DBGpProxyHandler_3,
-								message);
+				MessageDialog.openError(Display.getDefault().getActiveShell(),
+						PHPDebugCoreMessages.XDebug_DBGpProxyHandler_3, message);
 			}
 		});
 	}

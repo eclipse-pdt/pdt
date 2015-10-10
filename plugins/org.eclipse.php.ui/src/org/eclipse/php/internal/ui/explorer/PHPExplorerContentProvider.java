@@ -60,8 +60,7 @@ import org.eclipse.wst.jsdt.ui.project.JsNature;
  * 
  */
 public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
-		implements IIncludepathListener /* , IResourceChangeListener */,
-		IElementChangedListener {
+		implements IIncludepathListener /* , IResourceChangeListener */, IElementChangedListener {
 	public final static ArrayList<Object> EMPTY_LIST = new ArrayList<Object>();
 	StandardJavaScriptElementContentProvider jsContentProvider;
 
@@ -83,8 +82,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		JavaScriptCore.removeElementChangedListener(this);
 	}
 
-	private Object[] getNonPhpProjects(final IScriptModel model)
-			throws ModelException {
+	private Object[] getNonPhpProjects(final IScriptModel model) throws ModelException {
 		return model.getForeignResources();
 	}
 
@@ -111,8 +109,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 			final Object entry = ((IncludePath) parentElement).getEntry();
 			if (entry instanceof IBuildpathEntry) {
 				int entryKind = ((IBuildpathEntry) entry).getEntryKind();
-				if (entryKind == IBuildpathEntry.BPE_CONTAINER
-						|| entryKind == IBuildpathEntry.BPE_LIBRARY) {
+				if (entryKind == IBuildpathEntry.BPE_CONTAINER || entryKind == IBuildpathEntry.BPE_LIBRARY) {
 					return getBuildPathEntryChildren(parentElement, entry);
 				}
 			}
@@ -123,8 +120,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 			return ((ProjectLibraryRoot) parentElement).getChildren();
 		}
 		if (parentElement instanceof PackageFragmentRootContainer) {
-			return getContainerPackageFragmentRoots(
-					(PackageFragmentRootContainer) parentElement, true);
+			return getContainerPackageFragmentRoots((PackageFragmentRootContainer) parentElement, true);
 		}
 
 		if (parentElement instanceof org.eclipse.wst.jsdt.core.IJavaScriptElement) {
@@ -140,37 +136,31 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 			// aggregate php projects and non php projects (includes closed
 			// ones)
 			if (parentElement instanceof IScriptModel) {
-				return StandardModelElementContentProvider.concatenate(
-						getScriptProjects((IScriptModel) parentElement),
+				return StandardModelElementContentProvider.concatenate(getScriptProjects((IScriptModel) parentElement),
 						getNonPhpProjects((IScriptModel) parentElement));
 			}
 
 			// Handles SourceModule and downwards as well as
 			// ExternalProjectFragments (i.e language model)
-			if (parentElement instanceof ISourceModule
-					|| !(parentElement instanceof IOpenable)
+			if (parentElement instanceof ISourceModule || !(parentElement instanceof IOpenable)
 					|| parentElement instanceof ExternalProjectFragment) {
 				if (parentElement instanceof IFolder) {
 					IResource[] members = ((IFolder) parentElement).members();
 					ArrayList<Object> returnChlidren = new ArrayList<Object>();
 					for (IResource resource2 : members) {
 						IModelElement modelElement = DLTKCore.create(resource2);
-						if (modelElement != null
-								&& isSourceFolder(modelElement)) {
+						if (modelElement != null && isSourceFolder(modelElement)) {
 							returnChlidren.add(modelElement);
 						} else {
 							returnChlidren.add(resource2);
 						}
 					}
-					return (Object[]) returnChlidren
-							.toArray(new Object[returnChlidren.size()]);
+					return (Object[]) returnChlidren.toArray(new Object[returnChlidren.size()]);
 				}
 
-				for (ITreeContentProvider provider : TreeContentProviderRegistry
-						.getInstance().getTreeProviders()) {
+				for (ITreeContentProvider provider : TreeContentProviderRegistry.getInstance().getTreeProviders()) {
 
-					Object[] providerChildren = provider
-							.getChildren(parentElement);
+					Object[] providerChildren = provider.getChildren(parentElement);
 					if (providerChildren != null) {
 						return providerChildren;
 					}
@@ -194,38 +184,27 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 
 					ArrayList<Object> returnChildren = new ArrayList<Object>();
 
-					boolean groupByNamespace = PHPUiPlugin.getDefault()
-							.getPreferenceStore().getBoolean(
-									PreferenceConstants.EXPLORER_GROUP_BY_NAMESPACES);
-					if (groupByNamespace
-							&& parentElement instanceof IModelElement
+					boolean groupByNamespace = PHPUiPlugin.getDefault().getPreferenceStore()
+							.getBoolean(PreferenceConstants.EXPLORER_GROUP_BY_NAMESPACES);
+					if (groupByNamespace && parentElement instanceof IModelElement
 							&& isSourceFolder(DLTKCore.create(resource))
-							&& supportsNamespaces(((IOpenable) parentElement)
-									.getScriptProject())) {
-						returnChildren.add(new GlobalNamespace(
-								(IModelElement) parentElement));
+							&& supportsNamespaces(((IOpenable) parentElement).getScriptProject())) {
+						returnChildren.add(new GlobalNamespace((IModelElement) parentElement));
 
-						returnChildren.addAll(
-								collectNamespaces(DLTKCore.create(resource)));
+						returnChildren.addAll(collectNamespaces(DLTKCore.create(resource)));
 
-						IResource[] resChildren = ((IContainer) resource)
-								.members();
+						IResource[] resChildren = ((IContainer) resource).members();
 						for (IResource resource2 : resChildren) {
-							IModelElement modelElement = DLTKCore
-									.create(resource2);
-							if (modelElement == null
-									|| !isInSourceFolder(modelElement)) {
+							IModelElement modelElement = DLTKCore.create(resource2);
+							if (modelElement == null || !isInSourceFolder(modelElement)) {
 								returnChildren.add(resource2);
 							}
 						}
 					} else {
-						IResource[] resChildren = ((IContainer) resource)
-								.members();
+						IResource[] resChildren = ((IContainer) resource).members();
 						for (IResource resource2 : resChildren) {
-							IModelElement modelElement = DLTKCore
-									.create(resource2);
-							if (modelElement != null
-									&& isInSourceFolder(modelElement)) {
+							IModelElement modelElement = DLTKCore.create(resource2);
+							if (modelElement != null && isInSourceFolder(modelElement)) {
 								returnChildren.add(modelElement);
 							} else {
 								returnChildren.add(resource2);
@@ -239,19 +218,15 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 						IProject project = scriptProject.getProject();
 
 						// Add include path node
-						IncludePath[] includePaths = IncludePathManager
-								.getInstance().getIncludePaths(project);
-						IncludePathContainer incPathContainer = new IncludePathContainer(
-								scriptProject, includePaths);
+						IncludePath[] includePaths = IncludePathManager.getInstance().getIncludePaths(project);
+						IncludePathContainer incPathContainer = new IncludePathContainer(scriptProject, includePaths);
 						returnChildren.add(incPathContainer);
 
 						// Add the language library
-						Object[] projectChildren = getProjectFragments(
-								scriptProject);
+						Object[] projectChildren = getProjectFragments(scriptProject);
 						for (Object modelElement : projectChildren) {
 							if (modelElement instanceof BuildPathContainer
-									&& ((BuildPathContainer) modelElement)
-											.getBuildpathEntry().getPath()
+									&& ((BuildPathContainer) modelElement).getBuildpathEntry().getPath()
 											.equals(LanguageModelInitializer.LANGUAGE_CONTAINER_PATH)) {
 								returnChildren.add(modelElement);
 							}
@@ -259,20 +234,17 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 
 						boolean hasJsNature = JsNature.hasNature(project);
 						if (hasJsNature) {
-							ProjectLibraryRoot projectLibs = new ProjectLibraryRoot(
-									JavaScriptCore.create(project));
+							ProjectLibraryRoot projectLibs = new ProjectLibraryRoot(JavaScriptCore.create(project));
 							returnChildren.add(projectLibs);
 						}
 
 						// let extensions contribute explorer root elements
-						for (ITreeContentProvider provider : TreeContentProviderRegistry
-								.getInstance().getTreeProviders()) {
+						for (ITreeContentProvider provider : TreeContentProviderRegistry.getInstance()
+								.getTreeProviders()) {
 
-							Object[] providerChildren = provider
-									.getChildren(parentElement);
+							Object[] providerChildren = provider.getChildren(parentElement);
 							if (providerChildren != null) {
-								returnChildren.addAll(new ArrayList<Object>(
-										Arrays.asList(providerChildren)));
+								returnChildren.addAll(new ArrayList<Object>(Arrays.asList(providerChildren)));
 							}
 						}
 					}
@@ -283,8 +255,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 			Logger.logException(e);
 		}
 
-		if (parentElement instanceof ArchiveProjectFragment
-				|| parentElement instanceof ArchiveFolder) {
+		if (parentElement instanceof ArchiveProjectFragment || parentElement instanceof ArchiveFolder) {
 			return super.getChildren(parentElement);
 		}
 
@@ -306,8 +277,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 			IBuildpathEntry entry = buildpath[j];
 			// root path
 			IPath path = entry.getPath();
-			if (path != null
-					&& path.equals(modelElement.getResource().getFullPath())) {
+			if (path != null && path.equals(modelElement.getResource().getFullPath())) {
 				return true;
 			}
 		}
@@ -338,12 +308,10 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		return version.isGreaterThan(PHPVersion.PHP5);
 	}
 
-	protected Object[] getAllNamespaces(final IScriptProject project)
-			throws ModelException {
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(project,
-				IDLTKSearchScope.SOURCES);
-		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null,
-				null, MatchRule.PREFIX, 0, 0, scope, null);
+	protected Object[] getAllNamespaces(final IScriptProject project) throws ModelException {
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(project, IDLTKSearchScope.SOURCES);
+		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null, null, MatchRule.PREFIX, 0, 0, scope,
+				null);
 		Map<String, List<IType>> aggregated = new HashMap<String, List<IType>>();
 		for (IType ns : namespaces) {
 			String elementName = ns.getElementName();
@@ -356,19 +324,17 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		}
 		List<IType> result = new LinkedList<IType>();
 		for (Entry<String, List<IType>> entry : aggregated.entrySet()) {
-			result.add(new NamespaceNode(project, entry.getKey(), entry
-					.getValue().toArray(new IType[entry.getValue().size()])));
+			result.add(new NamespaceNode(project, entry.getKey(),
+					entry.getValue().toArray(new IType[entry.getValue().size()])));
 		}
 		return result.toArray();
 	}
 
-	protected List<IType> collectNamespaces(IModelElement create)
-			throws ModelException {
+	protected List<IType> collectNamespaces(IModelElement create) throws ModelException {
 
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(create,
-				IDLTKSearchScope.SOURCES);
-		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null,
-				null, MatchRule.PREFIX, 0, 0, scope, null);
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(create, IDLTKSearchScope.SOURCES);
+		IType[] namespaces = PhpModelAccess.getDefault().findNamespaces(null, null, MatchRule.PREFIX, 0, 0, scope,
+				null);
 		Map<String, List<IType>> aggregated = new HashMap<String, List<IType>>();
 		for (IType ns : namespaces) {
 			String elementName = ns.getElementName();
@@ -381,15 +347,14 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		}
 		List<IType> result = new LinkedList<IType>();
 		for (Entry<String, List<IType>> entry : aggregated.entrySet()) {
-			result.add(new NamespaceNode(create, entry.getKey(), entry
-					.getValue().toArray(new IType[entry.getValue().size()])));
+			result.add(new NamespaceNode(create, entry.getKey(),
+					entry.getValue().toArray(new IType[entry.getValue().size()])));
 		}
 
 		return result;
 	}
 
-	private Object[] getContainerPackageFragmentRoots(
-			PackageFragmentRootContainer container, boolean createFolder) {
+	private Object[] getContainerPackageFragmentRoots(PackageFragmentRootContainer container, boolean createFolder) {
 
 		Object[] children = container.getChildren();
 		if (children == null)
@@ -407,19 +372,15 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		while (next != null) {
 			try {
 				if (next instanceof IPackageFragment) {
-					expanded.addAll(Arrays
-							.asList(((IPackageFragment) next).getChildren()));
+					expanded.addAll(Arrays.asList(((IPackageFragment) next).getChildren()));
 				} else if (next instanceof IPackageFragmentRoot) {
-					expanded.addAll(Arrays.asList(
-							((IPackageFragmentRoot) next).getChildren()));
+					expanded.addAll(Arrays.asList(((IPackageFragmentRoot) next).getChildren()));
 				} else if (next instanceof IClassFile) {
-					List<IJavaScriptElement> newChildren = Arrays
-							.asList(((IClassFile) next).getChildren());
+					List<IJavaScriptElement> newChildren = Arrays.asList(((IClassFile) next).getChildren());
 					allChildren.removeAll(newChildren);
 					allChildren.addAll(newChildren);
 				} else if (next instanceof IJavaScriptUnit) {
-					List<IJavaScriptElement> newChildren = Arrays
-							.asList(((IJavaScriptUnit) next).getChildren());
+					List<IJavaScriptElement> newChildren = Arrays.asList(((IJavaScriptUnit) next).getChildren());
 					allChildren.removeAll(newChildren);
 					allChildren.addAll(newChildren);
 
@@ -442,12 +403,9 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	 * @param entry
 	 * @return
 	 */
-	private Object[] getBuildPathEntryChildren(Object parentElement,
-			Object entry) {
-		IScriptProject scriptProject = DLTKCore
-				.create(((IncludePath) parentElement).getProject());
-		IProjectFragment[] findProjectFragments = scriptProject
-				.findProjectFragments((IBuildpathEntry) entry);
+	private Object[] getBuildPathEntryChildren(Object parentElement, Object entry) {
+		IScriptProject scriptProject = DLTKCore.create(((IncludePath) parentElement).getProject());
+		IProjectFragment[] findProjectFragments = scriptProject.findProjectFragments((IBuildpathEntry) entry);
 		List<Object> children = new LinkedList<Object>();
 		for (IProjectFragment projectFragment : findProjectFragments) {
 			Object[] fragmentChildren = getChildren(projectFragment);
@@ -474,8 +432,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	public class IncludePathContainer extends ProjectFragmentContainer {
 		private IncludePath[] fIncludePath;
 
-		public IncludePathContainer(IScriptProject parent,
-				IncludePath[] entries) {
+		public IncludePathContainer(IScriptProject parent, IncludePath[] entries) {
 			super(parent);
 			fIncludePath = entries;
 		}
@@ -533,8 +490,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	 */
 	public void refresh(IProject project) {
 		Collection<Runnable> runnables = new ArrayList<Runnable>();
-		final ArrayList<IScriptProject> resources = new ArrayList<IScriptProject>(
-				1);
+		final ArrayList<IScriptProject> resources = new ArrayList<IScriptProject>(1);
 		resources.add(DLTKCore.create(project));
 
 		postRefresh(resources, true, runnables);
@@ -552,8 +508,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	}
 
 	public void elementChanged(ElementChangedEvent event) {
-		IJavaScriptElementDelta[] affectedChildren = event.getDelta()
-				.getAffectedChildren();
+		IJavaScriptElementDelta[] affectedChildren = event.getDelta().getAffectedChildren();
 		final ArrayList<Runnable> runnables = new ArrayList<Runnable>();
 		for (int i = 0; i < affectedChildren.length; i++) {
 			if (processDelta(affectedChildren[i], runnables)) {
@@ -563,8 +518,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 
 	}
 
-	private boolean processDelta(IJavaScriptElementDelta delta,
-			ArrayList<Runnable> runnables) {
+	private boolean processDelta(IJavaScriptElementDelta delta, ArrayList<Runnable> runnables) {
 		int flags = delta.getFlags();
 		IJavaScriptElement element = delta.getElement();
 		int elementType = element.getElementType();
@@ -580,8 +534,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 			// if the raw class path has changed we refresh the entire project
 			if ((flags & IJavaScriptElementDelta.F_INCLUDEPATH_CHANGED) != 0) {
 
-				final ArrayList<IScriptProject> resources = new ArrayList<IScriptProject>(
-						1);
+				final ArrayList<IScriptProject> resources = new ArrayList<IScriptProject>(1);
 				IProject project = ((IJavaScriptProject) element).getProject();
 				resources.add(DLTKCore.create(project));
 				postRefresh(resources, true, runnables);

@@ -16,8 +16,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.ui.*;
 
-public class EvaluationContextManager implements IWindowListener,
-		IDebugContextListener {
+public class EvaluationContextManager implements IWindowListener, IDebugContextListener {
 
 	private static EvaluationContextManager fgManager;
 
@@ -25,8 +24,7 @@ public class EvaluationContextManager implements IWindowListener,
 	 * System property indicating a stack frame is selected in the debug view
 	 * with an <code>IJavaStackFrame</code> adapter.
 	 */
-	private static final String DEBUGGER_ACTIVE = PHPDebugUIPlugin.ID
-			+ ".debuggerActive"; //$NON-NLS-1$
+	private static final String DEBUGGER_ACTIVE = PHPDebugUIPlugin.ID + ".debuggerActive"; //$NON-NLS-1$
 	/**
 	 * System property indicating an element is selected in the debug view that
 	 * is an instanceof <code>IJavaStackFrame</code> or <code>IJavaThread</code>
@@ -34,20 +32,20 @@ public class EvaluationContextManager implements IWindowListener,
 	 */
 	// private static final String INSTANCE_OF_IJAVA_STACK_FRAME =
 	// PHPDebugUIPlugin.ID
-	//			+ ".instanceof.IJavaStackFrame"; 
+	// + ".instanceof.IJavaStackFrame";
 	/**
 	 * System property indicating the frame in the debug view supports 'force
 	 * return'
 	 */
 	// private static final String SUPPORTS_FORCE_RETURN = PHPDebugUIPlugin.ID
-	//			+ ".supportsForceReturn"; 	
+	// + ".supportsForceReturn";
 	/**
 	 * System property indicating whether the frame in the debug view supports
 	 * instance and reference retrieval (1.5 VMs and later).
 	 */
 	// private static final String SUPPORTS_INSTANCE_RETRIEVAL =
 	// PHPDebugUIPlugin.ID
-	//			+ ".supportsInstanceRetrieval"; 
+	// + ".supportsInstanceRetrieval";
 
 	private Map fContextsByPage = null;
 
@@ -63,14 +61,12 @@ public class EvaluationContextManager implements IWindowListener,
 				if (fgManager == null) {
 					fgManager = new EvaluationContextManager();
 					IWorkbench workbench = PlatformUI.getWorkbench();
-					IWorkbenchWindow[] windows = workbench
-							.getWorkbenchWindows();
+					IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 					for (int i = 0; i < windows.length; i++) {
 						fgManager.windowOpened(windows[i]);
 					}
 					workbench.addWindowListener(fgManager);
-					fgManager.fActiveWindow = workbench
-							.getActiveWorkbenchWindow();
+					fgManager.fActiveWindow = workbench.getActiveWorkbenchWindow();
 				}
 			}
 		};
@@ -90,9 +86,8 @@ public class EvaluationContextManager implements IWindowListener,
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.IWindowListener#windowClosed(org.eclipse.ui.IWorkbenchWindow
-	 * )
+	 * @see org.eclipse.ui.IWindowListener#windowClosed(org.eclipse.ui.
+	 * IWorkbenchWindow )
 	 */
 	public void windowClosed(IWorkbenchWindow window) {
 	}
@@ -109,9 +104,8 @@ public class EvaluationContextManager implements IWindowListener,
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.IWindowListener#windowOpened(org.eclipse.ui.IWorkbenchWindow
-	 * )
+	 * @see org.eclipse.ui.IWindowListener#windowOpened(org.eclipse.ui.
+	 * IWorkbenchWindow )
 	 */
 	public void windowOpened(IWorkbenchWindow window) {
 	}
@@ -123,28 +117,27 @@ public class EvaluationContextManager implements IWindowListener,
 	 * @param page
 	 * @param frame
 	 */
-	private void setContext(IWorkbenchPage page, IStackFrame frame,
-			boolean instOf) {
+	private void setContext(IWorkbenchPage page, IStackFrame frame, boolean instOf) {
 		if (fContextsByPage == null) {
 			fContextsByPage = new HashMap();
 		}
 		fContextsByPage.put(page, frame);
 		System.setProperty(DEBUGGER_ACTIVE, "true"); //$NON-NLS-1$
 		// if (frame.canForceReturn()) {
-		//				System.setProperty(SUPPORTS_FORCE_RETURN, "true"); 
+		// System.setProperty(SUPPORTS_FORCE_RETURN, "true");
 		// } else {
-		//				System.setProperty(SUPPORTS_FORCE_RETURN, "false"); 
+		// System.setProperty(SUPPORTS_FORCE_RETURN, "false");
 		// }
 		// if
 		// (((IJavaDebugTarget)frame.getDebugTarget()).supportsInstanceRetrieval()){
-		//				System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "true"); 
+		// System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "true");
 		// } else {
-		//				System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "false"); 
+		// System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "false");
 		// }
 		// if (instOf) {
-		//				System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "true"); 
+		// System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "true");
 		// } else {
-		//				System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "false"); 
+		// System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "false");
 		// }
 	}
 
@@ -158,10 +151,10 @@ public class EvaluationContextManager implements IWindowListener,
 		if (fContextsByPage != null) {
 			fContextsByPage.remove(page);
 			// if (fContextsByPage.isEmpty()) {
-			//				System.setProperty(DEBUGGER_ACTIVE, "false"); 
-			//				System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "false"); 
-			//				System.setProperty(SUPPORTS_FORCE_RETURN, "false"); 
-			//				System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "false"); 
+			// System.setProperty(DEBUGGER_ACTIVE, "false");
+			// System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "false");
+			// System.setProperty(SUPPORTS_FORCE_RETURN, "false");
+			// System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "false");
 			// }
 		}
 	}
@@ -226,8 +219,7 @@ public class EvaluationContextManager implements IWindowListener,
 		return getEvaluationContext(window, alreadyVisited);
 	}
 
-	private static IStackFrame getEvaluationContext(IWorkbenchWindow window,
-			List alreadyVisited) {
+	private static IStackFrame getEvaluationContext(IWorkbenchWindow window, List alreadyVisited) {
 		IWorkbenchPage activePage = window.getActivePage();
 		IStackFrame frame = null;
 		if (activePage != null) {
@@ -246,8 +238,7 @@ public class EvaluationContextManager implements IWindowListener,
 
 			alreadyVisited.add(window);
 
-			IWorkbenchWindow[] windows = PlatformUI.getWorkbench()
-					.getWorkbenchWindows();
+			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
 			for (int i = 0; i < windows.length; i++) {
 				if (!alreadyVisited.contains(windows[i])) {
 					frame = getEvaluationContext(windows[i], alreadyVisited);
@@ -272,10 +263,8 @@ public class EvaluationContextManager implements IWindowListener,
 					if (ss.size() == 1) {
 						Object element = ss.getFirstElement();
 						if (element instanceof IAdaptable) {
-							IStackFrame frame = (IStackFrame) ((IAdaptable) element)
-									.getAdapter(IStackFrame.class);
-							boolean instOf = element instanceof IStackFrame
-									|| element instanceof IThread;
+							IStackFrame frame = (IStackFrame) ((IAdaptable) element).getAdapter(IStackFrame.class);
+							boolean instOf = element instanceof IStackFrame || element instanceof IThread;
 							if (frame != null) {
 								// do not consider scrapbook frames
 								// if

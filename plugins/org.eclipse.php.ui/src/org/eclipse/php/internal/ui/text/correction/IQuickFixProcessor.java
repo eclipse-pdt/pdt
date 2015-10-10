@@ -62,7 +62,7 @@ public interface IQuickFixProcessor {
 	 * @throws CoreException
 	 *             CoreException can be thrown if the operation fails
 	 */
-	IScriptCompletionProposal[] getCorrections(IInvocationContext context,
-			IProblemLocation[] locations) throws CoreException;
+	IScriptCompletionProposal[] getCorrections(IInvocationContext context, IProblemLocation[] locations)
+			throws CoreException;
 
 }

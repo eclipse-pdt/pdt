@@ -67,9 +67,7 @@ public class Resources {
 		URI uri = resource.getLocationURI();
 		if (uri == null)
 			return null;
-		return EFS.SCHEME_FILE.equalsIgnoreCase(uri.getScheme()) ? new File(uri)
-				.getAbsolutePath()
-				: uri.toString();
+		return EFS.SCHEME_FILE.equalsIgnoreCase(uri.getScheme()) ? new File(uri).getAbsolutePath() : uri.toString();
 	}
 
 }

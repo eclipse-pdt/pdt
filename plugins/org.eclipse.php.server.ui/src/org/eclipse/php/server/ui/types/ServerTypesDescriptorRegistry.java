@@ -27,8 +27,7 @@ public class ServerTypesDescriptorRegistry {
 
 	private static Map<String, IServerTypeDescriptor> descriptors = null;
 	protected static final String PROP_ID = "descriptor"; //$NON-NLS-1$
-	public static final String EXTENSION_POINT_ID = Activator.getDefault()
-			.getBundle().getSymbolicName()
+	public static final String EXTENSION_POINT_ID = Activator.getDefault().getBundle().getSymbolicName()
 			+ ".serverTypeDescriptor"; //$NON-NLS-1$
 
 	private static ServerTypesDescriptorRegistry instance;
@@ -39,8 +38,7 @@ public class ServerTypesDescriptorRegistry {
 	 * @param serverType
 	 * @return server type descriptor
 	 */
-	public static synchronized final IServerTypeDescriptor getDescriptor(
-			IServerType serverType) {
+	public static synchronized final IServerTypeDescriptor getDescriptor(IServerType serverType) {
 		Map<String, IServerTypeDescriptor> descriptors = getDescriptors();
 		if (serverType == null || serverType.getId() == null) {
 			return descriptors.get(ServerType.GENERIC_PHP_SERVER_ID);
@@ -64,9 +62,8 @@ public class ServerTypesDescriptorRegistry {
 
 	private Map<String, IServerTypeDescriptor> readFromExtensionPoint() {
 		final Map<String, IServerTypeDescriptor> descriptors = new HashMap<String, IServerTypeDescriptor>();
-		IConfigurationElement[] configurationElements = Platform
-				.getExtensionRegistry().getConfigurationElementsFor(
-						EXTENSION_POINT_ID);
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(EXTENSION_POINT_ID);
 		for (final IConfigurationElement element : configurationElements) {
 			IServerTypeDescriptor descriptor = new ServerTypeDescriptor(element);
 			descriptors.put(descriptor.getServerTypeId(), descriptor);

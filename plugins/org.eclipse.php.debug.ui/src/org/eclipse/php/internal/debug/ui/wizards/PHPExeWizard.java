@@ -35,8 +35,7 @@ public class PHPExeWizard extends FragmentedWizard implements INewWizard {
 		this(existingItems, Messages.PHPExeWizard_0);
 	}
 
-	public PHPExeWizard(PHPexeItem[] existingItems, String title,
-			WizardModel taskModel) {
+	public PHPExeWizard(PHPexeItem[] existingItems, String title, WizardModel taskModel) {
 		super(title, null, taskModel);
 		this.existingItems = existingItems;
 		setRootFragment(createRootFragment());
@@ -64,11 +63,9 @@ public class PHPExeWizard extends FragmentedWizard implements INewWizard {
 				Set<String> factoryIds = factories.keySet();
 				int index = 0;
 				for (String factoryId : factoryIds) {
-					children[index] = factories.get(factoryId)
-							.createWizardFragment();
+					children[index] = factories.get(factoryId).createWizardFragment();
 					if (children[index] instanceof IPHPExeCompositeFragment) {
-						((IPHPExeCompositeFragment) children[index])
-								.setExistingItems(existingItems);
+						((IPHPExeCompositeFragment) children[index]).setExistingItems(existingItems);
 					}
 					index++;
 				}

@@ -37,8 +37,7 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 
 							try {
 								if (ModelUtils.isDeprecated(element)) {
-									highlight(
-											((IMember) element).getNameRange());
+									highlight(((IMember) element).getNameRange());
 								}
 							} catch (ModelException e) {
 								Logger.logException(e);
@@ -58,13 +57,10 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 		public boolean visit(ClassName classConst) {
 			if (classConst.getName() instanceof Identifier) {
 
-				String className = ((Identifier) classConst.getName())
-						.getName();
-				IModelAccessCache cache = classConst.getAST()
-						.getBindingResolver().getModelAccessCache();
+				String className = ((Identifier) classConst.getName()).getName();
+				IModelAccessCache cache = classConst.getAST().getBindingResolver().getModelAccessCache();
 				try {
-					IType[] types = PHPModelUtils.getTypes(className,
-							getSourceModule(), classConst.getStart(), cache,
+					IType[] types = PHPModelUtils.getTypes(className, getSourceModule(), classConst.getStart(), cache,
 							new NullProgressMonitor());
 					if (types != null) {
 						for (IType type : types) {
@@ -84,8 +80,7 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 
 		@Override
 		public boolean visit(StaticConstantAccess staticConstantAccess) {
-			ITypeBinding type = staticConstantAccess.getClassName()
-					.resolveTypeBinding();
+			ITypeBinding type = staticConstantAccess.getClassName().resolveTypeBinding();
 
 			if (type != null && ModelUtils.isDeprecated(type.getPHPElement())) {
 				highlight(staticConstantAccess.getClassName());
@@ -95,8 +90,7 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 			if (type != null && fieldName != null) {
 				IVariableBinding[] fields = type.getDeclaredFields();
 				for (IVariableBinding field : fields) {
-					if (field.getName().toLowerCase()
-							.equals(fieldName.toLowerCase())) {
+					if (field.getName().toLowerCase().equals(fieldName.toLowerCase())) {
 						if (ModelUtils.isDeprecated(field.getPHPElement())) {
 							highlight(staticConstantAccess.getConstant());
 						}
@@ -110,8 +104,7 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 
 		@Override
 		public boolean visit(StaticFieldAccess staticFieldAccess) {
-			ITypeBinding type = staticFieldAccess.getClassName()
-					.resolveTypeBinding();
+			ITypeBinding type = staticFieldAccess.getClassName().resolveTypeBinding();
 
 			if (type != null && ModelUtils.isDeprecated(type.getPHPElement())) {
 				highlight(staticFieldAccess.getClassName());
@@ -119,15 +112,13 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 
 			String fieldName = null;
 			if (staticFieldAccess.getField().getName() instanceof Identifier) {
-				fieldName = ((Identifier) staticFieldAccess.getField()
-						.getName()).getName();
+				fieldName = ((Identifier) staticFieldAccess.getField().getName()).getName();
 			}
 
 			if (type != null && fieldName != null) {
 				IVariableBinding[] fields = type.getDeclaredFields();
 				for (IVariableBinding field : fields) {
-					if (field.getName().substring(1).toLowerCase()
-							.equals(fieldName.toLowerCase())) {
+					if (field.getName().substring(1).toLowerCase().equals(fieldName.toLowerCase())) {
 						if (ModelUtils.isDeprecated(field.getPHPElement())) {
 							highlight(staticFieldAccess.getField());
 						}
@@ -164,13 +155,10 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 		@Override
 		public boolean visit(FunctionInvocation funcInv) {
 			if ((funcInv.getParent() instanceof StaticMethodInvocation)) {
-				StaticMethodInvocation methodInvocation = (StaticMethodInvocation) funcInv
-						.getParent();
-				ITypeBinding type = methodInvocation.getClassName()
-						.resolveTypeBinding();
+				StaticMethodInvocation methodInvocation = (StaticMethodInvocation) funcInv.getParent();
+				ITypeBinding type = methodInvocation.getClassName().resolveTypeBinding();
 
-				if (type != null
-						&& ModelUtils.isDeprecated(type.getPHPElement())) {
+				if (type != null && ModelUtils.isDeprecated(type.getPHPElement())) {
 					highlight(methodInvocation.getClassName());
 				}
 
@@ -180,17 +168,13 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 
 				}
 			} else if (!(funcInv.getParent() instanceof MethodInvocation)) {
-				IModelAccessCache cache = funcInv.getAST().getBindingResolver()
-						.getModelAccessCache();
+				IModelAccessCache cache = funcInv.getAST().getBindingResolver().getModelAccessCache();
 				if (cache != null) {
-					String functionName = ModelUtils
-							.getFunctionName(funcInv.getFunctionName());
+					String functionName = ModelUtils.getFunctionName(funcInv.getFunctionName());
 					// functionName will be null if the function call looks like
 					// ${func}(&$this),the ${func} is type of ReflectionVariable
 					if (functionName != null) {
-						Collection<IMethod> functions = cache
-								.getGlobalFunctions(getSourceModule(),
-										functionName, null);
+						Collection<IMethod> functions = cache.getGlobalFunctions(getSourceModule(), functionName, null);
 						if (functions != null) {
 							for (IMethod function : functions) {
 								if (ModelUtils.isDeprecated(function)) {

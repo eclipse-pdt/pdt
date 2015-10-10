@@ -43,10 +43,9 @@ public class SSHTunnelFactory {
 	 *            cache)
 	 * @return A {@link SSHTunnel} instance.
 	 */
-	public static SSHTunnel getSSHTunnel(String remoteHost, String userName,
-			String password, int localPort, int remotePort, boolean cacheTunnel) {
-		SSHTunnel tunnel = createSSHTunnel(remoteHost, userName, password,
-				localPort, remotePort);
+	public static SSHTunnel getSSHTunnel(String remoteHost, String userName, String password, int localPort,
+			int remotePort, boolean cacheTunnel) {
+		SSHTunnel tunnel = createSSHTunnel(remoteHost, userName, password, localPort, remotePort);
 		if (cacheTunnel) {
 			if (tunnels.containsKey(tunnel)) {
 				tunnel = tunnels.get(tunnel);
@@ -70,10 +69,9 @@ public class SSHTunnelFactory {
 	 * @return An SSHTunnel
 	 * @see #getSSHTunnel(String, String, String, int, int, boolean)
 	 */
-	public static SSHTunnel getSSHTunnel(String remoteHost, String userName,
-			String password, int localPort, int remotePort) {
-		return getSSHTunnel(remoteHost, userName, password, localPort,
-				remotePort, true);
+	public static SSHTunnel getSSHTunnel(String remoteHost, String userName, String password, int localPort,
+			int remotePort) {
+		return getSSHTunnel(remoteHost, userName, password, localPort, remotePort, true);
 	}
 
 	/**
@@ -88,10 +86,9 @@ public class SSHTunnelFactory {
 	 * @return True, if there is a cached tunnel with the given parameters;
 	 *         False, otherwise.
 	 */
-	public static boolean hasSSHTunnel(String remoteHost, String userName,
-			String password, int localPort, int remotePort) {
-		SSHTunnel tunnel = createSSHTunnel(remoteHost, userName, password,
-				localPort, remotePort);
+	public static boolean hasSSHTunnel(String remoteHost, String userName, String password, int localPort,
+			int remotePort) {
+		SSHTunnel tunnel = createSSHTunnel(remoteHost, userName, password, localPort, remotePort);
 		return tunnels.containsKey(tunnel);
 	}
 
@@ -110,15 +107,14 @@ public class SSHTunnelFactory {
 	 * 
 	 * @return A new SSHTunnel
 	 */
-	private static SSHTunnel createSSHTunnel(String remoteHost,
-			String userName, String password, int localPort, int remotePort) {
+	private static SSHTunnel createSSHTunnel(String remoteHost, String userName, String password, int localPort,
+			int remotePort) {
 		String localHost = "localhost"; //$NON-NLS-1$
 		try {
 			localHost = InetAddress.getLocalHost().getHostName();
 		} catch (UnknownHostException e) {
 		}
-		SSHTunnel tunnel = new SSHTunnel(localHost, remoteHost, userName,
-				password, localPort, remotePort);
+		SSHTunnel tunnel = new SSHTunnel(localHost, remoteHost, userName, password, localPort, remotePort);
 		return tunnel;
 	}
 
@@ -141,7 +137,6 @@ public class SSHTunnelFactory {
 	 * @return An unmodifiable List of the SSHTunnels
 	 */
 	public static List<SSHTunnel> getAllTunnels() {
-		return Collections.unmodifiableList(Arrays.asList(tunnels.values()
-				.toArray(new SSHTunnel[tunnels.size()])));
+		return Collections.unmodifiableList(Arrays.asList(tunnels.values().toArray(new SSHTunnel[tunnels.size()])));
 	}
 }

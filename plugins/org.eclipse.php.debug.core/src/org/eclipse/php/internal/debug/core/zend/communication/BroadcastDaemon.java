@@ -34,8 +34,7 @@ public class BroadcastDaemon extends AbstractDebuggerCommunicationDaemon {
 	private class BroadcastChangeListener implements IPreferenceChangeListener {
 		@Override
 		public void preferenceChange(PreferenceChangeEvent event) {
-			if (event.getKey().equals(
-					PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT)) {
+			if (event.getKey().equals(PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT)) {
 				resetSocket();
 			}
 		}
@@ -71,8 +70,8 @@ public class BroadcastDaemon extends AbstractDebuggerCommunicationDaemon {
 	 * Returns the broadcast port, as defined in the preferences.
 	 */
 	public int getReceiverPort() {
-		return InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID).getInt(
-				PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT, 20080);
+		return InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
+				.getInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT, 20080);
 	}
 
 	/*
@@ -120,8 +119,7 @@ public class BroadcastDaemon extends AbstractDebuggerCommunicationDaemon {
 	private void registerListeners() {
 		if (broadcastChangeListener == null) {
 			broadcastChangeListener = new BroadcastChangeListener();
-			InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
-					.addPreferenceChangeListener(broadcastChangeListener);
+			InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID).addPreferenceChangeListener(broadcastChangeListener);
 		}
 	}
 

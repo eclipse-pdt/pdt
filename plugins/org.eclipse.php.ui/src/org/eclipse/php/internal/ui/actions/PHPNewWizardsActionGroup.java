@@ -54,11 +54,9 @@ public class PHPNewWizardsActionGroup extends ActionGroup {
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			if (sel.size() <= 1 && isNewTarget(sel.getFirstElement())) {
-				MenuManager newMenu = new MenuManager(
-						ActionMessages.NewWizardsActionGroup_new);
+				MenuManager newMenu = new MenuManager(ActionMessages.NewWizardsActionGroup_new);
 				menu.appendToGroup(IContextMenuConstants.GROUP_NEW, newMenu);
-				newMenu.add(new NewWizardMenu(fSite.getWorkbenchWindow(), sel
-						.size() == 0));
+				newMenu.add(new NewWizardMenu(fSite.getWorkbenchWindow(), sel.size() == 0));
 			}
 		}
 
@@ -72,10 +70,8 @@ public class PHPNewWizardsActionGroup extends ActionGroup {
 		}
 		if (element instanceof IModelElement) {
 			int type = ((IModelElement) element).getElementType();
-			return type == IModelElement.SCRIPT_PROJECT
-					|| type == IModelElement.PROJECT_FRAGMENT
-					|| type == IModelElement.SCRIPT_FOLDER
-					|| type == IModelElement.SOURCE_MODULE
+			return type == IModelElement.SCRIPT_PROJECT || type == IModelElement.PROJECT_FRAGMENT
+					|| type == IModelElement.SCRIPT_FOLDER || type == IModelElement.SOURCE_MODULE
 					|| type == IModelElement.TYPE;
 		}
 		return false;

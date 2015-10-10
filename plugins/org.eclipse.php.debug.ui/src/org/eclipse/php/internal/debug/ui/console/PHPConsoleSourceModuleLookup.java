@@ -54,16 +54,13 @@ public class PHPConsoleSourceModuleLookup {
 	}
 
 	public ISourceModule findSourceModuleByLocalPath(final IPath path) {
-		NonExistingPHPFileEditorInput nonExistingEditorInput = NonExistingPHPFileEditorInput
-				.findEditorInput(path);
+		NonExistingPHPFileEditorInput nonExistingEditorInput = NonExistingPHPFileEditorInput.findEditorInput(path);
 		if (nonExistingEditorInput != null) {
 			IWorkbenchPage activePage = PHPUiPlugin.getActivePage();
 			if (activePage != null) {
-				IEditorPart editor = activePage
-						.findEditor(nonExistingEditorInput);
+				IEditorPart editor = activePage.findEditor(nonExistingEditorInput);
 				if (editor instanceof PHPStructuredEditor) {
-					return (ISourceModule) ((PHPStructuredEditor) editor)
-							.getModelElement();
+					return (ISourceModule) ((PHPStructuredEditor) editor).getModelElement();
 				}
 			}
 			return null;
@@ -71,21 +68,18 @@ public class PHPConsoleSourceModuleLookup {
 
 		final boolean isFullPath = EnvironmentPathUtils.isFull(path);
 		final IProject[] projects = getAllProjects();
-		final IPath[] enclosingProjectsAndZips = scope
-				.enclosingProjectsAndZips();
+		final IPath[] enclosingProjectsAndZips = scope.enclosingProjectsAndZips();
 		for (int i = 0, max = projects.length; i < max; i++) {
 			try {
 				final IProject project = projects[i];
 				if (!checkScope(project, enclosingProjectsAndZips)) {
 					continue;
 				}
-				if (!project.isAccessible()
-						|| !DLTKLanguageManager.hasScriptNature(project))
+				if (!project.isAccessible() || !DLTKLanguageManager.hasScriptNature(project))
 					continue;
 
 				IScriptProject scriptProject = model.getScriptProject(project);
-				final ISourceModule module = findInProject(scriptProject, path,
-						isFullPath);
+				final ISourceModule module = findInProject(scriptProject, path, isFullPath);
 				if (module != null) {
 					return module.exists() ? module : null;
 				}
@@ -100,8 +94,8 @@ public class PHPConsoleSourceModuleLookup {
 		return null;
 	}
 
-	private ISourceModule findInProject(IScriptProject scriptProject,
-			IPath path, boolean isFullPath) throws ModelException {
+	private ISourceModule findInProject(IScriptProject scriptProject, IPath path, boolean isFullPath)
+			throws ModelException {
 		IProjectFragment[] roots = scriptProject.getProjectFragments();
 		for (int j = 0, rootCount = roots.length; j < rootCount; j++) {
 			final ProjectFragment root = (ProjectFragment) roots[j];
@@ -109,16 +103,13 @@ public class PHPConsoleSourceModuleLookup {
 			if (!isFullPath) {
 				rootPath = EnvironmentPathUtils.getLocalPath(rootPath);
 			}
-			if (rootPath.isPrefixOf(path)
-					&& !Util.isExcluded(path, root.fullInclusionPatternChars(),
-							root.fullExclusionPatternChars(), false)) {
-				IPath localPath = path.setDevice(null).removeFirstSegments(
-						rootPath.segmentCount());
+			if (rootPath.isPrefixOf(path) && !Util.isExcluded(path, root.fullInclusionPatternChars(),
+					root.fullExclusionPatternChars(), false)) {
+				IPath localPath = path.setDevice(null).removeFirstSegments(rootPath.segmentCount());
 				if (localPath.segmentCount() >= 1) {
 					final IScriptFolder folder;
 					if (localPath.segmentCount() > 1) {
-						folder = root.getScriptFolder(localPath
-								.removeLastSegments(1));
+						folder = root.getScriptFolder(localPath.removeLastSegments(1));
 					} else {
 						folder = root.getScriptFolder(""); //$NON-NLS-1$
 					}

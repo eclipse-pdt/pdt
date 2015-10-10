@@ -44,15 +44,13 @@ import org.eclipse.swt.widgets.Label;
  * @author Bartlomiej Laczkowski
  */
 @SuppressWarnings("restriction")
-public abstract class AbstractPHPLaunchConfigurationDebuggerTab
-		extends AbstractPHPLaunchConfigurationTab {
+public abstract class AbstractPHPLaunchConfigurationDebuggerTab extends AbstractPHPLaunchConfigurationTab {
 
 	/**
 	 * Widget listener that should be added to all controls that affects the
 	 * state of corresponding launch configuration.
 	 */
-	public final class WidgetListener extends SelectionAdapter
-			implements ModifyListener {
+	public final class WidgetListener extends SelectionAdapter implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
 			setDirty(true);
 			updateLaunchConfigurationDialog();
@@ -90,26 +88,21 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab
 
 	}
 
-	private final class NoneDebuggerSection
-			extends DebuggerLaunchSettingsSectionAdapter {
+	private final class NoneDebuggerSection extends DebuggerLaunchSettingsSectionAdapter {
 
 		@Override
 		public StatusMessage isValid(ILaunchConfiguration configuration) {
-			return new StatusMessage(IMessageProvider.ERROR,
-					getNoDebuggerMessage());
+			return new StatusMessage(IMessageProvider.ERROR, getNoDebuggerMessage());
 		}
 
 	}
 
-	private final class UnsupportedDebuggerSection
-			extends DebuggerLaunchSettingsSectionAdapter {
+	private final class UnsupportedDebuggerSection extends DebuggerLaunchSettingsSectionAdapter {
 
 		@Override
-		public void createSection(Composite parent,
-				WidgetListener widgetListener) {
+		public void createSection(Composite parent, WidgetListener widgetListener) {
 			Label info = new Label(parent, SWT.NONE);
-			info.setText(
-					Messages.AbstractPHPLaunchConfigurationDebuggerTab_Unsupported_debugger_type);
+			info.setText(Messages.AbstractPHPLaunchConfigurationDebuggerTab_Unsupported_debugger_type);
 		}
 
 		@Override
@@ -190,8 +183,7 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab
 	 */
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-		configuration.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-				getCurrentDebuggerId());
+		configuration.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, getCurrentDebuggerId());
 		getSection().performApply(configuration);
 	}
 
@@ -274,8 +266,7 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab
 		mcLayout.marginWidth = 0;
 		mainComposite.setLayout(mcLayout);
 		mainComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		Composite debuggerChoiceComposite = new Composite(mainComposite,
-				SWT.NONE);
+		Composite debuggerChoiceComposite = new Composite(mainComposite, SWT.NONE);
 		GridLayout layout = new GridLayout(5, false);
 		debuggerChoiceComposite.setLayout(layout);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
@@ -286,16 +277,14 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab
 		data = new GridData(SWT.BEGINNING);
 		label.setLayoutData(data);
 		label.setFont(font);
-		label.setText(
-				Messages.AbstractPHPLaunchConfigurationDebuggerTab_Debugger_type);
+		label.setText(Messages.AbstractPHPLaunchConfigurationDebuggerTab_Debugger_type);
 		debuggerName = new Label(debuggerChoiceComposite, SWT.NONE);
 		Label separator = new Label(debuggerChoiceComposite, SWT.NONE);
 		data = new GridData(SWT.BEGINNING);
 		data.widthHint = 20;
 		separator.setLayoutData(data);
 		configureDebugger = createPushButton(debuggerChoiceComposite,
-				Messages.AbstractPHPLaunchConfigurationDebuggerTab_Configure,
-				null);
+				Messages.AbstractPHPLaunchConfigurationDebuggerTab_Configure, null);
 		configureDebugger.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				handleConfigureDebugger();
@@ -309,25 +298,21 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab
 				performDebugTest();
 			}
 		});
-		Label lineSeparator = new Label(mainComposite,
-				SWT.SEPARATOR | SWT.HORIZONTAL);
-		lineSeparator
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		Label lineSeparator = new Label(mainComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
+		lineSeparator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 	}
 
 	private IDebuggerLaunchSettingsSection getSection() {
 		try {
 			String launchTypeId = getConfiguration().getType().getIdentifier();
 			String debuggerId = getCurrentDebuggerId();
-			IDebuggerLaunchSettingsSection section = currentSection
-					.get(debuggerId);
+			IDebuggerLaunchSettingsSection section = currentSection.get(debuggerId);
 			if (section == null) {
 				// Debugger type has been changed, rebuild section
 				if (PHPDebuggersRegistry.NONE_DEBUGGER_ID.equals(debuggerId)) {
 					section = new NoneDebuggerSection();
 				} else {
-					section = DebuggerLaunchSettingsSectionRegistry
-							.getSection(debuggerId, launchTypeId);
+					section = DebuggerLaunchSettingsSectionRegistry.getSection(debuggerId, launchTypeId);
 					if (section == null) {
 						section = new UnsupportedDebuggerSection();
 					}
@@ -344,8 +329,7 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab
 		return null;
 	}
 
-	private void buildSection(String debuggerId,
-			IDebuggerLaunchSettingsSection section) {
+	private void buildSection(String debuggerId, IDebuggerLaunchSettingsSection section) {
 		// Update debugger type data first
 		updateDebugger(debuggerId);
 		// Store as singular key map (most recent section by debugger ID)
@@ -366,17 +350,13 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab
 		debuggerName.setText(PHPDebuggersRegistry.getDebuggerName(debuggerId));
 		try {
 			// Update debugger type in original configuration
-			ILaunchConfigurationWorkingCopy wc = getOriginalConfiguration()
-					.getWorkingCopy();
-			wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-					debuggerId);
+			ILaunchConfigurationWorkingCopy wc = getOriginalConfiguration().getWorkingCopy();
+			wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerId);
 			wc.doSave();
 			// Update in working copy as well
 			if (getConfiguration() instanceof ILaunchConfigurationWorkingCopy) {
 				((ILaunchConfigurationWorkingCopy) getConfiguration())
-						.setAttribute(
-								PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-								debuggerId);
+						.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerId);
 			}
 		} catch (CoreException e) {
 			Logger.logException(e);

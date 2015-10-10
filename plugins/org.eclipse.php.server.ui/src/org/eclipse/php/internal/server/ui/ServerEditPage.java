@@ -86,9 +86,8 @@ public class ServerEditPage extends WizardPage implements IControlHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-	 * .Composite)
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
+	 * widgets .Composite)
 	 */
 	public void createControl(Composite parent) {
 		// Create a tabbed container that will hold all the fragments
@@ -96,12 +95,9 @@ public class ServerEditPage extends WizardPage implements IControlHandler {
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 2;
 		tabs.setLayoutData(gd);
-		IServerType serverType = ServerTypesManager.getInstance().getType(
-				server);
-		IServerTypeDescriptor serverTypeDescriptor = ServerTypesDescriptorRegistry
-				.getDescriptor(serverType);
-		ICompositeFragmentFactory[] factories = serverTypeDescriptor
-				.getEditorFragmentFactories();
+		IServerType serverType = ServerTypesManager.getInstance().getType(server);
+		IServerTypeDescriptor serverTypeDescriptor = ServerTypesDescriptorRegistry.getDescriptor(serverType);
+		ICompositeFragmentFactory[] factories = serverTypeDescriptor.getEditorFragmentFactories();
 		for (ICompositeFragmentFactory element : factories) {
 			TabItem tabItem = new TabItem(tabs, SWT.NONE);
 			CompositeFragment fragment = element.createComposite(tabs, this);
@@ -112,26 +108,20 @@ public class ServerEditPage extends WizardPage implements IControlHandler {
 			runtimeComposites.add(fragment);
 		}
 
-		getShell().setText(
-				PHPServerUIMessages.getString("ServerEditDialog.editServer")); //$NON-NLS-1$
-		getShell().setImage(
-				ServersPluginImages.get(ServersPluginImages.IMG_SERVER));
+		getShell().setText(PHPServerUIMessages.getString("ServerEditDialog.editServer")); //$NON-NLS-1$
+		getShell().setImage(ServersPluginImages.get(ServersPluginImages.IMG_SERVER));
 
 		tabs.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent e) {
 				TabItem item = (TabItem) e.item;
-				CompositeFragment fragment = (CompositeFragment) item
-						.getControl();
+				CompositeFragment fragment = (CompositeFragment) item.getControl();
 				if (fragment instanceof ServerCompositeFragment) {
-					IServerType type = ServerTypesManager.getInstance()
-							.getType(server);
+					IServerType type = ServerTypesManager.getInstance().getType(server);
 					if (type != null) {
-						IServerTypeDescriptor serverTypeDescriptor = ServerTypesDescriptorRegistry
-								.getDescriptor(type);
+						IServerTypeDescriptor serverTypeDescriptor = ServerTypesDescriptorRegistry.getDescriptor(type);
 						((ServerCompositeFragment) fragment)
-								.setImageDescriptor(serverTypeDescriptor
-										.getImageDescriptor(ImageType.WIZARD));
+								.setImageDescriptor(serverTypeDescriptor.getImageDescriptor(ImageType.WIZARD));
 					}
 				}
 				setImageDescriptor(fragment.getImageDescriptor());
@@ -146,20 +136,16 @@ public class ServerEditPage extends WizardPage implements IControlHandler {
 			setSelect(tabID);
 		}
 
-		int selectionIndex = tabs.getSelectionIndex() != -1 ? tabs
-				.getSelectionIndex() : 0;
-		CompositeFragment selectedFragment = runtimeComposites
-				.get(selectionIndex);
+		int selectionIndex = tabs.getSelectionIndex() != -1 ? tabs.getSelectionIndex() : 0;
+		CompositeFragment selectedFragment = runtimeComposites.get(selectionIndex);
 		setTitle(selectedFragment.getTitle());
 		setDescription(selectedFragment.getDescription());
 
 		setControl(tabs);
 		IServerType type = ServerTypesManager.getInstance().getType(server);
 		if (type != null) {
-			serverTypeDescriptor = ServerTypesDescriptorRegistry
-					.getDescriptor(type);
-			setImageDescriptor(serverTypeDescriptor
-					.getImageDescriptor(ImageType.WIZARD));
+			serverTypeDescriptor = ServerTypesDescriptorRegistry.getDescriptor(type);
+			setImageDescriptor(serverTypeDescriptor.getImageDescriptor(ImageType.WIZARD));
 		}
 
 	}
@@ -206,9 +192,8 @@ public class ServerEditPage extends WizardPage implements IControlHandler {
 	 * @see org.eclipse.php.internal.ui.wizards.IControlHandler#run(boolean,
 	 * boolean, org.eclipse.jface.operation.IRunnableWithProgress)
 	 */
-	public void run(boolean fork, boolean cancelable,
-			IRunnableWithProgress runnable) throws InvocationTargetException,
-			InterruptedException {
+	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable)
+			throws InvocationTargetException, InterruptedException {
 		getContainer().run(fork, cancelable, runnable);
 	}
 
@@ -247,8 +232,7 @@ public class ServerEditPage extends WizardPage implements IControlHandler {
 		}
 		// Save original server
 		try {
-			Server originalServer = ServersManager.findServer(server
-					.getUniqueId());
+			Server originalServer = ServersManager.findServer(server.getUniqueId());
 			// Server exists, update it
 			if (originalServer != null) {
 				originalServer.update(server);

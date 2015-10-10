@@ -22,8 +22,7 @@ public class SimpleIntValue extends DBGpElement implements IValue {
 	private int wantedValue;
 	private IVariable[] vars = new IVariable[0];
 
-	public SimpleIntValue(int currentValue, int wantedValue,
-			IDebugTarget debugTarget) {
+	public SimpleIntValue(int currentValue, int wantedValue, IDebugTarget debugTarget) {
 		super(debugTarget);
 		this.currentValue = currentValue;
 		this.wantedValue = wantedValue;

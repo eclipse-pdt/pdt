@@ -74,8 +74,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			fListener = null;
 		}
 		if (fProblemListener != null) {
-			PHPUiPlugin.getWorkspace().removeResourceChangeListener(
-					fProblemListener);
+			PHPUiPlugin.getWorkspace().removeResourceChangeListener(fProblemListener);
 			fProblemListener = null;
 		}
 	}
@@ -84,8 +83,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		if (parent instanceof IParent) {
 			IParent c = (IParent) parent;
 			try {
-				return OutlineFilter.filterChildrenForOutline(parent,
-						c.getChildren());
+				return OutlineFilter.filterChildrenForOutline(parent, c.getChildren());
 			} catch (ModelException x) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=38341
 				// don't log NotExist exceptions as this is a valid case
@@ -103,12 +101,10 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		PHPVersion phpVersion = null;
 		if (modelElement == null || modelElement.getScriptProject() == null) {
 			String versionName = CorePreferencesSupport.getInstance()
-					.getWorkspacePreferencesValue(
-							PHPCoreConstants.PHP_OPTIONS_PHP_VERSION);
+					.getWorkspacePreferencesValue(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION);
 			phpVersion = PHPVersion.byAlias(versionName);
 		} else {
-			phpVersion = ProjectOptions.getPhpVersion(modelElement
-					.getScriptProject().getProject());
+			phpVersion = ProjectOptions.getPhpVersion(modelElement.getScriptProject().getProject());
 		}
 		return phpVersion.isGreaterThan(PHPVersion.PHP5);
 	}
@@ -149,8 +145,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		if (parent instanceof IParent) {
 			IParent c = (IParent) parent;
 			try {
-				IModelElement[] children = OutlineFilter
-						.filter(c.getChildren());
+				IModelElement[] children = OutlineFilter.filter(c.getChildren());
 				return (children != null && children.length > 0);
 			} catch (ModelException x) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=38341
@@ -179,16 +174,14 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			DLTKCore.addElementChangedListener(fListener);
 
 			fProblemListener = new ProblemChangedListener();
-			PHPUiPlugin.getWorkspace().addResourceChangeListener(
-					fProblemListener, IResourceChangeEvent.POST_CHANGE);
+			PHPUiPlugin.getWorkspace().addResourceChangeListener(fProblemListener, IResourceChangeEvent.POST_CHANGE);
 		}
 		// If the new input is not valid and there is a listener - remove it
 		else if (!isCU && fListener != null) {
 			DLTKCore.removeElementChangedListener(fListener);
 			fListener = null;
 
-			PHPUiPlugin.getWorkspace().removeResourceChangeListener(
-					fProblemListener);
+			PHPUiPlugin.getWorkspace().removeResourceChangeListener(fProblemListener);
 			fProblemListener = null;
 
 			fInput = null;
@@ -229,37 +222,27 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 				protected IStatus run(IProgressMonitor monitor) {
 					fUseStatements = getUseStatements();
 
-					IWorkbenchWindow activeWorkbenchWindow = PlatformUI
-							.getWorkbench().getActiveWorkbenchWindow();
+					IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 					if (activeWorkbenchWindow != null) {
-						IWorkbenchPage activePage = activeWorkbenchWindow
-								.getActivePage();
+						IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
 						if (activePage != null) {
-							IEditorPart activeEditor = activePage
-									.getActiveEditor();
+							IEditorPart activeEditor = activePage.getActiveEditor();
 							if (activeEditor instanceof PHPStructuredEditor) {
-								IModelElement base = ((PHPStructuredEditor) activeEditor)
-										.getModelElement();
+								IModelElement base = ((PHPStructuredEditor) activeEditor).getModelElement();
 
 								if (isNamespaceSupported(base)) {
 									ModuleDeclaration moduleDeclaration = SourceParserUtil
 											.getModuleDeclaration((ISourceModule) base);
-									UseStatement[] useStatements = ASTUtils
-											.getUseStatements(
-													moduleDeclaration,
-													moduleDeclaration
-															.sourceEnd());
+									UseStatement[] useStatements = ASTUtils.getUseStatements(moduleDeclaration,
+											moduleDeclaration.sourceEnd());
 									useStatementsCountNew = useStatements.length;
 								}
 							}
 						}
 					}
-					final IModelElementDelta delta = findElement(fSourceModule,
-							e.getDelta());
-					if ((delta != null || e.getType() == ElementChangedEvent.POST_CHANGE)
-							&& fOutlineViewer != null
-							&& fOutlineViewer.getControl() != null
-							&& !fOutlineViewer.getControl().isDisposed()) {
+					final IModelElementDelta delta = findElement(fSourceModule, e.getDelta());
+					if ((delta != null || e.getType() == ElementChangedEvent.POST_CHANGE) && fOutlineViewer != null
+							&& fOutlineViewer.getControl() != null && !fOutlineViewer.getControl().isDisposed()) {
 						Display d = control.getDisplay();
 						if (d != null) {
 							d.asyncExec(new Runnable() {
@@ -277,8 +260,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			job.schedule();
 		}
 
-		private void collectSourceModules(IModelElementDelta delta,
-				Set<ISourceModule> sourceModules) {
+		private void collectSourceModules(IModelElementDelta delta, Set<ISourceModule> sourceModules) {
 			if (delta.getElement() instanceof ISourceModule) {
 				sourceModules.add((ISourceModule) delta.getElement());
 			}
@@ -292,8 +274,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 				return;
 			}
 			if (fOutlineViewer.getTree() == null
-					|| (fOutlineViewer.getTree() != null && !fOutlineViewer
-							.getTree().isDisposed())) {
+					|| (fOutlineViewer.getTree() != null && !fOutlineViewer.getTree().isDisposed())) {
 				visitAndUpdate(delta);
 			}
 		}
@@ -304,14 +285,12 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 				switch (delta.getKind()) {
 				case IModelElementDelta.ADDED:
 					if (modelElement.getElementType() == IModelElement.IMPORT_CONTAINER) {
-						IModelElement parent = new ImportContainerFinder()
-								.findParent((IImportContainer) modelElement);
+						IModelElement parent = new ImportContainerFinder().findParent((IImportContainer) modelElement);
 						if (parent != null) {
 							fOutlineViewer.add(parent, modelElement);
 						}
 					} else {
-						fOutlineViewer.add(modelElement.getParent(),
-								modelElement);
+						fOutlineViewer.add(modelElement.getParent(), modelElement);
 					}
 					refreshUseStatements(modelElement);
 					break;
@@ -330,15 +309,13 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		}
 
 		private void refreshUseStatements(IModelElement element) {
-			if (fUseStatementsNode != null
-					&& (element.getElementType() == IModelElement.IMPORT_CONTAINER || element
-							.getElementType() == IModelElement.IMPORT_DECLARATION)) {
+			if (fUseStatementsNode != null && (element.getElementType() == IModelElement.IMPORT_CONTAINER
+					|| element.getElementType() == IModelElement.IMPORT_DECLARATION)) {
 				fOutlineViewer.refresh(fUseStatementsNode);
 			}
 		}
 
-		protected IModelElementDelta findElement(IModelElement unit,
-				IModelElementDelta delta) {
+		protected IModelElementDelta findElement(IModelElement unit, IModelElementDelta delta) {
 
 			if (delta == null || unit == null) {
 				return null;
@@ -386,7 +363,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			if ((flags & IModelElementDelta.F_CHILDREN) != 0) {
 				return true;
 			}
-			return (flags & (IModelElementDelta.F_CONTENT | IModelElementDelta.F_FINE_GRAINED)) == IModelElementDelta.F_CONTENT;
+			return (flags & (IModelElementDelta.F_CONTENT
+					| IModelElementDelta.F_FINE_GRAINED)) == IModelElementDelta.F_CONTENT;
 		}
 	}
 
@@ -396,8 +374,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		@Override
 		public boolean visit(IResourceDelta delta) throws CoreException {
 			IResource res = delta.getResource();
-			if (res instanceof IProject
-					&& delta.getKind() == IResourceDelta.CHANGED) {
+			if (res instanceof IProject && delta.getKind() == IResourceDelta.CHANGED) {
 				IProject project = (IProject) res;
 				if (!project.isAccessible()) {
 					// only track open PHP projects
@@ -421,8 +398,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 				return;
 			}
 			int kind = delta.getKind();
-			if (kind == IResourceDelta.REMOVED || kind == IResourceDelta.ADDED
-					|| kind == IResourceDelta.CHANGED) {
+			if (kind == IResourceDelta.REMOVED || kind == IResourceDelta.ADDED || kind == IResourceDelta.CHANGED) {
 				collectChangedElements(delta);
 			}
 		}
@@ -434,15 +410,12 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			IMarkerDelta[] markerDeltas = delta.getMarkerDeltas();
 			for (int i = 0; i < markerDeltas.length; i++) {
 				if (markerDeltas[i].isSubtypeOf(IMarker.PROBLEM)) {
-					Integer charStart = (Integer) markerDeltas[i]
-							.getAttribute(IMarker.CHAR_START);
-					Integer charEnd = (Integer) markerDeltas[i]
-							.getAttribute(IMarker.CHAR_END);
+					Integer charStart = (Integer) markerDeltas[i].getAttribute(IMarker.CHAR_START);
+					Integer charEnd = (Integer) markerDeltas[i].getAttribute(IMarker.CHAR_END);
 
 					if (charStart != null && charEnd != null) {
 						try {
-							IModelElement element = fInput
-									.getElementAt(charStart);
+							IModelElement element = fInput.getElementAt(charStart);
 							collectToUpdate(element);
 						} catch (ModelException e) {
 							PHPUiPlugin.log(e);
@@ -459,8 +432,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			toUpdate.add(element);
 
 			// update elements from virtual 'use statements' node
-			if (fUseStatementsNode != null
-					&& element.getElementType() == IModelElement.IMPORT_DECLARATION) {
+			if (fUseStatementsNode != null && element.getElementType() == IModelElement.IMPORT_DECLARATION) {
 				Object[] objects = getChildren(fUseStatementsNode);
 				toUpdate.addAll(Arrays.asList(objects));
 			}
@@ -469,8 +441,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 				toUpdate.add(element);
 				// find parent for container if is in namespace
 				if (element instanceof IImportContainer) {
-					IModelElement parent = new ImportContainerFinder()
-							.findParent((IImportContainer) element);
+					IModelElement parent = new ImportContainerFinder().findParent((IImportContainer) element);
 					if (parent != null) {
 						toUpdate.add(parent);
 					}
@@ -504,13 +475,11 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 						return Status.OK_STATUS;
 					}
 
-					if (!collector.toUpdate.isEmpty() && fOutlineViewer != null
-							&& fOutlineViewer.getControl() != null
+					if (!collector.toUpdate.isEmpty() && fOutlineViewer != null && fOutlineViewer.getControl() != null
 							&& !fOutlineViewer.getControl().isDisposed()) {
 						Display d = control.getDisplay();
 						if (d != null) {
-							final Object[] objects = collector.toUpdate
-									.toArray();
+							final Object[] objects = collector.toUpdate.toArray();
 							d.asyncExec(new Runnable() {
 								public void run() {
 									fOutlineViewer.update(objects, null);
@@ -541,8 +510,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			return null;
 		}
 
-		private IModelElement findParent(Object object,
-				IImportContainer importContainer) {
+		private IModelElement findParent(Object object, IImportContainer importContainer) {
 			Object[] children = getChildren(object);
 			for (Object child : children) {
 				if (child == importContainer && object instanceof IModelElement) {
@@ -560,9 +528,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 	public class UseStatementsNode extends FakeType {
 
 		public UseStatementsNode(ISourceModule sourceModule) {
-			super((ModelElement) sourceModule,
-					PHPUIMessages.PHPOutlineContentProvider_useStatementsNode,
-					0, null);
+			super((ModelElement) sourceModule, PHPUIMessages.PHPOutlineContentProvider_useStatementsNode, 0, null);
 			fSourceModule = sourceModule;
 		}
 
@@ -596,21 +562,17 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		if (null == fSourceModule || !fSourceModule.exists()) {
 			return new IModelElement[0];
 		}
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(fSourceModule);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(fSourceModule);
 		if (moduleDeclaration == null)
 			return new IModelElement[0];
-		UseStatement[] useStatements = ASTUtils.getUseStatements(
-				moduleDeclaration, moduleDeclaration.sourceEnd());
+		UseStatement[] useStatements = ASTUtils.getUseStatements(moduleDeclaration, moduleDeclaration.sourceEnd());
 		List<UseStatementElement> elements = new LinkedList<UseStatementElement>();
 		for (UseStatement useStatement : useStatements) {
 			for (UsePart usePart : useStatement.getParts()) {
-				elements.add(new UseStatementElement(
-						(ModelElement) fSourceModule, usePart));
+				elements.add(new UseStatementElement((ModelElement) fSourceModule, usePart));
 			}
 		}
-		return (UseStatementElement[]) elements
-				.toArray(new UseStatementElement[elements.size()]);
+		return (UseStatementElement[]) elements.toArray(new UseStatementElement[elements.size()]);
 	}
 
 }

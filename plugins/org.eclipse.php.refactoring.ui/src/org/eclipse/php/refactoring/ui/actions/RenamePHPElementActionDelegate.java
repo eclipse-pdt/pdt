@@ -65,19 +65,16 @@ public class RenamePHPElementActionDelegate implements IPHPActionDelegator {
 		IEditorPart fEditor = fWindow.getActivePage().getActiveEditor();
 
 		if (fEditor != null && fEditor instanceof PHPStructuredEditor) {
-			IModelElement source = ((PHPStructuredEditor) fEditor)
-					.getModelElement();
+			IModelElement source = ((PHPStructuredEditor) fEditor).getModelElement();
 
 			if (!(source instanceof ISourceModule)) {
-				MessageDialog.openError(fWindow.getShell(), DIALOG_TITLE,
-						Messages.RenamePHPElementActionDelegate_1);
+				MessageDialog.openError(fWindow.getShell(), DIALOG_TITLE, Messages.RenamePHPElementActionDelegate_1);
 				return;
 			}
 			Program program = null;
 
 			try {
-				program = ASTUtils
-						.createProgramFromSource((ISourceModule) source);
+				program = ASTUtils.createProgramFromSource((ISourceModule) source);
 			} catch (Exception e) {
 				MessageDialog.openError(fWindow.getShell(), DIALOG_TITLE,
 						"Unexpected error happenned:" + e.getMessage()); //$NON-NLS-1$
@@ -89,13 +86,10 @@ public class RenamePHPElementActionDelegate implements IPHPActionDelegator {
 				return;
 			}
 
-			IPreferenceStore store = RefactoringUIPlugin.getDefault()
-					.getPreferenceStore();
-			boolean isInline = store
-					.getBoolean(PreferenceConstants.REFACTOR_LIGHTWEIGHT);
+			IPreferenceStore store = RefactoringUIPlugin.getDefault().getPreferenceStore();
+			boolean isInline = store.getBoolean(PreferenceConstants.REFACTOR_LIGHTWEIGHT);
 
-			ISourceViewer viewer = ((PHPStructuredEditor) fEditor)
-					.getTextViewer();
+			ISourceViewer viewer = ((PHPStructuredEditor) fEditor).getTextViewer();
 			IDocument document = viewer.getDocument();
 
 			// this is work around for the case
@@ -103,11 +97,9 @@ public class RenamePHPElementActionDelegate implements IPHPActionDelegator {
 			// use the offset from source viewer instead.
 			Point originalSelection = viewer.getSelectedRange();
 			if (originalSelection != null) {
-				run(source.getResource(), program, originalSelection.x,
-						originalSelection.y, fEditor, isInline);
+				run(source.getResource(), program, originalSelection.x, originalSelection.y, fEditor, isInline);
 			} else {
-				run(source.getResource(), program, selection.getOffset(),
-						selection.getLength(), fEditor, isInline);
+				run(source.getResource(), program, selection.getOffset(), selection.getLength(), fEditor, isInline);
 			}
 		}
 	}
@@ -118,41 +110,35 @@ public class RenamePHPElementActionDelegate implements IPHPActionDelegator {
 		}
 	}
 
-	private void run(IResource resource, Program program, int offset,
-			int length, IEditorPart fEditor, boolean isInline) {
+	private void run(IResource resource, Program program, int offset, int length, IEditorPart fEditor,
+			boolean isInline) {
 		ASTNode selectedNode = getSelectedNode(program, offset, length);
 
 		Shell activeShell = null;
 		if (fWindow != null) {
 			activeShell = fWindow.getShell();
 		} else {
-			activeShell = PlatformUI.getWorkbench().getDisplay()
-					.getActiveShell();
+			activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 		}
 		if (selectedNode != null) {
 			if (isInline) {
-				new RenameLinkedMode(null, (PHPStructuredEditor) fEditor)
-						.start();
+				new RenameLinkedMode(null, (PHPStructuredEditor) fEditor).start();
 			} else
 				try {
-					RefactoringExecutionStarter.startRenameRefactoring(
-							resource, selectedNode, activeShell);
+					RefactoringExecutionStarter.startRenameRefactoring(resource, selectedNode, activeShell);
 				} catch (CoreException e) {
-					MessageDialog.openInformation(fWindow.getShell(),
-							DIALOG_TITLE,
+					MessageDialog.openInformation(fWindow.getShell(), DIALOG_TITLE,
 							Messages.RenamePHPElementActionDelegate_2);
 				}
 		} else {
-			MessageDialog.openInformation(fWindow.getShell(), DIALOG_TITLE,
-					Messages.RenamePHPElementActionDelegate_2);
+			MessageDialog.openInformation(fWindow.getShell(), DIALOG_TITLE, Messages.RenamePHPElementActionDelegate_2);
 		}
 	}
 
 	protected ASTNode getSelectedNode(Program program, int offset, int length) {
 		ASTNode selectedNode = NodeFinder.perform(program, offset, length);
 
-		if (selectedNode != null
-				&& selectedNode.getType() == ASTNode.IN_LINE_HTML) {
+		if (selectedNode != null && selectedNode.getType() == ASTNode.IN_LINE_HTML) {
 			selectedNode = selectedNode.getProgramRoot();
 		}
 		return selectedNode;
@@ -165,8 +151,7 @@ public class RenamePHPElementActionDelegate implements IPHPActionDelegator {
 		if (isScriptContainer(object)) {
 			IModelElement element = (IModelElement) object;
 			try {
-				RefactoringExecutionStarter.startRenameRefactoring(
-						element.getResource(), null, fWindow.getShell());
+				RefactoringExecutionStarter.startRenameRefactoring(element.getResource(), null, fWindow.getShell());
 			} catch (CoreException e) {
 				MessageDialog.openInformation(fWindow.getShell(), DIALOG_TITLE,
 						Messages.RenamePHPElementActionDelegate_2);
@@ -201,8 +186,7 @@ public class RenamePHPElementActionDelegate implements IPHPActionDelegator {
 
 			try {
 				int offset = getSourceOffset(element);
-				run(element.getResource(), program, offset, 0, fWindow
-						.getActivePage().getActiveEditor(), false);
+				run(element.getResource(), program, offset, 0, fWindow.getActivePage().getActiveEditor(), false);
 
 			} catch (ModelException e) {
 				MessageDialog.openInformation(fWindow.getShell(), DIALOG_TITLE,
@@ -211,12 +195,11 @@ public class RenamePHPElementActionDelegate implements IPHPActionDelegator {
 			}
 
 		} else {
-			RenameResourceAction renameAction = new RenameResourceAction(
-					new IShellProvider() {
-						public Shell getShell() {
-							return fWindow.getShell();
-						}
-					});
+			RenameResourceAction renameAction = new RenameResourceAction(new IShellProvider() {
+				public Shell getShell() {
+					return fWindow.getShell();
+				}
+			});
 
 			renameAction.selectionChanged(selection);
 			renameAction.run();
@@ -244,9 +227,7 @@ public class RenamePHPElementActionDelegate implements IPHPActionDelegator {
 	}
 
 	protected boolean isScriptContainer(Object object) {
-		return object instanceof IScriptFolder
-				|| object instanceof IScriptProject
-				|| object instanceof ProjectFragment;
+		return object instanceof IScriptFolder || object instanceof IScriptProject || object instanceof ProjectFragment;
 	}
 
 	public void dispose() {

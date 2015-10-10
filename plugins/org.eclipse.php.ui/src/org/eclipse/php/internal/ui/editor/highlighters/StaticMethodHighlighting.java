@@ -22,8 +22,7 @@ public class StaticMethodHighlighting extends AbstractSemanticHighlighting {
 		@Override
 		public boolean visit(FunctionDeclaration functionDeclaration) {
 			ASTNode parent = functionDeclaration.getParent();
-			while (parent.getType() == ASTNode.BLOCK
-					|| parent.getType() == ASTNode.FUNCTION_DECLARATION) {
+			while (parent.getType() == ASTNode.BLOCK || parent.getType() == ASTNode.FUNCTION_DECLARATION) {
 				parent = parent.getParent();
 			}
 			if (parent.getType() == ASTNode.METHOD_DECLARATION) {
@@ -38,13 +37,10 @@ public class StaticMethodHighlighting extends AbstractSemanticHighlighting {
 
 		@Override
 		public boolean visit(FunctionInvocation functionInvocation) {
-			final Expression functionName = functionInvocation
-					.getFunctionName().getName();
-			final int invocationParent = functionInvocation.getParent()
-					.getType();
-			if ((functionName.getType() == ASTNode.IDENTIFIER || (functionName
-					.getType() == ASTNode.VARIABLE && ((Variable) functionName)
-					.getName().getType() == ASTNode.IDENTIFIER))
+			final Expression functionName = functionInvocation.getFunctionName().getName();
+			final int invocationParent = functionInvocation.getParent().getType();
+			if ((functionName.getType() == ASTNode.IDENTIFIER || (functionName.getType() == ASTNode.VARIABLE
+					&& ((Variable) functionName).getName().getType() == ASTNode.IDENTIFIER))
 					&& invocationParent == ASTNode.STATIC_METHOD_INVOCATION) {
 				highlight(functionName);
 			}

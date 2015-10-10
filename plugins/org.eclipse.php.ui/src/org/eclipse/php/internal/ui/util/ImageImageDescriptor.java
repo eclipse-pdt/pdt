@@ -44,8 +44,7 @@ public class ImageImageDescriptor extends ImageDescriptor {
 	 * @see Object#equals(Object)
 	 */
 	public boolean equals(Object obj) {
-		return (obj != null) && getClass().equals(obj.getClass())
-				&& fImage.equals(((ImageImageDescriptor) obj).fImage);
+		return (obj != null) && getClass().equals(obj.getClass()) && fImage.equals(((ImageImageDescriptor) obj).fImage);
 	}
 
 	/*

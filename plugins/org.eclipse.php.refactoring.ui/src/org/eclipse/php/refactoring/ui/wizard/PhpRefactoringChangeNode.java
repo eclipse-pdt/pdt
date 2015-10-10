@@ -58,14 +58,12 @@ public class PhpRefactoringChangeNode extends TextEditChangeNode {
 
 		public String getText() {
 			return ASTNodeLabels.getElementLabel(fphpElement,
-					ASTNodeLabels.M_PARAMETER_TYPES
-							| ASTNodeLabels.M_PARAMETER_NAMES);
+					ASTNodeLabels.M_PARAMETER_TYPES | ASTNodeLabels.M_PARAMETER_NAMES);
 		}
 
 		public ImageDescriptor getImageDescriptor() {
 			return fgImageProvider.getPHPImageDescriptor(fphpElement,
-					ASTNodeImageProvider.OVERLAY_ICONS
-							| ASTNodeImageProvider.SMALL_ICONS);
+					ASTNodeImageProvider.OVERLAY_ICONS | ASTNodeImageProvider.SMALL_ICONS);
 		}
 
 		public IRegion getTextRange() throws CoreException {
@@ -112,8 +110,7 @@ public class PhpRefactoringChangeNode extends TextEditChangeNode {
 					RefactoringUIPlugin.log(e);
 				}
 			}
-			return (ChildNode[]) children
-					.toArray(new ChildNode[children.size()]);
+			return (ChildNode[]) children.toArray(new ChildNode[children.size()]);
 		} else {
 			return EMPTY_CHILDREN;
 		}
@@ -126,19 +123,17 @@ public class PhpRefactoringChangeNode extends TextEditChangeNode {
 	 * @param tec
 	 * @param element
 	 */
-	private void addNode(Program program, List children, Map map,
-			final TextEditBasedChangeGroup tec, final ASTNode element) {
+	private void addNode(Program program, List children, Map map, final TextEditBasedChangeGroup tec,
+			final ASTNode element) {
 		if (element.getType() == ASTNode.PROGRAM) {
 			children.add(createTextEditGroupNode(this, tec));
 		} else {
-			PhpLanguageNode pjce = getChangeElement(map, element, children,
-					this);
+			PhpLanguageNode pjce = getChangeElement(map, element, children, this);
 			pjce.addChild(createTextEditGroupNode(pjce, tec));
 		}
 	}
 
-	private TextEditBasedChangeGroup[] getSortedChangeGroups(
-			TextEditBasedChange change) {
+	private TextEditBasedChangeGroup[] getSortedChangeGroups(TextEditBasedChange change) {
 		TextEditBasedChangeGroup[] edits = change.getChangeGroups();
 		List result = new ArrayList(edits.length);
 		for (int i = 0; i < edits.length; i++) {
@@ -147,12 +142,10 @@ public class PhpRefactoringChangeNode extends TextEditChangeNode {
 		}
 		Comparator comparator = new OffsetComparator();
 		Collections.sort(result, comparator);
-		return (TextEditBasedChangeGroup[]) result
-				.toArray(new TextEditBasedChangeGroup[result.size()]);
+		return (TextEditBasedChangeGroup[]) result.toArray(new TextEditBasedChangeGroup[result.size()]);
 	}
 
-	private ASTNode getModifiedPhpElement(TextEditBasedChangeGroup edit,
-			Program program) throws Exception {
+	private ASTNode getModifiedPhpElement(TextEditBasedChangeGroup edit, Program program) throws Exception {
 		IRegion range = edit.getRegion();
 		if (range.getOffset() == 0 && range.getLength() == 0)
 			return program;
@@ -164,15 +157,13 @@ public class PhpRefactoringChangeNode extends TextEditChangeNode {
 		return getParentContext(result);
 	}
 
-	private PhpLanguageNode getChangeElement(Map map, ASTNode element,
-			List children, TextEditChangeNode cunitChange) {
+	private PhpLanguageNode getChangeElement(Map map, ASTNode element, List children, TextEditChangeNode cunitChange) {
 		PhpLanguageNode result = (PhpLanguageNode) map.get(element);
 		if (result != null)
 			return result;
 
 		final int type = element.getType();
-		if (type == ASTNode.CLASS_DECLARATION
-				|| type == ASTNode.INTERFACE_DECLARATION
+		if (type == ASTNode.CLASS_DECLARATION || type == ASTNode.INTERFACE_DECLARATION
 				|| type == ASTNode.FUNCTION_DECLARATION) {
 			result = new PhpLanguageNode(cunitChange, element);
 			children.add(result);
@@ -181,8 +172,7 @@ public class PhpRefactoringChangeNode extends TextEditChangeNode {
 			assert element.getType() == ASTNode.METHOD_DECLARATION;
 
 			ASTNode parentNode = getParentContext(element);
-			final PhpLanguageNode parentChange = getChangeElement(map,
-					parentNode, children, cunitChange);
+			final PhpLanguageNode parentChange = getChangeElement(map, parentNode, children, cunitChange);
 			result = new PhpLanguageNode(parentChange, element);
 			parentChange.addChild(result);
 			map.put(element, result);
@@ -210,8 +200,7 @@ public class PhpRefactoringChangeNode extends TextEditChangeNode {
 		}
 	}
 
-	private boolean coveredBy(TextEditBasedChangeGroup group,
-			IRegion sourceRegion) {
+	private boolean coveredBy(TextEditBasedChangeGroup group, IRegion sourceRegion) {
 		int sLength = sourceRegion.getLength();
 		if (sLength == 0)
 			return false;

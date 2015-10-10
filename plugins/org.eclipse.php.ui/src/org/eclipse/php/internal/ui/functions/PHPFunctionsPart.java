@@ -58,8 +58,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class PHPFunctionsPart extends ViewPart implements IPartListener {
 
-	protected IPreferenceStore fStore = PHPUiPlugin.getDefault()
-			.getPreferenceStore();
+	protected IPreferenceStore fStore = PHPUiPlugin.getDefault().getPreferenceStore();
 
 	private TreeViewer fViewer;
 	private PHPFunctionsContentProvider fContentProvider;
@@ -85,8 +84,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		// filter out children for methods
 		fViewer.addFilter(new ViewerFilter() {
 			@Override
-			public boolean select(Viewer viewer, Object parentElement,
-					Object element) {
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
 				if (isMethodVariable(parentElement, element)) {
 					return false;
 				}
@@ -100,8 +98,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		addMouseTrackListener();
 		getSite().getPage().addPartListener(this);
 
-		IStatusLineManager slManager = getViewSite().getActionBars()
-				.getStatusLineManager();
+		IStatusLineManager slManager = getViewSite().getActionBars().getStatusLineManager();
 		fViewer.addSelectionChangedListener(new StatusBarUpdater(slManager));
 
 		fViewer.getTree().addFocusListener(new FocusListener() {
@@ -111,8 +108,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 
 					public void run() {
 						if (!fViewer.getTree().isDisposed()
-								&& (shouldRefresh || fViewer.getTree()
-										.getItems().length == 0)) {
+								&& (shouldRefresh || fViewer.getTree().getItems().length == 0)) {
 							fViewer.refresh();
 							shouldRefresh = false;
 						}
@@ -126,8 +122,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 
 		});
 		updateTitle();
-		PlatformUI.getWorkbench().getHelpSystem()
-				.setHelp(parent, IPHPHelpContextIds.PHP_FUNCTIONS_VIEW);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.PHP_FUNCTIONS_VIEW);
 	}
 
 	/**
@@ -138,8 +133,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 	 * @return whether the given element is a method variable
 	 */
 	public static boolean isMethodVariable(Object parentElement, Object element) {
-		if (parentElement instanceof IModelElement
-				&& element instanceof IModelElement) {
+		if (parentElement instanceof IModelElement && element instanceof IModelElement) {
 			if (((IModelElement) parentElement).getElementType() == IModelElement.METHOD
 					&& ((IModelElement) element).getElementType() == IModelElement.FIELD) {
 				return true;
@@ -161,8 +155,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 				ISelection selection = fViewer.getSelection();
 				if (!selection.isEmpty()) {
 					IStructuredSelection s = (IStructuredSelection) selection;
-					String url = PHPManualFactory.getManual().getURLForManual(
-							(IModelElement) s.getFirstElement());
+					String url = PHPManualFactory.getManual().getURLForManual((IModelElement) s.getFirstElement());
 					if (url != null) {
 						showFunctionHelpAction.setEnabled(true);
 						showFunctionHelpAction.setURL(url);
@@ -192,40 +185,29 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 				try {
 					// retrieves the project and the content
 					IScriptProject scriptProject = getCurrentScriptProject();
-					if (scriptProject == null
-							|| !(scriptProject instanceof ScriptProject)) {
+					if (scriptProject == null || !(scriptProject instanceof ScriptProject)) {
 						return Status.CANCEL_STATUS;
 					}
 
 					Object newInput;
 					try {
-						IBuildpathContainer languageContainer = DLTKCore
-								.getBuildpathContainer(
-										new Path(
-												LanguageModelInitializer.CONTAINER_PATH),
-										scriptProject);
+						IBuildpathContainer languageContainer = DLTKCore.getBuildpathContainer(
+								new Path(LanguageModelInitializer.CONTAINER_PATH), scriptProject);
 						if (languageContainer == null) {
-							Logger.log(
-									Logger.ERROR,
-									"project \""
-											+ scriptProject.getProject()
-													.getName()
-											+ "\" has php nature but has no language container"); //$NON-NLS-1$ //$NON-NLS-2$
+							Logger.log(Logger.ERROR, "project \"" + scriptProject.getProject().getName()
+									+ "\" has php nature but has no language container"); //$NON-NLS-1$ //$NON-NLS-2$
 							return Status.CANCEL_STATUS;
 						}
-						IBuildpathEntry[] buildpathEntries = languageContainer
-								.getBuildpathEntries();
+						IBuildpathEntry[] buildpathEntries = languageContainer.getBuildpathEntries();
 						List<IProjectFragment> fragments = new LinkedList<IProjectFragment>();
 						for (IBuildpathEntry buildpathEntry : buildpathEntries) {
 							IProjectFragment fragment = ((ScriptProject) scriptProject)
-									.getProjectFragment(buildpathEntry
-											.getPath());
+									.getProjectFragment(buildpathEntry.getPath());
 							if (fragment != null) {
 								fragments.add(fragment);
 							}
 						}
-						newInput = (IProjectFragment[]) fragments
-								.toArray(new IProjectFragment[fragments.size()]);
+						newInput = (IProjectFragment[]) fragments.toArray(new IProjectFragment[fragments.size()]);
 
 					} catch (ModelException e) {
 						return Status.CANCEL_STATUS;
@@ -235,8 +217,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 
 					// set the language settings as input to the content
 					// provider
-					if (!newInput.equals(currentInput)
-							&& fViewer.getContentProvider() != null) {
+					if (!newInput.equals(currentInput) && fViewer.getContentProvider() != null) {
 						fViewer.setInput(newInput);
 					}
 					return Status.OK_STATUS;
@@ -257,16 +238,13 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 			 * @return the selected project
 			 * @throws CoreException
 			 */
-			private final IScriptProject getCurrentScriptProject()
-					throws CoreException {
-				final PHPStructuredEditor phpEditor = EditorUtility
-						.getPHPStructuredEditor(editorPart);
+			private final IScriptProject getCurrentScriptProject() throws CoreException {
+				final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(editorPart);
 				if (phpEditor != null) {
 					return phpEditor.getProject();
 				}
 
-				final IProject[] projects = ResourcesPlugin.getWorkspace()
-						.getRoot().getProjects();
+				final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 				for (IProject project : projects) {
 					if (PHPToolkitUtil.isPhpProject(project)) {
 						return DLTKCore.create(project);
@@ -282,8 +260,8 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 	private TreeViewer createViewer(Composite composite) {
 		PatternFilter patternFilter = new PatternFilter();
 		// patternFilter.setIncludeLeadingWildcard(true);
-		FilteredTree filteredTree = new FilteredTree(composite, SWT.SINGLE
-				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, patternFilter, true);
+		FilteredTree filteredTree = new FilteredTree(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER,
+				patternFilter, true);
 		return filteredTree.getViewer();
 	}
 
@@ -306,38 +284,23 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 	private void addDoubleClickListener() {
 		fViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				IEditorPart editor = EditorUtility
-						.getPHPStructuredEditor(getViewSite().getPage()
-								.getActiveEditor());
-				StructuredSelection selection = (StructuredSelection) fViewer
-						.getSelection();
-				if (editor != null && editor instanceof ITextEditor
-						&& selection != null && !selection.isEmpty()) {
+				IEditorPart editor = EditorUtility.getPHPStructuredEditor(getViewSite().getPage().getActiveEditor());
+				StructuredSelection selection = (StructuredSelection) fViewer.getSelection();
+				if (editor != null && editor instanceof ITextEditor && selection != null && !selection.isEmpty()) {
 					if (selection.getFirstElement() instanceof IModelElement) {
-						IModelElement codeData = (IModelElement) selection
-								.getFirstElement();
+						IModelElement codeData = (IModelElement) selection.getFirstElement();
 						ITextEditor textEditor = (ITextEditor) editor;
-						int caretPosition = ((ITextSelection) textEditor
-								.getSelectionProvider().getSelection())
+						int caretPosition = ((ITextSelection) textEditor.getSelectionProvider().getSelection())
 								.getOffset();
-						IDocument document = textEditor.getDocumentProvider()
-								.getDocument(textEditor.getEditorInput());
+						IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 						try {
-							document.replace(caretPosition, 0,
-									codeData.getElementName());
+							document.replace(caretPosition, 0, codeData.getElementName());
 						} catch (BadLocationException e) {
 							Logger.logException(e);
 						}
 						textEditor.setFocus();
-						textEditor
-								.getSelectionProvider()
-								.setSelection(
-										new TextSelection(
-												document,
-												caretPosition
-														+ codeData
-																.getElementName()
-																.length(), 0));
+						textEditor.getSelectionProvider().setSelection(
+								new TextSelection(document, caretPosition + codeData.getElementName().length(), 0));
 					}
 				}
 			}
@@ -388,8 +351,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		}
 
 		part = EditorUtility.getPHPStructuredEditor(part);
-		if (PHPFunctionsPart.this.getViewer().getTree().getVisible()
-				&& part != null) {
+		if (PHPFunctionsPart.this.getViewer().getTree().getVisible() && part != null) {
 			updateInputForCurrentEditor((IEditorPart) part);
 		}
 	}
@@ -423,8 +385,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 	public void collapseAll() {
 		try {
 			fViewer.getControl().setRedraw(false);
-			fViewer.collapseToLevel(getViewPartInput(),
-					AbstractTreeViewer.ALL_LEVELS);
+			fViewer.collapseToLevel(getViewPartInput(), AbstractTreeViewer.ALL_LEVELS);
 		} finally {
 			fViewer.getControl().setRedraw(true);
 		}
@@ -461,12 +422,10 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		if (fWorkingSetName == null)
 			return result;
 
-		String wsstr = NLS.bind(PHPUIMessages.PHPExplorer_toolTip,
-				new String[] { fWorkingSetName });
+		String wsstr = NLS.bind(PHPUIMessages.PHPExplorer_toolTip, new String[] { fWorkingSetName });
 		if (result.length() == 0)
 			return wsstr;
-		return NLS.bind(PHPUIMessages.PHPExplorer_toolTip2, new String[] {
-				result, fWorkingSetName });
+		return NLS.bind(PHPUIMessages.PHPExplorer_toolTip2, new String[] { result, fWorkingSetName });
 	}
 
 	void updateTitle() {

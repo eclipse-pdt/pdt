@@ -19,11 +19,9 @@ import org.eclipse.jface.text.templates.TemplateProposal;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 
-public class PhpTemplateProposal extends TemplateProposal implements
-		ICompletionProposalExtension4 {
+public class PhpTemplateProposal extends TemplateProposal implements ICompletionProposalExtension4 {
 
-	public PhpTemplateProposal(Template template, TemplateContext context,
-			IRegion region, Image image, int relevance) {
+	public PhpTemplateProposal(Template template, TemplateContext context, IRegion region, Image image, int relevance) {
 		super(template, context, region, image, relevance);
 	}
 
@@ -42,14 +40,14 @@ public class PhpTemplateProposal extends TemplateProposal implements
 
 	@Override
 	public boolean equals(Object obj) {
-		if(this == obj)
+		if (this == obj)
 			return true;
-		if(!(obj instanceof PhpTemplateProposal))
+		if (!(obj instanceof PhpTemplateProposal))
 			return false;
-		PhpTemplateProposal newTemplateProposal = (PhpTemplateProposal)obj;
+		PhpTemplateProposal newTemplateProposal = (PhpTemplateProposal) obj;
 		return getTemplate().equals(newTemplateProposal.getTemplate());
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return getTemplate().hashCode();

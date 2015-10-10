@@ -18,8 +18,7 @@ import org.eclipse.osgi.util.NLS;
  */
 public final class CorrectionMessages extends NLS {
 
-	private static final String BUNDLE_NAME = CorrectionMessages.class
-			.getName();
+	private static final String BUNDLE_NAME = CorrectionMessages.class.getName();
 
 	private CorrectionMessages() {
 		// Do not instantiate

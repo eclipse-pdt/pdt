@@ -33,14 +33,13 @@ public class PHPAppearancePreferencePage extends AbstractPreferencePage {
 
 	public PHPAppearancePreferencePage() {
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
-		setDescription(PHPUIMessages.PHPAppearancePreferencePage_appearanceHeader); 
+		setDescription(PHPUIMessages.PHPAppearancePreferencePage_appearanceHeader);
 	}
 
 	protected void initializeValues() {
 		super.initializeValues();
 		IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
-		showReturnTypeCB.setSelection(store
-				.getBoolean(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE));
+		showReturnTypeCB.setSelection(store.getBoolean(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE));
 	}
 
 	private void createMainBlock(Composite parent) {
@@ -51,16 +50,14 @@ public class PHPAppearancePreferencePage extends AbstractPreferencePage {
 		comp.setLayout(gridLayout);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		showReturnTypeCB = new Button(comp, SWT.CHECK);
-		showReturnTypeCB
-				.setText(PHPUIMessages.PHPAppearancePreferencePage_showMehodsReturnType); 
+		showReturnTypeCB.setText(PHPUIMessages.PHPAppearancePreferencePage_showMehodsReturnType);
 		showReturnTypeCB.setLayoutData(gd);
 	}
 
 	protected Control createContents(Composite parent) {
 		createMainBlock(parent);
 		initializeValues();
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.APPEARANCE_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.APPEARANCE_PREFERENCES);
 		return null;
 	}
 
@@ -97,8 +94,7 @@ public class PHPAppearancePreferencePage extends AbstractPreferencePage {
 
 	public boolean performOk() {
 		IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
-		store.setValue(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE,
-				showReturnTypeCB.getSelection());
+		store.setValue(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE, showReturnTypeCB.getSelection());
 		return super.performOk();
 	}
 

@@ -42,8 +42,7 @@ public class PasswordDialogField extends StringDialogField {
 				}
 			};
 
-			fTextControl = new Text(parent, SWT.SINGLE | SWT.BORDER
-					| SWT.PASSWORD);
+			fTextControl = new Text(parent, SWT.SINGLE | SWT.BORDER | SWT.PASSWORD);
 			// moved up due to 1GEUNW2
 			fTextControl.setText(fText);
 			fTextControl.setFont(parent.getFont());

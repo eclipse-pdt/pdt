@@ -35,33 +35,28 @@ public class FindUseStatementByNamespaceTests {
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
-		TESTS.put(
-				PHPVersion.PHP5_3,
-				new String[] { "/workspace/astutils/find_use_statement_by_namespace/php53" }); //$NON-NLS-1$
+		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/astutils/find_use_statement_by_namespace/php53" }); //$NON-NLS-1$
 	};
 
 	public AbstractPHPSourceParser parser;
 
-	public FindUseStatementByNamespaceTests(PHPVersion phpVersion,
-			String[] fileName) {
+	public FindUseStatementByNamespaceTests(PHPVersion phpVersion, String[] fileName) {
 		parser = PHPSourceParserFactory.createParser(phpVersion);
 	}
 
 	@Test
 	public void find(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(fileName);
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdttFile
-				.getFile().trim().getBytes());
-		ModuleDeclaration moduleDeclaration = (ModuleDeclaration) parser.parse(
-				new InputStreamReader(inputStream), null,
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdttFile.getFile().trim().getBytes());
+		ModuleDeclaration moduleDeclaration = (ModuleDeclaration) parser.parse(new InputStreamReader(inputStream), null,
 				ProjectOptions.useShortTags((IProject) null));
 
 		String namespace = pdttFile.getConfig().get("namespace"); //$NON-NLS-1$
 		int offset = Integer.parseInt(pdttFile.getConfig().get("offset")); //$NON-NLS-1$
 
-		UsePart usePart = ASTUtils.findUseStatementByNamespace(
-				moduleDeclaration, namespace, offset);
+		UsePart usePart = ASTUtils.findUseStatementByNamespace(moduleDeclaration, namespace, offset);
 
 		String actual = (usePart == null) ? "null" : usePart.toString(); //$NON-NLS-1$
 		PDTTUtils.assertContents(pdttFile.getExpected(), actual);

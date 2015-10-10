@@ -99,10 +99,8 @@ public class RefactorActionGroup extends ActionGroup {
 	public RefactorActionGroup(IViewPart part) {
 		this(part.getSite(), part.getSite().getKeyBindingService());
 
-		IUndoContext workspaceContext = (IUndoContext) ResourcesPlugin
-				.getWorkspace().getAdapter(IUndoContext.class);
-		fUndoRedoActionGroup = new UndoRedoActionGroup(part.getViewSite(),
-				workspaceContext, true);
+		IUndoContext workspaceContext = (IUndoContext) ResourcesPlugin.getWorkspace().getAdapter(IUndoContext.class);
+		fUndoRedoActionGroup = new UndoRedoActionGroup(part.getViewSite(), workspaceContext, true);
 	}
 
 	/**
@@ -135,10 +133,8 @@ public class RefactorActionGroup extends ActionGroup {
 		ISelection selection = provider.getSelection();
 		fEditorActions = new ArrayList();
 
-		fMoveAction = new org.eclipse.dltk.internal.ui.actions.refactoring.MoveAction(
-				editor.getEditorSite());
-		fMoveAction
-				.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
+		fMoveAction = new org.eclipse.dltk.internal.ui.actions.refactoring.MoveAction(editor.getEditorSite());
+		fMoveAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
 		fMoveAction.update(selection);
 		initAction(fMoveAction, provider, selection);
 		editor.setAction("MoveElement", fMoveAction); //$NON-NLS-1$
@@ -147,24 +143,20 @@ public class RefactorActionGroup extends ActionGroup {
 		fKeyBindingService = editor.getEditorSite().getKeyBindingService();
 	}
 
-	private RefactorActionGroup(IWorkbenchSite site,
-			IKeyBindingService keyBindingService) {
+	private RefactorActionGroup(IWorkbenchSite site, IKeyBindingService keyBindingService) {
 
 		fSite = site;
 		ISelectionProvider provider = fSite.getSelectionProvider();
 		ISelection selection = provider.getSelection();
 
-		fMoveAction = new org.eclipse.dltk.internal.ui.actions.refactoring.MoveAction(
-				site);
-		fMoveAction
-				.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
+		fMoveAction = new org.eclipse.dltk.internal.ui.actions.refactoring.MoveAction(site);
+		fMoveAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
 		initAction(fMoveAction, provider, selection);
 
 		fKeyBindingService = keyBindingService;
 	}
 
-	private static void initAction(SelectionDispatchAction action,
-			ISelectionProvider provider, ISelection selection) {
+	private static void initAction(SelectionDispatchAction action, ISelectionProvider provider, ISelection selection) {
 		action.update(selection);
 		provider.addSelectionChangedListener(action);
 	}
@@ -187,8 +179,7 @@ public class RefactorActionGroup extends ActionGroup {
 	 *            the action bar to register the move and rename action with
 	 */
 	public void retargetFileMenuActions(IActionBars actionBars) {
-		actionBars.setGlobalActionHandler(ActionFactory.MOVE.getId(),
-				fMoveAction);
+		actionBars.setGlobalActionHandler(ActionFactory.MOVE.getId(), fMoveAction);
 	}
 
 	/*
@@ -211,8 +202,7 @@ public class RefactorActionGroup extends ActionGroup {
 		super.dispose();
 	}
 
-	private void disposeAction(ISelectionChangedListener action,
-			ISelectionProvider provider) {
+	private void disposeAction(ISelectionChangedListener action, ISelectionProvider provider) {
 		if (action != null)
 			provider.removeSelectionChangedListener(action);
 	}
@@ -271,22 +261,18 @@ public class RefactorActionGroup extends ActionGroup {
 				refactorMenuHidden(refactorSubmenu);
 			}
 		});
-		ITextSelection textSelection = (ITextSelection) fEditor
-				.getSelectionProvider().getSelection();
+		ITextSelection textSelection = (ITextSelection) fEditor.getSelectionProvider().getSelection();
 
 		for (Iterator iter = fEditorActions.iterator(); iter.hasNext();) {
-			SelectionDispatchAction action = (SelectionDispatchAction) iter
-					.next();
+			SelectionDispatchAction action = (SelectionDispatchAction) iter.next();
 			action.update(textSelection);
 		}
 	}
 
 	private void refactorMenuHidden(IMenuManager manager) {
-		ITextSelection textSelection = (ITextSelection) fEditor
-				.getSelectionProvider().getSelection();
+		ITextSelection textSelection = (ITextSelection) fEditor.getSelectionProvider().getSelection();
 		for (Iterator iter = fEditorActions.iterator(); iter.hasNext();) {
-			SelectionDispatchAction action = (SelectionDispatchAction) iter
-					.next();
+			SelectionDispatchAction action = (SelectionDispatchAction) iter.next();
 			action.update(textSelection);
 		}
 	}

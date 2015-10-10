@@ -35,7 +35,6 @@ public interface ISelectionListenerWithAST {
 	 *            The AST tree corresponding to the editor's input. This AST is
 	 *            shared and must not be modified.
 	 */
-	void selectionChanged(IEditorPart part, ITextSelection selection,
-			Program astRoot);
+	void selectionChanged(IEditorPart part, ITextSelection selection, Program astRoot);
 
 }

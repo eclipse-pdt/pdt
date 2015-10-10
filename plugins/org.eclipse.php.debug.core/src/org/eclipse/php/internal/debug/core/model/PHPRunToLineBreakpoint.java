@@ -39,15 +39,13 @@ public class PHPRunToLineBreakpoint extends PHPLineBreakpoint {
 	 * @exception DebugException
 	 *                if unable to create the breakpoint
 	 */
-	public PHPRunToLineBreakpoint(final IFile resource, final int lineNumber)
-			throws DebugException {
+	public PHPRunToLineBreakpoint(final IFile resource, final int lineNumber) throws DebugException {
 		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
 				// associate with workspace root to avoid drawing in editor
 				// ruler
 				fSourceFile = resource;
-				IMarker marker = ResourcesPlugin.getWorkspace().getRoot()
-						.createMarker(MARKER_ID);
+				IMarker marker = ResourcesPlugin.getWorkspace().getRoot().createMarker(MARKER_ID);
 				marker.setAttribute(IBreakpoint.ENABLED, Boolean.TRUE);
 				marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
 				marker.setAttribute(IBreakpoint.ID, getModelIdentifier());
@@ -65,8 +63,8 @@ public class PHPRunToLineBreakpoint extends PHPLineBreakpoint {
 		IPath path = file.getFullPath();
 		String fileName = path.lastSegment();
 		Integer lineNumber = (Integer) marker.getAttribute(IMarker.LINE_NUMBER);
-		fBreakpoint = new org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint(
-				fileName, (lineNumber.intValue()/*-1*/));
+		fBreakpoint = new org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint(fileName,
+				(lineNumber.intValue()/*-1*/));
 		fBreakpoint.setLifeTime(Breakpoint.ZEND_ONETIME_BREAKPOINT);
 	}
 

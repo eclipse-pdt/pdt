@@ -41,30 +41,25 @@ public class PHPVariableValueEditor implements IVariableValueEditor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.actions.IVariableValueEditor#editVariable(org.eclipse
-	 * .debug.core.model.IVariable, org.eclipse.swt.widgets.Shell)
+	 * @see org.eclipse.debug.ui.actions.IVariableValueEditor#editVariable(org.
+	 * eclipse .debug.core.model.IVariable, org.eclipse.swt.widgets.Shell)
 	 */
 	public boolean editVariable(IVariable variable, Shell shell) {
 		try {
 			String name = variable.getName();
-			String title = PHPDebugUIMessages.PHPPrimitiveValueEditor_0; 
-			String message = NLS.bind(
-					PHPDebugUIMessages.PHPPrimitiveValueEditor_1,
-					new String[] { name }); 
+			String title = PHPDebugUIMessages.PHPPrimitiveValueEditor_0;
+			String message = NLS.bind(PHPDebugUIMessages.PHPPrimitiveValueEditor_1, new String[] { name });
 			PHPValue value = (PHPValue) variable.getValue();
 			String initialValue = value.getValue();
 			PrimitiveValidator validator = new PrimitiveValidator();
-			InputDialog dialog = new InputDialog(shell, title, message,
-					initialValue, validator);
+			InputDialog dialog = new InputDialog(shell, title, message, initialValue, validator);
 			if (dialog.open() == Window.OK) {
 				String stringValue = dialog.getValue();
 				variable.setValue(stringValue);
 			}
 		} catch (DebugException e) {
-			DebugUIPlugin.errorDialog(shell,
-					PHPDebugUIMessages.PHPPrimitiveValueEditor_2,
-					PHPDebugUIMessages.PHPPrimitiveValueEditor_3, e); 
+			DebugUIPlugin.errorDialog(shell, PHPDebugUIMessages.PHPPrimitiveValueEditor_2,
+					PHPDebugUIMessages.PHPPrimitiveValueEditor_3, e);
 		}
 		return true;
 	}
@@ -72,13 +67,11 @@ public class PHPVariableValueEditor implements IVariableValueEditor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.actions.IVariableValueEditor#saveVariable(org.eclipse
-	 * .debug.core.model.IVariable, java.lang.String,
+	 * @see org.eclipse.debug.ui.actions.IVariableValueEditor#saveVariable(org.
+	 * eclipse .debug.core.model.IVariable, java.lang.String,
 	 * org.eclipse.swt.widgets.Shell)
 	 */
-	public boolean saveVariable(IVariable variable, String expression,
-			Shell shell) {
+	public boolean saveVariable(IVariable variable, String expression, Shell shell) {
 		return false;
 	}
 

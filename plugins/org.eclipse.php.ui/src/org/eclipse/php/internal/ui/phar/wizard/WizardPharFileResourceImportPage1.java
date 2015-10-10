@@ -30,14 +30,12 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 
 @SuppressWarnings("restriction")
-public class WizardPharFileResourceImportPage1 extends
-		WizardFileSystemResourceImportPage1 implements Listener {
+public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceImportPage1 implements Listener {
 
 	ILeveledImportStructureProvider structureProvider;
 
 	// constants
-	private static final String[] FILE_IMPORT_MASK = {
-			"*.phar;*.zip;*.tar;*.tar.gz;*.tgz;*.tar.bz2", "*.*" }; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String[] FILE_IMPORT_MASK = { "*.phar;*.zip;*.tar;*.tar.gz;*.tgz;*.tar.bz2", "*.*" }; //$NON-NLS-1$ //$NON-NLS-2$
 
 	// dialog store id constants
 	private final static String STORE_SOURCE_NAMES_ID = "WizardZipFileResourceImportPage1.STORE_SOURCE_NAMES_ID"; //$NON-NLS-1$
@@ -56,8 +54,7 @@ public class WizardPharFileResourceImportPage1 extends
 	 * @param selection
 	 *            IStructuredSelection
 	 */
-	public WizardPharFileResourceImportPage1(IWorkbench aWorkbench,
-			IStructuredSelection selection) {
+	public WizardPharFileResourceImportPage1(IWorkbench aWorkbench, IStructuredSelection selection) {
 		this(aWorkbench, selection, null);
 	}
 
@@ -72,8 +69,8 @@ public class WizardPharFileResourceImportPage1 extends
 	 *            != null: override default mask
 	 */
 
-	public WizardPharFileResourceImportPage1(IWorkbench aWorkbench,
-			IStructuredSelection selection, String[] fileImportMask) {
+	public WizardPharFileResourceImportPage1(IWorkbench aWorkbench, IStructuredSelection selection,
+			String[] fileImportMask) {
 		super("zipFileImportPage1", aWorkbench, selection); //$NON-NLS-1$
 
 		setTitle(PharImportMessages.ArchiveExport_exportTitle);
@@ -116,8 +113,7 @@ public class WizardPharFileResourceImportPage1 extends
 
 		// overwrite... checkbox
 		overwriteExistingResourcesCheckbox = new Button(parent, SWT.CHECK);
-		overwriteExistingResourcesCheckbox
-				.setText(PharImportMessages.FileImport_overwriteExisting);
+		overwriteExistingResourcesCheckbox.setText(PharImportMessages.FileImport_overwriteExisting);
 		overwriteExistingResourcesCheckbox.setFont(parent.getFont());
 	}
 
@@ -188,8 +184,7 @@ public class WizardPharFileResourceImportPage1 extends
 		if (specifiedFile == null) {
 			return false;
 		}
-		return ArchiveFileManipulations
-				.closePharFile(specifiedFile, getShell());
+		return ArchiveFileManipulations.closePharFile(specifiedFile, getShell());
 	}
 
 	/**
@@ -228,8 +223,7 @@ public class WizardPharFileResourceImportPage1 extends
 	 * @since 3.4
 	 */
 	private void disposeStructureProvider() {
-		ArchiveFileManipulations.closeStructureProvider(structureProvider,
-				getShell());
+		ArchiveFileManipulations.closeStructureProvider(structureProvider, getShell());
 		structureProvider = null;
 	}
 
@@ -395,8 +389,7 @@ public class WizardPharFileResourceImportPage1 extends
 
 		if (selectedFile != null) {
 			// Be sure it is valid before we go setting any names
-			if (!selectedFile.equals(sourceNameField.getText())
-					&& validateSourceFile(selectedFile)) {
+			if (!selectedFile.equals(sourceNameField.getText()) && validateSourceFile(selectedFile)) {
 				setSourceName(selectedFile);
 				selectionGroup.setFocus();
 			}
@@ -412,15 +405,12 @@ public class WizardPharFileResourceImportPage1 extends
 		if (ArchiveFileManipulations.isPharFile(sourceNameField.getText())) {
 			if (ensurePharSourceIsValid()) {
 				PharFile pharFile = getSpecifiedPharSourceFile();
-				importStructureProvider = new PharLeveledStructureProvider(
-						pharFile);
+				importStructureProvider = new PharLeveledStructureProvider(pharFile);
 			}
-		} else if (ArchiveFileManipulations
-				.isTarFile(sourceNameField.getText())) {
+		} else if (ArchiveFileManipulations.isTarFile(sourceNameField.getText())) {
 			if (ensureTarSourceIsValid()) {
 				TarFile tarFile = getSpecifiedTarSourceFile();
-				importStructureProvider = new TarLeveledStructureProvider(
-						tarFile);
+				importStructureProvider = new TarLeveledStructureProvider(tarFile);
 			}
 		} else if (ensureZipSourceIsValid()) {
 			ZipFile zipFile = getSpecifiedZipSourceFile();
@@ -431,16 +421,14 @@ public class WizardPharFileResourceImportPage1 extends
 			return false;
 		}
 
-		ImportOperation operation = new ImportOperation(getContainerFullPath(),
-				importStructureProvider.getRoot(), importStructureProvider,
-				this, fileSystemObjects);
+		ImportOperation operation = new ImportOperation(getContainerFullPath(), importStructureProvider.getRoot(),
+				importStructureProvider, this, fileSystemObjects);
 
 		operation.setContext(getShell());
 		if (!executeImportOperation(operation))
 			return false;
 
-		ArchiveFileManipulations.closeStructureProvider(
-				importStructureProvider, getShell());
+		ArchiveFileManipulations.closeStructureProvider(importStructureProvider, getShell());
 		return true;
 	}
 
@@ -448,8 +436,7 @@ public class WizardPharFileResourceImportPage1 extends
 	 * Initializes the specified operation appropriately.
 	 */
 	protected void initializeOperation(ImportOperation op) {
-		op.setOverwriteResources(overwriteExistingResourcesCheckbox
-				.getSelection());
+		op.setOverwriteResources(overwriteExistingResourcesCheckbox.getSelection());
 	}
 
 	/**
@@ -457,17 +444,14 @@ public class WizardPharFileResourceImportPage1 extends
 	 * selected file, or <code>null</code> if the dialog was canceled.
 	 */
 	protected String queryZipFileToImport() {
-		FileDialog dialog = new FileDialog(sourceNameField.getShell(), SWT.OPEN
-				| SWT.SHEET);
+		FileDialog dialog = new FileDialog(sourceNameField.getShell(), SWT.OPEN | SWT.SHEET);
 		dialog.setFilterExtensions(this.fileImportMask);
 		dialog.setText(PharImportMessages.ArchiveImportSource_title);
 
 		String currentSourceString = sourceNameField.getText();
-		int lastSeparatorIndex = currentSourceString
-				.lastIndexOf(File.separator);
+		int lastSeparatorIndex = currentSourceString.lastIndexOf(File.separator);
 		if (lastSeparatorIndex != -1) {
-			dialog.setFilterPath(currentSourceString.substring(0,
-					lastSeparatorIndex));
+			dialog.setFilterPath(currentSourceString.substring(0, lastSeparatorIndex));
 		}
 
 		return dialog.open();
@@ -500,8 +484,7 @@ public class WizardPharFileResourceImportPage1 extends
 			}
 
 			// radio buttons and checkboxes
-			overwriteExistingResourcesCheckbox.setSelection(settings
-					.getBoolean(STORE_OVERWRITE_EXISTING_RESOURCES_ID));
+			overwriteExistingResourcesCheckbox.setSelection(settings.getBoolean(STORE_OVERWRITE_EXISTING_RESOURCES_ID));
 		}
 	}
 
@@ -526,14 +509,12 @@ public class WizardPharFileResourceImportPage1 extends
 			settings.put(STORE_SOURCE_NAMES_ID, sourceNames);
 
 			// update specific types to import history
-			String[] selectedTypesNames = settings
-					.getArray(STORE_SELECTED_TYPES_ID);
+			String[] selectedTypesNames = settings.getArray(STORE_SELECTED_TYPES_ID);
 			if (selectedTypesNames == null) {
 				selectedTypesNames = new String[0];
 			}
 
-			settings.put(STORE_OVERWRITE_EXISTING_RESOURCES_ID,
-					overwriteExistingResourcesCheckbox.getSelection());
+			settings.put(STORE_OVERWRITE_EXISTING_RESOURCES_ID, overwriteExistingResourcesCheckbox.getSelection());
 		}
 	}
 

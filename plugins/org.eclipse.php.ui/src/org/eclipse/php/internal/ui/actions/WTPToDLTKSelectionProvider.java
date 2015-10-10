@@ -23,8 +23,7 @@ import org.eclipse.jface.viewers.*;
  * 
  * @author zulus
  */
-public class WTPToDLTKSelectionProvider
-		implements ISelectionProvider, ISelectionChangedListener {
+public class WTPToDLTKSelectionProvider implements ISelectionProvider, ISelectionChangedListener {
 	Set<ISelectionChangedListener> listeners = new HashSet<ISelectionChangedListener>();
 	private ISelectionProvider parentProvider;
 
@@ -38,8 +37,7 @@ public class WTPToDLTKSelectionProvider
 	}
 
 	@Override
-	public void removeSelectionChangedListener(
-			ISelectionChangedListener listener) {
+	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
 		listeners.remove(listener);
 
 	}
@@ -50,8 +48,7 @@ public class WTPToDLTKSelectionProvider
 	}
 
 	@Override
-	public void addSelectionChangedListener(
-			ISelectionChangedListener listener) {
+	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		listeners.add(listener);
 	}
 
@@ -71,10 +68,8 @@ public class WTPToDLTKSelectionProvider
 	 * @return
 	 */
 	protected ISelection transformSelection(ISelection selection) {
-		if (selection instanceof IStructuredSelection
-				&& selection instanceof ITextSelection) {
-			selection = new TextSelection(
-					((ITextSelection) selection).getOffset(),
+		if (selection instanceof IStructuredSelection && selection instanceof ITextSelection) {
+			selection = new TextSelection(((ITextSelection) selection).getOffset(),
 					((ITextSelection) selection).getLength());
 			return selection;
 		}

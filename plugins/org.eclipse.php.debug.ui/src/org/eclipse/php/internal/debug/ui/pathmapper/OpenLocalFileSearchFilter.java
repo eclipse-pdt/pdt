@@ -40,27 +40,23 @@ public class OpenLocalFileSearchFilter implements ILocalFileSearchFilter {
 	 */
 
 	@Override
-	public LocalFileSearchResult filter(final PathEntry[] entries,
-			final VirtualPath remotePath, final String serverName) {
+	public LocalFileSearchResult filter(final PathEntry[] entries, final VirtualPath remotePath,
+			final String serverName) {
 		final SyncObject<LocalFileSearchResult> searchResult = new SyncObject<LocalFileSearchResult>();
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			@Override
 			public void run() {
-				final Shell shell = PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getShell();
+				final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 				if (shell != null) {
 					shell.forceActive();
 				}
 				MapLocalFileDialog dialog = new MapLocalFileDialog(shell,
-						Messages.OpenLocalFileSearchFilter_Open_file_request,
-						remotePath, entries);
+						Messages.OpenLocalFileSearchFilter_Open_file_request, remotePath, entries);
 				LocalFileSearchResult filteredResult;
 				if (dialog.open() == Window.OK) {
-					filteredResult = new LocalFileSearchResult(
-							dialog.getResult());
+					filteredResult = new LocalFileSearchResult(dialog.getResult());
 				} else {
-					filteredResult = new LocalFileSearchResult(null,
-							Status.CANCEL_STATUS);
+					filteredResult = new LocalFileSearchResult(null, Status.CANCEL_STATUS);
 				}
 				searchResult.set(filteredResult);
 			}

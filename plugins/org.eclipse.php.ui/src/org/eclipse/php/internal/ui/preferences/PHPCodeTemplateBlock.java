@@ -61,8 +61,7 @@ import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
   */
 public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 
-	private class CodeTemplateAdapter extends ViewerComparator implements
-			ITreeListAdapter, IDialogFieldListener {
+	private class CodeTemplateAdapter extends ViewerComparator implements ITreeListAdapter, IDialogFieldListener {
 
 		private final Object[] NO_CHILDREN = new Object[0];
 
@@ -95,8 +94,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		public Object getParent(TreeListDialogField field, Object element) {
 			if (element instanceof TemplatePersistenceData) {
 				TemplatePersistenceData data = (TemplatePersistenceData) element;
-				if (data.getTemplate().getName()
-						.endsWith(CodeTemplateContextType.COMMENT_SUFFIX)) {
+				if (data.getTemplate().getName().endsWith(CodeTemplateContextType.COMMENT_SUFFIX)) {
 					return COMMENT_NODE;
 				}
 				return CODE_NODE;
@@ -273,8 +271,8 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 
 	private TemplateVariableProcessor fTemplateProcessor;
 
-	public PHPCodeTemplateBlock(IStatusChangeListener context,
-			IProject project, IWorkbenchPreferenceContainer container) {
+	public PHPCodeTemplateBlock(IStatusChangeListener context, IProject project,
+			IWorkbenchPreferenceContainer container) {
 		super(context, project, getAllKeys(), container);
 
 		fTemplateStore = new ProjectTemplateStore(project);
@@ -288,19 +286,15 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 
 		CodeTemplateAdapter adapter = new CodeTemplateAdapter();
 
-		String[] buttonLabels = new String[] {
-				PreferencesMessages.CodeTemplateBlock_templates_edit_button,
-				/* */null,
+		String[] buttonLabels = new String[] { PreferencesMessages.CodeTemplateBlock_templates_edit_button, /* */null,
 				PreferencesMessages.CodeTemplateBlock_templates_import_button,
 				PreferencesMessages.CodeTemplateBlock_templates_export_button,
 				PreferencesMessages.CodeTemplateBlock_templates_exportall_button
 
 		};
-		fCodeTemplateTree = new TreeListDialogField(adapter, buttonLabels,
-				new CodeTemplateLabelProvider());
+		fCodeTemplateTree = new TreeListDialogField(adapter, buttonLabels, new CodeTemplateLabelProvider());
 		fCodeTemplateTree.setDialogFieldListener(adapter);
-		fCodeTemplateTree
-				.setLabelText(PreferencesMessages.CodeTemplateBlock_templates_label);
+		fCodeTemplateTree.setLabelText(PreferencesMessages.CodeTemplateBlock_templates_label);
 		fCodeTemplateTree.setViewerComparator(adapter);
 
 		fCodeTemplateTree.enableButton(IDX_EXPORT, false);
@@ -313,8 +307,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 
 		fGenerateComments = new SelectionButtonDialogField(SWT.CHECK | SWT.WRAP);
 		fGenerateComments.setDialogFieldListener(adapter);
-		fGenerateComments
-				.setLabelText(PreferencesMessages.CodeTemplateBlock_createcomment_label);
+		fGenerateComments.setLabelText(PreferencesMessages.CodeTemplateBlock_createcomment_label);
 
 		updateControls();
 	}
@@ -338,10 +331,8 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		composite.setLayout(layout);
 
 		fCodeTemplateTree.doFillIntoGrid(composite, 3);
-		LayoutUtil
-				.setHorizontalSpan(fCodeTemplateTree.getLabelControl(null), 2);
-		LayoutUtil
-				.setHorizontalGrabbing(fCodeTemplateTree.getTreeControl(null));
+		LayoutUtil.setHorizontalSpan(fCodeTemplateTree.getLabelControl(null), 2);
+		LayoutUtil.setHorizontalGrabbing(fCodeTemplateTree.getTreeControl(null));
 
 		fPatternViewer = createViewer(composite, 2);
 
@@ -401,13 +392,11 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		// data.heightHint= fPixelConverter.convertHeightInCharsToPixels(5);
 		// control.setLayoutData(data);
 
-		StructuredTextViewer viewer = new StructuredTextViewer(parent, null,
-				null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL
-						| SWT.READ_ONLY);
+		StructuredTextViewer viewer = new StructuredTextViewer(parent, null, null, false,
+				SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.READ_ONLY);
 
 		IStructuredDocument document = StructuredModelManager.getModelManager()
-				.createStructuredDocumentFor(
-						ContentTypeIdForPHP.ContentTypeID_PHP);
+				.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP);
 		StyledText text = viewer.getTextWidget();
 		text.setLayoutData(data);
 		text.setEditable(false);
@@ -420,15 +409,12 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 
 			@Override
 			public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
-				return baseConfiguration
-						.getConfiguredContentTypes(sourceViewer);
+				return baseConfiguration.getConfiguredContentTypes(sourceViewer);
 			}
 
 			@Override
-			public LineStyleProvider[] getLineStyleProviders(
-					ISourceViewer sourceViewer, String partitionType) {
-				return baseConfiguration.getLineStyleProviders(sourceViewer,
-						partitionType);
+			public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
+				return baseConfiguration.getLineStyleProviders(sourceViewer, partitionType);
 			}
 		};
 		viewer.configure(configuration);
@@ -436,8 +422,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		viewer.setDocument(document);
 
 		Control control = viewer.getControl();
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
-				| GridData.FILL_VERTICAL);
+		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_VERTICAL);
 		data.horizontalSpan = nColumns;
 		data.heightHint = fPixelConverter.convertHeightInCharsToPixels(5);
 		control.setLayoutData(data);
@@ -450,32 +435,25 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		TemplatePersistenceData[] templates = fTemplateStore.getTemplateData();
 		for (int i = 0; i < templates.length; i++) {
 			TemplatePersistenceData curr = templates[i];
-			if (isComment == curr.getTemplate().getName()
-					.endsWith(CodeTemplateContextType.COMMENT_SUFFIX)) {
+			if (isComment == curr.getTemplate().getName().endsWith(CodeTemplateContextType.COMMENT_SUFFIX)) {
 				res.add(curr);
 			}
 		}
-		return (TemplatePersistenceData[]) res
-				.toArray(new TemplatePersistenceData[res.size()]);
+		return (TemplatePersistenceData[]) res.toArray(new TemplatePersistenceData[res.size()]);
 	}
 
 	protected static boolean canEdit(List selected) {
-		return selected.size() == 1
-				&& (selected.get(0) instanceof TemplatePersistenceData);
+		return selected.size() == 1 && (selected.get(0) instanceof TemplatePersistenceData);
 	}
 
 	protected void updateSourceViewerInput(List selection) {
-		if (fPatternViewer == null
-				|| fPatternViewer.getTextWidget().isDisposed()) {
+		if (fPatternViewer == null || fPatternViewer.getTextWidget().isDisposed()) {
 			return;
 		}
-		if (selection.size() == 1
-				&& selection.get(0) instanceof TemplatePersistenceData) {
-			TemplatePersistenceData data = (TemplatePersistenceData) selection
-					.get(0);
+		if (selection.size() == 1 && selection.get(0) instanceof TemplatePersistenceData) {
+			TemplatePersistenceData data = (TemplatePersistenceData) selection.get(0);
 			Template template = data.getTemplate();
-			TemplateContextType type = PHPUiPlugin.getDefault()
-					.getCodeTemplateContextRegistry()
+			TemplateContextType type = PHPUiPlugin.getDefault().getCodeTemplateContextRegistry()
 					.getContextType(template.getContextTypeId());
 			fTemplateProcessor.setContextType(type);
 			fPatternViewer.getDocument().set(template.getPattern());
@@ -498,9 +476,8 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 
 	private void edit(TemplatePersistenceData data) {
 		Template newTemplate = new Template(data.getTemplate());
-		EditTemplateDialog dialog = new EditTemplateDialog(getShell(),
-				newTemplate, true, false, PHPUiPlugin.getDefault()
-						.getCodeTemplateContextRegistry());
+		EditTemplateDialog dialog = new EditTemplateDialog(getShell(), newTemplate, true, false,
+				PHPUiPlugin.getDefault().getCodeTemplateContextRegistry());
 		if (dialog.open() == Window.OK) {
 			// changed
 			data.setTemplate(dialog.getTemplate());
@@ -522,8 +499,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 			TemplateReaderWriter reader = new TemplateReaderWriter();
 			File file = new File(path);
 			if (file.exists()) {
-				InputStream input = new BufferedInputStream(
-						new FileInputStream(file));
+				InputStream input = new BufferedInputStream(new FileInputStream(file));
 				try {
 					TemplatePersistenceData[] datas = reader.read(input, null);
 					for (int i = 0; i < datas.length; i++) {
@@ -574,15 +550,13 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 				datas.addAll(Arrays.asList(cat));
 			}
 		}
-		export((TemplatePersistenceData[]) datas
-				.toArray(new TemplatePersistenceData[datas.size()]));
+		export((TemplatePersistenceData[]) datas.toArray(new TemplatePersistenceData[datas.size()]));
 	}
 
 	private void export(TemplatePersistenceData[] templates) {
 		FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
-		dialog.setText(Messages.format(
-				PreferencesMessages.CodeTemplateBlock_export_title,
-				String.valueOf(templates.length)));
+		dialog.setText(
+				Messages.format(PreferencesMessages.CodeTemplateBlock_export_title, String.valueOf(templates.length)));
 		dialog.setFilterExtensions(new String[] { PreferencesMessages.CodeTemplateBlock_export_extension });
 		dialog.setFileName(PreferencesMessages.CodeTemplateBlock_export_filename);
 		String path = dialog.open();
@@ -596,9 +570,9 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		/*
 		 * if (file.isHidden()) { String title=
 		 * PreferencesMessages.CodeTemplateBlock_export_error_title; String
-		 * message=
-		 * Messages.format(PreferencesMessages.CodeTemplateBlock_export_error_hidden
-		 * , BasicElementLabels.getPathLabel(file));
+		 * message= Messages.format(PreferencesMessages.
+		 * CodeTemplateBlock_export_error_hidden ,
+		 * BasicElementLabels.getPathLabel(file));
 		 * MessageDialog.openError(getShell(), title, message); return; }
 		 * 
 		 * if (file.exists() && !file.canWrite()) { String title=
@@ -631,8 +605,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 	}
 
 	private boolean confirmOverwrite(File file) {
-		return MessageDialog.openQuestion(getShell(),
-				PreferencesMessages.CodeTemplateBlock_export_exists_title,
+		return MessageDialog.openQuestion(getShell(), PreferencesMessages.CodeTemplateBlock_export_exists_title,
 				PreferencesMessages.PHPCodeTemplateBlock_2);
 	}
 
@@ -651,11 +624,9 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 			return false;
 
 		if (fProject != null) {
-			TemplatePersistenceData[] templateData = fTemplateStore
-					.getTemplateData();
+			TemplatePersistenceData[] templateData = fTemplateStore.getTemplateData();
 			for (int i = 0; i < templateData.length; i++) {
-				fTemplateStore.setProjectSpecific(templateData[i].getId(),
-						enabled);
+				fTemplateStore.setProjectSpecific(templateData[i].getId(), enabled);
 			}
 		}
 		try {
@@ -680,9 +651,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 
 		String message = e.getLocalizedMessage();
 		if (message != null)
-			message = Messages.format(
-					PreferencesMessages.CodeTemplateBlock_error_parse_message,
-					message);
+			message = Messages.format(PreferencesMessages.CodeTemplateBlock_error_parse_message, message);
 		else
 			message = PreferencesMessages.CodeTemplateBlock_error_read_message;
 		MessageDialog.openError(getShell(), title, message);
@@ -704,8 +673,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 	 * @seeorg.eclipse.jdt.internal.ui.preferences.OptionsConfigurationBlock#
 	 * validateSettings(java.lang.String, java.lang.String)
 	 */
-	protected void validateSettings(Key changedKey, String oldValue,
-			String newValue) {
+	protected void validateSettings(Key changedKey, String oldValue, String newValue) {
 		// no validation here
 	}
 }

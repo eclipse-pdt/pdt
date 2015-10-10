@@ -33,11 +33,11 @@ public class ReadyNotificationHandler implements IDebugMessageHandler {
 		String currentFile = readyNotification.getFileName();
 		try {
 			if (debugTarget.isStepFiltersEnabled()) {
-				String localPath = ((RemoteDebugger) debugTarget
-						.getRemoteDebugger())
+				String localPath = ((RemoteDebugger) debugTarget.getRemoteDebugger())
 						.convertToLocalFilename(currentFile);
-				if (DebugStepFilterController.getInstance().isFiltered(
-						localPath)) {// file is filtered
+				if (DebugStepFilterController.getInstance().isFiltered(localPath)) {// file
+																					// is
+																					// filtered
 					try {
 						if (!isBreakPointExistInFile(debugTarget, currentFile)) {// file
 																					// has
@@ -54,23 +54,17 @@ public class ReadyNotificationHandler implements IDebugMessageHandler {
 			}
 		} finally {
 			int currentLine = readyNotification.getLineNumber();
-			IDebugHandler debugHandler = debugTarget.getRemoteDebugger()
-					.getDebugHandler();
+			IDebugHandler debugHandler = debugTarget.getRemoteDebugger().getDebugHandler();
 			debugHandler.ready(currentFile, currentLine);
 		}
 	}
 
 	// check if the currentFile has a breakpoint
-	private boolean isBreakPointExistInFile(PHPDebugTarget debugTarget,
-			String currentFile) throws CoreException {
-		IBreakpoint[] bPoints = debugTarget.getBreakpointManager()
-				.getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
+	private boolean isBreakPointExistInFile(PHPDebugTarget debugTarget, String currentFile) throws CoreException {
+		IBreakpoint[] bPoints = debugTarget.getBreakpointManager().getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
 		for (IBreakpoint bp : bPoints) {
-			if (bp.isEnabled()
-					&& FileUtils.checkIfEqualFilePaths(
-							((PHPConditionalBreakpoint) bp)
-									.getRuntimeBreakpoint().getFileName(),
-							currentFile)) {
+			if (bp.isEnabled() && FileUtils.checkIfEqualFilePaths(
+					((PHPConditionalBreakpoint) bp).getRuntimeBreakpoint().getFileName(), currentFile)) {
 				return true;
 			}
 		}

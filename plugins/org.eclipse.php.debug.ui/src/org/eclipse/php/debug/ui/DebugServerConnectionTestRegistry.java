@@ -47,31 +47,23 @@ public class DebugServerConnectionTestRegistry {
 	 */
 	public static IDebugServerConnectionTest[] getTests(final String debuggerId) {
 		Map<String, IDebugServerConnectionTest> filtersMap = new HashMap<String, IDebugServerConnectionTest>();
-		IConfigurationElement[] elements = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(EXTENSION_ID);
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_ID);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (PROP_TEST.equals(element.getName())) {
-				String debuggerTypeName = elements[i]
-						.getAttribute(PROP_DEBUGGER_TYPE);
-				String overridesIds = elements[i]
-						.getAttribute(PROP_OVERRIDES_ID);
-				if (debuggerTypeName.equals(PHPDebuggersRegistry
-						.getDebuggerName(debuggerId))) {
+				String debuggerTypeName = elements[i].getAttribute(PROP_DEBUGGER_TYPE);
+				String overridesIds = elements[i].getAttribute(PROP_OVERRIDES_ID);
+				if (debuggerTypeName.equals(PHPDebuggersRegistry.getDebuggerName(debuggerId))) {
 					String id = element.getAttribute(PROP_ID);
 					if (!filtersMap.containsKey(id)) {
 						if (overridesIds != null) {
-							StringTokenizer st = new StringTokenizer(
-									overridesIds, ", "); //$NON-NLS-1$
+							StringTokenizer st = new StringTokenizer(overridesIds, ", "); //$NON-NLS-1$
 							while (st.hasMoreTokens()) {
 								filtersMap.put(st.nextToken(), null);
 							}
 						}
 						try {
-							filtersMap
-									.put(id,
-											(IDebugServerConnectionTest) element
-													.createExecutableExtension("class")); //$NON-NLS-1$
+							filtersMap.put(id, (IDebugServerConnectionTest) element.createExecutableExtension("class")); //$NON-NLS-1$
 						} catch (CoreException e) {
 							Logger.logException(e);
 						}
@@ -83,8 +75,7 @@ public class DebugServerConnectionTestRegistry {
 		Collection<IDebugServerConnectionTest> testers = filtersMap.values();
 		while (testers.remove(null))
 			; // remove null elements
-		IDebugServerConnectionTest[] debugTests = testers
-				.toArray(new IDebugServerConnectionTest[testers.size()]);
+		IDebugServerConnectionTest[] debugTests = testers.toArray(new IDebugServerConnectionTest[testers.size()]);
 		return debugTests;
 	}
 

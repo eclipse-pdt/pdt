@@ -20,8 +20,7 @@ import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
  * 
  * @author Bartlomiej Laczkowski
  */
-public abstract class AbstractPHPLaunchConfigurationTab
-		extends AbstractLaunchConfigurationTab {
+public abstract class AbstractPHPLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 
 	private ILaunchConfiguration configuration;
 
@@ -76,8 +75,7 @@ public abstract class AbstractPHPLaunchConfigurationTab
 	 */
 	protected ILaunchConfiguration getOriginalConfiguration() {
 		if (configuration instanceof ILaunchConfigurationWorkingCopy) {
-			return ((ILaunchConfigurationWorkingCopy) configuration)
-					.getOriginal();
+			return ((ILaunchConfigurationWorkingCopy) configuration).getOriginal();
 		}
 		return configuration;
 	}

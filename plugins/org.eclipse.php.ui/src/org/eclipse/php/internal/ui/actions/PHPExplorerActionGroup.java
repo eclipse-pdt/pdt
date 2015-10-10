@@ -62,8 +62,7 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 	 * @param part
 	 */
 	private void removeWrongWorkingSetFilter(ScriptExplorerPart part) {
-		ViewerFilter filter = super.getWorkingSetActionGroup().getFilterGroup()
-				.getWorkingSetFilter();
+		ViewerFilter filter = super.getWorkingSetActionGroup().getFilterGroup().getWorkingSetFilter();
 		ViewerFilter[] filters = part.getTreeViewer().getFilters();
 		List<ViewerFilter> filterList = new ArrayList<ViewerFilter>();
 		for (int i = 0; i < filters.length; i++) {
@@ -72,8 +71,7 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 				filterList.add(viewerFilter);
 			}
 		}
-		part.getTreeViewer().setFilters(
-				filterList.toArray(new ViewerFilter[filterList.size()]));
+		part.getTreeViewer().setFilters(filterList.toArray(new ViewerFilter[filterList.size()]));
 	}
 
 	/*
@@ -86,13 +84,11 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 	@Override
 	protected void setGroups(ActionGroup[] groups) {
 		// aggregate the PHP Explorer actions
-		final ArrayList<ActionGroup> filtered = new ArrayList<ActionGroup>(
-				groups.length - 1);
+		final ArrayList<ActionGroup> filtered = new ArrayList<ActionGroup>(groups.length - 1);
 		for (int i = 0; i < groups.length; i++) {
 			if (groups[i] instanceof NewWizardsActionGroup) {
 				filtered.add(new PHPNewWizardsActionGroup(getPart().getSite()));
-			} else if (!(groups[i] instanceof LayoutActionGroup
-					|| groups[i] instanceof GenerateActionGroup
+			} else if (!(groups[i] instanceof LayoutActionGroup || groups[i] instanceof GenerateActionGroup
 					|| groups[i] instanceof RefactorActionGroup || groups[i] instanceof CCPActionGroup)) {
 				// use pdt's NavigateActionGroup instead of dltk's
 				if (groups[i] instanceof org.eclipse.dltk.internal.ui.actions.NavigateActionGroup) {
@@ -109,9 +105,8 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 
 				if (groups[i] instanceof org.eclipse.dltk.internal.ui.workingsets.ViewActionGroup) {
 					groups[i].dispose();
-					fViewActionGroup = new ViewActionGroup(getPart()
-							.getRootMode(), workingSetListener, getPart()
-							.getSite());
+					fViewActionGroup = new ViewActionGroup(getPart().getRootMode(), workingSetListener,
+							getPart().getSite());
 
 					fViewActionGroup.fillFilters(getPart().getTreeViewer());
 					groups[i] = fViewActionGroup;
@@ -143,9 +138,8 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerActionGroup#handleOpen
-	 * (org.eclipse.jface.viewers.OpenEvent)
+	 * @see org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerActionGroup#
+	 * handleOpen (org.eclipse.jface.viewers.OpenEvent)
 	 */
 	@Override
 	protected void handleOpen(OpenEvent event) {
@@ -190,28 +184,23 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 	 */
 	protected void handleDoubleClick(DoubleClickEvent event) {
 		TreeViewer viewer = getPart().getTreeViewer();
-		IStructuredSelection selection = (IStructuredSelection) event
-				.getSelection();
+		IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 		Object element = selection.getFirstElement();
 		if (viewer.isExpandable(element)) {
 			if (doubleClickGoesInto()) {
 				super.handleDoubleClick(event);
 			} else {
 				IAction openAction = fNavigateActionGroup.getOpenAction();
-				if (openAction != null
-						&& openAction.isEnabled()
+				if (openAction != null && openAction.isEnabled()
 						&& OpenStrategy.getOpenMethod() == OpenStrategy.DOUBLE_CLICK)
 					return;
 				if (selection instanceof ITreeSelection) {
-					TreePath[] paths = ((ITreeSelection) selection)
-							.getPathsFor(element);
+					TreePath[] paths = ((ITreeSelection) selection).getPathsFor(element);
 					for (int i = 0; i < paths.length; i++) {
-						viewer.setExpandedState(paths[i],
-								!viewer.getExpandedState(paths[i]));
+						viewer.setExpandedState(paths[i], !viewer.getExpandedState(paths[i]));
 					}
 				} else {
-					viewer.setExpandedState(element,
-							!viewer.getExpandedState(element));
+					viewer.setExpandedState(element, !viewer.getExpandedState(element));
 				}
 			}
 		} else {
@@ -225,9 +214,8 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 	 * @return
 	 */
 	private boolean doubleClickGoesInto() {
-		return PreferenceConstants.DOUBLE_CLICK_GOES_INTO.equals(DLTKUIPlugin
-				.getDefault().getPreferenceStore()
-				.getString(PreferenceConstants.DOUBLE_CLICK));
+		return PreferenceConstants.DOUBLE_CLICK_GOES_INTO
+				.equals(DLTKUIPlugin.getDefault().getPreferenceStore().getString(PreferenceConstants.DOUBLE_CLICK));
 	}
 
 	public ViewActionGroup getWorkingSetActionGroup() {

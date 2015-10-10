@@ -31,8 +31,7 @@ public class PHPWizardPagesRegistry {
 	private static PHPWizardPagesRegistry instance = new PHPWizardPagesRegistry();
 
 	private PHPWizardPagesRegistry() {
-		IConfigurationElement[] elements = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(EXTENSION_POINT); 
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_POINT);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (PAGE_ELEMENT.equals(element.getName())) {
@@ -60,21 +59,16 @@ public class PHPWizardPagesRegistry {
 		final List elementsList = (List) instance.pages.get(id);
 		if (elementsList != null) {
 			final List pagesList = new LinkedList();
-			SafeRunner.run(new SafeRunnable(
-					PHPUIMessages.PHPWizardPagesRegistry_0 + EXTENSION_POINT) { 
-						public void run() throws Exception {
-							Iterator i = elementsList.iterator();
-							while (i.hasNext()) {
-								IConfigurationElement element = (IConfigurationElement) i
-										.next();
-								pagesList
-										.add(element
-												.createExecutableExtension(CLASS_ATTRIBUTE));
-							}
-						}
-					});
-			return (IWizardPage[]) pagesList.toArray(new IWizardPage[pagesList
-					.size()]);
+			SafeRunner.run(new SafeRunnable(PHPUIMessages.PHPWizardPagesRegistry_0 + EXTENSION_POINT) {
+				public void run() throws Exception {
+					Iterator i = elementsList.iterator();
+					while (i.hasNext()) {
+						IConfigurationElement element = (IConfigurationElement) i.next();
+						pagesList.add(element.createExecutableExtension(CLASS_ATTRIBUTE));
+					}
+				}
+			});
+			return (IWizardPage[]) pagesList.toArray(new IWizardPage[pagesList.size()]);
 		}
 		return null;
 	}
@@ -93,21 +87,16 @@ public class PHPWizardPagesRegistry {
 		final List elementsList = (List) instance.pages.get(id);
 		if (elementsList != null) {
 			final List pagesList = new LinkedList();
-			SafeRunner.run(new SafeRunnable(
-					PHPUIMessages.PHPWizardPagesRegistry_0 + EXTENSION_POINT) { 
-						public void run() throws Exception {
-							Iterator i = elementsList.iterator();
-							while (i.hasNext()) {
-								IConfigurationElement element = (IConfigurationElement) i
-										.next();
-								pagesList
-										.add(element
-												.createExecutableExtension(CLASS_ATTRIBUTE));
-							}
-						}
-					});
-			return (WizardPageFactory[]) pagesList
-					.toArray(new WizardPageFactory[pagesList.size()]);
+			SafeRunner.run(new SafeRunnable(PHPUIMessages.PHPWizardPagesRegistry_0 + EXTENSION_POINT) {
+				public void run() throws Exception {
+					Iterator i = elementsList.iterator();
+					while (i.hasNext()) {
+						IConfigurationElement element = (IConfigurationElement) i.next();
+						pagesList.add(element.createExecutableExtension(CLASS_ATTRIBUTE));
+					}
+				}
+			});
+			return (WizardPageFactory[]) pagesList.toArray(new WizardPageFactory[pagesList.size()]);
 		}
 		return null;
 	}

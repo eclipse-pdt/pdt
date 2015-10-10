@@ -49,31 +49,27 @@ public class BreakpointMarkerUpdater implements IMarkerUpdater {
 	 * @see org.eclipse.ui.texteditor.IMarkerUpdater#getMarkerType()
 	 */
 	public String getMarkerType() {
-		return PHPLineBreakpoint.MARKER_ID; 
+		return PHPLineBreakpoint.MARKER_ID;
 	}
 
 	/**
 	 * @return true - the breakpoint marker updated false - the breakpoint
 	 *         marker will deleted
 	 */
-	public boolean updateMarker(IMarker marker, IDocument document,
-			Position position) {
+	public boolean updateMarker(IMarker marker, IDocument document, Position position) {
 		if (position.isDeleted()) {
 			return false;
 		}
 		try {
 			int newLine = document.getLineOfOffset(position.offset) + 1;
-			int offset = DefaultPHPBreakpointProvider.getValidPosition(
-					document, newLine);
+			int offset = DefaultPHPBreakpointProvider.getValidPosition(document, newLine);
 			// offset equals -1 means there is no valid position for this
 			// breakpoint marker
 			// and the breakpoint will delete.
 			if (offset != -1) {
 				newLine = document.getLineOfOffset(offset) + 1;
-				marker.setAttribute(IMarker.MESSAGE, MessageFormat
-						.format(PHPDebugCoreMessages.LineBreakPointMessage_1,
-								new Object[] { marker.getResource().getName(),
-										newLine }));
+				marker.setAttribute(IMarker.MESSAGE, MessageFormat.format(PHPDebugCoreMessages.LineBreakPointMessage_1,
+						new Object[] { marker.getResource().getName(), newLine }));
 				if (marker.getAttribute(IMarker.LINE_NUMBER, -1) == newLine) {
 					return true;
 				}

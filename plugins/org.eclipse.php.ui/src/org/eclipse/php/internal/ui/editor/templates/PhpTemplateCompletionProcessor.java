@@ -45,8 +45,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
-public class PhpTemplateCompletionProcessor extends
-		ScriptTemplateCompletionProcessor {
+public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProcessor {
 
 	private static final String $_LINE_SELECTION = "${" + GlobalTemplateVariables.LineSelection.NAME + "}"; //$NON-NLS-1$ //$NON-NLS-2$
 	private static final String $_WORD_SELECTION = "${" + GlobalTemplateVariables.WordSelection.NAME + "}"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -64,19 +63,16 @@ public class PhpTemplateCompletionProcessor extends
 	private IMethod enclosingMethod;
 	private IType enclosingType;
 
-	public PhpTemplateCompletionProcessor(
-			ScriptContentAssistInvocationContext context, boolean explicit) {
+	public PhpTemplateCompletionProcessor(ScriptContentAssistInvocationContext context, boolean explicit) {
 		super(context);
 		this.explicit = explicit;
 	}
 
-	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
-			int offset) {
+	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		document = viewer.getDocument();
 		try {
 			String type = TextUtilities.getContentType(document,
-					IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING,
-					offset, true);
+					IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, offset, true);
 			if (!PHPPartitionTypes.PHP_DEFAULT.equals(type)) {
 				return EMPTY;
 			}
@@ -115,51 +111,38 @@ public class PhpTemplateCompletionProcessor extends
 			}
 
 			// find the most outer enclosing type if exists
-			while (enclosingElement != null
-					&& !(enclosingElement instanceof IType)) {
+			while (enclosingElement != null && !(enclosingElement instanceof IType)) {
 				enclosingElement = enclosingElement.getParent();
 			}
 			enclosingType = (IType) enclosingElement;
 
 			if (enclosingMethod == null && enclosingType == null) {
 
-				contextIds
-						.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
-				contextIds
-						.add(PhpTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
-			} else if (enclosingMethod == null && enclosingType != null
-					&& !isFieldAccess) {
+				contextIds.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
+				contextIds.add(PhpTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
+			} else if (enclosingMethod == null && enclosingType != null && !isFieldAccess) {
 				if (!PHPFlags.isNamespace(enclosingType.getFlags())) {
-					contextIds
-							.add(PhpTemplateContextType.PHP_TYPE_MEMBERS_CONTEXT_TYPE_ID);
+					contextIds.add(PhpTemplateContextType.PHP_TYPE_MEMBERS_CONTEXT_TYPE_ID);
 					if (PHPFlags.isClass(enclosingType.getFlags())) {
-						contextIds
-								.add(PhpTemplateContextType.PHP_CLASS_MEMBERS_CONTEXT_TYPE_ID);
+						contextIds.add(PhpTemplateContextType.PHP_CLASS_MEMBERS_CONTEXT_TYPE_ID);
 					}
 				} else {
-					contextIds
-							.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
-					contextIds
-							.add(PhpTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
+					contextIds.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
+					contextIds.add(PhpTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
 				}
-			} else if (enclosingMethod != null && enclosingType != null
-					&& !isFieldAccess) {
+			} else if (enclosingMethod != null && enclosingType != null && !isFieldAccess) {
 				if (!PHPFlags.isNamespace(enclosingType.getFlags())) {
-					contextIds
-							.add(PhpTemplateContextType.PHP_TYPE_METHOD_STATEMENTS_CONTEXT_TYPE_ID);
+					contextIds.add(PhpTemplateContextType.PHP_TYPE_METHOD_STATEMENTS_CONTEXT_TYPE_ID);
 				}
-				contextIds
-						.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
+				contextIds.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
 			} else if (enclosingMethod != null && enclosingType == null) {
-				contextIds
-						.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
+				contextIds.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
 			}
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
 		}
 
-		ITextSelection selection = (ITextSelection) viewer
-				.getSelectionProvider().getSelection();
+		ITextSelection selection = (ITextSelection) viewer.getSelectionProvider().getSelection();
 
 		ICompletionProposal[] selectionProposal = EMPTY;
 		if (selection.getLength() != 0) {
@@ -192,16 +175,13 @@ public class PhpTemplateCompletionProcessor extends
 			for (int i = 0; i != templates.length; i++) {
 				Template template = templates[i];
 				if (context.canEvaluate(template)
-						&& (!multipleLinesSelected
-								&& template.getPattern().indexOf(
-										$_WORD_SELECTION) != -1 || (multipleLinesSelected && template
-								.getPattern().indexOf($_LINE_SELECTION) != -1))) {
-					matches.add((TemplateProposal) createProposal(templates[i],
-							context, region, getRelevance(template, prefix)));
+						&& (!multipleLinesSelected && template.getPattern().indexOf($_WORD_SELECTION) != -1
+								|| (multipleLinesSelected && template.getPattern().indexOf($_LINE_SELECTION) != -1))) {
+					matches.add((TemplateProposal) createProposal(templates[i], context, region,
+							getRelevance(template, prefix)));
 				}
 			}
-			selectionProposal = matches.toArray(new ICompletionProposal[matches
-					.size()]);
+			selectionProposal = matches.toArray(new ICompletionProposal[matches.size()]);
 		} else {
 			isSelection = false;
 		}
@@ -228,8 +208,8 @@ public class PhpTemplateCompletionProcessor extends
 				continue;
 			}
 			if (template.getName().startsWith(prefix))
-				matches.add((TemplateProposal) createProposal(template,
-						context, region, getRelevance(template, prefix)));
+				matches.add(
+						(TemplateProposal) createProposal(template, context, region, getRelevance(template, prefix)));
 		}
 
 		final IInformationControlCreator controlCreator = getInformationControlCreator();
@@ -261,8 +241,7 @@ public class PhpTemplateCompletionProcessor extends
 	 * Empties the collector.
 	 */
 	public void reset() {
-		for (Iterator<Entry<IDocument, Position>> it = fPositions.entrySet()
-				.iterator(); it.hasNext();) {
+		for (Iterator<Entry<IDocument, Position>> it = fPositions.entrySet().iterator(); it.hasNext();) {
 			Entry<IDocument, Position> entry = it.next();
 			IDocument doc = entry.getKey();
 			Position position = entry.getValue();
@@ -271,8 +250,7 @@ public class PhpTemplateCompletionProcessor extends
 		fPositions.clear();
 	}
 
-	protected TemplateContext createContext(ITextViewer viewer, IRegion region,
-			Position position) {
+	protected TemplateContext createContext(ITextViewer viewer, IRegion region, Position position) {
 		TemplateContextType contextType = getContextType(viewer, region);
 		if (contextType instanceof ScriptTemplateContextType) {
 			IDocument document = viewer.getDocument();
@@ -281,15 +259,13 @@ public class PhpTemplateCompletionProcessor extends
 			if (sourceModule == null) {
 				return null;
 			}
-			return ((ScriptTemplateContextType) contextType).createContext(
-					document, position, sourceModule);
+			return ((ScriptTemplateContextType) contextType).createContext(document, position, sourceModule);
 		}
 		return null;
 	}
 
 	protected boolean isValidPrefix(String prefix) {
-		if ((!explicit || isSelection)
-				&& (prefix == null || prefix.length() == 0)) {
+		if ((!explicit || isSelection) && (prefix == null || prefix.length() == 0)) {
 			return false;
 		}
 		return true;
@@ -299,23 +275,20 @@ public class PhpTemplateCompletionProcessor extends
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 		if (modelManager != null) {
 			IStructuredModel structuredModel = null;
-			structuredModel = modelManager.getExistingModelForRead(viewer
-					.getDocument());
+			structuredModel = modelManager.getExistingModelForRead(viewer.getDocument());
 			if (structuredModel != null) {
 				try {
 					DOMModelForPHP domModelForPHP = (DOMModelForPHP) structuredModel;
 					try {
 						// Find the structured document region:
-						IStructuredDocument document = (IStructuredDocument) domModelForPHP
-								.getDocument().getStructuredDocument();
-						IStructuredDocumentRegion sdRegion = document
-								.getRegionAtCharacterOffset(offset);
+						IStructuredDocument document = (IStructuredDocument) domModelForPHP.getDocument()
+								.getStructuredDocument();
+						IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
 						if (sdRegion == null) { // empty file case
 							return false;
 						}
 
-						ITextRegion textRegion = sdRegion
-								.getRegionAtCharacterOffset(offset);
+						ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(offset);
 						if (textRegion == null) {
 							return false;
 						}
@@ -324,21 +297,17 @@ public class PhpTemplateCompletionProcessor extends
 
 						if (textRegion instanceof ITextRegionContainer) {
 							container = (ITextRegionContainer) textRegion;
-							textRegion = container
-									.getRegionAtCharacterOffset(offset);
+							textRegion = container.getRegionAtCharacterOffset(offset);
 						}
 
 						if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 							IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
-							textRegion = phpScriptRegion.getPhpToken(offset
-									- container.getStartOffset()
-									- phpScriptRegion.getStart());
+							textRegion = phpScriptRegion
+									.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
 							String type = textRegion.getType();
-							if (PHPPartitionTypes
-									.isPHPMultiLineCommentState(type)
+							if (PHPPartitionTypes.isPHPMultiLineCommentState(type)
 									|| PHPPartitionTypes.isPHPDocState(type)
-									|| PHPPartitionTypes
-											.isPHPLineCommentState(type)
+									|| PHPPartitionTypes.isPHPLineCommentState(type)
 									|| PHPPartitionTypes.isPHPQuotesState(type)) {
 								return true;
 							}
@@ -354,8 +323,7 @@ public class PhpTemplateCompletionProcessor extends
 		return false;
 	}
 
-	private ICompletionProposal[] filterUsingPrefix(
-			ICompletionProposal[] completionProposals, String prefix) {
+	private ICompletionProposal[] filterUsingPrefix(ICompletionProposal[] completionProposals, String prefix) {
 		List<PhpTemplateProposal> matches = new ArrayList<PhpTemplateProposal>();
 		for (int i = 0; i < completionProposals.length; i++) {
 			PhpTemplateProposal phpTemplateProposal = (PhpTemplateProposal) completionProposals[i];
@@ -365,8 +333,7 @@ public class PhpTemplateCompletionProcessor extends
 			}
 		}
 
-		return (ICompletionProposal[]) matches
-				.toArray(new ICompletionProposal[matches.size()]);
+		return (ICompletionProposal[]) matches.toArray(new ICompletionProposal[matches.size()]);
 	}
 
 	protected String extractPrefix(ITextViewer viewer, int offset) {
@@ -401,8 +368,7 @@ public class PhpTemplateCompletionProcessor extends
 		return templates;
 	}
 
-	protected TemplateContextType getContextType(ITextViewer viewer,
-			IRegion region) {
+	protected TemplateContextType getContextType(ITextViewer viewer, IRegion region) {
 
 		// For now always return the context type for ALL PHP regions
 		TemplateContextType type = null;
@@ -415,8 +381,7 @@ public class PhpTemplateCompletionProcessor extends
 	}
 
 	protected Image getImage(Template template) {
-		return PHPUiPlugin.getImageDescriptorRegistry().get(
-				PHPPluginImages.DESC_TEMPLATE);
+		return PHPUiPlugin.getImageDescriptorRegistry().get(PHPPluginImages.DESC_TEMPLATE);
 	}
 
 	protected ContextTypeRegistry getTemplateContextRegistry() {
@@ -431,10 +396,9 @@ public class PhpTemplateCompletionProcessor extends
 		this.contextTypeId = contextTypeId;
 	}
 
-	protected ICompletionProposal createProposal(Template template,
-			TemplateContext context, IRegion region, int relevance) {
-		return new PhpTemplateProposal(template, context, region,
-				getImage(template), relevance);
+	protected ICompletionProposal createProposal(Template template, TemplateContext context, IRegion region,
+			int relevance) {
+		return new PhpTemplateProposal(template, context, region, getImage(template), relevance);
 	}
 
 	protected IInformationControlCreator getInformationControlCreator() {
@@ -496,8 +460,7 @@ public class PhpTemplateCompletionProcessor extends
 			int startLine = document.getLineOfOffset(s.x);
 			int endLine = document.getLineOfOffset(s.x + s.y);
 			IRegion line = document.getLineInformation(startLine);
-			return startLine != endLine
-					|| (s.x == line.getOffset() && s.y == line.getLength());
+			return startLine != endLine || (s.x == line.getOffset() && s.y == line.getLength());
 
 		} catch (BadLocationException x) {
 			return false;

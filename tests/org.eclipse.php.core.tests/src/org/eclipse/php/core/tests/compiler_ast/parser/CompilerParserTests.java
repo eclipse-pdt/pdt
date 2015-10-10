@@ -37,29 +37,21 @@ import org.junit.runner.RunWith;
 public class CompilerParserTests {
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
-		TESTS.put(PHPVersion.PHP5,
-				new String[] { "/workspace/compiler_parser/php5" });
-		TESTS.put(PHPVersion.PHP5_3,
-				new String[] { "/workspace/compiler_parser/php53" });
-		TESTS.put(PHPVersion.PHP5_4, new String[] {
-				"/workspace/compiler_parser/php53",
-				"/workspace/compiler_parser/php54" });
-		TESTS.put(PHPVersion.PHP5_5, new String[] {
-				"/workspace/compiler_parser/php53",
-				"/workspace/compiler_parser/php54",
-				"/workspace/compiler_parser/php55" });
-		TESTS.put(PHPVersion.PHP5_6, new String[] {
-				"/workspace/compiler_parser/php53",
-				"/workspace/compiler_parser/php54",
-				"/workspace/compiler_parser/php55",
-				"/workspace/compiler_parser/php56" });
-		TESTS.put(PHPVersion.PHP7_0, new String[] {
-				"/workspace/compiler_parser/php53",
-				"/workspace/compiler_parser/php54",
-				"/workspace/compiler_parser/php55",
-				"/workspace/compiler_parser/php56",
-				"/workspace/compiler_parser/php7"});
+		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/compiler_parser/php5" });
+		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/compiler_parser/php53" });
+		TESTS.put(PHPVersion.PHP5_4,
+				new String[] { "/workspace/compiler_parser/php53", "/workspace/compiler_parser/php54" });
+		TESTS.put(PHPVersion.PHP5_5, new String[] { "/workspace/compiler_parser/php53",
+				"/workspace/compiler_parser/php54", "/workspace/compiler_parser/php55" });
+		TESTS.put(PHPVersion.PHP5_6,
+				new String[] { "/workspace/compiler_parser/php53", "/workspace/compiler_parser/php54",
+						"/workspace/compiler_parser/php55", "/workspace/compiler_parser/php56" });
+		TESTS.put(PHPVersion.PHP7_0,
+				new String[] { "/workspace/compiler_parser/php53", "/workspace/compiler_parser/php54",
+						"/workspace/compiler_parser/php55", "/workspace/compiler_parser/php56",
+						"/workspace/compiler_parser/php7" });
 	};
 
 	private AbstractPHPSourceParser parser;
@@ -70,16 +62,12 @@ public class CompilerParserTests {
 
 	@Test
 	public void parserTest(String fileName) throws Exception {
-		final PdttFile pdttFile = new PdttFile(PHPCoreTests.getDefault()
-				.getBundle(), fileName, "UTF-8");
+		final PdttFile pdttFile = new PdttFile(PHPCoreTests.getDefault().getBundle(), fileName, "UTF-8");
 
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdttFile
-				.getFile().trim().getBytes("UTF-8"));
-		IModuleDeclaration moduleDeclaration = parser.parse(
-				new InputStreamReader(inputStream, "UTF-8"), null,
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdttFile.getFile().trim().getBytes("UTF-8"));
+		IModuleDeclaration moduleDeclaration = parser.parse(new InputStreamReader(inputStream, "UTF-8"), null,
 				ProjectOptions.useShortTags((IProject) null));
-		String actual = ASTPrintVisitor
-				.toXMLString((ASTNode) moduleDeclaration);
+		String actual = ASTPrintVisitor.toXMLString((ASTNode) moduleDeclaration);
 		PDTTUtils.assertContents(pdttFile.getExpected(), actual);
 	}
 }

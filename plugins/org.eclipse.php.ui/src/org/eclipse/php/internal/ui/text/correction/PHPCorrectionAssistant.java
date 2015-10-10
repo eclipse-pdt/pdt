@@ -56,8 +56,8 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 	public PHPCorrectionAssistant() {
 		super();
 
-		enableColoredLabels(PlatformUI.getPreferenceStore().getBoolean(
-				IWorkbenchPreferenceConstants.USE_COLORED_LABELS));
+		enableColoredLabels(
+				PlatformUI.getPreferenceStore().getBoolean(IWorkbenchPreferenceConstants.USE_COLORED_LABELS));
 
 		setInformationControlCreator(getInformationControlCreator());
 
@@ -70,8 +70,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 				fIsCompletionActive = true;
 			}
 
-			public void selectionChanged(ICompletionProposal proposal,
-					boolean smartToggle) {
+			public void selectionChanged(ICompletionProposal proposal, boolean smartToggle) {
 			}
 		});
 	}
@@ -83,8 +82,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 	private IInformationControlCreator getInformationControlCreator() {
 		return new IInformationControlCreator() {
 			public IInformationControl createInformationControl(Shell parent) {
-				return new DefaultInformationControl(parent, DLTKUIPlugin
-						.getAdditionalInfoAffordanceString());
+				return new DefaultInformationControl(parent, DLTKUIPlugin.getAdditionalInfoAffordanceString());
 			}
 		};
 	}
@@ -92,9 +90,8 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.text.contentassist.IContentAssistant#install(org.eclipse
-	 * .jface.text.ITextViewer)
+	 * @see org.eclipse.jface.text.contentassist.IContentAssistant#install(org.
+	 * eclipse .jface.text.ITextViewer)
 	 */
 	public void install(ISourceViewer sourceViewer) {
 		super.install(sourceViewer);
@@ -103,8 +100,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 		if (sourceViewer instanceof PHPStructuredTextViewer) {
 			fEditor = ((PHPStructuredTextViewer) sourceViewer).getTextEditor();
 		}
-		fLightBulbUpdater = new QuickAssistLightBulbUpdater(fEditor,
-				sourceViewer);
+		fLightBulbUpdater = new QuickAssistLightBulbUpdater(fEditor, sourceViewer);
 		fLightBulbUpdater.install();
 	}
 
@@ -163,8 +159,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 			int currLength = selectedRange.y;
 			boolean goToClosest = (currLength == 0) && !isReinvoked;
 
-			int newOffset = collectQuickFixableAnnotations(fEditor, currOffset,
-					goToClosest, resultingAnnotations);
+			int newOffset = collectQuickFixableAnnotations(fEditor, currOffset, goToClosest, resultingAnnotations);
 			if (newOffset != currOffset) {
 				storePosition(currOffset, currLength);
 				fViewer.setSelectedRange(newOffset, 0);
@@ -177,31 +172,26 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 		} catch (BadLocationException e) {
 			PHPUiPlugin.log(e);
 		}
-		fCurrentAnnotations = (Annotation[]) resultingAnnotations
-				.toArray(new Annotation[resultingAnnotations.size()]);
+		fCurrentAnnotations = (Annotation[]) resultingAnnotations.toArray(new Annotation[resultingAnnotations.size()]);
 
 		return super.showPossibleQuickAssists();
 	}
 
-	private static IRegion getRegionOfInterest(ITextEditor editor,
-			int invocationLocation) throws BadLocationException {
+	private static IRegion getRegionOfInterest(ITextEditor editor, int invocationLocation) throws BadLocationException {
 		IDocumentProvider documentProvider = editor.getDocumentProvider();
 		if (documentProvider == null) {
 			return null;
 		}
-		IDocument document = documentProvider.getDocument(editor
-				.getEditorInput());
+		IDocument document = documentProvider.getDocument(editor.getEditorInput());
 		if (document == null) {
 			return null;
 		}
 		return document.getLineInformationOfOffset(invocationLocation);
 	}
 
-	public static int collectQuickFixableAnnotations(ITextEditor editor,
-			int invocationLocation, boolean goToClosest,
+	public static int collectQuickFixableAnnotations(ITextEditor editor, int invocationLocation, boolean goToClosest,
 			ArrayList resultingAnnotations) throws BadLocationException {
-		IAnnotationModel model = DLTKUIPlugin.getDocumentProvider()
-				.getAnnotationModel(editor.getEditorInput());
+		IAnnotationModel model = DLTKUIPlugin.getDocumentProvider().getAnnotationModel(editor.getEditorInput());
 		if (model == null) {
 			return invocationLocation;
 		}
@@ -224,14 +214,12 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 				Annotation annot = (Annotation) iter.next();
 				if (PHPCorrectionProcessor.isQuickFixableType(annot)) {
 					Position pos = model.getPosition(annot);
-					if (pos != null
-							&& isInside(pos.offset, rangeStart, rangeEnd)) { // inside
-																				// our
-																				// range?
+					if (pos != null && isInside(pos.offset, rangeStart, rangeEnd)) { // inside
+																						// our
+																						// range?
 						allAnnotations.add(annot);
 						allPositions.add(pos);
-						bestOffset = processAnnotation(annot, pos,
-								invocationLocation, bestOffset);
+						bestOffset = processAnnotation(annot, pos, invocationLocation, bestOffset);
 					}
 				}
 			}
@@ -250,9 +238,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 				Annotation annot = (Annotation) iter.next();
 				if (PHPCorrectionProcessor.isQuickFixableType(annot)) {
 					Position pos = model.getPosition(annot);
-					if (pos != null
-							&& isInside(invocationLocation, pos.offset,
-									pos.offset + pos.length)) {
+					if (pos != null && isInside(invocationLocation, pos.offset, pos.offset + pos.length)) {
 						resultingAnnotations.add(annot);
 					}
 				}
@@ -262,12 +248,10 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 	}
 
 	private static void ensureUpdatedAnnotations(ITextEditor editor) {
-		Object inputElement = editor.getEditorInput().getAdapter(
-				IModelElement.class);
+		Object inputElement = editor.getEditorInput().getAdapter(IModelElement.class);
 		if (inputElement instanceof ISourceModule) {
 			try {
-				SharedASTProvider.getAST((ISourceModule) inputElement,
-						SharedASTProvider.WAIT_ACTIVE_ONLY, null);
+				SharedASTProvider.getAST((ISourceModule) inputElement, SharedASTProvider.WAIT_ACTIVE_ONLY, null);
 			} catch (ModelException e) {
 				PHPUiPlugin.log(e);
 			} catch (IOException e) {
@@ -276,8 +260,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 		}
 	}
 
-	private static int processAnnotation(Annotation annot, Position pos,
-			int invocationLocation, int bestOffset) {
+	private static int processAnnotation(Annotation annot, Position pos, int invocationLocation, int bestOffset) {
 		int posBegin = pos.offset;
 		int posEnd = posBegin + pos.length;
 		if (isInside(invocationLocation, posBegin, posEnd)) { // covers
@@ -285,8 +268,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 																// location?
 			return invocationLocation;
 		} else if (bestOffset != invocationLocation) {
-			int newClosestPosition = computeBestOffset(posBegin,
-					invocationLocation, bestOffset);
+			int newClosestPosition = computeBestOffset(posBegin, invocationLocation, bestOffset);
 			if (newClosestPosition != -1) {
 				if (newClosestPosition != bestOffset) { // new best
 					if (PHPCorrectionProcessor.hasCorrections(annot)) { // only
@@ -305,9 +287,12 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 	}
 
 	private static boolean isInside(int offset, int start, int end) {
-		return offset == start || offset == end
-				|| (offset > start && offset < end); // make sure to handle
-														// 0-length ranges
+		return offset == start || offset == end || (offset > start && offset < end); // make
+																						// sure
+																						// to
+																						// handle
+																						// 0-length
+																						// ranges
 	}
 
 	/**
@@ -327,8 +312,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 	 * @return -1 is returned if the given offset is not closer or the new best
 	 *         offset
 	 */
-	private static int computeBestOffset(int newOffset, int invocationLocation,
-			int bestOffset) {
+	private static int computeBestOffset(int newOffset, int invocationLocation, int bestOffset) {
 		if (newOffset <= invocationLocation) {
 			if (bestOffset > invocationLocation) {
 				return newOffset; // closest was on the right, prefer on the
@@ -359,8 +343,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 	}
 
 	private void restorePosition() {
-		if (fPosition != null && !fPosition.isDeleted()
-				&& fViewer.getDocument() != null) {
+		if (fPosition != null && !fPosition.isDeleted() && fViewer.getDocument() != null) {
 			fViewer.setSelectedRange(fPosition.offset, fPosition.length);
 			fViewer.revealRange(fPosition.offset, fPosition.length);
 		}

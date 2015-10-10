@@ -32,24 +32,21 @@ public class RefactoringASTParser {
 		fParser = ASTParser.newParser(phpVersion, useShortTags);
 	}
 
-	public Program parse(ISourceModule typeRoot, boolean resolveBindings)
-			throws Exception {
+	public Program parse(ISourceModule typeRoot, boolean resolveBindings) throws Exception {
 		return parse(typeRoot, resolveBindings, null);
 	}
 
-	public Program parse(ISourceModule typeRoot, boolean resolveBindings,
-			IProgressMonitor pm) throws Exception {
+	public Program parse(ISourceModule typeRoot, boolean resolveBindings, IProgressMonitor pm) throws Exception {
 		return parse(typeRoot, null, resolveBindings, pm);
 	}
 
-	public Program parse(ISourceModule typeRoot, WorkingCopyOwner owner,
-			boolean resolveBindings, IProgressMonitor pm) throws Exception {
+	public Program parse(ISourceModule typeRoot, WorkingCopyOwner owner, boolean resolveBindings, IProgressMonitor pm)
+			throws Exception {
 		return parse(typeRoot, owner, resolveBindings, false, false, pm);
 	}
 
-	public Program parse(ISourceModule typeRoot, WorkingCopyOwner owner,
-			boolean resolveBindings, boolean statementsRecovery,
-			boolean bindingsRecovery, IProgressMonitor pm) throws Exception {
+	public Program parse(ISourceModule typeRoot, WorkingCopyOwner owner, boolean resolveBindings,
+			boolean statementsRecovery, boolean bindingsRecovery, IProgressMonitor pm) throws Exception {
 		// fParser.setResolveBindings(resolveBindings);
 		// fParser.setStatementsRecovery(statementsRecovery);
 		// fParser.setBindingsRecovery(bindingsRecovery);
@@ -75,9 +72,8 @@ public class RefactoringASTParser {
 	 * @return the parsed Program
 	 * @throws Exception
 	 */
-	public Program parse(String newCuSource, ISourceModule originalCu,
-			boolean resolveBindings, boolean statementsRecovery,
-			IProgressMonitor pm) throws Exception {
+	public Program parse(String newCuSource, ISourceModule originalCu, boolean resolveBindings,
+			boolean statementsRecovery, IProgressMonitor pm) throws Exception {
 		// fParser.setResolveBindings(resolveBindings);
 		// fParser.setStatementsRecovery(statementsRecovery);
 		fParser.setSource(newCuSource.toCharArray());
@@ -130,12 +126,11 @@ public class RefactoringASTParser {
 	 * @return the parsed Program
 	 * @throws Exception
 	 */
-	public static Program parseWithASTProvider(ISourceModule typeRoot,
-			boolean resolveBindings, IProgressMonitor pm) throws Exception {
+	public static Program parseWithASTProvider(ISourceModule typeRoot, boolean resolveBindings, IProgressMonitor pm)
+			throws Exception {
 		Program cuNode = null;
 		try {
-			cuNode = SharedASTProvider.getAST(typeRoot,
-					SharedASTProvider.WAIT_ACTIVE_ONLY, pm);
+			cuNode = SharedASTProvider.getAST(typeRoot, SharedASTProvider.WAIT_ACTIVE_ONLY, pm);
 		} catch (ModelException e) {
 			RefactoringUIPlugin.log(e);
 		} catch (IOException e) {
@@ -144,10 +139,8 @@ public class RefactoringASTParser {
 		if (cuNode != null) {
 			return cuNode;
 		} else {
-			return new RefactoringASTParser(ASTProvider.SHARED_AST_LEVEL, true)
-					.parse(typeRoot, null, resolveBindings,
-							ASTProvider.SHARED_AST_STATEMENT_RECOVERY,
-							ASTProvider.SHARED_BINDING_RECOVERY, pm);
+			return new RefactoringASTParser(ASTProvider.SHARED_AST_LEVEL, true).parse(typeRoot, null, resolveBindings,
+					ASTProvider.SHARED_AST_STATEMENT_RECOVERY, ASTProvider.SHARED_BINDING_RECOVERY, pm);
 		}
 	}
 
@@ -181,7 +174,7 @@ public class RefactoringASTParser {
 				options.put(key, DLTKCore.IGNORE);
 			}
 		}
-		//		options.put(DLTKCore.COMPILER_TASK_TAGS, ""); //$NON-NLS-1$
+		// options.put(DLTKCore.COMPILER_TASK_TAGS, ""); //$NON-NLS-1$
 		return options;
 	}
 }

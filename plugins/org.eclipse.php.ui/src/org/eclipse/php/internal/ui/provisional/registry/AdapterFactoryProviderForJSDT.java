@@ -21,8 +21,7 @@ import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
  * @see issue #242015
  */
 public class AdapterFactoryProviderForJSDT
-		extends
-		org.eclipse.wst.jsdt.web.ui.internal.registry.AdapterFactoryProviderForJSDT {
+		extends org.eclipse.wst.jsdt.web.ui.internal.registry.AdapterFactoryProviderForJSDT {
 
 	@Override
 	public boolean isFor(IDocumentTypeHandler contentTypeDescription) {

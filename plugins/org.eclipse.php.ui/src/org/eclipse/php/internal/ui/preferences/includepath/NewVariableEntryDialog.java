@@ -46,8 +46,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 
 public class NewVariableEntryDialog extends StatusDialog {
 
-	private class VariablesAdapter implements IDialogFieldListener,
-			IListAdapter {
+	private class VariablesAdapter implements IDialogFieldListener, IListAdapter {
 
 		// -------- IListAdapter --------
 
@@ -95,20 +94,17 @@ public class NewVariableEntryDialog extends StatusDialog {
 		super(parent);
 		setTitle(NewWizardMessages.NewVariableEntryDialog_title);
 		this.environment = environment;
-		updateStatus(new StatusInfo(IStatus.ERROR, "")); //$NON-NLS-1$ 
+		updateStatus(new StatusInfo(IStatus.ERROR, "")); //$NON-NLS-1$
 
 		String[] buttonLabels = new String[] { NewWizardMessages.NewVariableEntryDialog_vars_extend, };
 
 		VariablesAdapter adapter = new VariablesAdapter();
 
-		BPVariableElementLabelProvider labelProvider = new BPVariableElementLabelProvider(
-				false);
+		BPVariableElementLabelProvider labelProvider = new BPVariableElementLabelProvider(false);
 
-		fVariablesList = new ListDialogField(adapter, buttonLabels,
-				labelProvider);
+		fVariablesList = new ListDialogField(adapter, buttonLabels, labelProvider);
 		fVariablesList.setDialogFieldListener(adapter);
-		fVariablesList
-				.setLabelText(NewWizardMessages.NewVariableEntryDialog_vars_label);
+		fVariablesList.setLabelText(NewWizardMessages.NewVariableEntryDialog_vars_label);
 
 		// TODO now disable Extend button
 		fVariablesList.enableButton(IDX_EXTEND, false);
@@ -126,8 +122,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 		// });
 
 		fConfigButton = new SelectionButtonDialogField(SWT.PUSH);
-		fConfigButton
-				.setLabelText(NewWizardMessages.NewVariableEntryDialog_configbutton_label);
+		fConfigButton.setLabelText(NewWizardMessages.NewVariableEntryDialog_configbutton_label);
 		fConfigButton.setDialogFieldListener(adapter);
 
 		initializeElements();
@@ -180,11 +175,11 @@ public class NewVariableEntryDialog extends StatusDialog {
 	 * @see org.eclipse.jface.dialogs.Dialog#getDialogBoundsSettings()
 	 */
 	protected IDialogSettings getDialogBoundsSettings() {
-		return PHPUiPlugin.getDefault().getDialogSettings()/*
-															 * getDialogSettingsSection
-															 * ( getClass
-															 * ().getName())
-															 */;
+		return PHPUiPlugin.getDefault()
+				.getDialogSettings()/*
+									 * getDialogSettingsSection ( getClass
+									 * ().getName())
+									 */;
 	}
 
 	/*
@@ -205,19 +200,17 @@ public class NewVariableEntryDialog extends StatusDialog {
 
 		LayoutUtil.setHorizontalSpan(fVariablesList.getLabelControl(null), 2);
 
-		GridData listData = (GridData) fVariablesList.getListControl(null)
-				.getLayoutData();
+		GridData listData = (GridData) fVariablesList.getListControl(null).getLayoutData();
 		listData.grabExcessHorizontalSpace = true;
 		listData.heightHint = convertHeightInCharsToPixels(10);
 		listData.widthHint = convertWidthInCharsToPixels(70);
 
 		fWarning = new CLabel(composite, SWT.NONE);
-		fWarning.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false,
-				fVariablesList.getNumberOfControls() - 1, 1));
+		fWarning.setLayoutData(
+				new GridData(SWT.FILL, SWT.TOP, true, false, fVariablesList.getNumberOfControls() - 1, 1));
 
 		Composite lowerComposite = new Composite(composite, SWT.NONE);
-		lowerComposite.setLayoutData(new GridData(
-				GridData.HORIZONTAL_ALIGN_FILL));
+		lowerComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 
 		layout = new GridLayout();
 		layout.marginHeight = 0;
@@ -273,8 +266,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 			status.setInfo(NewWizardMessages.NewVariableEntryDialog_info_noselection);
 		}
 		if (isValidSelection && nSelected > 1) {
-			String str = Messages.format(
-					NewWizardMessages.NewVariableEntryDialog_info_selected,
+			String str = Messages.format(NewWizardMessages.NewVariableEntryDialog_info_selected,
 					String.valueOf(nSelected));
 			status.setInfo(str);
 		}
@@ -314,22 +306,18 @@ public class NewVariableEntryDialog extends StatusDialog {
 		File file = elem.getPath().toFile();
 		// IPath[] selected = PHPBuildpathDialogAccess
 		// .chooseExternalArchiveEntries(getShell(), environment);
-		JARFileSelectionDialog dialog = new JARFileSelectionDialog(getShell(),
-				true, true, true);
+		JARFileSelectionDialog dialog = new JARFileSelectionDialog(getShell(), true, true, true);
 		dialog.setTitle(NewWizardMessages.NewVariableEntryDialog_ExtensionDialog_title);
-		dialog.setMessage(Messages
-				.format(NewWizardMessages.NewVariableEntryDialog_ExtensionDialog_description,
-						elem.getName()));
+		dialog.setMessage(
+				Messages.format(NewWizardMessages.NewVariableEntryDialog_ExtensionDialog_description, elem.getName()));
 		dialog.setInput(file);
 		if (dialog.open() == Window.OK) {
 			Object[] selected = dialog.getResult();
 			IPath[] paths = new IPath[selected.length];
 			for (int i = 0; i < selected.length; i++) {
-				IPath filePath = Path.fromOSString(((File) selected[i])
-						.getPath());
+				IPath filePath = Path.fromOSString(((File) selected[i]).getPath());
 				IPath resPath = new Path(elem.getName());
-				for (int k = elem.getPath().segmentCount(); k < filePath
-						.segmentCount(); k++) {
+				for (int k = elem.getPath().segmentCount(); k < filePath.segmentCount(); k++) {
 					resPath = resPath.append(filePath.segment(k));
 				}
 				paths[i] = resPath;
@@ -342,8 +330,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 	protected final void extendButtonPressed() {
 		List selected = fVariablesList.getSelectedElements();
 		if (selected.size() == 1) {
-			IPath[] extendedPaths = chooseExtensions((BPVariableElement) selected
-					.get(0));
+			IPath[] extendedPaths = chooseExtensions((BPVariableElement) selected.get(0));
 			if (extendedPaths != null && extendedPaths.length > 0) {
 				fResultPaths = extendedPaths;
 				super.buttonPressed(IDialogConstants.OK_ID);
@@ -357,11 +344,9 @@ public class NewVariableEntryDialog extends StatusDialog {
 		List selected = fVariablesList.getSelectedElements();
 		if (!selected.isEmpty()) {
 			String varName = ((BPVariableElement) selected.get(0)).getName();
-			options.put(BuildpathVariablesPreferencePage.DATA_SELECT_VARIABLE,
-					varName);
+			options.put(BuildpathVariablesPreferencePage.DATA_SELECT_VARIABLE, varName);
 		}
-		PreferencesUtil.createPreferenceDialogOn(getShell(), id,
-				new String[] { id }, options).open();
+		PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id }, options).open();
 
 		List oldElements = fVariablesList.getElements();
 		initializeElements();
