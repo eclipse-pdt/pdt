@@ -32,11 +32,10 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 
 	// other view id's
 	private static final String ID_EXPLORER = "org.eclipse.php.ui.explorer"; //$NON-NLS-1$
-	private static final String ID_TYPEHIERARCHY = "org.eclipse.dltk.ui.TypeHierarchy"; //$NON-NLS-1$
 	private static final String ID_FUNCTIONS = "org.eclipse.php.ui.functions"; //$NON-NLS-1$
 	private static final String ID_PROJECT_OUTLINE = "org.eclipse.php.ui.projectOutline"; //$NON-NLS-1$
 	public static final String ID_MVC = "org.zend.php.framework.ui.views.mvc"; //$NON-NLS-1$
-	private static final String ORG_ECLIPSE_DEBUG_UI_DEBUG_PERSPECTIVE = "org.eclipse.debug.ui.DebugPerspective"; //$	 //$NON-NLS-1$
+	private static final String ORG_ECLIPSE_DEBUG_UI_DEBUG_PERSPECTIVE = "org.eclipse.debug.ui.DebugPerspective"; // $ //$NON-NLS-1$
 
 	public void createInitialLayout(IPageLayout layout) {
 
@@ -66,22 +65,19 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		// Everything is based off the editor area
 
 		// Top left: Resource Navigator view and PHP Explorer
-		IFolderLayout topLeft = layout.createFolder(TOP_LEFT_LOCATION,
-				IPageLayout.LEFT, 0.22f, editorArea);
+		IFolderLayout topLeft = layout.createFolder(TOP_LEFT_LOCATION, IPageLayout.LEFT, 0.22f, editorArea);
 		topLeft.addView(ID_EXPLORER);
-		// topLeft.addView(ID_TYPEHIERARCHY);
 
 		// Bottom: Attributes view, Problem View, Task List, placeholder for
 		// Design View Log
-		IFolderLayout bottom = layout.createFolder(BOTTOM_LOCATION,
-				IPageLayout.BOTTOM, 0.75f, editorArea);
+		IFolderLayout bottom = layout.createFolder(BOTTOM_LOCATION, IPageLayout.BOTTOM, 0.75f, editorArea);
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
-		// bottom.addView(IPageLayout.ID_TASK_LIST);
+		bottom.addView(IPageLayout.ID_TASK_LIST);
 		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
 		bottom.addPlaceholder(IPageLayout.ID_BOOKMARKS);
 
-		IFolderLayout outlineFolder = layout.createFolder(TOP_RIGHT_LOCATION,
-				IPageLayout.RIGHT, (float) 0.75, editorArea); 
+		IFolderLayout outlineFolder = layout.createFolder(TOP_RIGHT_LOCATION, IPageLayout.RIGHT, (float) 0.75,
+				editorArea);
 		outlineFolder.addView(IPageLayout.ID_OUTLINE);
 		outlineFolder.addPlaceholder(ID_PROJECT_OUTLINE);
 		outlineFolder.addPlaceholder(ID_MVC);
