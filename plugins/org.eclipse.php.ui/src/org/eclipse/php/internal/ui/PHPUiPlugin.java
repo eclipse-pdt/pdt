@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.IWorkingCopyManager;
@@ -24,6 +25,7 @@ import org.eclipse.dltk.ui.MembersOrderPreferenceCache;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
@@ -31,6 +33,7 @@ import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.osgi.service.environment.EnvironmentInfo;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
 import org.eclipse.php.internal.ui.editor.ASTProvider;
 import org.eclipse.php.internal.ui.editor.templates.PhpCommentTemplateContextType;
@@ -50,6 +53,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.eclipse.ui.texteditor.ConfigurationElementSorter;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.jsdt.core.ITypeRoot;
@@ -110,6 +114,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	private ContributionContextTypeRegistry fContextTypeRegistry;
 
 	private PHPTemplateStore fCodeTemplateStore;
+
+	private IPreferenceStore fCorePreferenceStore;
 
 	public static String OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME = PHPUIMessages.PHPUiPlugin_4;
 	public static String OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME = PHPUIMessages.PHPUiPlugin_5;
@@ -586,6 +592,13 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			fImagesOnFSRegistry = new ImagesOnFileSystemRegistry();
 		}
 		return fImagesOnFSRegistry;
+	}
+
+	public IPreferenceStore getCorePreferenceStore() {
+		if (fCorePreferenceStore == null) {
+			fCorePreferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, PHPCorePlugin.ID);
+		}
+		return fCorePreferenceStore;
 	}
 
 }

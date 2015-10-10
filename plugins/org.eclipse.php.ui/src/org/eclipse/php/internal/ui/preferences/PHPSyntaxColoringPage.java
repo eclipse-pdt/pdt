@@ -15,13 +15,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.preference.ColorSelector;
@@ -80,6 +81,7 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.Overla
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
+import org.osgi.service.prefs.BackingStoreException;
 
 import com.ibm.icu.text.Collator;
 
@@ -1364,7 +1366,11 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	@Override
 	public boolean performOk() {
 		getOverlayStore().propagate();
-		PHPUiPlugin.getDefault().savePluginPreferences();
+		try {
+			InstanceScope.INSTANCE.getNode(PHPUiPlugin.ID).flush();
+		} catch (BackingStoreException e) {
+			org.eclipse.php.internal.ui.Logger.logException(e);
+		}
 		return true;
 	}
 

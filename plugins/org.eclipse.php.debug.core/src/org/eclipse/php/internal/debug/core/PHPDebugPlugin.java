@@ -143,7 +143,7 @@ public class PHPDebugPlugin extends Plugin {
 	public void stop(BundleContext context) throws Exception {
 		XDebugLaunchListener.shutdown();
 		DBGpProxyHandlersManager.INSTANCE.shutdown();
-		savePluginPreferences();
+		InstanceScope.INSTANCE.getNode(ID).flush();
 		DebuggerSettingsManager.INSTANCE.shutdown();
 		super.stop(context);
 		plugin = null;
@@ -166,20 +166,20 @@ public class PHPDebugPlugin extends Plugin {
 	}
 
 	public static boolean getStopAtFirstLine() {
-		Preferences prefs = getDefault().getPluginPreferences();
-		return prefs.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE);
+		return Platform.getPreferencesService().getBoolean(PHPDebugPlugin.ID,
+				PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, false, null);
 
 	}
 
 	public static boolean getDebugInfoOption() {
-		Preferences prefs = getDefault().getPluginPreferences();
-		return prefs.getBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO);
+		return Platform.getPreferencesService().getBoolean(PHPDebugPlugin.ID,
+				PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, false, null);
 
 	}
 
 	public static boolean getOpenInBrowserOption() {
-		Preferences prefs = getDefault().getPluginPreferences();
-		return prefs.getBoolean(PHPDebugCorePreferenceNames.OPEN_IN_BROWSER);
+		return Platform.getPreferencesService().getBoolean(PHPDebugPlugin.ID,
+				PHPDebugCorePreferenceNames.OPEN_IN_BROWSER, false, null);
 	}
 
 	/**
@@ -190,8 +190,8 @@ public class PHPDebugPlugin extends Plugin {
 	public static String getCurrentDebuggerId() {
 		// For backward compatibility try to get default debugger from
 		// preferences
-		Preferences prefs = getDefault().getPluginPreferences();
-		String id = prefs.getString(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID);
+		String id = Platform.getPreferencesService().getString(PHPDebugPlugin.ID,
+				PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, null, null);
 		if (id == null || id.isEmpty()) {
 			return DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID;
 		}
@@ -234,8 +234,8 @@ public class PHPDebugPlugin extends Plugin {
 	}
 
 	public static boolean getOpenDebugViewsOption() {
-		Preferences prefs = getDefault().getPluginPreferences();
-		return prefs.getBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS);
+		return Platform.getPreferencesService().getBoolean(PHPDebugPlugin.ID,
+				PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, false, null);
 
 	}
 

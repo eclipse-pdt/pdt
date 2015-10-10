@@ -11,17 +11,20 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
-import org.eclipse.dltk.ui.PreferencesAdapter;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.PositiveIntegerStringValidator;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * 
@@ -66,12 +69,16 @@ public class PHPContentAssistAutoActivationConfigurationBlock extends AbstractPH
 	}
 
 	protected IPreferenceStore getPreferenceStore() {
-		return new PreferencesAdapter(PHPCorePlugin.getDefault().getPluginPreferences());
+		return PHPUiPlugin.getDefault().getCorePreferenceStore();
 	}
 
 	protected void storeValues() {
 		super.storeValues();
-		PHPCorePlugin.getDefault().savePluginPreferences();
+		try {
+			InstanceScope.INSTANCE.getNode(PHPCorePlugin.ID).flush();
+		} catch (BackingStoreException e) {
+			Logger.logException(e);
+		}
 	}
 
 	// restore text boxes enablement according to the checkbox

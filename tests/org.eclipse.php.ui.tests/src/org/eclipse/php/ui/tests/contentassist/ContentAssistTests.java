@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
@@ -106,7 +107,8 @@ public class ContentAssistTests {
 
 		// set auto insert to true,if there are only one proposal in the CA,it
 		// will insert the proposal,so we can test CA without UI interaction
-		PHPUiPlugin.getDefault().getPluginPreferences().setDefault(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
+
+		DefaultScope.INSTANCE.getNode(PHPUiPlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
 		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
 	}
 

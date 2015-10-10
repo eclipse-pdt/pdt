@@ -12,10 +12,12 @@
 package org.eclipse.php.internal.ui.preferences.includepath;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.widgets.Composite;
@@ -23,6 +25,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
+import org.osgi.service.prefs.BackingStoreException;
 
 public class IncludePathVarsPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
@@ -84,7 +87,11 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements IWo
 	 * @see PreferencePage#performOk()
 	 */
 	public boolean performOk() {
-		PHPUiPlugin.getDefault().savePluginPreferences();
+		try {
+			InstanceScope.INSTANCE.getNode(PHPUiPlugin.ID).flush();
+		} catch (BackingStoreException e) {
+			Logger.logException(e);
+		}
 		return fVariableBlock.performOk();
 	}
 

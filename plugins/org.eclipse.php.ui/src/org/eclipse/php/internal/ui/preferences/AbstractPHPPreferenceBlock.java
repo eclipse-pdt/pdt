@@ -14,9 +14,11 @@ package org.eclipse.php.internal.ui.preferences;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.IStringValidator;
 import org.eclipse.php.internal.ui.util.ValidationStatus;
@@ -30,6 +32,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbench;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * 
@@ -324,13 +327,21 @@ public abstract class AbstractPHPPreferenceBlock extends AbstractPHPPreferencePa
 
 	public boolean performOK(boolean isProjectSpecific) {
 		storeValues();
-		PHPUiPlugin.getDefault().savePluginPreferences();
+		try {
+			InstanceScope.INSTANCE.getNode(PHPUiPlugin.ID).flush();
+		} catch (BackingStoreException e) {
+			Logger.logException(e);
+		}
 		return true;
 	}
 
 	public void performApply(boolean isProjectSpecific) {
 		storeValues();
-		PHPUiPlugin.getDefault().savePluginPreferences();
+		try {
+			InstanceScope.INSTANCE.getNode(PHPUiPlugin.ID).flush();
+		} catch (BackingStoreException e) {
+			Logger.logException(e);
+		}
 	}
 
 	protected abstract IPreferenceStore getPreferenceStore();

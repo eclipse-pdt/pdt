@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.core.zend.debugger;
 
 import java.net.URL;
 
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -70,7 +71,7 @@ public class OldDebuggerWarningDialog extends Dialog {
 		button.setText(Messages.OldDebuggerWarningDialog_9);
 		button.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				PHPDebugPlugin.getDefault().getPluginPreferences().setValue("DontShowOlderDebuggerWarning", //$NON-NLS-1$
+				InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID).putBoolean("DontShowOlderDebuggerWarning", //$NON-NLS-1$
 						button.getSelection());
 			}
 		});

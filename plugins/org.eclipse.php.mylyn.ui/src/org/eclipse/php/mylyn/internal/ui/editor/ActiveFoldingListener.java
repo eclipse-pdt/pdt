@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.IModelElement;
@@ -28,6 +26,8 @@ import org.eclipse.dltk.internal.mylyn.DLTKStructureBridge;
 import org.eclipse.dltk.internal.mylyn.DLTKUiBridgePlugin;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.text.folding.IFoldingStructureProviderExtension;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextListener;
 import org.eclipse.mylyn.context.core.ContextChangeEvent;
@@ -64,8 +64,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	public ActiveFoldingListener(PHPStructuredEditor editor) {
 		this.editor = editor;
 		ContextCore.getContextManager().addListener(this);
-		DLTKUiBridgePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(PREFERENCE_LISTENER);
-
+		DLTKUiBridgePlugin.getDefault().getPreferenceStore().addPropertyChangeListener(PREFERENCE_LISTENER);
 		enabled = DLTKUiBridgePlugin.getDefault().getPreferenceStore()
 				.getBoolean(DLTKUiBridgePlugin.AUTO_FOLDING_ENABLED);
 
@@ -74,7 +73,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	public void dispose() {
 		ContextCore.getContextManager().removeListener(this);
-		DLTKUiBridgePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
+		DLTKUiBridgePlugin.getDefault().getPreferenceStore().removePropertyChangeListener(PREFERENCE_LISTENER);
 	}
 
 	public static void resetProjection(IEditorPart javaEditor) {

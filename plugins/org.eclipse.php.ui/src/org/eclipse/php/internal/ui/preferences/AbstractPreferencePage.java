@@ -14,9 +14,11 @@ package org.eclipse.php.internal.ui.preferences;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.IStringValidator;
 import org.eclipse.php.internal.ui.util.ValidationStatus;
@@ -31,6 +33,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.osgi.service.prefs.BackingStoreException;
 
 public class AbstractPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
@@ -329,7 +332,11 @@ public class AbstractPreferencePage extends PreferencePage implements IWorkbench
 
 	public boolean performOk() {
 		storeValues();
-		PHPUiPlugin.getDefault().savePluginPreferences();
+		try {
+			InstanceScope.INSTANCE.getNode(PHPUiPlugin.ID).flush();
+		} catch (BackingStoreException e) {
+			Logger.logException(e);
+		}
 		return super.performOk();
 	}
 }

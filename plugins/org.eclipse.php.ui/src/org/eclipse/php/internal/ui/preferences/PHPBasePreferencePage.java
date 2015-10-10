@@ -13,12 +13,14 @@ package org.eclipse.php.internal.ui.preferences;
 
 import java.util.ArrayList;
 
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.SWT;
@@ -28,6 +30,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
+import org.osgi.service.prefs.BackingStoreException;
 
 /*
  * The page for setting general DLTK plugin preferences.
@@ -144,7 +147,11 @@ public class PHPBasePreferencePage extends PreferencePage implements IWorkbenchP
 			store.setValue(key, text.getText());
 		}
 
-		PHPUiPlugin.getDefault().savePluginPreferences();
+		try {
+			InstanceScope.INSTANCE.getNode(PHPUiPlugin.ID).flush();
+		} catch (BackingStoreException e) {
+			Logger.logException(e);
+		}
 		return super.performOk();
 	}
 

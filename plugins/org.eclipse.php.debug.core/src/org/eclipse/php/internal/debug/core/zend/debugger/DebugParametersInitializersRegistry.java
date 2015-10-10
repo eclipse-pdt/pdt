@@ -27,7 +27,6 @@ import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 
 /**
  * @author michael
- * 
  */
 public class DebugParametersInitializersRegistry {
 
@@ -124,8 +123,8 @@ public class DebugParametersInitializersRegistry {
 	 */
 	public static IDebugParametersInitializer getCurrentDebugParametersInitializer() {
 		try {
-			String id = PHPDebugPlugin.getDefault().getPluginPreferences()
-					.getString(IPHPDebugConstants.PHP_DEBUG_PARAMETERS_INITIALIZER);
+			String id = Platform.getPreferencesService().getString(PHPDebugPlugin.ID,
+					IPHPDebugConstants.PHP_DEBUG_PARAMETERS_INITIALIZER, null, null);
 			return getParametersInitializer(id);
 		} catch (Exception e) {
 			PHPDebugPlugin.log(e);

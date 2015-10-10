@@ -19,9 +19,11 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.Messages;
 import org.eclipse.php.internal.ui.util.StatusInfo;
@@ -35,6 +37,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.PlatformUI;
+import org.osgi.service.prefs.BackingStoreException;
 
 public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 
@@ -349,7 +352,11 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 			store.setValue(key, text.getText());
 		}
 
-		PHPUiPlugin.getDefault().savePluginPreferences();
+		try {
+			InstanceScope.INSTANCE.getNode(PHPUiPlugin.ID).flush();
+		} catch (BackingStoreException e) {
+			Logger.logException(e);
+		}
 		return super.performOk();
 
 	}

@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -19,7 +20,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * Abstract preference page which is used to wrap a
@@ -96,7 +99,11 @@ public abstract class AbstractConfigurationBlockPreferencePage extends Preferenc
 
 		fOverlayStore.propagate();
 
-		PHPUiPlugin.getDefault().savePluginPreferences();
+		try {
+			InstanceScope.INSTANCE.getNode(PHPUiPlugin.ID).flush();
+		} catch (BackingStoreException e) {
+			Logger.logException(e);
+		}
 
 		return true;
 	}
