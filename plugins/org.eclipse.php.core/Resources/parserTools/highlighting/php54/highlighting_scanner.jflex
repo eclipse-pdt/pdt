@@ -690,7 +690,6 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     "@staticvar"     {return PHPDOC_STATICVAR;}
     "@subpackage"    {return PHPDOC_SUBPACKAGE;}
     "@throws"        {return PHPDOC_THROWS;}
-    "@todo"          {return PHPDOC_TODO;}
     "@tutorial"      {return PHPDOC_TUTORIAL;}
     "@uses"		     {return PHPDOC_USES;}
     "@var"           {return PHPDOC_VAR;}
