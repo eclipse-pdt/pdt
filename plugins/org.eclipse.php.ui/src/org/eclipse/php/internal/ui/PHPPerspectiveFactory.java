@@ -32,7 +32,6 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 
 	// other view id's
 	private static final String ID_EXPLORER = "org.eclipse.php.ui.explorer"; //$NON-NLS-1$
-	private static final String ID_TYPEHIERARCHY = "org.eclipse.dltk.ui.TypeHierarchy"; //$NON-NLS-1$
 	private static final String ID_FUNCTIONS = "org.eclipse.php.ui.functions"; //$NON-NLS-1$
 	private static final String ID_PROJECT_OUTLINE = "org.eclipse.php.ui.projectOutline"; //$NON-NLS-1$
 	public static final String ID_MVC = "org.zend.php.framework.ui.views.mvc"; //$NON-NLS-1$
@@ -68,13 +67,12 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		// Top left: Resource Navigator view and PHP Explorer
 		IFolderLayout topLeft = layout.createFolder(TOP_LEFT_LOCATION, IPageLayout.LEFT, 0.22f, editorArea);
 		topLeft.addView(ID_EXPLORER);
-		// topLeft.addView(ID_TYPEHIERARCHY);
 
 		// Bottom: Attributes view, Problem View, Task List, placeholder for
 		// Design View Log
 		IFolderLayout bottom = layout.createFolder(BOTTOM_LOCATION, IPageLayout.BOTTOM, 0.75f, editorArea);
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
-		// bottom.addView(IPageLayout.ID_TASK_LIST);
+		bottom.addView(IPageLayout.ID_TASK_LIST);
 		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
 		bottom.addPlaceholder(IPageLayout.ID_BOOKMARKS);
 
