@@ -37,44 +37,56 @@ public abstract class ModelUtils {
 		ITypeBinding type = fieldAccess.getDispatcher().resolveTypeBinding();
 		String fieldName = getFieldName(fieldAccess.getMember());
 		if (type != null && fieldName != null) {
-			IVariableBinding[] fields = type.getDeclaredFields();
-			for (IVariableBinding field : fields) {
-				if (field.getName().substring(1).toLowerCase()
-						.equals(fieldName.toLowerCase())) {
-					return (IField) field.getPHPElement();
-				}
-			}
+			return getField(fieldName.toLowerCase(), type);
 		}
 		return null;
 	}
 
-	static public IMethod getMethod(MethodInvocation methodInvocation) {
-		ITypeBinding type = methodInvocation.getDispatcher()
-				.resolveTypeBinding();
-		String methodName = getFunctionName(methodInvocation.getMethod()
-				.getFunctionName());
-		if (type != null && methodName != null) {
-			IMethodBinding[] methods = type.getDeclaredMethods();
-			for (IMethodBinding method : methods) {
-				if (method.getName().toLowerCase()
-						.equals(methodName.toLowerCase())) {
-					return (IMethod) method.getPHPElement();
-				}
+	static private IField getField(String fieldName, ITypeBinding type) {
+		IVariableBinding[] fields = type.getDeclaredFields();
+		for (IVariableBinding field : fields) {
+			if (field.getName().substring(1).toLowerCase().equals(fieldName)) {
+				return (IField) field.getPHPElement();
 			}
+		}
+		ITypeBinding superClass = type.getSuperclass();
+		if (superClass != null) {
+			return getField(fieldName, superClass);
+		}
+
+		return null;
+	}
+
+	static public IMethod getMethod(MethodInvocation methodInvocation) {
+		ITypeBinding type = methodInvocation.getDispatcher().resolveTypeBinding();
+		String methodName = getFunctionName(methodInvocation.getMethod().getFunctionName());
+		if (type != null && methodName != null) {
+			return getMethod(methodName.toLowerCase(), type);
+		}
+		return null;
+	}
+
+	static private IMethod getMethod(String methodName, ITypeBinding type) {
+		IMethodBinding[] methods = type.getDeclaredMethods();
+		for (IMethodBinding method : methods) {
+			if (method.getName().toLowerCase().equals(methodName)) {
+				return (IMethod) method.getPHPElement();
+			}
+		}
+		ITypeBinding superclass = type.getSuperclass();
+		if (superclass != null) {
+			return getMethod(methodName, superclass);
 		}
 		return null;
 	}
 
 	static public IMethod getMethod(StaticMethodInvocation methodInvocation) {
-		ITypeBinding type = methodInvocation.getClassName()
-				.resolveTypeBinding();
-		String methodName = getFunctionName(methodInvocation.getMethod()
-				.getFunctionName());
+		ITypeBinding type = methodInvocation.getClassName().resolveTypeBinding();
+		String methodName = getFunctionName(methodInvocation.getMethod().getFunctionName());
 		if (type != null && methodName != null) {
 			IMethodBinding[] methods = type.getDeclaredMethods();
 			for (IMethodBinding method : methods) {
-				if (method.getName().toLowerCase()
-						.equals(methodName.toLowerCase())) {
+				if (method.getName().toLowerCase().equals(methodName.toLowerCase())) {
 					return (IMethod) method.getPHPElement();
 				}
 			}
@@ -89,13 +101,11 @@ public abstract class ModelUtils {
 		}
 		ITypeBinding type = methodBinding.getDeclaringClass();
 
-		String methodName = methodDeclaration.getFunction().getFunctionName()
-				.getName();
+		String methodName = methodDeclaration.getFunction().getFunctionName().getName();
 		if (type != null && methodName != null) {
 			IMethodBinding[] methods = type.getDeclaredMethods();
 			for (IMethodBinding method : methods) {
-				if (method.getName().toLowerCase()
-						.equals(methodName.toLowerCase())) {
+				if (method.getName().toLowerCase().equals(methodName.toLowerCase())) {
 					return (IMethod) method.getPHPElement();
 				}
 			}
@@ -104,8 +114,7 @@ public abstract class ModelUtils {
 	}
 
 	static public IMethod getMethod(FunctionDeclaration functionDeclaration) {
-		IFunctionBinding function = functionDeclaration
-				.resolveFunctionBinding();
+		IFunctionBinding function = functionDeclaration.resolveFunctionBinding();
 		if (function == null) {
 			return null;
 		}
@@ -113,8 +122,7 @@ public abstract class ModelUtils {
 		return method;
 	}
 
-	static public IMethod getFunctionMethod(
-			FunctionDeclaration functionDeclaration) {
+	static public IMethod getFunctionMethod(FunctionDeclaration functionDeclaration) {
 		ASTNode parent = functionDeclaration.getParent();
 		IMethod method = null;
 		if (parent instanceof MethodDeclaration) {
@@ -125,8 +133,7 @@ public abstract class ModelUtils {
 		return method;
 	}
 
-	static public Collection<ISourceRange> getDeprecatedElements(
-			IModelElement element) {
+	static public Collection<ISourceRange> getDeprecatedElements(IModelElement element) {
 		Collection<ISourceRange> elements = new LinkedList<ISourceRange>();
 		try {
 			if (ModelUtils.isDeprecated(element)) {
@@ -171,39 +178,31 @@ public abstract class ModelUtils {
 		return doc;
 	}
 
-	static public IType[] getTypes(String typeName, ISourceModule sm,
-			int offset, IType currentNamespace) {
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sm, null);
+	static public IType[] getTypes(String typeName, ISourceModule sm, int offset, IType currentNamespace) {
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sm, null);
 		IContext context = ASTUtils.findContext(sm, moduleDeclaration, offset);
 		if (currentNamespace != null) {
 			if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
 				// check if the first part is an alias,then get the full name
-				String prefix = typeName.substring(0, typeName
-						.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
-				final Map<String, UsePart> result = PHPModelUtils
-						.getAliasToNSMap(prefix, moduleDeclaration, offset,
-								currentNamespace, true);
+				String prefix = typeName.substring(0, typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
+				final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration, offset,
+						currentNamespace, true);
 				if (result.containsKey(prefix)) {
-					String fullName = result.get(prefix).getNamespace()
-							.getFullyQualifiedName();
+					String fullName = result.get(prefix).getNamespace().getFullyQualifiedName();
 					typeName = typeName.replace(prefix, fullName);
 				}
 			} else if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
 
 				String prefix = typeName;
-				final Map<String, UsePart> result = PHPModelUtils
-						.getAliasToNSMap(prefix, moduleDeclaration, offset,
-								currentNamespace, true);
+				final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration, offset,
+						currentNamespace, true);
 				if (result.containsKey(prefix)) {
-					String fullName = result.get(prefix).getNamespace()
-							.getFullyQualifiedName();
+					String fullName = result.get(prefix).getNamespace().getFullyQualifiedName();
 					typeName = fullName;
 				}
 			}
 		}
-		return PHPTypeInferenceUtils.getModelElements(
-				new PHPClassType(typeName), (ISourceModuleContext) context,
+		return PHPTypeInferenceUtils.getModelElements(new PHPClassType(typeName), (ISourceModuleContext) context,
 				offset);
 	}
 
