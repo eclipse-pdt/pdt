@@ -9,13 +9,16 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences.includepath;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.dltk.internal.ui.dialogs.StatusInfo;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
+import org.eclipse.dltk.ui.dialogs.StatusInfo;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -30,8 +33,7 @@ import org.eclipse.ui.views.navigator.ResourceComparator;
 
 /**
   */
-public class MultipleFolderSelectionDialog extends SelectionStatusDialog
-		implements ISelectionChangedListener {
+public class MultipleFolderSelectionDialog extends SelectionStatusDialog implements ISelectionChangedListener {
 
 	private CheckboxTreeViewer fViewer;
 
@@ -45,8 +47,8 @@ public class MultipleFolderSelectionDialog extends SelectionStatusDialog
 	private Set fExisting;
 	private Object fFocusElement;
 
-	public MultipleFolderSelectionDialog(Shell parent,
-			ILabelProvider labelProvider, ITreeContentProvider contentProvider) {
+	public MultipleFolderSelectionDialog(Shell parent, ILabelProvider labelProvider,
+			ITreeContentProvider contentProvider) {
 		super(parent);
 		fLabelProvider = labelProvider;
 		fContentProvider = contentProvider;
@@ -139,8 +141,7 @@ public class MultipleFolderSelectionDialog extends SelectionStatusDialog
 			public void run() {
 				access$superCreate();
 
-				fViewer.setCheckedElements(getInitialElementSelections()
-						.toArray());
+				fViewer.setCheckedElements(getInitialElementSelections().toArray());
 
 				fViewer.expandToLevel(2);
 				if (fExisting != null) {
@@ -192,7 +193,7 @@ public class MultipleFolderSelectionDialog extends SelectionStatusDialog
 		if (getResult() != null) {
 			updateStatus(new StatusInfo());
 		} else {
-			updateStatus(new StatusInfo(IStatus.ERROR, "")); //$NON-NLS-1$ 
+			updateStatus(new StatusInfo(IStatus.ERROR, "")); //$NON-NLS-1$
 		}
 	}
 
@@ -235,8 +236,7 @@ public class MultipleFolderSelectionDialog extends SelectionStatusDialog
 			setInitialSelections(existing);
 		}
 		if (fFocusElement != null) {
-			treeViewer.setSelection(new StructuredSelection(fFocusElement),
-					true);
+			treeViewer.setSelection(new StructuredSelection(fFocusElement), true);
 		}
 		treeViewer.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
@@ -258,8 +258,7 @@ public class MultipleFolderSelectionDialog extends SelectionStatusDialog
 	}
 
 	private void updateNewFolderButtonState() {
-		IStructuredSelection selection = (IStructuredSelection) fViewer
-				.getSelection();
+		IStructuredSelection selection = (IStructuredSelection) fViewer.getSelection();
 		fSelectedContainer = null;
 		if (selection.size() == 1) {
 			Object first = selection.getFirstElement();
