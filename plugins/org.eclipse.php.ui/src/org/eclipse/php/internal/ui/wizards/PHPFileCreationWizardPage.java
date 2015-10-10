@@ -38,8 +38,8 @@ public class PHPFileCreationWizardPage extends WizardNewFileCreationPage {
 	 * @param pageName
 	 */
 	public PHPFileCreationWizardPage(final ISelection selection) {
-		super(
-				"PHPWizardNewFileCreationPage", selection instanceof IStructuredSelection ? (IStructuredSelection) selection : null); //$NON-NLS-1$
+		super("PHPWizardNewFileCreationPage", //$NON-NLS-1$
+				selection instanceof IStructuredSelection ? (IStructuredSelection) selection : null);
 		setTitle(PHPUIMessages.PHPFileCreationWizardPage_3);
 		setDescription(PHPUIMessages.PHPFileCreationWizardPage_4);
 		setImageDescriptor(PHPPluginImages.DESC_WIZBAN_ADD_PHP_FILE);
@@ -54,8 +54,7 @@ public class PHPFileCreationWizardPage extends WizardNewFileCreationPage {
 				IPath path = containerFullPath.append(fileName);
 				if (ResourcesPlugin.getWorkspace().getRoot().exists(path)) {
 					count++;
-					fileName = addDefaultExtension(PHPUIMessages.PHPFileCreationWizardPage_8
-							+ count);
+					fileName = addDefaultExtension(PHPUIMessages.PHPFileCreationWizardPage_8 + count);
 				} else {
 					break;
 				}
@@ -80,11 +79,8 @@ public class PHPFileCreationWizardPage extends WizardNewFileCreationPage {
 
 	@Override
 	public void performHelp() {
-		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(getControl(),
-						IPHPHelpContextIds.CREATING_A_PHP_FILE_WITHIN_A_PROJECT);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
+				IPHPHelpContextIds.CREATING_A_PHP_FILE_WITHIN_A_PROJECT);
 		super.performHelp();
 	}
 
@@ -146,10 +142,8 @@ public class PHPFileCreationWizardPage extends WizardNewFileCreationPage {
 		if (!contentType.isAssociatedWith(fileName)) {
 			// fixed bug 195274
 			// get the extensions from content type
-			final String[] fileExtensions = contentType
-					.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
-			StringBuffer buffer = new StringBuffer(
-					PHPUIMessages.PHPFileCreationWizardPage_17);
+			final String[] fileExtensions = contentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+			StringBuffer buffer = new StringBuffer(PHPUIMessages.PHPFileCreationWizardPage_17);
 			buffer.append(fileExtensions[0]);
 			for (String extension : fileExtensions) {
 				buffer.append(", ").append(extension); //$NON-NLS-1$
@@ -164,8 +158,7 @@ public class PHPFileCreationWizardPage extends WizardNewFileCreationPage {
 
 	protected IContainer getContainer(final IPath path) {
 
-		final IResource resource = ResourcesPlugin.getWorkspace().getRoot()
-				.findMember(path);
+		final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
 		return resource instanceof IContainer ? (IContainer) resource : null;
 
 	}

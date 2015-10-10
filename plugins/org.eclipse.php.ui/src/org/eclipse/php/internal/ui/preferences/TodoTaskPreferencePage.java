@@ -40,24 +40,17 @@ public class TodoTaskPreferencePage extends PropertyAndPreferencePage {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-	 * .Composite)
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
+	 * widgets .Composite)
 	 */
 	public void createControl(Composite parent) {
 		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
-		fConfigurationBlock = new TodoTaskConfigurationBlock(
-				getNewStatusChangedListener(), getProject(), container);
+		fConfigurationBlock = new TodoTaskConfigurationBlock(getNewStatusChangedListener(), getProject(), container);
 
 		super.createControl(parent);
 
-		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(
-						getControl(),
-						getProject() != null ? IPHPHelpContextIds.TASK_TAGS_PROPERTIES
-								: IPHPHelpContextIds.TASK_TAGS_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), getProject() != null
+				? IPHPHelpContextIds.TASK_TAGS_PROPERTIES : IPHPHelpContextIds.TASK_TAGS_PREFERENCES);
 	}
 
 	/*
@@ -106,13 +99,11 @@ public class TodoTaskPreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
 	 * enableProjectSpecificSettings(boolean)
 	 */
-	protected void enableProjectSpecificSettings(
-			boolean useProjectSpecificSettings) {
+	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
 		// Order is important!
 		super.enableProjectSpecificSettings(useProjectSpecificSettings);
 		if (fConfigurationBlock != null) {
-			fConfigurationBlock
-					.useProjectSpecificSettings(useProjectSpecificSettings);
+			fConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
 		}
 	}
 
@@ -160,9 +151,8 @@ public class TodoTaskPreferencePage extends PropertyAndPreferencePage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#setElement
-	 * (org.eclipse.core.runtime.IAdaptable)
+	 * @see org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
+	 * setElement (org.eclipse.core.runtime.IAdaptable)
 	 */
 	public void setElement(IAdaptable element) {
 		super.setElement(element);

@@ -47,8 +47,7 @@ import com.ibm.icu.text.MessageFormat;
 
 /**
  */
-public class TodoTaskConfigurationBlock extends
-		PHPCoreOptionsConfigurationBlock {
+public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock {
 
 	private static final Key PREF_TASK_TAGS = getPHPCoreKey(PHPCoreConstants.TASK_TAGS);
 	private static final Key PREF_TASK_PRIORITIES = getPHPCoreKey(PHPCoreConstants.TASK_PRIORITIES);
@@ -67,8 +66,7 @@ public class TodoTaskConfigurationBlock extends
 		public String priority;
 	}
 
-	private class TodoTaskLabelProvider extends LabelProvider implements
-			ITableLabelProvider, IFontProvider {
+	private class TodoTaskLabelProvider extends LabelProvider implements ITableLabelProvider, IFontProvider {
 
 		public TodoTaskLabelProvider() {
 		}
@@ -116,10 +114,8 @@ public class TodoTaskConfigurationBlock extends
 			if (columnIndex == 0) {
 				String name = task.name;
 				if (isDefaultTask(task)) {
-					name = MessageFormat
-							.format(
-									PHPUIMessages.TodoTaskConfigurationBlock_tasks_default,
-									new Object[] { name });
+					name = MessageFormat.format(PHPUIMessages.TodoTaskConfigurationBlock_tasks_default,
+							new Object[] { name });
 				}
 				return name;
 			} else {
@@ -142,8 +138,7 @@ public class TodoTaskConfigurationBlock extends
 		 */
 		public Font getFont(Object element) {
 			if (isDefaultTask((TodoTask) element)) {
-				return JFaceResources.getFontRegistry().getBold(
-						JFaceResources.DIALOG_FONT);
+				return JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT);
 			}
 			return null;
 		}
@@ -164,33 +159,27 @@ public class TodoTaskConfigurationBlock extends
 	private ListDialogField fTodoTasksList;
 	private SelectionButtonDialogField fCaseSensitiveCheckBox;
 
-	public TodoTaskConfigurationBlock(IStatusChangeListener context,
-			IProject project, IWorkbenchPreferenceContainer container) {
+	public TodoTaskConfigurationBlock(IStatusChangeListener context, IProject project,
+			IWorkbenchPreferenceContainer container) {
 		super(context, project, getKeys(), container);
 
 		TaskTagAdapter adapter = new TaskTagAdapter();
-		String[] buttons = new String[] {
-				PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_add_button,
+		String[] buttons = new String[] { PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_add_button,
 				PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_edit_button,
-				PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_remove_button,
-				null,
+				PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_remove_button, null,
 				PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_setdefault_button, };
-		fTodoTasksList = new ListDialogField(adapter, buttons,
-				new TodoTaskLabelProvider());
+		fTodoTasksList = new ListDialogField(adapter, buttons, new TodoTaskLabelProvider());
 		fTodoTasksList.setDialogFieldListener(adapter);
 		fTodoTasksList.setRemoveButtonIndex(IDX_REMOVE);
 
-		String[] columnsHeaders = new String[] {
-				PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_name_column,
+		String[] columnsHeaders = new String[] { PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_name_column,
 				PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_priority_column, };
 
-		fTodoTasksList.setTableColumns(new ListDialogField.ColumnsDescription(
-				columnsHeaders, true));
+		fTodoTasksList.setTableColumns(new ListDialogField.ColumnsDescription(columnsHeaders, true));
 		fTodoTasksList.setViewerSorter(new TodoTaskSorter());
 
 		fCaseSensitiveCheckBox = new SelectionButtonDialogField(SWT.CHECK);
-		fCaseSensitiveCheckBox
-				.setLabelText(PHPUIMessages.TodoTaskConfigurationBlock_casesensitive_label);
+		fCaseSensitiveCheckBox.setLabelText(PHPUIMessages.TodoTaskConfigurationBlock_casesensitive_label);
 		fCaseSensitiveCheckBox.setDialogFieldListener(adapter);
 
 		unpackTodoTasks();
@@ -222,8 +211,7 @@ public class TodoTaskConfigurationBlock extends
 	}
 
 	private static Key[] getKeys() {
-		return new Key[] { PREF_TASK_TAGS, PREF_TASK_PRIORITIES,
-				PREF_TASK_CASE_SENSITIVE };
+		return new Key[] { PREF_TASK_TAGS, PREF_TASK_PRIORITIES, PREF_TASK_CASE_SENSITIVE };
 	}
 
 	public class TaskTagAdapter implements IListAdapter, IDialogFieldListener {
@@ -233,8 +221,7 @@ public class TodoTaskConfigurationBlock extends
 		}
 
 		private boolean canSetToDefault(List selectedElements) {
-			return selectedElements.size() == 1
-					&& !isDefaultTask((TodoTask) selectedElements.get(0));
+			return selectedElements.size() == 1 && !isDefaultTask((TodoTask) selectedElements.get(0));
 		}
 
 		public void customButtonPressed(ListDialogField field, int index) {
@@ -287,17 +274,14 @@ public class TodoTaskConfigurationBlock extends
 		listControl.setLayoutData(data);
 
 		Control buttonsControl = fTodoTasksList.getButtonBox(markersComposite);
-		buttonsControl.setLayoutData(new GridData(
-				GridData.HORIZONTAL_ALIGN_FILL
-						| GridData.VERTICAL_ALIGN_BEGINNING));
+		buttonsControl.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING));
 
 		fCaseSensitiveCheckBox.doFillIntoGrid(markersComposite, 2);
 
 		return markersComposite;
 	}
 
-	protected void validateSettings(Key changedKey, String oldValue,
-			String newValue) {
+	protected void validateSettings(Key changedKey, String oldValue, String newValue) {
 		if (changedKey != null) {
 			if (PREF_TASK_TAGS.equals(changedKey)) {
 				fTaskTagsStatus = validateTaskTags();
@@ -334,8 +318,7 @@ public class TodoTaskConfigurationBlock extends
 			setValue(PREF_TASK_PRIORITIES, prios.toString());
 			validateSettings(PREF_TASK_TAGS, null, null);
 		} else if (field == fCaseSensitiveCheckBox) {
-			String state = fCaseSensitiveCheckBox.isSelected() ? ENABLED
-					: DISABLED;
+			String state = fCaseSensitiveCheckBox.isSelected() ? ENABLED : DISABLED;
 			setValue(PREF_TASK_CASE_SENSITIVE, state);
 		}
 	}
@@ -390,8 +373,7 @@ public class TodoTaskConfigurationBlock extends
 			edited = (TodoTask) fTodoTasksList.getSelectedElements().get(0);
 		}
 		if (index == IDX_ADD || index == IDX_EDIT) {
-			TodoTaskInputDialog dialog = new TodoTaskInputDialog(getShell(),
-					edited, fTodoTasksList.getElements());
+			TodoTaskInputDialog dialog = new TodoTaskInputDialog(getShell(), edited, fTodoTasksList.getElements());
 			if (dialog.open() == Window.OK) {
 				if (edited != null) {
 					fTodoTasksList.replaceElement(edited, dialog.getResult());
@@ -412,8 +394,7 @@ public class TodoTaskConfigurationBlock extends
 			PHPUiPlugin.log(e);
 			return;
 		}
-		IEditorReference[] editors = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage()
+		IEditorReference[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
 				.getEditorReferences();
 		for (int i = 0; i < editors.length; i++) {
 			IEditorReference editorReference = editors[i];
@@ -422,15 +403,12 @@ public class TodoTaskConfigurationBlock extends
 				PHPStructuredEditor phpEditor = (PHPStructuredEditor) editor;
 				boolean isDirty = phpEditor.isDirty();
 				if (phpEditor.getTextViewer() instanceof PHPStructuredTextViewer) {
-					PHPStructuredTextViewer textViewer = (PHPStructuredTextViewer) phpEditor
-							.getTextViewer();
-					IDocumentAdapter documentAdapter = textViewer
-							.getDocumentAdapter();
+					PHPStructuredTextViewer textViewer = (PHPStructuredTextViewer) phpEditor.getTextViewer();
+					IDocumentAdapter documentAdapter = textViewer.getDocumentAdapter();
 					IDocument document = phpEditor.getDocument();
 					String content = document.get();
 					if (documentAdapter != null) {
-						documentAdapter.replaceTextRange(0, content.length(),
-								""); //$NON-NLS-1$
+						documentAdapter.replaceTextRange(0, content.length(), ""); //$NON-NLS-1$
 						documentAdapter.replaceTextRange(0, 0, content);
 					}
 

@@ -44,8 +44,7 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
 @SuppressWarnings("restriction")
 public class LocalFileSearchEngine {
 
-	private class PHPFilenameFilter
-			implements FileFilter, IContentTypeChangeListener {
+	private class PHPFilenameFilter implements FileFilter, IContentTypeChangeListener {
 		private Pattern phpFilePattern;
 
 		public PHPFilenameFilter() {
@@ -54,10 +53,8 @@ public class LocalFileSearchEngine {
 		}
 
 		private void buildPHPFilePattern() {
-			IContentType type = Platform.getContentTypeManager()
-					.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
-			String[] phpExtensions = type
-					.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+			IContentType type = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
+			String[] phpExtensions = type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 			StringBuilder buf = new StringBuilder();
 			buf.append(".*\\.("); //$NON-NLS-1$
 			for (int i = 0; i < phpExtensions.length; ++i) {
@@ -67,8 +64,7 @@ public class LocalFileSearchEngine {
 				buf.append(phpExtensions[i]);
 			}
 			buf.append(')');
-			phpFilePattern = Pattern.compile(buf.toString(),
-					Pattern.CASE_INSENSITIVE);
+			phpFilePattern = Pattern.compile(buf.toString(), Pattern.CASE_INSENSITIVE);
 		}
 
 		public void contentTypeChanged(ContentTypeChangeEvent event) {
@@ -76,8 +72,7 @@ public class LocalFileSearchEngine {
 		}
 
 		public boolean accept(File pathname) {
-			if (pathname.isDirectory()
-					|| phpFilePattern.matcher(pathname.getName()).matches()) {
+			if (pathname.isDirectory() || phpFilePattern.matcher(pathname.getName()).matches()) {
 				return true;
 			}
 			return false;
@@ -91,8 +86,7 @@ public class LocalFileSearchEngine {
 	private final ILocalFileSearchFilter searchResultsFilter;
 
 	public LocalFileSearchEngine() {
-		this.searchResultsFilter = LocalFileSearchFilterRegistry
-				.getFilter(DEFAULT_FILE_SEARCH_FILTER);
+		this.searchResultsFilter = LocalFileSearchFilterRegistry.getFilter(DEFAULT_FILE_SEARCH_FILTER);
 	}
 
 	public LocalFileSearchEngine(ILocalFileSearchFilter searchResultsFilter) {
@@ -112,21 +106,16 @@ public class LocalFileSearchEngine {
 	 * @return
 	 * @throws InterruptedException
 	 */
-	public LocalFileSearchResult find(final IResource container,
-			final String remoteFilePath, final String serverUniqueId)
-					throws InterruptedException {
-		if (container == null || !container.exists()
-				|| !container.isAccessible()) {
+	public LocalFileSearchResult find(final IResource container, final String remoteFilePath,
+			final String serverUniqueId) throws InterruptedException {
+		if (container == null || !container.exists() || !container.isAccessible()) {
 			return null;
 		}
 		final PathMapper pathMapper = serverUniqueId != null
-				? PathMapperRegistry
-						.getByServer(ServersManager.findServer(serverUniqueId))
-				: new PathMapper();
+				? PathMapperRegistry.getByServer(ServersManager.findServer(serverUniqueId)) : new PathMapper();
 		final VirtualPath abstractPath = new VirtualPath(remoteFilePath);
 		final SyncObject<LocalFileSearchResult> searchResult = new SyncObject<LocalFileSearchResult>();
-		Job findJob = new Job(
-				Messages.LocalFileSearchEngine_Searching_for_local_file) {
+		Job findJob = new Job(Messages.LocalFileSearchEngine_Searching_for_local_file) {
 			protected IStatus run(IProgressMonitor monitor) {
 				// First, look into the path mapper:
 				LinkedList<PathEntry> results = new LinkedList<PathEntry>();
@@ -135,8 +124,7 @@ public class LocalFileSearchEngine {
 				// Search in the whole workspace:
 				Set<IncludePath> s = new LinkedHashSet<IncludePath>();
 				Set<IBuildpathEntry> b = new LinkedHashSet<IBuildpathEntry>();
-				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
-						.getProjects();
+				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 				for (IProject project : projects) {
 					if (project.isOpen() && project.isAccessible()) {
 						// get include paths of all projects
@@ -145,8 +133,7 @@ public class LocalFileSearchEngine {
 						IScriptProject scriptProject = DLTKCore.create(project);
 						if (scriptProject != null && scriptProject.isOpen()) {
 							try {
-								IBuildpathEntry[] rawBuildpath = scriptProject
-										.getRawBuildpath();
+								IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
 								for (IBuildpathEntry pathEntry : rawBuildpath) {
 									b.add(pathEntry);
 								}
@@ -162,24 +149,17 @@ public class LocalFileSearchEngine {
 				// Try to find this file in the Workspace:
 				try {
 					IPath path = Path.fromOSString(remoteFilePath);
-					IFile file = ResourcesPlugin.getWorkspace().getRoot()
-							.getFileForLocation(path);
+					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
 					if (file != null && file.exists()) {
 						for (IncludePath includePath : includePaths) {
 							if (includePath.getEntry() instanceof IContainer) {
-								IContainer container = (IContainer) includePath
-										.getEntry();
-								if (container.getFullPath()
-										.isPrefixOf(file.getFullPath())) {
-									PathEntry localFile = new PathEntry(
-											file.getFullPath().toString(),
-											Type.WORKSPACE, file.getParent());
-									pathMapper.addEntry(remoteFilePath,
-											localFile,
-											MappingSource.ENVIRONMENT);
+								IContainer container = (IContainer) includePath.getEntry();
+								if (container.getFullPath().isPrefixOf(file.getFullPath())) {
+									PathEntry localFile = new PathEntry(file.getFullPath().toString(), Type.WORKSPACE,
+											file.getParent());
+									pathMapper.addEntry(remoteFilePath, localFile, MappingSource.ENVIRONMENT);
 									PathMapperRegistry.storeToPreferences();
-									searchResult.set(new LocalFileSearchResult(
-											localFile));
+									searchResult.set(new LocalFileSearchResult(localFile));
 									return Status.OK_STATUS;
 								}
 							}
@@ -191,23 +171,18 @@ public class LocalFileSearchEngine {
 				// Try to find in build paths
 				if (buildPaths != null) {
 					for (IBuildpathEntry entry : buildPaths) {
-						IPath entryPath = EnvironmentPathUtils
-								.getLocalPath(entry.getPath());
-						if (entry
-								.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+						IPath entryPath = EnvironmentPathUtils.getLocalPath(entry.getPath());
+						if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 							// We don't support lookup in archive
 							File entryDir = entryPath.toFile();
 							find(entryDir, abstractPath, entry, results);
-						} else if (entry
-								.getEntryKind() == IBuildpathEntry.BPE_PROJECT
+						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT
 								|| entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
-							IResource res = ResourcesPlugin.getWorkspace()
-									.getRoot()
+							IResource res = ResourcesPlugin.getWorkspace().getRoot()
 									.findMember(entry.getPath().lastSegment());
 							if (res instanceof IProject) {
 								IProject project = (IProject) res;
-								if (project.isOpen()
-										&& project.isAccessible()) {
+								if (project.isOpen() && project.isAccessible()) {
 									try {
 										find(project, abstractPath, results);
 									} catch (InterruptedException e) {
@@ -215,35 +190,26 @@ public class LocalFileSearchEngine {
 									}
 								}
 							}
-						} else if (entry
-								.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-							entryPath = DLTKCore
-									.getResolvedVariablePath(entryPath);
+						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+							entryPath = DLTKCore.getResolvedVariablePath(entryPath);
 							if (entryPath != null) {
 								File entryDir = entryPath.toFile();
 								find(entryDir, abstractPath, entry, results);
 							}
-						} else if (entry
-								.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
 							try {
 								if (projects.length == 0) {
 									continue;
 								}
 								final IProject currentProject = projects[0];
-								final IScriptProject scriptProject = DLTKCore
-										.create(currentProject);
-								IBuildpathContainer container = DLTKCore
-										.getBuildpathContainer(entry.getPath(),
-												scriptProject);
+								final IScriptProject scriptProject = DLTKCore.create(currentProject);
+								IBuildpathContainer container = DLTKCore.getBuildpathContainer(entry.getPath(),
+										scriptProject);
 								if (container != null) {
-									IBuildpathEntry[] buildpathEntries = container
-											.getBuildpathEntries();
-									entryPath = EnvironmentPathUtils
-											.getLocalPath(buildpathEntries[0]
-													.getPath());
+									IBuildpathEntry[] buildpathEntries = container.getBuildpathEntries();
+									entryPath = EnvironmentPathUtils.getLocalPath(buildpathEntries[0].getPath());
 									if (entryPath != null) {
-										find(entryPath.toFile(), abstractPath,
-												entry, results);
+										find(entryPath.toFile(), abstractPath, entry, results);
 									}
 								}
 							} catch (ModelException e) {
@@ -256,29 +222,22 @@ public class LocalFileSearchEngine {
 				for (IncludePath includePath : includePaths) {
 					if (includePath.getEntry() instanceof IContainer) {
 						try {
-							find((IContainer) includePath.getEntry(),
-									abstractPath, results);
+							find((IContainer) includePath.getEntry(), abstractPath, results);
 						} catch (InterruptedException e) {
 							PHPDebugPlugin.log(e);
 						}
 					}
 				}
 				boolean foundInWorkspace = results.size() > 0;
-				if (!foundInWorkspace && results.size() == 1 && abstractPath
-						.equals(results.getFirst().getAbstractPath())) {
-					searchResult
-							.set(new LocalFileSearchResult(results.getFirst()));
+				if (!foundInWorkspace && results.size() == 1
+						&& abstractPath.equals(results.getFirst().getAbstractPath())) {
+					searchResult.set(new LocalFileSearchResult(results.getFirst()));
 				} else if (results.size() > 0) {
-					Collections.sort(results,
-							new BestMatchPathComparator(abstractPath));
-					LocalFileSearchResult filteredResult = filter(
-							results.toArray(new PathEntry[results.size()]),
+					Collections.sort(results, new BestMatchPathComparator(abstractPath));
+					LocalFileSearchResult filteredResult = filter(results.toArray(new PathEntry[results.size()]),
 							abstractPath, serverUniqueId);
-					if (filteredResult.getPathEntry() != null
-							&& filteredResult.getStatus().isOK()) {
-						pathMapper.addEntry(remoteFilePath,
-								filteredResult.getPathEntry(),
-								MappingSource.USER);
+					if (filteredResult.getPathEntry() != null && filteredResult.getStatus().isOK()) {
+						pathMapper.addEntry(remoteFilePath, filteredResult.getPathEntry(), MappingSource.USER);
 						PathMapperRegistry.storeToPreferences();
 					}
 					searchResult.set(filteredResult);
@@ -295,8 +254,8 @@ public class LocalFileSearchEngine {
 		return searchResult.get();
 	}
 
-	private LocalFileSearchResult filter(final PathEntry[] entries,
-			final VirtualPath remotePath, final String serverUniqueId) {
+	private LocalFileSearchResult filter(final PathEntry[] entries, final VirtualPath remotePath,
+			final String serverUniqueId) {
 		return searchResultsFilter.filter(entries, remotePath, serverUniqueId);
 	}
 
@@ -311,26 +270,21 @@ public class LocalFileSearchEngine {
 	 *            List of results to return
 	 * @throws InterruptedException
 	 */
-	private void find(final IResource resource, final VirtualPath path,
-			final List<PathEntry> results) throws InterruptedException {
-		if (resource == null || !resource.exists()
-				|| !resource.isAccessible()) {
+	private void find(final IResource resource, final VirtualPath path, final List<PathEntry> results)
+			throws InterruptedException {
+		if (resource == null || !resource.exists() || !resource.isAccessible()) {
 			return;
 		}
 		WorkspaceJob findJob = new WorkspaceJob("") { //$NON-NLS-1$
-			public IStatus runInWorkspace(IProgressMonitor monitor)
-					throws CoreException {
+			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				resource.accept(new IResourceVisitor() {
-					public boolean visit(IResource resource)
-							throws CoreException {
+					public boolean visit(IResource resource) throws CoreException {
 						if (!resource.isAccessible()) {
 							return false;
 						}
-						if (resource instanceof IFile && resource.getName()
-								.equals(path.getLastSegment())) {
-							PathEntry pathEntry = new PathEntry(
-									resource.getFullPath().toString(),
-									Type.WORKSPACE, resource.getParent());
+						if (resource instanceof IFile && resource.getName().equals(path.getLastSegment())) {
+							PathEntry pathEntry = new PathEntry(resource.getFullPath().toString(), Type.WORKSPACE,
+									resource.getParent());
 							results.add(pathEntry);
 						}
 						return true;
@@ -356,15 +310,12 @@ public class LocalFileSearchEngine {
 	 *            List of results to return
 	 * @throws InterruptedException
 	 */
-	private void find(final File file, final VirtualPath path,
-			final IBuildpathEntry container, final List<PathEntry> results) {
-		if (!file.isDirectory()
-				&& file.getName().equals(path.getLastSegment())) {
-			Type type = (container
-					.getEntryKind() == IBuildpathEntry.BPE_VARIABLE)
-							? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
-			PathEntry pathEntry = new PathEntry(file.getAbsolutePath(), type,
-					container);
+	private void find(final File file, final VirtualPath path, final IBuildpathEntry container,
+			final List<PathEntry> results) {
+		if (!file.isDirectory() && file.getName().equals(path.getLastSegment())) {
+			Type type = (container.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR
+					: Type.INCLUDE_FOLDER;
+			PathEntry pathEntry = new PathEntry(file.getAbsolutePath(), type, container);
 			results.add(pathEntry);
 			return;
 		} else {

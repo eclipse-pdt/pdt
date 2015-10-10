@@ -62,13 +62,10 @@ public class CodeInjector {
 		try {
 			// fixed bug when working on untitled php docs
 			// openInEditor opened the wrong editor (regular php editor)
-			IEditorPart editor = org.eclipse.dltk.internal.ui.editor.EditorUtility
-					.openInEditor(existingPHPFile, true);
-			document = (IStructuredDocument) ((PHPStructuredEditor) editor)
-					.getDocument();
+			IEditorPart editor = org.eclipse.dltk.internal.ui.editor.EditorUtility.openInEditor(existingPHPFile, true);
+			document = (IStructuredDocument) ((PHPStructuredEditor) editor).getDocument();
 			// The model is fetched for editing and must be released
-			model = StructuredModelManager.getModelManager().getModelForEdit(
-					document);
+			model = StructuredModelManager.getModelManager().getModelForEdit(document);
 		} catch (PartInitException e) {
 			Logger.logException(e);
 		} catch (ModelException e) {
@@ -125,8 +122,7 @@ public class CodeInjector {
 	 *            injected. This issue needs to be reviewed again when OFFLINE
 	 *            formatting will be available.
 	 */
-	public void formatDocument(IStructuredDocument document, int offset,
-			int length) {
+	public void formatDocument(IStructuredDocument document, int offset, int length) {
 		IContentFormatter formatter = null;
 		if (formatter == null) {
 			formatter = PHPUiPlugin.getDefault().getActiveFormatter();

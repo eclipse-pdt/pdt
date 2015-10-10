@@ -29,8 +29,7 @@ import org.eclipse.ui.navigator.IPipelinedTreeContentProvider;
 import org.eclipse.ui.navigator.PipelinedShapeModification;
 import org.eclipse.ui.navigator.PipelinedViewerUpdate;
 
-public class PHPNavigatorContentProvider extends PHPExplorerContentProvider
-		implements IPipelinedTreeContentProvider {
+public class PHPNavigatorContentProvider extends PHPExplorerContentProvider implements IPipelinedTreeContentProvider {
 
 	public PHPNavigatorContentProvider() {
 		super(true);
@@ -56,8 +55,7 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider
 			IWorkspaceRoot root = (IWorkspaceRoot) parentElement;
 			return filterResourceProjects(root.getProjects());
 		} else if (parentElement instanceof IScriptModel) {
-			return filterResourceProjects(((IScriptModel) parentElement)
-					.getWorkspace().getRoot().getProjects());
+			return filterResourceProjects(((IScriptModel) parentElement).getWorkspace().getRoot().getProjects());
 		} else if (parentElement instanceof IFile) {
 			IModelElement create = DLTKCore.create((IFile) parentElement);
 			if (create != null) {
@@ -98,8 +96,7 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider
 	}
 
 	private static IProject[] filterResourceProjects(IProject[] projects) {
-		List<IProject> filteredProjects = new ArrayList<IProject>(
-				projects.length);
+		List<IProject> filteredProjects = new ArrayList<IProject>(projects.length);
 		for (int i = 0; i < projects.length; i++) {
 			IProject project = projects[i];
 			if (!project.isOpen() || isPHPProject(project))
@@ -143,8 +140,7 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider
 			if (element instanceof IResource) {
 				resource = (IResource) element;
 			} else if (element instanceof IAdaptable) {
-				resource = (IResource) ((IAdaptable) element)
-						.getAdapter(IResource.class);
+				resource = (IResource) ((IAdaptable) element).getAdapter(IResource.class);
 			}
 			if (resource != null) {
 				int i = elementList.indexOf(resource);
@@ -174,8 +170,7 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider
 	}
 
 	@Override
-	public PipelinedShapeModification interceptAdd(
-			PipelinedShapeModification addModification) {
+	public PipelinedShapeModification interceptAdd(PipelinedShapeModification addModification) {
 		Object parent = addModification.getParent();
 
 		if (parent instanceof IScriptProject) {
@@ -191,8 +186,7 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider
 	}
 
 	@Override
-	public PipelinedShapeModification interceptRemove(
-			PipelinedShapeModification removeModification) {
+	public PipelinedShapeModification interceptRemove(PipelinedShapeModification removeModification) {
 		deconvertPHPProjects(removeModification);
 		convertToPHPElements(removeModification.getChildren());
 		return removeModification;
@@ -211,8 +205,7 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider
 
 	private void deconvertPHPProjects(PipelinedShapeModification modification) {
 		Set<IProject> convertedChildren = new LinkedHashSet<IProject>();
-		for (Iterator<IAdaptable> iterator = modification.getChildren()
-				.iterator(); iterator.hasNext();) {
+		for (Iterator<IAdaptable> iterator = modification.getChildren().iterator(); iterator.hasNext();) {
 			Object added = iterator.next();
 			if (added instanceof IScriptProject) {
 				iterator.remove();
@@ -237,8 +230,7 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider
 			IModelElement element = DLTKCore.create((IContainer) parent);
 			if (element != null && element.exists()) {
 				// we don't convert the root
-				if (!(element instanceof IScriptModel)
-						&& !(element instanceof IScriptProject))
+				if (!(element instanceof IScriptModel) && !(element instanceof IScriptProject))
 					modification.setParent(element);
 				return convertToPHPElements(modification.getChildren());
 
@@ -260,13 +252,11 @@ public class PHPNavigatorContentProvider extends PHPExplorerContentProvider
 
 		LinkedHashSet<Object> convertedChildren = new LinkedHashSet<Object>();
 		IModelElement newChild;
-		for (Iterator<Object> childrenItr = currentChildren.iterator(); childrenItr
-				.hasNext();) {
+		for (Iterator<Object> childrenItr = currentChildren.iterator(); childrenItr.hasNext();) {
 			Object child = childrenItr.next();
 			// only convert IFolders and IFiles
 			if (child instanceof IFile) {
-				if ((newChild = DLTKCore.create((IResource) child)) != null
-						&& newChild.exists()) {
+				if ((newChild = DLTKCore.create((IResource) child)) != null && newChild.exists()) {
 					childrenItr.remove();
 					convertedChildren.add(newChild);
 				}

@@ -45,8 +45,7 @@ public class PHPMoveFileTestCase0031305 {
 		file = project1.getFile("PHPMoveFileTestCase0031305.php");
 
 		InputStream source = new ByteArrayInputStream(
-				"<?php $phpbb_root_path = './'; include($phpbb_root_path . 'common' );?>"
-						.getBytes());
+				"<?php $phpbb_root_path = './'; include($phpbb_root_path . 'common' );?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -61,21 +60,19 @@ public class PHPMoveFileTestCase0031305 {
 
 	@Test
 	public void testMove() {
-		IStructuredSelection selection = new StructuredSelection(project1
-				.getProject().getFile("PHPMoveFileTestCase0031305.php"));
+		IStructuredSelection selection = new StructuredSelection(
+				project1.getProject().getFile("PHPMoveFileTestCase0031305.php"));
 
 		PHPMoveProcessor processor = new PHPMoveProcessor(selection);
 
 		processor.setDestination(project2);
 		processor.setUpdateReferences(true);
 
-		RefactoringStatus status = processor
-				.checkInitialConditions(new NullProgressMonitor());
+		RefactoringStatus status = processor.checkInitialConditions(new NullProgressMonitor());
 
 		assertEquals(IStatus.OK, status.getSeverity());
 
-		status = processor
-				.checkFinalConditions(new NullProgressMonitor(), null);
+		status = processor.checkFinalConditions(new NullProgressMonitor(), null);
 
 		assertEquals(IStatus.OK, status.getSeverity());
 

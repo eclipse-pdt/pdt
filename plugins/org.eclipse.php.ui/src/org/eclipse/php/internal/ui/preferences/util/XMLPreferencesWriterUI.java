@@ -35,12 +35,11 @@ public class XMLPreferencesWriterUI extends XMLPreferencesWriter {
 	 *            The project Scope
 	 * @param workingCopyManager
 	 */
-	public static void write(Key prefsKey, IXMLPreferencesStorable[] objects,
-			ProjectScope projectScope, IWorkingCopyManager workingCopyManager) {
+	public static void write(Key prefsKey, IXMLPreferencesStorable[] objects, ProjectScope projectScope,
+			IWorkingCopyManager workingCopyManager) {
 		StringBuffer sb = new StringBuffer();
 		appendDelimitedString(sb, objects);
-		prefsKey
-				.setStoredValue(projectScope, sb.toString(), workingCopyManager);
+		prefsKey.setStoredValue(projectScope, sb.toString(), workingCopyManager);
 
 	}
 
@@ -54,8 +53,7 @@ public class XMLPreferencesWriterUI extends XMLPreferencesWriter {
 	 * @param object
 	 *            The IXMLPreferencesStorables to store.
 	 */
-	public static void write(IPreferenceStore store, String prefsKey,
-			IXMLPreferencesStorable object) {
+	public static void write(IPreferenceStore store, String prefsKey, IXMLPreferencesStorable object) {
 		StringBuffer sb = new StringBuffer();
 		write(sb, object.storeToMap());
 		store.setValue(prefsKey, sb.toString());
@@ -71,8 +69,7 @@ public class XMLPreferencesWriterUI extends XMLPreferencesWriter {
 	 * @param objects
 	 *            The IXMLPreferencesStorables to store.
 	 */
-	public static void write(IPreferenceStore store, String prefsKey,
-			IXMLPreferencesStorable[] objects) {
+	public static void write(IPreferenceStore store, String prefsKey, IXMLPreferencesStorable[] objects) {
 		StringBuffer sb = new StringBuffer();
 		appendDelimitedString(sb, objects);
 		store.setValue(prefsKey, sb.toString());

@@ -34,8 +34,7 @@ public class DebuggerLaunchSettingsSectionRegistry {
 		String debuggerId;
 		String launchTypeId;
 
-		public Entry(IConfigurationElement element, String id,
-				String overridenSectionId, String debuggerId,
+		public Entry(IConfigurationElement element, String id, String overridenSectionId, String debuggerId,
 				String launchTypeId) {
 			this.element = element;
 			this.id = id;
@@ -55,8 +54,7 @@ public class DebuggerLaunchSettingsSectionRegistry {
 	/**
 	 * The name of extension point to read settings sections from
 	 */
-	public static final String EXTENSION_POINT_ID = PHPDebugUIPlugin
-			.getDefault().getBundle().getSymbolicName()
+	public static final String EXTENSION_POINT_ID = PHPDebugUIPlugin.getDefault().getBundle().getSymbolicName()
 			+ ".phpDebuggerLaunchSettingsSections"; //$NON-NLS-1$
 
 	/**
@@ -82,15 +80,12 @@ public class DebuggerLaunchSettingsSectionRegistry {
 	 * @param launchTypeId
 	 * @return settings section
 	 */
-	public static final IDebuggerLaunchSettingsSection getSection(
-			String debuggerId, String launchTypeId) {
+	public static final IDebuggerLaunchSettingsSection getSection(String debuggerId, String launchTypeId) {
 		for (Entry entry : getEntries()) {
-			if (entry.debuggerId.equals(debuggerId)
-					&& entry.launchTypeId.equals(launchTypeId)) {
+			if (entry.debuggerId.equals(debuggerId) && entry.launchTypeId.equals(launchTypeId)) {
 				IDebuggerLaunchSettingsSection settingsSection = null;
 				try {
-					settingsSection = (IDebuggerLaunchSettingsSection) createInstance(
-							entry.element, PROP_SECTION,
+					settingsSection = (IDebuggerLaunchSettingsSection) createInstance(entry.element, PROP_SECTION,
 							IDebuggerLaunchSettingsSection.class);
 				} catch (CoreException e) {
 					Logger.logException(
@@ -112,29 +107,26 @@ public class DebuggerLaunchSettingsSectionRegistry {
 
 	private List<Entry> readFromExtensionPoint() {
 		final List<Entry> entries = new ArrayList<Entry>();
-		IConfigurationElement[] configurationElements = Platform
-				.getExtensionRegistry()
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(EXTENSION_POINT_ID);
 		for (final IConfigurationElement element : configurationElements) {
 			String id = element.getAttribute(PROP_ID);
 			String overridenSectionId = element.getAttribute(PROP_OVERRIDES);
 			String debuggerId = element.getAttribute(PROP_DEBUGGER_ID);
 			String launchTypeId = element.getAttribute(PROP_LAUNCH_TYPE_ID);
-			entries.add(new Entry(element, id, overridenSectionId, debuggerId,
-					launchTypeId));
+			entries.add(new Entry(element, id, overridenSectionId, debuggerId, launchTypeId));
 		}
 		return filterEntries(entries);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private static Object createInstance(IConfigurationElement element,
-			String propertyName, Class instanceClass) throws CoreException {
+	private static Object createInstance(IConfigurationElement element, String propertyName, Class instanceClass)
+			throws CoreException {
 		final Object object = element.createExecutableExtension(propertyName);
 		if (!instanceClass.isAssignableFrom(object.getClass())) {
 			String message = String.format("Invalid typecast for %s", //$NON-NLS-1$
 					element.getAttribute(propertyName));
-			IStatus status = new Status(IStatus.ERROR,
-					PHPDebugUIPlugin.getDefault().getBundle().getSymbolicName(),
+			IStatus status = new Status(IStatus.ERROR, PHPDebugUIPlugin.getDefault().getBundle().getSymbolicName(),
 					message);
 			throw new CoreException(status);
 		}

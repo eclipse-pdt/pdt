@@ -22,8 +22,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
  * 
  * @author guy
  */
-public class FileContentResponse extends DebugMessageResponseImpl
-		implements IDebugResponseMessage {
+public class FileContentResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
 
 	public static final int FAILURE = -1;
 	public static final int SUCCESS = 0;

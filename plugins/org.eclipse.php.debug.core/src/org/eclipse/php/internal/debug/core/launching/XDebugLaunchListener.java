@@ -28,8 +28,7 @@ public class XDebugLaunchListener implements ILaunchesListener {
 
 	// private static final String SYSTEM_DEBUG_PROPERTY =
 	// "org.eclipse.php.debug.ui.activeDebugging";
-	private static final String SYSTEM_DEBUG_PROPERTY = IDELayerFactory
-			.getIDELayer().getSystemDebugProperty();
+	private static final String SYSTEM_DEBUG_PROPERTY = IDELayerFactory.getIDELayer().getSystemDebugProperty();
 
 	private static XDebugLaunchListener instance;
 
@@ -41,15 +40,13 @@ public class XDebugLaunchListener implements ILaunchesListener {
 	public static XDebugLaunchListener getInstance() {
 		if (instance == null) {
 			instance = new XDebugLaunchListener();
-			DebugPlugin.getDefault().getLaunchManager().addLaunchListener(
-					instance);
+			DebugPlugin.getDefault().getLaunchManager().addLaunchListener(instance);
 		}
 		return instance;
 	}
 
 	public static void shutdown() {
-		DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(
-				instance);
+		DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(instance);
 	}
 
 	/*
@@ -90,15 +87,13 @@ public class XDebugLaunchListener implements ILaunchesListener {
 		for (int i = 0; i < launches.length; i++) {
 			ILaunch launch = launches[i];
 			IDebugTarget target = launch.getDebugTarget();
-			if (target instanceof IDBGpDebugTarget
-					&& ((IDBGpDebugTarget) target).isWebLaunch()) {
+			if (target instanceof IDBGpDebugTarget && ((IDBGpDebugTarget) target).isWebLaunch()) {
 				// this is a web launch
 				webLaunchActive = added;
 			}
 			hasActiveLaunch |= !launch.isTerminated();
 		}
-		System.setProperty(SYSTEM_DEBUG_PROPERTY,
-				hasActiveLaunch ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.setProperty(SYSTEM_DEBUG_PROPERTY, hasActiveLaunch ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public boolean isWebLaunchActive() {

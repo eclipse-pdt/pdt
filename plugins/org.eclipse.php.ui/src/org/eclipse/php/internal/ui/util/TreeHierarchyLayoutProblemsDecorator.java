@@ -22,8 +22,7 @@ import org.eclipse.dltk.ui.ProblemsLabelDecorator;
  * <code>ProblemsLabelDecorator</code>.
  * </p>
  */
-public class TreeHierarchyLayoutProblemsDecorator extends
-		ProblemsLabelDecorator {
+public class TreeHierarchyLayoutProblemsDecorator extends ProblemsLabelDecorator {
 
 	private boolean fIsFlatLayout;
 

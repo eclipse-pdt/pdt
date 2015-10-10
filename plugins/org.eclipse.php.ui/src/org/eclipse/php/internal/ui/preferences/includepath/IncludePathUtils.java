@@ -35,8 +35,7 @@ public class IncludePathUtils {
 	 * @param shell
 	 * @return the user choice (yes/no)
 	 */
-	public static boolean openConfirmationDialog(Shell shell, String title,
-			String message) {
+	public static boolean openConfirmationDialog(Shell shell, String title, String message) {
 
 		if (shell == null || fPrompting) {
 			return false;
@@ -56,10 +55,8 @@ public class IncludePathUtils {
 		return answer;
 	}
 
-	private static IPath getRelativeLocationFromIncludePath(
-			IScriptProject project, IPath path) {
-		final IPath inIncludePath = IncludePathManager.isInIncludePath(project
-				.getProject(), path);
+	private static IPath getRelativeLocationFromIncludePath(IScriptProject project, IPath path) {
+		final IPath inIncludePath = IncludePathManager.isInIncludePath(project.getProject(), path);
 		if (inIncludePath != null) {
 			return path.makeRelativeTo(inIncludePath);
 		}
@@ -75,29 +72,23 @@ public class IncludePathUtils {
 	 * @param modelElement
 	 * @return the resolved include path or {@link Path#EMPTY} if not found
 	 */
-	public static IPath getRelativeLocationFromIncludePath(
-			IScriptProject project, IModelElement modelElement) {
+	public static IPath getRelativeLocationFromIncludePath(IScriptProject project, IModelElement modelElement) {
 		// workspace resource
 		if (modelElement.getResource() != null) {
-			return getRelativeLocationFromIncludePath(project, modelElement
-					.getPath());
+			return getRelativeLocationFromIncludePath(project, modelElement.getPath());
 		}
 
 		// built in element
-		final IProjectFragment projectFragment = ScriptModelUtil
-				.getProjectFragment(modelElement);
+		final IProjectFragment projectFragment = ScriptModelUtil.getProjectFragment(modelElement);
 		final IScriptProject elementProject = modelElement.getScriptProject();
-		if (elementProject != null && !elementProject.equals(project)
-				&& !projectFragment.isExternal()) {
+		if (elementProject != null && !elementProject.equals(project) && !projectFragment.isExternal()) {
 			// TODO add project dependency
 			return Path.EMPTY;
 		}
 
 		// library element
-		ISourceModule sourceModule = (ISourceModule) modelElement
-				.getAncestor(IModelElement.SOURCE_MODULE);
-		IScriptFolder folder = (IScriptFolder) modelElement
-				.getAncestor(IModelElement.SCRIPT_FOLDER);
+		ISourceModule sourceModule = (ISourceModule) modelElement.getAncestor(IModelElement.SOURCE_MODULE);
+		IScriptFolder folder = (IScriptFolder) modelElement.getAncestor(IModelElement.SCRIPT_FOLDER);
 		if (sourceModule != null && folder != null) {
 			String folderElementName = folder.getElementName();
 			StringBuilder sb = new StringBuilder();

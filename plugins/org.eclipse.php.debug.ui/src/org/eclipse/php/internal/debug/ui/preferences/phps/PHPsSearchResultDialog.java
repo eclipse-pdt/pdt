@@ -36,8 +36,7 @@ import org.eclipse.ui.PlatformUI;
 @SuppressWarnings("restriction")
 public class PHPsSearchResultDialog extends MessageDialog {
 
-	private class LabelProvider extends BaseLabelProvider implements
-			ITableLabelProvider {
+	private class LabelProvider extends BaseLabelProvider implements ITableLabelProvider {
 
 		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
@@ -54,8 +53,7 @@ public class PHPsSearchResultDialog extends MessageDialog {
 			case 0:
 				return ((PHPexeItem) element).getName();
 			case 1: {
-				String debugger = PHPDebuggersRegistry
-						.getDebuggerName(((PHPexeItem) element).getDebuggerID());
+				String debugger = PHPDebuggersRegistry.getDebuggerName(((PHPexeItem) element).getDebuggerID());
 				return debugger != null ? debugger : "<none>"; //$NON-NLS-1$
 			}
 			case 2:
@@ -74,10 +72,8 @@ public class PHPsSearchResultDialog extends MessageDialog {
 
 	protected PHPsSearchResultDialog(List<PHPexeItem> results, String message) {
 		super(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-				Messages.PHPsSearchResultDialog_PHP_executables_search, null,
-				message, MessageDialog.INFORMATION, new String[] {
-						Messages.PHPsSearchResultDialog_Add,
-						Messages.PHPsSearchResultDialog_Cancel }, 0);
+				Messages.PHPsSearchResultDialog_PHP_executables_search, null, message, MessageDialog.INFORMATION,
+				new String[] { Messages.PHPsSearchResultDialog_Add, Messages.PHPsSearchResultDialog_Cancel }, 0);
 		this.results = results;
 	}
 
@@ -115,12 +111,10 @@ public class PHPsSearchResultDialog extends MessageDialog {
 		buttonsCompositeLayout.marginHeight = 0;
 		buttonsCompositeLayout.marginWidth = 0;
 		buttonsComposite.setLayout(buttonsCompositeLayout);
-		buttonsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
-				false));
-		GridData tableCompositeGridData = new GridData(SWT.FILL, SWT.FILL,
-				true, true);
-		Table resultTable = new Table(tableComposite, SWT.CHECK | SWT.SINGLE
-				| SWT.FULL_SELECTION | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		buttonsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+		GridData tableCompositeGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		Table resultTable = new Table(tableComposite,
+				SWT.CHECK | SWT.SINGLE | SWT.FULL_SELECTION | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		resultTable.setLayoutData(tableCompositeGridData);
 		resultTable.setHeaderVisible(true);
 		resultTable.setLinesVisible(true);
@@ -152,8 +146,7 @@ public class PHPsSearchResultDialog extends MessageDialog {
 		});
 		Button deselectAll = new Button(buttonsComposite, SWT.PUSH);
 		deselectAll.setText(Messages.PHPsSearchResultDialog_Deselect_all);
-		deselectAll
-				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		deselectAll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		deselectAll.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -177,8 +170,7 @@ public class PHPsSearchResultDialog extends MessageDialog {
 				PHPexeItem phpExe = (PHPexeItem) s;
 				// If no debugger installed, set ID for default one
 				if (phpExe.getDebuggerID() == null)
-					phpExe.setDebuggerID(PHPDebuggersRegistry
-							.getDefaultDebuggerId());
+					phpExe.setDebuggerID(PHPDebuggersRegistry.getDefaultDebuggerId());
 				phpExecs.add(phpExe);
 			}
 		}

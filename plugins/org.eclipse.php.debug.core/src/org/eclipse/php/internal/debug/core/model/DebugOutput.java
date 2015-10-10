@@ -39,9 +39,7 @@ public class DebugOutput {
 	public void appendHeader(String header) {
 		if (header != null) {
 			if (header.startsWith(CONTENT_TYPE_HEADER)) {
-				String contentType = header
-						.substring(CONTENT_TYPE_HEADER.length()).trim()
-						.toLowerCase();
+				String contentType = header.substring(CONTENT_TYPE_HEADER.length()).trim().toLowerCase();
 				int i = contentType.indexOf(';');
 				if (i > 0) {
 					this.contentType = contentType.substring(0, i).trim();

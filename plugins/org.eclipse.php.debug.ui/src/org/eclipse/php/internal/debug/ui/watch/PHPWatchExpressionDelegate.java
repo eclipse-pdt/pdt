@@ -39,8 +39,7 @@ public class PHPWatchExpressionDelegate implements IWatchExpressionDelegate {
 	 * @see org.eclipse.debug.core.model.IWatchExpressionDelegate#getValue(java.lang.String,
 	 *      org.eclipse.debug.core.model.IDebugElement)
 	 */
-	public void evaluateExpression(String expression, IDebugElement context,
-			IWatchExpressionListener listener) {
+	public void evaluateExpression(String expression, IDebugElement context, IWatchExpressionListener listener) {
 		fExpressionText = expression;
 		fListener = listener;
 		// find a stack frame context if possible.
@@ -89,11 +88,8 @@ public class PHPWatchExpressionDelegate implements IWatchExpressionDelegate {
 				// TODo fix
 			}
 			DebugPlugin.getDefault()
-					.fireDebugEventSet(
-							new DebugEvent[] { new DebugEvent(
-									PHPWatchExpressionDelegate.this,
-									DebugEvent.SUSPEND,
-									DebugEvent.EVALUATION_IMPLICIT) });
+					.fireDebugEventSet(new DebugEvent[] { new DebugEvent(PHPWatchExpressionDelegate.this,
+							DebugEvent.SUSPEND, DebugEvent.EVALUATION_IMPLICIT) });
 			return Status.OK_STATUS;
 		}
 	}
@@ -105,10 +101,8 @@ public class PHPWatchExpressionDelegate implements IWatchExpressionDelegate {
 	 *            The variable name
 	 * @return
 	 */
-	protected Expression getExpression(PHPDebugTarget debugTarget,
-			String variable) {
-		DefaultExpressionsManager expressionManager = debugTarget
-				.getExpressionManager();
+	protected Expression getExpression(PHPDebugTarget debugTarget, String variable) {
+		DefaultExpressionsManager expressionManager = debugTarget.getExpressionManager();
 		Expression expression = expressionManager.buildExpression(variable);
 
 		// Get the value from the debugger
@@ -117,8 +111,7 @@ public class PHPWatchExpressionDelegate implements IWatchExpressionDelegate {
 		return expression;
 	}
 
-	private class PHPWatchExpressionResult implements IWatchExpressionResult,
-			IWatchExpressionResultExtension {
+	private class PHPWatchExpressionResult implements IWatchExpressionResult, IWatchExpressionResultExtension {
 		public IValue getValue() {
 			Expression value = getExpression(debugTarget, fExpressionText);
 			IValue iValue = new PHPValue(debugTarget, value);

@@ -47,8 +47,7 @@ public class DebugViewHelper {
 			IProcess process = DebugUITools.getCurrentProcess();
 			if (process != null) {
 				if (process instanceof PHPProcess) {
-					target = (IPHPDebugTarget) ((PHPProcess) process)
-							.getDebugTarget();
+					target = (IPHPDebugTarget) ((PHPProcess) process).getDebugTarget();
 				}
 			}
 		}
@@ -64,11 +63,9 @@ public class DebugViewHelper {
 		}
 		if (element == null) {
 			if (adaptable instanceof PHPProcess) {
-				element = (IDebugElement) ((PHPProcess) adaptable)
-						.getDebugTarget();
+				element = (IDebugElement) ((PHPProcess) adaptable).getDebugTarget();
 			} else if (adaptable instanceof ILaunch) {
-				IDebugTarget[] targets = ((ILaunch) (adaptable))
-						.getDebugTargets();
+				IDebugTarget[] targets = ((ILaunch) (adaptable)).getDebugTargets();
 				for (int i = 0; i < targets.length; i++) {
 					if (targets[i] instanceof IPHPDebugTarget) {
 						element = (IDebugElement) targets[i];
@@ -82,10 +79,8 @@ public class DebugViewHelper {
 	private IPHPDebugTarget getDebugTarget(IDebugElement element) {
 		IPHPDebugTarget target = null;
 		if (element != null) {
-			if (element.getModelIdentifier().equals(
-					IPHPDebugConstants.ID_PHP_DEBUG_CORE)
-					|| element.getModelIdentifier().equals(
-							IDBGpModelConstants.DBGP_MODEL_ID)) {
+			if (element.getModelIdentifier().equals(IPHPDebugConstants.ID_PHP_DEBUG_CORE)
+					|| element.getModelIdentifier().equals(IDBGpModelConstants.DBGP_MODEL_ID)) {
 				target = (IPHPDebugTarget) element.getDebugTarget();
 			}
 		}

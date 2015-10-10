@@ -42,8 +42,7 @@ import org.eclipse.php.internal.debug.core.zend.model.ResolveBlackList;
  * 
  * @author michael
  */
-public class FileContentRequestCurrentHandler
-		extends AbstractFileContentRequestHandler {
+public class FileContentRequestCurrentHandler extends AbstractFileContentRequestHandler {
 
 	private static final String EXCLUDED_EXTENSION = "phar"; //$NON-NLS-1$
 
@@ -86,31 +85,24 @@ public class FileContentRequestCurrentHandler
 		try {
 			byte[] content = null;
 			if (!lastFileName.endsWith(EXCLUDED_EXTENSION)) {
-				if (isFirstFileToDebug
-						&& PHPDebugPlugin.isDummyFile(lastFileName)) {
+				if (isFirstFileToDebug && PHPDebugPlugin.isDummyFile(lastFileName)) {
 					content = getDummyContent();
 					// Blacklist dummy.php file, so it won't be requested for
 					// mapping:
-					debugTarget.getContextManager().addToResolveBlacklist(
-							new VirtualPath(lastFileName),
+					debugTarget.getContextManager().addToResolveBlacklist(new VirtualPath(lastFileName),
 							ResolveBlackList.Type.FILE);
 				} else {
-					RemoteDebugger remoteDebugger = (RemoteDebugger) debugTarget
-							.getRemoteDebugger();
-					String localPath = remoteDebugger
-							.convertToLocalFilename(lastFileName);
+					RemoteDebugger remoteDebugger = (RemoteDebugger) debugTarget.getRemoteDebugger();
+					String localPath = remoteDebugger.convertToLocalFilename(lastFileName);
 					if (localPath != null) {
-						IResource resource = ResourcesPlugin.getWorkspace()
-								.getRoot().findMember(localPath);
+						IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(localPath);
 						if (resource != null) {
 							IPath location = resource.getLocation();
 							if (location != null) {
-								content = getBytesFromURI(
-										location.toFile().toURI());
+								content = getBytesFromURI(location.toFile().toURI());
 							} else if (resource.exists()) {
 								// probably RSE
-								content = getBytesFromURI(
-										resource.getLocationURI());
+								content = getBytesFromURI(resource.getLocationURI());
 							}
 						} else {
 							File file = new File(localPath);
@@ -156,21 +148,17 @@ public class FileContentRequestCurrentHandler
 	private byte[] getDummyContent() {
 		String originalFileName = ""; //$NON-NLS-1$
 		try {
-			ILaunchConfiguration launchConfiguration = debugTarget.getLaunch()
-					.getLaunchConfiguration();
+			ILaunchConfiguration launchConfiguration = debugTarget.getLaunch().getLaunchConfiguration();
 			// The dummy request should be made on the full path of the debugged
 			// file.
-			originalFileName = launchConfiguration
-					.getAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, ""); //$NON-NLS-1$
+			originalFileName = launchConfiguration.getAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, ""); //$NON-NLS-1$
 		} catch (CoreException e) {
 		}
 		StringBuilder contentBuf = new StringBuilder("<?php "); //$NON-NLS-1$
 		File originalFile = new File(originalFileName);
 		if (!originalFileName.startsWith("\\\\") && originalFile.exists() //$NON-NLS-1$
-				&& getDebugType()
-						.equals(IDebugParametersKeys.PHP_EXE_SCRIPT_DEBUG)) {
-			String parentDirectory = originalFile.getParentFile()
-					.getAbsolutePath();
+				&& getDebugType().equals(IDebugParametersKeys.PHP_EXE_SCRIPT_DEBUG)) {
+			String parentDirectory = originalFile.getParentFile().getAbsolutePath();
 			if (parentDirectory.endsWith(":\\")) { //$NON-NLS-1$
 				parentDirectory += "\\"; //$NON-NLS-1$
 			}
@@ -186,9 +174,9 @@ public class FileContentRequestCurrentHandler
 			try {
 				return content.getBytes(encoding);
 			} catch (UnsupportedEncodingException e) {
-				Logger.logException("Failed to create dummy content in the '" //$NON-NLS-1$
-						+ encoding
-						+ "' encoding. \nCreating with the default encoding.", //$NON-NLS-1$
+				Logger.logException(
+						"Failed to create dummy content in the '" //$NON-NLS-1$
+								+ encoding + "' encoding. \nCreating with the default encoding.", //$NON-NLS-1$
 						e);
 			}
 		}
@@ -203,8 +191,7 @@ public class FileContentRequestCurrentHandler
 		IFileInfo fileInfo = fileStore.fetchInfo();
 		long length = fileInfo.getLength();
 		if (length > Integer.MAX_VALUE) {
-			throw new Exception(
-					"The requested file '" + lastFileName + "' is too big"); //$NON-NLS-1$ //$NON-NLS-2$
+			throw new Exception("The requested file '" + lastFileName + "' is too big"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		// TODO - There is no handle of file encoding!
 		byte[] bytes = new byte[(int) length];

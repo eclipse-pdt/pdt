@@ -57,8 +57,8 @@ public class ProfileStore {
 		private String fName;
 		private Map<String, Object> fSettings;
 
-		public void startElement(String uri, String localName, String qName,
-				Attributes attributes) throws SAXException {
+		public void startElement(String uri, String localName, String qName, Attributes attributes)
+				throws SAXException {
 
 			if (qName.equals(XML_NODE_SETTING)) {
 
@@ -118,8 +118,7 @@ public class ProfileStore {
 	 *         the latest version.
 	 * @throws CoreException
 	 */
-	public static List<Profile> readProfiles(IScopeContext scope)
-			throws CoreException {
+	public static List<Profile> readProfiles(IScopeContext scope) throws CoreException {
 		List<Profile> res = readProfilesFromPreferences(scope);
 		if (res == null) {
 			return readOldForCompatibility(scope);
@@ -127,8 +126,7 @@ public class ProfileStore {
 		return res;
 	}
 
-	public static void writeProfiles(Collection<Profile> profiles,
-			IScopeContext instanceScope) throws CoreException {
+	public static void writeProfiles(Collection<Profile> profiles, IScopeContext instanceScope) throws CoreException {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream(2000);
 		try {
 			writeProfilesToStream(profiles, stream);
@@ -138,8 +136,7 @@ public class ProfileStore {
 			} catch (UnsupportedEncodingException e) {
 				val = stream.toString();
 			}
-			IEclipsePreferences uiPreferences = instanceScope
-					.getNode(FormatterCorePlugin.PLUGIN_ID);
+			IEclipsePreferences uiPreferences = instanceScope.getNode(FormatterCorePlugin.PLUGIN_ID);
 			uiPreferences.put(PREF_FORMATTER_PROFILES, val);
 			uiPreferences.flush();
 		} catch (BackingStoreException e) { /* ignore */
@@ -151,10 +148,8 @@ public class ProfileStore {
 		}
 	}
 
-	public static List<Profile> readProfilesFromPreferences(IScopeContext scope)
-			throws CoreException {
-		String string = scope.getNode(FormatterCorePlugin.PLUGIN_ID).get(
-				PREF_FORMATTER_PROFILES, null);
+	public static List<Profile> readProfilesFromPreferences(IScopeContext scope) throws CoreException {
+		String string = scope.getNode(FormatterCorePlugin.PLUGIN_ID).get(PREF_FORMATTER_PROFILES, null);
 		if (string != null && string.length() > 0) {
 			byte[] bytes;
 			try {
@@ -182,15 +177,13 @@ public class ProfileStore {
 	 * 
 	 * @return returns a list of <code>CustomProfile</code> or <code>null</code>
 	 */
-	private static List<Profile> readOldForCompatibility(
-			IScopeContext instanceScope) {
+	private static List<Profile> readOldForCompatibility(IScopeContext instanceScope) {
 
 		// in 3.0 M9 and less the profiles were stored in a file in the plugin's
 		// meta data
 		final String STORE_FILE = "code_formatter_profiles.xml"; //$NON-NLS-1$
 
-		File file = FormatterUIPlugin.getDefault().getStateLocation()
-				.append(STORE_FILE).toFile();
+		File file = FormatterUIPlugin.getDefault().getStateLocation().append(STORE_FILE).toFile();
 		if (!file.exists())
 			return null;
 
@@ -199,8 +192,7 @@ public class ProfileStore {
 			// UTF-8: Kept for compatibility
 			final FileReader reader = new FileReader(file);
 			try {
-				List<Profile> res = readProfilesFromStream(new InputSource(
-						reader));
+				List<Profile> res = readProfilesFromStream(new InputSource(reader));
 				if (res != null) {
 					writeProfiles(res, instanceScope);
 				}
@@ -226,8 +218,7 @@ public class ProfileStore {
 	 * @return returns a list of <code>CustomProfile</code> or <code>null</code>
 	 * @throws CoreException
 	 */
-	public static List<Profile> readProfilesFromFile(File file)
-			throws CoreException {
+	public static List<Profile> readProfilesFromFile(File file) throws CoreException {
 		try {
 			final FileInputStream reader = new FileInputStream(file);
 			try {
@@ -239,9 +230,7 @@ public class ProfileStore {
 				}
 			}
 		} catch (IOException e) {
-			throw createException(
-					e,
-					FormatterMessages.CodingStyleConfigurationBlock_error_reading_xml_message);
+			throw createException(e, FormatterMessages.CodingStyleConfigurationBlock_error_reading_xml_message);
 		}
 	}
 
@@ -254,8 +243,7 @@ public class ProfileStore {
 	 * @return returns a list of <code>CustomProfile</code> or <code>null</code>
 	 * @throws CoreException
 	 */
-	private static List<Profile> readProfilesFromStream(InputSource inputSource)
-			throws CoreException {
+	private static List<Profile> readProfilesFromStream(InputSource inputSource) throws CoreException {
 
 		final ProfileDefaultHandler handler = new ProfileDefaultHandler();
 		try {
@@ -263,17 +251,11 @@ public class ProfileStore {
 			final SAXParser parser = factory.newSAXParser();
 			parser.parse(inputSource, handler);
 		} catch (SAXException e) {
-			throw createException(
-					e,
-					FormatterMessages.CodingStyleConfigurationBlock_error_reading_xml_message);
+			throw createException(e, FormatterMessages.CodingStyleConfigurationBlock_error_reading_xml_message);
 		} catch (IOException e) {
-			throw createException(
-					e,
-					FormatterMessages.CodingStyleConfigurationBlock_error_reading_xml_message);
+			throw createException(e, FormatterMessages.CodingStyleConfigurationBlock_error_reading_xml_message);
 		} catch (ParserConfigurationException e) {
-			throw createException(
-					e,
-					FormatterMessages.CodingStyleConfigurationBlock_error_reading_xml_message);
+			throw createException(e, FormatterMessages.CodingStyleConfigurationBlock_error_reading_xml_message);
 		}
 		return handler.getProfiles();
 	}
@@ -287,8 +269,7 @@ public class ProfileStore {
 	 *            File to write
 	 * @throws CoreException
 	 */
-	public static void writeProfilesToFile(Collection<Profile> profiles,
-			File file) throws CoreException {
+	public static void writeProfilesToFile(Collection<Profile> profiles, File file) throws CoreException {
 		final OutputStream writer;
 		try {
 			writer = new FileOutputStream(file);
@@ -301,9 +282,7 @@ public class ProfileStore {
 				}
 			}
 		} catch (IOException e) {
-			throw createException(
-					e,
-					FormatterMessages.CodingStyleConfigurationBlock_error_serializing_xml_message);
+			throw createException(e, FormatterMessages.CodingStyleConfigurationBlock_error_serializing_xml_message);
 		}
 	}
 
@@ -316,12 +295,10 @@ public class ProfileStore {
 	 *            Stream to write
 	 * @throws CoreException
 	 */
-	private static void writeProfilesToStream(Collection<Profile> profiles,
-			OutputStream stream) throws CoreException {
+	private static void writeProfilesToStream(Collection<Profile> profiles, OutputStream stream) throws CoreException {
 
 		try {
-			final DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
+			final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			final DocumentBuilder builder = factory.newDocumentBuilder();
 			final Document document = builder.newDocument();
 
@@ -329,31 +306,23 @@ public class ProfileStore {
 
 			document.appendChild(rootElement);
 
-			for (final Iterator<Profile> iter = profiles.iterator(); iter
-					.hasNext();) {
+			for (final Iterator<Profile> iter = profiles.iterator(); iter.hasNext();) {
 				final Profile profile = iter.next();
 				if (profile.isProfileToSave()) {
-					final Element profileElement = createProfileElement(
-							profile, document);
+					final Element profileElement = createProfileElement(profile, document);
 					rootElement.appendChild(profileElement);
 				}
 			}
 
-			Transformer transformer = TransformerFactory.newInstance()
-					.newTransformer();
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
 			transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
 			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); //$NON-NLS-1$
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
-			transformer.transform(new DOMSource(document), new StreamResult(
-					stream));
+			transformer.transform(new DOMSource(document), new StreamResult(stream));
 		} catch (TransformerException e) {
-			throw createException(
-					e,
-					FormatterMessages.CodingStyleConfigurationBlock_error_serializing_xml_message);
+			throw createException(e, FormatterMessages.CodingStyleConfigurationBlock_error_serializing_xml_message);
 		} catch (ParserConfigurationException e) {
-			throw createException(
-					e,
-					FormatterMessages.CodingStyleConfigurationBlock_error_serializing_xml_message);
+			throw createException(e, FormatterMessages.CodingStyleConfigurationBlock_error_serializing_xml_message);
 		}
 	}
 
@@ -361,8 +330,7 @@ public class ProfileStore {
 	 * Create a new profile element in the specified document. The profile is
 	 * not added to the document by this method.
 	 */
-	private static Element createProfileElement(Profile profile,
-			Document document) {
+	private static Element createProfileElement(Profile profile, Document document) {
 		final Element element = document.createElement(XML_NODE_PROFILE);
 		element.setAttribute(XML_ATTRIBUTE_NAME, profile.getName());
 
@@ -372,15 +340,12 @@ public class ProfileStore {
 			final String key = (String) keyIter.next();
 			final String value = (String) profile.getSettings().get(key);
 			if (value != null) {
-				final Element setting = document
-						.createElement(XML_NODE_SETTING);
+				final Element setting = document.createElement(XML_NODE_SETTING);
 				setting.setAttribute(XML_ATTRIBUTE_ID, key);
 				setting.setAttribute(XML_ATTRIBUTE_VALUE, value);
 				element.appendChild(setting);
 			} else {
-				Logger.log(
-						Logger.ERROR,
-						"ProfileStore: Profile does not contain value for key " + key); //$NON-NLS-1$
+				Logger.log(Logger.ERROR, "ProfileStore: Profile does not contain value for key " + key); //$NON-NLS-1$
 			}
 		}
 		return element;
@@ -400,8 +365,7 @@ public class ProfileStore {
 			}
 			savePreferences(instanceScope);
 
-			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
-					.getProjects();
+			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 			for (int i = 0; i < projects.length; i++) {
 				IScopeContext scope = new ProjectScope(projects[i]);
 				if (ProfileManager.hasProjectSpecificSettings(scope)) {
@@ -418,8 +382,7 @@ public class ProfileStore {
 		}
 	}
 
-	private static void savePreferences(final IScopeContext context)
-			throws BackingStoreException {
+	private static void savePreferences(final IScopeContext context) throws BackingStoreException {
 		context.getNode(FormatterCorePlugin.PLUGIN_ID).flush();
 	}
 
@@ -427,7 +390,6 @@ public class ProfileStore {
 	 * Creates a UI exception for logging purposes
 	 */
 	private static CoreException createException(Throwable t, String message) {
-		return new CoreException(new Status(IStatus.ERROR,
-				FormatterUIPlugin.PLUGIN_ID, IStatus.ERROR, message, t));
+		return new CoreException(new Status(IStatus.ERROR, FormatterUIPlugin.PLUGIN_ID, IStatus.ERROR, message, t));
 	}
 }

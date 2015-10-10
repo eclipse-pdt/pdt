@@ -22,14 +22,14 @@ import org.junit.runner.RunWith;
 
 @RunWith(PDTTList.class)
 public class RenameClassProcessorTest extends AbstractRenameRefactoringTest {
-	
+
 	@PDTTList.Parameters
-	public static String[] dirs = {"/resources/rename/renameClass/"}; //$NON-NLS-1$
-	
+	public static String[] dirs = { "/resources/rename/renameClass/" }; //$NON-NLS-1$
+
 	public RenameClassProcessorTest(String[] fileNames) {
 		super(fileNames);
 	}
-	
+
 	@Test
 	public void rename(String fileName) throws Exception {
 		PdttFileExt testFile = filesMap.get(fileName);
@@ -50,7 +50,7 @@ public class RenameClassProcessorTest extends AbstractRenameRefactoringTest {
 
 		checkInitCondition(processor);
 		checkFinalCondition(processor);
-		
+
 		performChange(processor);
 		checkTestResult(testFile);
 	}

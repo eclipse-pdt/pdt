@@ -49,8 +49,7 @@ public class ServerTypesManager {
 	 * @return server type instance
 	 */
 	public IServerType getType(String id) {
-		return id != null ? types.get(id) : types
-				.get(ServerType.GENERIC_PHP_SERVER_ID);
+		return id != null ? types.get(id) : types.get(ServerType.GENERIC_PHP_SERVER_ID);
 	}
 
 	/**
@@ -74,8 +73,7 @@ public class ServerTypesManager {
 
 	private void init() {
 		IConfigurationElement[] elements = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(
-						"org.eclipse.php.server.core.serverType"); //$NON-NLS-1$
+				.getConfigurationElementsFor("org.eclipse.php.server.core.serverType"); //$NON-NLS-1$
 		IServerType genericType = null;
 		List<IServerType> result = new ArrayList<IServerType>();
 		for (IConfigurationElement element : elements) {

@@ -18,15 +18,13 @@ import org.eclipse.dltk.core.IProjectFragment;
  * 
  * @since 3.2
  */
-public class BreakpointRenamePackageParticipant extends
-		BreakpointRenameParticipant {
+public class BreakpointRenamePackageParticipant extends BreakpointRenameParticipant {
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.debug.core.refactoring.BreakpointRenameParticipant
-	 * #accepts(org.eclipse.jdt.core.IModelElement)
+	 * @see org.eclipse.jdt.internal.debug.core.refactoring.
+	 * BreakpointRenameParticipant #accepts(org.eclipse.jdt.core.IModelElement)
 	 */
 	protected boolean accepts(IModelElement element) {
 		return element instanceof IProjectFragment;

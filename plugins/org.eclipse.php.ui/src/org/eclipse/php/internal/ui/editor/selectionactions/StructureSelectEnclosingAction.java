@@ -18,8 +18,7 @@ import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 
 public class StructureSelectEnclosingAction extends StructureSelectionAction {
 
-	public StructureSelectEnclosingAction(PHPStructuredEditor editor,
-			SelectionHistory history) {
+	public StructureSelectEnclosingAction(PHPStructuredEditor editor, SelectionHistory history) {
 		super(Messages.StructureSelectEnclosingAction_3, editor, history);
 		setToolTipText(Messages.StructureSelectEnclosingAction_4);
 		setDescription(Messages.StructureSelectEnclosingAction_5);
@@ -34,9 +33,8 @@ public class StructureSelectEnclosingAction extends StructureSelectionAction {
 	}
 
 	@Override
-	ISourceRange internalGetNewSelectionRange(ISourceRange oldSourceRange,
-			ISourceReference sr, SelectionAnalyzer selAnalyzer)
-			throws ModelException {
+	ISourceRange internalGetNewSelectionRange(ISourceRange oldSourceRange, ISourceReference sr,
+			SelectionAnalyzer selAnalyzer) throws ModelException {
 		ASTNode first = selAnalyzer.getFirstSelectedNode();
 		if (first == null || first.getParent() == null)
 			return getLastCoveringNodeRange(oldSourceRange, sr, selAnalyzer);

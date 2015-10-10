@@ -20,20 +20,17 @@ import java.util.Set;
 
 public class FileUtil {
 
-	public static void copyDirectory(File source, File target)
-			throws IOException {
+	public static void copyDirectory(File source, File target) throws IOException {
 		copyDirectory(source, target, Collections.<File> emptySet());
 	}
 
-	public static void copyDirectory(File source, File target,
-			Set<File> excludes) throws IOException {
+	public static void copyDirectory(File source, File target, Set<File> excludes) throws IOException {
 		if (!target.exists()) {
 			target.mkdirs();
 		}
 		final File[] files = source.listFiles();
 		if (files == null) {
-			throw new IllegalStateException("Source directory " + source
-					+ " doesn't exist");
+			throw new IllegalStateException("Source directory " + source + " doesn't exist");
 		}
 		for (int i = 0; i < files.length; i++) {
 			final File sourceChild = files[i];

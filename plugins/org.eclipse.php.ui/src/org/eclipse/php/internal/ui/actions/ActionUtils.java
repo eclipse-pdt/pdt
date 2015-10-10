@@ -34,9 +34,8 @@ import org.eclipse.swt.widgets.Shell;
 
 public class ActionUtils {
 
-	final private static IContentType contentType = Platform
-			.getContentTypeManager().getContentType(
-					ContentTypeIdForPHP.ContentTypeID_PHP);
+	final private static IContentType contentType = Platform.getContentTypeManager()
+			.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 
 	public static boolean containsOnlyProjects(List elements) {
 		if (elements.isEmpty())
@@ -68,8 +67,7 @@ public class ActionUtils {
 		return getResources(elements, false);
 	}
 
-	public static IResource[] getResources(List elements,
-			boolean includePHPFileData) {
+	public static IResource[] getResources(List elements, boolean includePHPFileData) {
 		List resources = new ArrayList(elements.size());
 		for (Iterator iter = elements.iterator(); iter.hasNext();) {
 			Object element = iter.next();
@@ -96,8 +94,7 @@ public class ActionUtils {
 
 		for (Object element : elements) {
 			if (element instanceof IFile) {
-				if (contentType.isAssociatedWith(((IResource) element)
-						.getName())) {
+				if (contentType.isAssociatedWith(((IResource) element).getName())) {
 					result.add(element);
 				}
 			} else if (element instanceof IResource) // other resource then file
@@ -110,17 +107,14 @@ public class ActionUtils {
 		return getPHPElements(elements, false);
 	}
 
-	public static Object[] getPHPElements(List elements,
-			boolean phpFileDataIsResource) {
+	public static Object[] getPHPElements(List elements, boolean phpFileDataIsResource) {
 		List phpElements = new ArrayList(elements.size());
 		for (Object element : elements) {
-			if (element instanceof IModelElement
-					|| element instanceof IScriptProject)/* PHPProjectModel */// ||
-																				// element
-																				// instanceof
-																				// PHPWorkspaceModelManager)
-				if (!phpFileDataIsResource
-						|| !(element instanceof ISourceModule))
+			if (element instanceof IModelElement || element instanceof IScriptProject)/* PHPProjectModel */// ||
+																											// element
+																											// instanceof
+																											// PHPWorkspaceModelManager)
+				if (!phpFileDataIsResource || !(element instanceof ISourceModule))
 					phpElements.add(element);
 		}
 		return phpElements.toArray();
@@ -129,11 +123,10 @@ public class ActionUtils {
 	public static Object[] getPHPElements(final Object[] elements) {
 		List resources = new ArrayList(elements.length);
 		for (Object element : elements) {
-			if (element instanceof ISourceModule
-					|| element instanceof IScriptProject)/* PHPProjectModel */// ||
-																				// element
-																				// instanceof
-																				// PHPWorkspaceModelManager)
+			if (element instanceof ISourceModule || element instanceof IScriptProject)/* PHPProjectModel */// ||
+																											// element
+																											// instanceof
+																											// PHPWorkspaceModelManager)
 				resources.add(element);
 		}
 		return resources.toArray();
@@ -190,8 +183,7 @@ public class ActionUtils {
 	public static boolean isDeleteAvailable(final IResource resource) {
 		if (!resource.exists() || resource.isPhantom())
 			return false;
-		if (resource.getType() == IResource.ROOT
-				|| resource.getType() == IResource.PROJECT)
+		if (resource.getType() == IResource.ROOT || resource.getType() == IResource.PROJECT)
 			return false;
 		return true;
 	}
@@ -201,8 +193,7 @@ public class ActionUtils {
 		if (/* element instanceof PHPWorkspaceModelManager || */element instanceof IScriptProject /* PHPProjectModel */)
 			return false;
 
-		if (PHPUiConstants.DISABLE_ELEMENT_REFACTORING
-				&& !(element instanceof ISourceModule))
+		if (PHPUiConstants.DISABLE_ELEMENT_REFACTORING && !(element instanceof ISourceModule))
 			return false;
 		return true;
 	}
@@ -229,8 +220,7 @@ public class ActionUtils {
 	public static boolean arePHPElements(final Object[] elements) {
 		if (elements != null) {
 			for (int index = 0; index < elements.length; index++) {
-				if (elements[index] instanceof IMember
-						&& !(elements[index] instanceof ISourceModule))
+				if (elements[index] instanceof IMember && !(elements[index] instanceof ISourceModule))
 					return true;
 			}
 		}

@@ -35,8 +35,7 @@ public class ExtractVariableWizard extends RefactoringWizard {
 
 	public ExtractVariableWizard(ExtractVariableRefactoring ref) {
 		super(ref, DIALOG_BASED_USER_INTERFACE | PREVIEW_EXPAND_FIRST_NODE);
-		setDefaultPageTitle(PHPRefactoringUIMessages
-				.getString("ExtractVariableWizard.0")); //$NON-NLS-1$
+		setDefaultPageTitle(PHPRefactoringUIMessages.getString("ExtractVariableWizard.0")); //$NON-NLS-1$
 	}
 
 	/*
@@ -45,8 +44,7 @@ public class ExtractVariableWizard extends RefactoringWizard {
 	 * @see RefactoringWizard#addUserInputPages
 	 */
 	protected void addUserInputPages() {
-		addPage(new ExtractTempInputPage(getExtractVariableRefactoring()
-				.guessTempNames()));
+		addPage(new ExtractTempInputPage(getExtractVariableRefactoring().guessTempNames()));
 	}
 
 	private ExtractVariableRefactoring getExtractVariableRefactoring() {
@@ -61,14 +59,12 @@ public class ExtractVariableWizard extends RefactoringWizard {
 		private static final String REPLACE_ALL = "replaceOccurrences"; //$NON-NLS-1$
 
 		private final boolean fInitialValid;
-		private static final String DESCRIPTION = PHPRefactoringUIMessages
-				.getString("ExtractVariableWizard.1"); //$NON-NLS-1$
+		private static final String DESCRIPTION = PHPRefactoringUIMessages.getString("ExtractVariableWizard.1"); //$NON-NLS-1$
 		private String[] fTempNameProposals;
 		private IDialogSettings fSettings;
 
 		public ExtractTempInputPage(String[] tempNameProposals) {
-			super(DESCRIPTION, true,
-					tempNameProposals.length == 0 ? "" : tempNameProposals[0]); //$NON-NLS-1$
+			super(DESCRIPTION, true, tempNameProposals.length == 0 ? "" : tempNameProposals[0]); //$NON-NLS-1$
 			Assert.isNotNull(tempNameProposals);
 			fTempNameProposals = tempNameProposals;
 			fInitialValid = tempNameProposals.length > 0;
@@ -85,8 +81,7 @@ public class ExtractVariableWizard extends RefactoringWizard {
 			RowLayouter layouter = new RowLayouter(2);
 
 			Label label = new Label(result, SWT.NONE);
-			label.setText(PHPRefactoringUIMessages
-					.getString("ExtractVariableWizard.2")); //$NON-NLS-1$
+			label.setText(PHPRefactoringUIMessages.getString("ExtractVariableWizard.2")); //$NON-NLS-1$
 
 			Text text = createTextInputField(result);
 			text.selectAll();
@@ -106,8 +101,7 @@ public class ExtractVariableWizard extends RefactoringWizard {
 		}
 
 		private void creatContentAssit(Text text) {
-			ControlDecoration cd = new ControlDecoration(text, SWT.LEFT
-					| SWT.TOP);
+			ControlDecoration cd = new ControlDecoration(text, SWT.LEFT | SWT.TOP);
 
 			FieldDecoration dec = getCueDecoration();
 			cd.setImage(dec.getImage());
@@ -118,29 +112,22 @@ public class ExtractVariableWizard extends RefactoringWizard {
 
 		FieldDecoration getCueDecoration() {
 			// We use our own decoration which is based on the JFace version.
-			FieldDecorationRegistry registry = FieldDecorationRegistry
-					.getDefault();
-			FieldDecoration dec = registry
-					.getFieldDecoration(COM_ZEND_PHP_REFACTORING_UI_ASSI_DECORATION);
+			FieldDecorationRegistry registry = FieldDecorationRegistry.getDefault();
+			FieldDecoration dec = registry.getFieldDecoration(COM_ZEND_PHP_REFACTORING_UI_ASSI_DECORATION);
 			if (dec == null) {
 				// Get the standard one. We use its image and our own customized
 				// text.
 				FieldDecoration standardDecoration = registry
 						.getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
-				registry.registerFieldDecoration(
-						COM_ZEND_PHP_REFACTORING_UI_ASSI_DECORATION,
-						NLS.bind(
-								PHPRefactoringUIMessages
-										.getString("ExtractVariableWizard.6"), TRIGGER_KEY), //$NON-NLS-1$
+				registry.registerFieldDecoration(COM_ZEND_PHP_REFACTORING_UI_ASSI_DECORATION,
+						NLS.bind(PHPRefactoringUIMessages.getString("ExtractVariableWizard.6"), TRIGGER_KEY), //$NON-NLS-1$
 						standardDecoration.getImage());
-				dec = registry
-						.getFieldDecoration(COM_ZEND_PHP_REFACTORING_UI_ASSI_DECORATION);
+				dec = registry.getFieldDecoration(COM_ZEND_PHP_REFACTORING_UI_ASSI_DECORATION);
 			}
 			return dec;
 		}
 
-		void installContentProposalAdapter(Control control,
-				IControlContentAdapter contentAdapter) {
+		void installContentProposalAdapter(Control control, IControlContentAdapter contentAdapter) {
 			boolean propagate = false;
 			KeyStroke keyStroke;
 			char[] autoActivationCharacters = null;
@@ -152,9 +139,8 @@ public class ExtractVariableWizard extends RefactoringWizard {
 				keyStroke = KeyStroke.getInstance(SWT.F10);
 			}
 
-			ContentProposalAdapter adapter = new ContentProposalAdapter(
-					control, contentAdapter, getContentProposalProvider(),
-					keyStroke, autoActivationCharacters) {
+			ContentProposalAdapter adapter = new ContentProposalAdapter(control, contentAdapter,
+					getContentProposalProvider(), keyStroke, autoActivationCharacters) {
 				public void closeProposalPopup() {
 					closeProposalPopup();
 				}
@@ -175,8 +161,7 @@ public class ExtractVariableWizard extends RefactoringWizard {
 
 		private IContentProposalProvider getContentProposalProvider() {
 			return new IContentProposalProvider() {
-				public IContentProposal[] getProposals(String contents,
-						int position) {
+				public IContentProposal[] getProposals(String contents, int position) {
 					IContentProposal[] proposals = new IContentProposal[fTempNameProposals.length];
 					for (int i = 0; i < fTempNameProposals.length; i++) {
 						final String user = fTempNameProposals[i];
@@ -204,33 +189,24 @@ public class ExtractVariableWizard extends RefactoringWizard {
 		}
 
 		private void loadSettings() {
-			fSettings = getDialogSettings().getSection(
-					ExtractVariableWizard.DIALOG_SETTING_SECTION);
+			fSettings = getDialogSettings().getSection(ExtractVariableWizard.DIALOG_SETTING_SECTION);
 			if (fSettings == null) {
-				fSettings = getDialogSettings().addNewSection(
-						ExtractVariableWizard.DIALOG_SETTING_SECTION);
+				fSettings = getDialogSettings().addNewSection(ExtractVariableWizard.DIALOG_SETTING_SECTION);
 				fSettings.put(DECLARE_FINAL, false);
 				fSettings.put(REPLACE_ALL, true);
 			}
-			getExtractVariableRefactoring().setReplaceAllOccurrences(
-					fSettings.getBoolean(REPLACE_ALL));
+			getExtractVariableRefactoring().setReplaceAllOccurrences(fSettings.getBoolean(REPLACE_ALL));
 		}
 
-		private void addReplaceAllCheckbox(Composite result,
-				RowLayouter layouter) {
-			String title = PHPRefactoringUIMessages
-					.getString("ExtractVariableWizard.3"); //$NON-NLS-1$
-			boolean defaultValue = getExtractVariableRefactoring()
-					.getReplaceAllOccurrences();
-			final Button checkBox = createCheckbox(result, title, defaultValue,
-					layouter);
-			getExtractVariableRefactoring().setReplaceAllOccurrences(
-					checkBox.getSelection());
+		private void addReplaceAllCheckbox(Composite result, RowLayouter layouter) {
+			String title = PHPRefactoringUIMessages.getString("ExtractVariableWizard.3"); //$NON-NLS-1$
+			boolean defaultValue = getExtractVariableRefactoring().getReplaceAllOccurrences();
+			final Button checkBox = createCheckbox(result, title, defaultValue, layouter);
+			getExtractVariableRefactoring().setReplaceAllOccurrences(checkBox.getSelection());
 			checkBox.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					fSettings.put(REPLACE_ALL, checkBox.getSelection());
-					getExtractVariableRefactoring().setReplaceAllOccurrences(
-							checkBox.getSelection());
+					getExtractVariableRefactoring().setReplaceAllOccurrences(checkBox.getSelection());
 				}
 			});
 		}
@@ -248,8 +224,7 @@ public class ExtractVariableWizard extends RefactoringWizard {
 			return (ExtractVariableRefactoring) getRefactoring();
 		}
 
-		private static Button createCheckbox(Composite parent, String title,
-				boolean value, RowLayouter layouter) {
+		private static Button createCheckbox(Composite parent, String title, boolean value, RowLayouter layouter) {
 			Button checkBox = new Button(parent, SWT.CHECK);
 			checkBox.setText(title);
 			checkBox.setSelection(value);

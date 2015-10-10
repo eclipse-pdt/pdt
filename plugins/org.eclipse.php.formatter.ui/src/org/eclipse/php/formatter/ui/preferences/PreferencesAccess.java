@@ -30,8 +30,7 @@ public class PreferencesAccess {
 		return new PreferencesAccess();
 	}
 
-	public static PreferencesAccess getWorkingCopyPreferences(
-			IWorkingCopyManager workingCopyManager) {
+	public static PreferencesAccess getWorkingCopyPreferences(IWorkingCopyManager workingCopyManager) {
 		return new WorkingCopyPreferencesAccess(workingCopyManager);
 	}
 
@@ -64,13 +63,11 @@ public class PreferencesAccess {
 
 		private final IWorkingCopyManager fWorkingCopyManager;
 
-		private WorkingCopyPreferencesAccess(
-				IWorkingCopyManager workingCopyManager) {
+		private WorkingCopyPreferencesAccess(IWorkingCopyManager workingCopyManager) {
 			fWorkingCopyManager = workingCopyManager;
 		}
 
-		private final IScopeContext getWorkingCopyScopeContext(
-				IScopeContext original) {
+		private final IScopeContext getWorkingCopyScopeContext(IScopeContext original) {
 			return new WorkingCopyScopeContext(fWorkingCopyManager, original);
 		}
 
@@ -92,9 +89,8 @@ public class PreferencesAccess {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jdt.internal.ui.preferences.PreferencesAccess#applyChanges
-		 * ()
+		 * @see org.eclipse.jdt.internal.ui.preferences.PreferencesAccess#
+		 * applyChanges ()
 		 */
 		@Override
 		public void applyChanges() throws BackingStoreException {
@@ -107,8 +103,7 @@ public class PreferencesAccess {
 		private final IWorkingCopyManager fWorkingCopyManager;
 		private final IScopeContext fOriginal;
 
-		public WorkingCopyScopeContext(IWorkingCopyManager workingCopyManager,
-				IScopeContext original) {
+		public WorkingCopyScopeContext(IWorkingCopyManager workingCopyManager, IScopeContext original) {
 			fWorkingCopyManager = workingCopyManager;
 			fOriginal = original;
 		}
@@ -130,8 +125,7 @@ public class PreferencesAccess {
 		 * .String)
 		 */
 		public IEclipsePreferences getNode(String qualifier) {
-			return fWorkingCopyManager.getWorkingCopy(fOriginal
-					.getNode(qualifier));
+			return fWorkingCopyManager.getWorkingCopy(fOriginal.getNode(qualifier));
 		}
 
 		/*

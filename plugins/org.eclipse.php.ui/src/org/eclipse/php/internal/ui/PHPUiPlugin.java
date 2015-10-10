@@ -142,11 +142,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			protected IStatus run(IProgressMonitor monitor) {
 
 				libraryFolderChangeListener = new LibraryFolderChangeListener();
-				LibraryFolderManager.getInstance()
-						.addListener(libraryFolderChangeListener);
+				LibraryFolderManager.getInstance().addListener(libraryFolderChangeListener);
 
-				PlatformUI.getWorkbench().getDisplay()
-						.asyncExec(new Runnable() {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						processCommandLine(context);
 					}
@@ -165,17 +163,14 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	static void initializeAfterLoad(IProgressMonitor monitor) {
-		org.eclipse.dltk.internal.corext.util.OpenTypeHistory
-				.getInstance(PHPUILanguageToolkit.getInstance())
+		org.eclipse.dltk.internal.corext.util.OpenTypeHistory.getInstance(PHPUILanguageToolkit.getInstance())
 				.checkConsistency(monitor);
 	}
 
 	private void processCommandLine(BundleContext context) {
-		ServiceTracker environmentTracker = new ServiceTracker(context,
-				EnvironmentInfo.class.getName(), null);
+		ServiceTracker environmentTracker = new ServiceTracker(context, EnvironmentInfo.class.getName(), null);
 		environmentTracker.open();
-		EnvironmentInfo environmentInfo = (EnvironmentInfo) environmentTracker
-				.getService();
+		EnvironmentInfo environmentInfo = (EnvironmentInfo) environmentTracker.getService();
 		environmentTracker.close();
 		if (environmentInfo == null) {
 			return;
@@ -192,13 +187,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			// check if there is a flag for creating a test project
 			// evaluate each char and DONT use "String.equals" for performance
 			// even thought this takes place asynchronously
-			if (args[i].length() == 3
-					&& CREATE_TEST_PROJECT_SWITCH_FIRST_CHAR == (args[i]
-							.charAt(0))
-					&& CREATE_TEST_PROJECT_SWITCH_SECOND_CHAR == (args[i]
-							.charAt(1))
-					&& CREATE_TEST_PROJECT_SWITCH_THIRD_CHAR == (args[i]
-							.charAt(2))) {
+			if (args[i].length() == 3 && CREATE_TEST_PROJECT_SWITCH_FIRST_CHAR == (args[i].charAt(0))
+					&& CREATE_TEST_PROJECT_SWITCH_SECOND_CHAR == (args[i].charAt(1))
+					&& CREATE_TEST_PROJECT_SWITCH_THIRD_CHAR == (args[i].charAt(2))) {
 				createTestProject();
 				return;
 			}
@@ -223,8 +214,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 		CorrectionCommandInstaller.unregisterCommands();
 
 		if (libraryFolderChangeListener != null) {
-			LibraryFolderManager.getInstance()
-					.removeListener(libraryFolderChangeListener);
+			LibraryFolderManager.getInstance().removeListener(libraryFolderChangeListener);
 			libraryFolderChangeListener = null;
 		}
 
@@ -275,8 +265,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	public static void log(Throwable e) {
-		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR,
-				"PHP ui plugin internal error", e)); //$NON-NLS-1$
+		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR, "PHP ui plugin internal error", e)); //$NON-NLS-1$
 	}
 
 	public static ImageDescriptorRegistry getImageDescriptorRegistry() {
@@ -333,8 +322,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public TemplateStore getTemplateStore() {
 		if (templateStore == null) {
-			templateStore = new PHPTemplateStore(getTemplateContextRegistry(),
-					getPreferenceStore(), PreferenceConstants.TEMPLATES_KEY);
+			templateStore = new PHPTemplateStore(getTemplateContextRegistry(), getPreferenceStore(),
+					PreferenceConstants.TEMPLATES_KEY);
 
 			try {
 				templateStore.load();
@@ -354,8 +343,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	public TemplateStore getCodeTemplateStore() {
 		if (fCodeTemplateStore == null) {
 
-			fCodeTemplateStore = new PHPTemplateStore(
-					getCodeTemplateContextRegistry(), getPreferenceStore(),
+			fCodeTemplateStore = new PHPTemplateStore(getCodeTemplateContextRegistry(), getPreferenceStore(),
 					PreferenceConstants.CODE_TEMPLATES_KEY);
 
 			try {
@@ -396,18 +384,12 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
 
 			registry.addContextType(PhpTemplateContextType.PHP_CONTEXT_TYPE_ID);
-			registry.addContextType(
-					PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
-			registry.addContextType(
-					PhpTemplateContextType.PHP_TYPE_MEMBERS_CONTEXT_TYPE_ID);
-			registry.addContextType(
-					PhpTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
-			registry.addContextType(
-					PhpTemplateContextType.PHP_TYPE_METHOD_STATEMENTS_CONTEXT_TYPE_ID);
-			registry.addContextType(
-					PhpTemplateContextType.PHP_CLASS_MEMBERS_CONTEXT_TYPE_ID);
-			registry.addContextType(
-					PhpCommentTemplateContextType.PHP_COMMENT_CONTEXT_TYPE_ID);
+			registry.addContextType(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
+			registry.addContextType(PhpTemplateContextType.PHP_TYPE_MEMBERS_CONTEXT_TYPE_ID);
+			registry.addContextType(PhpTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
+			registry.addContextType(PhpTemplateContextType.PHP_TYPE_METHOD_STATEMENTS_CONTEXT_TYPE_ID);
+			registry.addContextType(PhpTemplateContextType.PHP_CLASS_MEMBERS_CONTEXT_TYPE_ID);
+			registry.addContextType(PhpCommentTemplateContextType.PHP_COMMENT_CONTEXT_TYPE_ID);
 
 			fContextTypeRegistry = registry;
 		}
@@ -448,29 +430,24 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public PHPEditorTextHoverDescriptor[] getPHPEditorTextHoverDescriptors() {
 		if (fPHPEditorTextHoverDescriptors == null) {
-			fPHPEditorTextHoverDescriptors = PHPEditorTextHoverDescriptor
-					.getContributedHovers();
+			fPHPEditorTextHoverDescriptors = PHPEditorTextHoverDescriptor.getContributedHovers();
 			ConfigurationElementSorter sorter = new ConfigurationElementSorter() {
 				/*
 				 * @seeorg.eclipse.ui.texteditor.ConfigurationElementSorter#
 				 * getConfigurationElement(java.lang.Object)
 				 */
-				public IConfigurationElement getConfigurationElement(
-						Object object) {
-					return ((PHPEditorTextHoverDescriptor) object)
-							.getConfigurationElement();
+				public IConfigurationElement getConfigurationElement(Object object) {
+					return ((PHPEditorTextHoverDescriptor) object).getConfigurationElement();
 				}
 			};
 			sorter.sort(fPHPEditorTextHoverDescriptors);
 
 			// Move Best Match hover to front
 			for (int i = 0; i < fPHPEditorTextHoverDescriptors.length - 1; i++) {
-				if (PreferenceConstants.ID_BESTMATCH_HOVER
-						.equals(fPHPEditorTextHoverDescriptors[i].getId())) {
+				if (PreferenceConstants.ID_BESTMATCH_HOVER.equals(fPHPEditorTextHoverDescriptors[i].getId())) {
 					PHPEditorTextHoverDescriptor hoverDescriptor = fPHPEditorTextHoverDescriptors[i];
 					for (int j = i; j > 0; j--)
-						fPHPEditorTextHoverDescriptors[j] = fPHPEditorTextHoverDescriptors[j
-								- 1];
+						fPHPEditorTextHoverDescriptors[j] = fPHPEditorTextHoverDescriptors[j - 1];
 					fPHPEditorTextHoverDescriptors[0] = hoverDescriptor;
 					break;
 				}
@@ -499,8 +476,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public PHPManualSiteDescriptor[] getPHPManualSiteDescriptors() {
 		if (fPHPManualSiteDescriptors == null) {
-			fPHPManualSiteDescriptors = PHPManualSiteDescriptor
-					.getContributedSites();
+			fPHPManualSiteDescriptors = PHPManualSiteDescriptor.getContributedSites();
 		}
 		return fPHPManualSiteDescriptors;
 	}
@@ -555,16 +531,13 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 * 
 	 * @since 3.4
 	 */
-	public static ISourceModule getEditorInputTypeRoot(
-			IEditorInput editorInput) {
+	public static ISourceModule getEditorInputTypeRoot(IEditorInput editorInput) {
 		// Performance: check working copy manager first: this is faster
-		ISourceModule cu = DLTKUIPlugin.getDefault().getWorkingCopyManager()
-				.getWorkingCopy(editorInput);
+		ISourceModule cu = DLTKUIPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editorInput);
 		if (cu != null)
 			return cu;
 
-		ISourceModule je = (ISourceModule) editorInput
-				.getAdapter(ISourceModule.class);
+		ISourceModule je = (ISourceModule) editorInput.getAdapter(ISourceModule.class);
 		return je;
 	}
 
@@ -590,15 +563,13 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			for (int i = 0; i < elements.length; i++) {
 				IConfigurationElement element = elements[i];
 				if (element.getName().equals("processor")) { //$NON-NLS-1$
-					ElementCreationProxy ecProxy = new ElementCreationProxy(
-							element, formatterExtensionName);
+					ElementCreationProxy ecProxy = new ElementCreationProxy(element, formatterExtensionName);
 					fActiveFormatter = (IContentFormatter) ecProxy.getObject();
 				}
 			}
 			if (fActiveFormatter == null) {
 				fActiveFormatter = new MultiPassContentFormatter(
-						IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING,
-						IHTMLPartitions.HTML_DEFAULT);
+						IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, IHTMLPartitions.HTML_DEFAULT);
 			}
 		}
 		return fActiveFormatter;

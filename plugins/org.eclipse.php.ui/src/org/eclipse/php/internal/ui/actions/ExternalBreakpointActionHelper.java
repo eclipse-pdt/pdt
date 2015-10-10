@@ -45,11 +45,9 @@ public class ExternalBreakpointActionHelper {
 	private static String getSecondaryId(ITextEditor textEditor) {
 		String secondaryId = null;
 		if (textEditor instanceof PHPStructuredEditor) {
-			IModelElement modelElement = ((PHPStructuredEditor) textEditor)
-					.getModelElement();
+			IModelElement modelElement = ((PHPStructuredEditor) textEditor).getModelElement();
 			if (modelElement instanceof IExternalSourceModule) {
-				secondaryId = EnvironmentPathUtils.getFile(modelElement)
-						.getFullPath().toString();
+				secondaryId = EnvironmentPathUtils.getFile(modelElement).getFullPath().toString();
 			}
 		}
 		return secondaryId;
@@ -65,23 +63,17 @@ public class ExternalBreakpointActionHelper {
 	 * @param rulerInfo
 	 * @return
 	 */
-	public static boolean hasMarkers(ITextEditor textEditor,
-			IResource resource, IDocument document,
-			AbstractMarkerAnnotationModel annotationModel,
-			IVerticalRulerInfo rulerInfo) {
+	public static boolean hasMarkers(ITextEditor textEditor, IResource resource, IDocument document,
+			AbstractMarkerAnnotationModel annotationModel, IVerticalRulerInfo rulerInfo) {
 
 		if (resource != null && annotationModel != null) {
 			try {
 				IMarker[] allMarkers;
 				if (resource instanceof IFile && resource.exists()) {
-					allMarkers = resource.findMarkers(
-							IBreakpoint.LINE_BREAKPOINT_MARKER, true,
-							IResource.DEPTH_ZERO);
+					allMarkers = resource.findMarkers(IBreakpoint.LINE_BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
 					if (allMarkers != null) {
 						for (IMarker marker : allMarkers) {
-							if (includesRulerLine(annotationModel
-									.getMarkerPosition(marker), document,
-									rulerInfo)) {
+							if (includesRulerLine(annotationModel.getMarkerPosition(marker), document, rulerInfo)) {
 								return true;
 							}
 						}
@@ -90,23 +82,16 @@ public class ExternalBreakpointActionHelper {
 					String secondaryId = getSecondaryId(textEditor);
 
 					// get it from the workspace root
-					allMarkers = resource.getWorkspace().getRoot().findMarkers(
-							IBreakpoint.LINE_BREAKPOINT_MARKER, true,
+					allMarkers = resource.getWorkspace().getRoot().findMarkers(IBreakpoint.LINE_BREAKPOINT_MARKER, true,
 							IResource.DEPTH_ZERO);
-					IBreakpointManager manager = DebugPlugin.getDefault()
-							.getBreakpointManager();
+					IBreakpointManager manager = DebugPlugin.getDefault().getBreakpointManager();
 					if (allMarkers != null) {
 						for (IMarker marker : allMarkers) {
 							if (manager.getBreakpoint(marker) != null) {
 								String markerSecondaryId = marker
-										.getAttribute(
-												StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY,
-												null);
-								if ((secondaryId == null || secondaryId
-										.equals(markerSecondaryId))
-										&& includesRulerLine(annotationModel
-												.getMarkerPosition(marker),
-												document, rulerInfo)) {
+										.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, null);
+								if ((secondaryId == null || secondaryId.equals(markerSecondaryId)) && includesRulerLine(
+										annotationModel.getMarkerPosition(marker), document, rulerInfo)) {
 									return true;
 								}
 							}
@@ -129,47 +114,34 @@ public class ExternalBreakpointActionHelper {
 	 * @param rulerInfo
 	 * @return
 	 */
-	public static IMarker[] getMarkers(ITextEditor textEditor,
-			IResource resource, IDocument document,
-			AbstractMarkerAnnotationModel annotationModel,
-			IVerticalRulerInfo rulerInfo) {
+	public static IMarker[] getMarkers(ITextEditor textEditor, IResource resource, IDocument document,
+			AbstractMarkerAnnotationModel annotationModel, IVerticalRulerInfo rulerInfo) {
 
 		List<IMarker> markers = new ArrayList<IMarker>();
 		if (resource != null && annotationModel != null) {
 			try {
 				IMarker[] allMarkers;
 				if (resource instanceof IFile && resource.exists()) {
-					allMarkers = resource.findMarkers(
-							IBreakpoint.BREAKPOINT_MARKER, true,
-							IResource.DEPTH_ZERO);
+					allMarkers = resource.findMarkers(IBreakpoint.BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
 					if (allMarkers != null) {
 						for (IMarker marker : allMarkers) {
-							if (includesRulerLine(annotationModel
-									.getMarkerPosition(marker), document,
-									rulerInfo)) {
+							if (includesRulerLine(annotationModel.getMarkerPosition(marker), document, rulerInfo)) {
 								markers.add(marker);
 							}
 						}
 					}
 				} else {
 					String secondaryId = getSecondaryId(textEditor);
-					allMarkers = resource.getWorkspace().getRoot().findMarkers(
-							IBreakpoint.BREAKPOINT_MARKER, true,
+					allMarkers = resource.getWorkspace().getRoot().findMarkers(IBreakpoint.BREAKPOINT_MARKER, true,
 							IResource.DEPTH_ZERO);
 					if (allMarkers != null) {
-						IBreakpointManager manager = DebugPlugin.getDefault()
-								.getBreakpointManager();
+						IBreakpointManager manager = DebugPlugin.getDefault().getBreakpointManager();
 						for (IMarker marker : allMarkers) {
 							if (manager.getBreakpoint(marker) != null) {
 								String markerSecondaryId = marker
-										.getAttribute(
-												StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY,
-												null);
-								if ((secondaryId == null || secondaryId
-										.equals(markerSecondaryId))
-										&& includesRulerLine(annotationModel
-												.getMarkerPosition(marker),
-												document, rulerInfo)) {
+										.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, null);
+								if ((secondaryId == null || secondaryId.equals(markerSecondaryId)) && includesRulerLine(
+										annotationModel.getMarkerPosition(marker), document, rulerInfo)) {
 									markers.add(marker);
 								}
 							}
@@ -192,8 +164,7 @@ public class ExternalBreakpointActionHelper {
 	 *            the document the position refers to
 	 * @return <code>true</code> if the line is included by the given position
 	 */
-	private static boolean includesRulerLine(Position position,
-			IDocument document, IVerticalRulerInfo rulerInfo) {
+	private static boolean includesRulerLine(Position position, IDocument document, IVerticalRulerInfo rulerInfo) {
 		if (position != null && rulerInfo != null) {
 			try {
 				int markerLine = document.getLineOfOffset(position.getOffset());

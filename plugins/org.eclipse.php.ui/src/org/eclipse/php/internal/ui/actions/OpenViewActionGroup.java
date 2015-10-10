@@ -79,13 +79,11 @@ public class OpenViewActionGroup extends ActionGroup {
 	public OpenViewActionGroup(PHPStructuredEditor part) {
 		fEditorIsOwner = true;
 		fOpenTypeHierarchy = new OpenTypeHierarchyAction(part);
-		fOpenTypeHierarchy
-				.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
+		fOpenTypeHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
 		part.setAction("OpenTypeHierarchy", fOpenTypeHierarchy); //$NON-NLS-1$
 
 		fOpenCallHierarchy = new OpenCallHierarchyAction(part);
-		fOpenCallHierarchy
-				.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
+		fOpenCallHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
 		part.setAction("OpenCallHierarchy", fOpenCallHierarchy); //$NON-NLS-1$
 
 		initialize(part.getEditorSite());
@@ -93,18 +91,14 @@ public class OpenViewActionGroup extends ActionGroup {
 
 	private void createSiteActions(IWorkbenchSite site) {
 
-		fOpenPropertiesDialog = new PropertyDialogAction(site,
-				site.getSelectionProvider());
-		fOpenPropertiesDialog
-				.setActionDefinitionId(IWorkbenchActionDefinitionIds.PROPERTIES);
+		fOpenPropertiesDialog = new PropertyDialogAction(site, site.getSelectionProvider());
+		fOpenPropertiesDialog.setActionDefinitionId(IWorkbenchActionDefinitionIds.PROPERTIES);
 
 		fOpenTypeHierarchy = new OpenTypeHierarchyAction(site);
-		fOpenTypeHierarchy
-				.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
+		fOpenTypeHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
 
 		fOpenCallHierarchy = new OpenCallHierarchyAction(site);
-		fOpenCallHierarchy
-				.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
+		fOpenCallHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
 
 		initialize(site);
 	}
@@ -147,16 +141,13 @@ public class OpenViewActionGroup extends ActionGroup {
 		if (!fIsCallHiararchyViewerOwner)
 			appendToGroup(menu, fOpenCallHierarchy);
 		IStructuredSelection selection = getStructuredSelection();
-		if (fOpenPropertiesDialog != null && fOpenPropertiesDialog.isEnabled()
-				&& selection != null
+		if (fOpenPropertiesDialog != null && fOpenPropertiesDialog.isEnabled() && selection != null
 				&& fOpenPropertiesDialog.isApplicableForSelection(selection)) {
-			menu.appendToGroup(IContextMenuConstants.GROUP_PROPERTIES,
-					fOpenPropertiesDialog);
+			menu.appendToGroup(IContextMenuConstants.GROUP_PROPERTIES, fOpenPropertiesDialog);
 		}
 		MenuManager showInSubMenu = new MenuManager(getShowInMenuLabel());
 		IWorkbenchWindow workbenchWindow = fSite.getWorkbenchWindow();
-		showInSubMenu.add(ContributionItemFactory.VIEWS_SHOW_IN
-				.create(workbenchWindow));
+		showInSubMenu.add(ContributionItemFactory.VIEWS_SHOW_IN.create(workbenchWindow));
 		menu.appendToGroup(IContextMenuConstants.GROUP_OPEN, showInSubMenu);
 	}
 
@@ -170,13 +161,10 @@ public class OpenViewActionGroup extends ActionGroup {
 	}
 
 	private void setGlobalActionHandlers(IActionBars actionBars) {
-		actionBars.setGlobalActionHandler(
-				PHPActionConstants.OPEN_TYPE_HIERARCHY, fOpenTypeHierarchy);
-		actionBars.setGlobalActionHandler(
-				PHPActionConstants.OPEN_CALL_HIERARCHY, fOpenCallHierarchy);
+		actionBars.setGlobalActionHandler(PHPActionConstants.OPEN_TYPE_HIERARCHY, fOpenTypeHierarchy);
+		actionBars.setGlobalActionHandler(PHPActionConstants.OPEN_CALL_HIERARCHY, fOpenCallHierarchy);
 		if (!fEditorIsOwner)
-			actionBars.setGlobalActionHandler(ActionFactory.PROPERTIES.getId(),
-					fOpenPropertiesDialog);
+			actionBars.setGlobalActionHandler(ActionFactory.PROPERTIES.getId(), fOpenPropertiesDialog);
 	}
 
 	private void appendToGroup(IMenuManager menu, IAction action) {
@@ -197,11 +185,9 @@ public class OpenViewActionGroup extends ActionGroup {
 	private String getShowInMenuLabel() {
 		String keyBinding = null;
 
-		IBindingService bindingService = (IBindingService) PlatformUI
-				.getWorkbench().getAdapter(IBindingService.class);
+		IBindingService bindingService = (IBindingService) PlatformUI.getWorkbench().getAdapter(IBindingService.class);
 		if (bindingService != null)
-			keyBinding = bindingService
-					.getBestActiveBindingFormattedFor("org.eclipse.ui.navigate.showInQuickMenu"); //$NON-NLS-1$
+			keyBinding = bindingService.getBestActiveBindingFormattedFor("org.eclipse.ui.navigate.showInQuickMenu"); //$NON-NLS-1$
 
 		if (keyBinding == null)
 			keyBinding = ""; //$NON-NLS-1$

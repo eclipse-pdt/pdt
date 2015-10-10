@@ -7,8 +7,7 @@ import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 
 public class PHPRuntime {
-	public static final String PHP_CONTAINER = PHPDebugPlugin.ID
-			+ ".PHP_CONTAINER"; //$NON-NLS-1$
+	public static final String PHP_CONTAINER = PHPDebugPlugin.ID + ".PHP_CONTAINER"; //$NON-NLS-1$
 
 	public static final String ID_STANDARD_VM_TYPE = "org.eclipse.php.internal.debug.ui.launcher.StandardPHPType"; //$NON-NLS-1$
 
@@ -71,8 +70,7 @@ public class PHPRuntime {
 	}
 
 	public static PHPVersion getPHPVersion(IPath containerPath) {
-		if (containerPath.segmentCount() == 3
-				&& containerPath.segment(1).equals(ID_STANDARD_VM_TYPE)) {
+		if (containerPath.segmentCount() == 3 && containerPath.segment(1).equals(ID_STANDARD_VM_TYPE)) {
 			return PHPVersion.byAlias(containerPath.segment(2));
 		}
 		return null;
@@ -80,8 +78,7 @@ public class PHPRuntime {
 
 	public static PHPexeItem getPHPexeItem(IPath containerPath) {
 		if (containerPath.segmentCount() == 3) {
-			return PHPexes.getInstance().getItem(containerPath.segment(1),
-					containerPath.segment(2));
+			return PHPexes.getInstance().getItem(containerPath.segment(1), containerPath.segment(2));
 		}
 		return null;
 	}

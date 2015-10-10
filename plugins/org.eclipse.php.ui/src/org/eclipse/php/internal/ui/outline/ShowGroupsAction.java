@@ -37,23 +37,19 @@ public class ShowGroupsAction extends Action {
 		propertyChangeListener = new IPropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty().equals(
-						PreferenceConstants.PREF_OUTLINEMODE)) {
+				if (event.getProperty().equals(PreferenceConstants.PREF_OUTLINEMODE)) {
 					setEnabled(isEnabled());
 				}
 
 			}
 		};
-		PHPUiPlugin.getDefault().getPreferenceStore()
-				.addPropertyChangeListener(propertyChangeListener);
-		boolean show = PHPUiPlugin.getDefault().getPreferenceStore()
-				.getBoolean(PREF_SHOW_GROUPS);
+		PHPUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(propertyChangeListener);
+		boolean show = PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(PREF_SHOW_GROUPS);
 		setChecked(show);
 	}
 
 	public void dispose() {
-		PHPUiPlugin.getDefault().getPreferenceStore()
-				.removePropertyChangeListener(propertyChangeListener);
+		PHPUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(propertyChangeListener);
 	}
 
 	public void run() {
@@ -63,8 +59,7 @@ public class ShowGroupsAction extends Action {
 			// phpContentProvider.setShowGroups(isChecked());
 			treeViewer.refresh(false);
 			treeViewer.expandToLevel(2);
-			PHPUiPlugin.getDefault().getPreferenceStore()
-					.setValue(PREF_SHOW_GROUPS, isChecked());
+			PHPUiPlugin.getDefault().getPreferenceStore().setValue(PREF_SHOW_GROUPS, isChecked());
 		}
 	}
 

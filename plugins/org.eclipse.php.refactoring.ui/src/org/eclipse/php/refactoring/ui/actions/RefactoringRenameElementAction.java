@@ -82,8 +82,7 @@ public class RefactoringRenameElementAction extends RenamePHPElementAction {
 				return;
 			}
 			List elements = selection.toList();
-			IResource[] resources = ActionUtils.getPHPResources(elements
-					.toArray());
+			IResource[] resources = ActionUtils.getPHPResources(elements.toArray());
 			// Collection<CodeData> refactorablePHPElements = new LinkedList();
 			// Object[] phpElements = ActionUtils.getPHPElements(elements);
 			// for (Object phpElement : phpElements) {
@@ -109,8 +108,7 @@ public class RefactoringRenameElementAction extends RenamePHPElementAction {
 		setEnabled(true);
 	}
 
-	private SelectionListenerAction createWorkbenchAction(
-			IStructuredSelection selection) {
+	private SelectionListenerAction createWorkbenchAction(IStructuredSelection selection) {
 
 		List list = selection.toList();
 		if (list.size() == 0 || list.get(0) instanceof IProject) {
@@ -183,53 +181,45 @@ public class RefactoringRenameElementAction extends RenamePHPElementAction {
 				// }
 				else {
 					throw new UnsupportedOperationException(
-							PHPRefactoringUIMessages
-									.getString("RefactoringRenameElementAction.0") + selection.getFirstElement().getClass().getName()); //$NON-NLS-1$
+							PHPRefactoringUIMessages.getString("RefactoringRenameElementAction.0") //$NON-NLS-1$
+									+ selection.getFirstElement().getClass().getName());
 				}
 
 				// rename an element from the editor
 			} else {
 
-				resource = file = ((IFileEditorInput) fEditor.getEditorInput())
-						.getFile();
+				resource = file = ((IFileEditorInput) fEditor.getEditorInput()).getFile();
 				if (file == null) {
 					throw new UnsupportedOperationException(
-							PHPRefactoringUIMessages
-									.getString("RefactoringRenameElementAction.0") + selection.getFirstElement().getClass().getName()); //$NON-NLS-1$
+							PHPRefactoringUIMessages.getString("RefactoringRenameElementAction.0") //$NON-NLS-1$
+									+ selection.getFirstElement().getClass().getName());
 				}
-				final IDocument doc = fEditor.getDocumentProvider()
-						.getDocument(fEditor.getEditorInput());
-				final ITextSelection sel = (ITextSelection) fEditor
-						.getSelectionProvider().getSelection();
+				final IDocument doc = fEditor.getDocumentProvider().getDocument(fEditor.getEditorInput());
+				final ITextSelection sel = (ITextSelection) fEditor.getSelectionProvider().getSelection();
 				final int offset = sel.getOffset() + sel.getLength();
 
 				project = resource.getProject();
 
 				// locate the php element to refactor
-				final Program program = ASTParser.parse(doc,
-						ProjectOptions.isSupportingAspTags(project),
-						ProjectOptions.getPhpVersion(project),
-						ProjectOptions.useShortTags(project));
+				final Program program = ASTParser.parse(doc, ProjectOptions.isSupportingAspTags(project),
+						ProjectOptions.getPhpVersion(project), ProjectOptions.useShortTags(project));
 				locateNode = Locator.locateNode(program, offset);
 			}
 
 			// starts the rename refactoring operation
 			if (checkProjectSaved(project)) {
-				RefactoringExecutionStarter.startRenameRefactoring(resource,
-						locateNode, getShell());
+				RefactoringExecutionStarter.startRenameRefactoring(resource, locateNode, getShell());
 			}
 
 		} catch (Exception e) {
-			MessageDialog.openInformation(getShell(),
-					PHPUIMessages.RenamePHPElementAction_name,
+			MessageDialog.openInformation(getShell(), PHPUIMessages.RenamePHPElementAction_name,
 					PHPUIMessages.RenamePHPElementAction_not_available);
 		}
 	}
 
 	private boolean checkProjectSaved(IProject project) {
 		// save project files
-		final SaveFilesResult result = SaveFilesHandler.handle(project, false,
-				false, new NullProgressMonitor());
+		final SaveFilesResult result = SaveFilesHandler.handle(project, false, false, new NullProgressMonitor());
 		if (!result.isAccepted()) {
 			return false;
 		}

@@ -19,8 +19,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.ui.IWorkbenchPart;
 
-public class PHPToggleBreakpointsTargetFactory implements
-		IToggleBreakpointsTargetFactory {
+public class PHPToggleBreakpointsTargetFactory implements IToggleBreakpointsTargetFactory {
 
 	private static final String ID = "org.eclipse.php.debug.ui.PHPtoggleTargetFactory"; //$NON-NLS-1$
 
@@ -31,8 +30,7 @@ public class PHPToggleBreakpointsTargetFactory implements
 		return new ScriptLineBreakpointAdapter();
 	}
 
-	public String getDefaultToggleTarget(IWorkbenchPart part,
-			ISelection selection) {
+	public String getDefaultToggleTarget(IWorkbenchPart part, ISelection selection) {
 		return ID;
 	}
 

@@ -25,18 +25,17 @@ import org.junit.runner.RunWith;
 @RunWith(PDTTList.class)
 public class PHPMoveProcessorTest extends AbstractRefactoringTest {
 
-	
 	public PHPMoveProcessorTest(String[] fileNames) {
 		super(fileNames);
 	}
-	
+
 	@Override
 	protected TestProject getProject() {
 		return new TestProject("RefactoringMove");
 	}
-	
+
 	@PDTTList.Parameters
-	public static String[] dirs = {"/resources/move/"}; //$NON-NLS-1$
+	public static String[] dirs = { "/resources/move/" }; //$NON-NLS-1$
 
 	@Test
 	public void test(String fileName) throws Exception {

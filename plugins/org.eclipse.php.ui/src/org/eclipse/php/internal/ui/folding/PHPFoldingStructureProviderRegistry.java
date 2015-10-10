@@ -54,11 +54,8 @@ public class PHPFoldingStructureProviderRegistry {
 	public PHPFoldingStructureProviderDescriptor[] getFoldingProviderDescriptors() {
 		synchronized (this) {
 			ensureRegistered();
-			return (PHPFoldingStructureProviderDescriptor[]) fDescriptors
-					.values()
-					.toArray(
-							new PHPFoldingStructureProviderDescriptor[fDescriptors
-									.size()]);
+			return (PHPFoldingStructureProviderDescriptor[]) fDescriptors.values()
+					.toArray(new PHPFoldingStructureProviderDescriptor[fDescriptors.size()]);
 		}
 	}
 
@@ -71,8 +68,7 @@ public class PHPFoldingStructureProviderRegistry {
 	 * @return the corresponding provider, or <code>null</code> if none can be
 	 *         found
 	 */
-	public PHPFoldingStructureProviderDescriptor getFoldingProviderDescriptor(
-			String id) {
+	public PHPFoldingStructureProviderDescriptor getFoldingProviderDescriptor(String id) {
 		synchronized (this) {
 			ensureRegistered();
 			return (PHPFoldingStructureProviderDescriptor) fDescriptors.get(id);
@@ -86,8 +82,7 @@ public class PHPFoldingStructureProviderRegistry {
 	 * @return the current provider according to the preferences
 	 */
 	public IStructuredTextFoldingProvider getCurrentFoldingProvider() {
-		String id = PreferenceConstants.getPreferenceStore().getString(
-				PreferenceConstants.EDITOR_FOLDING_PROVIDER);
+		String id = PreferenceConstants.getPreferenceStore().getString(PreferenceConstants.EDITOR_FOLDING_PROVIDER);
 		PHPFoldingStructureProviderDescriptor desc = getFoldingProviderDescriptor(id);
 		if (desc != null) {
 			try {
@@ -119,12 +114,10 @@ public class PHPFoldingStructureProviderRegistry {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		Map map = new HashMap();
 
-		IConfigurationElement[] elements = registry
-				.getConfigurationElementsFor(PHPUiPlugin.getPluginId(),
-						EXTENSION_POINT);
+		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPUiPlugin.getPluginId(),
+				EXTENSION_POINT);
 		for (int i = 0; i < elements.length; i++) {
-			PHPFoldingStructureProviderDescriptor desc = new PHPFoldingStructureProviderDescriptor(
-					elements[i]);
+			PHPFoldingStructureProviderDescriptor desc = new PHPFoldingStructureProviderDescriptor(elements[i]);
 			map.put(desc.getId(), desc);
 		}
 

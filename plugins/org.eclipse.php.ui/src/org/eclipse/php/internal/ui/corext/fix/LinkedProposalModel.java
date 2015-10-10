@@ -20,7 +20,7 @@ import org.eclipse.php.internal.ui.corext.fix.LinkedProposalPositionGroup.Positi
 
 public class LinkedProposalModel {
 
-	private Map/* <String, PositionGroup> */fPositionGroups;
+	private Map/* <String, PositionGroup> */ fPositionGroups;
 	private LinkedProposalPositionGroup.PositionInformation fEndPosition;
 
 	public void addPositionGroup(LinkedProposalPositionGroup positionGroup) {
@@ -34,11 +34,9 @@ public class LinkedProposalModel {
 		fPositionGroups.put(positionGroup.getGroupId(), positionGroup);
 	}
 
-	public LinkedProposalPositionGroup getPositionGroup(String groupId,
-			boolean createIfNotExisting) {
-		LinkedProposalPositionGroup group = fPositionGroups != null ? (LinkedProposalPositionGroup) fPositionGroups
-				.get(groupId)
-				: null;
+	public LinkedProposalPositionGroup getPositionGroup(String groupId, boolean createIfNotExisting) {
+		LinkedProposalPositionGroup group = fPositionGroups != null
+				? (LinkedProposalPositionGroup) fPositionGroups.get(groupId) : null;
 		if (createIfNotExisting && group == null) {
 			group = new LinkedProposalPositionGroup(groupId);
 			addPositionGroup(group);
@@ -76,8 +74,7 @@ public class LinkedProposalModel {
 	}
 
 	public void setEndPosition(ITrackedNodePosition position) {
-		setEndPosition(LinkedProposalPositionGroup.createPositionInformation(
-				position, false));
+		setEndPosition(LinkedProposalPositionGroup.createPositionInformation(position, false));
 	}
 
 	public PositionInformation getEndPosition() {

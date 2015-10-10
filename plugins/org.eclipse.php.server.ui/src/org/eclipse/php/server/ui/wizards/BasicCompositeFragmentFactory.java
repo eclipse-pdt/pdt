@@ -28,9 +28,8 @@ public class BasicCompositeFragmentFactory implements ICompositeFragmentFactory 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.server.apache.ui.wizard.ICompositeFragmentFactory
-	 * #createWizardFragment()
+	 * @see org.eclipse.php.internal.server.apache.ui.wizard.
+	 * ICompositeFragmentFactory #createWizardFragment()
 	 */
 	public WizardFragment createWizardFragment() {
 		return new ServerWizardFragment();
@@ -39,13 +38,12 @@ public class BasicCompositeFragmentFactory implements ICompositeFragmentFactory 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.server.apache.ui.wizard.ICompositeFragmentFactory
+	 * @see org.eclipse.php.internal.server.apache.ui.wizard.
+	 * ICompositeFragmentFactory
 	 * #createComposite(org.eclipse.swt.widgets.Composite,
 	 * org.eclipse.php.internal.server.apache.ui.IControlHandler)
 	 */
-	public CompositeFragment createComposite(Composite parent,
-			IControlHandler controlHandler) {
+	public CompositeFragment createComposite(Composite parent, IControlHandler controlHandler) {
 		return new ServerCompositeFragment(parent, controlHandler, true);
 	}
 

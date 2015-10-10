@@ -34,8 +34,7 @@ import org.eclipse.ui.PlatformUI;
  * Using DLTK preference store in order to affect PHP Explorer (which is DLTK view)
  * See PreferenceConstants to access or change these values through public API.
  */
-public class PHPBasePreferencePage extends PreferencePage implements
-		IWorkbenchPreferencePage {
+public class PHPBasePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	// TODO: assign DLTK values once its build support these constants
 	private static final String DOUBLE_CLICK = org.eclipse.dltk.ui.PreferenceConstants.DOUBLE_CLICK;
@@ -62,8 +61,7 @@ public class PHPBasePreferencePage extends PreferencePage implements
 	public void init(IWorkbench workbench) {
 	}
 
-	private Button addRadioButton(Composite parent, String label, String key,
-			String value) {
+	private Button addRadioButton(Composite parent, String label, String key, String value) {
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 
 		Button button = new Button(parent, SWT.RADIO);
@@ -71,8 +69,7 @@ public class PHPBasePreferencePage extends PreferencePage implements
 		button.setData(new String[] { key, value });
 		button.setLayoutData(gd);
 
-		button.setSelection(value.equals(DLTKUIPlugin.getDefault()
-				.getPreferenceStore().getString(key)));
+		button.setSelection(value.equals(DLTKUIPlugin.getDefault().getPreferenceStore().getString(key)));
 
 		fRadioButtons.add(button);
 		return button;
@@ -92,14 +89,11 @@ public class PHPBasePreferencePage extends PreferencePage implements
 		Group doubleClickGroup = new Group(result, SWT.NONE);
 		doubleClickGroup.setLayout(new GridLayout());
 		doubleClickGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		doubleClickGroup
-				.setText(PHPUIMessages.PHPBasePreferencePage_doubleclick_action);
-		addRadioButton(doubleClickGroup,
-				PHPUIMessages.PHPBasePreferencePage_doubleclick_gointo,
-				DOUBLE_CLICK, DOUBLE_CLICK_GOES_INTO);
-		addRadioButton(doubleClickGroup,
-				PHPUIMessages.PHPBasePreferencePage_doubleclick_expand,
-				DOUBLE_CLICK, DOUBLE_CLICK_EXPANDS);
+		doubleClickGroup.setText(PHPUIMessages.PHPBasePreferencePage_doubleclick_action);
+		addRadioButton(doubleClickGroup, PHPUIMessages.PHPBasePreferencePage_doubleclick_gointo, DOUBLE_CLICK,
+				DOUBLE_CLICK_GOES_INTO);
+		addRadioButton(doubleClickGroup, PHPUIMessages.PHPBasePreferencePage_doubleclick_expand, DOUBLE_CLICK,
+				DOUBLE_CLICK_EXPANDS);
 		Dialog.applyDialogFont(result);
 		return result;
 	}
@@ -156,8 +150,7 @@ public class PHPBasePreferencePage extends PreferencePage implements
 
 	@Override
 	public void performHelp() {
-		PlatformUI.getWorkbench().getHelpSystem()
-				.setHelp(getControl(), IPHPHelpContextIds.PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PREFERENCES);
 		super.performHelp();
 	}
 

@@ -115,13 +115,11 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		layout.numColumns = 2;
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
-		layout.marginTop = convertVerticalDLUsToPixels(
-				IDialogConstants.VERTICAL_MARGIN);
+		layout.marginTop = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
 		typeSelectionGroup.setLayout(layout);
 		typeSelectionGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		Label divider = new Label(typeSelectionGroup,
-				SWT.HORIZONTAL | SWT.SEPARATOR);
+		Label divider = new Label(typeSelectionGroup, SWT.HORIZONTAL | SWT.SEPARATOR);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 2;
 		divider.setLayoutData(layoutData);
@@ -159,44 +157,33 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		fWorkspacePathBrowseBtn.setText(Messages.PathMapperEntryDialog_4);
 		fWorkspacePathBrowseBtn.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				WorkspaceBrowseDialog dialog = new WorkspaceBrowseDialog(
-						getShell());
+				WorkspaceBrowseDialog dialog = new WorkspaceBrowseDialog(getShell());
 				if (dialog.open() == Window.OK) {
 					Object selectedElement = dialog.getSelectedElement();
 					fWorkspacePathText.setData(null);
 					if (selectedElement instanceof IResource) {
 						IResource resource = (IResource) selectedElement;
 						fWorkspacePathText.setData(Type.WORKSPACE);
-						fWorkspacePathText
-								.setText(resource.getFullPath().toString());
+						fWorkspacePathText.setText(resource.getFullPath().toString());
 					} else if (selectedElement instanceof IBuildpathEntry) {
 						IBuildpathEntry includePathEntry = (IBuildpathEntry) selectedElement;
-						fWorkspacePathText.setData(includePathEntry
-								.getEntryKind() == IBuildpathEntry.BPE_VARIABLE
-										? Type.INCLUDE_VAR
-										: Type.INCLUDE_FOLDER);
-						if (includePathEntry
-								.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-							IPath incPath = DLTKCore.getResolvedVariablePath(
-									includePathEntry.getPath());
+						fWorkspacePathText.setData(includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE
+								? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER);
+						if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+							IPath incPath = DLTKCore.getResolvedVariablePath(includePathEntry.getPath());
 							if (incPath != null) {
-								fWorkspacePathText
-										.setText(incPath.toOSString());
+								fWorkspacePathText.setText(incPath.toOSString());
 							}
 						} else {
-							fWorkspacePathText.setText(EnvironmentPathUtils
-									.getLocalPath(includePathEntry.getPath())
-									.toOSString());
+							fWorkspacePathText.setText(
+									EnvironmentPathUtils.getLocalPath(includePathEntry.getPath()).toOSString());
 						}
 					} else if (selectedElement instanceof IPFile) {
 						IPFile ipFile = (IPFile) selectedElement;
 						IBuildpathEntry includePathEntry = ipFile.includePathEntry;
-						fWorkspacePathText.setData(includePathEntry
-								.getEntryKind() == IBuildpathEntry.BPE_VARIABLE
-										? Type.INCLUDE_VAR
-										: Type.INCLUDE_FOLDER);
-						fWorkspacePathText
-								.setText(ipFile.file.getAbsolutePath());
+						fWorkspacePathText.setData(includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE
+								? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER);
+						fWorkspacePathText.setText(ipFile.file.getAbsolutePath());
 					}
 				}
 			}
@@ -260,8 +247,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 			}
 		});
 
-		ignorePathText = new Text(typeSelectionGroup,
-				SWT.BORDER | SWT.READ_ONLY);
+		ignorePathText = new Text(typeSelectionGroup, SWT.BORDER | SWT.READ_ONLY);
 		ignorePathText.setEnabled(false);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		ignorePathText.setLayoutData(layoutData);
@@ -276,9 +262,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 	protected Control createContents(Composite parent) {
 		Control control = super.createContents(parent);
 
-		setTitleImage(PHPDebugUIImages
-				.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_MAPPING_SERVER)
-				.createImage());
+		setTitleImage(PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_MAPPING_SERVER).createImage());
 		if (fEditData != null) {
 			getShell().setText(Messages.PathMapperEntryDialog_0);
 			setTitle(Messages.PathMapperEntryDialog_6);
@@ -366,16 +350,13 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 
 			boolean pathExistsInWorkspace = false;
 			mapping.type = (Type) fWorkspacePathText.getData();
-			if (mapping.type == Type.INCLUDE_FOLDER
-					|| mapping.type == Type.INCLUDE_VAR) {
+			if (mapping.type == Type.INCLUDE_FOLDER || mapping.type == Type.INCLUDE_VAR) {
 				pathExistsInWorkspace = new File(workspacePath).exists();
 			} else {
-				pathExistsInWorkspace = (ResourcesPlugin.getWorkspace()
-						.getRoot().findMember(workspacePath) != null);
+				pathExistsInWorkspace = (ResourcesPlugin.getWorkspace().getRoot().findMember(workspacePath) != null);
 			}
 			if (!pathExistsInWorkspace) {
-				setError(NLS.bind(Messages.PathMapperEntryDialog_12,
-						workspacePath));
+				setError(NLS.bind(Messages.PathMapperEntryDialog_12, workspacePath));
 				return;
 			}
 			try {
@@ -394,8 +375,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 				return;
 			}
 			if (!new File(externalPath).exists()) {
-				setError(NLS.bind(Messages.PathMapperEntryDialog_15,
-						externalPath));
+				setError(NLS.bind(Messages.PathMapperEntryDialog_15, externalPath));
 				return;
 			}
 			try {
@@ -415,8 +395,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 	@Override
 	protected IDialogSettings getDialogBoundsSettings() {
 		if (fDialogSettings == null) {
-			fDialogSettings = DialogSettings.getOrCreateSection(
-					PHPDebugUIPlugin.getDefault().getDialogSettings(),
+			fDialogSettings = DialogSettings.getOrCreateSection(PHPDebugUIPlugin.getDefault().getDialogSettings(),
 					this.getClass().getSimpleName());
 		}
 		return fDialogSettings;
@@ -470,25 +449,20 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 
 			PixelConverter pixelConverter = new PixelConverter(parent);
 
-			fViewer = new TreeViewer(parent,
-					SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+			fViewer = new TreeViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 			GridData layoutData = new GridData(GridData.FILL_BOTH);
-			layoutData.widthHint = pixelConverter
-					.convertWidthInCharsToPixels(70);
-			layoutData.heightHint = pixelConverter
-					.convertHeightInCharsToPixels(20);
+			layoutData.widthHint = pixelConverter.convertWidthInCharsToPixels(70);
+			layoutData.heightHint = pixelConverter.convertHeightInCharsToPixels(20);
 			fViewer.getControl().setLayoutData(layoutData);
 
 			fViewer.setContentProvider(new ContentProvider());
 			fViewer.setLabelProvider(new LabelProvider());
 
-			fViewer.addSelectionChangedListener(
-					new ISelectionChangedListener() {
-						public void selectionChanged(
-								SelectionChangedEvent event) {
-							validate();
-						}
-					});
+			fViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+				public void selectionChanged(SelectionChangedEvent event) {
+					validate();
+				}
+			});
 
 			fViewer.setInput(ResourcesPlugin.getWorkspace().getRoot());
 
@@ -496,8 +470,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		}
 
 		protected void validate() {
-			IStructuredSelection selection = (IStructuredSelection) fViewer
-					.getSelection();
+			IStructuredSelection selection = (IStructuredSelection) fViewer.getSelection();
 			Object element = selection.getFirstElement();
 			// TODO: buildpath entry selection
 			if (element == null/* || element instanceof IncludeNode */) {
@@ -526,8 +499,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 					return false;
 				}
 				IPFile other = (IPFile) obj;
-				return other.file.equals(file)
-						&& other.includePathEntry.equals(includePathEntry);
+				return other.file.equals(file) && other.includePathEntry.equals(includePathEntry);
 			}
 		}
 
@@ -541,8 +513,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 						IContainer container = (IContainer) parentElement;
 						IResource[] members = container.members();
 						for (IResource member : members) {
-							if (member instanceof IContainer
-									&& member.isAccessible()) {
+							if (member instanceof IContainer && member.isAccessible()) {
 								if (member instanceof IProject) { // show only
 									// PHP
 									// projects
@@ -558,16 +529,12 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 						// Add include paths:
 						if (parentElement instanceof IProject) {
 							IProject project = (IProject) parentElement;
-							IncludePath[] includePath = IncludePathManager
-									.getInstance().getIncludePaths(project);
+							IncludePath[] includePath = IncludePathManager.getInstance().getIncludePaths(project);
 							for (IncludePath path : includePath) {
 								if (path.isBuildpath()) {
-									IBuildpathEntry buildpathEntry = (IBuildpathEntry) path
-											.getEntry();
-									if (buildpathEntry
-											.getEntryKind() == IBuildpathEntry.BPE_LIBRARY
-											|| buildpathEntry
-													.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+									IBuildpathEntry buildpathEntry = (IBuildpathEntry) path.getEntry();
+									if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY
+											|| buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 										r.add(buildpathEntry);
 									}
 								}
@@ -576,22 +543,18 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 						return r.toArray();
 					} else if (parentElement instanceof IBuildpathEntry) {
 						IBuildpathEntry includePathEntry = (IBuildpathEntry) parentElement;
-						IPath path = EnvironmentPathUtils
-								.getLocalPath(includePathEntry.getPath());
+						IPath path = EnvironmentPathUtils.getLocalPath(includePathEntry.getPath());
 						File file = null;
-						if (includePathEntry
-								.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+						if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 							file = path.toFile();
-						} else if (includePathEntry
-								.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+						} else if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 							path = DLTKCore.getResolvedVariablePath(path);
 							if (path != null) {
 								file = path.toFile();
 							}
 						}
 						if (file != null) {
-							return getChildren(
-									new IPFile(includePathEntry, file));
+							return getChildren(new IPFile(includePathEntry, file));
 						}
 					} else if (parentElement instanceof IPFile) {
 						IPFile ipFile = (IPFile) parentElement;
@@ -620,8 +583,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 				}
 				if (element instanceof IPFile) {
 					IPFile ipFile = (IPFile) element;
-					return new IPFile(ipFile.includePathEntry,
-							ipFile.file.getParentFile());
+					return new IPFile(ipFile.includePathEntry, ipFile.file.getParentFile());
 				}
 				return null;
 			}
@@ -637,8 +599,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 			public void dispose() {
 			}
 
-			public void inputChanged(Viewer viewer, Object oldInput,
-					Object newInput) {
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 		}
 
@@ -647,18 +608,14 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 			public Image getImage(Object element) {
 				if (element instanceof IBuildpathEntry) {
 					IBuildpathEntry includePathEntry = (IBuildpathEntry) element;
-					if (includePathEntry
-							.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-						return PHPPluginImages
-								.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
+					if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+						return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
 					} else {
-						return PHPPluginImages
-								.get(PHPPluginImages.IMG_OBJS_LIBRARY);
+						return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 					}
 				}
 				if (element instanceof IPFile) {
-					return PlatformUI.getWorkbench().getSharedImages()
-							.getImage(ISharedImages.IMG_OBJ_FOLDER);
+					return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
 				}
 				return super.getImage(element);
 			}
@@ -666,9 +623,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 			public String getText(Object element) {
 				if (element instanceof IBuildpathEntry) {
 					IBuildpathEntry includePathEntry = (IBuildpathEntry) element;
-					return EnvironmentPathUtils
-							.getLocalPath(includePathEntry.getPath())
-							.toOSString();
+					return EnvironmentPathUtils.getLocalPath(includePathEntry.getPath()).toOSString();
 				}
 				if (element instanceof IPFile) {
 					return ((IPFile) element).file.getName();

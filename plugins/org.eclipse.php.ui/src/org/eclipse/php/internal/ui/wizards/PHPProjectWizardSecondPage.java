@@ -59,11 +59,10 @@ import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
  * project creation (so that linked folders can be defined) and, if an existing
  * external location was specified, offers to do a include detection
  */
-public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
-		implements IPHPProjectCreateWizardPage {
+public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage implements IPHPProjectCreateWizardPage {
 
-	private static final String FILENAME_PROJECT = ".project"; //$NON-NLS-1$ 
-	protected static final String FILENAME_BUILDPATH = ".buildpath"; //$NON-NLS-1$ 
+	private static final String FILENAME_PROJECT = ".project"; //$NON-NLS-1$
+	protected static final String FILENAME_BUILDPATH = ".buildpath"; //$NON-NLS-1$
 
 	protected final PHPProjectWizardFirstPage fFirstPage;
 
@@ -100,14 +99,12 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 		fKeepContent = fFirstPage.getDetect();
 
 		final IRunnableWithProgress op = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor)
-					throws InvocationTargetException, InterruptedException {
+			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				try {
 					if (fIsAutobuild == null) {
 						fIsAutobuild = fFirstPage.getIsAutobuild();
 						if (fIsAutobuild == null) {
-							fIsAutobuild = Boolean.valueOf(CoreUtility
-									.enableAutoBuild(false));
+							fIsAutobuild = Boolean.valueOf(CoreUtility.enableAutoBuild(false));
 						}
 					}
 					updateProject(monitor);
@@ -122,8 +119,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 		};
 
 		try {
-			getContainer().run(true, false,
-					new WorkspaceModifyDelegatingOperation(op));
+			getContainer().run(true, false, new WorkspaceModifyDelegatingOperation(op));
 		} catch (InvocationTargetException e) {
 			final String title = NewWizardMessages.ScriptProjectWizardSecondPage_error_title;
 			final String message = NewWizardMessages.ScriptProjectWizardSecondPage_error_message;
@@ -133,8 +129,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 		}
 	}
 
-	protected void updateProject(IProgressMonitor monitor)
-			throws CoreException, InterruptedException {
+	protected void updateProject(IProgressMonitor monitor) throws CoreException, InterruptedException {
 
 		IProject projectHandle = fFirstPage.getProjectHandle();
 		IScriptProject create = DLTKCore.create(projectHandle);
@@ -145,15 +140,12 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 			monitor = new NullProgressMonitor();
 		}
 		try {
-			monitor.beginTask(
-					NewWizardMessages.ScriptProjectWizardSecondPage_operation_initialize,
-					70);
+			monitor.beginTask(NewWizardMessages.ScriptProjectWizardSecondPage_operation_initialize, 70);
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
 
-			createProject(getProject(), fCurrProjectLocation,
-					new SubProgressMonitor(monitor, 20));
+			createProject(getProject(), fCurrProjectLocation, new SubProgressMonitor(monitor, 20));
 
 			IBuildpathEntry[] buildpathEntries = null;
 			IncludePath[] includepathEntries = null;
@@ -162,10 +154,8 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 				includepathEntries = setProjectBaseIncludepath();
 				if (!getProject().getFile(FILENAME_BUILDPATH).exists()) {
 
-					IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-							.getLanguageToolkit(getScriptNature());
-					final BuildpathDetector detector = createBuildpathDetector(
-							monitor, toolkit);
+					IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(getScriptNature());
+					final BuildpathDetector detector = createBuildpathDetector(monitor, toolkit);
 					buildpathEntries = detector.getBuildpath();
 
 				} else {
@@ -175,23 +165,19 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 				// need to create sub-folders and set special build/include
 				// paths
 				IPreferenceStore store = getPreferenceStore();
-				IPath srcPath = new Path(
-						store.getString(PreferenceConstants.SRCBIN_SRCNAME));
-				IPath binPath = new Path(
-						store.getString(PreferenceConstants.SRCBIN_BINNAME));
+				IPath srcPath = new Path(store.getString(PreferenceConstants.SRCBIN_SRCNAME));
+				IPath binPath = new Path(store.getString(PreferenceConstants.SRCBIN_BINNAME));
 
 				if (srcPath.segmentCount() > 0) {
 					IFolder folder = getProject().getFolder(srcPath);
-					CoreUtility.createFolder(folder, true, true,
-							new SubProgressMonitor(monitor, 10));
+					CoreUtility.createFolder(folder, true, true, new SubProgressMonitor(monitor, 10));
 				} else {
 					monitor.worked(10);
 				}
 
 				if (binPath.segmentCount() > 0) {
 					IFolder folder = getProject().getFolder(binPath);
-					CoreUtility.createFolder(folder, true, true,
-							new SubProgressMonitor(monitor, 10));
+					CoreUtility.createFolder(folder, true, true, new SubProgressMonitor(monitor, 10));
 				} else {
 					monitor.worked(10);
 				}
@@ -201,21 +187,18 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 				// configure the buildpath entries, including the default
 				// InterpreterEnvironment library.
 				List cpEntries = new ArrayList();
-				cpEntries.add(DLTKCore.newSourceEntry(projectPath
-						.append(srcPath)));
+				cpEntries.add(DLTKCore.newSourceEntry(projectPath.append(srcPath)));
 
-				buildpathEntries = (IBuildpathEntry[]) cpEntries
-						.toArray(new IBuildpathEntry[cpEntries.size()]);
-				includepathEntries = new IncludePath[] { new IncludePath(
-						getProject().getFolder(srcPath), getProject()) };
+				buildpathEntries = (IBuildpathEntry[]) cpEntries.toArray(new IBuildpathEntry[cpEntries.size()]);
+				includepathEntries = new IncludePath[] {
+						new IncludePath(getProject().getFolder(srcPath), getProject()) };
 			} else {
 				// flat project layout
 				IPath projectPath = getProject().getFullPath();
 				List cpEntries = new ArrayList();
 				cpEntries.add(DLTKCore.newSourceEntry(projectPath));
 
-				buildpathEntries = (IBuildpathEntry[]) cpEntries
-						.toArray(new IBuildpathEntry[cpEntries.size()]);
+				buildpathEntries = (IBuildpathEntry[]) cpEntries.toArray(new IBuildpathEntry[cpEntries.size()]);
 				includepathEntries = setProjectBaseIncludepath();
 
 				monitor.worked(20);
@@ -237,15 +220,12 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 			}
 
 			// adding build paths, and language-Container:
-			getScriptProject().setRawBuildpath(buildpathEntries,
-					new NullProgressMonitor());
+			getScriptProject().setRawBuildpath(buildpathEntries, new NullProgressMonitor());
 			LanguageModelInitializer.enableLanguageModelFor(getScriptProject());
 
 			// init, and adding include paths:
-			getBuildPathsBlock().init(getScriptProject(),
-					new IBuildpathEntry[] {});
-			IncludePathManager.getInstance().setIncludePath(getProject(),
-					includepathEntries);
+			getBuildPathsBlock().init(getScriptProject(), new IBuildpathEntry[] {});
+			IncludePathManager.getInstance().setIncludePath(getProject(), includepathEntries);
 
 		} finally {
 			monitor.done();
@@ -267,12 +247,8 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 	}
 
 	protected void setHelpContext(Control control) {
-		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(
-						control,
-						IPHPHelpContextIds.ADDING_ELEMENTS_TO_A_PROJECT_S_INCLUDE_PATH);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(control,
+				IPHPHelpContextIds.ADDING_ELEMENTS_TO_A_PROJECT_S_INCLUDE_PATH);
 	}
 
 	/**
@@ -290,16 +266,13 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 	 * @throws CoreException
 	 * @throws JavaScriptModelException
 	 */
-	protected void addJavaScriptNature(IProgressMonitor monitor)
-			throws CoreException, JavaScriptModelException {
-		JsWebNature jsWebNature = new JsWebNature(getProject(),
-				new SubProgressMonitor(monitor, 1));
+	protected void addJavaScriptNature(IProgressMonitor monitor) throws CoreException, JavaScriptModelException {
+		JsWebNature jsWebNature = new JsWebNature(getProject(), new SubProgressMonitor(monitor, 1));
 		jsWebNature.configure();
 	}
 
 	@Override
-	public void configureScriptProject(IProgressMonitor monitor)
-			throws CoreException, InterruptedException {
+	public void configureScriptProject(IProgressMonitor monitor) throws CoreException, InterruptedException {
 		String scriptNature = getScriptNature();
 		setScriptNature(monitor, scriptNature);
 	}
@@ -317,14 +290,11 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 		}
 
 		int nSteps = 6;
-		monitor.beginTask(
-				NewWizardMessages.ScriptCapabilityConfigurationPage_op_desc_Script,
-				nSteps);
+		monitor.beginTask(NewWizardMessages.ScriptCapabilityConfigurationPage_op_desc_Script, nSteps);
 
 		try {
 			IProject project = getProject();
-			BuildpathsBlock.addScriptNature(project, new SubProgressMonitor(
-					monitor, 1), scriptNature);
+			BuildpathsBlock.addScriptNature(project, new SubProgressMonitor(monitor, 1), scriptNature);
 			// getBuildPathsBlock().configureScriptProject(new
 			// SubProgressMonitor(monitor, 5));
 		} catch (OperationCanceledException e) {
@@ -334,11 +304,9 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 		}
 	}
 
-	protected BuildpathDetector createBuildpathDetector(
-			IProgressMonitor monitor, IDLTKLanguageToolkit toolkit)
+	protected BuildpathDetector createBuildpathDetector(IProgressMonitor monitor, IDLTKLanguageToolkit toolkit)
 			throws CoreException {
-		BuildpathDetector detector = new PHPBuildpathDetector(getProject(),
-				toolkit);
+		BuildpathDetector detector = new PHPBuildpathDetector(getProject(), toolkit);
 		detector.detectBuildpath(new SubProgressMonitor(monitor, 20));
 		return detector;
 	}
@@ -358,8 +326,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 		return fFirstPage.getLocationURI();
 	}
 
-	protected void rememberExistingFiles(URI projectLocation)
-			throws CoreException {
+	protected void rememberExistingFiles(URI projectLocation) throws CoreException {
 		fDotProjectBackup = null;
 		fDotBuildpathBackup = null;
 
@@ -367,86 +334,61 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 		if (file.fetchInfo().exists()) {
 			IFileStore projectFile = file.getChild(FILENAME_PROJECT);
 			if (projectFile.fetchInfo().exists()) {
-				fDotProjectBackup = createBackup(projectFile, "project-desc"); //$NON-NLS-1$ 
+				fDotProjectBackup = createBackup(projectFile, "project-desc"); //$NON-NLS-1$
 			}
 			IFileStore buildpathFile = file.getChild(FILENAME_BUILDPATH);
 			if (buildpathFile.fetchInfo().exists()) {
-				fDotBuildpathBackup = createBackup(buildpathFile,
-						"buildpath-desc"); //$NON-NLS-1$ 
+				fDotBuildpathBackup = createBackup(buildpathFile, "buildpath-desc"); //$NON-NLS-1$
 			}
 		}
 	}
 
-	private void restoreExistingFiles(URI projectLocation,
-			IProgressMonitor monitor) throws CoreException {
-		int ticks = ((fDotProjectBackup != null ? 1 : 0) + (fDotBuildpathBackup != null ? 1
-				: 0)) * 2;
-		monitor.beginTask("", ticks); //$NON-NLS-1$ 
+	private void restoreExistingFiles(URI projectLocation, IProgressMonitor monitor) throws CoreException {
+		int ticks = ((fDotProjectBackup != null ? 1 : 0) + (fDotBuildpathBackup != null ? 1 : 0)) * 2;
+		monitor.beginTask("", ticks); //$NON-NLS-1$
 		try {
 			if (fDotProjectBackup != null) {
-				IFileStore projectFile = EFS.getStore(projectLocation)
-						.getChild(FILENAME_PROJECT);
-				projectFile
-						.delete(EFS.NONE, new SubProgressMonitor(monitor, 1));
-				copyFile(fDotProjectBackup, projectFile,
-						new SubProgressMonitor(monitor, 1));
+				IFileStore projectFile = EFS.getStore(projectLocation).getChild(FILENAME_PROJECT);
+				projectFile.delete(EFS.NONE, new SubProgressMonitor(monitor, 1));
+				copyFile(fDotProjectBackup, projectFile, new SubProgressMonitor(monitor, 1));
 			}
 		} catch (IOException e) {
-			IStatus status = new Status(
-					IStatus.ERROR,
-					DLTKUIPlugin.PLUGIN_ID,
-					IStatus.ERROR,
-					NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_project,
-					e);
+			IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR,
+					NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_project, e);
 			throw new CoreException(status);
 		}
 		try {
 			if (fDotBuildpathBackup != null) {
-				IFileStore buildpathFile = EFS.getStore(projectLocation)
-						.getChild(FILENAME_BUILDPATH);
-				buildpathFile.delete(EFS.NONE, new SubProgressMonitor(monitor,
-						1));
-				copyFile(fDotBuildpathBackup, buildpathFile,
-						new SubProgressMonitor(monitor, 1));
+				IFileStore buildpathFile = EFS.getStore(projectLocation).getChild(FILENAME_BUILDPATH);
+				buildpathFile.delete(EFS.NONE, new SubProgressMonitor(monitor, 1));
+				copyFile(fDotBuildpathBackup, buildpathFile, new SubProgressMonitor(monitor, 1));
 			}
 		} catch (IOException e) {
-			IStatus status = new Status(
-					IStatus.ERROR,
-					DLTKUIPlugin.PLUGIN_ID,
-					IStatus.ERROR,
-					NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_buildpath,
-					e);
+			IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR,
+					NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_buildpath, e);
 			throw new CoreException(status);
 		}
 	}
 
-	private File createBackup(IFileStore source, String name)
-			throws CoreException {
+	private File createBackup(IFileStore source, String name) throws CoreException {
 		try {
-			File bak = File.createTempFile("eclipse-" + name, ".bak"); //$NON-NLS-1$ //$NON-NLS-2$ 
+			File bak = File.createTempFile("eclipse-" + name, ".bak"); //$NON-NLS-1$ //$NON-NLS-2$
 			copyFile(source, bak);
 			return bak;
 		} catch (IOException e) {
-			IStatus status = new Status(
-					IStatus.ERROR,
-					DLTKUIPlugin.PLUGIN_ID,
-					IStatus.ERROR,
-					Messages.format(
-							NewWizardMessages.ScriptProjectWizardSecondPage_problem_backup,
-							name), e);
+			IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR,
+					Messages.format(NewWizardMessages.ScriptProjectWizardSecondPage_problem_backup, name), e);
 			throw new CoreException(status);
 		}
 	}
 
-	private void copyFile(IFileStore source, File target) throws IOException,
-			CoreException {
+	private void copyFile(IFileStore source, File target) throws IOException, CoreException {
 		InputStream is = source.openInputStream(EFS.NONE, null);
 		FileOutputStream os = new FileOutputStream(target);
 		copyFile(is, os);
 	}
 
-	private void copyFile(File source, IFileStore target,
-			IProgressMonitor monitor) throws IOException, CoreException {
+	private void copyFile(File source, IFileStore target, IProgressMonitor monitor) throws IOException, CoreException {
 		FileInputStream is = new FileInputStream(source);
 		OutputStream os = target.openOutputStream(EFS.NONE, monitor);
 		copyFile(is, os);
@@ -474,20 +416,16 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 	/**
 	 * Called from the wizard on finish.
 	 */
-	public void performFinish(IProgressMonitor monitor) throws CoreException,
-			InterruptedException {
+	public void performFinish(IProgressMonitor monitor) throws CoreException, InterruptedException {
 		try {
-			monitor.beginTask(
-					NewWizardMessages.ScriptProjectWizardSecondPage_operation_create,
-					3);
+			monitor.beginTask(NewWizardMessages.ScriptProjectWizardSecondPage_operation_create, 3);
 			if (getProject() == null || !getProject().exists()) {
 				updateProject(new SubProgressMonitor(monitor, 1));
 			}
 
 			if (!fKeepContent) {
 				if (DLTKCore.DEBUG) {
-					System.err
-							.println("Add compiler compilance options here..."); //$NON-NLS-1$ 
+					System.err.println("Add compiler compilance options here..."); //$NON-NLS-1$
 				}
 			}
 
@@ -511,10 +449,8 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 		if (fFirstPage.fVersionGroup.fDefaultValues.isSelected()) {
 			return;
 		}
-		boolean useASPTags = fFirstPage.fVersionGroup.fConfigurationBlock
-				.getUseAspTagsValue();
-		PHPVersion phpVersion = fFirstPage.fVersionGroup.fConfigurationBlock
-				.getPHPVersionValue();
+		boolean useASPTags = fFirstPage.fVersionGroup.fConfigurationBlock.getUseAspTagsValue();
+		PHPVersion phpVersion = fFirstPage.fVersionGroup.fConfigurationBlock.getPHPVersionValue();
 		ProjectOptions.setSupportingAspTags(useASPTags, getProject());
 		ProjectOptions.setPhpVersion(phpVersion, getProject());
 	}
@@ -536,8 +472,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 	 * @see org.eclipse.core.resources.IProjectDescription#setLocationURI(java.net.URI)
 	 * 
 	 */
-	public void createProject(IProject project, URI locationURI,
-			IProgressMonitor monitor) throws CoreException {
+	public void createProject(IProject project, URI locationURI, IProgressMonitor monitor) throws CoreException {
 		PHPProjectUtils.createProjectAt(project, locationURI, monitor);
 	}
 
@@ -546,10 +481,8 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 	}
 
 	@Override
-	protected BuildpathsBlock createBuildpathBlock(
-			IStatusChangeListener listener) {
-		return new PHPIncludePathsBlock(new BusyIndicatorRunnableContext(),
-				listener, 0, useNewSourcePage(), null);
+	protected BuildpathsBlock createBuildpathBlock(IStatusChangeListener listener) {
+		return new PHPIncludePathsBlock(new BusyIndicatorRunnableContext(), listener, 0, useNewSourcePage(), null);
 	}
 
 	public void initPage() {

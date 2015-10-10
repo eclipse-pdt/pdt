@@ -39,14 +39,11 @@ public class AdapterFactoryProviderForPhp implements AdapterFactoryProvider {
 
 	protected void addContentBasedFactories(IStructuredModel structuredModel) {
 		FactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
-		Assert
-				.isNotNull(factoryRegistry,
-						"Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
+		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
 		INodeAdapterFactory factory = null;
 		factory = factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
 		if (factory == null) {
-			factory = new JFaceNodeAdapterFactoryForHTML(
-					IJFaceNodeAdapter.class, true);
+			factory = new JFaceNodeAdapterFactoryForHTML(IJFaceNodeAdapter.class, true);
 			factoryRegistry.addFactory(factory);
 		}
 	}

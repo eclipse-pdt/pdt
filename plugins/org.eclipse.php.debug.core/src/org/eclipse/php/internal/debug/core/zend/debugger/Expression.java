@@ -25,7 +25,6 @@ public interface Expression extends IVariableFacet {
 
 	public ExpressionValue getValue();
 
-	public Expression createChildExpression(String name, String representation,
-			Facet... facet);
+	public Expression createChildExpression(String name, String representation, Facet... facet);
 
 }

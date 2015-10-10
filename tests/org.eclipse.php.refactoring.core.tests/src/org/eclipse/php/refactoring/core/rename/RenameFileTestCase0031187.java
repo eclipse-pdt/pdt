@@ -51,17 +51,17 @@ public class RenameFileTestCase0031187 extends AbstractRenameRefactoringTest {
 			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
 
-		
 		file1 = project1.getFile("RenameFile0031187_2.php");
 
-		source = new ByteArrayInputStream("<?php include 'RenameFile0031187.php'; echo 'RenameFile0031187.php test rename RenameFile0031187.php';?>".getBytes());
+		source = new ByteArrayInputStream(
+				"<?php include 'RenameFile0031187.php'; echo 'RenameFile0031187.php test rename RenameFile0031187.php';?>"
+						.getBytes());
 
 		if (!file1.exists()) {
 			file1.create(source, true, new NullProgressMonitor());
 		} else {
 			file1.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
-
 
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
@@ -73,7 +73,6 @@ public class RenameFileTestCase0031187 extends AbstractRenameRefactoringTest {
 
 		assertNotNull(program);
 
-		
 		RenameFileProcessor processor = new RenameFileProcessor(file, program);
 		processor.setNewElementName("RenameFile0031187_1.php");
 		processor.setUpdateRefernces(true);
@@ -82,12 +81,11 @@ public class RenameFileTestCase0031187 extends AbstractRenameRefactoringTest {
 		checkInitCondition(processor);
 
 		performChange(processor);
-		
-		
+
 		IFile file = project1.getFile("RenameFile0031187_1.php");
 		assertNotNull(file);
 		assertTrue(file.exists());
-		
+
 		try {
 			String content = FileUtils.getContents(file1);
 			assertEquals(

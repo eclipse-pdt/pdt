@@ -26,8 +26,7 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
  * @author guy
  * @deprecated
  */
-public class GetCallStackLiteRequest extends DebugMessageRequestImpl implements
-		IDebugRequestMessage {
+public class GetCallStackLiteRequest extends DebugMessageRequestImpl implements IDebugRequestMessage {
 
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());

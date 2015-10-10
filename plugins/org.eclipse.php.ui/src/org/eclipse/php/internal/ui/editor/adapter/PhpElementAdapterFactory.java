@@ -30,12 +30,11 @@ import org.eclipse.ui.IActionFilter;
  */
 public class PhpElementAdapterFactory implements IAdapterFactory {
 
-	private static Map<Class<?>, Object> adapterType2Object = new HashMap<Class<?>, Object>(
-			4);
+	private static Map<Class<?>, Object> adapterType2Object = new HashMap<Class<?>, Object>(4);
+
 	static {
 		adapterType2Object.put(IActionFilter.class, new GenericActionFilter());
-		adapterType2Object.put(ISearchPageScoreComputer.class,
-				new DLTKSearchPageScoreComputer());
+		adapterType2Object.put(ISearchPageScoreComputer.class, new DLTKSearchPageScoreComputer());
 	}
 
 	public PhpElementAdapterFactory() {

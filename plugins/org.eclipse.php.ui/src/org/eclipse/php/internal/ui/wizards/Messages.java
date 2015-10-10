@@ -9,6 +9,7 @@ public class Messages extends NLS {
 	public static String NewGenericFileTemplatesWizardPage_1;
 	public static String NewGenericFileTemplatesWizardPage_2;
 	public static String PHPIncludePathPage_0;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

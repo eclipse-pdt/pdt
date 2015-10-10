@@ -29,11 +29,9 @@ import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.wst.xml.core.internal.Logger;
 
-public abstract class PHPEditorResolvingAction extends TextEditorAction
-		implements IUpdate {
+public abstract class PHPEditorResolvingAction extends TextEditorAction implements IUpdate {
 
-	public PHPEditorResolvingAction(ResourceBundle bundle, String prefix,
-			ITextEditor editor) {
+	public PHPEditorResolvingAction(ResourceBundle bundle, String prefix, ITextEditor editor) {
 		super(bundle, prefix, editor);
 		setEnabled(true);
 	}
@@ -44,10 +42,8 @@ public abstract class PHPEditorResolvingAction extends TextEditorAction
 		if (modelElement != null) {
 			if (modelElement.length > 1) {
 				IModelElement[] filteredElements = filterElements(modelElement);
-				selected = OpenActionUtil.selectModelElement(filteredElements,
-						getTextEditor().getSite().getShell(),
-						ActionMessages.OpenAction_error_title,
-						ActionMessages.OpenAction_select_element);
+				selected = OpenActionUtil.selectModelElement(filteredElements, getTextEditor().getSite().getShell(),
+						ActionMessages.OpenAction_error_title, ActionMessages.OpenAction_select_element);
 				if (selected == null)
 					return;
 			} else {
@@ -76,19 +72,16 @@ public abstract class PHPEditorResolvingAction extends TextEditorAction
 	protected IModelElement[] getSelectedElement() {
 
 		ITextEditor editor = getTextEditor();
-		ITextSelection textSelection = (ITextSelection) editor
-				.getSelectionProvider().getSelection();
+		ITextSelection textSelection = (ITextSelection) editor.getSelectionProvider().getSelection();
 		int offset = textSelection.getOffset();
 
-		IModelElement input = EditorUtility.getEditorInputModelElement(editor,
-				false);
+		IModelElement input = EditorUtility.getEditorInputModelElement(editor, false);
 		if (input == null) {
 			return null;
 		}
 
 		try {
-			IDocument document = editor.getDocumentProvider().getDocument(
-					editor.getEditorInput());
+			IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
 			IRegion wordRegion = ScriptWordFinder.findWord(document, offset);
 			if (wordRegion == null)
 				return null;
@@ -98,8 +91,7 @@ public abstract class PHPEditorResolvingAction extends TextEditorAction
 			}
 
 			IModelElement[] elements = null;
-			elements = ((ICodeAssist) input).codeSelect(wordRegion.getOffset(),
-					wordRegion.getLength());
+			elements = ((ICodeAssist) input).codeSelect(wordRegion.getOffset(), wordRegion.getLength());
 			if (elements != null && elements.length > 0) {
 				return elements;
 			}
@@ -117,15 +109,13 @@ public abstract class PHPEditorResolvingAction extends TextEditorAction
 		Map<IModelElement, IModelElement> uniqueElements = new HashMap<IModelElement, IModelElement>();
 		for (int i = 0; i < elements.length; i++) {
 			IModelElement element = elements[i];
-			IModelElement module = element
-					.getAncestor(IModelElement.SOURCE_MODULE);
+			IModelElement module = element.getAncestor(IModelElement.SOURCE_MODULE);
 			if (module != null) {
 				if (!uniqueElements.containsKey(module)) {
 					uniqueElements.put(module, element);
 				}
 			}
 		}
-		return uniqueElements.values().toArray(
-				new IModelElement[uniqueElements.size()]);
+		return uniqueElements.values().toArray(new IModelElement[uniqueElements.size()]);
 	}
 }

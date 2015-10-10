@@ -36,19 +36,16 @@ public class PHPInterpreterPreferencePage extends PropertyAndPreferencePage {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-	 * .Composite)
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
+	 * widgets .Composite)
 	 */
 	public void createControl(Composite parent) {
 		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
-		fConfigurationBlock = new PHPVersionConfigurationBlock(
-				getNewStatusChangedListener(), getProject(), container);
+		fConfigurationBlock = new PHPVersionConfigurationBlock(getNewStatusChangedListener(), getProject(), container);
 
 		super.createControl(parent);
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.PHP_INTERPRETER_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.PHP_INTERPRETER_PREFERENCES);
 
 	}
 
@@ -98,11 +95,9 @@ public class PHPInterpreterPreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
 	 * enableProjectSpecificSettings(boolean)
 	 */
-	protected void enableProjectSpecificSettings(
-			boolean useProjectSpecificSettings) {
+	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
 		if (fConfigurationBlock != null) {
-			fConfigurationBlock
-					.useProjectSpecificSettings(useProjectSpecificSettings);
+			fConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
 		}
 		super.enableProjectSpecificSettings(useProjectSpecificSettings);
 	}
@@ -151,9 +146,8 @@ public class PHPInterpreterPreferencePage extends PropertyAndPreferencePage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#setElement
-	 * (org.eclipse.core.runtime.IAdaptable)
+	 * @see org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
+	 * setElement (org.eclipse.core.runtime.IAdaptable)
 	 */
 	public void setElement(IAdaptable element) {
 		super.setElement(element);

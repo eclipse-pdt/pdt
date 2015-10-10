@@ -40,8 +40,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 
-	private final class FakeFolderBaseWorkbenchContentProvider extends
-			BaseWorkbenchContentProvider {
+	private final class FakeFolderBaseWorkbenchContentProvider extends BaseWorkbenchContentProvider {
 		/**
 		 * {@inheritDoc}
 		 */
@@ -84,9 +83,8 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 	private final HashSet fInsertedElements;
 	private final Hashtable fNonExistingFolders;
 
-	public CreateMultipleSourceFoldersDialog(
-			final IScriptProject scriptProject,
-			final BPListElement[] existingElements, Shell shell) {
+	public CreateMultipleSourceFoldersDialog(final IScriptProject scriptProject, final BPListElement[] existingElements,
+			Shell shell) {
 		super(shell);
 		fScriptProject = scriptProject;
 		fExistingElements = existingElements;
@@ -107,8 +105,7 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 		Class[] acceptedClasses = new Class[] { IProject.class, IFolder.class };
 		List existingContainers = getExistingContainers(fExistingElements);
 
-		IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot()
-				.getProjects();
+		IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		ArrayList rejectedElements = new ArrayList(allProjects.length);
 		IProject currProject = fScriptProject.getProject();
 		for (int i = 0; i < allProjects.length; i++) {
@@ -116,8 +113,7 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 				rejectedElements.add(allProjects[i]);
 			}
 		}
-		ViewerFilter filter = new TypedViewerFilter(acceptedClasses,
-				rejectedElements.toArray());
+		ViewerFilter filter = new TypedViewerFilter(acceptedClasses, rejectedElements.toArray());
 
 		ILabelProvider lp = new WorkbenchLabelProvider();
 		ITreeContentProvider cp = new FakeFolderBaseWorkbenchContentProvider();
@@ -125,13 +121,11 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 		String title = NewWizardMessages.SourceContainerWorkbookPage_ExistingSourceFolderDialog_new_title;
 		String message = NewWizardMessages.SourceContainerWorkbookPage_ExistingSourceFolderDialog_edit_description;
 
-		MultipleFolderSelectionDialog dialog = new MultipleFolderSelectionDialog(
-				getShell(), lp, cp) {
+		MultipleFolderSelectionDialog dialog = new MultipleFolderSelectionDialog(getShell(), lp, cp) {
 			protected Control createDialogArea(Composite parent) {
 				Control result = super.createDialogArea(parent);
 				if (DLTKCore.DEBUG) {
-					System.err
-							.println("CreateMultipleSourceFoldersDialog: Add help support"); //$NON-NLS-1$ 
+					System.err.println("CreateMultipleSourceFoldersDialog: Add help support"); //$NON-NLS-1$
 				}
 				// PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
 				// IDLTKHelpContextIds.BP_CHOOSE_EXISTING_FOLDER_TO_MAKE_SOURCE_FOLDER);
@@ -140,10 +134,8 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 
 			protected Object createFolder(final IContainer container) {
 				final Object[] result = new Object[1];
-				final BPListElement newElement = new BPListElement(
-						fScriptProject, IBuildpathEntry.BPE_SOURCE, false);
-				final AddSourceFolderWizard wizard = newSourceFolderWizard(
-						newElement, fExistingElements, container);
+				final BPListElement newElement = new BPListElement(fScriptProject, IBuildpathEntry.BPE_SOURCE, false);
+				final AddSourceFolderWizard wizard = newSourceFolderWizard(newElement, fExistingElements, container);
 				AbstractOpenWizardAction action = new AbstractOpenWizardAction() {
 					protected INewWizard createWizard() throws CoreException {
 						return wizard;
@@ -153,8 +145,7 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 					public void propertyChange(PropertyChangeEvent event) {
 						if (event.getProperty().equals(IAction.RESULT)) {
 							if (event.getNewValue().equals(Boolean.TRUE)) {
-								result[0] = addFakeFolder(
-										fScriptProject.getProject(), newElement);
+								result[0] = addFakeFolder(fScriptProject.getProject(), newElement);
 							} else {
 								wizard.cancel();
 							}
@@ -176,9 +167,8 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 			Object[] elements = dialog.getResult();
 			for (int i = 0; i < elements.length; i++) {
 				IResource res = (IResource) elements[i];
-				fInsertedElements.add(new BPListElement(fScriptProject,
-						IBuildpathEntry.BPE_SOURCE, res.getFullPath(), res,
-						false));
+				fInsertedElements.add(
+						new BPListElement(fScriptProject, IBuildpathEntry.BPE_SOURCE, res.getFullPath(), res, false));
 			}
 
 			if (fExistingElements.length == 1) {
@@ -207,9 +197,9 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 	}
 
 	private void addExlusionPatterns(List newEntries, Set modifiedEntries) {
-		BuildPathBasePage.fixNestingConflicts((BPListElement[]) newEntries
-				.toArray(new BPListElement[newEntries.size()]),
-				fExistingElements, modifiedEntries);
+		BuildPathBasePage.fixNestingConflicts(
+				(BPListElement[]) newEntries.toArray(new BPListElement[newEntries.size()]), fExistingElements,
+				modifiedEntries);
 		if (!modifiedEntries.isEmpty()) {
 			String title = NewWizardMessages.SourceContainerWorkbookPage_exclusion_added_title;
 			String message = NewWizardMessages.SourceContainerWorkbookPage_exclusion_added_message;
@@ -217,10 +207,10 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 		}
 	}
 
-	private AddSourceFolderWizard newSourceFolderWizard(BPListElement element,
-			BPListElement[] existing, IContainer parent) {
-		AddSourceFolderWizard wizard = new AddSourceFolderWizard(existing,
-				element, false, true, false, false, false, parent);
+	private AddSourceFolderWizard newSourceFolderWizard(BPListElement element, BPListElement[] existing,
+			IContainer parent) {
+		AddSourceFolderWizard wizard = new AddSourceFolderWizard(existing, element, false, true, false, false, false,
+				parent);
 		wizard.setDoFlushChange(false);
 		return wizard;
 	}
@@ -241,8 +231,7 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 		return res;
 	}
 
-	private IFolder addFakeFolder(final IContainer container,
-			final BPListElement element) {
+	private IFolder addFakeFolder(final IContainer container, final BPListElement element) {
 		IFolder result;
 		IPath projectPath = fScriptProject.getPath();
 		IPath path = element.getPath();

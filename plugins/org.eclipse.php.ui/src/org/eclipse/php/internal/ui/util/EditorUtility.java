@@ -45,8 +45,7 @@ public class EditorUtility {
 	 * 
 	 * @throws ModelException
 	 */
-	public static final IEditorInput getEditorInput(IModelElement element)
-			throws ModelException {
+	public static final IEditorInput getEditorInput(IModelElement element) throws ModelException {
 		while (element != null) {
 			if (element instanceof ISourceModule) {
 				final ISourceModule unit = (ISourceModule) element;
@@ -54,8 +53,7 @@ public class EditorUtility {
 					PHPStructuredEditor editorPart = (PHPStructuredEditor) findOpenEditor(new IEditorLookupCondition() {
 						public boolean find(IEditorPart editorPart) {
 							return editorPart instanceof PHPStructuredEditor
-									&& ((PHPStructuredEditor) editorPart)
-											.getModelElement().equals(unit);
+									&& ((PHPStructuredEditor) editorPart).getModelElement().equals(unit);
 						}
 					});
 					if (editorPart != null) {
@@ -66,8 +64,7 @@ public class EditorUtility {
 			}
 			element = element.getParent();
 		}
-		return org.eclipse.dltk.internal.ui.editor.EditorUtility
-				.getEditorInput(element);
+		return org.eclipse.dltk.internal.ui.editor.EditorUtility.getEditorInput(element);
 	}
 
 	/**
@@ -78,10 +75,8 @@ public class EditorUtility {
 	 *         that wants to work with PHP editor actions must implement the
 	 *         getAdapter() method this way the actions pick the php editor...
 	 */
-	public static final PHPStructuredEditor getPHPStructuredEditor(
-			final IWorkbenchPart editor) {
-		return editor != null ? (PHPStructuredEditor) editor
-				.getAdapter(PHPStructuredEditor.class) : null;
+	public static final PHPStructuredEditor getPHPStructuredEditor(final IWorkbenchPart editor) {
+		return editor != null ? (PHPStructuredEditor) editor.getAdapter(PHPStructuredEditor.class) : null;
 	}
 
 	/**
@@ -89,14 +84,12 @@ public class EditorUtility {
 	 * 
 	 * @return php editor, or <code>null</code> if no editor found
 	 */
-	public static final PHPStructuredEditor getPHPEditor(
-			final ITextViewer textViewer) {
+	public static final PHPStructuredEditor getPHPEditor(final ITextViewer textViewer) {
 
 		return (PHPStructuredEditor) findOpenEditor(new IEditorLookupCondition() {
 			public boolean find(IEditorPart editorPart) {
 				return editorPart instanceof PHPStructuredEditor
-						&& ((PHPStructuredEditor) editorPart).getTextViewer()
-								.getDocument() == textViewer.getDocument();
+						&& ((PHPStructuredEditor) editorPart).getTextViewer().getDocument() == textViewer.getDocument();
 			}
 		});
 	}
@@ -110,28 +103,22 @@ public class EditorUtility {
 	 *            Line number to reveal
 	 * @throws CoreException
 	 */
-	public static IEditorPart openLocalFile(String filePath, int lineNumber)
-			throws CoreException {
+	public static IEditorPart openLocalFile(String filePath, int lineNumber) throws CoreException {
 
-		IResource member = ResourcesPlugin.getWorkspace().getRoot().findMember(
-				filePath);
+		IResource member = ResourcesPlugin.getWorkspace().getRoot().findMember(filePath);
 		if (member instanceof IFile) {
-			IEditorPart editor = org.eclipse.dltk.internal.ui.editor.EditorUtility
-					.openInEditor(member, true);
-			org.eclipse.dltk.internal.ui.editor.EditorUtility.revealInEditor(
-					editor, lineNumber);
+			IEditorPart editor = org.eclipse.dltk.internal.ui.editor.EditorUtility.openInEditor(member, true);
+			org.eclipse.dltk.internal.ui.editor.EditorUtility.revealInEditor(editor, lineNumber);
 			return editor;
 		}
 
 		IPath path = new Path(filePath);
 		String parentPath = path.removeLastSegments(1).toOSString();
-		IFileStore fileStore = EFS.getLocalFileSystem().getStore(
-				new Path(parentPath));
+		IFileStore fileStore = EFS.getLocalFileSystem().getStore(new Path(parentPath));
 
 		fileStore = fileStore.getChild(path.lastSegment());
 
-		if (!fileStore.fetchInfo().isDirectory()
-				&& fileStore.fetchInfo().exists()) {
+		if (!fileStore.fetchInfo().isDirectory() && fileStore.fetchInfo().exists()) {
 
 			IWorkbenchPage page = DLTKUIPlugin.getActivePage();
 			IEditorPart editorPart = null;
@@ -140,8 +127,7 @@ public class EditorUtility {
 				// if the open file request has a line number, try to set the
 				// cursor on that line
 				if (lineNumber >= 0) {
-					org.eclipse.dltk.internal.ui.editor.EditorUtility
-							.revealInEditor(editorPart, lineNumber - 1); // XXX:
+					org.eclipse.dltk.internal.ui.editor.EditorUtility.revealInEditor(editorPart, lineNumber - 1); // XXX:
 					// look
 					// why
 					// we
@@ -161,8 +147,7 @@ public class EditorUtility {
 	}
 
 	private static IEditorPart findOpenEditor(IEditorLookupCondition cond) {
-		IWorkbenchPage workbenchpage = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage();
+		IWorkbenchPage workbenchpage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
 		// Check active editor, first:
 		IEditorPart activeEditorPart = workbenchpage.getActiveEditor();
@@ -171,8 +156,7 @@ public class EditorUtility {
 		}
 
 		// Check other editors:
-		IEditorReference[] editorReferences = workbenchpage
-				.getEditorReferences();
+		IEditorReference[] editorReferences = workbenchpage.getEditorReferences();
 		for (int i = 0; i < editorReferences.length; i++) {
 			IEditorReference editorReference = editorReferences[i];
 			IEditorPart editorPart = editorReference.getEditor(false);

@@ -81,20 +81,18 @@ public class DebugSearchEngine {
 	 *            Directory of current PHP file
 	 * @return path entry or <code>null</code> in case it could not be found
 	 */
-	public static PathEntry find(String remoteFile, IDebugTarget debugTarget,
-			String currentWorkingDir, String currentScriptDir) {
+	public static PathEntry find(String remoteFile, IDebugTarget debugTarget, String currentWorkingDir,
+			String currentScriptDir) {
 		if (remoteFile == null) {
 			throw new NullPointerException();
 		}
 
 		PathEntry pathEntry = null;
-		ILaunchConfiguration launchConfiguration = debugTarget.getLaunch()
-				.getLaunchConfiguration();
+		ILaunchConfiguration launchConfiguration = debugTarget.getLaunch().getLaunchConfiguration();
 
 		IProject project = null;
 		if (currentScriptDir != null) {
-			IResource resource = ResourcesPlugin.getWorkspace().getRoot()
-					.findMember(currentScriptDir);
+			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(currentScriptDir);
 			if (resource != null) {
 				project = resource.getProject();
 			}
@@ -105,11 +103,9 @@ public class DebugSearchEngine {
 		if (project == null) {
 			String projectName;
 			try {
-				projectName = launchConfiguration.getAttribute(
-						IPHPDebugConstants.PHP_Project, (String) null);
+				projectName = launchConfiguration.getAttribute(IPHPDebugConstants.PHP_Project, (String) null);
 				if (projectName != null) {
-					project = ResourcesPlugin.getWorkspace().getRoot()
-							.getProject(projectName);
+					project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 				}
 			} catch (CoreException e) {
 				PHPDebugPlugin.log(e);
@@ -119,39 +115,31 @@ public class DebugSearchEngine {
 		// If the given path is not absolute - use internal PHP search
 		// mechanism:
 		if (!VirtualPath.isAbsolute(remoteFile)) {
-			if (project != null && currentWorkingDir != null
-					&& currentScriptDir != null) {
+			if (project != null && currentWorkingDir != null && currentScriptDir != null) {
 				// This is not a full path, search using PHP Search Engine:
-				Result<?, ?> result = PHPSearchEngine.find(remoteFile,
-						currentWorkingDir, currentScriptDir, project);
+				Result<?, ?> result = PHPSearchEngine.find(remoteFile, currentWorkingDir, currentScriptDir, project);
 				if (result instanceof ExternalFileResult) {
 					ExternalFileResult extFileResult = (ExternalFileResult) result;
-					return new PathEntry(
-							extFileResult.getFile().getAbsolutePath(),
-							Type.EXTERNAL, extFileResult.getContainer());
+					return new PathEntry(extFileResult.getFile().getAbsolutePath(), Type.EXTERNAL,
+							extFileResult.getContainer());
 				}
 				if (result instanceof IncludedFileResult) {
 					IncludedFileResult incFileResult = (IncludedFileResult) result;
 					IBuildpathEntry container = incFileResult.getContainer();
-					Type type = (container
-							.getEntryKind() == IBuildpathEntry.BPE_VARIABLE)
-									? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
-					return new PathEntry(
-							incFileResult.getFile().getAbsolutePath(), type,
-							container);
+					Type type = (container.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR
+							: Type.INCLUDE_FOLDER;
+					return new PathEntry(incFileResult.getFile().getAbsolutePath(), type, container);
 				}
 				if (result != null) {
 					// workspace file
 					ResourceResult resResult = (ResourceResult) result;
 					IResource resource = resResult.getFile();
-					return new PathEntry(resource.getFullPath().toString(),
-							Type.WORKSPACE, resource.getParent());
+					return new PathEntry(resource.getFullPath().toString(), Type.WORKSPACE, resource.getParent());
 				}
 			}
 			return null;
 		}
-		PathMapper pathMapper = PathMapperRegistry
-				.getByLaunchConfiguration(launchConfiguration);
+		PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(launchConfiguration);
 		if (pathMapper != null) {
 			pathEntry = find(pathMapper, remoteFile, project, debugTarget);
 		}
@@ -171,8 +159,7 @@ public class DebugSearchEngine {
 	 *            Current debug target
 	 * @return path entry or <code>null</code> in case it could not be found
 	 */
-	public static PathEntry find(final PathMapper pathMapper,
-			final String remoteFile, final IProject currentProject,
+	public static PathEntry find(final PathMapper pathMapper, final String remoteFile, final IProject currentProject,
 			final IDebugTarget debugTarget) {
 
 		final PathEntry[] localFile = new PathEntry[1];
@@ -218,8 +205,7 @@ public class DebugSearchEngine {
 				if (currentProject != null && currentProject.isOpen()) {
 					projects = new IProject[] { currentProject };
 				} else {
-					projects = ResourcesPlugin.getWorkspace().getRoot()
-							.getProjects();
+					projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 				}
 				for (IProject project : projects) {
 					if (project.isOpen() && project.isAccessible()) {
@@ -230,8 +216,7 @@ public class DebugSearchEngine {
 						IScriptProject scriptProject = DLTKCore.create(project);
 						if (scriptProject != null && scriptProject.isOpen()) {
 							try {
-								IBuildpathEntry[] rawBuildpath = scriptProject
-										.getRawBuildpath();
+								IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
 								for (IBuildpathEntry pathEntry : rawBuildpath) {
 									b.add(pathEntry);
 								}
@@ -248,21 +233,15 @@ public class DebugSearchEngine {
 				// Try to find this file in the Workspace:
 				try {
 					IPath path = Path.fromOSString(remoteFile);
-					IFile file = ResourcesPlugin.getWorkspace().getRoot()
-							.getFileForLocation(path);
+					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
 					if (file != null && file.exists()) {
 						for (IncludePath includePath : includePaths) {
 							if (includePath.getEntry() instanceof IContainer) {
-								IContainer container = (IContainer) includePath
-										.getEntry();
-								if (container.getFullPath()
-										.isPrefixOf(file.getFullPath())) {
-									localFile[0] = new PathEntry(
-											file.getFullPath().toString(),
-											Type.WORKSPACE, file.getParent());
-									pathMapper.addEntry(remoteFile,
-											localFile[0],
-											MappingSource.ENVIRONMENT);
+								IContainer container = (IContainer) includePath.getEntry();
+								if (container.getFullPath().isPrefixOf(file.getFullPath())) {
+									localFile[0] = new PathEntry(file.getFullPath().toString(), Type.WORKSPACE,
+											file.getParent());
+									pathMapper.addEntry(remoteFile, localFile[0], MappingSource.ENVIRONMENT);
 									PathMapperRegistry.storeToPreferences();
 									return Status.OK_STATUS;
 								}
@@ -278,37 +257,22 @@ public class DebugSearchEngine {
 				File file = new File(remoteFile);
 				if (file.exists()) {
 					try {
-						IScriptProject scriptProject = DLTKCore
-								.create(currentProject);
+						IScriptProject scriptProject = DLTKCore.create(currentProject);
 						if (currentProject != null && scriptProject != null) {
-							IBuildpathEntry[] rawBuildpath = scriptProject
-									.getRawBuildpath();
+							IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
 
-							IEnvironment environment = EnvironmentManager
-									.getEnvironment(currentProject);
-							IPath remoteFilePath = EnvironmentPathUtils
-									.getFullPath(environment,
-											new Path(remoteFile));
+							IEnvironment environment = EnvironmentManager.getEnvironment(currentProject);
+							IPath remoteFilePath = EnvironmentPathUtils.getFullPath(environment, new Path(remoteFile));
 							for (IBuildpathEntry entry : rawBuildpath) {
 								IPath entryPath = entry.getPath();
-								if (entry
-										.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-									entryPath = DLTKCore
-											.getResolvedVariablePath(entryPath);
+								if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+									entryPath = DLTKCore.getResolvedVariablePath(entryPath);
 								}
-								if (entryPath != null
-										&& (entryPath
-												.isPrefixOf(Path.fromOSString(
-														remoteFile))
-										|| entryPath
-												.isPrefixOf(remoteFilePath))) {
-									Type type = (entry
-											.getEntryKind() == IBuildpathEntry.BPE_VARIABLE)
-													? Type.INCLUDE_VAR
-													: Type.INCLUDE_FOLDER;
-									localFile[0] = new PathEntry(
-											file.getAbsolutePath(), type,
-											entry);
+								if (entryPath != null && (entryPath.isPrefixOf(Path.fromOSString(remoteFile))
+										|| entryPath.isPrefixOf(remoteFilePath))) {
+									Type type = (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE)
+											? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
+									localFile[0] = new PathEntry(file.getAbsolutePath(), type, entry);
 									return Status.OK_STATUS;
 								}
 							}
@@ -319,24 +283,16 @@ public class DebugSearchEngine {
 					}
 					for (IncludePath includePath : includePaths) {
 						if (includePath.getEntry() instanceof IBuildpathEntry) {
-							IBuildpathEntry entry = (IBuildpathEntry) includePath
-									.getEntry();
+							IBuildpathEntry entry = (IBuildpathEntry) includePath.getEntry();
 							IPath entryPath = entry.getPath();
-							if (entry
-									.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-								entryPath = DLTKCore
-										.getResolvedVariablePath(entryPath);
+							if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+								entryPath = DLTKCore.getResolvedVariablePath(entryPath);
 							}
-							if (entryPath != null && entryPath.isPrefixOf(
-									Path.fromOSString(remoteFile))) {
-								Type type = (entry
-										.getEntryKind() == IBuildpathEntry.BPE_VARIABLE)
-												? Type.INCLUDE_VAR
-												: Type.INCLUDE_FOLDER;
-								localFile[0] = new PathEntry(
-										file.getAbsolutePath(), type, entry);
-								pathMapper.addEntry(remoteFile, localFile[0],
-										MappingSource.ENVIRONMENT);
+							if (entryPath != null && entryPath.isPrefixOf(Path.fromOSString(remoteFile))) {
+								Type type = (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR
+										: Type.INCLUDE_FOLDER;
+								localFile[0] = new PathEntry(file.getAbsolutePath(), type, entry);
+								pathMapper.addEntry(remoteFile, localFile[0], MappingSource.ENVIRONMENT);
 								PathMapperRegistry.storeToPreferences();
 								return Status.OK_STATUS;
 							}
@@ -349,21 +305,17 @@ public class DebugSearchEngine {
 					for (IBuildpathEntry entry : buildPaths) {
 
 						IPath entryPath = entry.getPath();
-						if (entry
-								.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+						if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 							// We don't support lookup in archive
 							File entryDir = entryPath.toFile();
 							find(entryDir, abstractPath, entry, results);
-						} else if (entry
-								.getEntryKind() == IBuildpathEntry.BPE_PROJECT
+						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT
 								|| entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
-							IResource res = ResourcesPlugin.getWorkspace()
-									.getRoot()
+							IResource res = ResourcesPlugin.getWorkspace().getRoot()
 									.findMember(entry.getPath().lastSegment());
 							if (res instanceof IProject) {
 								IProject project = (IProject) res;
-								if (project.isOpen()
-										&& project.isAccessible()) {
+								if (project.isOpen() && project.isAccessible()) {
 									try {
 										find(project, abstractPath, results);
 									} catch (InterruptedException e) {
@@ -371,37 +323,28 @@ public class DebugSearchEngine {
 									}
 								}
 							}
-						} else if (entry
-								.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-							entryPath = DLTKCore
-									.getResolvedVariablePath(entryPath);
+						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+							entryPath = DLTKCore.getResolvedVariablePath(entryPath);
 							if (entryPath != null) {
 								File entryDir = entryPath.toFile();
 								find(entryDir, abstractPath, entry, results);
 							}
-						} else if (entry
-								.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
 
 							try {
 								if (projects.length == 0) {
 									continue;
 								}
 								final IProject currentProject = projects[0];
-								final IScriptProject scriptProject = DLTKCore
-										.create(currentProject);
+								final IScriptProject scriptProject = DLTKCore.create(currentProject);
 
-								IBuildpathContainer container = DLTKCore
-										.getBuildpathContainer(entry.getPath(),
-												scriptProject);
+								IBuildpathContainer container = DLTKCore.getBuildpathContainer(entry.getPath(),
+										scriptProject);
 								if (container != null) {
-									IBuildpathEntry[] buildpathEntries = container
-											.getBuildpathEntries();
-									entryPath = EnvironmentPathUtils
-											.getLocalPath(buildpathEntries[0]
-													.getPath());
+									IBuildpathEntry[] buildpathEntries = container.getBuildpathEntries();
+									entryPath = EnvironmentPathUtils.getLocalPath(buildpathEntries[0].getPath());
 									if (entryPath != null) {
-										find(entryPath.toFile(), abstractPath,
-												entry, results);
+										find(entryPath.toFile(), abstractPath, entry, results);
 									}
 
 								}
@@ -418,8 +361,7 @@ public class DebugSearchEngine {
 				for (IncludePath includePath : includePaths) {
 					if (includePath.getEntry() instanceof IContainer) {
 						try {
-							find((IContainer) includePath.getEntry(),
-									abstractPath, results);
+							find((IContainer) includePath.getEntry(), abstractPath, results);
 						} catch (InterruptedException e) {
 							PHPDebugPlugin.log(e);
 						}
@@ -431,38 +373,31 @@ public class DebugSearchEngine {
 				// search in opened editors
 				searchOpenedEditors(results, abstractPath);
 				// Remove duplicated entries
-				results = new LinkedList<PathEntry>(
-						new LinkedHashSet<PathEntry>(results));
+				results = new LinkedList<PathEntry>(new LinkedHashSet<PathEntry>(results));
 
-				if (!foundInWorkspace && results.size() == 1 && abstractPath
-						.equals(results.get(0).getAbstractPath())) {
+				if (!foundInWorkspace && results.size() == 1 && abstractPath.equals(results.get(0).getAbstractPath())) {
 					localFile[0] = results.get(0);
 				} else if (results.size() > 0) {
-					Collections.sort(results,
-							new BestMatchPathComparator(abstractPath));
+					Collections.sort(results, new BestMatchPathComparator(abstractPath));
 
-					results = preFilterItems(abstractPath, results,
-							debugTarget);
+					results = preFilterItems(abstractPath, results, debugTarget);
 					boolean isSingleMatch = results.size() == 1;
 
 					if (isSingleMatch) {
 						localFile[0] = results.get(0);
 					} else {
-						localFile[0] = filterItems(abstractPath,
-								results.toArray(new PathEntry[results.size()]),
+						localFile[0] = filterItems(abstractPath, results.toArray(new PathEntry[results.size()]),
 								debugTarget);
 					}
 					if (localFile[0] != null) {
 						if (localFile[0].getType() == Type.SERVER) {
 							pathMapper.addServerEntry(remoteFile, localFile[0],
-									isSingleMatch ? MappingSource.ENVIRONMENT
-											: MappingSource.USER);
+									isSingleMatch ? MappingSource.ENVIRONMENT : MappingSource.USER);
 							PathMapperRegistry.storeToPreferences();
 							localFile[0] = null;
 						} else {
 							pathMapper.addEntry(remoteFile, localFile[0],
-									isSingleMatch ? MappingSource.ENVIRONMENT
-											: MappingSource.USER);
+									isSingleMatch ? MappingSource.ENVIRONMENT : MappingSource.USER);
 							PathMapperRegistry.storeToPreferences();
 						}
 					}
@@ -480,15 +415,13 @@ public class DebugSearchEngine {
 		return localFile[0];
 	}
 
-	private static List<PathEntry> preFilterItems(VirtualPath remotePath,
-			List<PathEntry> entries, IDebugTarget debugTarget) {
+	private static List<PathEntry> preFilterItems(VirtualPath remotePath, List<PathEntry> entries,
+			IDebugTarget debugTarget) {
 		final List<PathEntry> filtered = new LinkedList<PathEntry>();
-		final List<PathEntry> mostMatchEntries = getMostMatchEntries(entries,
-				remotePath);
+		final List<PathEntry> mostMatchEntries = getMostMatchEntries(entries, remotePath);
 		PathEntry matchByConfig = null;
 		if (mostMatchEntries.size() == 0 || mostMatchEntries.size() > 1) {
-			matchByConfig = getMatchFromLaunchConfiguration(entries,
-					debugTarget.getLaunch().getLaunchConfiguration());
+			matchByConfig = getMatchFromLaunchConfiguration(entries, debugTarget.getLaunch().getLaunchConfiguration());
 		}
 		if (mostMatchEntries.size() == 1) {
 			filtered.add(mostMatchEntries.get(0));
@@ -501,14 +434,12 @@ public class DebugSearchEngine {
 		return filtered;
 	}
 
-	private static PathEntry getMatchFromLaunchConfiguration(
-			List<PathEntry> entries, ILaunchConfiguration launchConfiguration) {
+	private static PathEntry getMatchFromLaunchConfiguration(List<PathEntry> entries,
+			ILaunchConfiguration launchConfiguration) {
 		try {
-			String projectName = launchConfiguration.getAttribute(
-					IPHPDebugConstants.PHP_Project, (String) null);
+			String projectName = launchConfiguration.getAttribute(IPHPDebugConstants.PHP_Project, (String) null);
 			if (projectName != null) {
-				IProject project = ResourcesPlugin.getWorkspace().getRoot()
-						.getProject(projectName);
+				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 				for (PathEntry pathEntry : entries) {
 					Object container = pathEntry.getContainer();
 					if (container instanceof IContainer) {
@@ -526,8 +457,7 @@ public class DebugSearchEngine {
 		return null;
 	}
 
-	private static List<PathEntry> getMostMatchEntries(List<PathEntry> entries,
-			VirtualPath remotePath) {
+	private static List<PathEntry> getMostMatchEntries(List<PathEntry> entries, VirtualPath remotePath) {
 		if (remotePath.getSegmentsCount() == 1) {
 			return entries;
 		}
@@ -536,8 +466,7 @@ public class DebugSearchEngine {
 		for (int i = 0; i < entries.size(); i++) {
 			PathEntry pathEntry = entries.get(i);
 			VirtualPath virtualPath = pathEntry.getAbstractPath();
-			int matchSegmentsNumber = getMatchSegmentsNumber(virtualPath,
-					remotePath);
+			int matchSegmentsNumber = getMatchSegmentsNumber(virtualPath, remotePath);
 			if (matchSegmentsNumber > mostMatchSegmentsNumber) {
 				mostMatchSegmentsNumber = matchSegmentsNumber;
 			}
@@ -553,8 +482,7 @@ public class DebugSearchEngine {
 		return mostMatchList;
 	}
 
-	private static int getMatchSegmentsNumber(VirtualPath virtualPath,
-			VirtualPath remotePath) {
+	private static int getMatchSegmentsNumber(VirtualPath virtualPath, VirtualPath remotePath) {
 		int i = virtualPath.getSegmentsCount();
 		if (i > remotePath.getSegmentsCount()) {
 			i = remotePath.getSegmentsCount();
@@ -562,18 +490,15 @@ public class DebugSearchEngine {
 		int result = 0;
 		// compare last i segments.
 		for (int j = i - 1; j >= 0; j--) {
-			if (virtualPath.getSegments()[j
-					+ (virtualPath.getSegmentsCount() - i)]
-							.equals(remotePath.getSegments()[j
-									+ (remotePath.getSegmentsCount() - i)])) {
+			if (virtualPath.getSegments()[j + (virtualPath.getSegmentsCount() - i)]
+					.equals(remotePath.getSegments()[j + (remotePath.getSegmentsCount() - i)])) {
 				result++;
 			}
 		}
 		return result;
 	}
 
-	private static void searchOpenedEditors(List<PathEntry> results,
-			VirtualPath remotePath) {
+	private static void searchOpenedEditors(List<PathEntry> results, VirtualPath remotePath) {
 		// Collect open editor references:
 		List<IEditorReference> editors = new ArrayList<IEditorReference>(0);
 		IWorkbench workbench = PlatformUI.getWorkbench();
@@ -596,17 +521,14 @@ public class DebugSearchEngine {
 			}
 			if (editorInput instanceof FileStoreEditorInput) {
 				File file = new File(((IURIEditorInput) editorInput).getURI());
-				if (file.exists() && file.getName()
-						.equalsIgnoreCase(remotePath.getLastSegment())) {
-					results.add(new PathEntry(file.getAbsolutePath(),
-							PathEntry.Type.EXTERNAL, file.getParentFile()));
+				if (file.exists() && file.getName().equalsIgnoreCase(remotePath.getLastSegment())) {
+					results.add(new PathEntry(file.getAbsolutePath(), PathEntry.Type.EXTERNAL, file.getParentFile()));
 				}
 			}
 		}
 	}
 
-	private static PathEntry filterItems(VirtualPath remotePath,
-			PathEntry[] entries, IDebugTarget debugTarget) {
+	private static PathEntry filterItems(VirtualPath remotePath, PathEntry[] entries, IDebugTarget debugTarget) {
 
 		IPathEntryFilter[] filters = initializePathEntryFilters();
 		for (int i = 0; i < filters.length; ++i) {
@@ -619,25 +541,21 @@ public class DebugSearchEngine {
 		if (filters == null) {
 			Map<String, IPathEntryFilter> filtersMap = new HashMap<String, IPathEntryFilter>();
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
-			IConfigurationElement[] elements = registry
-					.getConfigurationElementsFor(PHPDebugPlugin.getID(),
-							"pathEntryFilters"); //$NON-NLS-1$
+			IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(),
+					"pathEntryFilters"); //$NON-NLS-1$
 			for (IConfigurationElement element : elements) {
 				if ("filter".equals(element.getName())) { //$NON-NLS-1$
 					String id = element.getAttribute("id"); //$NON-NLS-1$
 					if (!filtersMap.containsKey(id)) {
-						String overridesIds = element
-								.getAttribute("overridesId"); //$NON-NLS-1$
+						String overridesIds = element.getAttribute("overridesId"); //$NON-NLS-1$
 						if (overridesIds != null) {
-							StringTokenizer st = new StringTokenizer(
-									overridesIds, ", "); //$NON-NLS-1$
+							StringTokenizer st = new StringTokenizer(overridesIds, ", "); //$NON-NLS-1$
 							while (st.hasMoreTokens()) {
 								filtersMap.put(st.nextToken(), null);
 							}
 						}
 						try {
-							filtersMap.put(id, (IPathEntryFilter) element
-									.createExecutableExtension("class")); //$NON-NLS-1$
+							filtersMap.put(id, (IPathEntryFilter) element.createExecutableExtension("class")); //$NON-NLS-1$
 						} catch (CoreException e) {
 							PHPDebugPlugin.log(e);
 						}
@@ -665,15 +583,12 @@ public class DebugSearchEngine {
 	 *            List of results to return
 	 * @throws InterruptedException
 	 */
-	private static void find(final File file, final VirtualPath path,
-			final IBuildpathEntry container, final List<PathEntry> results) {
-		if (!file.isDirectory()
-				&& file.getName().equals(path.getLastSegment())) {
-			Type type = (container
-					.getEntryKind() == IBuildpathEntry.BPE_VARIABLE)
-							? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
-			PathEntry pathEntry = new PathEntry(file.getAbsolutePath(), type,
-					container);
+	private static void find(final File file, final VirtualPath path, final IBuildpathEntry container,
+			final List<PathEntry> results) {
+		if (!file.isDirectory() && file.getName().equals(path.getLastSegment())) {
+			Type type = (container.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR
+					: Type.INCLUDE_FOLDER;
+			PathEntry pathEntry = new PathEntry(file.getAbsolutePath(), type, container);
 			results.add(pathEntry);
 			return;
 		} else {
@@ -697,26 +612,21 @@ public class DebugSearchEngine {
 	 *            List of results to return
 	 * @throws InterruptedException
 	 */
-	private static void find(final IResource resource, final VirtualPath path,
-			final List<PathEntry> results) throws InterruptedException {
-		if (resource == null || !resource.exists()
-				|| !resource.isAccessible()) {
+	private static void find(final IResource resource, final VirtualPath path, final List<PathEntry> results)
+			throws InterruptedException {
+		if (resource == null || !resource.exists() || !resource.isAccessible()) {
 			return;
 		}
 		WorkspaceJob findJob = new WorkspaceJob("") { //$NON-NLS-1$
-			public IStatus runInWorkspace(IProgressMonitor monitor)
-					throws CoreException {
+			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				resource.accept(new IResourceVisitor() {
-					public boolean visit(IResource resource)
-							throws CoreException {
+					public boolean visit(IResource resource) throws CoreException {
 						if (!resource.isAccessible()) {
 							return false;
 						}
-						if (resource instanceof IFile && resource.getName()
-								.equals(path.getLastSegment())) {
-							PathEntry pathEntry = new PathEntry(
-									resource.getFullPath().toString(),
-									Type.WORKSPACE, resource.getParent());
+						if (resource instanceof IFile && resource.getName().equals(path.getLastSegment())) {
+							PathEntry pathEntry = new PathEntry(resource.getFullPath().toString(), Type.WORKSPACE,
+									resource.getParent());
 							results.add(pathEntry);
 						}
 						return true;
@@ -729,8 +639,7 @@ public class DebugSearchEngine {
 		findJob.join();
 	}
 
-	private static class PHPFilenameFilter
-			implements FileFilter, IContentTypeChangeListener {
+	private static class PHPFilenameFilter implements FileFilter, IContentTypeChangeListener {
 		private Pattern phpFilePattern;
 
 		public PHPFilenameFilter() {
@@ -739,10 +648,8 @@ public class DebugSearchEngine {
 		}
 
 		private void buildPHPFilePattern() {
-			IContentType type = Platform.getContentTypeManager()
-					.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
-			String[] phpExtensions = type
-					.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+			IContentType type = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
+			String[] phpExtensions = type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 			StringBuilder buf = new StringBuilder();
 			buf.append(".*\\.("); //$NON-NLS-1$
 			for (int i = 0; i < phpExtensions.length; ++i) {
@@ -752,8 +659,7 @@ public class DebugSearchEngine {
 				buf.append(phpExtensions[i]);
 			}
 			buf.append(')');
-			phpFilePattern = Pattern.compile(buf.toString(),
-					Pattern.CASE_INSENSITIVE);
+			phpFilePattern = Pattern.compile(buf.toString(), Pattern.CASE_INSENSITIVE);
 		}
 
 		public void contentTypeChanged(ContentTypeChangeEvent event) {
@@ -761,8 +667,7 @@ public class DebugSearchEngine {
 		}
 
 		public boolean accept(File pathname) {
-			if (pathname.isDirectory()
-					|| phpFilePattern.matcher(pathname.getName()).matches()) {
+			if (pathname.isDirectory() || phpFilePattern.matcher(pathname.getName()).matches()) {
 				return true;
 			}
 			return false;

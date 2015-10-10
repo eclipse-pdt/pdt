@@ -24,23 +24,19 @@ public class ElementCreationProxy {
 	String extensionPointName;
 	Object elementObject;
 
-	public ElementCreationProxy(IConfigurationElement element,
-			String extensionPointName) {
+	public ElementCreationProxy(IConfigurationElement element, String extensionPointName) {
 		this.element = element;
 		this.extensionPointName = extensionPointName;
 	}
 
 	public Object getObject() {
 		if (elementObject == null) {
-			SafeRunner.run(new SafeRunnable(
-					PHPUIMessages.ElementCreationProxy_0 + element.getName()
-							+ PHPUIMessages.ElementCreationProxy_1
-							+ extensionPointName) { 
-						public void run() throws Exception {
-							elementObject = element
-									.createExecutableExtension("class"); //$NON-NLS-1$
-						}
-					});
+			SafeRunner.run(new SafeRunnable(PHPUIMessages.ElementCreationProxy_0 + element.getName()
+					+ PHPUIMessages.ElementCreationProxy_1 + extensionPointName) {
+				public void run() throws Exception {
+					elementObject = element.createExecutableExtension("class"); //$NON-NLS-1$
+				}
+			});
 		}
 		return elementObject;
 	}

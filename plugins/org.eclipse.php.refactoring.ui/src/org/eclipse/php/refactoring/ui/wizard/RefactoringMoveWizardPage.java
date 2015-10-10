@@ -51,9 +51,8 @@ public class RefactoringMoveWizardPage extends UserInputWizardPage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-	 * .Composite)
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
+	 * widgets .Composite)
 	 */
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
@@ -61,8 +60,7 @@ public class RefactoringMoveWizardPage extends UserInputWizardPage {
 		setControl(result);
 		result.setLayout(new GridLayout());
 
-		IResource[] initialSelections = new IResource[] { getPHPMoveProcessor()
-				.getDestination() };
+		IResource[] initialSelections = new IResource[] { getPHPMoveProcessor().getDestination() };
 
 		verifyDestination(initialSelections, true);
 
@@ -93,16 +91,14 @@ public class RefactoringMoveWizardPage extends UserInputWizardPage {
 
 	private Control addLabel(Composite parent) {
 		Label label = new Label(parent, SWT.NONE);
-		String text = PHPRefactoringUIMessages
-				.getString("RefactoringMoveWizardPage.1"); //$NON-NLS-1$
+		String text = PHPRefactoringUIMessages.getString("RefactoringMoveWizardPage.1"); //$NON-NLS-1$
 		label.setText(text);
 		label.setLayoutData(new GridData(SWT.BEGINNING, SWT.END, false, false));
 		return label;
 	}
 
 	private TreeViewer createViewer(Composite parent) {
-		TreeViewer treeViewer = new TreeViewer(parent, SWT.SINGLE
-				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		TreeViewer treeViewer = new TreeViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.widthHint = convertWidthInCharsToPixels(40);
 		gd.heightHint = convertHeightInCharsToPixels(15);
@@ -114,8 +110,7 @@ public class RefactoringMoveWizardPage extends UserInputWizardPage {
 		treeViewer.setComparator(new WorkbenchViewerComparator());
 		treeViewer.setInput(ResourcesPlugin.getWorkspace());
 		treeViewer.addFilter(new ViewerFilter() {
-			public boolean select(Viewer viewer, Object parentElement,
-					Object element) {
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
 				if (element instanceof IProject) {
 					IProject project = (IProject) element;
 					return project.isAccessible();
@@ -155,8 +150,7 @@ public class RefactoringMoveWizardPage extends UserInputWizardPage {
 		verifyDestination(ss.getFirstElement(), false);
 	}
 
-	private final void verifyDestination(Object selected,
-			boolean initialVerification) {
+	private final void verifyDestination(Object selected, boolean initialVerification) {
 		try {
 			RefactoringStatus status = verifyDestination(selected);
 			if (initialVerification)
@@ -169,8 +163,7 @@ public class RefactoringMoveWizardPage extends UserInputWizardPage {
 		}
 	}
 
-	protected RefactoringStatus verifyDestination(Object selected)
-			throws Exception {
+	protected RefactoringStatus verifyDestination(Object selected) throws Exception {
 		PHPMoveProcessor processor = getPHPMoveProcessor();
 		final RefactoringStatus refactoringStatus;
 
@@ -186,23 +179,20 @@ public class RefactoringMoveWizardPage extends UserInputWizardPage {
 			refactoringStatus = processor.setDestination((IContainer) selected);
 		else
 			refactoringStatus = RefactoringStatus
-					.createFatalErrorStatus(PHPRefactoringUIMessages
-							.getString("RefactoringMoveWizardPage.2")); //$NON-NLS-1$
+					.createFatalErrorStatus(PHPRefactoringUIMessages.getString("RefactoringMoveWizardPage.2")); //$NON-NLS-1$
 
 		return refactoringStatus;
 	}
 
 	private PHPMoveProcessor getPHPMoveProcessor() {
-		return (PHPMoveProcessor) getRefactoring().getAdapter(
-				PHPMoveProcessor.class);
+		return (PHPMoveProcessor) getRefactoring().getAdapter(PHPMoveProcessor.class);
 	}
 
 	private void addUpdateReferenceComponent(Composite result) {
 		final PHPMoveProcessor processor = getPHPMoveProcessor();
 
 		fReferenceCheckbox = new Button(result, SWT.CHECK);
-		fReferenceCheckbox.setText(PHPRefactoringUIMessages
-				.getString("RefactoringMoveWizardPage.3")); //$NON-NLS-1$
+		fReferenceCheckbox.setText(PHPRefactoringUIMessages.getString("RefactoringMoveWizardPage.3")); //$NON-NLS-1$
 		fReferenceCheckbox.setSelection(processor.getUpdateReferences());
 		fReferenceCheckbox.setEnabled(true);
 		fReferenceCheckbox.setSelection(true);
@@ -211,10 +201,8 @@ public class RefactoringMoveWizardPage extends UserInputWizardPage {
 
 		fReferenceCheckbox.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				processor.setUpdateReferences(((Button) e.widget)
-						.getSelection());
-				getRefactoringWizard().setForcePreviewReview(
-						processor.getUpdateReferences());
+				processor.setUpdateReferences(((Button) e.widget).getSelection());
+				getRefactoringWizard().setForcePreviewReview(processor.getUpdateReferences());
 			}
 		});
 	}

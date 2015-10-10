@@ -49,16 +49,14 @@ public class ServerWizard extends FragmentedWizard implements INewWizard {
 		super(title, null, taskModel);
 		setRootFragment(createRootFragment(null));
 		ServerTypeCompositeFragmentFactory serverType = new ServerTypeCompositeFragmentFactory();
-		serverTypeWizardFragment = (ServerTypeWizardFragment) serverType
-				.createWizardFragment();
+		serverTypeWizardFragment = (ServerTypeWizardFragment) serverType.createWizardFragment();
 	}
 
 	public ServerWizard(String title) {
 		super(title, null);
 		setRootFragment(createRootFragment(null));
 		ServerTypeCompositeFragmentFactory serverType = new ServerTypeCompositeFragmentFactory();
-		serverTypeWizardFragment = (ServerTypeWizardFragment) serverType
-				.createWizardFragment();
+		serverTypeWizardFragment = (ServerTypeWizardFragment) serverType.createWizardFragment();
 	}
 
 	private WizardFragment createRootFragment(final IServerType type) {
@@ -70,10 +68,8 @@ public class ServerWizard extends FragmentedWizard implements INewWizard {
 					loadChildren(children, list);
 					return;
 				}
-				IServerTypeDescriptor serverTypeDescriptor = ServerTypesDescriptorRegistry
-						.getDescriptor(type);
-				ICompositeFragmentFactory[] factories = serverTypeDescriptor
-						.getWizardFragmentFactories();
+				IServerTypeDescriptor serverTypeDescriptor = ServerTypesDescriptorRegistry.getDescriptor(type);
+				ICompositeFragmentFactory[] factories = serverTypeDescriptor.getWizardFragmentFactories();
 				int index = 0;
 				if (ServerTypesManager.getInstance().getAll().size() > 1) {
 					children = new WizardFragment[factories.length + 1];
@@ -126,8 +122,7 @@ public class ServerWizard extends FragmentedWizard implements INewWizard {
 	 */
 	@Override
 	public boolean canFinish() {
-		if (getCurrentWizardFragment() != null
-				&& getCurrentWizardFragment().equals(serverTypeWizardFragment))
+		if (getCurrentWizardFragment() != null && getCurrentWizardFragment().equals(serverTypeWizardFragment))
 			return false;
 		return super.canFinish();
 	}

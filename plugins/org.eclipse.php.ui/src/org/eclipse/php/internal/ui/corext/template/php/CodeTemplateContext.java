@@ -24,8 +24,7 @@ public class CodeTemplateContext extends TemplateContext {
 	private String fLineDelimiter;
 	private IScriptProject fProject;
 
-	public CodeTemplateContext(String contextTypeName, IScriptProject sp,
-			String lineDelim) {
+	public CodeTemplateContext(String contextTypeName, IScriptProject sp, String lineDelim) {
 		super(getTemplateContextRegistry().getContextType(contextTypeName));
 
 		fLineDelimiter = lineDelim;
@@ -45,8 +44,7 @@ public class CodeTemplateContext extends TemplateContext {
 	 * org.eclipse.jdt.internal.corext.template.TemplateContext#evaluate(org
 	 * .eclipse.jdt.internal.corext.template.Template)
 	 */
-	public TemplateBuffer evaluate(Template template)
-			throws BadLocationException, TemplateException {
+	public TemplateBuffer evaluate(Template template) throws BadLocationException, TemplateException {
 		// test that all variables are defined
 		// Iterator iterator = getContextType().resolvers();
 		// while (iterator.hasNext()) {
@@ -55,7 +53,7 @@ public class CodeTemplateContext extends TemplateContext {
 		// if (var instanceof
 		// CodeTemplateContextType.CodeTemplateVariableResolver) {
 		// Assert.isNotNull(getVariable(var.getType()),
-		//						"Variable " + var.getType() + "not defined"); 
+		// "Variable " + var.getType() + "not defined");
 		// }
 		// }
 
@@ -88,9 +86,7 @@ public class CodeTemplateContext extends TemplateContext {
 					buf.append(lineDelim);
 				}
 				IRegion region = tracker.getLineInformation(i);
-				String line = code.substring(region.getOffset(), region
-						.getOffset()
-						+ region.getLength());
+				String line = code.substring(region.getOffset(), region.getOffset() + region.getLength());
 				buf.append(line);
 			}
 			return buf.toString();

@@ -24,8 +24,7 @@ import org.eclipse.php.internal.core.util.WeakObject;
  * 
  * @deprecated (Not effective - candidate for removal)
  */
-public class WeakPropertyChangeListener extends WeakObject implements
-		IPropertyChangeListener {
+public class WeakPropertyChangeListener extends WeakObject implements IPropertyChangeListener {
 
 	private Object target;
 	private static ReferenceQueue q = new ReferenceQueue();
@@ -33,8 +32,7 @@ public class WeakPropertyChangeListener extends WeakObject implements
 	private static Object parameterValues[] = new Object[] { null };
 	private static String removeListenerMethodName = "removePropertyChangeListener"; //$NON-NLS-1$
 
-	public static WeakPropertyChangeListener create(IPropertyChangeListener l,
-			Object target) {
+	public static WeakPropertyChangeListener create(IPropertyChangeListener l, Object target) {
 		removeRedundantReferences();
 		return new WeakPropertyChangeListener(l, target);
 	}
@@ -47,11 +45,9 @@ public class WeakPropertyChangeListener extends WeakObject implements
 		}
 	}
 
-	private static void removeRedundantReference(
-			WeakPropertyChangeListener listener) {
+	private static void removeRedundantReference(WeakPropertyChangeListener listener) {
 		try {
-			Method setMethod = listener.target.getClass().getMethod(
-					removeListenerMethodName, parameterTypes);
+			Method setMethod = listener.target.getClass().getMethod(removeListenerMethodName, parameterTypes);
 			parameterValues[0] = listener;
 			setMethod.invoke(listener.target, parameterValues);
 		} catch (Exception exc) {
@@ -60,8 +56,7 @@ public class WeakPropertyChangeListener extends WeakObject implements
 	}
 
 	/** Creates new WeakPropertyChangeListener */
-	protected WeakPropertyChangeListener(IPropertyChangeListener l,
-			Object target) {
+	protected WeakPropertyChangeListener(IPropertyChangeListener l, Object target) {
 		super(l, q);
 		this.target = target;
 	}

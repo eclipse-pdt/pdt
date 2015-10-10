@@ -57,8 +57,7 @@ public class LaunchUtilities {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Shell shell = getShell();
-				MessageDialog.openError(shell,
-						PHPDebugUIMessages.LaunchUtilities_error, message);
+				MessageDialog.openError(shell, PHPDebugUIMessages.LaunchUtilities_error, message);
 			}
 		});
 	}
@@ -75,9 +74,7 @@ public class LaunchUtilities {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Shell shell = getShell();
-				ErrorDialog.openError(shell,
-						PHPDebugUIMessages.LaunchUtilities_error, message,
-						status); 
+				ErrorDialog.openError(shell, PHPDebugUIMessages.LaunchUtilities_error, message, status);
 			}
 		});
 	}
@@ -91,8 +88,7 @@ public class LaunchUtilities {
 	 *            the message
 	 */
 	public static void openError(Shell shell, String message) {
-		MessageDialog.openError(shell,
-				PHPDebugUIMessages.LaunchUtilities_error, message); 
+		MessageDialog.openError(shell, PHPDebugUIMessages.LaunchUtilities_error, message);
 	}
 
 	/**
@@ -106,15 +102,12 @@ public class LaunchUtilities {
 	 *            a status
 	 */
 	public static void openError(Shell shell, String message, IStatus status) {
-		ErrorDialog.openError(shell, PHPDebugUIMessages.LaunchUtilities_error,
-				message, status); 
+		ErrorDialog.openError(shell, PHPDebugUIMessages.LaunchUtilities_error, message, status);
 	}
 
-	public static String getProjectFromDialog(Shell shell,
-			String[] requiredNatures) {
-		ProjectSelectionDialog dialog = new ProjectSelectionDialog(shell,
-				requiredNatures, PHPDebugUIMessages.LaunchUtilities_projects,
-				PHPDebugUIMessages.LaunchUtilities_selectProject);
+	public static String getProjectFromDialog(Shell shell, String[] requiredNatures) {
+		ProjectSelectionDialog dialog = new ProjectSelectionDialog(shell, requiredNatures,
+				PHPDebugUIMessages.LaunchUtilities_projects, PHPDebugUIMessages.LaunchUtilities_selectProject);
 		dialog.open();
 		Object[] resource = dialog.getResult();
 		String text = null;
@@ -149,15 +142,12 @@ public class LaunchUtilities {
 	 *            opened in the editor
 	 * @return A selected IResource
 	 */
-	public static IResource getFileFromDialog(IProject project, Shell shell,
-			String[] fileExtensions, String[] requiredNatures,
-			boolean allowExternalFiles) {
+	public static IResource getFileFromDialog(IProject project, Shell shell, String[] fileExtensions,
+			String[] requiredNatures, boolean allowExternalFiles) {
 		LaunchUtilities inst = new LaunchUtilities();
 
-		ApplicationFileSelectionDialog d = new ApplicationFileSelectionDialog(
-				shell, inst.new WebLaunchLabelProvider(),
-				PHPDebugUIMessages.LaunchUtilities_selectFile,
-				PHPDebugUIMessages.LaunchUtilities_selectProjectFile,
+		ApplicationFileSelectionDialog d = new ApplicationFileSelectionDialog(shell, inst.new WebLaunchLabelProvider(),
+				PHPDebugUIMessages.LaunchUtilities_selectFile, PHPDebugUIMessages.LaunchUtilities_selectProjectFile,
 				fileExtensions, requiredNatures, false, allowExternalFiles);
 
 		if (project != null) {
@@ -183,8 +173,7 @@ public class LaunchUtilities {
 		return null;
 	}
 
-	private class WebLaunchLabelProvider extends
-			org.eclipse.ui.model.WorkbenchLabelProvider {
+	private class WebLaunchLabelProvider extends org.eclipse.ui.model.WorkbenchLabelProvider {
 
 		protected String decorateText(String input, Object element) {
 			if (element instanceof IFile) {

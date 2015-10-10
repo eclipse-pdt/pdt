@@ -17,6 +17,7 @@ public class Messages extends NLS {
 	public static String ProblemLocation_7;
 	public static String ProblemLocation_8;
 	public static String ProblemLocation_9;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

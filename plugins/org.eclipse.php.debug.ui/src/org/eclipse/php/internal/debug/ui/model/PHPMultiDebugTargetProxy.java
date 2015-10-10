@@ -54,9 +54,8 @@ public class PHPMultiDebugTargetProxy extends DebugTargetProxy {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.internal.ui.viewers.update.DebugTargetProxy#containsEvent
-	 * (org.eclipse.debug.core.DebugEvent)
+	 * @see org.eclipse.debug.internal.ui.viewers.update.DebugTargetProxy#
+	 * containsEvent (org.eclipse.debug.core.DebugEvent)
 	 */
 	@Override
 	protected boolean containsEvent(DebugEvent event) {
@@ -83,18 +82,14 @@ public class PHPMultiDebugTargetProxy extends DebugTargetProxy {
 	 * getNextSuspendedThreadDelta(org.eclipse.debug.core.model.IThread,
 	 * boolean)
 	 */
-	protected ModelDelta getNextSuspendedThreadDelta(IThread currentThread,
-			boolean reverse) {
+	protected ModelDelta getNextSuspendedThreadDelta(IThread currentThread, boolean reverse) {
 		if (debugTarget != null) {
 			try {
 				IThread[] threads = debugTarget.getThreads();
-				ILaunchManager manager = DebugPlugin.getDefault()
-						.getLaunchManager();
+				ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
 				ILaunch launch = debugTarget.getLaunch();
-				int launchIndex = indexOf(manager.getLaunches(),
-						debugTarget.getLaunch());
-				int targetIndex = indexOf(
-						debugTarget.getLaunch().getChildren(), debugTarget);
+				int launchIndex = indexOf(manager.getLaunches(), debugTarget.getLaunch());
+				int targetIndex = indexOf(debugTarget.getLaunch().getChildren(), debugTarget);
 				List<IThread> chosen = new ArrayList<IThread>();
 				// Select & unfold all suspended threads
 				boolean takeNext = currentThread == null;
@@ -114,22 +109,17 @@ public class PHPMultiDebugTargetProxy extends DebugTargetProxy {
 					takeNext = takeNext || thread.equals(currentThread);
 				}
 				if (!chosen.isEmpty()) {
-					ModelDelta delta = new ModelDelta(manager,
-							IModelDelta.NO_CHANGE);
-					ModelDelta node = delta.addNode(launch, launchIndex,
-							IModelDelta.NO_CHANGE, debugTarget.getLaunch()
-									.getChildren().length);
-					node = node.addNode(debugTarget, targetIndex,
-							IModelDelta.NO_CHANGE, threads.length);
+					ModelDelta delta = new ModelDelta(manager, IModelDelta.NO_CHANGE);
+					ModelDelta node = delta.addNode(launch, launchIndex, IModelDelta.NO_CHANGE,
+							debugTarget.getLaunch().getChildren().length);
+					node = node.addNode(debugTarget, targetIndex, IModelDelta.NO_CHANGE, threads.length);
 					for (int i = 0; i < chosen.size(); i++) {
 						IThread t = chosen.get(i);
 						IStackFrame frame = t.getTopStackFrame();
 						if (frame != null) {
-							ModelDelta next = node.addNode(t, i,
-									IModelDelta.NO_CHANGE | IModelDelta.EXPAND,
+							ModelDelta next = node.addNode(t, i, IModelDelta.NO_CHANGE | IModelDelta.EXPAND,
 									t.getStackFrames().length);
-							next = next.addNode(frame, 0, IModelDelta.NO_CHANGE
-									| IModelDelta.SELECT, 0);
+							next = next.addNode(frame, 0, IModelDelta.NO_CHANGE | IModelDelta.SELECT, 0);
 						}
 					}
 					return delta;

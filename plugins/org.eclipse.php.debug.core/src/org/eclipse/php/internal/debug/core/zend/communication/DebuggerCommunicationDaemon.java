@@ -43,8 +43,7 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 
 	public static final String ZEND_DEBUGGER_ID = "org.eclipse.php.debug.core.zendDebugger"; //$NON-NLS-1$
 
-	private static class CommunicationDaemon extends
-			AbstractDebuggerCommunicationDaemon {
+	private static class CommunicationDaemon extends AbstractDebuggerCommunicationDaemon {
 
 		private int port;
 
@@ -104,8 +103,7 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 	private class DefaultPortListener implements IPreferenceChangeListener {
 		@Override
 		public void preferenceChange(PreferenceChangeEvent event) {
-			if (event.getKey().equals(
-					PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT)) {
+			if (event.getKey().equals(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT)) {
 				reset();
 			}
 		}
@@ -128,11 +126,9 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 		@Override
 		public void settingsChanged(PropertyChangeEvent[] events) {
 			for (PropertyChangeEvent event : events) {
-				IDebuggerSettings settings = (IDebuggerSettings) event
-						.getSource();
+				IDebuggerSettings settings = (IDebuggerSettings) event.getSource();
 				if (getDebuggerID().equals(settings.getDebuggerId())
-						&& event.getProperty().equals(
-								ZendDebuggerSettingsConstants.PROP_CLIENT_PORT)) {
+						&& event.getProperty().equals(ZendDebuggerSettingsConstants.PROP_CLIENT_PORT)) {
 					reset();
 				}
 			}
@@ -220,24 +216,20 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 	private void registerListeners() {
 		if (defaultPortListener == null) {
 			defaultPortListener = new DefaultPortListener();
-			InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
-					.addPreferenceChangeListener(defaultPortListener);
+			InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID).addPreferenceChangeListener(defaultPortListener);
 		}
 		if (debuggerSettingsListener == null) {
 			debuggerSettingsListener = new DebuggerSettingsListener();
-			DebuggerSettingsManager.INSTANCE
-					.addSettingsListener(debuggerSettingsListener);
+			DebuggerSettingsManager.INSTANCE.addSettingsListener(debuggerSettingsListener);
 		}
 	}
 
 	private void unregisterListeners() {
 		if (defaultPortListener != null) {
-			InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
-					.addPreferenceChangeListener(defaultPortListener);
+			InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID).addPreferenceChangeListener(defaultPortListener);
 		}
 		if (debuggerSettingsListener != null) {
-			DebuggerSettingsManager.INSTANCE
-					.addSettingsListener(debuggerSettingsListener);
+			DebuggerSettingsManager.INSTANCE.addSettingsListener(debuggerSettingsListener);
 		}
 	}
 
@@ -269,8 +261,7 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 				}
 			}
 			if (!isRunning) {
-				AbstractDebuggerCommunicationDaemon newDaemon = new CommunicationDaemon(
-						port);
+				AbstractDebuggerCommunicationDaemon newDaemon = new CommunicationDaemon(port);
 				daemons.add(newDaemon);
 			}
 		}

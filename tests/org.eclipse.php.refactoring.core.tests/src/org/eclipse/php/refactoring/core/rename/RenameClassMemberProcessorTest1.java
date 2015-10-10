@@ -29,8 +29,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RenameClassMemberProcessorTest1 extends
-		AbstractRenameRefactoringTest {
+public class RenameClassMemberProcessorTest1 extends AbstractRenameRefactoringTest {
 
 	private IProject project1;
 	private IFile file;
@@ -50,7 +49,8 @@ public class RenameClassMemberProcessorTest1 extends
 		file = folder.getFile("test21.php");
 
 		InputStream source = new ByteArrayInputStream(
-				"<?php class Item { public static function foo(){} } class ItemEx extends Item{public static function foo(){}} ItemEx::foo();?>".getBytes());
+				"<?php class Item { public static function foo(){} } class ItemEx extends Item{public static function foo(){}} ItemEx::foo();?>"
+						.getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -71,12 +71,12 @@ public class RenameClassMemberProcessorTest1 extends
 		int start = 120;
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
-		
+
 		RenameClassMemberProcessor processor = new RenameClassMemberProcessor(file, selectedNode);
 		processor.setNewElementName("foo1");
-		
+
 		checkInitCondition(processor);
-		
+
 		performChange(processor);
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
@@ -96,5 +96,3 @@ public class RenameClassMemberProcessorTest1 extends
 		project1.delete(IResource.FORCE, new NullProgressMonitor());
 	}
 }
-
-

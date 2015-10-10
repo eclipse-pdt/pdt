@@ -54,8 +54,7 @@ public class PHPResourceContentProvider implements ITreeContentProvider {
 				IContainer container = (IContainer) parentElement;
 				IResource[] members = container.members();
 				for (IResource member : members) {
-					if (member instanceof IContainer && member.isAccessible()
-							&& !isResourceFiltered(member)) {
+					if (member instanceof IContainer && member.isAccessible() && !isResourceFiltered(member)) {
 						if (member instanceof IProject) { // show only PHP
 															// projects
 							IProject project = (IProject) member;
@@ -70,12 +69,10 @@ public class PHPResourceContentProvider implements ITreeContentProvider {
 				// Add include paths:
 				if (parentElement instanceof IProject) {
 					IProject project = (IProject) parentElement;
-					IncludePath[] includePath = IncludePathManager
-							.getInstance().getIncludePaths(project);
+					IncludePath[] includePath = IncludePathManager.getInstance().getIncludePaths(project);
 					for (IncludePath path : includePath) {
 						if (path.isBuildpath()) {
-							IBuildpathEntry buildpathEntry = (IBuildpathEntry) path
-									.getEntry();
+							IBuildpathEntry buildpathEntry = (IBuildpathEntry) path.getEntry();
 							if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY
 									|| buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 								r.add(buildpathEntry);
@@ -106,8 +103,7 @@ public class PHPResourceContentProvider implements ITreeContentProvider {
 					File files[] = file.listFiles();
 					List<Object> r = new ArrayList<Object>(files.length);
 					for (File currentFile : files) {
-						r.add(new IncPathFile(ipFile.IBuildpathEntry,
-								currentFile));
+						r.add(new IncPathFile(ipFile.IBuildpathEntry, currentFile));
 					}
 					return r.toArray();
 				}
@@ -131,8 +127,7 @@ public class PHPResourceContentProvider implements ITreeContentProvider {
 		}
 		if (element instanceof IncPathFile) {
 			IncPathFile ipFile = (IncPathFile) element;
-			return new IncPathFile(ipFile.IBuildpathEntry, ipFile.file
-					.getParentFile());
+			return new IncPathFile(ipFile.IBuildpathEntry, ipFile.file.getParentFile());
 		}
 		return null;
 	}
@@ -174,8 +169,7 @@ class IncPathFile {
 			return false;
 		}
 		IncPathFile other = (IncPathFile) obj;
-		return other.file.equals(file)
-				&& other.IBuildpathEntry.equals(IBuildpathEntry);
+		return other.file.equals(file) && other.IBuildpathEntry.equals(IBuildpathEntry);
 	}
 }
 
@@ -193,8 +187,7 @@ class PHPResLabelProvider extends ScriptUILabelProvider {
 		if (element instanceof IncPathFile) {
 			IncPathFile currentFile = (IncPathFile) element;
 			if (currentFile.file.isDirectory()) {
-				return PlatformUI.getWorkbench().getSharedImages().getImage(
-						ISharedImages.IMG_OBJ_FOLDER);
+				return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
 			} else {
 				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHP_FILE);
 			}
@@ -205,8 +198,7 @@ class PHPResLabelProvider extends ScriptUILabelProvider {
 	public String getText(Object element) {
 		if (element instanceof IBuildpathEntry) {
 			IBuildpathEntry includePathEntry = (IBuildpathEntry) element;
-			return EnvironmentPathUtils
-					.getLocalPath(includePathEntry.getPath()).toOSString();
+			return EnvironmentPathUtils.getLocalPath(includePathEntry.getPath()).toOSString();
 		}
 		if (element instanceof IncPathFile) {
 			return ((IncPathFile) element).file.getName();

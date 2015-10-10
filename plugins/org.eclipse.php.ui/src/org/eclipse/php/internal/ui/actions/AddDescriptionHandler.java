@@ -29,8 +29,7 @@ public class AddDescriptionHandler extends SelectionHandler implements IHandler 
 		final IModelElement element = getCurrentModelElement(event);
 		if (element != null) {
 			final AddDescriptionAction addDescriptionAction = new AddDescriptionAction();
-			addDescriptionAction
-					.setModelElement(new IModelElement[] { element });
+			addDescriptionAction.setModelElement(new IModelElement[] { element });
 			addDescriptionAction.run(null);
 		}
 

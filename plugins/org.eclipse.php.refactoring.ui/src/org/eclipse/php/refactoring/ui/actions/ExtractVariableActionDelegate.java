@@ -29,8 +29,7 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
-public class ExtractVariableActionDelegate implements IEditorActionDelegate,
-		IWorkbenchWindowActionDelegate {
+public class ExtractVariableActionDelegate implements IEditorActionDelegate, IWorkbenchWindowActionDelegate {
 
 	private IEditorPart targetEditor;
 	private Shell shell;
@@ -48,12 +47,10 @@ public class ExtractVariableActionDelegate implements IEditorActionDelegate,
 
 	public void run(IAction action) {
 		if (targetEditor == null) {
-			targetEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage().getActiveEditor();
+			targetEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		}
 		if (shell == null) {
-			shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getShell();
+			shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		}
 		if (!(targetEditor instanceof PHPStructuredEditor))
 			return;
@@ -65,38 +62,27 @@ public class ExtractVariableActionDelegate implements IEditorActionDelegate,
 		IStructuredModel model = null;
 		try {
 			// get the document
-			model = StructuredModelManager.getModelManager()
-					.getExistingModelForEdit(file);
-			IStructuredDocument structuredDocument = model
-					.getStructuredDocument();
+			model = StructuredModelManager.getModelManager().getExistingModelForEdit(file);
+			IStructuredDocument structuredDocument = model.getStructuredDocument();
 
-			IModelElement source = ((PHPStructuredEditor) phpEditor)
-					.getModelElement();
+			IModelElement source = ((PHPStructuredEditor) phpEditor).getModelElement();
 
 			if (!(source instanceof ISourceModule)) {
-				MessageDialog
-						.openError(this.shell, "Error", "Unexpected Error"); //$NON-NLS-1$ //$NON-NLS-2$
+				MessageDialog.openError(this.shell, "Error", "Unexpected Error"); //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 			}
 
 			// get the selection offsets
-			ITextSelection fTextSelection = (ITextSelection) phpEditor
-					.getSelectionProvider().getSelection();
+			ITextSelection fTextSelection = (ITextSelection) phpEditor.getSelectionProvider().getSelection();
 			int startOffset = fTextSelection.getOffset();
 			int length = fTextSelection.getLength();
 
 			ExtractVariableRefactoring refactoring;
 			try {
-				refactoring = new ExtractVariableRefactoring(
-						(ISourceModule) source, structuredDocument,
-						startOffset, length);
-				new RefactoringStarter()
-						.activate(
-								refactoring,
-								new ExtractVariableWizard(refactoring),
-								shell,
-								PHPRefactoringUIMessages
-										.getString("ExtractVariableActionDelegate.0"), false); //$NON-NLS-1$
+				refactoring = new ExtractVariableRefactoring((ISourceModule) source, structuredDocument, startOffset,
+						length);
+				new RefactoringStarter().activate(refactoring, new ExtractVariableWizard(refactoring), shell,
+						PHPRefactoringUIMessages.getString("ExtractVariableActionDelegate.0"), false); //$NON-NLS-1$
 
 			} catch (CoreException e) {
 				MessageDialog.openError(this.shell, "Error", e.getMessage()); //$NON-NLS-1$

@@ -28,8 +28,7 @@ public class MethodHighlighting extends AbstractSemanticHighlighting {
 	protected class MethodApply extends AbstractSemanticApply {
 		@Override
 		public boolean visit(MethodDeclaration classMethodDeclaration) {
-			Identifier functionName = classMethodDeclaration.getFunction()
-					.getFunctionName();
+			Identifier functionName = classMethodDeclaration.getFunction().getFunctionName();
 			highlight(functionName);
 			return true;
 		}
@@ -38,8 +37,7 @@ public class MethodHighlighting extends AbstractSemanticHighlighting {
 		 * Mark foo() on: $a->foo();
 		 */
 		public boolean visit(MethodInvocation methodInvocation) {
-			checkDispatch(methodInvocation.getMethod().getFunctionName()
-					.getName());
+			checkDispatch(methodInvocation.getMethod().getFunctionName().getName());
 			return true;
 		}
 
@@ -59,10 +57,8 @@ public class MethodHighlighting extends AbstractSemanticHighlighting {
 
 		public boolean visit(TraitUseStatement node) {
 			ISourceModule sourceModule = getSourceModule();
-			ModuleDeclaration moduleDeclaration = SourceParserUtil
-					.getModuleDeclaration(sourceModule, null);
-			FileContext context = new FileContext(sourceModule,
-					moduleDeclaration, node.getStart());
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+			FileContext context = new FileContext(sourceModule, moduleDeclaration, node.getStart());
 			List<TraitStatement> tsList = node.getTsList();
 			for (TraitStatement traitStatement : tsList) {
 				if (traitStatement instanceof TraitAliasStatement) {
@@ -72,28 +68,20 @@ public class MethodHighlighting extends AbstractSemanticHighlighting {
 								.getAlias().getTraitMethod();
 
 						IEvaluatedType type = PHPClassType.fromTraitName(
-								PHPModelUtils.getFullName(reference
-										.getClassName()), sourceModule,
+								PHPModelUtils.getFullName(reference.getClassName()), sourceModule,
 								traitStatement.getStart());
-						IType[] modelElements = PHPTypeInferenceUtils
-								.getModelElements(type, context,
-										traitStatement.getStart(), statement
-												.getAST().getBindingResolver()
-												.getModelAccessCache());
+						IType[] modelElements = PHPTypeInferenceUtils.getModelElements(type, context,
+								traitStatement.getStart(),
+								statement.getAST().getBindingResolver().getModelAccessCache());
 						if (modelElements != null && modelElements.length > 0) {
 							for (IType iType : modelElements) {
 								boolean shouldBreak = false;
 								try {
-									IModelElement[] children = iType
-											.getChildren();
+									IModelElement[] children = iType.getChildren();
 									for (IModelElement iModelElement : children) {
-										if (iModelElement.getElementName()
-												.equals(reference
-														.getFunctionName()
-														.getName())
+										if (iModelElement.getElementName().equals(reference.getFunctionName().getName())
 												&& (iModelElement instanceof IMethod)) {
-											highlight(reference
-													.getFunctionName());
+											highlight(reference.getFunctionName());
 											shouldBreak = true;
 											break;
 										}
@@ -107,29 +95,21 @@ public class MethodHighlighting extends AbstractSemanticHighlighting {
 							}
 						}
 					} else {
-						Identifier method = (Identifier) statement.getAlias()
-								.getTraitMethod();
+						Identifier method = (Identifier) statement.getAlias().getTraitMethod();
 						List<NamespaceName> traitList = node.getTraitList();
 						for (NamespaceName namespaceName : traitList) {
 							boolean shouldBreak = false;
-							IEvaluatedType type = PHPClassType.fromTraitName(
-									PHPModelUtils.getFullName(namespaceName),
+							IEvaluatedType type = PHPClassType.fromTraitName(PHPModelUtils.getFullName(namespaceName),
 									sourceModule, traitStatement.getStart());
-							IType[] modelElements = PHPTypeInferenceUtils
-									.getModelElements(type, context,
-											traitStatement.getStart(),
-											statement.getAST()
-													.getBindingResolver()
-													.getModelAccessCache());
-							if (modelElements != null
-									&& modelElements.length > 0) {
+							IType[] modelElements = PHPTypeInferenceUtils.getModelElements(type, context,
+									traitStatement.getStart(),
+									statement.getAST().getBindingResolver().getModelAccessCache());
+							if (modelElements != null && modelElements.length > 0) {
 								for (IType iType : modelElements) {
 									try {
-										IModelElement[] children = iType
-												.getChildren();
+										IModelElement[] children = iType.getChildren();
 										for (IModelElement iModelElement : children) {
-											if (iModelElement.getElementName()
-													.equals(method.getName())
+											if (iModelElement.getElementName().equals(method.getName())
 													&& (iModelElement instanceof IMethod)) {
 												highlight(method);
 												shouldBreak = true;
@@ -152,27 +132,20 @@ public class MethodHighlighting extends AbstractSemanticHighlighting {
 
 				} else if (traitStatement instanceof TraitPrecedenceStatement) {
 					TraitPrecedenceStatement statement = (TraitPrecedenceStatement) traitStatement;
-					FullyQualifiedTraitMethodReference reference = statement
-							.getPrecedence().getMethodReference();
+					FullyQualifiedTraitMethodReference reference = statement.getPrecedence().getMethodReference();
 
-					IEvaluatedType type = PHPClassType
-							.fromTraitName(PHPModelUtils.getFullName(reference
-									.getClassName()), sourceModule,
-									traitStatement.getStart());
-					IType[] modelElements = PHPTypeInferenceUtils
-							.getModelElements(type, context,
-									traitStatement.getStart(), statement
-											.getAST().getBindingResolver()
-											.getModelAccessCache());
+					IEvaluatedType type = PHPClassType.fromTraitName(
+							PHPModelUtils.getFullName(reference.getClassName()), sourceModule,
+							traitStatement.getStart());
+					IType[] modelElements = PHPTypeInferenceUtils.getModelElements(type, context,
+							traitStatement.getStart(), statement.getAST().getBindingResolver().getModelAccessCache());
 					if (modelElements != null && modelElements.length > 0) {
 						for (IType iType : modelElements) {
 							boolean shouldBreak = false;
 							try {
 								IModelElement[] children = iType.getChildren();
 								for (IModelElement iModelElement : children) {
-									if (iModelElement.getElementName().equals(
-											reference.getFunctionName()
-													.getName())
+									if (iModelElement.getElementName().equals(reference.getFunctionName().getName())
 											&& (iModelElement instanceof IMethod)) {
 										highlight(reference.getFunctionName());
 										shouldBreak = true;

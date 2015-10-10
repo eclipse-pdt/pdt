@@ -52,8 +52,7 @@ public class ShowWhitespaceAction extends TextEditorPropertyAction {
 			MergeSourceViewer[] viewers = getViewers();
 			for (int i = 0; i < viewers.length; i++) {
 				MergeSourceViewer viewer = viewers[i];
-				WhitespaceCharacterPainter painter = new WhitespaceCharacterPainter(
-						viewer);
+				WhitespaceCharacterPainter painter = new WhitespaceCharacterPainter(viewer);
 				viewer.addPainter(painter);
 				painters.put(viewer, painter);
 			}
@@ -66,8 +65,7 @@ public class ShowWhitespaceAction extends TextEditorPropertyAction {
 		Map painters = getPainters();
 		for (Entry entry : (Set<Entry>) painters.entrySet()) {
 			MergeSourceViewer viewer = (MergeSourceViewer) entry.getKey();
-			WhitespaceCharacterPainter painter = (WhitespaceCharacterPainter) entry
-					.getValue();
+			WhitespaceCharacterPainter painter = (WhitespaceCharacterPainter) entry.getValue();
 			if (painter != null) {
 				viewer.removePainter(painter);
 				painter.deactivate(true);

@@ -39,10 +39,8 @@ import org.w3c.dom.Node;
 public class DBGpSession {
 
 	public static final String DEFAULT_SESSION_ENCODING = "ISO-8859-1"; //$NON-NLS-1$
-	public static final String DEFAULT_BINARY_ENCODING = Charset
-			.defaultCharset().name();
-	public static final String DEFAULT_OUTPUT_ENCODING = Charset
-			.defaultCharset().name();
+	public static final String DEFAULT_BINARY_ENCODING = Charset.defaultCharset().name();
+	public static final String DEFAULT_OUTPUT_ENCODING = Charset.defaultCharset().name();
 
 	private Socket DBGpSocket;
 	private AsyncResponseHandlerJob responseHandler;
@@ -92,9 +90,7 @@ public class DBGpSession {
 				if (DBGpResponse.INIT == parsedResponse.getType()) {
 					ideKey = parsedResponse.getIdekey();
 					sessionId = parsedResponse.getSession();
-					initialScript = DBGpUtils
-							.getFilenameFromURIString(parsedResponse
-									.getFileUri());
+					initialScript = DBGpUtils.getFilenameFromURIString(parsedResponse.getFileUri());
 					engineVersion = parsedResponse.getEngineVersion();
 					engineType = parsedResponse.getEngineType();
 					threadId = parsedResponse.getThreadId();
@@ -105,8 +101,7 @@ public class DBGpSession {
 					// TODO: dialog box up
 				}
 			} else {
-				DBGpLogger.logError(
-						"Unexpected null from readResponse waiting for Init", //$NON-NLS-1$
+				DBGpLogger.logError("Unexpected null from readResponse waiting for Init", //$NON-NLS-1$
 						this, null);
 			}
 			if (!isGood) {
@@ -114,8 +109,7 @@ public class DBGpSession {
 			}
 
 		} catch (UnsupportedEncodingException e) {
-			DBGpLogger
-					.logException("UnsupportedEncodingException - 1", this, e); //$NON-NLS-1$
+			DBGpLogger.logException("UnsupportedEncodingException - 1", this, e); //$NON-NLS-1$
 			endSession();
 		} catch (IOException e) {
 			DBGpLogger.logException("IOException - 1", this, e); //$NON-NLS-1$
@@ -262,14 +256,11 @@ public class DBGpSession {
 							int respType = parsedResponse.getType();
 
 							if (respType == DBGpResponse.RESPONSE) {
-								if (parsedResponse.getStatus().equals(
-										DBGpResponse.STATUS_STOPPED)) {
+								if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
 									handleStopStatus(parsedResponse);
-								} else if (parsedResponse.getStatus().equals(
-										DBGpResponse.STATUS_BREAK)) {
+								} else if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_BREAK)) {
 									handleBreakStatus(parsedResponse);
-								} else if (parsedResponse.getStatus().equals(
-										DBGpResponse.STATUS_STOPPING)) {
+								} else if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPING)) {
 									handleStoppingStatus(parsedResponse);
 								}
 							} else if (respType == DBGpResponse.STREAM
@@ -286,10 +277,8 @@ public class DBGpSession {
 						unblockSyncCaller(parsedResponse);
 					}
 				} catch (Throwable t) {
-					DBGpLogger
-							.logException(
-									"Unexpected exception. Terminating the debug session", //$NON-NLS-1$
-									this, t);
+					DBGpLogger.logException("Unexpected exception. Terminating the debug session", //$NON-NLS-1$
+							this, t);
 
 					// send a dummy response back to unblock the target. It will
 					// know that the session has
@@ -383,8 +372,7 @@ public class DBGpSession {
 
 		private void handleStoppingStatus(DBGpResponse parsedResponse) {
 			// For the moment we will ignore the reason and just stop.
-			DBGpResponse stoppedResponse = sendSyncCmdOnResponseThread(
-					DBGpCommand.stop, null);
+			DBGpResponse stoppedResponse = sendSyncCmdOnResponseThread(DBGpCommand.stop, null);
 			if (stoppedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
 				handleStopStatus(stoppedResponse);
 			} else {
@@ -427,8 +415,7 @@ public class DBGpSession {
 						// stack is created, thread info
 						// setup.
 						processBreakpointHit();
-					} else if (cmd.equals(DBGpCommand.stepInto)
-							|| cmd.equals(DBGpCommand.StepOut)
+					} else if (cmd.equals(DBGpCommand.stepInto) || cmd.equals(DBGpCommand.StepOut)
 							|| cmd.equals(DBGpCommand.stepOver)) {
 						// step hit
 						// no need to setup any information ?
@@ -456,32 +443,29 @@ public class DBGpSession {
 
 			// Todo: Improvement: update DBGpTarget with the latest stack
 			// information
-			DBGpResponse parsedResponse = sendSyncCmdOnResponseThread(
-					DBGpCommand.stackGet, null);
+			DBGpResponse parsedResponse = sendSyncCmdOnResponseThread(DBGpCommand.stackGet, null);
 			if (parsedResponse != null) {
 
 				// we could have received a stop here so we need to check for
 				// this
-				if (parsedResponse.getStatus().equals(
-						DBGpResponse.STATUS_STOPPED)) {
+				if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
 					handleStopStatus(parsedResponse);
 				} else {
-					Node stackData = parsedResponse.getParentNode()
-							.getFirstChild(); // get the first stack entry
-					String line = DBGpResponse
-							.getAttribute(stackData, "lineno"); //$NON-NLS-1$
+					Node stackData = parsedResponse.getParentNode().getFirstChild(); // get
+																						// the
+																						// first
+																						// stack
+																						// entry
+					String line = DBGpResponse.getAttribute(stackData, "lineno"); //$NON-NLS-1$
 					int lineno = 0;
 					try {
 						lineno = Integer.parseInt(line);
 						String filename = DBGpUtils
-								.getFilenameFromURIString(DBGpResponse
-										.getAttribute(stackData, "filename")); //$NON-NLS-1$
-						filename = debugTarget
-								.mapToWorkspaceFileIfRequired(filename);
+								.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename")); //$NON-NLS-1$
+						filename = debugTarget.mapToWorkspaceFileIfRequired(filename);
 						debugTarget.breakpointHit(filename, lineno);
 					} catch (NumberFormatException nfe) {
-						DBGpLogger.logException(
-								"Unexpected number format exception", //$NON-NLS-1$
+						DBGpLogger.logException("Unexpected number format exception", //$NON-NLS-1$
 								this, nfe);
 					}
 				}
@@ -531,8 +515,7 @@ public class DBGpSession {
 			// the first part of the DBGp protocol is the length
 			// as a string, so we read it and convert it to an int
 			while ((receivedByte = DBGpReader.readByte()) != 0) {
-				remainingBytesToRead = remainingBytesToRead * 10 + receivedByte
-						- 48;
+				remainingBytesToRead = remainingBytesToRead * 10 + receivedByte - 48;
 			}
 
 			byteArray = new byte[remainingBytesToRead];
@@ -541,8 +524,7 @@ public class DBGpSession {
 
 				// need to handle situation where we could block still waiting
 				// for more info ?
-				int bytesReceived = DBGpReader.read(byteArray, totalBytesSoFar,
-						remainingBytesToRead);
+				int bytesReceived = DBGpReader.read(byteArray, totalBytesSoFar, remainingBytesToRead);
 				remainingBytesToRead -= bytesReceived;
 				totalBytesSoFar += bytesReceived;
 			}
@@ -583,8 +565,7 @@ public class DBGpSession {
 			}
 			return byteArray;
 		} catch (UnsupportedEncodingException e) {
-			DBGpLogger
-					.logException("UnsupportedEncodingException - 2", this, e); //$NON-NLS-1$
+			DBGpLogger.logException("UnsupportedEncodingException - 2", this, e); //$NON-NLS-1$
 			endSession();
 		}
 		return null;
@@ -593,14 +574,11 @@ public class DBGpSession {
 	private void determineEncodings() {
 		ILaunch launch = getDebugTarget().getLaunch();
 		ILaunchConfiguration launchConfig = launch.getLaunchConfiguration();
-		outputEncoding = getCharset(IDebugParametersKeys.OUTPUT_ENCODING,
-				launchConfig);
-		binaryEncoding = getCharset(IDebugParametersKeys.TRANSFER_ENCODING,
-				launchConfig);
+		outputEncoding = getCharset(IDebugParametersKeys.OUTPUT_ENCODING, launchConfig);
+		binaryEncoding = getCharset(IDebugParametersKeys.TRANSFER_ENCODING, launchConfig);
 	}
 
-	private String getCharset(String encodingKey,
-			ILaunchConfiguration launchConfig) {
+	private String getCharset(String encodingKey, ILaunchConfiguration launchConfig) {
 		String charset = null;
 		String outputEncoding = null;
 		if (launchConfig != null) {
@@ -614,12 +592,10 @@ public class DBGpSession {
 			if (encodingKey == IDebugParametersKeys.OUTPUT_ENCODING) {
 				outputEncoding = PHPProjectPreferences.getOutputEncoding(null);
 			} else {
-				outputEncoding = PHPProjectPreferences
-						.getTransferEncoding(null);
+				outputEncoding = PHPProjectPreferences.getTransferEncoding(null);
 			}
 		}
-		if (outputEncoding == null
-				|| Charset.isSupported(outputEncoding) == false) {
+		if (outputEncoding == null || Charset.isSupported(outputEncoding) == false) {
 			charset = Charset.defaultCharset().name();
 		} else {
 			charset = outputEncoding;

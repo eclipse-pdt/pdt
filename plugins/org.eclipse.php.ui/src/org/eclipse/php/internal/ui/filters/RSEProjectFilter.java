@@ -39,10 +39,8 @@ public class RSEProjectFilter extends ViewerFilter {
 			try {
 				// check if an RSE nature (project must be open) OR simply
 				// compare its name
-				if ((proj.isOpen() && proj
-						.hasNature(PHPUiConstants.RSE_TEMP_PROJECT_NATURE_ID))
-						|| proj.getName().equals(
-								PHPUiConstants.RSE_TEMP_PROJECT_NAME)) {
+				if ((proj.isOpen() && proj.hasNature(PHPUiConstants.RSE_TEMP_PROJECT_NATURE_ID))
+						|| proj.getName().equals(PHPUiConstants.RSE_TEMP_PROJECT_NAME)) {
 					return false;
 				}
 			} catch (CoreException ce) {

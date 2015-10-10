@@ -52,8 +52,7 @@ public class AbstractSemanticApplyWithNS extends AbstractSemanticApply {
 		if (scriptProject != null) {
 			return SearchEngine.createSearchScope(scriptProject);
 		}
-		IProjectFragment projectFragment = (IProjectFragment) sourceModule
-				.getAncestor(IModelElement.PROJECT_FRAGMENT);
+		IProjectFragment projectFragment = (IProjectFragment) sourceModule.getAncestor(IModelElement.PROJECT_FRAGMENT);
 		if (projectFragment != null) {
 			return SearchEngine.createSearchScope(projectFragment);
 		}
@@ -69,8 +68,7 @@ public class AbstractSemanticApplyWithNS extends AbstractSemanticApply {
 				name = part.getAlias().getName();
 			} else {
 				name = part.getName().getName();
-				int index = name
-						.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+				int index = name.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 				if (index >= 0) {
 					name = name.substring(index + 1);
 				}

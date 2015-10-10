@@ -20,8 +20,8 @@ import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.EditorsUI;
 
-public class ProblemHover extends AbstractScriptEditorTextHover implements
-		IPHPTextHover, IInformationProviderExtension2, ITextHoverExtension {
+public class ProblemHover extends AbstractScriptEditorTextHover
+		implements IPHPTextHover, IInformationProviderExtension2, ITextHoverExtension {
 
 	private static final ProblemHoverProcessor annotationHover = new ProblemHoverProcessor();
 
@@ -54,10 +54,8 @@ public class ProblemHover extends AbstractScriptEditorTextHover implements
 				 * AbstractReusableInformationControlCreator
 				 * #doCreateInformationControl(org.eclipse.swt.widgets.Shell)
 				 */
-				public IInformationControl doCreateInformationControl(
-						Shell parent) {
-					return new DefaultInformationControl(parent,
-							new HTMLTextPresenter(false));
+				public IInformationControl doCreateInformationControl(Shell parent) {
+					return new DefaultInformationControl(parent, new HTMLTextPresenter(false));
 				}
 			};
 		}
@@ -77,10 +75,8 @@ public class ProblemHover extends AbstractScriptEditorTextHover implements
 				 * AbstractReusableInformationControlCreator
 				 * #doCreateInformationControl(org.eclipse.swt.widgets.Shell)
 				 */
-				public IInformationControl doCreateInformationControl(
-						Shell parent) {
-					return new DefaultInformationControl(parent, EditorsUI
-							.getTooltipAffordanceString(),
+				public IInformationControl doCreateInformationControl(Shell parent) {
+					return new DefaultInformationControl(parent, EditorsUI.getTooltipAffordanceString(),
 							new HTMLTextPresenter(true));
 				}
 			};

@@ -42,8 +42,7 @@ public class RenameFileTestCase0029095 extends AbstractRenameRefactoringTest {
 
 		file = project1.getFile("RenameFile0029095.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php class TestRenameClass{}?>".getBytes());
+		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -51,17 +50,17 @@ public class RenameFileTestCase0029095 extends AbstractRenameRefactoringTest {
 			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
 
-		
 		file1 = project1.getFile("RenameFile00290952.php");
 
-		source = new ByteArrayInputStream("<?php include 'RenameFile0029095.php'; echo 'RenameFile0029095.php test rename RenameFile0029095.php';?>".getBytes());
+		source = new ByteArrayInputStream(
+				"<?php include 'RenameFile0029095.php'; echo 'RenameFile0029095.php test rename RenameFile0029095.php';?>"
+						.getBytes());
 
 		if (!file1.exists()) {
 			file1.create(source, true, new NullProgressMonitor());
 		} else {
 			file1.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
-
 
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
@@ -73,7 +72,6 @@ public class RenameFileTestCase0029095 extends AbstractRenameRefactoringTest {
 
 		assertNotNull(program);
 
-		
 		RenameFileProcessor processor = new RenameFileProcessor(file, program);
 		processor.setNewElementName("RenameFile00290951.php");
 		processor.setUpdateRefernces(true);
@@ -82,12 +80,11 @@ public class RenameFileTestCase0029095 extends AbstractRenameRefactoringTest {
 		checkInitCondition(processor);
 
 		performChange(processor);
-		
-		
+
 		IFile file = project1.getFile("RenameFile00290951.php");
 		assertNotNull(file);
 		assertTrue(file.exists());
-		
+
 		try {
 			String content = FileUtils.getContents(file1);
 			assertEquals(

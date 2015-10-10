@@ -26,8 +26,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
 /**
  * @author guy
  */
-public class EvalRequest extends DebugMessageRequestImpl implements
-		IDebugRequestMessage {
+public class EvalRequest extends DebugMessageRequestImpl implements IDebugRequestMessage {
 
 	private String command;
 
@@ -47,8 +46,7 @@ public class EvalRequest extends DebugMessageRequestImpl implements
 
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
-		setCommand(CommunicationUtilities.readEncodedString(in,
-				getTransferEncoding()));
+		setCommand(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
 	}
 
 	public int getType() {
@@ -58,7 +56,6 @@ public class EvalRequest extends DebugMessageRequestImpl implements
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());
-		CommunicationUtilities.writeEncodedString(out, getCommand(),
-				getTransferEncoding());
+		CommunicationUtilities.writeEncodedString(out, getCommand(), getTransferEncoding());
 	}
 }

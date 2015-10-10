@@ -35,18 +35,13 @@ public class TypeDeclarationVisitorTests {
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
-		TESTS.put(
-				PHPVersion.PHP5,
-				new String[] { "/workspace/astutils/type_declaration_visitor/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] {
-				"/workspace/astutils/type_declaration_visitor/php5",
+		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/astutils/type_declaration_visitor/php5" });
+		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/astutils/type_declaration_visitor/php5",
 				"/workspace/astutils/type_declaration_visitor/php53" });
-		TESTS.put(
-				PHPVersion.PHP5_4,
-				new String[] { "/workspace/astutils/type_declaration_visitor/php54" });
-		TESTS.put(PHPVersion.PHP5_5, new String[] {
-				"/workspace/astutils/type_declaration_visitor/php54",
+		TESTS.put(PHPVersion.PHP5_4, new String[] { "/workspace/astutils/type_declaration_visitor/php54" });
+		TESTS.put(PHPVersion.PHP5_5, new String[] { "/workspace/astutils/type_declaration_visitor/php54",
 				"/workspace/astutils/type_declaration_visitor/php55" });
 	};
 
@@ -60,10 +55,8 @@ public class TypeDeclarationVisitorTests {
 	public void visitor(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(fileName);
 
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdttFile
-				.getFile().trim().getBytes());
-		ModuleDeclaration moduleDeclaration = (ModuleDeclaration) parser.parse(
-				new InputStreamReader(inputStream), null,
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdttFile.getFile().trim().getBytes());
+		ModuleDeclaration moduleDeclaration = (ModuleDeclaration) parser.parse(new InputStreamReader(inputStream), null,
 				ProjectOptions.useShortTags((IProject) null));
 
 		final StringBuilder builder = new StringBuilder();

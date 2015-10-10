@@ -19,8 +19,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.wst.jsdt.ui.actions.ConvertingSelectionProvider;
 
-public abstract class SelectionDispatchAction extends Action implements
-		ISelectionChangedListener {
+public abstract class SelectionDispatchAction extends Action implements ISelectionChangedListener {
 
 	private IWorkbenchSite fSite;
 	private ISelectionProvider fSpecialSelectionProvider;

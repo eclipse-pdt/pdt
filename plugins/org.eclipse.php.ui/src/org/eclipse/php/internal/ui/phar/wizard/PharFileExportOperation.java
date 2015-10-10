@@ -16,12 +16,10 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
-public class PharFileExportOperation extends WorkspaceModifyOperation implements
-		IPharExportRunnable {
+public class PharFileExportOperation extends WorkspaceModifyOperation implements IPharExportRunnable {
 
 	private static class MessageMultiStatus extends MultiStatus {
-		MessageMultiStatus(String pluginId, int code, String message,
-				Throwable exception) {
+		MessageMultiStatus(String pluginId, int code, String message, Throwable exception) {
 			super(pluginId, code, message, exception);
 		}
 
@@ -69,8 +67,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 
 	private PharFileExportOperation(Shell parent) {
 		fParentShell = parent;
-		fStatus = new MessageMultiStatus(PHPUiPlugin.getPluginId(), IStatus.OK,
-				"", null); //$NON-NLS-1$
+		fStatus = new MessageMultiStatus(PHPUiPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
 		// standardModelElementContentProvider= new
 		// StandardModelElementContentProvider();
 	}
@@ -80,8 +77,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 		String message = ex.getLocalizedMessage();
 		if (message == null || message.length() < 1) {
 			message = ""; //$NON-NLS-1$
-			status = new Status(status.getSeverity(), status.getPlugin(),
-					status.getCode(), message, ex);
+			status = new Status(status.getSeverity(), status.getPlugin(), status.getCode(), message, ex);
 		}
 		fStatus.add(status);
 	}
@@ -96,8 +92,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	 *            the throwable that caused the warning, or <code>null</code>
 	 */
 	protected void addInfo(String message, Throwable error) {
-		fStatus.add(new Status(IStatus.INFO, PHPUiPlugin.getPluginId(), 10001,
-				message, error));
+		fStatus.add(new Status(IStatus.INFO, PHPUiPlugin.getPluginId(), 10001, message, error));
 	}
 
 	/**
@@ -110,8 +105,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	 *            the throwable that caused the warning, or <code>null</code>
 	 */
 	private void addWarning(String message, Throwable error) {
-		fStatus.add(new Status(IStatus.WARNING, PHPUiPlugin.getPluginId(),
-				10001, message, error));
+		fStatus.add(new Status(IStatus.WARNING, PHPUiPlugin.getPluginId(), 10001, message, error));
 	}
 
 	/**
@@ -124,8 +118,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	 *            the throwable that caused the error, or <code>null</code>
 	 */
 	private void addError(String message, Throwable error) {
-		fStatus.add(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), 10001,
-				message, error));
+		fStatus.add(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), 10001, message, error));
 	}
 
 	/**
@@ -193,8 +186,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	 * @throws InterruptedException
 	 *             thrown on cancel
 	 */
-	private void exportElement(Object element, IProgressMonitor progressMonitor)
-			throws InterruptedException {
+	private void exportElement(Object element, IProgressMonitor progressMonitor) throws InterruptedException {
 		int leadSegmentsToRemove = 1;
 		IProjectFragment pkgRoot = null;
 		boolean isInJavaProject = false;
@@ -206,8 +198,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 			IModelElement je = (IModelElement) element;
 			jProject = je.getScriptProject();
 			try {
-				pkgRoot = jProject.getProjectFragment(je
-						.getCorrespondingResource());
+				pkgRoot = jProject.getProjectFragment(je.getCorrespondingResource());
 			} catch (ModelException e) {
 				e.printStackTrace();
 			}
@@ -241,13 +232,11 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 				jProject = DLTKCore.create(resource.getProject());
 				try {
 					IProjectFragment pkgFragment = jProject
-							.findProjectFragment(resource.getFullPath()
-									.removeLastSegments(1));
+							.findProjectFragment(resource.getFullPath().removeLastSegments(1));
 					if (pkgFragment != null)
 						pkgRoot = pkgFragment;
 					else
-						pkgRoot = findPackageFragmentRoot(jProject, resource
-								.getFullPath().removeLastSegments(1));
+						pkgRoot = findPackageFragmentRoot(jProject, resource.getFullPath().removeLastSegments(1));
 				} catch (ModelException ex) {
 					addWarning("", ex); //$NON-NLS-1$
 					return;
@@ -259,14 +248,11 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 			leadSegmentsToRemove = pkgRoot.getPath().segmentCount();
 			boolean isOnBuildPath;
 			isOnBuildPath = jProject.isOnBuildpath(resource);
-			if (!isOnBuildPath
-					|| (!pkgRoot.getElementName().equals(
-							IProjectFragment.DEFAULT_PACKAGE_ROOT)))
+			if (!isOnBuildPath || (!pkgRoot.getElementName().equals(IProjectFragment.DEFAULT_PACKAGE_ROOT)))
 				leadSegmentsToRemove--;
 		}
 
-		IPath destinationPath = resource.getFullPath().removeFirstSegments(
-				leadSegmentsToRemove);
+		IPath destinationPath = resource.getFullPath().removeFirstSegments(leadSegmentsToRemove);
 
 		if (resource.getType() == IResource.FILE) {
 
@@ -279,8 +265,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 
 			if (fJarPackage.areDirectoryEntriesIncluded()) {
 
-				exportResource(progressMonitor, resource,
-						destinationPath.append(File.separator));
+				exportResource(progressMonitor, resource, destinationPath.append(File.separator));
 
 				progressMonitor.worked(1);
 				ModalContext.checkCanceled(progressMonitor);
@@ -290,8 +275,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 
 	}
 
-	private void exportContainer(IProgressMonitor progressMonitor,
-			IContainer container) throws InterruptedException {
+	private void exportContainer(IProgressMonitor progressMonitor, IContainer container) throws InterruptedException {
 
 		IResource[] children = null;
 		try {
@@ -309,8 +293,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 		}
 	}
 
-	private IProjectFragment findPackageFragmentRoot(IScriptProject jProject,
-			IPath path) throws ModelException {
+	private IProjectFragment findPackageFragmentRoot(IScriptProject jProject, IPath path) throws ModelException {
 		if (jProject == null || path == null || path.segmentCount() <= 0)
 			return null;
 		IProjectFragment pkgRoot = jProject.findProjectFragment(path);
@@ -320,8 +303,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 			return findPackageFragmentRoot(jProject, path.removeLastSegments(1));
 	}
 
-	private void exportResource(IProgressMonitor progressMonitor,
-			IResource resource, IPath destinationPath) {
+	private void exportResource(IProgressMonitor progressMonitor, IResource resource, IPath destinationPath) {
 
 		try {
 			if (resource instanceof IFile) {
@@ -345,8 +327,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	 * @throws InterruptedException
 	 *             thrown when cancelled
 	 */
-	private void exportSelectedElements(IProgressMonitor progressMonitor)
-			throws InterruptedException {
+	private void exportSelectedElements(IProgressMonitor progressMonitor) throws InterruptedException {
 		int n = fJarPackage.getElements().length;
 		for (int i = 0; i < n; i++) {
 			Object element = fJarPackage.getElements()[i];
@@ -380,7 +361,11 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	private void handleCoreExceptionOnExport(CoreException ex) {
 		Throwable realEx = ex.getStatus().getException();
 		if (realEx instanceof IOException && realEx.getMessage() != null
-				&& realEx.getMessage().startsWith("duplicate entry:")) // hardcoded message string from java.util.zip.ZipOutputStream.putNextEntry(ZipEntry) //$NON-NLS-1$
+				&& realEx.getMessage().startsWith("duplicate entry:")) // hardcoded //$NON-NLS-1$
+																		// message
+																		// string
+																		// from
+																		// java.util.zip.ZipOutputStream.putNextEntry(ZipEntry)
 			addWarning(ex.getMessage(), realEx);
 		else
 			addToStatus(ex);
@@ -430,14 +415,12 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	 *             thrown when cancelled
 	 * @see #getStatus()
 	 */
-	protected void execute(IProgressMonitor progressMonitor)
-			throws InvocationTargetException, InterruptedException {
+	protected void execute(IProgressMonitor progressMonitor) throws InvocationTargetException, InterruptedException {
 		int count = fJarPackages.length;
 		progressMonitor.beginTask("", count); //$NON-NLS-1$
 		try {
 			for (int i = 0; i < count; i++) {
-				SubProgressMonitor subProgressMonitor = new SubProgressMonitor(
-						progressMonitor, 1,
+				SubProgressMonitor subProgressMonitor = new SubProgressMonitor(progressMonitor, 1,
 						SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
 				fJarPackage = fJarPackages[i];
 				if (fJarPackage != null)
@@ -448,8 +431,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 		}
 	}
 
-	private void singleRun(IProgressMonitor progressMonitor)
-			throws InvocationTargetException, InterruptedException {
+	private void singleRun(IProgressMonitor progressMonitor) throws InvocationTargetException, InterruptedException {
 		try {
 			if (!preconditionsOK())
 				throw new InvocationTargetException(null, ""); //$NON-NLS-1$
@@ -459,9 +441,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 			fJarBuilder = PharExportHelper.createPlainPharBuilder(fJarPackage);
 			// fJarBuilder = new PlainPharBuilder();
 			fJarBuilder.open(fJarPackage, fParentShell, fStatus);
-			fJarBuilder.writeStub(
-					fJarBuilder.getStubProvider().create(fJarPackage),
-					progressMonitor);
+			fJarBuilder.writeStub(fJarBuilder.getStubProvider().create(fJarPackage), progressMonitor);
 			exportSelectedElements(progressMonitor);
 			fJarBuilder.writeSignature(progressMonitor);
 			// if (getStatus().getSeverity() != IStatus.ERROR) {
@@ -488,30 +468,21 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 		// null);
 		// return false;
 		// }
-		if (fJarPackage.getElements() == null
-				|| fJarPackage.getElements().length == 0) {
-			addError(
-					PharPackagerMessages.JarFileExportOperation_noResourcesSelected,
-					null);
+		if (fJarPackage.getElements() == null || fJarPackage.getElements().length == 0) {
+			addError(PharPackagerMessages.JarFileExportOperation_noResourcesSelected, null);
 			return false;
 		}
 		if (fJarPackage.getAbsolutePharLocation() == null) {
-			addError(
-					PharPackagerMessages.JarFileExportOperation_invalidJarLocation,
-					null);
+			addError(PharPackagerMessages.JarFileExportOperation_invalidJarLocation, null);
 			return false;
 		}
 		File targetFile = fJarPackage.getAbsolutePharLocation().toFile();
 		if (targetFile.exists() && !targetFile.canWrite()) {
-			addError(
-					PharPackagerMessages.JarFileExportOperation_jarFileExistsAndNotWritable,
-					null);
+			addError(PharPackagerMessages.JarFileExportOperation_jarFileExistsAndNotWritable, null);
 			return false;
 		}
 		if (!fJarPackage.isStubAccessible()) {
-			addError(
-					PharPackagerMessages.JarFileExportOperation_manifestDoesNotExist,
-					null);
+			addError(PharPackagerMessages.JarFileExportOperation_manifestDoesNotExist, null);
 			return false;
 		}
 

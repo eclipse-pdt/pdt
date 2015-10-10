@@ -69,8 +69,7 @@ public class BindingTests {
 	@Before
 	public void setUp() throws Exception {
 		if (project == null) {
-			project = ResourcesPlugin.getWorkspace().getRoot()
-					.getProject("BindingTests");
+			project = ResourcesPlugin.getWorkspace().getRoot().getProject("BindingTests");
 			if (project.exists()) {
 				return;
 			}
@@ -118,8 +117,7 @@ public class BindingTests {
 		PHPVersion version = ProjectOptions.getDefaultPhpVersion();
 		ISourceModule sourceModule = null;
 		sourceModule = DLTKCore.createSourceModuleFrom(testFile);
-		ASTParser parser = ASTParser.newParser(
-				new InputStreamReader(testFile.getContents()), version, false,
+		ASTParser parser = ASTParser.newParser(new InputStreamReader(testFile.getContents()), version, false,
 				sourceModule);
 		return parser.createAST(new NullProgressMonitor());
 	}
@@ -134,8 +132,7 @@ public class BindingTests {
 	 * @throws CoreException
 	 * @throws Exception
 	 */
-	protected ITypeBinding getTypeBinding(String content, int fromIndex)
-			throws CoreException, Exception {
+	protected ITypeBinding getTypeBinding(String content, int fromIndex) throws CoreException, Exception {
 		Program program = createAndParse(content);
 
 		// locate the expression to test
@@ -156,8 +153,7 @@ public class BindingTests {
 	 * @throws CoreException
 	 * @throws Exception
 	 */
-	protected ITypeBinding getTypeBinding(String content) throws CoreException,
-			Exception {
+	protected ITypeBinding getTypeBinding(String content) throws CoreException, Exception {
 		return getTypeBinding(content, 0);
 	}
 
@@ -245,8 +241,7 @@ public class BindingTests {
 		int indexOf = locateElement(content, 0);
 		ITypeBinding type = getTypeBinding(content);
 		ITypeBinding otherType = getTypeBinding(content, indexOf + 4);
-		assertFalse("Should NOT be sub-type compatible",
-				type.isSubTypeCompatible(otherType));
+		assertFalse("Should NOT be sub-type compatible", type.isSubTypeCompatible(otherType));
 	}
 
 	@Test
@@ -261,7 +256,8 @@ public class BindingTests {
 	// public void testArraysGetComponentType() throws Exception {
 	// // create a file and get the program's root
 	// String content =
-	// "<? interface B {} class A implements B { function foo() { $a = array(1, 2, 3); $b = /**/$a; } } ?>";
+	// "<? interface B {} class A implements B { function foo() { $a = array(1,
+	// 2, 3); $b = /**/$a; } } ?>";
 	// ITypeBinding type = getTypeBinding(content);
 	// // TODO - Right now, this test will always fail until we implement this
 	// // functionality.
@@ -287,8 +283,7 @@ public class BindingTests {
 		String content = "<? interface B {} class A implements B { public $value; private $pValue; function foo() { $a = new A(); $b = /**/$a; } } ?>";
 		ITypeBinding type = getTypeBinding(content);
 		IMethodBinding[] declaredMethods = type.getDeclaredMethods();
-		assertTrue("The declaring type name is wrong", declaredMethods[0]
-				.getDeclaringClass().getName().equals("A"));
+		assertTrue("The declaring type name is wrong", declaredMethods[0].getDeclaringClass().getName().equals("A"));
 		// declaredFields[0].getDeclaringFunction();
 		// TODO - complete the implementation of MethodBinding
 	}
@@ -303,17 +298,15 @@ public class BindingTests {
 
 		type = getTypeBinding(content, index + 4);
 		IMethodBinding[] classAMethods = type.getDeclaredMethods();
-		assertTrue("Should override",
-				classAMethods[0].overrides(interfaceBMethods[0]));
-		assertFalse("Should NOT override",
-				classAMethods[1].overrides(interfaceBMethods[0]));
-		assertTrue("Should override",
-				classAMethods[2].overrides(interfaceBMethods[0]));
+		assertTrue("Should override", classAMethods[0].overrides(interfaceBMethods[0]));
+		assertFalse("Should NOT override", classAMethods[1].overrides(interfaceBMethods[0]));
+		assertTrue("Should override", classAMethods[2].overrides(interfaceBMethods[0]));
 	}
 
 	// public void testConstantExpressionBinding() throws Exception {
 	// String str =
-	// "<?php class A{ const MY_CONSTANT = 3;} function foo() { echo /**/MY_CONSTANT; }  ?>";
+	// "<?php class A{ const MY_CONSTANT = 3;} function foo() { echo
+	// /**/MY_CONSTANT; } ?>";
 	// Program program = createAndParse(str);
 	//
 	// // locate the expression to test
@@ -329,14 +322,11 @@ public class BindingTests {
 		String str = "<?php $a = new MyClass(); class MyClass { public function MyClass() {} } ?>";
 		Program program = createAndParse(str);
 
-		ExpressionStatement statement = (ExpressionStatement) program
-				.statements().get(0);
+		ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
 		Assignment assignment = (Assignment) statement.getExpression();
-		ClassInstanceCreation instanceCreation = (ClassInstanceCreation) assignment
-				.getRightHandSide();
+		ClassInstanceCreation instanceCreation = (ClassInstanceCreation) assignment.getRightHandSide();
 
-		IMethodBinding constructorBinding = instanceCreation
-				.resolveConstructorBinding();
+		IMethodBinding constructorBinding = instanceCreation.resolveConstructorBinding();
 
 		assertNotNull(constructorBinding);
 		assertTrue(constructorBinding.isConstructor() == true);
@@ -349,11 +339,9 @@ public class BindingTests {
 		String str = "<?php $a = 5+5 ?>";
 		Program program = createAndParse(str);
 
-		ExpressionStatement statement = (ExpressionStatement) program
-				.statements().get(0);
+		ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
 		Assignment assignment = (Assignment) statement.getExpression();
-		InfixExpression infixExpression = (InfixExpression) assignment
-				.getRightHandSide();
+		InfixExpression infixExpression = (InfixExpression) assignment.getRightHandSide();
 
 		ITypeBinding expressionBinding = infixExpression.resolveTypeBinding();
 
@@ -366,8 +354,7 @@ public class BindingTests {
 		String str = "<?php class MyClass { var $anotherOne; }; $a = new MyClass(); $b = $a->anotherOne ?>";
 		Program program = createAndParse(str);
 
-		ExpressionStatement statement = (ExpressionStatement) program
-				.statements().get(3);
+		ExpressionStatement statement = (ExpressionStatement) program.statements().get(3);
 		Assignment assignment = (Assignment) statement.getExpression();
 		FieldAccess fieldAccess = (FieldAccess) assignment.getRightHandSide();
 
@@ -383,17 +370,14 @@ public class BindingTests {
 		String str = "<?php class MyClass { public $myvar = \"test\"; public function mymethod(){ return $this->myvar; }} $a = new MyClass(); $a->mymethod();?>";
 		Program program = createAndParse(str);
 
-		ExpressionStatement statement = (ExpressionStatement) program
-				.statements().get(2);
-		MethodInvocation methodInvocation = (MethodInvocation) statement
-				.getExpression();
+		ExpressionStatement statement = (ExpressionStatement) program.statements().get(2);
+		MethodInvocation methodInvocation = (MethodInvocation) statement.getExpression();
 		IMethodBinding methodBinding = methodInvocation.resolveMethodBinding();
 
 		assertNotNull(methodBinding);
 		assertTrue(methodBinding.getName().equals("mymethod"));
 		assertNotNull(methodBinding.getDeclaringClass());
-		assertTrue(methodBinding.getDeclaringClass().getName()
-				.equals("MyClass"));
+		assertTrue(methodBinding.getDeclaringClass().getName().equals("MyClass"));
 		assertTrue(methodBinding.isConstructor() == false);
 		assertTrue(methodBinding.getReturnType()[0].getName().equals("string"));
 	}
@@ -403,10 +387,8 @@ public class BindingTests {
 		String str = "<?php class MyClass { public static $a = 4; } ; /**/MyClass::$a;?>";
 		Program program = createAndParse(str);
 
-		final ExpressionStatement statement = (ExpressionStatement) program
-				.statements().get(2);
-		final StaticFieldAccess staticFieldAcces = (StaticFieldAccess) statement
-				.getExpression();
+		final ExpressionStatement statement = (ExpressionStatement) program.statements().get(2);
+		final StaticFieldAccess staticFieldAcces = (StaticFieldAccess) statement.getExpression();
 		IVariableBinding fieldBinding = staticFieldAcces.resolveFieldBinding();
 
 		assertTrue(fieldBinding.isField() == true);
@@ -419,12 +401,9 @@ public class BindingTests {
 		String str = "<?php class MyClass { const A = 4; } ; /**/MyClass::A;?>";
 		Program program = createAndParse(str);
 
-		final ExpressionStatement statement = (ExpressionStatement) program
-				.statements().get(2);
-		final StaticConstantAccess constantAccess = (StaticConstantAccess) statement
-				.getExpression();
-		IVariableBinding fieldBinding = (IVariableBinding) constantAccess
-				.resolveFieldBinding();
+		final ExpressionStatement statement = (ExpressionStatement) program.statements().get(2);
+		final StaticConstantAccess constantAccess = (StaticConstantAccess) statement.getExpression();
+		IVariableBinding fieldBinding = (IVariableBinding) constantAccess.resolveFieldBinding();
 
 		assertNotNull(fieldBinding);
 		assertTrue(fieldBinding.isField());
@@ -436,12 +415,10 @@ public class BindingTests {
 		Program program = createAndParse(str);
 
 		IFile myFile = project.getFile("myFile.php");
-		myFile.create(new ByteArrayInputStream(new byte[] {}), true,
-				new NullProgressMonitor());
+		myFile.create(new ByteArrayInputStream(new byte[] {}), true, new NullProgressMonitor());
 		try {
 
-			ExpressionStatement statement = (ExpressionStatement) program
-					.statements().get(0);
+			ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
 			Include include = (Include) statement.getExpression();
 
 			IBinding sourceBinding = include.resolveBinding();
@@ -460,11 +437,9 @@ public class BindingTests {
 		String str = "<?php function foo() { return new SoapClient(); } ?> ";
 		Program program = createAndParse(str);
 
-		FunctionDeclaration functionDeclaration = (FunctionDeclaration) program
-				.statements().get(0);
+		FunctionDeclaration functionDeclaration = (FunctionDeclaration) program.statements().get(0);
 
-		IFunctionBinding functionBinding = functionDeclaration
-				.resolveFunctionBinding();
+		IFunctionBinding functionBinding = functionDeclaration.resolveFunctionBinding();
 
 		assertNotNull(functionBinding);
 		assertTrue(functionBinding.getName().equals("foo"));
@@ -478,17 +453,14 @@ public class BindingTests {
 		String str = "<?php class MyClass { function foo(){ return new MyClass(); } } ?>";
 		Program program = createAndParse(str);
 
-		ClassDeclaration classDeclaration = (ClassDeclaration) program
-				.statements().get(0);
-		MethodDeclaration methodDeclaration = (MethodDeclaration) classDeclaration
-				.getBody().statements().get(0);
+		ClassDeclaration classDeclaration = (ClassDeclaration) program.statements().get(0);
+		MethodDeclaration methodDeclaration = (MethodDeclaration) classDeclaration.getBody().statements().get(0);
 
 		IMethodBinding methodBinding = methodDeclaration.resolveMethodBinding();
 		assertNotNull(methodBinding);
 		assertTrue(methodBinding.getName().equals("foo"));
 		assertNotNull(methodBinding.getDeclaringClass());
-		assertTrue(methodBinding.getDeclaringClass().getName()
-				.equals("MyClass"));
+		assertTrue(methodBinding.getDeclaringClass().getName().equals("MyClass"));
 		assertTrue(methodBinding.isConstructor() == false);
 		assertTrue(methodBinding.getReturnType()[0].getName().equals("MyClass"));
 
@@ -499,20 +471,16 @@ public class BindingTests {
 		String str = "<?php class MyClass { function foo(){ yield 1; } } ?>";
 		Program program = createAndParse(str);
 
-		ClassDeclaration classDeclaration = (ClassDeclaration) program
-				.statements().get(0);
-		MethodDeclaration methodDeclaration = (MethodDeclaration) classDeclaration
-				.getBody().statements().get(0);
+		ClassDeclaration classDeclaration = (ClassDeclaration) program.statements().get(0);
+		MethodDeclaration methodDeclaration = (MethodDeclaration) classDeclaration.getBody().statements().get(0);
 
 		IMethodBinding methodBinding = methodDeclaration.resolveMethodBinding();
 		assertNotNull(methodBinding);
 		assertTrue(methodBinding.getName().equals("foo"));
 		assertNotNull(methodBinding.getDeclaringClass());
-		assertTrue(methodBinding.getDeclaringClass().getName()
-				.equals("MyClass"));
+		assertTrue(methodBinding.getDeclaringClass().getName().equals("MyClass"));
 		assertTrue(methodBinding.isConstructor() == false);
-		assertTrue(methodBinding.getReturnType()[0].getName().equals(
-				"Generator"));
+		assertTrue(methodBinding.getReturnType()[0].getName().equals("Generator"));
 
 	}
 
@@ -539,13 +507,10 @@ public class BindingTests {
 		String str = "<?php function foo(){} foo(); ?>";
 		Program program = createAndParse(str);
 
-		ExpressionStatement statement = (ExpressionStatement) program
-				.statements().get(1);
-		FunctionInvocation functionInvocation = (FunctionInvocation) statement
-				.getExpression();
+		ExpressionStatement statement = (ExpressionStatement) program.statements().get(1);
+		FunctionInvocation functionInvocation = (FunctionInvocation) statement.getExpression();
 
-		IFunctionBinding functionBinding = functionInvocation
-				.resolveFunctionBinding();
+		IFunctionBinding functionBinding = functionInvocation.resolveFunctionBinding();
 		assertNotNull(functionBinding);
 		assertTrue(functionBinding.getName().equals("foo"));
 		assertTrue(functionBinding.isVarargs() == false);
@@ -572,10 +537,8 @@ public class BindingTests {
 		String str = "<?php class MyClass { function foo(){} } $a = new MyClass(); $a->foo(); ?>";
 		Program program = createAndParse(str);
 
-		ExpressionStatement statement = (ExpressionStatement) program
-				.statements().get(2);
-		MethodInvocation methodInvocation = (MethodInvocation) statement
-				.getExpression();
+		ExpressionStatement statement = (ExpressionStatement) program.statements().get(2);
+		MethodInvocation methodInvocation = (MethodInvocation) statement.getExpression();
 
 		IMethodBinding methodBinding = methodInvocation.resolveMethodBinding();
 		assertNotNull(methodBinding);
@@ -590,7 +553,8 @@ public class BindingTests {
 
 	// public void testMethodInvocationParametersBinding() throws Exception {
 	// String str =
-	// "<?php class MyClass { function foo(MyClass $instance){} } $a = new MyClass(); $a->foo(); ?>";
+	// "<?php class MyClass { function foo(MyClass $instance){} } $a = new
+	// MyClass(); $a->foo(); ?>";
 	// Program program = createAndParse(str);
 	//
 	// ExpressionStatement statement = (ExpressionStatement) program
@@ -610,13 +574,10 @@ public class BindingTests {
 		String str = "<?php class MyClass { static function foo(){} } MyClass::foo($a); ?>";
 		Program program = createAndParse(str);
 
-		ExpressionStatement statement = (ExpressionStatement) program
-				.statements().get(1);
-		StaticMethodInvocation staticMethodInvocation = (StaticMethodInvocation) statement
-				.getExpression();
+		ExpressionStatement statement = (ExpressionStatement) program.statements().get(1);
+		StaticMethodInvocation staticMethodInvocation = (StaticMethodInvocation) statement.getExpression();
 
-		IMethodBinding methodBinding = staticMethodInvocation
-				.resolveMethodBinding();
+		IMethodBinding methodBinding = staticMethodInvocation.resolveMethodBinding();
 
 		assertNotNull(methodBinding);
 		assertTrue(methodBinding.isConstructor() == false);
@@ -726,8 +687,7 @@ public class BindingTests {
 		String str = "<?php class A {} ?>";
 		Program program = createAndParse(str);
 
-		ClassDeclaration classDeclaration = (ClassDeclaration) program
-				.statements().get(0);
+		ClassDeclaration classDeclaration = (ClassDeclaration) program.statements().get(0);
 		ITypeBinding binding = classDeclaration.resolveTypeBinding();
 
 		assertNotNull(binding);
@@ -741,8 +701,7 @@ public class BindingTests {
 		String str = "<?php interface A {} ?>";
 		Program program = createAndParse(str);
 
-		InterfaceDeclaration interfaceDeclaration = (InterfaceDeclaration) program
-				.statements().get(0);
+		InterfaceDeclaration interfaceDeclaration = (InterfaceDeclaration) program.statements().get(0);
 		ITypeBinding binding = interfaceDeclaration.resolveTypeBinding();
 
 		assertNotNull(binding);

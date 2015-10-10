@@ -71,8 +71,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 
 				} else if (traitStatement instanceof TraitPrecedenceStatement) {
 					TraitPrecedenceStatement statement = (TraitPrecedenceStatement) traitStatement;
-					FullyQualifiedTraitMethodReference reference = statement
-							.getPrecedence().getMethodReference();
+					FullyQualifiedTraitMethodReference reference = statement.getPrecedence().getMethodReference();
 					highlightNamespaceType(reference.getClassName());
 					traitList = statement.getPrecedence().getTrList();
 					for (NamespaceName namespaceName : traitList) {

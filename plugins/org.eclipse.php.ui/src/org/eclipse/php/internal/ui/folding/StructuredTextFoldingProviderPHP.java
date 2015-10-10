@@ -60,9 +60,8 @@ import org.w3c.dom.Node;
 /**
  * Updates the projection model of a structured model for JSP.
  */
-public class StructuredTextFoldingProviderPHP implements IProjectionListener,
-		IStructuredTextFoldingProvider, IFoldingStructureProviderExtension,
-		IFoldingStructureProvider {
+public class StructuredTextFoldingProviderPHP implements IProjectionListener, IStructuredTextFoldingProvider,
+		IFoldingStructureProviderExtension, IFoldingStructureProvider {
 
 	/**
 	 * A context that contains the information needed to compute the folding
@@ -83,8 +82,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		private ICommentScanner fScanner;
 		private boolean headerChecked = false;
 
-		private FoldingStructureComputationContext(IDocument document,
-				ProjectionAnnotationModel model, boolean allowCollapsing) {
+		private FoldingStructureComputationContext(IDocument document, ProjectionAnnotationModel model,
+				boolean allowCollapsing) {
 			Assert.isNotNull(document);
 			Assert.isNotNull(model);
 			fDocument = document;
@@ -158,8 +157,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		 * @param position
 		 *            the corresponding position
 		 */
-		public void addProjectionRange(PhpProjectionAnnotation annotation,
-				Position position) {
+		public void addProjectionRange(PhpProjectionAnnotation annotation, Position position) {
 			fMap.put(annotation, position);
 		}
 
@@ -263,8 +261,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 
 			try {
 				// ignore whitespaces
-				while (start > 0
-						&& Character.isWhitespace(document.getChar(start))) {
+				while (start > 0 && Character.isWhitespace(document.getChar(start))) {
 					start--;
 				}
 
@@ -278,9 +275,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 					return startElement;
 				}
 
-				while (start > 0
-						&& (document.getChar(start) != '*' || document
-								.getChar(start - 1) != '/')) {
+				while (start > 0 && (document.getChar(start) != '*' || document.getChar(start - 1) != '/')) {
 					start--;
 				}
 
@@ -304,8 +299,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	/**
 	 * A {@link ProjectionAnnotation} for java code.
 	 */
-	protected static final class PhpProjectionAnnotation extends
-			ProjectionAnnotation {
+	protected static final class PhpProjectionAnnotation extends ProjectionAnnotation {
 
 		private IModelElement fJavaElement;
 		private boolean fIsComment;
@@ -322,8 +316,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		 *            <code>true</code> for a foldable comment,
 		 *            <code>false</code> for a foldable code element
 		 */
-		public PhpProjectionAnnotation(boolean isCollapsed,
-				IModelElement element, boolean isComment) {
+		public PhpProjectionAnnotation(boolean isCollapsed, IModelElement element, boolean isComment) {
 			super(isCollapsed);
 			fJavaElement = element;
 			fIsComment = isComment;
@@ -410,17 +403,14 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		private final Set/* <? extends IModelElement> */<IModelElement> fSet;
 		private final boolean fMatchCollapsed;
 
-		private PhpElementSetFilter(
-				Set/* <? extends IModelElement> */<IModelElement> set,
-				boolean matchCollapsed) {
+		private PhpElementSetFilter(Set/* <? extends IModelElement> */<IModelElement> set, boolean matchCollapsed) {
 			fSet = set;
 			fMatchCollapsed = matchCollapsed;
 		}
 
 		public boolean match(PhpProjectionAnnotation annotation) {
 			boolean stateMatch = fMatchCollapsed == annotation.isCollapsed();
-			if (stateMatch && !annotation.isComment()
-					&& !annotation.isMarkedDeleted()) {
+			if (stateMatch && !annotation.isComment() && !annotation.isMarkedDeleted()) {
 				IModelElement element = annotation.getElement();
 				if (fSet.contains(element)) {
 					return true;
@@ -433,9 +423,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	private class ElementChangedListener implements IElementChangedListener {
 
 		/*
-		 * @see
-		 * org.eclipse.jdt.core.IElementChangedListener#elementChanged(org.eclipse
-		 * .jdt.core.ElementChangedEvent)
+		 * @see org.eclipse.jdt.core.IElementChangedListener#elementChanged(org.
+		 * eclipse .jdt.core.ElementChangedEvent)
 		 */
 		public void elementChanged(ElementChangedEvent e) {
 			IModelElementDelta delta = findElement(fInput, e.getDelta());
@@ -468,8 +457,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		 * @return <code>true</code> if the delta should be ignored
 		 * @since 3.3
 		 */
-		private boolean shouldIgnoreDelta(IModelElement ast,
-				IModelElementDelta delta) {
+		private boolean shouldIgnoreDelta(IModelElement ast, IModelElementDelta delta) {
 			if (ast == null)
 				return false; // can't compute
 
@@ -488,24 +476,19 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 
 			int caretLine = 0;
 			try {
-				caretLine = document.getLineOfOffset(editor
-						.getCachedSelectedRange().x) + 1;
+				caretLine = document.getLineOfOffset(editor.getCachedSelectedRange().x) + 1;
 			} catch (BadLocationException x) {
 				return false; // can't compute
 			}
 
 			if (caretLine > 0) {
 				try {
-					IMarker[] problems = resource.findMarkers(
-							DefaultProblem.MARKER_TYPE_PROBLEM, false,
+					IMarker[] problems = resource.findMarkers(DefaultProblem.MARKER_TYPE_PROBLEM, false,
 							IResource.DEPTH_INFINITE);
 					for (int i = 0; i < problems.length; i++) {
 						final IMarker marker = problems[i];
-						final boolean isInCaret = isCaretLine(caretLine,
-								IMarker.LINE_NUMBER, marker);
-						final boolean isSyntaxError = isCaretLine(
-								IMarker.SEVERITY_ERROR, IMarker.SEVERITY,
-								marker);
+						final boolean isInCaret = isCaretLine(caretLine, IMarker.LINE_NUMBER, marker);
+						final boolean isSyntaxError = isCaretLine(IMarker.SEVERITY_ERROR, IMarker.SEVERITY, marker);
 						if (isSyntaxError && isInCaret) {
 							return true;
 						}
@@ -518,15 +501,12 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 			return false;
 		}
 
-		private final boolean isCaretLine(int expected, String attribute,
-				final IMarker marker) throws CoreException {
+		private final boolean isCaretLine(int expected, String attribute, final IMarker marker) throws CoreException {
 			final Object res = marker.getAttribute(attribute); // IMarker.LINE_NUMBER
-			return res != null && res instanceof Integer
-					&& (Integer) res == expected;
+			return res != null && res instanceof Integer && (Integer) res == expected;
 		}
 
-		private IModelElementDelta findElement(IModelElement target,
-				IModelElementDelta delta) {
+		private IModelElementDelta findElement(IModelElement target, IModelElementDelta delta) {
 
 			if (delta == null || target == null)
 				return null;
@@ -556,8 +536,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	 * away the region from after the '/**' to the beginning of the content, the
 	 * other from after the first content line until after the comment.
 	 */
-	private static final class CommentPosition extends Position implements
-			IProjectionPosition {
+	private static final class CommentPosition extends Position implements IProjectionPosition {
 		CommentPosition(int offset, int length) {
 			super(offset, length);
 		}
@@ -566,10 +545,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		 * @seeorg.eclipse.jface.text.source.projection.IProjectionPosition#
 		 * computeFoldingRegions(org.eclipse.jface.text.IDocument)
 		 */
-		public IRegion[] computeProjectionRegions(IDocument document)
-				throws BadLocationException {
-			DocumentCharacterIterator sequence = new DocumentCharacterIterator(
-					document, offset, offset + length);
+		public IRegion[] computeProjectionRegions(IDocument document) throws BadLocationException {
+			DocumentCharacterIterator sequence = new DocumentCharacterIterator(document, offset, offset + length);
 			int prefixEnd = 0;
 			int contentStart = findFirstContent(sequence, prefixEnd);
 
@@ -577,16 +554,13 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 			int captionLine = document.getLineOfOffset(offset + contentStart);
 			int lastLine = document.getLineOfOffset(offset + length);
 
-			Assert.isTrue(firstLine <= captionLine,
-					"first folded line is greater than the caption line"); //$NON-NLS-1$
-			Assert.isTrue(captionLine <= lastLine,
-					"caption line is greater than the last folded line"); //$NON-NLS-1$
+			Assert.isTrue(firstLine <= captionLine, "first folded line is greater than the caption line"); //$NON-NLS-1$
+			Assert.isTrue(captionLine <= lastLine, "caption line is greater than the last folded line"); //$NON-NLS-1$
 
 			IRegion preRegion;
 			if (firstLine < captionLine) {
 				int preOffset = document.getLineOffset(firstLine);
-				IRegion preEndLineInfo = document
-						.getLineInformation(captionLine);
+				IRegion preEndLineInfo = document.getLineInformation(captionLine);
 				int preEnd = preEndLineInfo.getOffset();
 				preRegion = new Region(preOffset, preEnd - preOffset);
 			} else {
@@ -595,8 +569,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 
 			if (captionLine < lastLine) {
 				int postOffset = document.getLineOffset(captionLine + 1);
-				IRegion postRegion = new Region(postOffset, offset + length
-						- postOffset);
+				IRegion postRegion = new Region(postOffset, offset + length - postOffset);
 
 				if (preRegion == null)
 					return new IRegion[] { postRegion };
@@ -635,8 +608,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		 * computeCaptionOffset(org.eclipse.jface.text.IDocument)
 		 */
 		public int computeCaptionOffset(IDocument document) {
-			DocumentCharacterIterator sequence = new DocumentCharacterIterator(
-					document, offset, offset + length);
+			DocumentCharacterIterator sequence = new DocumentCharacterIterator(document, offset, offset + length);
 			return findFirstContent(sequence, 0);
 		}
 	}
@@ -646,8 +618,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	 * away the lines before the one containing the simple name of the php
 	 * element, one folding away any lines after the caption.
 	 */
-	private static final class PhpElementPosition extends Position implements
-			IProjectionPosition {
+	private static final class PhpElementPosition extends Position implements IProjectionPosition {
 
 		private IMember fMember;
 
@@ -666,8 +637,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		 * @seeorg.eclipse.jface.text.source.projection.IProjectionPosition#
 		 * computeFoldingRegions(org.eclipse.jface.text.IDocument)
 		 */
-		public IRegion[] computeProjectionRegions(IDocument document)
-				throws BadLocationException {
+		public IRegion[] computeProjectionRegions(IDocument document) throws BadLocationException {
 			int nameStart = offset;
 			try {
 				/*
@@ -702,8 +672,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 			IRegion preRegion;
 			if (firstLine < captionLine) {
 				int preOffset = document.getLineOffset(firstLine);
-				IRegion preEndLineInfo = document
-						.getLineInformation(captionLine);
+				IRegion preEndLineInfo = document.getLineInformation(captionLine);
 				int preEnd = preEndLineInfo.getOffset();
 				preRegion = new Region(preOffset, preEnd - preOffset);
 			} else {
@@ -712,8 +681,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 
 			if (captionLine < lastLine) {
 				int postOffset = document.getLineOffset(captionLine + 1);
-				IRegion postRegion = new Region(postOffset, offset + length
-						- postOffset);
+				IRegion postRegion = new Region(postOffset, offset + length - postOffset);
 
 				if (preRegion == null)
 					return new IRegion[] { postRegion };
@@ -731,8 +699,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		 * @seeorg.eclipse.jface.text.source.projection.IProjectionPosition#
 		 * computeCaptionOffset(org.eclipse.jface.text.IDocument)
 		 */
-		public int computeCaptionOffset(IDocument document)
-				throws BadLocationException {
+		public int computeCaptionOffset(IDocument document) throws BadLocationException {
 			int nameStart = offset;
 			try {
 				// need a reconcile here?
@@ -966,12 +933,10 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		if (fDocument != null) {
 			IStructuredModel sModel = null;
 			try {
-				sModel = StructuredModelManager.getModelManager()
-						.getExistingModelForRead(fDocument);
+				sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
 				if (sModel != null) {
 					final int startOffset = 0;
-					final IndexedRegion startNode = sModel
-							.getIndexedRegion(startOffset);
+					final IndexedRegion startNode = sModel.getIndexedRegion(startOffset);
 					if (startNode instanceof Node) {
 						Node nextSibling = (Node) startNode;
 						while (nextSibling != null) {
@@ -1002,8 +967,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 			final INodeNotifier notifier = (INodeNotifier) node;
 
 			// try and get the adapter for the current node and remove it
-			final INodeAdapter adapter2 = notifier
-					.getExistingAdapter(ProjectionModelNodeAdapterHTML.class);
+			final INodeAdapter adapter2 = notifier.getExistingAdapter(ProjectionModelNodeAdapterHTML.class);
 			if (adapter2 != null) {
 				notifier.removeAdapter(adapter2);
 			}
@@ -1060,8 +1024,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		if (fDocument != null) {
 			IStructuredModel sModel = null;
 			try {
-				sModel = StructuredModelManager.getModelManager()
-						.getExistingModelForRead(fDocument);
+				sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
 				if (sModel != null) {
 					IndexedRegion startNode = sModel.getIndexedRegion(0);
 					if (startNode == null) {
@@ -1073,8 +1036,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 						int siblingLevel = 0;
 						Node nextSibling = (Node) startNode;
 
-						while (nextSibling != null
-								&& siblingLevel < MAX_SIBLINGS) {
+						while (nextSibling != null && siblingLevel < MAX_SIBLINGS) {
 							final Node currentNode = nextSibling;
 							nextSibling = currentNode.getNextSibling();
 
@@ -1131,26 +1093,21 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	 * 
 	 * @return ProjectionModelNodeAdapterFactoryHTML
 	 */
-	private ProjectionModelNodeAdapterFactoryHTML getAdapterFactoryHTML(
-			boolean createIfNeeded) {
+	private ProjectionModelNodeAdapterFactoryHTML getAdapterFactoryHTML(boolean createIfNeeded) {
 		final long start = System.currentTimeMillis();
 
 		ProjectionModelNodeAdapterFactoryHTML factory = null;
 		if (fDocument != null) {
 			IStructuredModel sModel = null;
 			try {
-				sModel = StructuredModelManager.getModelManager()
-						.getExistingModelForRead(fDocument);
+				sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
 				if (sModel != null && (sModel instanceof IDOMModel)) {
-					final FactoryRegistry factoryRegistry = sModel
-							.getFactoryRegistry();
+					final FactoryRegistry factoryRegistry = sModel.getFactoryRegistry();
 
 					// getting the projectionmodelnodeadapter for the first
 					// time
 					// so do some initializing
-					if (!factoryRegistry
-							.contains(ProjectionModelNodeAdapterHTML.class)
-							&& createIfNeeded) {
+					if (!factoryRegistry.contains(ProjectionModelNodeAdapterHTML.class) && createIfNeeded) {
 						final ProjectionModelNodeAdapterFactoryHTML newFactory = new ProjectionModelNodeAdapterFactoryHTML();
 
 						// add factory to factory registry
@@ -1162,8 +1119,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 						final PropagatingAdapter propagatingAdapter = (PropagatingAdapter) ((INodeNotifier) document)
 								.getAdapterFor(PropagatingAdapter.class);
 						if (propagatingAdapter != null) {
-							propagatingAdapter
-									.addAdaptOnCreateFactory(newFactory);
+							propagatingAdapter.addAdaptOnCreateFactory(newFactory);
 						}
 					}
 
@@ -1190,8 +1146,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		return createContext(true);
 	}
 
-	private FoldingStructureComputationContext createContext(
-			boolean allowCollapse) {
+	private FoldingStructureComputationContext createContext(boolean allowCollapse) {
 		if (!isInstalled())
 			return null;
 		ProjectionAnnotationModel model = getModel();
@@ -1214,14 +1169,10 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
 		// fCollapseImportContainer=
 		// store.getBoolean(PreferenceConstants.EDITOR_FOLDING_IMPORTS);
-		fCollapseTypes = store
-				.getBoolean(PreferenceConstants.EDITOR_FOLDING_CLASSES);
-		fCollapsePhpdoc = store
-				.getBoolean(PreferenceConstants.EDITOR_FOLDING_PHPDOC);
-		fCollapseMembers = store
-				.getBoolean(PreferenceConstants.EDITOR_FOLDING_FUNCTIONS);
-		fCollapseHeaderComments = store
-				.getBoolean(PreferenceConstants.EDITOR_FOLDING_HEADER_COMMENTS);
+		fCollapseTypes = store.getBoolean(PreferenceConstants.EDITOR_FOLDING_CLASSES);
+		fCollapsePhpdoc = store.getBoolean(PreferenceConstants.EDITOR_FOLDING_PHPDOC);
+		fCollapseMembers = store.getBoolean(PreferenceConstants.EDITOR_FOLDING_FUNCTIONS);
+		fCollapseHeaderComments = store.getBoolean(PreferenceConstants.EDITOR_FOLDING_HEADER_COMMENTS);
 	}
 
 	private void update(FoldingStructureComputationContext ctx) {
@@ -1237,8 +1188,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		Map<IModelElement, Object> oldStructure = computeCurrentStructure(ctx);
 
 		for (Entry<Object, Position> entry : newStructure.entrySet()) {
-			PhpProjectionAnnotation newAnnotation = (PhpProjectionAnnotation) entry
-					.getKey();
+			PhpProjectionAnnotation newAnnotation = (PhpProjectionAnnotation) entry.getKey();
 			Position newPosition = entry.getValue();
 
 			IModelElement element = newAnnotation.getElement();
@@ -1265,13 +1215,10 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 					Tuple tuple = (Tuple) x.next();
 					PhpProjectionAnnotation existingAnnotation = tuple.annotation;
 					Position existingPosition = tuple.position;
-					if (newAnnotation.isComment() == existingAnnotation
-							.isComment()) {
+					if (newAnnotation.isComment() == existingAnnotation.isComment()) {
 						boolean updateCollapsedState = ctx.allowCollapsing()
-								&& existingAnnotation.isCollapsed() != newAnnotation
-										.isCollapsed();
-						if (!isMalformedAnonymousType
-								&& existingPosition != null
+								&& existingAnnotation.isCollapsed() != newAnnotation.isCollapsed();
+						if (!isMalformedAnonymousType && existingPosition != null
 								&& (!newPosition.equals(existingPosition) || updateCollapsedState)) {
 							existingPosition.setOffset(newPosition.getOffset());
 							existingPosition.setLength(newPosition.getLength());
@@ -1304,10 +1251,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 
 		match(deletions, additions, updates, ctx);
 
-		Annotation[] deletedArray = deletions.toArray(new Annotation[deletions
-				.size()]);
-		Annotation[] changedArray = updates.toArray(new Annotation[updates
-				.size()]);
+		Annotation[] deletedArray = deletions.toArray(new Annotation[deletions.size()]);
+		Annotation[] changedArray = updates.toArray(new Annotation[updates.size()]);
 		ctx.getModel().modifyAnnotations(deletedArray, additions, changedArray);
 	}
 
@@ -1321,8 +1266,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		}
 	}
 
-	private void computeFoldingStructure(IModelElement[] elements,
-			FoldingStructureComputationContext ctx) throws ModelException {
+	private void computeFoldingStructure(IModelElement[] elements, FoldingStructureComputationContext ctx)
+			throws ModelException {
 		for (int i = 0; i < elements.length; i++) {
 			IModelElement element = elements[i];
 
@@ -1356,8 +1301,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	 * @param ctx
 	 *            the computation context
 	 */
-	protected void computeFoldingStructure(IModelElement element,
-			FoldingStructureComputationContext ctx) {
+	protected void computeFoldingStructure(IModelElement element, FoldingStructureComputationContext ctx) {
 
 		boolean collapse = false;
 		boolean collapseCode = true;
@@ -1385,8 +1329,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 			return;
 		}
 
-		IRegion[] regions = computeProjectionRanges((ISourceReference) element,
-				ctx);
+		IRegion[] regions = computeProjectionRanges((ISourceReference) element, ctx);
 		if (regions.length > 0) {
 			// comments
 			// use the set to filter the duplicate comment IRegion,or sometimes
@@ -1401,30 +1344,24 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 					Position position = createCommentPosition(normalized);
 					if (position != null) {
 						boolean commentCollapse;
-						if (i == 0
-								&& (regions.length > 2 || ctx
-										.hasHeaderComment())
+						if (i == 0 && (regions.length > 2 || ctx.hasHeaderComment())
 								&& element == ctx.getFirstElement()) {
 							commentCollapse = ctx.collapseHeaderComments();
 						} else {
 							commentCollapse = ctx.collapseJavadoc();
 						}
-						ctx.addProjectionRange(new PhpProjectionAnnotation(
-								commentCollapse, element, true), position);
+						ctx.addProjectionRange(new PhpProjectionAnnotation(commentCollapse, element, true), position);
 					}
 				}
 			}
 			// code
 			if (collapseCode) {
-				IRegion normalized = alignRegion(regions[regions.length - 1],
-						ctx);
+				IRegion normalized = alignRegion(regions[regions.length - 1], ctx);
 				if (normalized != null) {
-					Position position = element instanceof IMember ? createMemberPosition(
-							normalized, (IMember) element)
+					Position position = element instanceof IMember ? createMemberPosition(normalized, (IMember) element)
 							: createCommentPosition(normalized);
 					if (position != null)
-						ctx.addProjectionRange(new PhpProjectionAnnotation(
-								collapse, element, false), position);
+						ctx.addProjectionRange(new PhpProjectionAnnotation(collapse, element, false), position);
 				}
 			}
 		}
@@ -1446,8 +1383,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	 *            the folding context
 	 * @return the regions to be folded
 	 */
-	protected final IRegion[] computeProjectionRanges(
-			ISourceReference reference, FoldingStructureComputationContext ctx) {
+	protected final IRegion[] computeProjectionRanges(ISourceReference reference,
+			FoldingStructureComputationContext ctx) {
 		try {
 			ISourceRange range = reference.getSourceRange();
 			if (!SourceRange.isAvailable(range))
@@ -1490,34 +1427,26 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		return new IRegion[0];
 	}
 
-	private IRegion computeHeaderComment(FoldingStructureComputationContext ctx)
-			throws ModelException {
+	private IRegion computeHeaderComment(FoldingStructureComputationContext ctx) throws ModelException {
 		if (!(ctx.getDocument() instanceof IStructuredDocument)) {
 			return null;
 		}
-		final IStructuredDocument document = (IStructuredDocument) ctx
-				.getDocument();
-		IStructuredDocumentRegion sdRegion = document
-				.getFirstStructuredDocumentRegion();
+		final IStructuredDocument document = (IStructuredDocument) ctx.getDocument();
+		IStructuredDocumentRegion sdRegion = document.getFirstStructuredDocumentRegion();
 		int i = 0;
-		while (sdRegion != null
-				&& sdRegion.getType() != PHPRegionTypes.PHP_CONTENT && i++ < 40) {
+		while (sdRegion != null && sdRegion.getType() != PHPRegionTypes.PHP_CONTENT && i++ < 40) {
 			sdRegion = sdRegion.getNext();
 		}
 
-		if (sdRegion == null
-				|| sdRegion.getType() != PHPRegionTypes.PHP_CONTENT
-				|| sdRegion.getRegions().size() < 2) {
+		if (sdRegion == null || sdRegion.getType() != PHPRegionTypes.PHP_CONTENT || sdRegion.getRegions().size() < 2) {
 			return null;
 		}
 
-		final IPhpScriptRegion textRegion = (IPhpScriptRegion) sdRegion
-				.getRegions().get(1);
+		final IPhpScriptRegion textRegion = (IPhpScriptRegion) sdRegion.getRegions().get(1);
 		try {
 			ITextRegion phpToken = textRegion.getPhpToken(0);
 			i = 0;
-			while (phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_START
-					&& i++ < 3) {
+			while (phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_START && i++ < 3) {
 				phpToken = textRegion.getPhpToken(phpToken.getEnd());
 			}
 			if (phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_START) {
@@ -1525,15 +1454,13 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 			}
 			int start = phpToken.getStart();
 			ITextRegion lastToken = null;
-			while (lastToken != phpToken
-					&& phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_END) {
+			while (lastToken != phpToken && phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_END) {
 				phpToken = textRegion.getPhpToken(phpToken.getEnd());
 			}
 
 			if (phpToken.getType() == PHPRegionTypes.PHPDOC_COMMENT_END) {
 				int end = phpToken.getEnd();
-				return new Region(sdRegion.getStartOffset()
-						+ textRegion.getStart() + start, end - start);
+				return new Region(sdRegion.getStartOffset() + textRegion.getStart() + start, end - start);
 			}
 			return null;
 
@@ -1612,10 +1539,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	 *            the member to remember
 	 * @return a folding position corresponding to <code>aligned</code>
 	 */
-	protected final Position createMemberPosition(IRegion aligned,
-			IMember member) {
-		return new PhpElementPosition(aligned.getOffset(), aligned.getLength(),
-				member);
+	protected final Position createMemberPosition(IRegion aligned, IMember member) {
+		return new PhpElementPosition(aligned.getOffset(), aligned.getLength(), member);
 	}
 
 	/**
@@ -1634,8 +1559,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	 *         aligned with line offsets, <code>null</code> if the region is too
 	 *         small to be foldable (e.g. covers only one line)
 	 */
-	protected final IRegion alignRegion(IRegion region,
-			FoldingStructureComputationContext ctx) {
+	protected final IRegion alignRegion(IRegion region, FoldingStructureComputationContext ctx) {
 		if (region == null)
 			return null;
 
@@ -1644,8 +1568,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		try {
 
 			int start = document.getLineOfOffset(region.getOffset());
-			int end = document.getLineOfOffset(Math.min(region.getOffset()
-					+ region.getLength() - 1, document.getLength()));
+			int end = document
+					.getLineOfOffset(Math.min(region.getOffset() + region.getLength() - 1, document.getLength()));
 			if (start >= end)
 				return null;
 
@@ -1654,8 +1578,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 			if (document.getNumberOfLines() > end + 1)
 				endOffset = document.getLineOffset(end + 1);
 			else
-				endOffset = document.getLineOffset(end)
-						+ document.getLineLength(end);
+				endOffset = document.getLineOffset(end) + document.getLineLength(end);
 
 			return new Region(offset, endOffset - offset);
 
@@ -1697,18 +1620,15 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	 * @param ctx
 	 *            the context
 	 */
-	private void match(List<PhpProjectionAnnotation> deletions,
-			Map<PhpProjectionAnnotation, Position> additions,
-			List<PhpProjectionAnnotation> changes,
-			FoldingStructureComputationContext ctx) {
+	private void match(List<PhpProjectionAnnotation> deletions, Map<PhpProjectionAnnotation, Position> additions,
+			List<PhpProjectionAnnotation> changes, FoldingStructureComputationContext ctx) {
 		if (deletions.isEmpty() || (additions.isEmpty() && changes.isEmpty()))
 			return;
 
 		List<PhpProjectionAnnotation> newDeletions = new ArrayList<PhpProjectionAnnotation>();
 		List<PhpProjectionAnnotation> newChanges = new ArrayList<PhpProjectionAnnotation>();
 
-		Iterator<PhpProjectionAnnotation> deletionIterator = deletions
-				.iterator();
+		Iterator<PhpProjectionAnnotation> deletionIterator = deletions.iterator();
 		while (deletionIterator.hasNext()) {
 			PhpProjectionAnnotation deleted = deletionIterator.next();
 			Position deletedPosition = ctx.getModel().getPosition(deleted);
@@ -1720,8 +1640,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 			Tuple match = findMatch(deletedTuple, changes, null, ctx);
 			boolean addToDeletions = true;
 			if (match == null) {
-				match = findMatch(deletedTuple, additions.keySet(), additions,
-						ctx);
+				match = findMatch(deletedTuple, additions.keySet(), additions, ctx);
 				addToDeletions = false;
 			}
 
@@ -1729,8 +1648,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 				IModelElement element = match.annotation.getElement();
 				deleted.setElement(element);
 				deletedPosition.setLength(match.position.getLength());
-				if (deletedPosition instanceof PhpElementPosition
-						&& element instanceof IMember) {
+				if (deletedPosition instanceof PhpElementPosition && element instanceof IMember) {
 					PhpElementPosition jep = (PhpElementPosition) deletedPosition;
 					jep.setMember((IMember) element);
 				}
@@ -1773,16 +1691,14 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	 *            the context
 	 * @return a matching tuple or <code>null</code> for no match
 	 */
-	private Tuple findMatch(Tuple tuple,
-			Collection<PhpProjectionAnnotation> annotations,
-			Map<PhpProjectionAnnotation, Position> positionMap,
-			FoldingStructureComputationContext ctx) {
+	private Tuple findMatch(Tuple tuple, Collection<PhpProjectionAnnotation> annotations,
+			Map<PhpProjectionAnnotation, Position> positionMap, FoldingStructureComputationContext ctx) {
 		Iterator<PhpProjectionAnnotation> it = annotations.iterator();
 		while (it.hasNext()) {
 			PhpProjectionAnnotation annotation = it.next();
 			if (tuple.annotation.isComment() == annotation.isComment()) {
-				Position position = positionMap == null ? ctx.getModel()
-						.getPosition(annotation) : positionMap.get(annotation);
+				Position position = positionMap == null ? ctx.getModel().getPosition(annotation)
+						: positionMap.get(annotation);
 				if (position == null)
 					continue;
 
@@ -1796,8 +1712,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 		return null;
 	}
 
-	private Map<IModelElement, Object> computeCurrentStructure(
-			FoldingStructureComputationContext ctx) {
+	private Map<IModelElement, Object> computeCurrentStructure(FoldingStructureComputationContext ctx) {
 		Map<IModelElement, Object> map = new HashMap<IModelElement, Object>();
 		ProjectionAnnotationModel model = ctx.getModel();
 		Iterator e = model.getAnnotationIterator();
@@ -1818,8 +1733,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 
 		Comparator comparator = new Comparator() {
 			public int compare(Object o1, Object o2) {
-				return ((Tuple) o1).position.getOffset()
-						- ((Tuple) o2).position.getOffset();
+				return ((Tuple) o1).position.getOffset() - ((Tuple) o2).position.getOffset();
 			}
 		};
 		for (Iterator<Object> it = map.values().iterator(); it.hasNext();) {
@@ -1853,8 +1767,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	 * #collapseElements(org.eclipse.jdt.core.IModelElement[])
 	 */
 	public final void collapseElements(IModelElement[] elements) {
-		Set<IModelElement> set = new HashSet<IModelElement>(
-				Arrays.asList(elements));
+		Set<IModelElement> set = new HashSet<IModelElement>(Arrays.asList(elements));
 		modifyFiltered(new PhpElementSetFilter(set, false), false);
 	}
 
@@ -1864,8 +1777,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	 * #expandElements(org.eclipse.jdt.core.IModelElement[])
 	 */
 	public final void expandElements(IModelElement[] elements) {
-		Set<IModelElement> set = new HashSet<IModelElement>(
-				Arrays.asList(elements));
+		Set<IModelElement> set = new HashSet<IModelElement>(Arrays.asList(elements));
 		modifyFiltered(new PhpElementSetFilter(set, true), true);
 	}
 
@@ -1904,8 +1816,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 			}
 		}
 
-		model.modifyAnnotations(null, null,
-				modified.toArray(new Annotation[modified.size()]));
+		model.modifyAnnotations(null, null, modified.toArray(new Annotation[modified.size()]));
 	}
 
 	/*
@@ -1929,8 +1840,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	}
 
 	@Override
-	public void install(ITextEditor editor, ProjectionViewer viewer,
-			IPreferenceStore store) {
+	public void install(ITextEditor editor, ProjectionViewer viewer, IPreferenceStore store) {
 		// ignore
 		install(viewer);
 	}

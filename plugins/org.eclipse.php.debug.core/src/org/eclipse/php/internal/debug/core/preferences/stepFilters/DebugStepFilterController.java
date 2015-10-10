@@ -68,27 +68,24 @@ public class DebugStepFilterController implements IDebugStepFilterPrefListener {
 		for (DebugStepFilter currentFilter : enabledFilters) {
 			String filterPath = currentFilter.getPath();
 			if (currentFilter.getType() == IStepFilterTypes.PATH_PATTERN) {
-				if (filterPath.startsWith("*") && filterPath.endsWith("*")) {//*...* //$NON-NLS-1$ //$NON-NLS-2$
-					if (path.contains(filterPath.substring(1, filterPath
-							.length() - 1))) {
+				if (filterPath.startsWith("*") && filterPath.endsWith("*")) {// *...* //$NON-NLS-1$ //$NON-NLS-2$
+					if (path.contains(filterPath.substring(1, filterPath.length() - 1))) {
 						filterResult = true;
 						break;
 					}
-				} else if (filterPath.startsWith("*")) {//*... //$NON-NLS-1$
+				} else if (filterPath.startsWith("*")) {// *... //$NON-NLS-1$
 					if (path.endsWith(filterPath.substring(1))) {
 						filterResult = true;
 						break;
 					}
-				} else if (filterPath.endsWith("*")) {//...* //$NON-NLS-1$
-					if (path.startsWith(filterPath.substring(0, filterPath
-							.length() - 1))) {
+				} else if (filterPath.endsWith("*")) {// ...* //$NON-NLS-1$
+					if (path.startsWith(filterPath.substring(0, filterPath.length() - 1))) {
 						filterResult = true;
 						break;
 					}
-				}// else, simply compare the exact path string
+				} // else, simply compare the exact path string
 				else {// check if simple path pattern
-					filterResult = FileUtils.checkIfEqualFilePaths(path,
-							currentFilter.getPath());
+					filterResult = FileUtils.checkIfEqualFilePaths(path, currentFilter.getPath());
 					break;
 				}
 			} else {// no '*' in filter
@@ -98,8 +95,7 @@ public class DebugStepFilterController implements IDebugStepFilterPrefListener {
 						|| (currentFilter.getType() == IStepFilterTypes.PHP_PROJECT_FOLDER)
 						|| (currentFilter.getType() == IStepFilterTypes.PHP_INCLUDE_PATH_LIBRARY_FOLDER)
 						|| (currentFilter.getType() == IStepFilterTypes.PHP_INCLUDE_PATH_LIBRARY)) {
-					filterResult = FileUtils.checkIfContainerOfFile(
-							currentFilter.getPath(), path);
+					filterResult = FileUtils.checkIfContainerOfFile(currentFilter.getPath(), path);
 					break;
 				}
 				// check if the given path is inside an include path variable
@@ -107,14 +103,10 @@ public class DebugStepFilterController implements IDebugStepFilterPrefListener {
 				else if ((currentFilter.getType() == IStepFilterTypes.PHP_INCLUDE_PATH_VAR)
 						|| currentFilter.getType() == IStepFilterTypes.PHP_INCLUDE_PATH_VAR_FOLDER) {
 
-					IPath resolvedVariablePath = DLTKCore
-							.getResolvedVariablePath(new Path(currentFilter
-									.getPath()));
+					IPath resolvedVariablePath = DLTKCore.getResolvedVariablePath(new Path(currentFilter.getPath()));
 					if (resolvedVariablePath != null) {
-						String includePathVarPath = resolvedVariablePath
-								.toOSString();
-						filterResult = FileUtils.checkIfContainerOfFile(
-								includePathVarPath, path);
+						String includePathVarPath = resolvedVariablePath.toOSString();
+						filterResult = FileUtils.checkIfContainerOfFile(includePathVarPath, path);
 					}
 					break;
 				}
@@ -134,8 +126,7 @@ public class DebugStepFilterController implements IDebugStepFilterPrefListener {
 	// Returns ONLY enabled filters
 	private DebugStepFilter[] getAllEnabledFilters() {
 		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
-		String[] parsedFilters = parseList(store
-				.getString(IPHPDebugConstants.PREF_STEP_FILTERS_LIST));
+		String[] parsedFilters = parseList(store.getString(IPHPDebugConstants.PREF_STEP_FILTERS_LIST));
 
 		ArrayList<DebugStepFilter> list = new ArrayList<DebugStepFilter>();
 		for (int i = 0; i < parsedFilters.length; i++) {
@@ -144,9 +135,8 @@ public class DebugStepFilterController implements IDebugStepFilterPrefListener {
 			if (tokens.length != 4) {
 				return new DebugStepFilter[0];
 			}
-			DebugStepFilter tempFilter = new DebugStepFilter(Integer
-					.parseInt(tokens[0]), Boolean.parseBoolean(tokens[1]),
-					Boolean.parseBoolean(tokens[2]), tokens[3]);
+			DebugStepFilter tempFilter = new DebugStepFilter(Integer.parseInt(tokens[0]),
+					Boolean.parseBoolean(tokens[1]), Boolean.parseBoolean(tokens[2]), tokens[3]);
 			if (tempFilter.isEnabled()) {
 				list.add(tempFilter);
 			}
@@ -167,8 +157,7 @@ public class DebugStepFilterController implements IDebugStepFilterPrefListener {
 	// Parses the comma separated string into an array of strings
 	private String[] parseList(String listString) {
 		ArrayList<String> list = new ArrayList<String>();
-		StringTokenizer tokenizer = new StringTokenizer(listString,
-				DebugStepFilter.FILTERS_PREF_LIST_DELIM); 
+		StringTokenizer tokenizer = new StringTokenizer(listString, DebugStepFilter.FILTERS_PREF_LIST_DELIM);
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken();
 			list.add(token);
@@ -200,16 +189,14 @@ public class DebugStepFilterController implements IDebugStepFilterPrefListener {
 				String path = null;
 				int filterType = 0;
 				try {
-					isEnabled = Boolean.parseBoolean(element
-							.getAttribute("enabled")); //$NON-NLS-1$
+					isEnabled = Boolean.parseBoolean(element.getAttribute("enabled")); //$NON-NLS-1$
 					path = element.getAttribute("path"); //$NON-NLS-1$
 					filterType = getFilterTypeId(element.getAttribute("type")); //$NON-NLS-1$
 				} catch (InvalidRegistryObjectException ire) {
 					PHPDebugPlugin.log(ire);
 					return;
 				}
-				listToAdd.add(new DebugStepFilter(filterType, isEnabled, true,
-						path));
+				listToAdd.add(new DebugStepFilter(filterType, isEnabled, true, path));
 			}
 
 		}

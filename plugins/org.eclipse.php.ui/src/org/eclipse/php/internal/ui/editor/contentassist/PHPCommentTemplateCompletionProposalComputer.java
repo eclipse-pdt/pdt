@@ -17,24 +17,21 @@ import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
 import org.eclipse.jface.text.templates.TemplateCompletionProcessor;
 import org.eclipse.php.internal.ui.editor.templates.PhpCommentTemplateCompletionProcessor;
 
-public class PHPCommentTemplateCompletionProposalComputer extends
-		PHPCompletionProposalComputer {
+public class PHPCommentTemplateCompletionProposalComputer extends PHPCompletionProposalComputer {
 
 	public PHPCommentTemplateCompletionProposalComputer() {
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	protected List computeScriptCompletionProposals(int offset,
-			ScriptContentAssistInvocationContext context,
+	protected List computeScriptCompletionProposals(int offset, ScriptContentAssistInvocationContext context,
 			IProgressMonitor monitor) {
 
 		return Collections.EMPTY_LIST;
 
 	}
 
-	protected TemplateCompletionProcessor createTemplateProposalComputer(
-			ScriptContentAssistInvocationContext context) {
+	protected TemplateCompletionProcessor createTemplateProposalComputer(ScriptContentAssistInvocationContext context) {
 		context.getCoreContext();
 		return new PhpCommentTemplateCompletionProcessor(context);
 	}

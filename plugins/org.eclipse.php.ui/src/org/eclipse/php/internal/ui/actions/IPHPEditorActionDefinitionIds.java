@@ -13,8 +13,7 @@ package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
-public interface IPHPEditorActionDefinitionIds extends
-		ITextEditorActionDefinitionIds {
+public interface IPHPEditorActionDefinitionIds extends ITextEditorActionDefinitionIds {
 
 	// edit
 

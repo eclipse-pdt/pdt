@@ -34,7 +34,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
  */
 public final class ProjectTemplateStore {
 
-	private static final String KEY = PreferenceConstants.CODE_TEMPLATES_KEY; 
+	private static final String KEY = PreferenceConstants.CODE_TEMPLATES_KEY;
 
 	private final TemplateStore fInstanceStore;
 	private final TemplateStore fProjectStore;
@@ -44,8 +44,8 @@ public final class ProjectTemplateStore {
 		if (project == null) {
 			fProjectStore = null;
 		} else {
-			final ScopedPreferenceStore projectSettings = new ScopedPreferenceStore(
-					new ProjectScope(project), PHPUiPlugin.ID);
+			final ScopedPreferenceStore projectSettings = new ScopedPreferenceStore(new ProjectScope(project),
+					PHPUiPlugin.ID);
 			fProjectStore = new TemplateStore(projectSettings, KEY) {
 				/*
 				 * Make sure we keep the id of added code templates - add
@@ -72,8 +72,7 @@ public final class ProjectTemplateStore {
 		if (project == null) {
 			return false;
 		}
-		String pref = new ProjectScope(project).getNode(PHPUiPlugin.ID).get(
-				KEY, null);
+		String pref = new ProjectScope(project).getNode(PHPUiPlugin.ID).get(KEY, null);
 		if (pref != null && pref.trim().length() > 0) {
 			Reader input = new StringReader(pref);
 			TemplateReaderWriter reader = new TemplateReaderWriter();
@@ -111,8 +110,7 @@ public final class ProjectTemplateStore {
 			fProjectStore.load();
 
 			Set<String> datas = new HashSet<String>();
-			TemplatePersistenceData[] data = fProjectStore
-					.getTemplateData(false);
+			TemplatePersistenceData[] data = fProjectStore.getTemplateData(false);
 			for (int i = 0; i < data.length; i++) {
 				datas.add(data[i].getId());
 			}
@@ -121,9 +119,8 @@ public final class ProjectTemplateStore {
 			for (int i = 0; i < data.length; i++) {
 				TemplatePersistenceData orig = data[i];
 				if (!datas.contains(orig.getId())) {
-					TemplatePersistenceData copy = new TemplatePersistenceData(
-							new Template(orig.getTemplate()), orig.isEnabled(),
-							orig.getId());
+					TemplatePersistenceData copy = new TemplatePersistenceData(new Template(orig.getTemplate()),
+							orig.isEnabled(), orig.getId());
 					fProjectStore.add(copy);
 					copy.setDeleted(true);
 				}
@@ -177,14 +174,11 @@ public final class ProjectTemplateStore {
 		}
 	}
 
-	public Template findTemplate(String templateName,
-			String templateContextTypeId) {
+	public Template findTemplate(String templateName, String templateContextTypeId) {
 		if (fProjectStore != null) {
-			return fProjectStore.findTemplate(templateName,
-					templateContextTypeId);
+			return fProjectStore.findTemplate(templateName, templateContextTypeId);
 		} else {
-			return fInstanceStore.findTemplate(templateName,
-					templateContextTypeId);
+			return fInstanceStore.findTemplate(templateName, templateContextTypeId);
 		}
 
 	}

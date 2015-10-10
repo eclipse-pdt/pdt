@@ -62,8 +62,7 @@ public class PHPInterpreterExecutionConfigurationBlock {
 		 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 		 */
 		public Image getImage(Object element) {
-			return DLTKPluginImages.getDescriptor(
-					DLTKPluginImages.IMG_OBJS_LIBRARY).createImage();
+			return DLTKPluginImages.getDescriptor(DLTKPluginImages.IMG_OBJS_LIBRARY).createImage();
 		}
 
 		/**
@@ -150,8 +149,7 @@ public class PHPInterpreterExecutionConfigurationBlock {
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		fProfilesViewer = new TableViewer(table);
 		fProfilesViewer.setContentProvider(new ArrayContentProvider());
-		fProfilesViewer
-				.setLabelProvider(new ExecutionEnvironmentsLabelProvider());
+		fProfilesViewer.setLabelProvider(new ExecutionEnvironmentsLabelProvider());
 		fProfilesViewer.setComparator(new ViewerComparator());
 		fProfilesViewer.setInput(PHPVersion.supportedVersions());
 
@@ -174,32 +172,27 @@ public class PHPInterpreterExecutionConfigurationBlock {
 		fJREsViewer.setLabelProvider(new PHPExeLabelProvider());
 		fJREsViewer.setInput(new PHPexeItem[0]);
 
-		fProfilesViewer
-				.addSelectionChangedListener(new ISelectionChangedListener() {
-					public void selectionChanged(SelectionChangedEvent event) {
-						PHPVersion version = (PHPVersion) ((IStructuredSelection) event
-								.getSelection()).getFirstElement();
-						PHPexeItem jre = versionToDefaultItem.get(version);
-						fJREsViewer.setInput(getCompatibleItems(allItems,
-								version));
-						if (jre != null) {
-							fJREsViewer
-									.setCheckedElements(new Object[] { jre });
-						} else {
-							fJREsViewer.setCheckedElements(new Object[0]);
-						}
-					}
+		fProfilesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				PHPVersion version = (PHPVersion) ((IStructuredSelection) event.getSelection()).getFirstElement();
+				PHPexeItem jre = versionToDefaultItem.get(version);
+				fJREsViewer.setInput(getCompatibleItems(allItems, version));
+				if (jre != null) {
+					fJREsViewer.setCheckedElements(new Object[] { jre });
+				} else {
+					fJREsViewer.setCheckedElements(new Object[0]);
+				}
+			}
 
-				});
+		});
 
 		fJREsViewer.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				if (event.getChecked()) {
 					Object element = event.getElement();
-					versionToDefaultItem
-							.put((PHPVersion) ((IStructuredSelection) fProfilesViewer
-									.getSelection()).getFirstElement(),
-									(PHPexeItem) element);
+					versionToDefaultItem.put(
+							(PHPVersion) ((IStructuredSelection) fProfilesViewer.getSelection()).getFirstElement(),
+							(PHPexeItem) element);
 					fJREsViewer.setCheckedElements(new Object[] { element });
 				} else {
 					versionToDefaultItem.remove(fJREsViewer.getInput());
@@ -212,8 +205,7 @@ public class PHPInterpreterExecutionConfigurationBlock {
 		return ancestor;
 	}
 
-	private PHPexeItem[] getCompatibleItems(PHPexeItem[] allItems,
-			PHPVersion version) {
+	private PHPexeItem[] getCompatibleItems(PHPexeItem[] allItems, PHPVersion version) {
 		String versionNumber = version.getAlias().substring(3);
 		PHPexeItem[] result = versionToCompatibleItems.get(version);
 		if (result == null) {
@@ -229,11 +221,9 @@ public class PHPInterpreterExecutionConfigurationBlock {
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
 	public boolean performOk() {
-		for (Iterator<PHPVersion> iterator = versionToDefaultItem.keySet()
-				.iterator(); iterator.hasNext();) {
+		for (Iterator<PHPVersion> iterator = versionToDefaultItem.keySet().iterator(); iterator.hasNext();) {
 			PHPVersion version = iterator.next();
-			phpExes.setItemDefaultForPHPVersion(
-					versionToDefaultItem.get(version), version);
+			phpExes.setItemDefaultForPHPVersion(versionToDefaultItem.get(version), version);
 		}
 		phpExes.save();
 		return true;

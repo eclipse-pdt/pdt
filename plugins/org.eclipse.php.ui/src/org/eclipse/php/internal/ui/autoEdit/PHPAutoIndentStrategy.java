@@ -52,11 +52,8 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		// when user typing c.text.length()==1 except enter key,
 		// if user type enter key,we may add some indentation spaces/tabs for
 		// it,so we use c.text.trim().length() > 0 to filter it
-		if (c.text != null
-				&& c.text.length() > 1
-				&& c.text.trim().length() > 1
-				&& getPreferenceStore().getBoolean(
-						PreferenceConstants.EDITOR_SMART_PASTE)) {
+		if (c.text != null && c.text.length() > 1 && c.text.trim().length() > 1
+				&& getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_SMART_PASTE)) {
 			try {
 				// bug 459462
 				defaultStrategy.setIndentationObject(null);
@@ -89,19 +86,14 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		IndentationObject indentationObject = null;
 		try {
 			if (document instanceof IStructuredDocument) {
-				indentationObject = new IndentationObject(
-						(IStructuredDocument) document);
-				defaultStrategy.placeMatchingBlanksForStructuredDocument(
-						(IStructuredDocument) document, helpBuffer,
-						document.getLineOfOffset(command.offset),
-						command.offset);
-				IRegion region = document.getLineInformation(document
-						.getLineOfOffset(command.offset));
-				if (document.get(region.getOffset(), region.getLength()).trim()
-						.length() == 0) {// blank line
+				indentationObject = new IndentationObject((IStructuredDocument) document);
+				defaultStrategy.placeMatchingBlanksForStructuredDocument((IStructuredDocument) document, helpBuffer,
+						document.getLineOfOffset(command.offset), command.offset);
+				IRegion region = document.getLineInformation(document.getLineOfOffset(command.offset));
+				if (document.get(region.getOffset(), region.getLength()).trim().length() == 0) {// blank
+																								// line
 					if (command.offset != region.getOffset()) {
-						document.replace(region.getOffset(),
-								region.getLength(), ""); //$NON-NLS-1$
+						document.replace(region.getOffset(), region.getLength(), ""); //$NON-NLS-1$
 						// adjust the offset
 						command.offset = region.getOffset();
 					}
@@ -117,8 +109,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		IStructuredModel structuredModel = null;
 		try {
 			IProject project = null;
-			structuredModel = StructuredModelManager.getModelManager()
-					.getExistingModelForRead(document);
+			structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			DOMModelForPHP doModelForPHP = (DOMModelForPHP) structuredModel;
 			project = getProject(doModelForPHP);
 			newline = PHPModelUtils.getLineSeparator(project);
@@ -140,8 +131,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				if (tempsb.length() > 0) {
 					tempsb.append(newline);
 				}
-				String currentLine = tempdocument.get(region.getOffset(),
-						region.getLength());
+				String currentLine = tempdocument.get(region.getOffset(), region.getLength());
 				if (tempsb.length() == 0) {
 					if (currentLine.trim().length() == 0) {
 						startingEmptyLines++;
@@ -150,19 +140,16 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 					}
 
 				} else {
-					tempsb.append(tempdocument.get(region.getOffset(),
-							region.getLength()));
+					tempsb.append(tempdocument.get(region.getOffset(), region.getLength()));
 				}
 			}
 		} catch (BadLocationException e) {
 			PHPUiPlugin.log(e);
 		}
-		JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(
-				new PhpSourceParser());
+		JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(new PhpSourceParser());
 		String start = "<?php"; //$NON-NLS-1$
 		newdocument.set(start + newline + tempsb.toString());
-		PhpIndentationFormatter formatter = new PhpIndentationFormatter(0,
-				newdocument.getLength(), indentationObject);
+		PhpIndentationFormatter formatter = new PhpIndentationFormatter(0, newdocument.getLength(), indentationObject);
 		formatter.format(newdocument.getFirstStructuredDocumentRegion());
 
 		List<String> list = new ArrayList<String>();
@@ -173,8 +160,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 					continue;
 				}
 				IRegion region = newdocument.getLineInformation(i);
-				String line = newdocument.get(region.getOffset(),
-						region.getLength());
+				String line = newdocument.get(region.getOffset(), region.getLength());
 				list.add(line);
 			}
 		} catch (BadLocationException e) {
@@ -200,8 +186,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 			} else {
 				String lineDelimiter = null;
 				try {
-					lineDelimiter = tempdocument
-							.getLineDelimiter(startingEmptyLines + i);
+					lineDelimiter = tempdocument.getLineDelimiter(startingEmptyLines + i);
 				} catch (BadLocationException e) {
 				}
 				if (lineDelimiter == null) {

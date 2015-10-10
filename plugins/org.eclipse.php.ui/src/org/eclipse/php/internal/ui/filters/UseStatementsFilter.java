@@ -21,8 +21,7 @@ public class UseStatementsFilter extends ViewerFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (element instanceof UseStatementsNode
-				|| parentElement instanceof UseStatementsNode) {
+		if (element instanceof UseStatementsNode || parentElement instanceof UseStatementsNode) {
 			return false;
 		}
 

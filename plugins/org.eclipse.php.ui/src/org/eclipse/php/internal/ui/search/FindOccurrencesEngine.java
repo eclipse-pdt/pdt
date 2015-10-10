@@ -43,23 +43,19 @@ public final class FindOccurrencesEngine {
 		return null;
 	}
 
-	public String run(ISourceModule input, int offset, int length)
-			throws ModelException, IOException {
+	public String run(ISourceModule input, int offset, int length) throws ModelException, IOException {
 		if (input.getSourceRange() == null) {
 			return "SearchMessages.FindOccurrencesEngine_noSource_text"; //$NON-NLS-1$
 		}
 
-		final Program root = SharedASTProvider.getAST(input,
-				SharedASTProvider.WAIT_YES, null);
+		final Program root = SharedASTProvider.getAST(input, SharedASTProvider.WAIT_YES, null);
 		if (root == null) {
 			return "SearchMessages.FindOccurrencesEngine_cannotParse_text"; //$NON-NLS-1$
 		}
 		return run(root, offset, length);
 	}
 
-	private void performNewSearch(IOccurrencesFinder finder,
-			ISourceModule element) {
-		NewSearchUI.runQueryInBackground(new OccurrencesSearchQuery(finder,
-				element));
+	private void performNewSearch(IOccurrencesFinder finder, ISourceModule element) {
+		NewSearchUI.runQueryInBackground(new OccurrencesSearchQuery(finder, element));
 	}
 }

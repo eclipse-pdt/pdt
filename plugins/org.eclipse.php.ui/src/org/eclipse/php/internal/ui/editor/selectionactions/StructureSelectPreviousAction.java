@@ -53,8 +53,7 @@ public class StructureSelectPreviousAction extends StructureSelectionAction {
 		}
 	}
 
-	public StructureSelectPreviousAction(PHPStructuredEditor editor,
-			SelectionHistory history) {
+	public StructureSelectPreviousAction(PHPStructuredEditor editor, SelectionHistory history) {
 		super(Messages.StructureSelectPreviousAction_3, editor, history);
 		setToolTipText(Messages.StructureSelectPreviousAction_4);
 		setDescription(Messages.StructureSelectPreviousAction_5);
@@ -78,13 +77,10 @@ public class StructureSelectPreviousAction extends StructureSelectionAction {
 	 * ICompilationUnit, SelectionAnalyzer)
 	 */
 	@Override
-	ISourceRange internalGetNewSelectionRange(ISourceRange oldSourceRange,
-			ISourceReference sr, SelectionAnalyzer selAnalyzer)
-			throws ModelException {
-		if (oldSourceRange.getLength() == 0
-				&& selAnalyzer.getLastCoveringNode() != null) {
-			ASTNode previousNode = PreviousNodeAnalyzer.perform(
-					oldSourceRange.getOffset(),
+	ISourceRange internalGetNewSelectionRange(ISourceRange oldSourceRange, ISourceReference sr,
+			SelectionAnalyzer selAnalyzer) throws ModelException {
+		if (oldSourceRange.getLength() == 0 && selAnalyzer.getLastCoveringNode() != null) {
+			ASTNode previousNode = PreviousNodeAnalyzer.perform(oldSourceRange.getOffset(),
 					selAnalyzer.getLastCoveringNode());
 			if (previousNode != null)
 				return getSelectedNodeSourceRange(sr, previousNode);
@@ -97,8 +93,7 @@ public class StructureSelectPreviousAction extends StructureSelectionAction {
 		if (parent == null)
 			return getLastCoveringNodeRange(oldSourceRange, sr, selAnalyzer);
 
-		ASTNode previousNode = getPreviousNode(parent,
-				selAnalyzer.getSelectedNodes()[0]);
+		ASTNode previousNode = getPreviousNode(parent, selAnalyzer.getSelectedNodes()[0]);
 		if (previousNode == parent)
 			return getSelectedNodeSourceRange(sr, parent);
 

@@ -20,22 +20,19 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakpointProvider;
 
-public class PHPBreakpointProvider implements IBreakpointProvider,
-		IExecutableExtension {
+public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableExtension {
 
 	private IPHPBreakpointProvider provider;
 
 	public PHPBreakpointProvider() {
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = registry
-				.getConfigurationElementsFor(PHPDebugUIPlugin.getID(),
-						"phpBreakpointProviders"); //$NON-NLS-1$
+		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugUIPlugin.getID(),
+				"phpBreakpointProviders"); //$NON-NLS-1$
 		for (IConfigurationElement element : elements) {
 			if ("provider".equals(element.getName())) { //$NON-NLS-1$
 				try {
-					provider = (IPHPBreakpointProvider) element
-							.createExecutableExtension("class"); //$NON-NLS-1$
+					provider = (IPHPBreakpointProvider) element.createExecutableExtension("class"); //$NON-NLS-1$
 					break;
 				} catch (CoreException e) {
 					PHPUiPlugin.log(e);
@@ -47,8 +44,8 @@ public class PHPBreakpointProvider implements IBreakpointProvider,
 		}
 	}
 
-	public IStatus addBreakpoint(IDocument document, IEditorInput input,
-			int lineNumber, int offset) throws CoreException {
+	public IStatus addBreakpoint(IDocument document, IEditorInput input, int lineNumber, int offset)
+			throws CoreException {
 		return provider.addBreakpoint(document, input, lineNumber, offset);
 	}
 
@@ -60,8 +57,8 @@ public class PHPBreakpointProvider implements IBreakpointProvider,
 		provider.setSourceEditingTextTools(tool);
 	}
 
-	public void setInitializationData(IConfigurationElement config,
-			String propertyName, Object data) throws CoreException {
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
+			throws CoreException {
 		provider.setInitializationData(config, propertyName, data);
 	}
 }

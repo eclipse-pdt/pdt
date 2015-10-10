@@ -27,8 +27,7 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
  * 
  * @author guy
  */
-public class CancelBreakpointRequest extends DebugMessageRequestImpl implements
-		IDebugRequestMessage {
+public class CancelBreakpointRequest extends DebugMessageRequestImpl implements IDebugRequestMessage {
 
 	private int breakpointId;
 

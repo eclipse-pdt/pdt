@@ -48,9 +48,8 @@ public class PHPCodeReader extends SingleCharReader {
 		return fForward ? fOffset - 1 : fOffset;
 	}
 
-	public void configureForwardReader(IDocument document, int offset,
-			int length, boolean skipComments, boolean skipStrings)
-			throws IOException {
+	public void configureForwardReader(IDocument document, int offset, int length, boolean skipComments,
+			boolean skipStrings) throws IOException {
 		fDocument = document;
 		fOffset = offset;
 		fSkipComments = skipComments;
@@ -60,8 +59,8 @@ public class PHPCodeReader extends SingleCharReader {
 		fEnd = Math.min(fDocument.getLength(), fOffset + length);
 	}
 
-	public void configureBackwardReader(IDocument document, int offset,
-			boolean skipComments, boolean skipStrings) throws IOException {
+	public void configureBackwardReader(IDocument document, int offset, boolean skipComments, boolean skipStrings)
+			throws IOException {
 		fDocument = document;
 		fOffset = offset;
 		fSkipComments = skipComments;
@@ -170,8 +169,7 @@ public class PHPCodeReader extends SingleCharReader {
 			int offset = fOffset;
 			while (fCachedLineOffset < offset) {
 				char current = fDocument.getChar(offset--);
-				if (current == '/' && fCachedLineOffset <= offset
-						&& fDocument.getChar(offset) == '/') {
+				if (current == '/' && fCachedLineOffset <= offset && fDocument.getChar(offset) == '/') {
 					fOffset = offset;
 					return;
 				}
@@ -182,8 +180,7 @@ public class PHPCodeReader extends SingleCharReader {
 	private void gotoCommentStart() throws BadLocationException {
 		while (0 < fOffset) {
 			char current = fDocument.getChar(fOffset--);
-			if (current == '*' && 0 <= fOffset
-					&& fDocument.getChar(fOffset) == '/')
+			if (current == '*' && 0 <= fOffset && fDocument.getChar(fOffset) == '/')
 				return;
 		}
 	}

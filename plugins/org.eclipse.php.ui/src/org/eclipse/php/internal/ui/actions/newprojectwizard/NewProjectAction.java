@@ -74,17 +74,11 @@ public class NewProjectAction extends Action {
 		}
 		this.window = window;
 		ISharedImages images = PlatformUI.getWorkbench().getSharedImages();
-		setImageDescriptor(images
-				.getImageDescriptor(ISharedImages.IMG_TOOL_NEW_WIZARD));
-		setDisabledImageDescriptor(images
-				.getImageDescriptor(ISharedImages.IMG_TOOL_NEW_WIZARD_DISABLED));
+		setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_NEW_WIZARD));
+		setDisabledImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_NEW_WIZARD_DISABLED));
 		setToolTipText(IDEWorkbenchMessages.NewProjectAction_toolTip);
-		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(
-						this,
-						org.eclipse.ui.internal.IWorkbenchHelpContextIds.NEW_ACTION);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
+				org.eclipse.ui.internal.IWorkbenchHelpContextIds.NEW_ACTION);
 	}
 
 	/*
@@ -94,10 +88,8 @@ public class NewProjectAction extends Action {
 		// Create wizard selection wizard.
 		IWorkbench workbench = PlatformUI.getWorkbench();
 
-		IWizardCategory root = WorkbenchPlugin.getDefault()
-				.getNewWizardRegistry().getRootCategory();
-		IWizardDescriptor localphpWizard = root
-				.findWizard("com.zend.php.ide.ui.project.wizard.localphp"); //$NON-NLS-1$
+		IWizardCategory root = WorkbenchPlugin.getDefault().getNewWizardRegistry().getRootCategory();
+		IWizardDescriptor localphpWizard = root.findWizard("com.zend.php.ide.ui.project.wizard.localphp"); //$NON-NLS-1$
 		if (localphpWizard == null) {// pdt
 			org.eclipse.ui.internal.dialogs.NewWizard wizard = new org.eclipse.ui.internal.dialogs.NewWizard();
 			wizard.setProjectsOnly(true);
@@ -107,13 +99,10 @@ public class NewProjectAction extends Action {
 				selectionToPass = (IStructuredSelection) selection;
 			}
 			wizard.init(workbench, selectionToPass);
-			IDialogSettings workbenchSettings = IDEWorkbenchPlugin.getDefault()
-					.getDialogSettings();
-			IDialogSettings wizardSettings = workbenchSettings
-					.getSection("NewWizardAction"); //$NON-NLS-1$ 
+			IDialogSettings workbenchSettings = IDEWorkbenchPlugin.getDefault().getDialogSettings();
+			IDialogSettings wizardSettings = workbenchSettings.getSection("NewWizardAction"); //$NON-NLS-1$
 			if (wizardSettings == null) {
-				wizardSettings = workbenchSettings
-						.addNewSection("NewWizardAction"); //$NON-NLS-1$
+				wizardSettings = workbenchSettings.addNewSection("NewWizardAction"); //$NON-NLS-1$
 			}
 			wizard.setDialogSettings(wizardSettings);
 			wizard.setForcePreviousAndNextButtons(true);
@@ -121,15 +110,9 @@ public class NewProjectAction extends Action {
 			// Create wizard dialog.
 			WizardDialog dialog = new WizardDialog(null, wizard);
 			dialog.create();
-			dialog.getShell()
-					.setSize(
-							Math.max(SIZING_WIZARD_WIDTH, dialog.getShell()
-									.getSize().x), SIZING_WIZARD_HEIGHT);
-			PlatformUI
-					.getWorkbench()
-					.getHelpSystem()
-					.setHelp(dialog.getShell(),
-							IIDEHelpContextIds.NEW_PROJECT_WIZARD);
+			dialog.getShell().setSize(Math.max(SIZING_WIZARD_WIDTH, dialog.getShell().getSize().x),
+					SIZING_WIZARD_HEIGHT);
+			PlatformUI.getWorkbench().getHelpSystem().setHelp(dialog.getShell(), IIDEHelpContextIds.NEW_PROJECT_WIZARD);
 
 			// Open wizard.
 			dialog.open();
@@ -142,13 +125,10 @@ public class NewProjectAction extends Action {
 				selectionToPass = (IStructuredSelection) selection;
 			}
 			wizard.init(workbench, selectionToPass);
-			IDialogSettings workbenchSettings = IDEWorkbenchPlugin.getDefault()
-					.getDialogSettings();
-			IDialogSettings wizardSettings = workbenchSettings
-					.getSection("NewWizardAction"); //$NON-NLS-1$
+			IDialogSettings workbenchSettings = IDEWorkbenchPlugin.getDefault().getDialogSettings();
+			IDialogSettings wizardSettings = workbenchSettings.getSection("NewWizardAction"); //$NON-NLS-1$
 			if (wizardSettings == null) {
-				wizardSettings = workbenchSettings
-						.addNewSection("NewWizardAction"); //$NON-NLS-1$
+				wizardSettings = workbenchSettings.addNewSection("NewWizardAction"); //$NON-NLS-1$
 			}
 			wizard.setDialogSettings(wizardSettings);
 			wizard.setForcePreviousAndNextButtons(true);
@@ -156,15 +136,9 @@ public class NewProjectAction extends Action {
 			// Create wizard dialog.
 			WizardDialog dialog = new WizardDialog(null, wizard);
 			dialog.create();
-			dialog.getShell()
-					.setSize(
-							Math.max(SIZING_WIZARD_WIDTH, dialog.getShell()
-									.getSize().x), SIZING_WIZARD_HEIGHT);
-			PlatformUI
-					.getWorkbench()
-					.getHelpSystem()
-					.setHelp(dialog.getShell(),
-							IIDEHelpContextIds.NEW_PROJECT_WIZARD);
+			dialog.getShell().setSize(Math.max(SIZING_WIZARD_WIDTH, dialog.getShell().getSize().x),
+					SIZING_WIZARD_HEIGHT);
+			PlatformUI.getWorkbench().getHelpSystem().setHelp(dialog.getShell(), IIDEHelpContextIds.NEW_PROJECT_WIZARD);
 
 			// Open wizard.
 			dialog.open();

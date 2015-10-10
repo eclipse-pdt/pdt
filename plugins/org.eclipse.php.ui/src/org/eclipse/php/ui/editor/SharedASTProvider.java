@@ -96,8 +96,7 @@ public final class SharedASTProvider {
 	 * No AST will be created by the AST provider.
 	 * </p>
 	 */
-	public static final WAIT_FLAG WAIT_ACTIVE_ONLY = new WAIT_FLAG(
-			"wait active only"); //$NON-NLS-1$
+	public static final WAIT_FLAG WAIT_ACTIVE_ONLY = new WAIT_FLAG("wait active only"); //$NON-NLS-1$
 
 	/**
 	 * Wait flag indicating that a client requesting an AST only wants the
@@ -137,11 +136,9 @@ public final class SharedASTProvider {
 	 * @throws IOException
 	 * @throws ModelException
 	 */
-	public static Program getAST(ISourceModule element, WAIT_FLAG waitFlag,
-			IProgressMonitor progressMonitor) throws ModelException,
-			IOException {
-		return PHPUiPlugin.getDefault().getASTProvider().getAST(element,
-				waitFlag, progressMonitor);
+	public static Program getAST(ISourceModule element, WAIT_FLAG waitFlag, IProgressMonitor progressMonitor)
+			throws ModelException, IOException {
+		return PHPUiPlugin.getDefault().getASTProvider().getAST(element, waitFlag, progressMonitor);
 	}
 
 	private SharedASTProvider() {

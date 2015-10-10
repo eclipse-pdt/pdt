@@ -41,15 +41,12 @@ public class WizardFragmentsFactoryRegistry {
 
 	private Map<String, Map<String, ICompositeFragmentFactory>> factories;
 
-	public static Map<String, ICompositeFragmentFactory> getFragmentsFactories(
-			String fragmentsGroupID) {
+	public static Map<String, ICompositeFragmentFactory> getFragmentsFactories(String fragmentsGroupID) {
 		WizardFragmentsFactoryRegistry registry = getInstance();
-		Map<String, ICompositeFragmentFactory> factories = registry.factories
-				.get(fragmentsGroupID);
+		Map<String, ICompositeFragmentFactory> factories = registry.factories.get(fragmentsGroupID);
 		if (factories == null) {
 			factories = new LinkedHashMap<String, ICompositeFragmentFactory>();
-			List<FragmentsFactory> fragments = registry.fragments
-					.get(fragmentsGroupID);
+			List<FragmentsFactory> fragments = registry.fragments.get(fragmentsGroupID);
 			for (int i = 0; i < fragments.size(); i++) {
 				FragmentsFactory factory = (FragmentsFactory) fragments.get(i);
 				factories.put(factory.getID(), factory.createFragmentFactory());
@@ -65,9 +62,7 @@ public class WizardFragmentsFactoryRegistry {
 		factories = new HashMap<String, Map<String, ICompositeFragmentFactory>>();
 		fragments = new HashMap<String, List<FragmentsFactory>>();
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = registry
-				.getConfigurationElementsFor(PHPUiPlugin.ID,
-						EXTENSION_POINT_NAME);
+		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPUiPlugin.ID, EXTENSION_POINT_NAME);
 
 		for (int i = 0; i < elements.length; i++) {
 			final IConfigurationElement element = elements[i];
@@ -106,8 +101,7 @@ public class WizardFragmentsFactoryRegistry {
 		List<List<FragmentsFactory>> nonRootFragments = new ArrayList<List<FragmentsFactory>>();
 		for (int i = 0; i < fragments.size(); i++) {
 			FragmentsFactory factory = (FragmentsFactory) fragments.get(i);
-			if (factory.getPlaceAfter() == null
-					|| factory.getPlaceAfter().equals("")) { //$NON-NLS-1$
+			if (factory.getPlaceAfter() == null || factory.getPlaceAfter().equals("")) { //$NON-NLS-1$
 				addAsList(rootsFragments, factory);
 			} else {
 				addAsList(nonRootFragments, factory);
@@ -127,15 +121,10 @@ public class WizardFragmentsFactoryRegistry {
 			if (!moved) {
 				// move it to the roots anyway, since there is an error in the
 				// extention definitions.
-				FragmentsFactory invalidFactory = getFactory(nonRootFragments,
-						i);
+				FragmentsFactory invalidFactory = getFactory(nonRootFragments, i);
 				addAsList(rootsFragments, invalidFactory);
-				PHPUiPlugin
-						.log(new Status(
-								IStatus.WARNING,
-								PHPUiPlugin.ID,
-								0,
-								"Invalid 'placeAfter' id (" + invalidFactory.getPlaceAfter() + ')', null)); //$NON-NLS-1$
+				PHPUiPlugin.log(new Status(IStatus.WARNING, PHPUiPlugin.ID, 0,
+						"Invalid 'placeAfter' id (" + invalidFactory.getPlaceAfter() + ')', null)); //$NON-NLS-1$
 			}
 		}
 
@@ -150,8 +139,7 @@ public class WizardFragmentsFactoryRegistry {
 		}
 	}
 
-	private boolean placeFragment(List<List<FragmentsFactory>> targetFactories,
-			List<FragmentsFactory> factoriesGroup) {
+	private boolean placeFragment(List<List<FragmentsFactory>> targetFactories, List<FragmentsFactory> factoriesGroup) {
 		if (factoriesGroup == null || factoriesGroup.size() == 0) {
 			return true;
 		}
@@ -176,15 +164,13 @@ public class WizardFragmentsFactoryRegistry {
 		return false;
 	}
 
-	private FragmentsFactory getFactory(
-			List<List<FragmentsFactory>> nonRootFragments, int i) {
+	private FragmentsFactory getFactory(List<List<FragmentsFactory>> nonRootFragments, int i) {
 		List<FragmentsFactory> list = nonRootFragments.get(i);
 		return list.get(0);
 	}
 
 	// add an element to a List by wrapping it in another List.
-	private void addAsList(List<List<FragmentsFactory>> target,
-			FragmentsFactory element) {
+	private void addAsList(List<List<FragmentsFactory>> target, FragmentsFactory element) {
 		List<FragmentsFactory> list = new ArrayList<FragmentsFactory>();
 		list.add(element);
 		target.add(list);
@@ -204,22 +190,19 @@ public class WizardFragmentsFactoryRegistry {
 		private String id;
 		private String placeAfter;
 
-		public FragmentsFactory(IConfigurationElement element, String id,
-				String placeAfter) {
+		public FragmentsFactory(IConfigurationElement element, String id, String placeAfter) {
 			this.element = element;
 			this.id = id;
 			this.placeAfter = placeAfter;
 		}
 
 		public ICompositeFragmentFactory createFragmentFactory() {
-			SafeRunner
-					.run(new SafeRunnable(
-							"Error creation extension for extension-point org.eclipse.php.server.ui.wizardAndCompositeFragments") { //$NON-NLS-1$
-						public void run() throws Exception {
-							factory = (ICompositeFragmentFactory) element
-									.createExecutableExtension(CLASS_ATTRIBUTE);
-						}
-					});
+			SafeRunner.run(new SafeRunnable(
+					"Error creation extension for extension-point org.eclipse.php.server.ui.wizardAndCompositeFragments") { //$NON-NLS-1$
+				public void run() throws Exception {
+					factory = (ICompositeFragmentFactory) element.createExecutableExtension(CLASS_ATTRIBUTE);
+				}
+			});
 			return factory;
 		}
 
@@ -231,5 +214,5 @@ public class WizardFragmentsFactoryRegistry {
 			return placeAfter;
 		}
 	}
-	
+
 }

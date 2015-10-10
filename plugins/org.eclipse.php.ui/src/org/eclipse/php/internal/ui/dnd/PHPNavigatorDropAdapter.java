@@ -58,7 +58,7 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 	private int lastValidOperation = DND.DROP_NONE;
 
 	private IPHPMoveActionDelegator fReorgMoveAction;
-	private static final String MOVE_ACTION_ID = "org.eclipse.php.ui.actions.Move"; //$NON-NLS-1$ 
+	private static final String MOVE_ACTION_ID = "org.eclipse.php.ui.actions.Move"; //$NON-NLS-1$
 
 	/**
 	 * Constructs a new drop adapter.
@@ -83,8 +83,7 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 	 * Returns an error status with the given info.
 	 */
 	private IStatus error(String message, Throwable exception) {
-		return new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, 0, message,
-				exception);
+		return new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, 0, message, exception);
 	}
 
 	/**
@@ -96,8 +95,7 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 	private IContainer getActualTarget(IResource mouseTarget) {
 		/* if cursor is before or after mouseTarget, set target to parent */
 		if (getFeedbackEnabled()) {
-			if (getCurrentLocation() == LOCATION_BEFORE
-					|| getCurrentLocation() == LOCATION_AFTER) {
+			if (getCurrentLocation() == LOCATION_BEFORE || getCurrentLocation() == LOCATION_AFTER) {
 				return mouseTarget.getParent();
 			}
 		}
@@ -117,8 +115,7 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 	private IResource[] getSelectedResources() {
 		ArrayList selectedResources = new ArrayList();
 
-		ISelection selection = LocalSelectionTransfer.getInstance()
-				.getSelection();
+		ISelection selection = LocalSelectionTransfer.getInstance().getSelection();
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection ssel = (IStructuredSelection) selection;
 			for (Iterator i = ssel.iterator(); i.hasNext();) {
@@ -134,8 +131,7 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 				}
 			}
 		}
-		return (IResource[]) selectedResources
-				.toArray(new IResource[selectedResources.size()]);
+		return (IResource[]) selectedResources.toArray(new IResource[selectedResources.size()]);
 	}
 
 	/**
@@ -166,8 +162,7 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 	 * Returns an status indicating success.
 	 */
 	private IStatus ok() {
-		return new Status(IStatus.OK, PlatformUI.PLUGIN_ID, 0,
-				ResourceNavigatorMessages.DropAdapter_ok, null);
+		return new Status(IStatus.OK, PlatformUI.PLUGIN_ID, 0, ResourceNavigatorMessages.DropAdapter_ok, null);
 	}
 
 	/**
@@ -184,16 +179,14 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 
 		// simple case: one error, not a multistatus
 		if (!status.isMultiStatus()) {
-			ErrorDialog
-					.openError(getShell(), genericTitle, null, status, codes);
+			ErrorDialog.openError(getShell(), genericTitle, null, status, codes);
 			return;
 		}
 
 		// one error, single child of multistatus
 		IStatus[] children = status.getChildren();
 		if (children.length == 1) {
-			ErrorDialog.openError(getShell(), status.getMessage(), null,
-					children[0], codes);
+			ErrorDialog.openError(getShell(), status.getMessage(), null, children[0], codes);
 			return;
 		}
 		// several problems
@@ -214,11 +207,9 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 		IStatus status = null;
 		IResource[] resources = null;
 		TransferData currentTransfer = getCurrentTransfer();
-		if (LocalSelectionTransfer.getInstance().isSupportedType(
-				currentTransfer)) {
+		if (LocalSelectionTransfer.getInstance().isSupportedType(currentTransfer)) {
 			resources = getSelectedResources();
-		} else if (ResourceTransfer.getInstance().isSupportedType(
-				currentTransfer)) {
+		} else if (ResourceTransfer.getInstance().isSupportedType(currentTransfer)) {
 			resources = (IResource[]) data;
 		} else if (FileTransfer.getInstance().isSupportedType(currentTransfer)) {
 			status = performFileDrop(data);
@@ -243,8 +234,7 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 	private IStatus performFileDrop(Object data) {
 		MultiStatus problems = new MultiStatus(PlatformUI.PLUGIN_ID, 0,
 				ResourceNavigatorMessages.DropAdapter_problemImporting, null);
-		mergeStatus(problems,
-				validateTarget(getCurrentTarget(), getCurrentTransfer()));
+		mergeStatus(problems, validateTarget(getCurrentTarget(), getCurrentTransfer()));
 
 		final IContainer target = getActualTarget((IResource) getCurrentTarget());
 		final String[] names = (String[]) data;
@@ -254,8 +244,7 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 		Display.getCurrent().asyncExec(new Runnable() {
 			public void run() {
 				getShell().forceActive();
-				CopyFilesAndFoldersOperation operation = new CopyFilesAndFoldersOperation(
-						getShell());
+				CopyFilesAndFoldersOperation operation = new CopyFilesAndFoldersOperation(getShell());
 				operation.copyFiles(names, target);
 			}
 		});
@@ -268,12 +257,10 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 	private IStatus performResourceCopy(Shell shell, IResource[] sources) {
 		MultiStatus problems = new MultiStatus(PlatformUI.PLUGIN_ID, 1,
 				ResourceNavigatorMessages.DropAdapter_problemsMoving, null);
-		mergeStatus(problems,
-				validateTarget(getCurrentTarget(), getCurrentTransfer()));
+		mergeStatus(problems, validateTarget(getCurrentTarget(), getCurrentTransfer()));
 
 		IContainer target = getActualTarget((IResource) getCurrentTarget());
-		CopyFilesAndFoldersOperation operation = new CopyFilesAndFoldersOperation(
-				shell);
+		CopyFilesAndFoldersOperation operation = new CopyFilesAndFoldersOperation(shell);
 		operation.copyResources(sources, target);
 
 		return problems;
@@ -286,8 +273,7 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 		MultiStatus problems = new MultiStatus(PlatformUI.PLUGIN_ID, 1,
 				ResourceNavigatorMessages.DropAdapter_problemsMoving, null);
 
-		mergeStatus(problems,
-				validateTarget(getCurrentTarget(), getCurrentTransfer()));
+		mergeStatus(problems, validateTarget(getCurrentTarget(), getCurrentTransfer()));
 
 		IContainer target = getActualTarget((IResource) getCurrentTarget());
 		ReadOnlyStateChecker checker = new ReadOnlyStateChecker(getShell(),
@@ -298,8 +284,7 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 		fReorgMoveAction.setSources(sources);
 		fReorgMoveAction.setTarget(target);
 
-		ISelection selection = LocalSelectionTransfer.getInstance()
-				.getSelection();
+		ISelection selection = LocalSelectionTransfer.getInstance().getSelection();
 		if (selection instanceof IStructuredSelection) {
 			// fReorgMoveAction.setSelection((StructuredSelection) selection);
 			fReorgMoveAction.runDrop((IStructuredSelection) selection);
@@ -337,23 +322,19 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 				} else {
 					operation = new MoveFilesAndFoldersOperation(getShell());
 				}
-				message = operation.validateDestination(destination,
-						selectedResources);
+				message = operation.validateDestination(destination, selectedResources);
 			}
 		} // file import?
 		else if (FileTransfer.getInstance().isSupportedType(transferType)) {
-			String[] sourceNames = (String[]) FileTransfer.getInstance()
-					.nativeToJava(transferType);
+			String[] sourceNames = (String[]) FileTransfer.getInstance().nativeToJava(transferType);
 			if (sourceNames == null) {
 				// source names will be null on Linux. Use empty names to do
 				// destination validation.
 				// Fixes bug 29778
 				sourceNames = new String[0];
 			}
-			CopyFilesAndFoldersOperation copyOperation = new CopyFilesAndFoldersOperation(
-					getShell());
-			message = copyOperation.validateImportDestination(destination,
-					sourceNames);
+			CopyFilesAndFoldersOperation copyOperation = new CopyFilesAndFoldersOperation(getShell());
+			message = copyOperation.validateImportDestination(destination, sourceNames);
 		}
 		if (message != null) {
 			return error(message);

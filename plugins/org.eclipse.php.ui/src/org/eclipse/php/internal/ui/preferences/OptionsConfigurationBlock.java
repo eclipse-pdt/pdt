@@ -115,8 +115,7 @@ public abstract class OptionsConfigurationBlock {
 
 	// are turned off
 
-	public OptionsConfigurationBlock(IStatusChangeListener context,
-			IProject project, Key[] allKeys,
+	public OptionsConfigurationBlock(IStatusChangeListener context, IProject project, Key[] allKeys,
 			IWorkbenchPreferenceContainer container) {
 		fContext = context;
 		fProject = project;
@@ -129,11 +128,10 @@ public abstract class OptionsConfigurationBlock {
 		}
 
 		if (fProject != null) {
-			fLookupOrder = new IScopeContext[] { new ProjectScope(fProject),
-					InstanceScope.INSTANCE, DefaultScope.INSTANCE };
-		} else {
-			fLookupOrder = new IScopeContext[] { InstanceScope.INSTANCE,
+			fLookupOrder = new IScopeContext[] { new ProjectScope(fProject), InstanceScope.INSTANCE,
 					DefaultScope.INSTANCE };
+		} else {
+			fLookupOrder = new IScopeContext[] { InstanceScope.INSTANCE, DefaultScope.INSTANCE };
 		}
 
 		testIfOptionsComplete(allKeys);
@@ -143,8 +141,7 @@ public abstract class OptionsConfigurationBlock {
 			fDisabledProjectSettings = new IdentityHashMap<Key, String>();
 			for (int i = 0; i < allKeys.length; i++) {
 				Key curr = allKeys[i];
-				fDisabledProjectSettings.put(curr,
-						curr.getStoredValue(fLookupOrder, false, fManager));
+				fDisabledProjectSettings.put(curr, curr.getStoredValue(fLookupOrder, false, fManager));
 			}
 		}
 
@@ -167,8 +164,7 @@ public abstract class OptionsConfigurationBlock {
 
 	private void testIfOptionsComplete(Key[] allKeys) {
 		for (int i = 0; i < allKeys.length; i++) {
-			if (allKeys[i].getStoredValue(fLookupOrder, false,
-					fManager) == null) {
+			if (allKeys[i].getStoredValue(fLookupOrder, false, fManager) == null) {
 				PHPUiPlugin.logErrorMessage("preference option missing: " //$NON-NLS-1$
 						+ allKeys[i] + " (" + this.getClass().getName() + ')'); //$NON-NLS-1$
 			}
@@ -181,8 +177,7 @@ public abstract class OptionsConfigurationBlock {
 	public void selectOption(String key, String qualifier) {
 		for (int i = 0; i < fAllKeys.length; i++) {
 			Key curr = fAllKeys[i];
-			if (curr.getName().equals(key)
-					&& curr.getQualifier().equals(qualifier)) {
+			if (curr.getName().equals(key) && curr.getQualifier().equals(qualifier)) {
 				selectOption(curr);
 			}
 		}
@@ -192,8 +187,7 @@ public abstract class OptionsConfigurationBlock {
 		Control control = findControl(key);
 		if (control != null) {
 			if (!fExpandedComposites.isEmpty()) {
-				ExpandableComposite expandable = getParentExpandableComposite(
-						control);
+				ExpandableComposite expandable = getParentExpandableComposite(control);
 				if (expandable != null) {
 					for (int i = 0; i < fExpandedComposites.size(); i++) {
 						ExpandableComposite curr = fExpandedComposites.get(i);
@@ -211,8 +205,7 @@ public abstract class OptionsConfigurationBlock {
 			IScopeContext projectContext = new ProjectScope(project);
 			Key[] allKeys = fAllKeys;
 			for (int i = 0; i < allKeys.length; i++) {
-				if (allKeys[i].getStoredValue(projectContext,
-						fManager) != null) {
+				if (allKeys[i].getStoredValue(projectContext, fManager) != null) {
 					return true;
 				}
 			}
@@ -230,8 +223,7 @@ public abstract class OptionsConfigurationBlock {
 
 	protected abstract Control createContents(Composite parent);
 
-	protected Button addCheckBox(Composite parent, String label, Key key,
-			String[] values, int indent) {
+	protected Button addCheckBox(Composite parent, String label, Key key, String[] values, int indent) {
 		ControlData data = new ControlData(key, values);
 
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -255,10 +247,9 @@ public abstract class OptionsConfigurationBlock {
 		return checkBox;
 	}
 
-	protected Combo addComboBox(Composite parent, String label, Key key,
-			String[] values, String[] valueLabels, int indent) {
-		GridData gd = new GridData(GridData.FILL, GridData.CENTER, true, false,
-				2, 1);
+	protected Combo addComboBox(Composite parent, String label, Key key, String[] values, String[] valueLabels,
+			int indent) {
+		GridData gd = new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
 		gd.horizontalIndent = indent;
 
 		Label labelControl = new Label(parent, SWT.LEFT);
@@ -274,8 +265,7 @@ public abstract class OptionsConfigurationBlock {
 		return comboBox;
 	}
 
-	protected Combo addComboBox(Composite parent, String label, Key key,
-			String[] values, String[] valueLabels) {
+	protected Combo addComboBox(Composite parent, String label, Key key, String[] values, String[] valueLabels) {
 
 		Label labelControl = new Label(parent, SWT.LEFT);
 		labelControl.setFont(JFaceResources.getDialogFont());
@@ -289,8 +279,8 @@ public abstract class OptionsConfigurationBlock {
 		return comboBox;
 	}
 
-	protected Combo addInversedComboBox(Composite parent, String label, Key key,
-			String[] values, String[] valueLabels, int indent) {
+	protected Combo addInversedComboBox(Composite parent, String label, Key key, String[] values, String[] valueLabels,
+			int indent) {
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.horizontalIndent = indent;
 		gd.horizontalSpan = 3;
@@ -315,8 +305,7 @@ public abstract class OptionsConfigurationBlock {
 		return comboBox;
 	}
 
-	protected Combo newComboControl(Composite composite, Key key,
-			String[] values, String[] valueLabels) {
+	protected Combo newComboControl(Composite composite, Key key, String[] values, String[] valueLabels) {
 		ControlData data = new ControlData(key, values);
 
 		Combo comboBox = new Combo(composite, SWT.READ_ONLY);
@@ -334,8 +323,7 @@ public abstract class OptionsConfigurationBlock {
 		return comboBox;
 	}
 
-	protected Text addTextField(Composite parent, String label, Key key,
-			int indent, int widthHint) {
+	protected Text addTextField(Composite parent, String label, Key key, int indent, int widthHint) {
 		Label labelControl = new Label(parent, SWT.WRAP);
 		labelControl.setText(label);
 		labelControl.setFont(JFaceResources.getDialogFont());
@@ -378,8 +366,7 @@ public abstract class OptionsConfigurationBlock {
 		return null;
 	}
 
-	protected ExpandableComposite getParentExpandableComposite(
-			Control control) {
+	protected ExpandableComposite getParentExpandableComposite(Control control) {
 		Control parent = control.getParent();
 		while (!(parent instanceof ExpandableComposite) && parent != null) {
 			parent = parent.getParent();
@@ -391,24 +378,19 @@ public abstract class OptionsConfigurationBlock {
 	}
 
 	private void makeScrollableCompositeAware(Control control) {
-		ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(
-				control);
+		ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(control);
 		if (parentScrolledComposite != null) {
 			parentScrolledComposite.adaptChild(control);
 		}
 	}
 
-	protected ExpandableComposite createStyleSection(Composite parent,
-			String label, int nColumns) {
-		ExpandableComposite excomposite = new ExpandableComposite(parent,
-				SWT.NONE, ExpandableComposite.TWISTIE
-						| ExpandableComposite.CLIENT_INDENT);
+	protected ExpandableComposite createStyleSection(Composite parent, String label, int nColumns) {
+		ExpandableComposite excomposite = new ExpandableComposite(parent, SWT.NONE,
+				ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT);
 		excomposite.setText(label);
 		excomposite.setExpanded(false);
-		excomposite.setFont(JFaceResources.getFontRegistry()
-				.getBold(JFaceResources.DIALOG_FONT));
-		excomposite.setLayoutData(new GridData(GridData.FILL, GridData.FILL,
-				true, false, nColumns, 1));
+		excomposite.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
+		excomposite.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, nColumns, 1));
 		excomposite.addExpansionListener(new ExpansionAdapter() {
 			public void expansionStateChanged(ExpansionEvent e) {
 				expandedStateChanged((ExpandableComposite) e.getSource());
@@ -420,8 +402,7 @@ public abstract class OptionsConfigurationBlock {
 	}
 
 	protected final void expandedStateChanged(ExpandableComposite expandable) {
-		ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(
-				expandable);
+		ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(expandable);
 		if (parentScrolledComposite != null) {
 			parentScrolledComposite.reflow(true);
 		}
@@ -434,8 +415,7 @@ public abstract class OptionsConfigurationBlock {
 				excomposite.setExpanded(i == 0); // only expand the first node
 				// by default
 			} else {
-				excomposite.setExpanded(settings
-						.getBoolean(SETTINGS_EXPANDED + String.valueOf(i)));
+				excomposite.setExpanded(settings.getBoolean(SETTINGS_EXPANDED + String.valueOf(i)));
 			}
 		}
 	}
@@ -443,8 +423,7 @@ public abstract class OptionsConfigurationBlock {
 	protected void storeSectionExpansionStates(IDialogSettings settings) {
 		for (int i = 0; i < fExpandedComposites.size(); i++) {
 			ExpandableComposite curr = fExpandedComposites.get(i);
-			settings.put(SETTINGS_EXPANDED + String.valueOf(i),
-					curr.isExpanded());
+			settings.put(SETTINGS_EXPANDED + String.valueOf(i), curr.isExpanded());
 		}
 	}
 
@@ -499,8 +478,7 @@ public abstract class OptionsConfigurationBlock {
 	}
 
 	protected String getValue(Key key) {
-		if (fDisabledProjectSettings != null
-				&& fDisabledProjectSettings.get(key) != null) {
+		if (fDisabledProjectSettings != null && fDisabledProjectSettings.get(key) != null) {
 			return fDisabledProjectSettings.get(key);
 		}
 		return key.getStoredValue(fLookupOrder, false, fManager);
@@ -538,8 +516,7 @@ public abstract class OptionsConfigurationBlock {
 	 * 
 	 * @param changedKey Key that changed, or null, if all changed.
 	 */
-	protected abstract void validateSettings(Key changedKey, String oldValue,
-			String newValue);
+	protected abstract void validateSettings(Key changedKey, String oldValue, String newValue);
 
 	protected String[] getTokens(String text, String separator) {
 		StringTokenizer tok = new StringTokenizer(text, separator);
@@ -551,8 +528,7 @@ public abstract class OptionsConfigurationBlock {
 		return res;
 	}
 
-	private boolean getChanges(IScopeContext currContext,
-			List<Key> changedSettings) {
+	private boolean getChanges(IScopeContext currContext, List<Key> changedSettings) {
 		boolean needsBuild = false;
 		for (int i = 0; i < fAllKeys.length; i++) {
 			Key key = fAllKeys[i];
@@ -561,13 +537,11 @@ public abstract class OptionsConfigurationBlock {
 			if (val == null) {
 				if (oldVal != null) {
 					changedSettings.add(key);
-					needsBuild |= !oldVal.equals(
-							key.getStoredValue(fLookupOrder, true, fManager));
+					needsBuild |= !oldVal.equals(key.getStoredValue(fLookupOrder, true, fManager));
 				}
 			} else if (!val.equals(oldVal)) {
 				changedSettings.add(key);
-				needsBuild |= oldVal != null || !val.equals(
-						key.getStoredValue(fLookupOrder, true, fManager));
+				needsBuild |= oldVal != null || !val.equals(key.getStoredValue(fLookupOrder, true, fManager));
 			}
 		}
 		return needsBuild;
@@ -588,8 +562,7 @@ public abstract class OptionsConfigurationBlock {
 				fDisabledProjectSettings = new IdentityHashMap<Key, String>();
 				for (int i = 0; i < fAllKeys.length; i++) {
 					Key curr = fAllKeys[i];
-					String oldSetting = curr.getStoredValue(fLookupOrder, false,
-							fManager);
+					String oldSetting = curr.getStoredValue(fLookupOrder, false, fManager);
 					fDisabledProjectSettings.put(curr, oldSetting);
 					curr.setStoredValue(fLookupOrder[0], null, fManager); // clear
 					// project
@@ -629,11 +602,9 @@ public abstract class OptionsConfigurationBlock {
 		if (needsBuild) {
 			String[] strings = getFullBuildDialogStrings(fProject == null);
 			if (strings != null) {
-				MessageDialog dialog = new MessageDialog(getShell(), strings[0],
-						null, strings[1], MessageDialog.QUESTION,
-						new String[] { IDialogConstants.YES_LABEL,
-								IDialogConstants.NO_LABEL,
-								IDialogConstants.CANCEL_LABEL },
+				MessageDialog dialog = new MessageDialog(
+						getShell(), strings[0], null, strings[1], MessageDialog.QUESTION, new String[] {
+								IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL },
 						2);
 				int res = dialog.open();
 				if (res == 0) {
@@ -686,8 +657,7 @@ public abstract class OptionsConfigurationBlock {
 
 	}
 
-	protected abstract String[] getFullBuildDialogStrings(
-			boolean workspaceSettings);
+	protected abstract String[] getFullBuildDialogStrings(boolean workspaceSettings);
 
 	public void performDefaults() {
 		for (int i = 0; i < fAllKeys.length; i++) {

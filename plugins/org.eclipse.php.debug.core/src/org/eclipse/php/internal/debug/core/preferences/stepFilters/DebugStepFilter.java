@@ -42,8 +42,7 @@ public class DebugStepFilter {
 	 *            - The path string representation (can have '*' as a prefix
 	 *            and/or postfix)
 	 */
-	public DebugStepFilter(int type, boolean enabled, boolean isReadOnly,
-			String path) {
+	public DebugStepFilter(int type, boolean enabled, boolean isReadOnly, String path) {
 		fPath = path;
 		fIsEnabled = enabled;
 		fType = type;
@@ -100,8 +99,7 @@ public class DebugStepFilter {
 		if (o instanceof DebugStepFilter) {
 			DebugStepFilter other = (DebugStepFilter) o;
 
-			if ((FileUtils.checkIfEqualFilePaths(getPath(), other.getPath()))
-					&& (getType() == other.getType())) {
+			if ((FileUtils.checkIfEqualFilePaths(getPath(), other.getPath())) && (getType() == other.getType())) {
 				return true;
 			}
 		}

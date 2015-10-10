@@ -49,13 +49,13 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 	private IDialogSettings fSettings;
 
 	private static final String DESCRIPTION = RefactoringMessages.ExtractMethodInputPage_description;
-	//	private static final String THROW_RUNTIME_EXCEPTIONS = "ThrowRuntimeExceptions"; //$NON-NLS-1$
+	// private static final String THROW_RUNTIME_EXCEPTIONS =
+	// "ThrowRuntimeExceptions"; //$NON-NLS-1$
 	private static final String GENERATE_PHPDOC = "GeneratePHPdoc"; //$NON-NLS-1$
 
 	public ExtractFunctionInputPage() {
 		super(PAGE_NAME);
-		setImageDescriptor(RefactoringUIPlugin.imageDescriptorFromPlugin(
-				RefactoringUIPlugin.PLUGIN_ID,
+		setImageDescriptor(RefactoringUIPlugin.imageDescriptorFromPlugin(RefactoringUIPlugin.PLUGIN_ID,
 				"icons/full/wizban/compunitrefact_wiz.png"));//$NON-NLS-1$
 		setDescription(DESCRIPTION);
 		fFirstTime = true;
@@ -117,15 +117,12 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 			layout.marginWidth = 0;
 			group.setLayout(layout);
 
-			String[] labels = new String[] {
-					RefactoringMessages.ExtractMethodInputPage_public,
+			String[] labels = new String[] { RefactoringMessages.ExtractMethodInputPage_public,
 					RefactoringMessages.ExtractMethodInputPage_protected,
 					RefactoringMessages.ExtractMethodInputPage_default,
 					RefactoringMessages.ExtractMethodInputPage_private };
-			Integer[] data = new Integer[] { new Integer(Modifiers.AccPublic),
-					new Integer(Modifiers.AccProtected),
-					new Integer(Modifiers.AccDefault),
-					new Integer(Modifiers.AccPrivate) };
+			Integer[] data = new Integer[] { new Integer(Modifiers.AccPublic), new Integer(Modifiers.AccProtected),
+					new Integer(Modifiers.AccDefault), new Integer(Modifiers.AccPrivate) };
 			Integer visibility = new Integer(fRefactoring.getVisibility());
 			for (int i = 0; i < labels.length; i++) {
 				Button radio = new Button(group, SWT.RADIO);
@@ -143,10 +140,8 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 		}
 
 		if (!fRefactoring.getParameterInfos().isEmpty()) {
-			ChangeParametersControl cp = new ChangeParametersControl(result,
-					SWT.NONE,
-					RefactoringMessages.ExtractMethodInputPage_parameters,
-					new IParameterListChangeListener() {
+			ChangeParametersControl cp = new ChangeParametersControl(result, SWT.NONE,
+					RefactoringMessages.ExtractMethodInputPage_parameters, new IParameterListChangeListener() {
 						public void parameterChanged(ParameterInfo parameter) {
 							parameterModified();
 						}
@@ -177,11 +172,9 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 
 		Button checkBox = new Button(result, SWT.CHECK);
 		if (fRefactoring.isClassMethod()) {
-			checkBox.setText(PHPRefactoringUIMessages
-					.getString("ExtractFunctionInputPage_2")); //$NON-NLS-1$
+			checkBox.setText(PHPRefactoringUIMessages.getString("ExtractFunctionInputPage_2")); //$NON-NLS-1$
 		} else {
-			checkBox.setText(PHPRefactoringUIMessages
-					.getString("ExtractFunctionInputPage_1")); //$NON-NLS-1$
+			checkBox.setText(PHPRefactoringUIMessages.getString("ExtractFunctionInputPage_1")); //$NON-NLS-1$
 		}
 		boolean generate = computeGeneratePHPdoc();
 		setGeneratePHPdoc(generate);
@@ -200,9 +193,8 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 		} else if (duplicates == 1) {
 			checkBox.setText(RefactoringMessages.ExtractMethodInputPage_duplicates_single);
 		} else {
-			checkBox.setText(NLS
-					.bind(RefactoringMessages.ExtractMethodInputPage_duplicates_multi,
-							new Integer(duplicates)));
+			checkBox.setText(
+					NLS.bind(RefactoringMessages.ExtractMethodInputPage_duplicates_multi, new Integer(duplicates)));
 		}
 		boolean enabled = duplicates > 0;
 
@@ -215,8 +207,7 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 
 		checkBox.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				fRefactoring.setReplaceDuplicates(((Button) e.widget)
-						.getSelection());
+				fRefactoring.setReplaceDuplicates(((Button) e.widget).getSelection());
 			}
 		});
 		layouter.perform(checkBox);
@@ -249,7 +240,7 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 	// // return decl.getName().getIdentifier();
 	// // }
 	// // }
-	//		return "UNKNOWN"; //$NON-NLS-1$
+	// return "UNKNOWN"; //$NON-NLS-1$
 	// }
 
 	private Text createTextInputField(Composite parent, int style) {
@@ -290,23 +281,20 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 		fRefactoring.setGeneratePHPdoc(value);
 	}
 
-	private void createSignaturePreview(Composite composite,
-			RowLayouter layouter) {
+	private void createSignaturePreview(Composite composite, RowLayouter layouter) {
 		Label previewLabel = new Label(composite, SWT.NONE);
-		previewLabel
-				.setText(RefactoringMessages.ExtractMethodInputPage_signature_preview);
+		previewLabel.setText(RefactoringMessages.ExtractMethodInputPage_signature_preview);
 		layouter.perform(previewLabel);
 
 		// IPreferenceStore store=
 		// RefactoringUIPlugin.getDefault().getPreferenceStore();
-		fSignaturePreview = new PHPSourceViewer(composite, SWT.READ_ONLY
-				| SWT.V_SCROLL | SWT.WRAP /* | SWT.BORDER */);
+		fSignaturePreview = new PHPSourceViewer(composite,
+				SWT.READ_ONLY | SWT.V_SCROLL | SWT.WRAP /* | SWT.BORDER */);
 		// fSignaturePreview.configure(new
 		// JavaSourceViewerConfiguration(JavaPlugin.getDefault().getJavaTextTools().getColorManager(),
 		// store, null, null));
 		// fSignaturePreview.getTextWidget().setFont(JFaceResources.getFont(PreferenceConstants.EDITOR_TEXT_FONT));
-		fSignaturePreview.getTextWidget().setBackground(
-				composite.getBackground());
+		fSignaturePreview.getTextWidget().setBackground(composite.getBackground());
 		fSignaturePreview.setText(fSignaturePreviewDocument);
 		fSignaturePreview.setEditable(false);
 
@@ -319,8 +307,7 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 		gd.horizontalSpan = 2;
 		fSignaturePreview.setLayoutData(gd);
 
-		PixelConverter pixelConverter = new PixelConverter(
-				signaturePreviewControl);
+		PixelConverter pixelConverter = new PixelConverter(signaturePreviewControl);
 		GridData gdata = new GridData(GridData.FILL_BOTH);
 		gdata.widthHint = pixelConverter.convertWidthInCharsToPixels(50);
 		gdata.heightHint = pixelConverter.convertHeightInCharsToPixels(2);
@@ -347,11 +334,9 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 	}
 
 	private void loadSettings() {
-		fSettings = getDialogSettings().getSection(
-				ExtractFunctionWizard.DIALOG_SETTING_SECTION);
+		fSettings = getDialogSettings().getSection(ExtractFunctionWizard.DIALOG_SETTING_SECTION);
 		if (fSettings == null) {
-			fSettings = getDialogSettings().addNewSection(
-					ExtractFunctionWizard.DIALOG_SETTING_SECTION);
+			fSettings = getDialogSettings().addNewSection(ExtractFunctionWizard.DIALOG_SETTING_SECTION);
 			fSettings.put(GENERATE_PHPDOC, true);
 		}
 	}

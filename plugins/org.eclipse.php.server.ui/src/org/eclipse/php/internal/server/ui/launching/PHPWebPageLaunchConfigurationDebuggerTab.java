@@ -30,8 +30,7 @@ import org.eclipse.php.internal.server.ui.ServerEditWizardRunner;
  * @author Bartlomiej Laczkowski
  */
 @SuppressWarnings("restriction")
-public class PHPWebPageLaunchConfigurationDebuggerTab
-		extends AbstractPHPLaunchConfigurationDebuggerTab {
+public class PHPWebPageLaunchConfigurationDebuggerTab extends AbstractPHPLaunchConfigurationDebuggerTab {
 
 	/*
 	 * (non-Javadoc)
@@ -45,8 +44,7 @@ public class PHPWebPageLaunchConfigurationDebuggerTab
 		if (server == null || ServersManager.isNoneServer(server))
 			return;
 		NullProgressMonitor monitor = new NullProgressMonitor();
-		if (ServerEditWizardRunner.runWizard(server,
-				DebuggerCompositeFragment.ID) == Window.CANCEL) {
+		if (ServerEditWizardRunner.runWizard(server, DebuggerCompositeFragment.ID) == Window.CANCEL) {
 			monitor.setCanceled(true);
 			return;
 		}
@@ -89,8 +87,7 @@ public class PHPWebPageLaunchConfigurationDebuggerTab
 	 */
 	@Override
 	protected void updateDebugTest() {
-		debugTesters = DebugServerConnectionTestRegistry
-				.getTests(getCurrentDebuggerId());
+		debugTesters = DebugServerConnectionTestRegistry.getTests(getCurrentDebuggerId());
 		if (debugTesters.length == 0) {
 			validateDebuggerBtn.setEnabled(false);
 		} else {
@@ -113,8 +110,7 @@ public class PHPWebPageLaunchConfigurationDebuggerTab
 
 	private Server getServer() {
 		try {
-			String serverName = getConfiguration().getAttribute(Server.NAME,
-					""); //$NON-NLS-1$
+			String serverName = getConfiguration().getAttribute(Server.NAME, ""); //$NON-NLS-1$
 			Server server = ServersManager.getServer(serverName);
 			return server;
 		} catch (CoreException e) {

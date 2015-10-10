@@ -22,26 +22,22 @@ public class ChangeOutlineModeAction extends Action {
 	private PHPContentOutlineConfiguration contentOutlineConfiguration;
 	private TreeViewer viewer;
 
-	public ChangeOutlineModeAction(String label, int mode,
-			PHPContentOutlineConfiguration contentOutlineConfiguration,
+	public ChangeOutlineModeAction(String label, int mode, PHPContentOutlineConfiguration contentOutlineConfiguration,
 			TreeViewer viewer) {
 		super(label, AS_RADIO_BUTTON);
 		this.mode = mode;
 		this.contentOutlineConfiguration = contentOutlineConfiguration;
 		this.viewer = viewer;
-		int prefMode = PHPUiPlugin.getDefault().getPreferenceStore()
-				.getInt(PreferenceConstants.PREF_OUTLINEMODE);
+		int prefMode = PHPUiPlugin.getDefault().getPreferenceStore().getInt(PreferenceConstants.PREF_OUTLINEMODE);
 		setChecked(prefMode == mode);
 	}
 
 	public void run() {
 		contentOutlineConfiguration.setMode(mode);
 		contentOutlineConfiguration.getContentProvider(viewer);
-		viewer.setLabelProvider(contentOutlineConfiguration
-				.getLabelProvider(viewer));
+		viewer.setLabelProvider(contentOutlineConfiguration.getLabelProvider(viewer));
 		viewer.refresh(false);
-		PHPUiPlugin.getDefault().getPreferenceStore()
-				.setValue(PreferenceConstants.PREF_OUTLINEMODE, mode);
+		PHPUiPlugin.getDefault().getPreferenceStore().setValue(PreferenceConstants.PREF_OUTLINEMODE, mode);
 	}
 
 }

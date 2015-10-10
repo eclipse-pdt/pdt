@@ -86,13 +86,10 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 
 			if (fileName != null) {
 				HandleFactory fac = new HandleFactory();
-				IDLTKSearchScope scope = SearchEngine
-						.createWorkspaceScope(PHPLanguageToolkit.getDefault());
-				IPath localPath = EnvironmentPathUtils.getFile(
-						LocalEnvironment.getInstance(), new Path(fileName))
+				IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
+				IPath localPath = EnvironmentPathUtils.getFile(LocalEnvironment.getInstance(), new Path(fileName))
 						.getFullPath();
-				Openable openable = fac.createOpenable(localPath.toString(),
-						scope);
+				Openable openable = fac.createOpenable(localPath.toString(), scope);
 				if (openable instanceof IStorage) {
 					return new Object[] { openable };
 				}
@@ -103,19 +100,15 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 				}
 
 				// try a phar
-				final PharPath pharPath = PharPath.getPharPath(new Path(
-						fileName));
+				final PharPath pharPath = PharPath.getPharPath(new Path(fileName));
 				if (pharPath != null) {
 
 					try {
-						final PharArchiveFile archiveFile = new PharArchiveFile(
-								pharPath.getPharName());
-						final IArchiveEntry entry = archiveFile
-								.getArchiveEntry((pharPath.getFolder().length() == 0 ? "" //$NON-NLS-1$
-										: pharPath.getFolder() + "/") //$NON-NLS-1$
-										+ pharPath.getFile());
-						return new Object[] { new ExternalEntryFile(fileName,
-								archiveFile, entry) };
+						final PharArchiveFile archiveFile = new PharArchiveFile(pharPath.getPharName());
+						final IArchiveEntry entry = archiveFile.getArchiveEntry((pharPath.getFolder().length() == 0 ? "" //$NON-NLS-1$
+								: pharPath.getFolder() + "/") //$NON-NLS-1$
+								+ pharPath.getFile());
+						return new Object[] { new ExternalEntryFile(fileName, archiveFile, entry) };
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -128,15 +121,13 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 		return sourceElements;
 	}
 
-	private static final class ExternalEntryFile extends PlatformObject
-			implements IStorage {
+	private static final class ExternalEntryFile extends PlatformObject implements IStorage {
 
 		private String fileName;
 		private IArchiveEntry entry;
 		private PharArchiveFile archiveFile;
 
-		public ExternalEntryFile(String fileName, PharArchiveFile archiveFile,
-				IArchiveEntry entry) {
+		public ExternalEntryFile(String fileName, PharArchiveFile archiveFile, IArchiveEntry entry) {
 			this.fileName = fileName;
 			this.entry = entry;
 			this.archiveFile = archiveFile;

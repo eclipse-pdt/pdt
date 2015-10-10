@@ -19,10 +19,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 @RunWith(Suite.class)
-@SuiteClasses({
-	FormatterTests.class,
-	FormatterAutoEditTests.class,
-	FormatterLinuxAutoEditTests.class
-})
+@SuiteClasses({ FormatterTests.class, FormatterAutoEditTests.class, FormatterLinuxAutoEditTests.class })
 public class AllTests {
 }

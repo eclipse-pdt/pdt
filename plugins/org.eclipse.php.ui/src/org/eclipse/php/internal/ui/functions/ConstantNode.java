@@ -47,8 +47,7 @@ public class ConstantNode {
 		return children.toArray(new Object[children.size()]);
 	}
 
-	public void addSourceModuleChildren(
-			IModelElement[] externalSourceModuleChildren) {
+	public void addSourceModuleChildren(IModelElement[] externalSourceModuleChildren) {
 		modules.addAll(Arrays.asList(externalSourceModuleChildren));
 
 	}

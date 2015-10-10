@@ -69,14 +69,12 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 	 * will create an operation and run it using wizard as execution context.
 	 */
 	public boolean performFinish() {
-		final String containerName = phpFileCreationWizardPage
-				.getContainerFullPath().toString();
+		final String containerName = phpFileCreationWizardPage.getContainerFullPath().toString();
 		final String fileName = phpFileCreationWizardPage.getFileName();
 		newPhpTemplatesWizardPage.resetTableViewerInput();
 		IScriptProject project = null;
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IResource resource = root.findMember(phpFileCreationWizardPage
-				.getContainerFullPath());
+		IResource resource = root.findMember(phpFileCreationWizardPage.getContainerFullPath());
 		if (!resource.exists() || !(resource instanceof IContainer)) {
 			project = DLTKCore.create(resource.getProject());
 		}
@@ -86,15 +84,14 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		}
 
 		String lineSeparator = Util.getLineSeparator(null, project);
-		final PHPTemplateStore.CompiledTemplate template = this.newPhpTemplatesWizardPage
-				.compileTemplate(containerName, fileName, lineSeparator);
+		final PHPTemplateStore.CompiledTemplate template = this.newPhpTemplatesWizardPage.compileTemplate(containerName,
+				fileName, lineSeparator);
 
 		IRunnableWithProgress op = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor)
-					throws InvocationTargetException {
+			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
-					new FileCreator().createFile(PHPFileCreationWizard.this,
-							file, monitor, template.string, template.offset);
+					new FileCreator().createFile(PHPFileCreationWizard.this, file, monitor, template.string,
+							template.offset);
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);
 				} finally {
@@ -108,9 +105,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 			return false;
 		} catch (InvocationTargetException e) {
 			Throwable realException = e.getTargetException();
-			MessageDialog.openError(getShell(),
-					PHPUIMessages.PHPFileCreationWizard_0,
-					realException.getMessage());
+			MessageDialog.openError(getShell(), PHPUIMessages.PHPFileCreationWizard_0, realException.getMessage());
 			return false;
 		}
 		return true;
@@ -148,13 +143,12 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		 * @throws CoreException
 		 * @see {@link #createFile(Wizard, IFile, IProgressMonitor, String, String)}
 		 */
-		public void createFile(Wizard wizard, IFile file,
-				IProgressMonitor monitor, String contents) throws CoreException {
+		public void createFile(Wizard wizard, IFile file, IProgressMonitor monitor, String contents)
+				throws CoreException {
 			createFile(wizard, file, monitor, contents, 0, null);
 		}
 
-		public void createFile(Wizard wizard, IFile file,
-				IProgressMonitor monitor, String contents, int offset)
+		public void createFile(Wizard wizard, IFile file, IProgressMonitor monitor, String contents, int offset)
 				throws CoreException {
 			createFile(wizard, file, monitor, contents, offset, null);
 		}
@@ -174,40 +168,27 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		 *            null).
 		 * @throws CoreException
 		 */
-		public void createFile(Wizard wizard, final IFile file,
-				IProgressMonitor monitor, String contents, final int offset,
-				final String editorID) throws CoreException {
+		public void createFile(Wizard wizard, final IFile file, IProgressMonitor monitor, String contents,
+				final int offset, final String editorID) throws CoreException {
 			// create a sample file
 			IContainer container = file.getParent();
 			if (file != null) {
 				if (!file.isLinked()) {
 					// adopt project's/workspace's line delimiter (separator)
-					String lineSeparator = Platform.getPreferencesService()
-							.getString(
-									Platform.PI_RUNTIME,
-									Platform.PREF_LINE_SEPARATOR,
-									null,
-									new IScopeContext[] { new ProjectScope(
-											container.getProject()) });
+					String lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME,
+							Platform.PREF_LINE_SEPARATOR, null,
+							new IScopeContext[] { new ProjectScope(container.getProject()) });
 					if (lineSeparator == null)
-						lineSeparator = Platform
-								.getPreferencesService()
-								.getString(
-										Platform.PI_RUNTIME,
-										Platform.PREF_LINE_SEPARATOR,
-										null,
-										new IScopeContext[] { InstanceScope.INSTANCE });
+						lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME,
+								Platform.PREF_LINE_SEPARATOR, null, new IScopeContext[] { InstanceScope.INSTANCE });
 					if (lineSeparator == null)
-						lineSeparator = System
-								.getProperty(Platform.PREF_LINE_SEPARATOR);
+						lineSeparator = System.getProperty(Platform.PREF_LINE_SEPARATOR);
 					if (contents != null) {
-						contents = contents.replaceAll(
-								"(\n\r?|\r\n?)", lineSeparator); //$NON-NLS-1$
+						contents = contents.replaceAll("(\n\r?|\r\n?)", lineSeparator); //$NON-NLS-1$
 					}
 
 					try {
-						InputStream stream = openContentStream(contents,
-								getCharSetValue(container));
+						InputStream stream = openContentStream(contents, getCharSetValue(container));
 						if (file.exists()) {
 							file.setContents(stream, true, true, monitor);
 						} else {
@@ -221,24 +202,20 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 
 				}
 				monitor.worked(1);
-				monitor.setTaskName(NLS.bind(PHPUIMessages.newPhpFile_openning,
-						file.getName()));
+				monitor.setTaskName(NLS.bind(PHPUIMessages.newPhpFile_openning, file.getName()));
 				wizard.getShell().getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						IWorkbenchPage page = PlatformUI.getWorkbench()
-								.getActiveWorkbenchWindow().getActivePage();
+						IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 						try {
 							normalizeFile(file);
 							IEditorPart editor;
 							if (editorID == null) {
 								editor = IDE.openEditor(page, file, true);
 							} else {
-								editor = IDE.openEditor(page, file, editorID,
-										true);
+								editor = IDE.openEditor(page, file, editorID, true);
 							}
 							if (editor instanceof PHPStructuredEditor) {
-								StructuredTextViewer textViewer = ((PHPStructuredEditor) editor)
-										.getTextViewer();
+								StructuredTextViewer textViewer = ((PHPStructuredEditor) editor).getTextViewer();
 								textViewer.setSelectedRange(offset, 0);
 							}
 						} catch (PartInitException e) {
@@ -253,8 +230,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		/**
 		 * We will initialize file contents with a sample text.
 		 */
-		private static InputStream openContentStream(String contents,
-				String charSet) {
+		private static InputStream openContentStream(String contents, String charSet) {
 			if (contents == null) {
 				contents = ""; //$NON-NLS-1$
 			}
@@ -278,10 +254,8 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 
 		}
 
-		private static void throwCoreException(String message)
-				throws CoreException {
-			IStatus status = new Status(IStatus.ERROR,
-					PHPUIMessages.PHPFileCreationWizard_4, IStatus.OK, message,
+		private static void throwCoreException(String message) throws CoreException {
+			IStatus status = new Status(IStatus.ERROR, PHPUIMessages.PHPFileCreationWizard_4, IStatus.OK, message,
 					null);
 			throw new CoreException(status);
 		}

@@ -46,8 +46,7 @@ class InclusivePositionUpdater implements IPositionUpdater {
 
 		int eventOffset = event.getOffset();
 		int eventOldLength = event.getLength();
-		int eventNewLength = event.getText() == null ? 0 : event.getText()
-				.length();
+		int eventNewLength = event.getText() == null ? 0 : event.getText().length();
 		int deltaLength = eventNewLength - eventOldLength;
 
 		try {
@@ -71,8 +70,7 @@ class InclusivePositionUpdater implements IPositionUpdater {
 				else if (end < eventOffset) {
 					// position comes way before change -
 					// leave alone
-				} else if (offset <= eventOffset
-						&& end >= eventOffset + eventOldLength) {
+				} else if (offset <= eventOffset && end >= eventOffset + eventOldLength) {
 					// event completely internal to the position - adjust length
 					position.setLength(length + deltaLength);
 				} else if (offset < eventOffset) {

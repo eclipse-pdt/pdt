@@ -29,27 +29,23 @@ public class PHPModelProxyFactory implements IModelProxyFactory {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.internal.ui.viewers.model.provisional.IModelProxyFactory
-	 * #createModelProxy(java.lang.Object,
+	 * @see org.eclipse.debug.internal.ui.viewers.model.provisional.
+	 * IModelProxyFactory #createModelProxy(java.lang.Object,
 	 * org.eclipse.debug.internal.ui.viewers.
 	 * model.provisional.IPresentationContext)
 	 */
 	@Override
-	public IModelProxy createModelProxy(Object element,
-			IPresentationContext context) {
+	public IModelProxy createModelProxy(Object element, IPresentationContext context) {
 		// Hook the Debug view
 		if (IDebugUIConstants.ID_DEBUG_VIEW.equals(context.getId())) {
 			if (element instanceof PHPLaunch) {
 				return new PHPLaunchProxy((PHPLaunch) element);
 			}
 			if (element instanceof PHPMultiDebugTarget) {
-				return new PHPMultiDebugTargetProxy(
-						((PHPMultiDebugTarget) element));
+				return new PHPMultiDebugTargetProxy(((PHPMultiDebugTarget) element));
 			}
 			if (element instanceof DBGpMultiSessionTarget) {
-				return new PHPMultiDebugTargetProxy(
-						((DBGpMultiSessionTarget) element));
+				return new PHPMultiDebugTargetProxy(((DBGpMultiSessionTarget) element));
 			}
 		}
 		return null;

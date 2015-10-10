@@ -51,22 +51,18 @@ public class PHPEditorTextHoverDescriptor {
 	 */
 	public static PHPEditorTextHoverDescriptor[] getContributedHovers() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = registry
-				.getConfigurationElementsFor(PHP_EDITOR_TEXT_HOVER_EXTENSION_POINT);
+		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHP_EDITOR_TEXT_HOVER_EXTENSION_POINT);
 
 		Arrays.sort(elements, new Comparator<IConfigurationElement>() {
-			public int compare(IConfigurationElement e1,
-					IConfigurationElement e2) {
+			public int compare(IConfigurationElement e1, IConfigurationElement e2) {
 				int p1 = 0;
 				int p2 = 0;
 				try {
-					p1 = Integer.valueOf(e1.getAttribute(PRIORITY_ATTRIBUTE))
-							.intValue();
+					p1 = Integer.valueOf(e1.getAttribute(PRIORITY_ATTRIBUTE)).intValue();
 				} catch (NumberFormatException e) {
 				}
 				try {
-					p2 = Integer.valueOf(e2.getAttribute(PRIORITY_ATTRIBUTE))
-							.intValue();
+					p2 = Integer.valueOf(e2.getAttribute(PRIORITY_ATTRIBUTE)).intValue();
 				} catch (NumberFormatException e) {
 				}
 				return (int) Math.signum(p2 - p1);
@@ -94,11 +90,9 @@ public class PHPEditorTextHoverDescriptor {
 			return SWT.NONE;
 
 		int stateMask = 0;
-		StringTokenizer modifierTokenizer = new StringTokenizer(modifiers,
-				",;.:+-* "); //$NON-NLS-1$
+		StringTokenizer modifierTokenizer = new StringTokenizer(modifiers, ",;.:+-* "); //$NON-NLS-1$
 		while (modifierTokenizer.hasMoreTokens()) {
-			int modifier = EditorUtility
-					.findLocalizedModifier(modifierTokenizer.nextToken());
+			int modifier = EditorUtility.findLocalizedModifier(modifierTokenizer.nextToken());
 			if (modifier == 0 || (stateMask & modifier) == modifier)
 				return -1;
 			stateMask = stateMask | modifier;
@@ -120,15 +114,12 @@ public class PHPEditorTextHoverDescriptor {
 	 */
 	public IPHPTextHover createTextHover() {
 		String pluginId = fElement.getNamespaceIdentifier();
-		boolean isHoversPlugInActivated = Platform.getBundle(pluginId)
-				.getState() == Bundle.ACTIVE;
+		boolean isHoversPlugInActivated = Platform.getBundle(pluginId).getState() == Bundle.ACTIVE;
 		if (isHoversPlugInActivated || canActivatePlugIn()) {
 			try {
-				return (IPHPTextHover) fElement
-						.createExecutableExtension(CLASS_ATTRIBUTE);
+				return (IPHPTextHover) fElement.createExecutableExtension(CLASS_ATTRIBUTE);
 			} catch (CoreException x) {
-				Logger.logException(PHPUIMessages.PHPTextHover_createTextHover,
-						x);
+				Logger.logException(PHPUIMessages.PHPTextHover_createTextHover, x);
 			}
 		}
 		return null;
@@ -178,14 +169,11 @@ public class PHPEditorTextHoverDescriptor {
 	}
 
 	public boolean canActivatePlugIn() {
-		return Boolean.valueOf(
-				fElement.getAttribute(ACTIVATE_PLUG_IN_ATTRIBUTE))
-				.booleanValue();
+		return Boolean.valueOf(fElement.getAttribute(ACTIVATE_PLUG_IN_ATTRIBUTE)).booleanValue();
 	}
 
 	public boolean equals(Object obj) {
-		if (obj == null || !obj.getClass().equals(this.getClass())
-				|| getId() == null)
+		if (obj == null || !obj.getClass().equals(this.getClass()) || getId() == null)
 			return false;
 		return getId().equals(((PHPEditorTextHoverDescriptor) obj).getId());
 	}
@@ -194,28 +182,22 @@ public class PHPEditorTextHoverDescriptor {
 		return getId().hashCode();
 	}
 
-	private static PHPEditorTextHoverDescriptor[] createDescriptors(
-			IConfigurationElement[] elements) {
+	private static PHPEditorTextHoverDescriptor[] createDescriptors(IConfigurationElement[] elements) {
 		List result = new ArrayList(elements.length);
 		for (IConfigurationElement element : elements) {
 			if (HOVER_TAG.equals(element.getName())) {
-				PHPEditorTextHoverDescriptor desc = new PHPEditorTextHoverDescriptor(
-						element);
+				PHPEditorTextHoverDescriptor desc = new PHPEditorTextHoverDescriptor(element);
 				result.add(desc);
 			}
 		}
-		return (PHPEditorTextHoverDescriptor[]) result
-				.toArray(new PHPEditorTextHoverDescriptor[result.size()]);
+		return (PHPEditorTextHoverDescriptor[]) result.toArray(new PHPEditorTextHoverDescriptor[result.size()]);
 	}
 
-	private static void initializeFromPreferences(
-			PHPEditorTextHoverDescriptor[] hovers) {
-		String compiledTextHoverModifiers = PreferenceConstants
-				.getPreferenceStore().getString(
-						PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS);
+	private static void initializeFromPreferences(PHPEditorTextHoverDescriptor[] hovers) {
+		String compiledTextHoverModifiers = PreferenceConstants.getPreferenceStore()
+				.getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS);
 
-		StringTokenizer tokenizer = new StringTokenizer(
-				compiledTextHoverModifiers, VALUE_SEPARATOR);
+		StringTokenizer tokenizer = new StringTokenizer(compiledTextHoverModifiers, VALUE_SEPARATOR);
 		HashMap idToModifier = new HashMap(tokenizer.countTokens() / 2);
 
 		while (tokenizer.hasMoreTokens()) {
@@ -224,12 +206,10 @@ public class PHPEditorTextHoverDescriptor {
 				idToModifier.put(id, tokenizer.nextToken());
 		}
 
-		String compiledTextHoverModifierMasks = PreferenceConstants
-				.getPreferenceStore().getString(
-						PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS);
+		String compiledTextHoverModifierMasks = PreferenceConstants.getPreferenceStore()
+				.getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS);
 
-		tokenizer = new StringTokenizer(compiledTextHoverModifierMasks,
-				VALUE_SEPARATOR);
+		tokenizer = new StringTokenizer(compiledTextHoverModifierMasks, VALUE_SEPARATOR);
 		HashMap idToModifierMask = new HashMap(tokenizer.countTokens() / 2);
 
 		while (tokenizer.hasMoreTokens()) {
@@ -239,8 +219,7 @@ public class PHPEditorTextHoverDescriptor {
 		}
 
 		for (int i = 0; i < hovers.length; i++) {
-			String modifierString = (String) idToModifier
-					.get(hovers[i].getId());
+			String modifierString = (String) idToModifier.get(hovers[i].getId());
 			boolean enabled = true;
 			if (modifierString == null)
 				modifierString = DISABLED_TAG;
@@ -259,9 +238,7 @@ public class PHPEditorTextHoverDescriptor {
 			if (hovers[i].fStateMask == -1) {
 				// Fallback: use stored modifier masks
 				try {
-					hovers[i].fStateMask = Integer
-							.parseInt((String) idToModifierMask.get(hovers[i]
-									.getId()));
+					hovers[i].fStateMask = Integer.parseInt((String) idToModifierMask.get(hovers[i].getId()));
 				} catch (NumberFormatException ex) {
 					hovers[i].fStateMask = -1;
 				}
@@ -270,8 +247,7 @@ public class PHPEditorTextHoverDescriptor {
 				if (stateMask == -1)
 					hovers[i].fModifierString = ""; //$NON-NLS-1$
 				else
-					hovers[i].fModifierString = EditorUtility
-							.getModifierString(stateMask);
+					hovers[i].fModifierString = EditorUtility.getModifierString(stateMask);
 			}
 		}
 	}

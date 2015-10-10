@@ -29,8 +29,7 @@ import com.ibm.icu.text.MessageFormat;
  */
 public class DeleteBreakpointChange extends BreakpointChange {
 
-	public DeleteBreakpointChange(PHPLineBreakpoint breakpoint)
-			throws CoreException {
+	public DeleteBreakpointChange(PHPLineBreakpoint breakpoint) throws CoreException {
 		super(breakpoint);
 	}
 
@@ -40,8 +39,7 @@ public class DeleteBreakpointChange extends BreakpointChange {
 	 * @see org.eclipse.ltk.core.refactoring.Change#getName()
 	 */
 	public String getName() {
-		return MessageFormat.format(
-				RefactoringMessages.DeleteBreakpointChange_0,
+		return MessageFormat.format(RefactoringMessages.DeleteBreakpointChange_0,
 				new String[] { getBreakpointLabel(getOriginalBreakpoint()) });
 	}
 

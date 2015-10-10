@@ -52,8 +52,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 public class PHPManual {
 
 	private static final String BROWSER_ID = "PHPManual.browser"; //$NON-NLS-1$
-	private static final Pattern HTTP_URL_PATTERN = Pattern
-			.compile("http://[^\\s]*"); //$NON-NLS-1$
+	private static final Pattern HTTP_URL_PATTERN = Pattern.compile("http://[^\\s]*"); //$NON-NLS-1$
 	private static int browserCount = 0;
 
 	private PHPManualSite site;
@@ -74,18 +73,15 @@ public class PHPManual {
 	private synchronized Map<String, String> getPHPEntityPathMap() {
 		if (phpEntityPathMap == null) {
 			phpEntityPathMap = new HashMap<String, String>();
-			URL url = FileLocator.find(Platform.getBundle(PHPUiPlugin
-					.getPluginId()), new Path("phpdoc.mapping"), null); //$NON-NLS-1$
+			URL url = FileLocator.find(Platform.getBundle(PHPUiPlugin.getPluginId()), new Path("phpdoc.mapping"), null); //$NON-NLS-1$
 			if (url != null) {
 				try {
-					BufferedReader r = new BufferedReader(
-							new InputStreamReader(url.openStream()));
+					BufferedReader r = new BufferedReader(new InputStreamReader(url.openStream()));
 					String line;
 					while ((line = r.readLine()) != null) {
 						int sepIdx = line.indexOf('=');
 						if (sepIdx != -1) {
-							phpEntityPathMap.put(line.substring(0, sepIdx)
-									.toLowerCase(), line.substring(sepIdx + 1));
+							phpEntityPathMap.put(line.substring(0, sepIdx).toLowerCase(), line.substring(sepIdx + 1));
 						}
 					}
 				} catch (IOException e) {
@@ -111,8 +107,7 @@ public class PHPManual {
 		String path = null;
 		if (modelElement instanceof IMethod) {
 			try {
-				IModelElement ancestor = ((IMethod) modelElement)
-						.getAncestor(IModelElement.TYPE);
+				IModelElement ancestor = ((IMethod) modelElement).getAncestor(IModelElement.TYPE);
 				if (null != ancestor) {
 					// if this is actually a method (not function), checking for
 					// declaring class manual
@@ -153,8 +148,7 @@ public class PHPManual {
 			PHPDocBlock docBlock = phpDocDeclaration.getPHPDoc();
 			if (docBlock != null) {
 				for (PHPDocTag docTag : docBlock.getTags(PHPDocTagKinds.LINK)) {
-					Matcher m = HTTP_URL_PATTERN.matcher(docTag.getValue()
-							.trim());
+					Matcher m = HTTP_URL_PATTERN.matcher(docTag.getValue().trim());
 					if (m.find()) {
 						try {
 							URL url = new URL(m.group());
@@ -177,17 +171,14 @@ public class PHPManual {
 		String path = null;
 		if (type != null) {
 			ISourceModule sourceModule = type.getSourceModule();
-			ModuleDeclaration moduleDeclaration = SourceParserUtil
-					.getModuleDeclaration(sourceModule);
-			TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(
-					moduleDeclaration, type);
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+			TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(moduleDeclaration, type);
 			path = getPHPDocLink(typeDeclaration);
 
 			if (path == null) {
 
 				String className = type.getElementName();
-				path = (String) getPHPEntityPathMap().get(
-						className.toLowerCase());
+				path = (String) getPHPEntityPathMap().get(className.toLowerCase());
 				if (path == null) {
 					path = buildPathForClass(type.getElementName());
 				}
@@ -208,12 +199,10 @@ public class PHPManual {
 	protected String buildPathForMethod(IMethod method) {
 
 		ISourceModule sourceModule = method.getSourceModule();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sourceModule);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		MethodDeclaration methodDeclaration;
 		try {
-			methodDeclaration = PHPModelUtils.getNodeByMethod(
-					moduleDeclaration, method);
+			methodDeclaration = PHPModelUtils.getNodeByMethod(moduleDeclaration, method);
 		} catch (ModelException e) {
 			return null;
 		}
@@ -224,15 +213,12 @@ public class PHPManual {
 			if (declaringType != null) {
 				String functionName = declaringType.getElementName() + "::" //$NON-NLS-1$
 						+ method.getElementName();
-				path = (String) getPHPEntityPathMap().get(
-						functionName.toLowerCase());
+				path = (String) getPHPEntityPathMap().get(functionName.toLowerCase());
 				if (path == null) {
-					path = buildPathForMethod(declaringType.getElementName(),
-							method.getElementName());
+					path = buildPathForMethod(declaringType.getElementName(), method.getElementName());
 				}
 			} else {
-				path = (String) getPHPEntityPathMap().get(
-						method.getElementName().toLowerCase());
+				path = (String) getPHPEntityPathMap().get(method.getElementName().toLowerCase());
 				if (path == null) {
 					path = buildPathForMethod(null, method.getElementName());
 				}
@@ -258,16 +244,12 @@ public class PHPManual {
 	 * specified URL
 	 */
 	public void showFunctionHelp(String url) {
-		IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench()
-				.getBrowserSupport();
+		IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
 		IWebBrowser browser;
 		try {
-			IPreferenceStore store = PHPUiPlugin.getDefault()
-					.getPreferenceStore();
-			if (store
-					.getBoolean(PreferenceConstants.PHP_MANUAL_OPEN_IN_NEW_BROWSER)) {
-				browser = browserSupport.createBrowser(BROWSER_ID
-						+ ++browserCount);
+			IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
+			if (store.getBoolean(PreferenceConstants.PHP_MANUAL_OPEN_IN_NEW_BROWSER)) {
+				browser = browserSupport.createBrowser(BROWSER_ID + ++browserCount);
 			} else {
 				browser = browserSupport.createBrowser(BROWSER_ID);
 			}
@@ -278,20 +260,16 @@ public class PHPManual {
 				// convert to help system URL
 				String helpURL = url.substring("help://".length()); //$NON-NLS-1$
 				// open in Help System
-				PlatformUI.getWorkbench().getHelpSystem()
-						.displayHelpResource(helpURL);
+				PlatformUI.getWorkbench().getHelpSystem().displayHelpResource(helpURL);
 
 			} else {
 				URL url2 = validateUrlExists(url);
 				if (null == url2) {
 
 					// need to open some kind of err dialog and return
-					MessageDialog d = new MessageDialog(PlatformUI
-							.getWorkbench().getActiveWorkbenchWindow()
-							.getShell(), PHPUIMessages.PHPManual_title, null,
-							PHPUIMessages.PHPManual_noManual_msg,
-							MessageDialog.INFORMATION,
-							new String[] { IDialogConstants.OK_LABEL }, 0);
+					MessageDialog d = new MessageDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+							PHPUIMessages.PHPManual_title, null, PHPUIMessages.PHPManual_noManual_msg,
+							MessageDialog.INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0);
 					d.open();
 					return;
 				}

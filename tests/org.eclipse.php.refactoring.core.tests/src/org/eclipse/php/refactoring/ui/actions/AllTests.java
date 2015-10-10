@@ -16,11 +16,10 @@ import junit.framework.TestSuite;
 public class AllTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite(
-				"Test for org.eclipse.php.refactoring.ui.actions");
-		//$JUnit-BEGIN$
+		TestSuite suite = new TestSuite("Test for org.eclipse.php.refactoring.ui.actions");
+		// $JUnit-BEGIN$
 		suite.addTestSuite(RenamePHPElementActionDelegateTest.class);
-		//$JUnit-END$
+		// $JUnit-END$
 		return suite;
 	}
 

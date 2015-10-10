@@ -17,8 +17,7 @@ import java.io.IOException;
 
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
 
-public class DebugSessionClosedNotification extends
-		DebugMessageNotificationImpl implements IDebugNotificationMessage {
+public class DebugSessionClosedNotification extends DebugMessageNotificationImpl implements IDebugNotificationMessage {
 
 	public void deserialize(DataInputStream in) throws IOException {
 	}

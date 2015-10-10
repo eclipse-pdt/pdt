@@ -14,8 +14,7 @@ package org.eclipse.php.internal.ui.phpCodeData;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.php.ui.actions.filters.IActionFilterContributor;
 
-public class CodeDataActionFilterContributor implements
-		IActionFilterContributor {
+public class CodeDataActionFilterContributor implements IActionFilterContributor {
 
 	public boolean testAttribute(Object target, String name, String value) {
 		IModelElement modelElem = (IModelElement) target;

@@ -81,11 +81,9 @@ public class PHPResourceSelectionGroup extends Composite {
 	 * @param showClosedProjects
 	 *            Whether or not to show closed projects.
 	 */
-	public PHPResourceSelectionGroup(Composite parent, Listener listener,
-			boolean allowNewContainerName, String message,
+	public PHPResourceSelectionGroup(Composite parent, Listener listener, boolean allowNewContainerName, String message,
 			boolean showClosedProjects) {
-		this(parent, listener, allowNewContainerName, message,
-				showClosedProjects, SIZING_SELECTION_PANE_HEIGHT,
+		this(parent, listener, allowNewContainerName, message, showClosedProjects, SIZING_SELECTION_PANE_HEIGHT,
 				SIZING_SELECTION_PANE_WIDTH);
 	}
 
@@ -109,8 +107,7 @@ public class PHPResourceSelectionGroup extends Composite {
 	 * @param widthHint
 	 *            width hint for the drill down composite
 	 */
-	public PHPResourceSelectionGroup(Composite parent, Listener listener,
-			boolean allowNewContainerName, String message,
+	public PHPResourceSelectionGroup(Composite parent, Listener listener, boolean allowNewContainerName, String message,
 			boolean showClosedProjects, int heightHint, int widthHint) {
 		super(parent, SWT.NONE);
 		this.listener = listener;
@@ -150,8 +147,7 @@ public class PHPResourceSelectionGroup extends Composite {
 	 * @param message
 	 */
 	public void createContents(String message) {
-		createContents(message, SIZING_SELECTION_PANE_HEIGHT,
-				SIZING_SELECTION_PANE_WIDTH);
+		createContents(message, SIZING_SELECTION_PANE_HEIGHT, SIZING_SELECTION_PANE_WIDTH);
 	}
 
 	/**
@@ -198,8 +194,7 @@ public class PHPResourceSelectionGroup extends Composite {
 		treeViewer.setUseHashlookup(true);
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) event
-						.getSelection();
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				resourceSelectionChanged(selection.getFirstElement()); // allow
 																		// null
 			}
@@ -208,8 +203,7 @@ public class PHPResourceSelectionGroup extends Composite {
 			public void doubleClick(DoubleClickEvent event) {
 				ISelection selection = event.getSelection();
 				if (selection instanceof IStructuredSelection) {
-					Object item = ((IStructuredSelection) selection)
-							.getFirstElement();
+					Object item = ((IStructuredSelection) selection).getFirstElement();
 					if (item == null) {
 						return;
 					}
@@ -245,12 +239,9 @@ public class PHPResourceSelectionGroup extends Composite {
 		if (selectedResource instanceof IResource) {
 			result = ((IResource) selectedResource).getFullPath();
 		} else if (selectedResource instanceof IBuildpathEntry) {
-			result = EnvironmentPathUtils
-					.getLocalPath(((IBuildpathEntry) selectedResource)
-							.getPath());
+			result = EnvironmentPathUtils.getLocalPath(((IBuildpathEntry) selectedResource).getPath());
 		} else if (selectedResource instanceof IncPathFile) {
-			result = new Path(((IncPathFile) selectedResource).file
-					.getAbsolutePath());
+			result = new Path(((IncPathFile) selectedResource).file.getAbsolutePath());
 		}
 		return result;
 

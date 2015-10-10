@@ -28,8 +28,7 @@ import com.ibm.icu.text.MessageFormat;
  * Renders PHP debug elements
  */
 @SuppressWarnings("restriction")
-public class XDebugModelPresentation extends PHPModelPresentation
-		implements IDebugModelPresentation {
+public class XDebugModelPresentation extends PHPModelPresentation implements IDebugModelPresentation {
 
 	protected String getStackFrameText(IStackFrame frame) {
 		if (frame instanceof DBGpStackFrame) {
@@ -37,8 +36,7 @@ public class XDebugModelPresentation extends PHPModelPresentation
 				// Fix bug #160443 (Stack frames line numbers update).
 				// Synchronize the top frame with the given values.
 				DBGpThread thread = (DBGpThread) frame.getThread();
-				DBGpStackFrame topFrame = (DBGpStackFrame) thread
-						.getTopStackFrame();
+				DBGpStackFrame topFrame = (DBGpStackFrame) thread.getTopStackFrame();
 				if (topFrame != null && topFrame.equals(frame)) {
 					frame = topFrame;
 				} // end fix
@@ -50,8 +48,7 @@ public class XDebugModelPresentation extends PHPModelPresentation
 					buffer.append(": lineno " + frame.getLineNumber()); //$NON-NLS-1$
 				} else {
 					buffer.append(((DBGpStackFrame) frame).getSourceName());
-					buffer.append(PHPDebugUIMessages.MPresentation_ATLine_1
-							+ (frame.getLineNumber()));
+					buffer.append(PHPDebugUIMessages.MPresentation_ATLine_1 + (frame.getLineNumber()));
 				}
 				return buffer.toString();
 
@@ -72,13 +69,10 @@ public class XDebugModelPresentation extends PHPModelPresentation
 	protected String getTargetText(IDebugTarget target) {
 		String label = ""; //$NON-NLS-1$
 		if (target.isTerminated()) {
-			label = MessageFormat.format(
-					PHPDebugUIMessages.MPresentation_Terminated_1,
-					new Object[] {});
+			label = MessageFormat.format(PHPDebugUIMessages.MPresentation_Terminated_1, new Object[] {});
 		}
 		String name = PHPDebugUIMessages.MPresentation_PHP_APP_1;
-		if (target instanceof DBGpTarget
-				|| target instanceof DBGpMultiSessionTarget) {
+		if (target instanceof DBGpTarget || target instanceof DBGpMultiSessionTarget) {
 			name = PHPDebugUIMessages.PHPModelPresentation_PHP_Applications;
 			try {
 				if (!target.hasThreads() && !target.isTerminated())

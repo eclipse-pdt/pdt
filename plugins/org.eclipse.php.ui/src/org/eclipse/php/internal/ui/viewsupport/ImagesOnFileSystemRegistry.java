@@ -37,8 +37,7 @@ public class ImagesOnFileSystemRegistry {
 
 	private File getTempDir() {
 		try {
-			File imageDir = PHPUiPlugin.getDefault().getStateLocation()
-					.append(IMAGE_DIR).toFile();
+			File imageDir = PHPUiPlugin.getDefault().getStateLocation().append(IMAGE_DIR).toFile();
 			if (imageDir.exists()) {
 				// has not been deleted on previous shutdown
 				delete(imageDir);
@@ -47,8 +46,7 @@ public class ImagesOnFileSystemRegistry {
 				imageDir.mkdir();
 			}
 			if (!imageDir.isDirectory()) {
-				PHPUiPlugin
-						.logErrorMessage("Failed to create image directory " + imageDir.toString()); //$NON-NLS-1$
+				PHPUiPlugin.logErrorMessage("Failed to create image directory " + imageDir.toString()); //$NON-NLS-1$
 				return null;
 			}
 			return imageDir;
@@ -70,8 +68,7 @@ public class ImagesOnFileSystemRegistry {
 
 	public URL getImageURL(IModelElement element) {
 		ImageDescriptor descriptor = fLabelProvider.getImageDescriptor(element,
-				ScriptElementImageProvider.OVERLAY_ICONS
-						| ScriptElementImageProvider.SMALL_ICONS);
+				ScriptElementImageProvider.OVERLAY_ICONS | ScriptElementImageProvider.SMALL_ICONS);
 		if (descriptor == null)
 			return null;
 		return getImageURL(descriptor);

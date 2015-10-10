@@ -54,41 +54,35 @@ public final class PHPDebugUtil {
 	 * @throws DebugException
 	 * @throws MalformedURLException
 	 */
-	public static void openLaunchURL(final String launchURL)
-			throws DebugException {
+	public static void openLaunchURL(final String launchURL) throws DebugException {
 		final SyncObject<DebugException> e = new SyncObject<DebugException>();
 		// Run synchronously to pass exception if any
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
 				try {
 					final URL urlToOpen = new URL(launchURL);
-					StringBuilder browserTitle = new StringBuilder(urlToOpen
-							.getProtocol()).append("://").append( //$NON-NLS-1$
+					StringBuilder browserTitle = new StringBuilder(urlToOpen.getProtocol()).append("://").append( //$NON-NLS-1$
 							urlToOpen.getHost());
 					if (urlToOpen.getPort() != -1)
 						browserTitle.append(':').append(urlToOpen.getPort());
 					browserTitle.append(urlToOpen.getPath());
-					IWorkbenchBrowserSupport browserSupport = PlatformUI
-							.getWorkbench().getBrowserSupport();
+					IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
 					IWebBrowser browser = browserSupport.createBrowser(
-							IWorkbenchBrowserSupport.LOCATION_BAR
-									| IWorkbenchBrowserSupport.NAVIGATION_BAR
+							IWorkbenchBrowserSupport.LOCATION_BAR | IWorkbenchBrowserSupport.NAVIGATION_BAR
 									| IWorkbenchBrowserSupport.STATUS,
 							"PHP Debugger Browser", //$NON-NLS-1$
 							browserTitle.toString(), browserTitle.toString());
 					if (PHPDebugPlugin.DEBUG)
-						System.out
-								.println("Opening debug/launch URL in a Web Browser: " //$NON-NLS-1$
-										+ urlToOpen.toString());
+						System.out.println("Opening debug/launch URL in a Web Browser: " //$NON-NLS-1$
+								+ urlToOpen.toString());
 					browser.openURL(urlToOpen);
 				} catch (Throwable t) {
 					Logger.logException(
-							MessageFormat
-									.format("Error initializing the Web Browser for debug/launch URL: {0}", launchURL), //$NON-NLS-1$
+							MessageFormat.format("Error initializing the Web Browser for debug/launch URL: {0}", //$NON-NLS-1$
+									launchURL),
 							t);
 					String errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;
-					e.set(new DebugException(new Status(IStatus.ERROR,
-							PHPDebugPlugin.getID(),
+					e.set(new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(),
 							IPHPDebugConstants.INTERNAL_ERROR, errorMessage, t)));
 				}
 			}
@@ -113,11 +107,9 @@ public final class PHPDebugUtil {
 			Integer defaultPort = PHPDebugPlugin.getDebugPort(debuggerId);
 			ports.add(defaultPort);
 			// Get ports from dedicated settings
-			List<IDebuggerSettings> allSettings = DebuggerSettingsManager.INSTANCE
-					.findSettings(debuggerId);
+			List<IDebuggerSettings> allSettings = DebuggerSettingsManager.INSTANCE.findSettings(debuggerId);
 			for (IDebuggerSettings settings : allSettings) {
-				String clientPort = settings
-						.getAttribute(ZendDebuggerSettingsConstants.PROP_CLIENT_PORT);
+				String clientPort = settings.getAttribute(ZendDebuggerSettingsConstants.PROP_CLIENT_PORT);
 				try {
 					Integer dedicatedPort = Integer.valueOf(clientPort);
 					ports.add(dedicatedPort);
@@ -130,10 +122,8 @@ public final class PHPDebugUtil {
 			Integer defaultPort = PHPDebugPlugin.getDebugPort(debuggerId);
 			ports.add(defaultPort);
 			// Get ports from all of debugger dedicated settings
-			for (IDebuggerSettings settings : DebuggerSettingsManager.INSTANCE
-					.findSettings(debuggerId)) {
-				String clientPort = settings
-						.getAttribute(XDebugDebuggerSettingsConstants.PROP_CLIENT_PORT);
+			for (IDebuggerSettings settings : DebuggerSettingsManager.INSTANCE.findSettings(debuggerId)) {
+				String clientPort = settings.getAttribute(XDebugDebuggerSettingsConstants.PROP_CLIENT_PORT);
 				try {
 					Integer dedicatedPort = Integer.valueOf(clientPort);
 					ports.add(dedicatedPort);
@@ -162,8 +152,7 @@ public final class PHPDebugUtil {
 				.findSettings(ZendDebuggerConfiguration.ID);
 		for (IDebuggerSettings settings : allSettings) {
 			if (settings.getKind() == DebuggerSettingsKind.PHP_SERVER) {
-				String settingsHosts = ZendDebuggerSettingsUtil
-						.getDebugHosts(settings.getOwnerId());
+				String settingsHosts = ZendDebuggerSettingsUtil.getDebugHosts(settings.getOwnerId());
 				for (String host : getZendHostsArray(settingsHosts)) {
 					merged.add(host);
 				}

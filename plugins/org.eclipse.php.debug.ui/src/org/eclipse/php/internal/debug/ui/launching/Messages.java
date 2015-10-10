@@ -47,6 +47,7 @@ public class Messages extends NLS {
 	public static String ZendDebuggerWebLaunchSettingsSection_Invalid_URL;
 	public static String ZendDebuggerWebLaunchSettingsSection_Open_in_browser;
 	public static String ZendDebuggerWebLaunchSettingsSection_Start_debug_from;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

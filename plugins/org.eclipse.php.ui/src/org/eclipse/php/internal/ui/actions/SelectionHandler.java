@@ -43,8 +43,7 @@ public abstract class SelectionHandler extends AbstractHandler {
 	 * @return
 	 * @throws ModelException
 	 */
-	protected IModelElement getCurrentModelElement(ExecutionEvent event)
-			throws ExecutionException {
+	protected IModelElement getCurrentModelElement(ExecutionEvent event) throws ExecutionException {
 		IEditorPart editorPart = HandlerUtil.getActiveEditor(event);
 		PHPStructuredEditor textEditor = null;
 		IModelElement modelElement = null;
@@ -60,16 +59,14 @@ public abstract class SelectionHandler extends AbstractHandler {
 		}
 
 		if (textEditor != null && modelElement instanceof ISourceModule) {
-			final ISelectionProvider selectionProvider = textEditor
-					.getSelectionProvider();
+			final ISelectionProvider selectionProvider = textEditor.getSelectionProvider();
 			final ISelection selection = selectionProvider.getSelection();
 			if (selection instanceof TextSelection) {
 				final TextSelection textSelection = (TextSelection) selection;
 				try {
-					return ((ISourceModule) modelElement)
-							.getElementAt(textSelection.getOffset());
+					return ((ISourceModule) modelElement).getElementAt(textSelection.getOffset());
 				} catch (ModelException e) {
-					throw new ExecutionException(Messages.SelectionHandler_0, e); //$NON-NLS-1 
+					throw new ExecutionException(Messages.SelectionHandler_0, e); // $NON-NLS-1
 				}
 			}
 		}

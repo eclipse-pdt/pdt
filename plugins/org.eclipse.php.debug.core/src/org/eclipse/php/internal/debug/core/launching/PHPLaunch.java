@@ -45,8 +45,7 @@ public class PHPLaunch extends Launch {
 	 *            the source locator to use for this debug session, or
 	 *            <code>null</code> if not supported
 	 */
-	public PHPLaunch(ILaunchConfiguration launchConfiguration, String mode,
-			ISourceLocator locator) {
+	public PHPLaunch(ILaunchConfiguration launchConfiguration, String mode, ISourceLocator locator) {
 		super(launchConfiguration, mode, locator);
 	}
 

@@ -13,8 +13,7 @@ package org.eclipse.php.internal.ui.phpCodeData;
 
 import org.eclipse.php.ui.actions.filters.IActionFilterContributor;
 
-public class AddPHPDocActionFilterContributor implements
-		IActionFilterContributor {
+public class AddPHPDocActionFilterContributor implements IActionFilterContributor {
 
 	public boolean testAttribute(Object target, String name, String value) {
 		return true;

@@ -52,8 +52,7 @@ public class XMLLabelProvider extends JFaceNodeLabelProvider {
 					// try to get content model element
 					// declaration
 					CMElementDeclaration elementDecl = null;
-					ModelQuery mq = ModelQueryUtil.getModelQuery(element
-							.getOwnerDocument());
+					ModelQuery mq = ModelQueryUtil.getModelQuery(element.getOwnerDocument());
 					if (mq != null) {
 						elementDecl = mq.getCMElementDeclaration(element);
 					}
@@ -61,17 +60,14 @@ public class XMLLabelProvider extends JFaceNodeLabelProvider {
 					// ID
 					if (elementDecl != null) {
 						int i = 0;
-						while ((i < attributes.getLength())
-								&& (idTypedAttribute == null)) {
+						while ((i < attributes.getLength()) && (idTypedAttribute == null)) {
 							Node attr = attributes.item(i);
 							String attrName = attr.getNodeName();
-							CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) elementDecl
-									.getAttributes().getNamedItem(attrName);
+							CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) elementDecl.getAttributes()
+									.getNamedItem(attrName);
 							if (attrDecl != null) {
 								if ((attrDecl.getAttrType() != null)
-										&& (CMDataType.ID.equals(attrDecl
-												.getAttrType()
-												.getDataTypeName()))) {
+										&& (CMDataType.ID.equals(attrDecl.getAttrType().getDataTypeName()))) {
 									idTypedAttribute = attr;
 								} else if ((attrDecl.getUsage() == CMAttributeDeclaration.REQUIRED)
 										&& (requiredAttribute == null)) {
@@ -81,8 +77,7 @@ public class XMLLabelProvider extends JFaceNodeLabelProvider {
 									requiredAttribute = attr;
 								} else {
 									hasId = hasId || attrName.equals("id"); //$NON-NLS-1$
-									hasName = hasName
-											|| attrName.equals("name"); //$NON-NLS-1$
+									hasName = hasName || attrName.equals("name"); //$NON-NLS-1$
 								}
 							}
 							++i;
@@ -110,10 +105,8 @@ public class XMLLabelProvider extends JFaceNodeLabelProvider {
 					if ((attributeName != null) && (attributeName.length() > 0)) {
 						text.append(" " + attributeName); //$NON-NLS-1$
 						String attributeValue = shownAttribute.getNodeValue();
-						if ((attributeValue != null)
-								&& (attributeValue.length() > 0)) {
-							text
-									.append("=" + StringUtils.strip(attributeValue)); //$NON-NLS-1$
+						if ((attributeValue != null) && (attributeValue.length() > 0)) {
+							text.append("=" + StringUtils.strip(attributeValue)); //$NON-NLS-1$
 						}
 					}
 				}

@@ -38,14 +38,13 @@ import org.eclipse.ui.IWorkingSetManager;
  * @author apeled, nirc
  * 
  */
-public class WorkingSetAwarePHPExplorerContentProvider extends
-		PHPExplorerContentProvider implements IMultiElementTreeContentProvider {
+public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerContentProvider
+		implements IMultiElementTreeContentProvider {
 
 	private WorkingSetModel fWorkingSetModel;
 	private IPropertyChangeListener fListener;
 
-	public WorkingSetAwarePHPExplorerContentProvider(boolean provideMembers,
-			WorkingSetModel model) {
+	public WorkingSetAwarePHPExplorerContentProvider(boolean provideMembers, WorkingSetModel model) {
 		super(provideMembers);
 		fWorkingSetModel = model;
 		fListener = new IPropertyChangeListener() {
@@ -111,8 +110,7 @@ public class WorkingSetAwarePHPExplorerContentProvider extends
 				if (isKnownWorkingSet) {
 					result.add(element);
 				} else {
-					IProject project = (IProject) element
-							.getAdapter(IProject.class);
+					IProject project = (IProject) element.getAdapter(IProject.class);
 					if (project != null && project.exists()) {
 						IScriptProject jp = DLTKCore.create(project);
 						if (jp != null && jp.exists()) {
@@ -164,8 +162,7 @@ public class WorkingSetAwarePHPExplorerContentProvider extends
 		Object parent = super.getParent(element);
 		Object input = getViewerInput();
 		// stop at input or on ScriptModel. We never visualize it anyway.
-		while (parent != null && !parent.equals(input)
-				&& !(parent instanceof IScriptModel)) {
+		while (parent != null && !parent.equals(input) && !(parent instanceof IScriptModel)) {
 			result.add(parent);
 			parent = super.getParent(parent);
 		}
@@ -173,7 +170,7 @@ public class WorkingSetAwarePHPExplorerContentProvider extends
 		return result;
 	}
 
-	private List/* <TreePath> */getTreePaths(List modelParents, int index) {
+	private List/* <TreePath> */ getTreePaths(List modelParents, int index) {
 		List result = new ArrayList();
 		Object input = getViewerInput();
 		Object element = modelParents.get(index);
@@ -201,27 +198,22 @@ public class WorkingSetAwarePHPExplorerContentProvider extends
 		return first;
 	}
 
-	protected void augmentElementToRefresh(List toRefresh, int relation,
-			Object affectedElement) {
+	protected void augmentElementToRefresh(List toRefresh, int relation, Object affectedElement) {
 		// we are refreshing the ScriptModel and are in working set mode.
-		if (DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot()).equals(
-				affectedElement)) {
+		if (DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot()).equals(affectedElement)) {
 			toRefresh.remove(affectedElement);
 			toRefresh.add(fWorkingSetModel);
 		} else if (relation == GRANT_PARENT) {
 			Object parent = internalGetParent(affectedElement);
 			if (parent != null) {
-				toRefresh.addAll(Arrays.asList(fWorkingSetModel
-						.getAllParents(parent)));
+				toRefresh.addAll(Arrays.asList(fWorkingSetModel.getAllParents(parent)));
 			}
 		}
-		List nonProjetTopLevelElemens = fWorkingSetModel
-				.getNonProjectTopLevelElements();
+		List nonProjetTopLevelElemens = fWorkingSetModel.getNonProjectTopLevelElements();
 		if (nonProjetTopLevelElemens.isEmpty())
 			return;
 		List toAdd = new ArrayList();
-		for (Iterator iter = nonProjetTopLevelElemens.iterator(); iter
-				.hasNext();) {
+		for (Iterator iter = nonProjetTopLevelElemens.iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			if (isChildOf(element, toRefresh))
 				toAdd.add(element);
@@ -235,11 +227,9 @@ public class WorkingSetAwarePHPExplorerContentProvider extends
 		List toRefresh = new ArrayList(1);
 		if (WorkingSetModel.CHANGE_WORKING_SET_MODEL_CONTENT.equals(property)) {
 			toRefresh.add(fWorkingSetModel);
-		} else if (IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE
-				.equals(property)) {
+		} else if (IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE.equals(property)) {
 			toRefresh.add(newValue);
-		} else if (IWorkingSetManager.CHANGE_WORKING_SET_NAME_CHANGE
-				.equals(property)) {
+		} else if (IWorkingSetManager.CHANGE_WORKING_SET_NAME_CHANGE.equals(property)) {
 			toRefresh.add(newValue);
 		}
 		ArrayList runnables = new ArrayList();

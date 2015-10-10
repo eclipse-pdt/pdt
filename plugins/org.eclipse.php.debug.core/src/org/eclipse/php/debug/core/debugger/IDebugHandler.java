@@ -17,8 +17,7 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 
 public interface IDebugHandler {
 
-	public void sessionStarted(String fileName, String uri, String query,
-			String options);
+	public void sessionStarted(String fileName, String uri, String query, String options);
 
 	public void sessionEnded();
 

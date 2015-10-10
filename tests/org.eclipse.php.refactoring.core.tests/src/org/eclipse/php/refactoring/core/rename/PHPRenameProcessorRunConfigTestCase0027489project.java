@@ -34,8 +34,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PHPRenameProcessorRunConfigTestCase0027489project extends
-		AbstractRenameRefactoringTest {
+public class PHPRenameProcessorRunConfigTestCase0027489project extends AbstractRenameRefactoringTest {
 	private IProject project1;
 
 	private String configFileCont = "<?xml version='1.0' encoding='UTF-8' standalone='no'?> "
@@ -50,8 +49,7 @@ public class PHPRenameProcessorRunConfigTestCase0027489project extends
 			+ "<booleanAttribute key='org.eclipse.php.debug.core.RunWithDebugInfo' value='true'/>"
 			+ "<stringAttribute key='org.eclipse.php.debug.coreconfiguration_delegate_class' value='org.eclipse.php.internal.debug.core.launching.PHPExecutableLaunchDelegate'/>"
 			+ "<stringAttribute key='org.eclipse.php.debug.corephp_debugger_id' value='org.eclipse.php.debug.core.zendDebugger'/>"
-			+ "<stringAttribute key='php_debug_type' value='php_exe_script_debug'/>"
-			+ "</launchConfiguration>";
+			+ "<stringAttribute key='php_debug_type' value='php_exe_script_debug'/>" + "</launchConfiguration>";
 	private ILaunchConfiguration config;
 
 	private IFile configFile;
@@ -71,8 +69,7 @@ public class PHPRenameProcessorRunConfigTestCase0027489project extends
 		}
 		IFile file = folder.getFile("RenameRunConfigTest0027489proj.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php class TestRenameClass{}?>".getBytes());
+		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -86,15 +83,12 @@ public class PHPRenameProcessorRunConfigTestCase0027489project extends
 		if (!configFile.exists()) {
 			configFile.create(source, IFile.FORCE, new NullProgressMonitor());
 		} else {
-			configFile.setContents(source, IFile.FORCE,
-					new NullProgressMonitor());
+			configFile.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
 
-		config = DebugPlugin.getDefault().getLaunchManager()
-				.getLaunchConfiguration(configFile);
+		config = DebugPlugin.getDefault().getLaunchManager().getLaunchConfiguration(configFile);
 		ILaunchConfigurationWorkingCopy workingCopy = config.getWorkingCopy();
-		workingCopy.setAttribute("ATTR_FILE_FULL_PATH", file.getLocation()
-				.toString());
+		workingCopy.setAttribute("ATTR_FILE_FULL_PATH", file.getLocation().toString());
 		workingCopy.doSave();
 
 		PHPCoreTests.waitForIndexer();
@@ -106,8 +100,7 @@ public class PHPRenameProcessorRunConfigTestCase0027489project extends
 
 		RenameFolderProcessor processor = new RenameFolderProcessor(project1);
 
-		RefactoringStatus status = processor
-				.checkInitialConditions(new NullProgressMonitor());
+		RefactoringStatus status = processor.checkInitialConditions(new NullProgressMonitor());
 
 		assertEquals(IStatus.OK, status.getSeverity());
 
@@ -126,18 +119,13 @@ public class PHPRenameProcessorRunConfigTestCase0027489project extends
 		}
 
 		try {
-			config = DebugPlugin.getDefault().getLaunchManager()
-					.getLaunchConfiguration(configFile);
+			config = DebugPlugin.getDefault().getLaunchManager().getLaunchConfiguration(configFile);
 
 			String path = config.getAttribute("ATTR_FILE", "");
-			assertEquals(
-					"/TestProject2/src/RenameRunConfigTest0027489proj.php",
-					path);
+			assertEquals("/TestProject2/src/RenameRunConfigTest0027489proj.php", path);
 
 			path = config.getAttribute("ATTR_FILE_FULL_PATH", "");
-			assertEquals(project1.getFile(
-					"/src/RenameRunConfigTest0027489proj.php").getLocation()
-					.toString(), path);
+			assertEquals(project1.getFile("/src/RenameRunConfigTest0027489proj.php").getLocation().toString(), path);
 		} catch (CoreException e) {
 			fail(e.getMessage());
 		}

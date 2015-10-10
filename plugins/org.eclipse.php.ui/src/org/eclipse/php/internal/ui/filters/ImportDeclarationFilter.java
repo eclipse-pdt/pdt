@@ -14,8 +14,7 @@ package org.eclipse.php.internal.ui.filters;
  * Import Declaration Filter to avoid conflict with user filters
  */
 @SuppressWarnings("restriction")
-public class ImportDeclarationFilter extends
-		org.eclipse.dltk.internal.ui.filters.ImportDeclarationFilter {
+public class ImportDeclarationFilter extends org.eclipse.dltk.internal.ui.filters.ImportDeclarationFilter {
 
 	public ImportDeclarationFilter() {
 	}

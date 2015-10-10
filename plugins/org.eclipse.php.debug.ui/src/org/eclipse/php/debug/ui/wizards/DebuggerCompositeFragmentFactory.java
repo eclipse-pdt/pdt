@@ -24,8 +24,7 @@ import org.eclipse.swt.widgets.Composite;
  * @author Bartlomiej Laczkowski
  */
 @SuppressWarnings("restriction")
-public class DebuggerCompositeFragmentFactory implements
-		ICompositeFragmentFactory {
+public class DebuggerCompositeFragmentFactory implements ICompositeFragmentFactory {
 
 	/*
 	 * (non-Javadoc)
@@ -48,8 +47,7 @@ public class DebuggerCompositeFragmentFactory implements
 	 * org.eclipse.php.internal.ui.wizards.IControlHandler)
 	 */
 	@Override
-	public CompositeFragment createComposite(Composite parent,
-			IControlHandler controlHandler) {
+	public CompositeFragment createComposite(Composite parent, IControlHandler controlHandler) {
 		return new DebuggerCompositeFragment(parent, controlHandler, true);
 	}
 

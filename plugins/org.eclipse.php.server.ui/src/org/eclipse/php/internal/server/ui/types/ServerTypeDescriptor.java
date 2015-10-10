@@ -159,13 +159,11 @@ public class ServerTypeDescriptor implements IServerTypeDescriptor {
 		for (IConfigurationElement child : element.getChildren()) {
 			if (child.getName().equals("wizard")) { //$NON-NLS-1$
 				for (IConfigurationElement wizardFragment : child.getChildren()) {
-					wizardFragments.add(new Fragment(wizardFragment
-							.getAttribute("id"))); //$NON-NLS-1$
+					wizardFragments.add(new Fragment(wizardFragment.getAttribute("id"))); //$NON-NLS-1$
 				}
 			} else if (child.getName().equals("editor")) { //$NON-NLS-1$
 				for (IConfigurationElement wizardFragment : child.getChildren()) {
-					editorFragments.add(new Fragment(wizardFragment
-							.getAttribute("id"))); //$NON-NLS-1$
+					editorFragments.add(new Fragment(wizardFragment.getAttribute("id"))); //$NON-NLS-1$
 				}
 			}
 		}
@@ -177,10 +175,7 @@ public class ServerTypeDescriptor implements IServerTypeDescriptor {
 		Image image = regitry.get(id);
 		if (image == null) {
 			ImageDescriptor descriptor = getImageDescriptor(name);
-			regitry.put(
-					id,
-					descriptor != null ? descriptor : ImageDescriptor
-							.getMissingImageDescriptor());
+			regitry.put(id, descriptor != null ? descriptor : ImageDescriptor.getMissingImageDescriptor());
 			image = regitry.get(id);
 		}
 		return image;

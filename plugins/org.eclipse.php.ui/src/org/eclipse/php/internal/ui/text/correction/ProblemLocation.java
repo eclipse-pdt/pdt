@@ -37,8 +37,7 @@ public class ProblemLocation implements IProblemLocation {
 	private final String fMarkerType;
 	private final IProblemIdentifier fIdentifier;
 
-	public ProblemLocation(int offset, int length,
-			IScriptAnnotation annotation) {
+	public ProblemLocation(int offset, int length, IScriptAnnotation annotation) {
 		if (annotation.getId() != null) {
 			Scanner scan = new Scanner(annotation.getId().name());
 			if (scan.hasNextInt()) {
@@ -55,16 +54,13 @@ public class ProblemLocation implements IProblemLocation {
 		fArguments = annotation.getArguments();
 		fOffset = offset;
 		fLength = length;
-		fIsError = ScriptMarkerAnnotation.ERROR_ANNOTATION_TYPE
-				.equals(annotation.getType());
+		fIsError = ScriptMarkerAnnotation.ERROR_ANNOTATION_TYPE.equals(annotation.getType());
 
 		String markerType = annotation.getMarkerType();
-		fMarkerType = markerType != null ? markerType
-				: IModelMarker.SCRIPT_MODEL_PROBLEM_MARKER;
+		fMarkerType = markerType != null ? markerType : IModelMarker.SCRIPT_MODEL_PROBLEM_MARKER;
 	}
 
-	public ProblemLocation(int offset, int length, int id, String[] arguments,
-			boolean isError, String markerType) {
+	public ProblemLocation(int offset, int length, int id, String[] arguments, boolean isError, String markerType) {
 		fId = id;
 		fArguments = arguments;
 		fOffset = offset;
@@ -94,8 +90,7 @@ public class ProblemLocation implements IProblemLocation {
 		fLength = problem.getSourceEnd() - fOffset + 1;
 		fIsError = problem.isError();
 		if (problem.getID() instanceof IProblemIdentifierExtension) {
-			fMarkerType = ((IProblemIdentifierExtension) problem.getID())
-					.getMarkerType();
+			fMarkerType = ((IProblemIdentifierExtension) problem.getID()).getMarkerType();
 		} else if (problem instanceof CategorizedProblem) {
 			fMarkerType = ((CategorizedProblem) problem).getMarkerType();
 		} else {
@@ -192,8 +187,7 @@ public class ProblemLocation implements IProblemLocation {
 
 	public String toString() {
 		StringBuffer buf = new StringBuffer();
-		buf.append(Messages.ProblemLocation_0).append(getErrorCode(fId))
-				.append('\n');
+		buf.append(Messages.ProblemLocation_0).append(getErrorCode(fId)).append('\n');
 		buf.append('[').append(fOffset).append(", ").append(fLength).append(']') //$NON-NLS-1$
 				.append('\n');
 		String[] arg = fArguments;

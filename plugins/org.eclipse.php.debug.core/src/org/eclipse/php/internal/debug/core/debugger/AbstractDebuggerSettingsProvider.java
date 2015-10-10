@@ -36,8 +36,7 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
  * @author Bartlomiej Laczkowski
  */
 @SuppressWarnings("restriction")
-public abstract class AbstractDebuggerSettingsProvider implements
-		IDebuggerSettingsProvider {
+public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSettingsProvider {
 
 	/**
 	 * Helper class for saving settings to persistent store.
@@ -154,8 +153,7 @@ public abstract class AbstractDebuggerSettingsProvider implements
 	 * @param ownerId
 	 * @return new settings
 	 */
-	protected abstract IDebuggerSettings createSettings(
-			DebuggerSettingsKind kind, String ownerId);
+	protected abstract IDebuggerSettings createSettings(DebuggerSettingsKind kind, String ownerId);
 
 	/**
 	 * Implementors should create and return the appropriate settings taking
@@ -167,15 +165,13 @@ public abstract class AbstractDebuggerSettingsProvider implements
 	 * @param attributes
 	 * @return recreated settings
 	 */
-	protected abstract IDebuggerSettings createSettings(
-			DebuggerSettingsKind kind, String ownerId,
+	protected abstract IDebuggerSettings createSettings(DebuggerSettingsKind kind, String ownerId,
 			Map<String, String> attributes);
 
 	/**
 	 * Restore settings with the use of data from persistent storage.
 	 */
-	private IDebuggerSettings restoreSettings(String ownerId,
-			Map<String, String> attributes) {
+	private IDebuggerSettings restoreSettings(String ownerId, Map<String, String> attributes) {
 		return createSettings(getKind(ownerId), ownerId, attributes);
 	}
 
@@ -207,14 +203,12 @@ public abstract class AbstractDebuggerSettingsProvider implements
 	private void hookSettings() {
 		// Hook existing PHP executables
 		for (PHPexeItem owner : PHPexes.getInstance().getAllItems()) {
-			IDebuggerSettings settings = createSettings(
-					DebuggerSettingsKind.PHP_EXE, owner.getUniqueId());
+			IDebuggerSettings settings = createSettings(DebuggerSettingsKind.PHP_EXE, owner.getUniqueId());
 			save(settings);
 		}
 		// Hook existing PHP servers
 		for (Server owner : ServersManager.getServers()) {
-			IDebuggerSettings settings = createSettings(
-					DebuggerSettingsKind.PHP_SERVER, owner.getUniqueId());
+			IDebuggerSettings settings = createSettings(DebuggerSettingsKind.PHP_SERVER, owner.getUniqueId());
 			save(settings);
 		}
 	}
@@ -228,8 +222,7 @@ public abstract class AbstractDebuggerSettingsProvider implements
 	 */
 	private boolean exists(String ownerId) {
 		// Check if owner with given ID exists
-		if (PHPexes.getInstance().findItem(ownerId) == null
-				&& ServersManager.findServer(ownerId) == null)
+		if (PHPexes.getInstance().findItem(ownerId) == null && ServersManager.findServer(ownerId) == null)
 			return false;
 		return true;
 	}
@@ -260,9 +253,7 @@ public abstract class AbstractDebuggerSettingsProvider implements
 		for (IDebuggerSettings settings : settingsCache.values()) {
 			persistentSettings.add(new PersistentSettings(settings));
 		}
-		XMLPreferencesWriter.write(
-				InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID), getId(),
-				persistentSettings);
+		XMLPreferencesWriter.write(InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID), getId(), persistentSettings);
 	}
 
 	/**
@@ -270,15 +261,13 @@ public abstract class AbstractDebuggerSettingsProvider implements
 	 */
 	@SuppressWarnings("unchecked")
 	void load() {
-		List<Map<String, Object>> settingsList = XMLPreferencesReader.read(
-				InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID), getId(),
-				false);
+		List<Map<String, Object>> settingsList = XMLPreferencesReader
+				.read(InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID), getId(), false);
 		// Hook default settings to owners if preference does not exist
 		if (settingsList.isEmpty())
 			hookSettings();
 		for (Map<String, Object> settings : settingsList) {
-			settings = (Map<String, Object>) settings
-					.get(PersistentSettings.TAG_SETTINGS);
+			settings = (Map<String, Object>) settings.get(PersistentSettings.TAG_SETTINGS);
 			Map<String, String> attributes = new HashMap<String, String>();
 			String ownerId = null;
 			for (String key : settings.keySet()) {
@@ -297,8 +286,7 @@ public abstract class AbstractDebuggerSettingsProvider implements
 				cleanup = true;
 				continue;
 			}
-			IDebuggerSettings restoredSettings = restoreSettings(ownerId,
-					attributes);
+			IDebuggerSettings restoredSettings = restoreSettings(ownerId, attributes);
 			if (restoredSettings != null)
 				settingsCache.put(ownerId, restoredSettings);
 		}

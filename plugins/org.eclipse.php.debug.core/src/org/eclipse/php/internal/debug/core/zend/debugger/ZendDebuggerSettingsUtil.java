@@ -32,18 +32,16 @@ public class ZendDebuggerSettingsUtil {
 	}
 
 	public static String getDebugHosts(String phpServerId) {
-		IDebuggerSettings debuggerSettings = DebuggerSettingsManager.INSTANCE
-				.findSettings(phpServerId, ZendDebuggerConfiguration.ID);
+		IDebuggerSettings debuggerSettings = DebuggerSettingsManager.INSTANCE.findSettings(phpServerId,
+				ZendDebuggerConfiguration.ID);
 		String debugHosts = ""; //$NON-NLS-1$
 		if (debuggerSettings instanceof ZendDebuggerServerSettings) {
-			debugHosts = debuggerSettings
-					.getAttribute(ZendDebuggerSettingsConstants.PROP_CLIENT_IP);
+			debugHosts = debuggerSettings.getAttribute(ZendDebuggerSettingsConstants.PROP_CLIENT_IP);
 		}
 		return debugHosts;
 	}
 
-	public static int getResponseTimeout(
-			DebugSessionStartedNotification startedNotification) {
+	public static int getResponseTimeout(DebugSessionStartedNotification startedNotification) {
 		/*
 		 * Check if we have related server based on original URL host name, if
 		 * yes then set timeout from its debugger settings
@@ -51,8 +49,7 @@ public class ZendDebuggerSettingsUtil {
 		String debugQuery = startedNotification.getQuery();
 		String originalURLTrigger = "&original_url="; //$NON-NLS-1$
 		int originalURLStart = debugQuery.indexOf(originalURLTrigger);
-		String originalURL = debugQuery
-				.substring(originalURLStart + originalURLTrigger.length());
+		String originalURL = debugQuery.substring(originalURLStart + originalURLTrigger.length());
 		int responseTimeout = -1;
 		try {
 			URL url = new URL(originalURL);
@@ -62,13 +59,11 @@ public class ZendDebuggerSettingsUtil {
 		}
 		Server server = ServersManager.findByURL(originalURL);
 		if (server != null) {
-			IDebuggerSettings debuggerSettings = DebuggerSettingsManager.INSTANCE
-					.findSettings(server.getUniqueId(),
-							ZendDebuggerConfiguration.ID);
+			IDebuggerSettings debuggerSettings = DebuggerSettingsManager.INSTANCE.findSettings(server.getUniqueId(),
+					ZendDebuggerConfiguration.ID);
 			String debugClientPort = null;
 			if (debuggerSettings instanceof ZendDebuggerServerSettings) {
-				debugClientPort = debuggerSettings.getAttribute(
-						ZendDebuggerSettingsConstants.PROP_RESPONSE_TIMEOUT);
+				debugClientPort = debuggerSettings.getAttribute(ZendDebuggerSettingsConstants.PROP_RESPONSE_TIMEOUT);
 			}
 			try {
 				responseTimeout = Integer.valueOf(debugClientPort);
@@ -80,11 +75,10 @@ public class ZendDebuggerSettingsUtil {
 	}
 
 	public static int getDebugPort(String phpServerOrExeId) {
-		IDebuggerSettings debuggerSettings = DebuggerSettingsManager.INSTANCE
-				.findSettings(phpServerOrExeId, ZendDebuggerConfiguration.ID);
+		IDebuggerSettings debuggerSettings = DebuggerSettingsManager.INSTANCE.findSettings(phpServerOrExeId,
+				ZendDebuggerConfiguration.ID);
 		String debugClientPort = null;
-		debugClientPort = debuggerSettings
-				.getAttribute(ZendDebuggerSettingsConstants.PROP_CLIENT_PORT);
+		debugClientPort = debuggerSettings.getAttribute(ZendDebuggerSettingsConstants.PROP_CLIENT_PORT);
 		int debugPort = -1;
 		try {
 			debugPort = Integer.valueOf(debugClientPort);

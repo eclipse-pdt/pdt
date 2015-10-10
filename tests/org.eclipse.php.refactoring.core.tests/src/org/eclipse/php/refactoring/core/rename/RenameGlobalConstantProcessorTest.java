@@ -26,10 +26,10 @@ public class RenameGlobalConstantProcessorTest extends AbstractRenameRefactoring
 	public RenameGlobalConstantProcessorTest(String[] fileNames) {
 		super(fileNames);
 	}
-	
+
 	@PDTTList.Parameters
-	public static String[] dirs = {"/resources/rename/renameGblConst/"}; //$NON-NLS-1$
-	
+	public static String[] dirs = { "/resources/rename/renameGblConst/" }; //$NON-NLS-1$
+
 	@Test
 	public void rename(String fileName) throws Exception {
 		PdttFileExt testFile = filesMap.get(fileName);

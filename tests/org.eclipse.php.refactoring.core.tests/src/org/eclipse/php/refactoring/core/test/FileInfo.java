@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class FileInfo {
 	private String name;
-	private StringBuffer contents=new StringBuffer();
+	private StringBuffer contents = new StringBuffer();
 	private Map<String, String> config = new HashMap<String, String>();
 
 	public FileInfo(String fileName) {
@@ -37,14 +37,15 @@ public class FileInfo {
 	public void appendContents(String contents) {
 		this.contents.append(contents);
 	}
-	
+
 	/**
-	 * Returns the configuration entries (--CONFIG-- section contents in format key:value)
+	 * Returns the configuration entries (--CONFIG-- section contents in format
+	 * key:value)
+	 * 
 	 * @return
 	 */
 	public Map<String, String> getConfig() {
 		return config;
 	}
-
 
 }

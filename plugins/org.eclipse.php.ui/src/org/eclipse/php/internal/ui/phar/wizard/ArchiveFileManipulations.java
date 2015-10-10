@@ -116,15 +116,12 @@ public class ArchiveFileManipulations {
 	 * @param shell
 	 *            The shell to display any possible Dialogs in
 	 */
-	public static void closeStructureProvider(
-			ILeveledImportStructureProvider structureProvider, Shell shell) {
+	public static void closeStructureProvider(ILeveledImportStructureProvider structureProvider, Shell shell) {
 		if (structureProvider instanceof ZipLeveledStructureProvider) {
-			closeZipFile(((ZipLeveledStructureProvider) structureProvider)
-					.getZipFile(), shell);
+			closeZipFile(((ZipLeveledStructureProvider) structureProvider).getZipFile(), shell);
 		}
 		if (structureProvider instanceof TarLeveledStructureProvider) {
-			closeTarFile(((TarLeveledStructureProvider) structureProvider)
-					.getTarFile(), shell);
+			closeTarFile(((TarLeveledStructureProvider) structureProvider).getTarFile(), shell);
 		}
 		// TODO FOR PHAR
 	}
@@ -143,9 +140,7 @@ public class ArchiveFileManipulations {
 		try {
 			file.close();
 		} catch (IOException e) {
-			displayErrorDialog(NLS.bind(
-					DataTransferMessages.ZipImport_couldNotClose, file
-							.getName()), shell);
+			displayErrorDialog(NLS.bind(DataTransferMessages.ZipImport_couldNotClose, file.getName()), shell);
 			return false;
 		}
 
@@ -167,9 +162,7 @@ public class ArchiveFileManipulations {
 		try {
 			file.close();
 		} catch (IOException e) {
-			displayErrorDialog(NLS.bind(
-					DataTransferMessages.ZipImport_couldNotClose, file
-							.getName()), shell);
+			displayErrorDialog(NLS.bind(DataTransferMessages.ZipImport_couldNotClose, file.getName()), shell);
 			return false;
 		}
 
@@ -183,8 +176,7 @@ public class ArchiveFileManipulations {
 	 *            the error message
 	 */
 	protected static void displayErrorDialog(String message, Shell shell) {
-		MessageDialog.open(MessageDialog.ERROR, shell, getErrorDialogTitle(),
-				message, SWT.SHEET);
+		MessageDialog.open(MessageDialog.ERROR, shell, getErrorDialogTitle(), message, SWT.SHEET);
 	}
 
 	/**
@@ -198,9 +190,7 @@ public class ArchiveFileManipulations {
 		try {
 			file.close();
 		} catch (IOException e) {
-			displayErrorDialog(NLS.bind(
-					DataTransferMessages.ZipImport_couldNotClose, file
-							.getName()), shell);
+			displayErrorDialog(NLS.bind(DataTransferMessages.ZipImport_couldNotClose, file.getName()), shell);
 			return false;
 		}
 

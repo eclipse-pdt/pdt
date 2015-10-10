@@ -90,7 +90,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * @see org.eclipse.debug.core.model.IThread#getName()
 	 */
 	public String getName() throws DebugException {
-		return "PHPthread";  //$NON-NLS-1$
+		return "PHPthread"; //$NON-NLS-1$
 	}
 
 	/*
@@ -277,8 +277,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 		if (frame == null) {
 			return NO_VARIABLES;
 		}
-		Expression[] stackVariables = ((PHPStackFrame) frame)
-				.getStackVariables();
+		Expression[] stackVariables = ((PHPStackFrame) frame).getStackVariables();
 		if (stackVariables == null) {
 			return NO_VARIABLES;
 		}

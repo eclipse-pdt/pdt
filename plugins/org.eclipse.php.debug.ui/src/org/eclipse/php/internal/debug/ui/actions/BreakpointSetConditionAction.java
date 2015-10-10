@@ -54,11 +54,9 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 
 		private boolean fSetConditionEnabled;
 
-		protected SetConditionDialog(Shell parentShell, String dialogTitle,
-				String dialogMessage, String initialValue,
+		protected SetConditionDialog(Shell parentShell, String dialogTitle, String dialogMessage, String initialValue,
 				boolean enableCondition, IInputValidator validator) {
-			super(parentShell, dialogTitle, dialogMessage, initialValue,
-					validator);
+			super(parentShell, dialogTitle, dialogMessage, initialValue, validator);
 			fSetConditionEnabled = enableCondition;
 		}
 
@@ -69,13 +67,11 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 			Composite area = (Composite) super.createDialogArea(parent);
 
 			final Button checkbox = new Button(area, SWT.CHECK);
-			GridData data = new GridData(GridData.GRAB_HORIZONTAL
-					| GridData.HORIZONTAL_ALIGN_FILL);
+			GridData data = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL);
 			data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
 			checkbox.setLayoutData(data);
 			checkbox.setFont(parent.getFont());
-			checkbox.setText(MessageFormat.format(
-					PHPDebugUIMessages.EnableSetCondition_1, new Object[] {}));
+			checkbox.setText(MessageFormat.format(PHPDebugUIMessages.EnableSetCondition_1, new Object[] {}));
 			checkbox.setSelection(fSetConditionEnabled);
 			getText().setEnabled(fSetConditionEnabled);
 
@@ -135,8 +131,7 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 					ConditionDialog((PHPConditionalBreakpoint) breakpoint);
 				} catch (CoreException ce) {
 					// ConditionDialog doesn't throw CoreException. Just Log
-					Logger.logException(
-							"PHP: Exception setting condition in breakpoint", //$NON-NLS-1$
+					Logger.logException("PHP: Exception setting condition in breakpoint", //$NON-NLS-1$
 							ce);
 				}
 			}
@@ -156,12 +151,10 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 			enableCondition = true;
 
 		Shell activeShell = PHPDebugUIPlugin.getActiveWorkbenchShell();
-		String title = MessageFormat.format(PHPDebugUIMessages.SetCondition_1,
-				new Object[] {});
-		String message = MessageFormat.format(
-				PHPDebugUIMessages.EnterCondition_1, new Object[] {});
-		SetConditionDialog dialog = new SetConditionDialog(activeShell, title,
-				message, currentCondition, enableCondition, validator);
+		String title = MessageFormat.format(PHPDebugUIMessages.SetCondition_1, new Object[] {});
+		String message = MessageFormat.format(PHPDebugUIMessages.EnterCondition_1, new Object[] {});
+		SetConditionDialog dialog = new SetConditionDialog(activeShell, title, message, currentCondition,
+				enableCondition, validator);
 		if (dialog.open() != Window.OK) {
 			return false;
 		}

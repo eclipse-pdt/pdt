@@ -81,8 +81,7 @@ public class InstalledPHPsBlock {
 			return fPHPexes.toArray();
 		}
 
-		public void inputChanged(final Viewer viewer, final Object oldInput,
-				final Object newInput) {
+		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 		}
 
 	}
@@ -90,8 +89,7 @@ public class InstalledPHPsBlock {
 	/**
 	 * Label provider for installed PHPs table.
 	 */
-	class PHPExeLabelProvider extends LabelProvider implements
-			ITableLabelProvider, IFontProvider {
+	class PHPExeLabelProvider extends LabelProvider implements ITableLabelProvider, IFontProvider {
 
 		/**
 		 * @see ITableLabelProvider#getColumnImage(Object, int)
@@ -113,13 +111,11 @@ public class InstalledPHPsBlock {
 				switch (columnIndex) {
 				case 0:
 					if (isDefault(element)) {
-						return phpExe.getName()
-								+ PHPDebugUIMessages.PHPsPreferencePage_WorkspaceDefault;
+						return phpExe.getName() + PHPDebugUIMessages.PHPsPreferencePage_WorkspaceDefault;
 					}
 					return phpExe.getName();
 				case 1:
-					String debuggerName = PHPDebuggersRegistry
-							.getDebuggerName(phpExe.getDebuggerID());
+					String debuggerName = PHPDebuggersRegistry.getDebuggerName(phpExe.getDebuggerID());
 					if (debuggerName == null) {
 						debuggerName = ""; //$NON-NLS-1$
 					}
@@ -137,8 +133,7 @@ public class InstalledPHPsBlock {
 
 		public Font getFont(Object element) {
 			if (isDefault(element)) {
-				return JFaceResources.getFontRegistry().getBold(
-						JFaceResources.DIALOG_FONT);
+				return JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT);
 			}
 			return null;
 		}
@@ -182,8 +177,7 @@ public class InstalledPHPsBlock {
 	/**
 	 * Selection listeners (checked PHP changes)
 	 */
-	private final ListenerList fSelectionListeners = new ListenerList(
-			ListenerList.IDENTITY);
+	private final ListenerList fSelectionListeners = new ListenerList(ListenerList.IDENTITY);
 
 	// index of column used for sorting
 	private int fSortColumn = 0;
@@ -200,19 +194,16 @@ public class InstalledPHPsBlock {
 	 * Bring up a dialog that lets the user create a new VM definition.
 	 */
 	private void addPHPexe() {
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getShell();
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		NullProgressMonitor monitor = new NullProgressMonitor();
 		PHPexeItem phpExeItem = null;
-		PHPExeWizard wizard = new PHPExeWizard(PHPexes.getInstance()
-				.getAllItems());
+		PHPExeWizard wizard = new PHPExeWizard(PHPexes.getInstance().getAllItems());
 		ClosableWizardDialog dialog = new ClosableWizardDialog(shell, wizard);
 		if (dialog.open() == Window.CANCEL) {
 			monitor.setCanceled(true);
 			return;
 		}
-		phpExeItem = (PHPexeItem) wizard.getRootFragment().getWizardModel()
-				.getObject(PHPExeWizard.MODEL);
+		phpExeItem = (PHPexeItem) wizard.getRootFragment().getWizardModel().getObject(PHPExeWizard.MODEL);
 		fPHPexes.add(phpExeItem);
 		PHPexes.getInstance().addItem(phpExeItem);
 		fPHPExeList.refresh();
@@ -226,18 +217,15 @@ public class InstalledPHPsBlock {
 	 * org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener
 	 * (org.eclipse.jface.viewers.ISelectionChangedListener)
 	 */
-	public void addSelectionChangedListener(
-			final ISelectionChangedListener listener) {
+	public void addSelectionChangedListener(final ISelectionChangedListener listener) {
 		fSelectionListeners.add(listener);
 	}
 
 	/**
 	 * Correctly resizes the table so no phantom columns appear
 	 */
-	protected void configureTableResizing(final Composite parent,
-			final Composite buttons, final Table table,
-			final TableColumn column1, final TableColumn column2,
-			final TableColumn column3) {
+	protected void configureTableResizing(final Composite parent, final Composite buttons, final Table table,
+			final TableColumn column1, final TableColumn column2, final TableColumn column3) {
 		parent.addControlListener(new ControlAdapter() {
 			public void controlResized(final ControlEvent e) {
 				resizeTable(parent, buttons, table, column1, column2, column3);
@@ -299,8 +287,7 @@ public class InstalledPHPsBlock {
 		tableLabel.setLayoutData(data);
 		tableLabel.setFont(font);
 
-		final Table table = new Table(parent, SWT.BORDER | SWT.MULTI
-				| SWT.FULL_SELECTION);
+		final Table table = new Table(parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
 
 		data = new GridData(GridData.FILL_BOTH);
 		table.setLayoutData(data);
@@ -339,12 +326,11 @@ public class InstalledPHPsBlock {
 		fPHPExeList = new CheckboxTableViewer(table);
 		fPHPExeList.setLabelProvider(new PHPExeLabelProvider());
 		fPHPExeList.setContentProvider(new PHPsContentProvider());
-		fPHPExeList
-				.addSelectionChangedListener(new ISelectionChangedListener() {
-					public void selectionChanged(final SelectionChangedEvent evt) {
-						enableButtons();
-					}
-				});
+		fPHPExeList.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(final SelectionChangedEvent evt) {
+				enableButtons();
+			}
+		});
 
 		fPHPExeList.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(final DoubleClickEvent e) {
@@ -354,8 +340,7 @@ public class InstalledPHPsBlock {
 		});
 		table.addKeyListener(new KeyAdapter() {
 			public void keyPressed(final KeyEvent event) {
-				if (fRemoveButton != null && !fRemoveButton.isDisposed()
-						&& !fRemoveButton.isEnabled()) {
+				if (fRemoveButton != null && !fRemoveButton.isDisposed() && !fRemoveButton.isEnabled()) {
 					return;
 				}
 				if (event.character == SWT.DEL && event.stateMask == 0)
@@ -371,36 +356,32 @@ public class InstalledPHPsBlock {
 		buttons.setLayout(layout);
 		buttons.setFont(font);
 
-		fAddButton = createPushButton(buttons,
-				PHPDebugUIMessages.InstalledPHPsBlock_3);
+		fAddButton = createPushButton(buttons, PHPDebugUIMessages.InstalledPHPsBlock_3);
 		fAddButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(final Event evt) {
 				addPHPexe();
 			}
 		});
 
-		fEditButton = createPushButton(buttons,
-				PHPDebugUIMessages.InstalledPHPsBlock_4);
+		fEditButton = createPushButton(buttons, PHPDebugUIMessages.InstalledPHPsBlock_4);
 		fEditButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(final Event evt) {
 				editPHPexe();
 			}
 		});
 
-		fRemoveButton = createPushButton(buttons,
-				PHPDebugUIMessages.InstalledPHPsBlock_5);
+		fRemoveButton = createPushButton(buttons, PHPDebugUIMessages.InstalledPHPsBlock_5);
 		fRemoveButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(final Event evt) {
 				removePHPexes();
 			}
 		});
 
-		fSetDefaultButton = createPushButton(buttons,
-				PHPDebugUIMessages.InstalledPHPsBlock_setDefault);
+		fSetDefaultButton = createPushButton(buttons, PHPDebugUIMessages.InstalledPHPsBlock_setDefault);
 		fSetDefaultButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				PHPexeItem defaultItem = (PHPexeItem) ((IStructuredSelection) fPHPExeList
-						.getSelection()).getFirstElement();
+				PHPexeItem defaultItem = (PHPexeItem) ((IStructuredSelection) fPHPExeList.getSelection())
+						.getFirstElement();
 				PHPexes.getInstance().setDefaultItem(defaultItem);
 				commitChanges();
 				setPHPs(PHPexes.getInstance().getAllItems());
@@ -420,16 +401,14 @@ public class InstalledPHPsBlock {
 		gd.heightHint = 4;
 		separator.setLayoutData(gd);
 
-		fSearchButton = createPushButton(buttons,
-				PHPDebugUIMessages.InstalledPHPsBlock_6);
+		fSearchButton = createPushButton(buttons, PHPDebugUIMessages.InstalledPHPsBlock_6);
 		fSearchButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(final Event evt) {
 				search();
 			}
 		});
 
-		configureTableResizing(parent, buttons, table, column1, column2,
-				column3);
+		configureTableResizing(parent, buttons, table, column1, column2, column3);
 
 		fillWithWorkspacePHPs();
 		// by default, sort by the debugger type
@@ -442,14 +421,12 @@ public class InstalledPHPsBlock {
 	}
 
 	private void editPHPexe() {
-		final IStructuredSelection selection = (IStructuredSelection) fPHPExeList
-				.getSelection();
+		final IStructuredSelection selection = (IStructuredSelection) fPHPExeList.getSelection();
 		final PHPexeItem phpExe = (PHPexeItem) selection.getFirstElement();
 		if (phpExe == null) {
 			return;
 		}
-		PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(), phpExe,
-				PHPexes.getInstance().getAllItems());
+		PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(), phpExe, PHPexes.getInstance().getAllItems());
 		if (dialog.open() != Window.OK) {
 			return;
 		}
@@ -458,8 +435,7 @@ public class InstalledPHPsBlock {
 	}
 
 	private void enableButtons() {
-		IStructuredSelection selection = (IStructuredSelection) fPHPExeList
-				.getSelection();
+		IStructuredSelection selection = (IStructuredSelection) fPHPExeList.getSelection();
 		Object[] elements = selection.toArray();
 		boolean canRemoveOrEdit = true;
 		for (int i = 0; canRemoveOrEdit && i < elements.length; i++) {
@@ -468,10 +444,8 @@ public class InstalledPHPsBlock {
 		}
 		final int selectionCount = selection.size();
 		fRemoveButton.setEnabled(canRemoveOrEdit && selectionCount > 0);
-		PHPexeItem selectedItem = (PHPexeItem) ((IStructuredSelection) fPHPExeList
-				.getSelection()).getFirstElement();
-		fSetDefaultButton.setEnabled(selectionCount == 1
-				&& selectedItem != null && !selectedItem.isDefault());
+		PHPexeItem selectedItem = (PHPexeItem) ((IStructuredSelection) fPHPExeList.getSelection()).getFirstElement();
+		fSetDefaultButton.setEnabled(selectionCount == 1 && selectedItem != null && !selectedItem.isDefault());
 	}
 
 	/**
@@ -527,8 +501,7 @@ public class InstalledPHPsBlock {
 	}
 
 	private void removePHPexes() {
-		final IStructuredSelection selection = (IStructuredSelection) fPHPExeList
-				.getSelection();
+		final IStructuredSelection selection = (IStructuredSelection) fPHPExeList.getSelection();
 		final PHPexeItem[] phpExes = new PHPexeItem[selection.size()];
 		final Iterator<?> iter = selection.iterator();
 		int i = 0;
@@ -555,18 +528,16 @@ public class InstalledPHPsBlock {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener
+	 * @see org.eclipse.jface.viewers.ISelectionProvider#
+	 * removeSelectionChangedListener
 	 * (org.eclipse.jface.viewers.ISelectionChangedListener)
 	 */
-	public void removeSelectionChangedListener(
-			final ISelectionChangedListener listener) {
+	public void removeSelectionChangedListener(final ISelectionChangedListener listener) {
 		fSelectionListeners.remove(listener);
 	}
 
-	private void resizeTable(final Composite parent, final Composite buttons,
-			final Table table, final TableColumn column1,
-			final TableColumn column2, final TableColumn column3) {
+	private void resizeTable(final Composite parent, final Composite buttons, final Table table,
+			final TableColumn column1, final TableColumn column2, final TableColumn column3) {
 		fResizingTable = true;
 		int parentWidth = -1;
 		int parentHeight = -1;
@@ -575,8 +546,7 @@ public class InstalledPHPsBlock {
 			parentWidth = area.width;
 			parentHeight = area.height;
 		} else {
-			final Point parentSize = parent.computeSize(SWT.DEFAULT,
-					SWT.DEFAULT);
+			final Point parentSize = parent.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 			parentWidth = parentSize.x;
 			parentHeight = parentSize.y;
 		}
@@ -618,8 +588,7 @@ public class InstalledPHPsBlock {
 	 * @param qualifier
 	 *            key to restore settings from
 	 */
-	public void restoreColumnSettings(final IDialogSettings settings,
-			final String qualifier) {
+	public void restoreColumnSettings(final IDialogSettings settings, final String qualifier) {
 		fWeight1 = restoreColumnWeight(settings, qualifier, 0);
 		fWeight2 = restoreColumnWeight(settings, qualifier, 1);
 		fWeight3 = restoreColumnWeight(settings, qualifier, 2);
@@ -645,8 +614,7 @@ public class InstalledPHPsBlock {
 		}
 	}
 
-	private float restoreColumnWeight(final IDialogSettings settings,
-			final String qualifier, final int col) {
+	private float restoreColumnWeight(final IDialogSettings settings, final String qualifier, final int col) {
 		try {
 			return settings.getFloat(qualifier + ".column" + col); //$NON-NLS-1$
 		} catch (final NumberFormatException e) {
@@ -669,8 +637,7 @@ public class InstalledPHPsBlock {
 	 * @param qualifier
 	 *            key qualifier
 	 */
-	public void saveColumnSettings(final IDialogSettings settings,
-			final String qualifier) {
+	public void saveColumnSettings(final IDialogSettings settings, final String qualifier) {
 		for (int i = 0; i < 3; i++)
 			// persist the first 2 column weights
 			settings.put(qualifier + ".column" + i, getColumnWeight(i)); //$NON-NLS-1$
@@ -693,8 +660,7 @@ public class InstalledPHPsBlock {
 		final List<PHPexeItem> found = new ArrayList<PHPexeItem>();
 		final IRunnableWithProgress r = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) {
-				monitor.beginTask(PHPDebugUIMessages.InstalledPHPsBlock_11,
-						IProgressMonitor.UNKNOWN);
+				monitor.beginTask(PHPDebugUIMessages.InstalledPHPsBlock_11, IProgressMonitor.UNKNOWN);
 				search(rootDir, locations, monitor);
 				if (!locations.isEmpty()) {
 					monitor.setTaskName(PHPDebugUIMessages.InstalledPHPsBlock_Processing_search_results);
@@ -703,24 +669,18 @@ public class InstalledPHPsBlock {
 						if (monitor.isCanceled())
 							break;
 						File location = iter2.next();
-						PHPexeItem phpExe = new PHPexeItem(null, location,
-								null, null, true);
+						PHPexeItem phpExe = new PHPexeItem(null, location, null, null, true);
 						if (phpExe.getName() == null)
 							continue;
 						String nameCopy = new String(phpExe.getName());
 						monitor.subTask(MessageFormat
-								.format(PHPDebugUIMessages.InstalledPHPsBlock_Fetching_php_exe_info,
-										nameCopy));
-						List<PHPModuleInfo> modules = PHPExeUtil
-								.getModules(phpExe);
-						AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry
-								.getDebuggersConfigurations();
+								.format(PHPDebugUIMessages.InstalledPHPsBlock_Fetching_php_exe_info, nameCopy));
+						List<PHPModuleInfo> modules = PHPExeUtil.getModules(phpExe);
+						AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry.getDebuggersConfigurations();
 						for (AbstractDebuggerConfiguration debugger : debuggers) {
 							for (PHPModuleInfo m : modules)
-								if (m.getName().equalsIgnoreCase(
-										debugger.getModuleId())) {
-									phpExe.setDebuggerID(debugger
-											.getDebuggerId());
+								if (m.getName().equalsIgnoreCase(debugger.getModuleId())) {
+									phpExe.setDebuggerID(debugger.getDebuggerId());
 									break;
 								}
 						}
@@ -730,15 +690,12 @@ public class InstalledPHPsBlock {
 						// Check for duplicated names
 						duplicates: while (true) {
 							if (isDuplicateName(nameCopy)) {
-								nameCopy = phpExe.getName() + ' ' + '[' + i++
-										+ ']';
+								nameCopy = phpExe.getName() + ' ' + '[' + i++ + ']';
 								continue duplicates;
 							} else {
 								for (PHPexeItem item : found)
-									if (nameCopy.equalsIgnoreCase(item
-											.getName())) {
-										nameCopy = phpExe.getName() + ' ' + '['
-												+ i++ + ']';
+									if (nameCopy.equalsIgnoreCase(item.getName())) {
+										nameCopy = phpExe.getName() + ' ' + '[' + i++ + ']';
 										continue duplicates;
 									}
 							}
@@ -778,28 +735,22 @@ public class InstalledPHPsBlock {
 				}
 			};
 			Collections.sort(found, sorter);
-			PHPsSearchResultDialog searchDialog = new PHPsSearchResultDialog(
-					found,
-					MessageFormat
-							.format(PHPDebugUIMessages.InstalledPHPsBlock_Search_result_dialog_message,
-									path));
+			PHPsSearchResultDialog searchDialog = new PHPsSearchResultDialog(found,
+					MessageFormat.format(PHPDebugUIMessages.InstalledPHPsBlock_Search_result_dialog_message, path));
 			searchDialog.open();
 			List<PHPexeItem> itemsToAdd = searchDialog.getPHPExecutables();
 			for (PHPexeItem item : itemsToAdd) {
 				fPHPexes.add(item);
 				PHPexes.getInstance().addItem(item);
 				PHPexes.getInstance().save();
-				DBGpProxyHandlersManager.INSTANCE.registerHandler(item
-						.getUniqueId());
+				DBGpProxyHandlersManager.INSTANCE.registerHandler(item.getUniqueId());
 				PHPExeVerifier.verify(PHPexes.getInstance().getAllItems());
 			}
 			fPHPExeList.refresh();
 		} else {
-			MessageDialog.openInformation(PlatformUI.getWorkbench()
-					.getDisplay().getActiveShell(),
-					PHPDebugUIMessages.InstalledPHPsBlock_12, MessageFormat
-							.format(PHPDebugUIMessages.InstalledPHPsBlock_13,
-									new Object[] { path }));
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+					PHPDebugUIMessages.InstalledPHPsBlock_12,
+					MessageFormat.format(PHPDebugUIMessages.InstalledPHPsBlock_13, new Object[] { path }));
 		}
 
 	}
@@ -815,17 +766,15 @@ public class InstalledPHPsBlock {
 	 * @param types
 	 * @param ignore
 	 */
-	protected void search(final File directory, final List<File> found,
-			final IProgressMonitor monitor) {
+	protected void search(final File directory, final List<File> found, final IProgressMonitor monitor) {
 		if (monitor.isCanceled())
 			return;
 		// Search the root directory
 		List<File> foundExecs = findPHPExecutable(directory);
 		if (!foundExecs.isEmpty()) {
 			found.addAll(foundExecs);
-			monitor.setTaskName(MessageFormat.format(
-					PHPDebugUIMessages.InstalledPHPsBlock_Searching_with_found,
-					found.size()));
+			monitor.setTaskName(
+					MessageFormat.format(PHPDebugUIMessages.InstalledPHPsBlock_Searching_with_found, found.size()));
 		}
 		final String[] names = directory.list();
 		if (names == null)
@@ -837,9 +786,8 @@ public class InstalledPHPsBlock {
 			final File file = new File(directory, element);
 			if (file.isDirectory()) {
 				try {
-					monitor.subTask(MessageFormat.format(
-							PHPDebugUIMessages.InstalledPHPsBlock_14,
-							file.getCanonicalPath()));
+					monitor.subTask(
+							MessageFormat.format(PHPDebugUIMessages.InstalledPHPsBlock_14, file.getCanonicalPath()));
 				} catch (final IOException e) {
 				}
 				if (monitor.isCanceled())
@@ -899,22 +847,17 @@ public class InstalledPHPsBlock {
 	 */
 	private void sortByLocation() {
 		fPHPExeList.setSorter(new ViewerSorter() {
-			public int compare(final Viewer viewer, final Object e1,
-					final Object e2) {
+			public int compare(final Viewer viewer, final Object e1, final Object e2) {
 				if (e1 instanceof PHPexeItem && e2 instanceof PHPexeItem) {
 					final PHPexeItem left = (PHPexeItem) e1;
 					final PHPexeItem right = (PHPexeItem) e2;
-					return left
-							.getExecutable()
-							.getAbsolutePath()
-							.compareToIgnoreCase(
-									right.getExecutable().getAbsolutePath());
+					return left.getExecutable().getAbsolutePath()
+							.compareToIgnoreCase(right.getExecutable().getAbsolutePath());
 				}
 				return super.compare(viewer, e1, e2);
 			}
 
-			public boolean isSorterProperty(final Object element,
-					final String property) {
+			public boolean isSorterProperty(final Object element, final String property) {
 				return true;
 			}
 		});
@@ -926,22 +869,18 @@ public class InstalledPHPsBlock {
 	 */
 	private void sortByDebugger() {
 		fPHPExeList.setSorter(new ViewerSorter() {
-			public int compare(final Viewer viewer, final Object e1,
-					final Object e2) {
+			public int compare(final Viewer viewer, final Object e1, final Object e2) {
 				if (e1 instanceof PHPexeItem && e2 instanceof PHPexeItem) {
 					final PHPexeItem left = (PHPexeItem) e1;
 					final PHPexeItem right = (PHPexeItem) e2;
-					String leftDebugger = PHPDebuggersRegistry
-							.getDebuggerName(left.getDebuggerID());
-					String rightDebugger = PHPDebuggersRegistry
-							.getDebuggerName(right.getDebuggerID());
+					String leftDebugger = PHPDebuggersRegistry.getDebuggerName(left.getDebuggerID());
+					String rightDebugger = PHPDebuggersRegistry.getDebuggerName(right.getDebuggerID());
 					return rightDebugger.compareToIgnoreCase(leftDebugger);
 				}
 				return super.compare(viewer, e1, e2);
 			}
 
-			public boolean isSorterProperty(final Object element,
-					final String property) {
+			public boolean isSorterProperty(final Object element, final String property) {
 				return true;
 			}
 		});
@@ -953,8 +892,7 @@ public class InstalledPHPsBlock {
 	 */
 	private void sortByName() {
 		fPHPExeList.setSorter(new ViewerSorter() {
-			public int compare(final Viewer viewer, final Object e1,
-					final Object e2) {
+			public int compare(final Viewer viewer, final Object e1, final Object e2) {
 				if (e1 instanceof PHPexeItem && e2 instanceof PHPexeItem) {
 					final PHPexeItem left = (PHPexeItem) e1;
 					final PHPexeItem right = (PHPexeItem) e2;
@@ -963,8 +901,7 @@ public class InstalledPHPsBlock {
 				return super.compare(viewer, e1, e2);
 			}
 
-			public boolean isSorterProperty(final Object element,
-					final String property) {
+			public boolean isSorterProperty(final Object element, final String property) {
 				return true;
 			}
 		});
@@ -976,8 +913,7 @@ public class InstalledPHPsBlock {
 	 */
 	private void sortByType() {
 		fPHPExeList.setSorter(new ViewerSorter() {
-			public int compare(final Viewer viewer, final Object e1,
-					final Object e2) {
+			public int compare(final Viewer viewer, final Object e1, final Object e2) {
 				if (e1 instanceof PHPexeItem && e2 instanceof PHPexeItem) {
 					final PHPexeItem left = (PHPexeItem) e1;
 					final PHPexeItem right = (PHPexeItem) e2;
@@ -991,8 +927,7 @@ public class InstalledPHPsBlock {
 				return super.compare(viewer, e1, e2);
 			}
 
-			public boolean isSorterProperty(final Object element,
-					final String property) {
+			public boolean isSorterProperty(final Object element, final String property) {
 				return true;
 			}
 		});

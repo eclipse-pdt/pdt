@@ -44,8 +44,7 @@ public abstract class CompositeFragment extends Composite {
 	 *            Indicate if this composite will be used for server editing (as
 	 *            opposed to server Wizard)
 	 */
-	public CompositeFragment(Composite parent, int style,
-			IControlHandler handler, boolean isForEditing) {
+	public CompositeFragment(Composite parent, int style, IControlHandler handler, boolean isForEditing) {
 		super(parent, style);
 		this.controlHandler = handler;
 		this.isForEditing = isForEditing;
@@ -61,8 +60,7 @@ public abstract class CompositeFragment extends Composite {
 	 *            Indicate if this composite will be used for server editing (as
 	 *            opposed to server Wizard)
 	 */
-	public CompositeFragment(Composite parent, IControlHandler handler,
-			boolean isForEditing) {
+	public CompositeFragment(Composite parent, IControlHandler handler, boolean isForEditing) {
 		this(parent, SWT.NONE, handler, isForEditing);
 	}
 

@@ -59,12 +59,10 @@ class ProjectionViewerInformation {
 			// annotation model will be updated after all documentChanged
 			// listeners have been notified
 			IDocument document = event.getDocument();
-			if (document instanceof IDocumentExtension
-					&& fInfo.getDocument() == document) {
+			if (document instanceof IDocumentExtension && fInfo.getDocument() == document) {
 				if (fInfo.hasChangesQueued())
-					((IDocumentExtension) document)
-							.registerPostNotificationReplace(this,
-									new PostDocumentChangedListener(fInfo));
+					((IDocumentExtension) document).registerPostNotificationReplace(this,
+							new PostDocumentChangedListener(fInfo));
 			}
 		}
 	}
@@ -73,8 +71,7 @@ class ProjectionViewerInformation {
 	 * Essentially a post document changed listener because it is called after
 	 * documentchanged has been fired.
 	 */
-	private class PostDocumentChangedListener implements
-			IDocumentExtension.IReplace {
+	private class PostDocumentChangedListener implements IDocumentExtension.IReplace {
 		private ProjectionViewerInformation fInfo;
 
 		public PostDocumentChangedListener(ProjectionViewerInformation info) {
@@ -96,8 +93,8 @@ class ProjectionViewerInformation {
 	void applyChangesJOB() {
 		IJobManager jobManager = Job.getJobManager();
 		if (jobManager.find("Applying annotation model changes").length == 0) { //$NON-NLS-1$
-			ApplyAnnotationModelChangesJob job = new ApplyAnnotationModelChangesJob(
-					"Applying annotation model changes", this); //$NON-NLS-1$
+			ApplyAnnotationModelChangesJob job = new ApplyAnnotationModelChangesJob("Applying annotation model changes", //$NON-NLS-1$
+					this);
 			job.setPriority(Job.DECORATE);
 			job.setSystem(true);
 			job.schedule();
@@ -137,8 +134,7 @@ class ProjectionViewerInformation {
 
 	private List<ProjectionAnnotationModelChanges> getQueuedAnnotationChanges() {
 		if (fQueuedAnnotationChanges == null) {
-			fQueuedAnnotationChanges = Collections
-					.synchronizedList(new ArrayList<ProjectionAnnotationModelChanges>());
+			fQueuedAnnotationChanges = Collections.synchronizedList(new ArrayList<ProjectionAnnotationModelChanges>());
 		}
 		return fQueuedAnnotationChanges;
 	}
@@ -174,8 +170,7 @@ class ProjectionViewerInformation {
 			Map<Annotation, Position> additions = new HashMap<Annotation, Position>();
 			Set<Annotation> modifications = new HashSet<Annotation>();
 			while (!changesToApply.isEmpty()) {
-				ProjectionAnnotationModelChanges changes = changesToApply
-						.remove(0);
+				ProjectionAnnotationModelChanges changes = changesToApply.remove(0);
 				if (changes.getDeletions() != null) {
 					for (Annotation el : changes.getDeletions()) {
 						if (additions.containsKey(el)) {
@@ -190,8 +185,7 @@ class ProjectionViewerInformation {
 					}
 				}
 				if (changes.getAdditions() != null) {
-					Iterator iterator = changes.getAdditions().entrySet()
-							.iterator();
+					Iterator iterator = changes.getAdditions().entrySet().iterator();
 					while (iterator.hasNext()) {
 						Entry entry = (Entry) iterator.next();
 						Annotation key = (Annotation) entry.getKey();
@@ -214,21 +208,17 @@ class ProjectionViewerInformation {
 				}
 			}
 			try {
-				fProjectionAnnotationModel.modifyAnnotations(deletions
-						.toArray(new Annotation[deletions.size()]), additions,
-						modifications.toArray(new Annotation[modifications
-								.size()]));
+				fProjectionAnnotationModel.modifyAnnotations(deletions.toArray(new Annotation[deletions.size()]),
+						additions, modifications.toArray(new Annotation[modifications.size()]));
 			} catch (Exception e) {
 				// if anything goes wrong, log it and continue
 				Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 			}
 		} else {
 			while (!changesToApply.isEmpty()) {
-				ProjectionAnnotationModelChanges changes = changesToApply
-						.remove(0);
+				ProjectionAnnotationModelChanges changes = changesToApply.remove(0);
 				try {
-					fProjectionAnnotationModel.modifyAnnotations(
-							changes.getDeletions(), changes.getAdditions(),
+					fProjectionAnnotationModel.modifyAnnotations(changes.getDeletions(), changes.getAdditions(),
 							changes.getModifications());
 				} catch (Exception e) {
 					// if anything goes wrong, log it and continue
@@ -251,8 +241,7 @@ class ProjectionViewerInformation {
 	 * Updates projection annotation model if document is not in flux.
 	 * Otherwise, queues up the changes to be applied when document is ready.
 	 */
-	public void queueAnnotationModelChanges(
-			ProjectionAnnotationModelChanges newChange) {
+	public void queueAnnotationModelChanges(ProjectionAnnotationModelChanges newChange) {
 
 		List<ProjectionAnnotationModelChanges> changes = getQueuedAnnotationChanges();
 		synchronized (changes) {
@@ -296,8 +285,7 @@ class ProjectionViewerInformation {
 	private class ApplyAnnotationModelChangesJob extends Job {
 		ProjectionViewerInformation fInfo;
 
-		public ApplyAnnotationModelChangesJob(String name,
-				ProjectionViewerInformation fInfo) {
+		public ApplyAnnotationModelChangesJob(String name, ProjectionViewerInformation fInfo) {
 			super(name);
 			this.fInfo = fInfo;
 		}

@@ -32,8 +32,8 @@ public class QualifiedNameComponent extends Composite {
 	private static final String PATTERNS = "patterns"; //$NON-NLS-1$
 	private Text fPatterns;
 
-	public QualifiedNameComponent(Composite parent, int style,
-			final IQualifiedNameUpdating refactoring, IDialogSettings settings) {
+	public QualifiedNameComponent(Composite parent, int style, final IQualifiedNameUpdating refactoring,
+			IDialogSettings settings) {
 		super(parent, style);
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = 0;
@@ -41,13 +41,11 @@ public class QualifiedNameComponent extends Composite {
 		layout.numColumns = 2;
 		setLayout(layout);
 		Label label = new Label(this, SWT.NONE);
-		label.setText(PHPRefactoringUIMessages
-				.getString("QualifiedNames_label")); //$NON-NLS-1$
+		label.setText(PHPRefactoringUIMessages.getString("QualifiedNames_label")); //$NON-NLS-1$
 		fPatterns = new Text(this, SWT.BORDER);
 		fPatterns.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		label = new Label(this, SWT.NONE);
-		label.setText(PHPRefactoringUIMessages
-				.getString("QualifiedNameComponent_patterns_description")); //$NON-NLS-1$
+		label.setText(PHPRefactoringUIMessages.getString("QualifiedNameComponent_patterns_description")); //$NON-NLS-1$
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		label.setLayoutData(gd);

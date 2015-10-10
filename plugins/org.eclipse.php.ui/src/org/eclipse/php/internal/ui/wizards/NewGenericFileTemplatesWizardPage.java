@@ -77,8 +77,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		 * @see IStructuredContentProvider#getElements(Object)
 		 */
 		public Object[] getElements(Object input) {
-			return fStore.getTemplates(NewGenericFileTemplatesWizardPage.this
-					.getTemplateContextTypeId());
+			return fStore.getTemplates(NewGenericFileTemplatesWizardPage.this.getTemplateContextTypeId());
 		}
 
 		/*
@@ -92,8 +91,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	/**
 	 * Label provider for templates.
 	 */
-	private class TemplateLabelProvider extends LabelProvider implements
-			ITableLabelProvider {
+	private class TemplateLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 		/*
 		 * @see
@@ -156,15 +154,13 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	 * @param column3
 	 *            the third column
 	 */
-	private void configureTableResizing(final Composite parent,
-			final Table table, final TableColumn column1,
+	private void configureTableResizing(final Composite parent, final Table table, final TableColumn column1,
 			final TableColumn column2) {
 		parent.addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
 				Rectangle area = parent.getClientArea();
-				Point preferredSize = table.computeSize(SWT.DEFAULT,
-						SWT.DEFAULT);
+				Point preferredSize = table.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 				int width = area.width - 2 * table.getBorderWidth();
 				if (preferredSize.y > area.height) {
 					// Subtract the scrollbar width from the total column
@@ -263,12 +259,10 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 				if (object1 instanceof Template && object2 instanceof Template) {
 					Template left = (Template) object1;
 					Template right = (Template) object2;
-					int result = left.getName().compareToIgnoreCase(
-							right.getName());
+					int result = left.getName().compareToIgnoreCase(right.getName());
 					if (result != 0)
 						return result;
-					return left.getDescription().compareToIgnoreCase(
-							right.getDescription());
+					return left.getDescription().compareToIgnoreCase(right.getDescription());
 				}
 				return super.compare(viewer, object1, object2);
 			}
@@ -279,12 +273,11 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 			}
 		});
 
-		fTableViewer
-				.addSelectionChangedListener(new ISelectionChangedListener() {
-					public void selectionChanged(SelectionChangedEvent e) {
-						updateViewerInput();
-					}
-				});
+		fTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent e) {
+				updateViewerInput();
+			}
+		});
 
 		// create viewer that displays currently selected template's contents
 		fPatternViewer = doCreateViewer(parent);
@@ -295,8 +288,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		Dialog.applyDialogFont(parent);
 		setControl(parent);
 
-		PlatformUI.getWorkbench().getHelpSystem()
-				.setHelp(getControl(), IPHPHelpContextIds.NEW);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.NEW);
 	}
 
 	@Override
@@ -311,8 +303,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 	public void resetTableViewerInput() {
 		IProject newProject = getProject();
-		if ((fProject == null && fProject != newProject)
-				|| (fProject != null && !fProject.equals(newProject))) {
+		if ((fProject == null && fProject != newProject) || (fProject != null && !fProject.equals(newProject))) {
 			fProject = newProject;
 			fTemplateStore = getTemplateStore();
 			fTableViewer.setInput(fTemplateStore);
@@ -347,24 +338,20 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 			@Override
 			public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
-				return baseConfiguration
-						.getConfiguredContentTypes(sourceViewer);
+				return baseConfiguration.getConfiguredContentTypes(sourceViewer);
 			}
 
 			@Override
-			public LineStyleProvider[] getLineStyleProviders(
-					ISourceViewer sourceViewer, String partitionType) {
-				return baseConfiguration.getLineStyleProviders(sourceViewer,
-						partitionType);
+			public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
+				return baseConfiguration.getLineStyleProviders(sourceViewer, partitionType);
 			}
 		};
-		SourceViewer viewer = new StructuredTextViewer(parent, null, null,
-				false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		((StructuredTextViewer) viewer).getTextWidget().setFont(
-				JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
-		IStructuredModel scratchModel = StructuredModelManager
-				.getModelManager().createUnManagedStructuredModelFor(
-						ContentTypeIdForPHP.ContentTypeID_PHP);
+		SourceViewer viewer = new StructuredTextViewer(parent, null, null, false,
+				SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		((StructuredTextViewer) viewer).getTextWidget()
+				.setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
+		IStructuredModel scratchModel = StructuredModelManager.getModelManager()
+				.createUnManagedStructuredModelFor(ContentTypeIdForPHP.ContentTypeID_PHP);
 		IDocument document = scratchModel.getStructuredDocument();
 		viewer.configure(sourceViewerConfiguration);
 		viewer.setDocument(document);
@@ -428,8 +415,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	 */
 	private Template getSelectedTemplate() {
 		Template template = null;
-		IStructuredSelection selection = (IStructuredSelection) fTableViewer
-				.getSelection();
+		IStructuredSelection selection = (IStructuredSelection) fTableViewer.getSelection();
 
 		if (selection.size() == 1) {
 			template = (Template) selection.getFirstElement();
@@ -444,24 +430,18 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	 */
 	public CompiledTemplate compileTemplate() {
 		Template template = getSelectedTemplate();
-		return PHPTemplateStore.compileTemplate(
-				getTemplatesContextTypeRegistry(), template);
+		return PHPTemplateStore.compileTemplate(getTemplatesContextTypeRegistry(), template);
 	}
 
-	public CompiledTemplate compileTemplate(String containerName,
-			String fileName) {
+	public CompiledTemplate compileTemplate(String containerName, String fileName) {
 		Template template = getSelectedTemplate();
-		return PHPTemplateStore.compileTemplate(
-				getTemplatesContextTypeRegistry(), template, containerName,
-				fileName);
+		return PHPTemplateStore.compileTemplate(getTemplatesContextTypeRegistry(), template, containerName, fileName);
 	}
 
-	public CompiledTemplate compileTemplate(String containerName,
-			String fileName, String lineDelimiter) {
+	public CompiledTemplate compileTemplate(String containerName, String fileName, String lineDelimiter) {
 		Template template = getSelectedTemplate();
-		return PHPTemplateStore.compileTemplate(
-				getTemplatesContextTypeRegistry(), template, containerName,
-				fileName, lineDelimiter);
+		return PHPTemplateStore.compileTemplate(getTemplatesContextTypeRegistry(), template, containerName, fileName,
+				lineDelimiter);
 	}
 
 	public TemplateProposal createTemplateProposal() {
@@ -470,10 +450,8 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		if (template != null) {
 			TemplateContextType contextType = getTemplatesContextTypeRegistry()
 					.getContextType(getTemplateContextTypeId());
-			TemplateContext context = new DocumentTemplateContext(contextType,
-					new Document(), 0, 0);
-			proposal = new TemplateProposal(template, context,
-					new Region(0, 0), null);
+			TemplateContext context = new DocumentTemplateContext(contextType, new Document(), 0, 0);
+			proposal = new TemplateProposal(template, context, new Region(0, 0), null);
 		}
 
 		return proposal;
@@ -481,8 +459,8 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 	void linkClicked() {
 		String pageId = getPreferencePageId();
-		PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(
-				getShell(), pageId, new String[] { pageId }, null);
+		PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), pageId, new String[] { pageId },
+				null);
 		dialog.open();
 		fTableViewer.refresh();
 	}
@@ -491,8 +469,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	 * Load the last template name used in New HTML File wizard.
 	 */
 	protected void loadLastSavedPreferences() {
-		String templateName = getPreferenceStore().getString(
-				PreferenceConstants.NEW_PHP_FILE_TEMPLATE);
+		String templateName = getPreferenceStore().getString(PreferenceConstants.NEW_PHP_FILE_TEMPLATE);
 		if (templateName == null || templateName.length() == 0) {
 			fLastSelectedTemplateName = ""; //$NON-NLS-1$
 			fUseTemplateButton.setSelection(false);
@@ -525,8 +502,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 			templateName = template.getName();
 		}
 
-		getPreferenceStore().setValue(
-				PreferenceConstants.NEW_PHP_FILE_TEMPLATE, templateName);
+		getPreferenceStore().setValue(PreferenceConstants.NEW_PHP_FILE_TEMPLATE, templateName);
 	}
 
 	/**
@@ -541,8 +517,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 		if (templateName != null && templateName.length() > 0) {
 			// pick the last used template
-			template = fTemplateStore.findTemplate(templateName,
-					getTemplateContextTypeId());
+			template = fTemplateStore.findTemplate(templateName, getTemplateContextTypeId());
 		}
 
 		// no record of last used template so just pick first element

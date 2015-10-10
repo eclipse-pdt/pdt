@@ -16,7 +16,6 @@ import org.eclipse.php.internal.ui.explorer.PHPExplorerLabelProvider;
 
 public class PHPNavigatorLabelProvider extends PHPExplorerLabelProvider {
 	public PHPNavigatorLabelProvider() {
-		super(new PHPExplorerContentProvider(true), DLTKUIPlugin.getDefault()
-				.getPreferenceStore());
+		super(new PHPExplorerContentProvider(true), DLTKUIPlugin.getDefault().getPreferenceStore());
 	}
 }

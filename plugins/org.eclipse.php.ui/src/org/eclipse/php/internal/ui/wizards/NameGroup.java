@@ -29,8 +29,7 @@ public final class NameGroup extends Observable implements IDialogFieldListener 
 		nameComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		// text field for project name
 		fNameField = new StringDialogField();
-		fNameField
-				.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_NameGroup_label_text);
+		fNameField.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_NameGroup_label_text);
 		fNameField.setDialogFieldListener(this);
 		setName(initialName);
 		fNameField.doFillIntoGrid(nameComposite, 2);

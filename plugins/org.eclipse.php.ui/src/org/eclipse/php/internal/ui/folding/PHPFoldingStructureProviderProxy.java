@@ -23,14 +23,12 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
  * 
  * @author shalom
  */
-public class PHPFoldingStructureProviderProxy implements IProjectionListener,
-		IStructuredTextFoldingProvider {
+public class PHPFoldingStructureProviderProxy implements IProjectionListener, IStructuredTextFoldingProvider {
 
 	private IStructuredTextFoldingProvider currentFoldingProvider;
 
 	public PHPFoldingStructureProviderProxy() {
-		currentFoldingProvider = PHPUiPlugin.getDefault()
-				.getFoldingStructureProviderRegistry()
+		currentFoldingProvider = PHPUiPlugin.getDefault().getFoldingStructureProviderRegistry()
 				.getCurrentFoldingProvider();
 	}
 

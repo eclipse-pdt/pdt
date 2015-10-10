@@ -51,8 +51,7 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 	 * .IWorkbenchPart, org.eclipse.jface.viewers.ISelection,
 	 * org.eclipse.debug.core.model.ISuspendResume)
 	 */
-	public void runToLine(IWorkbenchPart part, ISelection selection,
-			ISuspendResume target) throws CoreException {
+	public void runToLine(IWorkbenchPart part, ISelection selection, ISuspendResume target) throws CoreException {
 		IEditorPart editorPart = (IEditorPart) part;
 		IEditorInput input = editorPart.getEditorInput();
 		String errorMessage = null;
@@ -60,8 +59,7 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 			errorMessage = PHPDebugUIMessages.PHPRunToLineAdapter_0;
 		} else {
 			ITextEditor textEditor = (ITextEditor) editorPart;
-			IDocument document = textEditor.getDocumentProvider().getDocument(
-					input);
+			IDocument document = textEditor.getDocumentProvider().getDocument(input);
 			if (document == null) {
 				errorMessage = PHPDebugUIMessages.PHPRunToLineAdapter_1;
 			} else {
@@ -69,17 +67,14 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 
 				int lineNumber = 0;
 				try {
-					lineNumber = document.getLineOfOffset(textSelection
-							.getOffset()) + 1;
+					lineNumber = document.getLineOfOffset(textSelection.getOffset()) + 1;
 				} catch (BadLocationException e) {
 				}
 				// Figure out if the selected line is a valid line to place a
 				// temporary breakpoint for the run-to-line
-				int validLinePosition = DefaultPHPBreakpointProvider
-						.getValidPosition(document, lineNumber);
+				int validLinePosition = DefaultPHPBreakpointProvider.getValidPosition(document, lineNumber);
 				if (validLinePosition < 0) {
-					StatusLineMessageTimerManager.setErrorMessage(
-							PHPDebugUIMessages.CannotRunToLine, 1000, true); // hide
+					StatusLineMessageTimerManager.setErrorMessage(PHPDebugUIMessages.CannotRunToLine, 1000, true); // hide
 					// message
 					// after
 					// 1
@@ -88,17 +83,14 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 				} else {
 					int validLineNumber = 0;
 					try {
-						validLineNumber = document
-								.getLineOfOffset(validLinePosition) + 1;
+						validLineNumber = document.getLineOfOffset(validLinePosition) + 1;
 						if (validLineNumber != lineNumber) {
-							StatusLineMessageTimerManager.setErrorMessage(
-									PHPDebugUIMessages.CannotRunToLine, 1000,
+							StatusLineMessageTimerManager.setErrorMessage(PHPDebugUIMessages.CannotRunToLine, 1000,
 									true); // hide message after 1 second
 							return;
 						}
 					} catch (BadLocationException ble) {
-						StatusLineMessageTimerManager.setErrorMessage(
-								PHPDebugUIMessages.CannotRunToLine, 1000, true); // hide
+						StatusLineMessageTimerManager.setErrorMessage(PHPDebugUIMessages.CannotRunToLine, 1000, true); // hide
 						// message
 						// after
 						// 1
@@ -118,10 +110,8 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 								// required here for different debuggers to plug
 								// into.
 								if (debugTarget instanceof PHPDebugTarget) {
-									IBreakpoint breakpoint = new PHPRunToLineBreakpoint(
-											file, lineNumber);
-									RunToLineHandler handler = new RunToLineHandler(
-											debugTarget, target, breakpoint);
+									IBreakpoint breakpoint = new PHPRunToLineBreakpoint(file, lineNumber);
+									RunToLineHandler handler = new RunToLineHandler(debugTarget, target, breakpoint);
 									handler.run(new NullProgressMonitor());
 								} else if (debugTarget instanceof DBGpTarget) {
 									DBGpTarget t = (DBGpTarget) debugTarget;
@@ -138,13 +128,11 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 				}
 			}
 		}
-		throw new CoreException(
-				new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(),
-						IPHPDebugConstants.INTERNAL_ERROR, errorMessage, null));
+		throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR,
+				errorMessage, null));
 	}
 
-	public boolean canRunToLine(IWorkbenchPart part, ISelection selection,
-			ISuspendResume target) {
+	public boolean canRunToLine(IWorkbenchPart part, ISelection selection, ISuspendResume target) {
 		// TODO: PHP Debug elements should have a shared marker and test for
 		// here
 		// This will be an enhancement to the generic debug API.
@@ -162,8 +150,7 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 	 */
 	protected IFile getFile(ITextEditor textEditor) {
 		if (textEditor != null) {
-			IModelElement modelElement = EditorUtility
-					.getEditorInputModelElement(textEditor, false);
+			IModelElement modelElement = EditorUtility.getEditorInputModelElement(textEditor, false);
 			if (modelElement != null) {
 				return (IFile) modelElement.getResource();
 			}
@@ -189,32 +176,29 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 			try {
 				IRegion line = idoc.getLineInformation(editorLineNumber - 1);
 				startOffset = line.getOffset();
-				endOffset = Math.max(line.getOffset(), line.getOffset()
-						+ line.getLength());
+				endOffset = Math.max(line.getOffset(), line.getOffset() + line.getLength());
 
-				String lineText = idoc
-						.get(startOffset, endOffset - startOffset).trim();
+				String lineText = idoc.get(startOffset, endOffset - startOffset).trim();
 
 				// blank lines or lines with only an open PHP
 				// tags cannot have a breakpoint
 
-				if (lineText.equals("") || lineText.equals("<%") || //$NON-NLS-1$ //$NON-NLS-2$ 
-						lineText.equals("%>") || lineText.equals("<?php") || lineText.equals("?>") || (lineText.trim()).startsWith("//")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				if (lineText.equals("") || lineText.equals("<%") || //$NON-NLS-1$ //$NON-NLS-2$
+						lineText.equals("%>") || lineText.equals("<?php") || lineText.equals("?>") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						|| (lineText.trim()).startsWith("//")) { //$NON-NLS-1$
 					result = -1;
 				} else {
 
 					// get all partitions for current line
 					ITypedRegion[] partitions = null;
 
-					partitions = idoc.computePartitioning(startOffset,
-							endOffset - startOffset);
+					partitions = idoc.computePartitioning(startOffset, endOffset - startOffset);
 
 					for (int i = 0; i < partitions.length; ++i) {
 						String type = partitions[i].getType();
 						// if found PHP
 						// return that position
-						if (PHPStructuredTextPartitioner
-								.isPHPPartitionType(type)) {
+						if (PHPStructuredTextPartitioner.isPHPPartitionType(type)) {
 							result = partitions[i].getOffset();
 						}
 					}

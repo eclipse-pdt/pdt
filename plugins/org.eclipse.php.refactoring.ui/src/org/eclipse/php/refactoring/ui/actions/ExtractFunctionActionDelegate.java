@@ -26,8 +26,7 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
-public class ExtractFunctionActionDelegate implements IEditorActionDelegate,
-		IWorkbenchWindowActionDelegate {
+public class ExtractFunctionActionDelegate implements IEditorActionDelegate, IWorkbenchWindowActionDelegate {
 
 	private IEditorPart targetEditor;
 	private Shell shell;
@@ -45,12 +44,10 @@ public class ExtractFunctionActionDelegate implements IEditorActionDelegate,
 
 	public void run(IAction action) {
 		if (targetEditor == null) {
-			targetEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage().getActiveEditor();
+			targetEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		}
 		if (shell == null) {
-			shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getShell();
+			shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		}
 		if (!(targetEditor instanceof PHPStructuredEditor))
 			return;
@@ -62,27 +59,18 @@ public class ExtractFunctionActionDelegate implements IEditorActionDelegate,
 		IStructuredModel model = null;
 		try {
 			// get the document
-			model = StructuredModelManager.getModelManager()
-					.getExistingModelForEdit(file);
-			IStructuredDocument structuredDocument = model
-					.getStructuredDocument();
+			model = StructuredModelManager.getModelManager().getExistingModelForEdit(file);
+			IStructuredDocument structuredDocument = model.getStructuredDocument();
 
 			// get the selection offsets
-			ITextSelection fTextSelection = (ITextSelection) phpEditor
-					.getSelectionProvider().getSelection();
+			ITextSelection fTextSelection = (ITextSelection) phpEditor.getSelectionProvider().getSelection();
 			int startOffset = fTextSelection.getOffset();
 			int length = fTextSelection.getLength();
 
 			final ExtractFunctionRefactoring refactoring = new ExtractFunctionRefactoring(
-					DLTKCore.createSourceModuleFrom(file), structuredDocument,
-					startOffset, length);
-			new RefactoringStarter()
-					.activate(
-							refactoring,
-							new ExtractFunctionWizard(refactoring),
-							shell,
-							RefactoringMessages.ExtractMethodAction_dialog_title,
-							false); //$NON-NLS-1$
+					DLTKCore.createSourceModuleFrom(file), structuredDocument, startOffset, length);
+			new RefactoringStarter().activate(refactoring, new ExtractFunctionWizard(refactoring), shell,
+					RefactoringMessages.ExtractMethodAction_dialog_title, false); // $NON-NLS-1$
 		} finally {
 			if (model != null) {
 				model.releaseFromEdit();

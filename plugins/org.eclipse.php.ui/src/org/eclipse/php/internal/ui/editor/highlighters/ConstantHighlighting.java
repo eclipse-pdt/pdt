@@ -43,9 +43,8 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 		@Override
 		public boolean visit(Scalar scalar) {
 			String value = scalar.getStringValue();
-			if ((scalar.getScalarType() == Scalar.TYPE_STRING && !isInQuote || scalar
-					.getScalarType() == Scalar.TYPE_SYSTEM)
-					&& !"null".equalsIgnoreCase(value) //$NON-NLS-1$
+			if ((scalar.getScalarType() == Scalar.TYPE_STRING && !isInQuote
+					|| scalar.getScalarType() == Scalar.TYPE_SYSTEM) && !"null".equalsIgnoreCase(value) //$NON-NLS-1$
 					&& !"false".equalsIgnoreCase(value) //$NON-NLS-1$
 					&& !"true".equalsIgnoreCase(value) //$NON-NLS-1$
 					&& value.charAt(0) != '\'' && value.charAt(0) != '"') {
@@ -56,9 +55,9 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 				FunctionInvocation fi = (FunctionInvocation) scalar.getParent();
 				if (fi.parameters().get(0) == scalar) {
 					if (fi.getFunctionName().getName() instanceof Identifier) {
-						final Identifier identifier = (Identifier) fi
-								.getFunctionName().getName();
-						if ("define".equalsIgnoreCase(identifier.getName()) || "constant".equalsIgnoreCase(identifier.getName())) {//$NON-NLS-1$ //$NON-NLS-2$
+						final Identifier identifier = (Identifier) fi.getFunctionName().getName();
+						if ("define".equalsIgnoreCase(identifier.getName()) //$NON-NLS-1$
+								|| "constant".equalsIgnoreCase(identifier.getName())) {//$NON-NLS-1$
 							highlight(scalar);
 						}
 					}
@@ -76,8 +75,7 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 		@Override
 		public boolean visit(NamespaceName namespace) {
 			ASTNode parent = namespace.getParent();
-			if (!(parent instanceof NamespaceDeclaration)
-					&& !(parent instanceof StaticDispatch)
+			if (!(parent instanceof NamespaceDeclaration) && !(parent instanceof StaticDispatch)
 					&& !(parent instanceof FunctionName)) {
 				List<Identifier> segs = namespace.segments();
 				Identifier c = segs.get(segs.size() - 1);
@@ -96,8 +94,7 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 
 	@Override
 	public void initDefaultPreferences() {
-		getStyle().setEnabledByDefault(false).setDefaultTextColor(0, 0, 192)
-				.setItalicByDefault(true);
+		getStyle().setEnabledByDefault(false).setDefaultTextColor(0, 0, 192).setItalicByDefault(true);
 	}
 
 	public String getDisplayName() {

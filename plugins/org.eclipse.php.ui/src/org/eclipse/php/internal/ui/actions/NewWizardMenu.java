@@ -38,39 +38,29 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 public class NewWizardMenu extends BaseNewWizardMenu {
 
 	private static final List<String> PROJECT_WIZARD_ID = new ArrayList<String>();
-	static {
-		PROJECT_WIZARD_ID
-				.add("org.eclipse.php.ui.wizards.PHPFileCreationWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID
-				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPClassWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID
-				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPInterfaceWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID
-				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPTraitWizard"); //$NON-NLS-1$
 
-		PROJECT_WIZARD_ID
-				.add("org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard"); //$NON-NLS-1$
+	static {
+		PROJECT_WIZARD_ID.add("org.eclipse.php.ui.wizards.PHPFileCreationWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPClassWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPInterfaceWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPTraitWizard"); //$NON-NLS-1$
+
+		PROJECT_WIZARD_ID.add("org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID.add("org.eclipse.ui.wizards.new.folder"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID.add("org.eclipse.ui.wizards.new.file"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID
-				.add("org.eclipse.wst.css.ui.internal.wizard.NewCSSWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID
-				.add("org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID
-				.add("org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID
-				.add("org.eclipse.ui.editors.wizards.UntitledTextFileWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID
-				.add("org.zend.php.framework.ui.wizards.NewZendItemWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.eclipse.wst.css.ui.internal.wizard.NewCSSWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.eclipse.ui.editors.wizards.UntitledTextFileWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.zend.php.framework.ui.wizards.NewZendItemWizard"); //$NON-NLS-1$
 
-		PROJECT_WIZARD_ID
-				.add("com.zend.php.ui.wizards.wizards.RemoteFolderWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.ui.wizards.wizards.RemoteFolderWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID.add("org.eclipse.php.wst.jsdt.ui.NewJSWizard"); //$NON-NLS-1$
-		PROJECT_WIZARD_ID
-				.add("org.eclipse.mylyn.tasks.ui.wizards.new.repository.task"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.eclipse.mylyn.tasks.ui.wizards.new.repository.task"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID.add("com.zend.php.phpunit.wizards.TestCaseWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID.add("com.zend.php.phpunit.wizards.TestSuiteWizard"); //$NON-NLS-1$
 	}
+
 	private final IAction newExampleAction;
 	private final IAction newProjectAction;
 
@@ -126,11 +116,8 @@ public class NewWizardMenu extends BaseNewWizardMenu {
 	private boolean hasExamples() {
 		boolean hasCategory = registryHasCategory(WizardsRegistryReader.FULL_EXAMPLES_WIZARD_CATEGORY);
 		if (hasCategory) {
-			IWizardCategory exampleCategory = WorkbenchPlugin
-					.getDefault()
-					.getNewWizardRegistry()
-					.findCategory(
-							WizardsRegistryReader.FULL_EXAMPLES_WIZARD_CATEGORY);
+			IWizardCategory exampleCategory = WorkbenchPlugin.getDefault().getNewWizardRegistry()
+					.findCategory(WizardsRegistryReader.FULL_EXAMPLES_WIZARD_CATEGORY);
 			return hasWizards(exampleCategory);
 		}
 		return false;
@@ -157,9 +144,8 @@ public class NewWizardMenu extends BaseNewWizardMenu {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.actions.BaseNewWizardMenu#addItems(org.eclipse.jface.action
-	 * .IContributionManager)
+	 * @see org.eclipse.ui.actions.BaseNewWizardMenu#addItems(org.eclipse.jface.
+	 * action .IContributionManager)
 	 */
 	protected void addItems(List list) {
 		ArrayList shortCuts = new ArrayList();
@@ -168,8 +154,7 @@ public class NewWizardMenu extends BaseNewWizardMenu {
 		for (Iterator iterator = shortCuts.iterator(); iterator.hasNext();) {
 			Object curr = iterator.next();
 			if (curr instanceof ActionContributionItem
-					&& isNewProjectWizardAction(((ActionContributionItem) curr)
-							.getAction())) {
+					&& isNewProjectWizardAction(((ActionContributionItem) curr).getAction())) {
 				iterator.remove();
 				// list.add(curr);
 			}
@@ -199,8 +184,7 @@ public class NewWizardMenu extends BaseNewWizardMenu {
 				if (curr instanceof ActionContributionItem) {
 					ActionContributionItem item = (ActionContributionItem) curr;
 					if (item.getAction() instanceof NewWizardShortcutAction) {
-						NewWizardShortcutAction action = (NewWizardShortcutAction) item
-								.getAction();
+						NewWizardShortcutAction action = (NewWizardShortcutAction) item.getAction();
 						if (id.equals(action.getWizardDescriptor().getId())) {
 							result.add(item);
 							iterator.remove();
@@ -215,8 +199,7 @@ public class NewWizardMenu extends BaseNewWizardMenu {
 
 	private boolean isNewProjectWizardAction(IAction action) {
 		if (action instanceof NewWizardShortcutAction) {
-			IWizardDescriptor wizardDescriptor = ((NewWizardShortcutAction) action)
-					.getWizardDescriptor();
+			IWizardDescriptor wizardDescriptor = ((NewWizardShortcutAction) action).getWizardDescriptor();
 			String[] tags = wizardDescriptor.getTags();
 			for (int i = 0; i < tags.length; i++) {
 				if (WorkbenchWizardElement.TAG_PROJECT.equals(tags[i])) {

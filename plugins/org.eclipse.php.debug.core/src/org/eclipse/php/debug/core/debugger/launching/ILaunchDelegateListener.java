@@ -15,6 +15,5 @@ public interface ILaunchDelegateListener {
 	 * org.eclipse.debug.core.ILaunch,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public int preLaunch(ILaunchConfiguration configuration, String mode,
-			ILaunch launch, IProgressMonitor monitor);
+	public int preLaunch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor);
 }

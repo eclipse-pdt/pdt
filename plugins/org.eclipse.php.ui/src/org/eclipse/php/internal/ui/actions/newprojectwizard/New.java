@@ -77,10 +77,8 @@ public final class New extends WizardHandler {
 			// Build the selection from the IFile of the editor
 			Class resourceClass = LegacyResourceSupport.getResourceClass();
 			if (resourceClass != null) {
-				IWorkbenchWindow activeWorkbenchWindow = HandlerUtil
-						.getActiveWorkbenchWindow(event);
-				IWorkbenchPart part = activeWorkbenchWindow.getPartService()
-						.getActivePart();
+				IWorkbenchWindow activeWorkbenchWindow = HandlerUtil.getActiveWorkbenchWindow(event);
+				IWorkbenchPart part = activeWorkbenchWindow.getPartService().getActivePart();
 				if (part instanceof IEditorPart) {
 					IEditorInput input = ((IEditorPart) part).getEditorInput();
 					Object resource = Util.getAdapter(input, resourceClass);
@@ -94,17 +92,14 @@ public final class New extends WizardHandler {
 	}
 
 	protected void executeHandler(ExecutionEvent event) {
-		IWorkbenchWindow activeWorkbenchWindow = HandlerUtil
-				.getActiveWorkbenchWindow(event);
+		IWorkbenchWindow activeWorkbenchWindow = HandlerUtil.getActiveWorkbenchWindow(event);
 		if (activeWorkbenchWindow == null) {
 			// action has been disposed
 			return;
 		}
 
-		IWizardCategory root = WorkbenchPlugin.getDefault()
-				.getNewWizardRegistry().getRootCategory();
-		IWizardDescriptor localphpWizard = root
-				.findWizard("com.zend.php.ide.ui.project.wizard.localphp"); //$NON-NLS-1$
+		IWizardCategory root = WorkbenchPlugin.getDefault().getNewWizardRegistry().getRootCategory();
+		IWizardDescriptor localphpWizard = root.findWizard("com.zend.php.ide.ui.project.wizard.localphp"); //$NON-NLS-1$
 		if (localphpWizard == null) {// pdt
 			org.eclipse.ui.internal.dialogs.NewWizard wizard = new org.eclipse.ui.internal.dialogs.NewWizard();
 			wizard.setCategoryId(categoryId);
@@ -112,13 +107,10 @@ public final class New extends WizardHandler {
 			IStructuredSelection selectionToPass = getSelectionToUse(event);
 			wizard.init(activeWorkbenchWindow.getWorkbench(), selectionToPass);
 
-			IDialogSettings workbenchSettings = WorkbenchPlugin.getDefault()
-					.getDialogSettings();
-			IDialogSettings wizardSettings = workbenchSettings
-					.getSection("NewWizardAction"); //$NON-NLS-1$
+			IDialogSettings workbenchSettings = WorkbenchPlugin.getDefault().getDialogSettings();
+			IDialogSettings wizardSettings = workbenchSettings.getSection("NewWizardAction"); //$NON-NLS-1$
 			if (wizardSettings == null) {
-				wizardSettings = workbenchSettings
-						.addNewSection("NewWizardAction"); //$NON-NLS-1$
+				wizardSettings = workbenchSettings.addNewSection("NewWizardAction"); //$NON-NLS-1$
 			}
 			wizard.setDialogSettings(wizardSettings);
 			wizard.setForcePreviousAndNextButtons(true);
@@ -126,15 +118,10 @@ public final class New extends WizardHandler {
 			Shell parent = activeWorkbenchWindow.getShell();
 			WizardDialog dialog = new WizardDialog(parent, wizard);
 			dialog.create();
-			dialog.getShell()
-					.setSize(
-							Math.max(SIZING_WIZARD_WIDTH, dialog.getShell()
-									.getSize().x), SIZING_WIZARD_HEIGHT);
-			activeWorkbenchWindow
-					.getWorkbench()
-					.getHelpSystem()
-					.setHelp(dialog.getShell(),
-							IWorkbenchHelpContextIds.NEW_WIZARD);
+			dialog.getShell().setSize(Math.max(SIZING_WIZARD_WIDTH, dialog.getShell().getSize().x),
+					SIZING_WIZARD_HEIGHT);
+			activeWorkbenchWindow.getWorkbench().getHelpSystem().setHelp(dialog.getShell(),
+					IWorkbenchHelpContextIds.NEW_WIZARD);
 			dialog.open();
 
 		} else {// zend studio
@@ -144,13 +131,10 @@ public final class New extends WizardHandler {
 			IStructuredSelection selectionToPass = getSelectionToUse(event);
 			wizard.init(activeWorkbenchWindow.getWorkbench(), selectionToPass);
 
-			IDialogSettings workbenchSettings = WorkbenchPlugin.getDefault()
-					.getDialogSettings();
-			IDialogSettings wizardSettings = workbenchSettings
-					.getSection("NewWizardAction"); //$NON-NLS-1$
+			IDialogSettings workbenchSettings = WorkbenchPlugin.getDefault().getDialogSettings();
+			IDialogSettings wizardSettings = workbenchSettings.getSection("NewWizardAction"); //$NON-NLS-1$
 			if (wizardSettings == null) {
-				wizardSettings = workbenchSettings
-						.addNewSection("NewWizardAction"); //$NON-NLS-1$
+				wizardSettings = workbenchSettings.addNewSection("NewWizardAction"); //$NON-NLS-1$
 			}
 			wizard.setDialogSettings(wizardSettings);
 			wizard.setForcePreviousAndNextButtons(true);
@@ -158,15 +142,10 @@ public final class New extends WizardHandler {
 			Shell parent = activeWorkbenchWindow.getShell();
 			WizardDialog dialog = new WizardDialog(parent, wizard);
 			dialog.create();
-			dialog.getShell()
-					.setSize(
-							Math.max(SIZING_WIZARD_WIDTH, dialog.getShell()
-									.getSize().x), SIZING_WIZARD_HEIGHT);
-			activeWorkbenchWindow
-					.getWorkbench()
-					.getHelpSystem()
-					.setHelp(dialog.getShell(),
-							IWorkbenchHelpContextIds.NEW_WIZARD);
+			dialog.getShell().setSize(Math.max(SIZING_WIZARD_WIDTH, dialog.getShell().getSize().x),
+					SIZING_WIZARD_HEIGHT);
+			activeWorkbenchWindow.getWorkbench().getHelpSystem().setHelp(dialog.getShell(),
+					IWorkbenchHelpContextIds.NEW_WIZARD);
 			dialog.open();
 		}
 	}

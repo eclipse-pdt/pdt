@@ -26,8 +26,7 @@ import org.eclipse.swt.graphics.Image;
  * from pioneering adopters on the understanding that any code that uses this
  * API will almost certainly be broken (repeatedly) as the API evolves.
  */
-public class PHPOutlineLabelProvider extends XMLLabelProvider implements
-		IStyledLabelProvider {
+public class PHPOutlineLabelProvider extends XMLLabelProvider implements IStyledLabelProvider {
 
 	private ILabelProvider modelElementLabelProvider;
 

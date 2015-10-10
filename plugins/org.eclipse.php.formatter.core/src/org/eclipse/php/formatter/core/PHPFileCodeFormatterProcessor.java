@@ -35,13 +35,11 @@ import org.w3c.dom.Node;
  * @author guy.g
  * 
  */
-public class PHPFileCodeFormatterProcessor
-		implements IStructuredFormatProcessor {
+public class PHPFileCodeFormatterProcessor implements IStructuredFormatProcessor {
 
 	PHPCodeFormatter formatter = new PHPCodeFormatter();
 
-	public void formatDocument(IDocument document, int start, int length)
-			throws IOException, CoreException {
+	public void formatDocument(IDocument document, int start, int length) throws IOException, CoreException {
 
 	}
 
@@ -52,8 +50,7 @@ public class PHPFileCodeFormatterProcessor
 
 		IStructuredModel structuredModel = null;
 
-		structuredModel = StructuredModelManager.getModelManager()
-				.getModelForEdit(file);
+		structuredModel = StructuredModelManager.getModelManager().getModelForEdit(file);
 		if (structuredModel == null) {
 			return;
 		}
@@ -61,15 +58,13 @@ public class PHPFileCodeFormatterProcessor
 			// setup structuredModel
 			// Note: We are getting model for edit. Will save model if model
 			// changed.
-			IStructuredDocument structuredDocument = structuredModel
-					.getStructuredDocument();
+			IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 
 			IRegion region = new Region(0, structuredDocument.getLength());
 
 			formatter.format(structuredDocument, region);
 			// save model if needed - used for closed files
-			if (!structuredModel.isSharedForEdit()
-					&& structuredModel.isSaveNeeded()) {
+			if (!structuredModel.isSharedForEdit() && structuredModel.isSaveNeeded()) {
 				structuredModel.save();
 			}
 		} finally {
@@ -83,8 +78,7 @@ public class PHPFileCodeFormatterProcessor
 
 	}
 
-	public void formatModel(IStructuredModel structuredModel, int start,
-			int length) {
+	public void formatModel(IStructuredModel structuredModel, int start, int length) {
 
 	}
 

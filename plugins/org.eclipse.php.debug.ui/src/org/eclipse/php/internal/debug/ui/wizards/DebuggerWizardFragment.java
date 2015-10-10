@@ -53,8 +53,7 @@ public class DebuggerWizardFragment extends CompositeWizardFragment {
 	 * org.eclipse.php.internal.ui.wizards.IWizardHandle)
 	 */
 	public Composite createComposite(Composite parent, IWizardHandle handle) {
-		compositeFragment = new DebuggerCompositeFragment(parent,
-				new WizardControlWrapper(handle), false);
+		compositeFragment = new DebuggerCompositeFragment(parent, new WizardControlWrapper(handle), false);
 		return compositeFragment;
 	}
 
@@ -66,14 +65,12 @@ public class DebuggerWizardFragment extends CompositeWizardFragment {
 	public void enter() {
 		if (compositeFragment != null) {
 			try {
-				server = (Server) getWizardModel()
-						.getObject(WizardModel.SERVER);
+				server = (Server) getWizardModel().getObject(WizardModel.SERVER);
 				if (server != null) {
 					compositeFragment.setData(server);
 					return;
 				}
-				phpExeItem = (PHPexeItem) getWizardModel().getObject(
-						PHPExeWizard.MODEL);
+				phpExeItem = (PHPexeItem) getWizardModel().getObject(PHPExeWizard.MODEL);
 				if (phpExeItem == null) {
 					phpExeItem = new PHPexeItem();
 				}
@@ -82,8 +79,7 @@ public class DebuggerWizardFragment extends CompositeWizardFragment {
 				Logger.logException(e);
 			}
 		} else {
-			Logger.log(Logger.ERROR,
-					"Could not display the Servers wizard (component is null)."); //$NON-NLS-1$
+			Logger.log(Logger.ERROR, "Could not display the Servers wizard (component is null)."); //$NON-NLS-1$
 		}
 	}
 

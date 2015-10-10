@@ -48,8 +48,8 @@ public class ParameterEditDialog extends StatusDialog {
 	 *            be <code>null</code> if <code>canEditType</code> is
 	 *            <code>false</code>.
 	 */
-	public ParameterEditDialog(Shell parentShell, ParameterInfo parameter,
-			boolean canEditDefault, StubTypeContext context) {
+	public ParameterEditDialog(Shell parentShell, ParameterInfo parameter, boolean canEditDefault,
+			StubTypeContext context) {
 		super(parentShell);
 		fParameter = parameter;
 
@@ -74,8 +74,7 @@ public class ParameterEditDialog extends StatusDialog {
 		if (newName.length() == 0)
 			label.setText(RefactoringMessages.ParameterEditDialog_message_new);
 		else {
-			label.setText(NLS.bind(
-					RefactoringMessages.ParameterEditDialog_message, newName));
+			label.setText(NLS.bind(RefactoringMessages.ParameterEditDialog_message, newName));
 		}
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
@@ -155,17 +154,14 @@ public class ParameterEditDialog extends StatusDialog {
 			return null;
 		String type = fType.getText();
 
-		RefactoringStatus status = PHPConventionsUtil.checkParameterTypeSyntax(
-				type, fContext.getCuHandle().getSourceModule()
-						.getScriptProject());
+		RefactoringStatus status = PHPConventionsUtil.checkParameterTypeSyntax(type,
+				fContext.getCuHandle().getSourceModule().getScriptProject());
 		if (status == null || status.isOK())
 			return createOkStatus();
 		if (status.hasError())
-			return createErrorStatus(status.getEntryWithHighestSeverity()
-					.getMessage());
+			return createErrorStatus(status.getEntryWithHighestSeverity().getMessage());
 		else
-			return createWarningStatus(status.getEntryWithHighestSeverity()
-					.getMessage());
+			return createWarningStatus(status.getEntryWithHighestSeverity().getMessage());
 	}
 
 	private IStatus validateName() {
@@ -191,25 +187,21 @@ public class ParameterEditDialog extends StatusDialog {
 			return createErrorStatus(RefactoringMessages.ParameterEditDialog_defaultValue_error);
 		// if (ChangeSignatureProcessor.isValidExpression(defaultValue))
 		// return createOkStatus();
-		String msg = RefactoringMessages.bind(
-				RefactoringMessages.ParameterEditDialog_defaultValue_invalid,
+		String msg = RefactoringMessages.bind(RefactoringMessages.ParameterEditDialog_defaultValue_invalid,
 				new String[] { defaultValue });
 		return createErrorStatus(msg);
 
 	}
 
 	private Status createOkStatus() {
-		return new Status(IStatus.OK, RefactoringUIPlugin.PLUGIN_ID,
-				IStatus.OK, "", null); //$NON-NLS-1$
+		return new Status(IStatus.OK, RefactoringUIPlugin.PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$
 	}
 
 	private Status createWarningStatus(String message) {
-		return new Status(IStatus.WARNING, RefactoringUIPlugin.PLUGIN_ID,
-				IStatus.WARNING, message, null);
+		return new Status(IStatus.WARNING, RefactoringUIPlugin.PLUGIN_ID, IStatus.WARNING, message, null);
 	}
 
 	private Status createErrorStatus(String message) {
-		return new Status(IStatus.ERROR, RefactoringUIPlugin.PLUGIN_ID,
-				IStatus.ERROR, message, null);
+		return new Status(IStatus.ERROR, RefactoringUIPlugin.PLUGIN_ID, IStatus.ERROR, message, null);
 	}
 }

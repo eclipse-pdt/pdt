@@ -56,8 +56,7 @@ public class PHPPartitionerTests {
 	private static final String PROJECT_NAME = "partitioner";
 
 	// The markers looked for in the PHP partition
-	private static final String[] phpLookUp = { "php", "echo",
-			"PHP_Single_Comment", "PHP_Multi_Comment", "PHP_Doc",
+	private static final String[] phpLookUp = { "php", "echo", "PHP_Single_Comment", "PHP_Multi_Comment", "PHP_Doc",
 			"Test quoted string partition", "1 F d, Y", "Running test", "$num" };
 
 	protected static IProject project;
@@ -72,8 +71,7 @@ public class PHPPartitionerTests {
 	 */
 	protected File getPluginDirectoryPath() {
 		try {
-			URL platformURL = Platform.getBundle(PHPCoreTests.PLUGIN_ID)
-					.getEntry("/");
+			URL platformURL = Platform.getBundle(PHPCoreTests.PLUGIN_ID).getEntry("/");
 			return new File(FileLocator.toFileURL(platformURL).getFile());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -152,14 +150,11 @@ public class PHPPartitionerTests {
 	public void setUp() throws Exception {
 		// copy files in project from source workspace to target workspace
 		final File sourceWorkspacePath = getSourceWorkspacePath();
-		final File targetWorkspacePath = getWorkspaceRoot().getLocation()
-				.toFile();
+		final File targetWorkspacePath = getWorkspaceRoot().getLocation().toFile();
 
-		copyDirectory(new File(sourceWorkspacePath, PROJECT_NAME), new File(
-				targetWorkspacePath, PROJECT_NAME));
+		copyDirectory(new File(sourceWorkspacePath, PROJECT_NAME), new File(targetWorkspacePath, PROJECT_NAME));
 
-		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject(PROJECT_NAME);
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_NAME);
 		if (project.exists()) {
 			return;
 		}
@@ -187,8 +182,7 @@ public class PHPPartitionerTests {
 	 */
 	@Test
 	public void partitionInHTML() throws Exception {
-		ArrayList<String> matches = getPartitionType(phpLookUp,
-				"phpPartitionerTestHTML.php");
+		ArrayList<String> matches = getPartitionType(phpLookUp, "phpPartitionerTestHTML.php");
 		for (int i = 0; i < matches.size(); i++) {
 			assertSame(PHPPartitionTypes.PHP_DEFAULT, (String) matches.get(i));
 		}
@@ -202,8 +196,7 @@ public class PHPPartitionerTests {
 	@Test
 	public void partitionStandalone() throws Exception {
 
-		ArrayList<String> matches = getPartitionType(phpLookUp,
-				"phpPartitionerTestPhp.php");
+		ArrayList<String> matches = getPartitionType(phpLookUp, "phpPartitionerTestPhp.php");
 		for (int i = 0; i < matches.size(); i++) {
 			assertSame(PHPPartitionTypes.PHP_DEFAULT, (String) matches.get(i));
 		}
@@ -217,8 +210,7 @@ public class PHPPartitionerTests {
 	@Test
 	public void partitionPhpAsHTMLAttributeKey() throws Exception {
 
-		ArrayList<String> matches = getPartitionType(phpLookUp,
-				"phpPartitionerTestPhpAsHTMLAttributeKey.php");
+		ArrayList<String> matches = getPartitionType(phpLookUp, "phpPartitionerTestPhpAsHTMLAttributeKey.php");
 		for (int i = 0; i < matches.size(); i++) {
 			assertSame(PHPPartitionTypes.PHP_DEFAULT, (String) matches.get(i));
 		}
@@ -232,8 +224,7 @@ public class PHPPartitionerTests {
 	@Test
 	public void partitionPhpAsHTMLAttributeValue() throws Exception {
 
-		ArrayList<String> matches = getPartitionType(phpLookUp,
-				"phpPartitionerTestPhpAsHTMLAttributeValue.php");
+		ArrayList<String> matches = getPartitionType(phpLookUp, "phpPartitionerTestPhpAsHTMLAttributeValue.php");
 		for (int i = 0; i < matches.size(); i++) {
 			assertSame(PHPPartitionTypes.PHP_DEFAULT, (String) matches.get(i));
 		}
@@ -252,8 +243,7 @@ public class PHPPartitionerTests {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("restriction")
-	private ArrayList<String> getPartitionType(String[] markers,
-			String testDataFile) throws Exception {
+	private ArrayList<String> getPartitionType(String[] markers, String testDataFile) throws Exception {
 		// offset from beginning of stream
 		int offset = 0;
 
@@ -266,11 +256,9 @@ public class PHPPartitionerTests {
 		InputStreamReader inStream = new InputStreamReader(inFile.getContents());
 		BufferedReader reader = new BufferedReader(inStream);
 
-		final IStructuredModel modelForEdit = StructuredModelManager
-				.getModelManager().getModelForEdit(inFile);
+		final IStructuredModel modelForEdit = StructuredModelManager.getModelManager().getModelForEdit(inFile);
 		try {
-			final IStructuredDocument structuredDocument = modelForEdit
-					.getStructuredDocument();
+			final IStructuredDocument structuredDocument = modelForEdit.getStructuredDocument();
 
 			// create the partitioner
 			final PHPStructuredTextPartitioner structuredTextPartitioner = new PHPStructuredTextPartitioner();
@@ -284,17 +272,14 @@ public class PHPPartitionerTests {
 					int lineOffset = curLine.indexOf(markers[i]);
 					// if marker was found in current line, get partition type
 					if (lineOffset != -1) {
-						ITypedRegion partition = structuredTextPartitioner
-								.getPartition(offset + lineOffset);
+						ITypedRegion partition = structuredTextPartitioner.getPartition(offset + lineOffset);
 						results.add(partition.getType());
 					}
 				}
 				// update global offset
-				String curLineDelimiter = structuredDocument
-						.getLineDelimiter(lineNumber);
+				String curLineDelimiter = structuredDocument.getLineDelimiter(lineNumber);
 				// use original line endings to shift the offset
-				offset += curLine.length() + (curLineDelimiter != null
-						? curLineDelimiter.length() : 0);
+				offset += curLine.length() + (curLineDelimiter != null ? curLineDelimiter.length() : 0);
 				curLine = reader.readLine();
 				lineNumber++;
 			}

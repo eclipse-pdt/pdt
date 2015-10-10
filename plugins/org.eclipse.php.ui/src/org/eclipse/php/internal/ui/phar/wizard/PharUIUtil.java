@@ -42,42 +42,33 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class PharUIUtil {
 
-	public static boolean askForOverwritePermission(final Shell parent,
-			IPath filePath, boolean isOSPath) {
+	public static boolean askForOverwritePermission(final Shell parent, IPath filePath, boolean isOSPath) {
 		if (parent == null)
 			return false;
-		return queryDialog(parent,
-				PharPackagerMessages.JarPackage_confirmReplace_title,
-				Messages.format(
-						PharPackagerMessages.JarPackage_confirmReplace_message,
+		return queryDialog(parent, PharPackagerMessages.JarPackage_confirmReplace_title,
+				Messages.format(PharPackagerMessages.JarPackage_confirmReplace_message,
 						BasicElementLabels.getPathLabel(filePath, isOSPath)));
 	}
 
-	private static boolean queryDialog(final Shell parent, final String title,
-			final String message) {
+	private static boolean queryDialog(final Shell parent, final String title, final String message) {
 		Display display = parent.getDisplay();
 		if (display == null || display.isDisposed())
 			return false;
 		final boolean[] returnValue = new boolean[1];
 		Runnable runnable = new Runnable() {
 			public void run() {
-				returnValue[0] = MessageDialog.openQuestion(parent, title,
-						message);
+				returnValue[0] = MessageDialog.openQuestion(parent, title, message);
 			}
 		};
 		display.syncExec(runnable);
 		return returnValue[0];
 	}
 
-	public static boolean askToCreateDirectory(final Shell parent,
-			File directory) {
+	public static boolean askToCreateDirectory(final Shell parent, File directory) {
 		if (parent == null)
 			return false;
-		return queryDialog(parent,
-				PharPackagerMessages.JarPackage_confirmCreate_title,
-				Messages.format(
-						PharPackagerMessages.JarPackage_confirmCreate_message,
-						BasicElementLabels.getPathLabel(directory)));
+		return queryDialog(parent, PharPackagerMessages.JarPackage_confirmCreate_title, Messages.format(
+				PharPackagerMessages.JarPackage_confirmCreate_message, BasicElementLabels.getPathLabel(directory)));
 	}
 
 	/**
@@ -92,8 +83,8 @@ public class PharUIUtil {
 	public static CoreException createCoreException(String message, Exception ex) {
 		if (message == null)
 			message = ""; //$NON-NLS-1$
-		return new CoreException(new Status(IStatus.ERROR, PHPUiPlugin.ID,
-				IDLTKStatusConstants.INTERNAL_ERROR, message, ex));
+		return new CoreException(
+				new Status(IStatus.ERROR, PHPUiPlugin.ID, IDLTKStatusConstants.INTERNAL_ERROR, message, ex));
 	}
 
 	public static boolean isInvalidPharBuildEntry(BPListElement cpentry) {
@@ -113,15 +104,12 @@ public class PharUIUtil {
 					path = EnvironmentPathUtils.getLocalPath(path);
 					pharFile = path.toFile();
 				} else {
-					IWorkspaceRoot root = ResourcesPlugin.getWorkspace()
-							.getRoot();
+					IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 					IResource file = root.findMember(path);
-					pharFile = Util
-							.toLocalFile(file.getLocationURI(), null/*
-																	 * no
-																	 * progress
-																	 * availaible
-																	 */);
+					pharFile = Util.toLocalFile(file.getLocationURI(),
+							null/*
+								 * no progress availaible
+								 */);
 				}
 
 				if (pharFile == null || !pharFile.exists())

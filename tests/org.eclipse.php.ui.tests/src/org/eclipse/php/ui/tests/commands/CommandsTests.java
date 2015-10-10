@@ -78,8 +78,7 @@ public class CommandsTests {
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 
 	static {
-		TESTS.put(PHPVersion.PHP7_0,
-				new String[] { "/workspace/commands/php53" });
+		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/commands/php53" });
 	};
 
 	@Context
@@ -93,8 +92,7 @@ public class CommandsTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("Content Assist_" + this.phpVersion);
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject("Content Assist_" + this.phpVersion);
 		if (project.exists()) {
 			return;
 		}
@@ -109,8 +107,7 @@ public class CommandsTests {
 
 		// set auto insert to true,if there are only one proposal in the CA,it
 		// will insert the proposal,so we can test CA without UI interaction
-		PHPUiPlugin.getDefault().getPluginPreferences()
-				.setDefault(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
+		PHPUiPlugin.getDefault().getPluginPreferences().setDefault(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
 		PHPCoreTests.setProjectPhpVersion(project, phpVersion);
 	}
 
@@ -137,8 +134,7 @@ public class CommandsTests {
 
 	@Test
 	public void assist(String fileName) throws Exception {
-		final PdttFile pdttFile = new PdttFile(
-				PHPUiTests.getDefault().getBundle(), fileName);
+		final PdttFile pdttFile = new PdttFile(PHPUiTests.getDefault().getBundle(), fileName);
 		pdttFile.applyPreferences();
 
 		final Exception[] err = new Exception[1];
@@ -147,20 +143,16 @@ public class CommandsTests {
 			@Override
 			public void run() {
 				try {
-					ISourceRange range = createFile(pdttFile.getFile(),
-							Long.toString(System.currentTimeMillis()),
+					ISourceRange range = createFile(pdttFile.getFile(), Long.toString(System.currentTimeMillis()),
 							prepareOtherStreams(pdttFile));
 
-					String result = selectAndExecute(getCommandId(pdttFile),
-							range.getOffset(), range.getLength());
+					String result = selectAndExecute(getCommandId(pdttFile), range.getOffset(), range.getLength());
 					closeEditor();
 					if (!pdttFile.getExpected().trim().equals(result.trim())) {
 						StringBuilder errorBuf = new StringBuilder();
-						errorBuf.append(
-								"\nEXPECTED RESULT:\n-----------------------------\n");
+						errorBuf.append("\nEXPECTED RESULT:\n-----------------------------\n");
 						errorBuf.append(pdttFile.getExpected());
-						errorBuf.append(
-								"\nACTUAL RESULT:\n-----------------------------\n");
+						errorBuf.append("\nACTUAL RESULT:\n-----------------------------\n");
 						errorBuf.append(result);
 						fail(errorBuf.toString());
 					}
@@ -201,26 +193,22 @@ public class CommandsTests {
 	}
 
 	protected String selectAndExecute(String commandId, int offset, int length)
-			throws ExecutionException, NotDefinedException, NotEnabledException,
-			NotHandledException {
+			throws ExecutionException, NotDefinedException, NotEnabledException, NotHandledException {
 		StructuredTextViewer viewer = null;
 		Display display = Display.getDefault();
 		long timeout = System.currentTimeMillis() + 3000;
-		while ((System.currentTimeMillis() < timeout)
-				&& ((viewer = fEditor.getTextViewer()) == null)) {
+		while ((System.currentTimeMillis() < timeout) && ((viewer = fEditor.getTextViewer()) == null)) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
 		}
 		if (viewer == null) {
-			fail("fEditor.getTextViewer() returns null for file "
-					+ testFile.getFullPath() + "(" + testFile.getLocation()
-					+ ")");
+			fail("fEditor.getTextViewer() returns null for file " + testFile.getFullPath() + "("
+					+ testFile.getLocation() + ")");
 		}
 		viewer.setSelectedRange(offset, length);
 		IServiceLocator serviceLocator = PlatformUI.getWorkbench();
-		IHandlerService handlerService = (IHandlerService) serviceLocator
-				.getService(IHandlerService.class);
+		IHandlerService handlerService = (IHandlerService) serviceLocator.getService(IHandlerService.class);
 
 		if (commandId == null) {
 			fail("command_id configuration entry is not added.");
@@ -236,15 +224,12 @@ public class CommandsTests {
 		return config.get("command_id");
 	}
 
-	protected ISourceRange createFile(String data, String fileName,
-			InputStream[] other) throws Exception {
-		testFile = project.getFile(new Path(fileName).removeFileExtension()
-				.addFileExtension("php").lastSegment());
+	protected ISourceRange createFile(String data, String fileName, InputStream[] other) throws Exception {
+		testFile = project.getFile(new Path(fileName).removeFileExtension().addFileExtension("php").lastSegment());
 
 		int left = data.indexOf(SELECTION_CHAR);
 		if (left == -1) {
-			throw new IllegalArgumentException(
-					"Selection characters are not set");
+			throw new IllegalArgumentException("Selection characters are not set");
 		}
 		// replace the left character
 		data = data.substring(0, left) + data.substring(left + 1);
@@ -258,24 +243,21 @@ public class CommandsTests {
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
 		otherFiles = new IFile[other.length];
 		for (int i = 0; i < other.length; i++) {
-			otherFiles[i] = project.getFile(new Path(i + fileName)
-					.addFileExtension("php").lastSegment());
+			otherFiles[i] = project.getFile(new Path(i + fileName).addFileExtension("php").lastSegment());
 			otherFiles[i].create(other[i], true, null);
 		}
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 		PHPCoreTests.waitForIndexer();
-		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow();
+		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage page = workbenchWindow.getActivePage();
 		IEditorInput input = new FileEditorInput(testFile);
 		/*
 		 * This should take care of testing init, createPartControl,
 		 * beginBackgroundOperation, endBackgroundOperation methods
 		 */
-		IEditorPart part = page.openEditor(input, "org.eclipse.php.editor",
-				true);
+		IEditorPart part = page.openEditor(input, "org.eclipse.php.editor", true);
 		if (part instanceof PHPStructuredEditor) {
 			fEditor = (PHPStructuredEditor) part;
 		} else {

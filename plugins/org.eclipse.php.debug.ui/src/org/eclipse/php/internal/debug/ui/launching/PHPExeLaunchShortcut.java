@@ -70,8 +70,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	 */
 	public void launch(ISelection selection, String mode) {
 		if (selection instanceof IStructuredSelection) {
-			searchAndLaunch(((IStructuredSelection) selection).toArray(), mode,
-					getPHPExeLaunchConfigType());
+			searchAndLaunch(((IStructuredSelection) selection).toArray(), mode, getPHPExeLaunchConfigType());
 		}
 
 	}
@@ -103,42 +102,35 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 						ITextEditor textEditor = (ITextEditor) editor;
 						final TextFileDocumentProvider documentProvider = (TextFileDocumentProvider) textEditor
 								.getDocumentProvider();
-						final IDocument document = documentProvider
-								.getDocument(input);
-						documentProvider.saveDocument(null, input, document,
-								true);
+						final IDocument document = documentProvider.getDocument(input);
+						documentProvider.saveDocument(null, input, document, true);
 						// set document dirty
 						document.replace(0, 0, ""); //$NON-NLS-1$
 					}
-					path = ((NonExistingPHPFileEditorInput) input)
-							.getPath(input);// Untitled
+					path = ((NonExistingPHPFileEditorInput) input).getPath(input);// Untitled
 					// dummy
 					// path
 				}
 				if (path != null) {
 					File systemFile = new File(path.toOSString());
 					if (systemFile.exists()) {
-						searchAndLaunch(new Object[] { systemFile }, mode,
-								getPHPExeLaunchConfigType());
+						searchAndLaunch(new Object[] { systemFile }, mode, getPHPExeLaunchConfigType());
 					}
 				}
 			} catch (Exception e) {
 				Logger.logException(e);
 			}
 		} else {
-			searchAndLaunch(new Object[] { file }, mode,
-					getPHPExeLaunchConfigType());
+			searchAndLaunch(new Object[] { file }, mode, getPHPExeLaunchConfigType());
 		}
 	}
 
 	protected ILaunchConfigurationType getPHPExeLaunchConfigType() {
 		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
-		return lm
-				.getLaunchConfigurationType(IPHPDebugConstants.PHPEXELaunchType);
+		return lm.getLaunchConfigurationType(IPHPDebugConstants.PHPEXELaunchType);
 	}
 
-	public static void searchAndLaunch(Object[] search, String mode,
-			ILaunchConfigurationType configType) {
+	public static void searchAndLaunch(Object[] search, String mode, ILaunchConfigurationType configType) {
 		int entries = search == null ? 0 : search.length;
 		for (int i = 0; i < entries; i++) {
 			try {
@@ -166,8 +158,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 					res = file;
 					project = file.getProject();
 					IContentType contentType = Platform.getContentTypeManager()
-							.getContentType(
-									ContentTypeIdForPHP.ContentTypeID_PHP);
+							.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 					if (contentType.isAssociatedWith(file.getName())) {
 						if (new File(file.getFullPath().toOSString()).exists()) {
 							phpPathString = file.getFullPath().toOSString();
@@ -190,49 +181,40 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 
 				if (phpPathString == null) {
 					// Could not find target to launch
-					throw new CoreException(new Status(IStatus.ERROR,
-							PHPDebugUIPlugin.ID, IStatus.OK,
+					throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK,
 							PHPDebugUIMessages.launch_failure_no_target, null));
 				}
 
 				PHPexeItem defaultEXE = getDefaultPHPExe(project);
-				String phpExeName = (defaultEXE != null) ? defaultEXE
-						.getExecutable().getAbsolutePath().toString() : null;
+				String phpExeName = (defaultEXE != null) ? defaultEXE.getExecutable().getAbsolutePath().toString()
+						: null;
 
 				if (phpExeName == null) {
-					MessageDialog.openError(
-							PHPDebugUIPlugin.getActiveWorkbenchShell(),
-							PHPDebugUIMessages.launch_noexe_msg_title,
-							PHPDebugUIMessages.launch_noexe_msg_text);
-					PreferencesUtil
-							.createPreferenceDialogOn(
-									PHPDebugUIPlugin.getActiveWorkbenchShell(),
-									"org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage", //$NON-NLS-1$
-									null, null).open();
+					MessageDialog.openError(PHPDebugUIPlugin.getActiveWorkbenchShell(),
+							PHPDebugUIMessages.launch_noexe_msg_title, PHPDebugUIMessages.launch_noexe_msg_text);
+					PreferencesUtil.createPreferenceDialogOn(PHPDebugUIPlugin.getActiveWorkbenchShell(),
+							"org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage", //$NON-NLS-1$
+							null, null).open();
 					return;
 				}
 
 				// Launch the app
-				ILaunchConfiguration config = findLaunchConfiguration(project,
-						phpPathString, phpFileLocation, defaultEXE, mode,
-						configType, res);
+				ILaunchConfiguration config = findLaunchConfiguration(project, phpPathString, phpFileLocation,
+						defaultEXE, mode, configType, res);
 				if (config != null) {
 					DebugUITools.launch(config, mode);
 				} else {
 					// Could not find launch configuration
-					throw new CoreException(new Status(IStatus.ERROR,
-							PHPDebugUIPlugin.ID, IStatus.OK,
+					throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK,
 							PHPDebugUIMessages.launch_failure_no_config, null));
 				}
 			} catch (CoreException ce) {
 				final IStatus stat = ce.getStatus();
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						ErrorDialog.openError(
-								PHPDebugUIPlugin.getActiveWorkbenchShell(),
+						ErrorDialog.openError(PHPDebugUIPlugin.getActiveWorkbenchShell(),
 								PHPDebugUIMessages.launch_failure_msg_title,
-								PHPDebugUIMessages.launch_failure_exec_msg_text,
-								stat);
+								PHPDebugUIMessages.launch_failure_exec_msg_text, stat);
 					}
 				});
 			}
@@ -254,11 +236,9 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	// This scope will be used to search for preferences values.
 	private static IScopeContext[] createPreferenceScopes(IProject project) {
 		if (project != null) {
-			return new IScopeContext[] { new ProjectScope(project),
-					InstanceScope.INSTANCE, DefaultScope.INSTANCE };
+			return new IScopeContext[] { new ProjectScope(project), InstanceScope.INSTANCE, DefaultScope.INSTANCE };
 		}
-		return new IScopeContext[] { InstanceScope.INSTANCE,
-				DefaultScope.INSTANCE };
+		return new IScopeContext[] { InstanceScope.INSTANCE, DefaultScope.INSTANCE };
 	}
 
 	/**
@@ -269,37 +249,32 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	 * 
 	 * @return a re-useable config or <code>null</code> if none
 	 */
-	protected static ILaunchConfiguration findLaunchConfiguration(
-			IProject phpProject, String phpPathString,
-			String phpFileFullLocation, PHPexeItem defaultEXE, String mode,
-			ILaunchConfigurationType configType, IResource res) {
+	protected static ILaunchConfiguration findLaunchConfiguration(IProject phpProject, String phpPathString,
+			String phpFileFullLocation, PHPexeItem defaultEXE, String mode, ILaunchConfigurationType configType,
+			IResource res) {
 		ILaunchConfiguration config = null;
 
 		try {
-			ILaunchConfiguration[] configs = DebugPlugin.getDefault()
-					.getLaunchManager().getLaunchConfigurations(configType);
+			ILaunchConfiguration[] configs = DebugPlugin.getDefault().getLaunchManager()
+					.getLaunchConfigurations(configType);
 
 			int numConfigs = configs == null ? 0 : configs.length;
 			for (int i = 0; i < numConfigs; i++) {
-				String fileName = configs[i].getAttribute(
-						IPHPDebugConstants.ATTR_FILE, (String) null);
-				String exeName = configs[i].getAttribute(
-						IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION,
-						(String) null);
-				String iniPath = configs[i].getAttribute(
-						IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
-				PHPexeItem item = PHPexes.getInstance().getItemForFile(exeName,
-						iniPath);
+				String fileName = configs[i].getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
+				String exeName = configs[i].getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
+				String iniPath = configs[i].getAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
+				PHPexeItem item = PHPexes.getInstance().getItemForFile(exeName, iniPath);
 
-				if (phpPathString.equals(fileName)/* && defaultEXE.equals(item) */) {
+				if (phpPathString
+						.equals(fileName)/* && defaultEXE.equals(item) */) {
 					config = configs[i];
 					break;
 				}
 			}
 
 			if (config == null) {
-				config = createConfiguration(phpProject, phpPathString,
-						phpFileFullLocation, defaultEXE, configType, res);
+				config = createConfiguration(phpProject, phpPathString, phpFileFullLocation, defaultEXE, configType,
+						res);
 			}
 		} catch (CoreException ce) {
 			ce.printStackTrace();
@@ -312,33 +287,25 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	 * 
 	 * @param res
 	 */
-	protected static ILaunchConfiguration createConfiguration(
-			IProject phpProject, String phpPathString,
-			String phpFileFullLocation, PHPexeItem defaultEXE,
-			ILaunchConfigurationType configType, IResource res)
-			throws CoreException {
+	protected static ILaunchConfiguration createConfiguration(IProject phpProject, String phpPathString,
+			String phpFileFullLocation, PHPexeItem defaultEXE, ILaunchConfigurationType configType, IResource res)
+					throws CoreException {
 		ILaunchConfiguration config = null;
-		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null,
-				getNewConfigurationName(phpPathString));
+		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getNewConfigurationName(phpPathString));
 
 		// Set the delegate class according to selected executable.
-		wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-				defaultEXE.getDebuggerID());
+		wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, defaultEXE.getDebuggerID());
 		IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
 				.getDebuggerConfiguration(defaultEXE.getDebuggerID());
-		wc.setAttribute(
-				PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
+		wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
 				debuggerConfiguration.getScriptLaunchDelegateClass());
 		wc.setAttribute(IPHPDebugConstants.ATTR_FILE, phpPathString);
-		wc.setAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH,
-				phpFileFullLocation);
-		wc.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, defaultEXE
-				.getExecutable().getAbsolutePath().toString());
-		String iniPath = defaultEXE.getINILocation() != null ? defaultEXE
-				.getINILocation().toString() : null;
+		wc.setAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, phpFileFullLocation);
+		wc.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION,
+				defaultEXE.getExecutable().getAbsolutePath().toString());
+		String iniPath = defaultEXE.getINILocation() != null ? defaultEXE.getINILocation().toString() : null;
 		wc.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, iniPath);
-		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO,
-				PHPDebugPlugin.getDebugInfoOption());
+		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
 		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 				PHPProjectPreferences.getStopAtFirstLine(phpProject));
 		if (res != null) {
@@ -364,8 +331,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 		try {
 			IPath path = Path.fromOSString(fileName);
 
-			NonExistingPHPFileEditorInput editorInput = NonExistingPHPFileEditorInput
-					.findEditorInput(path);
+			NonExistingPHPFileEditorInput editorInput = NonExistingPHPFileEditorInput.findEditorInput(path);
 			if (editorInput != null) {
 				path = new Path(editorInput.getName());
 			}
@@ -380,12 +346,10 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 				configurationName = lastSegment;
 			}
 		} catch (Exception e) {
-			Logger.log(Logger.WARNING_DEBUG,
-					"Could not generate configuration name for " + fileName //$NON-NLS-1$
-							+ ".\nThe default name will be used.", e); //$NON-NLS-1$
+			Logger.log(Logger.WARNING_DEBUG, "Could not generate configuration name for " + fileName //$NON-NLS-1$
+					+ ".\nThe default name will be used.", e); //$NON-NLS-1$
 		}
-		return DebugPlugin.getDefault().getLaunchManager()
-				.generateUniqueLaunchConfigurationNameFrom(configurationName);
+		return DebugPlugin.getDefault().getLaunchManager().generateUniqueLaunchConfigurationNameFrom(configurationName);
 	}
 
 	public ILaunchConfiguration[] getLaunchConfigurations(ISelection selection) {
@@ -436,8 +400,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	 * @return containing resource or <code>null</code>
 	 */
 	private IResource getLaunchableResource(IAdaptable adaptable) {
-		IModelElement je = (IModelElement) adaptable
-				.getAdapter(IModelElement.class);
+		IModelElement je = (IModelElement) adaptable.getAdapter(IModelElement.class);
 		if (je != null) {
 			return je.getResource();
 		}

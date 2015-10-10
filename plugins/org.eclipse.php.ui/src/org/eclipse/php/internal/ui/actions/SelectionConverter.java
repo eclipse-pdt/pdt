@@ -55,11 +55,9 @@ public class SelectionConverter {
 	 * @return the selection
 	 * @throws ModelException
 	 */
-	public static IStructuredSelection getStructuredSelection(
-			IWorkbenchPart part) throws ModelException {
+	public static IStructuredSelection getStructuredSelection(IWorkbenchPart part) throws ModelException {
 		if (part instanceof PHPStructuredEditor)
-			return new StructuredSelection(
-					codeResolve((PHPStructuredEditor) part));
+			return new StructuredSelection(codeResolve((PHPStructuredEditor) part));
 		ISelectionProvider provider = part.getSite().getSelectionProvider();
 		if (provider != null) {
 			ISelection selection = provider.getSelection();
@@ -100,15 +98,13 @@ public class SelectionConverter {
 
 	}
 
-	public static IModelElement[] codeResolveOrInputForked(
-			PHPStructuredEditor editor) throws InvocationTargetException,
-			InterruptedException {
+	public static IModelElement[] codeResolveOrInputForked(PHPStructuredEditor editor)
+			throws InvocationTargetException, InterruptedException {
 		ISourceModule input = getInput(editor);
 		if (input == null)
 			return EMPTY_RESULT;
 
-		ITextSelection selection = (ITextSelection) editor
-				.getSelectionProvider().getSelection();
+		ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
 		IModelElement[] result = performForkedCodeResolve(input, selection);
 		if (result.length == 0) {
 			result = new IModelElement[] { input };
@@ -116,8 +112,7 @@ public class SelectionConverter {
 		return result;
 	}
 
-	public static IModelElement[] codeResolve(PHPStructuredEditor editor)
-			throws ModelException {
+	public static IModelElement[] codeResolve(PHPStructuredEditor editor) throws ModelException {
 		return codeResolve(editor, true);
 	}
 
@@ -133,12 +128,10 @@ public class SelectionConverter {
 	 * @throws ModelException
 	 * @since 3.2
 	 */
-	public static IModelElement[] codeResolve(PHPStructuredEditor editor,
-			boolean primaryOnly) throws ModelException {
+	public static IModelElement[] codeResolve(PHPStructuredEditor editor, boolean primaryOnly) throws ModelException {
 		ISourceModule input = getInput(editor, primaryOnly);
 		if (input != null)
-			return codeResolve(input, (ITextSelection) editor
-					.getSelectionProvider().getSelection());
+			return codeResolve(input, (ITextSelection) editor.getSelectionProvider().getSelection());
 		return EMPTY_RESULT;
 	}
 
@@ -155,18 +148,15 @@ public class SelectionConverter {
 	 * @throws InvocationTargetException
 	 * @since 3.2
 	 */
-	public static IModelElement[] codeResolveForked(PHPStructuredEditor editor,
-			boolean primaryOnly) throws InvocationTargetException,
-			InterruptedException {
+	public static IModelElement[] codeResolveForked(PHPStructuredEditor editor, boolean primaryOnly)
+			throws InvocationTargetException, InterruptedException {
 		ISourceModule input = getInput(editor, primaryOnly);
 		if (input != null)
-			return performForkedCodeResolve(input, (ITextSelection) editor
-					.getSelectionProvider().getSelection());
+			return performForkedCodeResolve(input, (ITextSelection) editor.getSelectionProvider().getSelection());
 		return EMPTY_RESULT;
 	}
 
-	public static IModelElement getElementAtOffset(PHPStructuredEditor editor)
-			throws ModelException {
+	public static IModelElement getElementAtOffset(PHPStructuredEditor editor) throws ModelException {
 		return getElementAtOffset(editor, true);
 	}
 
@@ -182,22 +172,19 @@ public class SelectionConverter {
 	 * @throws ModelException
 	 * @since 3.2
 	 */
-	private static IModelElement getElementAtOffset(PHPStructuredEditor editor,
-			boolean primaryOnly) throws ModelException {
+	private static IModelElement getElementAtOffset(PHPStructuredEditor editor, boolean primaryOnly)
+			throws ModelException {
 		ISourceModule input = getInput(editor, primaryOnly);
 		if (input != null)
-			return getElementAtOffset(input, (ITextSelection) editor
-					.getSelectionProvider().getSelection());
+			return getElementAtOffset(input, (ITextSelection) editor.getSelectionProvider().getSelection());
 		return null;
 	}
 
-	public static IType getTypeAtOffset(PHPStructuredEditor editor)
-			throws ModelException {
+	public static IType getTypeAtOffset(PHPStructuredEditor editor) throws ModelException {
 		IModelElement element = SelectionConverter.getElementAtOffset(editor);
 		IType type = (IType) element.getAncestor(IModelElement.TYPE);
 		if (type == null) {
-			ISourceModule unit = SelectionConverter
-					.getInputAsCompilationUnit(editor);
+			ISourceModule unit = SelectionConverter.getInputAsCompilationUnit(editor);
 			if (unit != null) {
 				final IType[] allTypes = unit.getAllTypes();
 				if (allTypes != null && allTypes.length > 0) {
@@ -224,8 +211,7 @@ public class SelectionConverter {
 	 * @return the type root which is the editor input
 	 * @since 3.2
 	 */
-	private static ISourceModule getInput(PHPStructuredEditor editor,
-			boolean primaryOnly) {
+	private static ISourceModule getInput(PHPStructuredEditor editor, boolean primaryOnly) {
 		if (editor == null)
 			return null;
 		return EditorUtility.getEditorInputModelElement(editor, primaryOnly);
@@ -235,19 +221,16 @@ public class SelectionConverter {
 		return SelectionConverter.getInput(editor);
 	}
 
-	public static ISourceModule getInputAsCompilationUnit(
-			PHPStructuredEditor editor) {
+	public static ISourceModule getInputAsCompilationUnit(PHPStructuredEditor editor) {
 		return SelectionConverter.getInput(editor);
 	}
 
-	private static IModelElement[] performForkedCodeResolve(
-			final ISourceModule input, final ITextSelection selection)
+	private static IModelElement[] performForkedCodeResolve(final ISourceModule input, final ITextSelection selection)
 			throws InvocationTargetException, InterruptedException {
 		final class CodeResolveRunnable implements IRunnableWithProgress {
 			IModelElement[] result;
 
-			public void run(IProgressMonitor monitor)
-					throws InvocationTargetException {
+			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
 					result = codeResolve(input, selection);
 				} catch (ModelException e) {
@@ -256,19 +239,17 @@ public class SelectionConverter {
 			}
 		}
 		CodeResolveRunnable runnable = new CodeResolveRunnable();
-		PlatformUI.getWorkbench().getProgressService()
-				.busyCursorWhile(runnable);
+		PlatformUI.getWorkbench().getProgressService().busyCursorWhile(runnable);
 		return runnable.result;
 	}
 
-	public static IModelElement[] codeResolve(IModelElement input,
-			ITextSelection selection) throws ModelException {
+	public static IModelElement[] codeResolve(IModelElement input, ITextSelection selection) throws ModelException {
 		if (input instanceof ICodeAssist) {
 			if (input instanceof ISourceModule) {
 				ScriptModelUtil.reconcile((ISourceModule) input);
 			}
-			IModelElement[] elements = ((ICodeAssist) input).codeSelect(
-					selection.getOffset() + selection.getLength(), 0);
+			IModelElement[] elements = ((ICodeAssist) input).codeSelect(selection.getOffset() + selection.getLength(),
+					0);
 			if (elements.length > 0) {
 				return elements;
 			}
@@ -276,8 +257,8 @@ public class SelectionConverter {
 		return EMPTY_RESULT;
 	}
 
-	public static IModelElement getElementAtOffset(ISourceModule input,
-			ITextSelection selection) throws ModelException {
+	public static IModelElement getElementAtOffset(ISourceModule input, ITextSelection selection)
+			throws ModelException {
 		if (input != null) {
 			ScriptModelUtil.reconcile(input);
 			IModelElement ref = input.getElementAt(selection.getOffset());
@@ -302,8 +283,7 @@ public class SelectionConverter {
 	// return new IModelElement[] {enclosing};
 	// }
 
-	public static IModelElement resolveEnclosingElement(
-			PHPStructuredEditor editor, ITextSelection selection)
+	public static IModelElement resolveEnclosingElement(PHPStructuredEditor editor, ITextSelection selection)
 			throws ModelException {
 		ISourceModule input = getInput(editor);
 		if (input != null)
@@ -311,8 +291,8 @@ public class SelectionConverter {
 		return null;
 	}
 
-	public static IModelElement resolveEnclosingElement(IModelElement input,
-			ITextSelection selection) throws ModelException {
+	public static IModelElement resolveEnclosingElement(IModelElement input, ITextSelection selection)
+			throws ModelException {
 		IModelElement atOffset = null;
 		if (input instanceof ISourceModule) {
 			ISourceModule cunit = (ISourceModule) input;
@@ -327,8 +307,7 @@ public class SelectionConverter {
 			int selectionEnd = selection.getOffset() + selection.getLength();
 			IModelElement result = atOffset;
 			if (atOffset instanceof ISourceReference) {
-				ISourceRange range = ((ISourceReference) atOffset)
-						.getSourceRange();
+				ISourceRange range = ((ISourceReference) atOffset).getSourceRange();
 				while (range.getOffset() + range.getLength() < selectionEnd) {
 					result = result.getParent();
 					if (!(result instanceof ISourceReference)) {
@@ -357,20 +336,17 @@ public class SelectionConverter {
 	 * @return returns the selected element or <code>null</code> if the dialog
 	 *         has been cancelled
 	 */
-	public static IModelElement selectJavaElement(IModelElement[] elements,
-			Shell shell, String title, String message) {
+	public static IModelElement selectJavaElement(IModelElement[] elements, Shell shell, String title, String message) {
 		int nResults = elements.length;
 		if (nResults == 0)
 			return null;
 		if (nResults == 1)
 			return elements[0];
 
-		int flags = ModelElementLabelProvider.SHOW_DEFAULT
-				| ModelElementLabelProvider.SHOW_QUALIFIED
+		int flags = ModelElementLabelProvider.SHOW_DEFAULT | ModelElementLabelProvider.SHOW_QUALIFIED
 				| ModelElementLabelProvider.SHOW_ROOT;
 
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
-				shell, new ModelElementLabelProvider(flags));
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(shell, new ModelElementLabelProvider(flags));
 		dialog.setTitle(title);
 		dialog.setMessage(message);
 		dialog.setElements(elements);

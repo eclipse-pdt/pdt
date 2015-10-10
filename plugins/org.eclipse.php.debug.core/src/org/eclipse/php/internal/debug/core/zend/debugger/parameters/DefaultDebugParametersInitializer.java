@@ -32,9 +32,8 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
  * Default debug parameters initializer.
  */
 @SuppressWarnings("restriction")
-public class DefaultDebugParametersInitializer extends
-		AbstractDebugParametersInitializer implements
-		IWebDebugParametersInitializer {
+public class DefaultDebugParametersInitializer extends AbstractDebugParametersInitializer
+		implements IWebDebugParametersInitializer {
 
 	/*
 	 * (non-Javadoc)
@@ -45,36 +44,29 @@ public class DefaultDebugParametersInitializer extends
 	 */
 	public Hashtable<String, String> getDebugParameters(ILaunch launch) {
 		Hashtable<String, String> parameters = new Hashtable<String, String>();
-		ILaunchConfiguration launchConfiguration = launch
-				.getLaunchConfiguration();
+		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		parameters.put(START_DEBUG, "1"); //$NON-NLS-1$
 
 		String port = launch.getAttribute(IDebugParametersKeys.PORT);
 		if (port != null) {
 			parameters.put(DEBUG_PORT, port);
 		} else {
-			PHPDebugPlugin
-					.logErrorMessage("A port was not defined for the DefaultDebugParametersInitializer."); //$NON-NLS-1$
+			PHPDebugPlugin.logErrorMessage("A port was not defined for the DefaultDebugParametersInitializer."); //$NON-NLS-1$
 		}
 
-		if (getBooleanValue(launch
-				.getAttribute(IDebugParametersKeys.PASSIVE_DEBUG))) {
+		if (getBooleanValue(launch.getAttribute(IDebugParametersKeys.PASSIVE_DEBUG))) {
 			parameters.put(DEBUG_PASSIVE, "1"); //$NON-NLS-1$
 		}
 
 		parameters.put(SEND_SESS_END, "1"); //$NON-NLS-1$
 
-		if (getBooleanValue(launch
-				.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER))) {
+		if (getBooleanValue(launch.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER))) {
 			String debugHosts = PHPDebugPlugin.getDebugHosts();
 			// Set up custom server debug hosts if any
 			if (launchConfiguration != null) {
 				try {
-					Server server = ServersManager
-							.getServer(launchConfiguration.getAttribute(
-									Server.NAME, "")); //$NON-NLS-1$
-					String customHosts = ZendDebuggerSettingsUtil
-							.getDebugHosts(server.getUniqueId());
+					Server server = ServersManager.getServer(launchConfiguration.getAttribute(Server.NAME, "")); //$NON-NLS-1$
+					String customHosts = ZendDebuggerSettingsUtil.getDebugHosts(server.getUniqueId());
 					if (!customHosts.isEmpty())
 						debugHosts = customHosts;
 				} catch (CoreException ce) {
@@ -83,13 +75,11 @@ public class DefaultDebugParametersInitializer extends
 			}
 			parameters.put(DEBUG_HOST, debugHosts);
 
-			parameters.put(DEBUG_NO_CACHE,
-					Long.toString(System.currentTimeMillis()));
+			parameters.put(DEBUG_NO_CACHE, Long.toString(System.currentTimeMillis()));
 		}
 
 		if (ILaunchManager.DEBUG_MODE.equals(launch.getLaunchMode())
-				&& getBooleanValue(launch
-						.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT))) {
+				&& getBooleanValue(launch.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT))) {
 			parameters.put(DEBUG_STOP, "1"); //$NON-NLS-1$
 		}
 		String url = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL);
@@ -98,27 +88,16 @@ public class DefaultDebugParametersInitializer extends
 		}
 		if (launchConfiguration != null) {
 			try {
-				String sessionSetting = launchConfiguration.getAttribute(
-						IPHPDebugConstants.DEBUGGING_PAGES,
+				String sessionSetting = launchConfiguration.getAttribute(IPHPDebugConstants.DEBUGGING_PAGES,
 						IPHPDebugConstants.DEBUGGING_ALL_PAGES);
-				if (IPHPDebugConstants.DEBUGGING_ALL_PAGES
-						.equals(sessionSetting)) {
+				if (IPHPDebugConstants.DEBUGGING_ALL_PAGES.equals(sessionSetting)) {
 					parameters.put(DEBUG_ALL_PAGES, "1"); //$NON-NLS-1$
-				} else if (IPHPDebugConstants.DEBUGGING_FIRST_PAGE
-						.equals(sessionSetting)) {
+				} else if (IPHPDebugConstants.DEBUGGING_FIRST_PAGE.equals(sessionSetting)) {
 					parameters.put(DEBUG_FIRST_PAGE, "1"); //$NON-NLS-1$
-				} else if (IPHPDebugConstants.DEBUGGING_START_FROM
-						.equals(sessionSetting)) {
-					parameters
-							.put(DEBUG_START_URL,
-									launchConfiguration
-											.getAttribute(
-													IPHPDebugConstants.DEBUGGING_START_FROM_URL,
-													"")); //$NON-NLS-1$
-					if (launchConfiguration
-							.getAttribute(
-									IPHPDebugConstants.DEBUGGING_SHOULD_CONTINUE,
-									false)) {
+				} else if (IPHPDebugConstants.DEBUGGING_START_FROM.equals(sessionSetting)) {
+					parameters.put(DEBUG_START_URL,
+							launchConfiguration.getAttribute(IPHPDebugConstants.DEBUGGING_START_FROM_URL, "")); //$NON-NLS-1$
+					if (launchConfiguration.getAttribute(IPHPDebugConstants.DEBUGGING_SHOULD_CONTINUE, false)) {
 						parameters.put(DEBUG_CONTINUE, "1"); //$NON-NLS-1$
 					}
 				}
@@ -137,8 +116,8 @@ public class DefaultDebugParametersInitializer extends
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer
+	 * @see org.eclipse.php.debug.core.debugger.parameters.
+	 * IDebugParametersInitializer
 	 * #getRequestURL(org.eclipse.debug.core.ILaunch)
 	 */
 	public URL getRequestURL(ILaunch launch) {

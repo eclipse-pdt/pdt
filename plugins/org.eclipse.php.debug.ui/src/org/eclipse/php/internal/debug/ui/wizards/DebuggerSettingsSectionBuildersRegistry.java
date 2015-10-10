@@ -33,8 +33,7 @@ public class DebuggerSettingsSectionBuildersRegistry {
 	/**
 	 * The name of extension point to read builders from
 	 */
-	public static final String EXTENSION_POINT_ID = PHPDebugUIPlugin
-			.getDefault().getBundle().getSymbolicName()
+	public static final String EXTENSION_POINT_ID = PHPDebugUIPlugin.getDefault().getBundle().getSymbolicName()
 			+ ".phpDebuggerSettingsSectionBuilders"; //$NON-NLS-1$
 
 	/**
@@ -49,8 +48,7 @@ public class DebuggerSettingsSectionBuildersRegistry {
 	 *            the settings provider id
 	 * @return a section builder or <code>null</code>
 	 */
-	public static synchronized final IDebuggerSettingsSectionBuilder getBuilder(
-			String providerId) {
+	public static synchronized final IDebuggerSettingsSectionBuilder getBuilder(String providerId) {
 		Map<String, IDebuggerSettingsSectionBuilder> builders = getBuilders();
 		return builders.get(providerId);
 	}
@@ -77,36 +75,31 @@ public class DebuggerSettingsSectionBuildersRegistry {
 	 */
 	protected Map<String, IDebuggerSettingsSectionBuilder> readFromExtensionPoint() {
 		final Map<String, IDebuggerSettingsSectionBuilder> factories = new HashMap<String, IDebuggerSettingsSectionBuilder>();
-		IConfigurationElement[] configurationElements = Platform
-				.getExtensionRegistry().getConfigurationElementsFor(
-						EXTENSION_POINT_ID);
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(EXTENSION_POINT_ID);
 		for (final IConfigurationElement element : configurationElements) {
 			IDebuggerSettingsSectionBuilder builder;
 			try {
-				builder = (IDebuggerSettingsSectionBuilder) createInstance(
-						element, PROP_BUILDER,
+				builder = (IDebuggerSettingsSectionBuilder) createInstance(element, PROP_BUILDER,
 						IDebuggerSettingsSectionBuilder.class);
 			} catch (CoreException e) {
 				Logger.logException(
 						"Could not instantiate debugger settings section builder from extension point data.", e); //$NON-NLS-1$
 				continue;
 			}
-			factories.put(
-					element.getAttribute(PROP_DEBUGGER_SETTINGS_PROVIDER_ID),
-					builder);
+			factories.put(element.getAttribute(PROP_DEBUGGER_SETTINGS_PROVIDER_ID), builder);
 		}
 		return factories;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected Object createInstance(IConfigurationElement element,
-			String propertyName, Class instanceClass) throws CoreException {
+	protected Object createInstance(IConfigurationElement element, String propertyName, Class instanceClass)
+			throws CoreException {
 		final Object object = element.createExecutableExtension(propertyName);
 		if (!instanceClass.isAssignableFrom(object.getClass())) {
-			String message = String
-					.format("Invalid typecast for %s", element.getAttribute(propertyName)); //$NON-NLS-1$
-			IStatus status = new Status(IStatus.ERROR, PHPDebugUIPlugin
-					.getDefault().getBundle().getSymbolicName(), message);
+			String message = String.format("Invalid typecast for %s", element.getAttribute(propertyName)); //$NON-NLS-1$
+			IStatus status = new Status(IStatus.ERROR, PHPDebugUIPlugin.getDefault().getBundle().getSymbolicName(),
+					message);
 			throw new CoreException(status);
 		}
 		return object;

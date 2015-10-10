@@ -21,8 +21,7 @@ import org.eclipse.osgi.util.NLS;
  * 
  * @since 3.2
  */
-public final class MultiStateCompilationUnitChange extends
-		MultiStateTextFileChange {
+public final class MultiStateCompilationUnitChange extends MultiStateTextFileChange {
 
 	/** The compilation unit */
 	private final ISourceModule fUnit;
@@ -35,8 +34,7 @@ public final class MultiStateCompilationUnitChange extends
 	 * @param unit
 	 *            the compilation unit
 	 */
-	public MultiStateCompilationUnitChange(final String name,
-			final ISourceModule unit) {
+	public MultiStateCompilationUnitChange(final String name, final ISourceModule unit) {
 		super(name, (IFile) unit.getResource());
 
 		fUnit = unit;
@@ -68,11 +66,10 @@ public final class MultiStateCompilationUnitChange extends
 	 * {@inheritDoc}
 	 */
 	public String getName() {
-		return NLS.bind(
-				"{0} - {1}", new String[] { //$NON-NLS-1$
+		return NLS.bind("{0} - {1}", //$NON-NLS-1$
+				new String[] {
 						BasicElementLabels.getFileName(fUnit),
-						BasicElementLabels.getPathLabel(fUnit.getParent()
-								.getPath(), false) });
+						BasicElementLabels.getPathLabel(fUnit.getParent().getPath(), false) });
 	}
 
 }

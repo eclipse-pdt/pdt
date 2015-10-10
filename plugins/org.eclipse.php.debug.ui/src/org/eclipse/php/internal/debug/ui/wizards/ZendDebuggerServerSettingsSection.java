@@ -46,8 +46,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Bartlomiej Laczkowski
  */
 @SuppressWarnings("restriction")
-public class ZendDebuggerServerSettingsSection implements
-		IDebuggerSettingsSection {
+public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSection {
 
 	protected IDebuggerSettingsWorkingCopy settingsWorkingCopy;
 	protected CompositeFragment compositeFragment;
@@ -56,10 +55,8 @@ public class ZendDebuggerServerSettingsSection implements
 	/**
 	 * 
 	 */
-	public ZendDebuggerServerSettingsSection(
-			final CompositeFragment compositeFragment,
-			final Composite debuggerSettingsComposite,
-			final IDebuggerSettingsWorkingCopy settingsWorkingCopy) {
+	public ZendDebuggerServerSettingsSection(final CompositeFragment compositeFragment,
+			final Composite debuggerSettingsComposite, final IDebuggerSettingsWorkingCopy settingsWorkingCopy) {
 		this.settingsWorkingCopy = settingsWorkingCopy;
 		this.compositeFragment = compositeFragment;
 		this.settingsComposite = debuggerSettingsComposite;
@@ -69,9 +66,8 @@ public class ZendDebuggerServerSettingsSection implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#performOK
-	 * ()
+	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
+	 * performOK ()
 	 */
 	@Override
 	public boolean performOK() {
@@ -92,52 +88,37 @@ public class ZendDebuggerServerSettingsSection implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#validate
-	 * ()
+	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
+	 * validate ()
 	 */
 	public void validate() {
 		// Reset state
-		compositeFragment.setMessage(compositeFragment.getDescription(),
-				IMessageProvider.NONE);
+		compositeFragment.setMessage(compositeFragment.getDescription(), IMessageProvider.NONE);
 		// Check errors
-		String clientIp = (String) settingsWorkingCopy
-				.getAttribute(PROP_CLIENT_IP);
+		String clientIp = (String) settingsWorkingCopy.getAttribute(PROP_CLIENT_IP);
 		if (clientIp == null || clientIp.isEmpty()) {
-			compositeFragment
-					.setMessage(
-							Messages.ZendDebuggerServerSettingsSection_Client_IP_is_missing,
-							IMessageProvider.ERROR);
+			compositeFragment.setMessage(Messages.ZendDebuggerServerSettingsSection_Client_IP_is_missing,
+					IMessageProvider.ERROR);
 			return;
 		}
-		String clientPort = (String) settingsWorkingCopy
-				.getAttribute(PROP_CLIENT_PORT);
+		String clientPort = (String) settingsWorkingCopy.getAttribute(PROP_CLIENT_PORT);
 		if (clientPort == null || clientPort.isEmpty()) {
-			compositeFragment
-					.setMessage(
-							Messages.ZendDebuggerServerSettingsSection_Client_port_is_missing,
-							IMessageProvider.ERROR);
+			compositeFragment.setMessage(Messages.ZendDebuggerServerSettingsSection_Client_port_is_missing,
+					IMessageProvider.ERROR);
 			return;
 		}
-		String responseTimeout = (String) settingsWorkingCopy
-				.getAttribute(PROP_RESPONSE_TIMEOUT);
+		String responseTimeout = (String) settingsWorkingCopy.getAttribute(PROP_RESPONSE_TIMEOUT);
 		if (responseTimeout == null || responseTimeout.isEmpty()) {
-			compositeFragment
-					.setMessage(
-							Messages.ZendDebuggerServerSettingsSection_Response_timeout_is_missing,
-							IMessageProvider.ERROR);
+			compositeFragment.setMessage(Messages.ZendDebuggerServerSettingsSection_Response_timeout_is_missing,
+					IMessageProvider.ERROR);
 			return;
 		}
 		int port = Integer.valueOf(clientPort);
 		if (!PHPLaunchUtilities.isPortAvailable(port)
-				&& !PHPLaunchUtilities.isDebugDaemonActive(port,
-						DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
-			compositeFragment
-					.setMessage(
-							MessageFormat
-									.format(Messages.DebuggerCommonSettingsSection_Port_is_already_in_use,
-											clientPort),
-							IMessageProvider.WARNING);
+				&& !PHPLaunchUtilities.isDebugDaemonActive(port, DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
+			compositeFragment.setMessage(
+					MessageFormat.format(Messages.DebuggerCommonSettingsSection_Port_is_already_in_use, clientPort),
+					IMessageProvider.WARNING);
 			return;
 		}
 	}
@@ -145,9 +126,8 @@ public class ZendDebuggerServerSettingsSection implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#canTest
-	 * ()
+	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
+	 * canTest ()
 	 */
 	@Override
 	public boolean canTest() {
@@ -162,19 +142,15 @@ public class ZendDebuggerServerSettingsSection implements
 	 */
 	@Override
 	public void performTest() {
-		IDebugServerConnectionTest[] tests = DebugServerConnectionTestRegistry
-				.getTests(ZendDebuggerConfiguration.ID);
+		IDebugServerConnectionTest[] tests = DebugServerConnectionTestRegistry.getTests(ZendDebuggerConfiguration.ID);
 		Server server = (Server) compositeFragment.getData();
-		int port = ZendDebuggerSettingsUtil.getDebugPort(settingsWorkingCopy
-				.getOwnerId());
-		Set<Integer> allDebugPorts = PHPDebugUtil
-				.getDebugPorts(ZendDebuggerConfiguration.ID);
+		int port = ZendDebuggerSettingsUtil.getDebugPort(settingsWorkingCopy.getOwnerId());
+		Set<Integer> allDebugPorts = PHPDebugUtil.getDebugPorts(ZendDebuggerConfiguration.ID);
 		AbstractDebuggerCommunicationDaemon tmpDaemon = null;
 		if (!allDebugPorts.contains(port))
 			tmpDaemon = DebuggerCommunicationDaemon.createDaemon(port);
 		for (IDebugServerConnectionTest test : tests) {
-			test.testConnection(server, PlatformUI.getWorkbench().getDisplay()
-					.getActiveShell());
+			test.testConnection(server, PlatformUI.getWorkbench().getDisplay().getActiveShell());
 		}
 		if (tmpDaemon != null) {
 			tmpDaemon.stopListen();
@@ -190,12 +166,10 @@ public class ZendDebuggerServerSettingsSection implements
 		connectionGroup.setLayout(cgLayout);
 		GridData cgGridData = new GridData(GridData.FILL_HORIZONTAL);
 		connectionGroup.setLayoutData(cgGridData);
-		connectionGroup
-				.setText(Messages.ZendDebuggerServerSettingsSection_Connection_settings);
+		connectionGroup.setText(Messages.ZendDebuggerServerSettingsSection_Connection_settings);
 		// Client IP
 		Label clientIpLabel = new Label(connectionGroup, SWT.None);
-		clientIpLabel
-				.setText(Messages.ZendDebuggerServerSettingsSection_Client_IPs);
+		clientIpLabel.setText(Messages.ZendDebuggerServerSettingsSection_Client_IPs);
 		final Text clientIpText = new Text(connectionGroup, SWT.BORDER);
 		GridData citLayoutData = new GridData(GridData.FILL_HORIZONTAL);
 		clientIpText.setLayoutData(citLayoutData);
@@ -209,13 +183,11 @@ public class ZendDebuggerServerSettingsSection implements
 		});
 		// Client port
 		Label clientPortLabel = new Label(connectionGroup, SWT.None);
-		clientPortLabel
-				.setText(Messages.ZendDebuggerServerSettingsSection_Client_port);
+		clientPortLabel.setText(Messages.ZendDebuggerServerSettingsSection_Client_port);
 		final Text clientPortText = new Text(connectionGroup, SWT.BORDER);
 		GridData cptLayoutData = new GridData(GridData.FILL_HORIZONTAL);
 		clientPortText.setLayoutData(cptLayoutData);
-		clientPortText.setText(settingsWorkingCopy
-				.getAttribute(PROP_CLIENT_PORT));
+		clientPortText.setText(settingsWorkingCopy.getAttribute(PROP_CLIENT_PORT));
 		clientPortText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				String port = clientPortText.getText();
@@ -225,18 +197,15 @@ public class ZendDebuggerServerSettingsSection implements
 		});
 		// Response timeout
 		Label responseTimeoutLabel = new Label(connectionGroup, SWT.None);
-		responseTimeoutLabel
-				.setText(Messages.ZendDebuggerServerSettingsSection_Response_timeout);
+		responseTimeoutLabel.setText(Messages.ZendDebuggerServerSettingsSection_Response_timeout);
 		final Text responseTimeoutText = new Text(connectionGroup, SWT.BORDER);
 		GridData rttLayoutData = new GridData(GridData.FILL_HORIZONTAL);
 		responseTimeoutText.setLayoutData(rttLayoutData);
-		responseTimeoutText.setText(settingsWorkingCopy
-				.getAttribute(PROP_RESPONSE_TIMEOUT));
+		responseTimeoutText.setText(settingsWorkingCopy.getAttribute(PROP_RESPONSE_TIMEOUT));
 		responseTimeoutText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				String responseTimeout = responseTimeoutText.getText();
-				settingsWorkingCopy.setAttribute(PROP_RESPONSE_TIMEOUT,
-						responseTimeout);
+				settingsWorkingCopy.setAttribute(PROP_RESPONSE_TIMEOUT, responseTimeout);
 				validate();
 			}
 		});

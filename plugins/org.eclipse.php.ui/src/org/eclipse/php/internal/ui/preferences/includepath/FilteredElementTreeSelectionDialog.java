@@ -33,8 +33,7 @@ import org.eclipse.ui.progress.WorkbenchJob;
 /**
  * An element tree selection dialog with a filter box on top.
  */
-public class FilteredElementTreeSelectionDialog extends
-		ElementTreeSelectionDialog {
+public class FilteredElementTreeSelectionDialog extends ElementTreeSelectionDialog {
 
 	private static class MultiplePatternFilter extends PatternFilter {
 
@@ -59,8 +58,7 @@ public class FilteredElementTreeSelectionDialog extends
 					}
 				}
 				if (!res.isEmpty()) {
-					fMatchers = (StringMatcher[]) res
-							.toArray(new StringMatcher[res.size()]);
+					fMatchers = (StringMatcher[]) res.toArray(new StringMatcher[res.size()]);
 				}
 			}
 		}
@@ -87,8 +85,8 @@ public class FilteredElementTreeSelectionDialog extends
 		 * @since 3.5
 		 */
 		public boolean isElementVisible(Viewer viewer, Object element) {
-			boolean hasChildren = ((ITreeContentProvider) ((AbstractTreeViewer) viewer)
-					.getContentProvider()).hasChildren(element);
+			boolean hasChildren = ((ITreeContentProvider) ((AbstractTreeViewer) viewer).getContentProvider())
+					.hasChildren(element);
 			if (fIsDeepFiltering) {
 				if (!super.isElementVisible(viewer, element))
 					return false;
@@ -111,10 +109,8 @@ public class FilteredElementTreeSelectionDialog extends
 		private boolean narrowingDown;
 		private String previousFilterText;
 
-		public FilteredTreeWithFilter(Composite parent, int treeStyle,
-				String initialFilter, boolean deepFiltering) {
-			super(parent, treeStyle, new MultiplePatternFilter(deepFiltering),
-					true);
+		public FilteredTreeWithFilter(Composite parent, int treeStyle, String initialFilter, boolean deepFiltering) {
+			super(parent, treeStyle, new MultiplePatternFilter(deepFiltering), true);
 			if (initialFilter != null) {
 				setFilterText(initialFilter);
 				textChanged();
@@ -123,16 +119,14 @@ public class FilteredElementTreeSelectionDialog extends
 		}
 
 		protected void textChanged() {
-			narrowingDown = previousFilterText == null
-					|| getFilterString().startsWith(previousFilterText);
+			narrowingDown = previousFilterText == null || getFilterString().startsWith(previousFilterText);
 			previousFilterText = getFilterString();
 			super.textChanged();
 		}
 
 		// This is a copy of the super method, but without auto-expansion.
 		protected WorkbenchJob doCreateRefreshJob() {
-			return new WorkbenchJob(
-					IncludePathMessages.FilteredElementTreeSelectionDialog_1) {
+			return new WorkbenchJob(IncludePathMessages.FilteredElementTreeSelectionDialog_1) {
 
 				public IStatus runInUIThread(IProgressMonitor monitor) {
 					if (treeViewer.getControl().isDisposed()) {
@@ -144,16 +138,14 @@ public class FilteredElementTreeSelectionDialog extends
 						return Status.OK_STATUS;
 					}
 
-					boolean initial = initialText != null
-							&& initialText.equals(text);
+					boolean initial = initialText != null && initialText.equals(text);
 					if (initial) {
 						getPatternFilter().setPattern(null);
 					} else {
 						getPatternFilter().setPattern(text);
 					}
 
-					Control redrawFalseControl = treeComposite != null ? treeComposite
-							: treeViewer.getControl();
+					Control redrawFalseControl = treeComposite != null ? treeComposite : treeViewer.getControl();
 					try {
 						// don't want the user to see updates that will be made
 						// to
@@ -168,8 +160,7 @@ public class FilteredElementTreeSelectionDialog extends
 							for (int i = 0; i < is.length; i++) {
 								TreeItem item = is[i];
 								if (item.getExpanded()) {
-									treeViewer.setExpandedState(item.getData(),
-											false);
+									treeViewer.setExpandedState(item.getData(), false);
 								}
 							}
 						}
@@ -180,8 +171,7 @@ public class FilteredElementTreeSelectionDialog extends
 					} finally {
 						// done updating the tree - set redraw back to true
 						TreeItem[] items = getViewer().getTree().getItems();
-						if (items.length > 0
-								&& getViewer().getTree().getSelectionCount() == 0) {
+						if (items.length > 0 && getViewer().getTree().getSelectionCount() == 0) {
 							treeViewer.getTree().setTopItem(items[0]);
 						}
 						redrawFalseControl.setRedraw(true);
@@ -196,14 +186,13 @@ public class FilteredElementTreeSelectionDialog extends
 	private String fInitialFilter;
 	private boolean fIsDeepFiltering;
 
-	public FilteredElementTreeSelectionDialog(Shell parent,
-			ILabelProvider labelProvider, ITreeContentProvider contentProvider) {
+	public FilteredElementTreeSelectionDialog(Shell parent, ILabelProvider labelProvider,
+			ITreeContentProvider contentProvider) {
 		this(parent, labelProvider, contentProvider, true);
 	}
 
-	public FilteredElementTreeSelectionDialog(Shell parent,
-			ILabelProvider labelProvider, ITreeContentProvider contentProvider,
-			boolean isDeepFiltering) {
+	public FilteredElementTreeSelectionDialog(Shell parent, ILabelProvider labelProvider,
+			ITreeContentProvider contentProvider, boolean isDeepFiltering) {
 		super(parent, labelProvider, contentProvider);
 		fInitialFilter = null;
 		fIsDeepFiltering = isDeepFiltering;
@@ -221,15 +210,13 @@ public class FilteredElementTreeSelectionDialog extends
 	}
 
 	protected TreeViewer doCreateTreeViewer(Composite parent, int style) {
-		FilteredTree tree = new FilteredTreeWithFilter(parent, style,
-				fInitialFilter, fIsDeepFiltering);
+		FilteredTree tree = new FilteredTreeWithFilter(parent, style, fInitialFilter, fIsDeepFiltering);
 		tree.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		applyDialogFont(tree);
 
 		TreeViewer viewer = tree.getViewer();
-		SWTUtil.setAccessibilityText(viewer.getControl(),
-				Strings.removeMnemonicIndicator(getMessage()));
+		SWTUtil.setAccessibilityText(viewer.getControl(), Strings.removeMnemonicIndicator(getMessage()));
 		return viewer;
 	}
 

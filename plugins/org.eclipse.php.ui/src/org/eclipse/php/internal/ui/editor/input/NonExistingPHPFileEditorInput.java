@@ -28,8 +28,7 @@ import org.eclipse.ui.internal.editors.text.NonExistingFileEditorInput;
  * 
  * @see org.eclipse.ui.internal.editors.text.NonExistingFileEditorInput
  */
-public class NonExistingPHPFileEditorInput extends NonExistingFileEditorInput
-		implements ILocationProviderExtension {
+public class NonExistingPHPFileEditorInput extends NonExistingFileEditorInput implements ILocationProviderExtension {
 
 	private static final Map<IPath, NonExistingPHPFileEditorInput> registry = Collections
 			.synchronizedMap(new HashMap<IPath, NonExistingPHPFileEditorInput>());

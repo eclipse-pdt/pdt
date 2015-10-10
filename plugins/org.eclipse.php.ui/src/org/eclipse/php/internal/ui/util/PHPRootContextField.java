@@ -25,17 +25,15 @@ public class PHPRootContextField {
 
 	private Text rootContext;
 
-	public PHPRootContextField(Composite parent,
-			DataModelSynchHelper synchHelper) {
+	public PHPRootContextField(Composite parent, DataModelSynchHelper synchHelper) {
 		Label rootContextLabel = new Label(parent, SWT.NULL);
-		rootContextLabel.setText(PHPUIMessages.PHPRootContextField_0); 
+		rootContextLabel.setText(PHPUIMessages.PHPRootContextField_0);
 
 		rootContext = new Text(parent, SWT.BORDER);
 
 		rootContext.setLayoutData(getTextLayoutData());
 		if (synchHelper != null) {
-			synchHelper.synchText(rootContext,
-					PHPCoreConstants.PHPOPTION_CONTEXT_ROOT,
+			synchHelper.synchText(rootContext, PHPCoreConstants.PHPOPTION_CONTEXT_ROOT,
 					new Control[] { rootContextLabel });
 		}
 	}
@@ -55,8 +53,7 @@ public class PHPRootContextField {
 	}
 
 	protected Object getTextLayoutData() {
-		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL
-				| GridData.HORIZONTAL_ALIGN_BEGINNING);
+		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_BEGINNING);
 
 		return gd;
 	}

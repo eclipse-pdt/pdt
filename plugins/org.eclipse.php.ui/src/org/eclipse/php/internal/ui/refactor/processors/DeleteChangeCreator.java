@@ -40,8 +40,7 @@ class DeleteChangeCreator {
 		// private
 	}
 
-	static Change createDeleteChange(TextChangeManager manager,
-			IResource[] resources, IModelElement[] modelElements,
+	static Change createDeleteChange(TextChangeManager manager, IResource[] resources, IModelElement[] modelElements,
 			String changeName, List packageDeletes) throws CoreException {
 		// final DynamicValidationStateChange result= new
 		// DynamicValidationStateChange(changeName) {
@@ -66,14 +65,11 @@ class DeleteChangeCreator {
 			result.add(createDeleteChange(resources[i]));
 		}
 
-		Map grouped = ReorgUtils
-				.groupBySourceModule(getElementsSmallerThanCu(modelElements));
+		Map grouped = ReorgUtils.groupBySourceModule(getElementsSmallerThanCu(modelElements));
 		if (grouped.size() != 0) {
 			Assert.isNotNull(manager);
 			for (Entry entry : (Set<Entry>) grouped.entrySet()) {
-				Change change = createDeleteChange(
-						(ISourceModule) entry.getKey(),
-						(List) entry.getValue(), manager);
+				Change change = createDeleteChange((ISourceModule) entry.getKey(), (List) entry.getValue(), manager);
 				if (change != null) {
 					result.add(change);
 				}
@@ -99,8 +95,8 @@ class DeleteChangeCreator {
 	/*
 	 * List<IModelElement> modelElements
 	 */
-	private static Change createDeleteChange(ISourceModule cu,
-			List modelElements, TextChangeManager manager) throws CoreException {
+	private static Change createDeleteChange(ISourceModule cu, List modelElements, TextChangeManager manager)
+			throws CoreException {
 		// SourceModule cuNode= RefactoringASTParser.parseWithASTProvider(cu,
 		// false, null);
 		// SourceModuleRewrite rewriter= new SourceModuleRewrite(cu, cuNode);
@@ -109,15 +105,13 @@ class DeleteChangeCreator {
 		Assert.isNotNull(manager);
 		TextFileChange textFileChange = null;
 		if (cu.getResource() instanceof IFile) {
-			textFileChange = new TextFileChange(cu.getElementName(),
-					(IFile) cu.getResource());
+			textFileChange = new TextFileChange(cu.getElementName(), (IFile) cu.getResource());
 			MultiTextEdit fileChangeRootEdit = new MultiTextEdit();
 			textFileChange.setEdit(fileChangeRootEdit);
 
 			manager.manage(cu, textFileChange);
 
-			IModelElement[] elements = (IModelElement[]) modelElements
-					.toArray(new IModelElement[modelElements.size()]);
+			IModelElement[] elements = (IModelElement[]) modelElements.toArray(new IModelElement[modelElements.size()]);
 
 			for (int cnt = 0, max = elements.length; cnt < max; cnt++) {
 				ISourceRange sourceRange = null;
@@ -127,15 +121,13 @@ class DeleteChangeCreator {
 				}
 				if (sourceRange != null) {
 					IStructuredDocument document = determineDocument(cu);
-					int suffixLength = getSuffixLength(document,
-							sourceRange.getOffset() + sourceRange.getLength(),
+					int suffixLength = getSuffixLength(document, sourceRange.getOffset() + sourceRange.getLength(),
 							';');
 					int length = sourceRange.getLength() + suffixLength;
 					if (sourceRange.getOffset() + length > document.getLength()) {
 						length = document.getLength() - sourceRange.getOffset();
 					}
-					DeleteEdit edit = new DeleteEdit(sourceRange.getOffset(),
-							length);
+					DeleteEdit edit = new DeleteEdit(sourceRange.getOffset(), length);
 
 					fileChangeRootEdit.addChild(edit);
 					if (cu.isWorkingCopy()) {
@@ -151,8 +143,7 @@ class DeleteChangeCreator {
 		return textFileChange;
 	}
 
-	private static int getSuffixLength(IStructuredDocument document,
-			int offset, char endChar) {
+	private static int getSuffixLength(IStructuredDocument document, int offset, char endChar) {
 		try {
 			int length = document.getLength() - offset;
 			for (int rv = 0; rv < length; rv++) {
@@ -178,17 +169,14 @@ class DeleteChangeCreator {
 			IFile file = (IFile) module.getResource();
 			if (file != null) {
 				if (file.exists()) {
-					structuredModel = StructuredModelManager.getModelManager()
-							.getExistingModelForRead(file);
+					structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
 					if (structuredModel != null) {
 						document = structuredModel.getStructuredDocument();
 					} else {
-						document = StructuredModelManager.getModelManager()
-								.createStructuredDocumentFor(file);
+						document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file);
 					}
 				} else {
-					document = StructuredModelManager.getModelManager()
-							.createNewStructuredDocumentFor(file);
+					document = StructuredModelManager.getModelManager().createNewStructuredDocumentFor(file);
 					document.set(module.getSource());
 				}
 			}
@@ -272,12 +260,10 @@ class DeleteChangeCreator {
 		}
 	}
 
-	private static Change createSourceManipulationDeleteChange(
-			ISourceManipulation element) {
+	private static Change createSourceManipulationDeleteChange(ISourceManipulation element) {
 		// XXX workaround for bug 31384, in case of linked ISourceManipulation
 		// delete the resource
-		if (element instanceof ISourceModule
-				|| element instanceof IScriptFolder) {
+		if (element instanceof ISourceModule || element instanceof IScriptFolder) {
 			IResource resource;
 			if (element instanceof ISourceModule)
 				resource = ReorgUtils.getResource((ISourceModule) element);
@@ -289,8 +275,7 @@ class DeleteChangeCreator {
 		return new DeleteSourceManipulationChange(element, true);
 	}
 
-	private static Change createProjectFragmentDeleteChange(
-			IProjectFragment root) {
+	private static Change createProjectFragmentDeleteChange(IProjectFragment root) {
 		IResource resource = root.getResource();
 		if (resource != null && resource.isLinked()) {
 			// XXX using this code is a workaround for jcore bug 31998

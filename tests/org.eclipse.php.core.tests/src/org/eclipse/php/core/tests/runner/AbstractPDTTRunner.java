@@ -33,8 +33,7 @@ public abstract class AbstractPDTTRunner extends Suite {
 	public static @interface Context {
 	}
 
-	protected static final List<Runner> EMPTY_RUNNERS = Collections
-			.<Runner> emptyList();
+	protected static final List<Runner> EMPTY_RUNNERS = Collections.<Runner> emptyList();
 	protected final List<Runner> runners = new LinkedList<Runner>();
 
 	protected int counter = 0;
@@ -61,10 +60,8 @@ public abstract class AbstractPDTTRunner extends Suite {
 	}
 
 	protected Bundle getBundle() throws Throwable {
-		for (FrameworkMethod method : getTestClass().getAnnotatedMethods(
-				Context.class)) {
-			if (method.isPublic() && method.isStatic()
-					&& method.getReturnType().isAssignableFrom(Bundle.class)) {
+		for (FrameworkMethod method : getTestClass().getAnnotatedMethods(Context.class)) {
+			if (method.isPublic() && method.isStatic() && method.getReturnType().isAssignableFrom(Bundle.class)) {
 				return (Bundle) method.invokeExplosively(null);
 			}
 		}

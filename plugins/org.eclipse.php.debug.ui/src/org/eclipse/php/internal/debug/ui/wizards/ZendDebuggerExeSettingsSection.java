@@ -50,10 +50,8 @@ public class ZendDebuggerExeSettingsSection implements IDebuggerSettingsSection 
 	/**
 	 * 
 	 */
-	public ZendDebuggerExeSettingsSection(
-			final CompositeFragment compositeFragment,
-			final Composite debuggerSettingsComposite,
-			final IDebuggerSettingsWorkingCopy settingsWorkingCopy) {
+	public ZendDebuggerExeSettingsSection(final CompositeFragment compositeFragment,
+			final Composite debuggerSettingsComposite, final IDebuggerSettingsWorkingCopy settingsWorkingCopy) {
 		this.settingsWorkingCopy = settingsWorkingCopy;
 		this.compositeFragment = compositeFragment;
 		this.settingsComposite = debuggerSettingsComposite;
@@ -63,9 +61,8 @@ public class ZendDebuggerExeSettingsSection implements IDebuggerSettingsSection 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#performOK
-	 * ()
+	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
+	 * performOK ()
 	 */
 	@Override
 	public boolean performOK() {
@@ -86,20 +83,17 @@ public class ZendDebuggerExeSettingsSection implements IDebuggerSettingsSection 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#validate
-	 * ()
+	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
+	 * validate ()
 	 */
 	@Override
 	public void validate() {
 		// Reset state
-		compositeFragment.setMessage(compositeFragment.getDescription(),
-				IMessageProvider.NONE);
+		compositeFragment.setMessage(compositeFragment.getDescription(), IMessageProvider.NONE);
 		if (debuggerStatus == null) {
 			debuggerStatus = Status.OK_STATUS;
 			PHPexeItem phpExe = (PHPexeItem) compositeFragment.getData();
-			AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry
-					.getDebuggersConfigurations();
+			AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry.getDebuggersConfigurations();
 			for (AbstractDebuggerConfiguration debugger : debuggers) {
 				if (phpExe.getDebuggerID().equals(debugger.getDebuggerId())) {
 					debuggerStatus = debugger.validate(phpExe);
@@ -108,35 +102,26 @@ public class ZendDebuggerExeSettingsSection implements IDebuggerSettingsSection 
 		}
 		// Check errors
 		if (debuggerStatus.getSeverity() == IStatus.ERROR) {
-			compositeFragment.setMessage(debuggerStatus.getMessage(),
-					IMessageProvider.ERROR);
+			compositeFragment.setMessage(debuggerStatus.getMessage(), IMessageProvider.ERROR);
 			return;
 		}
-		String clientPort = (String) settingsWorkingCopy
-				.getAttribute(PROP_CLIENT_PORT);
+		String clientPort = (String) settingsWorkingCopy.getAttribute(PROP_CLIENT_PORT);
 		if (clientPort == null || clientPort.isEmpty()) {
-			compositeFragment
-					.setMessage(
-							Messages.ZendDebuggerExeSettingsSection_Client_port_is_missing,
-							IMessageProvider.ERROR);
+			compositeFragment.setMessage(Messages.ZendDebuggerExeSettingsSection_Client_port_is_missing,
+					IMessageProvider.ERROR);
 			return;
 		}
 		// Check warnings
 		if (debuggerStatus.getSeverity() == IStatus.WARNING) {
-			compositeFragment.setMessage(debuggerStatus.getMessage(),
-					IMessageProvider.WARNING);
+			compositeFragment.setMessage(debuggerStatus.getMessage(), IMessageProvider.WARNING);
 			return;
 		}
 		int port = Integer.valueOf(clientPort);
 		if (!PHPLaunchUtilities.isPortAvailable(port)
-				&& !PHPLaunchUtilities.isDebugDaemonActive(port,
-						DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
-			compositeFragment
-					.setMessage(
-							MessageFormat
-									.format(Messages.DebuggerCommonSettingsSection_Port_is_already_in_use,
-											clientPort),
-							IMessageProvider.WARNING);
+				&& !PHPLaunchUtilities.isDebugDaemonActive(port, DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
+			compositeFragment.setMessage(
+					MessageFormat.format(Messages.DebuggerCommonSettingsSection_Port_is_already_in_use, clientPort),
+					IMessageProvider.WARNING);
 			return;
 		}
 	}
@@ -144,9 +129,8 @@ public class ZendDebuggerExeSettingsSection implements IDebuggerSettingsSection 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#canTest
-	 * ()
+	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
+	 * canTest ()
 	 */
 	@Override
 	public boolean canTest() {
@@ -174,17 +158,14 @@ public class ZendDebuggerExeSettingsSection implements IDebuggerSettingsSection 
 		connectionGroup.setLayout(cgLayout);
 		GridData cgGridData = new GridData(GridData.FILL_HORIZONTAL);
 		connectionGroup.setLayoutData(cgGridData);
-		connectionGroup
-				.setText(Messages.ZendDebuggerExeSettingsSection_Connection_settings);
+		connectionGroup.setText(Messages.ZendDebuggerExeSettingsSection_Connection_settings);
 		// Client port
 		Label clientPortLabel = new Label(connectionGroup, SWT.None);
-		clientPortLabel
-				.setText(Messages.ZendDebuggerExeSettingsSection_Client_port);
+		clientPortLabel.setText(Messages.ZendDebuggerExeSettingsSection_Client_port);
 		final Text clientPortText = new Text(connectionGroup, SWT.BORDER);
 		GridData cptLayoutData = new GridData(GridData.FILL_HORIZONTAL);
 		clientPortText.setLayoutData(cptLayoutData);
-		clientPortText.setText(settingsWorkingCopy
-				.getAttribute(PROP_CLIENT_PORT));
+		clientPortText.setText(settingsWorkingCopy.getAttribute(PROP_CLIENT_PORT));
 		clientPortText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				String port = clientPortText.getText();

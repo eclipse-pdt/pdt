@@ -75,8 +75,7 @@ public class TableSorter {
 	protected void tableColumnClicked(TableColumn column) {
 		Table table = column.getParent();
 		if (column.equals(table.getSortColumn())) {
-			table.setSortDirection(
-					table.getSortDirection() == SWT.UP ? SWT.DOWN : SWT.UP);
+			table.setSortDirection(table.getSortDirection() == SWT.UP ? SWT.DOWN : SWT.UP);
 		} else {
 			table.setSortColumn(column);
 			table.setSortDirection(SWT.UP);
@@ -85,8 +84,7 @@ public class TableSorter {
 	}
 
 	protected int compareElements(Object e1, Object e2) {
-		ILabelProvider labelProvider = (ILabelProvider) fTableViewer
-				.getLabelProvider();
+		ILabelProvider labelProvider = (ILabelProvider) fTableViewer.getLabelProvider();
 		Table table = fTableViewer.getTable();
 		String text1 = ""; //$NON-NLS-1$
 		String text2 = ""; //$NON-NLS-1$
@@ -94,8 +92,7 @@ public class TableSorter {
 		if (labelProvider instanceof ITableLabelProvider) {
 			ITableLabelProvider tableLabelProvider = (ITableLabelProvider) labelProvider;
 
-			int index = Arrays.asList(table.getColumns())
-					.indexOf(table.getSortColumn());
+			int index = Arrays.asList(table.getColumns()).indexOf(table.getSortColumn());
 			if (index != -1) {
 				text1 = tableLabelProvider.getColumnText(e1, index);
 				text2 = tableLabelProvider.getColumnText(e2, index);
@@ -139,8 +136,7 @@ public class TableSorter {
 		if (viewer == null)
 			return;
 
-		for (Map.Entry<TableColumn, SelectionAdapter> entry : fSelectionAdapters
-				.entrySet()) {
+		for (Map.Entry<TableColumn, SelectionAdapter> entry : fSelectionAdapters.entrySet()) {
 			TableColumn tableColumn = entry.getKey();
 			SelectionAdapter selectionAdapter = entry.getValue();
 			tableColumn.removeSelectionListener(selectionAdapter);

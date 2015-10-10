@@ -20,32 +20,26 @@ public class PHPResponseHandler {
 	PHPDebugTarget fDebugTarget;
 
 	public class StartResponseHandler
-			implements
-			org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StartResponseHandler {
+			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StartResponseHandler {
 
 		public void started(boolean success) {
 			if (!success)
-				Logger.log(Logger.ERROR,
-						"PHPResponseHandler: StartResponseHandler failed"); //$NON-NLS-1$
+				Logger.log(Logger.ERROR, "PHPResponseHandler: StartResponseHandler failed"); //$NON-NLS-1$
 
 		}
 	}
 
 	public class BreakpointAddedResponseHandler
-			implements
-			org.eclipse.php.internal.debug.core.zend.debugger.Debugger.BreakpointAddedResponseHandler {
+			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.BreakpointAddedResponseHandler {
 
-		public void breakpointAdded(String fileName, int lineNumber, int id,
-				boolean success) {
+		public void breakpointAdded(String fileName, int lineNumber, int id, boolean success) {
 			String info = "Filename: " + fileName + " lineNumber " + lineNumber //$NON-NLS-1$ //$NON-NLS-2$
 					+ " id: " + id; //$NON-NLS-1$
 			if (success) {
-				IBreakpoint breakpoint = fDebugTarget.findBreakpoint(fileName,
-						lineNumber);
+				IBreakpoint breakpoint = fDebugTarget.findBreakpoint(fileName, lineNumber);
 				if (breakpoint != null) {
 					if (fDebugTarget.isFirstBreakpointAdded(breakpoint)) {
-						fDebugTarget.addBreakpointFiles(fDebugTarget
-								.getProject());
+						fDebugTarget.addBreakpointFiles(fDebugTarget.getProject());
 					}
 					PHPLineBreakpoint lineBreakpoint = (PHPLineBreakpoint) breakpoint;
 					org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint rbp = lineBreakpoint
@@ -55,23 +49,19 @@ public class PHPResponseHandler {
 					// it is still possible that the breakpoint we are dealing
 					// with was not registered to the
 					// BreakpointManager because it's a Run-To-Line breakpoint.
-					Logger
-							.trace(
-									"debug", //$NON-NLS-1$
-									"PHPResponseHandler:: BreakpointAddedResponseHandler unable to find breakpoint " //$NON-NLS-1$
-											+ info);
+					Logger.trace("debug", //$NON-NLS-1$
+							"PHPResponseHandler:: BreakpointAddedResponseHandler unable to find breakpoint " //$NON-NLS-1$
+									+ info);
 				}
 			} else {
-				Logger.log(Logger.ERROR,
-						"PHPResponseHandler: BreakpointAddedResponseHandler failed " //$NON-NLS-1$
-								+ info);
+				Logger.log(Logger.ERROR, "PHPResponseHandler: BreakpointAddedResponseHandler failed " //$NON-NLS-1$
+						+ info);
 			}
 		}
 	}
 
 	public class BreakpointRemovedResponseHandler
-			implements
-			org.eclipse.php.internal.debug.core.zend.debugger.Debugger.BreakpointRemovedResponseHandler {
+			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.BreakpointRemovedResponseHandler {
 
 		public void breakpointRemoved(int id, boolean success) {
 			/**
@@ -88,78 +78,66 @@ public class PHPResponseHandler {
 	}
 
 	public class StepIntoResponseHandler
-			implements
-			org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StepIntoResponseHandler {
+			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StepIntoResponseHandler {
 
 		public void stepInto(boolean success) {
 			if (!success)
-				Logger.log(Logger.ERROR,
-						"PHPResponseHandler: StepIntoResponseHandler failed"); //$NON-NLS-1$
+				Logger.log(Logger.ERROR, "PHPResponseHandler: StepIntoResponseHandler failed"); //$NON-NLS-1$
 
 		}
 
 	}
 
 	public class StepOverResponseHandler
-			implements
-			org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StepOverResponseHandler {
+			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StepOverResponseHandler {
 
 		public void stepOver(boolean success) {
 			if (!success)
-				Logger.log(Logger.ERROR,
-						"PHPResponseHandler: StepOverResponseHandler failed"); //$NON-NLS-1$
+				Logger.log(Logger.ERROR, "PHPResponseHandler: StepOverResponseHandler failed"); //$NON-NLS-1$
 
 		}
 
 	}
 
 	public class StepOutResponseHandler
-			implements
-			org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StepOutResponseHandler {
+			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StepOutResponseHandler {
 
 		public void stepOut(boolean success) {
 			if (!success)
-				Logger.log(Logger.ERROR,
-						"PHPResponseHandler: StepOutResponseHandler failed"); //$NON-NLS-1$
+				Logger.log(Logger.ERROR, "PHPResponseHandler: StepOutResponseHandler failed"); //$NON-NLS-1$
 
 		}
 
 	}
 
 	public class GoResponseHandler
-			implements
-			org.eclipse.php.internal.debug.core.zend.debugger.Debugger.GoResponseHandler {
+			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.GoResponseHandler {
 
 		public void go(boolean success) {
 			if (!success)
-				Logger.log(Logger.ERROR,
-						"PHPResponseHandler: GoResponseHandler failed"); //$NON-NLS-1$
+				Logger.log(Logger.ERROR, "PHPResponseHandler: GoResponseHandler failed"); //$NON-NLS-1$
 
 		}
 
 	}
 
 	public class PauseResponseHandler
-			implements
-			org.eclipse.php.internal.debug.core.zend.debugger.Debugger.PauseResponseHandler {
+			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.PauseResponseHandler {
 
 		public void pause(boolean success) {
 			if (!success)
-				Logger.log(Logger.ERROR,
-						"PHPResponseHandler: PauseResponseHandler failed"); //$NON-NLS-1$
+				Logger.log(Logger.ERROR, "PHPResponseHandler: PauseResponseHandler failed"); //$NON-NLS-1$
 
 		}
 
 	}
 
 	public class AddFilesResponseHandler
-			implements
-			org.eclipse.php.internal.debug.core.zend.debugger.Debugger.AddFilesResponseHandler {
+			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.AddFilesResponseHandler {
 
 		public void addFiles(boolean success) {
 			if (!success)
-				Logger.log(Logger.ERROR,
-						"PHPResponseHandler: AddFilesResponseHandler failed"); //$NON-NLS-1$
+				Logger.log(Logger.ERROR, "PHPResponseHandler: AddFilesResponseHandler failed"); //$NON-NLS-1$
 		}
 
 	}

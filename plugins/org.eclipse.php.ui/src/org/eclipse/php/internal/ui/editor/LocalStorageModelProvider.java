@@ -50,13 +50,11 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IExtend
  * 
  * @author yaronm
  */
-public class LocalStorageModelProvider extends StorageDocumentProvider
-		implements IModelProvider {
+public class LocalStorageModelProvider extends StorageDocumentProvider implements IModelProvider {
 
 	private class InternalElementStateListener implements IElementStateListener {
 		public void elementContentAboutToBeReplaced(Object element) {
-			LocalStorageModelProvider.this
-					.fireElementContentAboutToBeReplaced(element);
+			LocalStorageModelProvider.this.fireElementContentAboutToBeReplaced(element);
 		}
 
 		public void elementContentReplaced(Object element) {
@@ -82,9 +80,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 				// update document from input's contents
 				CodedReaderCreator codedReaderCreator = new CodedReaderCreator(
 						calculateID((IStorageEditorInput) element),
-						Utilities
-								.getMarkSupportedStream(((IStorageEditorInput) element)
-										.getStorage().getContents()));
+						Utilities.getMarkSupportedStream(((IStorageEditorInput) element).getStorage().getContents()));
 				reader = codedReaderCreator.getCodedReader();
 
 				innerdocument = (IStructuredDocument) info.fDocument;
@@ -104,8 +100,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 						stringBuffer.append(buffer, 0, nRead);
 					}
 				}
-				innerdocument.replaceText(this, 0, originalLengthToReplace,
-						stringBuffer.toString(), true);
+				innerdocument.replaceText(this, 0, originalLengthToReplace, stringBuffer.toString(), true);
 			} catch (CoreException e) {
 				Logger.logException(e);
 			} catch (IOException e) {
@@ -140,13 +135,11 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 		}
 
 		public void elementDirtyStateChanged(Object element, boolean isDirty) {
-			LocalStorageModelProvider.this.fireElementDirtyStateChanged(
-					element, isDirty);
+			LocalStorageModelProvider.this.fireElementDirtyStateChanged(element, isDirty);
 		}
 
 		public void elementMoved(Object originalElement, Object movedElement) {
-			LocalStorageModelProvider.this.fireElementMoved(originalElement,
-					movedElement);
+			LocalStorageModelProvider.this.fireElementMoved(originalElement, movedElement);
 		}
 	}
 
@@ -158,8 +151,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 		public boolean fShouldReleaseOnInfoDispose;
 		public IStructuredModel fStructuredModel;
 
-		public ModelInfo(IStructuredModel structuredModel,
-				IEditorInput element, boolean selfCreated) {
+		public ModelInfo(IStructuredModel structuredModel, IEditorInput element, boolean selfCreated) {
 			fElement = element;
 			fStructuredModel = structuredModel;
 			fShouldReleaseOnInfoDispose = selfCreated;
@@ -248,8 +240,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 				String name = storage.getName();
 				// if either the name or storage path are null or they are
 				// identical, add a hash to it to guarantee uniqueness
-				addHash = storagePath == null
-						|| storagePath.toString().equals(name);
+				addHash = storagePath == null || storagePath.toString().equals(name);
 				if (storagePath != null) {
 					// If they are different, the IStorage contract is not
 					// being honored
@@ -276,20 +267,15 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 		return path;
 	}
 
-	protected IAnnotationModel createAnnotationModel(Object element)
-			throws CoreException {
+	protected IAnnotationModel createAnnotationModel(Object element) throws CoreException {
 		IAnnotationModel model = null;
 		if (element instanceof IStorageEditorInput) {
 			IStorageEditorInput input = (IStorageEditorInput) element;
-			String contentType = (getModel(input) != null ? getModel(input)
-					.getContentTypeIdentifier() : null);
-			String ext = BreakpointRulerAction
-					.getFileExtension((IEditorInput) element);
-			IResource res = BreakpointProviderBuilder.getInstance()
-					.getResource(input, contentType, ext);
+			String contentType = (getModel(input) != null ? getModel(input).getContentTypeIdentifier() : null);
+			String ext = BreakpointRulerAction.getFileExtension((IEditorInput) element);
+			IResource res = BreakpointProviderBuilder.getInstance().getResource(input, contentType, ext);
 			String id = input.getName();
-			if (input.getStorage() != null
-					&& input.getStorage().getFullPath() != null) {
+			if (input.getStorage() != null && input.getStorage().getFullPath() != null) {
 				id = input.getStorage().getFullPath().toString();
 			}
 			// we can only create a resource marker annotationmodel off of a
@@ -313,23 +299,19 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 			// the contents of the resource
 			ModelInfo info = getModelInfoFor((IEditorInput) element);
 			if (info == null) {
-				throw new IllegalArgumentException(
-						"no corresponding model info found"); //$NON-NLS-1$
+				throw new IllegalArgumentException("no corresponding model info found"); //$NON-NLS-1$
 			}
 			IStructuredModel model = info.fStructuredModel;
 			if (model != null) {
-				if (!fReuseModelDocument
-						&& element instanceof IStorageEditorInput) {
+				if (!fReuseModelDocument && element instanceof IStorageEditorInput) {
 					Reader reader = null;
 					IStructuredDocument innerdocument = null;
 					try {
 						// update document from input's contents
 
 						CodedReaderCreator codedReaderCreator = new CodedReaderCreator(
-								calculateID((IStorageEditorInput) element),
-								Utilities
-										.getMarkSupportedStream(((IStorageEditorInput) element)
-												.getStorage().getContents()));
+								calculateID((IStorageEditorInput) element), Utilities.getMarkSupportedStream(
+										((IStorageEditorInput) element).getStorage().getContents()));
 						reader = codedReaderCreator.getCodedReader();
 
 						innerdocument = model.getStructuredDocument();
@@ -366,9 +348,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 						}
 						// ignore read-only settings if reverting whole
 						// document
-						innerdocument.replaceText(this, 0,
-								originalLengthToReplace,
-								stringBuffer.toString(), true);
+						innerdocument.replaceText(this, 0, originalLengthToReplace, stringBuffer.toString(), true);
 						model.setDirtyState(false);
 
 					} catch (CoreException e) {
@@ -402,8 +382,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 	 * Also create ModelInfo - extra resource synchronization classes should be
 	 * stored within the ModelInfo
 	 */
-	protected ElementInfo createElementInfo(Object element)
-			throws CoreException {
+	protected ElementInfo createElementInfo(Object element) throws CoreException {
 		if (getModelInfoFor((IEditorInput) element) == null) {
 			createModelInfo((IEditorInput) element);
 		}
@@ -425,24 +404,21 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 	 * To be used when model is provided to us, ensures that when setInput is
 	 * used on this input, the given model will be used.
 	 */
-	public void createModelInfo(IEditorInput input,
-			IStructuredModel structuredModel, boolean releaseModelOnDisconnect) {
+	public void createModelInfo(IEditorInput input, IStructuredModel structuredModel,
+			boolean releaseModelOnDisconnect) {
 		// we have to make sure factories are added, whether we created or
 		// not.
-		if (getModelInfoFor(input) != null
-				|| getModelInfoFor(structuredModel) != null) {
+		if (getModelInfoFor(input) != null || getModelInfoFor(structuredModel) != null) {
 			return;
 		}
 
 		if (input instanceof IExtendedStorageEditorInput) {
-			((IExtendedStorageEditorInput) input)
-					.addElementStateListener(fInternalListener);
+			((IExtendedStorageEditorInput) input).addElementStateListener(fInternalListener);
 		}
 
 		EditorModelUtil.addFactoriesTo(structuredModel);
 
-		ModelInfo modelInfo = new ModelInfo(structuredModel, input,
-				releaseModelOnDisconnect);
+		ModelInfo modelInfo = new ModelInfo(structuredModel, input, releaseModelOnDisconnect);
 		fModelInfoMap.put(input, modelInfo);
 	}
 
@@ -463,8 +439,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 	public void disposeModelInfo(ModelInfo info) {
 		if (info.fElement instanceof IStorageEditorInput) {
 			if (info.fElement instanceof IExtendedStorageEditorInput) {
-				((IExtendedStorageEditorInput) info.fElement)
-						.removeElementStateListener(fInternalListener);
+				((IExtendedStorageEditorInput) info.fElement).removeElementStateListener(fInternalListener);
 			}
 			if (info.fShouldReleaseOnInfoDispose) {
 				info.fStructuredModel.releaseFromEdit();
@@ -480,8 +455,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 	 * org.eclipse.ui.texteditor.AbstractDocumentProvider#doResetDocument(java
 	 * .lang.Object, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	protected void doResetDocument(Object element, IProgressMonitor monitor)
-			throws CoreException {
+	protected void doResetDocument(Object element, IProgressMonitor monitor) throws CoreException {
 		fReuseModelDocument = false;
 		super.doResetDocument(element, monitor);
 		fReuseModelDocument = true;
@@ -491,13 +465,12 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 	 * @see org.eclipse.ui.texteditor.AbstractDocumentProvider#doSaveDocument(org.eclipse.core.runtime.IProgressMonitor,
 	 *      java.lang.Object, org.eclipse.jface.text.IDocument, boolean)
 	 */
-	protected void doSaveDocument(IProgressMonitor monitor, Object element,
-			IDocument document, boolean overwrite) throws CoreException {
+	protected void doSaveDocument(IProgressMonitor monitor, Object element, IDocument document, boolean overwrite)
+			throws CoreException {
 		IDocumentProvider provider = null;
 		// BUG119211 - try to use registered document provider if possible
 		if (element instanceof IEditorInput) {
-			provider = DocumentProviderRegistry.getDefault()
-					.getDocumentProvider((IEditorInput) element);
+			provider = DocumentProviderRegistry.getDefault().getDocumentProvider((IEditorInput) element);
 		}
 		if (provider == null)
 			provider = new FileDocumentProvider();
@@ -532,8 +505,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 	private ModelInfo getModelInfoFor(IStructuredModel structuredModel) {
 		ModelInfo result = null;
 		if (structuredModel != null) {
-			ModelInfo[] modelInfos = (ModelInfo[]) fModelInfoMap.values()
-					.toArray(new ModelInfo[0]);
+			ModelInfo[] modelInfos = (ModelInfo[]) fModelInfoMap.values().toArray(new ModelInfo[0]);
 			for (int i = 0; i < modelInfos.length; i++) {
 				ModelInfo info = modelInfos[i];
 				if (structuredModel.equals(info.fStructuredModel)) {
@@ -562,8 +534,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 	 * @param logExceptions
 	 * @return IStructuredModel
 	 */
-	public IStructuredModel loadModel(IStorageEditorInput input,
-			boolean logExceptions) {
+	public IStructuredModel loadModel(IStorageEditorInput input, boolean logExceptions) {
 		String id = calculateID(input);
 
 		InputStream contents = null;
@@ -578,8 +549,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider
 		IStructuredModel model = null;
 		try {
 			// first parameter must be unique
-			model = StructuredModelManager.getModelManager().getModelForEdit(
-					id, contents, null);
+			model = StructuredModelManager.getModelManager().getModelForEdit(id, contents, null);
 			model.setBaseLocation(calculateBaseLocation(input));
 		} catch (IOException e) {
 			if (logExceptions) {

@@ -46,8 +46,7 @@ import java_cup.runtime.Symbol;
  * 
  * @author moshe, 2007
  */
-public class CodeFormatterVisitor extends AbstractVisitor
-		implements ICodeFormattingProcessor {
+public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormattingProcessor {
 
 	public static final int NO_LINE_WRAP = 0;
 	public static final int FIRST_WRAP_WHEN_NECESSARY = 1;
@@ -148,18 +147,14 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 	private boolean ignoreEmptyLineSetting = false;
 
-	public CodeFormatterVisitor(IDocument document,
-			CodeFormatterPreferences codeFormatterPreferences,
-			String lineSeparator, PHPVersion phpVersion, boolean useShortTags,
-			IRegion region) throws Exception {
-		this(document, codeFormatterPreferences, lineSeparator, phpVersion,
-				useShortTags, region, 0);
+	public CodeFormatterVisitor(IDocument document, CodeFormatterPreferences codeFormatterPreferences,
+			String lineSeparator, PHPVersion phpVersion, boolean useShortTags, IRegion region) throws Exception {
+		this(document, codeFormatterPreferences, lineSeparator, phpVersion, useShortTags, region, 0);
 	}
 
-	public CodeFormatterVisitor(IDocument document,
-			CodeFormatterPreferences codeFormatterPreferences,
-			String lineSeparator, PHPVersion phpVersion, boolean useShortTags,
-			IRegion region, int indentationLevel) throws Exception {
+	public CodeFormatterVisitor(IDocument document, CodeFormatterPreferences codeFormatterPreferences,
+			String lineSeparator, PHPVersion phpVersion, boolean useShortTags, IRegion region, int indentationLevel)
+					throws Exception {
 		this.phpVersion = phpVersion;
 		this.useShortTags = useShortTags;
 		this.document = document;
@@ -174,22 +169,18 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		Program program = null;
 		try {
 			final Reader reader = new StringReader(document.get());
-			program = ASTParser.newParser(reader, phpVersion, true)
-					.createAST(new NullProgressMonitor());
+			program = ASTParser.newParser(reader, phpVersion, true).createAST(new NullProgressMonitor());
 		} catch (Exception e) {
-			Logger.log(Logger.INFO,
-					"Parsing error, file could not be formatted.");//$NON-NLS-1$
+			Logger.log(Logger.INFO, "Parsing error, file could not be formatted.");//$NON-NLS-1$
 		}
 
 		this.useTags = preferences.use_tags;
 		this.tagsKind = 0;
 		if (this.useTags) {
-			if (preferences.disabling_tag != null
-					&& preferences.disabling_tag.length > 0) {
+			if (preferences.disabling_tag != null && preferences.disabling_tag.length > 0) {
 				this.disablingTag = new String(preferences.disabling_tag);
 			}
-			if (preferences.enabling_tag != null
-					&& preferences.enabling_tag.length > 0) {
+			if (preferences.enabling_tag != null && preferences.enabling_tag.length > 0) {
 				this.enablingTag = new String(preferences.enabling_tag);
 			}
 		}
@@ -200,11 +191,10 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 	}
 
-	public CodeFormatterVisitor(IDocument document, String lineSeparator,
-			PHPVersion phpVersion, boolean useShortTags, IRegion region)
-					throws Exception {
-		this(document, CodeFormatterPreferences.getDefaultPreferences(),
-				lineSeparator, phpVersion, useShortTags, region, 0);
+	public CodeFormatterVisitor(IDocument document, String lineSeparator, PHPVersion phpVersion, boolean useShortTags,
+			IRegion region) throws Exception {
+		this(document, CodeFormatterPreferences.getDefaultPreferences(), lineSeparator, phpVersion, useShortTags,
+				region, 0);
 	}
 
 	// insert chars to the buffer
@@ -243,8 +233,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	private char getBufferFirstChar(int position) throws BadLocationException {
 		for (int offset = position; offset < replaceBuffer.length(); offset++) {
 			char currChar = replaceBuffer.charAt(offset);
-			if (currChar != ' ' && currChar != '\t' && currChar != '\r'
-					&& currChar != '\n') {
+			if (currChar != ' ' && currChar != '\t' && currChar != '\r' && currChar != '\n') {
 				// not empty line
 				return currChar;
 			}
@@ -255,10 +244,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	public List<ReplaceEdit> getChanges() {
 		IRegion[] partitions = new IRegion[0];
 		try {
-			partitions = getAllSingleLine(
-					TextUtilities.computePartitioning(document,
-							IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING,
-							0, document.getLength(), false));
+			partitions = getAllSingleLine(TextUtilities.computePartitioning(document,
+					IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, 0, document.getLength(), false));
 		} catch (BadLocationException e) {
 			Logger.logException(e);
 		}
@@ -302,17 +289,14 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		AstLexer result = null;
 		if (PHPVersion.PHP5.equals(phpVersion)) {
 			result = new CompilerAstLexer(reader);
-			((CompilerAstLexer) result).setAST(
-					new AST(reader, PHPVersion.PHP5, false, useShortTags));
+			((CompilerAstLexer) result).setAST(new AST(reader, PHPVersion.PHP5, false, useShortTags));
 			stInScriptin = CompilerAstLexer.ST_IN_SCRIPTING; // save the initial
 			// state for reset
 			// operation
 		} else if (PHPVersion.PHP5_3.equals(phpVersion)) {
-			result = new org.eclipse.php.internal.core.compiler.ast.parser.php53.CompilerAstLexer(
-					reader);
+			result = new org.eclipse.php.internal.core.compiler.ast.parser.php53.CompilerAstLexer(reader);
 			((org.eclipse.php.internal.core.compiler.ast.parser.php53.CompilerAstLexer) result)
-					.setAST(new AST(reader, PHPVersion.PHP5_3, false,
-							useShortTags));
+					.setAST(new AST(reader, PHPVersion.PHP5_3, false, useShortTags));
 			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php53.CompilerAstLexer.ST_IN_SCRIPTING; // save
 			// the
 			// initial
@@ -321,11 +305,9 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			// reset
 			// operation
 		} else if (PHPVersion.PHP5_4.equals(phpVersion)) {
-			result = new org.eclipse.php.internal.core.compiler.ast.parser.php54.CompilerAstLexer(
-					reader);
+			result = new org.eclipse.php.internal.core.compiler.ast.parser.php54.CompilerAstLexer(reader);
 			((org.eclipse.php.internal.core.compiler.ast.parser.php54.CompilerAstLexer) result)
-					.setAST(new AST(reader, PHPVersion.PHP5_4, false,
-							useShortTags));
+					.setAST(new AST(reader, PHPVersion.PHP5_4, false, useShortTags));
 			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php54.CompilerAstLexer.ST_IN_SCRIPTING; // save
 			// the
 			// initial
@@ -334,11 +316,9 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			// reset
 			// operation
 		} else if (PHPVersion.PHP5_5.equals(phpVersion)) {
-			result = new org.eclipse.php.internal.core.compiler.ast.parser.php55.CompilerAstLexer(
-					reader);
+			result = new org.eclipse.php.internal.core.compiler.ast.parser.php55.CompilerAstLexer(reader);
 			((org.eclipse.php.internal.core.compiler.ast.parser.php55.CompilerAstLexer) result)
-					.setAST(new AST(reader, PHPVersion.PHP5_5, false,
-							useShortTags));
+					.setAST(new AST(reader, PHPVersion.PHP5_5, false, useShortTags));
 			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php55.CompilerAstLexer.ST_IN_SCRIPTING; // save
 			// the
 			// initial
@@ -347,11 +327,9 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			// reset
 			// operation
 		} else if (PHPVersion.PHP5_6.equals(phpVersion)) {
-			result = new org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerAstLexer(
-					reader);
+			result = new org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerAstLexer(reader);
 			((org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerAstLexer) result)
-					.setAST(new AST(reader, PHPVersion.PHP5_6, false,
-							useShortTags));
+					.setAST(new AST(reader, PHPVersion.PHP5_6, false, useShortTags));
 			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerAstLexer.ST_IN_SCRIPTING; // save
 			// the
 			// initial
@@ -360,11 +338,9 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			// reset
 			// operation
 		} else if (PHPVersion.PHP7_0.equals(phpVersion)) {
-			result = new org.eclipse.php.internal.core.compiler.ast.parser.php7.CompilerAstLexer(
-					reader);
+			result = new org.eclipse.php.internal.core.compiler.ast.parser.php7.CompilerAstLexer(reader);
 			((org.eclipse.php.internal.core.compiler.ast.parser.php7.CompilerAstLexer) result)
-					.setAST(new AST(reader, PHPVersion.PHP7_0, false,
-							useShortTags));
+					.setAST(new AST(reader, PHPVersion.PHP7_0, false, useShortTags));
 			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php7.CompilerAstLexer.ST_IN_SCRIPTING; // save
 			// the
 			// initial
@@ -386,8 +362,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					return PHP_OPEN_ASP_TAG;
 				} else if (document.getChar(offset + 2) == '=') {
 					return PHP_OPEN_SHORT_TAG_WITH_EQUAL;
-				} else if (document.getChar(offset + 2) != 'p'
-						&& document.getChar(offset + 2) != 'P') {
+				} else if (document.getChar(offset + 2) != 'p' && document.getChar(offset + 2) != 'P') {
 					return PHP_OPEN_SHORT_TAG;
 				} else if (document.getChar(offset + 1) == '?') {
 					return PHP_OPEN_TAG;
@@ -430,12 +405,10 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	/**
 	 * handle the action of if, while, do while, for statements.
 	 */
-	private void handleAction(int lastPosition, Statement action,
-			boolean addNewlineBeforeAction) {
+	private void handleAction(int lastPosition, Statement action, boolean addNewlineBeforeAction) {
 		boolean isIndentationAdded = false;
 		if (action.getType() == ASTNode.BLOCK) {
-			isIndentationAdded = handleBlockOpenBrace(
-					this.preferences.brace_position_for_block,
+			isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_block,
 					this.preferences.insert_space_before_opening_brace_in_block);
 		} else if (action.getType() == ASTNode.EMPTY_STATEMENT) {
 			// This is an empty statement
@@ -474,8 +447,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	 * @param placeSpaceBeforeOpenCurly
 	 * @return
 	 */
-	private boolean handleBlockOpenBrace(byte bracePosition,
-			boolean placeSpaceBeforeOpenCurly) {
+	private boolean handleBlockOpenBrace(byte bracePosition, boolean placeSpaceBeforeOpenCurly) {
 		boolean isIndentationAdded = false;
 		switch (bracePosition) {
 		case CodeFormatterPreferences.NEXT_LINE_INDENT:
@@ -504,8 +476,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 				if (hasComments) {
 					// handle the comments
-					handleComments(offset, end, astLexer.getCommentList(),
-							false, 0);
+					handleComments(offset, end, astLexer.getCommentList(), false, 0);
 				} else {
 					handleCharsWithoutComments(offset, end);
 				}
@@ -519,8 +490,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	}
 
 	@SuppressWarnings("unchecked")
-	private void handleChars1(int offset, int end, boolean isIndented,
-			int indentGap) {
+	private void handleChars1(int offset, int end, boolean isIndented, int indentGap) {
 		try {
 			// check if the changed region is in the formatting requested region
 			if (startRegionPosition < end && endRegionPosition >= end) {
@@ -528,8 +498,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 				if (hasComments) {
 					// handle the comments
-					handleComments(offset, end, astLexer.getCommentList(),
-							isIndented, indentGap);
+					handleComments(offset, end, astLexer.getCommentList(), isIndented, indentGap);
 				} else {
 					handleCharsWithoutComments(offset, end);
 				}
@@ -550,13 +519,11 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		return hasComments;
 	}
 
-	private void handleCharsWithoutComments(int offset, int end)
-			throws BadLocationException {
+	private void handleCharsWithoutComments(int offset, int end) throws BadLocationException {
 		handleCharsWithoutComments(offset, end, false);
 	}
 
-	private void handleCharsWithoutComments(int offset, int end,
-			boolean isComment) throws BadLocationException {
+	private void handleCharsWithoutComments(int offset, int end, boolean isComment) throws BadLocationException {
 		String content = document.get(offset, end - offset).toLowerCase();
 		int phpTagOpenIndex = -1;
 		if (!isComment && ((phpTagOpenIndex = content.indexOf("<?")) != -1 //$NON-NLS-1$
@@ -588,8 +555,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 				// add empty lines
 				if (emptyLines > 0 && newLinesInBuffer < emptyLines + 1) {
-					for (int line = newLinesInBuffer; line < emptyLines
-							+ 1; line++) {
+					for (int line = newLinesInBuffer; line < emptyLines + 1; line++) {
 						insertNewLine();
 					}
 					if (inComment) {
@@ -636,10 +602,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				String afterNewLine = EMPTY_STRING;
 				int position = replaceBuffer.lastIndexOf(lineSeparator);
 				if (position >= 0) {
-					if (getBufferFirstChar(
-							position + lineSeparator.length()) == '\0') {
-						afterNewLine = replaceBuffer.substring(
-								position + lineSeparator.length(),
+					if (getBufferFirstChar(position + lineSeparator.length()) == '\0') {
+						afterNewLine = replaceBuffer.substring(position + lineSeparator.length(),
 								replaceBuffer.length());
 					}
 				} else {
@@ -674,9 +638,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	 * @param j
 	 * @return the last element end position
 	 */
-	private int handleCommaList(ASTNode[] array, int lastPosition,
-			boolean insertSpaceBeforeComma, boolean insertSpaceAfterComma,
-			int lineWrapPolicy, int indentGap, boolean forceSplit) {
+	private int handleCommaList(ASTNode[] array, int lastPosition, boolean insertSpaceBeforeComma,
+			boolean insertSpaceAfterComma, int lineWrapPolicy, int indentGap, boolean forceSplit) {
 		int oldIndentationLevel = indentationLevel;
 		boolean wasBinaryExpressionWrapped = this.wasBinaryExpressionWrapped;
 		if (array.length == 0) {
@@ -717,8 +680,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			case NO_LINE_WRAP:
 				break;
 			case FIRST_WRAP_WHEN_NECESSARY:
-				if (lineWidth + array[i]
-						.getLength() > this.preferences.line_wrap_line_split) {
+				if (lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
 					lineWrapPolicy = WRAP_WHEN_NECESSARY;
 					insertNewLine();
 					if (!cio.indented) {
@@ -729,15 +691,13 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				}
 				break;
 			case WRAP_WHEN_NECESSARY:
-				if (lineWidth + array[i]
-						.getLength() > this.preferences.line_wrap_line_split) {
+				if (lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
 					insertNewLine();
 					indent();
 				}
 				break;
 			case WRAP_FIRST_ELEMENT:
-				if (forceSplit || lineWidth + array[i]
-						.getLength() > this.preferences.line_wrap_line_split) {
+				if (forceSplit || lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
 					revert(savedBuffer, changesIndex);
 					lastPosition = savedLastPosition;
 					i = 0;
@@ -750,8 +710,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				}
 				break;
 			case WRAP_ALL_ELEMENTS:
-				if (forceSplit || lineWidth + array[i]
-						.getLength() > this.preferences.line_wrap_line_split) {
+				if (forceSplit || lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
 					revert(savedBuffer, changesIndex);
 					lastPosition = savedLastPosition;
 					i = 0;
@@ -764,8 +723,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				}
 				break;
 			case WRAP_ALL_ELEMENTS_NO_INDENT_FIRST:
-				if (forceSplit || lineWidth + array[i]
-						.getLength() > this.preferences.line_wrap_line_split) {
+				if (forceSplit || lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
 					// revert the buffer
 					revert(savedBuffer, changesIndex);
 					lastPosition = savedLastPosition;
@@ -783,8 +741,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				}
 				break;
 			case WRAP_ALL_ELEMENTS_EXCEPT_FIRST:
-				if (forceSplit || lineWidth + array[i]
-						.getLength() > this.preferences.line_wrap_line_split) {
+				if (forceSplit || lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
 					// revert
 					revert(savedBuffer, changesIndex);
 					lastPosition = savedLastPosition;
@@ -803,8 +760,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				break;
 			}
 
-			handleChars1(lastPosition, array[i].getStart(),
-					oldIndentationLevel != indentationLevel, indentGap);
+			handleChars1(lastPosition, array[i].getStart(), oldIndentationLevel != indentationLevel, indentGap);
 			array[i].accept(this);
 			lastPosition = array[i].getEnd();
 
@@ -829,8 +785,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440209
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440820
 	private void handleComments(int offset, int end,
-			List<org.eclipse.php.internal.core.compiler.ast.nodes.Comment> commentList,
-			boolean isIndented, int indentGap) throws Exception {
+			List<org.eclipse.php.internal.core.compiler.ast.nodes.Comment> commentList, boolean isIndented,
+			int indentGap) throws Exception {
 		boolean oldIgnoreEmptyLineSetting = ignoreEmptyLineSetting;
 		ignoreEmptyLineSetting = false;
 
@@ -843,15 +799,11 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 		comments: for (Iterator<org.eclipse.php.internal.core.compiler.ast.nodes.Comment> iter = commentList
 				.iterator(); iter.hasNext();) {
-			org.eclipse.php.internal.core.compiler.ast.nodes.Comment comment = iter
-					.next();
-			int commentStartLine = document
-					.getLineOfOffset(comment.sourceStart() + offset);
+			org.eclipse.php.internal.core.compiler.ast.nodes.Comment comment = iter.next();
+			int commentStartLine = document.getLineOfOffset(comment.sourceStart() + offset);
 			int position = replaceBuffer.lastIndexOf(lineSeparator);
-			boolean startAtFirstColumn = (document.getLineOffset(
-					commentStartLine) == comment.sourceStart() + offset);
-			boolean endWithNewLineIndent = endWithNewLineIndent(
-					replaceBuffer.toString());
+			boolean startAtFirstColumn = (document.getLineOffset(commentStartLine) == comment.sourceStart() + offset);
+			boolean endWithNewLineIndent = endWithNewLineIndent(replaceBuffer.toString());
 			String afterNewLine = EMPTY_STRING;
 			boolean indentOnFirstColumn;
 			String commentContent;
@@ -861,20 +813,15 @@ public class CodeFormatterVisitor extends AbstractVisitor
 						|| !this.preferences.never_indent_line_comments_on_first_column;
 				if (startLine == commentStartLine) {
 					indentOnFirstColumn = false;
-					IRegion startLinereg = document
-							.getLineInformation(startLine);
+					IRegion startLinereg = document.getLineInformation(startLine);
 					// TODO: Do line width calculation based on the
 					// formatted content instead of the original content
-					lineWidth = comment.sourceStart() + offset
-							- startLinereg.getOffset();
+					lineWidth = comment.sourceStart() + offset - startLinereg.getOffset();
 					if (position >= 0) {
-						if (getBufferFirstChar(
-								position + lineSeparator.length()) == '\0') {
-							afterNewLine = replaceBuffer.substring(
-									position + lineSeparator.length(),
+						if (getBufferFirstChar(position + lineSeparator.length()) == '\0') {
+							afterNewLine = replaceBuffer.substring(position + lineSeparator.length(),
 									replaceBuffer.length());
-							replaceBuffer.replace(position,
-									replaceBuffer.length(), ""); //$NON-NLS-1$
+							replaceBuffer.replace(position, replaceBuffer.length(), ""); //$NON-NLS-1$
 							insertSpaces(1);
 						} else {
 							insertSpace();
@@ -889,10 +836,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					}
 				} else {
 					if (indentationLevelDesending) {
-						IRegion reg = document
-								.getLineInformation(commentStartLine - 1);
-						char previousChar = document
-								.getChar(reg.getOffset() + reg.getLength() - 1);
+						IRegion reg = document.getLineInformation(commentStartLine - 1);
+						char previousChar = document.getChar(reg.getOffset() + reg.getLength() - 1);
 						int indentationSize = preferences.indentationSize;
 
 						// add empty lines
@@ -910,8 +855,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 						// Because the comment is the previous indentation level
 						for (int i = 0; i < indentationSize; i++) {
 							appendToBuffer(preferences.indentationChar);
-							lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR)
-									? 0 : 3;
+							lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
 						}
 					}
 
@@ -925,15 +869,12 @@ public class CodeFormatterVisitor extends AbstractVisitor
 							lineWidth = 0;
 						}
 					} else {
-						if (position >= 0 && getBufferFirstChar(
-								position + lineSeparator.length()) == '\0') {
-							replaceBuffer.replace(position,
-									replaceBuffer.length(), ""); //$NON-NLS-1$
+						if (position >= 0 && getBufferFirstChar(position + lineSeparator.length()) == '\0') {
+							replaceBuffer.replace(position, replaceBuffer.length(), ""); //$NON-NLS-1$
 						}
 						insertNewLine();
 						if (!isIndented && !commentIndetationStack.isEmpty()) {
-							CommentIndentationObject cio = commentIndetationStack
-									.peek();
+							CommentIndentationObject cio = commentIndetationStack.peek();
 							if (!cio.indented) {
 								cio.indented = true;
 								indentationLevel += indentGap;
@@ -944,8 +885,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					if (indentationLevelDesending || blockEnd) {
 						for (int i = 0; i < preferences.indentationSize; i++) {
 							appendToBuffer(preferences.indentationChar);
-							lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR)
-									? 0 : 3;
+							lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
 						}
 					}
 					needIndentNewLine = true;
@@ -954,8 +894,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				doNotIndent = true;
 				boolean resetCommentIndentVariables = true;
 				if (indentOnFirstColumn) {
-					if (previousCommentIsSingleLine
-							&& indentStringForComment != null) {
+					if (previousCommentIsSingleLine && indentStringForComment != null) {
 						appendToBuffer(indentStringForComment);
 						// adjust lineWidth,because indentLengthForComment may
 						// contain '\t'
@@ -970,53 +909,43 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					doNotIndent = false;
 				}
 				previousCommentIsSingleLine = true;
-				handleCharsWithoutComments(start,
-						comment.sourceStart() + offset);
+				handleCharsWithoutComments(start, comment.sourceStart() + offset);
 
 				doNotIndent = false;
-				resetEnableStatus(document.get(comment.sourceStart() + offset,
-						comment.sourceEnd() - comment.sourceStart()));
-				if (this.editsEnabled
-						&& this.preferences.comment_format_line_comment
-						&& (startAtFirstColumn
-								&& this.preferences.comment_format_line_comment_starting_on_first_column
+				resetEnableStatus(
+						document.get(comment.sourceStart() + offset, comment.sourceEnd() - comment.sourceStart()));
+				if (this.editsEnabled && this.preferences.comment_format_line_comment
+						&& (startAtFirstColumn && this.preferences.comment_format_line_comment_starting_on_first_column
 								|| !startAtFirstColumn)) {
 					if (resetCommentIndentVariables) {
 						resetCommentIndentVariables();
 					}
 
 					if (startLine == commentStartLine) {
-						initCommentIndentVariables(offset, startLine, comment,
-								endWithNewLineIndent);
+						initCommentIndentVariables(offset, startLine, comment, endWithNewLineIndent);
 						// adjust lineWidth,because indentLengthForComment may
 						// contain '\t'
 						lineWidth = indentLengthForComment;
 					}
-					if (startAtFirstColumn
-							&& this.preferences.never_indent_line_comments_on_first_column) {
+					if (startAtFirstColumn && this.preferences.never_indent_line_comments_on_first_column) {
 						indentLengthForComment = 0;
 						indentStringForComment = ""; //$NON-NLS-1$
 					}
 
-					commentContent = document.get(
-							comment.sourceStart() + offset,
+					commentContent = document.get(comment.sourceStart() + offset,
 							comment.sourceEnd() - comment.sourceStart());
-					boolean needInsertNewLine = commentContent
-							.endsWith(lineSeparator);
+					boolean needInsertNewLine = commentContent.endsWith(lineSeparator);
 					if (!needInsertNewLine) {
 						String[] delimiters = document.getLegalLineDelimiters();
 						for (int i = 0; i < delimiters.length; i++) {
-							needInsertNewLine = commentContent
-									.endsWith(delimiters[i]);
+							needInsertNewLine = commentContent.endsWith(delimiters[i]);
 							if (needInsertNewLine) {
 								break;
 							}
 						}
 					}
 					int commentTokLen = commentContent.startsWith("#") ? 1 : 2;//$NON-NLS-1$
-					commentWords = Arrays
-							.asList(commentContent.substring(commentTokLen)
-									.trim().split("[ \\t\\v\\f]")); //$NON-NLS-1$
+					commentWords = Arrays.asList(commentContent.substring(commentTokLen).trim().split("[ \\t\\v\\f]")); //$NON-NLS-1$
 					commentWords = removeEmptyString(commentWords);
 					commentContent = join(commentWords, " "); //$NON-NLS-1$
 					commentContent = commentContent.trim();
@@ -1025,14 +954,12 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					appendToBuffer("//"); //$NON-NLS-1$
 
 					for (String word : commentWords) {
-						if (this.preferences.comment_line_length != 9999
-								&& !newLineStart && (lineWidth + 1 + word
-										.length() > this.preferences.comment_line_length)) {
+						if (this.preferences.comment_line_length != 9999 && !newLineStart
+								&& (lineWidth + 1 + word.length() > this.preferences.comment_line_length)) {
 							insertNewLine();
 							// start at first column, and more than
 							// comment_line_length
-							if (!startAtFirstColumn || (startAtFirstColumn
-									&& indentOnFirstColumn)) {
+							if (!startAtFirstColumn || (startAtFirstColumn && indentOnFirstColumn)) {
 								if (indentLengthForComment >= 0) {
 									appendToBuffer(indentStringForComment);
 
@@ -1049,8 +976,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 							newLineStart = false;
 						}
 					}
-					handleCharsWithoutComments(comment.sourceStart() + offset,
-							comment.sourceEnd() + offset, true);
+					handleCharsWithoutComments(comment.sourceStart() + offset, comment.sourceEnd() + offset, true);
 					if (needInsertNewLine) {
 						insertNewLine();
 						needInsertNewLine = false;
@@ -1059,16 +985,13 @@ public class CodeFormatterVisitor extends AbstractVisitor
 						afterNewLine = EMPTY_STRING;
 					}
 				} else {
-					commentContent = document.get(
-							comment.sourceStart() + offset,
+					commentContent = document.get(comment.sourceStart() + offset,
 							comment.sourceEnd() - comment.sourceStart());
-					boolean needInsertNewLine = commentContent
-							.endsWith(lineSeparator);
+					boolean needInsertNewLine = commentContent.endsWith(lineSeparator);
 					if (!needInsertNewLine) {
 						String[] delimiters = document.getLegalLineDelimiters();
 						for (int i = 0; i < delimiters.length; i++) {
-							needInsertNewLine = commentContent
-									.endsWith(delimiters[i]);
+							needInsertNewLine = commentContent.endsWith(delimiters[i]);
 							if (needInsertNewLine) {
 								break;
 							}
@@ -1088,30 +1011,24 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			case org.eclipse.php.internal.core.compiler.ast.nodes.Comment.TYPE_PHPDOC:
 				previousCommentIsSingleLine = false;
 				inComment = false;
-				handleCharsWithoutComments(start,
-						comment.sourceStart() + offset);
+				handleCharsWithoutComments(start, comment.sourceStart() + offset);
 				inComment = true;
-				resetEnableStatus(document.get(comment.sourceStart() + offset,
-						comment.sourceEnd() - comment.sourceStart()));
-				String codeBeforeComment = document
-						.get(0, comment.sourceStart() + offset).trim();
+				resetEnableStatus(
+						document.get(comment.sourceStart() + offset, comment.sourceEnd() - comment.sourceStart()));
+				String codeBeforeComment = document.get(0, comment.sourceStart() + offset).trim();
 				boolean isHeaderComment = codeBeforeComment.equals("<?") //$NON-NLS-1$
 						|| codeBeforeComment.equals("<?php"); //$NON-NLS-1$
-				if ((!isHeaderComment || this.preferences.comment_format_header)
-						&& this.editsEnabled
+				if ((!isHeaderComment || this.preferences.comment_format_header) && this.editsEnabled
 						&& this.preferences.comment_format_javadoc_comment
-						&& canHandlePHPDocComment((PHPDocBlock) comment,
-								offset)) {
+						&& canHandlePHPDocComment((PHPDocBlock) comment, offset)) {
 					PHPDocBlock block = (PHPDocBlock) comment;
 
 					newLineOfComment = false;
 					appendToBuffer("/**"); //$NON-NLS-1$
 
 					commentWords = new ArrayList<String>();
-					org.eclipse.php.internal.core.compiler.ast.nodes.Scalar[] texts = block
-							.getTexts().toArray(
-									new org.eclipse.php.internal.core.compiler.ast.nodes.Scalar[block
-											.getTexts().size()]);
+					org.eclipse.php.internal.core.compiler.ast.nodes.Scalar[] texts = block.getTexts().toArray(
+							new org.eclipse.php.internal.core.compiler.ast.nodes.Scalar[block.getTexts().size()]);
 					PHPDocTag[] tags = block.getTags();
 					if ((tags == null || tags.length == 0)) {
 						texts = getNonblankScalars(texts);
@@ -1143,16 +1060,13 @@ public class CodeFormatterVisitor extends AbstractVisitor
 								}
 								isFirst = false;
 								initCommentWords();
-								formatPHPDocText(commentWords, null, false,
-										false);
+								formatPHPDocText(commentWords, null, false, false);
 								commentWords = new ArrayList<String>();
 								lastLineIsBlank = false;
 							}
-						} else
-							if (!this.preferences.comment_clear_blank_lines_in_javadoc_comment) {
+						} else if (!this.preferences.comment_clear_blank_lines_in_javadoc_comment) {
 							// don't duplicate first blank line
-							if (isFirst
-									&& this.preferences.comment_new_lines_at_javadoc_boundaries
+							if (isFirst && this.preferences.comment_new_lines_at_javadoc_boundaries
 									&& commentWords.isEmpty()) {
 								isFirst = false;
 								lastLineIsBlank = true;
@@ -1173,27 +1087,22 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					}
 
 					if (tags != null && tags.length > 0) {
-						if (this.preferences.comment_insert_empty_line_before_root_tags
-								&& !lastLineIsBlank) {
+						if (this.preferences.comment_insert_empty_line_before_root_tags && !lastLineIsBlank) {
 							insertNewLineForPHPDoc();
 							appendToBuffer(" "); //$NON-NLS-1$
 						}
 						for (int i = 0; i < tags.length; i++) {
 							PHPDocTag phpDocTag = tags[i];
 							boolean insertTag = true;
-							String[] words = phpDocTag.getDescTexts()
-									.toArray(new String[0]);
+							String[] words = phpDocTag.getDescTexts().toArray(new String[0]);
 
-							if ((i == tags.length - 1)
-									&& !this.preferences.comment_new_lines_at_javadoc_boundaries) {
+							if ((i == tags.length - 1) && !this.preferences.comment_new_lines_at_javadoc_boundaries) {
 								words = getNonblankWords(words);
 							}
 							commentWords = new ArrayList<String>();
 
 							if (getNonblankWords(words).length == 0) {
-								boolean hasRefs = phpDocTag
-										.getAllReferencesWithOrigOrder()
-										.size() != 0;
+								boolean hasRefs = phpDocTag.getAllReferencesWithOrigOrder().size() != 0;
 								int nbLines = words.length;
 								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=433938
 								if (!hasRefs && nbLines > 1) {
@@ -1211,30 +1120,25 @@ public class CodeFormatterVisitor extends AbstractVisitor
 										commentWords.add(word);
 										if (this.preferences.join_lines_in_comments) {
 
-											formatCommentWords(phpDocTag,
-													insertTag, true);
+											formatCommentWords(phpDocTag, insertTag, true);
 											insertTag = false;
 										}
-									} else
-										if (!this.preferences.comment_clear_blank_lines_in_javadoc_comment
-												&& !insertTag) {
+									} else if (!this.preferences.comment_clear_blank_lines_in_javadoc_comment
+											&& !insertTag) {
 
-										formatCommentWords(phpDocTag, insertTag,
-												true);
+										formatCommentWords(phpDocTag, insertTag, true);
 										insertTag = false;
 									}
 
 								}
 								if (!commentWords.isEmpty() || insertTag) {
-									formatCommentWords(phpDocTag, insertTag,
-											!commentWords.isEmpty());
+									formatCommentWords(phpDocTag, insertTag, !commentWords.isEmpty());
 								}
 							}
 						}
 						lastLineIsBlank = false;
 					}
-					if (this.preferences.comment_new_lines_at_javadoc_boundaries
-							&& !lastLineIsBlank) {
+					if (this.preferences.comment_new_lines_at_javadoc_boundaries && !lastLineIsBlank) {
 						insertNewLineForPHPDoc();
 						appendToBuffer("/"); //$NON-NLS-1$
 					} else if (lastLineIsBlank) {
@@ -1242,23 +1146,18 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					} else {
 						indertWordToComment("*/"); //$NON-NLS-1$
 					}
-					handleCharsWithoutComments(comment.sourceStart() + offset,
-							comment.sourceEnd() + offset, true);
+					handleCharsWithoutComments(comment.sourceStart() + offset, comment.sourceEnd() + offset, true);
 				} else {
-					commentContent = document.get(
-							comment.sourceStart() + offset,
+					commentContent = document.get(comment.sourceStart() + offset,
 							comment.sourceEnd() - comment.sourceStart());
-					List<String> lines = Arrays
-							.asList(commentContent.split("\r\n?|\n", -1)); //$NON-NLS-1$
+					List<String> lines = Arrays.asList(commentContent.split("\r\n?|\n", -1)); //$NON-NLS-1$
 					appendToBuffer(lines.get(0));
 					// indent all lines, even empty lines
 					for (int i = 1; i < lines.size(); i++) {
 						insertNewLineForPHPDoc(false);
-						appendToBuffer(lines.get(i)
-								.replaceFirst("^[ \\t\\v\\f]+", "")); //$NON-NLS-1$ //$NON-NLS-2$
+						appendToBuffer(lines.get(i).replaceFirst("^[ \\t\\v\\f]+", "")); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-					handleCharsWithoutComments(comment.sourceStart() + offset,
-							comment.sourceEnd() + offset, true);
+					handleCharsWithoutComments(comment.sourceStart() + offset, comment.sourceEnd() + offset, true);
 				}
 				start = comment.sourceEnd() + offset;
 				insertNewLine();
@@ -1274,16 +1173,12 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					// TODO: Do line width calculation based on the
 					// formatted content instead of the original content
 					lineWidth = end - reg.getOffset();
-					resetEnableStatus(document.get(
-							comment.sourceStart() + offset,
-							comment.sourceEnd() - comment.sourceStart()));
+					resetEnableStatus(
+							document.get(comment.sourceStart() + offset, comment.sourceEnd() - comment.sourceStart()));
 					for (; iter.hasNext();) {
-						org.eclipse.php.internal.core.compiler.ast.nodes.Comment nextComment = iter
-								.next();
-						resetEnableStatus(
-								document.get(nextComment.sourceStart() + offset,
-										nextComment.sourceEnd()
-												- nextComment.sourceStart()));
+						org.eclipse.php.internal.core.compiler.ast.nodes.Comment nextComment = iter.next();
+						resetEnableStatus(document.get(nextComment.sourceStart() + offset,
+								nextComment.sourceEnd() - nextComment.sourceStart()));
 					}
 					start = end;
 					break comments;
@@ -1294,20 +1189,16 @@ public class CodeFormatterVisitor extends AbstractVisitor
 						|| !this.preferences.never_indent_block_comments_on_first_column;
 				if (startLine == commentStartLine) {
 					indentOnFirstColumn = false;
-					IRegion startLinereg = document
-							.getLineInformation(startLine);
+					IRegion startLinereg = document.getLineInformation(startLine);
 					// TODO: Do line width calculation based on the
 					// formatted content instead of the original content
-					lineWidth = comment.sourceStart() + offset
-							- startLinereg.getOffset();
+					lineWidth = comment.sourceStart() + offset - startLinereg.getOffset();
 					if (position >= 0) {
 						// if (getBufferFirstChar(position
 						// + lineSeparator.length()) == '\0') {
-						afterNewLine = replaceBuffer.substring(
-								position + lineSeparator.length(),
+						afterNewLine = replaceBuffer.substring(position + lineSeparator.length(),
 								replaceBuffer.length());
-						replaceBuffer.replace(position, replaceBuffer.length(),
-								""); //$NON-NLS-1$
+						replaceBuffer.replace(position, replaceBuffer.length(), ""); //$NON-NLS-1$
 						insertSpaces(1);
 						// } else {
 						// insertSpace();
@@ -1324,8 +1215,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					if (position >= 0) {
 						// if (getBufferFirstChar(position
 						// + lineSeparator.length()) == '\0') {
-						replaceBuffer.replace(position + lineSeparator.length(),
-								replaceBuffer.length(), ""); //$NON-NLS-1$
+						replaceBuffer.replace(position + lineSeparator.length(), replaceBuffer.length(), ""); //$NON-NLS-1$
 						lineWidth = 0;
 						// } else {
 						// insertNewLine();
@@ -1345,8 +1235,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 						// level
 						for (int i = 0; i < preferences.indentationSize; i++) {
 							appendToBuffer(preferences.indentationChar);
-							lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR)
-									? 0 : 3;
+							lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
 						}
 					}
 					needIndentNewLine = true;
@@ -1364,29 +1253,24 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					}
 				}
 
-				handleCharsWithoutComments(start,
-						comment.sourceStart() + offset);
+				handleCharsWithoutComments(start, comment.sourceStart() + offset);
 				doNotIndent = false;
 				start = comment.sourceEnd() + offset;
-				resetEnableStatus(document.get(comment.sourceStart() + offset,
-						comment.sourceEnd() - comment.sourceStart()));
+				resetEnableStatus(
+						document.get(comment.sourceStart() + offset, comment.sourceEnd() - comment.sourceStart()));
 
 				if (startLine == commentStartLine) {
-					initCommentIndentVariables(offset, startLine, comment,
-							endWithNewLineIndent);
+					initCommentIndentVariables(offset, startLine, comment, endWithNewLineIndent);
 					lineWidth = indentLengthForComment;
 				}
-				if (startAtFirstColumn
-						&& this.preferences.never_indent_block_comments_on_first_column) {
+				if (startAtFirstColumn && this.preferences.never_indent_block_comments_on_first_column) {
 					indentLengthForComment = 0;
 					indentStringForComment = ""; //$NON-NLS-1$
 				}
-				if (this.editsEnabled
-						&& this.preferences.comment_format_block_comment
+				if (this.editsEnabled && this.preferences.comment_format_block_comment
 						&& !(comment instanceof VarComment)) {
 					appendToBuffer("/*"); //$NON-NLS-1$
-					commentContent = document.get(
-							comment.sourceStart() + offset,
+					commentContent = document.get(comment.sourceStart() + offset,
 							comment.sourceEnd() - comment.sourceStart());
 
 					// boolean needInsertNewLine = commentContent
@@ -1402,10 +1286,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					// }
 					// }
 					commentContent = commentContent.trim();
-					commentContent = commentContent.substring(2,
-							commentContent.length() - 2);
-					List<String> lines = Arrays
-							.asList(commentContent.split("\r\n?|\n", -1)); //$NON-NLS-1$
+					commentContent = commentContent.substring(2, commentContent.length() - 2);
+					List<String> lines = Arrays.asList(commentContent.split("\r\n?|\n", -1)); //$NON-NLS-1$
 					commentWords = new ArrayList<String>();
 					if (lines.size() == 1) {
 						String word = lines.get(0).trim();
@@ -1420,15 +1302,13 @@ public class CodeFormatterVisitor extends AbstractVisitor
 						}
 						// +1 means ' ' after "/*",+2 means "*/"
 						if (this.preferences.comment_line_length == 9999
-								|| lineWidth + 1 + sb.length()
-										+ 2 <= this.preferences.comment_line_length) {
+								|| lineWidth + 1 + sb.length() + 2 <= this.preferences.comment_line_length) {
 							appendToBuffer(" "); //$NON-NLS-1$
 							appendToBuffer(sb.toString());
 							appendToBuffer("*/"); //$NON-NLS-1$
 							commentWords = new ArrayList<String>();
-							handleCharsWithoutComments(
-									comment.sourceStart() + offset,
-									comment.sourceEnd() + offset, true);
+							handleCharsWithoutComments(comment.sourceStart() + offset, comment.sourceEnd() + offset,
+									true);
 							// if (needInsertNewLine) {
 							insertNewLine();
 							// needInsertNewLine = false;
@@ -1458,8 +1338,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					}
 					newLineOfComment = false;
 					if (this.preferences.comment_new_lines_at_block_boundaries) {
-						insertNewLineForPHPBlockComment(indentLengthForComment,
-								indentStringForComment);
+						insertNewLineForPHPBlockComment(indentLengthForComment, indentStringForComment);
 						newLineOfComment = true;
 					}
 					boolean isFirst = true;
@@ -1472,45 +1351,34 @@ public class CodeFormatterVisitor extends AbstractVisitor
 							commentWords.add(word);
 							if (this.preferences.join_lines_in_comments) {
 								if (!isFirst) {
-									insertNewLineForPHPBlockComment(
-											indentLengthForComment,
-											indentStringForComment);
+									insertNewLineForPHPBlockComment(indentLengthForComment, indentStringForComment);
 									newLineOfComment = true;
 								}
 								isFirst = false;
-								formatCommentBlockWords(indentLengthForComment,
-										indentStringForComment);
+								formatCommentBlockWords(indentLengthForComment, indentStringForComment);
 							}
-						} else
-							if (!this.preferences.comment_clear_blank_lines_in_block_comment) {
+						} else if (!this.preferences.comment_clear_blank_lines_in_block_comment) {
 							if (j != 0 && j != lines.size() - 1) {
-								formatCommentBlockWords(indentLengthForComment,
-										indentStringForComment);
+								formatCommentBlockWords(indentLengthForComment, indentStringForComment);
 								// don't duplicate first blank line
-								if (isFirst
-										&& this.preferences.comment_new_lines_at_block_boundaries) {
+								if (isFirst && this.preferences.comment_new_lines_at_block_boundaries) {
 									newLineOfComment = true;
 									isFirst = false;
 									continue;
 								}
-								insertNewLineForPHPBlockComment(
-										indentLengthForComment,
-										indentStringForComment);
+								insertNewLineForPHPBlockComment(indentLengthForComment, indentStringForComment);
 								newLineOfComment = true;
 								isFirst = false;
 							}
 						}
 					}
 					if (!commentWords.isEmpty()) {
-						formatCommentBlockWords(indentLengthForComment,
-								indentStringForComment);
+						formatCommentBlockWords(indentLengthForComment, indentStringForComment);
 						isFirst = false;
 					}
-					if (isFirst
-							&& this.preferences.comment_new_lines_at_block_boundaries) {
+					if (isFirst && this.preferences.comment_new_lines_at_block_boundaries) {
 						appendToBuffer("/"); //$NON-NLS-1$
-					} else if (newLineOfComment
-							|| this.preferences.comment_new_lines_at_block_boundaries) {
+					} else if (newLineOfComment || this.preferences.comment_new_lines_at_block_boundaries) {
 						insertNewLine();
 						if (indentLengthForComment >= 0) {
 							appendToBuffer(indentStringForComment);
@@ -1522,24 +1390,18 @@ public class CodeFormatterVisitor extends AbstractVisitor
 						indertWordToComment("*/"); //$NON-NLS-1$
 					}
 					newLineOfComment = false;
-					handleCharsWithoutComments(comment.sourceStart() + offset,
-							comment.sourceEnd() + offset, true);
+					handleCharsWithoutComments(comment.sourceStart() + offset, comment.sourceEnd() + offset, true);
 				} else {
-					commentContent = document.get(
-							comment.sourceStart() + offset,
+					commentContent = document.get(comment.sourceStart() + offset,
 							comment.sourceEnd() - comment.sourceStart());
-					List<String> lines = Arrays
-							.asList(commentContent.split("\r\n?|\n", -1)); //$NON-NLS-1$
+					List<String> lines = Arrays.asList(commentContent.split("\r\n?|\n", -1)); //$NON-NLS-1$
 					appendToBuffer(lines.get(0));
 					// indent all lines, even empty lines
 					for (int i = 1; i < lines.size(); i++) {
-						insertNewLineForPHPBlockComment(indentLengthForComment,
-								indentStringForComment, false);
-						appendToBuffer(lines.get(i)
-								.replaceFirst("^[ \\t\\v\\f]+", "")); //$NON-NLS-1$ //$NON-NLS-2$
+						insertNewLineForPHPBlockComment(indentLengthForComment, indentStringForComment, false);
+						appendToBuffer(lines.get(i).replaceFirst("^[ \\t\\v\\f]+", "")); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-					handleCharsWithoutComments(comment.sourceStart() + offset,
-							comment.sourceEnd() + offset, true);
+					handleCharsWithoutComments(comment.sourceStart() + offset, comment.sourceEnd() + offset, true);
 				}
 				insertNewLine();
 				break;
@@ -1556,8 +1418,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		handleCharsWithoutComments(start, end);
 	}
 
-	private void indentBaseOnPrevLine(int commentStartLine)
-			throws BadLocationException {
+	private void indentBaseOnPrevLine(int commentStartLine) throws BadLocationException {
 		IRegion prevLine = document.getLineInformation(commentStartLine);
 		loop: for (int i = 0; i < prevLine.getLength(); i++) {
 			switch (document.getChar(i + prevLine.getOffset())) {
@@ -1574,18 +1435,15 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		}
 	}
 
-	private boolean canHandlePHPDocComment(PHPDocBlock comment, int offset)
-			throws BadLocationException {
+	private boolean canHandlePHPDocComment(PHPDocBlock comment, int offset) throws BadLocationException {
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=474332
 		// do not handle single-line PHPDoc comment with @var tag inside
 		PHPDocTag[] varTags = comment.getTags(PHPDocTagKinds.VAR);
 		if (varTags.length != 1) {
 			return true;
 		}
-		int commentStartLine = document
-				.getLineOfOffset(comment.sourceStart() + offset);
-		int commentEndLine = document
-				.getLineOfOffset(comment.sourceEnd() + offset);
+		int commentStartLine = document.getLineOfOffset(comment.sourceStart() + offset);
+		int commentEndLine = document.getLineOfOffset(comment.sourceEnd() + offset);
 		return commentStartLine != commentEndLine;
 	}
 
@@ -1596,8 +1454,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				case '/':
 					if (document.getChar(iRegion.getOffset() + i + 1) == '/')
 						return true;
-					else if (document
-							.getChar(iRegion.getOffset() + i + 1) == '*')
+					else if (document.getChar(iRegion.getOffset() + i + 1) == '*')
 						return true;
 				case '*':
 					return true;
@@ -1622,8 +1479,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	private String getIndent() {
 		StringBuffer sb = new StringBuffer();
 
-		for (int i = 0; i < indentationLevel
-				* preferences.indentationSize; i++) {
+		for (int i = 0; i < indentationLevel * preferences.indentationSize; i++) {
 			sb.append(preferences.indentationChar);
 		}
 		return sb.toString();
@@ -1640,15 +1496,14 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		if (indentationLevelDesending || blockEnd) {
 			for (int i = 0; i < preferences.indentationSize; i++) {
 				appendToBuffer(preferences.indentationChar);
-				lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR)
-						? 0 : 3;
+				lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
 			}
 		}
 	}
 
 	private void initCommentIndentVariables(int offset, int startLine,
-			org.eclipse.php.internal.core.compiler.ast.nodes.Comment comment,
-			boolean endWithNewLineIndent) throws BadLocationException {
+			org.eclipse.php.internal.core.compiler.ast.nodes.Comment comment, boolean endWithNewLineIndent)
+					throws BadLocationException {
 		// TODO the value should be calculated from ReplaceEdit changes
 		indentLengthForComment = 0;
 		indentStringForComment = ""; //$NON-NLS-1$
@@ -1659,9 +1514,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			return;
 		}
 		IRegion startRegion = document.getLineInformation(startLine);
-		String startLineContent = document.get(startRegion.getOffset(),
-				comment.sourceStart() + offset - startRegion.getOffset())
-				.trim();
+		String startLineContent = document
+				.get(startRegion.getOffset(), comment.sourceStart() + offset - startRegion.getOffset()).trim();
 		// indentStringForComment = FormatterUtils.getLineBlanks(document,
 		// startRegion);
 
@@ -1669,18 +1523,14 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		int lastIndentationLevel = indentationLevel;
 		if (endWithNewLineIndent) {
 			if (indentationLevelList.size() >= 2) {
-				lastIndentationLevel = indentationLevelList
-						.get(indentationLevelList.size() - 2);
+				lastIndentationLevel = indentationLevelList.get(indentationLevelList.size() - 2);
 			} else {
-				lastIndentationLevel = indentationLevelList
-						.get(indentationLevelList.size() - 1);
+				lastIndentationLevel = indentationLevelList.get(indentationLevelList.size() - 1);
 			}
 		} else {
-			lastIndentationLevel = indentationLevelList
-					.get(indentationLevelList.size() - 1);
+			lastIndentationLevel = indentationLevelList.get(indentationLevelList.size() - 1);
 		}
-		for (int i = 0; i < lastIndentationLevel
-				* preferences.indentationSize; i++) {
+		for (int i = 0; i < lastIndentationLevel * preferences.indentationSize; i++) {
 			sb.append(preferences.indentationChar);
 		}
 		for (int i = 0; i < startLineContent.length(); i++) {
@@ -1787,8 +1637,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 	}
 
-	private void formatCommentWords(PHPDocTag phpDocTag, boolean insertTag,
-			boolean hasDesc) {
+	private void formatCommentWords(PHPDocTag phpDocTag, boolean insertTag, boolean hasDesc) {
 		initCommentWords();
 		insertNewLineForPHPDoc();
 		formatPHPDocText(commentWords, phpDocTag, insertTag, hasDesc);
@@ -1799,18 +1648,15 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	private void initCommentWords() {
 		String commentContent = join(commentWords, " "); //$NON-NLS-1$
 		commentContent = commentContent.trim();
-		commentWords = Arrays.asList(
-				MagicMemberUtil.WHITESPACE_SEPERATOR.split(commentContent));
+		commentWords = Arrays.asList(MagicMemberUtil.WHITESPACE_SEPERATOR.split(commentContent));
 		commentWords = removeEmptyString(commentWords);
 	}
 
-	private void insertNewLineForPHPBlockComment(int indentLength,
-			String blanks) {
+	private void insertNewLineForPHPBlockComment(int indentLength, String blanks) {
 		insertNewLineForPHPBlockComment(indentLength, blanks, true);
 	}
 
-	private void insertNewLineForPHPBlockComment(int indentLength,
-			String blanks, boolean addCommentSymbol) {
+	private void insertNewLineForPHPBlockComment(int indentLength, String blanks, boolean addCommentSymbol) {
 		insertNewLine();
 		if (indentLength >= 0) {
 			appendToBuffer(blanks);
@@ -1839,8 +1685,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		}
 	}
 
-	private void formatPHPDocText(List<String> words, PHPDocTag phpDocTag,
-			boolean insertTag, boolean hasDesc) {
+	private void formatPHPDocText(List<String> words, PHPDocTag phpDocTag, boolean insertTag, boolean hasDesc) {
 		boolean insertSpace = true;
 		String tag = ""; //$NON-NLS-1$
 		// int indentLength = 0;
@@ -1865,8 +1710,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				appendToBuffer(reference);
 			}
 			newLineOfComment = false;
-			if (this.preferences.comment_insert_new_line_for_parameter
-					&& phpDocTag.getTagKind() == PHPDocTag.PARAM) {
+			if (this.preferences.comment_insert_new_line_for_parameter && phpDocTag.getTagKind() == PHPDocTag.PARAM) {
 				if (insertTag && hasDesc) {
 					insertNewLineForPHPDoc();
 				}
@@ -1882,13 +1726,11 @@ public class CodeFormatterVisitor extends AbstractVisitor
 						&& this.preferences.comment_indent_parameter_description) {
 					for (int i = 0; i < preferences.indentationSize; i++) {
 						appendToBuffer(preferences.indentationChar);
-						lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR)
-								? 0 : 3;
+						lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
 					}
 
 				}
-			} else
-				if (!insertTag && this.preferences.comment_indent_root_tags) {
+			} else if (!insertTag && this.preferences.comment_indent_root_tags) {
 				insertSpaces(tagLength);
 			}
 		}
@@ -1903,14 +1745,11 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	}
 
 	private String getTagReference(PHPDocTag phpDocTag) {
-		SimpleReference[] reference = phpDocTag.getAllReferencesWithOrigOrder()
-				.toArray(new SimpleReference[0]);
+		SimpleReference[] reference = phpDocTag.getAllReferencesWithOrigOrder().toArray(new SimpleReference[0]);
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < reference.length; i++) {
-			if (i > 0 && reference[i - 1] instanceof TypeReference
-					&& reference[i] instanceof TypeReference) {
-				sb.append(Constants.TYPE_SEPERATOR_CHAR)
-						.append(reference[i].getName());
+			if (i > 0 && reference[i - 1] instanceof TypeReference && reference[i] instanceof TypeReference) {
+				sb.append(Constants.TYPE_SEPERATOR_CHAR).append(reference[i].getName());
 			} else {
 				sb.append(" ").append(reference[i].getName()); //$NON-NLS-1$
 			}
@@ -1922,11 +1761,9 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		indertWordToComment(null, 0, word, true);
 	}
 
-	private void indertWordToCommentBlock(String word, int indentLength,
-			String blanks) {
+	private void indertWordToCommentBlock(String word, int indentLength, String blanks) {
 		if (this.preferences.comment_line_length != 9999 && !newLineOfComment
-				&& (lineWidth + 1 + word
-						.length() > this.preferences.comment_line_length)) {
+				&& (lineWidth + 1 + word.length() > this.preferences.comment_line_length)) {
 			insertNewLine();
 			if (indentLength >= 0) {
 				appendToBuffer(blanks);
@@ -1945,12 +1782,10 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		}
 	}
 
-	private void indertWordToComment(PHPDocTag phpDocTag, int tagLength,
-			String word, boolean insertSpace) {
+	private void indertWordToComment(PHPDocTag phpDocTag, int tagLength, String word, boolean insertSpace) {
 		word = word.trim();
 		if (this.preferences.comment_line_length != 9999 && !newLineOfComment
-				&& (lineWidth + 1 + word
-						.length() > this.preferences.comment_line_length)) {
+				&& (lineWidth + 1 + word.length() > this.preferences.comment_line_length)) {
 			insertNewLineForPHPDoc();
 			appendToBuffer(" "); //$NON-NLS-1$
 
@@ -1959,13 +1794,11 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					insertSpaces(tagLength);
 				}
 
-				if (this.preferences.comment_indent_root_tags
-						&& this.preferences.comment_indent_parameter_description
+				if (this.preferences.comment_indent_root_tags && this.preferences.comment_indent_parameter_description
 						&& phpDocTag.getTagKind() == PHPDocTag.PARAM) {
 					for (int i = 0; i < preferences.indentationSize; i++) {
 						appendToBuffer(preferences.indentationChar);
-						lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR)
-								? 0 : 3;
+						lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
 					}
 				}
 			}
@@ -1987,15 +1820,12 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		}
 	}
 
-	private void handleForSemicolon(Expression[] beforExpressions,
-			Expression[] afterExpressions) {
-		if (this.preferences.insert_space_before_semicolon_in_for
-				&& beforExpressions.length > 0) {
+	private void handleForSemicolon(Expression[] beforExpressions, Expression[] afterExpressions) {
+		if (this.preferences.insert_space_before_semicolon_in_for && beforExpressions.length > 0) {
 			insertSpace();
 		}
 		appendToBuffer(SEMICOLON);
-		if (this.preferences.insert_space_after_semicolon_in_for
-				&& afterExpressions.length > 0) {
+		if (this.preferences.insert_space_after_semicolon_in_for && afterExpressions.length > 0) {
 			insertSpace();
 		}
 	}
@@ -2035,8 +1865,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	 *            the position of the semicolon -1
 	 */
 	private void handleSemicolon(int start, int end) {
-		if (this.preferences.insert_space_before_semicolon
-				&& !isHeredocSemicolon) {
+		if (this.preferences.insert_space_before_semicolon && !isHeredocSemicolon) {
 			insertSpace();
 		}
 		// check if the statement end with ; or ?>
@@ -2078,11 +1907,9 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	private void indent() {
 		if (!isPhpEqualTag) {
 			indentationLevelList.add(indentationLevel);
-			for (int i = 0; i < indentationLevel
-					* preferences.indentationSize; i++) {
+			for (int i = 0; i < indentationLevel * preferences.indentationSize; i++) {
 				appendToBuffer(preferences.indentationChar);
-				lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR)
-						? 0 : 3;
+				lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
 			}
 		}
 	}
@@ -2132,14 +1959,12 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			break;
 		case ASTNode.FUNCTION_DECLARATION:
 		case ASTNode.METHOD_DECLARATION:
-			numberOfLines = this.preferences.blank_line_before_method_declaration
-					+ 1;
+			numberOfLines = this.preferences.blank_line_before_method_declaration + 1;
 			// ignoreEmptyLineSetting = true;
 			ignoreEmptyLineSetting = !preferences.indent_empty_lines;
 			break;
 		case ASTNode.FIELD_DECLARATION:
-			numberOfLines = this.preferences.blank_line_before_field_declaration
-					+ 1;
+			numberOfLines = this.preferences.blank_line_before_field_declaration + 1;
 			// ignoreEmptyLineSetting = true;
 			ignoreEmptyLineSetting = !preferences.indent_empty_lines;
 			break;
@@ -2147,12 +1972,10 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		case ASTNode.INTERFACE_DECLARATION:
 			// ignoreEmptyLineSetting = true;
 			ignoreEmptyLineSetting = !preferences.indent_empty_lines;
-			numberOfLines = this.preferences.blank_line_before_class_declaration
-					+ 1;
+			numberOfLines = this.preferences.blank_line_before_class_declaration + 1;
 			break;
 		case ASTNode.CONSTANT_DECLARATION:
-			numberOfLines = this.preferences.blank_line_before_constant_declaration
-					+ 1;
+			numberOfLines = this.preferences.blank_line_before_constant_declaration + 1;
 			// ignoreEmptyLineSetting = true;
 			ignoreEmptyLineSetting = !preferences.indent_empty_lines;
 			break;
@@ -2164,16 +1987,13 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		return numberOfLines;
 	}
 
-	private void handleSplittedPhpBlock(int offset, int end)
-			throws BadLocationException {
+	private void handleSplittedPhpBlock(int offset, int end) throws BadLocationException {
 		IRegion lineRegion = document.getLineInformationOfOffset(offset);
 		switch (getPhpStartTag(offset)) {
 		case PHP_OPEN_ASP_TAG:
 		case PHP_OPEN_SHORT_TAG:
-			if (document
-					.get(offset + 2, lineRegion.getOffset()
-							+ lineRegion.getLength() - (offset + 2))
-					.trim().length() != 0) {
+			if (document.get(offset + 2, lineRegion.getOffset() + lineRegion.getLength() - (offset + 2)).trim()
+					.length() != 0) {
 				insertNewLine();
 			}
 			handleCharsWithoutComments(offset + 2, end);
@@ -2182,10 +2002,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			handleCharsWithoutComments(offset + 3, end);
 			break;
 		case PHP_OPEN_TAG:
-			if (document
-					.get(offset + 5, lineRegion.getOffset()
-							+ lineRegion.getLength() - (offset + 5))
-					.trim().length() != 0) {
+			if (document.get(offset + 5, lineRegion.getOffset() + lineRegion.getLength() - (offset + 5)).trim()
+					.length() != 0) {
 				insertNewLine();
 			}
 			handleCharsWithoutComments(offset + 5, end);
@@ -2203,8 +2021,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 	private void insertString(int offset, int end, String content) {
 		assert end >= offset;
-		ReplaceEdit replaceEdit = new ReplaceEdit(offset, end - offset,
-				content);
+		ReplaceEdit replaceEdit = new ReplaceEdit(offset, end - offset, content);
 		changes.add(replaceEdit);
 	}
 
@@ -2227,8 +2044,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 		for (int offset = lineStart; offset < lineEnd; offset++) {
 			char currChar = document.getChar(offset);
-			if (currChar != ' ' && currChar != '\t' && currChar != '\r'
-					&& currChar != '\n') {
+			if (currChar != ' ' && currChar != '\t' && currChar != '\r' && currChar != '\n') {
 				// not empty line
 				return false;
 			}
@@ -2250,8 +2066,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	}
 
 	private void scan(final int offset, final int end) throws Exception {
-		final Reader reader = new DocumentReader(document, offset,
-				end - offset);
+		final Reader reader = new DocumentReader(document, offset, end - offset);
 
 		if (astLexer == null) {
 			// create the lexer for the first time
@@ -2350,8 +2165,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			}
 
 			lineWidth += 5;
-			int indentationGap = calculateIndentGap(
-					this.preferences.line_wrap_expressions_in_array_init_indent_policy,
+			int indentationGap = calculateIndentGap(this.preferences.line_wrap_expressions_in_array_init_indent_policy,
 					this.preferences.line_wrap_array_init_indentation);
 
 			// work around for close bracket.
@@ -2360,8 +2174,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			lastPosition = handleCommaList(elements, lastPosition,
 					this.preferences.insert_space_before_list_comma_in_array,
 					this.preferences.insert_space_after_list_comma_in_array,
-					this.preferences.line_wrap_expressions_in_array_init_line_wrap_policy,
-					indentationGap,
+					this.preferences.line_wrap_expressions_in_array_init_line_wrap_policy, indentationGap,
 					this.preferences.line_wrap_expressions_in_array_init_force_split);
 
 			// work around for close bracket.
@@ -2389,8 +2202,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		return false;
 	}
 
-	private int calculateIndentGap(int indentationPolicy,
-			int defaultIndentation) {
+	private int calculateIndentGap(int indentationPolicy, int defaultIndentation) {
 		switch (indentationPolicy) {
 		case DEFAULT_INDENTATION:
 			return defaultIndentation;
@@ -2401,8 +2213,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			if (this.preferences.indentationChar == '\t') {
 				lineIndentation = (int) Math.ceil(lineWidth / 4);
 			} else {
-				lineIndentation = (int) Math
-						.ceil(lineWidth / this.preferences.indentationSize);
+				lineIndentation = (int) Math.ceil(lineWidth / this.preferences.indentationSize);
 			}
 			return lineIndentation - indentationLevel;
 		case INDENT_ONE:
@@ -2422,8 +2233,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			if (this.preferences.insert_space_after_arrow_in_array) {
 				insertSpace();
 			}
-			handleChars(arrayElement.getKey().getEnd(),
-					arrayElement.getValue().getStart());
+			handleChars(arrayElement.getKey().getEnd(), arrayElement.getValue().getStart());
 		}
 		arrayElement.getValue().accept(this);
 		return false;
@@ -2480,8 +2290,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					// need check how many new lines will the next statement
 					// insert
 					int numberOfLines = getNumbreOfLines(statement) - 1;
-					numberOfLines = this.preferences.blank_lines_after_namespace
-							- numberOfLines;
+					numberOfLines = this.preferences.blank_lines_after_namespace - numberOfLines;
 					if (numberOfLines > 0) {
 						for (int j = 0; j < numberOfLines; j++) {
 							insertNewLine();
@@ -2501,8 +2310,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				Statement statement = block.statements().get(0);
 				// need check how many new lines will the next statement insert
 				int numberOfLines = getNumbreOfLines(statement) - 1;
-				numberOfLines = this.preferences.blank_lines_after_namespace
-						- numberOfLines;
+				numberOfLines = this.preferences.blank_lines_after_namespace - numberOfLines;
 				if (numberOfLines > 0) {
 					for (int j = 0; j < numberOfLines; j++) {
 						insertNewLine();
@@ -2558,16 +2366,14 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		Statement[] statements = new Statement[statementsList.size()];
 		statements = block.statements().toArray(statements);
 		for (int i = 0; i < statements.length; i++) {
-			boolean isHtmlStatement = statements[i]
-					.getType() == ASTNode.IN_LINE_HTML;
+			boolean isHtmlStatement = statements[i].getType() == ASTNode.IN_LINE_HTML;
 			boolean isASTError = statements[i].getType() == ASTNode.AST_ERROR;
 			// fixed bug 441419
 			// in case of previous statement is an error there is no need for
 			// new lines
 			// because the lastStatementEndOffset position move to the current
 			// statement start position
-			boolean isStatementAfterError = i > 0
-					? statements[i - 1].getType() == ASTNode.AST_ERROR : false;
+			boolean isStatementAfterError = i > 0 ? statements[i - 1].getType() == ASTNode.AST_ERROR : false;
 			if (isASTError && i + 1 < statements.length) {
 				// move the lastStatementEndOffset position to the start of the
 				// next statement start position
@@ -2575,8 +2381,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			} else {
 				if (isPhpMode && !isHtmlStatement) {
 					// PHP -> PHP
-					if (!isStatementAfterError
-							&& getPhpStartTag(lastStatementEndOffset) != -1) {
+					if (!isStatementAfterError && getPhpStartTag(lastStatementEndOffset) != -1) {
 						insertNewLine();
 					}
 					if (isThrowOrReturnFormatCase(statements)) {
@@ -2588,8 +2393,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 						}
 					}
 					if (lastStatementEndOffset <= statements[i].getStart()) {
-						handleChars(lastStatementEndOffset,
-								statements[i].getStart());
+						handleChars(lastStatementEndOffset, statements[i].getStart());
 					}
 				} else if (isPhpMode && isHtmlStatement) {
 					// PHP -> HTML
@@ -2597,14 +2401,12 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				} else if (!isPhpMode && !isHtmlStatement) {
 					// HTML -> PHP
 					if (!isStatementAfterError) {
-						isPhpEqualTag = getPhpStartTag(
-								lastStatementEndOffset) == PHP_OPEN_SHORT_TAG_WITH_EQUAL;
+						isPhpEqualTag = getPhpStartTag(lastStatementEndOffset) == PHP_OPEN_SHORT_TAG_WITH_EQUAL;
 						insertNewLines(statements[i]);
 						indent();
 					}
 					if (lastStatementEndOffset <= statements[i].getStart()) {
-						handleChars(lastStatementEndOffset,
-								statements[i].getStart());
+						handleChars(lastStatementEndOffset, statements[i].getStart());
 					}
 					isPhpMode = true;
 				} else {
@@ -2613,8 +2415,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				}
 				statements[i].accept(this);
 				lastStatementEndOffset = statements[i].getEnd();
-				if (isNamespace && i + 1 < statements.length
-						&& statements[i].getType() == ASTNode.USE_STATEMENT) {
+				if (isNamespace && i + 1 < statements.length && statements[i].getType() == ASTNode.USE_STATEMENT) {
 					if (statements[i + 1].getType() == ASTNode.USE_STATEMENT) {
 						// for (int j = 0; j <
 						// this.preferences.blank_lines_between_use_statements;
@@ -2628,10 +2429,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					} else {
 						// need check how many new lines will the next statement
 						// insert
-						int numberOfLines = getNumbreOfLines(statements[i + 1])
-								- 1;
-						numberOfLines = this.preferences.blank_lines_after_use_statements
-								- numberOfLines;
+						int numberOfLines = getNumbreOfLines(statements[i + 1]) - 1;
+						numberOfLines = this.preferences.blank_lines_after_use_statements - numberOfLines;
 						if (numberOfLines > 0) {
 							for (int j = 0; j < numberOfLines; j++) {
 								insertNewLine();
@@ -2656,8 +2455,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		}
 		int endPosition = block.getEnd() - 1;
 		boolean hasComments = false;
-		if (startRegionPosition < endPosition
-				&& endRegionPosition >= endPosition) {
+		if (startRegionPosition < endPosition && endRegionPosition >= endPosition) {
 			try {
 				hasComments = hasComments(lastStatementEndOffset, endPosition);
 			} catch (Exception e) {
@@ -2666,8 +2464,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		}
 
 		if (statements.length > 0 || isEmptyBlockNewLine || hasComments) {
-			if (isUnbracketedNamespace
-					|| isThrowOrReturnFormatCase(statements)) {
+			if (isUnbracketedNamespace || isThrowOrReturnFormatCase(statements)) {
 				// do not add new line... Throw/Return Statements within an If
 				// Statement block
 			} else {
@@ -2757,12 +2554,9 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	// line
 	// is either return OR throw expression AND the FORMAT flag is ON
 	private boolean isThrowOrReturnFormatCase(Statement[] statements) {
-		return preferences.control_statement_keep_guardian_on_one_line
-				&& (statements.length == 1)
-				&& (statements[0].getParent()
-						.getParent() instanceof IfStatement)
-				&& (((IfStatement) statements[0].getParent().getParent())
-						.getFalseStatement() == null)
+		return preferences.control_statement_keep_guardian_on_one_line && (statements.length == 1)
+				&& (statements[0].getParent().getParent() instanceof IfStatement)
+				&& (((IfStatement) statements[0].getParent().getParent()).getFalseStatement() == null)
 				&& (statements[0].getType() == ASTNode.RETURN_STATEMENT
 						|| statements[0].getType() == ASTNode.YIELD_STATEMENT
 						|| statements[0].getType() == ASTNode.THROW_STATEMENT);
@@ -2859,14 +2653,12 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			insertSpace();
 		}
 		lineWidth += 5;
-		handleChars(catchClause.getStart() + 5,
-				catchClause.getClassName().getStart());
+		handleChars(catchClause.getStart() + 5, catchClause.getClassName().getStart());
 
 		// handle the catch identifier
 		catchClause.getClassName().accept(this);
 		insertSpace();
-		handleChars(catchClause.getClassName().getEnd(),
-				catchClause.getVariable().getStart());
+		handleChars(catchClause.getClassName().getEnd(), catchClause.getVariable().getStart());
 		catchClause.getVariable().accept(this);
 
 		// set the catch closing parn spaces
@@ -2875,11 +2667,9 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		}
 		appendToBuffer(CLOSE_PARN);
 
-		boolean isIndentationAdded = handleBlockOpenBrace(
-				this.preferences.brace_position_for_block,
+		boolean isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_block,
 				this.preferences.insert_space_before_opening_brace_in_block);
-		handleChars(catchClause.getVariable().getEnd(),
-				catchClause.getBody().getStart());
+		handleChars(catchClause.getVariable().getEnd(), catchClause.getBody().getStart());
 		catchClause.getBody().accept(this);
 		if (isIndentationAdded) {
 			indentationLevel--;
@@ -2922,8 +2712,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				insertSpace();
 			}
 
-			List<Expression> initializers = classConstantDeclaration
-					.initializers();
+			List<Expression> initializers = classConstantDeclaration.initializers();
 
 			Expression[] constantValues = new Expression[initializers.size()];
 
@@ -2940,8 +2729,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 	public boolean visit(ClassDeclaration classDeclaration) {
 		// handle spaces between modifier, 'class' and class name
-		String modifier = ClassDeclaration
-				.getModifier(classDeclaration.getModifier());
+		String modifier = ClassDeclaration.getModifier(classDeclaration.getModifier());
 		if (!modifier.equals(EMPTY_STRING)) {
 			appendToBuffer(modifier);
 			insertSpace();
@@ -2952,8 +2740,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			appendToBuffer("class"); //$NON-NLS-1$
 		}
 		insertSpace();
-		handleChars(classDeclaration.getStart(),
-				classDeclaration.getName().getStart());
+		handleChars(classDeclaration.getStart(), classDeclaration.getName().getStart());
 
 		classDeclaration.getName().accept(this);
 
@@ -2980,14 +2767,12 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			lastPosition = handleCommaList(interfaces, lastPosition,
 					this.preferences.insert_space_before_comma_in_implements,
 					this.preferences.insert_space_after_comma_in_implements,
-					this.preferences.line_wrap_superinterfaces_in_type_declaration_line_wrap_policy,
-					indentationGap,
+					this.preferences.line_wrap_superinterfaces_in_type_declaration_line_wrap_policy, indentationGap,
 					this.preferences.line_wrap_superinterfaces_in_type_declaration_force_split);
 		}
 
 		// handle class body
-		boolean isIndentationAdded = handleBlockOpenBrace(
-				this.preferences.brace_position_for_class,
+		boolean isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_class,
 				this.preferences.insert_space_before_opening_brace_in_class);
 		handleChars(lastPosition, classDeclaration.getBody().getStart());
 
@@ -3004,8 +2789,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		// insertSpace();
 		appendToBuffer("new "); //$NON-NLS-1$
 		// lineWidth += 3; // the 'new' word
-		handleChars(classInstanceCreation.getStart(),
-				classInstanceCreation.getClassName().getStart());
+		handleChars(classInstanceCreation.getStart(), classInstanceCreation.getClassName().getStart());
 		classInstanceCreation.getClassName().accept(this);
 		if (this.preferences.insert_space_before_opening_paren_in_function) {
 			insertSpace();
@@ -3014,37 +2798,30 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		List<Expression> ctorParams = classInstanceCreation.ctorParams();
 		int numberOfCtorParameters = ctorParams.size();
 
-		if (numberOfCtorParameters == 0
-				&& this.preferences.insert_space_between_empty_paren_in_function) {
+		if (numberOfCtorParameters == 0 && this.preferences.insert_space_between_empty_paren_in_function) {
 			insertSpace();
 		}
 
-		if (numberOfCtorParameters > 0
-				&& this.preferences.insert_space_after_opening_paren_in_function) {
+		if (numberOfCtorParameters > 0 && this.preferences.insert_space_after_opening_paren_in_function) {
 			insertSpace();
 		}
 
-		Expression[] arrayOfParameters = (Expression[]) ctorParams
-				.toArray(new Expression[ctorParams.size()]);
+		Expression[] arrayOfParameters = (Expression[]) ctorParams.toArray(new Expression[ctorParams.size()]);
 		int indentationGap = calculateIndentGap(
 				this.preferences.line_wrap_arguments_in_allocation_expression_indent_policy,
 				this.preferences.line_wrap_wrapped_lines_indentation);
-		int lastPosition = handleCommaList(arrayOfParameters,
-				classInstanceCreation.getClassName().getEnd(),
+		int lastPosition = handleCommaList(arrayOfParameters, classInstanceCreation.getClassName().getEnd(),
 				this.preferences.insert_space_before_comma_in_function,
 				this.preferences.insert_space_after_comma_in_function,
-				this.preferences.line_wrap_arguments_in_allocation_expression_line_wrap_policy,
-				indentationGap,
+				this.preferences.line_wrap_arguments_in_allocation_expression_line_wrap_policy, indentationGap,
 				this.preferences.line_wrap_arguments_in_allocation_expression_force_split);
 
-		if (numberOfCtorParameters > 0
-				&& this.preferences.insert_space_before_closing_paren_in_function) {
+		if (numberOfCtorParameters > 0 && this.preferences.insert_space_before_closing_paren_in_function) {
 			insertSpace();
 		}
 		appendToBuffer(CLOSE_PARN);
 		if (classInstanceCreation.getAnonymousClassDeclaration() != null) {
-			AnonymousClassDeclaration acd = classInstanceCreation
-					.getAnonymousClassDeclaration();
+			AnonymousClassDeclaration acd = classInstanceCreation.getAnonymousClassDeclaration();
 			if (acd.getSuperClass() != null) {
 				appendToBuffer(" extends "); //$NON-NLS-1$
 				handleChars(lastPosition, acd.getSuperClass().getStart());
@@ -3062,13 +2839,11 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				lastPosition = handleCommaList(nodes, lastPosition,
 						this.preferences.insert_space_before_comma_in_implements,
 						this.preferences.insert_space_after_comma_in_implements,
-						this.preferences.line_wrap_superinterfaces_in_type_declaration_line_wrap_policy,
-						indentationGap,
+						this.preferences.line_wrap_superinterfaces_in_type_declaration_line_wrap_policy, indentationGap,
 						this.preferences.line_wrap_superinterfaces_in_type_declaration_force_split);
 			}
 
-			boolean isIndentationAdded = handleBlockOpenBrace(
-					this.preferences.brace_position_for_lambda_function,
+			boolean isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_lambda_function,
 					this.preferences.insert_space_before_opening_brace_in_function);
 			handleChars(lastPosition, acd.getBody().getStart());
 
@@ -3105,8 +2880,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	}
 
 	public boolean visit(ConditionalExpression conditionalExpression) {
-		boolean isTernaryOperator = conditionalExpression
-				.getOperatorType() == ConditionalExpression.OP_TERNARY;
+		boolean isTernaryOperator = conditionalExpression.getOperatorType() == ConditionalExpression.OP_TERNARY;
 		// start
 		// condition ? true : false
 		conditionalExpression.getCondition().accept(this);
@@ -3129,8 +2903,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			if (this.preferences.insert_space_after_conditional_question_mark) {
 				insertSpace();
 			}
-			handleChars(conditionalExpression.getCondition().getEnd(),
-					ifTrue.getStart());
+			handleChars(conditionalExpression.getCondition().getEnd(), ifTrue.getStart());
 			ifTrue.accept(this);
 			// iftrue -> iffalse
 			if (this.preferences.insert_space_before_conditional_colon) {
@@ -3141,10 +2914,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			if (ifFalse != null) {
 				length = ifFalse.getStart();
 			}
-			colonOffset = getCharPosition(
-					conditionalExpression.getCondition().getEnd(), length, ':');
-			handleChars(conditionalExpression.getCondition().getEnd(),
-					colonOffset);
+			colonOffset = getCharPosition(conditionalExpression.getCondition().getEnd(), length, ':');
+			handleChars(conditionalExpression.getCondition().getEnd(), colonOffset);
 		}
 
 		if (isTernaryOperator) {
@@ -3154,11 +2925,9 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				insertSpace();
 			}
 			if (ifTrue != null && ifFalse != null) {
-				handleChars(ifTrue.getEnd(),
-						conditionalExpression.getIfFalse().getStart());
+				handleChars(ifTrue.getEnd(), conditionalExpression.getIfFalse().getStart());
 			} else if (ifTrue == null && ifFalse != null) {
-				handleChars(colonOffset,
-						conditionalExpression.getIfFalse().getStart());
+				handleChars(colonOffset, conditionalExpression.getIfFalse().getStart());
 			} else if (ifTrue != null && ifFalse == null) {
 				handleChars(ifTrue.getEnd(), colonOffset);
 			}
@@ -3229,10 +2998,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				insertSpace();
 			}
 
-			List<Expression> directiveValuesList = declareStatement
-					.directiveValues();
-			Expression[] directiveValues = new Expression[directiveValuesList
-					.size()];
+			List<Expression> directiveValuesList = declareStatement.directiveValues();
+			Expression[] directiveValues = new Expression[directiveValuesList.size()];
 			directiveValues = directiveValuesList.toArray(directiveValues);
 
 			handleChars(lastPosition, directiveValues[i].getStart());
@@ -3267,10 +3034,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		String textBetween = ""; //$NON-NLS-1$
 		int indexOfWhile = -1;
 		try {
-			textBetween = document
-					.get(doActionEnd,
-							doStatement.getCondition().getStart() - doActionEnd)
-					.toLowerCase();
+			textBetween = document.get(doActionEnd, doStatement.getCondition().getStart() - doActionEnd).toLowerCase();
 		} catch (BadLocationException e) {
 			Logger.logException(e);
 			return false;
@@ -3305,8 +3069,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		}
 		appendToBuffer(CLOSE_PARN);
 
-		handleSemicolon(doStatement.getCondition().getEnd(),
-				doStatement.getEnd());
+		handleSemicolon(doStatement.getCondition().getEnd(), doStatement.getEnd());
 		return false;
 	}
 
@@ -3318,17 +3081,14 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		expressions = expressionList.toArray(expressions);
 
 		// check if short echo syntax (<?=)
-		if (expressions.length > 0
-				&& echoStatement.getStart() != expressions[0].getStart()) {
+		if (expressions.length > 0 && echoStatement.getStart() != expressions[0].getStart()) {
 			lastPosition += 4;
 			lineWidth += 4;
 			insertSpace();
 		}
 
-		lastPosition = handleCommaList(expressions, lastPosition,
-				this.preferences.insert_space_before_comma_in_echo,
-				this.preferences.insert_space_after_comma_in_echo, NO_LINE_WRAP,
-				NO_LINE_WRAP_INDENT, false);
+		lastPosition = handleCommaList(expressions, lastPosition, this.preferences.insert_space_before_comma_in_echo,
+				this.preferences.insert_space_after_comma_in_echo, NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
 
 		handleSemicolon(lastPosition, echoStatement.getEnd());
 		return false;
@@ -3366,8 +3126,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		}
 
 		// handle the chars between the dispatcher to the property
-		handleChars(fieldAccess.getDispatcher().getEnd(),
-				fieldAccess.getField().getStart());
+		handleChars(fieldAccess.getDispatcher().getEnd(), fieldAccess.getField().getStart());
 
 		fieldAccess.getField().accept(this);
 		return false;
@@ -3441,15 +3200,13 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			insertSpace();
 		}
 		lineWidth += 7;
-		handleChars(forEachStatement.getStart() + 7,
-				forEachStatement.getExpression().getStart());
+		handleChars(forEachStatement.getStart() + 7, forEachStatement.getExpression().getStart());
 		// handle [as key => value] or just [as value]
 		forEachStatement.getExpression().accept(this);
 		appendToBuffer(" as "); //$NON-NLS-1$
 		int lastPosition = forEachStatement.getExpression().getEnd();
 		if (forEachStatement.getKey() != null) {
-			handleChars(forEachStatement.getExpression().getEnd(),
-					forEachStatement.getKey().getStart());
+			handleChars(forEachStatement.getExpression().getEnd(), forEachStatement.getKey().getStart());
 			forEachStatement.getKey().accept(this);
 			if (this.preferences.insert_space_before_arrow_in_foreach) {
 				insertSpace();
@@ -3468,8 +3225,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		}
 		appendToBuffer(CLOSE_PARN);
 
-		handleAction(forEachStatement.getValue().getEnd(),
-				forEachStatement.getStatement(), true);
+		handleAction(forEachStatement.getValue().getEnd(), forEachStatement.getStatement(), true);
 		return false;
 	}
 
@@ -3489,13 +3245,11 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			insertSpace();
 		}
 
-		if (formalParameter.isVariadic()
-				&& formalParameter.getParameterName() instanceof Variable) {
+		if (formalParameter.isVariadic() && formalParameter.getParameterName() instanceof Variable) {
 			appendToBuffer(ELLIPSIS);
 		}
 
-		handleChars(lastPosition,
-				formalParameter.getParameterName().getStart());
+		handleChars(lastPosition, formalParameter.getParameterName().getStart());
 
 		formalParameter.getParameterName().accept(this);
 		if (formalParameter.hasDefaultValue()) {
@@ -3508,8 +3262,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			}
 
 			// handle the chars between the variable to the value
-			handleChars(formalParameter.getParameterName().getEnd(),
-					formalParameter.getDefaultValue().getStart());
+			handleChars(formalParameter.getParameterName().getEnd(), formalParameter.getDefaultValue().getStart());
 		}
 		return false;
 	}
@@ -3539,28 +3292,20 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		Expression[] increasements = new Expression[forExpressions.size()];
 		forExpressions.toArray(increasements);
 
-		if (this.preferences.insert_space_after_open_paren_in_for
-				&& initializations.length > 0) {
+		if (this.preferences.insert_space_after_open_paren_in_for && initializations.length > 0) {
 			insertSpace();
 		}
 
-		lastPosition = handleCommaList(initializations, lastPosition,
-				this.preferences.insert_space_before_comma_in_for,
-				this.preferences.insert_space_after_comma_in_for, NO_LINE_WRAP,
-				NO_LINE_WRAP_INDENT, false);
+		lastPosition = handleCommaList(initializations, lastPosition, this.preferences.insert_space_before_comma_in_for,
+				this.preferences.insert_space_after_comma_in_for, NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
 		handleForSemicolon(initializations, conditions);
-		lastPosition = handleCommaList(conditions, lastPosition,
-				this.preferences.insert_space_before_comma_in_for,
-				this.preferences.insert_space_after_comma_in_for, NO_LINE_WRAP,
-				NO_LINE_WRAP_INDENT, false);
+		lastPosition = handleCommaList(conditions, lastPosition, this.preferences.insert_space_before_comma_in_for,
+				this.preferences.insert_space_after_comma_in_for, NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
 		handleForSemicolon(conditions, increasements);
-		lastPosition = handleCommaList(increasements, lastPosition,
-				this.preferences.insert_space_before_comma_in_for,
-				this.preferences.insert_space_after_comma_in_for, NO_LINE_WRAP,
-				NO_LINE_WRAP_INDENT, false);
+		lastPosition = handleCommaList(increasements, lastPosition, this.preferences.insert_space_before_comma_in_for,
+				this.preferences.insert_space_after_comma_in_for, NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
 
-		if (this.preferences.insert_space_before_close_paren_in_for
-				&& increasements.length > 0) {
+		if (this.preferences.insert_space_before_close_paren_in_for && increasements.length > 0) {
 			insertSpace();
 		}
 		appendToBuffer(CLOSE_PARN);
@@ -3573,8 +3318,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	public boolean visit(FunctionDeclaration functionDeclaration) {
 		isInsideFun = true;
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(getDocumentString(functionDeclaration.getStart(),
-				functionDeclaration.getStart() + 8));// append 'function'
+		buffer.append(getDocumentString(functionDeclaration.getStart(), functionDeclaration.getStart() + 8));// append
+																												// 'function'
 
 		// handle referenced function with '&'
 		if (functionDeclaration.isReference()) {
@@ -3586,8 +3331,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		buffer.append(functionDeclaration.getFunctionName().getName());
 
 		appendToBuffer(buffer.toString());
-		handleChars(functionDeclaration.getStart(),
-				functionDeclaration.getFunctionName().getEnd());
+		handleChars(functionDeclaration.getStart(), functionDeclaration.getFunctionName().getEnd());
 
 		if (this.preferences.insert_space_before_opening_paren_in_function_declaration) {
 			insertSpace();
@@ -3602,17 +3346,14 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					this.preferences.line_wrap_parameters_in_method_declaration_indent_policy,
 					this.preferences.line_wrap_wrapped_lines_indentation);
 
-			List<FormalParameter> parameterList = functionDeclaration
-					.formalParameters();
-			FormalParameter[] parameters = new FormalParameter[parameterList
-					.size()];
+			List<FormalParameter> parameterList = functionDeclaration.formalParameters();
+			FormalParameter[] parameters = new FormalParameter[parameterList.size()];
 			parameters = parameterList.toArray(parameters);
 
 			lastPosition = handleCommaList(parameters, lastPosition,
 					this.preferences.insert_space_before_comma_in_function_declaration,
 					this.preferences.insert_space_after_comma_in_function_declaration,
-					this.preferences.line_wrap_parameters_in_method_declaration_line_wrap_policy,
-					indentationGap,
+					this.preferences.line_wrap_parameters_in_method_declaration_line_wrap_policy, indentationGap,
 					this.preferences.line_wrap_parameters_in_method_declaration_force_split);
 
 			if (this.preferences.insert_space_before_closing_paren_in_function_declaration) {
@@ -3628,8 +3369,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		if (functionDeclaration.getReturnType() != null) {
 			appendToBuffer(COLON);
 			insertSpace();
-			handleChars(lastPosition,
-					functionDeclaration.getReturnType().getStart());
+			handleChars(lastPosition, functionDeclaration.getReturnType().getStart());
 			functionDeclaration.getReturnType().accept(this);
 
 			lastPosition = functionDeclaration.getReturnType().getEnd();
@@ -3637,8 +3377,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 		// handle function body
 		if (functionDeclaration.getBody() != null) {
-			boolean isIndentationAdded = handleBlockOpenBrace(
-					this.preferences.brace_position_for_function,
+			boolean isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_function,
 					this.preferences.insert_space_before_opening_brace_in_function);
 			handleChars(lastPosition, functionDeclaration.getBody().getStart());
 
@@ -3658,8 +3397,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	public boolean visit(FunctionInvocation functionInvocation) {
 
 		// in case of function print there no need for parenthesis
-		Expression functionName = functionInvocation.getFunctionName()
-				.getName();
+		Expression functionName = functionInvocation.getFunctionName().getName();
 		if (functionName.getType() == ASTNode.IDENTIFIER) {
 			final String name = ((Identifier) functionName).getName();
 			if (FUNCTION_NAME_PRINT.equalsIgnoreCase(name)) {
@@ -3676,10 +3414,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		innerVisit(functionInvocation, true);
 	}
 
-	private void innerVisit(FunctionInvocation functionInvocation,
-			boolean addParen) {
-		Expression functionName = functionInvocation.getFunctionName()
-				.getName();
+	private void innerVisit(FunctionInvocation functionInvocation, boolean addParen) {
+		Expression functionName = functionInvocation.getFunctionName().getName();
 		functionName.accept(this);
 
 		if (this.preferences.insert_space_before_opening_paren_in_function) {
@@ -3716,8 +3452,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			lastPosition = handleCommaList(parameters, lastPosition,
 					this.preferences.insert_space_before_comma_in_function,
 					this.preferences.insert_space_after_comma_in_function,
-					this.preferences.line_wrap_arguments_in_method_invocation_line_wrap_policy,
-					indentationGap,
+					this.preferences.line_wrap_arguments_in_method_invocation_line_wrap_policy, indentationGap,
 					this.preferences.line_wrap_arguments_in_method_invocation_force_split);
 
 			if (this.preferences.insert_space_before_closing_paren_in_function) {
@@ -3750,8 +3485,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		Expression[] parameters = new Expression[parametersList.size()];
 		parameters = parametersList.toArray(parameters);
 
-		boolean hasParenthsis = parameters[0]
-				.getType() == ASTNode.PARENTHESIS_EXPRESSION; // print
+		boolean hasParenthsis = parameters[0].getType() == ASTNode.PARENTHESIS_EXPRESSION; // print
 		// always
 		// have
 		// one
@@ -3764,20 +3498,16 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 		insertSpace();
 
-		Expression functionName = functionInvocation.getFunctionName()
-				.getName();
+		Expression functionName = functionInvocation.getFunctionName().getName();
 
 		int lastPosition = functionName.getEnd();
 
-		int indentationGap = calculateIndentGap(
-				this.preferences.line_wrap_arguments_in_method_invocation_indent_policy,
+		int indentationGap = calculateIndentGap(this.preferences.line_wrap_arguments_in_method_invocation_indent_policy,
 				this.preferences.line_wrap_wrapped_lines_indentation);
 
-		lastPosition = handleCommaList(parameters, lastPosition,
-				this.preferences.insert_space_before_comma_in_function,
+		lastPosition = handleCommaList(parameters, lastPosition, this.preferences.insert_space_before_comma_in_function,
 				this.preferences.insert_space_after_comma_in_function,
-				this.preferences.line_wrap_arguments_in_method_invocation_line_wrap_policy,
-				indentationGap,
+				this.preferences.line_wrap_arguments_in_method_invocation_line_wrap_policy, indentationGap,
 				this.preferences.line_wrap_arguments_in_method_invocation_force_split);
 
 		handleChars(lastPosition, functionInvocation.getEnd());
@@ -3796,10 +3526,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		Expression[] variables = new Expression[varList.size()];
 		variables = varList.toArray(variables);
 
-		lastPosition = handleCommaList(variables, lastPosition,
-				this.preferences.insert_space_before_comma_in_global,
-				this.preferences.insert_space_after_comma_in_global,
-				NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
+		lastPosition = handleCommaList(variables, lastPosition, this.preferences.insert_space_before_comma_in_global,
+				this.preferences.insert_space_after_comma_in_global, NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
 
 		handleSemicolon(lastPosition, globalStatement.getEnd());
 		return false;
@@ -3812,8 +3540,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 	public boolean visit(IfStatement ifStatement) {
 		// check if the token is 'if' or 'elseif'
-		int len = checkFirstTokenLength(ifStatement.getStart(),
-				ifStatement.getCondition().getStart());
+		int len = checkFirstTokenLength(ifStatement.getStart(), ifStatement.getCondition().getStart());
 
 		// handle the chars between the 'while' and the condition start position
 		if (this.preferences.insert_space_before_opening_paren_in_if) {
@@ -3824,8 +3551,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			insertSpace();
 		}
 		lineWidth += len; // add the word 'if' OR 'elseif'
-		handleChars(ifStatement.getStart() + len,
-				ifStatement.getCondition().getStart());
+		handleChars(ifStatement.getStart() + len, ifStatement.getCondition().getStart());
 
 		// handle the if condition
 		ifStatement.getCondition().accept(this);
@@ -3855,11 +3581,9 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				addNewlineBeforeAction = !preferences.control_statement_keep_then_on_same_line;
 			}
 		}
-		handleAction(lastPosition, ifStatement.getTrueStatement(),
-				addNewlineBeforeAction);
+		handleAction(lastPosition, ifStatement.getTrueStatement(), addNewlineBeforeAction);
 		lastPosition = ifStatement.getTrueStatement().getEnd();
-		if (ifStatement.getFalseStatement() == null || ifStatement
-				.getFalseStatement().getType() == ASTNode.AST_ERROR) {
+		if (ifStatement.getFalseStatement() == null || ifStatement.getFalseStatement().getType() == ASTNode.AST_ERROR) {
 			return false;
 		}
 
@@ -3876,24 +3600,19 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					insertNewLine();
 					indent();
 				} else {
-					lastPosition = setSpaceAfterBlock(
-							ifStatement.getTrueStatement().getEnd());
+					lastPosition = setSpaceAfterBlock(ifStatement.getTrueStatement().getEnd());
 				}
 
 				try {
-					lastPosition = internalHandleElse(ifStatement,
-							lastPosition);
+					lastPosition = internalHandleElse(ifStatement, lastPosition);
 				} catch (BadLocationException ble) {
 					Logger.logException(ble);
 					return false;
 				}
-				handleAction(lastPosition, ifStatement.getFalseStatement(),
-						true);
+				handleAction(lastPosition, ifStatement.getFalseStatement(), true);
 				boolean processed = isProcessed(ifStatement);
-				if (!((Block) ifStatement.getTrueStatement()).isCurly()
-						&& !processed) {
-					handleChars(ifStatement.getFalseStatement().getEnd(),
-							ifStatement.getEnd());
+				if (!((Block) ifStatement.getTrueStatement()).isCurly() && !processed) {
+					handleChars(ifStatement.getFalseStatement().getEnd(), ifStatement.getEnd());
 					appendToBuffer("endif;"); //$NON-NLS-1$
 					handleChars(ifStatement.getEnd(), ifStatement.getEnd());
 				}
@@ -3903,16 +3622,14 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				indent();
 
 				try {
-					lastPosition = internalHandleElse(ifStatement,
-							lastPosition);
+					lastPosition = internalHandleElse(ifStatement, lastPosition);
 				} catch (BadLocationException ble) {
 					Logger.logException(ble);
 					return false;
 				}
 
 				boolean elseActionInSameLine = preferences.control_statement_keep_else_on_same_line;
-				handleAction(lastPosition, ifStatement.getFalseStatement(),
-						!elseActionInSameLine);
+				handleAction(lastPosition, ifStatement.getFalseStatement(), !elseActionInSameLine);
 			}
 		}
 		return false;
@@ -3927,14 +3644,11 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		return precessed;
 	}
 
-	private void handleElseIfCases(IfStatement ifStatement)
-			throws BadLocationException {
+	private void handleElseIfCases(IfStatement ifStatement) throws BadLocationException {
 		int lastPosition = ifStatement.getTrueStatement().getEnd();
 		int len;
-		IfStatement falseIfStatement = (IfStatement) ifStatement
-				.getFalseStatement();
-		len = checkFirstTokenLength(falseIfStatement.getStart(),
-				falseIfStatement.getCondition().getStart());
+		IfStatement falseIfStatement = (IfStatement) ifStatement.getFalseStatement();
+		len = checkFirstTokenLength(falseIfStatement.getStart(), falseIfStatement.getCondition().getStart());
 		boolean elseIndentationLevelChanged = false;
 
 		// information needed to handleChars between if statement end to the
@@ -3942,8 +3656,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		String textBetween = ""; //$NON-NLS-1$
 		int trueStatementEnd = ifStatement.getTrueStatement().getEnd();
 		int indexOfElse = -1;
-		textBetween = document.get(trueStatementEnd,
-				ifStatement.getFalseStatement().getStart() - trueStatementEnd)
+		textBetween = document.get(trueStatementEnd, ifStatement.getFalseStatement().getStart() - trueStatementEnd)
 				.toLowerCase();
 		indexOfElse = textBetween.lastIndexOf("else"); //$NON-NLS-1$
 
@@ -3953,15 +3666,13 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				indent();
 			} else {
 				if (len == 2) {
-					lastPosition = setSpaceAfterBlock(
-							ifStatement.getTrueStatement().getEnd());
+					lastPosition = setSpaceAfterBlock(ifStatement.getTrueStatement().getEnd());
 				}
 			}
 
 			if (len != 2) {// elseif case
 				if (indexOfElse > 0) {
-					handleChars(lastPosition,
-							ifStatement.getFalseStatement().getStart());
+					handleChars(lastPosition, ifStatement.getFalseStatement().getStart());
 				} else {
 					// fix for setSpaceAfterBlock when no space is required
 					// before 'elseif'
@@ -3969,8 +3680,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 							&& preferences.insert_space_after_closing_brace_in_block) {
 						insertSpace();
 					}
-					handleChars(ifStatement.getTrueStatement().getEnd(),
-							ifStatement.getFalseStatement().getStart());
+					handleChars(ifStatement.getTrueStatement().getEnd(), ifStatement.getFalseStatement().getStart());
 				}
 			} else {
 				if (indexOfElse > 0) {
@@ -3983,8 +3693,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 						elseIndentationLevelChanged = true;
 						indent();
 					}
-					handleChars(indexOfElse,
-							ifStatement.getFalseStatement().getStart());
+					handleChars(indexOfElse, ifStatement.getFalseStatement().getStart());
 					lastPosition = indexOfElse;
 				} else {
 					appendToBuffer("else "); //$NON-NLS-1$
@@ -3996,11 +3705,9 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					}
 					// the following line handles the case : '}else' when
 					// setSpaceAfterBlock() is called and offset is set to +1
-					indexOfElse = (trueStatementEnd < lastPosition)
-							? lastPosition : indexOfElse + trueStatementEnd;
+					indexOfElse = (trueStatementEnd < lastPosition) ? lastPosition : indexOfElse + trueStatementEnd;
 
-					handleChars(indexOfElse,
-							ifStatement.getFalseStatement().getStart());
+					handleChars(indexOfElse, ifStatement.getFalseStatement().getStart());
 				}
 			}
 		} else { // if the true statement is not a block then we should add new
@@ -4017,13 +3724,11 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					elseIndentationLevelChanged = true;
 					indent();
 				}
-				handleChars(indexOfElse,
-						ifStatement.getFalseStatement().getStart());
+				handleChars(indexOfElse, ifStatement.getFalseStatement().getStart());
 				lastPosition = indexOfElse;
 			} else {
 				appendToBuffer(len == 2 ? "else " : EMPTY_STRING); //$NON-NLS-1$
-				if ((len == 2)
-						&& !preferences.control_statement_keep_else_if_on_same_line) {
+				if ((len == 2) && !preferences.control_statement_keep_else_if_on_same_line) {
 					insertNewLine();
 					indentationLevel++;
 					elseIndentationLevelChanged = true;
@@ -4033,8 +3738,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					indexOfElse = 0;
 				}
 
-				handleChars(indexOfElse + trueStatementEnd,
-						ifStatement.getFalseStatement().getStart());
+				handleChars(indexOfElse + trueStatementEnd, ifStatement.getFalseStatement().getStart());
 			}
 		}
 		boolean processed = isProcessed(ifStatement);
@@ -4043,10 +3747,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			indentationLevel--;
 		}
 		if (ifStatement.getTrueStatement().getType() == ASTNode.BLOCK
-				&& !((Block) ifStatement.getTrueStatement()).isCurly()
-				&& !processed) {
-			handleChars(ifStatement.getFalseStatement().getEnd(),
-					ifStatement.getEnd());
+				&& !((Block) ifStatement.getTrueStatement()).isCurly() && !processed) {
+			handleChars(ifStatement.getFalseStatement().getEnd(), ifStatement.getEnd());
 			appendToBuffer("endif;"); //$NON-NLS-1$
 			handleChars(ifStatement.getEnd(), ifStatement.getEnd());
 		}
@@ -4055,8 +3757,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	private void addAllIfStatements(IfStatement ifStatement) {
 		processedIfStatements.add(ifStatement);
 		Statement falseIfStatement;
-		while ((falseIfStatement = ifStatement
-				.getFalseStatement()) instanceof IfStatement) {
+		while ((falseIfStatement = ifStatement.getFalseStatement()) instanceof IfStatement) {
 			ifStatement = (IfStatement) falseIfStatement;
 			processedIfStatements.add(ifStatement);
 		}
@@ -4065,13 +3766,11 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 	// this will perform handleChars() between the statement's end AND the
 	// 'else'
-	private int internalHandleElse(IfStatement ifStatement, int lastPosition)
-			throws BadLocationException {
+	private int internalHandleElse(IfStatement ifStatement, int lastPosition) throws BadLocationException {
 		String textBetween = ""; //$NON-NLS-1$
 		int trueStatementEnd = ifStatement.getTrueStatement().getEnd();
 		int indexOfElse = -1;
-		textBetween = document.get(trueStatementEnd,
-				ifStatement.getFalseStatement().getStart() - trueStatementEnd)
+		textBetween = document.get(trueStatementEnd, ifStatement.getFalseStatement().getStart() - trueStatementEnd)
 				.toLowerCase();
 		indexOfElse = textBetween.lastIndexOf("else"); //$NON-NLS-1$
 		if (indexOfElse > 0) {
@@ -4094,8 +3793,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 	public boolean visit(Include include) {
 		int lastPosition = include.getStart();
-		int len = (include.getIncludeType() == Include.IT_INCLUDE
-				|| include.getIncludeType() == Include.IT_REQUIRE) ? 7 : 12;
+		int len = (include.getIncludeType() == Include.IT_INCLUDE || include.getIncludeType() == Include.IT_REQUIRE) ? 7
+				: 12;
 		lastPosition += len;
 		lineWidth += len;// add 'include' 'require' 'require_once'
 
@@ -4110,8 +3809,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		boolean forceSplit = this.preferences.line_wrap_binary_expression_force_split;
 		if (binaryExpressionLineWrapPolicy == -1) {// not initialized
 			binaryExpressionLineWrapPolicy = this.preferences.line_wrap_binary_expression_line_wrap_policy;
-			binaryExpressionIndentGap = calculateIndentGap(
-					this.preferences.line_wrap_binary_expression_indent_policy,
+			binaryExpressionIndentGap = calculateIndentGap(this.preferences.line_wrap_binary_expression_indent_policy,
 					this.preferences.line_wrap_wrapped_lines_indentation);
 
 		}
@@ -4126,11 +3824,9 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		infixExpression.getLeft().accept(this);
 		int operator = infixExpression.getOperator();
 		boolean isStringOperator = ((operator == InfixExpression.OP_STRING_AND)
-				|| (operator == InfixExpression.OP_STRING_OR)
-				|| (operator == InfixExpression.OP_STRING_XOR));
+				|| (operator == InfixExpression.OP_STRING_OR) || (operator == InfixExpression.OP_STRING_XOR));
 
-		if (isStringOperator
-				|| this.preferences.insert_space_before_binary_operation) {
+		if (isStringOperator || this.preferences.insert_space_before_binary_operation) {
 			insertSpace();
 		}
 		appendToBuffer(InfixExpression.getOperator(operator));
@@ -4228,23 +3924,19 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			break;
 		}
 
-		if (isStringOperator
-				|| this.preferences.insert_space_after_binary_operation) {
+		if (isStringOperator || this.preferences.insert_space_after_binary_operation) {
 			insertSpace();
 		}
 
 		// handle the chars between the variable to the value
-		handleChars(infixExpression.getLeft().getEnd(),
-				infixExpression.getRight().getStart());
+		handleChars(infixExpression.getLeft().getEnd(), infixExpression.getRight().getStart());
 
-		if (binaryExpressionRevertPolicy != -1
-				&& infixExpression == binaryExpressionSavedNode) {
+		if (binaryExpressionRevertPolicy != -1 && infixExpression == binaryExpressionSavedNode) {
 			if (binaryExpressionLineWrapPolicy == WRAP_ALL_ELEMENTS
 					&& binaryExpressionRevertPolicy == WRAP_ALL_ELEMENTS_EXCEPT_FIRST) {
 				infixExpression.getRight().accept(this);
 			} else {
-				revert(binaryExpressionSavedBuffer,
-						binaryExpressionSavedChangesIndex);
+				revert(binaryExpressionSavedBuffer, binaryExpressionSavedChangesIndex);
 				binaryExpressionLineWrapPolicy = binaryExpressionRevertPolicy;
 				infixExpression.accept(this);
 			}
@@ -4287,8 +3979,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		}
 
 		// handle the chars between the variable to the value
-		handleChars(instanceOfExpression.getExpression().getEnd(),
-				instanceOfExpression.getClassName().getStart());
+		handleChars(instanceOfExpression.getExpression().getEnd(), instanceOfExpression.getClassName().getStart());
 
 		instanceOfExpression.getClassName().accept(this);
 
@@ -4298,8 +3989,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 		insertSpace();
 		lineWidth += 9;// interface
-		handleChars(interfaceDeclaration.getStart() + 9,
-				interfaceDeclaration.getName().getStart());
+		handleChars(interfaceDeclaration.getStart() + 9, interfaceDeclaration.getName().getStart());
 		interfaceDeclaration.getName().accept(this);
 
 		int lastPosition = interfaceDeclaration.getName().getEnd();
@@ -4316,13 +4006,11 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			lastPosition = handleCommaList(interfaces, lastPosition,
 					this.preferences.insert_space_before_comma_in_implements,
 					this.preferences.insert_space_after_comma_in_implements,
-					this.preferences.line_wrap_superinterfaces_in_type_declaration_line_wrap_policy,
-					indentationGap,
+					this.preferences.line_wrap_superinterfaces_in_type_declaration_line_wrap_policy, indentationGap,
 					this.preferences.line_wrap_superinterfaces_in_type_declaration_force_split);
 		}
 
-		boolean isIndentationAdded = handleBlockOpenBrace(
-				this.preferences.brace_position_for_class,
+		boolean isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_class,
 				this.preferences.insert_space_before_opening_brace_in_class);
 		handleChars(lastPosition, interfaceDeclaration.getBody().getStart());
 
@@ -4347,12 +4035,9 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		int lastPosition = listVariable.getStart() + 4;
 		lineWidth += 4;
 		List<VariableBase> variables = listVariable.variables();
-		VariableBase[] variablesArray = variables
-				.toArray(new VariableBase[variables.size()]);
-		lastPosition = handleCommaList(variablesArray, lastPosition,
-				this.preferences.insert_space_before_comma_in_list,
-				this.preferences.insert_space_after_comma_in_list, NO_LINE_WRAP,
-				NO_LINE_WRAP_INDENT, false);
+		VariableBase[] variablesArray = variables.toArray(new VariableBase[variables.size()]);
+		lastPosition = handleCommaList(variablesArray, lastPosition, this.preferences.insert_space_before_comma_in_list,
+				this.preferences.insert_space_after_comma_in_list, NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
 
 		if (this.preferences.insert_space_before_closing_paren_in_list) {
 			if (variablesArray[variablesArray.length - 1].getLength() == 0
@@ -4371,8 +4056,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 	public boolean visit(MethodDeclaration classMethodDeclaration) {
 		// handle method modifiers
-		String originalModifier = getDocumentString(
-				classMethodDeclaration.getStart(),
+		String originalModifier = getDocumentString(classMethodDeclaration.getStart(),
 				classMethodDeclaration.getFunction().getStart()).trim();
 		StringTokenizer tokenizer = new StringTokenizer(originalModifier);
 		StringBuffer strBuffer = new StringBuffer();
@@ -4389,8 +4073,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		if (formattedModifier.length() > 0) {
 			insertSpace();
 		}
-		handleChars(classMethodDeclaration.getStart(),
-				classMethodDeclaration.getFunction().getStart());
+		handleChars(classMethodDeclaration.getStart(), classMethodDeclaration.getFunction().getStart());
 		classMethodDeclaration.getFunction().accept(this);
 		return false;
 	}
@@ -4456,8 +4139,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		}
 
 		// handle the chars between the dispatcher to the property
-		handleChars(methodInvocation.getDispatcher().getEnd(),
-				methodInvocation.getMethod().getStart());
+		handleChars(methodInvocation.getDispatcher().getEnd(), methodInvocation.getMethod().getStart());
 
 		methodInvocation.getMethod().accept(this);
 
@@ -4508,14 +4190,12 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		if (this.preferences.insert_space_before_postfix_expression) {
 			insertSpace();
 		}
-		appendToBuffer(PostfixExpression
-				.getOperator(postfixExpressions.getOperator()));
+		appendToBuffer(PostfixExpression.getOperator(postfixExpressions.getOperator()));
 		if (this.preferences.insert_space_before_prefix_expression) {
 			insertSpace();
 		}
 		// handle the chars between the variable to the value
-		handleChars(postfixExpressions.getVariable().getEnd(),
-				postfixExpressions.getEnd());
+		handleChars(postfixExpressions.getVariable().getEnd(), postfixExpressions.getEnd());
 
 		return false;
 	}
@@ -4525,15 +4205,13 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				&& this.preferences.insert_space_before_prefix_expression) {
 			insertSpace();
 		}
-		appendToBuffer(
-				PrefixExpression.getOperator(prefixExpression.getOperator()));
+		appendToBuffer(PrefixExpression.getOperator(prefixExpression.getOperator()));
 		if (prefixExpression.getOperator() != PrefixExpression.OP_UNPACK
 				&& this.preferences.insert_space_after_prefix_expression) {
 			insertSpace();
 		}
 		// handle the chars between the variable to the value
-		handleChars(prefixExpression.getStart(),
-				prefixExpression.getVariable().getStart());
+		handleChars(prefixExpression.getStart(), prefixExpression.getVariable().getStart());
 		prefixExpression.getVariable().accept(this);
 		return false;
 	}
@@ -4565,16 +4243,14 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		// }
 
 		for (int i = 0; i < statements.length; i++) {
-			boolean isHtmlStatement = statements[i]
-					.getType() == ASTNode.IN_LINE_HTML;
+			boolean isHtmlStatement = statements[i].getType() == ASTNode.IN_LINE_HTML;
 			boolean isASTError = statements[i].getType() == ASTNode.AST_ERROR;
 			// fixed bug 0015682
 			// in case of previous statement is an error there is no need for
 			// new lines
 			// because the lastStatementEndOffset position move to the current
 			// statement start position
-			boolean isStatementAfterError = i > 0
-					? statements[i - 1].getType() == ASTNode.AST_ERROR : false;
+			boolean isStatementAfterError = i > 0 ? statements[i - 1].getType() == ASTNode.AST_ERROR : false;
 			if (isASTError && i + 1 < statements.length) {
 				// move the lastStatementEndOffset position to the start of the
 				// next statement start position
@@ -4583,43 +4259,35 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				if (isPhpMode && !isHtmlStatement) {
 					// PHP -> PHP
 					if (lastStatementEndOffset > 0) {
-						if (!isStatementAfterError && getPhpStartTag(
-								lastStatementEndOffset) != -1) {
+						if (!isStatementAfterError && getPhpStartTag(lastStatementEndOffset) != -1) {
 							insertNewLine();
 						}
 						if (!isStatementAfterError) {
 							insertNewLines(statements[i]);
 							indent();
 						}
-						if (lastStatementEndOffset <= statements[i]
-								.getStart()) {
-							handleChars(lastStatementEndOffset,
-									statements[i].getStart());
+						if (lastStatementEndOffset <= statements[i].getStart()) {
+							handleChars(lastStatementEndOffset, statements[i].getStart());
 						}
 					}
 				} else if (isPhpMode && isHtmlStatement) {
 					// PHP -> HTML
 					if (lastStatementEndOffset > 0) {
-						if (lastStatementEndOffset <= statements[i]
-								.getStart()) {
-							handleChars(lastStatementEndOffset,
-									statements[i].getStart());
+						if (lastStatementEndOffset <= statements[i].getStart()) {
+							handleChars(lastStatementEndOffset, statements[i].getStart());
 						}
 					}
 					isPhpMode = false;
 				} else if (!isPhpMode && !isHtmlStatement) {
 					// HTML -> PHP
 					if (!isStatementAfterError) {
-						isPhpEqualTag = getPhpStartTag(
-								lastStatementEndOffset) == PHP_OPEN_SHORT_TAG_WITH_EQUAL;
-						indentationLevel = getPhpTagIndentationLevel(
-								lastStatementEndOffset);
+						isPhpEqualTag = getPhpStartTag(lastStatementEndOffset) == PHP_OPEN_SHORT_TAG_WITH_EQUAL;
+						indentationLevel = getPhpTagIndentationLevel(lastStatementEndOffset);
 						insertNewLines(statements[i]);
 						indent();
 					}
 					if (lastStatementEndOffset <= statements[i].getStart()) {
-						handleChars(lastStatementEndOffset,
-								statements[i].getStart());
+						handleChars(lastStatementEndOffset, statements[i].getStart());
 					}
 					isPhpMode = true;
 				} else {
@@ -4630,12 +4298,10 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				lastStatementEndOffset = statements[i].getEnd();
 				// need check how many new lines will the next statement
 				// insert
-				if (i + 1 < statements.length
-						&& statements[i].getType() == ASTNode.NAMESPACE
+				if (i + 1 < statements.length && statements[i].getType() == ASTNode.NAMESPACE
 						&& statements[i + 1].getType() == ASTNode.NAMESPACE) {
 					int numberOfLines = getNumbreOfLines(statements[i + 1]) - 1;
-					numberOfLines = this.preferences.blank_lines_between_namespaces
-							- numberOfLines;
+					numberOfLines = this.preferences.blank_lines_between_namespaces - numberOfLines;
 					if (numberOfLines > 0) {
 						for (int j = 0; j < numberOfLines; j++) {
 							insertNewLine();
@@ -4738,8 +4404,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		if (this.preferences.insert_space_after_coloncolon_in_field_access) {
 			insertSpace();
 		}
-		handleChars(staticConstantAccess.getClassName().getEnd(),
-				staticConstantAccess.getConstant().getStart());
+		handleChars(staticConstantAccess.getClassName().getEnd(), staticConstantAccess.getConstant().getStart());
 		staticConstantAccess.getConstant().accept(this);
 		return false;
 	}
@@ -4754,8 +4419,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		if (this.preferences.insert_space_after_coloncolon_in_field_access) {
 			insertSpace();
 		}
-		handleChars(staticFieldAccess.getClassName().getEnd(),
-				staticFieldAccess.getField().getStart());
+		handleChars(staticFieldAccess.getClassName().getEnd(), staticFieldAccess.getField().getStart());
 		staticFieldAccess.getField().accept(this);
 		return false;
 	}
@@ -4770,8 +4434,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		if (this.preferences.insert_space_after_coloncolon_in_method_invocation) {
 			insertSpace();
 		}
-		handleChars(staticMethodInvocation.getClassName().getEnd(),
-				staticMethodInvocation.getMethod().getStart());
+		handleChars(staticMethodInvocation.getClassName().getEnd(), staticMethodInvocation.getMethod().getStart());
 		staticMethodInvocation.getMethod().accept(this);
 		return false;
 	}
@@ -4785,10 +4448,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		Expression[] expressions = new Expression[expList.size()];
 		expressions = expList.toArray(expressions);
 
-		lastPosition = handleCommaList(expressions, lastPosition,
-				this.preferences.insert_space_before_comma_in_static,
-				this.preferences.insert_space_after_comma_in_static,
-				NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
+		lastPosition = handleCommaList(expressions, lastPosition, this.preferences.insert_space_before_comma_in_static,
+				this.preferences.insert_space_after_comma_in_static, NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
 
 		handleSemicolon(lastPosition, staticStatement.getEnd());
 		return false;
@@ -4807,8 +4468,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		} else {
 			insertSpace();
 			lineWidth += 4;// the word 'case'
-			handleChars(switchCase.getStart() + 4,
-					switchCase.getValue().getStart());
+			handleChars(switchCase.getStart() + 4, switchCase.getValue().getStart());
 			switchCase.getValue().accept(this);
 			if (this.preferences.insert_space_after_switch_case_value) {
 				insertSpace();
@@ -4837,19 +4497,14 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					lastStatementEndOffset = actions[i].getEnd();
 					continue;
 				}
-				boolean isBreakStatement = actions[i]
-						.getType() == ASTNode.BREAK_STATEMENT;
-				this.indentationLevel += isBreakStatement
-						? breakStatementIndentation
-						: regularStatementIndentation;
+				boolean isBreakStatement = actions[i].getType() == ASTNode.BREAK_STATEMENT;
+				this.indentationLevel += isBreakStatement ? breakStatementIndentation : regularStatementIndentation;
 				insertNewLine();
 				indent();
 				handleChars(lastStatementEndOffset, actions[i].getStart());
 				actions[i].accept(this);
 				lastStatementEndOffset = actions[i].getEnd();
-				this.indentationLevel -= isBreakStatement
-						? breakStatementIndentation
-						: regularStatementIndentation;
+				this.indentationLevel -= isBreakStatement ? breakStatementIndentation : regularStatementIndentation;
 			}
 		}
 		return false;
@@ -4882,8 +4537,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 		// switch body
 		boolean isIndentationAdded = false;
-		isIndentationAdded = handleBlockOpenBrace(
-				this.preferences.brace_position_for_switch,
+		isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_switch,
 				this.preferences.insert_space_before_opening_brace_in_switch);
 		Block body = switchStatement.getBody();
 		handleChars(expression.getEnd(), body.getStart());
@@ -4911,8 +4565,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	}
 
 	public boolean visit(TryStatement tryStatement) {
-		boolean isIndentationAdded = handleBlockOpenBrace(
-				this.preferences.brace_position_for_block,
+		boolean isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_block,
 				this.preferences.insert_space_before_opening_brace_in_block);
 		lineWidth += 3;
 		Block body = tryStatement.getBody();
@@ -4950,8 +4603,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 					insertSpace();
 				}
 			}
-			handleChars(lastStatementEndOffset,
-					tryStatement.finallyClause().getStart());
+			handleChars(lastStatementEndOffset, tryStatement.finallyClause().getStart());
 			tryStatement.finallyClause().accept(this);
 			lastStatementEndOffset = tryStatement.finallyClause().getEnd();
 		}
@@ -4962,8 +4614,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		if (this.preferences.insert_space_before_unary_expression) {
 			insertSpace();
 		}
-		appendToBuffer(
-				UnaryOperation.getOperator(unaryOperation.getOperator()));
+		appendToBuffer(UnaryOperation.getOperator(unaryOperation.getOperator()));
 		if (this.preferences.insert_space_after_unary_expression) {
 			insertSpace();
 		}
@@ -4992,8 +4643,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			insertSpace();
 		}
 		lineWidth += 5;
-		handleChars(whileStatement.getStart() + 5,
-				whileStatement.getCondition().getStart());
+		handleChars(whileStatement.getStart() + 5, whileStatement.getCondition().getStart());
 
 		// handle the while condition
 		whileStatement.getCondition().accept(this);
@@ -5020,19 +4670,16 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		insertSpace();
 		int lastPosition = namespaceDeclaration.getStart();
 		if (namespaceDeclaration.getName() != null) {
-			handleChars(namespaceDeclaration.getStart(),
-					namespaceDeclaration.getName().getStart());
+			handleChars(namespaceDeclaration.getStart(), namespaceDeclaration.getName().getStart());
 			namespaceDeclaration.getName().accept(this);
 
 			lastPosition = namespaceDeclaration.getName().getEnd();
 		}
 		if (namespaceDeclaration.isBracketed()) {
 			// handle class body
-			boolean isIndentationAdded = handleBlockOpenBrace(
-					this.preferences.brace_position_for_class,
+			boolean isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_class,
 					this.preferences.insert_space_before_opening_brace_in_class);
-			handleChars(lastPosition,
-					namespaceDeclaration.getBody().getStart());
+			handleChars(lastPosition, namespaceDeclaration.getBody().getStart());
 
 			namespaceDeclaration.getBody().accept(this);
 
@@ -5041,8 +4688,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 				indentationLevelDesending = true;
 			}
 		} else {
-			handleSemicolon(lastPosition,
-					namespaceDeclaration.getBody().getStart() - 1);
+			handleSemicolon(lastPosition, namespaceDeclaration.getBody().getStart() - 1);
 			namespaceDeclaration.getBody().accept(this);
 		}
 		return false;
@@ -5103,11 +4749,9 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		}
 
 		List<UseStatementPart> parts = useStatement.parts();
-		lastPosition = handleCommaList(parts.toArray(new ASTNode[parts.size()]),
-				lastPosition,
+		lastPosition = handleCommaList(parts.toArray(new ASTNode[parts.size()]), lastPosition,
 				this.preferences.insert_space_before_comma_in_global,
-				this.preferences.insert_space_after_comma_in_global,
-				lineWrapPolicy, indentationGap, forceSplit);
+				this.preferences.insert_space_after_comma_in_global, lineWrapPolicy, indentationGap, forceSplit);
 
 		if (useStatement.getNamespace() != null) {
 			insertNewLine();
@@ -5136,12 +4780,10 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 	private void appendStatementType(int statementType) {
 		if (statementType == UseStatement.T_FUNCTION) {
-			appendToBuffer(
-					PhpTokenNames.getName(CompilerParserConstants.T_FUNCTION));
+			appendToBuffer(PhpTokenNames.getName(CompilerParserConstants.T_FUNCTION));
 			insertSpace();
 		} else if (statementType == UseStatement.T_CONST) {
-			appendToBuffer(
-					PhpTokenNames.getName(CompilerParserConstants.T_CONST));
+			appendToBuffer(PhpTokenNames.getName(CompilerParserConstants.T_CONST));
 			insertSpace();
 		}
 	}
@@ -5151,8 +4793,9 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		if (lambdaFunctionDeclaration.isStatic()) {
 			buffer.append("static "); //$NON-NLS-1$
 		}
-		buffer.append(getDocumentString(lambdaFunctionDeclaration.getStart(),
-				lambdaFunctionDeclaration.getStart() + 8));// append 'function'
+		buffer.append(
+				getDocumentString(lambdaFunctionDeclaration.getStart(), lambdaFunctionDeclaration.getStart() + 8));// append
+																													// 'function'
 
 		// handle referenced function with '&'
 		if (lambdaFunctionDeclaration.isReference()) {
@@ -5162,17 +4805,14 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		}
 
 		appendToBuffer(buffer.toString());
-		handleChars(lambdaFunctionDeclaration.getStart(),
-				lambdaFunctionDeclaration.getStart() + 8);
+		handleChars(lambdaFunctionDeclaration.getStart(), lambdaFunctionDeclaration.getStart() + 8);
 
 		if (this.preferences.insert_space_before_opening_paren_in_function_declaration) {
 			insertSpace();
 		}
 		appendToBuffer(OPEN_PARN);
-		List<FormalParameter> formalParameters = lambdaFunctionDeclaration
-				.formalParameters();
-		ASTNode[] params = (FormalParameter[]) formalParameters
-				.toArray(new FormalParameter[formalParameters.size()]);
+		List<FormalParameter> formalParameters = lambdaFunctionDeclaration.formalParameters();
+		ASTNode[] params = (FormalParameter[]) formalParameters.toArray(new FormalParameter[formalParameters.size()]);
 		int lastPosition = lambdaFunctionDeclaration.getStart() + 8;
 		if (params.length > 0) {
 			if (this.preferences.insert_space_after_opening_paren_in_function_declaration) {
@@ -5184,8 +4824,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			lastPosition = handleCommaList(params, lastPosition,
 					this.preferences.insert_space_before_comma_in_function_declaration,
 					this.preferences.insert_space_after_comma_in_function_declaration,
-					this.preferences.line_wrap_parameters_in_method_declaration_line_wrap_policy,
-					indentationGap,
+					this.preferences.line_wrap_parameters_in_method_declaration_line_wrap_policy, indentationGap,
 					this.preferences.line_wrap_parameters_in_method_declaration_force_split);
 
 			if (this.preferences.insert_space_before_closing_paren_in_function_declaration) {
@@ -5198,8 +4837,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		}
 		appendToBuffer(CLOSE_PARN);
 
-		List<Expression> variables = lambdaFunctionDeclaration
-				.lexicalVariables();
+		List<Expression> variables = lambdaFunctionDeclaration.lexicalVariables();
 
 		if (variables.size() > 0) {
 			// TODO: Added a new preference?
@@ -5210,14 +4848,12 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			if (this.preferences.insert_space_before_opening_paren_in_function_declaration) {
 				insertSpace();
 			}
-			ASTNode[] vars = (Expression[]) variables
-					.toArray(new Expression[variables.size()]);
+			ASTNode[] vars = (Expression[]) variables.toArray(new Expression[variables.size()]);
 
 			lastPosition = handleCommaList(vars, lastPosition,
 					this.preferences.insert_space_before_comma_in_function_declaration,
 					this.preferences.insert_space_after_comma_in_function_declaration,
-					this.preferences.line_wrap_parameters_in_method_declaration_line_wrap_policy,
-					0,
+					this.preferences.line_wrap_parameters_in_method_declaration_line_wrap_policy, 0,
 					this.preferences.line_wrap_parameters_in_method_declaration_force_split);
 
 			if (this.preferences.insert_space_before_closing_paren_in_function_declaration) {
@@ -5230,8 +4866,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		if (lambdaFunctionDeclaration.getReturnType() != null) {
 			appendToBuffer(COLON);
 			insertSpace();
-			handleChars(lastPosition,
-					lambdaFunctionDeclaration.getReturnType().getStart());
+			handleChars(lastPosition, lambdaFunctionDeclaration.getReturnType().getStart());
 			lambdaFunctionDeclaration.getReturnType().accept(this);
 
 			lastPosition = lambdaFunctionDeclaration.getReturnType().getEnd();
@@ -5239,11 +4874,9 @@ public class CodeFormatterVisitor extends AbstractVisitor
 
 		// handle function body
 		if (lambdaFunctionDeclaration.getBody() != null) {
-			boolean isIndentationAdded = handleBlockOpenBrace(
-					this.preferences.brace_position_for_lambda_function,
+			boolean isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_lambda_function,
 					this.preferences.insert_space_before_opening_brace_in_function);
-			handleChars(lastPosition,
-					lambdaFunctionDeclaration.getBody().getStart());
+			handleChars(lastPosition, lambdaFunctionDeclaration.getBody().getStart());
 
 			lambdaFunctionDeclaration.getBody().accept(this);
 			if (isIndentationAdded) {
@@ -5262,8 +4895,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			// int lastPosition = node.getStart() + 3;
 			lineWidth += 3;// the word 'use'
 			insertSpace();
-			handleChars(node.getStart() + 3,
-					node.getTraitList().get(0).getStart());
+			handleChars(node.getStart() + 3, node.getTraitList().get(0).getStart());
 		}
 		return true;
 	}
@@ -5284,8 +4916,7 @@ public class CodeFormatterVisitor extends AbstractVisitor
 			return ""; //$NON-NLS-1$
 		}
 
-		StringBuffer buffer = new StringBuffer(
-				tabs * preferences.indentationSize);
+		StringBuffer buffer = new StringBuffer(tabs * preferences.indentationSize);
 		for (int i = 0; i < tabs * preferences.indentationSize; i++) {
 			buffer.append(preferences.indentationChar);
 		}
@@ -5302,8 +4933,8 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		List<ReplaceEdit> allChanges = getChanges();
 		MultiTextEdit rootEdit = new MultiTextEdit();
 		for (ReplaceEdit edit : allChanges) {
-			TextEdit textEdit = new org.eclipse.text.edits.ReplaceEdit(
-					edit.getOffset(), edit.getLength(), edit.getText());
+			TextEdit textEdit = new org.eclipse.text.edits.ReplaceEdit(edit.getOffset(), edit.getLength(),
+					edit.getText());
 			rootEdit.addChild(textEdit);
 		}
 		return rootEdit;
@@ -5312,24 +4943,21 @@ public class CodeFormatterVisitor extends AbstractVisitor
 	private boolean isInSingleLine(ReplaceEdit edit, IRegion[] partitions) {
 		for (int i = 0; i < partitions.length; i++) {
 			IRegion iTypedRegion = partitions[i];
-			if (edit.getOffset() >= iTypedRegion.getOffset() && edit.getOffset()
-					+ edit.getLength() <= iTypedRegion.getOffset()
-							+ iTypedRegion.getLength()) {
+			if (edit.getOffset() >= iTypedRegion.getOffset()
+					&& edit.getOffset() + edit.getLength() <= iTypedRegion.getOffset() + iTypedRegion.getLength()) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private IRegion[] getAllSingleLine(ITypedRegion[] partitions)
-			throws BadLocationException {
+	private IRegion[] getAllSingleLine(ITypedRegion[] partitions) throws BadLocationException {
 		List<IRegion> result = new ArrayList<IRegion>();
 		if (document instanceof IStructuredDocument) {
 			for (int i = 0; i < partitions.length; i++) {
 				ITypedRegion iTypedRegion = partitions[i];
 				if (PHPPartitionTypes.PHP_DEFAULT.equals(iTypedRegion.getType())
-						&& isPhpRegionOnSingleLine(iTypedRegion.getOffset(),
-								iTypedRegion.getLength())) {
+						&& isPhpRegionOnSingleLine(iTypedRegion.getOffset(), iTypedRegion.getLength())) {
 					result.add(iTypedRegion);
 				}
 			}
@@ -5337,12 +4965,10 @@ public class CodeFormatterVisitor extends AbstractVisitor
 		return result.toArray(new IRegion[result.size()]);
 	}
 
-	private boolean isPhpRegionOnSingleLine(int start, int length)
-			throws BadLocationException {
+	private boolean isPhpRegionOnSingleLine(int start, int length) throws BadLocationException {
 		assert length >= 0;
 		int endTagLength = "?>".length();
-		if (length < endTagLength || document.getLineOfOffset(start) != document
-				.getLineOfOffset(start + length - 1)) {
+		if (length < endTagLength || document.getLineOfOffset(start) != document.getLineOfOffset(start + length - 1)) {
 			return false;
 		}
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=418959

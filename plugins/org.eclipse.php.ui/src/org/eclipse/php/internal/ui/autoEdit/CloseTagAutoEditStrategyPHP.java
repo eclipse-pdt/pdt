@@ -27,8 +27,8 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
- * 1.when user check both "Add php after PHP start tag (<?)" and
- * "close PHP Tag",people type "<?" then get "<? ?>". 2.when user uncheck
+ * 1.when user check both "Add php after PHP start tag (<?)" and "close PHP Tag"
+ * ,people type "<?" then get "<? ?>". 2.when user uncheck
  * "Add php after PHP start tag (<?)" and check "close PHP Tag",people type "<?"
  * then get "<?php ?>". 3.when user check "Add php after PHP start tag (<?)" and
  * uncheck "close PHP Tag",no completion at all. 4.when user uncheck both
@@ -41,49 +41,39 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 
 	@SuppressWarnings("restriction")
 	@Override
-	public void customizeDocumentCommand(IDocument document,
-			DocumentCommand command) {
-		if (!TypingPreferences.addPhpCloseTag
-				&& !TypingPreferences.addPhpForPhpStartTags) {
+	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
+		if (!TypingPreferences.addPhpCloseTag && !TypingPreferences.addPhpForPhpStartTags) {
 			return;
 		}
 		Object textEditor = getActiveTextEditor();
-		if (!(textEditor instanceof ITextEditorExtension3 && ((ITextEditorExtension3) textEditor)
-				.getInsertMode() == ITextEditorExtension3.SMART_INSERT))
+		if (!(textEditor instanceof ITextEditorExtension3
+				&& ((ITextEditorExtension3) textEditor).getInsertMode() == ITextEditorExtension3.SMART_INSERT))
 			return;
 
 		IStructuredModel model = null;
 		try {
-			model = StructuredModelManager.getModelManager()
-					.getExistingModelForRead(document);
+			model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 
 			if (model != null) {
 				if (command.text != null) {
 					if (command.text.equals("?")) { //$NON-NLS-1$
-						IDOMNode node = (IDOMNode) model
-								.getIndexedRegion(command.offset - 1);
-						if (node != null
-								&& prefixedWith(document, command.offset, "<")) { //$NON-NLS-1$
-							if (!TypingPreferences.addPhpCloseTag
-									&& TypingPreferences.addPhpForPhpStartTags) {
+						IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset - 1);
+						if (node != null && prefixedWith(document, command.offset, "<")) { //$NON-NLS-1$
+							if (!TypingPreferences.addPhpCloseTag && TypingPreferences.addPhpForPhpStartTags) {
 								command.text += "php "; //$NON-NLS-1$
 								command.shiftsCaret = false;
 								command.caretOffset = command.offset + 5;
 								command.doit = false;
-							} else if (TypingPreferences.addPhpCloseTag
-									&& !TypingPreferences.addPhpForPhpStartTags) {
-								if (!closeTagAppears(node.getSource(),
-										command.offset)) {
+							} else if (TypingPreferences.addPhpCloseTag && !TypingPreferences.addPhpForPhpStartTags) {
+								if (!closeTagAppears(node.getSource(), command.offset)) {
 									command.text += " ?>"; //$NON-NLS-1$
 									// https://bugs.eclipse.org/bugs/show_bug.cgi?id=384262
 									command.caretOffset = command.offset + 1;
 									command.shiftsCaret = false;
 									command.doit = false;
 								}
-							} else if (TypingPreferences.addPhpCloseTag
-									&& TypingPreferences.addPhpForPhpStartTags) {
-								if (!closeTagAppears(node.getSource(),
-										command.offset)) {
+							} else if (TypingPreferences.addPhpCloseTag && TypingPreferences.addPhpForPhpStartTags) {
+								if (!closeTagAppears(node.getSource(), command.offset)) {
 									command.text += "php ?>"; //$NON-NLS-1$
 									command.shiftsCaret = false;
 									command.caretOffset = command.offset + 5;
@@ -111,8 +101,7 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 	 * @return
 	 */
 	private Object getActiveTextEditor() {
-		IWorkbenchWindow window = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow();
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
 			IWorkbenchPage page = window.getActivePage();
 			if (page != null) {
@@ -120,8 +109,7 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 				if (editor != null) {
 					if (editor instanceof ITextEditor)
 						return editor;
-					ITextEditor textEditor = (ITextEditor) editor
-							.getAdapter(ITextEditor.class);
+					ITextEditor textEditor = (ITextEditor) editor.getAdapter(ITextEditor.class);
 					if (textEditor != null)
 						return textEditor;
 					return editor;
@@ -134,8 +122,7 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 	private boolean prefixedWith(IDocument document, int offset, String string) {
 		try {
 			return document.getLength() >= string.length()
-					&& document.get(offset - string.length(), string.length())
-							.equals(string);
+					&& document.get(offset - string.length(), string.length()).equals(string);
 		} catch (BadLocationException e) {
 			Logger.logException(e);
 			return false;

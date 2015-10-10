@@ -44,19 +44,20 @@ public class PdttFileExt extends PdttFile {
 
 	/**
 	 * This callback is called while processing state section
+	 * 
 	 * @param state
 	 * @param line
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@Override
 	protected void onState(STATES state, String line) throws Exception {
 		switch (state) {
-			case FILE:
-				onFileState(line);
-				return;
-			case EXPECT:
-				onExpectState(line);
-				return;
+		case FILE:
+			onFileState(line);
+			return;
+		case EXPECT:
+			onExpectState(line);
+			return;
 		}
 		super.onState(state, line);
 	}
@@ -68,7 +69,7 @@ public class PdttFileExt extends PdttFile {
 			getExpectedFiles().add(info);
 		} else {
 			FileInfo currInfo = getExpectedFiles().get(expectedFiles.size() - 1);
-			if(currInfo.getContents().length() !=0){
+			if (currInfo.getContents().length() != 0) {
 				currInfo.appendContents("\n");
 			}
 			currInfo.appendContents(line);
@@ -82,7 +83,7 @@ public class PdttFileExt extends PdttFile {
 			getTestFiles().add(info);
 		} else {
 			FileInfo currInfo = getTestFiles().get(testFiles.size() - 1);
-			if(currInfo.getContents().length() !=0){
+			if (currInfo.getContents().length() != 0) {
 				currInfo.appendContents("\n");
 			}
 			currInfo.appendContents(line);

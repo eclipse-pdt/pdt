@@ -47,8 +47,7 @@ public class PHPMoveProcessorTestCase0027202 {
 		}
 		IFile file = folder.getFile("test1.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php class TestRenameClass{}?>".getBytes());
+		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -65,8 +64,7 @@ public class PHPMoveProcessorTestCase0027202 {
 		}
 
 		file = project2.getFile("test2.php");
-		source = new ByteArrayInputStream("<?php include('src/test1.php'); ?>"
-				.getBytes());
+		source = new ByteArrayInputStream("<?php include('src/test1.php'); ?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -86,14 +84,12 @@ public class PHPMoveProcessorTestCase0027202 {
 		processor.setDestination(project2);
 		processor.setUpdateReferences(true);
 
-		RefactoringStatus status = processor
-				.checkInitialConditions(new NullProgressMonitor());
+		RefactoringStatus status = processor.checkInitialConditions(new NullProgressMonitor());
 
 		assertEquals(IStatus.OK, status.getSeverity());
 
-		status = processor
-				.checkFinalConditions(new NullProgressMonitor(), null);
-		
+		status = processor.checkFinalConditions(new NullProgressMonitor(), null);
+
 		assertEquals(IStatus.ERROR, status.getSeverity());
 
 	}

@@ -30,8 +30,7 @@ public class LayoutUtil {
 	 *            Defines if the label of all fields should be on top of the
 	 *            fields
 	 */
-	public static void doDefaultLayout(final Composite parent,
-			final DialogField[] editors, final boolean labelOnTop) {
+	public static void doDefaultLayout(final Composite parent, final DialogField[] editors, final boolean labelOnTop) {
 		doDefaultLayout(parent, editors, labelOnTop, 0, 0);
 	}
 
@@ -46,8 +45,7 @@ public class LayoutUtil {
 	 * @param marginHeight
 	 *            The margin height to be used by the composite
 	 */
-	public static void doDefaultLayout(final Composite parent,
-			final DialogField[] editors, final boolean labelOnTop,
+	public static void doDefaultLayout(final Composite parent, final DialogField[] editors, final boolean labelOnTop,
 			final int marginWidth, final int marginHeight) {
 		int nCulumns = getNumberOfColumns(editors);
 		final Control[][] controls = new Control[editors.length][];
@@ -73,10 +71,8 @@ public class LayoutUtil {
 	public static int getButtonWidthHint(final Button button) {
 		button.setFont(JFaceResources.getDialogFont());
 		final PixelConverter converter = new PixelConverter(button);
-		final int widthHint = converter
-				.convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
-		return Math.max(widthHint, button.computeSize(SWT.DEFAULT, SWT.DEFAULT,
-				true).x);
+		final int widthHint = converter.convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
+		return Math.max(widthHint, button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
 	}
 
 	/**
@@ -89,8 +85,7 @@ public class LayoutUtil {
 		return nCulumns;
 	}
 
-	private static void modifyLabelSpans(final Control[][] controls,
-			final int nCulumns) {
+	private static void modifyLabelSpans(final Control[][] controls, final int nCulumns) {
 		for (int i = 0; i < controls.length; i++)
 			setHorizontalSpan(controls[i][0], nCulumns);
 	}
@@ -117,8 +112,7 @@ public class LayoutUtil {
 	/**
 	 * Sets the horizontal indent of a control. Assumes that GridData is used.
 	 */
-	public static void setHorizontalIndent(final Control control,
-			final int horizontalIndent) {
+	public static void setHorizontalIndent(final Control control, final int horizontalIndent) {
 		final Object ld = control.getLayoutData();
 		if (ld instanceof GridData)
 			((GridData) ld).horizontalIndent = horizontalIndent;

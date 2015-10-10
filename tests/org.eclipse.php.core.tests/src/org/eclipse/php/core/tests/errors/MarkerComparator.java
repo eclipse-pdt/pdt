@@ -18,14 +18,11 @@ public class MarkerComparator implements Comparator<IMarker> {
 
 	@Override
 	public int compare(IMarker o1, IMarker o2) {
-		int res = compareInt(o1.getAttribute(IMarker.LINE_NUMBER, -1),
-				o2.getAttribute(IMarker.LINE_NUMBER, -1));
+		int res = compareInt(o1.getAttribute(IMarker.LINE_NUMBER, -1), o2.getAttribute(IMarker.LINE_NUMBER, -1));
 		if (res == 0) {
-			res = compareInt(o1.getAttribute(IMarker.CHAR_START, -1),
-					o2.getAttribute(IMarker.CHAR_START, -1));
+			res = compareInt(o1.getAttribute(IMarker.CHAR_START, -1), o2.getAttribute(IMarker.CHAR_START, -1));
 			if (res == 0) {
-				res = compareInt(o1.getAttribute(IMarker.CHAR_END, -1),
-						o2.getAttribute(IMarker.CHAR_END, -1));
+				res = compareInt(o1.getAttribute(IMarker.CHAR_END, -1), o2.getAttribute(IMarker.CHAR_END, -1));
 			}
 		}
 

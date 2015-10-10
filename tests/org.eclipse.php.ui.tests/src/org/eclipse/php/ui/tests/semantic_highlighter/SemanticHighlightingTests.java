@@ -72,11 +72,10 @@ public class SemanticHighlightingTests {
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
-		TESTS.put(PHPVersion.PHP5,
-				new String[] { "/workspace/semantic_highlighting/php5" });
-		TESTS.put(PHPVersion.PHP5_3,
-				new String[] { "/workspace/semantic_highlighting/php53" });
+		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/semantic_highlighting/php5" });
+		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/semantic_highlighting/php53" });
 	};
 
 	@Context
@@ -93,13 +92,10 @@ public class SemanticHighlightingTests {
 		highlighters.put("field", new FieldHighlighting());
 		highlighters.put("function", new FunctionHighlighting());
 		highlighters.put("internal_class", new InternalClassHighlighting());
-		highlighters.put("internal_constant",
-				new InternalConstantHighlighting());
-		highlighters.put("internal_function",
-				new InternalFunctionHighlighting());
+		highlighters.put("internal_constant", new InternalConstantHighlighting());
+		highlighters.put("internal_function", new InternalFunctionHighlighting());
 		highlighters.put("method", new MethodHighlighting());
-		highlighters.put("parameter_variable",
-				new ParameterVariableHighlighting());
+		highlighters.put("parameter_variable", new ParameterVariableHighlighting());
 		highlighters.put("static_field", new StaticFieldHighlighting());
 		highlighters.put("static_method", new StaticMethodHighlighting());
 		highlighters.put("super_global", new SuperGlobalHighlighting());
@@ -107,8 +103,7 @@ public class SemanticHighlightingTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("SemanticHighlighting_" + phpVersion);
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject("SemanticHighlighting_" + phpVersion);
 		if (project.exists()) {
 			return;
 		}
@@ -144,15 +139,13 @@ public class SemanticHighlightingTests {
 
 	@Test
 	public void highlighter(String fileName) throws Exception {
-		final PdttFile pdttFile = new PdttFile(PHPUiTests.getDefault()
-				.getBundle(), fileName);
+		final PdttFile pdttFile = new PdttFile(PHPUiTests.getDefault().getBundle(), fileName);
 		String result = "";
 		createFile(new ByteArrayInputStream(pdttFile.getFile().getBytes()));
 		ISourceModule module = getSourceModule();
 		assertNotNull(module);
 
-		String index = fileName.substring(fileName.lastIndexOf('/') + 1,
-				fileName.indexOf('.'));
+		String index = fileName.substring(fileName.lastIndexOf('/') + 1, fileName.indexOf('.'));
 		int endIndex = index.indexOf('-');
 		if (endIndex != -1) {
 			index = index.substring(0, endIndex);
@@ -166,8 +159,7 @@ public class SemanticHighlightingTests {
 		result += highlighter.getClass().getName() + ":\n";
 		for (Position position : positions) {
 			result += "highlight("
-					+ pdttFile.getFile().substring(position.getOffset(),
-							position.getOffset() + position.getLength())
+					+ pdttFile.getFile().substring(position.getOffset(), position.getOffset() + position.getLength())
 					+ ")\n";
 		}
 		assertEquals(pdttFile.getExpected(), result);
@@ -181,10 +173,8 @@ public class SemanticHighlightingTests {
 		}
 	}
 
-	private Program getProgram(ISourceModule module) throws ModelException,
-			IOException {
-		return SharedASTProvider.getAST(module, SharedASTProvider.WAIT_YES,
-				null);
+	private Program getProgram(ISourceModule module) throws ModelException, IOException {
+		return SharedASTProvider.getAST(module, SharedASTProvider.WAIT_YES, null);
 
 	}
 
@@ -192,9 +182,7 @@ public class SemanticHighlightingTests {
 		for (Position p1 : positions) {
 			for (Position p2 : positions) {
 				if (p1 != p2 && p1.equals(p2)) {
-					throw new IllegalStateException(
-							"Found duplicate position in " + highlighter + ": "
-									+ p1);
+					throw new IllegalStateException("Found duplicate position in " + highlighter + ": " + p1);
 				}
 			}
 		}

@@ -115,8 +115,7 @@ public class ASTNodeImageProvider {
 	 */
 	public ImageDescriptor getCUResourceImageDescriptor(IFile file, int flags) {
 		Point size = useSmallSize(flags) ? SMALL_SIZE : BIG_SIZE;
-		return new PHPElementImageDescriptor(
-				PHPPluginImages.DESC_OBJS_CUNIT_RESOURCE, 0, size);
+		return new PHPElementImageDescriptor(PHPPluginImages.DESC_OBJS_CUNIT_RESOURCE, 0, size);
 	}
 
 	/**
@@ -126,8 +125,7 @@ public class ASTNodeImageProvider {
 	public ImageDescriptor getPHPImageDescriptor(ASTNode node, int flags) {
 		int adornmentFlags = computePHPAdornmentFlags(node, flags);
 		Point size = useSmallSize(flags) ? SMALL_SIZE : BIG_SIZE;
-		return new PHPElementImageDescriptor(
-				getBaseImageDescriptor(node, flags), adornmentFlags, size);
+		return new PHPElementImageDescriptor(getBaseImageDescriptor(node, flags), adornmentFlags, size);
 	}
 
 	/**
@@ -135,10 +133,8 @@ public class ASTNodeImageProvider {
 	 * overlays, if specified (only error ticks apply). Returns
 	 * <code>null</code> if no image could be found.
 	 */
-	public ImageDescriptor getWorkbenchImageDescriptor(IAdaptable adaptable,
-			int flags) {
-		IWorkbenchAdapter wbAdapter = (IWorkbenchAdapter) adaptable
-				.getAdapter(IWorkbenchAdapter.class);
+	public ImageDescriptor getWorkbenchImageDescriptor(IAdaptable adaptable, int flags) {
+		IWorkbenchAdapter wbAdapter = (IWorkbenchAdapter) adaptable.getAdapter(IWorkbenchAdapter.class);
 		if (wbAdapter == null) {
 			return null;
 		}
@@ -158,8 +154,7 @@ public class ASTNodeImageProvider {
 	 * Returns an image descriptor for a php element. This is the base image, no
 	 * overlays.
 	 */
-	public ImageDescriptor getBaseImageDescriptor(ASTNode element,
-			int renderFlags) {
+	public ImageDescriptor getBaseImageDescriptor(ASTNode element, int renderFlags) {
 		switch (element.getType()) {
 		case ASTNode.FUNCTION_DECLARATION:
 			return PHPPluginImages.DESC_MISC_PUBLIC;
@@ -271,14 +266,11 @@ public class ASTNodeImageProvider {
 		return PHPPluginImages.DESC_FIELD_PUBLIC;
 	}
 
-	public static Image getDecoratedImage(ImageDescriptor baseImage,
-			int adornments, Point size) {
-		return PHPUiPlugin.getImageDescriptorRegistry().get(
-				new PHPElementImageDescriptor(baseImage, adornments, size));
+	public static Image getDecoratedImage(ImageDescriptor baseImage, int adornments, Point size) {
+		return PHPUiPlugin.getImageDescriptorRegistry().get(new PHPElementImageDescriptor(baseImage, adornments, size));
 	}
 
-	public static ImageDescriptor getClassImageDescriptor(
-			TypeDeclaration typeDeclaration) {
+	public static ImageDescriptor getClassImageDescriptor(TypeDeclaration typeDeclaration) {
 		if (typeDeclaration.getType() == ASTNode.INTERFACE_DECLARATION) {
 			return PHPPluginImages.DESC_OBJS_INTERFACE;
 		}

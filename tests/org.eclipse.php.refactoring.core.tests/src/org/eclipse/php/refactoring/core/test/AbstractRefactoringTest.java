@@ -51,7 +51,7 @@ public abstract class AbstractRefactoringTest {
 
 	public AbstractRefactoringTest() {
 	}
-	
+
 	protected AbstractRefactoringTest(String[] fileNames) {
 		this.fileNames = fileNames;
 	}
@@ -200,9 +200,8 @@ public abstract class AbstractRefactoringTest {
 	public static Bundle getBundle() {
 		return Activator.getDefault().getBundle();
 	}
-	
-	public static IStructuredModel createUnManagedStructuredModelFor(IFile file) throws IOException, CoreException
-	{
+
+	public static IStructuredModel createUnManagedStructuredModelFor(IFile file) throws IOException, CoreException {
 		IStructuredModel model = null;
 		try {
 			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);

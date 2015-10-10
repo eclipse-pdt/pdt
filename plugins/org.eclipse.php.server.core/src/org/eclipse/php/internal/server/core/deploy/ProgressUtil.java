@@ -49,8 +49,7 @@ public class ProgressUtil {
 	 *            int
 	 * @return org.eclipse.core.runtime.IProgressMonitor
 	 */
-	public static IProgressMonitor getSubMonitorFor(IProgressMonitor monitor,
-			int ticks) {
+	public static IProgressMonitor getSubMonitorFor(IProgressMonitor monitor, int ticks) {
 		if (monitor == null)
 			return new NullProgressMonitor();
 		if (monitor instanceof NullProgressMonitor)
@@ -70,8 +69,7 @@ public class ProgressUtil {
 	 *            a style
 	 * @return org.eclipse.core.runtime.IProgressMonitor
 	 */
-	public static IProgressMonitor getSubMonitorFor(IProgressMonitor monitor,
-			int ticks, int style) {
+	public static IProgressMonitor getSubMonitorFor(IProgressMonitor monitor, int ticks, int style) {
 		if (monitor == null)
 			return new NullProgressMonitor();
 		if (monitor instanceof NullProgressMonitor)

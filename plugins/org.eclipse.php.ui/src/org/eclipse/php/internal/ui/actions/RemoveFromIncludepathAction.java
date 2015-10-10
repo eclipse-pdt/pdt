@@ -34,16 +34,14 @@ import org.eclipse.ui.IWorkbenchSite;
 /**
  * Include path removal action
  */
-public class RemoveFromIncludepathAction extends Action implements
-		ISelectionChangedListener {
+public class RemoveFromIncludepathAction extends Action implements ISelectionChangedListener {
 
 	private List<Object> fSelectedElements;
 
 	// BuildpathContainer iff isEnabled()
 
 	public RemoveFromIncludepathAction(IWorkbenchSite site) {
-		super(Messages.RemoveFromIncludepathAction_0,
-				DLTKPluginImages.DESC_ELCL_REMOVE_FROM_BP);
+		super(Messages.RemoveFromIncludepathAction_0, DLTKPluginImages.DESC_ELCL_REMOVE_FROM_BP);
 		setToolTipText(""); //$NON-NLS-1$
 		fSelectedElements = new ArrayList<Object>();
 	}
@@ -57,8 +55,7 @@ public class RemoveFromIncludepathAction extends Action implements
 			ExternalProjectFragment projFragment = (ExternalProjectFragment) object;
 			IScriptProject scriptProject = projFragment.getScriptProject();
 			try {
-				BuildPathUtils.removeEntryFromBuildPath(scriptProject,
-						projFragment.getBuildpathEntry());
+				BuildPathUtils.removeEntryFromBuildPath(scriptProject, projFragment.getBuildpathEntry());
 			} catch (ModelException e) {
 				Logger.logException("Could not remove buildPathEntry", e); //$NON-NLS-1$
 			}
@@ -70,10 +67,8 @@ public class RemoveFromIncludepathAction extends Action implements
 			IncludePath includePath = (IncludePath) object;
 			try {
 				if (includePath.isBuildpath())
-					IncludePathManager.getInstance()
-							.removeEntryFromIncludePath(
-									includePath.getProject(),
-									(IBuildpathEntry) (includePath.getEntry()));
+					IncludePathManager.getInstance().removeEntryFromIncludePath(includePath.getProject(),
+							(IBuildpathEntry) (includePath.getEntry()));
 				IProject proj = includePath.getProject();
 				IncludePathManager manager = IncludePathManager.getInstance();
 				IncludePath[] paths = manager.getIncludePaths(proj);
@@ -83,8 +78,7 @@ public class RemoveFromIncludepathAction extends Action implements
 						entries.add(path);
 					}
 				}
-				manager.setIncludePath(proj,
-						entries.toArray(new IncludePath[entries.size()]));
+				manager.setIncludePath(proj, entries.toArray(new IncludePath[entries.size()]));
 			} catch (ModelException e) {
 				Logger.logException("Could not remove buildPathEntry", e); //$NON-NLS-1$
 			}
@@ -108,20 +102,17 @@ public class RemoveFromIncludepathAction extends Action implements
 			for (Iterator iter = elements.iterator(); iter.hasNext();) {
 				Object element = iter.next();
 				fSelectedElements.add(element);
-				if (!(element instanceof IProjectFragment
-						|| element instanceof IScriptProject || element instanceof IncludePath))
+				if (!(element instanceof IProjectFragment || element instanceof IScriptProject
+						|| element instanceof IncludePath))
 					return false;
 				if (element instanceof IScriptProject) {
 					IScriptProject project = (IScriptProject) element;
 					if (!BuildpathModifier.isSourceFolder(project)
-							|| BuildPathUtils.isInBuildpath(project.getPath(),
-									project))
+							|| BuildPathUtils.isInBuildpath(project.getPath(), project))
 						return false;
 				} else if (element instanceof IProjectFragment) {
-					IBuildpathEntry entry = ((IProjectFragment) element)
-							.getRawBuildpathEntry();
-					if (entry != null
-							&& entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+					IBuildpathEntry entry = ((IProjectFragment) element).getRawBuildpathEntry();
+					if (entry != null && entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
 						return false;
 					}
 				} else if (element instanceof IncludePath) {

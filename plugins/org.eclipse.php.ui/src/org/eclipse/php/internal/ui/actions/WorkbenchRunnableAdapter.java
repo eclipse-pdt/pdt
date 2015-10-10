@@ -30,8 +30,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
  * by the adapted runnable are caught and re-thrown as a
  * <code>InterruptedException</code>.
  */
-public class WorkbenchRunnableAdapter implements IRunnableWithProgress,
-		IThreadListener {
+public class WorkbenchRunnableAdapter implements IRunnableWithProgress, IThreadListener {
 
 	private boolean fTransfer = false;
 	private IWorkspaceRunnable fWorkspaceRunnable;
@@ -48,8 +47,7 @@ public class WorkbenchRunnableAdapter implements IRunnableWithProgress,
 	 * Runs a workspace runnable with the given lock or <code>null</code> to run
 	 * with no lock at all.
 	 */
-	public WorkbenchRunnableAdapter(IWorkspaceRunnable runnable,
-			ISchedulingRule rule) {
+	public WorkbenchRunnableAdapter(IWorkspaceRunnable runnable, ISchedulingRule rule) {
 		fWorkspaceRunnable = runnable;
 		fRule = rule;
 	}
@@ -62,8 +60,7 @@ public class WorkbenchRunnableAdapter implements IRunnableWithProgress,
 	 *            <code>true</code> if the rule is to be transfered to the model
 	 *            context thread. Otherwise <code>false</code>
 	 */
-	public WorkbenchRunnableAdapter(IWorkspaceRunnable runnable,
-			ISchedulingRule rule, boolean transfer) {
+	public WorkbenchRunnableAdapter(IWorkspaceRunnable runnable, ISchedulingRule rule, boolean transfer) {
 		fWorkspaceRunnable = runnable;
 		fRule = rule;
 		fTransfer = transfer;
@@ -84,12 +81,10 @@ public class WorkbenchRunnableAdapter implements IRunnableWithProgress,
 	/*
 	 * @see IRunnableWithProgress#run(IProgressMonitor)
 	 */
-	public void run(IProgressMonitor monitor) throws InvocationTargetException,
-			InterruptedException {
+	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		try {
 			IWorkspace workspace = ResourcesPlugin.getWorkspace();
-			workspace.run(fWorkspaceRunnable, fRule, IWorkspace.AVOID_UPDATE,
-					monitor);
+			workspace.run(fWorkspaceRunnable, fRule, IWorkspace.AVOID_UPDATE, monitor);
 		} catch (OperationCanceledException e) {
 			throw new InterruptedException(e.getMessage());
 		} catch (CoreException e) {
@@ -114,8 +109,7 @@ public class WorkbenchRunnableAdapter implements IRunnableWithProgress,
 					if (cause instanceof CoreException) {
 						return ((CoreException) cause).getStatus();
 					} else {
-						return new Status(IStatus.ERROR, PHPUiPlugin.ID, 0, e
-								.toString(), cause);
+						return new Status(IStatus.ERROR, PHPUiPlugin.ID, 0, e.toString(), cause);
 					}
 				} catch (InterruptedException e) {
 					return Status.CANCEL_STATUS;

@@ -46,17 +46,14 @@ public class StackLayer {
 	 */
 	public StackLayer(String transferEncoding) {
 		unresolvedVariables = new HashMap<String, byte[]>();
-		expressionValueDeserializer = new ExpressionsValueDeserializer(
-				transferEncoding);
+		expressionValueDeserializer = new ExpressionsValueDeserializer(transferEncoding);
 	}
 
 	/**
 	 * Creates new StackLayer
 	 */
-	public StackLayer(int depth, String callerFileName, int callerLineNumber,
-			String callerFunctionName, String calledFileName,
-			int calledLineNumber, String calledFunctionName,
-			String transferEncoding) {
+	public StackLayer(int depth, String callerFileName, int callerLineNumber, String callerFunctionName,
+			String calledFileName, int calledLineNumber, String calledFunctionName, String transferEncoding) {
 		this(transferEncoding);
 
 		this.depth = depth;
@@ -146,10 +143,9 @@ public class StackLayer {
 			variables = new Expression[unresolvedVariables.size()];
 			int i = 0;
 			for (String variableName : unresolvedVariables.keySet()) {
-				StackVariable variable = new DefaultStackVariable(variableName,
-						depth);
-				variable.setValue(expressionValueDeserializer.deserializer(
-						variable, unresolvedVariables.get(variableName)));
+				StackVariable variable = new DefaultStackVariable(variableName, depth);
+				variable.setValue(
+						expressionValueDeserializer.deserializer(variable, unresolvedVariables.get(variableName)));
 				variables[i++] = variable;
 			}
 		}
@@ -159,15 +155,13 @@ public class StackLayer {
 	public String toString() {
 		StringBuffer buffer = new StringBuffer(20);
 		buffer.append(toStringCalledFunctionLine());
-		buffer
-				.append("  " + callerFileName + " line " //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append("  " + callerFileName + " line " //$NON-NLS-1$ //$NON-NLS-2$
 				+ (callerLineNumber + 1));
 		return buffer.toString();
 	}
 
 	public String toStringCalledFunctionLine() {
-		if (getCallerFunctionName() == null
-				|| getCallerFunctionName().equals("")) { //$NON-NLS-1$
+		if (getCallerFunctionName() == null || getCallerFunctionName().equals("")) { //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
 		}
 		StringBuffer buffer = new StringBuffer(getCallerFunctionName() + '(');
@@ -184,8 +178,7 @@ public class StackLayer {
 		return buffer.toString();
 	}
 
-	private static class DefaultStackVariable extends DefaultExpression
-			implements StackVariable {
+	private static class DefaultStackVariable extends DefaultExpression implements StackVariable {
 
 		private int stackDepth;
 
@@ -201,14 +194,11 @@ public class StackLayer {
 			return stackDepth;
 		}
 
-		public Expression createChildExpression(String endName,
-				String endRepresentation, Facet... facets) {
-			return new DefaultStackVariable(this, endName, stackDepth,
-					endRepresentation);
+		public Expression createChildExpression(String endName, String endRepresentation, Facet... facets) {
+			return new DefaultStackVariable(this, endName, stackDepth, endRepresentation);
 		}
 
-		private DefaultStackVariable(StackVariable parent, String name,
-				int stackDepth, String representation) {
+		private DefaultStackVariable(StackVariable parent, String name, int stackDepth, String representation) {
 			super(parent, name, representation);
 			this.stackDepth = stackDepth;
 		}

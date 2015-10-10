@@ -138,8 +138,7 @@ public class RowLayouter {
 	public void setDefaultGridData(GridData gd, int index) {
 		if (index >= fDefaultGridDatas.length) {
 			GridData[] newDatas = new GridData[index + 4];
-			System.arraycopy(fDefaultGridDatas, 0, newDatas, 0,
-					fDefaultGridDatas.length);
+			System.arraycopy(fDefaultGridDatas, 0, newDatas, 0, fDefaultGridDatas.length);
 			fDefaultGridDatas = newDatas;
 		}
 		fDefaultGridDatas[index] = gd;

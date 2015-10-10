@@ -22,8 +22,7 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
  * 
  * @author guy
  */
-public class AddBreakpointResponse extends DebugMessageResponseImpl implements
-		IDebugResponseMessage {
+public class AddBreakpointResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
 
 	private int breakPointID;
 

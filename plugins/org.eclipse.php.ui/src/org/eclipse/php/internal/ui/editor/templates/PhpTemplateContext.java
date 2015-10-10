@@ -38,33 +38,28 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 
 	private String fLineDelimiter;
 
-	public PhpTemplateContext(ScriptTemplateContextType phpTemplateContextType,
-			IDocument document, int offset, int length,
-			ISourceModule sourceModule) {
+	public PhpTemplateContext(ScriptTemplateContextType phpTemplateContextType, IDocument document, int offset,
+			int length, ISourceModule sourceModule) {
 		super(phpTemplateContextType, document, offset, length, sourceModule);
 	}
 
-	public PhpTemplateContext(ScriptTemplateContextType phpTemplateContextType,
-			IDocument document, Position position, ISourceModule sourceModule) {
+	public PhpTemplateContext(ScriptTemplateContextType phpTemplateContextType, IDocument document, Position position,
+			ISourceModule sourceModule) {
 		super(phpTemplateContextType, document, position, sourceModule);
 	}
 
 	@Override
-	public TemplateBuffer evaluate(Template template)
-			throws BadLocationException, TemplateException {
-		IFormatterCommonPrferences prefs = FormatterUtils
-				.getFormatterCommonPrferences();
+	public TemplateBuffer evaluate(Template template) throws BadLocationException, TemplateException {
+		IFormatterCommonPrferences prefs = FormatterUtils.getFormatterCommonPrferences();
 		boolean useTab = prefs.useTab(getDocument());
 		if (!useTab) {
 			int length = prefs.getIndentationSize(getDocument());
 			StringBuffer sb = new StringBuffer();
 			for (int i = 0; i < length; i++) {
-				sb.append(prefs.getIndentationChar(getDocument())); //$NON-NLS-1$
+				sb.append(prefs.getIndentationChar(getDocument())); // $NON-NLS-1$
 			}
-			String newPattern = TextUtils.replace(template.getPattern(), TAB,
-					sb.toString());
-			template = new Template(template.getName(),
-					template.getDescription(), template.getContextTypeId(),
+			String newPattern = TextUtils.replace(template.getPattern(), TAB, sb.toString());
+			template = new Template(template.getName(), template.getDescription(), template.getContextTypeId(),
 					newPattern, template.isAutoInsertable());
 
 		}
@@ -75,8 +70,7 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 		if (lines.length > 1) {
 			String delimeter;
 			if (fLineDelimiter == null) {
-				delimeter = TextUtilities
-						.getDefaultLineDelimiter(getDocument());
+				delimeter = TextUtilities.getDefaultLineDelimiter(getDocument());
 			} else {
 				delimeter = fLineDelimiter;
 			}
@@ -90,8 +84,7 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 				indenter.indentLine(buffer, indent, lines[i]);
 			}
 
-			template = new Template(template.getName(),
-					template.getDescription(), template.getContextTypeId(),
+			template = new Template(template.getName(), template.getDescription(), template.getContextTypeId(),
 					buffer.toString(), template.isAutoInsertable());
 		}
 
@@ -121,42 +114,35 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 			for (int i = 0; i < dollarVariable.getOffsets().length; i++) {
 				dollarOffsetSet.add(dollarVariable.getOffsets()[i]);
 			}
-			for (Iterator iterator = nonDollarVariables.iterator(); iterator
-					.hasNext();) {
-				TemplateVariable templateVariable = (TemplateVariable) iterator
-						.next();
-				if (templateVariable.getOffsets().length > 0
-						&& isbehind(templateVariable, dollarOffsetSet)) {
+			for (Iterator iterator = nonDollarVariables.iterator(); iterator.hasNext();) {
+				TemplateVariable templateVariable = (TemplateVariable) iterator.next();
+				if (templateVariable.getOffsets().length > 0 && isbehind(templateVariable, dollarOffsetSet)) {
 					int[] offsets = new int[templateVariable.getOffsets().length];
 					for (int i = 0; i < templateVariable.getOffsets().length; i++) {
-						dollarOffsetSet
-								.remove(templateVariable.getOffsets()[i] - 1);
+						dollarOffsetSet.remove(templateVariable.getOffsets()[i] - 1);
 						offsets[i] = templateVariable.getOffsets()[i] - 1;
 					}
 					String name = DOLLAR_SIGN + templateVariable.getName();
 					String defaultValue = name;
 					if (templateVariable.getDefaultValue() != null) {
-						defaultValue = DOLLAR_SIGN
-								+ templateVariable.getDefaultValue();
+						defaultValue = DOLLAR_SIGN + templateVariable.getDefaultValue();
 					}
-					templateVariable = new TemplateVariable(
-							templateVariable.getVariableType(), name,
-							defaultValue, offsets);
+					templateVariable = new TemplateVariable(templateVariable.getVariableType(), name, defaultValue,
+							offsets);
 				}
 				templateVariables.add(templateVariable);
 			}
 			if (!dollarOffsetSet.isEmpty()) {
 				templateVariables.add(dollarVariable);
 			}
-			result.setContent(result.getString(), templateVariables
-					.toArray(new TemplateVariable[templateVariables.size()]));
+			result.setContent(result.getString(),
+					templateVariables.toArray(new TemplateVariable[templateVariables.size()]));
 		}
 		// end
 		return result;
 	}
 
-	private boolean isbehind(TemplateVariable templateVariable,
-			Set<Integer> dollarOffsetSet) {
+	private boolean isbehind(TemplateVariable templateVariable, Set<Integer> dollarOffsetSet) {
 		for (int i = 0; i < templateVariable.getOffsets().length; i++) {
 			if (!dollarOffsetSet.contains(templateVariable.getOffsets()[i] - 1)) {
 				return false;
@@ -166,8 +152,7 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 	}
 
 	private boolean isDollar(TemplateVariable templateVariable) {
-		return templateVariable.isUnambiguous()
-				&& DOLLAR.equals(templateVariable.getType());
+		return templateVariable.isUnambiguous() && DOLLAR.equals(templateVariable.getType());
 	}
 
 	public void setLineDelimiter(String lineDelimiter) {

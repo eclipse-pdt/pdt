@@ -51,8 +51,7 @@ public class ContainerContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object element) {
 		if (element instanceof IWorkspace) {
 			// check if closed projects should be shown
-			IProject[] allProjects = ((IWorkspace) element).getRoot()
-					.getProjects();
+			IProject[] allProjects = ((IWorkspace) element).getRoot().getProjects();
 			if (showClosedProjects) {
 				return allProjects;
 			}

@@ -23,13 +23,11 @@ public class PHPCodeTemplatesPreferencePage extends TemplatePreferencePage {
 	public PHPCodeTemplatesPreferencePage() {
 		setPreferenceStore(PreferenceConstants.getPreferenceStore());
 		setTemplateStore(PHPUiPlugin.getDefault().getCodeTemplateStore());
-		setContextTypeRegistry(PHPUiPlugin.getDefault()
-				.getCodeTemplateContextRegistry());
+		setContextTypeRegistry(PHPUiPlugin.getDefault().getCodeTemplateContextRegistry());
 	}
 
 	public void performHelp() {
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
-				IPHPHelpContextIds.TEMPLATES_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.TEMPLATES_PREFERENCES);
 		getControl().notifyListeners(SWT.Help, new Event());
 	}
 }

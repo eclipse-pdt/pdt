@@ -65,8 +65,7 @@ public class PHPNewWizardMenu extends ContributionItem {
 	 *            if <code>true</code> the menu listens to perspective changes
 	 *            in the window
 	 */
-	public PHPNewWizardMenu(IMenuManager innerMgr, IWorkbenchWindow window,
-			boolean register) {
+	public PHPNewWizardMenu(IMenuManager innerMgr, IWorkbenchWindow window, boolean register) {
 		this(window);
 		fillMenu(innerMgr);
 		// Must be done after constructor to ensure field initialization.
@@ -132,16 +131,14 @@ public class PHPNewWizardMenu extends ContributionItem {
 		// so that image caching in ActionContributionItem works.
 		IAction action = (IAction) actions.get(id);
 		if (action == null) {
-			IWizardDescriptor wizardDesc = WorkbenchPlugin.getDefault()
-					.getNewWizardRegistry().findWizard(id);
+			IWizardDescriptor wizardDesc = WorkbenchPlugin.getDefault().getNewWizardRegistry().findWizard(id);
 			if (wizardDesc != null) {
 				action = new NewWizardShortcutAction(window, wizardDesc);
 				actions.put(id, action);
 				IConfigurationElement element = (IConfigurationElement) wizardDesc
 						.getAdapter(IConfigurationElement.class);
 				if (element != null)
-					window.getExtensionTracker().registerObject(
-							element.getDeclaringExtension(), action,
+					window.getExtensionTracker().registerObject(element.getDeclaringExtension(), action,
 							IExtensionTracker.REF_WEAK);
 			}
 		}
@@ -211,8 +208,7 @@ public class PHPNewWizardMenu extends ContributionItem {
 	}
 
 	protected boolean registryHasCategory(String categoryId) {
-		return WorkbenchPlugin.getDefault().getNewWizardRegistry()
-				.findCategory(categoryId) != null;
+		return WorkbenchPlugin.getDefault().getNewWizardRegistry().findCategory(categoryId) != null;
 	}
 
 	private boolean hasExamples() {

@@ -20,13 +20,12 @@ import org.eclipse.php.refactoring.core.test.PdttFileExt;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 @RunWith(PDTTList.class)
 public class RenameClassMemberProcessorTest extends AbstractRenameRefactoringTest {
 
-	
 	@PDTTList.Parameters
-	public static String[] dirs = {"/resources/rename/renameClassMember/"}; //$NON-NLS-1$
+	public static String[] dirs = { "/resources/rename/renameClassMember/" }; //$NON-NLS-1$
+
 	public RenameClassMemberProcessorTest(String[] fileNames) {
 		super(fileNames);
 	}

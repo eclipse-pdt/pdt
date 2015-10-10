@@ -101,9 +101,8 @@ public class PreferenceConstants {
 	 * A named preference that controls whether annotation roll over is used or
 	 * not.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. If
-	 * <code>true<code> the annotation ruler column
-	 * uses a roll over to display multiple annotations
+	 * Value is of type <code>Boolean</code>. If <code>true<code> the annotation
+	 * ruler column uses a roll over to display multiple annotations
 	 * </p>
 	 */
 	public static final String EDITOR_ANNOTATION_ROLL_OVER = "editor_annotation_roll_over"; //$NON-NLS-1$
@@ -124,8 +123,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_BOUNDARYMARKER_DEFAULT_COLOR = ColorHelper
-			.getColorString(255, 0, 0);
+	public static final String EDITOR_BOUNDARYMARKER_DEFAULT_COLOR = ColorHelper.getColorString(255, 0, 0);
 
 	/**
 	 * A named preference that controls whether the 'close braces' feature is
@@ -204,8 +202,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_COMMENT_DEFAULT_COLOR = ColorHelper
-			.getColorString(85, 127, 95);
+	public static final String EDITOR_COMMENT_DEFAULT_COLOR = ColorHelper.getColorString(85, 127, 95);
 
 	/**
 	 * A named preference that holds the color for the PHP comments
@@ -221,8 +218,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_LINE_COMMENT_DEFAULT_COLOR = ColorHelper
-			.getColorString(85, 127, 95);
+	public static final String EDITOR_LINE_COMMENT_DEFAULT_COLOR = ColorHelper.getColorString(85, 127, 95);
 
 	/**
 	 * A named preference that holds the color for the PHP comments
@@ -238,8 +234,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_PHPDOC_COMMENT_DEFAULT_COLOR = ColorHelper
-			.getColorString(63, 85, 191);
+	public static final String EDITOR_PHPDOC_COMMENT_DEFAULT_COLOR = ColorHelper.getColorString(63, 85, 191);
 
 	/**
 	 * A named preference that holds the color for the TASK tag inside the
@@ -257,8 +252,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_TASK_DEFAULT_COLOR = ColorHelper
-			.getColorString(124, 165, 213) + " | | true"; //$NON-NLS-1$
+	public static final String EDITOR_TASK_DEFAULT_COLOR = ColorHelper.getColorString(124, 165, 213) + " | | true"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls if correction indicators are shown in
@@ -283,8 +277,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_HEREDOC_DEFAULT_COLOR = ColorHelper
-			.getColorString(0, 130, 130);
+	public static final String EDITOR_HEREDOC_DEFAULT_COLOR = ColorHelper.getColorString(0, 130, 130);
 
 	/**
 	 * A named preference that holds the color for the PHP keyword
@@ -301,8 +294,7 @@ public class PreferenceConstants {
 	 * </p>
 	 */
 	public static final String EDITOR_KEYWORD_DEFAULT_COLOR = ColorHelper
-			.packStylePreferences(new String[] {
-					ColorHelper.getColorString(127, 0, 85), null, "true" }); //$NON-NLS-1$
+			.packStylePreferences(new String[] { ColorHelper.getColorString(127, 0, 85), null, "true" }); //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the color for the normal PHP text
@@ -318,8 +310,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_NORMAL_DEFAULT_COLOR = ColorHelper
-			.getColorString(0, 0, 0);
+	public static final String EDITOR_NORMAL_DEFAULT_COLOR = ColorHelper.getColorString(0, 0, 0);
 
 	/**
 	 * A named preference that holds the color for the numbers
@@ -335,8 +326,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_NUMBER_DEFAULT_COLOR = ColorHelper
-			.getColorString(0, 0, 0);
+	public static final String EDITOR_NUMBER_DEFAULT_COLOR = ColorHelper.getColorString(0, 0, 0);
 
 	/**
 	 * A named preference that holds the color for the PHPDoc comments
@@ -354,8 +344,7 @@ public class PreferenceConstants {
 	 * 
 	 * @return Foo
 	 */
-	public static final String EDITOR_PHPDOC_DEFAULT_COLOR = ColorHelper
-			.getColorString(127, 159, 191) + " | | true"; //$NON-NLS-1$
+	public static final String EDITOR_PHPDOC_DEFAULT_COLOR = ColorHelper.getColorString(127, 159, 191) + " | | true"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the color for the PHP string
@@ -371,8 +360,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_STRING_DEFAULT_COLOR = ColorHelper
-			.getColorString(0, 0, 192);
+	public static final String EDITOR_STRING_DEFAULT_COLOR = ColorHelper.getColorString(0, 0, 192);
 
 	/**
 	 * A named preference that controls whether the outline view selection
@@ -404,8 +392,7 @@ public class PreferenceConstants {
 	 * @since 3.5.0
 	 */
 	public static final String EDITOR_KEYWORD_PUBLIC_DEFAULT_COLOR = ColorHelper
-			.packStylePreferences(new String[] {
-					ColorHelper.getColorString(34, 128, 76), null, "true" }); //$NON-NLS-1$
+			.packStylePreferences(new String[] { ColorHelper.getColorString(34, 128, 76), null, "true" }); //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the default color for the PHP variable
@@ -420,8 +407,7 @@ public class PreferenceConstants {
 	 * @since 3.5.0
 	 */
 	public static final String EDITOR_KEYWORD_PROTECTED_DEFAULT_COLOR = ColorHelper
-			.packStylePreferences(new String[] {
-					ColorHelper.getColorString(165, 124, 44), null, "true" }); //$NON-NLS-1$
+			.packStylePreferences(new String[] { ColorHelper.getColorString(165, 124, 44), null, "true" }); //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the default color for the PHP variable
@@ -436,8 +422,7 @@ public class PreferenceConstants {
 	 * @since 3.5.0
 	 */
 	public static final String EDITOR_KEYWORD_PRIVATE_DEFAULT_COLOR = ColorHelper
-			.packStylePreferences(new String[] {
-					ColorHelper.getColorString(194, 27, 48), null, "true" }); //$NON-NLS-1$
+			.packStylePreferences(new String[] { ColorHelper.getColorString(194, 27, 48), null, "true" }); //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the default color for public keyword
@@ -445,8 +430,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_VARIABLE_DEFAULT_COLOR = ColorHelper
-			.getColorString(0, 0, 0);
+	public static final String EDITOR_VARIABLE_DEFAULT_COLOR = ColorHelper.getColorString(0, 0, 0);
 
 	/**
 	 * A named preference that controls the smart tab behavior.
@@ -610,8 +594,7 @@ public class PreferenceConstants {
 	 * @deprecated As of 3.1, this preference is not used or set any longer; see
 	 *             {@link SemanticHighlightingManager#affectsEnablement(IPreferenceStore, org.eclipse.jface.util.PropertyChangeEvent)}
 	 */
-	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_ENABLED = EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX
-			+ "enabled"; //$NON-NLS-1$
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_ENABLED = EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX + "enabled"; //$NON-NLS-1$
 
 	/**
 	 * A named preference suffix that controls a semantic highlighting's color.
@@ -859,8 +842,7 @@ public class PreferenceConstants {
 	/**
 	 * A named preference that defines the key for the hover modifiers.
 	 */
-	public static final String EDITOR_TEXT_HOVER_MODIFIERS = PHPUiPlugin.ID
-			+ "hoverModifiers"; //$NON-NLS-1$
+	public static final String EDITOR_TEXT_HOVER_MODIFIERS = PHPUiPlugin.ID + "hoverModifiers"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that defines the key for the hover modifier state
@@ -870,8 +852,7 @@ public class PreferenceConstants {
 	 * 
 	 * @see #EDITOR_TEXT_HOVER_MODIFIERS
 	 */
-	public static final String EDITOR_TEXT_HOVER_MODIFIER_MASKS = PHPUiPlugin.ID
-			+ "hoverModifierMasks"; //$NON-NLS-1$
+	public static final String EDITOR_TEXT_HOVER_MODIFIER_MASKS = PHPUiPlugin.ID + "hoverModifierMasks"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that defines the key for the default PHP Manual site.
@@ -1030,8 +1011,7 @@ public class PreferenceConstants {
 	 * some constants for auto-ident Smart Tab
 	 */
 	public static final String TAB = "tab"; //$NON-NLS-1$
-	public static final String FORMATTER_TAB_CHAR = PHPUiPlugin.ID
-			+ ".smart_tab.char"; //$NON-NLS-1$
+	public static final String FORMATTER_TAB_CHAR = PHPUiPlugin.ID + ".smart_tab.char"; //$NON-NLS-1$
 
 	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES = "cleanup.remove_trailing_whitespaces"; //$NON-NLS-1$
 	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES_ALL = "cleanup.remove_trailing_whitespaces_all"; //$NON-NLS-1$
@@ -1066,19 +1046,14 @@ public class PreferenceConstants {
 	public static void initializeDefaultValues() {
 
 		// Override Editor Preference defaults:
-		IPreferenceStore editorStore = EditorsPlugin.getDefault()
-				.getPreferenceStore();
+		IPreferenceStore editorStore = EditorsPlugin.getDefault().getPreferenceStore();
 
 		// Show current line:
-		editorStore
-				.setDefault(
-						AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE,
-						true);
+		editorStore.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE, true);
 
 		// disabling the spelling detection till we find a way to refine it the
 		// run only on strings and comments.
-		editorStore.setDefault(SpellingService.PREFERENCE_SPELLING_ENABLED,
-				false);
+		editorStore.setDefault(SpellingService.PREFERENCE_SPELLING_ENABLED, false);
 
 		IPreferenceStore store = getPreferenceStore();
 
@@ -1108,24 +1083,14 @@ public class PreferenceConstants {
 		store.setDefault(PreferenceConstants.EDITOR_MARK_OCCURRENCES, true);
 		store.setDefault(PreferenceConstants.EDITOR_STICKY_OCCURRENCES, true);
 		store.setDefault(PreferenceConstants.EDITOR_MARK_TYPE_OCCURRENCES, true);
-		store.setDefault(PreferenceConstants.EDITOR_MARK_METHOD_OCCURRENCES,
-				true);
-		store.setDefault(PreferenceConstants.EDITOR_MARK_CONSTANT_OCCURRENCES,
-				true);
-		store.setDefault(PreferenceConstants.EDITOR_MARK_FUNCTION_OCCURRENCES,
-				true);
-		store.setDefault(
-				PreferenceConstants.EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES,
-				true);
-		store.setDefault(
-				PreferenceConstants.EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES,
-				true);
-		store.setDefault(PreferenceConstants.EDITOR_MARK_EXCEPTION_OCCURRENCES,
-				true);
-		store.setDefault(PreferenceConstants.EDITOR_MARK_METHOD_EXIT_POINTS,
-				true);
-		store.setDefault(
-				PreferenceConstants.EDITOR_MARK_BREAK_CONTINUE_TARGETS, true);
+		store.setDefault(PreferenceConstants.EDITOR_MARK_METHOD_OCCURRENCES, true);
+		store.setDefault(PreferenceConstants.EDITOR_MARK_CONSTANT_OCCURRENCES, true);
+		store.setDefault(PreferenceConstants.EDITOR_MARK_FUNCTION_OCCURRENCES, true);
+		store.setDefault(PreferenceConstants.EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES, true);
+		store.setDefault(PreferenceConstants.EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES, true);
+		store.setDefault(PreferenceConstants.EDITOR_MARK_EXCEPTION_OCCURRENCES, true);
+		store.setDefault(PreferenceConstants.EDITOR_MARK_METHOD_EXIT_POINTS, true);
+		store.setDefault(PreferenceConstants.EDITOR_MARK_BREAK_CONTINUE_TARGETS, true);
 		store.setDefault(PreferenceConstants.EDITOR_MARK_IMPLEMENTORS, true);
 
 		store.setDefault(FORMATTER_COMMENT_CLEARBLANKLINES, false);
@@ -1142,77 +1107,56 @@ public class PreferenceConstants {
 		store.setDefault(APPEARANCE_MEMBER_SORT_ORDER, "I,S,T,C,SV,SF,V,F"); //$NON-NLS-1$
 
 		store.setDefault(EDITOR_CORRECTION_INDICATION, true);
-		store.setDefault(
-				org.eclipse.dltk.ui.PreferenceConstants.EDITOR_CORRECTION_INDICATION,
-				true);
+		store.setDefault(org.eclipse.dltk.ui.PreferenceConstants.EDITOR_CORRECTION_INDICATION, true);
 		store.setDefault(EDITOR_SYNC_OUTLINE_ON_CURSOR_MOVE, true);
 		store.setDefault(EDITOR_ANNOTATION_ROLL_OVER, false);
 
 		// CodeAssistPreferencePage
-		PreferenceConverter.setDefault(store, CODEASSIST_PROPOSALS_BACKGROUND,
-				new RGB(255, 255, 255));
-		PreferenceConverter.setDefault(store, CODEASSIST_PROPOSALS_FOREGROUND,
-				new RGB(0, 0, 0));
-		PreferenceConverter.setDefault(store, CODEASSIST_PARAMETERS_BACKGROUND,
-				new RGB(255, 255, 255));
-		PreferenceConverter.setDefault(store, CODEASSIST_PARAMETERS_FOREGROUND,
-				new RGB(0, 0, 0));
-		PreferenceConverter.setDefault(store,
-				CODEASSIST_REPLACEMENT_BACKGROUND, new RGB(255, 255, 0));
-		PreferenceConverter.setDefault(store,
-				CODEASSIST_REPLACEMENT_FOREGROUND, new RGB(255, 0, 0));
+		PreferenceConverter.setDefault(store, CODEASSIST_PROPOSALS_BACKGROUND, new RGB(255, 255, 255));
+		PreferenceConverter.setDefault(store, CODEASSIST_PROPOSALS_FOREGROUND, new RGB(0, 0, 0));
+		PreferenceConverter.setDefault(store, CODEASSIST_PARAMETERS_BACKGROUND, new RGB(255, 255, 255));
+		PreferenceConverter.setDefault(store, CODEASSIST_PARAMETERS_FOREGROUND, new RGB(0, 0, 0));
+		PreferenceConverter.setDefault(store, CODEASSIST_REPLACEMENT_BACKGROUND, new RGB(255, 255, 0));
+		PreferenceConverter.setDefault(store, CODEASSIST_REPLACEMENT_FOREGROUND, new RGB(255, 0, 0));
 
 		// SyntaxColoringPage
 		store.setDefault(EDITOR_NORMAL_COLOR, EDITOR_NORMAL_DEFAULT_COLOR);
-		store.setDefault(EDITOR_BOUNDARYMARKER_COLOR,
-				EDITOR_BOUNDARYMARKER_DEFAULT_COLOR);
+		store.setDefault(EDITOR_BOUNDARYMARKER_COLOR, EDITOR_BOUNDARYMARKER_DEFAULT_COLOR);
 		store.setDefault(EDITOR_KEYWORD_COLOR, EDITOR_KEYWORD_DEFAULT_COLOR);
 		store.setDefault(EDITOR_VARIABLE_COLOR, EDITOR_VARIABLE_DEFAULT_COLOR);
 		store.setDefault(EDITOR_STRING_COLOR, EDITOR_STRING_DEFAULT_COLOR);
 		store.setDefault(EDITOR_NUMBER_COLOR, EDITOR_NUMBER_DEFAULT_COLOR);
 		store.setDefault(EDITOR_HEREDOC_COLOR, EDITOR_HEREDOC_DEFAULT_COLOR);
 		store.setDefault(EDITOR_COMMENT_COLOR, EDITOR_COMMENT_DEFAULT_COLOR);
-		store.setDefault(EDITOR_LINE_COMMENT_COLOR,
-				EDITOR_LINE_COMMENT_DEFAULT_COLOR);
-		store.setDefault(EDITOR_PHPDOC_COMMENT_COLOR,
-				EDITOR_PHPDOC_COMMENT_DEFAULT_COLOR);
+		store.setDefault(EDITOR_LINE_COMMENT_COLOR, EDITOR_LINE_COMMENT_DEFAULT_COLOR);
+		store.setDefault(EDITOR_PHPDOC_COMMENT_COLOR, EDITOR_PHPDOC_COMMENT_DEFAULT_COLOR);
 		store.setDefault(EDITOR_PHPDOC_COLOR, EDITOR_PHPDOC_DEFAULT_COLOR);
 		store.setDefault(EDITOR_TASK_COLOR, EDITOR_TASK_DEFAULT_COLOR);
 
-		store.setDefault(EDITOR_KEYWORD_PRIVATE_COLOR,
-				EDITOR_KEYWORD_PRIVATE_DEFAULT_COLOR);
-		store.setDefault(EDITOR_KEYWORD_PROTECTED_COLOR,
-				EDITOR_KEYWORD_PROTECTED_DEFAULT_COLOR);
-		store.setDefault(EDITOR_KEYWORD_PUBLIC_COLOR,
-				EDITOR_KEYWORD_PUBLIC_DEFAULT_COLOR);
+		store.setDefault(EDITOR_KEYWORD_PRIVATE_COLOR, EDITOR_KEYWORD_PRIVATE_DEFAULT_COLOR);
+		store.setDefault(EDITOR_KEYWORD_PROTECTED_COLOR, EDITOR_KEYWORD_PROTECTED_DEFAULT_COLOR);
+		store.setDefault(EDITOR_KEYWORD_PUBLIC_COLOR, EDITOR_KEYWORD_PUBLIC_DEFAULT_COLOR);
 
 		// SyntaxColoringPage enable
 		store.setDefault(getEnabledPreferenceKey(EDITOR_NORMAL_COLOR), true);
-		store.setDefault(getEnabledPreferenceKey(EDITOR_BOUNDARYMARKER_COLOR),
-				true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_BOUNDARYMARKER_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_KEYWORD_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_VARIABLE_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_STRING_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_NUMBER_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_HEREDOC_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_COMMENT_COLOR), true);
-		store.setDefault(getEnabledPreferenceKey(EDITOR_LINE_COMMENT_COLOR),
-				true);
-		store.setDefault(getEnabledPreferenceKey(EDITOR_PHPDOC_COMMENT_COLOR),
-				true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_LINE_COMMENT_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_PHPDOC_COMMENT_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_PHPDOC_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_TASK_COLOR), true);
 
-		store.setDefault(getEnabledPreferenceKey(EDITOR_KEYWORD_PUBLIC_COLOR),
-				true);
-		store.setDefault(getEnabledPreferenceKey(EDITOR_KEYWORD_PRIVATE_COLOR),
-				true);
-		store.setDefault(
-				getEnabledPreferenceKey(EDITOR_KEYWORD_PROTECTED_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_KEYWORD_PUBLIC_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_KEYWORD_PRIVATE_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_KEYWORD_PROTECTED_COLOR), true);
 
 		// PHP options
-		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION,
-				PHPVersion.PHP5_3.toString());
+		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION, PHPVersion.PHP5_3.toString());
 		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_ROOT_CONTEXT, ""); //$NON-NLS-1$
 
 		// Smart home/end
@@ -1223,8 +1167,7 @@ public class PreferenceConstants {
 
 		// Folding options
 		store.setDefault(EDITOR_FOLDING_ENABLED, true);
-		store.setDefault(EDITOR_FOLDING_PROVIDER,
-				"org.eclipse.php.ui.defaultFoldingProvider"); //$NON-NLS-1$
+		store.setDefault(EDITOR_FOLDING_PROVIDER, "org.eclipse.php.ui.defaultFoldingProvider"); //$NON-NLS-1$
 		store.setDefault(EDITOR_FOLDING_PHPDOC, false);
 		store.setDefault(EDITOR_FOLDING_CLASSES, false);
 		store.setDefault(EDITOR_FOLDING_FUNCTIONS, false);
@@ -1236,40 +1179,33 @@ public class PreferenceConstants {
 
 		store.setDefault(NEW_PHP_FILE_TEMPLATE, "New simple PHP file"); //$NON-NLS-1$
 
-		store.setDefault(ALLOW_MULTIPLE_LAUNCHES,
-				MessageDialogWithToggle.PROMPT);
+		store.setDefault(ALLOW_MULTIPLE_LAUNCHES, MessageDialogWithToggle.PROMPT);
 
 		String mod1Name = Action.findModifierString(SWT.MOD1); // SWT.COMMAND on
 		// Mac;
 		// SWT.CONTROL
 		// elsewhere
-		store.setDefault(
-				EDITOR_TEXT_HOVER_MODIFIERS,
-				"org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + mod1Name); //$NON-NLS-1$
-		store.setDefault(
-				EDITOR_TEXT_HOVER_MODIFIER_MASKS,
-				"org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + SWT.MOD1); //$NON-NLS-1$
+		store.setDefault(EDITOR_TEXT_HOVER_MODIFIERS,
+				"org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" //$NON-NLS-1$
+						+ mod1Name);
+		store.setDefault(EDITOR_TEXT_HOVER_MODIFIER_MASKS,
+				"org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" //$NON-NLS-1$
+						+ SWT.MOD1);
 
-		store.setDefault(PHP_MANUAL_SITE, PHPManualConfigSerializer
-				.toString(new PHPManualConfig(
-						PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_LABEL,
+		store.setDefault(PHP_MANUAL_SITE,
+				PHPManualConfigSerializer.toString(new PHPManualConfig(PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_LABEL,
 						PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_SITE,
-						PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_EXTENSION,
-						false)));
+						PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_EXTENSION, false)));
 		store.setDefault(PHP_MANUAL_OPEN_IN_NEW_BROWSER, true);
 
 		store.setDefault(PreferenceConstants.SEARCH_USE_REDUCED_MENU, true);
 
-		store.setDefault(SWITCH_BACK_TO_PHP_PERSPECTIVE,
-				MessageDialogWithToggle.NEVER);
+		store.setDefault(SWITCH_BACK_TO_PHP_PERSPECTIVE, MessageDialogWithToggle.NEVER);
 
 		// default locale
-		if (store.getString(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE).equals(
-				"")) { //$NON-NLS-1$
-			store.setValue(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE, Locale
-					.getDefault().toString());
-			store.setDefault(PHPCoreConstants.WORKSPACE_LOCALE, Locale
-					.getDefault().toString());
+		if (store.getString(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE).equals("")) { //$NON-NLS-1$
+			store.setValue(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE, Locale.getDefault().toString());
+			store.setDefault(PHPCoreConstants.WORKSPACE_LOCALE, Locale.getDefault().toString());
 		}
 
 		// save actions
@@ -1279,8 +1215,7 @@ public class PreferenceConstants {
 		store.setDefault(FORMAT_ON_SAVE, false);
 
 		// default php outline mode
-		store.setDefault(PREF_OUTLINEMODE,
-				PHPContentOutlineConfiguration.MODE_PHP);
+		store.setDefault(PREF_OUTLINEMODE, PHPContentOutlineConfiguration.MODE_PHP);
 
 		store.setDefault(EXPLORER_GROUP_BY_NAMESPACES, false);
 
@@ -1292,8 +1227,7 @@ public class PreferenceConstants {
 	}
 
 	public static String getEnabledPreferenceKey(String preferenceKey) {
-		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX
-				+ preferenceKey
+		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX + preferenceKey
 				+ PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_ENABLED_SUFFIX;
 	}
 

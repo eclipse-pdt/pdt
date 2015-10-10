@@ -18,8 +18,7 @@ import org.eclipse.jface.contentassist.ISubjectControlContentAssistProcessor;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.*;
 
-public class VariableNameProcessor implements IContentAssistProcessor,
-		ISubjectControlContentAssistProcessor {
+public class VariableNameProcessor implements IContentAssistProcessor, ISubjectControlContentAssistProcessor {
 
 	private String[] fVariableNameProposals;
 
@@ -33,14 +32,12 @@ public class VariableNameProcessor implements IContentAssistProcessor,
 
 	}
 
-	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
-			int offset) {
+	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		Assert.isTrue(false, "ITextViewer not supported"); //$NON-NLS-1$
 		return null;
 	}
 
-	public IContextInformation[] computeContextInformation(ITextViewer viewer,
-			int offset) {
+	public IContextInformation[] computeContextInformation(ITextViewer viewer, int offset) {
 		Assert.isTrue(false, "ITextViewer not supported"); //$NON-NLS-1$
 		return null;
 	}
@@ -61,8 +58,7 @@ public class VariableNameProcessor implements IContentAssistProcessor,
 		return fErrorMessage;
 	}
 
-	public ICompletionProposal[] computeCompletionProposals(
-			IContentAssistSubjectControl contentAssistSubject,
+	public ICompletionProposal[] computeCompletionProposals(IContentAssistSubjectControl contentAssistSubject,
 			int documentOffset) {
 		if (fVariableNameProposals.length == 0)
 			return null;
@@ -74,18 +70,14 @@ public class VariableNameProcessor implements IContentAssistProcessor,
 			String tempName = fVariableNameProposals[i];
 			if (tempName.length() == 0 || !tempName.startsWith(prefix))
 				continue;
-			CompletionProposal proposal = new CompletionProposal(tempName, 0,
-					input.length(), 0);
+			CompletionProposal proposal = new CompletionProposal(tempName, 0, input.length(), 0);
 			proposals.add(proposal);
 		}
-		fErrorMessage = proposals.size() > 0 ? null
-				: "No completions available"; //$NON-NLS-1$
-		return (ICompletionProposal[]) proposals
-				.toArray(new ICompletionProposal[proposals.size()]);
+		fErrorMessage = proposals.size() > 0 ? null : "No completions available"; //$NON-NLS-1$
+		return (ICompletionProposal[]) proposals.toArray(new ICompletionProposal[proposals.size()]);
 	}
 
-	public IContextInformation[] computeContextInformation(
-			IContentAssistSubjectControl contentAssistSubjectControl,
+	public IContextInformation[] computeContextInformation(IContentAssistSubjectControl contentAssistSubjectControl,
 			int documentOffset) {
 		Assert.isTrue(false, "ITextViewer not supported"); //$NON-NLS-1$
 		return null;

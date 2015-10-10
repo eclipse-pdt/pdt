@@ -94,14 +94,12 @@ public class DltkUtil {
 		return displayString(inputString, indent, false);
 	}
 
-	public static String displayString(String inputString, int indent,
-			boolean shift) {
+	public static String displayString(String inputString, int indent, boolean shift) {
 		if (inputString == null)
 			return "null";
 		int length = inputString.length();
 		StringBuffer buffer = new StringBuffer(length);
-		java.util.StringTokenizer tokenizer = new java.util.StringTokenizer(
-				inputString, "\n\r", true);
+		java.util.StringTokenizer tokenizer = new java.util.StringTokenizer(inputString, "\n\r", true);
 		for (int i = 0; i < indent; i++)
 			buffer.append("\t");
 		if (shift)
@@ -202,8 +200,7 @@ public class DltkUtil {
 	 * Unzip the contents of the given zip in the given directory (create it if
 	 * it doesn't exist)
 	 */
-	public static void unzip(String zipPath, String destDirPath)
-			throws IOException {
+	public static void unzip(String zipPath, String destDirPath) throws IOException {
 
 		InputStream zipIn = new FileInputStream(zipPath);
 		byte[] buf = new byte[8192];
@@ -262,8 +259,7 @@ public class DltkUtil {
 			} else if (files[i].isFile()) {
 				BufferedInputStream input;
 				try {
-					input = new BufferedInputStream(new FileInputStream(
-							files[i]));
+					input = new BufferedInputStream(new FileInputStream(files[i]));
 					org.eclipse.dltk.compiler.util.Util.copy(child, input);
 					input.close();
 				} catch (FileNotFoundException e) {

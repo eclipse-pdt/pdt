@@ -60,8 +60,7 @@ public class PHPExecutableDebuggerInitializer {
 	 * @param workingDir
 	 * @param query
 	 */
-	public void initializeDebug(String phpExe, String fileName,
-			String workingDir, String query) {
+	public void initializeDebug(String phpExe, String fileName, String workingDir, String query) {
 		initializeDebug(phpExe, fileName, workingDir, query, null, null);
 	}
 
@@ -75,9 +74,8 @@ public class PHPExecutableDebuggerInitializer {
 	 * @param envVariables
 	 * @param phpIniLocation
 	 */
-	public void initializeDebug(String phpExe, String fileName,
-			String workingDir, String query, Map<String, String> envVariables,
-			String phpIniLocation) {
+	public void initializeDebug(String phpExe, String fileName, String workingDir, String query,
+			Map<String, String> envVariables, String phpIniLocation) {
 		try {
 			File phpExeFile = new File(phpExe);
 
@@ -99,36 +97,29 @@ public class PHPExecutableDebuggerInitializer {
 				}
 			}
 
-			String[] args = PHPLaunchUtilities.getProgramArguments(launch
-					.getLaunchConfiguration());
+			String[] args = PHPLaunchUtilities.getProgramArguments(launch.getLaunchConfiguration());
 
 			// Prepare the environment
-			Map<String, String> additionalLaunchEnvironment = PHPLaunchUtilities
-					.getPHPCGILaunchEnvironment(fileName, query, phpConfigDir,
-							phpExeFile.getParent(),
-							sapiType == PHPexeItem.SAPI_CGI ? args : null);
+			Map<String, String> additionalLaunchEnvironment = PHPLaunchUtilities.getPHPCGILaunchEnvironment(fileName,
+					query, phpConfigDir, phpExeFile.getParent(), sapiType == PHPexeItem.SAPI_CGI ? args : null);
 			if (envVariables == null) {
 				envVariables = additionalLaunchEnvironment;
 			} else {
 				additionalLaunchEnvironment.putAll(envVariables);
 				envVariables = additionalLaunchEnvironment;
 			}
-			String[] environmetVars = PHPLaunchUtilities.getEnvironment(
-					launch.getLaunchConfiguration(),
+			String[] environmetVars = PHPLaunchUtilities.getEnvironment(launch.getLaunchConfiguration(),
 					asAttributesArray(envVariables));
 
 			// Prepare the command line.
-			String[] phpCmdArray = PHPLaunchUtilities.getCommandLine(
-					launch.getLaunchConfiguration(), phpExe, phpConfigDir,
-					fileName, sapiType == PHPexeItem.SAPI_CLI ? args : null,
-					phpV);
+			String[] phpCmdArray = PHPLaunchUtilities.getCommandLine(launch.getLaunchConfiguration(), phpExe,
+					phpConfigDir, fileName, sapiType == PHPexeItem.SAPI_CLI ? args : null, phpV);
 
 			// Make sure that we have executable permissions on the file.
 			PHPexes.changePermissions(new File(phpCmdArray[0]));
 
 			if (PHPDebugPlugin.DEBUG) {
-				System.out
-						.println("Executing: " + Arrays.toString(phpCmdArray)); //$NON-NLS-1$
+				System.out.println("Executing: " + Arrays.toString(phpCmdArray)); //$NON-NLS-1$
 				System.out.println("Process environment: " //$NON-NLS-1$
 						+ Arrays.toString(environmetVars));
 			}
@@ -141,8 +132,7 @@ public class PHPExecutableDebuggerInitializer {
 				if (PHPDebugPlugin.DEBUG) {
 					System.out.println("Working directory: " + workingDir); //$NON-NLS-1$
 				}
-				p = Runtime.getRuntime().exec(phpCmdArray, environmetVars,
-						workingDirFile);
+				p = Runtime.getRuntime().exec(phpCmdArray, environmetVars, workingDirFile);
 			} else {
 				p = Runtime.getRuntime().exec(phpCmdArray, environmetVars);
 			}
@@ -156,12 +146,10 @@ public class PHPExecutableDebuggerInitializer {
 				public void run() {
 					String message = e.getLocalizedMessage();
 					if (message != null) {
-						message = message.replaceFirst(e.getClass().getName()
-								+ ": ", ""); //$NON-NLS-1$ //$NON-NLS-2$
+						message = message.replaceFirst(e.getClass().getName() + ": ", ""); //$NON-NLS-1$ //$NON-NLS-2$
 						MessageDialog.openError(display.getActiveShell(),
-								PHPDebugCoreMessages.PHPExecutableDebuggerInitializer_6, NLS.bind(
-										PHPDebugCoreMessages.PHPExecutableDebuggerInitializer_7,
-										message));
+								PHPDebugCoreMessages.PHPExecutableDebuggerInitializer_6,
+								NLS.bind(PHPDebugCoreMessages.PHPExecutableDebuggerInitializer_7, message));
 					}
 				}
 			});
@@ -196,27 +184,21 @@ public class PHPExecutableDebuggerInitializer {
 			// the php.ini).
 			if (launch != null && launch.getDebugTarget() == null) {
 				String launchName = launch.getLaunchConfiguration().getName();
-				boolean isRunMode = ILaunchManager.RUN_MODE.equals(launch
-						.getLaunchMode());
+				boolean isRunMode = ILaunchManager.RUN_MODE.equals(launch.getLaunchMode());
 				String msg = null;
 				if (isRunMode) {
-					msg = MessageFormat.format(
-							PHPDebugCoreMessages.Debugger_Error_Message_3,
+					msg = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_3,
 							new Object[] { launchName });
 				} else {
-					msg = MessageFormat.format(
-							PHPDebugCoreMessages.Debugger_Error_Message_2,
+					msg = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_2,
 							new Object[] { launchName });
 				}
 				final String message = msg;
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						MessageDialog.openWarning(Display.getDefault()
-								.getActiveShell(),
-								PHPDebugCoreMessages.Debugger_Launch_Error,
-								message);
-						DebugPlugin.getDefault().getLaunchManager()
-								.removeLaunch(launch);
+						MessageDialog.openWarning(Display.getDefault().getActiveShell(),
+								PHPDebugCoreMessages.Debugger_Launch_Error, message);
+						DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 					}
 				});
 			}

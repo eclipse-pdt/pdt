@@ -34,12 +34,10 @@ public class PlainPharBuilder extends PharBuilder {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void open(PharPackage jarPackage, Shell displayShell,
-			MultiStatus statusMsg) throws CoreException {
+	public void open(PharPackage jarPackage, Shell displayShell, MultiStatus statusMsg) throws CoreException {
 		super.open(jarPackage, displayShell, statusMsg);
 		fJarPackage = jarPackage;
-		Assert.isTrue(fJarPackage.isValid(),
-				"The PHAR package specification is invalid"); //$NON-NLS-1$
+		Assert.isTrue(fJarPackage.isValid(), "The PHAR package specification is invalid"); //$NON-NLS-1$
 		if (!canCreateJar(displayShell))
 			throw new OperationCanceledException();
 
@@ -69,8 +67,7 @@ public class PlainPharBuilder extends PharBuilder {
 			if (fJarPackage.allowOverwrite())
 				return true;
 			return parent != null
-					&& PharUIUtil.askForOverwritePermission(parent, fJarPackage
-							.getAbsolutePharLocation(), true);
+					&& PharUIUtil.askForOverwritePermission(parent, fJarPackage.getAbsolutePharLocation(), true);
 		}
 
 		// Test if directory exists
@@ -91,8 +88,7 @@ public class PlainPharBuilder extends PharBuilder {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void writeFile(IFile resource, IPath destinationPath)
-			throws CoreException {
+	public void writeFile(IFile resource, IPath destinationPath) throws CoreException {
 		try {
 			fileExporter.write(resource, destinationPath.toString());
 		} catch (IOException ex) {
@@ -105,8 +101,7 @@ public class PlainPharBuilder extends PharBuilder {
 	 * 
 	 * @throws IOException
 	 */
-	public void writeStub(IStub stub, IProgressMonitor progressMonitor)
-			throws CoreException {
+	public void writeStub(IStub stub, IProgressMonitor progressMonitor) throws CoreException {
 		try {
 			fileExporter.writeStub(stub);
 		} catch (IOException ex) {
@@ -125,25 +120,27 @@ public class PlainPharBuilder extends PharBuilder {
 				fileExporter.finished();
 				registerInWorkspaceIfNeeded();
 			} catch (IOException ex) {
-				throw PharUIUtil.createCoreException(ex.getLocalizedMessage(),
-						ex);
+				throw PharUIUtil.createCoreException(ex.getLocalizedMessage(), ex);
 			}
 		}
 	}
+
 	private void registerInWorkspaceIfNeeded() {
-		IPath jarPath= fJarPackage.getAbsolutePharLocation();
-		IProject[] projects= ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		for (int i= 0; i < projects.length; i++) {
-			IProject project= projects[i];
-			// The Jar is always put into the local file system. So it can only be
-			// part of a project if the project is local as well. So using getLocation
+		IPath jarPath = fJarPackage.getAbsolutePharLocation();
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		for (int i = 0; i < projects.length; i++) {
+			IProject project = projects[i];
+			// The Jar is always put into the local file system. So it can only
+			// be
+			// part of a project if the project is local as well. So using
+			// getLocation
 			// is currently save here.
-			IPath projectLocation= project.getLocation();
+			IPath projectLocation = project.getLocation();
 			if (projectLocation != null && projectLocation.isPrefixOf(jarPath)) {
 				try {
-					jarPath= jarPath.removeFirstSegments(projectLocation.segmentCount());
-					jarPath= jarPath.removeLastSegments(1);
-					IResource containingFolder= project.findMember(jarPath);
+					jarPath = jarPath.removeFirstSegments(projectLocation.segmentCount());
+					jarPath = jarPath.removeLastSegments(1);
+					IResource containingFolder = project.findMember(jarPath);
 					if (containingFolder != null && containingFolder.isAccessible())
 						containingFolder.refreshLocal(IResource.DEPTH_ONE, null);
 				} catch (CoreException ex) {
@@ -162,15 +159,13 @@ public class PlainPharBuilder extends PharBuilder {
 				fileExporter.writeSignature();
 				// }
 			} catch (IOException ex) {
-				throw PharUIUtil.createCoreException(ex.getLocalizedMessage(),
-						ex);
+				throw PharUIUtil.createCoreException(ex.getLocalizedMessage(), ex);
 			}
 		}
 
 	}
 
-	public void writeFile(IFolder resource, IPath destinationPath)
-			throws CoreException {
+	public void writeFile(IFolder resource, IPath destinationPath) throws CoreException {
 		try {
 			fileExporter.write(resource, destinationPath.toString());
 		} catch (IOException ex) {

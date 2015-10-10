@@ -22,8 +22,7 @@ public class ServerType implements IServerType {
 	/**
 	 * Default generic PHP server type id.
 	 */
-	public static final String GENERIC_PHP_SERVER_ID = Activator.PLUGIN_ID
-			+ ".genericServerType"; //$NON-NLS-1$
+	public static final String GENERIC_PHP_SERVER_ID = Activator.PLUGIN_ID + ".genericServerType"; //$NON-NLS-1$
 
 	private IConfigurationElement element;
 

@@ -59,8 +59,7 @@ public class Resources {
 		if (result != null) {
 			return result;
 		}
-		return new Status(IStatus.OK, PHPUiPlugin.getPluginId(), IStatus.OK,
-				"", null); //$NON-NLS-1$
+		return new Status(IStatus.OK, PHPUiPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
 	}
 
 	/**
@@ -109,15 +108,12 @@ public class Resources {
 			}
 		}
 		if (readOnlyFiles.size() == 0) {
-			return new Status(IStatus.OK, PHPUiPlugin.getPluginId(),
-					IStatus.OK, "", null); //$NON-NLS-1$
+			return new Status(IStatus.OK, PHPUiPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
 		}
 
 		Map<IFile, Long> oldTimeStamps = createModificationStampMap(readOnlyFiles);
 		IStatus status = ResourcesPlugin.getWorkspace()
-				.validateEdit(
-						readOnlyFiles.toArray(new IFile[readOnlyFiles.size()]),
-						context);
+				.validateEdit(readOnlyFiles.toArray(new IFile[readOnlyFiles.size()]), context);
 		if (!status.isOK()) {
 			return status;
 		}
@@ -134,8 +130,7 @@ public class Resources {
 			return modified;
 		}
 
-		return new Status(IStatus.OK, PHPUiPlugin.getPluginId(), IStatus.OK,
-				"", null); //$NON-NLS-1$
+		return new Status(IStatus.OK, PHPUiPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
 	}
 
 	private static Map<IFile, Long> createModificationStampMap(List<IFile> files) {
@@ -156,8 +151,7 @@ public class Resources {
 			((MultiStatus) status).add(entry);
 			return status;
 		} else {
-			MultiStatus result = new MultiStatus(PHPUiPlugin.getPluginId(), 0,
-					Messages.Resources_4, null);
+			MultiStatus result = new MultiStatus(PHPUiPlugin.getPluginId(), 0, Messages.Resources_4, null);
 			result.add(status);
 			result.add(entry);
 			return result;
@@ -165,19 +159,16 @@ public class Resources {
 	}
 
 	private static IStatus addOutOfSync(IStatus status, IResource resource) {
-		IStatus entry = new Status(IStatus.ERROR, ResourcesPlugin.PI_RESOURCES,
-				IResourceStatus.OUT_OF_SYNC_LOCAL,
-				NLS.bind(Messages.Resources_5, resource.getFullPath()
-						.toString()), null);
+		IStatus entry = new Status(IStatus.ERROR, ResourcesPlugin.PI_RESOURCES, IResourceStatus.OUT_OF_SYNC_LOCAL,
+				NLS.bind(Messages.Resources_5, resource.getFullPath().toString()), null);
 		if (status == null) {
 			return entry;
 		} else if (status.isMultiStatus()) {
 			((MultiStatus) status).add(entry);
 			return status;
 		} else {
-			MultiStatus result = new MultiStatus(ResourcesPlugin.PI_RESOURCES,
-					IResourceStatus.OUT_OF_SYNC_LOCAL, Messages.Resources_6,
-					null);
+			MultiStatus result = new MultiStatus(ResourcesPlugin.PI_RESOURCES, IResourceStatus.OUT_OF_SYNC_LOCAL,
+					Messages.Resources_6, null);
 			result.add(status);
 			result.add(entry);
 			return result;
@@ -218,13 +209,11 @@ public class Resources {
 		if (uri == null) {
 			return null;
 		}
-		return EFS.SCHEME_FILE.equalsIgnoreCase(uri.getScheme()) ? new File(uri)
-				.getAbsolutePath() : uri.toString();
+		return EFS.SCHEME_FILE.equalsIgnoreCase(uri.getScheme()) ? new File(uri).getAbsolutePath() : uri.toString();
 	}
 
 	public static boolean isReadOnly(IResource resource) {
-		ResourceAttributes resourceAttributes = resource
-				.getResourceAttributes();
+		ResourceAttributes resourceAttributes = resource.getResourceAttributes();
 		if (resourceAttributes == null) {
 			// not supported on this platform for
 			// this resource
@@ -234,8 +223,7 @@ public class Resources {
 	}
 
 	static void setReadOnly(IResource resource, boolean readOnly) {
-		ResourceAttributes resourceAttributes = resource
-				.getResourceAttributes();
+		ResourceAttributes resourceAttributes = resource.getResourceAttributes();
 		if (resourceAttributes == null) {
 			// not supported on this platform for
 			// this resource

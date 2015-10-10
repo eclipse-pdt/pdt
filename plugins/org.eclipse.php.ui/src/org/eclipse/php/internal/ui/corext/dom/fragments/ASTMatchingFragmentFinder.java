@@ -21,8 +21,7 @@ class ASTMatchingFragmentFinder extends ApplyAll {
 
 	private static boolean isProgramScope = false;
 
-	public static IASTFragment[] findMatchingFragments(ASTNode scope,
-			ASTFragment toMatch) {
+	public static IASTFragment[] findMatchingFragments(ASTNode scope, ASTFragment toMatch) {
 		isProgramScope = scope.getType() == ASTNode.PROGRAM ? true : false;
 
 		return new ASTMatchingFragmentFinder(toMatch).findMatches(scope);
@@ -42,8 +41,7 @@ class ASTMatchingFragmentFinder extends ApplyAll {
 	}
 
 	private IASTFragment[] getMatches() {
-		return (IASTFragment[]) fMatches.toArray(new IASTFragment[fMatches
-				.size()]);
+		return (IASTFragment[]) fMatches.toArray(new IASTFragment[fMatches.size()]);
 	}
 
 	protected boolean apply(ASTNode node) {
@@ -52,8 +50,7 @@ class ASTMatchingFragmentFinder extends ApplyAll {
 		if (node.getType() == ASTNode.FUNCTION_DECLARATION && isProgramScope)
 			return false;
 
-		IASTFragment[] localMatches = fFragmentToMatch
-				.getMatchingFragmentsWithNode(node);
+		IASTFragment[] localMatches = fFragmentToMatch.getMatchingFragmentsWithNode(node);
 		for (int i = 0; i < localMatches.length; i++) {
 			fMatches.add(localMatches[i]);
 		}

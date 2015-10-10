@@ -14,8 +14,7 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.wizards.datatransfer.DataTransferMessages;
 import org.eclipse.ui.internal.wizards.datatransfer.ILeveledImportStructureProvider;
 
-public class TarLeveledStructureProvider implements
-		ILeveledImportStructureProvider {
+public class TarLeveledStructureProvider implements ILeveledImportStructureProvider {
 	private TarFile tarFile;
 
 	private TarEntry root = new TarEntry("/"); //$NON-NLS-1$
@@ -81,8 +80,7 @@ public class TarLeveledStructureProvider implements
 		if (pathname.segmentCount() == 1) {
 			parent = root;
 		} else {
-			parent = (TarEntry) directoryEntryCache.get(pathname
-					.removeLastSegments(1));
+			parent = (TarEntry) directoryEntryCache.get(pathname.removeLastSegments(1));
 		}
 
 		List childList = (List) children.get(parent);
@@ -168,16 +166,14 @@ public class TarLeveledStructureProvider implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.internal.wizards.datatransfer.ILeveledImportStructureProvider
-	 * #closeArchive()
+	 * @see org.eclipse.ui.internal.wizards.datatransfer.
+	 * ILeveledImportStructureProvider #closeArchive()
 	 */
 	public boolean closeArchive() {
 		try {
 			getTarFile().close();
 		} catch (IOException e) {
-			IDEWorkbenchPlugin.log(DataTransferMessages.ZipImport_couldNotClose
-					+ getTarFile().getName(), e);
+			IDEWorkbenchPlugin.log(DataTransferMessages.ZipImport_couldNotClose + getTarFile().getName(), e);
 			return false;
 		}
 		return true;

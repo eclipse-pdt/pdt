@@ -42,21 +42,16 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	 */
 	public void createControl(Composite parent) {
 		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
-		fCodeTemplateConfigurationBlock = new PHPCodeTemplateBlock(
-				getNewStatusChangedListener(), getProject(), container);
+		fCodeTemplateConfigurationBlock = new PHPCodeTemplateBlock(getNewStatusChangedListener(), getProject(),
+				container);
 
 		super.createControl(parent);
 	}
 
 	@Override
 	public void performHelp() {
-		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(
-						getControl(),
-						isProjectPreferencePage() ? IPHPHelpContextIds.CODE_TEMPLATES_PROPERTIES
-								: IPHPHelpContextIds.CODE_TEMPLATES_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), isProjectPreferencePage()
+				? IPHPHelpContextIds.CODE_TEMPLATES_PROPERTIES : IPHPHelpContextIds.CODE_TEMPLATES_PREFERENCES);
 		super.performHelp();
 	}
 
@@ -76,12 +71,10 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage#
 	 * enableProjectSpecificSettings(boolean)
 	 */
-	protected void enableProjectSpecificSettings(
-			boolean useProjectSpecificSettings) {
+	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
 		super.enableProjectSpecificSettings(useProjectSpecificSettings);
 		if (fCodeTemplateConfigurationBlock != null) {
-			fCodeTemplateConfigurationBlock
-					.useProjectSpecificSettings(useProjectSpecificSettings);
+			fCodeTemplateConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
 		}
 	}
 
@@ -90,8 +83,7 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	 */
 	public boolean performOk() {
 		if (fCodeTemplateConfigurationBlock != null) {
-			return fCodeTemplateConfigurationBlock
-					.performOk(useProjectSettings());
+			return fCodeTemplateConfigurationBlock.performOk(useProjectSettings());
 		}
 		return true;
 	}
@@ -149,8 +141,7 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	 * hasProjectSpecificOptions(org.eclipse.core.resources.IProject)
 	 */
 	protected boolean hasProjectSpecificOptions(IProject project) {
-		return fCodeTemplateConfigurationBlock
-				.hasProjectSpecificOptions(project);
+		return fCodeTemplateConfigurationBlock.hasProjectSpecificOptions(project);
 	}
 
 	/*

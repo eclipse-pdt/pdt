@@ -53,8 +53,7 @@ public class OpenAction extends SelectionDispatchAction {
 		setText(PHPUIMessages.OpenAction_label);
 		setToolTipText(PHPUIMessages.OpenAction_tooltip);
 		setDescription(PHPUIMessages.OpenAction_description);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
-				IIDEHelpContextIds.OPEN_RESOURCE_ACTION);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IIDEHelpContextIds.OPEN_RESOURCE_ACTION);
 	}
 
 	/**
@@ -98,17 +97,14 @@ public class OpenAction extends SelectionDispatchAction {
 	}
 
 	protected boolean checkElement(Object element) {
-		if ((element instanceof ISourceReference)
-				|| ((element instanceof IAdaptable) && (((IAdaptable) element)
-						.getAdapter(ISourceReference.class) != null)))
+		if ((element instanceof ISourceReference) || ((element instanceof IAdaptable)
+				&& (((IAdaptable) element).getAdapter(ISourceReference.class) != null)))
 			return true;
 		if ((element instanceof IFile)
-				|| ((element instanceof IAdaptable) && (((IAdaptable) element)
-						.getAdapter(IFile.class) != null)))
+				|| ((element instanceof IAdaptable) && (((IAdaptable) element).getAdapter(IFile.class) != null)))
 			return true;
 		if ((element instanceof IStorage)
-				|| ((element instanceof IAdaptable) && (((IAdaptable) element)
-						.getAdapter(IStorage.class) != null)))
+				|| ((element instanceof IAdaptable) && (((IAdaptable) element).getAdapter(IStorage.class) != null)))
 			return true;
 		return false;
 	}
@@ -129,12 +125,9 @@ public class OpenAction extends SelectionDispatchAction {
 			Logger.logException(e);
 		}
 		if (element == null) {
-			IEditorStatusLine statusLine = (IEditorStatusLine) fEditor
-					.getAdapter(IEditorStatusLine.class);
+			IEditorStatusLine statusLine = (IEditorStatusLine) fEditor.getAdapter(IEditorStatusLine.class);
 			if (statusLine != null)
-				statusLine.setMessage(true,
-						PHPUIMessages.OpenAction_error_messageBadSelection,
-						null);
+				statusLine.setMessage(true, PHPUIMessages.OpenAction_error_messageBadSelection, null);
 			getShell().getDisplay().beep();
 			return;
 		}
@@ -148,8 +141,7 @@ public class OpenAction extends SelectionDispatchAction {
 	public void run(IStructuredSelection selection) {
 		if (!checkEnabled(selection))
 			return;
-		run(selection.toArray(), ((TreeViewer) getSelectionProvider())
-				.getTree().getSelection());
+		run(selection.toArray(), ((TreeViewer) getSelectionProvider()).getTree().getSelection());
 	}
 
 	/**
@@ -166,8 +158,7 @@ public class OpenAction extends SelectionDispatchAction {
 			Object element = elements[i];
 			try {
 				element = getElementToOpen(element);
-				boolean activateOnOpen = fEditor != null ? true : OpenStrategy
-						.activateOnOpen();
+				boolean activateOnOpen = fEditor != null ? true : OpenStrategy.activateOnOpen();
 				if (element instanceof ISourceModule && treeNodes != null) {
 					Object o = treeNodes[i];
 					if (o instanceof TreeItem) {
@@ -179,11 +170,9 @@ public class OpenAction extends SelectionDispatchAction {
 					OpenActionUtil.open(element, activateOnOpen);
 				}
 			} catch (PartInitException x) {
-				MessageDialog.openError(getShell(),
-						PHPUIMessages.OpenAction_error_messageProblems, ""); //$NON-NLS-1$
+				MessageDialog.openError(getShell(), PHPUIMessages.OpenAction_error_messageProblems, ""); //$NON-NLS-1$
 			} catch (ModelException e) {
-				MessageDialog.openError(getShell(),
-						PHPUIMessages.OpenAction_error_messageProblems, ""); //$NON-NLS-1$
+				MessageDialog.openError(getShell(), PHPUIMessages.OpenAction_error_messageProblems, ""); //$NON-NLS-1$
 			}
 		}
 	}

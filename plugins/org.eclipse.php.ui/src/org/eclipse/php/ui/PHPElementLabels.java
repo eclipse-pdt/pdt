@@ -21,19 +21,17 @@ public class PHPElementLabels extends ScriptElementLabels {
 			IModelElement elem = type.getParent();
 			IType declaringType = (elem instanceof IType) ? (IType) elem : null;
 			if (declaringType != null) {
-				getTypeLabel(declaringType, T_CONTAINER_QUALIFIED
-						| (flags & QUALIFIER_FLAGS), buf);
+				getTypeLabel(declaringType, T_CONTAINER_QUALIFIED | (flags & QUALIFIER_FLAGS), buf);
 				buf.append(getTypeDelimiter(elem));
 			}
 			int parentType = type.getParent().getElementType();
-			if (parentType == IModelElement.METHOD
-					|| parentType == IModelElement.FIELD) { // anonymous
+			if (parentType == IModelElement.METHOD || parentType == IModelElement.FIELD) { // anonymous
 				// or
 				// local
 				getElementLabel(type.getParent(),
-						(parentType == IModelElement.METHOD ? M_FULLY_QUALIFIED
-								: F_FULLY_QUALIFIED)
-								| (flags & QUALIFIER_FLAGS), buf);
+						(parentType == IModelElement.METHOD ? M_FULLY_QUALIFIED : F_FULLY_QUALIFIED)
+								| (flags & QUALIFIER_FLAGS),
+						buf);
 				buf.append(getTypeDelimiter(elem));
 			}
 		}
@@ -72,11 +70,9 @@ public class PHPElementLabels extends ScriptElementLabels {
 			IType declaringType = (elem instanceof IType) ? (IType) elem : null;
 			if (declaringType != null) {
 				buf.append(CONCAT_STRING);
-				getTypeLabel(declaringType, T_FULLY_QUALIFIED
-						| (flags & QUALIFIER_FLAGS), buf);
+				getTypeLabel(declaringType, T_FULLY_QUALIFIED | (flags & QUALIFIER_FLAGS), buf);
 				int parentType = type.getParent().getElementType();
-				if (parentType == IModelElement.METHOD
-						|| parentType == IModelElement.FIELD) { // anonymous
+				if (parentType == IModelElement.METHOD || parentType == IModelElement.FIELD) { // anonymous
 					// or
 					// local
 					buf.append(getTypeDelimiter(elem));
@@ -84,15 +80,14 @@ public class PHPElementLabels extends ScriptElementLabels {
 				}
 			}
 			int parentType = type.getParent().getElementType();
-			if (parentType == IModelElement.METHOD
-					|| parentType == IModelElement.FIELD) { // anonymous
+			if (parentType == IModelElement.METHOD || parentType == IModelElement.FIELD) { // anonymous
 				// or
 				// local
 				buf.append(CONCAT_STRING);
 				getElementLabel(type.getParent(),
-						(parentType == IModelElement.METHOD ? M_FULLY_QUALIFIED
-								: F_FULLY_QUALIFIED)
-								| (flags & QUALIFIER_FLAGS), buf);
+						(parentType == IModelElement.METHOD ? M_FULLY_QUALIFIED : F_FULLY_QUALIFIED)
+								| (flags & QUALIFIER_FLAGS),
+						buf);
 			}
 		}
 	}
@@ -104,8 +99,7 @@ public class PHPElementLabels extends ScriptElementLabels {
 			if (getFlag(flags, M_FULLY_QUALIFIED)) {
 				IType type = method.getDeclaringType();
 				if (type != null) {
-					getTypeLabel(type, T_FULLY_QUALIFIED
-							| (flags & QUALIFIER_FLAGS), buf);
+					getTypeLabel(type, T_FULLY_QUALIFIED | (flags & QUALIFIER_FLAGS), buf);
 					buf.append("::"); //$NON-NLS-1$
 				}
 			}
@@ -117,8 +111,7 @@ public class PHPElementLabels extends ScriptElementLabels {
 			getMethodParameters(method, flags, buf);
 			buf.append(')');
 
-			if (getFlag(flags, ScriptElementLabels.M_APP_RETURNTYPE)
-					&& method.exists() && !method.isConstructor()) {
+			if (getFlag(flags, ScriptElementLabels.M_APP_RETURNTYPE) && method.exists() && !method.isConstructor()) {
 				String type = method.getType();
 				if (type != null) {
 					// int offset = buf.length();
@@ -132,8 +125,7 @@ public class PHPElementLabels extends ScriptElementLabels {
 				IType declaringType = method.getDeclaringType();
 				if (declaringType != null) {
 					buf.append(CONCAT_STRING);
-					getTypeLabel(declaringType, T_FULLY_QUALIFIED
-							| (flags & QUALIFIER_FLAGS), buf);
+					getTypeLabel(declaringType, T_FULLY_QUALIFIED | (flags & QUALIFIER_FLAGS), buf);
 				}
 			}
 		} catch (ModelException e) {
@@ -141,14 +133,12 @@ public class PHPElementLabels extends ScriptElementLabels {
 		}
 	}
 
-	protected void getMethodParameters(IMethod method, long flags,
-			StringBuffer buf) throws ModelException {
+	protected void getMethodParameters(IMethod method, long flags, StringBuffer buf) throws ModelException {
 		if (getFlag(flags, M_PARAMETER_TYPES | M_PARAMETER_NAMES)) {
 			if (method.exists()) {
 				final boolean bNames = getFlag(flags, M_PARAMETER_NAMES);
 				final boolean bTypes = getFlag(flags, M_PARAMETER_TYPES);
-				final boolean bInitializers = getFlag(flags,
-						M_PARAMETER_INITIALIZERS);
+				final boolean bInitializers = getFlag(flags, M_PARAMETER_INITIALIZERS);
 				final IParameter[] params = method.getParameters();
 				for (int i = 0, nParams = params.length; i < nParams; i++) {
 					if (i > 0) {

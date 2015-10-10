@@ -30,8 +30,8 @@ class ProjectionAnnotationModelChanges {
 	private Map fAdditions;
 	private Annotation[] fModifications;
 
-	public ProjectionAnnotationModelChanges(Node node, Annotation[] deletions,
-			Map additions, Annotation[] modifications) {
+	public ProjectionAnnotationModelChanges(Node node, Annotation[] deletions, Map additions,
+			Annotation[] modifications) {
 		fNode = node;
 		fDeletions = deletions;
 		fAdditions = additions;
@@ -56,8 +56,7 @@ class ProjectionAnnotationModelChanges {
 
 	public boolean equals(Object obj) {
 		if (obj instanceof ProjectionAnnotationModelChanges) {
-			return ((ProjectionAnnotationModelChanges) obj).getNode()
-					.isSameNode(this.getNode());
+			return ((ProjectionAnnotationModelChanges) obj).getNode().isSameNode(this.getNode());
 		}
 		return super.equals(obj);
 	}

@@ -40,12 +40,11 @@ public class SortByNameAction extends AbstractDebugActionDelegate {
 				return;
 			}
 
-			BusyIndicator.showWhile(viewer.getControl().getDisplay(),
-					new Runnable() {
-						public void run() {
-							viewer.refresh();
-						}
-					});
+			BusyIndicator.showWhile(viewer.getControl().getDisplay(), new Runnable() {
+				public void run() {
+					viewer.refresh();
+				}
+			});
 		}
 
 	}

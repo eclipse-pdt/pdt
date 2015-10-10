@@ -17,8 +17,7 @@ import java.io.IOException;
 
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
 
-public class AddFilesResponse extends DebugMessageResponseImpl implements
-		IDebugResponseMessage {
+public class AddFilesResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
 
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());

@@ -52,24 +52,21 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 	 * (org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public boolean buildForLaunch(ILaunchConfiguration configuration,
-			String mode, IProgressMonitor monitor) throws CoreException {
-		return getConfigurationDelegate(configuration).buildForLaunch(
-				configuration, mode, monitor);
+	public boolean buildForLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
+			throws CoreException {
+		return getConfigurationDelegate(configuration).buildForLaunch(configuration, mode, monitor);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.ILaunchConfigurationDelegate2#finalLaunchCheck
-	 * (org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
-	 * org.eclipse.core.runtime.IProgressMonitor)
+	 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate2#
+	 * finalLaunchCheck (org.eclipse.debug.core.ILaunchConfiguration,
+	 * java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public boolean finalLaunchCheck(ILaunchConfiguration configuration,
-			String mode, IProgressMonitor monitor) throws CoreException {
-		return getConfigurationDelegate(configuration).finalLaunchCheck(
-				configuration, mode, monitor);
+	public boolean finalLaunchCheck(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
+			throws CoreException {
+		return getConfigurationDelegate(configuration).finalLaunchCheck(configuration, mode, monitor);
 	}
 
 	/*
@@ -79,21 +76,17 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 	 * org.eclipse.debug.core.model.ILaunchConfigurationDelegate2#getLaunch(
 	 * org.eclipse.debug.core.ILaunchConfiguration, java.lang.String)
 	 */
-	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode)
-			throws CoreException {
+	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
 		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
-		ILaunchConfigurationType exeType = lm
-				.getLaunchConfigurationType(IPHPDebugConstants.PHPEXELaunchType);
+		ILaunchConfigurationType exeType = lm.getLaunchConfigurationType(IPHPDebugConstants.PHPEXELaunchType);
 		if (configuration.getType().equals(exeType)) {
 			configuration = updatePHPExeAttributes(configuration, mode);
 		}
-		ILaunchConfigurationType serverType = lm
-				.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
+		ILaunchConfigurationType serverType = lm.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
 		if (configuration.getType().equals(serverType)) {
 			configuration = updatePHPServerAttributes(configuration, mode);
 		}
-		return getConfigurationDelegate(configuration).getLaunch(configuration,
-				mode);
+		return getConfigurationDelegate(configuration).getLaunch(configuration, mode);
 	}
 
 	/*
@@ -104,10 +97,9 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 	 * (org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public boolean preLaunchCheck(ILaunchConfiguration configuration,
-			String mode, IProgressMonitor monitor) throws CoreException {
-		return getConfigurationDelegate(configuration).preLaunchCheck(
-				configuration, mode, monitor);
+	public boolean preLaunchCheck(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
+			throws CoreException {
+		return getConfigurationDelegate(configuration).preLaunchCheck(configuration, mode, monitor);
 	}
 
 	/*
@@ -119,12 +111,11 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 	 * org.eclipse.debug.core.ILaunch,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public void launch(ILaunchConfiguration configuration, String mode,
-			ILaunch launch, IProgressMonitor monitor) throws CoreException {
+	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
+			throws CoreException {
 		// Launch
 		try {
-			getConfigurationDelegate(configuration).launch(configuration, mode,
-					launch, monitor);
+			getConfigurationDelegate(configuration).launch(configuration, mode, launch, monitor);
 		} finally {
 			// Clear the launch configuration delegate.
 			launchConfigurationDelegate = null;
@@ -140,81 +131,61 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 	 * @param configuration
 	 *            An {@link ILaunchConfiguration}
 	 */
-	protected ILaunchConfigurationDelegate2 getConfigurationDelegate(
-			ILaunchConfiguration configuration) throws CoreException {
-		String className = configuration.getAttribute(
-				PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, ""); //$NON-NLS-1$
+	protected ILaunchConfigurationDelegate2 getConfigurationDelegate(ILaunchConfiguration configuration)
+			throws CoreException {
+		String className = configuration.getAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, ""); //$NON-NLS-1$
 		if (className.length() == 0) {
 			throw new IllegalArgumentException();
 		}
 		if (launchConfigurationDelegate == null
-				|| !launchConfigurationDelegate.getClass().getCanonicalName()
-						.equals(className)) {
+				|| !launchConfigurationDelegate.getClass().getCanonicalName().equals(className)) {
 			try {
-				launchConfigurationDelegate = (ILaunchConfigurationDelegate2) Class
-						.forName(className).newInstance();
+				launchConfigurationDelegate = (ILaunchConfigurationDelegate2) Class.forName(className).newInstance();
 			} catch (Throwable t) {
-				throw new CoreException(new Status(IStatus.ERROR,
-						PHPDebugPlugin.ID, 0,
+				throw new CoreException(new Status(IStatus.ERROR, PHPDebugPlugin.ID, 0,
 						"Launch configuration delegate loading error.", t)); //$NON-NLS-1$
 			}
 		}
 		return launchConfigurationDelegate;
 	}
 
-	private ILaunchConfiguration updatePHPExeAttributes(
-			ILaunchConfiguration configuration, String mode)
-					throws CoreException {
+	private ILaunchConfiguration updatePHPExeAttributes(ILaunchConfiguration configuration, String mode)
+			throws CoreException {
 		PHPexeItem item = PHPLaunchUtilities.getPHPExe(configuration);
 		if (item != null) {
 			ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
-			wc.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, item
-					.getExecutable().toString());
+			wc.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, item.getExecutable().toString());
 			String debuggerId = item.getDebuggerID();
-			wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-					debuggerId);
-			IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
-					.getDebuggerConfiguration(debuggerId);
-			wc.setAttribute(
-					PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
+			wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerId);
+			IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(debuggerId);
+			wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
 					debuggerConfiguration.getScriptLaunchDelegateClass());
-			if ((mode.equals(ILaunchManager.DEBUG_MODE)
-					|| mode.equals(ILaunchManager.PROFILE_MODE))
-					&& debuggerConfiguration.getDebuggerId()
-							.equals(PHPDebuggersRegistry.NONE_DEBUGGER_ID)) {
+			if ((mode.equals(ILaunchManager.DEBUG_MODE) || mode.equals(ILaunchManager.PROFILE_MODE))
+					&& debuggerConfiguration.getDebuggerId().equals(PHPDebuggersRegistry.NONE_DEBUGGER_ID)) {
 				wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, true);
 			}
 			if (item.getINILocation() != null) {
-				wc.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, item
-						.getINILocation().toString());
+				wc.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, item.getINILocation().toString());
 			} else {
-				wc.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION,
-						(String) null);
+				wc.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
 			}
 			configuration = wc.doSave();
 		}
 		return configuration;
 	}
 
-	private ILaunchConfiguration updatePHPServerAttributes(
-			ILaunchConfiguration configuration, String mode)
-					throws CoreException {
+	private ILaunchConfiguration updatePHPServerAttributes(ILaunchConfiguration configuration, String mode)
+			throws CoreException {
 		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
-		Server server = ServersManager
-				.getServer(configuration.getAttribute(Server.NAME, "")); //$NON-NLS-1$
+		Server server = ServersManager.getServer(configuration.getAttribute(Server.NAME, "")); //$NON-NLS-1$
 		if (server != null) {
 			String debuggerId = server.getDebuggerId();
-			wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-					debuggerId);
-			IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
-					.getDebuggerConfiguration(debuggerId);
-			wc.setAttribute(
-					PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
+			wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerId);
+			IDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(debuggerId);
+			wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
 					debuggerConfiguration.getWebLaunchDelegateClass());
-			if ((mode.equals(ILaunchManager.DEBUG_MODE)
-					|| mode.equals(ILaunchManager.PROFILE_MODE))
-					&& debuggerConfiguration.getDebuggerId()
-							.equals(PHPDebuggersRegistry.NONE_DEBUGGER_ID)) {
+			if ((mode.equals(ILaunchManager.DEBUG_MODE) || mode.equals(ILaunchManager.PROFILE_MODE))
+					&& debuggerConfiguration.getDebuggerId().equals(PHPDebuggersRegistry.NONE_DEBUGGER_ID)) {
 				wc.setAttribute(IDebugUIConstants.ATTR_PRIVATE, true);
 			}
 			configuration = wc.doSave();

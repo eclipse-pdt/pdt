@@ -26,10 +26,8 @@ import java.util.regex.Pattern;
 public class INIFileModifier {
 
 	private static final String GLOBAL_SECTION = "__global__"; //$NON-NLS-1$
-	private static final Pattern SECTION_PATTERN = Pattern
-			.compile("\\[([^\\]]+)\\]"); //$NON-NLS-1$
-	private static final Pattern NAME_VAL_PATTERN = Pattern
-			.compile("([\\w]+)\\s*=\\s*(.*)"); //$NON-NLS-1$
+	private static final Pattern SECTION_PATTERN = Pattern.compile("\\[([^\\]]+)\\]"); //$NON-NLS-1$
+	private static final Pattern NAME_VAL_PATTERN = Pattern.compile("([\\w]+)\\s*=\\s*(.*)"); //$NON-NLS-1$
 
 	class INIFileSection {
 		String name;
@@ -133,8 +131,7 @@ public class INIFileModifier {
 	 *            <code>null</code> - every entry that matches the given name
 	 *            will be replaced
 	 */
-	public void addEntry(String sectionName, String name, String value,
-			boolean replace, String replacePattern) {
+	public void addEntry(String sectionName, String name, String value, boolean replace, String replacePattern) {
 		if (sectionName == null || name == null || value == null) {
 			throw new NullPointerException();
 		}
@@ -142,16 +139,12 @@ public class INIFileModifier {
 			if (section.name.equals(sectionName)) {
 				if (replace) {
 					for (int i = 0; i < section.lines.size(); ++i) {
-						Matcher m = NAME_VAL_PATTERN.matcher(section.lines
-								.get(i));
+						Matcher m = NAME_VAL_PATTERN.matcher(section.lines.get(i));
 						if (m.matches()) {
 							String oldName = m.group(1);
 							String oldValue = m.group(2);
-							if (oldName.equals(name)
-									&& (replacePattern == null || oldValue
-											.matches(replacePattern))) {
-								section.lines.set(i, name + '='
-										+ quoteString(value));
+							if (oldName.equals(name) && (replacePattern == null || oldValue.matches(replacePattern))) {
+								section.lines.set(i, name + '=' + quoteString(value));
 							}
 						}
 					}
@@ -224,8 +217,7 @@ public class INIFileModifier {
 	 *            entry that matches the given name will be removed.
 	 * @return <code>true</code> if some entry was removed, otherwise - false
 	 */
-	public boolean removeEntry(String sectionName, String name,
-			String removePattern) {
+	public boolean removeEntry(String sectionName, String name, String removePattern) {
 		if (name == null) {
 			throw new NullPointerException();
 		}
@@ -237,9 +229,7 @@ public class INIFileModifier {
 					if (m.matches()) {
 						String oldName = m.group(1);
 						String oldValue = m.group(2);
-						if (oldName.equals(name)
-								&& (removePattern == null || oldValue
-										.matches(removePattern))) {
+						if (oldName.equals(name) && (removePattern == null || oldValue.matches(removePattern))) {
 							section.lines.remove(i--);
 							removed = true;
 						}
@@ -298,8 +288,7 @@ public class INIFileModifier {
 	 *            it. If <code>commentPattern</code> is <code>null</code> every
 	 *            entry that matches the given name will be commented.
 	 */
-	public void commentEntry(String sectionName, String name,
-			String commentPattern) {
+	public void commentEntry(String sectionName, String name, String commentPattern) {
 		if (name == null) {
 			throw new NullPointerException();
 		}
@@ -313,8 +302,7 @@ public class INIFileModifier {
 						String oldValue = m.group(2);
 						if (!line.startsWith(";") //$NON-NLS-1$
 								&& oldName.equals(name)
-								&& (commentPattern == null || oldValue
-										.matches(commentPattern))) {
+								&& (commentPattern == null || oldValue.matches(commentPattern))) {
 							section.lines.set(i, ';' + line);
 						}
 					}

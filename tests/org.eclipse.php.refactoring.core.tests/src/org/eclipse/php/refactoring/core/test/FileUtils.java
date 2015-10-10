@@ -48,13 +48,12 @@ public class FileUtils {
 		BufferedReader input = null;
 		try {
 			// FileReader always assumes default encoding is OK!
-			input = new BufferedReader(
-					new InputStreamReader(file.getContents()));
+			input = new BufferedReader(new InputStreamReader(file.getContents()));
 			String line = null;
 
 			while ((line = input.readLine()) != null) {
 				contents.append(line);
-				contents.append(newLine); //$NON-NLS-1$
+				contents.append(newLine); // $NON-NLS-1$
 			}
 
 		} catch (CoreException e) {
@@ -78,16 +77,14 @@ public class FileUtils {
 	}
 
 	static public IProject createProject(String name) {
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				name);
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
 		if (project.exists()) {
 			return project;
 		}
 		try {
 			project.create(null);
 
-			project.open(IResource.BACKGROUND_REFRESH,
-					new NullProgressMonitor());
+			project.open(IResource.BACKGROUND_REFRESH, new NullProgressMonitor());
 			IProjectDescription desc = project.getDescription();
 			desc.setNatureIds(new String[] { PHPNature.ID });
 			project.setDescription(desc, null);
@@ -104,16 +101,14 @@ public class FileUtils {
 	}
 
 	static public IProject createProject(String name, PHPVersion version) {
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				name);
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
 		if (project.exists()) {
 			return project;
 		}
 		try {
 			project.create(null);
 
-			project.open(IResource.BACKGROUND_REFRESH,
-					new NullProgressMonitor());
+			project.open(IResource.BACKGROUND_REFRESH, new NullProgressMonitor());
 			IProjectDescription desc = project.getDescription();
 			desc.setNatureIds(new String[] { PHPNature.ID });
 			project.setDescription(desc, null);
@@ -131,8 +126,7 @@ public class FileUtils {
 		return project;
 	}
 
-	public static boolean isInBuildpath(IPath resourcePath,
-			IScriptProject project, int entryKind) {
+	public static boolean isInBuildpath(IPath resourcePath, IScriptProject project, int entryKind) {
 		boolean result = false;
 		if (resourcePath == null) {
 			return false;
@@ -153,8 +147,7 @@ public class FileUtils {
 		for (IBuildpathEntry buildpathEntry : buildpath) {
 			if (buildpathEntry.getEntryKind() == entryKind) {
 				IPath buildPathEntryPath = buildpathEntry.getPath();
-				if (resourcePath.toString().equals(
-						buildPathEntryPath.toString())) {
+				if (resourcePath.toString().equals(buildPathEntryPath.toString())) {
 					result = true;
 				}
 			}
@@ -170,8 +163,7 @@ public class FileUtils {
 	 * @return
 	 * @throws ModelException
 	 */
-	public static IBuildpathEntry[] removeEntryFromBuildPath(
-			IBuildpathEntry[] entries, IPath buidlEntryPath)
+	public static IBuildpathEntry[] removeEntryFromBuildPath(IBuildpathEntry[] entries, IPath buidlEntryPath)
 			throws ModelException {
 
 		// get the current buildpath entries, in order to remove the given
@@ -186,8 +178,7 @@ public class FileUtils {
 		}
 
 		// set the new updated buildpath for the project
-		return newRawBuildpath.toArray(new IBuildpathEntry[newRawBuildpath
-				.size()]);
+		return newRawBuildpath.toArray(new IBuildpathEntry[newRawBuildpath.size()]);
 
 	}
 }

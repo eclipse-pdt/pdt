@@ -248,8 +248,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		String cwd = getCWD();
 		if (cwd != null) {
 			PathMapper pathMapper = PathMapperRegistry
-					.getByLaunchConfiguration(debugTarget.getLaunch()
-							.getLaunchConfiguration());
+					.getByLaunchConfiguration(debugTarget.getLaunch().getLaunchConfiguration());
 			if (pathMapper != null) {
 				PathEntry cwdEntry = pathMapper.getLocalFile(cwd);
 				if (cwdEntry != null) {
@@ -298,11 +297,9 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (callStack == null)
 			return null;
 		if (callStack.getSize() > 0) {
-			currentScript = callStack.getLayer(callStack.getSize() - 1)
-					.getResolvedCalledFileName();
+			currentScript = callStack.getLayer(callStack.getSize() - 1).getResolvedCalledFileName();
 		}
-		return convertToLocalFilename(remoteFile, getCurrentWorkingDirectory(),
-				currentScript);
+		return convertToLocalFilename(remoteFile, getCurrentWorkingDirectory(), currentScript);
 	}
 
 	/**
@@ -316,8 +313,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 *            Script that is on the top of the debug stack currently
 	 * @return local file, or <code>null</code> in case of resolving failure
 	 */
-	public String convertToLocalFilename(String remoteFile, String cwd,
-			String currentScript) {
+	public String convertToLocalFilename(String remoteFile, String cwd, String currentScript) {
 		PHPDebugTarget debugTarget = debugHandler.getDebugTarget();
 		if (debugTarget.getContextManager().isResolveBlacklisted(remoteFile)) {
 			return remoteFile;
@@ -354,16 +350,11 @@ public class RemoteDebugger implements IRemoteDebugger {
 					continue;
 				}
 				IPath projectLocation = project.getLocation();
-				if (projectLocation != null
-						&& projectLocation.isPrefixOf(location)
+				if (projectLocation != null && projectLocation.isPrefixOf(location)
 						&& !projectLocation.equals(location)) {
 					try {
-						wsFile = workspace
-								.getRoot()
-								.getFile(
-										project.getFullPath()
-												.append(location
-														.makeRelativeTo(projectLocation)));
+						wsFile = workspace.getRoot()
+								.getFile(project.getFullPath().append(location.makeRelativeTo(projectLocation)));
 					} catch (Exception ex) {
 						Logger.logException(ex);
 					}
@@ -378,18 +369,15 @@ public class RemoteDebugger implements IRemoteDebugger {
 			}
 		}
 
-		String resolvedFileKey = new StringBuilder(remoteFile).append(cwd)
-				.append(currentScript).toString();
+		String resolvedFileKey = new StringBuilder(remoteFile).append(cwd).append(currentScript).toString();
 		if (!resolvedFiles.containsKey(resolvedFileKey)) {
 			String currentScriptDir = null;
 			if (currentScript != null) {
-				currentScriptDir = new Path(currentScript)
-						.removeLastSegments(1).toString();
+				currentScriptDir = new Path(currentScript).removeLastSegments(1).toString();
 			}
 
 			String resolvedFile = null;
-			PathEntry pathEntry = DebugSearchEngine.find(remoteFile,
-					debugTarget, cwd, currentScriptDir);
+			PathEntry pathEntry = DebugSearchEngine.find(remoteFile, debugTarget, cwd, currentScriptDir);
 			if (pathEntry != null) {
 				resolvedFile = pathEntry.getResolvedPath();
 			} else {
@@ -414,8 +402,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * @param localFile
 	 * @return remote file path, or localFile in case it couldn't be resolved
 	 */
-	public static String convertToRemoteFilename(String localFile,
-			PHPDebugTarget debugTarget) {
+	public static String convertToRemoteFilename(String localFile, PHPDebugTarget debugTarget) {
 		IPath path = Path.fromPortableString(localFile);
 
 		// check if this is valid workspace path to avoid IAE
@@ -423,10 +410,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 		// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=306834
 		if (path.segmentCount() >= 2) {
 
-			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot()
-					.getFile(path);
-			if (debugTarget.isPHPCGI() && wsFile.exists()
-					&& wsFile.getLocation() != null) {
+			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+			if (debugTarget.isPHPCGI() && wsFile.exists() && wsFile.getLocation() != null) {
 				File fsFile = wsFile.getLocation().toFile();
 				if (fsFile.exists()) {
 					return fsFile.getAbsolutePath();
@@ -435,8 +420,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		if (VirtualPath.isAbsolute(localFile)) {
 			PathMapper pathMapper = PathMapperRegistry
-					.getByLaunchConfiguration(debugTarget.getLaunch()
-							.getLaunchConfiguration());
+					.getByLaunchConfiguration(debugTarget.getLaunch().getLaunchConfiguration());
 			if (pathMapper != null) {
 				String remoteFile = pathMapper.getRemoteFile(localFile);
 				if (remoteFile != null) {
@@ -496,8 +480,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronic addBreakpoint Returns true if succeeded sending the request,
 	 * false otherwise.
 	 */
-	public boolean addBreakpoint(Breakpoint bp,
-			BreakpointAddedResponseHandler responseHandler) {
+	public boolean addBreakpoint(Breakpoint bp, BreakpointAddedResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
 		}
@@ -507,8 +490,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 			String fileName = tmpBreakpoint.getFileName();
 			tmpBreakpoint.setFileName(fileName);
 			request.setBreakpoint(tmpBreakpoint);
-			connection.sendRequest(request, new ThisHandleResponse(
-					responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -529,8 +511,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 			String fileName = tmpBreakpoint.getFileName();
 			tmpBreakpoint.setFileName(fileName);
 			request.setBreakpoint(tmpBreakpoint);
-			AddBreakpointResponse response = (AddBreakpointResponse) connection
-					.sendRequest(request);
+			AddBreakpointResponse response = (AddBreakpointResponse) connection.sendRequest(request);
 			if (response != null && response.getStatus() == 0) {
 				// Log.writeLog("addBreakpoint");
 				breakpoint.setID(response.getBreakpointID());
@@ -544,15 +525,13 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronic removeBreakpoint Returns true if succeeded sending the
 	 * request, false otherwise.
 	 */
-	public boolean removeBreakpoint(int id,
-			BreakpointRemovedResponseHandler responseHandler) {
+	public boolean removeBreakpoint(int id, BreakpointRemovedResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
 		}
 		CancelBreakpointRequest request = new CancelBreakpointRequest();
 		request.setBreakpointID(id);
-		connection
-				.sendRequest(request, new ThisHandleResponse(responseHandler));
+		connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 		return true;
 	}
 
@@ -567,8 +546,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		try {
 			CancelBreakpointRequest request = new CancelBreakpointRequest();
 			request.setBreakpointID(id);
-			CancelBreakpointResponse response = (CancelBreakpointResponse) connection
-					.sendRequest(request);
+			CancelBreakpointResponse response = (CancelBreakpointResponse) connection.sendRequest(request);
 			return response != null && response.getStatus() == 0;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -580,8 +558,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronic removeBreakpoint Returns true if succeeded sending the
 	 * request, false otherwise.
 	 */
-	public boolean removeBreakpoint(Breakpoint breakpoint,
-			BreakpointRemovedResponseHandler responseHandler) {
+	public boolean removeBreakpoint(Breakpoint breakpoint, BreakpointRemovedResponseHandler responseHandler) {
 		return removeBreakpoint(breakpoint.getID(), responseHandler);
 	}
 
@@ -597,14 +574,12 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronic removeAllBreakpoints Returns true if succeeded sending the
 	 * request, false otherwise.
 	 */
-	public boolean removeAllBreakpoints(
-			AllBreakpointRemovedResponseHandler responseHandler) {
+	public boolean removeAllBreakpoints(AllBreakpointRemovedResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
 		}
 		CancelAllBreakpointsRequest request = new CancelAllBreakpointsRequest();
-		connection
-				.sendRequest(request, new ThisHandleResponse(responseHandler));
+		connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 		return true;
 	}
 
@@ -618,8 +593,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		try {
 			CancelAllBreakpointsRequest request = new CancelAllBreakpointsRequest();
-			CancelAllBreakpointsResponse response = (CancelAllBreakpointsResponse) connection
-					.sendRequest(request);
+			CancelAllBreakpointsResponse response = (CancelAllBreakpointsResponse) connection.sendRequest(request);
 			return response != null && response.getStatus() == 0;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -636,8 +610,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 			return false;
 		}
 		StepIntoRequest request = new StepIntoRequest();
-		connection
-				.sendRequest(request, new ThisHandleResponse(responseHandler));
+		connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 		return true;
 	}
 
@@ -650,8 +623,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		try {
 			StepIntoRequest request = new StepIntoRequest();
-			StepIntoResponse response = (StepIntoResponse) connection
-					.sendRequest(request);
+			StepIntoResponse response = (StepIntoResponse) connection.sendRequest(request);
 			return response != null && response.getStatus() == 0;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -669,8 +641,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		try {
 			StepOverRequest request = new StepOverRequest();
-			connection.sendRequest(request, new ThisHandleResponse(
-					responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -687,8 +658,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		try {
 			StepOverRequest request = new StepOverRequest();
-			StepOverResponse response = (StepOverResponse) connection
-					.sendRequest(request);
+			StepOverResponse response = (StepOverResponse) connection.sendRequest(request);
 			return response != null && response.getStatus() == 0;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -706,8 +676,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		try {
 			StepOutRequest request = new StepOutRequest();
-			connection.sendRequest(request, new ThisHandleResponse(
-					responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -724,8 +693,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		try {
 			StepOutRequest request = new StepOutRequest();
-			StepOutResponse response = (StepOutResponse) connection
-					.sendRequest(request);
+			StepOutResponse response = (StepOutResponse) connection.sendRequest(request);
 			return response != null && response.getStatus() == 0;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -743,8 +711,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		try {
 			GoRequest request = new GoRequest();
-			connection.sendRequest(request, new ThisHandleResponse(
-					responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -790,8 +757,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 		StartRequest request = new StartRequest();
 		try {
-			connection.sendRequest(request, new ThisHandleResponse(
-					responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -813,8 +779,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 		StartRequest request = new StartRequest();
 		try {
-			StartResponse response = (StartResponse) connection
-					.sendRequest(request);
+			StartResponse response = (StartResponse) connection.sendRequest(request);
 			return response != null && response.getStatus() == 0;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -826,16 +791,14 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronous addFiles Returns true if succeeded sending the request,
 	 * false otherwise.
 	 */
-	public boolean addFiles(String[] paths,
-			AddFilesResponseHandler responseHandler) {
+	public boolean addFiles(String[] paths, AddFilesResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
 		}
 		try {
 			AddFilesRequest request = new AddFilesRequest();
 			request.setPaths(paths);
-			connection.sendRequest(request, new ThisHandleResponse(
-					responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -853,8 +816,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		try {
 			AddFilesRequest request = new AddFilesRequest();
 			request.setPaths(paths);
-			AddFilesResponse response = (AddFilesResponse) connection
-					.sendRequest(request);
+			AddFilesResponse response = (AddFilesResponse) connection.sendRequest(request);
 			return response != null && response.getStatus() == 0;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -871,10 +833,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	protected boolean detectProtocolID() {
 		boolean isUseNewProtocol = false;
 		try {
-			ILaunchConfiguration config = getDebugHandler().getDebugTarget()
-					.getLaunch().getLaunchConfiguration();
-			String debuggerId = config.getAttribute(
-					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
+			ILaunchConfiguration config = getDebugHandler().getDebugTarget().getLaunch().getLaunchConfiguration();
+			String debuggerId = config.getAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
 					DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 			if (DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID.equals(debuggerId)) {
 				ZendDebuggerConfiguration debuggerConfiguration = (ZendDebuggerConfiguration) PHPDebuggersRegistry
@@ -914,8 +874,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	public static void warnOlderDebugVersion() {
-		boolean dontShowWarning = Platform.getPreferencesService().getBoolean(
-				PHPDebugPlugin.ID, "DontShowOlderDebuggerWarning", false, //$NON-NLS-1$
+		boolean dontShowWarning = Platform.getPreferencesService().getBoolean(PHPDebugPlugin.ID,
+				"DontShowOlderDebuggerWarning", false, //$NON-NLS-1$
 				null);
 		if (!dontShowWarning) {
 			Display.getDefault().asyncExec(new Runnable() {
@@ -933,8 +893,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		request.setProtocolID(protocolID);
 		IDebugResponseMessage response = sendCustomRequest(request);
 		if (response != null && response instanceof SetProtocolResponse) {
-			int responceProtocolID = ((SetProtocolResponse) response)
-					.getProtocolID();
+			int responceProtocolID = ((SetProtocolResponse) response).getProtocolID();
 			if (responceProtocolID == protocolID) {
 				currentProtocolId = protocolID;
 				return true;
@@ -957,8 +916,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		PauseDebuggerRequest request = new PauseDebuggerRequest();
 		try {
-			connection.sendRequest(request, new ThisHandleResponse(
-					responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -975,8 +933,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		PauseDebuggerRequest request = new PauseDebuggerRequest();
 		try {
-			PauseDebuggerResponse response = (PauseDebuggerResponse) connection
-					.sendRequest(request);
+			PauseDebuggerResponse response = (PauseDebuggerResponse) connection.sendRequest(request);
 			return response != null && response.getStatus() == 0;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -988,16 +945,14 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronic pause Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
-	public boolean eval(String commandString,
-			EvalResponseHandler responseHandler) {
+	public boolean eval(String commandString, EvalResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
 		}
 		EvalRequest request = new EvalRequest();
 		request.setCommand(commandString);
 		try {
-			connection.sendRequest(request, new ThisHandleResponse(
-					responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -1005,8 +960,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 		return false;
 	}
 
-	public boolean assignValue(String var, String value, int depth,
-			String[] path, AssignValueResponseHandler responseHandler) {
+	public boolean assignValue(String var, String value, int depth, String[] path,
+			AssignValueResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
 		}
@@ -1017,8 +972,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		request.setPath(path);
 		request.setTransferEncoding(getTransferEncoding());
 		try {
-			connection.sendRequest(request, new ThisHandleResponse(
-					responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -1031,15 +985,13 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 */
 	private String getTransferEncoding() {
 		IProject project = debugHandler.getDebugTarget().getProject();
-		return project == null ? null : PHPProjectPreferences
-				.getTransferEncoding(project);
+		return project == null ? null : PHPProjectPreferences.getTransferEncoding(project);
 	}
 
 	/**
 	 * aSynchronic assigned value
 	 */
-	public boolean assignValue(String var, String value, int depth,
-			String[] path) {
+	public boolean assignValue(String var, String value, int depth, String[] path) {
 		if (!this.isActive()) {
 			return false;
 		}
@@ -1068,8 +1020,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		EvalRequest request = new EvalRequest();
 		request.setCommand(commandString);
 		try {
-			EvalResponse response = (EvalResponse) connection
-					.sendRequest(request);
+			EvalResponse response = (EvalResponse) connection.sendRequest(request);
 			String result = null;
 			if (response != null) {
 				if (response.getStatus() == 0) {
@@ -1109,8 +1060,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		request.setDepth(depth);
 		request.setPath(path);
 		try {
-			connection.sendRequest(request, new ThisHandleResponse(
-					responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -1121,8 +1071,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Synchronic getVariableValue Returns the variable var.
 	 */
-	public byte[] getVariableValue(String var, int depth, String[] path)
-			throws IllegalArgumentException {
+	public byte[] getVariableValue(String var, int depth, String[] path) throws IllegalArgumentException {
 		if (!this.isActive()) {
 			return null;
 		}
@@ -1132,8 +1081,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		request.setPath(path);
 		GetVariableValueResponse response = null;
 		try {
-			response = (GetVariableValueResponse) connection
-					.sendRequest(request);
+			response = (GetVariableValueResponse) connection.sendRequest(request);
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}
@@ -1149,8 +1097,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		GetCallStackRequest request = new GetCallStackRequest();
 		try {
-			connection.sendRequest(request, new ThisHandleResponse(
-					responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -1174,8 +1121,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		GetCallStackRequest request = new GetCallStackRequest();
 		PHPstack remoteStack = null;
 		try {
-			GetCallStackResponse response = (GetCallStackResponse) connection
-					.sendRequest(request);
+			GetCallStackResponse response = (GetCallStackResponse) connection.sendRequest(request);
 			if (response != null) {
 				remoteStack = response.getPHPstack();
 			}
@@ -1199,38 +1145,31 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 				layer.setResolvedCalledFileName(layer.getCalledFileName());
 				if (i > 0) {
-					String previousScript = remoteStack.getLayer(i - 1)
-							.getResolvedCalledFileName();
+					String previousScript = remoteStack.getLayer(i - 1).getResolvedCalledFileName();
 					String previousScriptDir = "."; //$NON-NLS-1$
-					int idx = Math.max(previousScript.lastIndexOf('/'),
-							previousScript.lastIndexOf('\\'));
+					int idx = Math.max(previousScript.lastIndexOf('/'), previousScript.lastIndexOf('\\'));
 					if (idx != -1) {
 						previousScriptDir = previousScript.substring(0, idx);
 					}
 
 					IProject project = null;
-					IResource resource = ResourcesPlugin.getWorkspace()
-							.getRoot().findMember(previousScript);
+					IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(previousScript);
 					if (resource != null) {
 						project = resource.getProject();
 					} else {
 						project = debugHandler.getDebugTarget().getProject();
 					}
 
-					if (layer.getCalledFileName() != null
-							&& currentWorkingDir != null && project != null) {
-						Result<?, ?> result = PHPSearchEngine.find(
-								layer.getCalledFileName(), currentWorkingDir,
+					if (layer.getCalledFileName() != null && currentWorkingDir != null && project != null) {
+						Result<?, ?> result = PHPSearchEngine.find(layer.getCalledFileName(), currentWorkingDir,
 								previousScriptDir, project);
 						if (result instanceof ResourceResult) {
-							layer.setResolvedCalledFileName(((ResourceResult) result)
-									.getFile().getFullPath().toString());
+							layer.setResolvedCalledFileName(
+									((ResourceResult) result).getFile().getFullPath().toString());
 						} else if (result instanceof IncludedFileResult) {
-							layer.setResolvedCalledFileName(((IncludedFileResult) result)
-									.getFile().getAbsolutePath());
+							layer.setResolvedCalledFileName(((IncludedFileResult) result).getFile().getAbsolutePath());
 						} else if (result instanceof ExternalFileResult) {
-							layer.setResolvedCalledFileName(((ExternalFileResult) result)
-									.getFile().getAbsolutePath());
+							layer.setResolvedCalledFileName(((ExternalFileResult) result).getFile().getAbsolutePath());
 						}
 					}
 				}
@@ -1238,8 +1177,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 	}
 
-	public boolean getStackVariableValue(int stackDepth, String value,
-			int depth, String[] path,
+	public boolean getStackVariableValue(int stackDepth, String value, int depth, String[] path,
 			GetStackVariableValueResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
@@ -1250,8 +1188,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		request.setLayerDepth(stackDepth);
 		request.setPath(path);
 		try {
-			connection.sendRequest(request, new ThisHandleResponse(
-					responseHandler));
+			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
 			return true;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -1262,8 +1199,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Synchronic getStackVariableValue Returns the variable value.
 	 */
-	public byte[] getStackVariableValue(int stackDepth, String value,
-			int depth, String[] path) {
+	public byte[] getStackVariableValue(int stackDepth, String value, int depth, String[] path) {
 		if (!this.isActive()) {
 			return null;
 		}
@@ -1274,8 +1210,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		request.setPath(path);
 		GetStackVariableValueResponse response = null;
 		try {
-			response = (GetStackVariableValueResponse) connection
-					.sendRequest(request);
+			response = (GetStackVariableValueResponse) connection.sendRequest(request);
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}
@@ -1285,12 +1220,10 @@ public class RemoteDebugger implements IRemoteDebugger {
 		return response.getVarResult();
 	}
 
-	private String tryGuessMapping(String remoteFile, PHPDebugTarget debugTarget)
-			throws ModelException {
+	private String tryGuessMapping(String remoteFile, PHPDebugTarget debugTarget) throws ModelException {
 		IProject project = debugTarget.getProject();
 		if (project == null) {
-			String orginalURL = debugTarget.getLaunch().getAttribute(
-					IDebugParametersKeys.ORIGINAL_URL);
+			String orginalURL = debugTarget.getLaunch().getAttribute(IDebugParametersKeys.ORIGINAL_URL);
 			if (orginalURL != null) {
 				String projectName = new Path(orginalURL).segment(0);
 				IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -1311,8 +1244,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 						if (remotePath.segmentCount() > 0) {
 							IResource res = project.getFile(remotePath);
 							if (res != null && res.exists()) {
-								return project.getFullPath().append(remotePath)
-										.toString();
+								return project.getFullPath().append(remotePath).toString();
 							}
 						}
 					}
@@ -1353,24 +1285,18 @@ public class RemoteDebugger implements IRemoteDebugger {
 		} else {
 			includePaths = new ArrayList<IPath>();
 		}
-		IncludePath[] paths = IncludePathManager.getInstance().getIncludePaths(
-				project);
+		IncludePath[] paths = IncludePathManager.getInstance().getIncludePaths(project);
 		for (IncludePath includePath : paths) {
 			if (includePath.getEntry() instanceof IBuildpathEntry) {
-				IBuildpathEntry bPath = (IBuildpathEntry) includePath
-						.getEntry();
+				IBuildpathEntry bPath = (IBuildpathEntry) includePath.getEntry();
 				if (bPath.getEntryKind() == IBuildpathEntry.BPE_CONTAINER
-						&& !bPath.getPath().toString()
-								.equals("org.eclipse.php.core.LANGUAGE")) { //$NON-NLS-1$
-					IBuildpathContainer buildpathContainer = DLTKCore
-							.getBuildpathContainer(bPath.getPath(),
-									DLTKCore.create(project));
+						&& !bPath.getPath().toString().equals("org.eclipse.php.core.LANGUAGE")) { //$NON-NLS-1$
+					IBuildpathContainer buildpathContainer = DLTKCore.getBuildpathContainer(bPath.getPath(),
+							DLTKCore.create(project));
 					if (buildpathContainer != null) {
-						final IBuildpathEntry[] buildpathEntries = buildpathContainer
-								.getBuildpathEntries();
+						final IBuildpathEntry[] buildpathEntries = buildpathContainer.getBuildpathEntries();
 						for (IBuildpathEntry buildpathEntry : buildpathEntries) {
-							IPath localPath = EnvironmentPathUtils
-									.getLocalPath(buildpathEntry.getPath());
+							IPath localPath = EnvironmentPathUtils.getLocalPath(buildpathEntry.getPath());
 							includePaths.add(localPath);
 						}
 					}
@@ -1393,8 +1319,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 
 		public void handleResponse(Object request, Object response) {
-			boolean success = response != null
-					&& ((IDebugResponseMessage) response).getStatus() == 0;
+			boolean success = response != null && ((IDebugResponseMessage) response).getStatus() == 0;
 
 			if (request instanceof AddBreakpointRequest) {
 				AddBreakpointRequest addBreakpointRequest = (AddBreakpointRequest) request;
@@ -1405,26 +1330,21 @@ public class RemoteDebugger implements IRemoteDebugger {
 				if (response != null) {
 					id = ((AddBreakpointResponse) response).getBreakpointID();
 				}
-				((BreakpointAddedResponseHandler) responseHandler)
-						.breakpointAdded(fileName, lineNumber, id, success);
+				((BreakpointAddedResponseHandler) responseHandler).breakpointAdded(fileName, lineNumber, id, success);
 
 			} else if (request instanceof CancelBreakpointRequest) {
 				((BreakpointRemovedResponseHandler) responseHandler)
-						.breakpointRemoved(((CancelBreakpointRequest) request)
-								.getBreakpointID(), success);
+						.breakpointRemoved(((CancelBreakpointRequest) request).getBreakpointID(), success);
 
 			} else if (request instanceof CancelAllBreakpointsRequest) {
-				((AllBreakpointRemovedResponseHandler) responseHandler)
-						.allBreakpointRemoved(success);
+				((AllBreakpointRemovedResponseHandler) responseHandler).allBreakpointRemoved(success);
 
 			} else if (request instanceof StartRequest) {
 				((StartResponseHandler) responseHandler).started(success);
 
 			} else if (request instanceof EvalRequest) {
-				((EvalResponseHandler) responseHandler).evaled(
-						((EvalRequest) request).getCommand(),
-						success ? ((EvalResponse) response).getResult() : null,
-						success);
+				((EvalResponseHandler) responseHandler).evaled(((EvalRequest) request).getCommand(),
+						success ? ((EvalResponse) response).getResult() : null, success);
 
 			} else if (request instanceof StepIntoRequest) {
 				((StepIntoResponseHandler) responseHandler).stepInto(success);
@@ -1447,8 +1367,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 				String value = assignValueRequest.getValue();
 				int depth = assignValueRequest.getDepth();
 				String[] path = assignValueRequest.getPath();
-				((AssignValueResponseHandler) responseHandler).valueAssigned(
-						var, value, depth, path, success);
+				((AssignValueResponseHandler) responseHandler).valueAssigned(var, value, depth, path, success);
 
 			} else if (request instanceof GetVariableValueRequest) {
 				GetVariableValueRequest getVariableValueRequest = (GetVariableValueRequest) request;
@@ -1459,26 +1378,20 @@ public class RemoteDebugger implements IRemoteDebugger {
 				String result = null;
 				if (response != null) {
 					try {
-						result = new String(
-								((GetVariableValueResponse) response)
-										.getVarResult(),
-								((IDebugMessage) response)
-										.getTransferEncoding());
+						result = new String(((GetVariableValueResponse) response).getVarResult(),
+								((IDebugMessage) response).getTransferEncoding());
 					} catch (UnsupportedEncodingException e) {
 					}
 				}
-				((VariableValueResponseHandler) responseHandler).variableValue(
-						value, depth, path, result, success);
+				((VariableValueResponseHandler) responseHandler).variableValue(value, depth, path, result, success);
 
 			} else if (request instanceof GetCallStackRequest) {
 				PHPstack remoteStack = null;
 				if (response != null) {
-					remoteStack = ((GetCallStackResponse) response)
-							.getPHPstack();
+					remoteStack = ((GetCallStackResponse) response).getPHPstack();
 				}
 				convertToSystem(remoteStack);
-				((GetCallStackResponseHandler) responseHandler).callStack(
-						remoteStack, success);
+				((GetCallStackResponseHandler) responseHandler).callStack(remoteStack, success);
 
 			} else if (request instanceof GetStackVariableValueRequest) {
 				GetStackVariableValueRequest getStackVariableValueRequest = (GetStackVariableValueRequest) request;
@@ -1491,17 +1404,13 @@ public class RemoteDebugger implements IRemoteDebugger {
 				String result = null;
 				if (response != null) {
 					try {
-						result = new String(
-								((GetStackVariableValueResponse) response)
-										.getVarResult(),
-								((IDebugMessage) response)
-										.getTransferEncoding());
+						result = new String(((GetStackVariableValueResponse) response).getVarResult(),
+								((IDebugMessage) response).getTransferEncoding());
 					} catch (UnsupportedEncodingException e) {
 					}
 				}
-				((GetStackVariableValueResponseHandler) responseHandler)
-						.stackVariableValue(stackDepth, value, depth, path,
-								result, success);
+				((GetStackVariableValueResponseHandler) responseHandler).stackVariableValue(stackDepth, value, depth,
+						path, result, success);
 			}
 		}
 	}

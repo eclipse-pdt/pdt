@@ -53,9 +53,8 @@ public class DebugParametersInitializersRegistry {
 	private DebugParametersInitializersRegistry() {
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = registry
-				.getConfigurationElementsFor(PHPDebugPlugin.getID(),
-						EXTENSION_POINT_NAME);
+		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(),
+				EXTENSION_POINT_NAME);
 
 		for (int i = 0; i < elements.length; i++) {
 			final IConfigurationElement element = elements[i];
@@ -99,17 +98,16 @@ public class DebugParametersInitializersRegistry {
 	 *            The debug parameters initializer ID
 	 * @return A new instance of an IDebugParametersInitializer
 	 */
-	public static IDebugParametersInitializer getParametersInitializer(String id)
-			throws Exception {
+	public static IDebugParametersInitializer getParametersInitializer(String id) throws Exception {
 		DebugParametersInitializerFactory initializerFactory = (DebugParametersInitializerFactory) getInstance()
 				.getInitializersFactories(RUN).get(id);
 		if (initializerFactory == null) {
-			initializerFactory = (DebugParametersInitializerFactory) getInstance()
-					.getInitializersFactories(PROFILE).get(id);
+			initializerFactory = (DebugParametersInitializerFactory) getInstance().getInitializersFactories(PROFILE)
+					.get(id);
 		}
 		if (initializerFactory == null) {
-			initializerFactory = (DebugParametersInitializerFactory) getInstance()
-					.getInitializersFactories(DEBUG).get(id);
+			initializerFactory = (DebugParametersInitializerFactory) getInstance().getInitializersFactories(DEBUG)
+					.get(id);
 		}
 		if (initializerFactory != null) {
 			return initializerFactory.createParametersInitializer();
@@ -126,11 +124,8 @@ public class DebugParametersInitializersRegistry {
 	 */
 	public static IDebugParametersInitializer getCurrentDebugParametersInitializer() {
 		try {
-			String id = PHPDebugPlugin
-					.getDefault()
-					.getPluginPreferences()
-					.getString(
-							IPHPDebugConstants.PHP_DEBUG_PARAMETERS_INITIALIZER);
+			String id = PHPDebugPlugin.getDefault().getPluginPreferences()
+					.getString(IPHPDebugConstants.PHP_DEBUG_PARAMETERS_INITIALIZER);
 			return getParametersInitializer(id);
 		} catch (Exception e) {
 			PHPDebugPlugin.log(e);
@@ -145,11 +140,9 @@ public class DebugParametersInitializersRegistry {
 	 * @param launch
 	 * @return A new instance of a best match IDebugParametersInitializer
 	 */
-	public static IDebugParametersInitializer getBestMatchDebugParametersInitializer(
-			ILaunch launch) {
+	public static IDebugParametersInitializer getBestMatchDebugParametersInitializer(ILaunch launch) {
 		try {
-			Dictionary factories = getInstance().getInitializersFactories(
-					launch.getLaunchMode());
+			Dictionary factories = getInstance().getInitializersFactories(launch.getLaunchMode());
 
 			// 1st try to get the one with matching configuration type
 			for (Enumeration e = factories.elements(); e.hasMoreElements();) {
@@ -157,11 +150,8 @@ public class DebugParametersInitializersRegistry {
 						.nextElement();
 				String configurationTypeId = initializerFactory.element
 						.getAttribute(LAUNCH_CONFIGURATION_TYPE_ATTRIBUTE);
-				if (configurationTypeId != null
-						&& !"".equals(configurationTypeId) //$NON-NLS-1$
-						&& configurationTypeId.equals(launch
-								.getLaunchConfiguration().getType()
-								.getIdentifier())) {
+				if (configurationTypeId != null && !"".equals(configurationTypeId) //$NON-NLS-1$
+						&& configurationTypeId.equals(launch.getLaunchConfiguration().getType().getIdentifier())) {
 					return initializerFactory.createParametersInitializer();
 				}
 			}
@@ -174,9 +164,7 @@ public class DebugParametersInitializersRegistry {
 						.getAttribute(LAUNCH_CONFIGURATION_TYPE_ATTRIBUTE);
 				if ((configurationTypeId == null || "" //$NON-NLS-1$
 						.equals(configurationTypeId))
-						&& !PHPDebugPlugin.getID().equals(
-								initializerFactory.element
-										.getNamespaceIdentifier())) {
+						&& !PHPDebugPlugin.getID().equals(initializerFactory.element.getNamespaceIdentifier())) {
 					return initializerFactory.createParametersInitializer();
 				}
 			}
@@ -184,8 +172,7 @@ public class DebugParametersInitializersRegistry {
 			for (Enumeration e = factories.elements(); e.hasMoreElements();) {
 				DebugParametersInitializerFactory initializerFactory = (DebugParametersInitializerFactory) e
 						.nextElement();
-				if (PHPDebugPlugin.getID().equals(
-						initializerFactory.element.getNamespaceIdentifier())) {
+				if (PHPDebugPlugin.getID().equals(initializerFactory.element.getNamespaceIdentifier())) {
 					return initializerFactory.createParametersInitializer();
 				}
 			}
@@ -208,16 +195,14 @@ public class DebugParametersInitializersRegistry {
 		}
 
 		public IDebugParametersInitializer createParametersInitializer() {
-			SafeRunner
-					.run(new SafeRunnable(
-							"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugParametersInitializers") { //$NON-NLS-1$
-						public void run() throws Exception {
-							parametersInitializer = (IDebugParametersInitializer) element
-									.createExecutableExtension(CLASS_ATTRIBUTE);
-						}
-					});
-			parametersInitializer.setDebugHandler(element
-					.getAttribute(HANDLER_ATTRIBUTE));
+			SafeRunner.run(new SafeRunnable(
+					"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugParametersInitializers") { //$NON-NLS-1$
+				public void run() throws Exception {
+					parametersInitializer = (IDebugParametersInitializer) element
+							.createExecutableExtension(CLASS_ATTRIBUTE);
+				}
+			});
+			parametersInitializer.setDebugHandler(element.getAttribute(HANDLER_ATTRIBUTE));
 			return parametersInitializer;
 		}
 	}

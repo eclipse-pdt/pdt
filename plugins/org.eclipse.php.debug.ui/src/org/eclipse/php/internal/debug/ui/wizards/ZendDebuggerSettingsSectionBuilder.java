@@ -20,19 +20,18 @@ import org.eclipse.swt.widgets.Composite;
  * @author Bartlomiej Laczkowski
  */
 @SuppressWarnings("restriction")
-public class ZendDebuggerSettingsSectionBuilder implements
-		IDebuggerSettingsSectionBuilder {
+public class ZendDebuggerSettingsSectionBuilder implements IDebuggerSettingsSectionBuilder {
 
 	@Override
-	public IDebuggerSettingsSection build(CompositeFragment compositeFragment,
-			Composite debuggerSettingsComposite, IDebuggerSettingsWorkingCopy settingsWorkingCopy) {
+	public IDebuggerSettingsSection build(CompositeFragment compositeFragment, Composite debuggerSettingsComposite,
+			IDebuggerSettingsWorkingCopy settingsWorkingCopy) {
 		switch (settingsWorkingCopy.getKind()) {
 		case PHP_SERVER:
-			return new ZendDebuggerServerSettingsSection(compositeFragment,
-					debuggerSettingsComposite, settingsWorkingCopy);
+			return new ZendDebuggerServerSettingsSection(compositeFragment, debuggerSettingsComposite,
+					settingsWorkingCopy);
 		case PHP_EXE:
-			return new ZendDebuggerExeSettingsSection(compositeFragment,
-					debuggerSettingsComposite, settingsWorkingCopy);
+			return new ZendDebuggerExeSettingsSection(compositeFragment, debuggerSettingsComposite,
+					settingsWorkingCopy);
 		default:
 			break;
 		}

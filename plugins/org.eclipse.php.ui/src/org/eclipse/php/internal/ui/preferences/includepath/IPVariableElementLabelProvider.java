@@ -25,8 +25,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
-public class IPVariableElementLabelProvider extends LabelProvider implements
-		IColorProvider {
+public class IPVariableElementLabelProvider extends LabelProvider implements IColorProvider {
 
 	private Image fZIPImage;
 	private Image fFolderImage;
@@ -37,8 +36,7 @@ public class IPVariableElementLabelProvider extends LabelProvider implements
 	public IPVariableElementLabelProvider(boolean showResolvedVariables) {
 		ImageRegistry reg = PHPUiPlugin.getDefault().getImageRegistry();
 		fZIPImage = reg.get(PHPPluginImages.IMG_OBJS_EXTZIP);
-		fFolderImage = PlatformUI.getWorkbench().getSharedImages().getImage(
-				ISharedImages.IMG_OBJ_FOLDER);
+		fFolderImage = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
 		fShowResolvedVariables = showResolvedVariables;
 		fResolvedBackground = null;
 	}
@@ -107,8 +105,7 @@ public class IPVariableElementLabelProvider extends LabelProvider implements
 			if (!fShowResolvedVariables && curr.isReserved()) {
 				if (fResolvedBackground == null) {
 					Display display = Display.getCurrent();
-					fResolvedBackground = display
-							.getSystemColor(SWT.COLOR_INFO_BACKGROUND);
+					fResolvedBackground = display.getSystemColor(SWT.COLOR_INFO_BACKGROUND);
 				}
 				return fResolvedBackground;
 			}

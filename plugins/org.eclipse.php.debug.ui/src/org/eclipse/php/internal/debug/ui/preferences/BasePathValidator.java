@@ -42,8 +42,7 @@ public class BasePathValidator implements IPageControlValidator {
 
 			} else {
 				this.errorMessage = null;
-				this.fDefaultBasePath
-						.setMessage(Messages.BasePathValidator_4);
+				this.fDefaultBasePath.setMessage(Messages.BasePathValidator_4);
 				isValid = true;
 			}
 		} else {

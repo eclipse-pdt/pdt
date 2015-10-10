@@ -77,13 +77,10 @@ public class OverrideIndicatorImageProvider implements IAnnotationImageProvider 
 	}
 
 	private boolean isImageProviderFor(Annotation annotation) {
-		return annotation != null
-				&& OverrideIndicatorManager.ANNOTATION_TYPE.equals(annotation
-						.getType());
+		return annotation != null && OverrideIndicatorManager.ANNOTATION_TYPE.equals(annotation.getType());
 	}
 
 	private boolean isOverwriting(Annotation annotation) {
-		return ((OverrideIndicatorManager.OverrideIndicator) annotation)
-				.isOverwriteIndicator();
+		return ((OverrideIndicatorManager.OverrideIndicator) annotation).isOverwriteIndicator();
 	}
 }

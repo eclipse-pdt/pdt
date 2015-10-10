@@ -38,8 +38,7 @@ import org.junit.Test;
  */
 public class ASTMatcherTests {
 
-	public void performMatching(String matchingStr, String notMatchingStr)
-			throws Exception {
+	public void performMatching(String matchingStr, String notMatchingStr) throws Exception {
 
 		ASTNode node = getAstNode(matchingStr);
 		ASTNode notMatchingNode = getAstNode(notMatchingStr);
@@ -53,9 +52,8 @@ public class ASTMatcherTests {
 
 	private ASTNode getAstNode(String str) throws Exception {
 		StringReader reader = new StringReader(str);
-		Program program = ASTParser.newParser(reader, PHPVersion.PHP5,
-				ProjectOptions.useShortTags((IProject) null)).createAST(
-				new NullProgressMonitor());
+		Program program = ASTParser.newParser(reader, PHPVersion.PHP5, ProjectOptions.useShortTags((IProject) null))
+				.createAST(new NullProgressMonitor());
 		List<Statement> statements = program.statements();
 
 		assertNotNull(statements);

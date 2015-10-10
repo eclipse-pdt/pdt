@@ -26,19 +26,18 @@ import org.junit.runner.RunWith;
 public class RenameTraitProcessorTest extends AbstractRenameRefactoringTest {
 
 	public RenameTraitProcessorTest(String[] fileNames) {
-	   super(fileNames);
+		super(fileNames);
 	}
-	
+
 	@PDTTList.Parameters
-	public static String[] dirs = {"/resources/rename/renameTrait/"}; //$NON-NLS-1$
-	
+	public static String[] dirs = { "/resources/rename/renameTrait/" }; //$NON-NLS-1$
+
 	@PDTTList.BeforeList
 	public void setUpSuite() throws Exception {
 		super.setUpSuite();
-		PHPCoreTests.setProjectPhpVersion(project.getProject(),
-				PHPVersion.PHP5_4);
+		PHPCoreTests.setProjectPhpVersion(project.getProject(), PHPVersion.PHP5_4);
 	}
-	
+
 	@Test
 	public void test(String fileName) throws Exception {
 		PdttFileExt testFile = filesMap.get(fileName);
@@ -59,7 +58,7 @@ public class RenameTraitProcessorTest extends AbstractRenameRefactoringTest {
 
 		checkInitCondition(processor);
 		checkFinalCondition(processor);
-		
+
 		performChange(processor);
 		checkTestResult(testFile);
 	}

@@ -105,8 +105,7 @@ public class TableLayoutComposite extends Composite {
 		return result;
 	}
 
-	private void layoutTable(Table table, int width, Rectangle area,
-			boolean increase) {
+	private void layoutTable(Table table, int width, Rectangle area, boolean increase) {
 		// XXX: Layout is being called with an invalid value the first time
 		// it is being called on Linux. This method resets the
 		// Layout to null so we make sure we run it only when
@@ -159,8 +158,7 @@ public class TableLayoutComposite extends Composite {
 					// int weight = firstTime ? cw.weight :
 					// tableColumns[i].getWidth();
 					int weight = cw.weight;
-					int pixels = totalWeight == 0 ? 0 : weight * rest
-							/ totalWeight;
+					int pixels = totalWeight == 0 ? 0 : weight * rest / totalWeight;
 					if (pixels < cw.minimumWidth)
 						pixels = cw.minimumWidth;
 					totalDistributed += pixels;

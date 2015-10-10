@@ -34,13 +34,11 @@ public class ParameterVariableHighlighting extends AbstractSemanticHighlighting 
 
 		public void endVisit(Variable variable) {
 			if (variable.getParent().getType() != ASTNode.FIELD_ACCESS
-					|| (variable.getParent().getType() == ASTNode.FIELD_ACCESS && ((FieldAccess) variable
-							.getParent()).getDispatcher() == variable)) {
+					|| (variable.getParent().getType() == ASTNode.FIELD_ACCESS
+							&& ((FieldAccess) variable.getParent()).getDispatcher() == variable)) {
 				Expression varName = variable.getName();
-				if (params.contains(((Identifier) varName).getName())
-						&& varName instanceof Identifier
-						&& variable.isDollared()
-						&& variable.getParent().getType() != ASTNode.STATIC_FIELD_ACCESS) {
+				if (params.contains(((Identifier) varName).getName()) && varName instanceof Identifier
+						&& variable.isDollared() && variable.getParent().getType() != ASTNode.STATIC_FIELD_ACCESS) {
 					highlight(variable);
 				}
 			}

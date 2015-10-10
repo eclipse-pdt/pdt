@@ -9,17 +9,13 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.swt.graphics.Image;
 
-public class PHPStubCompletionProposal extends PHPCompletionProposal implements
-		IPHPCompletionProposalExtension {
+public class PHPStubCompletionProposal extends PHPCompletionProposal implements IPHPCompletionProposalExtension {
 	private CompletionProposal typeProposal;
 	private IDocument document;
 
-	public PHPStubCompletionProposal(String replacementString,
-			int replacementOffset, int replacementLength, Image image,
-			String displayString, int relevance,
-			CompletionProposal typeProposal, IDocument document) {
-		super(replacementString, replacementOffset, replacementLength, image,
-				displayString, relevance);
+	public PHPStubCompletionProposal(String replacementString, int replacementOffset, int replacementLength,
+			Image image, String displayString, int relevance, CompletionProposal typeProposal, IDocument document) {
+		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance);
 		this.typeProposal = typeProposal;
 		this.document = document;
 	}
@@ -37,8 +33,7 @@ public class PHPStubCompletionProposal extends PHPCompletionProposal implements
 		// IType type = (IType) typeProposal.getModelElement();
 		// type.getElementName();
 		String result = "class " //$NON-NLS-1$
-				+ typeProposal.getModelElement().getElementName()
-				+ "{\r\n\t\r\n}"; //$NON-NLS-1$
+				+ typeProposal.getModelElement().getElementName() + "{\r\n\t\r\n}"; //$NON-NLS-1$
 		result = addComment(result);
 		result = addIndent(result, typeProposal.getReplaceStart());
 
@@ -54,8 +49,7 @@ public class PHPStubCompletionProposal extends PHPCompletionProposal implements
 	private String addIndent(String result, int offset) {
 		final String[] lines = TextUtils.splitLines(result);
 		if (lines.length > 1) {
-			final String delimeter = TextUtilities
-					.getDefaultLineDelimiter(document);
+			final String delimeter = TextUtilities.getDefaultLineDelimiter(document);
 			final String indent = calculateIndent(document, offset);
 			final StringBuffer buffer = new StringBuffer(lines[0]);
 
@@ -73,8 +67,7 @@ public class PHPStubCompletionProposal extends PHPCompletionProposal implements
 	protected String calculateIndent(IDocument document, int offset) {
 		try {
 			final IRegion region = document.getLineInformationOfOffset(offset);
-			String indent = document.get(region.getOffset(), offset
-					- region.getOffset());
+			String indent = document.get(region.getOffset(), offset - region.getOffset());
 			int i = 0;
 			while (i < indent.length() && isSpaceOrTab(indent.charAt(i))) {
 				++i;

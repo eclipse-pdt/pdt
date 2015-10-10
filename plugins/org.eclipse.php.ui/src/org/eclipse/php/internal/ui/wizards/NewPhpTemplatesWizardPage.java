@@ -24,8 +24,7 @@ import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.viewsupport.ProjectTemplateStore;
 
-public class NewPhpTemplatesWizardPage extends
-		NewGenericFileTemplatesWizardPage {
+public class NewPhpTemplatesWizardPage extends NewGenericFileTemplatesWizardPage {
 
 	public NewPhpTemplatesWizardPage() {
 		super(PHPUIMessages.newPhpFile_wizard_templatePage_title,
@@ -46,12 +45,9 @@ public class NewPhpTemplatesWizardPage extends
 
 	protected String getTemplatesLocationMessage() {
 		ContextTypeRegistry templateContextRegistry = getTemplatesContextTypeRegistry();
-		TemplateContextType templateContextType = templateContextRegistry
-				.getContextType(getTemplateContextTypeId());
+		TemplateContextType templateContextType = templateContextRegistry.getContextType(getTemplateContextTypeId());
 		String name = templateContextType.getName();
-		return NLS
-				.bind(PHPUIMessages.newPhpFile_wizard_templatePage_phpTemplatesLocation,
-						name);
+		return NLS.bind(PHPUIMessages.newPhpFile_wizard_templatePage_phpTemplatesLocation, name);
 	}
 
 	protected String getPreferencePageId() {

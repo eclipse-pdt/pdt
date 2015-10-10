@@ -10,6 +10,7 @@ public class Messages extends NLS {
 	public static String SSHTunnel_5;
 	public static String SSHTunnelSession_0;
 	public static String TunnelTester_0;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

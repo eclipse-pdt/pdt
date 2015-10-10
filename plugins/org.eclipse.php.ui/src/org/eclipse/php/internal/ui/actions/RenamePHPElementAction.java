@@ -52,8 +52,7 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 		setEnabled(false);
 	}
 
-	private static boolean canEnable(IStructuredSelection selection)
-			throws CoreException {
+	private static boolean canEnable(IStructuredSelection selection) throws CoreException {
 		IModelElement element = getPHPElement(selection);
 		if (element == null)
 			return false;
@@ -78,8 +77,7 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 		try {
 			run(element);
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e,
-					PHPUIMessages.RenamePHPElementAction_name,
+			ExceptionHandler.handle(e, PHPUIMessages.RenamePHPElementAction_name,
 					PHPUIMessages.RenamePHPElementAction_exception);
 		}
 	}
@@ -99,12 +97,10 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 				return;
 			}
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e,
-					PHPUIMessages.RenamePHPElementAction_name,
+			ExceptionHandler.handle(e, PHPUIMessages.RenamePHPElementAction_name,
 					PHPUIMessages.RenamePHPElementAction_exception);
 		}
-		MessageDialog.openInformation(getShell(),
-				PHPUIMessages.RenamePHPElementAction_name,
+		MessageDialog.openInformation(getShell(), PHPUIMessages.RenamePHPElementAction_name,
 				PHPUIMessages.RenamePHPElementAction_not_available);
 	}
 
@@ -133,11 +129,10 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 	private void run(IModelElement element) throws CoreException {
 		if (!ActionUtils.isProcessable(getShell(), element))
 			return;
-		throw new RuntimeException(PHPUIMessages.RenamePHPElementAction_0); 
+		throw new RuntimeException(PHPUIMessages.RenamePHPElementAction_0);
 	}
 
-	private static boolean isRenameAvailable(IModelElement element)
-			throws CoreException {
+	private static boolean isRenameAvailable(IModelElement element) throws CoreException {
 		// TODO do something here
 		return false;
 	}

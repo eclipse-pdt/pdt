@@ -20,7 +20,6 @@ public class DeleteUserInterfaceManager extends UserInterfaceManager {
 	}
 
 	private DeleteUserInterfaceManager() {
-		put(ScriptDeleteProcessor.class, UserInterfaceStarter.class,
-				DeleteWizard.class);
+		put(ScriptDeleteProcessor.class, UserInterfaceStarter.class, DeleteWizard.class);
 	}
 }

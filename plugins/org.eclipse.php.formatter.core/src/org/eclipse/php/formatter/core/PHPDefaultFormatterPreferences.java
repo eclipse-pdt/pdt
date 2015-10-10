@@ -14,8 +14,7 @@ package org.eclipse.php.formatter.core;
  * Utility class for populating a <code>CodeFormatterPreferences</code> with PHP
  * default Formatter settings
  */
-final class PHPDefaultFormatterPreferences implements
-		ICodeFormatterPreferencesInitializer {
+final class PHPDefaultFormatterPreferences implements ICodeFormatterPreferencesInitializer {
 
 	public CodeFormatterPreferences initValues() {
 		CodeFormatterPreferences preferences = new CodeFormatterPreferences();

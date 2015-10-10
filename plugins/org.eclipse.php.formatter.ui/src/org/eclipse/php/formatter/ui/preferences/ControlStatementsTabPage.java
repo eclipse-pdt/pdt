@@ -28,17 +28,15 @@ public class ControlStatementsTabPage extends ModifyDialogTabPage {
 			+ createPreviewHeader(FormatterMessages.ControlStatementsTabPage_preview_header)
 			+ "class Example { function bar() {	do {} while ( true );"
 			+ "try {} catch ( Exception $e ) {	} finally {}} function foo2() {if (true) {return;}"
-			+ "if (true) {return;} elseif (false) {return;} else { return;}}" + "function foo($s) {	if (true) return;	if (true)	return; else if (false) return; else return;}}?>"; //$NON-NLS-1$
+			+ "if (true) {return;} elseif (false) {return;} else { return;}}" //$NON-NLS-1$
+			+ "function foo($s) {	if (true) return;	if (true)	return; else if (false) return; else return;}}?>";
 
 	private CodeFormatterPreview fPreview;
 
-	protected CheckboxPreference fThenStatementPref, fSimpleIfPref,
-			newLineBeforeElseCB, newLineBeforeCatchCB, newLineBeforeFinallyCB,
-			newLineBeforeWhileCB, ifElseSameLineCB, elseIfSameLineCB,
-			guardianSameLineCB;
+	protected CheckboxPreference fThenStatementPref, fSimpleIfPref, newLineBeforeElseCB, newLineBeforeCatchCB,
+			newLineBeforeFinallyCB, newLineBeforeWhileCB, ifElseSameLineCB, elseIfSameLineCB, guardianSameLineCB;
 
-	public ControlStatementsTabPage(ModifyDialog modifyDialog,
-			CodeFormatterPreferences codeFormatterPreferences) {
+	public ControlStatementsTabPage(ModifyDialog modifyDialog, CodeFormatterPreferences codeFormatterPreferences) {
 		super(modifyDialog, codeFormatterPreferences);
 	}
 
@@ -46,54 +44,39 @@ public class ControlStatementsTabPage extends ModifyDialogTabPage {
 
 		final Group generalGroup = createGroup(numColumns, composite,
 				FormatterMessages.ControlStatementsTabPage_general_group_title);
-		newLineBeforeElseCB = createOption(
-				generalGroup,
-				numColumns,
+		newLineBeforeElseCB = createOption(generalGroup, numColumns,
 				FormatterMessages.ControlStatementsTabPage_general_group_insert_new_line_before_else_and_elseif_statements);
 		newLineBeforeElseCB
 				.setIsChecked(codeFormatterPreferences.control_statement_insert_newline_before_else_and_elseif_in_if);
 
-		newLineBeforeCatchCB = createOption(
-				generalGroup,
-				numColumns,
+		newLineBeforeCatchCB = createOption(generalGroup, numColumns,
 				FormatterMessages.ControlStatementsTabPage_general_group_insert_new_line_before_catch_statements);
 		newLineBeforeCatchCB
 				.setIsChecked(codeFormatterPreferences.control_statement_insert_newline_before_catch_in_try);
 
-		newLineBeforeFinallyCB = createOption(
-				generalGroup,
-				numColumns,
+		newLineBeforeFinallyCB = createOption(generalGroup, numColumns,
 				FormatterMessages.ControlStatementsTabPage_general_group_insert_new_line_before_finally_statements);
 		newLineBeforeFinallyCB
 				.setIsChecked(codeFormatterPreferences.control_statement_insert_newline_before_finally_in_try);
 
-		newLineBeforeWhileCB = createOption(
-				generalGroup,
-				numColumns,
+		newLineBeforeWhileCB = createOption(generalGroup, numColumns,
 				FormatterMessages.ControlStatementsTabPage_general_group_insert_new_line_before_while_in_do_statements);
-		newLineBeforeWhileCB
-				.setIsChecked(codeFormatterPreferences.control_statement_insert_newline_before_while_in_do);
+		newLineBeforeWhileCB.setIsChecked(codeFormatterPreferences.control_statement_insert_newline_before_while_in_do);
 
 		final Group ifElseGroup = createGroup(numColumns, composite,
 				FormatterMessages.ControlStatementsTabPage_if_else_group_title);
-		fThenStatementPref = createOption(
-				ifElseGroup,
-				numColumns,
+		fThenStatementPref = createOption(ifElseGroup, numColumns,
 				FormatterMessages.ControlStatementsTabPage_if_else_group_keep_then_on_same_line);
-		fThenStatementPref
-				.setIsChecked(codeFormatterPreferences.control_statement_keep_then_on_same_line);
+		fThenStatementPref.setIsChecked(codeFormatterPreferences.control_statement_keep_then_on_same_line);
 
 		Label l = new Label(ifElseGroup, SWT.NONE);
 		GridData gd = new GridData();
 		gd.widthHint = fPixelConverter.convertWidthInCharsToPixels(4);
 		l.setLayoutData(gd);
 
-		fSimpleIfPref = createOption(
-				ifElseGroup,
-				numColumns - 1,
+		fSimpleIfPref = createOption(ifElseGroup, numColumns - 1,
 				FormatterMessages.ControlStatementsTabPage_if_else_group_keep_simple_if_on_one_line);
-		fSimpleIfPref
-				.setIsChecked(codeFormatterPreferences.control_statement_keep_simple_if_on_one_line);
+		fSimpleIfPref.setIsChecked(codeFormatterPreferences.control_statement_keep_simple_if_on_one_line);
 
 		fThenStatementPref.addObserver(new Observer() {
 			public void update(Observable o, Object arg) {
@@ -104,26 +87,17 @@ public class ControlStatementsTabPage extends ModifyDialogTabPage {
 
 		fSimpleIfPref.setEnabled(!fThenStatementPref.isChecked());
 
-		ifElseSameLineCB = createOption(
-				ifElseGroup,
-				numColumns,
+		ifElseSameLineCB = createOption(ifElseGroup, numColumns,
 				FormatterMessages.ControlStatementsTabPage_if_else_group_keep_else_on_same_line);
-		ifElseSameLineCB
-				.setIsChecked(codeFormatterPreferences.control_statement_keep_else_on_same_line);
+		ifElseSameLineCB.setIsChecked(codeFormatterPreferences.control_statement_keep_else_on_same_line);
 
-		elseIfSameLineCB = createCheckboxPref(
-				ifElseGroup,
-				numColumns,
+		elseIfSameLineCB = createCheckboxPref(ifElseGroup, numColumns,
 				FormatterMessages.ControlStatementsTabPage_if_else_group_keep_else_if_on_one_line);
-		elseIfSameLineCB
-				.setIsChecked(codeFormatterPreferences.control_statement_keep_else_if_on_same_line);
+		elseIfSameLineCB.setIsChecked(codeFormatterPreferences.control_statement_keep_else_if_on_same_line);
 
-		guardianSameLineCB = createCheckboxPref(
-				ifElseGroup,
-				numColumns,
+		guardianSameLineCB = createCheckboxPref(ifElseGroup, numColumns,
 				FormatterMessages.ControlStatementsTabPage_if_else_group_keep_guardian_clause_on_one_line);
-		guardianSameLineCB
-				.setIsChecked(codeFormatterPreferences.control_statement_keep_guardian_on_one_line);
+		guardianSameLineCB.setIsChecked(codeFormatterPreferences.control_statement_keep_guardian_on_one_line);
 
 		isInitialized = true;
 	}
@@ -155,8 +129,7 @@ public class ControlStatementsTabPage extends ModifyDialogTabPage {
 		fPreview.update();
 	}
 
-	private CheckboxPreference createOption(Composite composite, int span,
-			String name) {
+	private CheckboxPreference createOption(Composite composite, int span, String name) {
 		return createCheckboxPref(composite, span, name);
 	}
 
@@ -170,16 +143,11 @@ public class ControlStatementsTabPage extends ModifyDialogTabPage {
 					.isChecked();
 			codeFormatterPreferences.control_statement_insert_newline_before_while_in_do = newLineBeforeWhileCB
 					.isChecked();
-			codeFormatterPreferences.control_statement_keep_then_on_same_line = fThenStatementPref
-					.isChecked();
-			codeFormatterPreferences.control_statement_keep_simple_if_on_one_line = fSimpleIfPref
-					.isChecked();
-			codeFormatterPreferences.control_statement_keep_else_on_same_line = ifElseSameLineCB
-					.isChecked();
-			codeFormatterPreferences.control_statement_keep_else_if_on_same_line = elseIfSameLineCB
-					.isChecked();
-			codeFormatterPreferences.control_statement_keep_guardian_on_one_line = guardianSameLineCB
-					.isChecked();
+			codeFormatterPreferences.control_statement_keep_then_on_same_line = fThenStatementPref.isChecked();
+			codeFormatterPreferences.control_statement_keep_simple_if_on_one_line = fSimpleIfPref.isChecked();
+			codeFormatterPreferences.control_statement_keep_else_on_same_line = ifElseSameLineCB.isChecked();
+			codeFormatterPreferences.control_statement_keep_else_if_on_same_line = elseIfSameLineCB.isChecked();
+			codeFormatterPreferences.control_statement_keep_guardian_on_one_line = guardianSameLineCB.isChecked();
 		}
 
 	}

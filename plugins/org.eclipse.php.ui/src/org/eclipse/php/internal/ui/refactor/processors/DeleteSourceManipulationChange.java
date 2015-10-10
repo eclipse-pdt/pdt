@@ -30,8 +30,7 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 	private final String fHandle;
 	private final boolean fIsExecuteChange;
 
-	public DeleteSourceManipulationChange(ISourceManipulation sm,
-			boolean isExecuteChange) {
+	public DeleteSourceManipulationChange(ISourceManipulation sm, boolean isExecuteChange) {
 		Assert.isNotNull(sm);
 		fHandle = getScriptElement(sm).getHandleIdentifier();
 		fIsExecuteChange = isExecuteChange;
@@ -41,9 +40,7 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 	 * @see IChange#getName()
 	 */
 	public String getName() {
-		return Messages.format(
-				RefactoringCoreMessages.DeleteSourceManipulationChange_0,
-				getElementName());
+		return Messages.format(RefactoringCoreMessages.DeleteSourceManipulationChange_0, getElementName());
 	}
 
 	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException {
@@ -87,18 +84,16 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 		// explorer
 		// since the primary working copy still exists.
 		if (element instanceof ISourceModule) {
-			pm.beginTask("", 2); //$NON-NLS-1$ 
+			pm.beginTask("", 2); //$NON-NLS-1$
 			ISourceModule unit = (ISourceModule) element;
 			saveCUnitIfNeeded(unit, new SubProgressMonitor(pm, 1));
 			// element.delete(false, new SubProgressMonitor(pm, 1));
 
 			IResource resource = unit.getResource();
 			if (resource != null) {
-				ResourceDescription resourceDescription = ResourceDescription
-						.fromResource(resource);
+				ResourceDescription resourceDescription = ResourceDescription.fromResource(resource);
 				element.delete(false, new SubProgressMonitor(pm, 1));
-				resourceDescription.recordStateFromHistory(resource,
-						new SubProgressMonitor(pm, 1));
+				resourceDescription.recordStateFromHistory(resource, new SubProgressMonitor(pm, 1));
 				return new UndoDeleteResourceChange(resourceDescription);
 			} else {
 				element.delete(false, pm);
@@ -107,9 +102,8 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 
 			// begin fix https://bugs.eclipse.org/bugs/show_bug.cgi?id=66835
 		} else if (element instanceof IScriptFolder) {
-			ISourceModule[] units = ((IScriptFolder) element)
-					.getSourceModules();
-			pm.beginTask("", units.length + 1); //$NON-NLS-1$ 
+			ISourceModule[] units = ((IScriptFolder) element).getSourceModules();
+			pm.beginTask("", units.length + 1); //$NON-NLS-1$
 			for (int i = 0; i < units.length; i++) {
 				saveCUnitIfNeeded(units[i], new SubProgressMonitor(pm, 1));
 			}
@@ -117,8 +111,7 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=292651
 			// There's an issue when deleting the IScriptFolder by using
 			// model.delete method.
-			delete(false, new SubProgressMonitor(pm, 1),
-					(IScriptFolder) element);
+			delete(false, new SubProgressMonitor(pm, 1), (IScriptFolder) element);
 			return new NullChange();
 			// end fix https://bugs.eclipse.org/bugs/show_bug.cgi?id=66835
 		} else {
@@ -127,13 +120,11 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 		}
 	}
 
-	public void delete(boolean force, IProgressMonitor monitor,
-			IModelElement element) throws ModelException {
+	public void delete(boolean force, IProgressMonitor monitor, IModelElement element) throws ModelException {
 		IModelElement[] elements = new IModelElement[] { element };
 		if (elements != null && elements.length > 0 && elements[0] != null
 				&& elements[0].getElementType() < IModelElement.TYPE) {
-			new DeleteResourceElementsOperation(elements, force)
-					.runOperation(monitor);
+			new DeleteResourceElementsOperation(elements, force).runOperation(monitor);
 		}
 	}
 
@@ -146,8 +137,7 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 		return (IModelElement) sm;
 	}
 
-	private static void saveCUnitIfNeeded(ISourceModule unit,
-			IProgressMonitor pm) throws CoreException {
+	private static void saveCUnitIfNeeded(ISourceModule unit, IProgressMonitor pm) throws CoreException {
 		if (unit.getResource() != null) {
 			saveFileIfNeeded((IFile) unit.getResource(), pm);
 		}

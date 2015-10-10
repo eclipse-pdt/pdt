@@ -27,12 +27,14 @@ import org.w3c.dom.Node;
 public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	private DBGpThread owningThread;
-	private String qualifiedFile = ""; // fully qualified name of the file this stack frame is in //$NON-NLS-1$
+	private String qualifiedFile = ""; // fully qualified name of //$NON-NLS-1$
+										// the file this stack frame is in
 	private String stackLevel; // the level of this stack frame
 	private String fileName; // workspace file relative to project, null if not
 								// in workspace
 	private int lineNo; // line within the file of this stack frame
-	private String name = ""; // string to display in debugger for this stack frame //$NON-NLS-1$
+	private String name = ""; // string to display in debugger for //$NON-NLS-1$
+								// this stack frame
 	private IVariable[] variables;
 
 	// private IVariable[] variables; // variables exposed to this stack frame
@@ -54,14 +56,11 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		String line = DBGpResponse.getAttribute(stackData, "lineno"); //$NON-NLS-1$
 		stackLevel = DBGpResponse.getAttribute(stackData, "level"); //$NON-NLS-1$
 		lineNo = Integer.parseInt(line);
-		qualifiedFile = DBGpUtils.getFilenameFromURIString(DBGpResponse
-				.getAttribute(stackData, "filename")); //$NON-NLS-1$
-		qualifiedFile = ((DBGpTarget) getDebugTarget())
-				.mapToWorkspaceFileIfRequired(qualifiedFile);
+		qualifiedFile = DBGpUtils.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename")); //$NON-NLS-1$
+		qualifiedFile = ((DBGpTarget) getDebugTarget()).mapToWorkspaceFileIfRequired(qualifiedFile);
 		String function = DBGpResponse.getAttribute(stackData, "where"); //$NON-NLS-1$
 		// check to see if the file exists in the workspace
-		IFile[] fileFound = ResourcesPlugin.getWorkspace().getRoot()
-				.findFilesForLocation(new Path(qualifiedFile));
+		IFile[] fileFound = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(qualifiedFile));
 		if (fileFound.length > 0) {
 			IFile file = fileFound[0];
 			// get the file found in workspace and show project/file
@@ -155,8 +154,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		// frame
 		DBGpLogger.debug("getting variables for stackframe on line: " + lineNo); //$NON-NLS-1$
 		if (variables == null) {
-			variables = ((DBGpTarget) getDebugTarget())
-					.getVariables(stackLevel);
+			variables = ((DBGpTarget) getDebugTarget()).getVariables(stackLevel);
 		}
 		return variables;
 	}
@@ -346,11 +344,8 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 				// cache the variables at that line as eclipse goes to the stack
 				// frame of
 				// another line number to get the stack variables.
-				boolean isEqual = sf.getQualifiedFile().equals(
-						getQualifiedFile())
-						&& sf.stackLevel.equals(stackLevel)
-						&& (sf.owningThread == owningThread)
-						&& sf.getLineNumber() == getLineNumber();
+				boolean isEqual = sf.getQualifiedFile().equals(getQualifiedFile()) && sf.stackLevel.equals(stackLevel)
+						&& (sf.owningThread == owningThread) && sf.getLineNumber() == getLineNumber();
 				return isEqual;
 			} catch (Exception e) {
 			}
@@ -364,8 +359,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
-		return getQualifiedFile().hashCode() + stackLevel.hashCode()
-				+ owningThread.hashCode();
+		return getQualifiedFile().hashCode() + stackLevel.hashCode() + owningThread.hashCode();
 	}
 
 	public String getQualifiedFile() {

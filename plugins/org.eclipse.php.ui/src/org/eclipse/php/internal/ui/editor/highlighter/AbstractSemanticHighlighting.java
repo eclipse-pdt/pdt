@@ -32,14 +32,12 @@ import org.eclipse.wst.sse.ui.ISemanticHighlighting;
 import org.eclipse.wst.sse.ui.ISemanticHighlightingExtension2;
 
 @SuppressWarnings("restriction")
-public abstract class AbstractSemanticHighlighting implements
-		ISemanticHighlighting, ISemanticHighlightingExtension2,
-		Comparable<AbstractSemanticHighlighting> {
+public abstract class AbstractSemanticHighlighting
+		implements ISemanticHighlighting, ISemanticHighlightingExtension2, Comparable<AbstractSemanticHighlighting> {
 
 	private ISourceModule sourceModule = null;
 
-	private SemanticHighlightingStyle style = new SemanticHighlightingStyle(
-			getPreferenceKey());
+	private SemanticHighlightingStyle style = new SemanticHighlightingStyle(getPreferenceKey());
 
 	private List<Position> list;
 
@@ -106,8 +104,7 @@ public abstract class AbstractSemanticHighlighting implements
 	protected Program getProgram(final IStructuredDocumentRegion region) {// region.getParentDocument().get()
 		sourceModule = null;
 		// resolve current sourceModule
-		Enumeration openBuffers = BufferManager.getDefaultBufferManager()
-				.getOpenBuffers();
+		Enumeration openBuffers = BufferManager.getDefaultBufferManager().getOpenBuffers();
 		while (openBuffers.hasMoreElements()) {
 			Object nextElement = openBuffers.nextElement();
 			if (nextElement instanceof DocumentAdapter) {
@@ -126,8 +123,7 @@ public abstract class AbstractSemanticHighlighting implements
 			try {
 				// Wait active_only. Sometimes highliters are called without
 				// reconciling
-				program = SharedASTProvider.getAST(sourceModule,
-						SharedASTProvider.WAIT_YES, null);
+				program = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_YES, null);
 			} catch (ModelException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -138,32 +134,27 @@ public abstract class AbstractSemanticHighlighting implements
 	}
 
 	public String getBoldPreferenceKey() {
-		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX
-				+ preferenceKey
+		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX + preferenceKey
 				+ PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_BOLD_SUFFIX;
 	}
 
 	public String getColorPreferenceKey() {
-		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX
-				+ preferenceKey
+		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX + preferenceKey
 				+ PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_COLOR_SUFFIX;
 	}
 
 	public String getBackgroundColorPreferenceKey() {
-		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX
-				+ preferenceKey
+		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX + preferenceKey
 				+ PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_BGCOLOR_SUFFIX;
 	}
 
 	public String getEnabledPreferenceKey() {
-		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX
-				+ preferenceKey
+		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX + preferenceKey
 				+ PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_ENABLED_SUFFIX;
 	}
 
 	public String getItalicPreferenceKey() {
-		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX
-				+ preferenceKey
+		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX + preferenceKey
 				+ PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_ITALIC_SUFFIX;
 	}
 
@@ -172,14 +163,12 @@ public abstract class AbstractSemanticHighlighting implements
 	}
 
 	public String getStrikethroughPreferenceKey() {
-		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX
-				+ preferenceKey
+		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX + preferenceKey
 				+ PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_STRIKETHROUGH_SUFFIX;
 	}
 
 	public String getUnderlinePreferenceKey() {
-		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX
-				+ preferenceKey
+		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX + preferenceKey
 				+ PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_UNDERLINE_SUFFIX;
 	}
 

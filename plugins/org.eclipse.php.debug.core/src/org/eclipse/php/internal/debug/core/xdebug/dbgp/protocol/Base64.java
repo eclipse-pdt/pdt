@@ -168,8 +168,7 @@ public class Base64 {
 
 	static {
 		try {
-			valToBase64CharTable = base64CharSetSequence
-					.getBytes(INTERNAL_ENCODING);
+			valToBase64CharTable = base64CharSetSequence.getBytes(INTERNAL_ENCODING);
 		} catch (UnsupportedEncodingException e) {
 		}
 

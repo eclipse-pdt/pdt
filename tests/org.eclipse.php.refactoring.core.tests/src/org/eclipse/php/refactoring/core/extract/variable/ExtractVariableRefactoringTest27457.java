@@ -36,8 +36,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ExtractVariableRefactoringTest27457 extends
-		AbstractRefactoringTest {
+public class ExtractVariableRefactoringTest27457 extends AbstractRefactoringTest {
 
 	private IProject project1;
 	private IFile file;
@@ -58,8 +57,7 @@ public class ExtractVariableRefactoringTest27457 extends
 		}
 		file = folder.getFile("ExtractVariableRefactoringTest27457.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php function foo(){} foo();?>".getBytes());
+		InputStream source = new ByteArrayInputStream("<?php function foo(){} foo();?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -79,8 +77,7 @@ public class ExtractVariableRefactoringTest27457 extends
 
 		IStructuredModel model = null;
 		try {
-			model = StructuredModelManager.getModelManager()
-					.createUnManagedStructuredModelFor(file);
+			model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
 		} catch (IOException e) {
 			fail(e.getMessage());
 		} catch (CoreException e) {
@@ -91,12 +88,10 @@ public class ExtractVariableRefactoringTest27457 extends
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
 		assertNotNull(structuredDocument);
 
-
 		ExtractVariableRefactoring processor;
 		try {
-			processor = new ExtractVariableRefactoring(
-					DLTKCore.createSourceModuleFrom(file), structuredDocument,
-					24, 0);
+			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 24,
+					0);
 			processor.setNewVariableName("c");
 
 			checkInitCondition(processor);
@@ -105,14 +100,12 @@ public class ExtractVariableRefactoringTest27457 extends
 			fail(e.getMessage());
 		}
 
-
 	}
-	
+
 	@Override
 	protected void checkInitCondition(Refactoring processor) {
 		try {
-			RefactoringStatus status = processor
-					.checkInitialConditions(new NullProgressMonitor());
+			RefactoringStatus status = processor.checkInitialConditions(new NullProgressMonitor());
 			assertEquals(Status.ERROR, status.getSeverity());
 		} catch (OperationCanceledException e1) {
 			fail(e1.getMessage());
@@ -120,6 +113,5 @@ public class ExtractVariableRefactoringTest27457 extends
 			fail(e1.getMessage());
 		}
 	}
-
 
 }

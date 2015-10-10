@@ -46,9 +46,8 @@ public class ServerTypeCompositeFragment extends CompositeFragment {
 				IServerTypeDescriptor serverTypeDescriptor = ServerTypesDescriptorRegistry
 						.getDescriptor((IServerType) element);
 				cell.setImage(serverTypeDescriptor.getImage(ImageType.ICON_32));
-				StyleRange greyDesc = new StyleRange(name.length() + 1,
-						description.length(), Display.getDefault()
-								.getSystemColor(SWT.COLOR_DARK_GRAY), null);
+				StyleRange greyDesc = new StyleRange(name.length() + 1, description.length(),
+						Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY), null);
 				StyleRange[] range = { greyDesc };
 				cell.setStyleRanges(range);
 			}
@@ -58,19 +57,14 @@ public class ServerTypeCompositeFragment extends CompositeFragment {
 
 	private IServerType currentType;
 
-	public ServerTypeCompositeFragment(Composite parent,
-			IControlHandler handler, boolean isForEditing) {
+	public ServerTypeCompositeFragment(Composite parent, IControlHandler handler, boolean isForEditing) {
 		super(parent, handler, isForEditing);
-		setTitle(PHPServerUIMessages
-				.getString("ServerTypeCompositeFragment.Title")); //$NON-NLS-1$
-		setDescription(PHPServerUIMessages
-				.getString("ServerTypeCompositeFragment.Description")); //$NON-NLS-1$
-		controlHandler.setTitle(PHPServerUIMessages
-				.getString("ServerTypeCompositeFragment.Title")); //$NON-NLS-1$
+		setTitle(PHPServerUIMessages.getString("ServerTypeCompositeFragment.Title")); //$NON-NLS-1$
+		setDescription(PHPServerUIMessages.getString("ServerTypeCompositeFragment.Description")); //$NON-NLS-1$
+		controlHandler.setTitle(PHPServerUIMessages.getString("ServerTypeCompositeFragment.Title")); //$NON-NLS-1$
 		controlHandler.setDescription(getDescription());
 		controlHandler.setImageDescriptor(ServersPluginImages.DESC_WIZ_SERVER);
-		setDisplayName(PHPServerUIMessages
-				.getString("ServerCompositeFragment.server")); //$NON-NLS-1$
+		setDisplayName(PHPServerUIMessages.getString("ServerCompositeFragment.server")); //$NON-NLS-1$
 	}
 
 	@Override
@@ -87,8 +81,7 @@ public class ServerTypeCompositeFragment extends CompositeFragment {
 
 	public void setData(Object server) throws IllegalArgumentException {
 		if (server != null && !(server instanceof Server)) {
-			throw new IllegalArgumentException(
-					"The given object is not a Server"); //$NON-NLS-1$
+			throw new IllegalArgumentException("The given object is not a Server"); //$NON-NLS-1$
 		}
 		super.setData(server);
 		validate();
@@ -115,8 +108,7 @@ public class ServerTypeCompositeFragment extends CompositeFragment {
 	 */
 	@Override
 	protected void createContents(Composite parent) {
-		Collection<IServerType> types = ServerTypesManager.getInstance()
-				.getAll();
+		Collection<IServerType> types = ServerTypesManager.getInstance().getAll();
 		TableViewer viewer = new TableViewer(parent);
 		Table table = viewer.getTable();
 		table.addListener(SWT.MeasureItem, new Listener() {
@@ -126,8 +118,7 @@ public class ServerTypeCompositeFragment extends CompositeFragment {
 		});
 		table.setLayoutData(new GridData(GridData.FILL_BOTH));
 		viewer.setContentProvider(new IStructuredContentProvider() {
-			public void inputChanged(Viewer viewer, Object oldInput,
-					Object newInput) {
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 
 			public void dispose() {

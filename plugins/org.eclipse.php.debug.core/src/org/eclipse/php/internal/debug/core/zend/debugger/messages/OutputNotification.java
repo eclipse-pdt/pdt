@@ -27,8 +27,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
 /**
  * @author erez
  */
-public class OutputNotification extends DebugMessageNotificationImpl implements
-		IDebugNotificationMessage {
+public class OutputNotification extends DebugMessageNotificationImpl implements IDebugNotificationMessage {
 
 	private String output = null;
 
@@ -41,8 +40,7 @@ public class OutputNotification extends DebugMessageNotificationImpl implements
 	}
 
 	public void deserialize(DataInputStream in) throws IOException {
-		setOutput(CommunicationUtilities.readEncodedString(in,
-				getTransferEncoding()));
+		setOutput(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
 	}
 
 	public int getType() {
@@ -51,7 +49,6 @@ public class OutputNotification extends DebugMessageNotificationImpl implements
 
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
-		CommunicationUtilities.writeEncodedString(out, getOutput(),
-				getTransferEncoding());
+		CommunicationUtilities.writeEncodedString(out, getOutput(), getTransferEncoding());
 	}
 }

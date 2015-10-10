@@ -47,8 +47,7 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 	 * @author nir.c Wrapper composite, that un/register itself to any buildpath
 	 *         changes
 	 */
-	private final class BuildPathComposite extends Composite implements
-			IElementChangedListener, IChangeListener {
+	private final class BuildPathComposite extends Composite implements IElementChangedListener, IChangeListener {
 
 		private BuildPathComposite(Composite parent, int style) {
 			super(parent, style);
@@ -82,9 +81,8 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 		}
 	}
 
-	public PHPBuildPathsBlock(IRunnableContext runnableContext,
-			IStatusChangeListener context, int pageToShow, boolean useNewPage,
-			IWorkbenchPreferenceContainer pageContainer) {
+	public PHPBuildPathsBlock(IRunnableContext runnableContext, IStatusChangeListener context, int pageToShow,
+			boolean useNewPage, IWorkbenchPreferenceContainer pageContainer) {
 		super(runnableContext, context, pageToShow, useNewPage, pageContainer);
 	}
 
@@ -108,8 +106,7 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 		container.setLayoutData(createGridData(GridData.FILL_BOTH, 1, 0));
 
 		fSourceContainerPage = new PHPBuildPathSourcePage(fBuildPathList);
-		((PHPBuildPathSourcePage) fSourceContainerPage)
-				.registerRemovedElementListener((IChangeListener) container);
+		((PHPBuildPathSourcePage) fSourceContainerPage).registerRemovedElementListener((IChangeListener) container);
 		Control control = fSourceContainerPage.getControl(container);
 		control.setLayoutData(createGridData(GridData.FILL_BOTH, 1, 0));
 
@@ -128,30 +125,24 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 		return gd;
 	}
 
-	public void configureScriptProject(IProgressMonitor monitor)
-			throws CoreException, OperationCanceledException {
+	public void configureScriptProject(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
 		removeEtnries();
 		adaptIncludePath();
 		super.configureScriptProject(monitor);
 
-		List<IBuildpathEntry> existingPathes = Arrays.asList(getScriptProject()
-				.getRawBuildpath());
-		BuildPathUtils.addNonDupEntriesToBuildPath(getScriptProject(),
-				existingPathes);
+		List<IBuildpathEntry> existingPathes = Arrays.asList(getScriptProject().getRawBuildpath());
+		BuildPathUtils.addNonDupEntriesToBuildPath(getScriptProject(), existingPathes);
 	}
 
 	private void removeEtnries() {
 		PHPBuildPathSourcePage buildPathSourcePage = (PHPBuildPathSourcePage) fSourceContainerPage;
-		List<BPListElement> removedElements = buildPathSourcePage
-				.getRemovedElements();
+		List<BPListElement> removedElements = buildPathSourcePage.getRemovedElements();
 		if (removedElements.size() > 0) {
 			for (BPListElement element : removedElements) {
 				try {
-					if (BuildPathUtils.isContainedInBuildpath(element
-							.getBuildpathEntry().getPath(), fCurrScriptProject)) {
-						BuildPathUtils
-								.removeEntryFromBuildPath(fCurrScriptProject,
-										element.getBuildpathEntry());
+					if (BuildPathUtils.isContainedInBuildpath(element.getBuildpathEntry().getPath(),
+							fCurrScriptProject)) {
+						BuildPathUtils.removeEntryFromBuildPath(fCurrScriptProject, element.getBuildpathEntry());
 					}
 				} catch (ModelException e) {
 					PHPCorePlugin.log(e);
@@ -171,16 +162,14 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 	private void adaptIncludePath() {
 		PHPBuildPathSourcePage buildPathSourcePage = (PHPBuildPathSourcePage) fSourceContainerPage;
 
-		boolean shouldRemoveFromIncludePath = buildPathSourcePage
-				.shouldRemoveFromIncludePath();
+		boolean shouldRemoveFromIncludePath = buildPathSourcePage.shouldRemoveFromIncludePath();
 
 		if (!shouldRemoveFromIncludePath) {
 			return;
 		}
 
 		// get the source elements that the user removed in the source tab
-		List<BPListElement> removedElements = buildPathSourcePage
-				.getRemovedElements();
+		List<BPListElement> removedElements = buildPathSourcePage.getRemovedElements();
 
 		List<IBuildpathEntry> buildPathEntries = new ArrayList<IBuildpathEntry>();
 		IProject project = fCurrScriptProject.getProject();
@@ -188,8 +177,8 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 		// in case there are any, the user is prompted with a question
 		if (removedElements.size() > 0) {
 			for (BPListElement listElement : removedElements) {
-				if (IncludePathManager.isInIncludePath(fCurrScriptProject
-						.getProject(), listElement.getPath()) != null) {
+				if (IncludePathManager.isInIncludePath(fCurrScriptProject.getProject(),
+						listElement.getPath()) != null) {
 					buildPathEntries.add(listElement.getBuildpathEntry());
 				}
 			}
@@ -197,9 +186,7 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 			// include path
 			try {
 				for (IBuildpathEntry buildpathEntry : buildPathEntries) {
-					IncludePathManager
-							.getInstance()
-							.removeEntryFromIncludePath(project, buildpathEntry);
+					IncludePathManager.getInstance().removeEntryFromIncludePath(project, buildpathEntry);
 				}
 			} catch (ModelException e) {
 				Logger.logException("Failed adding entries to build path", e); // //$NON-NLS-1$
@@ -227,16 +214,14 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 	}
 
 	private IStatus findMostSevereStatus() {
-		return StatusUtil.getMostSevere(new IStatus[] { fPathStatus,
-				fBuildPathStatus });
+		return StatusUtil.getMostSevere(new IStatus[] { fPathStatus, fBuildPathStatus });
 	}
 
 	public void init(IScriptProject jproject, IBuildpathEntry[] buildpathEntries) {
 		fCurrScriptProject = jproject;
 		boolean projectExists = false;
 		IProject project = fCurrScriptProject.getProject();
-		projectExists = project.exists()
-				&& project.getFile(BUILDPATH_FILENAME).exists();
+		projectExists = project.exists() && project.getFile(BUILDPATH_FILENAME).exists();
 		if (projectExists) {
 			if (buildpathEntries == null) {
 				buildpathEntries = fCurrScriptProject.readRawBuildpath();
@@ -248,10 +233,8 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 		if (buildpathEntries != null) {
 			for (int i = 0; i < buildpathEntries.length; i++) {
 				IBuildpathEntry curr = buildpathEntries[i];
-				BPListElement listElement = BPListElement.createFromExisting(
-						curr, fCurrScriptProject);
-				if (curr.isExported()
-						|| curr.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
+				BPListElement listElement = BPListElement.createFromExisting(curr, fCurrScriptProject);
+				if (curr.isExported() || curr.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
 					exportedEntries.add(listElement);
 				}
 				allEntries.add(listElement);

@@ -65,14 +65,12 @@ public class PHPWorkingSetFilter extends WorkingSetFilter {
 
 		IPath elementPath = null;
 
-		IResource elementResource = (IResource) element
-				.getAdapter(IResource.class);
+		IResource elementResource = (IResource) element.getAdapter(IResource.class);
 		if (elementResource != null)
 			elementPath = elementResource.getFullPath();
 
 		if (elementPath == null) {
-			IModelElement scriptElement = (IModelElement) element
-					.getAdapter(IModelElement.class);
+			IModelElement scriptElement = (IModelElement) element.getAdapter(IModelElement.class);
 			if (scriptElement != null)
 				elementPath = scriptElement.getPath();
 		}

@@ -56,8 +56,7 @@ public class RefactoringMoveAction extends AbstractMoveDelegator {
 	public void run(IStructuredSelection selection) {
 
 		if (fShell == null) {
-			fShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getShell();
+			fShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		}
 
 		if (selection == null) {
@@ -71,20 +70,16 @@ public class RefactoringMoveAction extends AbstractMoveDelegator {
 			if (selection.toList().get(0) instanceof IProject) {
 				project = (IProject) selection.toList().get(0);
 			} else if (selection.toList().get(0) instanceof IScriptProject) {
-				project = ((IScriptProject) selection.toList().get(0))
-						.getProject();
+				project = ((IScriptProject) selection.toList().get(0)).getProject();
 			} else {
 				return;
 			}
-			PHPProjectMoveProcessor processor = new PHPProjectMoveProcessor(
-					project);
+			PHPProjectMoveProcessor processor = new PHPProjectMoveProcessor(project);
 
 			MoveRefactoring refactoring = new MoveRefactoring(processor);
-			PHPProjectMoveWizard wizard = new PHPProjectMoveWizard(refactoring,
-					project);
+			PHPProjectMoveWizard wizard = new PHPProjectMoveWizard(refactoring, project);
 			new RefactoringStarter().activate(refactoring, wizard, fShell,
-					PHPRefactoringUIMessages
-							.getString("RefactoringMoveAction.0"), true); //$NON-NLS-1$
+					PHPRefactoringUIMessages.getString("RefactoringMoveAction.0"), true); //$NON-NLS-1$
 			return;
 		}
 
@@ -95,8 +90,7 @@ public class RefactoringMoveAction extends AbstractMoveDelegator {
 		}
 
 		// check for external files
-		final IResource[] resources = PHPMoveProcessor
-				.getResources(selectedResources);
+		final IResource[] resources = PHPMoveProcessor.getResources(selectedResources);
 		if (checkForExternalFiles(resources) || resources.length == 0) {
 			unableToRunMoveAction();
 			return;
@@ -110,9 +104,8 @@ public class RefactoringMoveAction extends AbstractMoveDelegator {
 
 		MoveRefactoring refactoring = new MoveRefactoring(processor);
 		PHPMoveWizard wizard = new PHPMoveWizard(refactoring);
-		new RefactoringStarter()
-				.activate(refactoring, wizard, fShell, PHPRefactoringUIMessages
-						.getString("RefactoringMoveAction.0"), true); //$NON-NLS-1$
+		new RefactoringStarter().activate(refactoring, wizard, fShell,
+				PHPRefactoringUIMessages.getString("RefactoringMoveAction.0"), true); //$NON-NLS-1$
 	}
 
 	/**
@@ -131,11 +124,8 @@ public class RefactoringMoveAction extends AbstractMoveDelegator {
 	}
 
 	private final void unableToRunMoveAction() {
-		MessageDialog
-				.openInformation(
-						fShell,
-						PHPRefactoringUIMessages
-								.getString("RefactoringMoveAction.1"), PHPRefactoringUIMessages.getString("RefactoringMoveAction.2")); //$NON-NLS-1$ //$NON-NLS-2$
+		MessageDialog.openInformation(fShell, PHPRefactoringUIMessages.getString("RefactoringMoveAction.1"), //$NON-NLS-1$
+				PHPRefactoringUIMessages.getString("RefactoringMoveAction.2")); //$NON-NLS-1$
 	}
 
 	/**
@@ -145,12 +135,10 @@ public class RefactoringMoveAction extends AbstractMoveDelegator {
 	 * @param selection
 	 * @return
 	 */
-	private SelectionListenerAction createWorkbenchAction(
-			IStructuredSelection selection) {
+	private SelectionListenerAction createWorkbenchAction(IStructuredSelection selection) {
 		List list = selection.toList();
 		SelectionListenerAction action = null;
-		if (list.size() == 0 || list.get(0) instanceof IProject
-				|| list.get(0) instanceof ScriptProject) {
+		if (list.size() == 0 || list.get(0) instanceof IProject || list.get(0) instanceof ScriptProject) {
 			action = new PHPMoveProjectAction(fShell);
 			action.selectionChanged(selection);
 		}
@@ -172,10 +160,8 @@ public class RefactoringMoveAction extends AbstractMoveDelegator {
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			if (selection instanceof ITextSelection) {
-				IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow();
-				IEditorPart editor = workbenchWindow.getActivePage()
-						.getActiveEditor();
+				IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				IEditorPart editor = workbenchWindow.getActivePage().getActiveEditor();
 				setActiveEditor(action, editor);
 			} else {
 				selectedResources = (IStructuredSelection) selection;

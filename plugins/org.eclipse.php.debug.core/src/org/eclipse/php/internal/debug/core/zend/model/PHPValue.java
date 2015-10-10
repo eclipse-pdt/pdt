@@ -92,8 +92,7 @@ public class PHPValue extends PHPDebugElement implements IValue {
 				fChildren = new IVariable[0];
 			}
 			// Check if we should divide it into partitions
-			if (fValue.getType() == ExpressionValue.ARRAY_TYPE
-					&& fChildren.length >= ARRAY_PARTITION_BOUNDARY) {
+			if (fValue.getType() == ExpressionValue.ARRAY_TYPE && fChildren.length >= ARRAY_PARTITION_BOUNDARY) {
 				createPartitions();
 			}
 		}
@@ -110,16 +109,13 @@ public class PHPValue extends PHPDebugElement implements IValue {
 			if (endIndex > numChild) {
 				endIndex = numChild - 1;
 			}
-			final IVariable[] vars = Arrays.copyOfRange(fChildren,
-					startIndex, endIndex + 1);
-			IVariable var = new VirtualPartition(this,
-					new IVariableProvider() {
-						@Override
-						public IVariable[] getVariables()
-								throws DebugException {
-							return vars;
-						}
-					}, startIndex, endIndex);
+			final IVariable[] vars = Arrays.copyOfRange(fChildren, startIndex, endIndex + 1);
+			IVariable var = new VirtualPartition(this, new IVariableProvider() {
+				@Override
+				public IVariable[] getVariables() throws DebugException {
+					return vars;
+				}
+			}, startIndex, endIndex);
 			children[i] = var;
 		}
 		fChildren = children;
@@ -127,8 +123,7 @@ public class PHPValue extends PHPDebugElement implements IValue {
 
 	private void requestVariables() {
 		PHPDebugTarget debugTarget = (PHPDebugTarget) getDebugTarget();
-		ExpressionsManager expressionManager = debugTarget
-				.getExpressionManager();
+		ExpressionsManager expressionManager = debugTarget.getExpressionManager();
 		Expression variable = fVariable;
 		if (fGlobal) {
 			String exp = "$GLOBALS[\"" + fVariable.getFullName().substring(1) //$NON-NLS-1$
@@ -147,8 +142,7 @@ public class PHPValue extends PHPDebugElement implements IValue {
 		if (children != null) {
 			fChildren = new PHPVariable[children.length];
 			for (int i = 0; i < children.length; i++) {
-				fChildren[i] = new PHPVariable(
-						(PHPDebugTarget) getDebugTarget(), children[i], fGlobal);
+				fChildren[i] = new PHPVariable((PHPDebugTarget) getDebugTarget(), children[i], fGlobal);
 			}
 		}
 	}
@@ -159,8 +153,7 @@ public class PHPValue extends PHPDebugElement implements IValue {
 	 * @see org.eclipse.debug.core.model.IValue#hasVariables()
 	 */
 	public boolean hasVariables() throws DebugException {
-		boolean isArrayOrObject = fValue.getType() == 5
-				|| fValue.getType() == 6 || fValue.getType() == 8;
+		boolean isArrayOrObject = fValue.getType() == 5 || fValue.getType() == 6 || fValue.getType() == 8;
 		if (!isArrayOrObject) {
 			return false;
 		}

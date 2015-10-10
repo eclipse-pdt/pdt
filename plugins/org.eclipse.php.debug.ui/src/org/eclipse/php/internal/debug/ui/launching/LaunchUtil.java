@@ -30,15 +30,11 @@ public class LaunchUtil {
 		ArrayList extensions = new ArrayList();
 		IContentTypeManager typeManager = Platform.getContentTypeManager();
 
-		IContentType type = typeManager
-				.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
-		String[] phpExtensions = type
-				.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+		IContentType type = typeManager.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
+		String[] phpExtensions = type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 
-		IContentType htmlContentType = typeManager
-				.getContentType(ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE);
-		String[] htmlExtensions = htmlContentType
-				.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+		IContentType htmlContentType = typeManager.getContentType(ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE);
+		String[] htmlExtensions = htmlContentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 
 		if (phpExtensions != null)
 			for (int i = 0; i < phpExtensions.length; i++)

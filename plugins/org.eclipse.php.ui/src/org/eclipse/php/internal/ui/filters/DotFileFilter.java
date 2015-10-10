@@ -28,14 +28,13 @@ public class DotFileFilter extends ViewerFilter {
 			Path path = new Path(name);
 			for (int i = 0; i < path.segmentCount(); i++) {
 				String segment = path.segment(i);
-				if (segment.startsWith(DOT)) { 
+				if (segment.startsWith(DOT)) {
 					return false;
 				}
 			}
 		} else if (element instanceof ISourceModule) {
 			if (((ISourceModule) element).getElementName().startsWith(DOT)
-					&& !((ISourceModule) element).getElementName().equals(
-							HTACCESS_FILE)) { 
+					&& !((ISourceModule) element).getElementName().equals(HTACCESS_FILE)) {
 				return false;
 			}
 		} else if (element instanceof IResource) {
@@ -43,7 +42,7 @@ public class DotFileFilter extends ViewerFilter {
 			IPath path = ((IResource) element).getFullPath();
 			for (int i = 0; i < path.segmentCount(); i++) {
 				String segment = path.segment(i);
-				if (segment.startsWith(DOT) && !segment.equals(HTACCESS_FILE)) { 
+				if (segment.startsWith(DOT) && !segment.equals(HTACCESS_FILE)) {
 					return false;
 				}
 			}

@@ -58,9 +58,8 @@ public class PdttFile {
 
 	protected enum STATES {
 
-		TEST("--TEST--"), CONFIG("--CONFIG--"), PREFERENCES("--PREFERENCES--"), FILE(
-				"--FILE--"), EXPECT("--EXPECT--"), OTHER("--OTHER--"), OTHER_FILE(
-				"--FILE([0-9]+)--");
+		TEST("--TEST--"), CONFIG("--CONFIG--"), PREFERENCES("--PREFERENCES--"), FILE("--FILE--"), EXPECT(
+				"--EXPECT--"), OTHER("--OTHER--"), OTHER_FILE("--FILE([0-9]+)--");
 
 		private static class Names {
 			private static Map<String, STATES> map = new HashMap<String, STATES>();
@@ -129,8 +128,7 @@ public class PdttFile {
 	 *            used)
 	 * @throws Exception
 	 */
-	public PdttFile(Bundle testBundle, String fileName, String charsetName)
-			throws Exception {
+	public PdttFile(Bundle testBundle, String fileName, String charsetName) throws Exception {
 		this.testBundle = testBundle;
 		this.fileName = fileName;
 		InputStream reader = openResource(fileName);
@@ -140,8 +138,7 @@ public class PdttFile {
 			if (reader != null) {
 				reader.close();
 			}
-			List<CharSequence> tmp = new ArrayList<CharSequence>(
-					otherFiles.size());
+			List<CharSequence> tmp = new ArrayList<CharSequence>(otherFiles.size());
 			int i = 0;
 			for (CharSequence seq : otherFiles) {
 				tmp.add(i, seq.toString());
@@ -156,9 +153,7 @@ public class PdttFile {
 	 * @return
 	 */
 	public String getDescription() throws Exception {
-		assertNotNull(
-				"File: " + fileName + " doesn't contain --TEST-- section",
-				description);
+		assertNotNull("File: " + fileName + " doesn't contain --TEST-- section", description);
 		return description;
 	}
 
@@ -179,8 +174,7 @@ public class PdttFile {
 	 */
 	public void applyPreferences() throws CoreException {
 		if (preferences != null) {
-			Platform.getPreferencesService().importPreferences(
-					new ByteArrayInputStream(preferences.getBytes()));
+			Platform.getPreferencesService().importPreferences(new ByteArrayInputStream(preferences.getBytes()));
 		}
 	}
 
@@ -190,15 +184,14 @@ public class PdttFile {
 	 * @return
 	 */
 	public String getFile() {
-		assertNotNull(
-				"File: " + fileName + " doesn't contain --FILE-- section", file);
+		assertNotNull("File: " + fileName + " doesn't contain --FILE-- section", file);
 		return file;
 	}
 
 	public String getOtherFile(int index) {
-		assertNotNull(new StringBuilder("File:").append(fileName).append('[')
-				.append(index).append("] doesn't contain --FILE").append(index)
-				.append("-- section").toString(), otherFiles.get(index));
+		assertNotNull(new StringBuilder("File:").append(fileName).append('[').append(index)
+				.append("] doesn't contain --FILE").append(index).append("-- section").toString(),
+				otherFiles.get(index));
 
 		return otherFiles.get(index).toString();
 	}
@@ -213,8 +206,7 @@ public class PdttFile {
 	 * @return
 	 */
 	public String getExpected() {
-		assertNotNull("File: " + fileName
-				+ " doesn't contain --EXPECT-- section", expected);
+		assertNotNull("File: " + fileName + " doesn't contain --EXPECT-- section", expected);
 		return expected;
 	}
 
@@ -244,10 +236,9 @@ public class PdttFile {
 	 *            used)
 	 * @throws Exception
 	 */
-	protected void parse(InputStream inputStream, String charsetName)
-			throws Exception {
-		BufferedReader bReader = charsetName != null ? new BufferedReader(
-				new InputStreamReader(inputStream, charsetName))
+	protected void parse(InputStream inputStream, String charsetName) throws Exception {
+		BufferedReader bReader = charsetName != null
+				? new BufferedReader(new InputStreamReader(inputStream, charsetName))
 				: new BufferedReader(new InputStreamReader(inputStream));
 
 		String line = bReader.readLine();
@@ -367,8 +358,7 @@ public class PdttFile {
 			this.file += (line + "\n");
 			break;
 		case OTHER_FILE:
-			((StringBuilder) this.otherFiles.get(currentFile)).append(line)
-					.append('\n');
+			((StringBuilder) this.otherFiles.get(currentFile)).append(line).append('\n');
 			break;
 		case EXPECT:
 			this.expected += (line + "\n");
@@ -382,8 +372,7 @@ public class PdttFile {
 		case CONFIG:
 			int i = line.indexOf(':');
 			if (i == -1) {
-				throw new Exception("Wrong option in "
-						+ STATES.CONFIG.getName() + " section: " + line);
+				throw new Exception("Wrong option in " + STATES.CONFIG.getName() + " section: " + line);
 			}
 			String key = line.substring(0, i);
 			String value = line.substring(i + 1);

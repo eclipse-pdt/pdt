@@ -20,8 +20,7 @@ public interface DBGpBreakpointFacade {
 
 	public boolean supportsBreakpoint(IBreakpoint bp);
 
-	public IBreakpoint createRunToLineBreakpoint(IFile fileName, int lineNumber)
-			throws DebugException;
+	public IBreakpoint createRunToLineBreakpoint(IFile fileName, int lineNumber) throws DebugException;
 
 	public IBreakpoint findBreakpointHit(String filename, int lineno);
 

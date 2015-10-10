@@ -101,15 +101,11 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 
 		@Override
 		public void phpExeChanged(PHPexeItemEvent event) {
-			if (event.getProperty().equals(
-					IPHPexeItemProperties.PROP_EXE_LOCATION)
-					|| event.getProperty().equals(
-							IPHPexeItemProperties.PROP_INI_LOCATION)
-					|| event.getProperty().equals(
-							IPHPexeItemProperties.PROP_USE_DEFAULT_INI)) {
+			if (event.getProperty().equals(IPHPexeItemProperties.PROP_EXE_LOCATION)
+					|| event.getProperty().equals(IPHPexeItemProperties.PROP_INI_LOCATION)
+					|| event.getProperty().equals(IPHPexeItemProperties.PROP_USE_DEFAULT_INI)) {
 				detectDebugger = true;
-			} else if (!updatingDebuggerId && event.getProperty()
-					.equals(IPHPexeItemProperties.PROP_DEBUGGER_ID)) {
+			} else if (!updatingDebuggerId && event.getProperty().equals(IPHPexeItemProperties.PROP_DEBUGGER_ID)) {
 				modifiedValuesCache.debuggerId = (String) event.getNewValue();
 				setDebugger();
 			}
@@ -121,8 +117,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 
 		@Override
 		public void propertyChange(PropertyChangeEvent event) {
-			if (!updatingDebuggerId
-					&& event.getPropertyName().equals(Server.DEBUGGER)) {
+			if (!updatingDebuggerId && event.getPropertyName().equals(Server.DEBUGGER)) {
 				modifiedValuesCache.debuggerId = (String) event.getNewValue();
 				setDebugger();
 			}
@@ -154,8 +149,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	 * @param handler
 	 * @param isForEditing
 	 */
-	public DebuggerCompositeFragment(Composite parent, IControlHandler handler,
-			boolean isForEditing) {
+	public DebuggerCompositeFragment(Composite parent, IControlHandler handler, boolean isForEditing) {
 		super(parent, handler, isForEditing);
 		this.detectDebugger = handler.getKind() == Kind.WIZARD;
 		addDisposeListener(new DisposeListener() {
@@ -192,8 +186,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			if (debuggerSettingsWC.isDirty()) {
 				DebuggerSettingsManager.INSTANCE.save(debuggerSettingsWC);
 			}
-			DebuggerSettingsManager.INSTANCE
-					.dropWorkingCopy(debuggerSettingsWC);
+			DebuggerSettingsManager.INSTANCE.dropWorkingCopy(debuggerSettingsWC);
 		}
 		return true;
 	}
@@ -209,8 +202,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		if (debuggerSettingsSection != null)
 			debuggerSettingsSection.performCancel();
 		if (debuggerSettingsWC != null) {
-			DebuggerSettingsManager.INSTANCE
-					.dropWorkingCopy(debuggerSettingsWC);
+			DebuggerSettingsManager.INSTANCE.dropWorkingCopy(debuggerSettingsWC);
 		}
 		return super.performCancel();
 	}
@@ -235,10 +227,8 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	 *             if the given object is not a {@link Server}
 	 */
 	public void setData(Object debuggerOwner) throws IllegalArgumentException {
-		if (debuggerOwner != null
-				&& !(debuggerOwner instanceof IUniqueIdentityElement)) {
-			throw new IllegalArgumentException(
-					"The given object is not a PHP Server or Executable"); //$NON-NLS-1$
+		if (debuggerOwner != null && !(debuggerOwner instanceof IUniqueIdentityElement)) {
+			throw new IllegalArgumentException("The given object is not a PHP Server or Executable"); //$NON-NLS-1$
 		}
 		registerListeners(debuggerOwner);
 		createDescription(debuggerOwner);
@@ -255,8 +245,8 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		IUniqueIdentityElement debuggerOwner = getDebuggerOwner();
 		if (debuggerOwner == null || debuggerId == null)
 			return;
-		IDebuggerSettings settings = DebuggerSettingsManager.INSTANCE
-				.findSettings(debuggerOwner.getUniqueId(), debuggerId);
+		IDebuggerSettings settings = DebuggerSettingsManager.INSTANCE.findSettings(debuggerOwner.getUniqueId(),
+				debuggerId);
 		boolean repaint = controlHandler.getKind() == Kind.WIZARD
 				&& !PHPDebuggersRegistry.NONE_DEBUGGER_ID.equals(debuggerId);
 		if (debuggerSettingsSection != null) {
@@ -269,23 +259,18 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		GridData dscData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		debuggerSettingsComposite.setLayoutData(dscData);
 		if (PHPDebuggersRegistry.NONE_DEBUGGER_ID.equals(debuggerId)) {
-			debuggerSettingsSection = new EmptySettingsSection(
-					debuggerSettingsComposite);
+			debuggerSettingsSection = new EmptySettingsSection(debuggerSettingsComposite);
 			debuggerGlobalSettings.setVisible(false);
 		} else if (settings == null) {
-			debuggerSettingsSection = new DebuggerUnsupportedSettingsSection(
-					this, debuggerSettingsComposite);
+			debuggerSettingsSection = new DebuggerUnsupportedSettingsSection(this, debuggerSettingsComposite);
 		} else {
-			debuggerGlobalSettings.setVisible(PHPDebuggersRegistry
-					.getDebuggerConfiguration(debuggerId) != null ? true
-							: false);
+			debuggerGlobalSettings
+					.setVisible(PHPDebuggersRegistry.getDebuggerConfiguration(debuggerId) != null ? true : false);
 			debuggerSettingsWC = getSettingsWC(debuggerId, settings);
-			IDebuggerSettingsProvider provider = DebuggerSettingsProviderRegistry
-					.getProvider(debuggerId);
+			IDebuggerSettingsProvider provider = DebuggerSettingsProviderRegistry.getProvider(debuggerId);
 			IDebuggerSettingsSectionBuilder sectionBuilder = DebuggerSettingsSectionBuildersRegistry
 					.getBuilder(provider.getId());
-			debuggerSettingsSection = sectionBuilder.build(this,
-					debuggerSettingsComposite, debuggerSettingsWC);
+			debuggerSettingsSection = sectionBuilder.build(this, debuggerSettingsComposite, debuggerSettingsWC);
 		}
 		if (!debuggerSettingsSection.canTest())
 			debuggerTest.setVisible(false);
@@ -297,13 +282,10 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		}
 	}
 
-	IDebuggerSettingsWorkingCopy getSettingsWC(String debuggerId,
-			IDebuggerSettings settings) {
-		IDebuggerSettingsWorkingCopy debuggerSettingsWC = settingsWCBuffer
-				.get(debuggerId);
+	IDebuggerSettingsWorkingCopy getSettingsWC(String debuggerId, IDebuggerSettings settings) {
+		IDebuggerSettingsWorkingCopy debuggerSettingsWC = settingsWCBuffer.get(debuggerId);
 		if (debuggerSettingsWC == null) {
-			debuggerSettingsWC = DebuggerSettingsManager.INSTANCE
-					.fetchWorkingCopy(settings);
+			debuggerSettingsWC = DebuggerSettingsManager.INSTANCE.fetchWorkingCopy(settings);
 			settingsWCBuffer.put(debuggerId, debuggerSettingsWC);
 		}
 		return debuggerSettingsWC;
@@ -311,12 +293,10 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 
 	protected void createDescription(Object owner) {
 		if (owner instanceof PHPexeItem) {
-			setImageDescriptor(PHPDebugUIImages
-					.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_DEBUG_PHPEXE));
+			setImageDescriptor(PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_DEBUG_PHPEXE));
 			setDescription(Messages.DebuggerCompositeFragment_Configure_exe_debugger_settings);
 		} else if (owner instanceof Server) {
-			setImageDescriptor(PHPDebugUIImages
-					.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_DEBUG_SERVER));
+			setImageDescriptor(PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_DEBUG_SERVER));
 			setDescription(Messages.DebuggerCompositeFragment_Configure_server_debugger_settings);
 		}
 		setDisplayName(Messages.DebuggerCompositeFragment_Debugger);
@@ -327,15 +307,13 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	}
 
 	protected void createContents(Composite parent) {
-		debuggersIds = new LinkedList<String>(
-				PHPDebuggersRegistry.getDebuggersIds());
+		debuggersIds = new LinkedList<String>(PHPDebuggersRegistry.getDebuggersIds());
 		mainComposite = parent;
 		Composite debuggerChoice = new Composite(parent, SWT.NONE);
 		GridLayout dcLayout = new GridLayout();
 		dcLayout.numColumns = 4;
 		debuggerChoice.setLayout(dcLayout);
-		debuggerChoice.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				false));
+		debuggerChoice.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		Label debuggerLabel = new Label(debuggerChoice, SWT.NONE);
 		debuggerLabel.setText("Debugger:"); //$NON-NLS-1$
 		debuggerLabel.setLayoutData(new GridData());
@@ -345,8 +323,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		debuggerCombo.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				if (getDebuggerOwner() != null) {
-					modifiedValuesCache.debuggerId = debuggersIds
-							.get(debuggerCombo.getSelectionIndex());
+					modifiedValuesCache.debuggerId = debuggersIds.get(debuggerCombo.getSelectionIndex());
 					updateItem();
 					// create settings panel
 					createSettings(modifiedValuesCache.debuggerId);
@@ -355,8 +332,8 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 				}
 			}
 		});
-		debuggerTest = SWTFactory.createPushButton(debuggerChoice,
-				Messages.DebuggerCompositeFragment_Test_button, null);
+		debuggerTest = SWTFactory.createPushButton(debuggerChoice, Messages.DebuggerCompositeFragment_Test_button,
+				null);
 		debuggerTest.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -377,12 +354,11 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		debuggerGlobalSettings.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				String selectedDebuggerId = debuggersIds
-						.get(debuggerCombo.getSelectionIndex());
+				String selectedDebuggerId = debuggersIds.get(debuggerCombo.getSelectionIndex());
 				AbstractDebuggerConfiguration globalConfiguration = PHPDebuggersRegistry
 						.getDebuggerConfiguration(selectedDebuggerId);
-				globalConfiguration.openConfigurationDialog(PlatformUI
-						.getWorkbench().getActiveWorkbenchWindow().getShell());
+				globalConfiguration
+						.openConfigurationDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 			}
 
 			@Override
@@ -396,8 +372,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			debuggerCombo.add(debuggerName, i);
 		}
 		Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
-		separator
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		separator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		Dialog.applyDialogFont(this);
 		// Initialize & validate
 		init();
@@ -411,11 +386,9 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		if (debuggerOwner == null)
 			return;
 		if (debuggerOwner instanceof Server) {
-			originalValuesCache.debuggerId = ((Server) debuggerOwner)
-					.getDebuggerId();
+			originalValuesCache.debuggerId = ((Server) debuggerOwner).getDebuggerId();
 		} else if (debuggerOwner instanceof PHPexeItem) {
-			originalValuesCache.debuggerId = ((PHPexeItem) debuggerOwner)
-					.getDebuggerID();
+			originalValuesCache.debuggerId = ((PHPexeItem) debuggerOwner).getDebuggerID();
 		}
 		// Clone the cache lazily
 		if (modifiedValuesCache == null)
@@ -448,9 +421,8 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			PHPexeItem exeItem = (PHPexeItem) data;
 			modifiedValuesCache.debuggerId = detectedDebuggerId = fetchDebugger(exeItem);
 		}
-		if (detectedDebuggerId == null
-				&& (modifiedValuesCache.debuggerId == null || modifiedValuesCache.debuggerId
-								.equals(PHPDebuggersRegistry.NONE_DEBUGGER_ID)))
+		if (detectedDebuggerId == null && (modifiedValuesCache.debuggerId == null
+				|| modifiedValuesCache.debuggerId.equals(PHPDebuggersRegistry.NONE_DEBUGGER_ID)))
 			detectedDebuggerId = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
 		else if (modifiedValuesCache.debuggerId != null) {
 			detectedDebuggerId = modifiedValuesCache.debuggerId;
@@ -468,8 +440,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 
 	private String fetchDebugger(PHPexeItem exeItem) {
 		List<PHPModuleInfo> modules = PHPExeUtil.getModules(exeItem);
-		AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry
-				.getDebuggersConfigurations();
+		AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry.getDebuggersConfigurations();
 		for (AbstractDebuggerConfiguration debugger : debuggers) {
 			for (PHPModuleInfo module : modules)
 				if (module.getName().equalsIgnoreCase(debugger.getModuleId())) {
@@ -483,11 +454,9 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		updatingDebuggerId = true;
 		IUniqueIdentityElement debuggerOwner = getDebuggerOwner();
 		if (debuggerOwner instanceof Server) {
-			((Server) debuggerOwner)
-					.setDebuggerId(modifiedValuesCache.debuggerId);
+			((Server) debuggerOwner).setDebuggerId(modifiedValuesCache.debuggerId);
 		} else if (debuggerOwner instanceof PHPexeItem) {
-			((PHPexeItem) debuggerOwner)
-					.setDebuggerID(modifiedValuesCache.debuggerId);
+			((PHPexeItem) debuggerOwner).setDebuggerID(modifiedValuesCache.debuggerId);
 		}
 		updatingDebuggerId = false;
 	}
@@ -497,8 +466,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		Point previousSize = new Point(shell.getSize().x, shell.getSize().y);
 		Rectangle previousClientArea = shell.getClientArea();
 		shell.layout(true, true);
-		final Point computedSize = shell.computeSize(previousClientArea.width,
-				SWT.DEFAULT, false);
+		final Point computedSize = shell.computeSize(previousClientArea.width, SWT.DEFAULT, false);
 		boolean resize = computedSize.y > previousSize.y;
 		if (resize) {
 			shell.setSize(shell.computeSize(previousClientArea.width,
@@ -506,11 +474,9 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		} else {
 			// Workaround for incorrect redrawing in GTK 3
 			shell.setRedraw(false);
-			shell.setSize(shell.computeSize(previousClientArea.width + 1,
-					previousClientArea.height, true));
+			shell.setSize(shell.computeSize(previousClientArea.width + 1, previousClientArea.height, true));
 			shell.setRedraw(true);
-			shell.setSize(shell.computeSize(previousClientArea.width,
-					previousClientArea.height, true));
+			shell.setSize(shell.computeSize(previousClientArea.width, previousClientArea.height, true));
 		}
 	}
 
@@ -521,8 +487,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		}
 		if (phpServerListener == null && debuggerOwner instanceof Server) {
 			phpServerListener = new PHPServerListener();
-			((Server) debuggerOwner)
-					.addPropertyChangeListener(phpServerListener);
+			((Server) debuggerOwner).addPropertyChangeListener(phpServerListener);
 		}
 	}
 
@@ -531,8 +496,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			((PHPexeItem) getData()).removePHPexeListener(phpExeListener);
 		}
 		if (phpServerListener != null) {
-			((Server) getData())
-					.removePropertyChangeListener(phpServerListener);
+			((Server) getData()).removePropertyChangeListener(phpServerListener);
 		}
 	}
 

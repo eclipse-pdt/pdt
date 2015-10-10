@@ -39,8 +39,7 @@ public class BestMatchPathComparator implements Comparator<PathEntry> {
 		int ns1 = 0;
 		int ns2 = 0;
 		boolean found = true;
-		for (int i = 0, j = 0, k = 0; found && i < segments.length
-				&& (j < s1.length || k < s2.length); ++i, ++j, ++k) {
+		for (int i = 0, j = 0, k = 0; found && i < segments.length && (j < s1.length || k < s2.length); ++i, ++j, ++k) {
 			found = false;
 			if (j < s1.length && s1[j].equals(segments[i])) {
 				ns1 = 0;

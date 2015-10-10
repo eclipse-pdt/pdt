@@ -26,34 +26,29 @@ public class CorrectionCommandInstaller {
 	}
 
 	public static void registerCommands() {
-		final IHandlerService handlerService = (IHandlerService) PlatformUI
-				.getWorkbench().getService(IHandlerService.class);
-		registerDescriptors(PHPCorrectionProcessor.getAssistProcessors(),
-				handlerService);
-		registerDescriptors(PHPCorrectionProcessor.getCorrectionProcessors(),
-				handlerService);
+		final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+				.getService(IHandlerService.class);
+		registerDescriptors(PHPCorrectionProcessor.getAssistProcessors(), handlerService);
+		registerDescriptors(PHPCorrectionProcessor.getCorrectionProcessors(), handlerService);
 	}
 
-	private static void registerDescriptors(
-			ContributedProcessorDescriptor[] descriptors,
+	private static void registerDescriptors(ContributedProcessorDescriptor[] descriptors,
 			IHandlerService handlerService) {
 		for (ContributedProcessorDescriptor descriptor : descriptors) {
 			for (String commandId : descriptor.getSupportedCommands()) {
 				if (fActivations.containsKey(commandId)) {
-					PHPUiPlugin.logErrorMessage(
-							"Command ID already registered: " + commandId); //$NON-NLS-1$
+					PHPUiPlugin.logErrorMessage("Command ID already registered: " + commandId); //$NON-NLS-1$
 					continue;
 				}
-				fActivations.put(commandId, handlerService.activateHandler(
-						commandId, new CorrectionCommandHandler()));
+				fActivations.put(commandId, handlerService.activateHandler(commandId, new CorrectionCommandHandler()));
 			}
 		}
 
 	}
 
 	public static void unregisterCommands() {
-		final IHandlerService handlerService = (IHandlerService) PlatformUI
-				.getWorkbench().getService(IHandlerService.class);
+		final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench()
+				.getService(IHandlerService.class);
 		if (handlerService != null) {
 			handlerService.deactivateHandlers(fActivations.values());
 		}

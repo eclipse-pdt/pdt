@@ -16,9 +16,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ PHP5ErrorReportingTests.class,
-		PHP53ErrorReportingTests.class, PHP54ErrorReportingTests.class,
-		PHP55ErrorReportingTests.class, PHP56ErrorReportingTests.class,
-		PHP7ErrorReportingTests.class })
+@Suite.SuiteClasses({ PHP5ErrorReportingTests.class, PHP53ErrorReportingTests.class, PHP54ErrorReportingTests.class,
+		PHP55ErrorReportingTests.class, PHP56ErrorReportingTests.class, PHP7ErrorReportingTests.class })
 public class ErrorReportingTests {
 }

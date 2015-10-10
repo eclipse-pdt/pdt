@@ -29,8 +29,7 @@ import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPa
 import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPropertiesNew;
 import org.eclipse.wst.common.frameworks.internal.ui.NewProjectGroup;
 
-public class PHPProjectWizardBasePage extends DataModelWizardPage implements
-		IProjectCreationPropertiesNew {
+public class PHPProjectWizardBasePage extends DataModelWizardPage implements IProjectCreationPropertiesNew {
 
 	/**
 	 * GUI for controlling whether a new PHP project should include JavaScript
@@ -44,8 +43,7 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements
 		private final Group fGroup;
 		protected Button fEnableJavaScriptSupport;
 
-		public JavaScriptSupportGroup(Composite composite,
-				PHPProjectWizardBasePage page) {
+		public JavaScriptSupportGroup(Composite composite, PHPProjectWizardBasePage page) {
 
 			fGroup = new Group(composite, SWT.NONE);
 			fGroup.setFont(composite.getFont());
@@ -57,25 +55,19 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements
 			fGroup.setText(PHPUIMessages.JavaScriptSupportGroup_OptionBlockTitle);
 
 			Composite checkLinkComposite = new Composite(fGroup, SWT.NONE);
-			checkLinkComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-					true, false));
+			checkLinkComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			checkLinkComposite.setLayout(new GridLayout(2, false));
 
-			fEnableJavaScriptSupport = new Button(checkLinkComposite, SWT.CHECK
-					| SWT.RIGHT);
-			fEnableJavaScriptSupport
-					.setText(PHPUIMessages.JavaScriptSupportGroup_EnableSupport);
-			fEnableJavaScriptSupport.setLayoutData(new GridData(SWT.BEGINNING,
-					SWT.CENTER, false, false));
-			fEnableJavaScriptSupport.setSelection(model
-					.getBooleanProperty(PHPCoreConstants.ADD_JS_NATURE));
+			fEnableJavaScriptSupport = new Button(checkLinkComposite, SWT.CHECK | SWT.RIGHT);
+			fEnableJavaScriptSupport.setText(PHPUIMessages.JavaScriptSupportGroup_EnableSupport);
+			fEnableJavaScriptSupport.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+			fEnableJavaScriptSupport.setSelection(model.getBooleanProperty(PHPCoreConstants.ADD_JS_NATURE));
 		}
 
 		// Stores in the model a property based on the selection of the
 		// check-box
 		public void setPropertiesInDataModel(IDataModel model) {
-			model.setBooleanProperty(PHPCoreConstants.ADD_JS_NATURE,
-					fEnableJavaScriptSupport.getSelection());
+			model.setBooleanProperty(PHPCoreConstants.ADD_JS_NATURE, fEnableJavaScriptSupport.getSelection());
 		}
 
 	}
@@ -86,8 +78,8 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements
 
 	public PHPProjectWizardBasePage(IDataModel dataModel, String pageName) {
 		super(dataModel, pageName);
-		setTitle(PHPUIMessages.PHPProjectWizardBasePage_0); 
-		setDescription(PHPUIMessages.PHPProjectWizardBasePage_1); 
+		setTitle(PHPUIMessages.PHPProjectWizardBasePage_0);
+		setDescription(PHPUIMessages.PHPProjectWizardBasePage_1);
 		setPageComplete(false);
 	}
 
@@ -98,8 +90,7 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements
 			// set scrollbar composite's min size so page is expandable but has
 			// scrollbars when needed
 			if (composite.getParent() instanceof ScrolledComposite) {
-				ScrolledComposite sc1 = (ScrolledComposite) composite
-						.getParent();
+				ScrolledComposite sc1 = (ScrolledComposite) composite.getParent();
 				sc1.setMinSize(minSize);
 				sc1.setExpandHorizontal(true);
 				sc1.setExpandVertical(true);
@@ -114,8 +105,7 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements
 	 * org.eclipse.jem.util.ui.wizard.WTPWizardPage#getValidationPropertyNames()
 	 */
 	protected String[] getValidationPropertyNames() {
-		return new String[] { IProjectCreationPropertiesNew.PROJECT_NAME,
-				PROJECT_LOCATION };
+		return new String[] { IProjectCreationPropertiesNew.PROJECT_NAME, PROJECT_LOCATION };
 	}
 
 	/*
@@ -139,8 +129,7 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements
 	}
 
 	protected void setHelpContext(Composite top) {
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(top,
-				IPHPHelpContextIds.CREATING_PROJECTS_AND_FILES); 
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(top, IPHPHelpContextIds.CREATING_PROJECTS_AND_FILES);
 	}
 
 	protected void createProjectNameGroup(Composite parent) {

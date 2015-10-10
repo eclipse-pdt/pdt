@@ -59,8 +59,8 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.osgi.framework.Bundle;
 
 @SuppressWarnings("restriction")
-public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
-		IPHPTextHover, IInformationProviderExtension2 {
+public class PHPDocumentationHover extends AbstractPHPEditorTextHover
+		implements IPHPTextHover, IInformationProviderExtension2 {
 
 	public IHoverMessageDecorator getMessageDecorator() {
 		return null;
@@ -78,17 +78,15 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 			fInfoControl = infoControl;
 			setText(PHPHoverMessages.JavadocHover_back);
 			ISharedImages images = PlatformUI.getWorkbench().getSharedImages();
-			setImageDescriptor(images
-					.getImageDescriptor(ISharedImages.IMG_TOOL_BACK));
-			setDisabledImageDescriptor(images
-					.getImageDescriptor(ISharedImages.IMG_TOOL_BACK_DISABLED));
+			setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_BACK));
+			setDisabledImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_BACK_DISABLED));
 
 			update();
 		}
 
 		public void run() {
-			BrowserInformationControlInput previous = (BrowserInformationControlInput) fInfoControl
-					.getInput().getPrevious();
+			BrowserInformationControlInput previous = (BrowserInformationControlInput) fInfoControl.getInput()
+					.getPrevious();
 			if (previous != null) {
 				fInfoControl.setInput(previous);
 			}
@@ -99,10 +97,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 
 			if (current != null && current.getPrevious() != null) {
 				BrowserInput previous = current.getPrevious();
-				setToolTipText(Messages.format(
-						PHPHoverMessages.JavadocHover_back_toElement_toolTip,
-						BasicElementLabels.getJavaElementName(previous
-								.getInputName())));
+				setToolTipText(Messages.format(PHPHoverMessages.JavadocHover_back_toElement_toolTip,
+						BasicElementLabels.getJavaElementName(previous.getInputName())));
 				setEnabled(true);
 			} else {
 				setToolTipText(PHPHoverMessages.JavadocHover_back);
@@ -123,17 +119,14 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 			fInfoControl = infoControl;
 			setText(PHPHoverMessages.JavadocHover_forward);
 			ISharedImages images = PlatformUI.getWorkbench().getSharedImages();
-			setImageDescriptor(images
-					.getImageDescriptor(ISharedImages.IMG_TOOL_FORWARD));
-			setDisabledImageDescriptor(images
-					.getImageDescriptor(ISharedImages.IMG_TOOL_FORWARD_DISABLED));
+			setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_FORWARD));
+			setDisabledImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_FORWARD_DISABLED));
 
 			update();
 		}
 
 		public void run() {
-			BrowserInformationControlInput next = (BrowserInformationControlInput) fInfoControl
-					.getInput().getNext();
+			BrowserInformationControlInput next = (BrowserInformationControlInput) fInfoControl.getInput().getNext();
 			if (next != null) {
 				fInfoControl.setInput(next);
 			}
@@ -143,10 +136,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 			BrowserInformationControlInput current = fInfoControl.getInput();
 
 			if (current != null && current.getNext() != null) {
-				setToolTipText(Messages
-						.format(PHPHoverMessages.JavadocHover_forward_toElement_toolTip,
-								BasicElementLabels.getJavaElementName(current
-										.getNext().getInputName())));
+				setToolTipText(Messages.format(PHPHoverMessages.JavadocHover_forward_toElement_toolTip,
+						BasicElementLabels.getJavaElementName(current.getNext().getInputName())));
 				setEnabled(true);
 			} else {
 				setToolTipText(PHPHoverMessages.JavadocHover_forward_toolTip);
@@ -166,7 +157,9 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		public OpenDeclarationAction(BrowserInformationControl infoControl) {
 			fInfoControl = infoControl;
 			setText(PHPHoverMessages.JavadocHover_openDeclaration);
-			PHPPluginImages.setLocalImageDescriptors(this, "goto_input.png"); //$NON-NLS-1$ //TODO: better images
+			PHPPluginImages.setLocalImageDescriptors(this, "goto_input.png"); //$NON-NLS-1$ //TODO:
+																				// better
+																				// images
 		}
 
 		/*
@@ -181,8 +174,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 
 			try {
 				// FIXME: add hover location to editor navigation history?
-				IEditorPart editor = EditorUtility.openInEditor(
-						infoInput.getElement(), true);
+				IEditorPart editor = EditorUtility.openInEditor(infoInput.getElement(), true);
 				EditorUtility.revealInEditor(editor, infoInput.getElement());
 			} catch (PartInitException e) {
 				PHPUiPlugin.log(e);
@@ -197,8 +189,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 	 * 
 	 * @since 3.3
 	 */
-	public static final class PresenterControlCreator extends
-			AbstractReusableInformationControlCreator {
+	public static final class PresenterControlCreator extends AbstractReusableInformationControlCreator {
 
 		/*
 		 * @seeorg.eclipse.jdt.internal.ui.text.java.hover.
@@ -209,8 +200,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 			if (BrowserInformationControl.isAvailable(parent)) {
 				ToolBarManager tbm = new ToolBarManager(SWT.FLAT);
 				String font = PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT;
-				BrowserInformationControl iControl = new BrowserInformationControl(
-						parent, font, tbm);
+				BrowserInformationControl iControl = new BrowserInformationControl(parent, font, tbm);
 
 				final BackAction backAction = new BackAction(iControl);
 				backAction.setEnabled(false);
@@ -219,8 +209,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 				tbm.add(forwardAction);
 				forwardAction.setEnabled(false);
 
-				final OpenDeclarationAction openDeclarationAction = new OpenDeclarationAction(
-						iControl);
+				final OpenDeclarationAction openDeclarationAction = new OpenDeclarationAction(iControl);
 				tbm.add(openDeclarationAction);
 
 				// final SimpleSelectionProvider selectionProvider = new
@@ -242,8 +231,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 							BrowserInformationControlInput input = (BrowserInformationControlInput) newInput;
 							Object inputElement = input.getInputElement();
 							boolean isJavaElementInput = inputElement instanceof IModelElement;
-							openDeclarationAction
-									.setEnabled(isJavaElementInput);
+							openDeclarationAction.setEnabled(isJavaElementInput);
 						}
 					}
 				};
@@ -266,8 +254,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 	 * 
 	 * @since 3.3
 	 */
-	public static final class HoverControlCreator extends
-			AbstractReusableInformationControlCreator {
+	public static final class HoverControlCreator extends AbstractReusableInformationControlCreator {
 		/**
 		 * The information presenter control creator.
 		 * 
@@ -280,8 +267,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		 *            control creator for enriched hover
 		 * @since 3.4
 		 */
-		public HoverControlCreator(
-				IInformationControlCreator informationPresenterControlCreator) {
+		public HoverControlCreator(IInformationControlCreator informationPresenterControlCreator) {
 			fInformationPresenterControlCreator = informationPresenterControlCreator;
 		}
 
@@ -291,12 +277,11 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		 * #doCreateInformationControl(org.eclipse.swt.widgets.Shell)
 		 */
 		public IInformationControl doCreateInformationControl(Shell parent) {
-			String tooltipAffordanceString = EditorsUI
-					.getTooltipAffordanceString();
+			String tooltipAffordanceString = EditorsUI.getTooltipAffordanceString();
 			if (BrowserInformationControl.isAvailable(parent)) {
 				String font = PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT;
-				BrowserInformationControl iControl = new BrowserInformationControl(
-						parent, font, tooltipAffordanceString) {
+				BrowserInformationControl iControl = new BrowserInformationControl(parent, font,
+						tooltipAffordanceString) {
 					/*
 					 * @see
 					 * org.eclipse.jface.text.IInformationControlExtension5#
@@ -310,8 +295,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 				addLinkListener(iControl);
 				return iControl;
 			} else {
-				return new DefaultInformationControl(parent,
-						tooltipAffordanceString);
+				return new DefaultInformationControl(parent, tooltipAffordanceString);
 			}
 		}
 
@@ -325,10 +309,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 				return false;
 
 			if (control instanceof IInformationControlExtension4) {
-				String tooltipAffordanceString = EditorsUI
-						.getTooltipAffordanceString();
-				((IInformationControlExtension4) control)
-						.setStatusText(tooltipAffordanceString);
+				String tooltipAffordanceString = EditorsUI.getTooltipAffordanceString();
+				((IInformationControlExtension4) control).setStatusText(tooltipAffordanceString);
 			}
 
 			return true;
@@ -336,16 +318,11 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 	}
 
 	private static final long LABEL_FLAGS = ScriptElementLabels.ALL_FULLY_QUALIFIED
-			| ScriptElementLabels.M_PRE_RETURNTYPE
-			| ScriptElementLabels.M_PARAMETER_TYPES
-			| ScriptElementLabels.M_PARAMETER_NAMES
-			| ScriptElementLabels.M_EXCEPTIONS
-			| ScriptElementLabels.F_PRE_TYPE_SIGNATURE
-			| ScriptElementLabels.M_PRE_TYPE_PARAMETERS
-			| ScriptElementLabels.T_TYPE_PARAMETERS
-			| ScriptElementLabels.USE_RESOLVED;
-	private static final long LOCAL_VARIABLE_FLAGS = LABEL_FLAGS
-			& ~ScriptElementLabels.F_FULLY_QUALIFIED
+			| ScriptElementLabels.M_PRE_RETURNTYPE | ScriptElementLabels.M_PARAMETER_TYPES
+			| ScriptElementLabels.M_PARAMETER_NAMES | ScriptElementLabels.M_EXCEPTIONS
+			| ScriptElementLabels.F_PRE_TYPE_SIGNATURE | ScriptElementLabels.M_PRE_TYPE_PARAMETERS
+			| ScriptElementLabels.T_TYPE_PARAMETERS | ScriptElementLabels.USE_RESOLVED;
+	private static final long LOCAL_VARIABLE_FLAGS = LABEL_FLAGS & ~ScriptElementLabels.F_FULLY_QUALIFIED
 			| ScriptElementLabels.F_POST_QUALIFIED;
 
 	/**
@@ -387,81 +364,72 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 	 */
 	public IInformationControlCreator getHoverControlCreator() {
 		if (fHoverControlCreator == null)
-			fHoverControlCreator = new HoverControlCreator(
-					getInformationPresenterControlCreator());
+			fHoverControlCreator = new HoverControlCreator(getInformationPresenterControlCreator());
 		return fHoverControlCreator;
 	}
 
 	private static void addLinkListener(final BrowserInformationControl control) {
-		control.addLocationListener(PHPElementLinks
-				.createLocationListener(new PHPElementLinks.ILinkHandler() {
-					/*
-					 * (non-Javadoc)
-					 * 
-					 * @see
-					 * org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks
-					 * .ILinkHandler
-					 * #handleInlineJavadocLink(org.eclipse.jdt.core
-					 * .IModelElement)
-					 */
-					public void handleInlineLink(IModelElement linkTarget) {
-						PHPDocumentationBrowserInformationControlInput hoverInfo = getHoverInfo(
-								new IModelElement[] { linkTarget },
-								null,
-								(PHPDocumentationBrowserInformationControlInput) control
-										.getInput());
-						if (control.hasDelayedInputChangeListener())
-							control.notifyDelayedInputChange(hoverInfo);
-						else
-							control.setInput(hoverInfo);
-					}
+		control.addLocationListener(PHPElementLinks.createLocationListener(new PHPElementLinks.ILinkHandler() {
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks
+			 * .ILinkHandler #handleInlineJavadocLink(org.eclipse.jdt.core
+			 * .IModelElement)
+			 */
+			public void handleInlineLink(IModelElement linkTarget) {
+				PHPDocumentationBrowserInformationControlInput hoverInfo = getHoverInfo(
+						new IModelElement[] { linkTarget }, null,
+						(PHPDocumentationBrowserInformationControlInput) control.getInput());
+				if (control.hasDelayedInputChangeListener())
+					control.notifyDelayedInputChange(hoverInfo);
+				else
+					control.setInput(hoverInfo);
+			}
 
-					/*
-					 * (non-Javadoc)
-					 * 
-					 * @see
-					 * org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks
-					 * .ILinkHandler
-					 * #handleDeclarationLink(org.eclipse.jdt.core.
-					 * IModelElement)
-					 */
-					public void handleDeclarationLink(IModelElement linkTarget) {
-						control.notifyDelayedInputChange(null);
-						control.dispose(); // FIXME: should have protocol to
-						// hide, rather than dispose
-						// try {
-						// FIXME: add hover location to editor navigation
-						// history?
-						// JavaUI.openInEditor(linkTarget);
-						// } catch (PartInitException e) {
-						// PHPUiPlugin.log(e);
-						// } catch (ModelException e) {
-						// PHPUiPlugin.log(e);
-						// }
-					}
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks
+			 * .ILinkHandler #handleDeclarationLink(org.eclipse.jdt.core.
+			 * IModelElement)
+			 */
+			public void handleDeclarationLink(IModelElement linkTarget) {
+				control.notifyDelayedInputChange(null);
+				control.dispose(); // FIXME: should have protocol to
+				// hide, rather than dispose
+				// try {
+				// FIXME: add hover location to editor navigation
+				// history?
+				// JavaUI.openInEditor(linkTarget);
+				// } catch (PartInitException e) {
+				// PHPUiPlugin.log(e);
+				// } catch (ModelException e) {
+				// PHPUiPlugin.log(e);
+				// }
+			}
 
-					/*
-					 * (non-Javadoc)
-					 * 
-					 * @see
-					 * org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks
-					 * .ILinkHandler#handleExternalLink(java.net.URL,
-					 * org.eclipse.swt.widgets.Display)
-					 */
-					public boolean handleExternalLink(URL url, Display display) {
-						control.notifyDelayedInputChange(null);
-						control.dispose(); // FIXME: should have protocol to
-						// hide, rather than dispose
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks
+			 * .ILinkHandler#handleExternalLink(java.net.URL,
+			 * org.eclipse.swt.widgets.Display)
+			 */
+			public boolean handleExternalLink(URL url, Display display) {
+				control.notifyDelayedInputChange(null);
+				control.dispose(); // FIXME: should have protocol to
+				// hide, rather than dispose
 
-						// open external links in real browser:
-						OpenBrowserUtil.open(url, display); //$NON-NLS-1$
+				// open external links in real browser:
+				OpenBrowserUtil.open(url, display); // $NON-NLS-1$
 
-						return true;
-					}
+				return true;
+			}
 
-					public void handleTextSet() {
-					}
-				}));
+			public void handleTextSet() {
+			}
+		}));
 	}
 
 	/**
@@ -483,34 +451,30 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		return internalGetHoverInfo(textViewer, hoverRegion);
 	}
 
-	private PHPDocumentationBrowserInformationControlInput internalGetHoverInfo(
-			ITextViewer textViewer, IRegion hoverRegion) {
+	private PHPDocumentationBrowserInformationControlInput internalGetHoverInfo(ITextViewer textViewer,
+			IRegion hoverRegion) {
 		IModelElement[] elements = getElementsAt(textViewer, hoverRegion);
 		if (elements == null || elements.length == 0)
 			return null;
 		// filter the same namespace
-		Set<IModelElement> elementSet = new TreeSet<IModelElement>(
-				new Comparator<IModelElement>() {
+		Set<IModelElement> elementSet = new TreeSet<IModelElement>(new Comparator<IModelElement>() {
 
-					public int compare(IModelElement o1, IModelElement o2) {
-						if (o1 instanceof IType && o2 instanceof IType) {
-							IType type1 = (IType) o1;
-							IType type2 = (IType) o2;
-							try {
-								if (PHPFlags.isNamespace(type1.getFlags())
-										&& PHPFlags.isNamespace(type2
-												.getFlags())
-										&& type1.getElementName().equals(
-												type2.getElementName())) {
-									return 0;
-								}
-							} catch (ModelException e) {
-							}
+			public int compare(IModelElement o1, IModelElement o2) {
+				if (o1 instanceof IType && o2 instanceof IType) {
+					IType type1 = (IType) o1;
+					IType type2 = (IType) o2;
+					try {
+						if (PHPFlags.isNamespace(type1.getFlags()) && PHPFlags.isNamespace(type2.getFlags())
+								&& type1.getElementName().equals(type2.getElementName())) {
+							return 0;
 						}
-						return 1;
+					} catch (ModelException e) {
 					}
+				}
+				return 1;
+			}
 
-				});
+		});
 		List<IModelElement> elementList = new ArrayList<IModelElement>();
 		for (int i = 0; i < elements.length; i++) {
 			if (!elementSet.contains(elements[i])) {
@@ -521,8 +485,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		elements = elementList.toArray(new IModelElement[elementList.size()]);
 
 		String constantValue;
-		if (elements.length == 1
-				&& elements[0].getElementType() == IModelElement.FIELD) {
+		if (elements.length == 1 && elements[0].getElementType() == IModelElement.FIELD) {
 			constantValue = getConstantValue((IField) elements[0], hoverRegion);
 			if (constantValue != null)
 				constantValue = HTMLPrinter.convertToHTMLContent(constantValue);
@@ -547,9 +510,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 	 *         if no information is available
 	 * @since 3.4
 	 */
-	private static PHPDocumentationBrowserInformationControlInput getHoverInfo(
-			IModelElement[] elements, String constantValue,
-			PHPDocumentationBrowserInformationControlInput previousInput) {
+	private static PHPDocumentationBrowserInformationControlInput getHoverInfo(IModelElement[] elements,
+			String constantValue, PHPDocumentationBrowserInformationControlInput previousInput) {
 		StringBuffer buffer = new StringBuffer();
 		boolean hasContents = false;
 		IModelElement element = null;
@@ -558,8 +520,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 			element = elements[i];
 			if (element instanceof IMember) {
 				IMember member = (IMember) element;
-				HTMLPrinter.addSmallHeader(buffer,
-						getInfoText(member, constantValue, true, i == 0));
+				HTMLPrinter.addSmallHeader(buffer, getInfoText(member, constantValue, true, i == 0));
 				Reader reader = null;
 				try {
 					reader = getHTMLContent(member);
@@ -574,8 +535,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 				}
 				hasContents = true;
 			} else if (element.getElementType() == IModelElement.FIELD) {
-				HTMLPrinter.addSmallHeader(buffer,
-						getInfoText(element, constantValue, true, i == 0));
+				HTMLPrinter.addSmallHeader(buffer, getInfoText(element, constantValue, true, i == 0));
 				hasContents = true;
 			}
 		}
@@ -586,16 +546,15 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		if (buffer.length() > 0) {
 			HTMLPrinter.insertPageProlog(buffer, 0, getStyleSheet());
 			HTMLPrinter.addPageEpilog(buffer);
-			return new PHPDocumentationBrowserInformationControlInput(
-					previousInput, element, buffer.toString(),
+			return new PHPDocumentationBrowserInformationControlInput(previousInput, element, buffer.toString(),
 					leadingImageWidth);
 		}
 
 		return null;
 	}
 
-	private static String getInfoText(IModelElement element,
-			String constantValue, boolean allowImage, boolean isFirstElement) {
+	private static String getInfoText(IModelElement element, String constantValue, boolean allowImage,
+			boolean isFirstElement) {
 		StringBuffer label = getInfoText(element);
 		if (element.getElementType() == IModelElement.FIELD) {
 			if (constantValue != null) {
@@ -608,16 +567,14 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 
 		String imageName = null;
 		if (allowImage) {
-			URL imageUrl = PHPUiPlugin.getDefault().getImagesOnFSRegistry()
-					.getImageURL(element);
+			URL imageUrl = PHPUiPlugin.getDefault().getImagesOnFSRegistry().getImageURL(element);
 			if (imageUrl != null) {
 				imageName = imageUrl.toExternalForm();
 			}
 		}
 
 		StringBuffer buf = new StringBuffer();
-		addImageAndLabel(buf, imageName, 16, 16, 2, 2, label.toString(), 20, 2,
-				isFirstElement);
+		addImageAndLabel(buf, imageName, 16, 16, 2, 2, label.toString(), 20, 2, isFirstElement);
 		return buf.toString();
 	}
 
@@ -655,72 +612,52 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		Object constantValue = null;
 		if (field != null && field.exists()) {
 			try {
-				Program unit = SharedASTProvider.getAST(
-						field.getSourceModule(), SharedASTProvider.WAIT_YES,
-						null);
-				ASTNode node = unit != null ? NodeFinder.perform(unit, field
-						.getNameRange().getOffset(), field.getNameRange()
-						.getLength()) : null;
+				Program unit = SharedASTProvider.getAST(field.getSourceModule(), SharedASTProvider.WAIT_YES, null);
+				ASTNode node = unit != null
+						? NodeFinder.perform(unit, field.getNameRange().getOffset(), field.getNameRange().getLength())
+						: null;
 				if (node != null) {
-					if (node instanceof Identifier
-							&& node.getParent() instanceof ConstantDeclaration) {
-						ConstantDeclaration decl = (ConstantDeclaration) node
-								.getParent();
-						if (decl.initializers().size() == 1
-								&& decl.initializers().get(0) instanceof Scalar) {
+					if (node instanceof Identifier && node.getParent() instanceof ConstantDeclaration) {
+						ConstantDeclaration decl = (ConstantDeclaration) node.getParent();
+						if (decl.initializers().size() == 1 && decl.initializers().get(0) instanceof Scalar) {
 							Scalar scalar = (Scalar) decl.initializers().get(0);
 							constantValue = scalar.getStringValue();
 						}
-					} else if (node instanceof Scalar
-							&& node.getParent() instanceof FunctionInvocation) {
-						FunctionInvocation invocation = (FunctionInvocation) node
-								.getParent();
-						Expression function = invocation.getFunctionName()
-								.getName();
+					} else if (node instanceof Scalar && node.getParent() instanceof FunctionInvocation) {
+						FunctionInvocation invocation = (FunctionInvocation) node.getParent();
+						Expression function = invocation.getFunctionName().getName();
 						String functionName = ""; //$NON-NLS-1$
 						// for PHP5.3
 						if (function instanceof NamespaceName) {
 							// global function
 							if (((NamespaceName) function).isGlobal()) {
-								functionName = ((NamespaceName) function)
-										.getName();
+								functionName = ((NamespaceName) function).getName();
 								if (functionName.charAt(0) == '\\') {
 									functionName = functionName.substring(1);
 								}
 							} else {
 								ModuleDeclaration parsedUnit = SourceParserUtil
-										.getModuleDeclaration(
-												field.getSourceModule(), null);
-								org.eclipse.dltk.ast.ASTNode func = ASTUtils
-										.findMinimalNode(parsedUnit,
-												function.getStart(),
-												function.getEnd());
+										.getModuleDeclaration(field.getSourceModule(), null);
+								org.eclipse.dltk.ast.ASTNode func = ASTUtils.findMinimalNode(parsedUnit,
+										function.getStart(), function.getEnd());
 
 								if (func instanceof FullyQualifiedReference) {
-									functionName = ((FullyQualifiedReference) func)
-											.getFullyQualifiedName();
+									functionName = ((FullyQualifiedReference) func).getFullyQualifiedName();
 								}
 								// look for the element in current namespace
 								if (functionName.indexOf('\\') == -1) {
-									IType currentNamespace = PHPModelUtils
-											.getCurrentNamespace(
-													field.getSourceModule(),
-													function.getStart());
+									IType currentNamespace = PHPModelUtils.getCurrentNamespace(field.getSourceModule(),
+											function.getStart());
 									String fullyQualifiedFuncName = ""; //$NON-NLS-1$
 									if (currentNamespace != null) {
 										fullyQualifiedFuncName = "\\" //$NON-NLS-1$
-												+ currentNamespace
-														.getElementName()
-												+ "\\" + functionName; //$NON-NLS-1$
+												+ currentNamespace.getElementName() + "\\" + functionName; //$NON-NLS-1$
 									} else {
 										fullyQualifiedFuncName = functionName;
 									}
 
-									IMethod[] methods = PHPModelUtils
-											.getFunctions(
-													fullyQualifiedFuncName,
-													field.getSourceModule(),
-													function.getStart(), null);
+									IMethod[] methods = PHPModelUtils.getFunctions(fullyQualifiedFuncName,
+											field.getSourceModule(), function.getStart(), null);
 									if (methods != null && methods.length > 0) {
 										functionName = fullyQualifiedFuncName;
 									}
@@ -732,8 +669,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 						if (functionName.equalsIgnoreCase("define") //$NON-NLS-1$
 								&& invocation.parameters().size() >= 2
 								&& invocation.parameters().get(1) instanceof Scalar) {
-							constantValue = ((Scalar) invocation.parameters()
-									.get(1)).getStringValue();
+							constantValue = ((Scalar) invocation.parameters().get(1)).getStringValue();
 						}
 					}
 				}
@@ -758,8 +694,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 
 		} else if (constantValue instanceof Integer) {
 			int intValue = ((Integer) constantValue).intValue();
-			return formatWithHexValue(constantValue,
-					"0x" + Integer.toHexString(intValue)); //$NON-NLS-1$
+			return formatWithHexValue(constantValue, "0x" + Integer.toHexString(intValue)); //$NON-NLS-1$
 		} else {
 			return constantValue.toString();
 		}
@@ -776,10 +711,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 	 * @return a formatted string with constant and hex values
 	 * @since 3.4
 	 */
-	private static String formatWithHexValue(Object constantValue,
-			String hexValue) {
-		return Messages.format(
-				PHPHoverMessages.JavadocHover_constantValue_hexValue,
+	private static String formatWithHexValue(Object constantValue, String hexValue) {
+		return Messages.format(PHPHoverMessages.JavadocHover_constantValue_hexValue,
 				new String[] { constantValue.toString(), hexValue });
 	}
 
@@ -795,8 +728,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 			fgStyleSheet = loadStyleSheet();
 		String css = fgStyleSheet;
 		if (css != null) {
-			FontData fontData = JFaceResources.getFontRegistry().getFontData(
-					PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT)[0];
+			FontData fontData = JFaceResources.getFontRegistry()
+					.getFontData(PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT)[0];
 			css = HTMLPrinter.convertTopLevelFont(css, fontData);
 		}
 
@@ -811,13 +744,11 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 	 */
 	private static String loadStyleSheet() {
 		Bundle bundle = Platform.getBundle(PHPUiPlugin.getPluginId());
-		URL styleSheetURL = bundle
-				.getEntry("/PHPDocumentationHoverStyleSheet.css"); //$NON-NLS-1$
+		URL styleSheetURL = bundle.getEntry("/PHPDocumentationHoverStyleSheet.css"); //$NON-NLS-1$
 		if (styleSheetURL != null) {
 			BufferedReader reader = null;
 			try {
-				reader = new BufferedReader(new InputStreamReader(
-						styleSheetURL.openStream()));
+				reader = new BufferedReader(new InputStreamReader(styleSheetURL.openStream()));
 				StringBuffer buffer = new StringBuffer(1500);
 				String line = reader.readLine();
 				while (line != null) {
@@ -840,16 +771,14 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		return null;
 	}
 
-	public static void addImageAndLabel(StringBuffer buf, String imageName,
-			int imageWidth, int imageHeight, int imageLeft, int imageTop,
-			String label, int labelLeft, int labelTop) {
-		addImageAndLabel(buf, imageName, imageWidth, imageHeight, imageLeft,
-				imageTop, label, labelLeft, labelTop, true);
+	public static void addImageAndLabel(StringBuffer buf, String imageName, int imageWidth, int imageHeight,
+			int imageLeft, int imageTop, String label, int labelLeft, int labelTop) {
+		addImageAndLabel(buf, imageName, imageWidth, imageHeight, imageLeft, imageTop, label, labelLeft, labelTop,
+				true);
 	}
 
-	private static void addImageAndLabel(StringBuffer buf, String imageName,
-			int imageWidth, int imageHeight, int imageLeft, int imageTop,
-			String label, int labelLeft, int labelTop, boolean isFirstElement) {
+	private static void addImageAndLabel(StringBuffer buf, String imageName, int imageWidth, int imageHeight,
+			int imageLeft, int imageTop, String label, int labelLeft, int labelTop, boolean isFirstElement) {
 
 		// workaround to make the window wide enough
 		label = label + "&nbsp"; //$NON-NLS-1$
@@ -861,13 +790,13 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 				imageStyle.append("top: ").append(imageTop).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
 				imageStyle.append("left: ").append(imageLeft).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				imageStyle
-						.append("margin-top: ").append(imageTop).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
-				imageStyle
-						.append("margin-left: ").append(-imageLeft).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
+				imageStyle.append("margin-top: ").append(imageTop).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
+				imageStyle.append("margin-left: ").append(-imageLeft).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			buf.append("<!--[if lte IE 6]><![if gte IE 5.5]>\n"); //$NON-NLS-1$
-			buf.append("<span style=\"").append(imageStyle).append("filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='").append(imageName).append("')\"></span>\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			buf.append("<span style=\"").append(imageStyle) //$NON-NLS-1$
+					.append("filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='").append(imageName) //$NON-NLS-1$
+					.append("')\"></span>\n"); //$NON-NLS-1$
 			buf.append("<![endif]><![endif]-->\n"); //$NON-NLS-1$
 
 			buf.append("<!--[if !IE]>-->\n"); //$NON-NLS-1$
@@ -899,10 +828,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 	}
 
 	private static StringBuffer getInfoText(IModelElement member) {
-		long flags = member.getElementType() == IModelElement.FIELD ? LOCAL_VARIABLE_FLAGS
-				: LABEL_FLAGS;
-		String label = ScriptElementLabels.getDefault().getElementLabel(member,
-				flags);
+		long flags = member.getElementType() == IModelElement.FIELD ? LOCAL_VARIABLE_FLAGS : LABEL_FLAGS;
+		String label = ScriptElementLabels.getDefault().getElementLabel(member, flags);
 		return new StringBuffer(label);
 	}
 }

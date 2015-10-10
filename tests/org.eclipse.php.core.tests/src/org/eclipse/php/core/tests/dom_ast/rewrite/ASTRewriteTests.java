@@ -100,9 +100,8 @@ import org.junit.runners.Suite.SuiteClasses;
 public class ASTRewriteTests {
 
 	@RunWith(org.junit.runners.Suite.class)
-	@SuiteClasses({ ASTRewriteTests.class, ASTRewriteTestsPHP54.Suite.class,
-			ASTRewriteTestsPHP55.Suite.class, ASTRewriteTestsPHP56.Suite.class,
-			ASTRewriteTestsPHP7.Suite.class })
+	@SuiteClasses({ ASTRewriteTests.class, ASTRewriteTestsPHP54.Suite.class, ASTRewriteTestsPHP55.Suite.class,
+			ASTRewriteTestsPHP56.Suite.class, ASTRewriteTestsPHP7.Suite.class })
 	public static class Suite {
 
 	}
@@ -141,8 +140,7 @@ public class ASTRewriteTests {
 		String str = "<?php foo(); ?>";
 		initialize(str);
 
-		List<FunctionInvocation> invocations = getAllOfType(program,
-				FunctionInvocation.class);
+		List<FunctionInvocation> invocations = getAllOfType(program, FunctionInvocation.class);
 		assertTrue("Unexpected list size.", invocations.size() == 1);
 		FunctionName functionName = invocations.get(0).getFunctionName();
 		functionName.setName(ast.newIdentifier("boobo"));
@@ -155,12 +153,10 @@ public class ASTRewriteTests {
 		String str = "<?php foo(); ?>";
 		initialize(str);
 
-		List<FunctionInvocation> invocations = getAllOfType(program,
-				FunctionInvocation.class);
+		List<FunctionInvocation> invocations = getAllOfType(program, FunctionInvocation.class);
 		assertTrue("Unexpected list size.", invocations.size() == 1);
 		FunctionInvocation functionInvocation = invocations.get(0);
-		functionInvocation.setFunctionName(
-				ast.newFunctionName(ast.newIdentifier("boobo")));
+		functionInvocation.setFunctionName(ast.newFunctionName(ast.newIdentifier("boobo")));
 		rewrite();
 		checkResult("<?php boobo(); ?>");
 	}
@@ -170,8 +166,7 @@ public class ASTRewriteTests {
 		String str = "<?php foo( ); ?>";
 		initialize(str);
 
-		List<FunctionInvocation> invocations = getAllOfType(program,
-				FunctionInvocation.class);
+		List<FunctionInvocation> invocations = getAllOfType(program, FunctionInvocation.class);
 		assertTrue("Unexpected list size.", invocations.size() == 1);
 		FunctionInvocation functionInvocation = invocations.get(0);
 		functionInvocation.parameters().add(ast.newVariable("aaa"));
@@ -184,8 +179,7 @@ public class ASTRewriteTests {
 		String str = "<?php foo(); ?>";
 		initialize(str);
 
-		List<FunctionInvocation> invocations = getAllOfType(program,
-				FunctionInvocation.class);
+		List<FunctionInvocation> invocations = getAllOfType(program, FunctionInvocation.class);
 		assertTrue("Unexpected list size.", invocations.size() == 1);
 		FunctionInvocation functionInvocation = invocations.get(0);
 		functionInvocation.parameters().add(ast.newVariable("aaa"));
@@ -200,8 +194,7 @@ public class ASTRewriteTests {
 		String str = "<?php foo($aaa, $bbb); ?>";
 		initialize(str);
 
-		List<FunctionInvocation> invocations = getAllOfType(program,
-				FunctionInvocation.class);
+		List<FunctionInvocation> invocations = getAllOfType(program, FunctionInvocation.class);
 		assertTrue("Unexpected list size.", invocations.size() == 1);
 		FunctionInvocation functionInvocation = invocations.get(0);
 		functionInvocation.parameters().remove(1);
@@ -214,8 +207,7 @@ public class ASTRewriteTests {
 		String str = "<?php foo($aaa, $bbb); ?>";
 		initialize(str);
 
-		List<FunctionInvocation> invocations = getAllOfType(program,
-				FunctionInvocation.class);
+		List<FunctionInvocation> invocations = getAllOfType(program, FunctionInvocation.class);
 		assertTrue("Unexpected list size.", invocations.size() == 1);
 		FunctionInvocation functionInvocation = invocations.get(0);
 		functionInvocation.parameters().remove(0);
@@ -228,8 +220,7 @@ public class ASTRewriteTests {
 		String str = "<?php foo($aaa, $bbb); ?>";
 		initialize(str);
 
-		List<FunctionInvocation> invocations = getAllOfType(program,
-				FunctionInvocation.class);
+		List<FunctionInvocation> invocations = getAllOfType(program, FunctionInvocation.class);
 		assertTrue("Unexpected list size.", invocations.size() == 1);
 		FunctionInvocation functionInvocation = invocations.get(0);
 		functionInvocation.parameters().clear();
@@ -256,15 +247,14 @@ public class ASTRewriteTests {
 		String str = "<?php A::foo($a); ?>";
 		initialize(str);
 
-		List<StaticMethodInvocation> staticInvocations = getAllOfType(program,
-				StaticMethodInvocation.class);
+		List<StaticMethodInvocation> staticInvocations = getAllOfType(program, StaticMethodInvocation.class);
 		assertTrue("Unexpected list size.", staticInvocations.size() == 1);
 		staticInvocations.get(0).setClassName(ast.newIdentifier("B"));
 		ArrayList<Expression> parameters = new ArrayList<Expression>();
 		parameters.add(ast.newScalar("b", Scalar.TYPE_STRING));
 		parameters.add(ast.newVariable("c"));
-		staticInvocations.get(0).setMethod(ast.newFunctionInvocation(
-				ast.newFunctionName(ast.newIdentifier("bar")), parameters));
+		staticInvocations.get(0)
+				.setMethod(ast.newFunctionInvocation(ast.newFunctionName(ast.newIdentifier("bar")), parameters));
 		rewrite();
 		checkResult("<?php B::bar(b,$c); ?>");
 	}
@@ -274,8 +264,7 @@ public class ASTRewriteTests {
 		String str = "<?php $a[]; ?>";
 		initialize(str);
 
-		List<ArrayAccess> arrayAccess = getAllOfType(program,
-				ArrayAccess.class);
+		List<ArrayAccess> arrayAccess = getAllOfType(program, ArrayAccess.class);
 		assertTrue("Unexpected list size.", arrayAccess.size() == 1);
 		arrayAccess.get(0).setName(ast.newVariable("b"));
 		// FIXME - We need to fix the ArrayAccess implementation to reflect any
@@ -293,8 +282,7 @@ public class ASTRewriteTests {
 		String str = "<?php $a[$b]; ?>";
 		initialize(str);
 
-		List<ArrayAccess> arrayAccess = getAllOfType(program,
-				ArrayAccess.class);
+		List<ArrayAccess> arrayAccess = getAllOfType(program, ArrayAccess.class);
 		assertTrue("Unexpected list size.", arrayAccess.size() == 1);
 		arrayAccess.get(0).setIndex(ast.newScalar("1"));
 		rewrite();
@@ -306,8 +294,7 @@ public class ASTRewriteTests {
 		String str = "<?php $a[$b][5][3]; ?>";
 		initialize(str);
 
-		List<ArrayAccess> arrayAccess = getAllOfType(program,
-				ArrayAccess.class);
+		List<ArrayAccess> arrayAccess = getAllOfType(program, ArrayAccess.class);
 		assertTrue("Unexpected list size.", arrayAccess.size() == 3);
 		// TODO - The access to this ArrayAccess is reversed - Check if this is
 		// the intended behavior.
@@ -324,8 +311,7 @@ public class ASTRewriteTests {
 		String str = "<?php $a[$b]; ?>";
 		initialize(str);
 
-		List<ArrayAccess> arrayAccess = getAllOfType(program,
-				ArrayAccess.class);
+		List<ArrayAccess> arrayAccess = getAllOfType(program, ArrayAccess.class);
 		assertTrue("Unexpected list size.", arrayAccess.size() == 1);
 		arrayAccess.get(0).setArrayType(ArrayAccess.VARIABLE_HASHTABLE);
 		rewrite();
@@ -337,8 +323,7 @@ public class ASTRewriteTests {
 		String str = "<?php $a{'name'}; ?>";
 		initialize(str);
 
-		List<ArrayAccess> arrayAccess = getAllOfType(program,
-				ArrayAccess.class);
+		List<ArrayAccess> arrayAccess = getAllOfType(program, ArrayAccess.class);
 		assertTrue("Unexpected list size.", arrayAccess.size() == 1);
 		arrayAccess.get(0).setArrayType(ArrayAccess.VARIABLE_ARRAY);
 		arrayAccess.get(0).setIndex(ast.newScalar("333"));
@@ -351,8 +336,7 @@ public class ASTRewriteTests {
 		String str = "<?php list($a,$b)=1; ?>";
 		initialize(str);
 
-		List<ListVariable> listVariables = getAllOfType(program,
-				ListVariable.class);
+		List<ListVariable> listVariables = getAllOfType(program, ListVariable.class);
 		assertTrue("Unexpected list size.", listVariables.size() == 1);
 		listVariables.get(0).variables().add(ast.newVariable("c"));
 		listVariables.get(0).variables().remove(0);
@@ -365,8 +349,7 @@ public class ASTRewriteTests {
 		String str = "<?php list($a,$b)=1; ?>";
 		initialize(str);
 
-		List<ListVariable> listVariables = getAllOfType(program,
-				ListVariable.class);
+		List<ListVariable> listVariables = getAllOfType(program, ListVariable.class);
 		assertTrue("Unexpected list size.", listVariables.size() == 1);
 		listVariables.get(0).variables().remove(1);
 		rewrite();
@@ -378,8 +361,7 @@ public class ASTRewriteTests {
 		String str = "<?php list($a, list($b,$c))=1;?>";
 		initialize(str);
 
-		List<ListVariable> listVariables = getAllOfType(program,
-				ListVariable.class);
+		List<ListVariable> listVariables = getAllOfType(program, ListVariable.class);
 		assertTrue("Unexpected list size.", listVariables.size() == 2);
 		ArrayList<VariableBase> variables = new ArrayList<VariableBase>();
 		variables.add(ast.newVariable("foo"));
@@ -430,8 +412,7 @@ public class ASTRewriteTests {
 		String str = "<?php $$a;?>";
 		initialize(str);
 
-		List<ReflectionVariable> reflectionVariables = getAllOfType(program,
-				ReflectionVariable.class);
+		List<ReflectionVariable> reflectionVariables = getAllOfType(program, ReflectionVariable.class);
 		assertTrue("Unexpected list size.", reflectionVariables.size() == 1);
 		reflectionVariables.get(0).setName(ast.newVariable("b"));
 		// FIXME ???? - We need to fix the ReflectionVariable implementation to
@@ -449,12 +430,10 @@ public class ASTRewriteTests {
 		String str = "<?php $$$bar(); ?>";
 		initialize(str);
 
-		List<FunctionInvocation> functionInvocations = getAllOfType(program,
-				FunctionInvocation.class);
+		List<FunctionInvocation> functionInvocations = getAllOfType(program, FunctionInvocation.class);
 		assertTrue("Unexpected list size.", functionInvocations.size() == 1);
-		functionInvocations.get(0)
-				.setFunctionName(ast.newFunctionName(ast.newReflectionVariable(
-						ast.newReflectionVariable(ast.newVariable("foo")))));
+		functionInvocations.get(0).setFunctionName(
+				ast.newFunctionName(ast.newReflectionVariable(ast.newReflectionVariable(ast.newVariable("foo")))));
 		rewrite();
 		checkResult("<?php $$$foo(); ?>");
 	}
@@ -464,11 +443,9 @@ public class ASTRewriteTests {
 		String str = "<?php ${\"var\"};?>";
 		initialize(str);
 
-		List<ReflectionVariable> reflectionVariables = getAllOfType(program,
-				ReflectionVariable.class);
+		List<ReflectionVariable> reflectionVariables = getAllOfType(program, ReflectionVariable.class);
 		assertTrue("Unexpected list size.", reflectionVariables.size() == 1);
-		reflectionVariables.get(0)
-				.setName(ast.newScalar("\"boobo\"", Scalar.TYPE_STRING));
+		reflectionVariables.get(0).setName(ast.newScalar("\"boobo\"", Scalar.TYPE_STRING));
 		rewrite();
 		checkResult("<?php ${\"boobo\"};?>");
 	}
@@ -478,8 +455,7 @@ public class ASTRewriteTests {
 		String str = "<?php MyClass::$a;?>";
 		initialize(str);
 
-		List<StaticFieldAccess> fieldsAccess = getAllOfType(program,
-				StaticFieldAccess.class);
+		List<StaticFieldAccess> fieldsAccess = getAllOfType(program, StaticFieldAccess.class);
 		assertTrue("Unexpected list size.", fieldsAccess.size() == 1);
 		fieldsAccess.get(0).setField(ast.newVariable("boobo"));
 		fieldsAccess.get(0).setClassName(ast.newIdentifier("Foo"));
@@ -492,11 +468,10 @@ public class ASTRewriteTests {
 		String str = "<?php MyClass::$$a[5];?>";
 		initialize(str);
 
-		List<StaticFieldAccess> fieldsAccess = getAllOfType(program,
-				StaticFieldAccess.class);
+		List<StaticFieldAccess> fieldsAccess = getAllOfType(program, StaticFieldAccess.class);
 		assertTrue("Unexpected list size.", fieldsAccess.size() == 1);
-		fieldsAccess.get(0).setField(ast.newReflectionVariable(ast
-				.newArrayAccess(ast.newVariable("bar"), ast.newScalar("333"))));
+		fieldsAccess.get(0)
+				.setField(ast.newReflectionVariable(ast.newArrayAccess(ast.newVariable("bar"), ast.newScalar("333"))));
 		rewrite();
 		checkResult("<?php MyClass::$$bar[333];?>");
 	}
@@ -506,8 +481,7 @@ public class ASTRewriteTests {
 		String str = "<?php $a->$b;?>";
 		initialize(str);
 
-		List<FieldAccess> fieldsAccess = getAllOfType(program,
-				FieldAccess.class);
+		List<FieldAccess> fieldsAccess = getAllOfType(program, FieldAccess.class);
 		assertTrue("Unexpected list size.", fieldsAccess.size() == 1);
 		fieldsAccess.get(0).setDispatcher(ast.newVariable("boo"));
 		fieldsAccess.get(0).setField(ast.newVariable("foo"));
@@ -520,11 +494,9 @@ public class ASTRewriteTests {
 		String str = "<?php $myClass->foo()->bar(); ?>";
 		initialize(str);
 
-		List<MethodInvocation> methodInvocations = getAllOfType(program,
-				MethodInvocation.class);
+		List<MethodInvocation> methodInvocations = getAllOfType(program, MethodInvocation.class);
 		assertTrue("Unexpected list size.", methodInvocations.size() == 2);
-		methodInvocations.get(1).getMethod()
-				.setFunctionName(ast.newFunctionName(ast.newScalar("boobo")));
+		methodInvocations.get(1).getMethod().setFunctionName(ast.newFunctionName(ast.newScalar("boobo")));
 		rewrite();
 		checkResult("<?php $myClass->boobo()->bar(); ?>");
 	}
@@ -534,16 +506,12 @@ public class ASTRewriteTests {
 		String str = "<?php MyClass::$a->foo(); ?>";
 		initialize(str);
 
-		List<FunctionInvocation> functionInvocations = getAllOfType(program,
-				FunctionInvocation.class);
+		List<FunctionInvocation> functionInvocations = getAllOfType(program, FunctionInvocation.class);
 		assertTrue("Unexpected list size.", functionInvocations.size() == 1);
-		functionInvocations.get(0).getFunctionName()
-				.setName(ast.newScalar("bar"));
-		List<MethodInvocation> methodInvocations = getAllOfType(program,
-				MethodInvocation.class);
+		functionInvocations.get(0).getFunctionName().setName(ast.newScalar("bar"));
+		List<MethodInvocation> methodInvocations = getAllOfType(program, MethodInvocation.class);
 		assertTrue("Unexpected list size.", methodInvocations.size() == 1);
-		((StaticFieldAccess) methodInvocations.get(0).getDispatcher())
-				.getField().setName(ast.newScalar("boobo"));
+		((StaticFieldAccess) methodInvocations.get(0).getDispatcher()).getField().setName(ast.newScalar("boobo"));
 		rewrite();
 		checkResult("<?php MyClass::$boobo->bar(); ?>");
 	}
@@ -553,8 +521,7 @@ public class ASTRewriteTests {
 		String str = "<?php clone $a; ?>";
 		initialize(str);
 
-		List<CloneExpression> cloneExpressions = getAllOfType(program,
-				CloneExpression.class);
+		List<CloneExpression> cloneExpressions = getAllOfType(program, CloneExpression.class);
 		assertTrue("Unexpected list size.", cloneExpressions.size() == 1);
 		cloneExpressions.get(0).setExpression(ast.newVariable("bbb"));
 		rewrite();
@@ -566,8 +533,7 @@ public class ASTRewriteTests {
 		String str = "<?php (int) $a; ?>";
 		initialize(str);
 
-		List<CastExpression> castExpressions = getAllOfType(program,
-				CastExpression.class);
+		List<CastExpression> castExpressions = getAllOfType(program, CastExpression.class);
 		assertTrue("Unexpected list size.", castExpressions.size() == 1);
 		castExpressions.get(0).setExpression(ast.newVariable("b"));
 		castExpressions.get(0).setCastingType(CastExpression.TYPE_STRING);
@@ -580,8 +546,7 @@ public class ASTRewriteTests {
 		String str = "<?php (string) $b->foo(); ?>";
 		initialize(str);
 
-		List<CastExpression> castExpressions = getAllOfType(program,
-				CastExpression.class);
+		List<CastExpression> castExpressions = getAllOfType(program, CastExpression.class);
 		assertTrue("Unexpected list size.", castExpressions.size() == 1);
 		castExpressions.get(0).setCastingType(CastExpression.TYPE_INT);
 		rewrite();
@@ -593,8 +558,7 @@ public class ASTRewriteTests {
 		String str = "<?php $a = MyClass::MY_CONST; ?>";
 		initialize(str);
 
-		List<StaticConstantAccess> staticConstants = getAllOfType(program,
-				StaticConstantAccess.class);
+		List<StaticConstantAccess> staticConstants = getAllOfType(program, StaticConstantAccess.class);
 		assertTrue("Unexpected list size.", staticConstants.size() == 1);
 		((Identifier) staticConstants.get(0).getClassName()).setName("Foo");
 		staticConstants.get(0).setConstant(ast.newIdentifier("BAR_CONST"));
@@ -607,8 +571,7 @@ public class ASTRewriteTests {
 		String str = "<?php $a++;?>";
 		initialize(str);
 
-		List<PostfixExpression> postfixExp = getAllOfType(program,
-				PostfixExpression.class);
+		List<PostfixExpression> postfixExp = getAllOfType(program, PostfixExpression.class);
 		assertTrue("Unexpected list size.", postfixExp.size() == 1);
 		postfixExp.get(0).setOperator(PostfixExpression.OP_DEC);
 		postfixExp.get(0).setVariable(ast.newVariable("b"));
@@ -621,8 +584,7 @@ public class ASTRewriteTests {
 		String str = "<?php foo()--;?>";
 		initialize(str);
 
-		List<PostfixExpression> postfixExp = getAllOfType(program,
-				PostfixExpression.class);
+		List<PostfixExpression> postfixExp = getAllOfType(program, PostfixExpression.class);
 		assertTrue("Unexpected list size.", postfixExp.size() == 1);
 		postfixExp.get(0).setOperator(PostfixExpression.OP_INC);
 		((FunctionInvocation) postfixExp.get(0).getVariable())
@@ -636,8 +598,7 @@ public class ASTRewriteTests {
 		String str = "<?php ++$a;?>";
 		initialize(str);
 
-		List<PrefixExpression> prefixExp = getAllOfType(program,
-				PrefixExpression.class);
+		List<PrefixExpression> prefixExp = getAllOfType(program, PrefixExpression.class);
 		assertTrue("Unexpected list size.", prefixExp.size() == 1);
 		prefixExp.get(0).setOperator(PrefixExpression.OP_DEC);
 		rewrite();
@@ -687,8 +648,7 @@ public class ASTRewriteTests {
 		String str = "<?php new MyClass(); ?>";
 		initialize(str);
 
-		List<ClassInstanceCreation> instanciations = getAllOfType(program,
-				ClassInstanceCreation.class);
+		List<ClassInstanceCreation> instanciations = getAllOfType(program, ClassInstanceCreation.class);
 		assertTrue("Unexpected list size.", instanciations.size() == 1);
 		instanciations.get(0).getClassName().setClassName(ast.newScalar("Foo"));
 		rewrite();
@@ -700,8 +660,7 @@ public class ASTRewriteTests {
 		String str = "<?php new MyClass(); ?>";
 		initialize(str);
 
-		List<ClassInstanceCreation> instanciations = getAllOfType(program,
-				ClassInstanceCreation.class);
+		List<ClassInstanceCreation> instanciations = getAllOfType(program, ClassInstanceCreation.class);
 		assertTrue("Unexpected list size.", instanciations.size() == 1);
 		instanciations.get(0).ctorParams().add(ast.newVariable("foo"));
 		instanciations.get(0).ctorParams().add(ast.newVariable("bar"));
@@ -714,12 +673,10 @@ public class ASTRewriteTests {
 		String str = "<?php new $a('start'); ?>";
 		initialize(str);
 
-		List<ClassInstanceCreation> instanciations = getAllOfType(program,
-				ClassInstanceCreation.class);
+		List<ClassInstanceCreation> instanciations = getAllOfType(program, ClassInstanceCreation.class);
 		assertTrue("Unexpected list size.", instanciations.size() == 1);
 		instanciations.get(0).ctorParams().add(ast.newScalar("'hello'"));
-		instanciations.get(0)
-				.setClassName(ast.newClassName(ast.newVariable("b")));
+		instanciations.get(0).setClassName(ast.newClassName(ast.newVariable("b")));
 		rewrite();
 		checkResult("<?php new $b('start', 'hello'); ?>");
 	}
@@ -729,8 +686,7 @@ public class ASTRewriteTests {
 		String str = "<?php new $a('start','end'); ?>";
 		initialize(str);
 
-		List<ClassInstanceCreation> instanciations = getAllOfType(program,
-				ClassInstanceCreation.class);
+		List<ClassInstanceCreation> instanciations = getAllOfType(program, ClassInstanceCreation.class);
 		assertTrue("Unexpected list size.", instanciations.size() == 1);
 		instanciations.get(0).ctorParams().remove(1);
 		rewrite();
@@ -742,8 +698,7 @@ public class ASTRewriteTests {
 		String str = "<?php new $a->$b(1, $a); ?>";
 		initialize(str);
 
-		List<ClassInstanceCreation> instanciations = getAllOfType(program,
-				ClassInstanceCreation.class);
+		List<ClassInstanceCreation> instanciations = getAllOfType(program, ClassInstanceCreation.class);
 		assertTrue("Unexpected list size.", instanciations.size() == 1);
 		instanciations.get(0).ctorParams().add(0, ast.newScalar("'Welcome'"));
 		rewrite();
@@ -769,8 +724,7 @@ public class ASTRewriteTests {
 
 		List<Reference> references = getAllOfType(program, Reference.class);
 		assertTrue("Unexpected list size.", references.size() == 1);
-		references.get(0).setExpression(ast.newFunctionInvocation(
-				ast.newFunctionName(ast.newVariable("bar")), null));
+		references.get(0).setExpression(ast.newFunctionInvocation(ast.newFunctionName(ast.newVariable("bar")), null));
 		rewrite();
 		checkResult("<?php $g = &$bar(); ?>");
 	}
@@ -782,8 +736,7 @@ public class ASTRewriteTests {
 
 		List<Reference> references = getAllOfType(program, Reference.class);
 		assertTrue("Unexpected list size.", references.size() == 1);
-		((ClassInstanceCreation) references.get(0).getExpression()).ctorParams()
-				.add(ast.newVariable("boobo"));
+		((ClassInstanceCreation) references.get(0).getExpression()).ctorParams().add(ast.newVariable("boobo"));
 		rewrite();
 		checkResult("<?php $b = &new MyClass($boobo); ?>");
 	}
@@ -793,11 +746,9 @@ public class ASTRewriteTests {
 		String str = "<?php $a instanceof MyClass;?>";
 		initialize(str);
 
-		List<InstanceOfExpression> instanceOf = getAllOfType(program,
-				InstanceOfExpression.class);
+		List<InstanceOfExpression> instanceOf = getAllOfType(program, InstanceOfExpression.class);
 		assertTrue("Unexpected list size.", instanceOf.size() == 1);
-		instanceOf.get(0).getClassName()
-				.setClassName(ast.newScalar("Foo", Scalar.TYPE_STRING));
+		instanceOf.get(0).getClassName().setClassName(ast.newScalar("Foo", Scalar.TYPE_STRING));
 		instanceOf.get(0).setExpression(ast.newVariable("b"));
 		rewrite();
 		checkResult("<?php $b instanceof Foo;?>");
@@ -808,11 +759,9 @@ public class ASTRewriteTests {
 		String str = "<?php @$a->foo(); ?>";
 		initialize(str);
 
-		List<IgnoreError> ignoreErrors = getAllOfType(program,
-				IgnoreError.class);
+		List<IgnoreError> ignoreErrors = getAllOfType(program, IgnoreError.class);
 		assertTrue("Unexpected list size.", ignoreErrors.size() == 1);
-		ignoreErrors.get(0).setExpression(ast.newFunctionInvocation(
-				ast.newFunctionName(ast.newScalar("bar")), null));
+		ignoreErrors.get(0).setExpression(ast.newFunctionInvocation(ast.newFunctionName(ast.newScalar("bar")), null));
 		rewrite();
 		checkResult("<?php @bar(); ?>");
 	}
@@ -837,8 +786,7 @@ public class ASTRewriteTests {
 
 		List<Include> includes = getAllOfType(program, Include.class);
 		assertTrue("Unexpected list size.", includes.size() == 1);
-		includes.get(0).setExpression(
-				ast.newParenthesisExpression(ast.newScalar("'newFile.php'")));
+		includes.get(0).setExpression(ast.newParenthesisExpression(ast.newScalar("'newFile.php'")));
 		includes.get(0).setIncludetype(Include.IT_REQUIRE);
 		rewrite();
 		checkResult("<?php require('newFile.php'); ?>");
@@ -851,8 +799,7 @@ public class ASTRewriteTests {
 
 		List<Include> includes = getAllOfType(program, Include.class);
 		assertTrue("Unexpected list size.", includes.size() == 1);
-		includes.get(0).setExpression(
-				ast.newParenthesisExpression(ast.newScalar("'file.php'")));
+		includes.get(0).setExpression(ast.newParenthesisExpression(ast.newScalar("'file.php'")));
 		includes.get(0).setIncludetype(Include.IT_REQUIRE_ONCE);
 		rewrite();
 		checkResult("<?php require_once ('file.php'); ?>");
@@ -877,8 +824,7 @@ public class ASTRewriteTests {
 
 		List<ArrayCreation> arrays = getAllOfType(program, ArrayCreation.class);
 		assertTrue("Unexpected list size.", arrays.size() == 1);
-		arrays.get(0).elements().add(ast.newArrayElement(ast.newScalar("'foo'"),
-				ast.newScalar("'boo'")));
+		arrays.get(0).elements().add(ast.newArrayElement(ast.newScalar("'foo'"), ast.newScalar("'boo'")));
 		rewrite();
 		checkResult("<?php array(1,2,3, 'foo'=>'boo',); ?>");
 	}
@@ -890,8 +836,7 @@ public class ASTRewriteTests {
 
 		List<ArrayCreation> arrays = getAllOfType(program, ArrayCreation.class);
 		assertTrue("Unexpected list size.", arrays.size() == 1);
-		arrays.get(0).elements()
-				.add(ast.newArrayElement(null, ast.newScalar("4")));
+		arrays.get(0).elements().add(ast.newArrayElement(null, ast.newScalar("4")));
 		rewrite();
 		checkResult("<?php array(1,2,3, 4,); ?>");
 	}
@@ -913,12 +858,11 @@ public class ASTRewriteTests {
 		String str = "<?php function foo() {} ?> ";
 		initialize(str);
 
-		List<FunctionDeclaration> declarations = getAllOfType(program,
-				FunctionDeclaration.class);
+		List<FunctionDeclaration> declarations = getAllOfType(program, FunctionDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).setFunctionName(ast.newIdentifier("bar"));
-		declarations.get(0).formalParameters().add(ast.newFormalParameter(
-				ast.newIdentifier("int"), ast.newVariable("a"), null, false));
+		declarations.get(0).formalParameters()
+				.add(ast.newFormalParameter(ast.newIdentifier("int"), ast.newVariable("a"), null, false));
 		rewrite();
 		checkResult("<?php function bar(int $a) {} ?> ");
 	}
@@ -928,11 +872,9 @@ public class ASTRewriteTests {
 		String str = "<?php function foo( $a) {} ?> ";
 		initialize(str);
 
-		List<FunctionDeclaration> declarations = getAllOfType(program,
-				FunctionDeclaration.class);
+		List<FunctionDeclaration> declarations = getAllOfType(program, FunctionDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
-		declarations.get(0).formalParameters().get(0)
-				.setParameterType(ast.newIdentifier("string"));
+		declarations.get(0).formalParameters().get(0).setParameterType(ast.newIdentifier("string"));
 		rewrite();
 		checkResult("<?php function foo( string $a) {} ?> ");
 	}
@@ -942,11 +884,9 @@ public class ASTRewriteTests {
 		String str = "<?php function foo($a, boolean $b) {} ?> ";
 		initialize(str);
 
-		List<FunctionDeclaration> declarations = getAllOfType(program,
-				FunctionDeclaration.class);
+		List<FunctionDeclaration> declarations = getAllOfType(program, FunctionDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
-		declarations.get(0).formalParameters().get(1)
-				.setParameterType(ast.newIdentifier("string"));
+		declarations.get(0).formalParameters().get(1).setParameterType(ast.newIdentifier("string"));
 		rewrite();
 		checkResult("<?php function foo($a, string $b) {} ?> ");
 	}
@@ -956,11 +896,9 @@ public class ASTRewriteTests {
 		String str = "<?php function foo($a, $b) {} ?> ";
 		initialize(str);
 
-		List<FunctionDeclaration> declarations = getAllOfType(program,
-				FunctionDeclaration.class);
+		List<FunctionDeclaration> declarations = getAllOfType(program, FunctionDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
-		declarations.get(0).formalParameters().get(1)
-				.setParameterType(ast.newIdentifier("string"));
+		declarations.get(0).formalParameters().get(1).setParameterType(ast.newIdentifier("string"));
 		rewrite();
 		checkResult("<?php function foo($a, string $b) {} ?> ");
 	}
@@ -970,11 +908,9 @@ public class ASTRewriteTests {
 		String str = "<?php function foo(boolean $a) {} ?> ";
 		initialize(str);
 
-		List<FunctionDeclaration> declarations = getAllOfType(program,
-				FunctionDeclaration.class);
+		List<FunctionDeclaration> declarations = getAllOfType(program, FunctionDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
-		declarations.get(0).formalParameters().get(0).getParameterType()
-				.delete();
+		declarations.get(0).formalParameters().get(0).getParameterType().delete();
 		rewrite();
 		checkResult("<?php function foo( $a) {} ?> ");
 	}
@@ -986,13 +922,11 @@ public class ASTRewriteTests {
 
 		Identifier name = ast.newIdentifier("foo");
 		List<FormalParameter> formalParameters = new ArrayList<FormalParameter>();
-		formalParameters.add(ast.newFormalParameter(ast.newIdentifier("int"),
-				ast.newVariable("a"), ast.newScalar("5"), false));
-		formalParameters.add(ast.newFormalParameter(null, ast.newVariable("b"),
-				ast.newScalar("'boobo'"), false));
+		formalParameters
+				.add(ast.newFormalParameter(ast.newIdentifier("int"), ast.newVariable("a"), ast.newScalar("5"), false));
+		formalParameters.add(ast.newFormalParameter(null, ast.newVariable("b"), ast.newScalar("'boobo'"), false));
 		Block body = ast.newBlock();
-		program.statements().add(0,
-				ast.newFunctionDeclaration(name, formalParameters, body, true));
+		program.statements().add(0, ast.newFunctionDeclaration(name, formalParameters, body, true));
 		rewrite();
 		checkResult("<?php function &foo(int $a = 5,  $b = 'boobo') {\n}\n?> ");
 	}
@@ -1002,11 +936,9 @@ public class ASTRewriteTests {
 		String str = "<?php function foo(boolean $a = false) {} ?> ";
 		initialize(str);
 
-		List<FunctionDeclaration> declarations = getAllOfType(program,
-				FunctionDeclaration.class);
+		List<FunctionDeclaration> declarations = getAllOfType(program, FunctionDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
-		((Scalar) declarations.get(0).formalParameters().get(0)
-				.getDefaultValue()).setStringValue("true");
+		((Scalar) declarations.get(0).formalParameters().get(0).getDefaultValue()).setStringValue("true");
 		rewrite();
 		checkResult("<?php function foo(boolean $a = true) {} ?> ");
 	}
@@ -1016,8 +948,7 @@ public class ASTRewriteTests {
 		String str = "<?php function foo(string $a = 'foo') {} ?> ";
 		initialize(str);
 
-		List<FunctionDeclaration> declarations = getAllOfType(program,
-				FunctionDeclaration.class);
+		List<FunctionDeclaration> declarations = getAllOfType(program, FunctionDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).formalParameters().get(0).setDefaultValue(null);
 		rewrite();
@@ -1029,11 +960,9 @@ public class ASTRewriteTests {
 		String str = "<?php function foo(string $a = 'foo') {} ?> ";
 		initialize(str);
 
-		List<FunctionDeclaration> declarations = getAllOfType(program,
-				FunctionDeclaration.class);
+		List<FunctionDeclaration> declarations = getAllOfType(program, FunctionDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
-		declarations.get(0).formalParameters().get(0).getDefaultValue()
-				.delete();
+		declarations.get(0).formalParameters().get(0).getDefaultValue().delete();
 		rewrite();
 		checkResult("<?php function foo(string $a) {} ?> ");
 	}
@@ -1043,8 +972,7 @@ public class ASTRewriteTests {
 		String str = "<?php class MyClass { } ?> ";
 		initialize(str);
 
-		List<ClassDeclaration> declarations = getAllOfType(program,
-				ClassDeclaration.class);
+		List<ClassDeclaration> declarations = getAllOfType(program, ClassDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).setName(ast.newIdentifier("Foo"));
 		rewrite();
@@ -1056,8 +984,7 @@ public class ASTRewriteTests {
 		String str = "<?php function  &foo() {} ?> ";
 		initialize(str);
 
-		List<FunctionDeclaration> declarations = getAllOfType(program,
-				FunctionDeclaration.class);
+		List<FunctionDeclaration> declarations = getAllOfType(program, FunctionDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).setIsReference(false);
 		rewrite();
@@ -1069,8 +996,7 @@ public class ASTRewriteTests {
 		String str = "<?php function  foo() {} ?> ";
 		initialize(str);
 
-		List<FunctionDeclaration> declarations = getAllOfType(program,
-				FunctionDeclaration.class);
+		List<FunctionDeclaration> declarations = getAllOfType(program, FunctionDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).setIsReference(true);
 		rewrite();
@@ -1082,8 +1008,7 @@ public class ASTRewriteTests {
 		String str = "<?php class MyClass { } ?> ";
 		initialize(str);
 
-		List<ClassDeclaration> declarations = getAllOfType(program,
-				ClassDeclaration.class);
+		List<ClassDeclaration> declarations = getAllOfType(program, ClassDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).setModifier(ClassDeclaration.MODIFIER_FINAL);
 		declarations.get(0).setSuperClass(ast.newIdentifier("Boo"));
@@ -1096,8 +1021,7 @@ public class ASTRewriteTests {
 		String str = "<?php class MyClass extends Foo { } ?> ";
 		initialize(str);
 
-		List<ClassDeclaration> declarations = getAllOfType(program,
-				ClassDeclaration.class);
+		List<ClassDeclaration> declarations = getAllOfType(program, ClassDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).getSuperClass().delete();
 		rewrite();
@@ -1109,8 +1033,7 @@ public class ASTRewriteTests {
 		String str = "<?php class MyClass extends Foo implements Bar { } ?> ";
 		initialize(str);
 
-		List<ClassDeclaration> declarations = getAllOfType(program,
-				ClassDeclaration.class);
+		List<ClassDeclaration> declarations = getAllOfType(program, ClassDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).getSuperClass().delete();
 		rewrite();
@@ -1122,8 +1045,7 @@ public class ASTRewriteTests {
 		String str = "<?php class MyClass extends Foo { } ?> ";
 		initialize(str);
 
-		List<ClassDeclaration> declarations = getAllOfType(program,
-				ClassDeclaration.class);
+		List<ClassDeclaration> declarations = getAllOfType(program, ClassDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		((Identifier) declarations.get(0).getSuperClass()).setName("Bar");
 		rewrite();
@@ -1135,8 +1057,7 @@ public class ASTRewriteTests {
 		String str = "<?php class MyClass { } ?> ";
 		initialize(str);
 
-		List<ClassDeclaration> declarations = getAllOfType(program,
-				ClassDeclaration.class);
+		List<ClassDeclaration> declarations = getAllOfType(program, ClassDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).interfaces().add(ast.newIdentifier("Foo"));
 		declarations.get(0).interfaces().add(ast.newIdentifier("Bar"));
@@ -1149,8 +1070,7 @@ public class ASTRewriteTests {
 		String str = "<?php class MyClass extends AAA implements Foo,Bar{ } ?> ";
 		initialize(str);
 
-		List<ClassDeclaration> declarations = getAllOfType(program,
-				ClassDeclaration.class);
+		List<ClassDeclaration> declarations = getAllOfType(program, ClassDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).interfaces().remove(0);
 		rewrite();
@@ -1162,8 +1082,7 @@ public class ASTRewriteTests {
 		String str = "<?php class MyClass extends AAA implements Foo,Bar{ } ?> ";
 		initialize(str);
 
-		List<ClassDeclaration> declarations = getAllOfType(program,
-				ClassDeclaration.class);
+		List<ClassDeclaration> declarations = getAllOfType(program, ClassDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).interfaces().clear();
 		rewrite();
@@ -1175,13 +1094,11 @@ public class ASTRewriteTests {
 		String str = "<?php class MyClass extends AAA implements Foo,Bar{ } ?> ";
 		initialize(str);
 
-		List<ClassDeclaration> declarations = getAllOfType(program,
-				ClassDeclaration.class);
+		List<ClassDeclaration> declarations = getAllOfType(program, ClassDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).interfaces().get(1).setName("BooBo");
 		rewrite();
-		checkResult(
-				"<?php class MyClass extends AAA implements Foo,BooBo{ } ?> ");
+		checkResult("<?php class MyClass extends AAA implements Foo,BooBo{ } ?> ");
 	}
 
 	@Test
@@ -1189,8 +1106,7 @@ public class ASTRewriteTests {
 		String str = "<?php interface MyInterface { } ?> ";
 		initialize(str);
 
-		List<InterfaceDeclaration> declarations = getAllOfType(program,
-				InterfaceDeclaration.class);
+		List<InterfaceDeclaration> declarations = getAllOfType(program, InterfaceDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).setName(ast.newIdentifier("Foo"));
 		rewrite();
@@ -1202,8 +1118,7 @@ public class ASTRewriteTests {
 		String str = "<?php interface MyInterface { const MY_CONSTANT = 3; public function myFunction($a); } ?> ";
 		initialize(str);
 
-		List<InterfaceDeclaration> declarations = getAllOfType(program,
-				InterfaceDeclaration.class);
+		List<InterfaceDeclaration> declarations = getAllOfType(program, InterfaceDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).interfaces().add(ast.newIdentifier("Foo"));
 		declarations.get(0).interfaces().add(ast.newIdentifier("Bar"));
@@ -1217,8 +1132,7 @@ public class ASTRewriteTests {
 		String str = "<?php interface MyInterface extends Foo, Bar{ const MY_CONSTANT = 3; public function myFunction($a); } ?> ";
 		initialize(str);
 
-		List<InterfaceDeclaration> declarations = getAllOfType(program,
-				InterfaceDeclaration.class);
+		List<InterfaceDeclaration> declarations = getAllOfType(program, InterfaceDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).interfaces().remove(1);
 		rewrite();
@@ -1231,13 +1145,11 @@ public class ASTRewriteTests {
 		String str = "<?php interface MyInterface extends Foo, Bar { const MY_CONSTANT = 3; public function myFunction($a); } ?> ";
 		initialize(str);
 
-		List<InterfaceDeclaration> declarations = getAllOfType(program,
-				InterfaceDeclaration.class);
+		List<InterfaceDeclaration> declarations = getAllOfType(program, InterfaceDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).interfaces().clear();
 		rewrite();
-		checkResult(
-				"<?php interface MyInterface { const MY_CONSTANT = 3; public function myFunction($a); } ?> ");
+		checkResult("<?php interface MyInterface { const MY_CONSTANT = 3; public function myFunction($a); } ?> ");
 	}
 
 	@Test
@@ -1245,8 +1157,7 @@ public class ASTRewriteTests {
 		String str = "<?php interface MyInterface extends Foo, Bar{ const MY_CONSTANT = 3; public function myFunction($a); } ?> ";
 		initialize(str);
 
-		List<InterfaceDeclaration> declarations = getAllOfType(program,
-				InterfaceDeclaration.class);
+		List<InterfaceDeclaration> declarations = getAllOfType(program, InterfaceDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).interfaces().get(0).setName("Boobo");
 		rewrite();
@@ -1285,8 +1196,7 @@ public class ASTRewriteTests {
 
 		List<ArrayCreation> arrays = getAllOfType(program, ArrayCreation.class);
 		assertTrue("Unexpected list size.", arrays.size() == 1);
-		((Scalar) arrays.get(0).elements().get(1).getKey())
-				.setStringValue("'Boobo'");
+		((Scalar) arrays.get(0).elements().get(1).getKey()).setStringValue("'Boobo'");
 		rewrite();
 		checkResult("<?php array('Golo','Boobo'=>'Dodidu'); ?>");
 	}
@@ -1308,11 +1218,9 @@ public class ASTRewriteTests {
 		String str = "<?php (bool)$a ? 3 : 4;?>";
 		initialize(str);
 
-		List<ConditionalExpression> conditional = getAllOfType(program,
-				ConditionalExpression.class);
+		List<ConditionalExpression> conditional = getAllOfType(program, ConditionalExpression.class);
 		assertTrue("Unexpected list size.", conditional.size() == 1);
-		((CastExpression) conditional.get(0).getCondition())
-				.setExpression(ast.newVariable("b"));
+		((CastExpression) conditional.get(0).getCondition()).setExpression(ast.newVariable("b"));
 		conditional.get(0).setIfFalse(ast.newScalar("100"));
 		conditional.get(0).setIfTrue(ast.newScalar("200"));
 		rewrite();
@@ -1324,12 +1232,10 @@ public class ASTRewriteTests {
 		String str = "<?php $a + 1;?>";
 		initialize(str);
 
-		List<InfixExpression> expressions = getAllOfType(program,
-				InfixExpression.class);
+		List<InfixExpression> expressions = getAllOfType(program, InfixExpression.class);
 		assertTrue("Unexpected list size.", expressions.size() == 1);
 		expressions.get(0).setOperator(InfixExpression.OP_MOD);
-		expressions.get(0).setRight(ast.newFunctionInvocation(
-				ast.newFunctionName(ast.newScalar("foo")), null));
+		expressions.get(0).setRight(ast.newFunctionInvocation(ast.newFunctionName(ast.newScalar("foo")), null));
 		rewrite();
 		checkResult("<?php $a % foo();?>");
 	}
@@ -1339,8 +1245,7 @@ public class ASTRewriteTests {
 		String str = "<?php 'string'.$c;?>";
 		initialize(str);
 
-		List<InfixExpression> expressions = getAllOfType(program,
-				InfixExpression.class);
+		List<InfixExpression> expressions = getAllOfType(program, InfixExpression.class);
 		assertTrue("Unexpected list size.", expressions.size() == 1);
 		expressions.get(0).setOperator(InfixExpression.OP_IS_NOT_EQUAL);
 		rewrite();
@@ -1412,8 +1317,7 @@ public class ASTRewriteTests {
 		String str = "<?php break $a;?>";
 		initialize(str);
 
-		List<BreakStatement> breaks = getAllOfType(program,
-				BreakStatement.class);
+		List<BreakStatement> breaks = getAllOfType(program, BreakStatement.class);
 		assertTrue("Unexpected list size.", breaks.size() == 1);
 		breaks.get(0).setExpression(ast.newVariable("b"));
 		rewrite();
@@ -1425,8 +1329,7 @@ public class ASTRewriteTests {
 		String str = "<?php break $a;?>";
 		initialize(str);
 
-		List<BreakStatement> breaks = getAllOfType(program,
-				BreakStatement.class);
+		List<BreakStatement> breaks = getAllOfType(program, BreakStatement.class);
 		assertTrue("Unexpected list size.", breaks.size() == 1);
 		breaks.get(0).getExpression().delete();
 		rewrite();
@@ -1438,8 +1341,7 @@ public class ASTRewriteTests {
 		String str = "<?php break;?>";
 		initialize(str);
 
-		List<BreakStatement> breaks = getAllOfType(program,
-				BreakStatement.class);
+		List<BreakStatement> breaks = getAllOfType(program, BreakStatement.class);
 		assertTrue("Unexpected list size.", breaks.size() == 1);
 		breaks.get(0).setExpression(ast.newVariable("b"));
 		rewrite();
@@ -1451,8 +1353,7 @@ public class ASTRewriteTests {
 		String str = "<?php continue;?>";
 		initialize(str);
 
-		List<ContinueStatement> continueExp = getAllOfType(program,
-				ContinueStatement.class);
+		List<ContinueStatement> continueExp = getAllOfType(program, ContinueStatement.class);
 		assertTrue("Unexpected list size.", continueExp.size() == 1);
 		continueExp.get(0).setExpression(ast.newVariable("b"));
 		rewrite();
@@ -1464,8 +1365,7 @@ public class ASTRewriteTests {
 		String str = "<?php continue $a;?>";
 		initialize(str);
 
-		List<ContinueStatement> continueExp = getAllOfType(program,
-				ContinueStatement.class);
+		List<ContinueStatement> continueExp = getAllOfType(program, ContinueStatement.class);
 		assertTrue("Unexpected list size.", continueExp.size() == 1);
 		continueExp.get(0).getExpression().delete();
 		rewrite();
@@ -1477,8 +1377,7 @@ public class ASTRewriteTests {
 		String str = "<?php continue $a;?>";
 		initialize(str);
 
-		List<ContinueStatement> continueExp = getAllOfType(program,
-				ContinueStatement.class);
+		List<ContinueStatement> continueExp = getAllOfType(program, ContinueStatement.class);
 		assertTrue("Unexpected list size.", continueExp.size() == 1);
 		continueExp.get(0).setExpression(ast.newVariable("b"));
 		rewrite();
@@ -1490,8 +1389,7 @@ public class ASTRewriteTests {
 		String str = "<?php return; ?>";
 		initialize(str);
 
-		List<ReturnStatement> returnStatements = getAllOfType(program,
-				ReturnStatement.class);
+		List<ReturnStatement> returnStatements = getAllOfType(program, ReturnStatement.class);
 		assertTrue("Unexpected list size.", returnStatements.size() == 1);
 		returnStatements.get(0).setExpression(ast.newVariable("a"));
 		rewrite();
@@ -1503,11 +1401,9 @@ public class ASTRewriteTests {
 		String str = "<?php return $a; ?>";
 		initialize(str);
 
-		List<ReturnStatement> returnStatements = getAllOfType(program,
-				ReturnStatement.class);
+		List<ReturnStatement> returnStatements = getAllOfType(program, ReturnStatement.class);
 		assertTrue("Unexpected list size.", returnStatements.size() == 1);
-		((Variable) returnStatements.get(0).getExpression())
-				.setName(ast.newScalar("b"));
+		((Variable) returnStatements.get(0).getExpression()).setName(ast.newScalar("b"));
 		rewrite();
 		checkResult("<?php return $b; ?>");
 	}
@@ -1517,8 +1413,7 @@ public class ASTRewriteTests {
 		String str = "<?php return $c; ?>";
 		initialize(str);
 
-		List<ReturnStatement> returnStatements = getAllOfType(program,
-				ReturnStatement.class);
+		List<ReturnStatement> returnStatements = getAllOfType(program, ReturnStatement.class);
 		assertTrue("Unexpected list size.", returnStatements.size() == 1);
 		returnStatements.get(0).getExpression().delete();
 		rewrite();
@@ -1556,8 +1451,7 @@ public class ASTRewriteTests {
 		String str = "<?php switch ($i) { case 0:    echo 'i equals 0';    break; case 1:     echo 'i equals 1';     break; default:    echo 'i not equals 0,1';  }  ?>";
 		initialize(str);
 
-		List<SwitchStatement> statements = getAllOfType(program,
-				SwitchStatement.class);
+		List<SwitchStatement> statements = getAllOfType(program, SwitchStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).setExpression(ast.newVariable("a"));
 		rewrite();
@@ -1573,8 +1467,7 @@ public class ASTRewriteTests {
 		List<SwitchCase> switchCases = getAllOfType(program, SwitchCase.class);
 		assertTrue("Unexpected list size.", switchCases.size() == 3);
 		switchCases.get(0).setValue(ast.newScalar("5"));
-		switchCases.get(0).actions().set(0,
-				ast.newEchoStatement(ast.newScalar("'i equals 5'")));
+		switchCases.get(0).actions().set(0, ast.newEchoStatement(ast.newScalar("'i equals 5'")));
 		rewrite();
 		checkResult(
 				"<?php switch ($i) { case 5:    echo 'i equals 5';\n    break; case 1:     echo 'i equals 1';     break; default:    echo 'i not equals 0,1';  }  ?>");
@@ -1596,11 +1489,9 @@ public class ASTRewriteTests {
 	@Test
 	public void switchStatementChangeAddCase() throws Exception {
 		String newLine = System.getProperty("line.separator");
-		String str = "<?php " + newLine + "switch ($i) { " + newLine
-				+ "	case 0:" + newLine + "		echo 'i equals 0';" + newLine
-				+ "		break;" + newLine + "	case 1:" + newLine
-				+ "		echo 'i equals 1';" + newLine + "		break;"
-				+ newLine + "	default:" + newLine
+		String str = "<?php " + newLine + "switch ($i) { " + newLine + "	case 0:" + newLine
+				+ "		echo 'i equals 0';" + newLine + "		break;" + newLine + "	case 1:" + newLine
+				+ "		echo 'i equals 1';" + newLine + "		break;" + newLine + "	default:" + newLine
 				+ "		echo 'i not equals 0,1';" + newLine + "}  ?>";
 		initialize(str);
 
@@ -1608,11 +1499,10 @@ public class ASTRewriteTests {
 		assertTrue("Unexpected list size.", blocks.size() == 1);
 		List<Statement> actions = new ArrayList<Statement>(3);
 		actions.add(ast.newEchoStatement(ast.newScalar("'a new case'")));
-		actions.add(ast.newExpressionStatement(ast.newFunctionInvocation(
-				ast.newFunctionName(ast.newScalar("foo")), null)));
+		actions.add(
+				ast.newExpressionStatement(ast.newFunctionInvocation(ast.newFunctionName(ast.newScalar("foo")), null)));
 		actions.add(ast.newBreakStatement());
-		blocks.get(0).statements().add(2,
-				ast.newSwitchCase(ast.newScalar("2"), actions, false));
+		blocks.get(0).statements().add(2, ast.newSwitchCase(ast.newScalar("2"), actions, false));
 		rewrite();
 		checkResult(
 				"<?php \nswitch ($i) { \n	case 0:\n		echo 'i equals 0';\n		break;\n	case 1:\n		echo 'i equals 1';\n		break;\n	case 2 :\n		echo 'a new case';\n		foo ();\n		break;\n\n	default:\n		echo 'i not equals 0,1';\n}  ?>");
@@ -1625,9 +1515,8 @@ public class ASTRewriteTests {
 
 		List<IfStatement> statements = getAllOfType(program, IfStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 2);
-		statements.get(0)
-				.setCondition(ast.newInfixExpression(ast.newVariable("c"),
-						InfixExpression.OP_BOOL_OR, ast.newVariable("d")));
+		statements.get(0).setCondition(
+				ast.newInfixExpression(ast.newVariable("c"), InfixExpression.OP_BOOL_OR, ast.newVariable("d")));
 		rewrite();
 		checkResult(
 				"<?php if ($c || $d) {   echo 'a is bigger than b';} elseif ($a == $b) {   echo 'a is equal to b';} else {   echo 'a is smaller than b';} ?>");
@@ -1646,8 +1535,7 @@ public class ASTRewriteTests {
 		blocks.get(0).setIsCurly(false);
 		blocks.get(1).setIsCurly(false);
 		rewrite();
-		checkResult(
-				"<?php if ($a > $b) :\n	echo 'a > b';\n	 else :\n	echo 'a <= b';\nendif; ?>");
+		checkResult("<?php if ($a > $b) :\n	echo 'a > b';\n	 else :\n	echo 'a <= b';\nendif; ?>");
 	}
 
 	@Test
@@ -1663,8 +1551,7 @@ public class ASTRewriteTests {
 		blocks.get(0).setIsCurly(true);
 		blocks.get(1).setIsCurly(true);
 		rewrite();
-		checkResult(
-				"<?php if ($a > $b) {\n	echo 'a > b';\n}\n else {\n	echo 'a <= b';\n}\n ?>");
+		checkResult("<?php if ($a > $b) {\n	echo 'a > b';\n}\n else {\n	echo 'a <= b';\n}\n ?>");
 	}
 
 	@Test
@@ -1729,8 +1616,7 @@ public class ASTRewriteTests {
 		List<Block> blocks = getAllOfType(program, Block.class);
 		blocks.get(0).setIsCurly(false);
 		rewrite();
-		checkResult(
-				"<?php for ($i = 1; $i <= 10; $i++) :  echo $i; endfor; ?>");
+		checkResult("<?php for ($i = 1; $i <= 10; $i++) :  echo $i; endfor; ?>");
 	}
 
 	@Test
@@ -1752,8 +1638,7 @@ public class ASTRewriteTests {
 		List<Block> blocks = getAllOfType(program, Block.class);
 		blocks.get(0).setIsCurly(false);
 		rewrite();
-		checkResult(
-				"<?php foreach ($arr as &$value) : $value = $value * 2; endforeach; ?>");
+		checkResult("<?php foreach ($arr as &$value) : $value = $value * 2; endforeach; ?>");
 	}
 
 	@Test
@@ -1764,8 +1649,7 @@ public class ASTRewriteTests {
 		List<Block> blocks = getAllOfType(program, Block.class);
 		blocks.get(0).setIsCurly(true);
 		rewrite();
-		checkResult(
-				"<?php foreach ($arr as &$value) { $value = $value * 2;\n}  ?>");
+		checkResult("<?php foreach ($arr as &$value) { $value = $value * 2;\n}  ?>");
 	}
 
 	@Test
@@ -1797,14 +1681,11 @@ public class ASTRewriteTests {
 		String str = "<?php while ($i <= 10) echo $i++; ?>";
 		initialize(str);
 
-		List<WhileStatement> statements = getAllOfType(program,
-				WhileStatement.class);
+		List<WhileStatement> statements = getAllOfType(program, WhileStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
-		statements.get(0)
-				.setCondition(ast.newInfixExpression(ast.newVariable("a"),
-						InfixExpression.OP_BOOL_OR, ast.newVariable("b")));
-		statements.get(0)
-				.setBody(ast.newEchoStatement(ast.newScalar("'Hello!!'")));
+		statements.get(0).setCondition(
+				ast.newInfixExpression(ast.newVariable("a"), InfixExpression.OP_BOOL_OR, ast.newVariable("b")));
+		statements.get(0).setBody(ast.newEchoStatement(ast.newScalar("'Hello!!'")));
 		rewrite();
 		checkResult("<?php while ($a || $b)echo 'Hello!!';\n ?>");
 	}
@@ -1816,17 +1697,15 @@ public class ASTRewriteTests {
 
 		List<DoStatement> statements = getAllOfType(program, DoStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
-		statements.get(0)
-				.setCondition(ast.newInfixExpression(ast.newVariable("a"),
-						InfixExpression.OP_IS_NOT_EQUAL, ast.newVariable("b")));
+		statements.get(0).setCondition(
+				ast.newInfixExpression(ast.newVariable("a"), InfixExpression.OP_IS_NOT_EQUAL, ast.newVariable("b")));
 
 		List<Statement> newStatements = new ArrayList<Statement>(2);
 		newStatements.add(ast.newEchoStatement(ast.newScalar("'Hello!!'")));
 		newStatements.add(ast.newEchoStatement(ast.newScalar("'Goodbye!!'")));
 		statements.get(0).setBody(ast.newBlock(newStatements));
 		rewrite();
-		checkResult(
-				"<?php do {\n	echo 'Hello!!';\n	echo 'Goodbye!!';\n}\nwhile ($a != $b); ?>");
+		checkResult("<?php do {\n	echo 'Hello!!';\n	echo 'Goodbye!!';\n}\nwhile ($a != $b); ?>");
 	}
 
 	@Test
@@ -1838,8 +1717,7 @@ public class ASTRewriteTests {
 		trueStatement.add(ast.newEchoStatement(ast.newScalar("'Boobo'")));
 		Block block = ast.newBlock(trueStatement);
 		block.setIsCurly(true);
-		program.statements().add(0,
-				ast.newIfStatement(ast.newVariable("a"), block, null));
+		program.statements().add(0, ast.newIfStatement(ast.newVariable("a"), block, null));
 		rewrite();
 		checkResult("<?php if ($a) {\n	echo 'Boobo';\n}\n?>");
 	}
@@ -1853,8 +1731,7 @@ public class ASTRewriteTests {
 		trueStatement.add(ast.newEchoStatement(ast.newScalar("'Boobo'")));
 		Block block = ast.newBlock(trueStatement);
 		block.setIsCurly(false);
-		program.statements().add(0,
-				ast.newIfStatement(ast.newVariable("a"), block, null));
+		program.statements().add(0, ast.newIfStatement(ast.newVariable("a"), block, null));
 		rewrite();
 		checkResult("<?php if ($a) :\n	echo 'Boobo';\n\nendif;\n?>");
 	}
@@ -1864,19 +1741,15 @@ public class ASTRewriteTests {
 		String str = "<?php for ($i = 1; $i <= 10; $i++) {  echo $i; } ?>";
 		initialize(str);
 
-		List<ForStatement> statements = getAllOfType(program,
-				ForStatement.class);
+		List<ForStatement> statements = getAllOfType(program, ForStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
-		statements.get(0).initializers().add(ast.newAssignment(
-				ast.newVariable("j"), Assignment.OP_EQUAL, ast.newScalar("5")));
+		statements.get(0).initializers()
+				.add(ast.newAssignment(ast.newVariable("j"), Assignment.OP_EQUAL, ast.newScalar("5")));
 		statements.get(0).conditions()
-				.add(ast.newInfixExpression(ast.newVariable("j"),
-						InfixExpression.OP_LGREATER, ast.newScalar("20")));
-		statements.get(0).updaters().add(ast.newPrefixExpression(
-				ast.newVariable("j"), PrefixExpression.OP_INC));
+				.add(ast.newInfixExpression(ast.newVariable("j"), InfixExpression.OP_LGREATER, ast.newScalar("20")));
+		statements.get(0).updaters().add(ast.newPrefixExpression(ast.newVariable("j"), PrefixExpression.OP_INC));
 		rewrite();
-		checkResult(
-				"<?php for ($i = 1, $j=5; $i <= 10, $j > 20; $i++, $j++) {  echo $i; } ?>");
+		checkResult("<?php for ($i = 1, $j=5; $i <= 10, $j > 20; $i++, $j++) {  echo $i; } ?>");
 	}
 
 	@Test
@@ -1884,8 +1757,7 @@ public class ASTRewriteTests {
 		String str = "<?php for ($i = 1; $i <= 10; $i++) {  echo $i; } ?>";
 		initialize(str);
 
-		List<ForStatement> statements = getAllOfType(program,
-				ForStatement.class);
+		List<ForStatement> statements = getAllOfType(program, ForStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).initializers().get(0).delete();
 		rewrite();
@@ -1897,8 +1769,7 @@ public class ASTRewriteTests {
 		String str = "<?php for ($i = 1; $i <= 10; $i++) {  echo $i; } ?>";
 		initialize(str);
 
-		List<ForStatement> statements = getAllOfType(program,
-				ForStatement.class);
+		List<ForStatement> statements = getAllOfType(program, ForStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).conditions().clear();
 		rewrite();
@@ -1910,8 +1781,7 @@ public class ASTRewriteTests {
 		String str = "<?php for ($i = 1; $i <= 10; $i++) {  echo $i; } ?>";
 		initialize(str);
 
-		List<ForStatement> statements = getAllOfType(program,
-				ForStatement.class);
+		List<ForStatement> statements = getAllOfType(program, ForStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).updaters().get(0).delete();
 		rewrite();
@@ -1923,14 +1793,12 @@ public class ASTRewriteTests {
 		String str = "<?php foreach ($arr as &$value) { $value = $value * 2; } ?>";
 		initialize(str);
 
-		List<ForEachStatement> statements = getAllOfType(program,
-				ForEachStatement.class);
+		List<ForEachStatement> statements = getAllOfType(program, ForEachStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).setExpression(ast.newVariable("foo"));
 		statements.get(0).setKey(ast.newVariable("bar"));
 		rewrite();
-		checkResult(
-				"<?php foreach ($foo as $bar=>&$value) { $value = $value * 2; } ?>");
+		checkResult("<?php foreach ($foo as $bar=>&$value) { $value = $value * 2; } ?>");
 	}
 
 	@Test
@@ -1938,16 +1806,14 @@ public class ASTRewriteTests {
 		String str = "<?php foreach ($arr as $foo=>&$value) { $value = $value * 2; } ?>";
 		initialize(str);
 
-		List<ForEachStatement> statements = getAllOfType(program,
-				ForEachStatement.class);
+		List<ForEachStatement> statements = getAllOfType(program, ForEachStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 
 		statements.get(0).setKey(ast.newVariable("bar"));
 		Reference ref = ast.newReference(ast.newVariable("val"));
 		statements.get(0).setValue(ref);
 		rewrite();
-		checkResult(
-				"<?php foreach ($arr as $bar=>&$val) { $value = $value * 2; } ?>");
+		checkResult("<?php foreach ($arr as $bar=>&$val) { $value = $value * 2; } ?>");
 	}
 
 	@Test
@@ -1955,13 +1821,11 @@ public class ASTRewriteTests {
 		String str = "<?php foreach ($foo as $bar=>&$value) { $value = $value * 2; } ?>";
 		initialize(str);
 
-		List<ForEachStatement> statements = getAllOfType(program,
-				ForEachStatement.class);
+		List<ForEachStatement> statements = getAllOfType(program, ForEachStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).getKey().delete();
 		rewrite();
-		checkResult(
-				"<?php foreach ($foo as &$value) { $value = $value * 2; } ?>");
+		checkResult("<?php foreach ($foo as &$value) { $value = $value * 2; } ?>");
 	}
 
 	@Test
@@ -1969,14 +1833,12 @@ public class ASTRewriteTests {
 		String str = "<?php try { $error = 'Always throw this error'; } catch (Exception $e) { echo ''; }  ?>";
 		initialize(str);
 
-		List<TryStatement> statements = getAllOfType(program,
-				TryStatement.class);
+		List<TryStatement> statements = getAllOfType(program, TryStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		Block newBlock = ast.newBlock();
-		newBlock.statements()
-				.add(ast.newEchoStatement(ast.newScalar("'Hello'")));
-		statements.get(0).catchClauses().add(ast.newCatchClause(
-				ast.newIdentifier("Boobo"), ast.newVariable("b"), newBlock));
+		newBlock.statements().add(ast.newEchoStatement(ast.newScalar("'Hello'")));
+		statements.get(0).catchClauses()
+				.add(ast.newCatchClause(ast.newIdentifier("Boobo"), ast.newVariable("b"), newBlock));
 		rewrite();
 		checkResult(
 				"<?php try { $error = 'Always throw this error'; } catch (Exception $e) { echo ''; }catch (Boobo $b) {\necho 'Hello';\n}\n  ?>");
@@ -1987,13 +1849,11 @@ public class ASTRewriteTests {
 		String str = "<?php try { $error = 'Always throw this error'; } catch (Exception $e) { echo ''; } catch (AnotherException $ea) { echo ''; }  ?>";
 		initialize(str);
 
-		List<TryStatement> statements = getAllOfType(program,
-				TryStatement.class);
+		List<TryStatement> statements = getAllOfType(program, TryStatement.class);
 		assertTrue("Unexpected list size.", statements.size() == 1);
 		statements.get(0).catchClauses().get(1).delete();
 		rewrite();
-		checkResult(
-				"<?php try { $error = 'Always throw this error'; } catch (Exception $e) { echo ''; }  ?>");
+		checkResult("<?php try { $error = 'Always throw this error'; } catch (Exception $e) { echo ''; }  ?>");
 	}
 
 	@Test
@@ -2001,8 +1861,7 @@ public class ASTRewriteTests {
 		String str = "<?php global $a; ?>";
 		initialize(str);
 
-		List<GlobalStatement> statements = getAllOfType(program,
-				GlobalStatement.class);
+		List<GlobalStatement> statements = getAllOfType(program, GlobalStatement.class);
 		statements.get(0).variables().add(ast.newVariable("b"));
 		rewrite();
 		checkResult("<?php global $a, $b; ?>");
@@ -2013,10 +1872,8 @@ public class ASTRewriteTests {
 		String str = "<?php global $$a; ?>";
 		initialize(str);
 
-		List<GlobalStatement> statements = getAllOfType(program,
-				GlobalStatement.class);
-		statements.get(0).variables()
-				.add(ast.newReflectionVariable(ast.newVariable("b")));
+		List<GlobalStatement> statements = getAllOfType(program, GlobalStatement.class);
+		statements.get(0).variables().add(ast.newReflectionVariable(ast.newVariable("b")));
 		rewrite();
 		checkResult("<?php global $$a, $$b; ?>");
 	}
@@ -2026,10 +1883,9 @@ public class ASTRewriteTests {
 		String str = "<?php static $a;?>";
 		initialize(str);
 
-		List<StaticStatement> statements = getAllOfType(program,
-				StaticStatement.class);
-		statements.get(0).expressions().add(ast.newAssignment(
-				ast.newVariable("b"), Assignment.OP_EQUAL, ast.newScalar("8")));
+		List<StaticStatement> statements = getAllOfType(program, StaticStatement.class);
+		statements.get(0).expressions()
+				.add(ast.newAssignment(ast.newVariable("b"), Assignment.OP_EQUAL, ast.newScalar("8")));
 		rewrite();
 		checkResult("<?php static $a, $b=8;?>");
 	}
@@ -2050,17 +1906,13 @@ public class ASTRewriteTests {
 		String str = "<?php class A { public $a = 3; final private static $var; }?>";
 		initialize(str);
 
-		List<FieldsDeclaration> declarations = getAllOfType(program,
-				FieldsDeclaration.class);
+		List<FieldsDeclaration> declarations = getAllOfType(program, FieldsDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 2);
-		declarations.get(0).fields().add(ast.newSingleFieldDeclaration(
-				ast.newVariable("b"), ast.newScalar("4")));
+		declarations.get(0).fields().add(ast.newSingleFieldDeclaration(ast.newVariable("b"), ast.newScalar("4")));
 		declarations.get(0).fields().get(0).getValue().delete();
-		declarations.get(1)
-				.setModifier(Modifiers.AccProtected | Modifiers.AccFinal);
+		declarations.get(1).setModifier(Modifiers.AccProtected | Modifiers.AccFinal);
 		rewrite();
-		checkResult(
-				"<?php class A { public $a, $b = 4; protected final $var; }?>");
+		checkResult("<?php class A { public $a, $b = 4; protected final $var; }?>");
 	}
 
 	@Test
@@ -2068,16 +1920,12 @@ public class ASTRewriteTests {
 		String str = "<?php class A { public function foo(int $a){} }?> ";
 		initialize(str);
 
-		List<MethodDeclaration> declarations = getAllOfType(program,
-				MethodDeclaration.class);
+		List<MethodDeclaration> declarations = getAllOfType(program, MethodDeclaration.class);
 		assertTrue("Unexpected list size.", declarations.size() == 1);
-		declarations.get(0)
-				.setModifier(Modifiers.AccProtected | Modifiers.AccAbstract);
-		declarations.get(0).getFunction()
-				.setFunctionName(ast.newIdentifier("bar"));
+		declarations.get(0).setModifier(Modifiers.AccProtected | Modifiers.AccAbstract);
+		declarations.get(0).getFunction().setFunctionName(ast.newIdentifier("bar"));
 		rewrite();
-		checkResult(
-				"<?php class A { protected abstract function bar(int $a){} }?> ");
+		checkResult("<?php class A { protected abstract function bar(int $a){} }?> ");
 	}
 
 	@Test
@@ -2090,29 +1938,24 @@ public class ASTRewriteTests {
 		AST astRoot = program.getAST();
 		ASTRewrite rewrite = ASTRewrite.create(astRoot);
 		Block block = blocks.get(0);
-		ListRewrite listRewrite = rewrite.getListRewrite(block,
-				Block.STATEMENTS_PROPERTY);
-		ASTNode placeHolder = rewrite.createStringPlaceholder("//mycomment",
-				ASTNode.COMMENT);
+		ListRewrite listRewrite = rewrite.getListRewrite(block, Block.STATEMENTS_PROPERTY);
+		ASTNode placeHolder = rewrite.createStringPlaceholder("//mycomment", ASTNode.COMMENT);
 		listRewrite.insertFirst(placeHolder, null);
 
 		TextEdit textEdits = rewrite.rewriteAST(document, null);
 		textEdits.apply(document);
-		checkResult(
-				"<?php\n class A { \n	//mycomment\n	public function foo(int $a){}\n }?> ");
+		checkResult("<?php\n class A { \n	//mycomment\n	public function foo(int $a){}\n }?> ");
 	}
 
 	@Test
 	public void exception() throws Exception {
 		String str = "<?php\n function A() { throw new Exception(); }";
 		initialize(str);
-		List<ThrowStatement> allthrows = getAllOfType(program,
-				ThrowStatement.class);
+		List<ThrowStatement> allthrows = getAllOfType(program, ThrowStatement.class);
 		ASTRewrite rewrite = ASTRewrite.create(program.getAST());
 
 		rewrite.replace(allthrows.get(0),
-				rewrite.createGroupNode(new ASTNode[] { allthrows.get(0),
-						program.getAST().newBreakStatement() }),
+				rewrite.createGroupNode(new ASTNode[] { allthrows.get(0), program.getAST().newBreakStatement() }),
 				null);
 		rewrite.rewriteAST(document, null).apply(document);
 
@@ -2125,12 +1968,10 @@ public class ASTRewriteTests {
 	 * Set the content into the document and initialize the parser, the program
 	 * and the ast.
 	 */
-	private void initialize(String content, PHPVersion phpVersion)
-			throws Exception {
+	private void initialize(String content, PHPVersion phpVersion) throws Exception {
 		document = new Document(content);
 
-		ASTParser parser = ASTParser.newParser(phpVersion,
-				ProjectOptions.useShortTags((IProject) null));
+		ASTParser parser = ASTParser.newParser(phpVersion, ProjectOptions.useShortTags((IProject) null));
 		parser.setSource(document.get().toCharArray());
 		program = parser.createAST(new NullProgressMonitor());
 		ast = program.getAST();
@@ -2153,15 +1994,13 @@ public class ASTRewriteTests {
 
 	protected final void checkResult(String expected) {
 		String actual = document.get();
-		String diff = PHPCoreTests.compareContentsIgnoreWhitespace(expected,
-				actual);
+		String diff = PHPCoreTests.compareContentsIgnoreWhitespace(expected, actual);
 		if (diff != null) {
 			fail(diff);
 		}
 	}
 
-	public <T extends ASTNode> List<T> getAllOfType(Program program,
-			final String className) {
+	public <T extends ASTNode> List<T> getAllOfType(Program program, final String className) {
 		final List<T> list = new ArrayList<T>();
 		program.accept(new ApplyAll() {
 			@SuppressWarnings("unchecked")
@@ -2175,8 +2014,7 @@ public class ASTRewriteTests {
 		return list;
 	}
 
-	public <T extends ASTNode> List<T> getAllOfType(Program program,
-			final Class<T> nodeClass) {
+	public <T extends ASTNode> List<T> getAllOfType(Program program, final Class<T> nodeClass) {
 		final List<T> list = new ArrayList<T>();
 		program.accept(new ApplyAll() {
 			@SuppressWarnings("unchecked")

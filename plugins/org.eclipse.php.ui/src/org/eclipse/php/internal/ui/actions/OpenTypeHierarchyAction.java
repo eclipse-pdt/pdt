@@ -68,8 +68,7 @@ import org.eclipse.ui.texteditor.IUpdate;
  * 
  * @since 2.0
  */
-public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
-		IUpdate {
+public class OpenTypeHierarchyAction extends SelectionDispatchAction implements IUpdate {
 
 	private PHPStructuredEditor fEditor;
 	private IModelElement lastSelectedElement;
@@ -112,8 +111,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 
 		IJobManager jobManager = Job.getJobManager();
 		if (jobManager.find(PHPUiPlugin.OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME).length > 0) {
-			jobManager
-					.cancel(PHPUiPlugin.OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME);
+			jobManager.cancel(PHPUiPlugin.OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME);
 		}
 
 		Job job = new Job(PHPUiPlugin.OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME) {
@@ -147,8 +145,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 			if (firstElement instanceof IMethod) {
 				setEnabled(((IMethod) firstElement).getParent() instanceof IType);
 			} else {
-				setEnabled(firstElement instanceof IType
-						|| firstElement instanceof IField);
+				setEnabled(firstElement instanceof IType || firstElement instanceof IField);
 			}
 		}
 	}
@@ -163,10 +160,9 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 		if (fEditor == null || selection == null || selection.getLength() <= 0)
 			return false;
 		if (fEditor.getModelElement() instanceof ISourceModule) {
-			ISourceModule sourceModule = (ISourceModule) fEditor
-					.getModelElement();
-			IModelElement element = getSelectionModelElement(
-					selection.getOffset(), selection.getLength(), sourceModule);
+			ISourceModule sourceModule = (ISourceModule) fEditor.getModelElement();
+			IModelElement element = getSelectionModelElement(selection.getOffset(), selection.getLength(),
+					sourceModule);
 			if (element == null) {
 				lastSelectedElement = null;
 				return false;
@@ -192,18 +188,14 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 	 * @param sourceModule
 	 * @return The {@link IModelElement} or null.
 	 */
-	protected IModelElement getSelectionModelElement(int offset, int length,
-			ISourceModule sourceModule) {
+	protected IModelElement getSelectionModelElement(int offset, int length, ISourceModule sourceModule) {
 		IModelElement element = null;
 		try {
-			Program ast = SharedASTProvider.getAST(sourceModule,
-					SharedASTProvider.WAIT_NO, null);
+			Program ast = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_NO, null);
 			if (ast != null) {
 				ASTNode selectedNode = NodeFinder.perform(ast, offset, length);
-				if (selectedNode != null
-						&& selectedNode.getType() == ASTNode.IDENTIFIER) {
-					IBinding binding = ((Identifier) selectedNode)
-							.resolveBinding();
+				if (selectedNode != null && selectedNode.getType() == ASTNode.IDENTIFIER) {
+					IBinding binding = ((Identifier) selectedNode).resolveBinding();
 					if (binding != null) {
 						element = binding.getPHPElement();
 					}
@@ -229,15 +221,12 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
 	public void run(ITextSelection selection) {
-		IModelElement input = EditorUtility.getEditorInputModelElement(fEditor,
-				true);
-		if (input == null || !ActionUtil.isProcessable(getShell(), input)
-				|| !(input instanceof ISourceModule)) {
+		IModelElement input = EditorUtility.getEditorInputModelElement(fEditor, true);
+		if (input == null || !ActionUtil.isProcessable(getShell(), input) || !(input instanceof ISourceModule)) {
 			return;
 		}
-		final IModelElement selectionModelElement = getSelectionModelElement(
-				selection.getOffset(), selection.getLength(),
-				(ISourceModule) input);
+		final IModelElement selectionModelElement = getSelectionModelElement(selection.getOffset(),
+				selection.getLength(), (ISourceModule) input);
 		run(new IModelElement[] { selectionModelElement });
 	}
 
@@ -253,8 +242,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 			Object input = selection.getFirstElement();
 
 			if (input instanceof LogicalPackage) {
-				IScriptFolder[] fragments = ((LogicalPackage) input)
-						.getFragments();
+				IScriptFolder[] fragments = ((LogicalPackage) input).getFragments();
 				if (fragments.length == 0)
 					return;
 				input = fragments[0];
@@ -275,8 +263,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 			List result = new ArrayList(1);
 			IStatus status = compileCandidates(result, element);
 			if (status.isOK()) {
-				run((IModelElement[]) result.toArray(new IModelElement[result
-						.size()]));
+				run((IModelElement[]) result.toArray(new IModelElement[result.size()]));
 			} else {
 				ErrorDialog.openError(getShell(), getDialogTitle(), "", //$NON-NLS-1$
 						status);
@@ -318,8 +305,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 		open(elements, getSite().getWorkbenchWindow());
 	}
 
-	public static TypeHierarchyViewPart open(IModelElement[] candidates,
-			IWorkbenchWindow window) {
+	public static TypeHierarchyViewPart open(IModelElement[] candidates, IWorkbenchWindow window) {
 		Assert.isNotNull(candidates);
 		Assert.isTrue(candidates.length != 0);
 
@@ -327,8 +313,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 		if (candidates.length > 1) {
 			String title = ""; //$NON-NLS-1$
 			String message = ""; //$NON-NLS-1$
-			input = OpenActionUtil.selectModelElement(candidates,
-					window.getShell(), title, message);
+			input = OpenActionUtil.selectModelElement(candidates, window.getShell(), title, message);
 		} else {
 			input = candidates[0];
 		}
@@ -339,18 +324,15 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 		return openInViewPart(window, input);
 	}
 
-	private static TypeHierarchyViewPart openInViewPart(
-			IWorkbenchWindow window, IModelElement input) {
+	private static TypeHierarchyViewPart openInViewPart(IWorkbenchWindow window, IModelElement input) {
 		IWorkbenchPage page = window.getActivePage();
 		try {
-			TypeHierarchyViewPart result = (TypeHierarchyViewPart) page
-					.findView(DLTKUIPlugin.ID_TYPE_HIERARCHY);
+			TypeHierarchyViewPart result = (TypeHierarchyViewPart) page.findView(DLTKUIPlugin.ID_TYPE_HIERARCHY);
 			if (result != null) {
 				result.clearNeededRefresh(); // avoid refresh of old hierarchy
 				// on 'becomes visible'
 			}
-			result = (TypeHierarchyViewPart) page
-					.showView(DLTKUIPlugin.ID_TYPE_HIERARCHY);
+			result = (TypeHierarchyViewPart) page.showView(DLTKUIPlugin.ID_TYPE_HIERARCHY);
 			result.setInputElement(input);
 			return result;
 		} catch (CoreException e) {
@@ -365,8 +347,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 	}
 
 	private static IStatus createStatus(String message) {
-		return new Status(IStatus.INFO, PHPUiPlugin.getPluginId(),
-				PHPUiPlugin.INTERNAL_ERROR, message, null);
+		return new Status(IStatus.INFO, PHPUiPlugin.getPluginId(), PHPUiPlugin.INTERNAL_ERROR, message, null);
 	}
 
 	public void update() {
@@ -392,8 +373,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 	}
 
 	private static IStatus compileCandidates(List result, IModelElement elem) {
-		IStatus ok = new Status(IStatus.OK, PHPUiPlugin.getPluginId(), 0,
-				"", null); //$NON-NLS-1$
+		IStatus ok = new Status(IStatus.OK, PHPUiPlugin.getPluginId(), 0, "", null); //$NON-NLS-1$
 		try {
 			switch (elem.getElementType()) {
 			// case IModelElement.INITIALIZER:
@@ -413,23 +393,23 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 			case IModelElement.PACKAGE_DECLARATION:
 				result.add(elem.getAncestor(IModelElement.SCRIPT_FOLDER));
 				return ok;
-				// case IModelElement.IMPORT_DECLARATION:
-				// IImportDeclaration decl= (IImportDeclaration) elem;
-				// if (decl.isOnDemand()) {
-				// elem= JavaModelUtil.findTypeContainer(elem.getJavaProject(),
-				// Signature.getQualifier(elem.getElementName()));
-				// } else {
-				// elem= elem.getJavaProject().findType(elem.getElementName());
-				// }
-				// if (elem != null) {
-				// result.add(elem);
-				// return ok;
-				// }
-				// return createStatus(ActionMessages.
-				// OpenTypeHierarchyAction_messages_unknown_import_decl);
-				// case IJavaElement.CLASS_FILE:
-				// result.add(((IClassFile)elem).getType());
-				// return ok;
+			// case IModelElement.IMPORT_DECLARATION:
+			// IImportDeclaration decl= (IImportDeclaration) elem;
+			// if (decl.isOnDemand()) {
+			// elem= JavaModelUtil.findTypeContainer(elem.getJavaProject(),
+			// Signature.getQualifier(elem.getElementName()));
+			// } else {
+			// elem= elem.getJavaProject().findType(elem.getElementName());
+			// }
+			// if (elem != null) {
+			// result.add(elem);
+			// return ok;
+			// }
+			// return createStatus(ActionMessages.
+			// OpenTypeHierarchyAction_messages_unknown_import_decl);
+			// case IJavaElement.CLASS_FILE:
+			// result.add(((IClassFile)elem).getType());
+			// return ok;
 			case IModelElement.SOURCE_MODULE:
 				AbstractSourceModule cu = (AbstractSourceModule) elem;
 				IType[] types = cu.getTypes();

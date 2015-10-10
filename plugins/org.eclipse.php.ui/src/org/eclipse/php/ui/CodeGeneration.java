@@ -48,8 +48,7 @@ import org.eclipse.php.ui.editor.SharedASTProvider;
  */
 public class CodeGeneration {
 
-	private static final String UNKNOWN_TYPE = UnknownType.INSTANCE
-			.getTypeName();
+	private static final String UNKNOWN_TYPE = UnknownType.INSTANCE.getTypeName();
 
 	/**
 	 * Constant ID for the type kind to be used in
@@ -112,11 +111,10 @@ public class CodeGeneration {
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 */
-	public static String getCompilationUnitContent(IScriptProject sp,
-			String typeComment, String typeContent, String lineDelimiter)
-			throws CoreException {
-		return getCompilationUnitContent(sp, getFileComment(sp, lineDelimiter),
-				typeComment, typeContent, lineDelimiter);
+	public static String getCompilationUnitContent(IScriptProject sp, String typeComment, String typeContent,
+			String lineDelimiter) throws CoreException {
+		return getCompilationUnitContent(sp, getFileComment(sp, lineDelimiter), typeComment, typeContent,
+				lineDelimiter);
 	}
 
 	/**
@@ -144,11 +142,9 @@ public class CodeGeneration {
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.1
 	 */
-	public static String getCompilationUnitContent(IScriptProject sp,
-			String fileComment, String typeComment, String typeContent,
-			String lineDelimiter) throws CoreException {
-		return StubUtility.getCompilationUnitContent(sp, fileComment,
-				typeComment, typeContent, lineDelimiter);
+	public static String getCompilationUnitContent(IScriptProject sp, String fileComment, String typeComment,
+			String typeContent, String lineDelimiter) throws CoreException {
+		return StubUtility.getCompilationUnitContent(sp, fileComment, typeComment, typeContent, lineDelimiter);
 	}
 
 	/**
@@ -167,13 +163,11 @@ public class CodeGeneration {
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.1
 	 */
-	public static String getFileComment(ISourceModule sm, String lineDelimiter)
-			throws CoreException {
+	public static String getFileComment(ISourceModule sm, String lineDelimiter) throws CoreException {
 		return StubUtility.getFileComment(sm, lineDelimiter);
 	}
 
-	public static String getFileComment(IScriptProject sp, String lineDelimiter)
-			throws CoreException {
+	public static String getFileComment(IScriptProject sp, String lineDelimiter) throws CoreException {
 		return StubUtility.getFileComment(sp, lineDelimiter);
 	}
 
@@ -197,11 +191,9 @@ public class CodeGeneration {
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 */
-	public static String getTypeComment(IScriptProject sp,
-			String typeQualifiedName, String lineDelimiter)
+	public static String getTypeComment(IScriptProject sp, String typeQualifiedName, String lineDelimiter)
 			throws CoreException {
-		return StubUtility.getTypeComment(sp, typeQualifiedName, EMPTY,
-				lineDelimiter);
+		return StubUtility.getTypeComment(sp, typeQualifiedName, EMPTY, lineDelimiter);
 	}
 
 	/**
@@ -227,11 +219,9 @@ public class CodeGeneration {
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.1
 	 */
-	public static String getTypeComment(IScriptProject sp,
-			String typeQualifiedName, String[] typeParameterNames,
+	public static String getTypeComment(IScriptProject sp, String typeQualifiedName, String[] typeParameterNames,
 			String lineDelimiter) throws CoreException {
-		return StubUtility.getTypeComment(sp, typeQualifiedName,
-				typeParameterNames, lineDelimiter);
+		return StubUtility.getTypeComment(sp, typeQualifiedName, typeParameterNames, lineDelimiter);
 	}
 
 	/**
@@ -259,8 +249,8 @@ public class CodeGeneration {
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.2
 	 */
-	public static String getTypeBody(String typeKind, IScriptProject sp,
-			String typeName, String lineDelim) throws CoreException {
+	public static String getTypeBody(String typeKind, IScriptProject sp, String typeName, String lineDelim)
+			throws CoreException {
 		return StubUtility.getTypeBody(typeKind, sp, typeName, lineDelim);
 	}
 
@@ -284,16 +274,15 @@ public class CodeGeneration {
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.0
 	 */
-	public static String getFieldComment(IScriptProject sp, IField field,
-			String lineDelimiter) throws CoreException {
+	public static String getFieldComment(IScriptProject sp, IField field, String lineDelimiter) throws CoreException {
 		Boolean isVar = false;
 		Program program = null;
 
 		try {
 			// XXX: WAIT_NO (instead of WAIT_YES) due bug 466694 and until
 			// bug 438661 will be fixed
-			program = SharedASTProvider.getAST(field.getSourceModule(),
-					SharedASTProvider.WAIT_NO, new NullProgressMonitor());
+			program = SharedASTProvider.getAST(field.getSourceModule(), SharedASTProvider.WAIT_NO,
+					new NullProgressMonitor());
 		} catch (IOException e1) {
 		}
 
@@ -304,8 +293,7 @@ public class CodeGeneration {
 			}
 		}
 
-		ASTNode elementAt = program.getElementAt(field.getSourceRange()
-				.getOffset());
+		ASTNode elementAt = program.getElementAt(field.getSourceRange().getOffset());
 		// we need at least one entry (even if content is null)
 		Expression[] expressions = new Expression[1];
 		ITypeBinding[] varTypes = new ITypeBinding[1];
@@ -315,8 +303,7 @@ public class CodeGeneration {
 			isVar = true;
 			Variable varDeclaration = (Variable) elementAt;
 			if (varDeclaration.getParent() instanceof Assignment) {
-				expressions[0] = ((Assignment) varDeclaration.getParent())
-						.getRightHandSide();
+				expressions[0] = ((Assignment) varDeclaration.getParent()).getRightHandSide();
 				varTypes[0] = expressions[0].resolveTypeBinding();
 			} else {
 				varTypes[0] = varDeclaration.resolveTypeBinding();
@@ -337,11 +324,9 @@ public class CodeGeneration {
 			}
 		} else if (elementAt instanceof ConstantDeclaration) {
 			ConstantDeclaration constDeclaration = (ConstantDeclaration) elementAt;
-			Identifier[] varDeclarations = constDeclaration.names().toArray(
-					new Identifier[0]);
+			Identifier[] varDeclarations = constDeclaration.names().toArray(new Identifier[0]);
 			if (varDeclarations.length > 0) {
-				expressions = constDeclaration.initializers().toArray(
-						new Expression[0]);
+				expressions = constDeclaration.initializers().toArray(new Expression[0]);
 				assert varDeclarations.length == expressions.length;
 
 				varTypes = new ITypeBinding[varDeclarations.length];
@@ -356,11 +341,9 @@ public class CodeGeneration {
 		String[] fieldTypes = getFieldTypes(varTypes, expressions);
 
 		if (isVar || fieldTypes.length > 1) {
-			return StubUtility.getMultipleFieldsComment(sp, fieldTypes,
-					fieldNames, lineDelimiter);
+			return StubUtility.getMultipleFieldsComment(sp, fieldTypes, fieldNames, lineDelimiter);
 		}
-		return StubUtility.getFieldComment(sp, fieldTypes[0], fieldNames[0],
-				lineDelimiter);
+		return StubUtility.getFieldComment(sp, fieldTypes[0], fieldNames[0], lineDelimiter);
 	}
 
 	private static String getVarName(Identifier varDeclaration) {
@@ -383,8 +366,7 @@ public class CodeGeneration {
 	 *            (can have null entries)
 	 * @return non-null field types
 	 */
-	public static String[] getFieldTypes(ITypeBinding[] varTypes,
-			Expression[] expressions) {
+	public static String[] getFieldTypes(ITypeBinding[] varTypes, Expression[] expressions) {
 		String[] fieldTypes = new String[expressions.length];
 
 		for (int i = 0; i < expressions.length; i++) {
@@ -520,13 +502,11 @@ public class CodeGeneration {
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 */
-	public static String getMethodComment(IScriptProject sp,
-			String declaringTypeName, String methodName, String[] paramNames,
-			String[] excTypeSig, String retTypeSig, IMethod overridden,
-			String lineDelimiter, List<String> exceptions) throws CoreException {
-		return StubUtility.getMethodComment(sp, declaringTypeName, methodName,
-				paramNames, retTypeSig, EMPTY, overridden, false,
-				lineDelimiter, exceptions);
+	public static String getMethodComment(IScriptProject sp, String declaringTypeName, String methodName,
+			String[] paramNames, String[] excTypeSig, String retTypeSig, IMethod overridden, String lineDelimiter,
+			List<String> exceptions) throws CoreException {
+		return StubUtility.getMethodComment(sp, declaringTypeName, methodName, paramNames, retTypeSig, EMPTY,
+				overridden, false, lineDelimiter, exceptions);
 	}
 
 	/**
@@ -573,14 +553,11 @@ public class CodeGeneration {
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.1
 	 */
-	public static String getMethodComment(IScriptProject sp,
-			String declaringTypeName, String methodName, String[] paramNames,
-			String[] excTypeSig, String retTypeSig,
-			String[] typeParameterNames, IMethod overridden,
-			String lineDelimiter, List<String> exceptions) throws CoreException {
-		return StubUtility.getMethodComment(sp, declaringTypeName, methodName,
-				paramNames, retTypeSig, typeParameterNames, overridden, false,
-				lineDelimiter, exceptions);
+	public static String getMethodComment(IScriptProject sp, String declaringTypeName, String methodName,
+			String[] paramNames, String[] excTypeSig, String retTypeSig, String[] typeParameterNames,
+			IMethod overridden, String lineDelimiter, List<String> exceptions) throws CoreException {
+		return StubUtility.getMethodComment(sp, declaringTypeName, methodName, paramNames, retTypeSig,
+				typeParameterNames, overridden, false, lineDelimiter, exceptions);
 	}
 
 	/**
@@ -606,8 +583,8 @@ public class CodeGeneration {
 	 *             Contributed by zhaozw - bug #255204 [regression] Parameters
 	 *             type is not displayed in Generated element comments doc block
 	 */
-	public static String getMethodComment(IMethod method, IMethod overridden,
-			String lineDelimiter) throws CoreException {
+	public static String getMethodComment(IMethod method, IMethod overridden, String lineDelimiter)
+			throws CoreException {
 		// FIXME - 'retType' should be initialized to null after the
 		// 'getReturnType will be functional, so void/c'tor will not have
 		// 'return' tag
@@ -620,8 +597,8 @@ public class CodeGeneration {
 		try {
 			// XXX: WAIT_NO (instead of WAIT_YES) due bug 466694 and until
 			// bug 438661 will be fixed
-			program = SharedASTProvider.getAST(method.getSourceModule(),
-					SharedASTProvider.WAIT_NO, new NullProgressMonitor());
+			program = SharedASTProvider.getAST(method.getSourceModule(), SharedASTProvider.WAIT_NO,
+					new NullProgressMonitor());
 		} catch (IOException e1) {
 		}
 
@@ -634,29 +611,25 @@ public class CodeGeneration {
 
 		ASTNode elementAt = null;
 		try {
-			elementAt = program.getElementAt(method.getSourceRange()
-					.getOffset());
+			elementAt = program.getElementAt(method.getSourceRange().getOffset());
 		} catch (IllegalArgumentException e) {
 			program = generageProgram(method, null);
 			if (program == null) {
 				return null;
 			}
-			elementAt = program.getElementAt(method.getSourceRange()
-					.getOffset());
+			elementAt = program.getElementAt(method.getSourceRange().getOffset());
 			if (elementAt == null) {
 				return null;
 			}
 		}
 
-		if (!(elementAt instanceof MethodDeclaration
-				|| elementAt instanceof FunctionDeclaration || elementAt
-					.getParent() instanceof MethodDeclaration)) {
+		if (!(elementAt instanceof MethodDeclaration || elementAt instanceof FunctionDeclaration
+				|| elementAt.getParent() instanceof MethodDeclaration)) {
 			program = generageProgram(method, program);
 			if (program == null) {
 				return null;
 			}
-			elementAt = program.getElementAt(method.getSourceRange()
-					.getOffset());
+			elementAt = program.getElementAt(method.getSourceRange().getOffset());
 		}
 
 		if (elementAt.getParent() instanceof MethodDeclaration) {
@@ -671,8 +644,7 @@ public class CodeGeneration {
 		if (elementAt instanceof MethodDeclaration) {
 			MethodDeclaration methodDeclaration = (MethodDeclaration) elementAt;
 			resolvedBinding = methodDeclaration.resolveMethodBinding();
-			formalParameters = methodDeclaration.getFunction()
-					.formalParameters();
+			formalParameters = methodDeclaration.getFunction().formalParameters();
 		} else if (elementAt instanceof FunctionDeclaration) {
 			FunctionDeclaration functionDeclaration = (FunctionDeclaration) elementAt;
 			resolvedBinding = functionDeclaration.resolveFunctionBinding();
@@ -683,17 +655,14 @@ public class CodeGeneration {
 			public boolean visit(ThrowStatement throwStatement) {
 				Expression expression = throwStatement.getExpression();
 				if (expression instanceof ClassInstanceCreation) {
-					ClassInstanceCreation cic = (ClassInstanceCreation) throwStatement
-							.getExpression();
+					ClassInstanceCreation cic = (ClassInstanceCreation) throwStatement.getExpression();
 					if (cic.getClassName().getName() instanceof Identifier) {
-						Identifier name = (Identifier) cic.getClassName()
-								.getName();
+						Identifier name = (Identifier) cic.getClassName().getName();
 						exceptions.add(name.getName());
 					}
 				}
 				if (expression instanceof Variable) {
-					ITypeBinding type = ((Variable) expression)
-							.resolveTypeBinding();
+					ITypeBinding type = ((Variable) expression).resolveTypeBinding();
 					if (type != null) {
 						exceptions.add(type.getName());
 					}
@@ -704,8 +673,7 @@ public class CodeGeneration {
 		});
 		final List<String> newExceptions = new ArrayList<String>();
 		final Set<String> exceptionSet = new HashSet<String>();
-		for (Iterator<String> iterator = exceptions.iterator(); iterator
-				.hasNext();) {
+		for (Iterator<String> iterator = exceptions.iterator(); iterator.hasNext();) {
 			String exception = iterator.next();
 			if (!exceptionSet.contains(exception)) {
 				exceptionSet.add(exception);
@@ -724,16 +692,12 @@ public class CodeGeneration {
 					parameterTypes[i++] = typeName;
 					continue;
 				}
-				if (formalParameter.getDefaultValue() != null
-						&& formalParameter.getDefaultValue() instanceof Scalar
-						&& !formalParameter.getDefaultValue()
-								.isNullExpression()) {
+				if (formalParameter.getDefaultValue() != null && formalParameter.getDefaultValue() instanceof Scalar
+						&& !formalParameter.getDefaultValue().isNullExpression()) {
 					Scalar scalar = (Scalar) formalParameter.getDefaultValue();
-					IEvaluatedType simpleType = PHPSimpleTypes
-							.fromString(Scalar.getType(scalar.getScalarType()));
+					IEvaluatedType simpleType = PHPSimpleTypes.fromString(Scalar.getType(scalar.getScalarType()));
 					if (simpleType == null) {
-						parameterTypes[i++] = Scalar.getType(scalar
-								.getScalarType());
+						parameterTypes[i++] = Scalar.getType(scalar.getScalarType());
 					} else {
 						parameterTypes[i++] = simpleType.getTypeName();
 					}
@@ -758,21 +722,16 @@ public class CodeGeneration {
 						// show unknown types as if they were null types, even
 						// if looking for returnType.isUnknown() is not the same
 						// as looking for returnType.isNullType()
-						returnTypeBuffer.append(
-								PHPSimpleTypes.NULL.getTypeName()).append(
-								Constants.TYPE_SEPERATOR_CHAR);
+						returnTypeBuffer.append(PHPSimpleTypes.NULL.getTypeName())
+								.append(Constants.TYPE_SEPERATOR_CHAR);
 					} else if (returnType.isAmbiguous()) {
-						returnTypeBuffer
-								.append("Ambiguous").append(Constants.TYPE_SEPERATOR_CHAR); //$NON-NLS-1$
-					} else if (!appendAllPossibleTypes(
-							returnType.getEvaluatedType(), returnTypeBuffer)) {
-						returnTypeBuffer.append(returnType.getName()).append(
-								Constants.TYPE_SEPERATOR_CHAR);
+						returnTypeBuffer.append("Ambiguous").append(Constants.TYPE_SEPERATOR_CHAR); //$NON-NLS-1$
+					} else if (!appendAllPossibleTypes(returnType.getEvaluatedType(), returnTypeBuffer)) {
+						returnTypeBuffer.append(returnType.getName()).append(Constants.TYPE_SEPERATOR_CHAR);
 					}
 				}
 				if (returnTypeBuffer.length() > 0) {
-					retType = returnTypeBuffer.substring(0,
-							returnTypeBuffer.length() - 1);
+					retType = returnTypeBuffer.substring(0, returnTypeBuffer.length() - 1);
 				}
 			}
 
@@ -796,9 +755,7 @@ public class CodeGeneration {
 		} else {
 			for (int i = 0; i < formalParameters.size(); i++) {
 				if (formalParameters.get(i).isVariadic()) {
-					paramNames[i] = PhpTokenNames
-							.getName(ParserConstants.T_ELLIPSIS)
-							+ paramNames[i];
+					paramNames[i] = PhpTokenNames.getName(ParserConstants.T_ELLIPSIS) + paramNames[i];
 				}
 			}
 		}
@@ -816,21 +773,18 @@ public class CodeGeneration {
 		}
 		IType declaringType = method.getDeclaringType();
 		if (null != declaringType) {
-			return StubUtility.getMethodComment(method.getScriptProject(),
-					declaringType.getElementName(), method.getElementName(),
-					paramNames, retType, typeParameterNames, overridden, false,
-					lineDelimiter, newExceptions);
+			return StubUtility.getMethodComment(method.getScriptProject(), declaringType.getElementName(),
+					method.getElementName(), paramNames, retType, typeParameterNames, overridden, false, lineDelimiter,
+					newExceptions);
 		}
-		return StubUtility.getMethodComment(method.getScriptProject(), null,
-				method.getElementName(), paramNames, retType,
-				typeParameterNames, overridden, false, lineDelimiter,
-				newExceptions);
+		return StubUtility.getMethodComment(method.getScriptProject(), null, method.getElementName(), paramNames,
+				retType, typeParameterNames, overridden, false, lineDelimiter, newExceptions);
 	}
 
 	private static Program generageProgram(IMember member, Program program) {
 		ISourceModule source = member.getSourceModule();
-		ASTParser parserForExpected = ASTParser.newParser(ProjectOptions
-				.getPhpVersion(source.getScriptProject().getProject()), source);
+		ASTParser parserForExpected = ASTParser
+				.newParser(ProjectOptions.getPhpVersion(source.getScriptProject().getProject()), source);
 		try {
 			parserForExpected.setSource(source);
 			program = parserForExpected.createAST(new NullProgressMonitor());
@@ -841,8 +795,7 @@ public class CodeGeneration {
 		return program;
 	}
 
-	private static List<ITypeBinding> removeDuplicateTypes(
-			ITypeBinding[] returnTypes) {
+	private static List<ITypeBinding> removeDuplicateTypes(ITypeBinding[] returnTypes) {
 
 		List<ITypeBinding> types = new ArrayList<ITypeBinding>();
 
@@ -867,8 +820,7 @@ public class CodeGeneration {
 	 * @param buffer
 	 * @return true if "type" is a type container object, false otherwise
 	 */
-	private static boolean appendAllPossibleTypes(IEvaluatedType type,
-			StringBuilder buffer) {
+	private static boolean appendAllPossibleTypes(IEvaluatedType type, StringBuilder buffer) {
 		List<String> foundTypes = new ArrayList<String>();
 		if (findAllPossibleTypes(type, foundTypes, 0, true)) {
 			for (String foundType : foundTypes) {
@@ -879,12 +831,11 @@ public class CodeGeneration {
 		return false;
 	}
 
-	private static boolean findAllPossibleTypes(IEvaluatedType type,
-			List<String> foundTypes, int level, boolean firstCall) {
+	private static boolean findAllPossibleTypes(IEvaluatedType type, List<String> foundTypes, int level,
+			boolean firstCall) {
 		if (type instanceof AmbiguousType) {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=467148
-			IEvaluatedType[] allPossibleTypes = ((AmbiguousType) type)
-					.getPossibleTypes();
+			IEvaluatedType[] allPossibleTypes = ((AmbiguousType) type).getPossibleTypes();
 			// XXX: allPossibleTypes should not be empty
 			for (IEvaluatedType possibleType : allPossibleTypes) {
 				findAllPossibleTypes(possibleType, foundTypes, level, false);
@@ -893,8 +844,7 @@ public class CodeGeneration {
 		}
 		if (type instanceof MultiTypeType) {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=467151
-			List<IEvaluatedType> allPossibleTypes = ((MultiTypeType) type)
-					.getTypes();
+			List<IEvaluatedType> allPossibleTypes = ((MultiTypeType) type).getTypes();
 			// XXX: allPossibleTypes should not be empty
 			for (IEvaluatedType possibleType : allPossibleTypes) {
 				findAllPossibleTypes(possibleType, foundTypes, level + 1, false);
@@ -1026,11 +976,10 @@ public class CodeGeneration {
 	 * @throws CoreException
 	 *             Thrown when the evaluation of the code template fails.
 	 */
-	public static String getMethodBodyContent(IScriptProject sp,
-			String declaringTypeName, String methodName, boolean isConstructor,
-			String bodyStatement, String lineDelimiter) throws CoreException {
-		return StubUtility.getMethodBodyContent(isConstructor, sp,
-				declaringTypeName, methodName, bodyStatement, lineDelimiter);
+	public static String getMethodBodyContent(IScriptProject sp, String declaringTypeName, String methodName,
+			boolean isConstructor, String bodyStatement, String lineDelimiter) throws CoreException {
+		return StubUtility.getMethodBodyContent(isConstructor, sp, declaringTypeName, methodName, bodyStatement,
+				lineDelimiter);
 	}
 
 	/**
@@ -1061,11 +1010,9 @@ public class CodeGeneration {
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.0
 	 */
-	public static String getGetterMethodBodyContent(IScriptProject sp,
-			String declaringTypeName, String methodName, String fieldName,
-			String lineDelimiter) throws CoreException {
-		return StubUtility.getGetterMethodBodyContent(sp, declaringTypeName,
-				methodName, fieldName, lineDelimiter);
+	public static String getGetterMethodBodyContent(IScriptProject sp, String declaringTypeName, String methodName,
+			String fieldName, String lineDelimiter) throws CoreException {
+		return StubUtility.getGetterMethodBodyContent(sp, declaringTypeName, methodName, fieldName, lineDelimiter);
 	}
 
 	/**
@@ -1099,11 +1046,10 @@ public class CodeGeneration {
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.0
 	 */
-	public static String getSetterMethodBodyContent(IScriptProject sp,
-			String declaringTypeName, String methodName, String fieldName,
-			String paramName, String lineDelimiter) throws CoreException {
-		return StubUtility.getSetterMethodBodyContent(sp, declaringTypeName,
-				methodName, fieldName, paramName, lineDelimiter);
+	public static String getSetterMethodBodyContent(IScriptProject sp, String declaringTypeName, String methodName,
+			String fieldName, String paramName, String lineDelimiter) throws CoreException {
+		return StubUtility.getSetterMethodBodyContent(sp, declaringTypeName, methodName, fieldName, paramName,
+				lineDelimiter);
 	}
 
 	/**
@@ -1136,12 +1082,10 @@ public class CodeGeneration {
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.0
 	 */
-	public static String getGetterComment(IScriptProject sp,
-			String declaringTypeName, String methodName, String fieldName,
-			String fieldType, String bareFieldName, String lineDelimiter)
-			throws CoreException {
-		return StubUtility.getGetterComment(sp, declaringTypeName, methodName,
-				fieldName, fieldType, bareFieldName, lineDelimiter);
+	public static String getGetterComment(IScriptProject sp, String declaringTypeName, String methodName,
+			String fieldName, String fieldType, String bareFieldName, String lineDelimiter) throws CoreException {
+		return StubUtility.getGetterComment(sp, declaringTypeName, methodName, fieldName, fieldType, bareFieldName,
+				lineDelimiter);
 	}
 
 	/**
@@ -1176,11 +1120,10 @@ public class CodeGeneration {
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.0
 	 */
-	public static String getSetterComment(IScriptProject sp,
-			String declaringTypeName, String methodName, String fieldName,
-			String fieldType, String paramName, String bareFieldName,
-			String lineDelimiter) throws CoreException {
-		return StubUtility.getSetterComment(sp, declaringTypeName, methodName,
-				fieldName, fieldType, paramName, bareFieldName, lineDelimiter);
+	public static String getSetterComment(IScriptProject sp, String declaringTypeName, String methodName,
+			String fieldName, String fieldType, String paramName, String bareFieldName, String lineDelimiter)
+					throws CoreException {
+		return StubUtility.getSetterComment(sp, declaringTypeName, methodName, fieldName, fieldType, paramName,
+				bareFieldName, lineDelimiter);
 	}
 }

@@ -37,8 +37,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 @SuppressWarnings("restriction")
-public class PHPExeEditDialog extends TitleAreaDialog implements
-		IControlHandler {
+public class PHPExeEditDialog extends TitleAreaDialog implements IControlHandler {
 
 	protected static final String FRAGMENT_GROUP_ID = "org.eclipse.php.debug.ui.phpExeWizardCompositeFragment"; //$NON-NLS-1$
 	private List<CompositeFragment> runtimeComposites;
@@ -47,8 +46,7 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 	private String tabID;
 	private CTabFolder tabs;
 
-	public PHPExeEditDialog(Shell shell, PHPexeItem phpExeItem,
-			PHPexeItem[] existingItems) {
+	public PHPExeEditDialog(Shell shell, PHPexeItem phpExeItem, PHPexeItem[] existingItems) {
 		super(shell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		// Work on a simple working copy
@@ -57,8 +55,7 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 		runtimeComposites = new ArrayList<CompositeFragment>(3);
 	}
 
-	public PHPExeEditDialog(Shell shell, PHPexeItem phpExeItem,
-			PHPexeItem[] existingItems, String tabID) {
+	public PHPExeEditDialog(Shell shell, PHPexeItem phpExeItem, PHPexeItem[] existingItems, String tabID) {
 		this(shell, phpExeItem, existingItems);
 		this.tabID = tabID;
 	}
@@ -88,15 +85,13 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 		tabs = SWTUtil.createTabFolder(parent);
 		Map<String, ICompositeFragmentFactory> factories = WizardFragmentsFactoryRegistry
 				.getFragmentsFactories(FRAGMENT_GROUP_ID);
-		Collection<ICompositeFragmentFactory> factoriesList = factories
-				.values();
+		Collection<ICompositeFragmentFactory> factoriesList = factories.values();
 		for (ICompositeFragmentFactory element : factoriesList) {
 			CTabItem tabItem = new CTabItem(tabs, SWT.BORDER);
 			CompositeFragment fragment = element.createComposite(tabs, this);
 			fragment.setData(phpExeItem);
 			if (fragment instanceof IPHPExeCompositeFragment) {
-				((IPHPExeCompositeFragment) fragment)
-						.setExistingItems(existingItems);
+				((IPHPExeCompositeFragment) fragment).setExistingItems(existingItems);
 			}
 			tabItem.setText(fragment.getDisplayName());
 			tabItem.setControl(fragment);
@@ -106,8 +101,7 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 		tabs.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				CTabItem item = (CTabItem) e.item;
-				CompositeFragment fragment = (CompositeFragment) item
-						.getControl();
+				CompositeFragment fragment = (CompositeFragment) item.getControl();
 				setTitle(fragment.getTitle());
 				setDescription(fragment.getDescription());
 				setImageDescriptor(fragment.getImageDescriptor());
@@ -135,8 +129,7 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 		while (composites.hasNext()) {
 			composites.next().performOk();
 		}
-		PHPexeItem original = PHPexes.getInstance().findItem(
-				phpExeItem.getUniqueId());
+		PHPexeItem original = PHPexes.getInstance().findItem(phpExeItem.getUniqueId());
 		// Update original item
 		PHPexes.getInstance().updateItem(original, phpExeItem);
 		// Save changes
@@ -153,8 +146,7 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 	public void update() {
 		Button button = getButton(IDialogConstants.OK_ID);
 		if (button != null) {
-			Iterator<CompositeFragment> composites = runtimeComposites
-					.iterator();
+			Iterator<CompositeFragment> composites = runtimeComposites.iterator();
 			while (composites.hasNext()) {
 				if (!composites.next().isComplete()) {
 					button.setEnabled(false);
@@ -178,9 +170,8 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 	}
 
 	@Override
-	public void run(boolean fork, boolean cancelable,
-			IRunnableWithProgress runnable) throws InvocationTargetException,
-			InterruptedException {
+	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable)
+			throws InvocationTargetException, InterruptedException {
 		// not supported
 	}
 
@@ -192,8 +183,7 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 			if (id.equals(tabs.getItem(i).getData())) {
 				tabs.setSelection(i);
 				// Update tab
-				CompositeFragment fragment = (CompositeFragment) tabs
-						.getItem(i).getControl();
+				CompositeFragment fragment = (CompositeFragment) tabs.getItem(i).getControl();
 				setTitle(fragment.getTitle());
 				setImageDescriptor(fragment.getImageDescriptor());
 				setDescription(fragment.getDescription());

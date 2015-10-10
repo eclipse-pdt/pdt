@@ -34,30 +34,21 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-	 * .Composite)
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
+	 * widgets .Composite)
 	 */
 	public void createControl(Composite parent) {
 		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
-		fConfigurationBlock = new SaveActionsConfigurationBlock(
-				getNewStatusChangedListener(), getProject(), container);
+		fConfigurationBlock = new SaveActionsConfigurationBlock(getNewStatusChangedListener(), getProject(), container);
 
 		super.createControl(parent);
 
 		// TODO - Set the Help context ID
 		if (isProjectPreferencePage()) {
-			PlatformUI
-					.getWorkbench()
-					.getHelpSystem()
-					.setHelp(getControl(),
-							IPHPHelpContextIds.SAVE_ACTIONS_PROPERTIES);
+			PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.SAVE_ACTIONS_PROPERTIES);
 		} else {
-			PlatformUI
-					.getWorkbench()
-					.getHelpSystem()
-					.setHelp(getControl(),
-							IPHPHelpContextIds.SAVE_ACTIONS_PREFERENCES);
+			PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
+					IPHPHelpContextIds.SAVE_ACTIONS_PREFERENCES);
 		}
 	}
 
@@ -107,11 +98,9 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
 	 * enableProjectSpecificSettings(boolean)
 	 */
-	protected void enableProjectSpecificSettings(
-			boolean useProjectSpecificSettings) {
+	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
 		if (fConfigurationBlock != null) {
-			fConfigurationBlock
-					.useProjectSpecificSettings(useProjectSpecificSettings);
+			fConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
 		}
 		super.enableProjectSpecificSettings(useProjectSpecificSettings);
 	}
@@ -160,9 +149,8 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#setElement
-	 * (org.eclipse.core.runtime.IAdaptable)
+	 * @see org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
+	 * setElement (org.eclipse.core.runtime.IAdaptable)
 	 */
 	public void setElement(IAdaptable element) {
 		super.setElement(element);

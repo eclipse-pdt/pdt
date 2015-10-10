@@ -23,8 +23,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
  * 
  * @author Wojciech Galanciak, 2012
  */
-public class IniAlteredNotification extends DebugMessageNotificationImpl
-		implements IDebugNotificationMessage {
+public class IniAlteredNotification extends DebugMessageNotificationImpl implements IDebugNotificationMessage {
 
 	private String name;
 	private String oldValue;

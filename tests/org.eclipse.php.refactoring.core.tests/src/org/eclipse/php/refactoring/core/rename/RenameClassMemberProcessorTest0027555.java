@@ -29,8 +29,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RenameClassMemberProcessorTest0027555 extends
-		AbstractRenameRefactoringTest {
+public class RenameClassMemberProcessorTest0027555 extends AbstractRenameRefactoringTest {
 
 	private IProject project1;
 	private IFile file;
@@ -50,8 +49,7 @@ public class RenameClassMemberProcessorTest0027555 extends
 		}
 		file = folder.getFile("test0027555.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php $a = new A(); $a->foo();".getBytes());
+		InputStream source = new ByteArrayInputStream("<?php $a = new A(); $a->foo();".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -61,8 +59,7 @@ public class RenameClassMemberProcessorTest0027555 extends
 
 		file1 = folder.getFile("test0027555_1.php");
 
-		source = new ByteArrayInputStream("<?php class A {function foo(){}}"
-				.getBytes());
+		source = new ByteArrayInputStream("<?php class A {function foo(){}}".getBytes());
 
 		if (!file1.exists()) {
 			file1.create(source, true, new NullProgressMonitor());
@@ -84,8 +81,7 @@ public class RenameClassMemberProcessorTest0027555 extends
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		RenameClassMemberProcessor processor = new RenameClassMemberProcessor(
-				file1, selectedNode);
+		RenameClassMemberProcessor processor = new RenameClassMemberProcessor(file1, selectedNode);
 		processor.setNewElementName("foo1");
 
 		checkInitCondition(processor);

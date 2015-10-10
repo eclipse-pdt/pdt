@@ -37,8 +37,7 @@ public class ProfileAdapterFactory implements IAdapterFactory {
 			}
 			if (profiles == null) {
 				try {
-					profiles = ProfileStore
-							.readProfilesFromPreferences(DefaultScope.INSTANCE);
+					profiles = ProfileStore.readProfilesFromPreferences(DefaultScope.INSTANCE);
 				} catch (CoreException e) {
 					Logger.logException(e);
 				}

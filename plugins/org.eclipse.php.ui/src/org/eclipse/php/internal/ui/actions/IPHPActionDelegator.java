@@ -14,7 +14,6 @@ package org.eclipse.php.internal.ui.actions;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public interface IPHPActionDelegator extends IWorkbenchWindowActionDelegate,
-		IEditorActionDelegate {
+public interface IPHPActionDelegator extends IWorkbenchWindowActionDelegate, IEditorActionDelegate {
 
 }

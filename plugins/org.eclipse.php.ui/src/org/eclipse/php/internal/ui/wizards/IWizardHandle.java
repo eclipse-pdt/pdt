@@ -76,7 +76,6 @@ public interface IWizardHandle extends IMessageProvider {
 	 * @throws InvocationTargetException
 	 *             thrown if there is an error
 	 */
-	public void run(boolean fork, boolean cancelable,
-			IRunnableWithProgress runnable) throws InterruptedException,
-			InvocationTargetException;
+	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable)
+			throws InterruptedException, InvocationTargetException;
 }

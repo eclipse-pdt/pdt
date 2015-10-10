@@ -35,8 +35,7 @@ public class BindingLabelProvider extends LabelProvider {
 
 	private static int getAdornmentFlags(IBinding binding) {
 		int adornments = 0;
-		if (binding instanceof IMethodBinding
-				&& ((IMethodBinding) binding).isConstructor())
+		if (binding instanceof IMethodBinding && ((IMethodBinding) binding).isConstructor())
 			adornments |= PHPElementImageDescriptor.CONSTRUCTOR;
 		final int modifiers = binding.getModifiers();
 		if (PHPFlags.isAbstract(modifiers))
@@ -62,8 +61,7 @@ public class BindingLabelProvider extends LabelProvider {
 		return adornments;
 	}
 
-	private static ImageDescriptor getBaseImageDescriptor(IBinding binding,
-			int flags) {
+	private static ImageDescriptor getBaseImageDescriptor(IBinding binding, int flags) {
 		if (binding instanceof ITypeBinding) {
 			ITypeBinding typeBinding = (ITypeBinding) binding;
 			if (typeBinding.isArray()) {
@@ -72,10 +70,10 @@ public class BindingLabelProvider extends LabelProvider {
 			// if (typeBinding.isCapture()) {
 			// typeBinding.getWildcard();
 			// }
-			return getTypeImageDescriptor(false /*
-												 * typeBinding.getDeclaringClass(
-												 * ) != null
-												 */, typeBinding, flags);
+			return getTypeImageDescriptor(
+					false /*
+							 * typeBinding.getDeclaringClass( ) != null
+							 */, typeBinding, flags);
 		} else if (binding instanceof IMethodBinding) {
 			// ITypeBinding type= ((IMethodBinding)
 			// binding).getDeclaringClass();
@@ -99,8 +97,7 @@ public class BindingLabelProvider extends LabelProvider {
 		// return DLTKPluginImages.DESC_OBJS_CLASS_DEFAULT;
 	}
 
-	private static ImageDescriptor getFieldImageDescriptor(
-			IVariableBinding binding) {
+	private static ImageDescriptor getFieldImageDescriptor(IVariableBinding binding) {
 		final int modifiers = binding.getModifiers();
 		if (PHPFlags.isPublic(modifiers)/* || binding.isEnumConstant() */)
 			return DLTKPluginImages.DESC_FIELD_PUBLIC;
@@ -112,16 +109,14 @@ public class BindingLabelProvider extends LabelProvider {
 		return DLTKPluginImages.DESC_FIELD_DEFAULT;
 	}
 
-	private static void getFieldLabel(IVariableBinding binding, long flags,
-			StringBuffer buffer) {
+	private static void getFieldLabel(IVariableBinding binding, long flags, StringBuffer buffer) {
 		if (((flags & ScriptElementLabels.F_PRE_TYPE_SIGNATURE) != 0)/*
-																	 * &&
-																	 * !binding.
-																	 * isEnumConstant
-																	 * ()
-																	 */) {
-			getTypeLabel(binding.getType(),
-					(flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
+																		 * &&
+																		 * !binding.
+																		 * isEnumConstant
+																		 * ()
+																		 */) {
+			getTypeLabel(binding.getType(), (flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
 			buffer.append(' ');
 		}
 		// qualification
@@ -130,22 +125,19 @@ public class BindingLabelProvider extends LabelProvider {
 			ITypeBinding declaringClass = binding.getDeclaringClass();
 			if (declaringClass != null) { // test for array.length
 				getTypeLabel(declaringClass,
-						ScriptElementLabels.T_FULLY_QUALIFIED
-								| (flags & ScriptElementLabels.P_COMPRESSED),
-						buffer);
+						ScriptElementLabels.T_FULLY_QUALIFIED | (flags & ScriptElementLabels.P_COMPRESSED), buffer);
 				buffer.append('.');
 			}
 		}
 		buffer.append(binding.getName());
 		if (((flags & ScriptElementLabels.F_APP_TYPE_SIGNATURE) != 0)/*
-																	 * &&
-																	 * !binding.
-																	 * isEnumConstant
-																	 * ()
-																	 */) {
+																		 * &&
+																		 * !binding.
+																		 * isEnumConstant
+																		 * ()
+																		 */) {
 			buffer.append(ScriptElementLabels.DECL_STRING);
-			getTypeLabel(binding.getType(),
-					(flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
+			getTypeLabel(binding.getType(), (flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
 		}
 		// post qualification
 		if ((flags & ScriptElementLabels.F_POST_QUALIFIED) != 0) {
@@ -153,18 +145,14 @@ public class BindingLabelProvider extends LabelProvider {
 			if (declaringClass != null) { // test for array.length
 				buffer.append(ScriptElementLabels.CONCAT_STRING);
 				getTypeLabel(declaringClass,
-						ScriptElementLabels.T_FULLY_QUALIFIED
-								| (flags & ScriptElementLabels.P_COMPRESSED),
-						buffer);
+						ScriptElementLabels.T_FULLY_QUALIFIED | (flags & ScriptElementLabels.P_COMPRESSED), buffer);
 			}
 		}
 	}
 
-	private static void getLocalVariableLabel(IVariableBinding binding,
-			long flags, StringBuffer buffer) {
+	private static void getLocalVariableLabel(IVariableBinding binding, long flags, StringBuffer buffer) {
 		if (((flags & ScriptElementLabels.F_PRE_TYPE_SIGNATURE) != 0)) {
-			getTypeLabel(binding.getType(),
-					(flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
+			getTypeLabel(binding.getType(), (flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
 			buffer.append(' ');
 		}
 		if (((flags & ScriptElementLabels.F_FULLY_QUALIFIED) != 0)) {
@@ -177,8 +165,7 @@ public class BindingLabelProvider extends LabelProvider {
 		buffer.append(binding.getName());
 		if (((flags & ScriptElementLabels.F_APP_TYPE_SIGNATURE) != 0)) {
 			buffer.append(ScriptElementLabels.DECL_STRING);
-			getTypeLabel(binding.getType(),
-					(flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
+			getTypeLabel(binding.getType(), (flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
 		}
 	}
 
@@ -231,8 +218,7 @@ public class BindingLabelProvider extends LabelProvider {
 		}
 	}
 
-	private static void getMethodLabel(IFunctionBinding binding, long flags,
-			StringBuffer buffer) {
+	private static void getMethodLabel(IFunctionBinding binding, long flags, StringBuffer buffer) {
 		// return type
 		// if ((flags & ScriptElementLabels.M_PRE_TYPE_PARAMETERS) != 0) {
 		// if (binding.isGenericMethod()) {
@@ -244,28 +230,22 @@ public class BindingLabelProvider extends LabelProvider {
 		// }
 		// }
 		// return type
-		IMethodBinding methodBinding = binding instanceof IMethodBinding ? (IMethodBinding) binding
-				: null;
+		IMethodBinding methodBinding = binding instanceof IMethodBinding ? (IMethodBinding) binding : null;
 		ITypeBinding[] returnTypes = null;
 		if ((flags & ScriptElementLabels.M_PRE_RETURNTYPE) != 0) {
 			returnTypes = binding.getReturnType();
 			for (ITypeBinding returnType : returnTypes) {
 				if ((methodBinding == null || !methodBinding.isConstructor())) {
-					getTypeLabel(returnType,
-							(flags & ScriptElementLabels.T_TYPE_PARAMETERS),
-							buffer);
+					getTypeLabel(returnType, (flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
 					buffer.append('|');
 				}
 			}
 		}
 
 		// qualification
-		if ((flags & ScriptElementLabels.M_FULLY_QUALIFIED) != 0
-				&& methodBinding != null) {
+		if ((flags & ScriptElementLabels.M_FULLY_QUALIFIED) != 0 && methodBinding != null) {
 			getTypeLabel(methodBinding.getDeclaringClass(),
-					ScriptElementLabels.T_FULLY_QUALIFIED
-							| (flags & ScriptElementLabels.P_COMPRESSED),
-					buffer);
+					ScriptElementLabels.T_FULLY_QUALIFIED | (flags & ScriptElementLabels.P_COMPRESSED), buffer);
 			buffer.append('.');
 		}
 		buffer.append(binding.getName());
@@ -283,8 +263,8 @@ public class BindingLabelProvider extends LabelProvider {
 		// parameters
 		buffer.append('(');
 		if ((flags & ScriptElementLabels.M_PARAMETER_TYPES | ScriptElementLabels.M_PARAMETER_NAMES) != 0) {
-			ITypeBinding[] parameters = ((flags & ScriptElementLabels.M_PARAMETER_TYPES) != 0) ? binding
-					.getParameterTypes() : null;
+			ITypeBinding[] parameters = ((flags & ScriptElementLabels.M_PARAMETER_TYPES) != 0)
+					? binding.getParameterTypes() : null;
 			if (parameters != null) {
 				for (int index = 0; index < parameters.length; index++) {
 					if (index > 0) {
@@ -292,17 +272,12 @@ public class BindingLabelProvider extends LabelProvider {
 					}
 					ITypeBinding paramType = parameters[index];
 					if (binding.isVarargs() && (index == parameters.length - 1)) {
-						getTypeLabel(
-								paramType.getElementType(),
-								(flags & ScriptElementLabels.T_TYPE_PARAMETERS),
+						getTypeLabel(paramType.getElementType(), (flags & ScriptElementLabels.T_TYPE_PARAMETERS),
 								buffer);
 						appendDimensions(paramType.getDimensions() - 1, buffer);
 						buffer.append(ScriptElementLabels.ELLIPSIS_STRING);
 					} else {
-						getTypeLabel(
-								paramType,
-								(flags & ScriptElementLabels.T_TYPE_PARAMETERS),
-								buffer);
+						getTypeLabel(paramType, (flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
 					}
 				}
 			}
@@ -321,9 +296,7 @@ public class BindingLabelProvider extends LabelProvider {
 					if (index > 0) {
 						buffer.append(ScriptElementLabels.COMMA_STRING);
 					}
-					getTypeLabel(exceptions[index],
-							(flags & ScriptElementLabels.T_TYPE_PARAMETERS),
-							buffer);
+					getTypeLabel(exceptions[index], (flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
 				}
 			}
 		}
@@ -343,23 +316,18 @@ public class BindingLabelProvider extends LabelProvider {
 			}
 			buffer.append(ScriptElementLabels.DECL_STRING);
 			for (ITypeBinding returnType : returnTypes) {
-				getTypeLabel(returnType,
-						(flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
+				getTypeLabel(returnType, (flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
 			}
 		}
 		// post qualification
-		if ((flags & ScriptElementLabels.M_POST_QUALIFIED) != 0
-				&& methodBinding != null) {
+		if ((flags & ScriptElementLabels.M_POST_QUALIFIED) != 0 && methodBinding != null) {
 			buffer.append(ScriptElementLabels.CONCAT_STRING);
 			getTypeLabel(methodBinding.getDeclaringClass(),
-					ScriptElementLabels.T_FULLY_QUALIFIED
-							| (flags & ScriptElementLabels.P_COMPRESSED),
-					buffer);
+					ScriptElementLabels.T_FULLY_QUALIFIED | (flags & ScriptElementLabels.P_COMPRESSED), buffer);
 		}
 	}
 
-	private static ImageDescriptor getTypeImageDescriptor(boolean inner,
-			ITypeBinding binding, int flags) {
+	private static ImageDescriptor getTypeImageDescriptor(boolean inner, ITypeBinding binding, int flags) {
 		/*
 		 * if (binding.isEnum()) return DLTKPluginImages.DESC_OBJS_ENUM; else if
 		 * (binding.isAnnotation()) return
@@ -385,8 +353,7 @@ public class BindingLabelProvider extends LabelProvider {
 		return null;
 	}
 
-	private static void getTypeLabel(ITypeBinding binding, long flags,
-			StringBuffer buffer) {
+	private static void getTypeLabel(ITypeBinding binding, long flags, StringBuffer buffer) {
 		// if ((flags & ScriptElementLabels.T_FULLY_QUALIFIED) != 0) {
 		// final IPackageBinding pack= binding.getPackage();
 		// if (pack != null && !pack.isUnnamed()) {
@@ -429,8 +396,7 @@ public class BindingLabelProvider extends LabelProvider {
 			return;
 		}
 		if (binding.isArray()) {
-			getTypeLabel(binding.getElementType(), flags
-					& ScriptElementLabels.T_TYPE_PARAMETERS, buffer);
+			getTypeLabel(binding.getElementType(), flags & ScriptElementLabels.T_TYPE_PARAMETERS, buffer);
 			appendDimensions(binding.getDimensions(), buffer);
 		} else { // type variables, primitive, reftype
 			String name = binding.getName();
@@ -505,8 +471,7 @@ public class BindingLabelProvider extends LabelProvider {
 	// }
 	// }
 
-	private static void getTypeParametersLabel(ITypeBinding[] typeParameters,
-			StringBuffer buffer) {
+	private static void getTypeParametersLabel(ITypeBinding[] typeParameters, StringBuffer buffer) {
 		if (typeParameters.length > 0) {
 			buffer.append('<');
 			for (int index = 0; index < typeParameters.length; index++) {
@@ -556,15 +521,13 @@ public class BindingLabelProvider extends LabelProvider {
 	 *            {@link ScriptElementImageProvider}.
 	 * @return the image of the binding or null if there is no image
 	 */
-	public static ImageDescriptor getBindingImageDescriptor(IBinding binding,
-			int imageFlags) {
+	public static ImageDescriptor getBindingImageDescriptor(IBinding binding, int imageFlags) {
 		ImageDescriptor baseImage = getBaseImageDescriptor(binding, imageFlags);
 		if (baseImage != null) {
 			int adornmentFlags = getAdornmentFlags(binding);
-			Point size = ((imageFlags & ScriptElementImageProvider.SMALL_ICONS) != 0) ? ScriptElementImageProvider.SMALL_SIZE
-					: ScriptElementImageProvider.BIG_SIZE;
-			return new PHPElementImageDescriptor(baseImage, adornmentFlags,
-					size);
+			Point size = ((imageFlags & ScriptElementImageProvider.SMALL_ICONS) != 0)
+					? ScriptElementImageProvider.SMALL_SIZE : ScriptElementImageProvider.BIG_SIZE;
+			return new PHPElementImageDescriptor(baseImage, adornmentFlags, size);
 		}
 		return null;
 	}
@@ -601,8 +564,7 @@ public class BindingLabelProvider extends LabelProvider {
 	 */
 	public Image getImage(Object element) {
 		if (element instanceof IBinding) {
-			ImageDescriptor baseImage = getBindingImageDescriptor(
-					(IBinding) element, fImageFlags);
+			ImageDescriptor baseImage = getBindingImageDescriptor((IBinding) element, fImageFlags);
 			if (baseImage != null) {
 				return getRegistry().get(baseImage);
 			}

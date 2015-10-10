@@ -25,44 +25,37 @@ import org.eclipse.jface.text.templates.TemplateCompletionProcessor;
 import org.eclipse.php.internal.ui.editor.templates.PhpTemplateCompletionProcessor;
 import org.eclipse.swt.widgets.Shell;
 
-public class PHPCompletionProposalComputer extends
-		ScriptCompletionProposalComputer {
+public class PHPCompletionProposalComputer extends ScriptCompletionProposalComputer {
 
 	private PHPCompletionProposalCollector phpCompletionProposalCollector;
 	private PhpTemplateCompletionProcessor phpTemplateCompletionProcessor;
 
 	@Override
-	protected TemplateCompletionProcessor createTemplateProposalComputer(
-			ScriptContentAssistInvocationContext context) {
+	protected TemplateCompletionProcessor createTemplateProposalComputer(ScriptContentAssistInvocationContext context) {
 		boolean explicit = false;
 		if (context instanceof PHPContentAssistInvocationContext) {
-			explicit = ((PHPContentAssistInvocationContext) context)
-					.isExplicit();
+			explicit = ((PHPContentAssistInvocationContext) context).isExplicit();
 		}
 
-		phpTemplateCompletionProcessor = new PhpTemplateCompletionProcessor(
-				context, explicit);
+		phpTemplateCompletionProcessor = new PhpTemplateCompletionProcessor(context, explicit);
 		return phpTemplateCompletionProcessor;
 	}
 
 	@Override
-	protected ScriptCompletionProposalCollector createCollector(
-			ScriptContentAssistInvocationContext context) {
+	protected ScriptCompletionProposalCollector createCollector(ScriptContentAssistInvocationContext context) {
 
 		boolean explicit = false;
 		if (context instanceof PHPContentAssistInvocationContext) {
-			explicit = ((PHPContentAssistInvocationContext) context)
-					.isExplicit();
+			explicit = ((PHPContentAssistInvocationContext) context).isExplicit();
 		}
 
-		phpCompletionProposalCollector = new PHPCompletionProposalCollector(
-				context.getDocument(), context.getSourceModule(), explicit);
+		phpCompletionProposalCollector = new PHPCompletionProposalCollector(context.getDocument(),
+				context.getSourceModule(), explicit);
 		return phpCompletionProposalCollector;
 	}
 
 	@Override
-	protected int guessContextInformationPosition(
-			ContentAssistInvocationContext context) {
+	protected int guessContextInformationPosition(ContentAssistInvocationContext context) {
 
 		IDocument document = context.getDocument();
 		int offset = context.getInvocationOffset();
@@ -88,33 +81,20 @@ public class PHPCompletionProposalComputer extends
 		return super.guessContextInformationPosition(context);
 	}
 
-	private void handleCodeCompletionException(ModelException e,
-			ScriptContentAssistInvocationContext context) {
+	private void handleCodeCompletionException(ModelException e, ScriptContentAssistInvocationContext context) {
 		ISourceModule module = context.getSourceModule();
 		Shell shell = context.getViewer().getTextWidget().getShell();
-		if (e.isDoesNotExist()
-				&& !module.getScriptProject().isOnBuildpath(module)) {
-			IPreferenceStore store = DLTKUIPlugin.getDefault()
-					.getPreferenceStore();
-			boolean value = store
-					.getBoolean(PreferenceConstants.NOTIFICATION_NOT_ON_BUILDPATH_MESSAGE);
+		if (e.isDoesNotExist() && !module.getScriptProject().isOnBuildpath(module)) {
+			IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
+			boolean value = store.getBoolean(PreferenceConstants.NOTIFICATION_NOT_ON_BUILDPATH_MESSAGE);
 			if (!value) {
-				MessageDialog
-						.openInformation(
-								shell,
-								ScriptTextMessages.CompletionProcessor_error_notOnBuildPath_title,
-								ScriptTextMessages.CompletionProcessor_error_notOnBuildPath_message);
+				MessageDialog.openInformation(shell, ScriptTextMessages.CompletionProcessor_error_notOnBuildPath_title,
+						ScriptTextMessages.CompletionProcessor_error_notOnBuildPath_message);
 			}
-			store.setValue(
-					PreferenceConstants.NOTIFICATION_NOT_ON_BUILDPATH_MESSAGE,
-					true);
+			store.setValue(PreferenceConstants.NOTIFICATION_NOT_ON_BUILDPATH_MESSAGE, true);
 		} else
-			ErrorDialog
-					.openError(
-							shell,
-							ScriptTextMessages.CompletionProcessor_error_accessing_title,
-							ScriptTextMessages.CompletionProcessor_error_accessing_message,
-							e.getStatus());
+			ErrorDialog.openError(shell, ScriptTextMessages.CompletionProcessor_error_accessing_title,
+					ScriptTextMessages.CompletionProcessor_error_accessing_message, e.getStatus());
 	}
 
 	@Override

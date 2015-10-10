@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.wizards;
 
-
 /**
  * Common interface for debugger settings owner sections.
  * 

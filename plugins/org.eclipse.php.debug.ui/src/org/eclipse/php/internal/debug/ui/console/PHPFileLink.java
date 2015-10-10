@@ -74,9 +74,8 @@ public class PHPFileLink implements IHyperlink {
 			PHPDebugUIPlugin.log(e);
 		}
 		// did not find source
-		MessageDialog.openInformation(PHPDebugUIPlugin
-				.getActiveWorkbenchShell(), Messages.PHPFileLink_0, MessageFormat
-				.format(Messages.PHPFileLink_1, new Object[] { fileName }));
+		MessageDialog.openInformation(PHPDebugUIPlugin.getActiveWorkbenchShell(), Messages.PHPFileLink_0,
+				MessageFormat.format(Messages.PHPFileLink_1, new Object[] { fileName }));
 	}
 
 	protected void openElementInEditor(Object element) throws CoreException {
@@ -86,8 +85,7 @@ public class PHPFileLink implements IHyperlink {
 		if (element instanceof IModelElement) {
 			input = EditorUtility.getEditorInput((IModelElement) element);
 		} else {
-			input = org.eclipse.dltk.internal.ui.editor.EditorUtility
-					.getEditorInput(element);
+			input = org.eclipse.dltk.internal.ui.editor.EditorUtility.getEditorInput(element);
 		}
 		if (input == null) {
 			return;
@@ -95,8 +93,7 @@ public class PHPFileLink implements IHyperlink {
 		IEditorDescriptor descriptor = IDE.getEditorDescriptor(input.getName());
 		IWorkbenchPage page = PHPDebugUIPlugin.getActivePage();
 		IEditorPart editor = page.openEditor(input, descriptor.getId());
-		org.eclipse.dltk.internal.ui.editor.EditorUtility.revealInEditor(
-				editor, lineNumber - 1);
+		org.eclipse.dltk.internal.ui.editor.EditorUtility.revealInEditor(editor, lineNumber - 1);
 	}
 
 	/**
@@ -114,8 +111,7 @@ public class PHPFileLink implements IHyperlink {
 			return f;
 		}
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
-		PHPConsoleSourceModuleLookup lookup = new PHPConsoleSourceModuleLookup(
-				toolkit);
+		PHPConsoleSourceModuleLookup lookup = new PHPConsoleSourceModuleLookup(toolkit);
 		return lookup.findSourceModuleByLocalPath(path);
 	}
 

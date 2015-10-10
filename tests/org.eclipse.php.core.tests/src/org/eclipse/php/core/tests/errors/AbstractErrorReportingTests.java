@@ -51,8 +51,7 @@ abstract public class AbstractErrorReportingTests {
 
 		StringBuilder buf = new StringBuilder();
 
-		IMarker[] markers = file.findMarkers(getMarkerType(), true,
-				IResource.DEPTH_ZERO);
+		IMarker[] markers = file.findMarkers(getMarkerType(), true, IResource.DEPTH_ZERO);
 		Arrays.sort(markers, new MarkerComparator());
 		for (IMarker marker : markers) {
 			buf.append("\n[line=");
@@ -65,8 +64,7 @@ abstract public class AbstractErrorReportingTests {
 			buf.append(marker.getAttribute(IMarker.MESSAGE)).append('\n');
 		}
 
-		PDTTUtils.assertContents(pdttFiles.get(fileName).getExpected(),
-				buf.toString());
+		PDTTUtils.assertContents(pdttFiles.get(fileName).getExpected(), buf.toString());
 	}
 
 	protected IFile createFile(String data) throws Exception {
@@ -84,8 +82,7 @@ abstract public class AbstractErrorReportingTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject(getPHPVersion() + "ErrorReportingTests");
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject(getPHPVersion() + "ErrorReportingTests");
 		if (project.exists()) {
 			return;
 		}

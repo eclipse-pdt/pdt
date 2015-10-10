@@ -78,16 +78,14 @@ public class PDTMylynPlugin extends Plugin {
 		editorTracker.install(workbench);
 
 		// update editors that are already opened
-		for (IWorkbenchWindow w : PlatformUI.getWorkbench()
-				.getWorkbenchWindows()) {
+		for (IWorkbenchWindow w : PlatformUI.getWorkbench().getWorkbenchWindows()) {
 			IWorkbenchPage page = w.getActivePage();
 			if (page != null) {
 				IEditorReference[] references = page.getEditorReferences();
 				for (IEditorReference reference : references) {
 					IEditorPart part = reference.getEditor(false);
 					if (part != null && part instanceof PHPStructuredEditor) {
-						editorTracker
-								.registerEditor((PHPStructuredEditor) part);
+						editorTracker.registerEditor((PHPStructuredEditor) part);
 					}
 				}
 			}
@@ -107,16 +105,14 @@ public class PDTMylynPlugin extends Plugin {
 		if (editorTracker == null) {
 			return;
 		}
-		for (IWorkbenchWindow w : PlatformUI.getWorkbench()
-				.getWorkbenchWindows()) {
+		for (IWorkbenchWindow w : PlatformUI.getWorkbench().getWorkbenchWindows()) {
 			IWorkbenchPage page = w.getActivePage();
 			if (page != null) {
 				IEditorReference[] references = page.getEditorReferences();
 				for (IEditorReference reference : references) {
 					IEditorPart part = reference.getEditor(false);
 					if (part != null && part instanceof PHPStructuredEditor) {
-						editorTracker
-								.unregisterEditor((PHPStructuredEditor) part);
+						editorTracker.unregisterEditor((PHPStructuredEditor) part);
 					}
 				}
 			}

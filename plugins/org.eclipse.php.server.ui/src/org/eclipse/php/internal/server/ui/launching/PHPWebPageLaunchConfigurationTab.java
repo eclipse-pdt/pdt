@@ -23,8 +23,7 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author Robert G., Shalom G.
  */
-public class PHPWebPageLaunchConfigurationTab extends
-		ServerLaunchConfigurationTab {
+public class PHPWebPageLaunchConfigurationTab extends ServerLaunchConfigurationTab {
 
 	public PHPWebPageLaunchConfigurationTab() {
 		super();
@@ -34,12 +33,11 @@ public class PHPWebPageLaunchConfigurationTab extends
 	}
 
 	protected void applyExtension(ILaunchConfigurationWorkingCopy configuration) {
-		configuration
-				.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true); // Always
-																				// run
-																				// with
-																				// debug
-																				// info
+		configuration.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true); // Always
+																					// run
+																					// with
+																					// debug
+																					// info
 	}
 
 	protected boolean isValidExtension(ILaunchConfiguration launchConfig) {

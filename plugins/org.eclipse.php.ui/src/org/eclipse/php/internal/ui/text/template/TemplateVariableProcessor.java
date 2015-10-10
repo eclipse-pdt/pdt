@@ -24,10 +24,8 @@ import org.eclipse.jface.text.templates.TemplateVariableResolver;
 public class TemplateVariableProcessor implements IContentAssistProcessor {
 
 	private static Comparator<ICompletionProposal> fgTemplateVariableProposalComparator = new Comparator<ICompletionProposal>() {
-		public int compare(ICompletionProposal proposal0,
-				ICompletionProposal proposal1) {
-			return proposal0.getDisplayString().compareTo(
-					proposal1.getDisplayString());
+		public int compare(ICompletionProposal proposal0, ICompletionProposal proposal1) {
+			return proposal0.getDisplayString().compareTo(proposal1.getDisplayString());
 		}
 	};
 
@@ -56,8 +54,7 @@ public class TemplateVariableProcessor implements IContentAssistProcessor {
 	/*
 	 * @see IContentAssistProcessor#computeCompletionProposals(ITextViewer, int)
 	 */
-	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
-			int documentOffset) {
+	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int documentOffset) {
 
 		if (fContextType == null)
 			return null;
@@ -92,12 +89,10 @@ public class TemplateVariableProcessor implements IContentAssistProcessor {
 
 		for (@SuppressWarnings("rawtypes")
 		Iterator iterator = fContextType.resolvers(); iterator.hasNext();) {
-			TemplateVariableResolver variable = (TemplateVariableResolver) iterator
-					.next();
+			TemplateVariableResolver variable = (TemplateVariableResolver) iterator.next();
 
 			if (variable.getType().startsWith(prefix))
-				proposals.add(new TemplateVariableProposal(variable, offset,
-						length, viewer, includeBrace));
+				proposals.add(new TemplateVariableProposal(variable, offset, length, viewer, includeBrace));
 		}
 
 		Collections.sort(proposals, fgTemplateVariableProposalComparator);
@@ -111,20 +106,16 @@ public class TemplateVariableProcessor implements IContentAssistProcessor {
 		if (start >= 1 && string.charAt(start - 1) == '$')
 			return start - 1;
 
-		while ((start != 0)
-				&& Character.isUnicodeIdentifierPart(string.charAt(start - 1)))
+		while ((start != 0) && Character.isUnicodeIdentifierPart(string.charAt(start - 1)))
 			start--;
 
 		if (start >= 1 && string.charAt(start - 1) == ':') {
 			start--;
-			while ((start != 0)
-					&& Character.isUnicodeIdentifierPart(string
-							.charAt(start - 1)))
+			while ((start != 0) && Character.isUnicodeIdentifierPart(string.charAt(start - 1)))
 				start--;
 		}
 
-		if (start >= 2 && string.charAt(start - 1) == '{'
-				&& string.charAt(start - 2) == '$')
+		if (start >= 2 && string.charAt(start - 1) == '{' && string.charAt(start - 2) == '$')
 			return start - 2;
 
 		return end;
@@ -133,8 +124,7 @@ public class TemplateVariableProcessor implements IContentAssistProcessor {
 	/*
 	 * @see IContentAssistProcessor#computeContextInformation(ITextViewer, int)
 	 */
-	public IContextInformation[] computeContextInformation(ITextViewer viewer,
-			int documentOffset) {
+	public IContextInformation[] computeContextInformation(ITextViewer viewer, int documentOffset) {
 		return null;
 	}
 

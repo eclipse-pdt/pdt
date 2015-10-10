@@ -33,6 +33,7 @@ public class Messages extends NLS {
 	public static String RenameLinkedMode_1;
 	public static String RenameLinkedMode_2;
 	public static String RenameLinkedMode_4;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

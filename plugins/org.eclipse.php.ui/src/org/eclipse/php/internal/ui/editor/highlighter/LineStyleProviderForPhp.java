@@ -40,8 +40,7 @@ import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 /**
  * Coloring mechanism for PHP partitions
  */
-public class LineStyleProviderForPhp extends AbstractLineStyleProvider
-		implements LineStyleProvider {
+public class LineStyleProviderForPhp extends AbstractLineStyleProvider implements LineStyleProvider {
 
 	private IPreferenceStore fColorPreferences;
 
@@ -51,281 +50,154 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 	// type),
 	// String
 	// (color)
+
 	static {
 		// Normal text:
-		fColorTypes.put(PHPRegionTypes.PHP_LABEL,
-				PreferenceConstants.EDITOR_NORMAL_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_TOKEN,
-				PreferenceConstants.EDITOR_NORMAL_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_SEMICOLON,
-				PreferenceConstants.EDITOR_NORMAL_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_OPERATOR,
-				PreferenceConstants.EDITOR_NORMAL_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_LABEL, PreferenceConstants.EDITOR_NORMAL_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_TOKEN, PreferenceConstants.EDITOR_NORMAL_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_SEMICOLON, PreferenceConstants.EDITOR_NORMAL_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_OPERATOR, PreferenceConstants.EDITOR_NORMAL_COLOR);
 
 		// Boundary Markers
-		fColorTypes.put(PHPRegionTypes.PHP_OPENTAG,
-				PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_CLOSETAG,
-				PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_OPENTAG, PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_CLOSETAG, PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR);
 
 		// Keywords
-		fColorTypes.put(PHPRegionTypes.PHP_LOGICAL_AND,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_ARRAY,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_AS,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_BREAK,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_CASE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_CATCH,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_FINALLY,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_CLASS,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_CONTINUE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_GOTO,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_DECLARE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_DEFAULT,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_DO,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_ECHO,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_ELSE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_ELSEIF,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_EMPTY,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_ENDDECLARE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_ENDFOR,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_ENDFOREACH,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_ENDIF,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_ENDSWITCH,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_EVAL,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_EXIT,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_EXTENDS,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_FOR,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_FOREACH,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_FUNCTION,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_IF,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_HALT_COMPILER,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_INCLUDE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_INCLUDE_ONCE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_GLOBAL,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_LIST,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_NEW,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_NOT,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_LOGICAL_OR,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_PRINT,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_PUBLIC,
-				PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_PRIVATE,
-				PreferenceConstants.EDITOR_KEYWORD_PRIVATE_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_PROTECTED,
-				PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_REQUIRE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_REQUIRE_ONCE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_RETURN,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_YIELD,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_STATIC,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_SWITCH,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_TRY,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_THROW,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_NAMESPACE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_USE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_VAR,
-				PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_WHILE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_LOGICAL_XOR,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_ABSTRACT,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_CLONE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_FALSE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_FINAL,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_DIE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_TRUE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_INSTANCEOF,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_UNSET,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_SELF,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_ISSET,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_PARENT,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_ENDWHILE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_FROM,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_IMPLEMENTS,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_INTERFACE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_CONST,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_TRAIT,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_INSTEADOF,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_CALLABLE,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_KEYWORD,
-				PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_LOGICAL_AND, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_ARRAY, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_AS, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_BREAK, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_CASE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_CATCH, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_FINALLY, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_CLASS, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_CONTINUE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_GOTO, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_DECLARE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_DEFAULT, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_DO, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_ECHO, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_ELSE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_ELSEIF, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_EMPTY, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_ENDDECLARE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_ENDFOR, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_ENDFOREACH, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_ENDIF, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_ENDSWITCH, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_EVAL, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_EXIT, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_EXTENDS, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_FOR, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_FOREACH, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_FUNCTION, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_IF, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_HALT_COMPILER, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_INCLUDE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_INCLUDE_ONCE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_GLOBAL, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_LIST, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_NEW, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_NOT, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_LOGICAL_OR, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_PRINT, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_PUBLIC, PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_PRIVATE, PreferenceConstants.EDITOR_KEYWORD_PRIVATE_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_PROTECTED, PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_REQUIRE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_REQUIRE_ONCE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_RETURN, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_YIELD, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_STATIC, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_SWITCH, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_TRY, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_THROW, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_NAMESPACE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_USE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_VAR, PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_WHILE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_LOGICAL_XOR, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_ABSTRACT, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_CLONE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_FALSE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_FINAL, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_DIE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_TRUE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_INSTANCEOF, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_UNSET, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_SELF, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_ISSET, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_PARENT, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_ENDWHILE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_FROM, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_IMPLEMENTS, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_INTERFACE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_CONST, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_TRAIT, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_INSTEADOF, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_CALLABLE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_KEYWORD, PreferenceConstants.EDITOR_KEYWORD_COLOR);
 
 		// Variables
-		fColorTypes.put(PHPRegionTypes.PHP_VARIABLE,
-				PreferenceConstants.EDITOR_VARIABLE_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_THIS,
-				PreferenceConstants.EDITOR_VARIABLE_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_VARIABLE, PreferenceConstants.EDITOR_VARIABLE_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_THIS, PreferenceConstants.EDITOR_VARIABLE_COLOR);
 
 		// Strings
-		fColorTypes.put(PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING,
-				PreferenceConstants.EDITOR_STRING_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_ENCAPSED_AND_WHITESPACE,
-				PreferenceConstants.EDITOR_STRING_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING, PreferenceConstants.EDITOR_STRING_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_ENCAPSED_AND_WHITESPACE, PreferenceConstants.EDITOR_STRING_COLOR);
 
 		// Comments
-		fColorTypes.put(PHPRegionTypes.PHP_COMMENT,
-				PreferenceConstants.EDITOR_COMMENT_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_COMMENT_START,
-				PreferenceConstants.EDITOR_COMMENT_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_COMMENT_END,
-				PreferenceConstants.EDITOR_COMMENT_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_LINE_COMMENT,
-				PreferenceConstants.EDITOR_LINE_COMMENT_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_COMMENT, PreferenceConstants.EDITOR_COMMENT_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_COMMENT_START, PreferenceConstants.EDITOR_COMMENT_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_COMMENT_END, PreferenceConstants.EDITOR_COMMENT_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_LINE_COMMENT, PreferenceConstants.EDITOR_LINE_COMMENT_COLOR);
 
 		// Numbers
-		fColorTypes.put(PHPRegionTypes.PHP_NUMBER,
-				PreferenceConstants.EDITOR_NUMBER_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_NUMBER, PreferenceConstants.EDITOR_NUMBER_COLOR);
 
 		// Heredocs
-		fColorTypes.put(PHPRegionTypes.PHP_HEREDOC_TAG,
-				PreferenceConstants.EDITOR_HEREDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_HEREDOC_TAG, PreferenceConstants.EDITOR_HEREDOC_COLOR);
 
 		// PHPDoc
-		fColorTypes.put(PHPRegionTypes.PHPDOC_METHOD,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_PROPERTY,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_VAR,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_SEE,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_NAME,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_DESC,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_TODO,
-				PreferenceConstants.EDITOR_TASK_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_LINK,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_EXAMPLE,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_LICENSE,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_PACKAGE,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_VERSION,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_ABSTRACT,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_INTERNAL,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_TUTORIAL,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_CATEGORY,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_FINAL,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_SINCE,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_PARAM,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_MAGIC,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_RETURN,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_AUTHOR,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_ACCESS,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_IGNORE,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_THROWS,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_STATIC,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_GLOBAL,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_USES,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_SUBPACKAGE,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_FILESOURCE,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_EXCEPTION,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_COPYRIGHT,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_STATICVAR,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_NAMESPACE,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_DEPRECATED,
-				PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_METHOD, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_PROPERTY, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_VAR, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_SEE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_NAME, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_DESC, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_TODO, PreferenceConstants.EDITOR_TASK_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_LINK, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_EXAMPLE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_LICENSE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_PACKAGE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_VERSION, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_ABSTRACT, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_INTERNAL, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_TUTORIAL, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_CATEGORY, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_FINAL, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_SINCE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_PARAM, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_MAGIC, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_RETURN, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_AUTHOR, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_ACCESS, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_IGNORE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_THROWS, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_STATIC, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_GLOBAL, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_USES, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_SUBPACKAGE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_FILESOURCE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_EXCEPTION, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_COPYRIGHT, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_STATICVAR, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_NAMESPACE, PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_DEPRECATED, PreferenceConstants.EDITOR_PHPDOC_COLOR);
 
-		fColorTypes.put(PHPRegionTypes.PHPDOC_COMMENT,
-				PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_COMMENT_START,
-				PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHPDOC_COMMENT_END,
-				PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_COMMENT, PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_COMMENT_START, PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_COMMENT_END, PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR);
 
 		// fColorTypes.put(PHPRegionTypes.TASK,
 		// PreferenceConstants.EDITOR_TASK_COLOR);
@@ -355,8 +227,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 		// return the defalt attributes if there is not highlight color for the
 		// region
 		if (result == null) {
-			result = (TextAttribute) getTextAttributes().get(
-					PreferenceConstants.EDITOR_NORMAL_COLOR);
+			result = (TextAttribute) getTextAttributes().get(PreferenceConstants.EDITOR_NORMAL_COLOR);
 		}
 		return result;
 	}
@@ -380,16 +251,13 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 	 */
 	protected void addTextAttribute(String colorKey) {
 		if (getColorPreferences() != null) {
-			String enableKey = PreferenceConstants
-					.getEnabledPreferenceKey(colorKey);
+			String enableKey = PreferenceConstants.getEnabledPreferenceKey(colorKey);
 			boolean enabled = getColorPreferences().getBoolean(enableKey);
 			if (enabled) {
 				String prefString = getColorPreferences().getString(colorKey);
-				String[] stylePrefs = ColorHelper
-						.unpackStylePreferences(prefString);
+				String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
 				if (stylePrefs != null) {
-					getTextAttributes().put(colorKey,
-							createTextAttribute(stylePrefs));
+					getTextAttributes().put(colorKey, createTextAttribute(stylePrefs));
 				}
 			} else {
 				addDefaultTextAttribute(colorKey);
@@ -400,11 +268,9 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 	protected void addDefaultTextAttribute(String colorKey) {
 		if (getColorPreferences() != null) {
 			String prefString = PreferenceConstants.EDITOR_NORMAL_DEFAULT_COLOR;
-			String[] stylePrefs = ColorHelper
-					.unpackStylePreferences(prefString);
+			String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
 			if (stylePrefs != null) {
-				getTextAttributes().put(colorKey,
-						createTextAttribute(stylePrefs));
+				getTextAttributes().put(colorKey, createTextAttribute(stylePrefs));
 			}
 		}
 	}
@@ -426,9 +292,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 		if (Boolean.valueOf(stylePrefs[5]).booleanValue()) { // underline
 			fontModifier |= TextAttribute.UNDERLINE;
 		}
-		return new TextAttribute(EditorUtility.getColor(ColorHelper
-				.toRGB(stylePrefs[0])), EditorUtility.getColor(ColorHelper
-				.toRGB(stylePrefs[1])), fontModifier);
+		return new TextAttribute(EditorUtility.getColor(ColorHelper.toRGB(stylePrefs[0])),
+				EditorUtility.getColor(ColorHelper.toRGB(stylePrefs[1])), fontModifier);
 	}
 
 	public TextAttribute getTextAttributeForColor(String colorKey) {
@@ -438,8 +303,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 	/**
 	 * this version does "trim" regions to match request
 	 */
-	protected StyleRange createStyleRange(ITextRegionCollection flatNode,
-			ITextRegion region, TextAttribute attr, int startOffset, int length) {
+	protected StyleRange createStyleRange(ITextRegionCollection flatNode, ITextRegion region, TextAttribute attr,
+			int startOffset, int length) {
 		int start = flatNode.getStartOffset(region);
 		if (start < startOffset)
 			start = startOffset;
@@ -448,8 +313,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 		// instead of end-start?
 		if (end > maxOffset)
 			end = maxOffset;
-		StyleRange result = new StyleRange(start, end - start,
-				attr.getForeground(), attr.getBackground(), attr.getStyle());
+		StyleRange result = new StyleRange(start, end - start, attr.getForeground(), attr.getBackground(),
+				attr.getStyle());
 		if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
 			result.underline = true;
 			result.fontStyle &= ~TextAttribute.UNDERLINE;
@@ -461,14 +326,13 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 		return result;
 	}
 
-	public boolean prepareRegions(ITypedRegion typedRegion,
-			int lineRequestStart, int lineRequestLength, Collection holdResults) {
+	public boolean prepareRegions(ITypedRegion typedRegion, int lineRequestStart, int lineRequestLength,
+			Collection holdResults) {
 		final int partitionStartOffset = typedRegion.getOffset();
 		final int partitionLength = typedRegion.getLength();
 		IStructuredDocumentRegion structuredDocumentRegion = getDocument()
 				.getRegionAtCharacterOffset(partitionStartOffset);
-		final boolean prepareTextRegions = prepareTextRegions(
-				structuredDocumentRegion, partitionStartOffset,
+		final boolean prepareTextRegions = prepareTextRegions(structuredDocumentRegion, partitionStartOffset,
 				partitionLength, holdResults);
 		return prepareTextRegions;
 	}
@@ -485,12 +349,10 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 	 * @param holdResults
 	 * @return
 	 */
-	public boolean prepareTextRegion(ITextRegionCollection blockedRegion,
-			int partitionStartOffset, int partitionLength,
+	public boolean prepareTextRegion(ITextRegionCollection blockedRegion, int partitionStartOffset, int partitionLength,
 			Collection<StyleRange> holdResults) {
 		boolean handled = false;
-		final int partitionEndOffset = partitionStartOffset + partitionLength
-				- 1;
+		final int partitionEndOffset = partitionStartOffset + partitionLength - 1;
 		ITextRegion region = null;
 		ITextRegionList regions = blockedRegion.getRegions();
 		int nRegions = regions.size();
@@ -507,14 +369,13 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 				continue;
 
 			if (region instanceof ITextRegionCollection) {
-				handled = prepareTextRegion((ITextRegionCollection) region,
-						partitionStartOffset, partitionLength, holdResults);
+				handled = prepareTextRegion((ITextRegionCollection) region, partitionStartOffset, partitionLength,
+						holdResults);
 				previousEndOffset = -1;
 			} else {
 
 				if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-					handled = preparePhpRegions(holdResults,
-							(IPhpScriptRegion) region, startOffset,
+					handled = preparePhpRegions(holdResults, (IPhpScriptRegion) region, startOffset,
 							partitionStartOffset, partitionLength);
 					previousEndOffset = -1;
 				} else {
@@ -534,15 +395,11 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 						// the attribute has the same values.
 						// TODO: this needs to be improved to handle readonly
 						// regions correctly
-						if ((styleRange != null)
-								&& (previousAttr != null)
-								&& (previousAttr.equals(attr))
-								&& previousEndOffset + 1 == blockedRegion
-										.getStartOffset(region)) {
+						if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr))
+								&& previousEndOffset + 1 == blockedRegion.getStartOffset(region)) {
 							styleRange.length += region.getLength();
 						} else {
-							styleRange = createStyleRange(blockedRegion,
-									region, attr, partitionStartOffset,
+							styleRange = createStyleRange(blockedRegion, region, attr, partitionStartOffset,
 									partitionLength);
 							holdResults.add(styleRange);
 							// technically speaking, we don't need to update
@@ -561,15 +418,11 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 		return handled;
 	}
 
-	public boolean prepareTextRegions(
-			IStructuredDocumentRegion structuredDocumentRegion,
-			int partitionStartOffset, int partitionLength,
-			Collection<StyleRange> holdResults) {
+	public boolean prepareTextRegions(IStructuredDocumentRegion structuredDocumentRegion, int partitionStartOffset,
+			int partitionLength, Collection<StyleRange> holdResults) {
 		boolean handled = false;
-		final int partitionEndOffset = partitionStartOffset + partitionLength
-				- 1;
-		while (structuredDocumentRegion != null
-				&& structuredDocumentRegion.getStartOffset() <= partitionEndOffset) {
+		final int partitionEndOffset = partitionStartOffset + partitionLength - 1;
+		while (structuredDocumentRegion != null && structuredDocumentRegion.getStartOffset() <= partitionEndOffset) {
 			ITextRegion region = null;
 			ITextRegionList regions = structuredDocumentRegion.getRegions();
 			int nRegions = regions.size();
@@ -579,22 +432,20 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 				region = regions.get(i);
 				TextAttribute attr = null;
 				TextAttribute previousAttr = null;
-				final int startOffset = structuredDocumentRegion
-						.getStartOffset(region);
+				final int startOffset = structuredDocumentRegion.getStartOffset(region);
 				if (startOffset > partitionEndOffset)
 					break;
 				if (structuredDocumentRegion.getEndOffset(region) <= partitionStartOffset)
 					continue;
 
 				if (region instanceof ITextRegionCollection) {
-					handled = prepareTextRegion((ITextRegionCollection) region,
-							partitionStartOffset, partitionLength, holdResults);
+					handled = prepareTextRegion((ITextRegionCollection) region, partitionStartOffset, partitionLength,
+							holdResults);
 					previousEndOffset = -1;
 				} else {
 
 					if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-						handled = preparePhpRegions(holdResults,
-								(IPhpScriptRegion) region, startOffset,
+						handled = preparePhpRegions(holdResults, (IPhpScriptRegion) region, startOffset,
 								partitionStartOffset, partitionLength);
 						previousEndOffset = -1;
 					} else {
@@ -614,17 +465,12 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 							// TODO: this needs to be improved to handle
 							// readonly
 							// regions correctly
-							if ((styleRange != null)
-									&& (previousAttr != null)
-									&& (previousAttr.equals(attr))
-									&& styleRange.start + styleRange.length == region
-											.getStart()
-									&& previousEndOffset + 1 == structuredDocumentRegion
-											.getStartOffset(region)) {
+							if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr))
+									&& styleRange.start + styleRange.length == region.getStart()
+									&& previousEndOffset + 1 == structuredDocumentRegion.getStartOffset(region)) {
 								styleRange.length += region.getLength();
 							} else {
-								styleRange = createStyleRange(
-										structuredDocumentRegion, region, attr,
+								styleRange = createStyleRange(structuredDocumentRegion, region, attr,
 										partitionStartOffset, partitionLength);
 
 								holdResults.add(styleRange);
@@ -634,8 +480,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 								// when it hasn't changed
 								previousAttr = attr;
 							}
-							previousEndOffset = structuredDocumentRegion
-									.getEndOffset(region);
+							previousEndOffset = structuredDocumentRegion.getEndOffset(region);
 						} else {
 							previousAttr = null;
 						}
@@ -664,9 +509,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 	 * @param partitionLength
 	 * @param partitionStartOffset
 	 */
-	private boolean preparePhpRegions(Collection<StyleRange> holdResults,
-			IPhpScriptRegion region, int regionStart, int partitionStartOffset,
-			int partitionLength) {
+	private boolean preparePhpRegions(Collection<StyleRange> holdResults, IPhpScriptRegion region, int regionStart,
+			int partitionStartOffset, int partitionLength) {
 		assert region.getType() == PHPRegionContext.PHP_CONTENT;
 
 		StyleRange styleRange = null;
@@ -686,16 +530,14 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 				length = partitionLength;
 			}
 
-			if (!region.isFullReparsed()
-					&& (regionStart == partitionStartOffset)) {
+			if (!region.isFullReparsed() && (regionStart == partitionStartOffset)) {
 				phpTokens = region.getUpdatedPhpTokens();
 				from = region.getUpdatedTokensStart();
 				partitionStartOffset = from + regionStart;
 				partitionLength = region.getUpdatedTokensLength();
 
 			} else {
-				phpTokens = region.getPhpTokens(from,
-						Math.min(length, region.getLength()));
+				phpTokens = region.getPhpTokens(from, Math.min(length, region.getLength()));
 			}
 
 			ITextRegion prevElement = null;
@@ -707,14 +549,12 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 				if (prevElement == element) {
 					continue;
 				}
-				if ((styleRange != null) && (previousAttr != null)
-						&& (previousAttr.equals(attr)) && prevElement != null
+				if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr)) && prevElement != null
 						&& prevElement.getLength() == prevElement.getLength()) {
 					// extends the prev styleRange with the current element
 					// length
 					styleRange.length += element.getLength();
-					if (styleRange.start + styleRange.length > partitionStartOffset
-							+ partitionLength) {
+					if (styleRange.start + styleRange.length > partitionStartOffset + partitionLength) {
 						styleRange.length -= (styleRange.start + styleRange.length)
 								- (partitionStartOffset + partitionLength);
 					}
@@ -750,11 +590,9 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 					if (styleStart > partitionStartOffset + partitionLength) {
 						// if the region ends after the requested end position -
 						// making it shorter
-						styleLength -= styleStart
-								- (partitionStartOffset + partitionLength);
+						styleLength -= styleStart - (partitionStartOffset + partitionLength);
 					}
-					if (attr.getBackground() != null
-							&& element.getTextEnd() != element.getEnd()) {// in
+					if (attr.getBackground() != null && element.getTextEnd() != element.getEnd()) {// in
 						// case
 						// of
 						// background
@@ -769,10 +607,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 						// the
 						// whitespaces
 						// applying style to the region w/o the whitespace
-						styleRange = new StyleRange(styleStart, styleLength
-								- (element.getEnd() - element.getTextEnd()),
-								attr.getForeground(), attr.getBackground(),
-								attr.getStyle());
+						styleRange = new StyleRange(styleStart, styleLength - (element.getEnd() - element.getTextEnd()),
+								attr.getForeground(), attr.getBackground(), attr.getStyle());
 						if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
 							styleRange.underline = true;
 							styleRange.fontStyle &= ~TextAttribute.UNDERLINE;
@@ -784,15 +620,12 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 						holdResults.add(styleRange);
 						// applying style to the whitespace (important for the
 						// refresh of the specific range
-						styleRange = new StyleRange(regionStart
-								+ element.getTextEnd(), element.getEnd()
-								- element.getTextEnd(), attr.getForeground(),
-								null, attr.getStyle());
+						styleRange = new StyleRange(regionStart + element.getTextEnd(),
+								element.getEnd() - element.getTextEnd(), attr.getForeground(), null, attr.getStyle());
 						holdResults.add(styleRange);
 						previousAttr = null;
 					} else {
-						styleRange = new StyleRange(styleStart, styleLength,
-								attr.getForeground(), attr.getBackground(),
+						styleRange = new StyleRange(styleStart, styleLength, attr.getForeground(), attr.getBackground(),
 								attr.getStyle());
 						if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
 							styleRange.underline = true;
@@ -880,71 +713,50 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 		if (event != null) {
 			String prefKey = event.getProperty();
 			if (PreferenceConstants.EDITOR_NORMAL_COLOR.equals(prefKey)
-					|| PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR
-							.equals(prefKey)
+					|| PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR.equals(prefKey)
 					|| PreferenceConstants.EDITOR_KEYWORD_COLOR.equals(prefKey)
-					|| PreferenceConstants.EDITOR_VARIABLE_COLOR
-							.equals(prefKey)
+					|| PreferenceConstants.EDITOR_VARIABLE_COLOR.equals(prefKey)
 					|| PreferenceConstants.EDITOR_STRING_COLOR.equals(prefKey)
 					|| PreferenceConstants.EDITOR_COMMENT_COLOR.equals(prefKey)
-					|| PreferenceConstants.EDITOR_LINE_COMMENT_COLOR
-							.equals(prefKey)
-					|| PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR
-							.equals(prefKey)
+					|| PreferenceConstants.EDITOR_LINE_COMMENT_COLOR.equals(prefKey)
+					|| PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR.equals(prefKey)
 					|| PreferenceConstants.EDITOR_PHPDOC_COLOR.equals(prefKey)
 					|| PreferenceConstants.EDITOR_NUMBER_COLOR.equals(prefKey)
 					|| PreferenceConstants.EDITOR_HEREDOC_COLOR.equals(prefKey)
 					|| PreferenceConstants.EDITOR_TASK_COLOR.equals(prefKey)
-					|| PreferenceConstants.EDITOR_KEYWORD_PRIVATE_COLOR
-							.equals(prefKey)
-					|| PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR
-							.equals(prefKey)
-					|| PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR
-							.equals(prefKey)) {
+					|| PreferenceConstants.EDITOR_KEYWORD_PRIVATE_COLOR.equals(prefKey)
+					|| PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR.equals(prefKey)
+					|| PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR.equals(prefKey)) {
 				addTextAttribute(prefKey);
-			} else if (PreferenceConstants.getEnabledPreferenceKey(
-					PreferenceConstants.EDITOR_NORMAL_COLOR).equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(
-							PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR)
+			} else if (PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_NORMAL_COLOR)
+					.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR)
 							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(
-							PreferenceConstants.EDITOR_KEYWORD_COLOR).equals(
-							prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(
-							PreferenceConstants.EDITOR_VARIABLE_COLOR).equals(
-							prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(
-							PreferenceConstants.EDITOR_STRING_COLOR).equals(
-							prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(
-							PreferenceConstants.EDITOR_COMMENT_COLOR).equals(
-							prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(
-							PreferenceConstants.EDITOR_LINE_COMMENT_COLOR)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_COLOR)
 							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(
-							PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_VARIABLE_COLOR)
 							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(
-							PreferenceConstants.EDITOR_PHPDOC_COLOR).equals(
-							prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(
-							PreferenceConstants.EDITOR_NUMBER_COLOR).equals(
-							prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(
-							PreferenceConstants.EDITOR_HEREDOC_COLOR).equals(
-							prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(
-							PreferenceConstants.EDITOR_TASK_COLOR).equals(
-							prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(
-							PreferenceConstants.EDITOR_KEYWORD_PRIVATE_COLOR)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_STRING_COLOR)
 							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(
-							PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_COMMENT_COLOR)
 							.equals(prefKey)
-					|| PreferenceConstants.getEnabledPreferenceKey(
-							PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_LINE_COMMENT_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_PHPDOC_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_NUMBER_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_HEREDOC_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_TASK_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_PRIVATE_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_PROTECTED_COLOR)
+							.equals(prefKey)
+					|| PreferenceConstants.getEnabledPreferenceKey(PreferenceConstants.EDITOR_KEYWORD_PUBLIC_COLOR)
 							.equals(prefKey)) {
 				boolean enabled = getColorPreferences().getBoolean(prefKey);
 				prefKey = prefKey.split("\\.")[1]; //$NON-NLS-1$

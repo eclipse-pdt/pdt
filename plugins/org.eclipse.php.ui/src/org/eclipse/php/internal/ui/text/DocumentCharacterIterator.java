@@ -27,8 +27,7 @@ import org.eclipse.jface.text.IDocument;
  * <code>CharacterIterator</code> methods as well as <code>charAt</code>may
  * return {@link CharacterIterator#DONE}.
  */
-public class DocumentCharacterIterator implements CharacterIterator,
-		CharSequence {
+public class DocumentCharacterIterator implements CharacterIterator, CharSequence {
 
 	private int fIndex = -1;
 	private final IDocument fDocument;
@@ -60,8 +59,7 @@ public class DocumentCharacterIterator implements CharacterIterator,
 	 * @throws IllegalArgumentException
 	 *             if the indices are out of bounds
 	 */
-	public DocumentCharacterIterator(IDocument document, int first)
-			throws IllegalArgumentException {
+	public DocumentCharacterIterator(IDocument document, int first) throws IllegalArgumentException {
 		this(document, first, document.getLength());
 	}
 
@@ -78,8 +76,7 @@ public class DocumentCharacterIterator implements CharacterIterator,
 	 * @throws IllegalArgumentException
 	 *             if the indices are out of bounds
 	 */
-	public DocumentCharacterIterator(IDocument document, int first, int last)
-			throws IllegalArgumentException {
+	public DocumentCharacterIterator(IDocument document, int first, int last) throws IllegalArgumentException {
 		if (document == null)
 			throw new NullPointerException();
 		if (first < 0 || first > last)
@@ -227,7 +224,6 @@ public class DocumentCharacterIterator implements CharacterIterator,
 			throw new IndexOutOfBoundsException();
 		if (end > length())
 			throw new IndexOutOfBoundsException();
-		return new DocumentCharacterIterator(fDocument,
-				getBeginIndex() + start, getBeginIndex() + end);
+		return new DocumentCharacterIterator(fDocument, getBeginIndex() + start, getBeginIndex() + end);
 	}
 }

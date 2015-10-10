@@ -42,8 +42,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
-public class PhpCommentTemplateCompletionProcessor extends
-		ScriptTemplateCompletionProcessor {
+public class PhpCommentTemplateCompletionProcessor extends ScriptTemplateCompletionProcessor {
 
 	private static final ICompletionProposal[] EMPTY_ICOMPLETION_PROPOSAL = new ICompletionProposal[0];
 	private static final ICompletionProposal[] EMPTY = {};
@@ -51,22 +50,18 @@ public class PhpCommentTemplateCompletionProcessor extends
 
 	private static char[] IGNORE = new char[] { '.', ':', '@', '$' };
 
-	public PhpCommentTemplateCompletionProcessor(
-			ScriptContentAssistInvocationContext context) {
+	public PhpCommentTemplateCompletionProcessor(ScriptContentAssistInvocationContext context) {
 		super(context);
 	}
 
-	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
-			int offset) {
+	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		if (isInDocOrCommentOrString(viewer, offset)) {
 
-			ICompletionProposal[] completionProposals = super
-					.computeCompletionProposals(viewer, offset);
+			ICompletionProposal[] completionProposals = super.computeCompletionProposals(viewer, offset);
 			if (completionProposals == null) {
 				return EMPTY;
 			}
-			return filterUsingPrefix(completionProposals, extractPrefix(viewer,
-					offset));
+			return filterUsingPrefix(completionProposals, extractPrefix(viewer, offset));
 		}
 		return EMPTY;
 	}
@@ -75,23 +70,20 @@ public class PhpCommentTemplateCompletionProcessor extends
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 		if (modelManager != null) {
 			IStructuredModel structuredModel = null;
-			structuredModel = modelManager.getExistingModelForRead(viewer
-					.getDocument());
+			structuredModel = modelManager.getExistingModelForRead(viewer.getDocument());
 			if (structuredModel != null) {
 				try {
 					DOMModelForPHP domModelForPHP = (DOMModelForPHP) structuredModel;
 					try {
 						// Find the structured document region:
-						IStructuredDocument document = (IStructuredDocument) domModelForPHP
-								.getDocument().getStructuredDocument();
-						IStructuredDocumentRegion sdRegion = document
-								.getRegionAtCharacterOffset(offset);
+						IStructuredDocument document = (IStructuredDocument) domModelForPHP.getDocument()
+								.getStructuredDocument();
+						IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
 						if (sdRegion == null) { // empty file case
 							return false;
 						}
 
-						ITextRegion textRegion = sdRegion
-								.getRegionAtCharacterOffset(offset);
+						ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(offset);
 						if (textRegion == null) {
 							return false;
 						}
@@ -100,21 +92,17 @@ public class PhpCommentTemplateCompletionProcessor extends
 
 						if (textRegion instanceof ITextRegionContainer) {
 							container = (ITextRegionContainer) textRegion;
-							textRegion = container
-									.getRegionAtCharacterOffset(offset);
+							textRegion = container.getRegionAtCharacterOffset(offset);
 						}
 
 						if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 							IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
-							textRegion = phpScriptRegion.getPhpToken(offset
-									- container.getStartOffset()
-									- phpScriptRegion.getStart());
+							textRegion = phpScriptRegion
+									.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
 							String type = textRegion.getType();
-							if (PHPPartitionTypes
-									.isPHPMultiLineCommentState(type)
+							if (PHPPartitionTypes.isPHPMultiLineCommentState(type)
 									|| PHPPartitionTypes.isPHPDocState(type)
-									|| PHPPartitionTypes
-											.isPHPLineCommentState(type)
+									|| PHPPartitionTypes.isPHPLineCommentState(type)
 									|| PHPPartitionTypes.isPHPQuotesState(type)) {
 								return true;
 							}
@@ -130,8 +118,7 @@ public class PhpCommentTemplateCompletionProcessor extends
 		return false;
 	}
 
-	private ICompletionProposal[] filterUsingPrefix(
-			ICompletionProposal[] completionProposals, String prefix) {
+	private ICompletionProposal[] filterUsingPrefix(ICompletionProposal[] completionProposals, String prefix) {
 		if (prefix.length() == 0) { // no templats should be offered if there is
 			// no prefix.
 			return EMPTY_ICOMPLETION_PROPOSAL;
@@ -145,8 +132,7 @@ public class PhpCommentTemplateCompletionProcessor extends
 			}
 		}
 
-		return (ICompletionProposal[]) matches
-				.toArray(new ICompletionProposal[matches.size()]);
+		return (ICompletionProposal[]) matches.toArray(new ICompletionProposal[matches.size()]);
 	}
 
 	protected String extractPrefix(ITextViewer viewer, int offset) {
@@ -181,8 +167,7 @@ public class PhpCommentTemplateCompletionProcessor extends
 		return templates;
 	}
 
-	protected TemplateContextType getContextType(ITextViewer viewer,
-			IRegion region) {
+	protected TemplateContextType getContextType(ITextViewer viewer, IRegion region) {
 
 		// For now always return the context type for ALL PHP regions
 		TemplateContextType type = null;
@@ -195,8 +180,7 @@ public class PhpCommentTemplateCompletionProcessor extends
 	}
 
 	protected Image getImage(Template template) {
-		return PHPUiPlugin.getImageDescriptorRegistry().get(
-				PHPPluginImages.DESC_TEMPLATE);
+		return PHPUiPlugin.getImageDescriptorRegistry().get(PHPPluginImages.DESC_TEMPLATE);
 	}
 
 	protected ContextTypeRegistry getTemplateContextRegistry() {
@@ -211,10 +195,9 @@ public class PhpCommentTemplateCompletionProcessor extends
 		this.contextTypeId = contextTypeId;
 	}
 
-	protected ICompletionProposal createProposal(Template template,
-			TemplateContext context, IRegion region, int relevance) {
-		return new PhpTemplateProposal(template, context, region,
-				getImage(template), relevance);
+	protected ICompletionProposal createProposal(Template template, TemplateContext context, IRegion region,
+			int relevance) {
+		return new PhpTemplateProposal(template, context, region, getImage(template), relevance);
 	}
 
 	protected IInformationControlCreator getInformationControlCreator() {

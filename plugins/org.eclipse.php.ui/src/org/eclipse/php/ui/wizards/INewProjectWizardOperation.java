@@ -33,8 +33,7 @@ public interface INewProjectWizardOperation {
 	 *            true to keep the sources (overwrite existing project) or false
 	 *            to create a new project
 	 */
-	public void onPreparePhpProject(IProject projectHandle, WizardModel model,
-			boolean keep);
+	public void onPreparePhpProject(IProject projectHandle, WizardModel model, boolean keep);
 
 	/**
 	 * Invoked after the user clicks on finish

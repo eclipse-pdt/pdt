@@ -18,8 +18,7 @@ public class OccurrenceMatch extends Match {
 
 	private final int fFlags;
 
-	public OccurrenceMatch(DLTKElementLine element, int offset, int length,
-			int flags) {
+	public OccurrenceMatch(DLTKElementLine element, int offset, int length, int flags) {
 		super(element, offset, length);
 		fFlags = flags;
 	}

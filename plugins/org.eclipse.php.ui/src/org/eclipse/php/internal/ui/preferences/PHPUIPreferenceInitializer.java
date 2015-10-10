@@ -24,10 +24,8 @@ public class PHPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		EditorsUI.useQuickDiffPreferencePage(store);
 		PreferenceConstants.initializeDefaultValues();
 
-		IPreferenceStore dltkStore = DLTKUIPlugin.getDefault()
-				.getPreferenceStore();
-		dltkStore.setDefault(
-				org.eclipse.dltk.ui.PreferenceConstants.CODEASSIST_SORTER,
+		IPreferenceStore dltkStore = DLTKUIPlugin.getDefault().getPreferenceStore();
+		dltkStore.setDefault(org.eclipse.dltk.ui.PreferenceConstants.CODEASSIST_SORTER,
 				"org.eclipse.php.ui.AlphabeticSorter"); //$NON-NLS-1$
 	}
 

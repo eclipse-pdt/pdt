@@ -45,8 +45,7 @@ public class FileDropEditorOpenAction extends FileDropAction {
 						IFile file = ResourcesPlugin.getWorkspace().getRoot()
 								.getFileForLocation(new Path(fileNames[i]));
 						if (file != null) {
-							org.eclipse.dltk.internal.ui.editor.EditorUtility
-									.openInEditor(file, true);
+							org.eclipse.dltk.internal.ui.editor.EditorUtility.openInEditor(file, true);
 						} else {
 							if (new File(fileNames[i]).exists()) {
 								EditorUtility.openLocalFile(fileNames[i], 0);

@@ -34,43 +34,39 @@ import org.junit.Test;
 public class PHPMoveProcessorRunConfigTestCase2 {
 	private IProject project1;
 
-	private String configFileCont = "<?xml version='1.0' encoding='UTF-8' standalone='no'?> " +
-	"<launchConfiguration type='org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType'>" +
-	"<stringAttribute key='ATTR_FILE' value='/TestProject2/src/RunConfigTest.php'/>" +
-	"<stringAttribute key='ATTR_FILE_FULL_PATH' value='C:\\src\\RunConfigTest.php'/>" +
-	"<stringAttribute key='ATTR_LOCATION' value='C:\\php-cgi.exe'/> "+
-	"<stringAttribute key='debugOutputEncoding' value='UTF-8'/>" + 
-	"<stringAttribute key='debugTransferEncoding' value='UTF-8'/>" +
-	"<booleanAttribute key='firstLineBreakpoint' value='true'/>" +
-	"<stringAttribute key='org.eclipse.php.debug.core.PHP_Project' value='/TestProject11'/>" +
-	"<booleanAttribute key='org.eclipse.php.debug.core.RunWithDebugInfo' value='true'/>" +
-	"<stringAttribute key='org.eclipse.php.debug.coreconfiguration_delegate_class' value='org.eclipse.php.internal.debug.core.launching.PHPExecutableLaunchDelegate'/>" +
-	"<stringAttribute key='org.eclipse.php.debug.corephp_debugger_id' value='org.eclipse.php.debug.core.zendDebugger'/>" +
-	"<stringAttribute key='php_debug_type' value='php_exe_script_debug'/>" +
-	"</launchConfiguration>";
+	private String configFileCont = "<?xml version='1.0' encoding='UTF-8' standalone='no'?> "
+			+ "<launchConfiguration type='org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType'>"
+			+ "<stringAttribute key='ATTR_FILE' value='/TestProject2/src/RunConfigTest.php'/>"
+			+ "<stringAttribute key='ATTR_FILE_FULL_PATH' value='C:\\src\\RunConfigTest.php'/>"
+			+ "<stringAttribute key='ATTR_LOCATION' value='C:\\php-cgi.exe'/> "
+			+ "<stringAttribute key='debugOutputEncoding' value='UTF-8'/>"
+			+ "<stringAttribute key='debugTransferEncoding' value='UTF-8'/>"
+			+ "<booleanAttribute key='firstLineBreakpoint' value='true'/>"
+			+ "<stringAttribute key='org.eclipse.php.debug.core.PHP_Project' value='/TestProject11'/>"
+			+ "<booleanAttribute key='org.eclipse.php.debug.core.RunWithDebugInfo' value='true'/>"
+			+ "<stringAttribute key='org.eclipse.php.debug.coreconfiguration_delegate_class' value='org.eclipse.php.internal.debug.core.launching.PHPExecutableLaunchDelegate'/>"
+			+ "<stringAttribute key='org.eclipse.php.debug.corephp_debugger_id' value='org.eclipse.php.debug.core.zendDebugger'/>"
+			+ "<stringAttribute key='php_debug_type' value='php_exe_script_debug'/>" + "</launchConfiguration>";
 	private ILaunchConfiguration config;
 
 	private IFile configFile;
 
-
 	@Before
 	public void setUp() throws Exception {
-		System.setProperty("disableStartupRunner","true");
+		System.setProperty("disableStartupRunner", "true");
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
-		
 
 		project1 = FileUtils.createProject("TestProject1");
-		
+
 		IFolder folder = project1.getFolder("src");
-		
-		if(!folder.exists()){
+
+		if (!folder.exists()) {
 			folder.create(true, true, new NullProgressMonitor());
 		}
 		IFile file = folder.getFile("RunConfigTest2.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php class TestRenameClass{}?>".getBytes());
+		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -78,39 +74,36 @@ public class PHPMoveProcessorRunConfigTestCase2 {
 			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
 
-
 		source = new ByteArrayInputStream(configFileCont.getBytes());
-		
+
 		configFile = project1.getFile("TestConfig2.launch");
-		if(!configFile.exists()){
-			configFile.create(source, IFile.FORCE,new NullProgressMonitor());
-		}
-		else{
+		if (!configFile.exists()) {
+			configFile.create(source, IFile.FORCE, new NullProgressMonitor());
+		} else {
 			configFile.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
-		
+
 		folder = project1.getFolder("src1");
-		
-		if(!folder.exists()){
+
+		if (!folder.exists()) {
 			folder.create(true, true, new NullProgressMonitor());
 		}
 
-		
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
 	}
-	
+
 	@Test
-	public void testMoveing(){
+	public void testMoveing() {
 		PHPMoveProcessor processor = new PHPMoveProcessor(project1.getProject().getFolder("src"));
-		
+
 		RefactoringStatus status = processor.checkInitialConditions(new NullProgressMonitor());
-		
+
 		assertEquals(IStatus.OK, status.getSeverity());
-		
+
 		processor.setDestination(project1.getFolder("src1"));
 		processor.setUpdateReferences(true);
-		
+
 		try {
 			Change change = processor.createChange(new NullProgressMonitor());
 			change.perform(new NullProgressMonitor());

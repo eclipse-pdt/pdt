@@ -34,14 +34,10 @@ public class DeleteAction extends SelectionDispatchAction {
 		super(site);
 		setText(ReorgMessages.DeleteAction_3);
 		setDescription(ReorgMessages.DeleteAction_4);
-		ISharedImages workbenchImages = DLTKUIPlugin.getDefault()
-				.getWorkbench().getSharedImages();
-		setDisabledImageDescriptor(workbenchImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE_DISABLED));
-		setImageDescriptor(workbenchImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
-		setHoverImageDescriptor(workbenchImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
+		ISharedImages workbenchImages = DLTKUIPlugin.getDefault().getWorkbench().getSharedImages();
+		setDisabledImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE_DISABLED));
+		setImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
+		setHoverImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 
 		if (DLTKCore.DEBUG) {
 			System.err.println(Messages.DeleteAction_0);
@@ -57,8 +53,7 @@ public class DeleteAction extends SelectionDispatchAction {
 			return;
 		}
 		try {
-			setEnabled(RefactoringAvailabilityTester
-					.isDeleteAvailable(selection.toArray()));
+			setEnabled(RefactoringAvailabilityTester.isDeleteAvailable(selection.toArray()));
 		} catch (CoreException e) {
 			// no ui here - this happens on selection changes
 			// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
@@ -88,11 +83,8 @@ public class DeleteAction extends SelectionDispatchAction {
 	}
 
 	@SuppressWarnings("restriction")
-	public void startDeleteRefactoring(final Object[] elements,
-			final Shell shell) throws CoreException {
-		final DeleteRefactoring refactoring = new DeleteRefactoring(
-				new ScriptDeleteProcessor(elements));
-		DeleteUserInterfaceManager.getDefault().getStarter(refactoring)
-				.activate(refactoring, shell, false);
+	public void startDeleteRefactoring(final Object[] elements, final Shell shell) throws CoreException {
+		final DeleteRefactoring refactoring = new DeleteRefactoring(new ScriptDeleteProcessor(elements));
+		DeleteUserInterfaceManager.getDefault().getStarter(refactoring).activate(refactoring, shell, false);
 	}
 }

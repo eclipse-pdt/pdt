@@ -22,8 +22,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
  * 
  * @author guy
  */
-public class FileContentRequest extends DebugMessageRequestImpl
-		implements IDebugRequestMessage {
+public class FileContentRequest extends DebugMessageRequestImpl implements IDebugRequestMessage {
 
 	protected String fileName;
 

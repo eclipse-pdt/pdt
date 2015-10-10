@@ -27,8 +27,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
 /**
  * @author guy
  */
-public class DebugSessionStartedNotification extends
-		DebugMessageNotificationImpl implements IDebugNotificationMessage {
+public class DebugSessionStartedNotification extends DebugMessageNotificationImpl implements IDebugNotificationMessage {
 
 	private String fileName = ""; //$NON-NLS-1$
 	private String uri = ""; //$NON-NLS-1$
@@ -111,8 +110,7 @@ public class DebugSessionStartedNotification extends
 											// use);
 		setFileName(CommunicationUtilities.readString(in));
 		setUri(CommunicationUtilities.readString(in));
-		setQuery(URLDecoder.decode(CommunicationUtilities.readString(in),
-				"UTF-8")); //$NON-NLS-1$
+		setQuery(URLDecoder.decode(CommunicationUtilities.readString(in), "UTF-8")); //$NON-NLS-1$
 		setOptions(CommunicationUtilities.readString(in));
 	}
 

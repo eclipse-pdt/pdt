@@ -20,8 +20,7 @@ import org.eclipse.swt.widgets.Composite;
  * @author Bartlomiej Laczkowski
  */
 @SuppressWarnings("restriction")
-public class XDebugDebuggerSettingsSectionBuilder implements
-		IDebuggerSettingsSectionBuilder {
+public class XDebugDebuggerSettingsSectionBuilder implements IDebuggerSettingsSectionBuilder {
 
 	/*
 	 * (non-Javadoc)
@@ -33,15 +32,15 @@ public class XDebugDebuggerSettingsSectionBuilder implements
 	 * php.internal.debug.core.debugger.IDebuggerSettingsWorkingCopy)
 	 */
 	@Override
-	public IDebuggerSettingsSection build(CompositeFragment compositeFragment,
-			Composite debuggerSettingsComposite, IDebuggerSettingsWorkingCopy settingsWorkingCopy) {
+	public IDebuggerSettingsSection build(CompositeFragment compositeFragment, Composite debuggerSettingsComposite,
+			IDebuggerSettingsWorkingCopy settingsWorkingCopy) {
 		switch (settingsWorkingCopy.getKind()) {
 		case PHP_SERVER:
-			return new XDebugDebuggerServerSettingsSection(compositeFragment,
-					debuggerSettingsComposite, settingsWorkingCopy);
+			return new XDebugDebuggerServerSettingsSection(compositeFragment, debuggerSettingsComposite,
+					settingsWorkingCopy);
 		case PHP_EXE:
-			return new XDebugDebuggerExeSettingsSection(compositeFragment,
-					debuggerSettingsComposite, settingsWorkingCopy);
+			return new XDebugDebuggerExeSettingsSection(compositeFragment, debuggerSettingsComposite,
+					settingsWorkingCopy);
 		default:
 			break;
 		}

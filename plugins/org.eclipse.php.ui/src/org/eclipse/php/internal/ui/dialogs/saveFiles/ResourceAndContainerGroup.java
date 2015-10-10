@@ -97,8 +97,8 @@ public class ResourceAndContainerGroup implements Listener {
 	 *            one word, in lowercase, to describe the resource to the user
 	 *            (file, folder, project)
 	 */
-	public ResourceAndContainerGroup(Composite parent, Listener client,
-			String resourceFieldLabel, String resourceType) {
+	public ResourceAndContainerGroup(Composite parent, Listener client, String resourceFieldLabel,
+			String resourceType) {
 		this(parent, client, resourceFieldLabel, resourceType, true);
 	}
 
@@ -118,11 +118,9 @@ public class ResourceAndContainerGroup implements Listener {
 	 * @param showClosedProjects
 	 *            whether or not to show closed projects
 	 */
-	public ResourceAndContainerGroup(Composite parent, Listener client,
-			String resourceFieldLabel, String resourceType,
+	public ResourceAndContainerGroup(Composite parent, Listener client, String resourceFieldLabel, String resourceType,
 			boolean showClosedProjects) {
-		this(parent, client, resourceFieldLabel, resourceType,
-				showClosedProjects, SWT.DEFAULT);
+		this(parent, client, resourceFieldLabel, resourceType, showClosedProjects, SWT.DEFAULT);
 	}
 
 	/**
@@ -143,8 +141,7 @@ public class ResourceAndContainerGroup implements Listener {
 	 * @param heightHint
 	 *            height hint for the container selection widget group
 	 */
-	public ResourceAndContainerGroup(Composite parent, Listener client,
-			String resourceFieldLabel, String resourceType,
+	public ResourceAndContainerGroup(Composite parent, Listener client, String resourceFieldLabel, String resourceType,
 			boolean showClosedProjects, int heightHint) {
 		super();
 		this.resourceType = resourceType;
@@ -171,8 +168,7 @@ public class ResourceAndContainerGroup implements Listener {
 	 * @param heightHint
 	 *            height hint for the container selection widget group
 	 */
-	protected void createContents(Composite parent, String resourceLabelString,
-			int heightHint) {
+	protected void createContents(Composite parent, String resourceLabelString, int heightHint) {
 
 		Font font = parent.getFont();
 		// server name group
@@ -186,11 +182,9 @@ public class ResourceAndContainerGroup implements Listener {
 
 		// container group
 		if (heightHint == SWT.DEFAULT) {
-			containerGroup = new ContainerSelectionGroup(composite, this, true,
-					null, showClosedProjects);
+			containerGroup = new ContainerSelectionGroup(composite, this, true, null, showClosedProjects);
 		} else {
-			containerGroup = new ContainerSelectionGroup(composite, this, true,
-					null, showClosedProjects, heightHint,
+			containerGroup = new ContainerSelectionGroup(composite, this, true, null, showClosedProjects, heightHint,
 					SIZING_TEXT_FIELD_WIDTH);
 		}
 
@@ -200,8 +194,7 @@ public class ResourceAndContainerGroup implements Listener {
 		layout.numColumns = 2;
 		layout.marginWidth = 0;
 		nameGroup.setLayout(layout);
-		nameGroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL
-				| GridData.GRAB_HORIZONTAL));
+		nameGroup.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
 		nameGroup.setFont(font);
 
 		Label label = new Label(nameGroup, SWT.NONE);
@@ -216,8 +209,7 @@ public class ResourceAndContainerGroup implements Listener {
 				handleResourceNameFocusLostEvent();
 			}
 		});
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
-				| GridData.GRAB_HORIZONTAL);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
 		data.widthHint = SIZING_TEXT_FIELD_WIDTH;
 		resourceNameField.setLayoutData(data);
 		resourceNameField.setFont(font);
@@ -298,8 +290,7 @@ public class ResourceAndContainerGroup implements Listener {
 	 */
 	private boolean useResourceExtension() {
 		String resource = resourceNameField.getText();
-		if ((resourceExtension != null) && (resourceExtension.length() > 0)
-				&& (resource.length() > 0)
+		if ((resourceExtension != null) && (resourceExtension.length() > 0) && (resource.length() > 0)
 				&& (resource.endsWith('.' + resourceExtension) == false)) {
 			return true;
 		}
@@ -348,8 +339,7 @@ public class ResourceAndContainerGroup implements Listener {
 	 *            Full path to the container.
 	 */
 	public void setContainerFullPath(IPath path) {
-		IResource initial = ResourcesPlugin.getWorkspace().getRoot()
-				.findMember(path);
+		IResource initial = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
 		if (initial != null) {
 			if (!(initial instanceof IContainer)) {
 				initial = initial.getParent();
@@ -421,8 +411,7 @@ public class ResourceAndContainerGroup implements Listener {
 		}
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		String projectName = path.segment(0);
-		if (projectName == null
-				|| !workspace.getRoot().getProject(projectName).exists()) {
+		if (projectName == null || !workspace.getRoot().getProject(projectName).exists()) {
 			problemType = PROBLEM_PROJECT_DOES_NOT_EXIST;
 			problemMessage = IDEWorkbenchMessages.ResourceGroup_noProject;
 			return false;
@@ -432,9 +421,7 @@ public class ResourceAndContainerGroup implements Listener {
 		while (path.segmentCount() > 1) {
 			if (root.getFile(path).exists()) {
 				problemType = PROBLEM_PATH_OCCUPIED;
-				problemMessage = NLS.bind(
-						IDEWorkbenchMessages.ResourceGroup_pathOccupied,
-						path.makeRelative());
+				problemMessage = NLS.bind(IDEWorkbenchMessages.ResourceGroup_pathOccupied, path.makeRelative());
 				return false;
 			}
 			path = path.removeLastSegments(1);
@@ -460,8 +447,7 @@ public class ResourceAndContainerGroup implements Listener {
 			return false;
 		}
 
-		IPath path = containerGroup.getContainerFullPath()
-				.append(getResource());
+		IPath path = containerGroup.getContainerFullPath().append(getResource());
 		return validateFullResourcePath(path);
 	}
 
@@ -478,21 +464,17 @@ public class ResourceAndContainerGroup implements Listener {
 	protected boolean validateFullResourcePath(IPath resourcePath) {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 
-		IStatus result = workspace.validatePath(resourcePath.toString(),
-				IResource.FOLDER);
+		IStatus result = workspace.validatePath(resourcePath.toString(), IResource.FOLDER);
 		if (!result.isOK()) {
 			problemType = PROBLEM_PATH_INVALID;
 			problemMessage = result.getMessage();
 			return false;
 		}
 
-		if (!allowExistingResources
-				&& (workspace.getRoot().getFolder(resourcePath).exists() || workspace
-						.getRoot().getFile(resourcePath).exists())) {
+		if (!allowExistingResources && (workspace.getRoot().getFolder(resourcePath).exists()
+				|| workspace.getRoot().getFile(resourcePath).exists())) {
 			problemType = PROBLEM_RESOURCE_EXIST;
-			problemMessage = NLS.bind(
-					IDEWorkbenchMessages.ResourceGroup_nameExists,
-					getResource());
+			problemMessage = NLS.bind(IDEWorkbenchMessages.ResourceGroup_nameExists, getResource());
 			return false;
 		}
 		return true;
@@ -511,16 +493,13 @@ public class ResourceAndContainerGroup implements Listener {
 
 		if (resourceName.length() == 0) {
 			problemType = PROBLEM_RESOURCE_EMPTY;
-			problemMessage = NLS.bind(
-					IDEWorkbenchMessages.ResourceGroup_emptyName, resourceType);
+			problemMessage = NLS.bind(IDEWorkbenchMessages.ResourceGroup_emptyName, resourceType);
 			return false;
 		}
 
 		if (!Path.ROOT.isValidPath(resourceName)) {
 			problemType = PROBLEM_NAME_INVALID;
-			problemMessage = NLS.bind(
-					IDEWorkbenchMessages.ResourceGroup_invalidFilename,
-					resourceName);
+			problemMessage = NLS.bind(IDEWorkbenchMessages.ResourceGroup_invalidFilename, resourceName);
 			return false;
 		}
 		return true;

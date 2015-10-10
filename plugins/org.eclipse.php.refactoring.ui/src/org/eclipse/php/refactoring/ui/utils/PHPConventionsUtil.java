@@ -20,8 +20,7 @@ public class PHPConventionsUtil {
 
 	public static boolean validateIdentifier(String newName) {
 		if (newName == null || newName.length() == 0
-				|| !Character.isLetter(newName.charAt(0))
-				&& newName.charAt(0) != '_') {
+				|| !Character.isLetter(newName.charAt(0)) && newName.charAt(0) != '_') {
 			return false;
 		}
 
@@ -43,21 +42,18 @@ public class PHPConventionsUtil {
 		if (validateIdentifier(text)) {
 			return Status.OK_STATUS;
 		} else {
-			return new Status(IStatus.ERROR, RefactoringUIPlugin.PLUGIN_ID,
-					"Error Parameter name"); //$NON-NLS-1$
+			return new Status(IStatus.ERROR, RefactoringUIPlugin.PLUGIN_ID, "Error Parameter name"); //$NON-NLS-1$
 		}
 	}
 
 	public static boolean startsWithLowerCase(String text) {
-		if (text == null || text.length() == 0
-				|| !Character.isLowerCase(text.charAt(0))) {
+		if (text == null || text.length() == 0 || !Character.isLowerCase(text.charAt(0))) {
 			return false;
 		}
 		return true;
 	}
 
-	public static RefactoringStatus checkParameterTypeSyntax(String type,
-			IScriptProject scriptProject) {
+	public static RefactoringStatus checkParameterTypeSyntax(String type, IScriptProject scriptProject) {
 		// TODO Auto-generated method stub
 		return null;
 	}

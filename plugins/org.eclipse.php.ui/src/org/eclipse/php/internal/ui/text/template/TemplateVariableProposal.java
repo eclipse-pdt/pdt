@@ -52,8 +52,8 @@ public class TemplateVariableProposal implements ICompletionProposal {
 	 * @param includeBrace
 	 *            whether to also replace the ${
 	 */
-	public TemplateVariableProposal(TemplateVariableResolver variable,
-			int offset, int length, ITextViewer viewer, boolean includeBrace) {
+	public TemplateVariableProposal(TemplateVariableResolver variable, int offset, int length, ITextViewer viewer,
+			boolean includeBrace) {
 		fResolver = variable;
 		fOffset = offset;
 		fLength = length;
@@ -82,11 +82,8 @@ public class TemplateVariableProposal implements ICompletionProposal {
 			PHPUiPlugin.log(e);
 
 			Shell shell = fViewer.getTextWidget().getShell();
-			MessageDialog
-					.openError(
-							shell,
-							TemplatePreferencesMessages.TemplateVariableProposal_error_title,
-							e.getMessage());
+			MessageDialog.openError(shell, TemplatePreferencesMessages.TemplateVariableProposal_error_title,
+					e.getMessage());
 		}
 	}
 

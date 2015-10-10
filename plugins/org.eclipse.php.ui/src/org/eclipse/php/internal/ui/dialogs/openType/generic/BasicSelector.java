@@ -42,12 +42,10 @@ public class BasicSelector extends Composite {
 	private ViewerElementFilter phpTypeViewerFilter;
 	private IBasicSelectorLabelProvider basicSelectorLabelProvider;
 
-	public BasicSelector(Composite parent,
-			CompositeFactory contentAreaCompositeFactory) {
+	public BasicSelector(Composite parent, CompositeFactory contentAreaCompositeFactory) {
 		super(parent, SWT.NONE);
 
-		this.contentAreaCompositeFactory = new CompositeFactoryAsserter(
-				contentAreaCompositeFactory);
+		this.contentAreaCompositeFactory = new CompositeFactoryAsserter(contentAreaCompositeFactory);
 		initialize();
 	}
 
@@ -82,8 +80,7 @@ public class BasicSelector extends Composite {
 
 		Control lastControl = filterText;
 		if (contentAreaCompositeFactory != null) {
-			Composite contentFilterComposite = contentAreaCompositeFactory
-					.createComposite(this);
+			Composite contentFilterComposite = contentAreaCompositeFactory.createComposite(this);
 			lastControl = contentFilterComposite;
 
 			formData = new FormData();
@@ -113,19 +110,16 @@ public class BasicSelector extends Composite {
 		tableViewerComposite = new Composite(this, SWT.NONE);
 		FillLayout fillLayout = new FillLayout();
 		tableViewerComposite.setLayout(fillLayout);
-		tableViewer = new HighLoadTableViewer(tableViewerComposite, SWT.SINGLE
-				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		tableViewer = new HighLoadTableViewer(tableViewerComposite,
+				SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		phpTypeViewerFilter = new ViewerElementFilter();
 		tableViewer.addFilter(phpTypeViewerFilter);
 		// Functionality to go to the text when pressing the up arrow and found
 		// in the first element
 		tableViewer.getControl().addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
-				StructuredSelection structuredSelection = (StructuredSelection) tableViewer
-						.getSelection();
-				if (structuredSelection.getFirstElement() == tableViewer
-						.getElementAt(0)
-						&& SWT.ARROW_UP == e.keyCode) {
+				StructuredSelection structuredSelection = (StructuredSelection) tableViewer.getSelection();
+				if (structuredSelection.getFirstElement() == tableViewer.getElementAt(0) && SWT.ARROW_UP == e.keyCode) {
 					filterText.setFocus();
 				}
 			}
@@ -138,8 +132,7 @@ public class BasicSelector extends Composite {
 		tableViewer.getControl().addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				if ((e.keyCode & SWT.KEYCODE_BIT) == 0) {
-					if ((e.keyCode > 'a' && e.keyCode < 'z')
-							|| (e.keyCode > 'A' && e.keyCode < 'Z')) {
+					if ((e.keyCode > 'a' && e.keyCode < 'z') || (e.keyCode > 'A' && e.keyCode < 'Z')) {
 						filterText.setFocus();
 						filterText.setText(filterText.getText() + e.character);
 						filterText.setSelection(filterText.getText().length());
@@ -149,8 +142,7 @@ public class BasicSelector extends Composite {
 						if (text.length() == 0) {
 							return;
 						}
-						filterText
-								.setText(text.substring(0, text.length() - 1));
+						filterText.setText(text.substring(0, text.length() - 1));
 						filterText.setSelection(text.length() - 1);
 					}
 				}
@@ -179,8 +171,7 @@ public class BasicSelector extends Composite {
 		// changed for the table
 		filterText.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
-				if (SWT.ARROW_DOWN == e.keyCode
-						&& tableViewer.getTableElements().length != 0) {
+				if (SWT.ARROW_DOWN == e.keyCode && tableViewer.getTableElements().length != 0) {
 					tableViewer.getControl().setFocus();
 				}
 			}
@@ -199,19 +190,16 @@ public class BasicSelector extends Composite {
 		tableViewer.setElements(elements);
 	}
 
-	public void setLabelProvider(
-			IBasicSelectorLabelProvider basicSelectorLabelProvider) {
+	public void setLabelProvider(IBasicSelectorLabelProvider basicSelectorLabelProvider) {
 		this.basicSelectorLabelProvider = basicSelectorLabelProvider;
 		this.tableViewer.setLabelProvider(new ITableLabelProvider() {
 
 			public Image getColumnImage(Object element, int columnIndex) {
-				return BasicSelector.this.basicSelectorLabelProvider
-						.getElementImage(element);
+				return BasicSelector.this.basicSelectorLabelProvider.getElementImage(element);
 			}
 
 			public String getColumnText(Object element, int columnIndex) {
-				return BasicSelector.this.basicSelectorLabelProvider
-						.getElementDescription(element);
+				return BasicSelector.this.basicSelectorLabelProvider.getElementDescription(element);
 			}
 
 			public void addListener(ILabelProviderListener listener) {
@@ -243,8 +231,7 @@ public class BasicSelector extends Composite {
 				return false;
 			}
 
-			String elementText = BasicSelector.this.basicSelectorLabelProvider
-					.getElementName(element).toLowerCase();
+			String elementText = BasicSelector.this.basicSelectorLabelProvider.getElementName(element).toLowerCase();
 			return SearchPattern.match(textFilter, elementText);
 		}
 
@@ -255,8 +242,7 @@ public class BasicSelector extends Composite {
 	}
 
 	public Object getSelectedElement() {
-		return ((StructuredSelection) tableViewer.getSelection())
-				.getFirstElement();
+		return ((StructuredSelection) tableViewer.getSelection()).getFirstElement();
 	}
 
 	public void addDoubleClickListener(IDoubleClickListener listener) {

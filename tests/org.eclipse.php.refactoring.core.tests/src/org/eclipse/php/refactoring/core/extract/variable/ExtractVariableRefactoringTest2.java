@@ -88,7 +88,8 @@ public class ExtractVariableRefactoringTest2 extends AbstractRefactoringTest {
 
 		ExtractVariableRefactoring processor;
 		try {
-			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 19, 2);
+			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 19,
+					2);
 			processor.setNewVariableName("c");
 
 			RefactoringStatus status = processor.checkInitialConditions(new NullProgressMonitor());
@@ -151,7 +152,8 @@ public class ExtractVariableRefactoringTest2 extends AbstractRefactoringTest {
 
 		ExtractVariableRefactoring processor;
 		try {
-			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 11, 1);
+			processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file), structuredDocument, 11,
+					1);
 			processor.setNewVariableName("c");
 
 			RefactoringStatus status = processor.checkInitialConditions(new NullProgressMonitor());

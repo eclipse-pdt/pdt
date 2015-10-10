@@ -49,8 +49,8 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
  * 
  * @since 3.0
  */
-public class PHPSourceViewerInformationControl implements IInformationControl,
-		IInformationControlExtension, DisposeListener {
+public class PHPSourceViewerInformationControl
+		implements IInformationControl, IInformationControlExtension, DisposeListener {
 
 	/** Border thickness in pixels. */
 	private static final int BORDER = 1;
@@ -124,8 +124,7 @@ public class PHPSourceViewerInformationControl implements IInformationControl,
 	}
 
 	public TextAttribute getAttribute(String namedStyle) {
-		TextAttribute ta = new TextAttribute(fText.getBackground(), fText
-				.getForeground(), SWT.NORMAL);
+		TextAttribute ta = new TextAttribute(fText.getBackground(), fText.getForeground(), SWT.NORMAL);
 		if (namedStyle != null && styleProvider != null) {
 			ta = styleProvider.getTextAttributeForColor(namedStyle);
 		}
@@ -133,8 +132,7 @@ public class PHPSourceViewerInformationControl implements IInformationControl,
 	}
 
 	public void applyStyles() {
-		if (fText == null || fText.isDisposed() || fInput == null
-				|| fInput.length() == 0) {
+		if (fText == null || fText.isDisposed() || fInput == null || fInput.length() == 0) {
 			return;
 		}
 		IStructuredDocumentRegion node = fNodes;
@@ -150,12 +148,10 @@ public class PHPSourceViewerInformationControl implements IInformationControl,
 
 	public void initColorsMap() {
 		IModelManager mmanager = StructuredModelManager.getModelManager();
-		setParser(mmanager.createStructuredDocumentFor(
-				ContentTypeIdForPHP.ContentTypeID_PHP).getParser());
+		setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP).getParser());
 
 		styleProvider = new LineStyleProviderForPhp();
-		Dictionary contextStyleMap = new Hashtable(styleProvider
-				.getColorTypesMap());
+		Dictionary contextStyleMap = new Hashtable(styleProvider.getColorTypesMap());
 
 		setContextStyleMap(contextStyleMap);
 	}
@@ -173,8 +169,7 @@ public class PHPSourceViewerInformationControl implements IInformationControl,
 	 * @param style
 	 *            the additional styles for the styled text widget
 	 */
-	public PHPSourceViewerInformationControl(Shell parent, int shellStyle,
-			int style) {
+	public PHPSourceViewerInformationControl(Shell parent, int shellStyle, int style) {
 		this(parent, shellStyle, style, null);
 	}
 
@@ -195,8 +190,7 @@ public class PHPSourceViewerInformationControl implements IInformationControl,
 	 *            <code>null</code> if the status field should be hidden
 	 * @since 3.0
 	 */
-	public PHPSourceViewerInformationControl(Shell parent, int shellStyle,
-			int style, String statusFieldText) {
+	public PHPSourceViewerInformationControl(Shell parent, int shellStyle, int style, String statusFieldText) {
 		GridLayout layout;
 		GridData gd;
 
@@ -221,10 +215,8 @@ public class PHPSourceViewerInformationControl implements IInformationControl,
 			composite.setLayout(layout);
 			gd = new GridData(GridData.FILL_BOTH);
 			composite.setLayoutData(gd);
-			composite.setForeground(display
-					.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-			composite.setBackground(display
-					.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+			composite.setForeground(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+			composite.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		}
 
 		// Source viewer
@@ -234,10 +226,8 @@ public class PHPSourceViewerInformationControl implements IInformationControl,
 		fText = fViewer.getTextWidget();
 		gd = new GridData(GridData.BEGINNING | GridData.FILL_BOTH);
 		fText.setLayoutData(gd);
-		fText.setForeground(parent.getDisplay().getSystemColor(
-				SWT.COLOR_INFO_FOREGROUND));
-		fText.setBackground(parent.getDisplay().getSystemColor(
-				SWT.COLOR_INFO_BACKGROUND));
+		fText.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+		fText.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 
 		initializeFont();
 
@@ -256,8 +246,7 @@ public class PHPSourceViewerInformationControl implements IInformationControl,
 		if (statusFieldText != null) {
 
 			// Horizontal separator line
-			fSeparator = new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL
-					| SWT.LINE_DOT);
+			fSeparator = new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL | SWT.LINE_DOT);
 			fSeparator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 			// Status field label
@@ -269,18 +258,14 @@ public class PHPSourceViewerInformationControl implements IInformationControl,
 				fontDatas[i].setHeight(fontDatas[i].getHeight() * 9 / 10);
 			fStatusTextFont = new Font(fStatusField.getDisplay(), fontDatas);
 			fStatusField.setFont(fStatusTextFont);
-			GridData gd2 = new GridData(GridData.FILL_VERTICAL
-					| GridData.FILL_HORIZONTAL
-					| GridData.HORIZONTAL_ALIGN_BEGINNING
-					| GridData.VERTICAL_ALIGN_BEGINNING);
+			GridData gd2 = new GridData(GridData.FILL_VERTICAL | GridData.FILL_HORIZONTAL
+					| GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING);
 			fStatusField.setLayoutData(gd2);
 
 			// Regarding the color see bug 41128
-			fStatusField.setForeground(display
-					.getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
+			fStatusField.setForeground(display.getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
 
-			fStatusField.setBackground(display
-					.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+			fStatusField.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		}
 
 		initColorsMap();
@@ -317,8 +302,7 @@ public class PHPSourceViewerInformationControl implements IInformationControl,
 	 *            <code>null</code> if the status field should be hidden
 	 * @since 3.0
 	 */
-	public PHPSourceViewerInformationControl(Shell parent, int style,
-			String statusFieldText) {
+	public PHPSourceViewerInformationControl(Shell parent, int style, String statusFieldText) {
 		this(parent, SWT.NO_TRIM | SWT.TOOL, style, statusFieldText);
 	}
 
@@ -346,8 +330,7 @@ public class PHPSourceViewerInformationControl implements IInformationControl,
 	 *            <code>null</code> if the status field should be hidden
 	 * @since 3.0
 	 */
-	public PHPSourceViewerInformationControl(Shell parent,
-			String statusFieldText) {
+	public PHPSourceViewerInformationControl(Shell parent, String statusFieldText) {
 		this(parent, SWT.NONE, statusFieldText);
 	}
 
@@ -357,8 +340,7 @@ public class PHPSourceViewerInformationControl implements IInformationControl,
 	 * @since 3.2
 	 */
 	private void initializeFont() {
-		Font font = JFaceResources
-				.getFont("org.eclipse.jdt.ui.editors.textfont"); //$NON-NLS-1$
+		Font font = JFaceResources.getFont("org.eclipse.jdt.ui.editors.textfont"); //$NON-NLS-1$
 		StyledText styledText = getViewer().getTextWidget();
 		styledText.setFont(font);
 	}
@@ -458,10 +440,8 @@ public class PHPSourceViewerInformationControl implements IInformationControl,
 
 		if (fStatusField != null) {
 			GridData gd = (GridData) fViewer.getTextWidget().getLayoutData();
-			Point statusSize = fStatusField.computeSize(SWT.DEFAULT,
-					SWT.DEFAULT, true);
-			Point separatorSize = fSeparator.computeSize(SWT.DEFAULT,
-					SWT.DEFAULT, true);
+			Point statusSize = fStatusField.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+			Point separatorSize = fSeparator.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
 			gd.heightHint = height - statusSize.y - separatorSize.y;
 		}
 		fShell.setSize(width, height);

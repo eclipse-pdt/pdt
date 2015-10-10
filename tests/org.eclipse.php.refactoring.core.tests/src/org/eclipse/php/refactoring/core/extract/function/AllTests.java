@@ -17,7 +17,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ExtractFunctionRefactoringTest.class})
+@Suite.SuiteClasses({ ExtractFunctionRefactoringTest.class })
 public class AllTests {
 
 	private static TestProject project;
@@ -34,6 +34,6 @@ public class AllTests {
 			project.delete();
 		} catch (Exception e) {
 		}
-		//		System.setProperty("disableStartupRunner",null);
+		// System.setProperty("disableStartupRunner",null);
 	}
 }

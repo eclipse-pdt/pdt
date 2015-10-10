@@ -23,8 +23,8 @@ public abstract class AbstractRenameRefactoringTest extends AbstractRefactoringT
 	public AbstractRenameRefactoringTest() {
 		super();
 	}
-	
-	protected ASTNode locateNode(Program program,int start,int end) {
+
+	protected ASTNode locateNode(Program program, int start, int end) {
 		ASTNode locateNode = NodeFinder.perform(program, start, end);
 		return locateNode;
 	}

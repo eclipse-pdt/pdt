@@ -23,15 +23,12 @@ import org.eclipse.php.internal.debug.core.zend.debugger.messages.FileContentRes
  * 
  * @author michael
  */
-public abstract class AbstractFileContentRequestHandler
-		implements IDebugRequestHandler {
+public abstract class AbstractFileContentRequestHandler implements IDebugRequestHandler {
 
-	protected void setResponseContent(FileContentResponse response,
-			FileContentRequest request, byte[] content) {
+	protected void setResponseContent(FileContentResponse response, FileContentRequest request, byte[] content) {
 		if (request instanceof FileContentExtendedRequest) {
 			FileContentExtendedRequest extendedRequest = (FileContentExtendedRequest) request;
-			if (filesAreIdentical(extendedRequest.getSize(),
-					extendedRequest.getCheckSum(), content)) {
+			if (filesAreIdentical(extendedRequest.getSize(), extendedRequest.getCheckSum(), content)) {
 				response.setStatus(FileContentResponse.FILES_IDENTICAL);
 				return;
 			}
@@ -39,8 +36,7 @@ public abstract class AbstractFileContentRequestHandler
 		response.setContent(content);
 	}
 
-	private static boolean filesAreIdentical(int requestSize,
-			int requestChecksum, byte[] content) {
+	private static boolean filesAreIdentical(int requestSize, int requestChecksum, byte[] content) {
 		int checksum;
 		if (requestSize == content.length) {
 			checksum = calcCheckSum(content);

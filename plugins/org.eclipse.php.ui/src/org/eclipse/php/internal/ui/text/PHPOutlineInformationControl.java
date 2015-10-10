@@ -36,22 +36,18 @@ import org.eclipse.ui.PlatformUI;
  * @author Roy, 2009
  * 
  */
-public class PHPOutlineInformationControl extends
-		ScriptOutlineInformationControl {
+public class PHPOutlineInformationControl extends ScriptOutlineInformationControl {
 
-	public PHPOutlineInformationControl(Shell parent, int shellStyle,
-			int treeStyle, String commandId) {
+	public PHPOutlineInformationControl(Shell parent, int shellStyle, int treeStyle, String commandId) {
 		super(parent, shellStyle, treeStyle, commandId, null);
 	}
 
-	protected ITypeHierarchy getSuperTypeHierarchy(
-			org.eclipse.dltk.core.IType type) {
+	protected ITypeHierarchy getSuperTypeHierarchy(org.eclipse.dltk.core.IType type) {
 
 		ITypeHierarchy th = (ITypeHierarchy) fTypeHierarchies.get(type);
 		if (th == null) {
 			try {
-				th = SuperTypeHierarchyCache.getTypeHierarchy(type,
-						getProgressMonitor());
+				th = SuperTypeHierarchyCache.getTypeHierarchy(type, getProgressMonitor());
 			} catch (ModelException e) {
 				return null;
 			} catch (OperationCanceledException e) {
@@ -80,8 +76,7 @@ public class PHPOutlineInformationControl extends
 	protected TreeViewer createTreeViewer(Composite parent, int style) {
 		TreeViewer viewer = super.createTreeViewer(parent, style);
 
-		IDecoratorManager decoratorMgr = PlatformUI.getWorkbench()
-				.getDecoratorManager();
+		IDecoratorManager decoratorMgr = PlatformUI.getWorkbench().getDecoratorManager();
 		if (decoratorMgr.getEnabled("org.eclipse.php.ui.override.decorator")) { //$NON-NLS-1$
 			IBaseLabelProvider labelProvider = viewer.getLabelProvider();
 			if (labelProvider instanceof ScriptUILabelProvider) {
@@ -89,8 +84,7 @@ public class PHPOutlineInformationControl extends
 						.addLabelDecorator(new OverrideIndicatorLabelDecorator());
 			} else if (labelProvider instanceof StyledDecoratingModelLabelProvider) {
 				// DLTK 5.2
-				((ScriptUILabelProvider) ((StyledDecoratingModelLabelProvider) labelProvider)
-						.getStyledStringProvider())
+				((ScriptUILabelProvider) ((StyledDecoratingModelLabelProvider) labelProvider).getStyledStringProvider())
 						.addLabelDecorator(new OverrideIndicatorLabelDecorator());
 			}
 		}

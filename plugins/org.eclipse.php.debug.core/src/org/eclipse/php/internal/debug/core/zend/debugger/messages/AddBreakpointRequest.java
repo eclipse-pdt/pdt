@@ -24,8 +24,7 @@ import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
  * 
  * @author guy
  */
-public class AddBreakpointRequest extends DebugMessageRequestImpl implements
-		IDebugRequestMessage {
+public class AddBreakpointRequest extends DebugMessageRequestImpl implements IDebugRequestMessage {
 
 	private Breakpoint breakPoint;
 

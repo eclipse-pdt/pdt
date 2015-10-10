@@ -31,8 +31,7 @@ public class EditExternalBreakpointAction extends EditBreakpointAction {
 	 * @param editor
 	 * @param rulerInfo
 	 */
-	public EditExternalBreakpointAction(ITextEditor editor,
-			IVerticalRuler rulerInfo) {
+	public EditExternalBreakpointAction(ITextEditor editor, IVerticalRuler rulerInfo) {
 		super(editor, rulerInfo);
 	}
 
@@ -43,9 +42,8 @@ public class EditExternalBreakpointAction extends EditBreakpointAction {
 	 * org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#hasMarkers()
 	 */
 	protected boolean hasMarkers() {
-		return ExternalBreakpointActionHelper.hasMarkers(getTextEditor(),
-				getResource(), getDocument(), getAnnotationModel(),
-				getRulerInfo());
+		return ExternalBreakpointActionHelper.hasMarkers(getTextEditor(), getResource(), getDocument(),
+				getAnnotationModel(), getRulerInfo());
 	}
 
 	/*
@@ -55,9 +53,8 @@ public class EditExternalBreakpointAction extends EditBreakpointAction {
 	 * org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#getMarkers()
 	 */
 	protected IMarker[] getMarkers() {
-		return ExternalBreakpointActionHelper.getMarkers(getTextEditor(),
-				getResource(), getDocument(), getAnnotationModel(),
-				getRulerInfo());
+		return ExternalBreakpointActionHelper.getMarkers(getTextEditor(), getResource(), getDocument(),
+				getAnnotationModel(), getRulerInfo());
 	}
 
 	/*

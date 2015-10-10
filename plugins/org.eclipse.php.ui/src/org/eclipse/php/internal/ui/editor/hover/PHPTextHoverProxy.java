@@ -19,14 +19,13 @@ import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.ui.IEditorPart;
 
-public class PHPTextHoverProxy extends AbstractPHPEditorTextHover implements
-		IPHPTextHover, ITextHoverExtension, IInformationProviderExtension2 {
+public class PHPTextHoverProxy extends AbstractPHPEditorTextHover
+		implements IPHPTextHover, ITextHoverExtension, IInformationProviderExtension2 {
 
 	private PHPEditorTextHoverDescriptor fHoverDescriptor;
 	private IPHPTextHover fHover;
 
-	public PHPTextHoverProxy(PHPEditorTextHoverDescriptor descriptor,
-			IEditorPart editor, IPreferenceStore store) {
+	public PHPTextHoverProxy(PHPEditorTextHoverDescriptor descriptor, IEditorPart editor, IPreferenceStore store) {
 		fHoverDescriptor = descriptor;
 		setEditor(editor);
 		setPreferenceStore(store);
@@ -74,8 +73,7 @@ public class PHPTextHoverProxy extends AbstractPHPEditorTextHover implements
 	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
 		if (ensureHoverCreated()) {
 			if (fHover instanceof ITextHoverExtension2)
-				return ((ITextHoverExtension2) fHover).getHoverInfo2(
-						textViewer, hoverRegion);
+				return ((ITextHoverExtension2) fHover).getHoverInfo2(textViewer, hoverRegion);
 			else
 				return fHover.getHoverInfo(textViewer, hoverRegion);
 		}
@@ -114,10 +112,8 @@ public class PHPTextHoverProxy extends AbstractPHPEditorTextHover implements
 	}
 
 	public IInformationControlCreator getInformationPresenterControlCreator() {
-		if (ensureHoverCreated()
-				&& (fHover instanceof IInformationProviderExtension2))
-			return ((IInformationProviderExtension2) fHover)
-					.getInformationPresenterControlCreator();
+		if (ensureHoverCreated() && (fHover instanceof IInformationProviderExtension2))
+			return ((IInformationProviderExtension2) fHover).getInformationPresenterControlCreator();
 
 		return null;
 	}
@@ -125,9 +121,8 @@ public class PHPTextHoverProxy extends AbstractPHPEditorTextHover implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.editor.hover.IPHPTextHover#getMessageDecorator
-	 * ()
+	 * @see org.eclipse.php.internal.ui.editor.hover.IPHPTextHover#
+	 * getMessageDecorator ()
 	 */
 	public IHoverMessageDecorator getMessageDecorator() {
 		return fHover.getMessageDecorator();

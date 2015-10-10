@@ -41,8 +41,7 @@ public class TestBuildpathInitializer extends BuildpathContainerInitializer {
 
 	private static final String LIBRARY = ".LIBRARY."; //$NON-NLS-1$
 
-	public void initialize(IPath containerPath, IScriptProject project)
-			throws CoreException {
+	public void initialize(IPath containerPath, IScriptProject project) throws CoreException {
 
 		if (containerPath.segmentCount() > 0) {
 			String segment = containerPath.segment(0);
@@ -50,11 +49,9 @@ public class TestBuildpathInitializer extends BuildpathContainerInitializer {
 			int i = segment.indexOf(LIBRARY);
 			if (i != -1) {
 				String library = segment.substring(i + LIBRARY.length());
-				BuildpathContainer container = new BuildpathContainer(library
-						+ " Library", containerPath, "libraries/" + library,
-						project);
-				DLTKCore.setBuildpathContainer(containerPath,
-						new IScriptProject[] { project },
+				BuildpathContainer container = new BuildpathContainer(library + " Library", containerPath,
+						"libraries/" + library, project);
+				DLTKCore.setBuildpathContainer(containerPath, new IScriptProject[] { project },
 						new IBuildpathContainer[] { container }, null);
 			}
 		}
@@ -68,8 +65,7 @@ public class TestBuildpathInitializer extends BuildpathContainerInitializer {
 		private IBuildpathEntry[] buildPathEntries;
 		private IScriptProject fProject;
 
-		public BuildpathContainer(String description, IPath containerPath,
-				String libraryPath, IScriptProject project) {
+		public BuildpathContainer(String description, IPath containerPath, String libraryPath, IScriptProject project) {
 			this.description = description;
 			this.containerPath = containerPath;
 			this.libraryPath = libraryPath;
@@ -78,29 +74,22 @@ public class TestBuildpathInitializer extends BuildpathContainerInitializer {
 
 		public IBuildpathEntry[] getBuildpathEntries(IScriptProject project) {
 			if (buildPathEntries == null) {
-				IEnvironment environment = EnvironmentManager
-						.getEnvironment(project);
+				IEnvironment environment = EnvironmentManager.getEnvironment(project);
 				try {
-					URL url = FileLocator.find(PHPCoreTests.getDefault()
-							.getBundle(), new Path(libraryPath), null);
+					URL url = FileLocator.find(PHPCoreTests.getDefault().getBundle(), new Path(libraryPath), null);
 					URL resolved = FileLocator.resolve(url);
 					IPath path = Path.fromOSString(resolved.getFile());
 					if (environment != null) {
-						path = EnvironmentPathUtils.getFullPath(environment,
-								path);
+						path = EnvironmentPathUtils.getFullPath(environment, path);
 					}
-					buildPathEntries = new IBuildpathEntry[] { DLTKCore
-							.newLibraryEntry(path,
-									BuildpathEntry.NO_ACCESS_RULES,
-									BuildpathEntry.NO_EXTRA_ATTRIBUTES,
-									BuildpathEntry.INCLUDE_ALL,
-									BuildpathEntry.EXCLUDE_NONE, false, true) };
+					buildPathEntries = new IBuildpathEntry[] { DLTKCore.newLibraryEntry(path,
+							BuildpathEntry.NO_ACCESS_RULES, BuildpathEntry.NO_EXTRA_ATTRIBUTES,
+							BuildpathEntry.INCLUDE_ALL, BuildpathEntry.EXCLUDE_NONE, false, true) };
 				} catch (Exception e) {
 					Logger.logException(e);
 				}
 			}
-			return buildPathEntries != null ? buildPathEntries
-					: new IBuildpathEntry[0];
+			return buildPathEntries != null ? buildPathEntries : new IBuildpathEntry[0];
 		}
 
 		public String getDescription() {

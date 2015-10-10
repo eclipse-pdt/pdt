@@ -78,8 +78,7 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 
 		IFile file = folder.getFile("test1.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php class TestRenameClass{}?>".getBytes());
+		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -90,26 +89,24 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 		IPath fPath = new Path("/project1/src");
 		IPath[] inclusionPattern = new IPath[0];
 		IPath[] exclusionPattern = new IPath[0];
-		IBuildpathEntry sourceEntry = DLTKCore.newSourceEntry(fPath,
-				inclusionPattern, exclusionPattern, new IBuildpathAttribute[0]);
+		IBuildpathEntry sourceEntry = DLTKCore.newSourceEntry(fPath, inclusionPattern, exclusionPattern,
+				new IBuildpathAttribute[0]);
 
 		fPath = new Path("/project1");
 		inclusionPattern = new IPath[0];
 		exclusionPattern = new IPath[1];
 		exclusionPattern[0] = new Path("src/");
-		IBuildpathEntry sourceEntry1 = DLTKCore.newSourceEntry(fPath,
-				inclusionPattern, exclusionPattern, new IBuildpathAttribute[0]);
+		IBuildpathEntry sourceEntry1 = DLTKCore.newSourceEntry(fPath, inclusionPattern, exclusionPattern,
+				new IBuildpathAttribute[0]);
 
-		final IScriptProject scriptProject = DLTKCore.create(project1
-				.getProject());
+		final IScriptProject scriptProject = DLTKCore.create(project1.getProject());
 
 		final List<IBuildpathEntry> entriesList = new ArrayList<IBuildpathEntry>();
 		IBuildpathEntry[] entries;
 		try {
 			entries = scriptProject.getRawBuildpath();
 
-			entries = FileUtils.removeEntryFromBuildPath(entries, project1
-					.getFullPath());
+			entries = FileUtils.removeEntryFromBuildPath(entries, project1.getFullPath());
 
 			entriesList.addAll(Arrays.asList(entries));
 
@@ -119,12 +116,10 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 			e.printStackTrace();
 		}
 
-		final IBuildpathEntry[] newEntries = new IBuildpathEntry[entriesList
-				.size()];
+		final IBuildpathEntry[] newEntries = new IBuildpathEntry[entriesList.size()];
 
 		scriptProject.setRawBuildpath(null, new NullProgressMonitor());
-		scriptProject.setRawBuildpath(entriesList.toArray(newEntries),
-				new NullProgressMonitor());
+		scriptProject.setRawBuildpath(entriesList.toArray(newEntries), new NullProgressMonitor());
 
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
@@ -182,15 +177,13 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 
 		IFile file = project1.getFile("test1.php");
 
-		InputStream sourceStream = new ByteArrayInputStream(
-				"<?php function foo(){};?>".getBytes());
+		InputStream sourceStream = new ByteArrayInputStream("<?php function foo(){};?>".getBytes());
 		try {
 			if (!file.exists()) {
 
 				file.create(sourceStream, true, new NullProgressMonitor());
 			} else {
-				file.setContents(sourceStream, IFile.FORCE,
-						new NullProgressMonitor());
+				file.setContents(sourceStream, IFile.FORCE, new NullProgressMonitor());
 			}
 		} catch (CoreException e) {
 			fail(e.getMessage());
@@ -252,8 +245,7 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 
 				file.create(sourceStream, true, new NullProgressMonitor());
 			} else {
-				file.setContents(sourceStream, IFile.FORCE,
-						new NullProgressMonitor());
+				file.setContents(sourceStream, IFile.FORCE, new NullProgressMonitor());
 			}
 		} catch (CoreException e) {
 			fail(e.getMessage());
@@ -266,9 +258,9 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 			fail(e.getMessage());
 		}
 		assertNotNull(source);
-		
+
 		try {
-			((ISourceModule)source).makeConsistent(new NullProgressMonitor());
+			((ISourceModule) source).makeConsistent(new NullProgressMonitor());
 		} catch (ModelException e1) {
 			fail(e1.getMessage());
 		}
@@ -305,7 +297,7 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 			program = RefactoringUtility.getProgramForFile(file);
 			ASTNode node = action.getSelectedNode(program, offset, 0);
 			assertTrue(node instanceof FunctionDeclaration);
-			assertTrue(node.getParent() instanceof MethodDeclaration); 
+			assertTrue(node.getParent() instanceof MethodDeclaration);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
@@ -315,15 +307,13 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 
 		IFile file = project1.getFile("test3.php");
 
-		InputStream sourceStream = new ByteArrayInputStream(
-				"<?php class MyClss{public $a,$b;}?>".getBytes());
+		InputStream sourceStream = new ByteArrayInputStream("<?php class MyClss{public $a,$b;}?>".getBytes());
 		try {
 			if (!file.exists()) {
 
 				file.create(sourceStream, true, new NullProgressMonitor());
 			} else {
-				file.setContents(sourceStream, IFile.FORCE,
-						new NullProgressMonitor());
+				file.setContents(sourceStream, IFile.FORCE, new NullProgressMonitor());
 			}
 		} catch (CoreException e) {
 			fail(e.getMessage());
@@ -338,7 +328,7 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 		assertNotNull(source);
 
 		try {
-			((ISourceModule)source).makeConsistent(new NullProgressMonitor());
+			((ISourceModule) source).makeConsistent(new NullProgressMonitor());
 		} catch (ModelException e1) {
 			fail(e1.getMessage());
 		}
@@ -399,8 +389,7 @@ public class RenamePHPElementActionDelegateTest extends TestCase {
 		RenamePHPElementActionDelegateProxy action = new RenamePHPElementActionDelegateProxy();
 
 		// script project case
-		final IScriptProject scriptProject = DLTKCore.create(project1
-				.getProject());
+		final IScriptProject scriptProject = DLTKCore.create(project1.getProject());
 		assertTrue(action.isScriptContainer(scriptProject));
 
 		// script fragment case

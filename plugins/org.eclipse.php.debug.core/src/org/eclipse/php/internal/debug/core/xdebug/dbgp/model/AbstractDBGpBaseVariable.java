@@ -23,8 +23,7 @@ import org.eclipse.php.internal.debug.core.model.IVariableFacet;
 /**
  * Abstract base for DBGp's variables.
  */
-public abstract class AbstractDBGpBaseVariable extends DBGpElement implements
-		IVariable, IVariableFacet {
+public abstract class AbstractDBGpBaseVariable extends DBGpElement implements IVariable, IVariableFacet {
 
 	private String stackLevel;
 	private String fullName;
@@ -39,8 +38,7 @@ public abstract class AbstractDBGpBaseVariable extends DBGpElement implements
 	 * @param fullName
 	 * @param facets
 	 */
-	public AbstractDBGpBaseVariable(IDebugTarget target, String stackLevel,
-			String fullName, Facet... facets) {
+	public AbstractDBGpBaseVariable(IDebugTarget target, String stackLevel, String fullName, Facet... facets) {
 		super(target);
 		this.stackLevel = stackLevel;
 		this.fullName = fullName;
@@ -54,8 +52,7 @@ public abstract class AbstractDBGpBaseVariable extends DBGpElement implements
 	 * @param stackLevel
 	 * @param facets
 	 */
-	public AbstractDBGpBaseVariable(IDebugTarget target, String stackLevel,
-			Facet... facets) {
+	public AbstractDBGpBaseVariable(IDebugTarget target, String stackLevel, Facet... facets) {
 		super(target);
 		this.stackLevel = stackLevel;
 		addFacets(facets);

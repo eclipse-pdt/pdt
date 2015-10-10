@@ -17,8 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
-public class PHPFormatterConfigurationWrapperProxy implements
-		IPHPFormatterConfigurationBlockWrapper {
+public class PHPFormatterConfigurationWrapperProxy implements IPHPFormatterConfigurationBlockWrapper {
 	private IPHPFormatterConfigurationBlockWrapper pConfigurationBlock;
 
 	public Control createContents(Composite composite) {
@@ -37,8 +36,8 @@ public class PHPFormatterConfigurationWrapperProxy implements
 		return pConfigurationBlock.hasProjectSpecificOptions(project);
 	}
 
-	public void init(IStatusChangeListener statusChangedListener,
-			IProject project, IWorkbenchPreferenceContainer container) {
+	public void init(IStatusChangeListener statusChangedListener, IProject project,
+			IWorkbenchPreferenceContainer container) {
 		pConfigurationBlock = new PHPFormatterConfigurationWrapper();
 		pConfigurationBlock.init(statusChangedListener, project, container);
 	}
@@ -56,8 +55,7 @@ public class PHPFormatterConfigurationWrapperProxy implements
 	}
 
 	public void useProjectSpecificSettings(boolean useProjectSpecificSettings) {
-		pConfigurationBlock
-				.useProjectSpecificSettings(useProjectSpecificSettings);
+		pConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
 	}
 
 }

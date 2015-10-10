@@ -33,8 +33,7 @@ public class PHPFunctionsLabelProvider extends ScriptUILabelProvider {
 	 * Creates a new label provider with default flags.
 	 */
 	public PHPFunctionsLabelProvider() {
-		this(ScriptElementLabels.ALL_DEFAULT,
-				ScriptElementImageProvider.OVERLAY_ICONS);
+		this(ScriptElementLabels.ALL_DEFAULT, ScriptElementImageProvider.OVERLAY_ICONS);
 	}
 
 	/**
@@ -57,9 +56,8 @@ public class PHPFunctionsLabelProvider extends ScriptUILabelProvider {
 
 	public Image getImage(Object element) {
 		if (element instanceof ConstantNode) {
-			ImageDescriptor descriptor = new ScriptElementImageDescriptor(
-					PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP, 0,
-					ScriptElementImageProvider.BIG_SIZE);
+			ImageDescriptor descriptor = new ScriptElementImageDescriptor(PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP,
+					0, ScriptElementImageProvider.BIG_SIZE);
 			return DLTKUIPlugin.getImageDescriptorRegistry().get(descriptor);
 		} else {
 			return super.getImage(element);

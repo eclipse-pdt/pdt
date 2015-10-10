@@ -69,8 +69,7 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 			}
 
 			if (e1 instanceof NamespaceNode && e2 instanceof NamespaceNode) {
-				return ((NamespaceNode) e1).getElementName().compareTo(
-						((NamespaceNode) e2).getElementName());
+				return ((NamespaceNode) e1).getElementName().compareTo(((NamespaceNode) e2).getElementName());
 			}
 
 			// Fix #256585 - sort by resource name
@@ -89,8 +88,7 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 		}
 	}
 
-	protected class PHPExplorerWorkingSetAwareModelElementSorter extends
-			PHPExplorerElementSorter {
+	protected class PHPExplorerWorkingSetAwareModelElementSorter extends PHPExplorerElementSorter {
 
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			if (e1 instanceof IWorkingSet || e2 instanceof IWorkingSet)
@@ -119,12 +117,10 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 		WorkingSetModel workingSetModel = getWorkingSetModel();
 		if (actionSet != null) {
 
-			actionSet.getWorkingSetActionGroup().setWorkingSetModel(
-					workingSetModel);
+			actionSet.getWorkingSetActionGroup().setWorkingSetModel(workingSetModel);
 		}
 
-		ConfigureWorkingSetAction action = new ConfigureWorkingSetAction(
-				getSite());
+		ConfigureWorkingSetAction action = new ConfigureWorkingSetAction(getSite());
 		action.setWorkingSetModel(workingSetModel);
 		action.run();
 	}
@@ -146,8 +142,7 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 				}
 			};
 		} else {
-			return new WorkingSetAwarePHPExplorerContentProvider(
-					showCUChildren, getWorkingSetModel()) {
+			return new WorkingSetAwarePHPExplorerContentProvider(showCUChildren, getWorkingSetModel()) {
 				protected IPreferenceStore getPreferenceStore() {
 					return DLTKUIPlugin.getDefault().getPreferenceStore();
 				}
@@ -163,8 +158,7 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	 */
 	@Override
 	protected ScriptExplorerLabelProvider createLabelProvider() {
-		final IPreferenceStore store = DLTKUIPlugin.getDefault()
-				.getPreferenceStore();
+		final IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
 		return new PHPExplorerLabelProvider(getContentProvider(), store);
 	}
 
@@ -199,12 +193,10 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	}
 
 	private void initDragAndDrop() {
-		int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK
-				| DND.DROP_DEFAULT;
+		int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_DEFAULT;
 
-		Transfer[] transfers = new Transfer[] {
-				LocalSelectionTransfer.getInstance(),
-				FileTransfer.getInstance(), PluginTransfer.getInstance() };
+		Transfer[] transfers = new Transfer[] { LocalSelectionTransfer.getInstance(), FileTransfer.getInstance(),
+				PluginTransfer.getInstance() };
 
 		TreeViewer viewer = getTreeViewer();
 		// viewer.addDragSupport(ops, transfers, new
@@ -215,8 +207,7 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	}
 
 	protected void initDrop() {
-		PHPViewerDropSupport dropSupport = new PHPViewerDropSupport(
-				getTreeViewer());
+		PHPViewerDropSupport dropSupport = new PHPViewerDropSupport(getTreeViewer());
 		dropSupport.addDropTargetListener(new WorkingSetDropAdapter(this));
 		dropSupport.start();
 	}
@@ -235,8 +226,7 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	protected IShowInSource getShowInSource() {
 		return new IShowInSource() {
 			public ShowInContext getShowInContext() {
-				return new ShowInContext(getTreeViewer().getInput(),
-						getTreeViewer().getSelection());
+				return new ShowInContext(getTreeViewer().getInput(), getTreeViewer().getSelection());
 			}
 		};
 	}

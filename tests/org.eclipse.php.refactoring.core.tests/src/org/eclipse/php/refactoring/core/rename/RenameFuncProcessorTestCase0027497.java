@@ -29,8 +29,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RenameFuncProcessorTestCase0027497 extends
-		AbstractRenameRefactoringTest {
+public class RenameFuncProcessorTestCase0027497 extends AbstractRenameRefactoringTest {
 
 	private IProject project1;
 	private IFile file;
@@ -45,8 +44,7 @@ public class RenameFuncProcessorTestCase0027497 extends
 		file = project1.getFile("RenameFuncTest00274972.php");
 
 		InputStream source = new ByteArrayInputStream(
-				"<?php include \"src/RenameFuncTest0027497.php\"; foo274972(); ?>"
-						.getBytes());
+				"<?php include \"src/RenameFuncTest0027497.php\"; foo274972(); ?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -88,8 +86,7 @@ public class RenameFuncProcessorTestCase0027497 extends
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		RenameFunctionProcessor processor = new RenameFunctionProcessor(file,
-				selectedNode);
+		RenameFunctionProcessor processor = new RenameFunctionProcessor(file, selectedNode);
 		processor.setNewElementName("foo2749721");
 		processor.setUpdateTextualMatches(true);
 
@@ -114,9 +111,7 @@ public class RenameFuncProcessorTestCase0027497 extends
 		try {
 			String content = FileUtils.getContents(file);
 
-			assertEquals(
-					"<?php include \"src/RenameFuncTest0027497.php\"; foo2749721(); ?>",
-					content);
+			assertEquals("<?php include \"src/RenameFuncTest0027497.php\"; foo2749721(); ?>", content);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

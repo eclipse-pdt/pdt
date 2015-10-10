@@ -22,8 +22,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 
-public class WorkbenchOptionsPreferencePage extends PreferencePage implements
-		IWorkbenchPreferencePage {
+public class WorkbenchOptionsPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	private WorkbenchOptionsBlock workbenchOptionsBlock;
 
@@ -42,8 +41,7 @@ public class WorkbenchOptionsPreferencePage extends PreferencePage implements
 		workbenchOptionsBlock.initializeValues(this);
 
 		// HELP
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.WORKBENCH_OPTIONS);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.WORKBENCH_OPTIONS);
 		return comp;
 	}
 

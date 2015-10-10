@@ -15,8 +15,7 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 
-public class RenamePHPElementActionDelegateProxy extends
-		RenamePHPElementActionDelegate {
+public class RenamePHPElementActionDelegateProxy extends RenamePHPElementActionDelegate {
 
 	@Override
 	protected ASTNode getSelectedNode(Program program, int offset, int length) {

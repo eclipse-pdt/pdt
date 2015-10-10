@@ -64,9 +64,10 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 			// ever used in current PHP IDE.
 			//
 			// Include_Storage_Project contains the project it is found in.
-			fileName = marker.getAttribute(
-					StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY,
-					fileName); // gets the full path.
+			fileName = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName); // gets
+																												// the
+																												// full
+																												// path.
 
 			// adding bps to these include files has strange affects. If one
 			// fails to add the first time it is because it removes one
@@ -75,8 +76,7 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 			// this
 			// problem. Will need to raise a defect on this at some point.
 
-			IResource res = ResourcesPlugin.getWorkspace().getRoot()
-					.getFileForLocation(new Path(fileName));
+			IResource res = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(fileName));
 			if (res instanceof IFile) {
 				workspaceFile = (IFile) res;
 			}
@@ -151,9 +151,8 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#setConditionChanged(boolean
-	 * )
+	 * @see org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#setConditionChanged(
+	 * boolean )
 	 */
 	public void resetConditionChanged() {
 		bp.setConditionChanged(false);

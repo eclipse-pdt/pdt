@@ -25,8 +25,7 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author yaronm
  */
-public class FilterLabelProvider extends LabelProvider implements
-		ITableLabelProvider {
+public class FilterLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 	/**
 	 * @see ITableLabelProvider#getColumnText(Object, int)

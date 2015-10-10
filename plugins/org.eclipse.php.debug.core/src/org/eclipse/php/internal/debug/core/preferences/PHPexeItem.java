@@ -36,8 +36,7 @@ import org.eclipse.php.internal.debug.core.PHPExeUtil.PHPExeInfo;
  * 
  * @author shalom, michael
  */
-public class PHPexeItem implements IUniqueIdentityElement,
-		IPHPexeItemProperties {
+public class PHPexeItem implements IUniqueIdentityElement, IPHPexeItemProperties {
 
 	public static final String SAPI_CLI = "CLI"; //$NON-NLS-1$
 	public static final String SAPI_CGI = "CGI"; //$NON-NLS-1$
@@ -46,8 +45,7 @@ public class PHPexeItem implements IUniqueIdentityElement,
 	private final class EventNotifier {
 
 		void notify(String key, Object oldValue, Object newValue) {
-			PHPexeItemEvent event = new PHPexeItemEvent(PHPexeItem.this, key,
-					oldValue, newValue);
+			PHPexeItemEvent event = new PHPexeItemEvent(PHPexeItem.this, key, oldValue, newValue);
 			for (Object listener : listeners.getListeners()) {
 				((IPHPexeItemListener) listener).phpExeChanged(event);
 			}
@@ -84,8 +82,7 @@ public class PHPexeItem implements IUniqueIdentityElement,
 	 * @param debuggerID
 	 * @param editable
 	 */
-	public PHPexeItem(String name, File executable, File iniLocation,
-			String debuggerID, boolean editable) {
+	public PHPexeItem(String name, File executable, File iniLocation, String debuggerID, boolean editable) {
 		this();
 		this.editable = editable;
 		setName(name);
@@ -111,8 +108,7 @@ public class PHPexeItem implements IUniqueIdentityElement,
 	 * @param loadDefaultINI
 	 *            Disable php "-n" usage
 	 */
-	PHPexeItem(String name, String executable, String config,
-			String debuggerID, boolean loadDefaultINI) {
+	PHPexeItem(String name, String executable, String config, String debuggerID, boolean loadDefaultINI) {
 		this();
 		setName(name);
 		setDebuggerID(debuggerID);
@@ -315,17 +311,15 @@ public class PHPexeItem implements IUniqueIdentityElement,
 	 * @return if this item is the default item.
 	 */
 	public boolean isDefault() {
-		return getName()
-				.equals(InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
-						.get(PHPDebugCorePreferenceNames.DEFAULT_PHP, null));
+		return getName().equals(
+				InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID).get(PHPDebugCorePreferenceNames.DEFAULT_PHP, null));
 	}
 
 	/**
 	 * @return return loadDefault
 	 */
 	public boolean isLoadDefaultINI() {
-		Boolean isLoadDefaultINI = (Boolean) properties
-				.get(PROP_USE_DEFAULT_INI);
+		Boolean isLoadDefaultINI = (Boolean) properties.get(PROP_USE_DEFAULT_INI);
 		return isLoadDefaultINI != null ? isLoadDefaultINI : false;
 	}
 
@@ -339,8 +333,7 @@ public class PHPexeItem implements IUniqueIdentityElement,
 		// Unique ID should always be the same for copy
 		copy.uniqueId = uniqueId;
 		copy.editable = editable;
-		copy.defaultForPHPVersionList = new ArrayList<PHPVersion>(
-				defaultForPHPVersionList);
+		copy.defaultForPHPVersionList = new ArrayList<PHPVersion>(defaultForPHPVersionList);
 		copy.setSapiType(getSapiType());
 		copy.setName(getName());
 		copy.setINILocation(getINILocation());
@@ -399,8 +392,7 @@ public class PHPexeItem implements IUniqueIdentityElement,
 		if (oldValue == null && newValue == null) {
 			return;
 		}
-		if ((oldValue == null && newValue != null)
-				|| (oldValue != null && newValue == null)
+		if ((oldValue == null && newValue != null) || (oldValue != null && newValue == null)
 				|| (!oldValue.equals(newValue))) {
 			fireEvent(key, oldValue, newValue);
 		}

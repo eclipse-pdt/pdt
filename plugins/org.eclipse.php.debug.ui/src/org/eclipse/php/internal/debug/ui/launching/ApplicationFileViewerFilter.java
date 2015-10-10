@@ -23,8 +23,7 @@ public class ApplicationFileViewerFilter extends ViewerFilter {
 	protected String[] validExtensions;
 	protected String[] requiredNatures;
 
-	public ApplicationFileViewerFilter(String[] requiredNatures,
-			String[] validExtensions) {
+	public ApplicationFileViewerFilter(String[] requiredNatures, String[] validExtensions) {
 		this.requiredNatures = requiredNatures;
 		this.validExtensions = validExtensions;
 	}
@@ -70,8 +69,7 @@ public class ApplicationFileViewerFilter extends ViewerFilter {
 	 */
 	public boolean isValidDirectory(IContainer container) {
 		try {
-			if (projectHasRequiredNatures(container.getProject())
-					&& !container.getName().startsWith(".")) { //$NON-NLS-1$
+			if (projectHasRequiredNatures(container.getProject()) && !container.getName().startsWith(".")) { //$NON-NLS-1$
 				return true;
 			}
 			return false;
@@ -81,8 +79,7 @@ public class ApplicationFileViewerFilter extends ViewerFilter {
 
 	}
 
-	private boolean projectHasRequiredNatures(IProject project)
-			throws CoreException {
+	private boolean projectHasRequiredNatures(IProject project) throws CoreException {
 		if (requiredNatures != null) {
 			for (int i = 0; i < requiredNatures.length; i++) {
 				if (!project.hasNature(requiredNatures[i]))

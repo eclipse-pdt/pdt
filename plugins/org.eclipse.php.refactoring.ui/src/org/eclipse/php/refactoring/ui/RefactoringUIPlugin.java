@@ -72,9 +72,8 @@ public class RefactoringUIPlugin extends AbstractUIPlugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
-	 * )
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.
+	 * BundleContext )
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -83,9 +82,8 @@ public class RefactoringUIPlugin extends AbstractUIPlugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
-	 * )
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.
+	 * BundleContext )
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
@@ -102,14 +100,12 @@ public class RefactoringUIPlugin extends AbstractUIPlugin {
 	}
 
 	public static void log(Exception e) {
-		String message = e != null ? e.toString()
-				+ " in " + e.getStackTrace()[0].getFileName() : ""; //$NON-NLS-1$ //$NON-NLS-2$
+		String message = e != null ? e.toString() + " in " + e.getStackTrace()[0].getFileName() : ""; //$NON-NLS-1$ //$NON-NLS-2$
 		logErrorMessage(message);
 	}
 
 	public static void logErrorMessage(String message) {
-		log(new Status(IStatus.ERROR, PLUGIN_ID, INTERNAL_ERROR,
-				message == null ? "" : message, null)); //$NON-NLS-1$
+		log(new Status(IStatus.ERROR, PLUGIN_ID, INTERNAL_ERROR, message == null ? "" : message, null)); //$NON-NLS-1$
 	}
 
 	public static void log(IStatus status) {

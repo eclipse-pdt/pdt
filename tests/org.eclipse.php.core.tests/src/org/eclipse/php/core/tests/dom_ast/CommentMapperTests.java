@@ -100,9 +100,8 @@ public class CommentMapperTests {
 	public void parseAndCompare(String programStr) throws Exception {
 		final IDocument document = new Document(programStr);
 		final Reader reader = new StringReader(programStr);
-		Program program = ASTParser.newParser(reader, PHPVersion.PHP5,
-				ProjectOptions.useShortTags((IProject) null)).createAST(
-				new NullProgressMonitor());
+		Program program = ASTParser.newParser(reader, PHPVersion.PHP5, ProjectOptions.useShortTags((IProject) null))
+				.createAST(new NullProgressMonitor());
 
 		program.initCommentMapper(document, new PhpAstLexer(reader));
 
@@ -118,18 +117,15 @@ public class CommentMapperTests {
 	 * @param str
 	 * @throws Exception
 	 */
-	public void parseAndCompareInner(String programStr, int index)
-			throws Exception {
+	public void parseAndCompareInner(String programStr, int index) throws Exception {
 		final IDocument document = new Document(programStr);
 		final Reader reader = new StringReader(programStr);
-		Program program = ASTParser.newParser(reader, PHPVersion.PHP5,
-				ProjectOptions.useShortTags((IProject) null)).createAST(
-				new NullProgressMonitor());
+		Program program = ASTParser.newParser(reader, PHPVersion.PHP5, ProjectOptions.useShortTags((IProject) null))
+				.createAST(new NullProgressMonitor());
 
 		program.initCommentMapper(document, new PhpAstLexer(reader));
 
-		final ClassDeclaration node = (ClassDeclaration) program.statements()
-				.get(0);
+		final ClassDeclaration node = (ClassDeclaration) program.statements().get(0);
 		final Statement statement = node.getBody().statements().get(index);
 
 		final int extendedLength = program.getExtendedLength(statement);

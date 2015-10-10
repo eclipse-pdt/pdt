@@ -29,8 +29,7 @@ import org.eclipse.swt.widgets.Composite;
  * @author guy.g
  * 
  */
-public class PHPContentAssistOptionsConfigurationBlock extends
-		AbstractPHPContentAssistPreferencePageBlock {
+public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPContentAssistPreferencePageBlock {
 
 	protected Button completionInsertRadioButton;
 	protected Button completionOverrideRadioButton;
@@ -42,8 +41,7 @@ public class PHPContentAssistOptionsConfigurationBlock extends
 	protected Button fPrefixGlobalFunctionCallRadioButton;
 
 	public void setCompositeAddon(Composite parent) {
-		Composite composite = createSubsection(parent,
-				PHPUIMessages.CodeAssistPreferencePage_optionsSectionLabel);
+		Composite composite = createSubsection(parent, PHPUIMessages.CodeAssistPreferencePage_optionsSectionLabel);
 		Composite radioButtonsComposite = new Composite(composite, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.marginWidth = 0;
@@ -53,66 +51,50 @@ public class PHPContentAssistOptionsConfigurationBlock extends
 		radioButtonsComposite.setLayout(gridLayout);
 		radioButtonsComposite.setLayoutData(gridData);
 
-		completionInsertRadioButton = new Button(radioButtonsComposite,
-				SWT.RADIO | SWT.LEFT);
-		completionInsertRadioButton
-				.setText(PHPUIMessages.CodeAssistPreferencePage_completionInserts);
+		completionInsertRadioButton = new Button(radioButtonsComposite, SWT.RADIO | SWT.LEFT);
+		completionInsertRadioButton.setText(PHPUIMessages.CodeAssistPreferencePage_completionInserts);
 		completionInsertRadioButton.setLayoutData(new GridData());
-		completionInsertRadioButton
-				.setData(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION);
+		completionInsertRadioButton.setData(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION);
 		add(completionInsertRadioButton);
 
-		completionOverrideRadioButton = new Button(radioButtonsComposite,
-				SWT.RADIO | SWT.LEFT);
-		completionOverrideRadioButton
-				.setText(PHPUIMessages.CodeAssistPreferencePage_completionOverwrites);
+		completionOverrideRadioButton = new Button(radioButtonsComposite, SWT.RADIO | SWT.LEFT);
+		completionOverrideRadioButton.setText(PHPUIMessages.CodeAssistPreferencePage_completionOverwrites);
 		completionOverrideRadioButton.setLayoutData(new GridData());
 
 		add(completionOverrideRadioButton);
 
 		insertSingleproposalsCheckBox = addCheckBox(composite,
-				PHPUIMessages.CodeAssistPreferencePage_insertSignleProposals,
-				PHPCoreConstants.CODEASSIST_AUTOINSERT, 0);
-		showVariableFromOtherFilesCheckBox = addCheckBox(
-				composite,
+				PHPUIMessages.CodeAssistPreferencePage_insertSignleProposals, PHPCoreConstants.CODEASSIST_AUTOINSERT,
+				0);
+		showVariableFromOtherFilesCheckBox = addCheckBox(composite,
 				PHPUIMessages.CodeAssistPreferencePage_showVariablesFromOtherFiles,
 				PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, 0);
-		showVariableFromOtherFilesCheckBox
-				.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent e) {
-						showVariableFromReferencedFilesCheckBox
-								.setEnabled(!showVariableFromOtherFilesCheckBox
-										.getSelection());
-					}
-				});
+		showVariableFromOtherFilesCheckBox.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				showVariableFromReferencedFilesCheckBox.setEnabled(!showVariableFromOtherFilesCheckBox.getSelection());
+			}
+		});
 
-		showVariableFromReferencedFilesCheckBox = addCheckBox(
-				composite,
+		showVariableFromReferencedFilesCheckBox = addCheckBox(composite,
 				PHPUIMessages.CodeAssistPreferencePage_showVariablesFromReferencedFiles,
-				PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_REFERENCED_FILES,
-				0);
+				PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_REFERENCED_FILES, 0);
 
-		insertFullyQualifiedNameForNamespaceCheckBox = addCheckBox(
-				composite,
+		insertFullyQualifiedNameForNamespaceCheckBox = addCheckBox(composite,
 				PHPUIMessages.CodeAssistPreferencePage_insertFullyQualifiedNameForNamespace,
-				PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE,
-				0);
+				PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE, 0);
 
-		fInsertParameterNamesRadioButton = addCheckBox(
-				composite,
+		fInsertParameterNamesRadioButton = addCheckBox(composite,
 				PHPUIMessages.CodeAssistPreferencePage_fillParameterNamesOnMethodCompletion,
 				PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, 0);
 
-		fPrefixGlobalFunctionCallRadioButton = addCheckBox(
-				composite,
+		fPrefixGlobalFunctionCallRadioButton = addCheckBox(composite,
 				PHPUIMessages.CodeAssistPreferencePage_insertGlobalPrefixForFunctionCallInsideNamespace,
 				PHPCoreConstants.CODEASSIST_PREFIX_GLOBAL_FUNCTION_CALL, 0);
 	}
 
 	protected void initializeValues() {
 		super.initializeValues();
-		completionOverrideRadioButton.setSelection(!completionInsertRadioButton
-				.getSelection());
+		completionOverrideRadioButton.setSelection(!completionInsertRadioButton.getSelection());
 		if (showVariableFromOtherFilesCheckBox.getSelection()) {
 			showVariableFromReferencedFilesCheckBox.setEnabled(false);
 		}
@@ -121,13 +103,11 @@ public class PHPContentAssistOptionsConfigurationBlock extends
 	@Override
 	protected void restoreDefaultButtonValues() {
 		super.restoreDefaultButtonValues();
-		completionOverrideRadioButton.setSelection(!completionInsertRadioButton
-				.getSelection());
+		completionOverrideRadioButton.setSelection(!completionInsertRadioButton.getSelection());
 	}
 
 	protected IPreferenceStore getPreferenceStore() {
-		return new PreferencesAdapter(PHPCorePlugin.getDefault()
-				.getPluginPreferences());
+		return new PreferencesAdapter(PHPCorePlugin.getDefault().getPluginPreferences());
 	}
 
 	protected void storeValues() {

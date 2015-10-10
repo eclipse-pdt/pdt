@@ -17,6 +17,7 @@ public class Messages extends NLS {
 	public static String PHPCodeRefactorPreferencePage_1;
 	public static String PHPCodeRefactorPreferencePage_2;
 	public static String PHPCodeRefactorPreferencePage_3;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

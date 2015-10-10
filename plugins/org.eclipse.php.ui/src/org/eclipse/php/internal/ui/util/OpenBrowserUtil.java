@@ -45,15 +45,12 @@ public class OpenBrowserUtil {
 		});
 	}
 
-	private static void internalOpen(final URL url,
-			final boolean useExternalBrowser) {
+	private static void internalOpen(final URL url, final boolean useExternalBrowser) {
 		BusyIndicator.showWhile(null, new Runnable() {
 			public void run() {
-				URL helpSystemUrl = PlatformUI.getWorkbench().getHelpSystem()
-						.resolve(url.toExternalForm(), true);
+				URL helpSystemUrl = PlatformUI.getWorkbench().getHelpSystem().resolve(url.toExternalForm(), true);
 				try {
-					IWorkbenchBrowserSupport browserSupport = PlatformUI
-							.getWorkbench().getBrowserSupport();
+					IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
 					IWebBrowser browser;
 					if (useExternalBrowser)
 						browser = browserSupport.getExternalBrowser();
@@ -62,7 +59,8 @@ public class OpenBrowserUtil {
 					browser.openURL(helpSystemUrl);
 				} catch (PartInitException ex) {
 					// XXX: show dialog?
-					//										PHPUiPlugin.logErrorStatus("Opening Javadoc failed", ex.getStatus()); 
+					// PHPUiPlugin.logErrorStatus("Opening Javadoc failed",
+					// ex.getStatus());
 				}
 			}
 		});

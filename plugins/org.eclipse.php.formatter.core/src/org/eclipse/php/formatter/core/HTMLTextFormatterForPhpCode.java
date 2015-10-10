@@ -23,8 +23,7 @@ import org.w3c.dom.Node;
 public class HTMLTextFormatterForPhpCode extends HTMLTextFormatter {
 
 	@Override
-	protected void formatText(IDOMNode node, HTMLFormatContraints contraints,
-			int mode) {
+	protected void formatText(IDOMNode node, HTMLFormatContraints contraints, int mode) {
 		Node prev = node.getPreviousSibling();
 		Node next = node.getNextSibling();
 		if ((prev != null && "PHP".equals(prev.getNodeName())) //$NON-NLS-1$

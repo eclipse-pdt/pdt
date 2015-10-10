@@ -35,8 +35,7 @@ public final class WhiteSpaceOptions {
 		protected final Map<String, Object> fWorkingValues;
 		protected final ArrayList<Node> fChildren;
 
-		public Node(InnerNode parent, Map<String, Object> workingValues,
-				String message) {
+		public Node(InnerNode parent, Map<String, Object> workingValues, String message) {
 			if (workingValues == null || message == null)
 				throw new IllegalArgumentException();
 			fParent = parent;
@@ -75,14 +74,12 @@ public final class WhiteSpaceOptions {
 	 */
 	public static class InnerNode extends Node {
 
-		public InnerNode(InnerNode parent, Map<String, Object> workingValues,
-				String messageKey) {
+		public InnerNode(InnerNode parent, Map<String, Object> workingValues, String messageKey) {
 			super(parent, workingValues, messageKey);
 		}
 
 		public void setChecked(boolean checked) {
-			for (final Iterator<Node> iter = fChildren.iterator(); iter
-					.hasNext();)
+			for (final Iterator<Node> iter = fChildren.iterator(); iter.hasNext();)
 				(iter.next()).setChecked(checked);
 		}
 
@@ -91,12 +88,10 @@ public final class WhiteSpaceOptions {
 		}
 
 		public List<String> getSnippets() {
-			final ArrayList<String> snippets = new ArrayList<String>(
-					fChildren.size());
+			final ArrayList<String> snippets = new ArrayList<String>(fChildren.size());
 			for (Iterator<Node> iter = fChildren.iterator(); iter.hasNext();) {
 				final List<String> childSnippets = iter.next().getSnippets();
-				for (final Iterator<String> chIter = childSnippets.iterator(); chIter
-						.hasNext();) {
+				for (final Iterator<String> chIter = childSnippets.iterator(); chIter.hasNext();) {
 					final String snippet = chIter.next();
 					if (!snippets.contains(snippet))
 						snippets.add(snippet);
@@ -119,8 +114,8 @@ public final class WhiteSpaceOptions {
 		private final String fKey;
 		private final ArrayList<String> fSnippets;
 
-		public OptionNode(InnerNode parent, Map<String, Object> workingValues,
-				String messageKey, String key, String snippet) {
+		public OptionNode(InnerNode parent, Map<String, Object> workingValues, String messageKey, String key,
+				String snippet) {
 			super(parent, workingValues, messageKey);
 			fKey = key;
 			fSnippets = new ArrayList<String>(1);
@@ -128,13 +123,11 @@ public final class WhiteSpaceOptions {
 		}
 
 		public void setChecked(boolean checked) {
-			fWorkingValues.put(fKey, checked ? CodeFormatterPreferences.TRUE
-					: CodeFormatterPreferences.FALSE);
+			fWorkingValues.put(fKey, checked ? CodeFormatterPreferences.TRUE : CodeFormatterPreferences.FALSE);
 		}
 
 		public boolean getChecked() {
-			return CodeFormatterPreferences.TRUE.equals(fWorkingValues
-					.get(fKey));
+			return CodeFormatterPreferences.TRUE.equals(fWorkingValues.get(fKey));
 		}
 
 		public List<String> getSnippets() {
@@ -205,159 +198,103 @@ public final class WhiteSpaceOptions {
 	 * @param workingValues
 	 * @return returns roots (type <code>Node</code>)
 	 */
-	public static List<Node> createTreeBySyntaxElem(
-			Map<String, Object> workingValues) {
+	public static List<Node> createTreeBySyntaxElem(Map<String, Object> workingValues) {
 		final ArrayList<Node> roots = new ArrayList<Node>();
 
 		InnerNode element;
 
-		element = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceOptions_opening_paren);
-		createBeforeOpenParenTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_before));
-		createAfterOpenParenTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_after));
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_opening_paren);
+		createBeforeOpenParenTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_before));
+		createAfterOpenParenTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_after));
 		roots.add(element);
 
-		element = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceOptions_closing_paren);
-		createBeforeClosingParenTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_before));
-		createAfterCloseParenTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_after));
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_closing_paren);
+		createBeforeClosingParenTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_before));
+		createAfterCloseParenTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_after));
 		roots.add(element);
 
-		element = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceOptions_opening_brace);
-		createBeforeOpenBraceTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_before));
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_opening_brace);
+		createBeforeOpenBraceTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_before));
 		roots.add(element);
 
-		element = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceOptions_closing_brace);
-		createAfterCloseBraceTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_after));
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_closing_brace);
+		createAfterCloseBraceTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_after));
 		roots.add(element);
 
-		element = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceOptions_opening_bracket);
-		createBeforeOpenBracketTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_before));
-		createAfterOpenBracketTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_after));
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_opening_bracket);
+		createBeforeOpenBracketTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_before));
+		createAfterOpenBracketTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_after));
 		roots.add(element);
 
-		element = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceOptions_closing_bracket);
-		createBeforeClosingBracketTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_before));
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_closing_bracket);
+		createBeforeClosingBracketTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_before));
 		roots.add(element);
 
-		element = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceOptions_operator);
-		createBeforeOperatorTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_before));
-		createAfterOperatorTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_after));
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_operator);
+		createBeforeOperatorTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_before));
+		createAfterOperatorTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_after));
 		roots.add(element);
 
-		element = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceOptions_comma);
-		createBeforeCommaTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_before));
-		createAfterCommaTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_after));
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_comma);
+		createBeforeCommaTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_before));
+		createAfterCommaTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_after));
 		roots.add(element);
 
-		element = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceOptions_colon);
-		createBeforeColonTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_before));
-		createAfterColonTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_after));
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_colon);
+		createBeforeColonTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_before));
+		createAfterColonTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_after));
 		roots.add(element);
 
-		element = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceOptions_semicolon);
-		createBeforeSemicolonTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_before));
-		createAfterSemicolonTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_after));
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_semicolon);
+		createBeforeSemicolonTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_before));
+		createAfterSemicolonTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_after));
 		roots.add(element);
 
-		element = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceOptions_question_mark);
-		createBeforeQuestionTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_before));
-		createAfterQuestionTree(
-				workingValues,
-				createChild(element, workingValues,
-						FormatterMessages.WhiteSpaceOptions_after));
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_question_mark);
+		createBeforeQuestionTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_before));
+		createAfterQuestionTree(workingValues,
+				createChild(element, workingValues, FormatterMessages.WhiteSpaceOptions_after));
 		roots.add(element);
 
-		element = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceOptions_between_empty_parens);
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_between_empty_parens);
 		createBetweenEmptyParenTree(workingValues, element);
 		roots.add(element);
 
-		element = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceOptions_between_empty_brackets);
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_between_empty_brackets);
 		createBetweenEmptyBracketsTree(workingValues, element);
 		roots.add(element);
 
-		element = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceOptions_before_arrow);
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_before_arrow);
 		createBeforeArrowTree(workingValues, element);
 		roots.add(element);
 
-		element = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceOptions_after_arrow);
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_after_arrow);
 		createAfterArrowTree(workingValues, element);
 		roots.add(element);
 
-		element = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceOptions_before_coloncolon);
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_before_coloncolon);
 		createBeforeColoncolonTree(workingValues, element);
 		roots.add(element);
 
-		element = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceOptions_after_coloncolon);
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_after_coloncolon);
 		createAfterColoncolonTree(workingValues, element);
 		roots.add(element);
 
@@ -377,117 +314,90 @@ public final class WhiteSpaceOptions {
 
 		InnerNode parent;
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_before_opening_paren);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_before_opening_paren);
 		createBeforeOpenParenTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_after_opening_paren);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_after_opening_paren);
 		createAfterOpenParenTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_before_closing_paren);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_before_closing_paren);
 		createBeforeClosingParenTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_after_closing_paren);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_after_closing_paren);
 		createAfterCloseParenTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_between_empty_parens);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_between_empty_parens);
 		createBetweenEmptyParenTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_before_opening_brace);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_before_opening_brace);
 		createBeforeOpenBraceTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_after_closing_brace);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_after_closing_brace);
 		createAfterCloseBraceTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_before_opening_bracket);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_before_opening_bracket);
 		createBeforeOpenBracketTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_after_opening_bracket);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_after_opening_bracket);
 		createAfterOpenBracketTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_before_closing_bracket);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_before_closing_bracket);
 		createBeforeClosingBracketTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_between_empty_brackets);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_between_empty_brackets);
 		createBetweenEmptyBracketsTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_before_operator);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_before_operator);
 		createBeforeOperatorTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_after_operator);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_after_operator);
 		createAfterOperatorTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_before_comma);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_before_comma);
 		createBeforeCommaTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_after_comma);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_after_comma);
 		createAfterCommaTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_after_colon);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_after_colon);
 		createAfterColonTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_before_colon);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_before_colon);
 		createBeforeColonTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_before_semicolon);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_before_semicolon);
 		createBeforeSemicolonTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_after_semicolon);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_after_semicolon);
 		createAfterSemicolonTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_before_question_mark);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_before_question_mark);
 		createBeforeQuestionTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_after_question_mark);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_after_question_mark);
 		createAfterQuestionTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_before_arrow);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_before_arrow);
 		createBeforeArrowTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_after_arrow);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_after_arrow);
 		createAfterArrowTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_before_coloncolon);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_before_coloncolon);
 		createBeforeColoncolonTree(workingValues, parent);
 
-		parent = createParentNode(roots, workingValues,
-				FormatterMessages.WhiteSpaceOptions_after_coloncolon);
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_after_coloncolon);
 		createAfterColoncolonTree(workingValues, parent);
 		return roots;
 	}
 
-	private static InnerNode createParentNode(List<Node> roots,
-			Map<String, Object> workingValues, String text) {
+	private static InnerNode createParentNode(List<Node> roots, Map<String, Object> workingValues, String text) {
 		final InnerNode parent = new InnerNode(null, workingValues, text);
 		roots.add(parent);
 		return parent;
 	}
 
-	public static ArrayList<Node> createTreeByPhpElement(
-			Map<String, Object> workingValues) {
+	public static ArrayList<Node> createTreeByPhpElement(Map<String, Object> workingValues) {
 
 		final InnerNode declarations = new InnerNode(null, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_declarations);
@@ -495,12 +405,9 @@ public final class WhiteSpaceOptions {
 		createFieldTree(workingValues, declarations);
 		createMethodDeclTree(workingValues, declarations);
 
-		final InnerNode statements = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_statements);
-		createOption(statements, workingValues,
-				FormatterMessages.WhiteSpaceOptions_before_semicolon,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_SEMICOLON,
-				SEMICOLON_PREVIEW);
+		final InnerNode statements = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceTabPage_statements);
+		createOption(statements, workingValues, FormatterMessages.WhiteSpaceOptions_before_semicolon,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_SEMICOLON, SEMICOLON_PREVIEW);
 		createBlockTree(workingValues, statements);
 		createIfStatementTree(workingValues, statements);
 		createForStatementTree(workingValues, statements);
@@ -523,8 +430,7 @@ public final class WhiteSpaceOptions {
 		createConditionalTree(workingValues, expressions);
 		createParenthesisExpressionTree(workingValues, expressions);
 
-		final InnerNode arrays = new InnerNode(null, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_arrays);
+		final InnerNode arrays = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceTabPage_arrays);
 		createArrayCreationTree(workingValues, arrays);
 		createArrayElementAccessTree(workingValues, arrays);
 
@@ -536,1503 +442,697 @@ public final class WhiteSpaceOptions {
 		return roots;
 	}
 
-	private static void createBeforeQuestionTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_conditional,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_QUESTION_IN_CONDITIONAL,
-				CONDITIONAL_PREVIEW);
+	private static void createBeforeQuestionTree(Map<String, Object> workingValues, final InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_conditional,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_QUESTION_IN_CONDITIONAL, CONDITIONAL_PREVIEW);
 	}
 
-	private static void createBeforeSemicolonTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_for,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_SEMICOLON_IN_FOR,
-				FOR_PREVIEW);
-		createOption(parent, workingValues,
-				FormatterMessages.WhiteSpaceOptions_statements,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_SEMICOLON,
-				SEMICOLON_PREVIEW);
+	private static void createBeforeSemicolonTree(Map<String, Object> workingValues, final InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_for,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_SEMICOLON_IN_FOR, FOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_statements,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_SEMICOLON, SEMICOLON_PREVIEW);
 	}
 
-	private static void createBeforeColonTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_conditional,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_CONDITIONAL,
-				CONDITIONAL_PREVIEW);
+	private static void createBeforeColonTree(Map<String, Object> workingValues, final InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_conditional,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_CONDITIONAL, CONDITIONAL_PREVIEW);
 
 		final InnerNode switchStatement = createChild(parent, workingValues,
 				FormatterMessages.WhiteSpaceOptions_switch);
-		createOption(
-				switchStatement,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_case,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_CASE,
-				SWITCH_PREVIEW);
-		createOption(
-				switchStatement,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_default,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_DEFAULT,
-				SWITCH_PREVIEW);
+		createOption(switchStatement, workingValues, FormatterMessages.WhiteSpaceOptions_case,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_CASE, SWITCH_PREVIEW);
+		createOption(switchStatement, workingValues, FormatterMessages.WhiteSpaceOptions_default,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_DEFAULT, SWITCH_PREVIEW);
 	}
 
-	private static void createBeforeCommaTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_for,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_FOR,
-				FOR_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_method_call,
+	private static void createBeforeCommaTree(Map<String, Object> workingValues, final InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_for,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_FOR, FOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_call,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_METHOD_INVOCATION_ARGUMENTS,
 				METHOD_CALL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_method_decl,
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_decl,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_METHOD_DECLARATION_PARAMETERS,
 				METHOD_DECL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_fields,
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_fields,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MULTIPLE_FIELD_DECLARATIONS,
 				MULT_FIELD_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_constants,
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_constants,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MULTIPLE_CONSTANT_DECLARATIONS,
 				MULT_FIELD_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_implements_clause,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_SUPERINTERFACES,
-				CLASS_DECL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_array_decl,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ARRAY_CREATION,
-				ARRAY_CREATION_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_list,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_LIST,
-				ARRAY_CREATION_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_echo,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ECHO,
-				ECHO_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_global,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_GLOBAL,
-				GLOBAL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_static,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_STATIC,
-				STATIC_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_implements_clause,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_SUPERINTERFACES, CLASS_DECL_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_array_decl,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ARRAY_CREATION, ARRAY_CREATION_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_list,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_LIST, ARRAY_CREATION_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_echo,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ECHO, ECHO_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_global,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_GLOBAL, GLOBAL_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_static,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_STATIC, STATIC_PREVIEW);
 	}
 
-	private static void createBeforeOperatorTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_assignment_operator,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ASSIGNMENT_OPERATOR,
-				OPERATOR_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_unary_operator,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_UNARY_OPERATOR,
-				OPERATOR_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_binary_operator,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_BINARY_OPERATOR,
-				OPERATOR_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_prefix_operator,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_PREFIX_OPERATOR,
-				OPERATOR_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_postfix_operator,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_POSTFIX_OPERATOR,
-				OPERATOR_PREVIEW);
+	private static void createBeforeOperatorTree(Map<String, Object> workingValues, final InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_assignment_operator,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ASSIGNMENT_OPERATOR, OPERATOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_unary_operator,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_UNARY_OPERATOR, OPERATOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_binary_operator,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_BINARY_OPERATOR, OPERATOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_prefix_operator,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_PREFIX_OPERATOR, OPERATOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_postfix_operator,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_POSTFIX_OPERATOR, OPERATOR_PREVIEW);
 	}
 
-	private static void createBeforeClosingBracketTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_array_element_access,
+	private static void createBeforeClosingBracketTree(Map<String, Object> workingValues, final InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_array_element_access,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_BRACKET_IN_ARRAY_REFERENCE,
 				ARRAY_ACCESS_PREVIEW);
 	}
 
-	private static void createBeforeOpenBracketTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_array_element_access,
+	private static void createBeforeOpenBracketTree(Map<String, Object> workingValues, final InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_array_element_access,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACKET_IN_ARRAY_REFERENCE,
 				ARRAY_ACCESS_PREVIEW);
 	}
 
-	private static void createBeforeOpenBraceTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
+	private static void createBeforeOpenBraceTree(Map<String, Object> workingValues, final InnerNode parent) {
 
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_class_decl,
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_class_decl,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_TYPE_DECLARATION,
 				CLASS_DECL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_method_decl,
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_decl,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_METHOD_DECLARATION,
 				METHOD_DECL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_block,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_BLOCK,
-				BLOCK_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_switch,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_SWITCH,
-				SWITCH_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_block,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_BLOCK, BLOCK_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_switch,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_SWITCH, SWITCH_PREVIEW);
 	}
 
-	private static void createBeforeClosingParenTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
+	private static void createBeforeClosingParenTree(Map<String, Object> workingValues, final InnerNode parent) {
 
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_catch,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_CATCH,
-				CATCH_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_for,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_FOR,
-				FOR_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_foreach,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_FOREACH,
-				FOREACH_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_list,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_LIST,
-				ARRAY_CREATION_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_if,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_IF,
-				IF_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_switch,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_SWITCH,
-				SWITCH_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_while,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_WHILE,
-				WHILE_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_type_cast,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_CAST,
-				CAST_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_method_decl,
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_catch,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_CATCH, CATCH_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_for,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_FOR, FOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_foreach,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_FOREACH, FOREACH_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_list,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_LIST, ARRAY_CREATION_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_if,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_IF, IF_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_switch,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_SWITCH, SWITCH_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_while,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_WHILE, WHILE_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_type_cast,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_CAST, CAST_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_decl,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_METHOD_DECLARATION,
 				METHOD_DECL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_method_call,
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_call,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_METHOD_INVOCATION,
 				METHOD_CALL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_paren_expr,
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_paren_expr,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_PARENTHESIZED_EXPRESSION,
 				PARENTHESIS_EXPRESSION_PREVIEW);
 	}
 
-	private static void createBeforeOpenParenTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
+	private static void createBeforeOpenParenTree(Map<String, Object> workingValues, final InnerNode parent) {
 
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_catch,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_CATCH,
-				CATCH_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_for,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_FOR,
-				FOR_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_foreach,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_FOREACH,
-				FOREACH_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_list,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_LIST,
-				ARRAY_CREATION_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_if,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_IF,
-				IF_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_switch,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_SWITCH,
-				SWITCH_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_while,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_WHILE,
-				WHILE_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_method_decl,
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_catch,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_CATCH, CATCH_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_for,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_FOR, FOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_foreach,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_FOREACH, FOREACH_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_list,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_LIST, ARRAY_CREATION_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_if,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_IF, IF_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_switch,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_SWITCH, SWITCH_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_while,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_WHILE, WHILE_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_decl,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_METHOD_DECLARATION,
 				METHOD_DECL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_method_call,
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_call,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_METHOD_INVOCATION,
 				METHOD_CALL_PREVIEW);
 	}
 
-	private static void createAfterQuestionTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_conditional,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_QUESTION_IN_CONDITIONAL,
-				CONDITIONAL_PREVIEW);
+	private static void createAfterQuestionTree(Map<String, Object> workingValues, final InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_conditional,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_QUESTION_IN_CONDITIONAL, CONDITIONAL_PREVIEW);
 	}
 
-	private static void createAfterColoncolonTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_field_access,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLONCOLON_IN_FIELD_ACCESS,
-				FIELD_ACCESS_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_method_call,
+	private static void createAfterColoncolonTree(Map<String, Object> workingValues, InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_field_access,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLONCOLON_IN_FIELD_ACCESS, FIELD_ACCESS_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_call,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLONCOLON_IN_METHOD_INVOCATION,
 				METHOD_CALL_PREVIEW);
 	}
 
-	private static void createBeforeColoncolonTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_field_access,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLONCOLON_IN_FIELD_ACCESS,
-				FIELD_ACCESS_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_method_call,
+	private static void createBeforeColoncolonTree(Map<String, Object> workingValues, InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_field_access,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLONCOLON_IN_FIELD_ACCESS, FIELD_ACCESS_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_call,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLONCOLON_IN_METHOD_INVOCATION,
 				METHOD_CALL_PREVIEW);
 	}
 
-	private static void createAfterArrowTree(Map<String, Object> workingValues,
-			InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_foreach,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_FOREACH,
-				FOREACH_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_method_call,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_METHOD_INVOCATION,
-				METHOD_CALL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_field_access,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_FIELD_ACCESS,
-				FIELD_ACCESS_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_array_decl,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_ARRAY_CREATION,
-				ARRAY_CREATION_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_yield,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_YIELD,
-				YIELD_PREVIEW);
+	private static void createAfterArrowTree(Map<String, Object> workingValues, InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_foreach,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_FOREACH, FOREACH_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_call,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_METHOD_INVOCATION, METHOD_CALL_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_field_access,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_FIELD_ACCESS, FIELD_ACCESS_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_array_decl,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_ARRAY_CREATION, ARRAY_CREATION_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_yield,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_YIELD, YIELD_PREVIEW);
 	}
 
-	private static void createBeforeArrowTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_foreach,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_FOREACH,
-				FOREACH_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_method_call,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_METHOD_INVOCATION,
-				METHOD_CALL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_field_access,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_FIELD_ACCESS,
-				FIELD_ACCESS_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_array_decl,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_ARRAY_CREATION,
-				ARRAY_CREATION_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_yield,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_YIELD,
-				YIELD_PREVIEW);
+	private static void createBeforeArrowTree(Map<String, Object> workingValues, InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_foreach,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_FOREACH, FOREACH_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_call,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_METHOD_INVOCATION, METHOD_CALL_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_field_access,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_FIELD_ACCESS, FIELD_ACCESS_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_array_decl,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_ARRAY_CREATION, ARRAY_CREATION_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_yield,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_YIELD, YIELD_PREVIEW);
 
 	}
 
-	private static void createAfterSemicolonTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_for,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_SEMICOLON_IN_FOR,
-				FOR_PREVIEW);
+	private static void createAfterSemicolonTree(Map<String, Object> workingValues, final InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_for,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_SEMICOLON_IN_FOR, FOR_PREVIEW);
 	}
 
-	private static void createAfterColonTree(Map<String, Object> workingValues,
-			final InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_conditional,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLON_IN_CONDITIONAL,
-				CONDITIONAL_PREVIEW);
+	private static void createAfterColonTree(Map<String, Object> workingValues, final InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_conditional,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLON_IN_CONDITIONAL, CONDITIONAL_PREVIEW);
 	}
 
-	private static void createAfterCommaTree(Map<String, Object> workingValues,
-			final InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_for,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_FOR,
-				FOR_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_method_call,
+	private static void createAfterCommaTree(Map<String, Object> workingValues, final InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_for,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_FOR, FOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_call,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_INVOCATION_ARGUMENTS,
 				METHOD_CALL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_method_decl,
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_decl,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_DECLARATION_PARAMETERS,
 				METHOD_DECL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_fields,
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_fields,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MULTIPLE_FIELD_DECLARATIONS,
 				MULT_FIELD_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_constants,
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_constants,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MULTIPLE_CONSTANT_DECLARATIONS,
 				MULT_FIELD_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_implements_clause,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_SUPERINTERFACES,
-				CLASS_DECL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_array_decl,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ARRAY_CREATION,
-				ARRAY_CREATION_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_list,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_LIST,
-				ARRAY_CREATION_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_echo,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ECHO,
-				ECHO_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_global,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_GLOBAL,
-				GLOBAL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_static,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_STATIC,
-				STATIC_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_implements_clause,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_SUPERINTERFACES, CLASS_DECL_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_array_decl,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ARRAY_CREATION, ARRAY_CREATION_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_list,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_LIST, ARRAY_CREATION_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_echo,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ECHO, ECHO_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_global,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_GLOBAL, GLOBAL_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_static,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_STATIC, STATIC_PREVIEW);
 	}
 
-	private static void createAfterOperatorTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
+	private static void createAfterOperatorTree(Map<String, Object> workingValues, final InnerNode parent) {
 
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_assignment_operator,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ASSIGNMENT_OPERATOR,
-				OPERATOR_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_unary_operator,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_UNARY_OPERATOR,
-				OPERATOR_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_binary_operator,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_BINARY_OPERATOR,
-				OPERATOR_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_prefix_operator,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_PREFIX_OPERATOR,
-				OPERATOR_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_postfix_operator,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_POSTFIX_OPERATOR,
-				OPERATOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_assignment_operator,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ASSIGNMENT_OPERATOR, OPERATOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_unary_operator,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_UNARY_OPERATOR, OPERATOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_binary_operator,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_BINARY_OPERATOR, OPERATOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_prefix_operator,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_PREFIX_OPERATOR, OPERATOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_postfix_operator,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_POSTFIX_OPERATOR, OPERATOR_PREVIEW);
 	}
 
-	private static void createAfterOpenBracketTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_array_element_access,
+	private static void createAfterOpenBracketTree(Map<String, Object> workingValues, final InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_array_element_access,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_BRACKET_IN_ARRAY_REFERENCE,
 				ARRAY_ACCESS_PREVIEW);
 	}
 
-	private static void createAfterCloseBraceTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_block,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CLOSING_BRACE_IN_BLOCK,
-				BLOCK_PREVIEW);
+	private static void createAfterCloseBraceTree(Map<String, Object> workingValues, final InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_block,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CLOSING_BRACE_IN_BLOCK, BLOCK_PREVIEW);
 	}
 
-	private static void createAfterCloseParenTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
+	private static void createAfterCloseParenTree(Map<String, Object> workingValues, final InnerNode parent) {
 
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_type_cast,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CLOSING_PAREN_IN_CAST,
-				CAST_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_type_cast,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CLOSING_PAREN_IN_CAST, CAST_PREVIEW);
 	}
 
-	private static void createAfterOpenParenTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_catch,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_CATCH,
-				CATCH_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_for,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_FOR,
-				FOR_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_foreach,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_FOREACH,
-				FOREACH_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_list,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_LIST,
-				ARRAY_CREATION_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_if,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_IF,
-				IF_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_switch,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_SWITCH,
-				SWITCH_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_while,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_WHILE,
-				WHILE_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_method_decl,
+	private static void createAfterOpenParenTree(Map<String, Object> workingValues, final InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_catch,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_CATCH, CATCH_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_for,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_FOR, FOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_foreach,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_FOREACH, FOREACH_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_list,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_LIST, ARRAY_CREATION_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_if,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_IF, IF_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_switch,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_SWITCH, SWITCH_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_while,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_WHILE, WHILE_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_decl,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_METHOD_DECLARATION,
 				METHOD_DECL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_type_cast,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_CAST,
-				CAST_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_method_call,
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_type_cast,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_CAST, CAST_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_call,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_METHOD_INVOCATION,
 				METHOD_CALL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_paren_expr,
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_paren_expr,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_PARENTHESIZED_EXPRESSION,
 				PARENTHESIS_EXPRESSION_PREVIEW);
 	}
 
-	private static void createBetweenEmptyParenTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_method_decl,
+	private static void createBetweenEmptyParenTree(Map<String, Object> workingValues, final InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_decl,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_PARENS_IN_METHOD_DECLARATION,
 				METHOD_DECL_PREVIEW);
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_method_call,
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_call,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_PARENS_IN_METHOD_INVOCATION,
 				METHOD_CALL_PREVIEW);
 	}
 
-	private static void createBetweenEmptyBracketsTree(
-			Map<String, Object> workingValues, final InnerNode parent) {
-		createOption(
-				parent,
-				workingValues,
-				FormatterMessages.WhiteSpaceOptions_array_element_access,
+	private static void createBetweenEmptyBracketsTree(Map<String, Object> workingValues, final InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_array_element_access,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_BRACKETS_IN_ARRAY_TYPE_REFERENCE,
 				ARRAY_ACCESS_PREVIEW);
 	}
 
 	// syntax element tree
 
-	private static InnerNode createClassTree(Map<String, Object> workingValues,
-			InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_classes);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_classes_before_opening_brace_of_a_class,
+	private static InnerNode createClassTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_classes);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_classes_before_opening_brace_of_a_class,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_TYPE_DECLARATION,
 				CLASS_DECL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_classes_before_comma_implements,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_SUPERINTERFACES,
-				CLASS_DECL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_classes_after_comma_implements,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_SUPERINTERFACES,
-				CLASS_DECL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_classes_before_comma_implements,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_SUPERINTERFACES, CLASS_DECL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_classes_after_comma_implements,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_SUPERINTERFACES, CLASS_DECL_PREVIEW);
 
 		return root;
 	}
 
-	private static InnerNode createAssignmentTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_assignments);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_assignments_before_assignment_operator,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ASSIGNMENT_OPERATOR,
-				OPERATOR_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_assignments_after_assignment_operator,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ASSIGNMENT_OPERATOR,
-				OPERATOR_PREVIEW);
+	private static InnerNode createAssignmentTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_assignments);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_assignments_before_assignment_operator,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ASSIGNMENT_OPERATOR, OPERATOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_assignments_after_assignment_operator,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ASSIGNMENT_OPERATOR, OPERATOR_PREVIEW);
 		return root;
 	}
 
-	private static InnerNode createOperatorTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_operators);
+	private static InnerNode createOperatorTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_operators);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_operators_before_binary_operators,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_BINARY_OPERATOR,
-				OPERATOR_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_operators_after_binary_operators,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_BINARY_OPERATOR,
-				OPERATOR_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_operators_before_unary_operators,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_UNARY_OPERATOR,
-				OPERATOR_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_operators_after_unary_operators,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_UNARY_OPERATOR,
-				OPERATOR_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_operators_before_prefix_operators,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_PREFIX_OPERATOR,
-				OPERATOR_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_operators_after_prefix_operators,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_PREFIX_OPERATOR,
-				OPERATOR_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_operators_before_postfix_operators,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_POSTFIX_OPERATOR,
-				OPERATOR_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_operators_after_postfix_operators,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_POSTFIX_OPERATOR,
-				OPERATOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_operators_before_binary_operators,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_BINARY_OPERATOR, OPERATOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_operators_after_binary_operators,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_BINARY_OPERATOR, OPERATOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_operators_before_unary_operators,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_UNARY_OPERATOR, OPERATOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_operators_after_unary_operators,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_UNARY_OPERATOR, OPERATOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_operators_before_prefix_operators,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_PREFIX_OPERATOR, OPERATOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_operators_after_prefix_operators,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_PREFIX_OPERATOR, OPERATOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_operators_before_postfix_operators,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_POSTFIX_OPERATOR, OPERATOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_operators_after_postfix_operators,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_POSTFIX_OPERATOR, OPERATOR_PREVIEW);
 		return root;
 	}
 
-	private static InnerNode createMethodDeclTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_methods);
+	private static InnerNode createMethodDeclTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_methods);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_opening_paren,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_opening_paren,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_METHOD_DECLARATION,
 				METHOD_DECL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_METHOD_DECLARATION,
 				METHOD_DECL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_METHOD_DECLARATION,
 				METHOD_DECL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_between_empty_parens,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_between_empty_parens,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_PARENS_IN_METHOD_DECLARATION,
 				METHOD_DECL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_opening_brace,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_opening_brace,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_METHOD_DECLARATION,
 				METHOD_DECL_PREVIEW);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_comma_in_params,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_comma_in_params,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_METHOD_DECLARATION_PARAMETERS,
 				METHOD_DECL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_comma_in_params,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_comma_in_params,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_DECLARATION_PARAMETERS,
 				METHOD_DECL_PREVIEW);
 
 		return root;
 	}
 
-	private static InnerNode createFieldTree(Map<String, Object> workingValues,
-			InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_fields);
+	private static InnerNode createFieldTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_fields);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_fields_before_comma,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_fields_before_comma,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MULTIPLE_FIELD_DECLARATIONS,
 				MULT_FIELD_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_fields_after_comma,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_fields_after_comma,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MULTIPLE_FIELD_DECLARATIONS,
 				MULT_FIELD_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_constant_before_comma,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_constant_before_comma,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MULTIPLE_CONSTANT_DECLARATIONS,
 				MULT_FIELD_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_constant_after_comma,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_constant_after_comma,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MULTIPLE_CONSTANT_DECLARATIONS,
 				MULT_FIELD_PREVIEW);
 		return root;
 	}
 
-	private static InnerNode createArrayCreationTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_arraycreation);
+	private static InnerNode createArrayCreationTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_arraycreation);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_opening_paren_in_array,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_opening_paren_in_array,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_ARRAY_CREATION,
 				ARRAY_CREATION_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_opening_paren_in_array,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_opening_paren_in_array,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_ARRAY_CREATION,
 				ARRAY_CREATION_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_closing_paren_in_array,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_closing_paren_in_array,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_ARRAY_CREATION,
 				ARRAY_CREATION_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_comma_in_array,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ARRAY_CREATION,
-				ARRAY_CREATION_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_comma_in_array,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ARRAY_CREATION,
-				ARRAY_CREATION_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_arrow_in_array,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_ARRAY_CREATION,
-				ARRAY_CREATION_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_arrow_in_array,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_ARRAY_CREATION,
-				ARRAY_CREATION_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_comma_in_array,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ARRAY_CREATION, ARRAY_CREATION_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_comma_in_array,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ARRAY_CREATION, ARRAY_CREATION_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_arrow_in_array,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_ARRAY_CREATION, ARRAY_CREATION_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_arrow_in_array,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_ARRAY_CREATION, ARRAY_CREATION_PREVIEW);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_opening_paren_in_list,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_LIST,
-				ARRAY_CREATION_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_opening_paren_in_list,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_LIST,
-				ARRAY_CREATION_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_closing_paren_in_list,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_LIST,
-				ARRAY_CREATION_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_comma_in_list,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_LIST,
-				ARRAY_CREATION_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_comma_in_list,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_LIST,
-				ARRAY_CREATION_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_opening_paren_in_list,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_LIST, ARRAY_CREATION_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_opening_paren_in_list,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_LIST, ARRAY_CREATION_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_closing_paren_in_list,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_LIST, ARRAY_CREATION_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_comma_in_list,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_LIST, ARRAY_CREATION_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_comma_in_list,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_LIST, ARRAY_CREATION_PREVIEW);
 
 		return root;
 	}
 
-	private static InnerNode createArrayElementAccessTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_arrayelem);
+	private static InnerNode createArrayElementAccessTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_arrayelem);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_opening_bracket,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_opening_bracket,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACKET_IN_ARRAY_REFERENCE,
 				ARRAY_ACCESS_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_opening_bracket,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_opening_bracket,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_BRACKET_IN_ARRAY_REFERENCE,
 				ARRAY_ACCESS_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_closing_bracket,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_closing_bracket,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_BRACKET_IN_ARRAY_REFERENCE,
 				ARRAY_ACCESS_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_between_empty_brackets,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_between_empty_brackets,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_BRACKETS_IN_ARRAY_TYPE_REFERENCE,
 				ARRAY_ACCESS_PREVIEW);
 
 		return root;
 	}
 
-	private static InnerNode createFunctionCallTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_calls);
+	private static InnerNode createFunctionCallTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_calls);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_opening_paren,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_opening_paren,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_METHOD_INVOCATION,
 				METHOD_CALL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_METHOD_INVOCATION,
 				METHOD_CALL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_METHOD_INVOCATION,
 				METHOD_CALL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_between_empty_parens,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_between_empty_parens,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_PARENS_IN_METHOD_INVOCATION,
 				METHOD_CALL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_calls_before_comma_in_method_args,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_calls_before_comma_in_method_args,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_METHOD_INVOCATION_ARGUMENTS,
 				METHOD_CALL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_calls_after_comma_in_method_args,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_calls_after_comma_in_method_args,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_INVOCATION_ARGUMENTS,
 				METHOD_CALL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_calls_before_arrow_in_method,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_METHOD_INVOCATION,
-				METHOD_CALL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_calls_after_arrow_in_method,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_METHOD_INVOCATION,
-				METHOD_CALL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_calls_before_coloncolon_in_method,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_calls_before_arrow_in_method,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_METHOD_INVOCATION, METHOD_CALL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_calls_after_arrow_in_method,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_METHOD_INVOCATION, METHOD_CALL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_calls_before_coloncolon_in_method,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLONCOLON_IN_METHOD_INVOCATION,
 				METHOD_CALL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_calls_after_coloncolon_in_method,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_calls_after_coloncolon_in_method,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLONCOLON_IN_METHOD_INVOCATION,
 				METHOD_CALL_PREVIEW);
 		return root;
 	}
 
-	private static InnerNode createFieldAccessTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_fieldaccess);
+	private static InnerNode createFieldAccessTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_fieldaccess);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_fieldaccess_before_arrow_in_field_acecss,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_FIELD_ACCESS,
-				FIELD_ACCESS_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_fieldaccess_after_arrow_in_field_acecss,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_FIELD_ACCESS,
-				FIELD_ACCESS_PREVIEW);
-		createOption(
-				root,
-				workingValues,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_fieldaccess_before_arrow_in_field_acecss,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_FIELD_ACCESS, FIELD_ACCESS_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_fieldaccess_after_arrow_in_field_acecss,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_FIELD_ACCESS, FIELD_ACCESS_PREVIEW);
+		createOption(root, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_fieldaccess_before_coloncolon_in_field_acecss,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLONCOLON_IN_FIELD_ACCESS,
-				FIELD_ACCESS_PREVIEW);
-		createOption(
-				root,
-				workingValues,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLONCOLON_IN_FIELD_ACCESS, FIELD_ACCESS_PREVIEW);
+		createOption(root, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_fieldaccess_after_coloncolon_in_field_acecss,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLONCOLON_IN_FIELD_ACCESS,
-				FIELD_ACCESS_PREVIEW);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLONCOLON_IN_FIELD_ACCESS, FIELD_ACCESS_PREVIEW);
 		return root;
 	}
 
-	private static InnerNode createBlockTree(Map<String, Object> workingValues,
-			InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_blocks);
+	private static InnerNode createBlockTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_blocks);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_opening_brace,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_BLOCK,
-				BLOCK_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_closing_brace,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CLOSING_BRACE_IN_BLOCK,
-				CATCH_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_opening_brace,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_BLOCK, BLOCK_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_closing_brace,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CLOSING_BRACE_IN_BLOCK, CATCH_PREVIEW);
 		return root;
 	}
 
-	private static InnerNode createSwitchStatementTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_switch);
+	private static InnerNode createSwitchStatementTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_switch);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_switch_before_case_colon,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_CASE,
-				SWITCH_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_switch_before_default_colon,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_DEFAULT,
-				SWITCH_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_opening_brace,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_SWITCH,
-				SWITCH_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_opening_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_SWITCH,
-				SWITCH_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_SWITCH,
-				SWITCH_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_SWITCH,
-				SWITCH_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_switch_before_case_colon,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_CASE, SWITCH_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_switch_before_default_colon,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_DEFAULT, SWITCH_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_opening_brace,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_SWITCH, SWITCH_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_opening_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_SWITCH, SWITCH_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_SWITCH, SWITCH_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_SWITCH, SWITCH_PREVIEW);
 		return root;
 	}
 
-	private static InnerNode createDoWhileTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_do);
+	private static InnerNode createDoWhileTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_do);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_opening_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_WHILE,
-				WHILE_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_WHILE,
-				WHILE_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_WHILE,
-				WHILE_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_opening_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_WHILE, WHILE_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_WHILE, WHILE_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_WHILE, WHILE_PREVIEW);
 
 		return root;
 	}
 
-	private static InnerNode createTryStatementTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_try);
+	private static InnerNode createTryStatementTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_try);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_opening_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_CATCH,
-				CATCH_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_CATCH,
-				CATCH_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_CATCH,
-				CATCH_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_opening_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_CATCH, CATCH_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_CATCH, CATCH_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_CATCH, CATCH_PREVIEW);
 		return root;
 	}
 
-	private static InnerNode createStaticTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_static);
+	private static InnerNode createStaticTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_static);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_comma,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_STATIC,
-				STATIC_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_comma,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_STATIC,
-				STATIC_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_comma,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_STATIC, STATIC_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_comma,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_STATIC, STATIC_PREVIEW);
 		return root;
 	}
 
-	private static InnerNode createGlobalTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_global);
+	private static InnerNode createGlobalTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_global);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_comma,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_GLOBAL,
-				GLOBAL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_comma,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_GLOBAL,
-				GLOBAL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_comma,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_GLOBAL, GLOBAL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_comma,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_GLOBAL, GLOBAL_PREVIEW);
 		return root;
 	}
 
-	private static InnerNode createEchoTree(Map<String, Object> workingValues,
-			InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_echo);
+	private static InnerNode createEchoTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_echo);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_comma,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ECHO,
-				ECHO_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_comma,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ECHO,
-				ECHO_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_comma,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ECHO, ECHO_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_comma,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ECHO, ECHO_PREVIEW);
 		return root;
 	}
 
-	private static InnerNode createIfStatementTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_if);
+	private static InnerNode createIfStatementTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_if);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_opening_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_IF,
-				IF_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_IF,
-				IF_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_IF,
-				IF_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_opening_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_IF, IF_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_IF, IF_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_IF, IF_PREVIEW);
 		return root;
 	}
 
-	private static InnerNode createForStatementTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_for);
+	private static InnerNode createForStatementTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_for);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_opening_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_FOR,
-				FOR_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_FOR,
-				FOR_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_FOR,
-				FOR_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_for_before_comma,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_FOR,
-				FOR_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_for_after_comma,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_FOR,
-				FOR_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_semicolon,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_SEMICOLON_IN_FOR,
-				FOR_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_semicolon,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_SEMICOLON_IN_FOR,
-				FOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_opening_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_FOR, FOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_FOR, FOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_FOR, FOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_for_before_comma,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_FOR, FOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_for_after_comma,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_FOR, FOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_semicolon,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_SEMICOLON_IN_FOR, FOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_semicolon,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_SEMICOLON_IN_FOR, FOR_PREVIEW);
 
 		return root;
 	}
 
-	private static InnerNode createForeachStatementTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_foreach);
+	private static InnerNode createForeachStatementTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_foreach);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_opening_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_FOREACH,
-				FOREACH_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_FOREACH,
-				FOREACH_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_FOREACH,
-				FOREACH_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_foreach_before_arrow,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_FOREACH,
-				FOREACH_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_foreach_after_arrow,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_FOREACH,
-				FOREACH_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_opening_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_FOREACH, FOREACH_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_FOREACH, FOREACH_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_FOREACH, FOREACH_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_foreach_before_arrow,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_FOREACH, FOREACH_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_foreach_after_arrow,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_FOREACH, FOREACH_PREVIEW);
 
 		return root;
 	}
 
-	private static InnerNode createYieldStatementTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_yield);
+	private static InnerNode createYieldStatementTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_yield);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_yield_before_arrow,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_YIELD,
-				YIELD_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_yield_after_arrow,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_YIELD,
-				YIELD_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_yield_before_arrow,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_YIELD, YIELD_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_yield_after_arrow,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_YIELD, YIELD_PREVIEW);
 
 		return root;
 	}
 
-	private static InnerNode createConditionalTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_conditionals);
+	private static InnerNode createConditionalTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_conditionals);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_question,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_QUESTION_IN_CONDITIONAL,
-				CONDITIONAL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_question,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_QUESTION_IN_CONDITIONAL,
-				CONDITIONAL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_colon,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_CONDITIONAL,
-				CONDITIONAL_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_colon,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLON_IN_CONDITIONAL,
-				CONDITIONAL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_question,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_QUESTION_IN_CONDITIONAL, CONDITIONAL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_question,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_QUESTION_IN_CONDITIONAL, CONDITIONAL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_colon,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_CONDITIONAL, CONDITIONAL_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_colon,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLON_IN_CONDITIONAL, CONDITIONAL_PREVIEW);
 		return root;
 	}
 
-	private static InnerNode createParenthesisExpressionTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_parenexpr);
+	private static InnerNode createParenthesisExpressionTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_parenexpr);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_PARENTHESIZED_EXPRESSION,
 				PARENTHESIS_EXPRESSION_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_PARENTHESIZED_EXPRESSION,
 				PARENTHESIS_EXPRESSION_PREVIEW);
 		return root;
 	}
 
-	private static InnerNode createTypecastTree(
-			Map<String, Object> workingValues, InnerNode parent) {
-		final InnerNode root = new InnerNode(parent, workingValues,
-				FormatterMessages.WhiteSpaceTabPage_typecasts);
+	private static InnerNode createTypecastTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_typecasts);
 
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_CAST,
-				CAST_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_CAST,
-				CAST_PREVIEW);
-		createOption(
-				root,
-				workingValues,
-				FormatterMessages.WhiteSpaceTabPage_after_closing_paren,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CLOSING_PAREN_IN_CAST,
-				CAST_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_opening_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_CAST, CAST_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_CAST, CAST_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_closing_paren,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CLOSING_PAREN_IN_CAST, CAST_PREVIEW);
 		return root;
 	}
 
-	private static InnerNode createChild(InnerNode root,
-			Map<String, Object> workingValues, String message) {
+	private static InnerNode createChild(InnerNode root, Map<String, Object> workingValues, String message) {
 		return new InnerNode(root, workingValues, message);
 	}
 
-	private static OptionNode createOption(InnerNode root,
-			Map<String, Object> workingValues, String message, String key,
-			String snippet) {
+	private static OptionNode createOption(InnerNode root, Map<String, Object> workingValues, String message,
+			String key, String snippet) {
 		return new OptionNode(root, workingValues, message, key, snippet);
 	}
 

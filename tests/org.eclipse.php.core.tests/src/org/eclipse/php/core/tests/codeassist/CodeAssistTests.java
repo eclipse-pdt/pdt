@@ -55,36 +55,27 @@ public class CodeAssistTests {
 
 	@Parameters
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+
 	static {
 
-		TESTS.put(PHPVersion.PHP5, new String[] {
-				"/workspace/codeassist/php5/exclusive",
-				"/workspace/codeassist/php5",
+		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/codeassist/php5/exclusive", "/workspace/codeassist/php5",
 				"/workspace/codeassist/php5/classExclusive" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] {
-				"/workspace/codeassist/php5",
-				"/workspace/codeassist/php5/classExclusive",
-				"/workspace/codeassist/php53/exclusive",
-				"/workspace/codeassist/php53/classExclusive",
-				"/workspace/codeassist/php53" });
-		TESTS.put(PHPVersion.PHP5_4, new String[] {
-				"/workspace/codeassist/php5",
-				"/workspace/codeassist/php5/classExclusive",
-				"/workspace/codeassist/php53",
-				"/workspace/codeassist/php53/classExclusive",
-				"/workspace/codeassist/php54",
-				"/workspace/codeassist/php54/classExclusive" });
-		TESTS.put(PHPVersion.PHP5_5, new String[] {
-				"/workspace/codeassist/php5", "/workspace/codeassist/php53",
+		TESTS.put(PHPVersion.PHP5_3,
+				new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php5/classExclusive",
+						"/workspace/codeassist/php53/exclusive", "/workspace/codeassist/php53/classExclusive",
+						"/workspace/codeassist/php53" });
+		TESTS.put(PHPVersion.PHP5_4,
+				new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php5/classExclusive",
+						"/workspace/codeassist/php53", "/workspace/codeassist/php53/classExclusive",
+						"/workspace/codeassist/php54", "/workspace/codeassist/php54/classExclusive" });
+		TESTS.put(PHPVersion.PHP5_5, new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53",
 				"/workspace/codeassist/php54", "/workspace/codeassist/php55" });
-		TESTS.put(PHPVersion.PHP5_6, new String[] {
-				"/workspace/codeassist/php5", "/workspace/codeassist/php53",
-				"/workspace/codeassist/php54", "/workspace/codeassist/php55",
-				"/workspace/codeassist/php56" });
-		TESTS.put(PHPVersion.PHP7_0, new String[] {
-				"/workspace/codeassist/php5", "/workspace/codeassist/php53",
-				"/workspace/codeassist/php54", "/workspace/codeassist/php55",
-				"/workspace/codeassist/php56", "/workspace/codeassist/php7" });
+		TESTS.put(PHPVersion.PHP5_6, new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53",
+				"/workspace/codeassist/php54", "/workspace/codeassist/php55", "/workspace/codeassist/php56" });
+		TESTS.put(PHPVersion.PHP7_0,
+				new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53",
+						"/workspace/codeassist/php54", "/workspace/codeassist/php55", "/workspace/codeassist/php56",
+						"/workspace/codeassist/php7" });
 	};
 
 	protected IProject project;
@@ -98,8 +89,7 @@ public class CodeAssistTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject("CodeAssistTests_" + version.toString());
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject("CodeAssistTests_" + version.toString());
 		if (project.exists()) {
 			return;
 		}
@@ -114,8 +104,7 @@ public class CodeAssistTests {
 		PHPCoreTests.setProjectPhpVersion(project, version);
 
 		if (ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			ResourcesPlugin.getWorkspace().getDescription()
-					.setAutoBuilding(false);
+			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(false);
 		}
 	}
 
@@ -126,8 +115,7 @@ public class CodeAssistTests {
 		project = null;
 
 		if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-			ResourcesPlugin.getWorkspace().getDescription()
-					.setAutoBuilding(true);
+			ResourcesPlugin.getWorkspace().getDescription().setAutoBuilding(true);
 		}
 	}
 
@@ -135,8 +123,7 @@ public class CodeAssistTests {
 	public void assist(String fileName) throws Exception {
 		final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(fileName);
 		pdttFile.applyPreferences();
-		CompletionProposal[] proposals = getProposals(pdttFile.getFile(),
-				pdttFile.getOtherFiles());
+		CompletionProposal[] proposals = getProposals(pdttFile.getFile(), pdttFile.getOtherFiles());
 		compareProposals(proposals, pdttFile);
 	}
 
@@ -179,8 +166,7 @@ public class CodeAssistTests {
 		int i = 0;
 		for (String otherFileContent : otherFiles) {
 			IFile tmp = project.getFile(String.format("test%s.php", i));
-			tmp.create(new ByteArrayInputStream(otherFileContent.getBytes()),
-					true, null);
+			tmp.create(new ByteArrayInputStream(otherFileContent.getBytes()), true, null);
 			this.otherFiles.add(i, tmp);
 			i++;
 		}
@@ -198,8 +184,7 @@ public class CodeAssistTests {
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}
 
-	public CompletionProposal[] getProposals(String data, String[] otherFiles)
-			throws Exception {
+	public CompletionProposal[] getProposals(String data, String[] otherFiles) throws Exception {
 		int offset = createFile(data, otherFiles);
 		return getProposals(offset);
 	}
@@ -208,39 +193,33 @@ public class CodeAssistTests {
 		return getProposals(getSourceModule(), offset);
 	}
 
-	public static CompletionProposal[] getProposals(ISourceModule sourceModule,
-			int offset) throws ModelException {
+	public static CompletionProposal[] getProposals(ISourceModule sourceModule, int offset) throws ModelException {
 		final List<CompletionProposal> proposals = new LinkedList<CompletionProposal>();
 		sourceModule.codeComplete(offset, new CompletionRequestor() {
 			public void accept(CompletionProposal proposal) {
 				proposals.add(proposal);
 			}
 		});
-		return (CompletionProposal[]) proposals
-				.toArray(new CompletionProposal[proposals.size()]);
+		return (CompletionProposal[]) proposals.toArray(new CompletionProposal[proposals.size()]);
 	}
 
-	public static void compareProposals(CompletionProposal[] proposals,
-			CodeAssistPdttFile pdttFile) throws Exception {
+	public static void compareProposals(CompletionProposal[] proposals, CodeAssistPdttFile pdttFile) throws Exception {
 		ExpectedProposal[] expectedProposals = pdttFile.getExpectedProposals();
 
 		boolean proposalsEqual = true;
 		if (proposals.length == expectedProposals.length) {
-			for (ExpectedProposal expectedProposal : pdttFile
-					.getExpectedProposals()) {
+			for (ExpectedProposal expectedProposal : pdttFile.getExpectedProposals()) {
 				boolean found = false;
 				for (CompletionProposal proposal : proposals) {
 					IModelElement modelElement = proposal.getModelElement();
 					if (modelElement == null) {
-						if (new String(proposal.getName())
-								.equalsIgnoreCase(expectedProposal.name)) { // keyword
+						if (new String(proposal.getName()).equalsIgnoreCase(expectedProposal.name)) { // keyword
 							found = true;
 							break;
 						}
 					} else if (modelElement.getElementType() == expectedProposal.type) {
 						if (modelElement instanceof AliasType) {
-							if (((AliasType) modelElement).getAlias().equals(
-									expectedProposal.name)) {
+							if (((AliasType) modelElement).getAlias().equals(expectedProposal.name)) {
 
 								found = true;
 								break;
@@ -248,23 +227,20 @@ public class CodeAssistTests {
 
 						} else if ((modelElement instanceof FakeConstructor)
 								&& (modelElement.getParent() instanceof AliasType)) {
-							if (((AliasType) modelElement.getParent())
-									.getAlias().equals(expectedProposal.name)) {
+							if (((AliasType) modelElement.getParent()).getAlias().equals(expectedProposal.name)) {
 
 								found = true;
 								break;
 							}
 
 						} else {
-							if (modelElement.getElementName().equalsIgnoreCase(
-									expectedProposal.name)) {
+							if (modelElement.getElementName().equalsIgnoreCase(expectedProposal.name)) {
 								found = true;
 								break;
 							}
 						}
 					} else if (modelElement.getElementType() == expectedProposal.type
-							&& new String(proposal.getName())
-									.equalsIgnoreCase(expectedProposal.name)) {
+							&& new String(proposal.getName()).equalsIgnoreCase(expectedProposal.name)) {
 						// for phar include
 						found = true;
 						break;
@@ -286,10 +262,8 @@ public class CodeAssistTests {
 			errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
 			for (CompletionProposal p : proposals) {
 				IModelElement modelElement = p.getModelElement();
-				if (modelElement == null
-						|| modelElement.getElementName() == null) {
-					errorBuf.append("keyword(").append(p.getName())
-							.append(")\n");
+				if (modelElement == null || modelElement.getElementName() == null) {
+					errorBuf.append("keyword(").append(p.getName()).append(")\n");
 				} else {
 					switch (modelElement.getElementType()) {
 					case IModelElement.FIELD:
@@ -303,13 +277,9 @@ public class CodeAssistTests {
 						break;
 					}
 					if (modelElement instanceof AliasType) {
-						errorBuf.append('(')
-								.append(((AliasType) modelElement).getAlias())
-								.append(")\n");
+						errorBuf.append('(').append(((AliasType) modelElement).getAlias()).append(")\n");
 					} else {
-						errorBuf.append('(')
-								.append(modelElement.getElementName())
-								.append(")\n");
+						errorBuf.append('(').append(modelElement.getElementName()).append(")\n");
 					}
 				}
 			}

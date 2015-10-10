@@ -41,8 +41,7 @@ public class PHPSourcePreviewerUpdater {
 	 * @param preferenceStore
 	 *            the preference store
 	 */
-	public PHPSourcePreviewerUpdater(final SourceViewer viewer,
-			final SourceViewerConfiguration configuration,
+	public PHPSourcePreviewerUpdater(final SourceViewer viewer, final SourceViewerConfiguration configuration,
 			final IPreferenceStore preferenceStore) {
 		Assert.isNotNull(viewer);
 		Assert.isNotNull(configuration);
@@ -54,10 +53,8 @@ public class PHPSourcePreviewerUpdater {
 			 * (org.eclipse.jface.util.PropertyChangeEvent)
 			 */
 			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty().equals(
-						"org.eclipse.wst.sse.ui.textfont")) { //$NON-NLS-1$
-					Font font = JFaceResources
-							.getFont("org.eclipse.wst.sse.ui.textfont"); //$NON-NLS-1$
+				if (event.getProperty().equals("org.eclipse.wst.sse.ui.textfont")) { //$NON-NLS-1$
+					Font font = JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont"); //$NON-NLS-1$
 					viewer.getTextWidget().setFont(font);
 				}
 			}
@@ -82,10 +79,8 @@ public class PHPSourcePreviewerUpdater {
 			 * .swt.events.DisposeEvent)
 			 */
 			public void widgetDisposed(DisposeEvent e) {
-				preferenceStore
-						.removePropertyChangeListener(propertyChangeListener);
-				JFaceResources.getFontRegistry().removeListener(
-						fontChangeListener);
+				preferenceStore.removePropertyChangeListener(propertyChangeListener);
+				JFaceResources.getFontRegistry().removeListener(fontChangeListener);
 			}
 		});
 		JFaceResources.getFontRegistry().addListener(fontChangeListener);

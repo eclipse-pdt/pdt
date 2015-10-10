@@ -41,8 +41,7 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 	private final String fName;
 	private final String fFinderId;
 
-	public OccurrencesSearchQuery(IOccurrencesFinder finder,
-			ISourceModule element) {
+	public OccurrencesSearchQuery(IOccurrencesFinder finder, ISourceModule element) {
 		fFinder = finder;
 		fElement = element;
 		fJobLabel = fFinder.getJobLabel();
@@ -59,8 +58,7 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 	 */
 	public IStatus run(IProgressMonitor monitor) {
 		if (fFinder == null) {
-			return new StatusInfo(IStatus.ERROR,
-					org.eclipse.php.internal.ui.search.Messages.OccurrencesSearchQuery_0); 
+			return new StatusInfo(IStatus.ERROR, org.eclipse.php.internal.ui.search.Messages.OccurrencesSearchQuery_0);
 		}
 		if (monitor == null)
 			monitor = new NullProgressMonitor();
@@ -75,12 +73,10 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 				for (int i = 0; i < occurrences.length; i++) {
 					OccurrenceLocation loc = occurrences[i];
 
-					DLTKElementLine lineKey = getLineElement(astRoot, loc,
-							lineMap);
+					DLTKElementLine lineKey = getLineElement(astRoot, loc, lineMap);
 					if (lineKey != null) {
-						OccurrenceMatch match = new OccurrenceMatch(lineKey,
-								loc.getOffset(), loc.getLength(), loc
-										.getFlags());
+						OccurrenceMatch match = new OccurrenceMatch(lineKey, loc.getOffset(), loc.getLength(),
+								loc.getFlags());
 						resultingMatches.add(match);
 
 						// TODO see location flags for more information
@@ -90,8 +86,7 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 				}
 
 				if (!resultingMatches.isEmpty()) {
-					fResult.addMatches((Match[]) resultingMatches
-							.toArray(new Match[resultingMatches.size()]));
+					fResult.addMatches((Match[]) resultingMatches.toArray(new Match[resultingMatches.size()]));
 				}
 			}
 
@@ -103,8 +98,7 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 		return Status.OK_STATUS;
 	}
 
-	private DLTKElementLine getLineElement(Program astRoot,
-			OccurrenceLocation location, HashMap lineToGroup) {
+	private DLTKElementLine getLineElement(Program astRoot, OccurrenceLocation location, HashMap lineToGroup) {
 		int lineNumber = astRoot.getLineNumber(location.getOffset());
 		if (lineNumber <= 0) {
 			return null;
@@ -116,8 +110,7 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 			int lineStartOffset = astRoot.getPosition(lineNumber, 0);
 			if (lineStartOffset >= 0) {
 				// lineNumber - 1, FIXME - set the correct line content
-				lineElement = new DLTKElementLine(astRoot.getSourceModule(),
-						lineStartOffset, ""); //$NON-NLS-1$
+				lineElement = new DLTKElementLine(astRoot.getSourceModule(), lineStartOffset, ""); //$NON-NLS-1$
 				lineToGroup.put(key, lineElement);
 			}
 		}
@@ -133,11 +126,10 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 
 	public String getResultLabel(int nMatches) {
 		if (nMatches == 1) {
-			return Messages.format(fSingularLabel, new Object[] { fName,
-					fElement.getElementName() });
+			return Messages.format(fSingularLabel, new Object[] { fName, fElement.getElementName() });
 		} else {
-			return Messages.format(fPluralLabel, new Object[] { fName,
-					Integer.valueOf(nMatches), fElement.getElementName() });
+			return Messages.format(fPluralLabel,
+					new Object[] { fName, Integer.valueOf(nMatches), fElement.getElementName() });
 		}
 	}
 

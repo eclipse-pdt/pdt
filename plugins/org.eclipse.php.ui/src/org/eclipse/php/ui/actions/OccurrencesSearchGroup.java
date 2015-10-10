@@ -123,34 +123,34 @@ public class OccurrencesSearchGroup extends ActionGroup {
 		// fOccurrencesInFileAction.setActionDefinitionId(IJavaEditorActionDefinitionIds.SEARCH_OCCURRENCES_IN_FILE);
 		// // Need to reset the label
 		// fOccurrencesInFileAction.setText(SearchMessages.Search_FindOccurrencesInFile_shortLabel);
-		//		fEditor.setAction("SearchOccurrencesInFile", fOccurrencesInFileAction); //$NON-NLS-1$
+		// fEditor.setAction("SearchOccurrencesInFile",
+		// fOccurrencesInFileAction); //$NON-NLS-1$
 		//
 		// fExceptionOccurrencesAction= new
 		// FindExceptionOccurrencesAction(fEditor);
 		// fExceptionOccurrencesAction.setActionDefinitionId(IJavaEditorActionDefinitionIds.SEARCH_EXCEPTION_OCCURRENCES_IN_FILE);
-		//		fEditor.setAction("SearchExceptionOccurrences", fExceptionOccurrencesAction); //$NON-NLS-1$
+		// fEditor.setAction("SearchExceptionOccurrences",
+		// fExceptionOccurrencesAction); //$NON-NLS-1$
 		//
 		// fFindImplementorOccurrencesAction= new
 		// FindImplementOccurrencesAction(fEditor);
 		// fFindImplementorOccurrencesAction.setActionDefinitionId(IJavaEditorActionDefinitionIds.SEARCH_IMPLEMENT_OCCURRENCES_IN_FILE);
-		//		fEditor.setAction("SearchImplementOccurrences", fFindImplementorOccurrencesAction); //$NON-NLS-1$
+		// fEditor.setAction("SearchImplementOccurrences",
+		// fFindImplementorOccurrencesAction); //$NON-NLS-1$
 		//
 		// fBreakContinueTargetOccurrencesAction= new
 		// FindBreakContinueTargetOccurrencesAction(fEditor);
 		// fBreakContinueTargetOccurrencesAction.setActionDefinitionId(IJavaEditorActionDefinitionIds.SEARCH_BREAK_CONTINUE_TARGET_OCCURRENCES);
-		//		fEditor.setAction("BreakContinueTargetOccurrences", fBreakContinueTargetOccurrencesAction); //$NON-NLS-1$
+		// fEditor.setAction("BreakContinueTargetOccurrences",
+		// fBreakContinueTargetOccurrencesAction); //$NON-NLS-1$
 
-		fMethodExitOccurrencesAction = new FindMethodExitOccurrencesAction(
-				fEditor);
+		fMethodExitOccurrencesAction = new FindMethodExitOccurrencesAction(fEditor);
 		fMethodExitOccurrencesAction
 				.setActionDefinitionId(IPHPEditorActionDefinitionIds.SEARCH_METHOD_EXIT_OCCURRENCES);
-		fEditor
-				.setAction(
-						"ExitOccurrencesAction", fMethodExitOccurrencesAction); //$NON-NLS-1$
+		fEditor.setAction("ExitOccurrencesAction", fMethodExitOccurrencesAction); //$NON-NLS-1$
 	}
 
-	private void registerAction(SelectionDispatchAction action,
-			ISelectionProvider provider, ISelection selection) {
+	private void registerAction(SelectionDispatchAction action, ISelectionProvider provider, ISelection selection) {
 		action.update(selection);
 		provider.addSelectionChangedListener(action);
 	}
@@ -165,8 +165,7 @@ public class OccurrencesSearchGroup extends ActionGroup {
 			menuText = menuText + '\t' + shortcut;
 		}
 
-		MenuManager javaSearchMM = new MenuManager(menuText,
-				IContextMenuConstants.GROUP_SEARCH);
+		MenuManager javaSearchMM = new MenuManager(menuText, IContextMenuConstants.GROUP_SEARCH);
 		javaSearchMM.add(new Action() {
 		});
 		javaSearchMM.addMenuListener(new IMenuListener() {
@@ -179,13 +178,11 @@ public class OccurrencesSearchGroup extends ActionGroup {
 				addAction(fMethodExitOccurrencesAction, mm);
 				// addAction(fBreakContinueTargetOccurrencesAction, mm);
 				if (mm.isEmpty()) {
-					mm
-							.add(new Action(
-									"SearchMessages.group_occurrences_quickMenu_noEntriesAvailable") { //$NON-NLS-1$
-								public boolean isEnabled() {
-									return false;
-								}
-							});
+					mm.add(new Action("SearchMessages.group_occurrences_quickMenu_noEntriesAvailable") { //$NON-NLS-1$
+						public boolean isEnabled() {
+							return false;
+						}
+					});
 				}
 			}
 
@@ -205,12 +202,10 @@ public class OccurrencesSearchGroup extends ActionGroup {
 		if (element == null)
 			return;
 
-		ITextSelection textSelection = (ITextSelection) fEditor
-				.getSelectionProvider().getSelection();
-		IDocument document = DLTKUIPlugin.getDocumentProvider().getDocument(
-				fEditor.getEditorInput());
-		ModelTextSelection phpSelection = new ModelTextSelection(element,
-				document, textSelection.getOffset(), textSelection.getLength());
+		ITextSelection textSelection = (ITextSelection) fEditor.getSelectionProvider().getSelection();
+		IDocument document = DLTKUIPlugin.getDocumentProvider().getDocument(fEditor.getEditorInput());
+		ModelTextSelection phpSelection = new ModelTextSelection(element, document, textSelection.getOffset(),
+				textSelection.getLength());
 
 		// fExceptionOccurrencesAction.update(javaSelection);
 		// fOccurrencesInFileAction.update(javaSelection);
@@ -220,8 +215,7 @@ public class OccurrencesSearchGroup extends ActionGroup {
 	}
 
 	private String getShortcutString() {
-		IBindingService bindingService = (IBindingService) PlatformUI
-				.getWorkbench().getAdapter(IBindingService.class);
+		IBindingService bindingService = (IBindingService) PlatformUI.getWorkbench().getAdapter(IBindingService.class);
 		if (bindingService == null)
 			return null;
 		return bindingService
@@ -269,15 +263,13 @@ public class OccurrencesSearchGroup extends ActionGroup {
 			// fFindImplementorOccurrencesAction);
 			// fActionBars.setGlobalActionHandler(JdtActionConstants.FIND_BREAK_CONTINUE_TARGET_OCCURRENCES,
 			// fBreakContinueTargetOccurrencesAction);
-			fActionBars.setGlobalActionHandler(
-					PHPActionConstants.FIND_METHOD_EXIT_OCCURRENCES,
+			fActionBars.setGlobalActionHandler(PHPActionConstants.FIND_METHOD_EXIT_OCCURRENCES,
 					fMethodExitOccurrencesAction);
 
 		}
 	}
 
-	private void disposeAction(ISelectionChangedListener action,
-			ISelectionProvider provider) {
+	private void disposeAction(ISelectionChangedListener action, ISelectionProvider provider) {
 		if (action != null)
 			provider.removeSelectionChangedListener(action);
 	}

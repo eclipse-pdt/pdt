@@ -37,38 +37,30 @@ public class OldDebuggerWarningDialog extends Dialog {
 		getShell().setText(Messages.OldDebuggerWarningDialog_0);
 
 		Label label = new Label(composite, SWT.NONE);
-		label
-				.setText(Messages.OldDebuggerWarningDialog_1);
+		label.setText(Messages.OldDebuggerWarningDialog_1);
 
 		Link link = new Link(composite, SWT.NONE);
 		link.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		link
-				.setText(Messages.OldDebuggerWarningDialog_4);
+		link.setText(Messages.OldDebuggerWarningDialog_4);
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				try {
-					IWorkbenchBrowserSupport browserSupport = PlatformUI
-							.getWorkbench().getBrowserSupport();
+					IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
 					IWebBrowser browser = browserSupport.getExternalBrowser();
-					browser
-							.openURL(new URL(
-									"http://www.zend.com/en/products/studio/downloads")); //$NON-NLS-1$
+					browser.openURL(new URL("http://www.zend.com/en/products/studio/downloads")); //$NON-NLS-1$
 				} catch (Exception e) {
 				}
 			}
 		});
 		link = new Link(composite, SWT.NONE);
 		link.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		link
-				.setText(Messages.OldDebuggerWarningDialog_6);
+		link.setText(Messages.OldDebuggerWarningDialog_6);
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				try {
-					IWorkbenchBrowserSupport browserSupport = PlatformUI
-							.getWorkbench().getBrowserSupport();
+					IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
 					IWebBrowser browser = browserSupport.getExternalBrowser();
-					browser.openURL(new URL(
-							"http://www.zend.com/app-server/downloads")); //$NON-NLS-1$
+					browser.openURL(new URL("http://www.zend.com/app-server/downloads")); //$NON-NLS-1$
 				} catch (Exception e) {
 				}
 			}
@@ -78,8 +70,8 @@ public class OldDebuggerWarningDialog extends Dialog {
 		button.setText(Messages.OldDebuggerWarningDialog_9);
 		button.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				PHPDebugPlugin.getDefault().getPluginPreferences().setValue(
-						"DontShowOlderDebuggerWarning", button.getSelection()); //$NON-NLS-1$
+				PHPDebugPlugin.getDefault().getPluginPreferences().setValue("DontShowOlderDebuggerWarning", //$NON-NLS-1$
+						button.getSelection());
 			}
 		});
 
@@ -87,7 +79,6 @@ public class OldDebuggerWarningDialog extends Dialog {
 	}
 
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
-				true);
+		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 	}
 }

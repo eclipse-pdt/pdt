@@ -46,15 +46,13 @@ public class BreakpointSet {
 						File file = new File(path.toOSString());
 						fDirectories.add(file.getAbsolutePath());
 					} else if (element.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
-						IResource includeResource = ResourcesPlugin
-								.getWorkspace().getRoot().findMember(
-										element.getPath().lastSegment());
+						IResource includeResource = ResourcesPlugin.getWorkspace().getRoot()
+								.findMember(element.getPath().lastSegment());
 						if (includeResource instanceof IProject) {
 							fProjects.add((IProject) includeResource);
 						}
 					} else if (element.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-						IPath path = DLTKCore.getResolvedVariablePath(element
-								.getPath());
+						IPath path = DLTKCore.getResolvedVariablePath(element.getPath());
 						File file = path.toFile();
 						if (file != null) {
 							if (file.isDirectory()) {

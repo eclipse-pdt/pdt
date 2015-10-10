@@ -67,11 +67,9 @@ public class RenameSupport {
 	public IStatus preCheck() throws CoreException {
 		ensureChecked();
 		if (fPreCheckStatus.hasFatalError())
-			return fPreCheckStatus.getEntryMatchingSeverity(
-					RefactoringStatus.FATAL).toStatus();
+			return fPreCheckStatus.getEntryMatchingSeverity(RefactoringStatus.FATAL).toStatus();
 		else
-			return new Status(IStatus.OK, RefactoringUIPlugin.PLUGIN_ID, 0,
-					"", null); //$NON-NLS-1$
+			return new Status(IStatus.OK, RefactoringUIPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
 	}
 
 	/**
@@ -88,8 +86,7 @@ public class RenameSupport {
 			showInformation(parent, fPreCheckStatus);
 			return false;
 		}
-		UserInterfaceStarter starter = RenameUserInterfaceManager.getDefault()
-				.getStarter(fRefactoring);
+		UserInterfaceStarter starter = RenameUserInterfaceManager.getDefault().getStarter(fRefactoring);
 		return starter.activate(fRefactoring, parent, true);
 	}
 
@@ -115,8 +112,7 @@ public class RenameSupport {
 	 * @see IRunnableContext#run(boolean, boolean,
 	 *      org.eclipse.jface.operation.IRunnableWithProgress)
 	 */
-	public void perform(Shell parent, IRunnableContext context)
-			throws InterruptedException, InvocationTargetException {
+	public void perform(Shell parent, IRunnableContext context) throws InterruptedException, InvocationTargetException {
 		try {
 			ensureChecked();
 			if (fPreCheckStatus.hasFatalError()) {
@@ -128,10 +124,8 @@ public class RenameSupport {
 		}
 
 		// TODO: helpers here
-		RefactoringExecutionHelper helper = new RefactoringExecutionHelper(
-				fRefactoring,
-				RefactoringCore.getConditionCheckingFailedSeverity(), false,
-				parent, context);
+		RefactoringExecutionHelper helper = new RefactoringExecutionHelper(fRefactoring,
+				RefactoringCore.getConditionCheckingFailedSeverity(), false, parent, context);
 		helper.perform(false);
 	}
 
@@ -155,8 +149,7 @@ public class RenameSupport {
 	/** Flag indicating that the setter method is to be updated as well. */
 	public static final int UPDATE_SETTER_METHOD = 1 << 5;
 
-	private RenameSupport(AbstractRenameProcessor<?> processor, String newName,
-			int flags) throws CoreException {
+	private RenameSupport(AbstractRenameProcessor<?> processor, String newName, int flags) throws CoreException {
 		fRefactoring = new RenameRefactoring(processor);
 		initialize(fRefactoring, newName, flags);
 	}
@@ -179,60 +172,48 @@ public class RenameSupport {
 	 *             if an unexpected error occurred while creating the
 	 *             {@link RenameSupport}.
 	 */
-	public static RenameSupport create(IResource operatedFile, int element,
-			ASTNode locateNode, String newName, int flags) throws CoreException {
+	public static RenameSupport create(IResource operatedFile, int element, ASTNode locateNode, String newName,
+			int flags) throws CoreException {
 		AbstractRenameProcessor<?> processor = null;
 		if (operatedFile instanceof IContainer) {
 			processor = new RenameFolderProcessor((IContainer) operatedFile);
 		} else {
 			switch (element) {
 			case PhpElementConciliator.CONCILIATOR_GLOBAL_VARIABLE:
-				processor = new RenameGlobalVariableProcessor(
-						(IFile) operatedFile, locateNode);
+				processor = new RenameGlobalVariableProcessor((IFile) operatedFile, locateNode);
 				break;
 			case PhpElementConciliator.CONCILIATOR_FUNCTION:
-				processor = new RenameFunctionProcessor((IFile) operatedFile,
-						locateNode);
+				processor = new RenameFunctionProcessor((IFile) operatedFile, locateNode);
 				break;
 			case PhpElementConciliator.CONCILIATOR_LOCAL_VARIABLE:
-				processor = new RenameLocalVariableProcessor(
-						(IFile) operatedFile, locateNode);
+				processor = new RenameLocalVariableProcessor((IFile) operatedFile, locateNode);
 				break;
 			case PhpElementConciliator.CONCILIATOR_CLASSNAME:
-				processor = new RenameClassProcessor((IFile) operatedFile,
-						locateNode);
+				processor = new RenameClassProcessor((IFile) operatedFile, locateNode);
 				break;
 			case PhpElementConciliator.CONCILIATOR_TRAITNAME:
-				processor = new RenameTraitProcessor((IFile) operatedFile,
-						locateNode);
+				processor = new RenameTraitProcessor((IFile) operatedFile, locateNode);
 				break;
 			case PhpElementConciliator.CONCILIATOR_CONSTANT:
-				processor = new RenameGlobalConstantProcessor(
-						(IFile) operatedFile, locateNode);
+				processor = new RenameGlobalConstantProcessor((IFile) operatedFile, locateNode);
 				break;
 			case PhpElementConciliator.CONCILIATOR_CLASS_MEMBER:
-				processor = new RenameClassMemberProcessor(
-						(IFile) operatedFile, locateNode);
+				processor = new RenameClassMemberProcessor((IFile) operatedFile, locateNode);
 				break;
 			case PhpElementConciliator.CONCILIATOR_PROGRAM:
-				processor = new RenameFileProcessor(operatedFile,
-						(Program) locateNode);
+				processor = new RenameFileProcessor(operatedFile, (Program) locateNode);
 				break;
 			}
 		}
-		return processor == null ? null : new RenameSupport(processor, newName,
-				flags);
+		return processor == null ? null : new RenameSupport(processor, newName, flags);
 	}
 
-	private static void initialize(RenameRefactoring refactoring,
-			String newName, int flags) {
+	private static void initialize(RenameRefactoring refactoring, String newName, int flags) {
 		if (refactoring.getProcessor() == null)
 			return;
-		setNewName((INameUpdating) refactoring.getAdapter(INameUpdating.class),
-				newName);
+		setNewName((INameUpdating) refactoring.getAdapter(INameUpdating.class), newName);
 
-		ITextUpdating text = (ITextUpdating) refactoring
-				.getAdapter(ITextUpdating.class);
+		ITextUpdating text = (ITextUpdating) refactoring.getAdapter(ITextUpdating.class);
 		if (text != null) {
 			text.setUpdateTextualMatches(updateTextualMatches(flags));
 		}
@@ -252,8 +233,7 @@ public class RenameSupport {
 		if (fPreCheckStatus == null) {
 			if (!fRefactoring.isApplicable()) {
 				fPreCheckStatus = RefactoringStatus
-						.createFatalErrorStatus(PHPRefactoringUIMessages
-								.getString("RenameSupport_not_available")); //$NON-NLS-1$
+						.createFatalErrorStatus(PHPRefactoringUIMessages.getString("RenameSupport_not_available")); //$NON-NLS-1$
 			} else {
 				fPreCheckStatus = new RefactoringStatus();
 			}
@@ -261,10 +241,9 @@ public class RenameSupport {
 	}
 
 	private void showInformation(Shell parent, RefactoringStatus status) {
-		String message = status
-				.getMessageMatchingSeverity(RefactoringStatus.FATAL);
-		MessageDialog.openInformation(parent, PHPRefactoringUIMessages
-				.getString("RenameSupport_dialog_title"), message); //$NON-NLS-1$
+		String message = status.getMessageMatchingSeverity(RefactoringStatus.FATAL);
+		MessageDialog.openInformation(parent, PHPRefactoringUIMessages.getString("RenameSupport_dialog_title"), //$NON-NLS-1$
+				message);
 	}
 
 }

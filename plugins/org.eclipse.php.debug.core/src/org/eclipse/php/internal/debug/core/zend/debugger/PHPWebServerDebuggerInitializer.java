@@ -37,7 +37,8 @@ import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
  * <ul>
  * <li>Open an internal Web browser that will issue a request to the debug
  * server</li>
- * <li>Use URL connection to send the request to the the debug server directly</li>
+ * <li>Use URL connection to send the request to the the debug server directly
+ * </li>
  * </ul>
  */
 @SuppressWarnings("restriction")
@@ -54,8 +55,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 		}
 		boolean openInBrowser = false;
 		try {
-			openInBrowser = launch.getLaunchConfiguration().getAttribute(
-					IPHPDebugConstants.OPEN_IN_BROWSER, false);
+			openInBrowser = launch.getLaunchConfiguration().getAttribute(IPHPDebugConstants.OPEN_IN_BROWSER, false);
 		} catch (CoreException e) {
 			// Should not happened
 		}
@@ -79,22 +79,18 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 	 * @param parametersInitializer
 	 * @throws DebugException
 	 */
-	protected void openBrowser(ILaunch launch,
-			IDebugParametersInitializer parametersInitializer)
+	protected void openBrowser(ILaunch launch, IDebugParametersInitializer parametersInitializer)
 			throws DebugException {
 		boolean runWithDebug = true;
 		try {
-			runWithDebug = launch.getLaunchConfiguration().getAttribute(
-					IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
+			runWithDebug = launch.getLaunchConfiguration().getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
 		} catch (CoreException e) {
 			// Should not happen
 		}
 		URL requestURL = parametersInitializer.getRequestURL(launch);
 		String launchURL = requestURL.toString();
-		if (runWithDebug
-				&& !ILaunchManager.RUN_MODE.equals(launch.getLaunchMode())) {
-			String query = PHPLaunchUtilities.generateQuery(launch,
-					parametersInitializer);
+		if (runWithDebug && !ILaunchManager.RUN_MODE.equals(launch.getLaunchMode())) {
+			String query = PHPLaunchUtilities.generateQuery(launch, parametersInitializer);
 			if (launchURL.indexOf('?') == -1) {
 				launchURL = launchURL + '?' + query;
 			} else {
@@ -111,8 +107,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 	 * @param parametersInitializer
 	 * @throws DebugException
 	 */
-	protected void openUrlConnection(ILaunch launch,
-			IDebugParametersInitializer parametersInitializer)
+	protected void openUrlConnection(ILaunch launch, IDebugParametersInitializer parametersInitializer)
 			throws DebugException {
 		URL requestURL = parametersInitializer.getRequestURL(launch);
 		try {
@@ -121,15 +116,13 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 				IWebDebugParametersInitializer webParametersInitializer = (IWebDebugParametersInitializer) parametersInitializer;
 				StringBuilder getParams = new StringBuilder("?"); //$NON-NLS-1$
 				// Initialize debug parameters (using cookies):
-				Hashtable<String, String> debugParameters = parametersInitializer
-						.getDebugParameters(launch);
+				Hashtable<String, String> debugParameters = parametersInitializer.getDebugParameters(launch);
 				if (debugParameters != null) {
 					Enumeration<String> k = debugParameters.keys();
 					while (k.hasMoreElements()) {
 						String key = k.nextElement();
 						String value = debugParameters.get(key);
-						getParams.append(URLEncoder.encode(key, URL_ENCODING))
-								.append('=')
+						getParams.append(URLEncoder.encode(key, URL_ENCODING)).append('=')
 								.append(URLEncoder.encode(value, URL_ENCODING));
 						if (k.hasMoreElements()) {
 							getParams.append('&');
@@ -137,29 +130,21 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 					}
 				}
 				// Initialize with additional GET parameters
-				String requestMethod = webParametersInitializer
-						.getRequestMethod(launch);
-				if (IWebDebugParametersInitializer.GET_METHOD
-						.equals(requestMethod)) {
-					Hashtable<String, String> requestParameters = webParametersInitializer
-							.getRequestParameters(launch);
+				String requestMethod = webParametersInitializer.getRequestMethod(launch);
+				if (IWebDebugParametersInitializer.GET_METHOD.equals(requestMethod)) {
+					Hashtable<String, String> requestParameters = webParametersInitializer.getRequestParameters(launch);
 					if (requestParameters != null) {
 						Enumeration<String> k = requestParameters.keys();
 						while (k.hasMoreElements()) {
 							String key = k.nextElement();
 							String value = requestParameters.get(key);
 							getParams.append('&');
-							getParams
-									.append(URLEncoder
-											.encode(key, URL_ENCODING))
-									.append('=')
-									.append(URLEncoder.encode(value,
-											URL_ENCODING));
+							getParams.append(URLEncoder.encode(key, URL_ENCODING)).append('=')
+									.append(URLEncoder.encode(value, URL_ENCODING));
 						}
 					}
 				}
-				requestURL = new URL(requestURL.getProtocol(),
-						requestURL.getHost(), requestURL.getPort(),
+				requestURL = new URL(requestURL.getProtocol(), requestURL.getHost(), requestURL.getPort(),
 						requestURL.getPath() + getParams.toString());
 
 				// Open the connection:
@@ -167,22 +152,19 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 					System.out.println("Opening URL connection: " //$NON-NLS-1$
 							+ requestURL.toString());
 				}
-				HttpURLConnection urlConection = (HttpURLConnection) requestURL
-						.openConnection();
+				HttpURLConnection urlConection = (HttpURLConnection) requestURL.openConnection();
 				urlConection.setDoInput(true);
 				urlConection.setDoOutput(true);
 				if (requestMethod != null) {
 					urlConection.setRequestMethod(requestMethod);
 				}
 				// Add additional headers
-				Hashtable<String, String> headers = webParametersInitializer
-						.getRequestHeaders(launch);
+				Hashtable<String, String> headers = webParametersInitializer.getRequestHeaders(launch);
 				if (headers != null) {
 					Enumeration<String> k = headers.keys();
 					while (k.hasMoreElements()) {
 						String key = k.nextElement();
-						String value = URLEncoder.encode(headers.get(key),
-								URL_ENCODING);
+						String value = URLEncoder.encode(headers.get(key), URL_ENCODING);
 						if (PHPDebugPlugin.DEBUG) {
 							System.out.println("Adding HTTP header: " + key //$NON-NLS-1$
 									+ "=" + value); //$NON-NLS-1$
@@ -191,16 +173,14 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 					}
 				}
 				// Set cookies
-				Hashtable<String, String> cookies = webParametersInitializer
-						.getRequestCookies(launch);
+				Hashtable<String, String> cookies = webParametersInitializer.getRequestCookies(launch);
 				if (cookies != null) {
 					StringBuilder cookieBuf = new StringBuilder();
 					Enumeration<String> k = cookies.keys();
 					while (k.hasMoreElements()) {
 						String key = k.nextElement();
 						String value = cookies.get(key);
-						cookieBuf.append(URLEncoder.encode(key, URL_ENCODING))
-								.append('=')
+						cookieBuf.append(URLEncoder.encode(key, URL_ENCODING)).append('=')
 								.append(URLEncoder.encode(value, URL_ENCODING));
 						if (k.hasMoreElements()) {
 							cookieBuf.append("; "); //$NON-NLS-1$
@@ -213,8 +193,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 					urlConection.addRequestProperty("Cookie", //$NON-NLS-1$
 							cookieBuf.toString());
 				}
-				DataOutputStream outputStream = new DataOutputStream(
-						urlConection.getOutputStream());
+				DataOutputStream outputStream = new DataOutputStream(urlConection.getOutputStream());
 				try {
 					// Initialize with additional POST parameters
 					if (requestMethod == IWebDebugParametersInitializer.POST_METHOD) {
@@ -226,12 +205,8 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 							while (k.hasMoreElements()) {
 								String key = k.nextElement();
 								String value = requestParameters.get(key);
-								postParams
-										.append(URLEncoder.encode(key,
-												URL_ENCODING))
-										.append('=')
-										.append(URLEncoder.encode(value,
-												URL_ENCODING));
+								postParams.append(URLEncoder.encode(key, URL_ENCODING)).append('=')
+										.append(URLEncoder.encode(value, URL_ENCODING));
 								if (k.hasMoreElements()) {
 									postParams.append('&');
 								}
@@ -240,8 +215,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 						}
 					}
 					// Add raw data
-					String rawData = webParametersInitializer
-							.getRequestRawData(launch);
+					String rawData = webParametersInitializer.getRequestRawData(launch);
 					if (rawData != null) {
 						outputStream.writeBytes(rawData);
 					}
@@ -251,28 +225,21 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 				}
 				String headerKey = urlConection.getHeaderFieldKey(1);
 				if (headerKey == null) {
-					Logger.log(Logger.WARNING,
-							"No HeaderKey returned by server. Most likely not started"); //$NON-NLS-1$
+					Logger.log(Logger.WARNING, "No HeaderKey returned by server. Most likely not started"); //$NON-NLS-1$
 					String errorMessage = PHPDebugCoreMessages.DebuggerConnection_Problem_1;
-					throw new DebugException(new Status(IStatus.ERROR,
-							PHPDebugPlugin.getID(),
-							IPHPDebugConstants.INTERNAL_ERROR, errorMessage,
-							null));
+					throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(),
+							IPHPDebugConstants.INTERNAL_ERROR, errorMessage, null));
 				}
 				for (int i = 1; (headerKey = urlConection.getHeaderFieldKey(i)) != null; i++) {
 					if (headerKey.equals("X-Zend-Debug-Server")) { //$NON-NLS-1$
-						String headerValue = urlConection
-								.getHeaderField(headerKey);
+						String headerValue = urlConection.getHeaderField(headerKey);
 						if (!headerValue.equals("OK")) { //$NON-NLS-1$
-							Logger.log(Logger.WARNING,
-									"Unexpected Header Value returned by Server. " //$NON-NLS-1$
-											+ headerValue);
-							String errorMessage = PHPDebugCoreMessages.DebuggerConnection_Problem_2
-									+ " - " + headerValue; //$NON-NLS-1$
-							throw new DebugException(new Status(IStatus.ERROR,
-									PHPDebugPlugin.getID(),
-									IPHPDebugConstants.INTERNAL_ERROR,
-									errorMessage, null));
+							Logger.log(Logger.WARNING, "Unexpected Header Value returned by Server. " //$NON-NLS-1$
+									+ headerValue);
+							String errorMessage = PHPDebugCoreMessages.DebuggerConnection_Problem_2 + " - " //$NON-NLS-1$
+									+ headerValue;
+							throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(),
+									IPHPDebugConstants.INTERNAL_ERROR, errorMessage, null));
 						}
 						break;
 					}
@@ -284,35 +251,27 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 				inputStream.close();
 			}
 		} catch (UnknownHostException e) {
-			String errorMessage = PHPDebugCoreMessages.DebuggerConnection_Problem_4
-					+ requestURL.getHost();
+			String errorMessage = PHPDebugCoreMessages.DebuggerConnection_Problem_4 + requestURL.getHost();
 			Logger.logException(errorMessage, e);
-			throw new DebugException(new Status(IStatus.ERROR,
-					PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR,
-					errorMessage, e));
+			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(),
+					IPHPDebugConstants.INTERNAL_ERROR, errorMessage, e));
 		} catch (ConnectException e) {
 			String errorMessage = PHPDebugCoreMessages.DebuggerConnection_Problem_5
-					+ requestURL.toString().substring(0,
-							requestURL.toString().indexOf('?'));
+					+ requestURL.toString().substring(0, requestURL.toString().indexOf('?'));
 			Logger.logException(errorMessage, e);
-			throw new DebugException(new Status(IStatus.ERROR,
-					PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR,
-					errorMessage, e));
+			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(),
+					IPHPDebugConstants.INTERNAL_ERROR, errorMessage, e));
 		} catch (IOException e) {
 			String errorMessage = PHPDebugCoreMessages.DebuggerConnection_Problem_5
-					+ requestURL.toString().substring(0,
-							requestURL.toString().indexOf('?'));
+					+ requestURL.toString().substring(0, requestURL.toString().indexOf('?'));
 			Logger.logException(errorMessage, e);
-			throw new DebugException(new Status(IStatus.ERROR,
-					PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR,
-					errorMessage, e));
+			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(),
+					IPHPDebugConstants.INTERNAL_ERROR, errorMessage, e));
 		} catch (Exception e) {
-			Logger.logException(
-					"Unexpected exception communicating with Web server", e); //$NON-NLS-1$
+			Logger.logException("Unexpected exception communicating with Web server", e); //$NON-NLS-1$
 			String errorMessage = e.getMessage();
-			throw new DebugException(new Status(IStatus.ERROR,
-					PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR,
-					errorMessage, e));
+			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(),
+					IPHPDebugConstants.INTERNAL_ERROR, errorMessage, e));
 		}
 	}
 

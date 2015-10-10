@@ -70,8 +70,7 @@ public class TemplateSet {
 	 * @see #addFromStream(InputStream, boolean)
 	 * @throws CoreException
 	 */
-	public void addFromFile(File file, boolean allowDuplicates)
-			throws CoreException {
+	public void addFromFile(File file, boolean allowDuplicates) throws CoreException {
 		InputStream stream = null;
 
 		try {
@@ -102,11 +101,9 @@ public class TemplateSet {
 	 * @param allowDuplicates
 	 * @throws CoreException
 	 */
-	public void addFromStream(InputStream stream, boolean allowDuplicates)
-			throws CoreException {
+	public void addFromStream(InputStream stream, boolean allowDuplicates) throws CoreException {
 		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder parser = factory.newDocumentBuilder();
 			Document document = parser.parse(new InputSource(stream));
 
@@ -121,17 +118,14 @@ public class TemplateSet {
 					continue;
 
 				String name = getAttributeValue(attributes, NAME_ATTRIBUTE);
-				String description = getAttributeValue(attributes,
-						DESCRIPTION_ATTRIBUTE);
+				String description = getAttributeValue(attributes, DESCRIPTION_ATTRIBUTE);
 				if (name == null || description == null)
 					continue;
 
-				String context = getAttributeValue(attributes,
-						CONTEXT_ATTRIBUTE);
+				String context = getAttributeValue(attributes, CONTEXT_ATTRIBUTE);
 
 				if (context == null)
-					throw new SAXException(
-							PhpTemplateMessages.TemplateSet_error_missing_attribute);
+					throw new SAXException(PhpTemplateMessages.TemplateSet_error_missing_attribute);
 
 				StringBuffer buffer = new StringBuffer();
 				NodeList children = node.getChildNodes();
@@ -142,8 +136,7 @@ public class TemplateSet {
 				}
 				String pattern = buffer.toString().trim();
 
-				Template template = new Template(name, description, context,
-						pattern, true);
+				Template template = new Template(name, description, context, pattern, true);
 
 				String message = validateTemplate(template);
 				if (message == null) {
@@ -168,10 +161,9 @@ public class TemplateSet {
 	}
 
 	protected String validateTemplate(Template template) {
-		TemplateContextType type = fRegistry.getContextType(template
-				.getContextTypeId());
+		TemplateContextType type = fRegistry.getContextType(template.getContextTypeId());
 		if (type == null) {
-			return PhpTemplateMessages.TemplateSet_3 + template.getContextTypeId(); 
+			return PhpTemplateMessages.TemplateSet_3 + template.getContextTypeId();
 		}
 		try {
 			type.validate(template.getPattern());
@@ -226,8 +218,7 @@ public class TemplateSet {
 	 */
 	public void saveToStream(OutputStream stream) throws CoreException {
 		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.newDocument();
 
@@ -246,8 +237,7 @@ public class TemplateSet {
 				name.setValue(template.getName());
 				attributes.setNamedItem(name);
 
-				Attr description = document
-						.createAttribute(DESCRIPTION_ATTRIBUTE);
+				Attr description = document.createAttribute(DESCRIPTION_ATTRIBUTE);
 				description.setValue(template.getDescription());
 				attributes.setNamedItem(description);
 
@@ -259,8 +249,7 @@ public class TemplateSet {
 				node.appendChild(pattern);
 			}
 
-			Transformer transformer = TransformerFactory.newInstance()
-					.newTransformer();
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
 			transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
 			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); //$NON-NLS-1$
 			DOMSource source = new DOMSource(document);
@@ -281,23 +270,20 @@ public class TemplateSet {
 			code = TEMPLATE_PARSE_EXCEPTION;
 		else
 			code = TEMPLATE_IO_EXCEPTION;
-		//		IStatus status= JavaUIStatus.createError(code, TemplateMessages.getString("TemplateSet.error.read"), t); 
+		// IStatus status= JavaUIStatus.createError(code,
+		// TemplateMessages.getString("TemplateSet.error.read"), t);
 		// throw new JavaUIException(status);
-		throw new CoreException(
-				new Status(
-						IStatus.ERROR,
-						"org.eclipse.jface.text", code, PhpTemplateMessages.TemplateSet_error_read, t)); //$NON-NLS-1$
+		throw new CoreException(new Status(IStatus.ERROR, "org.eclipse.jface.text", code, //$NON-NLS-1$
+				PhpTemplateMessages.TemplateSet_error_read, t));
 	}
 
 	private static void throwWriteException(Throwable t) throws CoreException {
 		// IStatus status=
 		// JavaUIStatus.createError(IJavaStatusConstants.TEMPLATE_IO_EXCEPTION,
-		//			TemplateMessages.getString("TemplateSet.error.write"), t); 
+		// TemplateMessages.getString("TemplateSet.error.write"), t);
 		// throw new JavaUIException(status);
-		throw new CoreException(
-				new Status(
-						IStatus.ERROR,
-						"org.eclipse.jface.text", TEMPLATE_IO_EXCEPTION, PhpTemplateMessages.TemplateSet_error_write, t)); //$NON-NLS-1$
+		throw new CoreException(new Status(IStatus.ERROR, "org.eclipse.jface.text", TEMPLATE_IO_EXCEPTION, //$NON-NLS-1$
+				PhpTemplateMessages.TemplateSet_error_write, t));
 	}
 
 	/**

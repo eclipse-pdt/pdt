@@ -21,8 +21,7 @@ import org.eclipse.php.internal.core.format.IContentFormatter2;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
 
 @Deprecated
-public class PHPCodeFormatterProxy implements IContentFormatter,
-		IContentFormatter2, IFormatterProcessorFactory {
+public class PHPCodeFormatterProxy implements IContentFormatter, IContentFormatter2, IFormatterProcessorFactory {
 
 	private PHPCodeFormatter formatter = new PHPCodeFormatter();
 
@@ -35,11 +34,9 @@ public class PHPCodeFormatterProxy implements IContentFormatter,
 		return formatter.getFormattingStrategy(contentType);
 	}
 
-	public ICodeFormattingProcessor getCodeFormattingProcessor(
-			IDocument document, PHPVersion phpVersion, boolean useShortTags,
-			IRegion region) throws Exception {
-		return formatter.getCodeFormattingProcessor(document, phpVersion,
-				useShortTags, region);
+	public ICodeFormattingProcessor getCodeFormattingProcessor(IDocument document, PHPVersion phpVersion,
+			boolean useShortTags, IRegion region) throws Exception {
+		return formatter.getCodeFormattingProcessor(document, phpVersion, useShortTags, region);
 	}
 
 	public void setDefaultProject(IProject project) {
@@ -50,8 +47,7 @@ public class PHPCodeFormatterProxy implements IContentFormatter,
 		formatter.setIsPasting(isPasting);
 	}
 
-	public void format(IDocument document, IRegion region,
-			PHPVersion phpVersion) {
+	public void format(IDocument document, IRegion region, PHPVersion phpVersion) {
 		formatter.format(document, region, phpVersion);
 	}
 

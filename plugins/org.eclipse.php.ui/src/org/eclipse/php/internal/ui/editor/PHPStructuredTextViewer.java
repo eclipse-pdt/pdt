@@ -104,35 +104,27 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 	private ContentAssistantFacade fContentAssistantFacade;
 
-	public PHPStructuredTextViewer(Composite parent,
-			IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
+	public PHPStructuredTextViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
 			boolean showAnnotationsOverview, int styles) {
-		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview,
-				styles);
+		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
 	}
 
-	public PHPStructuredTextViewer(ITextEditor textEditor, Composite parent,
-			IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
-			boolean showAnnotationsOverview, int styles) {
-		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview,
-				styles);
+	public PHPStructuredTextViewer(ITextEditor textEditor, Composite parent, IVerticalRuler verticalRuler,
+			IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
+		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
 		this.fTextEditor = textEditor;
 		if (fTextEditor instanceof PHPStructuredEditor) {
 			PHPStructuredEditor phpEditor = (PHPStructuredEditor) fTextEditor;
 			phpEditor.addReconcileListener(new IPhpScriptReconcilingListener() {
 
 				@Override
-				public void reconciled(Program program, boolean forced,
-						IProgressMonitor progressMonitor) {
+				public void reconciled(Program program, boolean forced, IProgressMonitor progressMonitor) {
 					if (fPostSelectionLength != -1) {
 						Display.getDefault().syncExec(new Runnable() {
 							public void run() {
 								synchronized (PHPStructuredTextViewer.this) {
-									if (fPostSelectionOffset >= 0
-											&& fPostSelectionLength >= 0) {
-										firePostSelectionChanged(
-												fPostSelectionOffset,
-												fPostSelectionLength);
+									if (fPostSelectionOffset >= 0 && fPostSelectionLength >= 0) {
+										firePostSelectionChanged(fPostSelectionOffset, fPostSelectionLength);
 									}
 								}
 							}
@@ -169,8 +161,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			try {
 				setRedraw(false);
 				// begin recording
-				beginRecording(FORMAT_DOCUMENT_TEXT, FORMAT_DOCUMENT_TEXT,
-						cursorPosition, selectionLength);
+				beginRecording(FORMAT_DOCUMENT_TEXT, FORMAT_DOCUMENT_TEXT, cursorPosition, selectionLength);
 
 				// format the whole document !
 				IRegion region;
@@ -182,11 +173,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 				if (fContentFormatter instanceof IContentFormatterExtension) {
 					IContentFormatterExtension extension = (IContentFormatterExtension) fContentFormatter;
 					IFormattingContext context = new FormattingContext();
-					context.setProperty(
-							FormattingContextProperties.CONTEXT_DOCUMENT,
-							Boolean.TRUE);
-					context.setProperty(
-							FormattingContextProperties.CONTEXT_REGION, region);
+					context.setProperty(FormattingContextProperties.CONTEXT_DOCUMENT, Boolean.TRUE);
+					context.setProperty(FormattingContextProperties.CONTEXT_REGION, region);
 					extension.format(getDocument(), context);
 				} else {
 					fContentFormatter.format(getDocument(), region);
@@ -218,34 +206,28 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 					// get the "real" offset - adjusted according to the
 					// projection
 					int selectionOffset = getSelectedRange().x;
-					IStructuredDocumentRegion sdRegion = sDoc
-							.getRegionAtCharacterOffset(selectionOffset);
+					IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selectionOffset);
 					if (sdRegion == null) {
 						super.doOperation(operation);
 						return;
 					}
-					ITextRegion textRegion = sdRegion
-							.getRegionAtCharacterOffset(selectionOffset);
+					ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selectionOffset);
 					if (textRegion instanceof ForeignRegion) {
 						ForeignRegion foreignRegion = (ForeignRegion) textRegion;
 						isJavaScriptRegion = "script" //$NON-NLS-1$
-						.equalsIgnoreCase(foreignRegion.getSurroundingTag());
+								.equalsIgnoreCase(foreignRegion.getSurroundingTag());
 					}
 
 					// Check if the containing project has JS nature or not
 					if (fTextEditor instanceof PHPStructuredEditor) {
 						PHPStructuredEditor phpEditor = (PHPStructuredEditor) fTextEditor;
-						IModelElement modelElement = phpEditor
-								.getModelElement();
+						IModelElement modelElement = phpEditor.getModelElement();
 
 						if (modelElement != null) {
-							IScriptProject scriptProject = modelElement
-									.getScriptProject();
+							IScriptProject scriptProject = modelElement.getScriptProject();
 							project = scriptProject.getProject();
-							if (project != null
-									&& project.isAccessible()
-									&& project
-											.getNature(JavaScriptCore.NATURE_ID) == null) {
+							if (project != null && project.isAccessible()
+									&& project.getNature(JavaScriptCore.NATURE_ID) == null) {
 								hasJavaScriptNature = false;
 							}
 						}
@@ -253,25 +235,19 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 					// open dialog if required
 					if (isJavaScriptRegion && !hasJavaScriptNature) {
-						Shell activeWorkbenchShell = PHPUiPlugin
-								.getActiveWorkbenchShell();
+						Shell activeWorkbenchShell = PHPUiPlugin.getActiveWorkbenchShell();
 						// Pop a question dialog - if the user selects 'Yes' JS
 						// Support is added, otherwise no change
-						int addJavaScriptSupport = OptionalMessageDialog.open(
-								"PROMPT_ADD_JAVASCRIPT_SUPPORT",//$NON-NLS-1$
-								activeWorkbenchShell,
-								PHPUIMessages.PHPStructuredTextViewer_0, null,
-								PHPUIMessages.PHPStructuredTextViewer_1,
-								OptionalMessageDialog.QUESTION, new String[] {
-										IDialogConstants.YES_LABEL,
-										IDialogConstants.NO_LABEL }, 0); //$NON-NLS-1$
+						int addJavaScriptSupport = OptionalMessageDialog.open("PROMPT_ADD_JAVASCRIPT_SUPPORT", //$NON-NLS-1$
+								activeWorkbenchShell, PHPUIMessages.PHPStructuredTextViewer_0, null,
+								PHPUIMessages.PHPStructuredTextViewer_1, OptionalMessageDialog.QUESTION,
+								new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0); // $NON-NLS-1$
 
 						// run the JSDT action for adding the JS nature
 						if (addJavaScriptSupport == 0 && project != null) {
 							SetupProjectsWizzard wiz = new SetupProjectsWizzard();
 							wiz.setActivePart(null, this.getTextEditor());
-							wiz.selectionChanged(null, new StructuredSelection(
-									project));
+							wiz.selectionChanged(null, new StructuredSelection(project));
 							wiz.run(null);
 						}
 						return;
@@ -286,9 +262,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			// an explicit request
 			if (fViewerConfiguration != null) {
 				PHPStructuredTextViewerConfiguration structuredTextViewerConfiguration = (PHPStructuredTextViewerConfiguration) fViewerConfiguration;
-				IContentAssistProcessor[] all = structuredTextViewerConfiguration
-						.getContentAssistProcessors(this,
-								PHPPartitionTypes.PHP_DEFAULT);
+				IContentAssistProcessor[] all = structuredTextViewerConfiguration.getContentAssistProcessors(this,
+						PHPPartitionTypes.PHP_DEFAULT);
 				for (IContentAssistProcessor element : all) {
 					if (element instanceof PHPCompletionProcessor) {
 						((PHPCompletionProcessor) element).setExplicit(true);
@@ -319,9 +294,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 				try {
 					textSelection = (ITextSelection) getSelection();
 					int length = textSelection.getLength();
-					if (!textWidget.getBlockSelection()
-							&& (length == 0 || length == textWidget
-									.getSelectionRange().y))
+					if (!textWidget.getBlockSelection() && (length == 0 || length == textWidget.getSelectionRange().y))
 						getTextWidget().invokeAction(ST.DELETE_NEXT);
 					else
 						deleteSelection(textSelection, textWidget);
@@ -356,8 +329,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 *             on document access failure
 	 * @since 3.5
 	 */
-	private void deleteSelection(ITextSelection selection, StyledText textWidget)
-			throws BadLocationException {
+	private void deleteSelection(ITextSelection selection, StyledText textWidget) throws BadLocationException {
 		new SelectionProcessor(this).doDelete(selection);
 	}
 
@@ -377,15 +349,12 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		return super.canDoOperation(operation);
 	}
 
-	private void beginRecording(String label, String description,
-			int cursorPosition, int selectionLength) {
+	private void beginRecording(String label, String description, int cursorPosition, int selectionLength) {
 		IDocument doc = getDocument();
 		if (doc instanceof IStructuredDocument) {
 			IStructuredDocument structuredDocument = (IStructuredDocument) doc;
-			IStructuredTextUndoManager undoManager = structuredDocument
-					.getUndoManager();
-			undoManager.beginRecording(this, label, description,
-					cursorPosition, selectionLength);
+			IStructuredTextUndoManager undoManager = structuredDocument.getUndoManager();
+			undoManager.beginRecording(this, label, description, cursorPosition, selectionLength);
 		} else {
 			// TODO: how to handle other document types?
 		}
@@ -395,8 +364,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		IDocument doc = getDocument();
 		if (doc instanceof IStructuredDocument) {
 			IStructuredDocument structuredDocument = (IStructuredDocument) doc;
-			IStructuredTextUndoManager undoManager = structuredDocument
-					.getUndoManager();
+			IStructuredTextUndoManager undoManager = structuredDocument.getUndoManager();
 			undoManager.endRecording(this, cursorPosition, selectionLength);
 		} else {
 			// TODO: how to handle other document types?
@@ -405,8 +373,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 	@Override
 	protected IDocumentAdapter createDocumentAdapter() {
-		documentAdapter = new StructuredDocumentToTextAdapterForPhp(
-				getTextWidget());
+		documentAdapter = new StructuredDocumentToTextAdapterForPhp(getTextWidget());
 		return documentAdapter;
 	}
 
@@ -433,8 +400,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		super.addVerticalRulerColumn(column);
 	}
 
-	public class StructuredDocumentToTextAdapterForPhp extends
-			StructuredDocumentToTextAdapter {
+	public class StructuredDocumentToTextAdapterForPhp extends StructuredDocumentToTextAdapter {
 
 		public StructuredDocumentToTextAdapterForPhp() {
 			super();
@@ -445,23 +411,18 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		}
 
 		@Override
-		protected void redrawRegionChanged(
-				RegionChangedEvent structuredDocumentEvent) {
-			if (structuredDocumentEvent != null
-					&& structuredDocumentEvent.getRegion() != null
+		protected void redrawRegionChanged(RegionChangedEvent structuredDocumentEvent) {
+			if (structuredDocumentEvent != null && structuredDocumentEvent.getRegion() != null
 					&& structuredDocumentEvent.getRegion().getType() == PHPRegionContext.PHP_CONTENT) {
-				final IPhpScriptRegion region = (IPhpScriptRegion) structuredDocumentEvent
-						.getRegion();
+				final IPhpScriptRegion region = (IPhpScriptRegion) structuredDocumentEvent.getRegion();
 				if (region.isFullReparsed()) {
 					final TextRegionListImpl newList = new TextRegionListImpl();
 					newList.add(region);
 					final IStructuredDocumentRegion structuredDocumentRegion = structuredDocumentEvent
 							.getStructuredDocumentRegion();
-					final IStructuredDocument structuredDocument = structuredDocumentEvent
-							.getStructuredDocument();
-					final RegionsReplacedEvent regionsReplacedEvent = new RegionsReplacedEvent(
-							structuredDocument, structuredDocumentRegion,
-							structuredDocumentRegion, null, newList, null, 0, 0);
+					final IStructuredDocument structuredDocument = structuredDocumentEvent.getStructuredDocument();
+					final RegionsReplacedEvent regionsReplacedEvent = new RegionsReplacedEvent(structuredDocument,
+							structuredDocumentRegion, structuredDocumentRegion, null, newList, null, 0, 0);
 					redrawRegionsReplaced(regionsReplacedEvent);
 				}
 			}
@@ -493,8 +454,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		fViewerConfiguration = configuration;
 
 		PHPStructuredTextViewerConfiguration phpConfiguration = (PHPStructuredTextViewerConfiguration) configuration;
-		IContentAssistant newPHPAssistant = phpConfiguration
-				.getPHPContentAssistant(this, true);
+		IContentAssistant newPHPAssistant = phpConfiguration.getPHPContentAssistant(this, true);
 
 		// Uninstall content assistant created in super:
 		if (fContentAssistant != null) {
@@ -507,8 +467,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			fContentAssistant.install(this);
 			if (fContentAssistant instanceof IContentAssistantExtension2
 					&& fContentAssistant instanceof IContentAssistantExtension4)
-				fContentAssistantFacade = new ContentAssistantFacade(
-						fContentAssistant);
+				fContentAssistantFacade = new ContentAssistantFacade(fContentAssistant);
 			fContentAssistantInstalled = true;
 		} else {
 			// 248036 - disable the content assist operation if no content
@@ -521,8 +480,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			fOutlinePresenter.install(this);
 		}
 
-		fHierarchyPresenter = phpConfiguration
-				.getHierarchyPresenter(this, true);
+		fHierarchyPresenter = phpConfiguration.getHierarchyPresenter(this, true);
 		if (fHierarchyPresenter != null) {
 			fHierarchyPresenter.install(this);
 		}
@@ -592,9 +550,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * Reconciles the whole document (to re-run PHPValidator)
 	 */
 	public void reconcile() {
-		((StructuredRegionProcessor) fReconciler)
-				.processDirtyRegion(new DirtyRegion(0, getDocument()
-						.getLength(), DirtyRegion.INSERT, getDocument().get()));
+		((StructuredRegionProcessor) fReconciler).processDirtyRegion(
+				new DirtyRegion(0, getDocument().getLength(), DirtyRegion.INSERT, getDocument().get()));
 
 	}
 
@@ -629,8 +586,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 *            the text presentation listener
 	 * @since 3.0
 	 */
-	public void prependTextPresentationListener(
-			ITextPresentationListener listener) {
+	public void prependTextPresentationListener(ITextPresentationListener listener) {
 
 		Assert.isNotNull(listener);
 
@@ -662,25 +618,19 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	}
 
 	@Override
-	public void setDocument(IDocument document,
-			IAnnotationModel annotationModel, int modelRangeOffset,
+	public void setDocument(IDocument document, IAnnotationModel annotationModel, int modelRangeOffset,
 			int modelRangeLength) {
 		if (getDocument() instanceof IStructuredDocument) {
-			CommandStack commandStack = ((IStructuredDocument) getDocument())
-					.getUndoManager().getCommandStack();
+			CommandStack commandStack = ((IStructuredDocument) getDocument()).getUndoManager().getCommandStack();
 			if (commandStack instanceof BasicCommandStack) {
-				commandStack
-						.addCommandStackListener(getInternalCommandStackListener());
+				commandStack.addCommandStackListener(getInternalCommandStackListener());
 			}
 		}
-		super.setDocument(document, annotationModel, modelRangeOffset,
-				modelRangeLength);
+		super.setDocument(document, annotationModel, modelRangeOffset, modelRangeLength);
 		if (getDocument() instanceof IStructuredDocument) {
-			CommandStack commandStack = ((IStructuredDocument) getDocument())
-					.getUndoManager().getCommandStack();
+			CommandStack commandStack = ((IStructuredDocument) getDocument()).getUndoManager().getCommandStack();
 			if (commandStack instanceof BasicCommandStack) {
-				commandStack
-						.addCommandStackListener(getInternalCommandStackListener());
+				commandStack.addCommandStackListener(getInternalCommandStackListener());
 			}
 		}
 	}
@@ -717,9 +667,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.wst.sse.ui.internal.StructuredTextViewer#getContentAssistFacade
-	 * ()
+	 * @see org.eclipse.wst.sse.ui.internal.StructuredTextViewer#
+	 * getContentAssistFacade ()
 	 */
 	@Override
 	public ContentAssistantFacade getContentAssistFacade() {
@@ -728,8 +677,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 	@Override
 	protected void firePostSelectionChanged(int offset, int length) {
-		if (fTextEditor instanceof PHPStructuredEditor
-				&& !((PHPStructuredEditor) fTextEditor).fReconcileSelection) {
+		if (fTextEditor instanceof PHPStructuredEditor && !((PHPStructuredEditor) fTextEditor).fReconcileSelection) {
 			super.firePostSelectionChanged(offset, length);
 			fPostSelectionOffset = -1;
 			fPostSelectionLength = -1;

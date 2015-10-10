@@ -52,8 +52,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 
 		@SuppressWarnings("unchecked")
 		void check(Map<String, Object> serverMap) {
-			Map<String, String> attributes = (Map<String, String>) serverMap
-					.get(Server.SERVER_ELEMENT);
+			Map<String, String> attributes = (Map<String, String>) serverMap.get(Server.SERVER_ELEMENT);
 			// Upgrade servers with unique ID element
 			if (!attributes.containsKey(Server.UNIQUE_ID))
 				upgraded = false;
@@ -66,9 +65,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			monitor.beginTask(
-					Messages.ServersManager_Saving_upgraded_configurations,
-					IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.ServersManager_Saving_upgraded_configurations, IProgressMonitor.UNKNOWN);
 			save();
 			monitor.done();
 			return Status.OK_STATUS;
@@ -99,8 +96,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	private List<IServersManagerListener> listeners;
 
 	private static ServersManager instance;
-	private static final String NODE_QUALIFIER = Activator.PLUGIN_ID
-			+ ".phpServersPrefs"; //$NON-NLS-1$
+	private static final String NODE_QUALIFIER = Activator.PLUGIN_ID + ".phpServersPrefs"; //$NON-NLS-1$
 	private static final String BASE_URL = "http://localhost"; //$NON-NLS-1$
 	public static final String DEFAULT_SERVER_NAME = "Default PHP Web Server"; //$NON-NLS-1$
 
@@ -158,15 +154,13 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		if (server != oldValue) {
 			manager.servers.remove(oldValue.getName());
 			oldValue.removePropertyChangeListener(manager);
-			ServerManagerEvent event = new ServerManagerEvent(
-					ServerManagerEvent.MANAGER_EVENT_REMOVED, oldValue);
+			ServerManagerEvent event = new ServerManagerEvent(ServerManagerEvent.MANAGER_EVENT_REMOVED, oldValue);
 			manager.fireEvent(event);
 		}
 		oldValue = (Server) manager.servers.put(server.getName(), server);
 		if (oldValue != null) {
 			oldValue.removePropertyChangeListener(manager);
-			ServerManagerEvent event = new ServerManagerEvent(
-					ServerManagerEvent.MANAGER_EVENT_REMOVED, oldValue);
+			ServerManagerEvent event = new ServerManagerEvent(ServerManagerEvent.MANAGER_EVENT_REMOVED, oldValue);
 			manager.fireEvent(event);
 		}
 		Server defaultServer = getDefaultServer(null);
@@ -174,8 +168,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			// Set workspace default if there is no any
 			setDefaultServer(null, server);
 		}
-		ServerManagerEvent event = new ServerManagerEvent(
-				ServerManagerEvent.MANAGER_EVENT_ADDED, server);
+		ServerManagerEvent event = new ServerManagerEvent(ServerManagerEvent.MANAGER_EVENT_ADDED, server);
 		manager.fireEvent(event);
 		// Register the manager as a Server lister to get nofitications about
 		// attribute changes.
@@ -238,8 +231,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		if (removedServer != null) {
 			// Fire the event for the removal
 			removedServer.removePropertyChangeListener(manager);
-			ServerManagerEvent event = new ServerManagerEvent(
-					ServerManagerEvent.MANAGER_EVENT_REMOVED, removedServer);
+			ServerManagerEvent event = new ServerManagerEvent(ServerManagerEvent.MANAGER_EVENT_REMOVED, removedServer);
 			manager.fireEvent(event);
 		}
 		return removedServer;
@@ -259,8 +251,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 
 	public static Server getServer(Server oldServer) {
 		ServersManager manager = getInstance();
-		for (Iterator<Server> iterator = manager.servers.values().iterator(); iterator
-				.hasNext();) {
+		for (Iterator<Server> iterator = manager.servers.values().iterator(); iterator.hasNext();) {
 			Server server = iterator.next();
 			if (server.getBaseURL().equals(oldServer.getBaseURL())) {
 				return server;
@@ -277,8 +268,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	 */
 	public static Server findServer(String serverId) {
 		ServersManager manager = getInstance();
-		for (Iterator<Server> iterator = manager.servers.values().iterator(); iterator
-				.hasNext();) {
+		for (Iterator<Server> iterator = manager.servers.values().iterator(); iterator.hasNext();) {
 			Server server = iterator.next();
 			if (server.getUniqueId().equals(serverId)) {
 				return server;
@@ -310,8 +300,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		}
 		String urlHostAddress = url.getHost();
 		try {
-			InetAddress urlHostInetAddress = InetAddress
-					.getByName(urlHostAddress);
+			InetAddress urlHostInetAddress = InetAddress.getByName(urlHostAddress);
 			// Resolve it to IP address
 			urlHostAddress = urlHostInetAddress.getHostAddress();
 		} catch (UnknownHostException e) {
@@ -324,8 +313,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 				continue;
 			String serverHost = server.getHost();
 			try {
-				InetAddress serverHostAddress = InetAddress
-						.getByName(serverHost);
+				InetAddress serverHostAddress = InetAddress.getByName(serverHost);
 				if (urlHostAddress.equals(serverHostAddress.getHostAddress())) {
 					matchedByHost.add(server);
 				}
@@ -387,14 +375,12 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			 * workspace default server.
 			 */
 			IScopeContext[] preferenceScopes = createPreferenceScopes(project);
-			String projectSpecificServer = preferenceScopes[0]
-					.getNode(NODE_QUALIFIER)
+			String projectSpecificServer = preferenceScopes[0].getNode(NODE_QUALIFIER)
 					.get(DEFAULT_SERVER_PREFERENCES_KEY, (String) null);
 			if (projectSpecificServer == null) {
 				// We do not have a project specific setting for this project.
 				// Map it to the default workspace server.
-				manager.defaultServersMap.put(project,
-						manager.defaultServersMap.get(null));
+				manager.defaultServersMap.put(project, manager.defaultServersMap.get(null));
 				server = (Server) manager.defaultServersMap.get(null);
 			}
 		}
@@ -405,23 +391,18 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		 * reason to re-load the servers definitions from the preferences (XML).
 		 */
 		if (server == null) {
-			IEclipsePreferences preferences = InstanceScope.INSTANCE
-					.getNode(Activator.PLUGIN_ID);
+			IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID);
 			String serverName = null;
 			if (project == null) {
 				// Get the default workspace server.
-				serverName = preferences.get(DEFAULT_SERVER_PREFERENCES_KEY,
-						null);
+				serverName = preferences.get(DEFAULT_SERVER_PREFERENCES_KEY, null);
 			} else {
 				// Get the projects' default server
-				IScopeContext[] preferenceScopes = createPreferenceScopes(
-						project);
-				serverName = preferenceScopes[0].getNode(NODE_QUALIFIER)
-						.get(DEFAULT_SERVER_PREFERENCES_KEY, null);
+				IScopeContext[] preferenceScopes = createPreferenceScopes(project);
+				serverName = preferenceScopes[0].getNode(NODE_QUALIFIER).get(DEFAULT_SERVER_PREFERENCES_KEY, null);
 				if (serverName == null) {
 					// No project server - take the workspace one
-					serverName = preferences.get(DEFAULT_SERVER_PREFERENCES_KEY,
-							null);
+					serverName = preferences.get(DEFAULT_SERVER_PREFERENCES_KEY, null);
 				}
 			}
 			if (serverName != null && !"".equals(serverName)) { //$NON-NLS-1$
@@ -460,8 +441,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		 * Get the default server for the given project. In case that we need to
 		 * set a new server for the project, make sure we save it as well.
 		 */
-		Server defaultProjectServer = (Server) manager.defaultServersMap
-				.get(project);
+		Server defaultProjectServer = (Server) manager.defaultServersMap.get(project);
 		if (server != defaultProjectServer) {
 			manager.defaultServersMap.put(project, server);
 		}
@@ -491,8 +471,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	 * @return
 	 * @throws MalformedURLException
 	 */
-	public static Server createServer(String name, String baseURL)
-			throws MalformedURLException {
+	public static Server createServer(String name, String baseURL) throws MalformedURLException {
 		Server server = new Server(name, "localhost", baseURL, ""); //$NON-NLS-1$ //$NON-NLS-2$
 		server = ServersManager.getServer(server);
 		addServer(server);
@@ -510,10 +489,8 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 				continue;
 			serversToSave.add(server);
 		}
-		IEclipsePreferences preferences = InstanceScope.INSTANCE
-				.getNode(Activator.PLUGIN_ID);
-		XMLPreferencesWriter.write(preferences, SERVERS_PREFERENCES_KEY,
-				serversToSave);
+		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID);
+		XMLPreferencesWriter.write(preferences, SERVERS_PREFERENCES_KEY, serversToSave);
 	}
 
 	/**
@@ -551,8 +528,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			getInstance().servers.remove(oldValue);
 			getInstance().servers.put(newValue, server);
 		}
-		ServerManagerEvent event = new ServerManagerEvent(
-				ServerManagerEvent.MANAGER_EVENT_MODIFIED, server,
+		ServerManagerEvent event = new ServerManagerEvent(ServerManagerEvent.MANAGER_EVENT_MODIFIED, server,
 				evt.getPropertyName(), oldValue, newValue);
 		fireEvent(event);
 	}
@@ -569,8 +545,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	 * @param event
 	 */
 	public void fireEvent(ServerManagerEvent event) {
-		IServersManagerListener[] allListeners = new IServersManagerListener[listeners
-				.size()];
+		IServersManagerListener[] allListeners = new IServersManagerListener[listeners.size()];
 		listeners.toArray(allListeners);
 		if (event.getType() == ServerManagerEvent.MANAGER_EVENT_ADDED) {
 			fireAddEvent(event, allListeners);
@@ -585,16 +560,13 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	// This scope will be used to search for preferences values.
 	private static IScopeContext[] createPreferenceScopes(IProject project) {
 		if (project != null) {
-			return new IScopeContext[] { new ProjectScope(project),
-					InstanceScope.INSTANCE, DefaultScope.INSTANCE };
+			return new IScopeContext[] { new ProjectScope(project), InstanceScope.INSTANCE, DefaultScope.INSTANCE };
 		}
-		return new IScopeContext[] { InstanceScope.INSTANCE,
-				DefaultScope.INSTANCE };
+		return new IScopeContext[] { InstanceScope.INSTANCE, DefaultScope.INSTANCE };
 	}
 
 	private void innerSaveDefaultServer(IProject project, Server server) {
-		IEclipsePreferences preferences = InstanceScope.INSTANCE
-				.getNode(Activator.PLUGIN_ID);
+		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID);
 		// Preferences prefs = Activator.getDefault().getPluginPreferences();
 		if (project == null && server != null) {
 			preferences.put(DEFAULT_SERVER_PREFERENCES_KEY, server.getName());
@@ -605,8 +577,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			}
 		} else if (project != null) {
 			IScopeContext[] scopeContexts = createPreferenceScopes(project);
-			IEclipsePreferences prefsNode = scopeContexts[0]
-					.getNode(NODE_QUALIFIER);
+			IEclipsePreferences prefsNode = scopeContexts[0].getNode(NODE_QUALIFIER);
 			if (server != null) {
 				prefsNode.put(DEFAULT_SERVER_PREFERENCES_KEY, server.getName());
 			} else {
@@ -631,10 +602,9 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		// Read all the configurations of the servers from the preferences and
 		// place them into the
 		// servers hash (map name to Server instance).
-		IEclipsePreferences preferences = InstanceScope.INSTANCE
-				.getNode(Activator.PLUGIN_ID);
-		List<Map<String, Object>> serversConfigs = XMLPreferencesReader.read(
-				preferences, SERVERS_PREFERENCES_KEY, true);
+		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID);
+		List<Map<String, Object>> serversConfigs = XMLPreferencesReader.read(preferences, SERVERS_PREFERENCES_KEY,
+				true);
 		ServersUpgrade upgrader = new ServersUpgrade();
 		// Then we create the servers from their configurations...
 		for (Map<String, Object> serverMap : serversConfigs) {
@@ -674,29 +644,24 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 					continue;
 				serversToSave.add(toSave);
 			}
-			IEclipsePreferences preferences = InstanceScope.INSTANCE
-					.getNode(Activator.PLUGIN_ID);
-			XMLPreferencesWriter.write(preferences, SERVERS_PREFERENCES_KEY,
-					serversToSave);
+			IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID);
+			XMLPreferencesWriter.write(preferences, SERVERS_PREFERENCES_KEY, serversToSave);
 		}
 	}
 
-	private void fireAddEvent(ServerManagerEvent event,
-			IServersManagerListener[] allListeners) {
+	private void fireAddEvent(ServerManagerEvent event, IServersManagerListener[] allListeners) {
 		for (IServersManagerListener element : allListeners) {
 			element.serverAdded(event);
 		}
 	}
 
-	private void fireRemoveEvent(ServerManagerEvent event,
-			IServersManagerListener[] allListeners) {
+	private void fireRemoveEvent(ServerManagerEvent event, IServersManagerListener[] allListeners) {
 		for (IServersManagerListener element : allListeners) {
 			element.serverRemoved(event);
 		}
 	}
 
-	private void fireModifiedEvent(ServerManagerEvent event,
-			IServersManagerListener[] allListeners) {
+	private void fireModifiedEvent(ServerManagerEvent event, IServersManagerListener[] allListeners) {
 		for (IServersManagerListener element : allListeners) {
 			element.serverModified(event);
 		}

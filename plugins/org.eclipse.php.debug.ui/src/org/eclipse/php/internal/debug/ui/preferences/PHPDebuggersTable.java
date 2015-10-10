@@ -75,8 +75,7 @@ public class PHPDebuggersTable {
 		data = new GridData(GridData.FILL_BOTH);
 		parent.setLayoutData(data);
 
-		final Table table = new Table(parent, SWT.BORDER | SWT.MULTI
-				| SWT.FULL_SELECTION);
+		final Table table = new Table(parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
 
 		data = new GridData(GridData.FILL_BOTH);
 		data.heightHint = 35;
@@ -90,18 +89,16 @@ public class PHPDebuggersTable {
 		table.setLayout(tableLayout);
 
 		final TableColumn debuggerTypeColumn = new TableColumn(table, SWT.NULL);
-		debuggerTypeColumn
-				.setText(PHPDebugUIMessages.PHPDebuggersTable_debuggerType);
+		debuggerTypeColumn.setText(PHPDebugUIMessages.PHPDebuggersTable_debuggerType);
 
 		fPHPDebuggers = new CheckboxTableViewer(table);
 		fPHPDebuggers.setLabelProvider(new PHPDebuggersLabelProvider());
 		fPHPDebuggers.setContentProvider(new PHPDebuggersContentProvider());
-		fPHPDebuggers
-				.addSelectionChangedListener(new ISelectionChangedListener() {
-					public void selectionChanged(final SelectionChangedEvent evt) {
-						enableButtons();
-					}
-				});
+		fPHPDebuggers.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(final SelectionChangedEvent evt) {
+				enableButtons();
+			}
+		});
 
 		fPHPDebuggers.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(final DoubleClickEvent e) {
@@ -119,8 +116,7 @@ public class PHPDebuggersTable {
 		buttons.setLayout(layout);
 		buttons.setFont(font);
 
-		fSettingsButton = createPushButton(buttons,
-				PHPDebugUIMessages.PHPDebuggersTable_configure);
+		fSettingsButton = createPushButton(buttons, PHPDebugUIMessages.PHPDebuggersTable_configure);
 		fSettingsButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(final Event evt) {
 				editSettings();
@@ -129,10 +125,8 @@ public class PHPDebuggersTable {
 
 		fPHPDebuggers.setComparator(new ViewerComparator() {
 			public int compare(Viewer viewer, Object e1, Object e2) {
-				if (e1 instanceof IDebuggerConfiguration
-						&& e2 instanceof IDebuggerConfiguration) {
-					return ((IDebuggerConfiguration) e2).getName().compareTo(
-							((IDebuggerConfiguration) e1).getName());
+				if (e1 instanceof IDebuggerConfiguration && e2 instanceof IDebuggerConfiguration) {
+					return ((IDebuggerConfiguration) e2).getName().compareTo(((IDebuggerConfiguration) e1).getName());
 				}
 				return super.compare(viewer, e1, e2);
 			}
@@ -152,8 +146,7 @@ public class PHPDebuggersTable {
 	 * Set the debuggers to their default values (ports etc.)
 	 */
 	public void performDefaults() {
-		AbstractDebuggerConfiguration[] debuggersConfigurations = PHPDebuggersRegistry
-				.getDebuggersConfigurations();
+		AbstractDebuggerConfiguration[] debuggersConfigurations = PHPDebuggersRegistry.getDebuggersConfigurations();
 		if (debuggersConfigurations == null) {
 			return;
 		}
@@ -163,8 +156,7 @@ public class PHPDebuggersTable {
 		fPHPDebuggers.refresh();
 	}
 
-	private void configureTableResizing(final Composite parent,
-			final Composite buttons, final Table table,
+	private void configureTableResizing(final Composite parent, final Composite buttons, final Table table,
 			final TableColumn debuggerTypeColumn) {
 		parent.addControlListener(new ControlAdapter() {
 			public void controlResized(final ControlEvent e) {
@@ -185,8 +177,8 @@ public class PHPDebuggersTable {
 		});
 	}
 
-	private void resizeTable(final Composite parent, final Composite buttons,
-			final Table table, final TableColumn column1) {
+	private void resizeTable(final Composite parent, final Composite buttons, final Table table,
+			final TableColumn column1) {
 		fResizingTable = true;
 		int parentWidth = -1;
 		int parentHeight = -1;
@@ -195,8 +187,7 @@ public class PHPDebuggersTable {
 			parentWidth = area.width;
 			parentHeight = area.height;
 		} else {
-			final Point parentSize = parent.computeSize(SWT.DEFAULT,
-					SWT.DEFAULT);
+			final Point parentSize = parent.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 			parentWidth = parentSize.x;
 			parentHeight = parentSize.y;
 		}
@@ -244,8 +235,7 @@ public class PHPDebuggersTable {
 	 * Set the debuggers input to the table.
 	 */
 	private void fillWithWorkspaceDebuggers() {
-		AbstractDebuggerConfiguration[] debuggersConfigurations = PHPDebuggersRegistry
-				.getDebuggersConfigurations();
+		AbstractDebuggerConfiguration[] debuggersConfigurations = PHPDebuggersRegistry.getDebuggersConfigurations();
 		fPHPDebuggers.setInput(debuggersConfigurations);
 		fPHPDebuggers.refresh();
 
@@ -253,8 +243,7 @@ public class PHPDebuggersTable {
 
 	// Enable / Disable the setting button
 	private void enableButtons() {
-		IStructuredSelection selection = (IStructuredSelection) fPHPDebuggers
-				.getSelection();
+		IStructuredSelection selection = (IStructuredSelection) fPHPDebuggers.getSelection();
 		fSettingsButton.setEnabled(selection.size() == 1);
 	}
 
@@ -273,8 +262,7 @@ public class PHPDebuggersTable {
 	 * Edit the settings for the selected PHP debugger.
 	 */
 	private void editSettings() {
-		final IStructuredSelection selection = (IStructuredSelection) fPHPDebuggers
-				.getSelection();
+		final IStructuredSelection selection = (IStructuredSelection) fPHPDebuggers.getSelection();
 		final AbstractDebuggerConfiguration phpDebuggerConfiguration = (AbstractDebuggerConfiguration) selection
 				.getFirstElement();
 		if (phpDebuggerConfiguration == null) {
@@ -282,8 +270,7 @@ public class PHPDebuggersTable {
 		}
 		// Open the edit dialog after creating it's content by calling the
 		// AbstractDebuggerConfiguration#openConfigurationDialog
-		phpDebuggerConfiguration.openConfigurationDialog(Display.getDefault()
-				.getActiveShell());
+		phpDebuggerConfiguration.openConfigurationDialog(Display.getDefault().getActiveShell());
 		fPHPDebuggers.refresh(phpDebuggerConfiguration);
 		commitChanges();
 	}
@@ -307,16 +294,14 @@ public class PHPDebuggersTable {
 			return PHPDebuggersRegistry.getDebuggersConfigurations();
 		}
 
-		public void inputChanged(final Viewer viewer, final Object oldInput,
-				final Object newInput) {
+		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 		}
 	}
 
 	/**
 	 * Label provider for installed PHPs table.
 	 */
-	class PHPDebuggersLabelProvider extends LabelProvider implements
-			ITableLabelProvider {
+	class PHPDebuggersLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 		/**
 		 * @see ITableLabelProvider#getColumnImage(Object, int)

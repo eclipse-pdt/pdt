@@ -6,8 +6,7 @@ import org.eclipse.dltk.ui.ScriptElementImageDescriptor;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.ui.phar.wizard.PharUIUtil;
 
-public class PHPIncludePathProblemsLabelDecorator extends
-		ProblemsLabelDecorator {
+public class PHPIncludePathProblemsLabelDecorator extends ProblemsLabelDecorator {
 	@Override
 	protected int computeAdornmentFlags(Object obj) {
 		if (obj instanceof IncludePath) {

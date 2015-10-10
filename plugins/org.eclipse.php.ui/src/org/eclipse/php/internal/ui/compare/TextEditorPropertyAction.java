@@ -18,15 +18,13 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.editors.text.EditorsUI;
 
-public class TextEditorPropertyAction extends Action implements
-		IPropertyChangeListener {
+public class TextEditorPropertyAction extends Action implements IPropertyChangeListener {
 
 	private final MergeSourceViewer[] viewers;
 	private final String preferenceKey;
 	private IPreferenceStore store;
 
-	public TextEditorPropertyAction(String label, MergeSourceViewer[] viewers,
-			String preferenceKey) {
+	public TextEditorPropertyAction(String label, MergeSourceViewer[] viewers, String preferenceKey) {
 		super(label, IAction.AS_CHECK_BOX);
 		this.viewers = viewers;
 		this.preferenceKey = preferenceKey;

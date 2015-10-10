@@ -26,8 +26,8 @@ import org.eclipse.swt.graphics.Point;
  * implementing all the extension interfaces. It uses a position to track its
  * replacement offset and length. The position must be set up externally.
  */
-public class PositionBasedCompletionProposal implements ICompletionProposal,
-		ICompletionProposalExtension, ICompletionProposalExtension2 {
+public class PositionBasedCompletionProposal
+		implements ICompletionProposal, ICompletionProposalExtension, ICompletionProposalExtension2 {
 
 	/** The string to be displayed in the completion proposal popup */
 	private String fDisplayString;
@@ -59,10 +59,8 @@ public class PositionBasedCompletionProposal implements ICompletionProposal,
 	 *            the position of the cursor following the insert relative to
 	 *            replacementOffset
 	 */
-	public PositionBasedCompletionProposal(String replacementString,
-			Position replacementPosition, int cursorPosition) {
-		this(replacementString, replacementPosition, cursorPosition, null,
-				null, null, null, null);
+	public PositionBasedCompletionProposal(String replacementString, Position replacementPosition, int cursorPosition) {
+		this(replacementString, replacementPosition, cursorPosition, null, null, null, null, null);
 	}
 
 	/**
@@ -87,10 +85,9 @@ public class PositionBasedCompletionProposal implements ICompletionProposal,
 	 * @param triggers
 	 *            the trigger characters
 	 */
-	public PositionBasedCompletionProposal(String replacementString,
-			Position replacementPosition, int cursorPosition, Image image,
-			String displayString, IContextInformation contextInformation,
-			String additionalProposalInfo, char[] triggers) {
+	public PositionBasedCompletionProposal(String replacementString, Position replacementPosition, int cursorPosition,
+			Image image, String displayString, IContextInformation contextInformation, String additionalProposalInfo,
+			char[] triggers) {
 		Assert.isNotNull(replacementString);
 		Assert.isTrue(replacementPosition != null);
 
@@ -109,8 +106,7 @@ public class PositionBasedCompletionProposal implements ICompletionProposal,
 	 */
 	public void apply(IDocument document) {
 		try {
-			document.replace(fReplacementPosition.getOffset(),
-					fReplacementPosition.getLength(), fReplacementString);
+			document.replace(fReplacementPosition.getOffset(), fReplacementPosition.getLength(), fReplacementString);
 		} catch (BadLocationException x) {
 			// ignore
 		}
@@ -160,37 +156,32 @@ public class PositionBasedCompletionProposal implements ICompletionProposal,
 	 * org.eclipse.jface.text.contentassist.ICompletionProposalExtension2#apply
 	 * (org.eclipse.jface.text.ITextViewer, char, int, int)
 	 */
-	public void apply(ITextViewer viewer, char trigger, int stateMask,
-			int offset) {
+	public void apply(ITextViewer viewer, char trigger, int stateMask, int offset) {
 		apply(viewer.getDocument());
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.contentassist.ICompletionProposalExtension2#selected
-	 * (org.eclipse.jface.text.ITextViewer, boolean)
+	 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension2#
+	 * selected (org.eclipse.jface.text.ITextViewer, boolean)
 	 */
 	public void selected(ITextViewer viewer, boolean smartToggle) {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.contentassist.ICompletionProposalExtension2#unselected
-	 * (org.eclipse.jface.text.ITextViewer)
+	 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension2#
+	 * unselected (org.eclipse.jface.text.ITextViewer)
 	 */
 	public void unselected(ITextViewer viewer) {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.contentassist.ICompletionProposalExtension2#validate
-	 * (org.eclipse.jface.text.IDocument, int,
+	 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension2#
+	 * validate (org.eclipse.jface.text.IDocument, int,
 	 * org.eclipse.jface.text.DocumentEvent)
 	 */
 	public boolean validate(IDocument document, int offset, DocumentEvent event) {
 		try {
-			String content = document.get(fReplacementPosition.getOffset(),
-					offset - fReplacementPosition.getOffset());
+			String content = document.get(fReplacementPosition.getOffset(), offset - fReplacementPosition.getOffset());
 			if (fReplacementString.startsWith(content))
 				return true;
 		} catch (BadLocationException e) {
@@ -209,9 +200,8 @@ public class PositionBasedCompletionProposal implements ICompletionProposal,
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.contentassist.ICompletionProposalExtension#isValidFor
-	 * (org.eclipse.jface.text.IDocument, int)
+	 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension#
+	 * isValidFor (org.eclipse.jface.text.IDocument, int)
 	 */
 	public boolean isValidFor(IDocument document, int offset) {
 		// not called any more

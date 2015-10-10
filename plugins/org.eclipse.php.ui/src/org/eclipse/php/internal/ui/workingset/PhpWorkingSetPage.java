@@ -63,16 +63,14 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	 * Default constructor.
 	 */
 	public PhpWorkingSetPage() {
-		super(PAGE_ID, PAGE_TITLE,
-				DLTKPluginImages.DESC_WIZBAN_SCRIPT_WORKINGSET);
+		super(PAGE_ID, PAGE_TITLE, DLTKPluginImages.DESC_WIZBAN_SCRIPT_WORKINGSET);
 		setDescription(WorkingSetMessages.PhpWorkingSetPage_workingSet_description);
 		fFirstCheck = true;
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-	 * .Composite)
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
+	 * widgets .Composite)
 	 */
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
@@ -84,14 +82,12 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 		Label label = new Label(composite, SWT.WRAP);
 		label.setText(WorkingSetMessages.PhpWorkingSetPage_workingSet_name);
-		GridData gd = new GridData(GridData.GRAB_HORIZONTAL
-				| GridData.HORIZONTAL_ALIGN_FILL
-				| GridData.VERTICAL_ALIGN_CENTER);
+		GridData gd = new GridData(
+				GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
 
 		fWorkingSetName = new Text(composite, SWT.SINGLE | SWT.BORDER);
-		fWorkingSetName.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
-				| GridData.HORIZONTAL_ALIGN_FILL));
+		fWorkingSetName.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
 		fWorkingSetName.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				validateInput();
@@ -101,13 +97,10 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 		label = new Label(composite, SWT.WRAP);
 		label.setText(WorkingSetMessages.PhpWorkingSetPage_workingSet_content);
-		gd = new GridData(GridData.GRAB_HORIZONTAL
-				| GridData.HORIZONTAL_ALIGN_FILL
-				| GridData.VERTICAL_ALIGN_CENTER);
+		gd = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
 
-		fTree = new CheckboxTreeViewer(composite, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL);
+		fTree = new CheckboxTreeViewer(composite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		gd = new GridData(GridData.FILL_BOTH | GridData.GRAB_VERTICAL);
 		gd.heightHint = convertHeightInCharsToPixels(15);
 		fTree.getControl().setLayoutData(gd);
@@ -116,24 +109,19 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		fTree.setContentProvider(fTreeContentProvider);
 
 		AppearanceAwareLabelProvider fScriptElementLabelProvider = new AppearanceAwareLabelProvider(
-				AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS
-						| ScriptElementLabels.P_COMPRESSED,
-				AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS
-						| ScriptElementImageProvider.SMALL_ICONS, DLTKUIPlugin
-						.getDefault().getPreferenceStore());
+				AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | ScriptElementLabels.P_COMPRESSED,
+				AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | ScriptElementImageProvider.SMALL_ICONS,
+				DLTKUIPlugin.getDefault().getPreferenceStore());
 
-		fTree.setLabelProvider(new DecoratingModelLabelProvider(
-				fScriptElementLabelProvider));
+		fTree.setLabelProvider(new DecoratingModelLabelProvider(fScriptElementLabelProvider));
 		fTree.setSorter(new ModelElementSorter());
 		if (DLTKCore.DEBUG) {
-			System.err
-					.println("Add empty inner package filter support here..."); //$NON-NLS-1$
+			System.err.println("Add empty inner package filter support here..."); //$NON-NLS-1$
 		}
 		// fTree.addFilter(new EmptyInnerPackageFilter());
 		fTree.setUseHashlookup(true);
 
-		fTree.setInput(DLTKCore
-				.create(ResourcesPlugin.getWorkspace().getRoot()));
+		fTree.setInput(DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot()));
 
 		fTree.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
@@ -148,13 +136,11 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			public void treeExpanded(TreeExpansionEvent event) {
 				final Object element = event.getElement();
 				if (fTree.getGrayed(element) == false)
-					BusyIndicator.showWhile(getShell().getDisplay(),
-							new Runnable() {
-								public void run() {
-									setSubtreeChecked(element,
-											fTree.getChecked(element), false);
-								}
-							});
+					BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
+						public void run() {
+							setSubtreeChecked(element, fTree.getChecked(element), false);
+						}
+					});
 			}
 		});
 
@@ -164,18 +150,14 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		buttonComposite.setLayout(layout);
-		buttonComposite.setLayoutData(new GridData(
-				GridData.HORIZONTAL_ALIGN_FILL));
+		buttonComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 
 		Button selectAllButton = new Button(buttonComposite, SWT.PUSH);
-		selectAllButton
-				.setText(WorkingSetMessages.PhpWorkingSetPage_selectAll_label);
-		selectAllButton
-				.setToolTipText(WorkingSetMessages.PhpWorkingSetPage_selectAll_toolTip);
+		selectAllButton.setText(WorkingSetMessages.PhpWorkingSetPage_selectAll_label);
+		selectAllButton.setToolTipText(WorkingSetMessages.PhpWorkingSetPage_selectAll_toolTip);
 		selectAllButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent selectionEvent) {
-				fTree.setCheckedElements(fTreeContentProvider.getElements(fTree
-						.getInput()));
+				fTree.setCheckedElements(fTreeContentProvider.getElements(fTree.getInput()));
 				validateInput();
 			}
 		});
@@ -183,10 +165,8 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		SWTUtil.setButtonDimensionHint(selectAllButton);
 
 		Button deselectAllButton = new Button(buttonComposite, SWT.PUSH);
-		deselectAllButton
-				.setText(WorkingSetMessages.PhpWorkingSetPage_deselectAll_label);
-		deselectAllButton
-				.setToolTipText(WorkingSetMessages.PhpWorkingSetPage_deselectAll_toolTip);
+		deselectAllButton.setText(WorkingSetMessages.PhpWorkingSetPage_deselectAll_label);
+		deselectAllButton.setToolTipText(WorkingSetMessages.PhpWorkingSetPage_deselectAll_toolTip);
 		deselectAllButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				fTree.setCheckedElements(new Object[0]);
@@ -223,8 +203,7 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	public void setSelection(IWorkingSet workingSet) {
 		Assert.isNotNull(workingSet, "Working set must not be null"); //$NON-NLS-1$
 		fWorkingSet = workingSet;
-		if (getContainer() != null && getShell() != null
-				&& fWorkingSetName != null) {
+		if (getContainer() != null && getShell() != null && fWorkingSetName != null) {
 			fFirstCheck = false;
 			fWorkingSetName.setText(fWorkingSet.getName());
 			initializeCheckedState();
@@ -240,11 +219,9 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		ArrayList elements = new ArrayList(10);
 		findCheckedElements(elements, fTree.getInput());
 		if (fWorkingSet == null) {
-			IWorkingSetManager workingSetManager = PlatformUI.getWorkbench()
-					.getWorkingSetManager();
+			IWorkingSetManager workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
 			fWorkingSet = workingSetManager.createWorkingSet(workingSetName,
-					(IAdaptable[]) elements.toArray(new IAdaptable[elements
-							.size()]));
+					(IAdaptable[]) elements.toArray(new IAdaptable[elements.size()]));
 		} else {
 			// Add inaccessible resources
 			IAdaptable[] oldItems = fWorkingSet.getElements();
@@ -254,13 +231,11 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				if (oldItems[i] instanceof IResource) {
 					oldResource = (IResource) oldItems[i];
 				} else {
-					oldResource = (IResource) oldItems[i]
-							.getAdapter(IResource.class);
+					oldResource = (IResource) oldItems[i].getAdapter(IResource.class);
 				}
 				if (oldResource != null && oldResource.isAccessible() == false) {
 					IProject project = oldResource.getProject();
-					if (elements.contains(project)
-							|| closedWithChildren.contains(project)) {
+					if (elements.contains(project) || closedWithChildren.contains(project)) {
 						elements.add(oldItems[i]);
 						elements.remove(project);
 						closedWithChildren.add(project);
@@ -268,8 +243,7 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				}
 			}
 			fWorkingSet.setName(workingSetName);
-			fWorkingSet.setElements((IAdaptable[]) elements
-					.toArray(new IAdaptable[elements.size()]));
+			fWorkingSet.setElements((IAdaptable[]) elements.toArray(new IAdaptable[elements.size()]));
 		}
 	}
 
@@ -291,11 +265,8 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 		fFirstCheck = false;
 
-		if (errorMessage == null
-				&& (fWorkingSet == null || newText
-						.equals(fWorkingSet.getName()) == false)) {
-			IWorkingSet[] workingSets = PlatformUI.getWorkbench()
-					.getWorkingSetManager().getWorkingSets();
+		if (errorMessage == null && (fWorkingSet == null || newText.equals(fWorkingSet.getName()) == false)) {
+			IWorkingSet[] workingSets = PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
 			for (int i = 0; i < workingSets.length; i++) {
 				if (newText.equals(workingSets[i].getName())) {
 					errorMessage = WorkingSetMessages.PhpWorkingSetPage_warning_workingSetExists;
@@ -349,14 +320,11 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		});
 	}
 
-	private void setSubtreeChecked(Object parent, boolean state,
-			boolean checkExpandedState) {
+	private void setSubtreeChecked(Object parent, boolean state, boolean checkExpandedState) {
 		if (!(parent instanceof IAdaptable))
 			return;
-		IContainer container = (IContainer) ((IAdaptable) parent)
-				.getAdapter(IContainer.class);
-		if ((!fTree.getExpandedState(parent) && checkExpandedState)
-				|| (container != null && !container.isAccessible()))
+		IContainer container = (IContainer) ((IAdaptable) parent).getAdapter(IContainer.class);
+		if ((!fTree.getExpandedState(parent) && checkExpandedState) || (container != null && !container.isAccessible()))
 			return;
 
 		Object[] children = fTreeContentProvider.getChildren(parent);
@@ -376,8 +344,7 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		if (child == null)
 			return;
 		if (child instanceof IAdaptable) {
-			IResource resource = (IResource) ((IAdaptable) child)
-					.getAdapter(IResource.class);
+			IResource resource = (IResource) ((IAdaptable) child).getAdapter(IResource.class);
 			if (resource != null && !resource.isAccessible())
 				return;
 		}
@@ -390,8 +357,7 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		children = fTreeContentProvider.getChildren(parent);
 
 		for (int i = children.length - 1; i >= 0; i--) {
-			if (fTree.getChecked(children[i]) != baseChildState
-					|| fTree.getGrayed(children[i])) {
+			if (fTree.getChecked(children[i]) != baseChildState || fTree.getGrayed(children[i])) {
 				allSameState = false;
 				break;
 			}
@@ -414,22 +380,18 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 					if (page == null)
 						return;
 
-					IWorkbenchPart part = DLTKUIPlugin.getActivePage()
-							.getActivePart();
+					IWorkbenchPart part = DLTKUIPlugin.getActivePage().getActivePart();
 					if (part == null)
 						return;
 
 					try {
-						elements = SelectionConverter.getStructuredSelection(
-								part).toArray();
+						elements = SelectionConverter.getStructuredSelection(part).toArray();
 						for (int i = 0; i < elements.length; i++) {
 							if (elements[i] instanceof IResource) {
 								IModelElement je = (IModelElement) ((IResource) elements[i])
 										.getAdapter(IModelElement.class);
-								if (je != null
-										&& je.exists()
-										&& je.getScriptProject().isOnBuildpath(
-												(IResource) elements[i]))
+								if (je != null && je.exists()
+										&& je.getScriptProject().isOnBuildpath((IResource) elements[i]))
 									elements[i] = je;
 							}
 						}
@@ -448,10 +410,8 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 							elements[i] = project;
 					}
 					if (element instanceof IModelElement) {
-						IScriptProject jProject = ((IModelElement) element)
-								.getScriptProject();
-						if (jProject != null
-								&& !jProject.getProject().isAccessible())
+						IScriptProject jProject = ((IModelElement) element).getScriptProject();
+						if (jProject != null && !jProject.getProject().isAccessible())
 							elements[i] = jProject.getProject();
 					}
 				}
@@ -469,9 +429,8 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	}
 
 	private boolean isExpandable(Object element) {
-		return (element instanceof IScriptProject
-				|| element instanceof IProjectFragment
-				|| element instanceof IScriptFolder
-				|| element instanceof IScriptModel || element instanceof IContainer);
+		return (element instanceof IScriptProject || element instanceof IProjectFragment
+				|| element instanceof IScriptFolder || element instanceof IScriptModel
+				|| element instanceof IContainer);
 	}
 }

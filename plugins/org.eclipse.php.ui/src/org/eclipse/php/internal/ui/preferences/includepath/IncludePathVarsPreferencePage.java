@@ -24,8 +24,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 
-public class IncludePathVarsPreferencePage extends PreferencePage implements
-		IWorkbenchPreferencePage {
+public class IncludePathVarsPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	public static final String ID = "org.eclipse.php.ui.preferences.IncludePathVariables"; //$NON-NLS-1$
 
@@ -49,14 +48,12 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-	 * .Composite)
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
+	 * widgets .Composite)
 	 */
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
-				IPHPHelpContextIds.PATH_VARIABLES_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PATH_VARIABLES_PREFERENCES);
 	}
 
 	/*
@@ -65,8 +62,7 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements
 	protected Control createContents(Composite parent) {
 		Control result = fVariableBlock.createContents(parent);
 		Dialog.applyDialogFont(result);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.PATH_VARIABLES_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.PATH_VARIABLES_PREFERENCES);
 		return result;
 	}
 
@@ -100,8 +96,7 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements
 	public void setVisible(boolean visible) {
 		// check if the stored settings have changed
 		if (visible) {
-			if (fStoredSettings != null
-					&& !fStoredSettings.equals(getCurrentSettings())) {
+			if (fStoredSettings != null && !fStoredSettings.equals(getCurrentSettings())) {
 				fVariableBlock.refresh(null);
 			}
 		} else {

@@ -53,8 +53,7 @@ public class HTMLElementFormatterForPhpCode extends HTMLElementFormatter {
 
 	/**
 	 */
-	protected void formatChildNodes(IDOMNode node,
-			HTMLFormatContraints contraints) {
+	protected void formatChildNodes(IDOMNode node, HTMLFormatContraints contraints) {
 		if (node == null)
 			return;
 		if (!node.hasChildNodes())
@@ -81,9 +80,8 @@ public class HTMLElementFormatterForPhpCode extends HTMLElementFormatter {
 				insertBreakBefore(child, contraints);
 			}
 
-			IStructuredFormatter formatter = HTMLFormatterFactoryForPhpCode
-					.getInstance().createFormatter(child,
-							getFormatPreferences());
+			IStructuredFormatter formatter = HTMLFormatterFactoryForPhpCode.getInstance().createFormatter(child,
+					getFormatPreferences());
 			if (formatter != null) {
 				if (formatter instanceof HTMLFormatter) {
 					HTMLFormatter htmlFormatter = (HTMLFormatter) formatter;

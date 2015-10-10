@@ -48,8 +48,7 @@ import org.eclipse.ui.progress.UIJob;
  * @author Bartlomiej Laczkowski
  */
 @SuppressWarnings("restriction")
-public abstract class AbstractDebugWebLaunchSettingsSection
-		implements IDebuggerLaunchSettingsSection {
+public abstract class AbstractDebugWebLaunchSettingsSection implements IDebuggerLaunchSettingsSection {
 
 	protected static class Digester {
 
@@ -133,23 +132,19 @@ public abstract class AbstractDebugWebLaunchSettingsSection
 	public void initialize(ILaunchConfiguration configuration) {
 		this.configuration = configuration;
 		try {
-			boolean isUsingTunnel = configuration
-					.getAttribute(IPHPDebugConstants.USE_SSH_TUNNEL, false);
+			boolean isUsingTunnel = configuration.getAttribute(IPHPDebugConstants.USE_SSH_TUNNEL, false);
 			debugThroughTunnel.setSelection(isUsingTunnel);
 			updateTunnelComponents(isUsingTunnel);
 			if (isUsingTunnel && tunnelGroup != null) {
-				userName.setText(configuration.getAttribute(
-						IPHPDebugConstants.SSH_TUNNEL_USER_NAME, "")); //$NON-NLS-1$
+				userName.setText(configuration.getAttribute(IPHPDebugConstants.SSH_TUNNEL_USER_NAME, "")); //$NON-NLS-1$
 				if (userName.getText().length() > 0) {
 					// Load the password from the Secured Storage
 					try {
 						password.setText(PHPLaunchUtilities
-								.getSecurePreferences(PHPLaunchUtilities
-										.getDebugHost(getConfiguration()))
+								.getSecurePreferences(PHPLaunchUtilities.getDebugHost(getConfiguration()))
 								.get(userName.getText(), "")); //$NON-NLS-1$
 					} catch (StorageException e) {
-						Logger.logException(
-								"Error accessing the secured storage", e); //$NON-NLS-1$
+						Logger.logException("Error accessing the secured storage", e); //$NON-NLS-1$
 						password.setText(""); //$NON-NLS-1$
 					}
 				} else {
@@ -158,8 +153,7 @@ public abstract class AbstractDebugWebLaunchSettingsSection
 			}
 			if (breakpointGroup != null) {
 				// Initialize the breakpoint settings
-				breakOnFirstLine.setSelection(configuration.getAttribute(
-						IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
+				breakOnFirstLine.setSelection(configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 						PHPDebugPlugin.getStopAtFirstLine()));
 			}
 		} catch (CoreException e) {
@@ -177,32 +171,24 @@ public abstract class AbstractDebugWebLaunchSettingsSection
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		if (breakpointGroup != null) {
-			configuration.setAttribute(
-					IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
-					breakOnFirstLine.getSelection());
+			configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
 		}
 		if (tunnelGroup != null) {
-			configuration.setAttribute(IPHPDebugConstants.USE_SSH_TUNNEL,
-					debugThroughTunnel.getSelection());
+			configuration.setAttribute(IPHPDebugConstants.USE_SSH_TUNNEL, debugThroughTunnel.getSelection());
 			if (debugThroughTunnel.getSelection()) {
-				configuration.setAttribute(
-						IPHPDebugConstants.SSH_TUNNEL_USER_NAME,
-						userName.getText().trim());
+				configuration.setAttribute(IPHPDebugConstants.SSH_TUNNEL_USER_NAME, userName.getText().trim());
 				/*
 				 * We save a hash of the password and not the real one. This is
 				 * only used to allow an apply when a password change happens.
 				 * The real password saving is done through the secured storage
 				 * right after that line.
 				 */
-				String passwordDigest = Digester
-						.digest(password.getText().trim());
+				String passwordDigest = Digester.digest(password.getText().trim());
 				if (passwordDigest == null) {
 					// As a default, use the string hash.
-					passwordDigest = String
-							.valueOf(password.getText().trim().hashCode());
+					passwordDigest = String.valueOf(password.getText().trim().hashCode());
 				}
-				configuration.setAttribute(
-						IPHPDebugConstants.SSH_TUNNEL_PASSWORD, passwordDigest);
+				configuration.setAttribute(IPHPDebugConstants.SSH_TUNNEL_PASSWORD, passwordDigest);
 				// Save to secured storage
 				try {
 					/*
@@ -220,22 +206,16 @@ public abstract class AbstractDebugWebLaunchSettingsSection
 						 * actually clicked (or when other widgets are
 						 * triggering the apply call).
 						 */
-						PHPLaunchUtilities
-								.getSecurePreferences(PHPLaunchUtilities
-										.getDebugHost(getConfiguration()))
-								.put(userName.getText(),
-										password.getText().trim(),
-										true /* encrypt */);
+						PHPLaunchUtilities.getSecurePreferences(PHPLaunchUtilities.getDebugHost(getConfiguration()))
+								.put(userName.getText(), password.getText().trim(), true /* encrypt */);
 					}
 				} catch (StorageException e) {
 					Logger.logException("Error saving to the secured storage", //$NON-NLS-1$
 							e);
 				}
 			} else {
-				configuration.setAttribute(
-						IPHPDebugConstants.SSH_TUNNEL_USER_NAME, ""); //$NON-NLS-1$
-				configuration.setAttribute(
-						IPHPDebugConstants.SSH_TUNNEL_PASSWORD, ""); //$NON-NLS-1$
+				configuration.setAttribute(IPHPDebugConstants.SSH_TUNNEL_USER_NAME, ""); //$NON-NLS-1$
+				configuration.setAttribute(IPHPDebugConstants.SSH_TUNNEL_PASSWORD, ""); //$NON-NLS-1$
 			}
 		}
 		isSSHCredentialsChange = false; // Reset this flag here.
@@ -275,13 +255,11 @@ public abstract class AbstractDebugWebLaunchSettingsSection
 
 	protected void createBreakpointGroup(Composite parent) {
 		breakpointGroup = new Group(parent, SWT.NONE);
-		breakpointGroup.setText(
-				Messages.AbstractDebugWebLaunchSettingsSection_Breakpoint);
+		breakpointGroup.setText(Messages.AbstractDebugWebLaunchSettingsSection_Breakpoint);
 		breakpointGroup.setLayout(new GridLayout(1, false));
 		breakpointGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		breakOnFirstLine = SWTFactory.createCheckButton(breakpointGroup,
-				Messages.AbstractDebugWebLaunchSettingsSection_Break_at_first_line,
-				null, false, 1);
+				Messages.AbstractDebugWebLaunchSettingsSection_Break_at_first_line, null, false, 1);
 		breakOnFirstLine.addSelectionListener(widgetListener);
 	}
 
@@ -290,20 +268,17 @@ public abstract class AbstractDebugWebLaunchSettingsSection
 		tunnelGroup = new Group(composite, SWT.NONE);
 		tunnelGroup.setLayout(new GridLayout(1, false));
 		tunnelGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		tunnelGroup.setText(
-				Messages.AbstractDebugWebLaunchSettingsSection_SSH_tunnel);
+		tunnelGroup.setText(Messages.AbstractDebugWebLaunchSettingsSection_SSH_tunnel);
 		// Add the tunneling controls
 		debugThroughTunnel = new Button(tunnelGroup, SWT.CHECK);
-		debugThroughTunnel.setText(
-				Messages.AbstractDebugWebLaunchSettingsSection_Debug_through_SSH);
+		debugThroughTunnel.setText(Messages.AbstractDebugWebLaunchSettingsSection_Debug_through_SSH);
 		Composite credentialsComposite = new Composite(tunnelGroup, SWT.NONE);
 		credentialsComposite.setLayout(new GridLayout(2, false));
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalIndent = 20;
 		credentialsComposite.setLayoutData(data);
 		nameLabel = new Label(credentialsComposite, SWT.NONE);
-		nameLabel.setText(
-				Messages.AbstractDebugWebLaunchSettingsSection_User_name);
+		nameLabel.setText(Messages.AbstractDebugWebLaunchSettingsSection_User_name);
 		userName = new Text(credentialsComposite, SWT.BORDER | SWT.SINGLE);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.widthHint = 200;
@@ -316,10 +291,8 @@ public abstract class AbstractDebugWebLaunchSettingsSection
 			}
 		});
 		passwordLabel = new Label(credentialsComposite, SWT.NONE);
-		passwordLabel.setText(
-				Messages.AbstractDebugWebLaunchSettingsSection_Password);
-		password = new Text(credentialsComposite,
-				SWT.PASSWORD | SWT.BORDER | SWT.SINGLE);
+		passwordLabel.setText(Messages.AbstractDebugWebLaunchSettingsSection_Password);
+		password = new Text(credentialsComposite, SWT.PASSWORD | SWT.BORDER | SWT.SINGLE);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.widthHint = 200;
 		password.setLayoutData(data);
@@ -330,8 +303,7 @@ public abstract class AbstractDebugWebLaunchSettingsSection
 				updateTunnelComponents(true);
 			}
 		});
-		final Composite testConnectionComposite = new Composite(
-				credentialsComposite, SWT.NONE);
+		final Composite testConnectionComposite = new Composite(credentialsComposite, SWT.NONE);
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
@@ -340,8 +312,7 @@ public abstract class AbstractDebugWebLaunchSettingsSection
 		data.horizontalSpan = 2;
 		testConnectionComposite.setLayoutData(data);
 		testButton = new Button(testConnectionComposite, SWT.PUSH);
-		testButton.setText(
-				Messages.AbstractDebugWebLaunchSettingsSection_Test_connection);
+		testButton.setText(Messages.AbstractDebugWebLaunchSettingsSection_Test_connection);
 		testResultLabel = new CLabel(testConnectionComposite, SWT.NONE);
 		testResultLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		testButton.addSelectionListener(new SelectionAdapter() {
@@ -354,11 +325,8 @@ public abstract class AbstractDebugWebLaunchSettingsSection
 			public void mouseUp(MouseEvent e) {
 				Object messageData = testResultLabel.getData("info"); //$NON-NLS-1$
 				if (messageData != null) {
-					MessageDialog.openInformation(
-							PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-									.getShell(),
-							Messages.AbstractDebugWebLaunchSettingsSection_SSH_tunnel_test,
-							messageData.toString());
+					MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+							Messages.AbstractDebugWebLaunchSettingsSection_SSH_tunnel_test, messageData.toString());
 				}
 			}
 		});
@@ -381,10 +349,8 @@ public abstract class AbstractDebugWebLaunchSettingsSection
 
 	protected void updateTunnelComponents(boolean enabled) {
 		testResultLabel.setText(""); //$NON-NLS-1$
-		setEnabled(enabled, userName, password, nameLabel, passwordLabel,
-				testResultLabel);
-		testButton
-				.setEnabled(enabled && userName.getText().trim().length() > 0);
+		setEnabled(enabled, userName, password, nameLabel, passwordLabel, testResultLabel);
+		testButton.setEnabled(enabled && userName.getText().trim().length() > 0);
 	}
 
 	protected void setEnabled(boolean enabled, Control... controls) {
@@ -401,65 +367,47 @@ public abstract class AbstractDebugWebLaunchSettingsSection
 	 */
 	protected void testTunnelConnection() {
 		testButton.setEnabled(false);
-		testResultLabel.setForeground(
-				Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
-		testResultLabel.setText(
-				Messages.AbstractDebugWebLaunchSettingsSection_Testing_connection);
-		testResultLabel.setCursor(
-				Display.getDefault().getSystemCursor(SWT.CURSOR_WAIT));
+		testResultLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
+		testResultLabel.setText(Messages.AbstractDebugWebLaunchSettingsSection_Testing_connection);
+		testResultLabel.setCursor(Display.getDefault().getSystemCursor(SWT.CURSOR_WAIT));
 		testResultLabel.setData("info", null); //$NON-NLS-1$
-		Job connectionTest = new UIJob(
-				Messages.AbstractDebugWebLaunchSettingsSection_SSH_tunnel_test) {
+		Job connectionTest = new UIJob(Messages.AbstractDebugWebLaunchSettingsSection_SSH_tunnel_test) {
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				try {
-					String remoteHost = PHPLaunchUtilities
-							.getDebugHost(getConfiguration());
-					int port = PHPLaunchUtilities
-							.getDebugPort(getConfiguration());
-					if (remoteHost == null || remoteHost.length() == 0
-							|| port < 0) {
+					String remoteHost = PHPLaunchUtilities.getDebugHost(getConfiguration());
+					int port = PHPLaunchUtilities.getDebugPort(getConfiguration());
+					if (remoteHost == null || remoteHost.length() == 0 || port < 0) {
 						// The host was not yet set in the launch configuration.
 						testButton.setEnabled(true);
-						testResultLabel.setCursor(Display.getDefault()
-								.getSystemCursor(SWT.CURSOR_HAND));
-						testResultLabel.setForeground(Display.getDefault()
-								.getSystemColor(SWT.COLOR_DARK_RED));
+						testResultLabel.setCursor(Display.getDefault().getSystemCursor(SWT.CURSOR_HAND));
+						testResultLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_RED));
 						if (port > -1) {
-							testResultLabel.setText(
-									Messages.AbstractDebugWebLaunchSettingsSection_Missing_host);
+							testResultLabel.setText(Messages.AbstractDebugWebLaunchSettingsSection_Missing_host);
 							testResultLabel.setData("info", //$NON-NLS-1$
 									Messages.AbstractDebugWebLaunchSettingsSection_Missing_host_address);
 						} else {
-							testResultLabel.setText(
-									Messages.AbstractDebugWebLaunchSettingsSection_Error);
+							testResultLabel.setText(Messages.AbstractDebugWebLaunchSettingsSection_Error);
 							testResultLabel.setData("info", //$NON-NLS-1$
 									Messages.AbstractDebugWebLaunchSettingsSection_Could_not_determine_port);
 						}
 					}
-					testResultLabel.setCursor(Display.getDefault()
-							.getSystemCursor(SWT.CURSOR_WAIT));
-					IStatus connectionStatus = TunnelTester.test(remoteHost,
-							userName.getText().trim(),
+					testResultLabel.setCursor(Display.getDefault().getSystemCursor(SWT.CURSOR_WAIT));
+					IStatus connectionStatus = TunnelTester.test(remoteHost, userName.getText().trim(),
 							password.getText().trim(), port, port);
 					testButton.setEnabled(true);
 					testResultLabel.setCursor(null);
 					if (connectionStatus.isOK()) {
-						testResultLabel.setForeground(Display.getDefault()
-								.getSystemColor(SWT.COLOR_DARK_GREEN));
-						testResultLabel.setText(
-								Messages.AbstractDebugWebLaunchSettingsSection_Successfully_connected);
+						testResultLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_GREEN));
+						testResultLabel.setText(Messages.AbstractDebugWebLaunchSettingsSection_Successfully_connected);
 					} else if (connectionStatus.isMultiStatus()) {
 						/*
 						 * A case where the connection indicate that it was
 						 * successful, however, we were still not able to verify
 						 * that.
 						 */
-						testResultLabel.setCursor(Display.getDefault()
-								.getSystemCursor(SWT.CURSOR_HAND));
-						testResultLabel.setForeground(Display.getDefault()
-								.getSystemColor(SWT.COLOR_DARK_YELLOW));
-						testResultLabel.setText(
-								Messages.AbstractDebugWebLaunchSettingsSection_Undetermined);
+						testResultLabel.setCursor(Display.getDefault().getSystemCursor(SWT.CURSOR_HAND));
+						testResultLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_YELLOW));
+						testResultLabel.setText(Messages.AbstractDebugWebLaunchSettingsSection_Undetermined);
 						testResultLabel.setData("info", //$NON-NLS-1$
 								connectionStatus.getMessage());
 						/*
@@ -469,44 +417,33 @@ public abstract class AbstractDebugWebLaunchSettingsSection
 						IStatus[] children = connectionStatus.getChildren();
 						if (children != null) {
 							for (IStatus child : children) {
-								if (child.getSeverity() == IStatus.INFO && child
-										.getCode() == TunnelTester.PASSWORD_CHANGED_CODE) {
+								if (child.getSeverity() == IStatus.INFO
+										&& child.getCode() == TunnelTester.PASSWORD_CHANGED_CODE) {
 									password.setText(child.getMessage());
 									break;
 								}
 							}
 						}
-					} else if (connectionStatus
-							.getSeverity() == IStatus.WARNING) {
-						testResultLabel.setCursor(Display.getDefault()
-								.getSystemCursor(SWT.CURSOR_HAND));
-						testResultLabel.setForeground(Display.getDefault()
-								.getSystemColor(SWT.COLOR_DARK_GREEN));
-						testResultLabel.setText(
-								Messages.AbstractDebugWebLaunchSettingsSection_Connected_with_warnings);
+					} else if (connectionStatus.getSeverity() == IStatus.WARNING) {
+						testResultLabel.setCursor(Display.getDefault().getSystemCursor(SWT.CURSOR_HAND));
+						testResultLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_GREEN));
+						testResultLabel.setText(Messages.AbstractDebugWebLaunchSettingsSection_Connected_with_warnings);
 						testResultLabel.setData("info", //$NON-NLS-1$
 								connectionStatus.getMessage());
 					} else if (connectionStatus.getSeverity() == IStatus.INFO) {
-						testResultLabel.setForeground(Display.getDefault()
-								.getSystemColor(SWT.COLOR_DARK_GREEN));
-						testResultLabel.setText(
-								Messages.AbstractDebugWebLaunchSettingsSection_Connected_with_warnings);
+						testResultLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_GREEN));
+						testResultLabel.setText(Messages.AbstractDebugWebLaunchSettingsSection_Connected_with_warnings);
 						/*
 						 * Update the password field in case that the info
 						 * indicated a password change.
 						 */
-						if (connectionStatus
-								.getCode() == TunnelTester.PASSWORD_CHANGED_CODE) {
+						if (connectionStatus.getCode() == TunnelTester.PASSWORD_CHANGED_CODE) {
 							password.setText(connectionStatus.getMessage());
 						}
-					} else if (connectionStatus
-							.getSeverity() == IStatus.ERROR) {
-						testResultLabel.setCursor(Display.getDefault()
-								.getSystemCursor(SWT.CURSOR_HAND));
-						testResultLabel.setForeground(Display.getDefault()
-								.getSystemColor(SWT.COLOR_DARK_RED));
-						testResultLabel.setText(
-								Messages.AbstractDebugWebLaunchSettingsSection_Failed_to_connect);
+					} else if (connectionStatus.getSeverity() == IStatus.ERROR) {
+						testResultLabel.setCursor(Display.getDefault().getSystemCursor(SWT.CURSOR_HAND));
+						testResultLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_RED));
+						testResultLabel.setText(Messages.AbstractDebugWebLaunchSettingsSection_Failed_to_connect);
 						testResultLabel.setData("info", //$NON-NLS-1$
 								connectionStatus.getMessage());
 					}
@@ -514,8 +451,7 @@ public abstract class AbstractDebugWebLaunchSettingsSection
 					testButton.setEnabled(true);
 					testResultLabel.setCursor(null);
 					testResultLabel.setForeground(null);
-					testResultLabel.setText(
-							Messages.AbstractDebugWebLaunchSettingsSection_Canceled);
+					testResultLabel.setText(Messages.AbstractDebugWebLaunchSettingsSection_Canceled);
 				}
 				return org.eclipse.core.runtime.Status.OK_STATUS;
 			}

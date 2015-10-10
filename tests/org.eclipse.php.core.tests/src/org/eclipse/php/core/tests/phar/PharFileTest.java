@@ -55,8 +55,7 @@ public class PharFileTest {
 					continue;
 				}
 				if (pharFolder.isDirectory()) {
-					IPath stubLocation = new Path(pharFolder.getAbsolutePath())
-							.append(PharConstants.STUB_PATH);
+					IPath stubLocation = new Path(pharFolder.getAbsolutePath()).append(PharConstants.STUB_PATH);
 					PharPackage pharPackage = new PharPackage();
 
 					if (stubLocation.toFile().exists()) {
@@ -64,16 +63,13 @@ public class PharFileTest {
 						pharPackage.setStubLocation(stubLocation);
 					}
 					pharPackage.setExportType(PharConstants.PHAR);
-					list.add(new Object[] { pharFolder.getName(),
-							pharFolder.getAbsolutePath(), pharPackage,
+					list.add(new Object[] { pharFolder.getName(), pharFolder.getAbsolutePath(), pharPackage,
 							PharConstants.NONE_COMPRESSED, Digest.SHA1_TYPE });
 
-					list.add(new Object[] { pharFolder.getName(),
-							pharFolder.getAbsolutePath(), pharPackage,
+					list.add(new Object[] { pharFolder.getName(), pharFolder.getAbsolutePath(), pharPackage,
 							PharConstants.BZ2_COMPRESSED, Digest.SHA1_TYPE });
 
-					list.add(new Object[] { pharFolder.getName(),
-							pharFolder.getAbsolutePath(), pharPackage,
+					list.add(new Object[] { pharFolder.getName(), pharFolder.getAbsolutePath(), pharPackage,
 							PharConstants.GZ_COMPRESSED, Digest.MD5_TYPE });
 				}
 			}
@@ -84,8 +80,7 @@ public class PharFileTest {
 	private static IPath getResourceFolder(String fileName) {
 		IPath path = null;
 		try {
-			path = new Path(FileLocator.getBundleFile(
-					PHPCoreTests.getDefault().getBundle()).getAbsolutePath())
+			path = new Path(FileLocator.getBundleFile(PHPCoreTests.getDefault().getBundle()).getAbsolutePath())
 					.append(fileName);
 		} catch (IOException e) {
 			fail(e.getLocalizedMessage());
@@ -93,24 +88,20 @@ public class PharFileTest {
 		return path;
 	}
 
-	public void compareContent(String pharFileFolder, PharFile pharFile)
-			throws Exception {
+	public void compareContent(String pharFileFolder, PharFile pharFile) throws Exception {
 		Map<String, PharEntry> pharEntryMap = pharFile.getPharEntryMap();
 		for (Entry<String, PharEntry> entry : pharEntryMap.entrySet()) {
 			String filename = entry.getKey();
 
-			if (PharConstants.SIGNATURE_PATH.endsWith(filename)
-					|| PharConstants.STUB_PATH.endsWith(filename))
+			if (PharConstants.SIGNATURE_PATH.endsWith(filename) || PharConstants.STUB_PATH.endsWith(filename))
 				continue;
 			File file = new File(pharFileFolder, filename);
-			assertTrue(inputStreamEquals(new BufferedInputStream(
-					new FileInputStream(file)), pharFile.getInputStream(entry
-					.getValue())));
+			assertTrue(inputStreamEquals(new BufferedInputStream(new FileInputStream(file)),
+					pharFile.getInputStream(entry.getValue())));
 		}
 	}
 
-	public static boolean inputStreamEquals(InputStream is1, InputStream is2)
-			throws IOException {
+	public static boolean inputStreamEquals(InputStream is1, InputStream is2) throws IOException {
 		byte[] buffer1 = new byte[512];
 		byte[] buffer2 = new byte[512];
 		int n1, n2;
@@ -171,8 +162,8 @@ public class PharFileTest {
 	private final String signature;
 	private PharPackage pharPackage;
 
-	public PharFileTest(String description, String resourceFolder,
-			PharPackage pharPackage, int compressionType, String signature) {
+	public PharFileTest(String description, String resourceFolder, PharPackage pharPackage, int compressionType,
+			String signature) {
 		pharFileFolder = resourceFolder;
 		path = new Path(pharFileFolder);
 		this.pharPackage = pharPackage;
@@ -193,8 +184,7 @@ public class PharFileTest {
 		tempPhar.delete();
 	}
 
-	private File exportTempPhar(String pharFileFolder) throws IOException,
-			CoreException {
+	private File exportTempPhar(String pharFileFolder) throws IOException, CoreException {
 		File result = File.createTempFile("temp", ".phar");
 		// result.deleteOnExit();
 
@@ -213,8 +203,7 @@ public class PharFileTest {
 		return result;
 	}
 
-	private void export(PharFileExporter exporter, File file)
-			throws IOException, CoreException {
+	private void export(PharFileExporter exporter, File file) throws IOException, CoreException {
 		if (file.isFile()) {
 			exportFile(exporter, file);
 		} else {
@@ -222,8 +211,7 @@ public class PharFileTest {
 		}
 	}
 
-	private void exportFolder(PharFileExporter exporter, File file)
-			throws IOException, CoreException {
+	private void exportFolder(PharFileExporter exporter, File file) throws IOException, CoreException {
 		if (file.getName().equalsIgnoreCase("CVS"))
 			return;
 		File[] children = file.listFiles();
@@ -232,11 +220,9 @@ public class PharFileTest {
 		}
 	}
 
-	private void exportFile(PharFileExporter exporter, File file)
-			throws IOException, CoreException {
+	private void exportFile(PharFileExporter exporter, File file) throws IOException, CoreException {
 		String destinationPath = getDestinationPath(file);
-		if (destinationPath.equals(PharConstants.STUB_PATH)
-				|| destinationPath.equals(PharConstants.SIGNATURE_PATH)) {
+		if (destinationPath.equals(PharConstants.STUB_PATH) || destinationPath.equals(PharConstants.SIGNATURE_PATH)) {
 			return;
 		}
 		exporter.write(file, destinationPath);

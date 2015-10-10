@@ -48,9 +48,8 @@ public class WizardControlWrapper implements IControlHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.server.apache.ui.IControlHandler#setTitle(java.lang.String
-	 * )
+	 * @see org.eclipse.php.server.apache.ui.IControlHandler#setTitle(java.lang.
+	 * String )
 	 */
 	public void setTitle(String title) {
 		wizard.setTitle(title);
@@ -104,9 +103,8 @@ public class WizardControlWrapper implements IControlHandler {
 	 * @see org.eclipse.php.internal.ui.wizards.IControlHandler#run(boolean,
 	 * boolean, org.eclipse.jface.operation.IRunnableWithProgress)
 	 */
-	public void run(boolean fork, boolean cancelable,
-			IRunnableWithProgress runnable) throws InvocationTargetException,
-			InterruptedException {
+	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable)
+			throws InvocationTargetException, InterruptedException {
 		wizard.run(fork, cancelable, runnable);
 	}
 

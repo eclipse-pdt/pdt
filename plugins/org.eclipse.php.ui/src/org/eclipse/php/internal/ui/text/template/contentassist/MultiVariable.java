@@ -135,7 +135,6 @@ public class MultiVariable extends TemplateVariable {
 	}
 
 	public Object[][] getAllChoices() {
-		return (Object[][]) fValueMap.values().toArray(
-				new Object[fValueMap.size()][]);
+		return (Object[][]) fValueMap.values().toArray(new Object[fValueMap.size()][]);
 	}
 }

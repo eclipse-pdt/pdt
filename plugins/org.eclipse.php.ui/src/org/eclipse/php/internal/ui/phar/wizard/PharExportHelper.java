@@ -6,8 +6,7 @@ import org.eclipse.php.internal.core.phar.*;
 
 public class PharExportHelper {
 
-	public static IFileExporter createFileExporter(PharPackage pharPackage)
-			throws IOException {
+	public static IFileExporter createFileExporter(PharPackage pharPackage) throws IOException {
 		if (pharPackage.getExportType() == PharConstants.PHAR) {
 			return new PharFileExporter(pharPackage);
 		} else if (pharPackage.getExportType() == PharConstants.TAR) {

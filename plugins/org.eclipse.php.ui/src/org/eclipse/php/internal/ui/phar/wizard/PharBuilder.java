@@ -16,25 +16,24 @@ public abstract class PharBuilder implements IPharBuilder {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void open(PharPackage jarPackage, Shell shell, MultiStatus status)
-			throws CoreException {
+	public void open(PharPackage jarPackage, Shell shell, MultiStatus status) throws CoreException {
 		fStatus = status;
 	}
 
 	// some methods for convenience
 	protected final void addInfo(String message, Throwable error) {
-		fStatus.add(new Status(IStatus.INFO, PHPUiPlugin.getPluginId(),
-				IJavaStatusConstants.INTERNAL_ERROR, message, error));
+		fStatus.add(new Status(IStatus.INFO, PHPUiPlugin.getPluginId(), IJavaStatusConstants.INTERNAL_ERROR, message,
+				error));
 	}
 
 	protected final void addWarning(String message, Throwable error) {
-		fStatus.add(new Status(IStatus.WARNING, PHPUiPlugin.getPluginId(),
-				IJavaStatusConstants.INTERNAL_ERROR, message, error));
+		fStatus.add(new Status(IStatus.WARNING, PHPUiPlugin.getPluginId(), IJavaStatusConstants.INTERNAL_ERROR, message,
+				error));
 	}
 
 	protected final void addError(String message, Throwable error) {
-		fStatus.add(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(),
-				IJavaStatusConstants.INTERNAL_ERROR, message, error));
+		fStatus.add(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IJavaStatusConstants.INTERNAL_ERROR, message,
+				error));
 	}
 
 	protected final void addToStatus(CoreException ex) {
@@ -42,8 +41,7 @@ public abstract class PharBuilder implements IPharBuilder {
 		String message = ex.getLocalizedMessage();
 		if (message == null || message.length() < 1) {
 			message = ""; //$NON-NLS-1$
-			status = new Status(status.getSeverity(), status.getPlugin(),
-					status.getCode(), message, ex);
+			status = new Status(status.getSeverity(), status.getPlugin(), status.getCode(), message, ex);
 		}
 		fStatus.add(status);
 	}

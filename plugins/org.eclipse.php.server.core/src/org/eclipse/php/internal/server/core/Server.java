@@ -27,8 +27,7 @@ import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
 /**
  * A generic server implementation.
  */
-public class Server implements IXMLPreferencesStorable, IAdaptable,
-		IUniqueIdentityElement {
+public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdentityElement {
 
 	// Used as a root element name when saving and loading the preferences.
 	public static final String SERVER_ELEMENT = "server"; //$NON-NLS-1$
@@ -68,8 +67,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable,
 	 * @param publish
 	 * @throws MalformedURLException
 	 */
-	public Server(String name, String host, String baseURL, String documentRoot)
-			throws MalformedURLException {
+	public Server(String name, String host, String baseURL, String documentRoot) throws MalformedURLException {
 		this();
 		setName(name);
 		setHost(host);
@@ -157,8 +155,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable,
 		URL resultURL;
 		try {
 			URL baseURL = new URL(base);
-			resultURL = new URL(baseURL.getProtocol(), baseURL.getHost(),
-					getFormattedPort(port), ""); //$NON-NLS-1$
+			resultURL = new URL(baseURL.getProtocol(), baseURL.getHost(), getFormattedPort(port), ""); //$NON-NLS-1$
 		} catch (MalformedURLException e) {
 			// hopefully this is not called as setBaseURL is safe
 			return base;
@@ -167,8 +164,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable,
 	}
 
 	private int getFormattedPort(String port) {
-		int i = (port == null || port.length() == 0) ? -1 : Integer
-				.valueOf(port);
+		int i = (port == null || port.length() == 0) ? -1 : Integer.valueOf(port);
 		if (i == DEFAULT_HTTP_PORT) {
 			i = -1;
 		}
@@ -215,8 +211,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable,
 
 	}
 
-	protected static String renderCommandLine(String[] commandLine,
-			String separator) {
+	protected static String renderCommandLine(String[] commandLine, String separator) {
 		if (commandLine == null || commandLine.length < 1)
 			return ""; //$NON-NLS-1$
 		StringBuffer buf = new StringBuffer(commandLine[0]);
@@ -298,8 +293,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable,
 	 */
 	public void restoreFromMap(Map<String, Object> map) {
 		@SuppressWarnings("unchecked")
-		Map<String, Object> properties = (Map<String, Object>) map
-				.get(SERVER_ELEMENT);
+		Map<String, Object> properties = (Map<String, Object>) map.get(SERVER_ELEMENT);
 		// This will cause for property change events to be fired on every
 		// attribute set.
 		for (Entry<?, ?> entry : properties.entrySet()) {

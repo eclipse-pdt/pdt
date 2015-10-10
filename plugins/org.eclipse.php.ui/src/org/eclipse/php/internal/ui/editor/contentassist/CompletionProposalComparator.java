@@ -63,8 +63,7 @@ public class CompletionProposalComparator implements Comparator {
 		return compareAlphabetically(p1, p2);
 	}
 
-	public int compareAlphabetically(ICompletionProposal p1,
-			ICompletionProposal p2) {
+	public int compareAlphabetically(ICompletionProposal p1, ICompletionProposal p2) {
 		return getSortKey(p1).compareToIgnoreCase(getSortKey(p2));
 	}
 
@@ -82,8 +81,7 @@ public class CompletionProposalComparator implements Comparator {
 
 	private String getSortKey(ICompletionProposal p) {
 		if (p instanceof AbstractScriptCompletionProposal) {
-			String sortString = ((AbstractScriptCompletionProposal) p)
-					.getSortString();
+			String sortString = ((AbstractScriptCompletionProposal) p).getSortString();
 			if (sortString != null)
 				return sortString;
 		} else if (p instanceof ScriptTemplateProposal) {

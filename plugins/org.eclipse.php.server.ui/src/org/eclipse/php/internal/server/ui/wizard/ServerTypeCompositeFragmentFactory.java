@@ -22,15 +22,13 @@ import org.eclipse.swt.widgets.Composite;
  * Composite fragment factory for server types.
  */
 @SuppressWarnings("restriction")
-public class ServerTypeCompositeFragmentFactory implements
-		ICompositeFragmentFactory {
+public class ServerTypeCompositeFragmentFactory implements ICompositeFragmentFactory {
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.server.apache.ui.wizard.ICompositeFragmentFactory
-	 * #createWizardFragment()
+	 * @see org.eclipse.php.internal.server.apache.ui.wizard.
+	 * ICompositeFragmentFactory #createWizardFragment()
 	 */
 	public WizardFragment createWizardFragment() {
 		return new ServerTypeWizardFragment();
@@ -39,13 +37,12 @@ public class ServerTypeCompositeFragmentFactory implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.server.apache.ui.wizard.ICompositeFragmentFactory
+	 * @see org.eclipse.php.internal.server.apache.ui.wizard.
+	 * ICompositeFragmentFactory
 	 * #createComposite(org.eclipse.swt.widgets.Composite,
 	 * org.eclipse.php.internal.server.apache.ui.IControlHandler)
 	 */
-	public CompositeFragment createComposite(Composite parent,
-			IControlHandler controlHandler) {
+	public CompositeFragment createComposite(Composite parent, IControlHandler controlHandler) {
 		return new ServerTypeCompositeFragment(parent, controlHandler, true);
 	}
 

@@ -66,8 +66,7 @@ public class TextEditUtil {
 		if (edit.getOffset() != children[0].getOffset())
 			return false;
 
-		if (edit.getExclusiveEnd() != children[children.length - 1]
-				.getExclusiveEnd())
+		if (edit.getExclusiveEnd() != children[children.length - 1].getExclusiveEnd())
 			return false;
 
 		for (int i = 0; i < children.length; i++) {
@@ -137,14 +136,12 @@ public class TextEditUtil {
 			int i1 = 0;
 			int i2 = 0;
 			while (i1 < children1.length && i2 < children2.length) {
-				while (children1[i1].getExclusiveEnd() < children2[i2]
-						.getOffset()) {
+				while (children1[i1].getExclusiveEnd() < children2[i2].getOffset()) {
 					i1++;
 					if (i1 >= children1.length)
 						return false;
 				}
-				while (children2[i2].getExclusiveEnd() < children1[i1]
-						.getOffset()) {
+				while (children2[i2].getExclusiveEnd() < children1[i1].getOffset()) {
 					i2++;
 					if (i2 >= children2.length)
 						return false;
@@ -156,18 +153,15 @@ public class TextEditUtil {
 				if (overlaps(children1[i1], children2[i2]))
 					return true;
 
-				int mergeEnd = Math.max(children1[i1].getExclusiveEnd(),
-						children2[i2].getExclusiveEnd());
+				int mergeEnd = Math.max(children1[i1].getExclusiveEnd(), children2[i2].getExclusiveEnd());
 
 				i1++;
 				i2++;
 
-				if (i1 < children1.length
-						&& children1[i1].getOffset() < mergeEnd) {
+				if (i1 < children1.length && children1[i1].getOffset() < mergeEnd) {
 					return true;
 				}
-				if (i2 < children2.length
-						&& children2[i2].getOffset() < mergeEnd) {
+				if (i2 < children2.length && children2[i2].getOffset() < mergeEnd) {
 					return true;
 				}
 			}
@@ -260,8 +254,7 @@ public class TextEditUtil {
 		return result;
 	}
 
-	private static void merge(TextEdit edit1, TextEdit edit2,
-			MultiTextEdit result) {
+	private static void merge(TextEdit edit1, TextEdit edit2, MultiTextEdit result) {
 		if (edit1 instanceof MultiTextEdit && edit2 instanceof MultiTextEdit) {
 			MultiTextEdit multiTextEdit1 = (MultiTextEdit) edit1;
 			if (!multiTextEdit1.hasChildren()) {
@@ -282,9 +275,7 @@ public class TextEditUtil {
 			int i2 = 0;
 			while (i1 < children1.length && i2 < children2.length) {
 
-				while (i1 < children1.length
-						&& children1[i1].getExclusiveEnd() < children2[i2]
-								.getOffset()) {
+				while (i1 < children1.length && children1[i1].getExclusiveEnd() < children2[i2].getOffset()) {
 					edit1.removeChild(0);
 					result.addChild(children1[i1]);
 					i1++;
@@ -292,9 +283,7 @@ public class TextEditUtil {
 				if (i1 >= children1.length)
 					break;
 
-				while (i2 < children2.length
-						&& children2[i2].getExclusiveEnd() < children1[i1]
-								.getOffset()) {
+				while (i2 < children2.length && children2[i2].getExclusiveEnd() < children1[i1].getOffset()) {
 					edit2.removeChild(0);
 					result.addChild(children2[i2]);
 					i2++;

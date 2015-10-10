@@ -23,16 +23,14 @@ import org.eclipse.jface.viewers.ViewerFilter;
 /**
  * Filters out all compilation units and class files elements.
  */
-public class PHPContentTypeFilter extends ViewerFilter implements
-		IExecutableExtension {
+public class PHPContentTypeFilter extends ViewerFilter implements IExecutableExtension {
 
 	private static final String ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE = "org.eclipse.wst.html.core.htmlsource"; //$NON-NLS-1$
 	IContentType contentType;
 
 	public PHPContentTypeFilter() {
 		super();
-		contentType = Platform.getContentTypeManager().getContentType(
-				ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE);
+		contentType = Platform.getContentTypeManager().getContentType(ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE);
 	}
 
 	/**
@@ -51,12 +49,11 @@ public class PHPContentTypeFilter extends ViewerFilter implements
 		return true;
 	}
 
-	public void setInitializationData(IConfigurationElement config,
-			String propertyName, Object data) throws CoreException {
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
+			throws CoreException {
 		String pattern = config.getAttribute("pattern"); //$NON-NLS-1$
 		if (pattern != null) {
-			IContentType newcontentType = Platform.getContentTypeManager()
-					.getContentType(pattern);
+			IContentType newcontentType = Platform.getContentTypeManager().getContentType(pattern);
 			if (newcontentType != null)
 				contentType = newcontentType;
 		}

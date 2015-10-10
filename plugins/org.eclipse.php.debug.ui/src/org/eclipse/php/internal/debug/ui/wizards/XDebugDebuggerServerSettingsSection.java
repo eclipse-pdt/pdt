@@ -38,8 +38,7 @@ import org.eclipse.swt.widgets.*;
  * @author Bartlomiej Laczkowski
  */
 @SuppressWarnings("restriction")
-public class XDebugDebuggerServerSettingsSection implements
-		IDebuggerSettingsSection {
+public class XDebugDebuggerServerSettingsSection implements IDebuggerSettingsSection {
 
 	protected IDebuggerSettingsWorkingCopy settingsWorkingCopy;
 	protected CompositeFragment compositeFragment;
@@ -48,10 +47,8 @@ public class XDebugDebuggerServerSettingsSection implements
 	/**
 	 * Creates new section.
 	 */
-	public XDebugDebuggerServerSettingsSection(
-			final CompositeFragment compositeFragment,
-			final Composite debuggerSettingsComposite,
-			final IDebuggerSettingsWorkingCopy settingsWorkingCopy) {
+	public XDebugDebuggerServerSettingsSection(final CompositeFragment compositeFragment,
+			final Composite debuggerSettingsComposite, final IDebuggerSettingsWorkingCopy settingsWorkingCopy) {
 		this.settingsWorkingCopy = settingsWorkingCopy;
 		this.compositeFragment = compositeFragment;
 		this.settingsComposite = debuggerSettingsComposite;
@@ -61,14 +58,12 @@ public class XDebugDebuggerServerSettingsSection implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#performOK
-	 * ()
+	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
+	 * performOK ()
 	 */
 	@Override
 	public boolean performOK() {
-		DBGpProxyHandlersManager.INSTANCE.registerHandler(settingsWorkingCopy
-				.getOwnerId());
+		DBGpProxyHandlersManager.INSTANCE.registerHandler(settingsWorkingCopy.getOwnerId());
 		return true;
 	}
 
@@ -86,55 +81,39 @@ public class XDebugDebuggerServerSettingsSection implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#validate
-	 * ()
+	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
+	 * validate ()
 	 */
 	public void validate() {
 		// Reset state
-		compositeFragment.setMessage(compositeFragment.getDescription(),
-				IMessageProvider.NONE);
+		compositeFragment.setMessage(compositeFragment.getDescription(), IMessageProvider.NONE);
 		// Check errors
-		String clientPort = (String) settingsWorkingCopy
-				.getAttribute(PROP_CLIENT_PORT);
+		String clientPort = (String) settingsWorkingCopy.getAttribute(PROP_CLIENT_PORT);
 		if (clientPort == null || clientPort.isEmpty()) {
-			compositeFragment
-					.setMessage(
-							Messages.XDebugDebuggerSettingsSection_Client_port_is_missing,
-							IMessageProvider.ERROR);
+			compositeFragment.setMessage(Messages.XDebugDebuggerSettingsSection_Client_port_is_missing,
+					IMessageProvider.ERROR);
 			return;
 		}
 		int port = Integer.valueOf(clientPort);
 		if (!PHPLaunchUtilities.isPortAvailable(port)
-				&& !PHPLaunchUtilities.isDebugDaemonActive(port,
-						XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID)) {
-			compositeFragment
-					.setMessage(
-							MessageFormat
-									.format(Messages.DebuggerCommonSettingsSection_Port_is_already_in_use,
-											clientPort),
-							IMessageProvider.WARNING);
+				&& !PHPLaunchUtilities.isDebugDaemonActive(port, XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID)) {
+			compositeFragment.setMessage(
+					MessageFormat.format(Messages.DebuggerCommonSettingsSection_Port_is_already_in_use, clientPort),
+					IMessageProvider.WARNING);
 			return;
 		}
-		boolean isProxyEnabled = Boolean.valueOf(settingsWorkingCopy
-				.getAttribute(PROP_PROXY_ENABLE));
+		boolean isProxyEnabled = Boolean.valueOf(settingsWorkingCopy.getAttribute(PROP_PROXY_ENABLE));
 		if (isProxyEnabled) {
-			String proxyIdeKey = settingsWorkingCopy
-					.getAttribute(PROP_PROXY_IDE_KEY);
+			String proxyIdeKey = settingsWorkingCopy.getAttribute(PROP_PROXY_IDE_KEY);
 			if (proxyIdeKey == null || proxyIdeKey.isEmpty()) {
-				compositeFragment
-						.setMessage(
-								Messages.XDebugDebuggerServerSettingsSection_IDE_key_is_missing,
-								IMessageProvider.ERROR);
+				compositeFragment.setMessage(Messages.XDebugDebuggerServerSettingsSection_IDE_key_is_missing,
+						IMessageProvider.ERROR);
 				return;
 			}
-			String proxyAddress = settingsWorkingCopy
-					.getAttribute(PROP_PROXY_ADDRESS);
+			String proxyAddress = settingsWorkingCopy.getAttribute(PROP_PROXY_ADDRESS);
 			if (proxyAddress == null || proxyAddress.isEmpty()) {
-				compositeFragment
-						.setMessage(
-								Messages.XDebugDebuggerServerSettingsSection_Proxy_address_is_missing,
-								IMessageProvider.ERROR);
+				compositeFragment.setMessage(Messages.XDebugDebuggerServerSettingsSection_Proxy_address_is_missing,
+						IMessageProvider.ERROR);
 				return;
 			}
 		}
@@ -143,9 +122,8 @@ public class XDebugDebuggerServerSettingsSection implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#canTest
-	 * ()
+	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
+	 * canTest ()
 	 */
 	@Override
 	public boolean canTest() {
@@ -172,17 +150,14 @@ public class XDebugDebuggerServerSettingsSection implements
 		connectionGroup.setLayout(cgLayout);
 		GridData cgGridData = new GridData(GridData.FILL_HORIZONTAL);
 		connectionGroup.setLayoutData(cgGridData);
-		connectionGroup
-				.setText(Messages.XDebugDebuggerSettingsSection_Connection_settings);
+		connectionGroup.setText(Messages.XDebugDebuggerSettingsSection_Connection_settings);
 		// Client port
 		Label clientPortLabel = new Label(connectionGroup, SWT.None);
-		clientPortLabel
-				.setText(Messages.XDebugDebuggerSettingsSection_Client_port);
+		clientPortLabel.setText(Messages.XDebugDebuggerSettingsSection_Client_port);
 		final Text clientPortText = new Text(connectionGroup, SWT.BORDER);
 		GridData cptLayoutData = new GridData(GridData.FILL_HORIZONTAL);
 		clientPortText.setLayoutData(cptLayoutData);
-		clientPortText.setText(settingsWorkingCopy
-				.getAttribute(PROP_CLIENT_PORT));
+		clientPortText.setText(settingsWorkingCopy.getAttribute(PROP_CLIENT_PORT));
 		clientPortText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				String port = clientPortText.getText();
@@ -196,24 +171,20 @@ public class XDebugDebuggerServerSettingsSection implements
 		GridData dbgpGridData = new GridData(GridData.FILL_HORIZONTAL);
 		dbgpGridData.horizontalSpan = 2;
 		advancedSubGroup.setLayoutData(dbgpGridData);
-		advancedSubGroup
-				.setText(Messages.XDebugDebuggerSettingsSection_Advanced_group);
+		advancedSubGroup.setText(Messages.XDebugDebuggerSettingsSection_Advanced_group);
 		// Enable DBGp proxy
 		final Button enableProxy = new Button(advancedSubGroup, SWT.CHECK);
 		GridData epGridData = new GridData(SWT.LEFT, SWT.CENTER, true, false);
 		epGridData.horizontalSpan = 2;
 		enableProxy.setLayoutData(epGridData);
-		enableProxy
-				.setText(Messages.XDebugDebuggerSettingsSection_Enable_DBGp_proxy);
+		enableProxy.setText(Messages.XDebugDebuggerSettingsSection_Enable_DBGp_proxy);
 		// Proxy IDE key
 		Label proxyIdeKeyLabel = new Label(advancedSubGroup, SWT.None);
-		proxyIdeKeyLabel
-				.setText(Messages.XDebugDebuggerSettingsSection_Proxy_ide_key);
+		proxyIdeKeyLabel.setText(Messages.XDebugDebuggerSettingsSection_Proxy_ide_key);
 		final Text proxyIdeKeyText = new Text(advancedSubGroup, SWT.BORDER);
 		GridData pikLayoutData = new GridData(GridData.FILL_HORIZONTAL);
 		proxyIdeKeyText.setLayoutData(pikLayoutData);
-		proxyIdeKeyText.setText(settingsWorkingCopy
-				.getAttribute(PROP_PROXY_IDE_KEY));
+		proxyIdeKeyText.setText(settingsWorkingCopy.getAttribute(PROP_PROXY_IDE_KEY));
 		proxyIdeKeyText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				String ideKey = proxyIdeKeyText.getText();
@@ -223,18 +194,15 @@ public class XDebugDebuggerServerSettingsSection implements
 		});
 		// Proxy address
 		Label proxyAddressLabel = new Label(advancedSubGroup, SWT.None);
-		proxyAddressLabel
-				.setText(Messages.XDebugDebuggerSettingsSection_Proxy_address);
+		proxyAddressLabel.setText(Messages.XDebugDebuggerSettingsSection_Proxy_address);
 		final Text proxyAddressText = new Text(advancedSubGroup, SWT.BORDER);
 		GridData patLayoutData = new GridData(GridData.FILL_HORIZONTAL);
 		proxyAddressText.setLayoutData(patLayoutData);
-		proxyAddressText.setText(settingsWorkingCopy
-				.getAttribute(PROP_PROXY_ADDRESS));
+		proxyAddressText.setText(settingsWorkingCopy.getAttribute(PROP_PROXY_ADDRESS));
 		proxyAddressText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				String proxyAddress = proxyAddressText.getText();
-				settingsWorkingCopy.setAttribute(PROP_PROXY_ADDRESS,
-						proxyAddress);
+				settingsWorkingCopy.setAttribute(PROP_PROXY_ADDRESS, proxyAddress);
 				validate();
 			}
 		});
@@ -249,13 +217,11 @@ public class XDebugDebuggerServerSettingsSection implements
 			public void widgetDefaultSelected(SelectionEvent e) {
 				proxyIdeKeyText.setEnabled(enableProxy.getSelection());
 				proxyAddressText.setEnabled(enableProxy.getSelection());
-				settingsWorkingCopy.setAttribute(PROP_PROXY_ENABLE,
-						String.valueOf(enableProxy.getSelection()));
+				settingsWorkingCopy.setAttribute(PROP_PROXY_ENABLE, String.valueOf(enableProxy.getSelection()));
 				validate();
 			}
 		});
-		boolean isProxyEnabled = Boolean.valueOf(settingsWorkingCopy
-				.getAttribute(PROP_PROXY_ENABLE));
+		boolean isProxyEnabled = Boolean.valueOf(settingsWorkingCopy.getAttribute(PROP_PROXY_ENABLE));
 		enableProxy.setSelection(isProxyEnabled);
 		proxyIdeKeyText.setEnabled(isProxyEnabled);
 		proxyAddressText.setEnabled(isProxyEnabled);

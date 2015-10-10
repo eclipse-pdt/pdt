@@ -21,8 +21,8 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ SemanticHighlightingTests.class, ContentAssistTests.class,
-		FormatterAutoEditTests.class, CommandsTests.class })
+@SuiteClasses({ SemanticHighlightingTests.class, ContentAssistTests.class, FormatterAutoEditTests.class,
+		CommandsTests.class })
 public class AllTests {
 
 }

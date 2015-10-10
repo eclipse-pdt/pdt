@@ -40,19 +40,15 @@ public class RenameProfileDialog extends StatusDialog {
 	private final ProfileManager fManager;
 	private Profile fRenamedProfile;
 
-	public RenameProfileDialog(Shell parentShell, Profile profile,
-			ProfileManager manager) {
+	public RenameProfileDialog(Shell parentShell, Profile profile, ProfileManager manager) {
 		super(parentShell);
 		fManager = manager;
 		setTitle(FormatterMessages.RenameProfileDialog_dialog_title);
 		fProfile = profile;
 		fOk = new StatusInfo();
-		fDuplicate = new StatusInfo(
-				IStatus.ERROR,
+		fDuplicate = new StatusInfo(IStatus.ERROR,
 				FormatterMessages.RenameProfileDialog_status_message_profile_with_this_name_already_exists);
-		fEmpty = new StatusInfo(
-				IStatus.ERROR,
-				FormatterMessages.RenameProfileDialog_status_message_profile_name_empty);
+		fEmpty = new StatusInfo(IStatus.ERROR, FormatterMessages.RenameProfileDialog_status_message_profile_name_empty);
 		fNoMessage = new StatusInfo(IStatus.ERROR, new String());
 	}
 
@@ -75,8 +71,7 @@ public class RenameProfileDialog extends StatusDialog {
 		gd.horizontalSpan = numColumns;
 		gd.widthHint = convertWidthInCharsToPixels(60);
 		fNameLabel = new Label(composite, SWT.NONE);
-		fNameLabel
-				.setText(FormatterMessages.RenameProfileDialog_dialog_label_enter_a_new_name);
+		fNameLabel.setText(FormatterMessages.RenameProfileDialog_dialog_label_enter_a_new_name);
 		fNameLabel.setLayoutData(gd);
 
 		// Create text field to enter name

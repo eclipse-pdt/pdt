@@ -72,7 +72,7 @@ public class PHPSearchActionGroup extends ActionGroup {
 		fOccurrencesGroup = new OccurrencesSearchGroup(site);
 		fReferencesGroup = new ReferencesSearchGroup(site, PHPLanguageToolkit.getDefault());
 		fDeclarationsGroup = new DeclarationsSearchGroup(site, PHPLanguageToolkit.getDefault());
-		
+
 		proxySelectionProvider = new WTPToDLTKSelectionProvider(site.getSelectionProvider());
 		fReferencesGroup.setSpecialSelectionProvider(proxySelectionProvider);
 		fDeclarationsGroup.setSpecialSelectionProvider(proxySelectionProvider);
@@ -110,16 +110,13 @@ public class PHPSearchActionGroup extends ActionGroup {
 	 */
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
-		if (!PreferenceConstants.getPreferenceStore()
-				.getBoolean(PreferenceConstants.SEARCH_USE_REDUCED_MENU)) {
+		if (!PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.SEARCH_USE_REDUCED_MENU)) {
 			IMenuManager target = menu;
 			IMenuManager searchSubMenu = null;
 			if (fEditor != null) {
 				String groupName = "SearchMessages.group_search"; //$NON-NLS-1$
-				searchSubMenu = new MenuManager(groupName,
-						ITextEditorActionConstants.GROUP_FIND);
-				searchSubMenu.add(
-						new GroupMarker(ITextEditorActionConstants.GROUP_FIND));
+				searchSubMenu = new MenuManager(groupName, ITextEditorActionConstants.GROUP_FIND);
+				searchSubMenu.add(new GroupMarker(ITextEditorActionConstants.GROUP_FIND));
 				target = searchSubMenu;
 			}
 
@@ -130,8 +127,7 @@ public class PHPSearchActionGroup extends ActionGroup {
 
 			// no other way to find out if we have added items.
 			if (searchSubMenu != null && searchSubMenu.getItems().length > 2) {
-				menu.appendToGroup(ITextEditorActionConstants.GROUP_FIND,
-						searchSubMenu);
+				menu.appendToGroup(ITextEditorActionConstants.GROUP_FIND, searchSubMenu);
 			}
 
 			fReferencesGroup.fillContextMenu(target);

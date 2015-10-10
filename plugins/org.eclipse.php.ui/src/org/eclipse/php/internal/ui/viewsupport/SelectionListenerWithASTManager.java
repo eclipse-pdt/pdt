@@ -77,8 +77,7 @@ public class SelectionListenerWithASTManager {
 			};
 
 			fPostSelectionListener = new ISelectionListener() {
-				public void selectionChanged(IWorkbenchPart part,
-						ISelection selection) {
+				public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 					if (part == fPart && selection instanceof ITextSelection)
 						firePostSelectionChanged((ITextSelection) selection);
 				}
@@ -91,13 +90,10 @@ public class SelectionListenerWithASTManager {
 
 		public void install(ISelectionListenerWithAST listener) {
 			if (isEmpty()) {
-				fPart.getEditorSite().getPage()
-						.addPostSelectionListener(fPostSelectionListener);
-				ISelectionProvider selectionProvider = fPart
-						.getSelectionProvider();
+				fPart.getEditorSite().getPage().addPostSelectionListener(fPostSelectionListener);
+				ISelectionProvider selectionProvider = fPart.getSelectionProvider();
 				if (selectionProvider != null)
-					selectionProvider
-							.addSelectionChangedListener(fSelectionListener);
+					selectionProvider.addSelectionChangedListener(fSelectionListener);
 			}
 			fAstListeners.add(listener);
 		}
@@ -105,13 +101,10 @@ public class SelectionListenerWithASTManager {
 		public void uninstall(ISelectionListenerWithAST listener) {
 			fAstListeners.remove(listener);
 			if (isEmpty()) {
-				fPart.getEditorSite().getPage()
-						.removePostSelectionListener(fPostSelectionListener);
-				ISelectionProvider selectionProvider = fPart
-						.getSelectionProvider();
+				fPart.getEditorSite().getPage().removePostSelectionListener(fPostSelectionListener);
+				ISelectionProvider selectionProvider = fPart.getSelectionProvider();
 				if (selectionProvider != null)
-					selectionProvider
-							.removeSelectionChangedListener(fSelectionListener);
+					selectionProvider.removeSelectionChangedListener(fSelectionListener);
 			}
 		}
 
@@ -137,8 +130,7 @@ public class SelectionListenerWithASTManager {
 			if (fCurrentJob != null) {
 				fCurrentJob.cancel();
 			}
-			final ISourceModule typeRoot = EditorUtility
-					.getEditorInputModelElement(fPart, false);
+			final ISourceModule typeRoot = EditorUtility.getEditorInputModelElement(fPart, false);
 			if (typeRoot == null) {
 				return;
 			}
@@ -149,8 +141,7 @@ public class SelectionListenerWithASTManager {
 						monitor = new NullProgressMonitor();
 					}
 					synchronized (fJobLock) {
-						return calculateASTandInform(typeRoot, selection,
-								monitor);
+						return calculateASTandInform(typeRoot, selection, monitor);
 					}
 				}
 			};
@@ -159,15 +150,14 @@ public class SelectionListenerWithASTManager {
 			fCurrentJob.schedule();
 		}
 
-		protected final IStatus calculateASTandInform(ISourceModule input,
-				ITextSelection selection, IProgressMonitor monitor) {
+		protected final IStatus calculateASTandInform(ISourceModule input, ITextSelection selection,
+				IProgressMonitor monitor) {
 			if (monitor.isCanceled()) {
 				return Status.CANCEL_STATUS;
 			}
 			// create AST
 			try {
-				Program astRoot = SharedASTProvider.getAST(input,
-						SharedASTProvider.WAIT_ACTIVE_ONLY, monitor);
+				Program astRoot = SharedASTProvider.getAST(input, SharedASTProvider.WAIT_ACTIVE_ONLY, monitor);
 
 				if (astRoot != null && !monitor.isCanceled()) {
 					Object[] listeners;
@@ -175,8 +165,7 @@ public class SelectionListenerWithASTManager {
 						listeners = fAstListeners.getListeners();
 					}
 					for (int i = 0; i < listeners.length; i++) {
-						((ISelectionListenerWithAST) listeners[i])
-								.selectionChanged(fPart, selection, astRoot);
+						((ISelectionListenerWithAST) listeners[i]).selectionChanged(fPart, selection, astRoot);
 						if (monitor.isCanceled()) {
 							return Status.CANCEL_STATUS;
 						}
@@ -186,11 +175,9 @@ public class SelectionListenerWithASTManager {
 			} catch (OperationCanceledException e) {
 				// thrown when canceling the AST creation
 			} catch (ModelException e) {
-				new Status(Status.ERROR, PHPUiPlugin.ID,
-						"error retrieving AST from Provider"); //$NON-NLS-1$
+				new Status(Status.ERROR, PHPUiPlugin.ID, "error retrieving AST from Provider"); //$NON-NLS-1$
 			} catch (IOException e) {
-				new Status(Status.ERROR, PHPUiPlugin.ID,
-						"error retrieving AST from Provider"); //$NON-NLS-1$
+				new Status(Status.ERROR, PHPUiPlugin.ID, "error retrieving AST from Provider"); //$NON-NLS-1$
 			}
 			return Status.CANCEL_STATUS;
 		}
@@ -229,8 +216,7 @@ public class SelectionListenerWithASTManager {
 	 * @param listener
 	 *            The listener to unregister.
 	 */
-	public void removeListener(ITextEditor part,
-			ISelectionListenerWithAST listener) {
+	public void removeListener(ITextEditor part, ISelectionListenerWithAST listener) {
 		synchronized (this) {
 			PartListenerGroup partListener = fListenerGroups.get(part);
 			if (partListener != null) {

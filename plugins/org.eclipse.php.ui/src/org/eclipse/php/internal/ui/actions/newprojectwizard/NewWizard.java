@@ -50,8 +50,7 @@ public class NewWizard extends Wizard {
 	 * Create the wizard pages
 	 */
 	public void addPages() {
-		IWizardCategory root = WorkbenchPlugin.getDefault()
-				.getNewWizardRegistry().getRootCategory();
+		IWizardCategory root = WorkbenchPlugin.getDefault().getNewWizardRegistry().getRootCategory();
 		IWizardDescriptor[] primary = new IWizardDescriptor[0];
 		if (projectsOnly) {
 			List<IWizardDescriptor> wizards = new ArrayList<IWizardDescriptor>();
@@ -59,18 +58,14 @@ public class NewWizard extends Wizard {
 			primary = wizards.toArray(new IWizardDescriptor[wizards.size()]);
 		}
 
-		mainPage = new NewWizardSelectionPage(workbench, selection, root,
-				primary, projectsOnly);
+		mainPage = new NewWizardSelectionPage(workbench, selection, root, primary, projectsOnly);
 		addPage(mainPage);
 	}
 
-	private void fillWizards(IWizardCategory root,
-			List<IWizardDescriptor> wizards) {
+	private void fillWizards(IWizardCategory root, List<IWizardDescriptor> wizards) {
 		for (IWizardDescriptor wizardDescriptor : root.getWizards()) {
-			if (wizardDescriptor.getId().toLowerCase().indexOf(ZEND) >= 0
-					&& (wizardDescriptor.getCategory() == null || wizardDescriptor
-							.getCategory().getId().toLowerCase()
-							.indexOf(EXAMPLE) < 0)) {
+			if (wizardDescriptor.getId().toLowerCase().indexOf(ZEND) >= 0 && (wizardDescriptor.getCategory() == null
+					|| wizardDescriptor.getCategory().getId().toLowerCase().indexOf(EXAMPLE) < 0)) {
 				wizards.add(wizardDescriptor);
 			}
 		}
@@ -112,8 +107,7 @@ public class NewWizard extends Wizard {
 	 * @param currentSelection
 	 *            the current selection
 	 */
-	public void init(IWorkbench aWorkbench,
-			IStructuredSelection currentSelection) {
+	public void init(IWorkbench aWorkbench, IStructuredSelection currentSelection) {
 		this.workbench = aWorkbench;
 		this.selection = currentSelection;
 
@@ -125,8 +119,8 @@ public class NewWizard extends Wizard {
 				setWindowTitle(WorkbenchMessages.NewWizard_title);
 			}
 		}
-		setDefaultPageImageDescriptor(WorkbenchImages
-				.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_NEW_WIZ));
+		setDefaultPageImageDescriptor(
+				WorkbenchImages.getImageDescriptor(IWorkbenchGraphicConstants.IMG_WIZBAN_NEW_WIZ));
 		setNeedsProgressMonitor(true);
 	}
 

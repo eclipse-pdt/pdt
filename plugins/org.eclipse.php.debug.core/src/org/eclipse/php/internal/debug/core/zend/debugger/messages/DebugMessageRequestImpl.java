@@ -13,8 +13,7 @@ package org.eclipse.php.internal.debug.core.zend.debugger.messages;
 
 import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 
-public abstract class DebugMessageRequestImpl extends DebugMessageImpl
-		implements IDebugRequestMessage {
+public abstract class DebugMessageRequestImpl extends DebugMessageImpl implements IDebugRequestMessage {
 
 	private int id;
 

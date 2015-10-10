@@ -38,8 +38,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.*;
  * @author NirC, 2008
  */
 
-public class RemoveBlockCommentHandler extends CommentHandler implements
-		IHandler {
+public class RemoveBlockCommentHandler extends CommentHandler implements IHandler {
 
 	public RemoveBlockCommentHandler() {
 		super();
@@ -56,8 +55,7 @@ public class RemoveBlockCommentHandler extends CommentHandler implements
 				textEditor = (ITextEditor) o;
 		}
 		if (textEditor != null) {
-			IDocument document = textEditor.getDocumentProvider().getDocument(
-					textEditor.getEditorInput());
+			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 
 			if (document != null) {
 				// get current text selection
@@ -78,17 +76,14 @@ public class RemoveBlockCommentHandler extends CommentHandler implements
 				if (document instanceof IStructuredDocument) {
 					int selectionOffset = textSelection.getOffset();
 					IStructuredDocument sDoc = (IStructuredDocument) document;
-					IStructuredDocumentRegion sdRegion = sDoc
-							.getRegionAtCharacterOffset(selectionOffset);
-					ITextRegion textRegion = sdRegion
-							.getRegionAtCharacterOffset(selectionOffset);
+					IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selectionOffset);
+					ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selectionOffset);
 
 					ITextRegionCollection container = sdRegion;
 
 					if (textRegion instanceof ITextRegionContainer) {
 						container = (ITextRegionContainer) textRegion;
-						textRegion = container
-								.getRegionAtCharacterOffset(selectionOffset);
+						textRegion = container.getRegionAtCharacterOffset(selectionOffset);
 					}
 					if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 						processAction(textEditor, document, textSelection);
@@ -102,18 +97,15 @@ public class RemoveBlockCommentHandler extends CommentHandler implements
 		return null;
 	}
 
-	void processAction(ITextEditor textEditor, IDocument document,
-			ITextSelection textSelection) {
+	void processAction(ITextEditor textEditor, IDocument document, ITextSelection textSelection) {
 
 		int selectionOffset = textSelection.getOffset();
 		int selectionLength = textSelection.getLength();
 
-		IStructuredModel model = StructuredModelManager.getModelManager()
-				.getExistingModelForEdit(document);
+		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
 		if (model != null) {
 			try {
-				model.beginRecording(this,
-						PHPUIMessages.RemoveBlockComment_tooltip);
+				model.beginRecording(this, PHPUIMessages.RemoveBlockComment_tooltip);
 				model.aboutToChangeModel();
 
 				if (document instanceof IStructuredDocument) {
@@ -121,9 +113,8 @@ public class RemoveBlockCommentHandler extends CommentHandler implements
 					IStructuredDocumentRegion regionAtCharacterOffset = sDoc
 							.getRegionAtCharacterOffset(selectionOffset);
 					int docRegionOffset = regionAtCharacterOffset.getStart();
-					ITextRegion textRegion = sDoc.getRegionAtCharacterOffset(
-							selectionOffset).getRegionAtCharacterOffset(
-							selectionOffset);
+					ITextRegion textRegion = sDoc.getRegionAtCharacterOffset(selectionOffset)
+							.getRegionAtCharacterOffset(selectionOffset);
 
 					Stack<TextLocation> phpCommentLocationStack = new Stack<TextLocation>(); // stack
 																								// of
@@ -139,11 +130,9 @@ public class RemoveBlockCommentHandler extends CommentHandler implements
 
 					try {
 						int textRegionOffset = textRegion.getStart();
-						int normelizedOffset = textRegionOffset
-								+ docRegionOffset;
+						int normelizedOffset = textRegionOffset + docRegionOffset;
 						ITextRegion[] phpTokens = ((PhpScriptRegion) textRegion)
-								.getPhpTokens(selectionOffset
-										- normelizedOffset, selectionLength);
+								.getPhpTokens(selectionOffset - normelizedOffset, selectionLength);
 
 						int lastOffsetParsed = -1;
 
@@ -156,43 +145,29 @@ public class RemoveBlockCommentHandler extends CommentHandler implements
 																	// cycles...
 								continue;
 
-							if (isCommentStartRegion(token)
-									|| isCommentRegion(token)
-									|| isCommentEndRegion(token)) {
+							if (isCommentStartRegion(token) || isCommentRegion(token) || isCommentEndRegion(token)) {
 								// if we are somewhere within a comment
 								// (start/end/body), this will find the start
 								// and end tokens
-								ITextRegion startToken = findCommentStartToken(
-										token, (PhpScriptRegion) textRegion);
-								TextLocation commentOffsets = new TextLocation(
-										startToken.getStart()
-												+ normelizedOffset,
+								ITextRegion startToken = findCommentStartToken(token, (PhpScriptRegion) textRegion);
+								TextLocation commentOffsets = new TextLocation(startToken.getStart() + normelizedOffset,
 										startToken.getEnd() + normelizedOffset);
-								boolean result = validateAndPushLocation(
-										phpCommentLocationStack, commentOffsets);
+								boolean result = validateAndPushLocation(phpCommentLocationStack, commentOffsets);
 								assert (result);
-								lastOffsetParsed = commentOffsets.endOffset
-										- normelizedOffset;
+								lastOffsetParsed = commentOffsets.endOffset - normelizedOffset;
 
-								ITextRegion endToken = findCommentEndToken(
-										token, (PhpScriptRegion) textRegion);
-								commentOffsets = new TextLocation(
-										endToken.getStart() + normelizedOffset,
+								ITextRegion endToken = findCommentEndToken(token, (PhpScriptRegion) textRegion);
+								commentOffsets = new TextLocation(endToken.getStart() + normelizedOffset,
 										endToken.getEnd() + normelizedOffset);
-								result = validateAndPushLocation(
-										phpCommentLocationStack, commentOffsets);
+								result = validateAndPushLocation(phpCommentLocationStack, commentOffsets);
 								assert (result);
-								lastOffsetParsed = commentOffsets.endOffset
-										- normelizedOffset;
+								lastOffsetParsed = commentOffsets.endOffset - normelizedOffset;
 
 							}
 						}
 						for (int i = phpCommentLocationStack.size(); i > 0; i--) {
-							TextLocation location = phpCommentLocationStack
-									.pop();
-							document.replace(location.startOffset,
-									location.endOffset - location.startOffset,
-									""); //$NON-NLS-1$
+							TextLocation location = phpCommentLocationStack.pop();
+							document.replace(location.startOffset, location.endOffset - location.startOffset, ""); //$NON-NLS-1$
 						}
 
 					} catch (BadLocationException e) {
@@ -209,32 +184,28 @@ public class RemoveBlockCommentHandler extends CommentHandler implements
 		}
 	}
 
-	private boolean validateAndPushLocation(
-			Stack<TextLocation> phpCommentLocationStack,
-			TextLocation commentOffsets) {
-		if (commentOffsets != null
-				&& !phpCommentLocationStack.contains(commentOffsets)) {
+	private boolean validateAndPushLocation(Stack<TextLocation> phpCommentLocationStack, TextLocation commentOffsets) {
+		if (commentOffsets != null && !phpCommentLocationStack.contains(commentOffsets)) {
 			phpCommentLocationStack.push(commentOffsets);
 			return true;
 		}
 		return false;
 	}
 
-	private ITextRegion findCommentStartToken(ITextRegion token,
-			PhpScriptRegion phpScriptRegion) throws BadLocationException {
+	private ITextRegion findCommentStartToken(ITextRegion token, PhpScriptRegion phpScriptRegion)
+			throws BadLocationException {
 		assert (isCommentStartRegion(token) || isCommentRegion(token) || isCommentEndRegion(token));
 
 		if (isCommentStartRegion(token)) {
 			return token;
 		}
-		ITextRegion previousToken = phpScriptRegion.getPhpToken(token
-				.getStart() - 1);
+		ITextRegion previousToken = phpScriptRegion.getPhpToken(token.getStart() - 1);
 		return findCommentStartToken(previousToken, phpScriptRegion);
 
 	}
 
-	private ITextRegion findCommentEndToken(ITextRegion token,
-			PhpScriptRegion phpScriptRegion) throws BadLocationException {
+	private ITextRegion findCommentEndToken(ITextRegion token, PhpScriptRegion phpScriptRegion)
+			throws BadLocationException {
 		assert (isCommentStartRegion(token) || isCommentRegion(token) || isCommentEndRegion(token));
 
 		if (isCommentEndRegion(token)) {

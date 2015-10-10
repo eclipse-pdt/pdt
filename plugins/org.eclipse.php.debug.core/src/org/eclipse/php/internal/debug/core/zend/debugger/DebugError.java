@@ -39,14 +39,12 @@ public class DebugError implements Cloneable {
 
 	public static boolean isWarning(DebugError debugError) {
 		int errorIndex = getErrorIndex(debugError.getCode());
-		return errorIndex == 1 || errorIndex == 5 || errorIndex == 7
-				|| errorIndex == 9;
+		return errorIndex == 1 || errorIndex == 5 || errorIndex == 7 || errorIndex == 9;
 	}
 
 	public static boolean isError(DebugError debugError) {
 		int errorIndex = getErrorIndex(debugError.getCode());
-		return errorIndex == 0 || errorIndex == 2 || errorIndex == 4
-				|| errorIndex == 6 || errorIndex == 8;
+		return errorIndex == 0 || errorIndex == 2 || errorIndex == 4 || errorIndex == 6 || errorIndex == 8;
 	}
 
 	public static boolean isStrict(DebugError debugError) {
@@ -139,9 +137,7 @@ public class DebugError implements Cloneable {
 	 */
 	public String getFileDisplayName() {
 		IPath filePath = new Path(fileName);
-		if (filePath.segmentCount() > 1
-				&& filePath.segment(filePath.segmentCount() - 2).equals(
-						"Untitled_Documents")) { //$NON-NLS-1$
+		if (filePath.segmentCount() > 1 && filePath.segment(filePath.segmentCount() - 2).equals("Untitled_Documents")) { //$NON-NLS-1$
 			return filePath.lastSegment();
 		}
 		return fileName;
@@ -210,8 +206,7 @@ public class DebugError implements Cloneable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((fileName == null) ? 0 : fileName.hashCode());
+		result = prime * result + ((fileName == null) ? 0 : fileName.hashCode());
 		result = prime * result + lineNumber;
 		result = prime * result + ((text == null) ? 0 : text.hashCode());
 		return result;

@@ -132,8 +132,7 @@ public class DBGpCommand {
 		 */
 	}
 
-	public int send(String command, String args, int cmdId, String encoding)
-			throws IOException {
+	public int send(String command, String args, int cmdId, String encoding) throws IOException {
 		try {
 			return writeToStream(command, args, cmdId, encoding);
 		} catch (IOException e) {
@@ -152,8 +151,7 @@ public class DBGpCommand {
 		return trId;
 	}
 
-	private int writeToStream(String command, String args, int cmdId,
-			String encoding) throws IOException {
+	private int writeToStream(String command, String args, int cmdId, String encoding) throws IOException {
 		String fullCmd = command + id + cmdId;
 		if (args != null) {
 			fullCmd = fullCmd + " " + args; //$NON-NLS-1$

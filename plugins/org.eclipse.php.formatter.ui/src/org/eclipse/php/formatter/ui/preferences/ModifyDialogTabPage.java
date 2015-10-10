@@ -77,16 +77,14 @@ public abstract class ModifyDialogTabPage {
 	protected final class CheckboxPreference extends Preference {
 		private final Button fCheckbox;
 
-		public CheckboxPreference(Composite composite, int numColumns,
-				String text) {
+		public CheckboxPreference(Composite composite, int numColumns, String text) {
 			if (text == null)
 				throw new IllegalArgumentException(
 						FormatterMessages.ModifyDialogTabPage_error_msg_values_text_unassigned);
 
 			fCheckbox = new Button(composite, SWT.CHECK);
 			fCheckbox.setText(text);
-			fCheckbox.setLayoutData(createGridData(numColumns,
-					GridData.FILL_HORIZONTAL, SWT.DEFAULT));
+			fCheckbox.setLayoutData(createGridData(numColumns, GridData.FILL_HORIZONTAL, SWT.DEFAULT));
 			fCheckbox.setFont(composite.getFont());
 
 			fCheckbox.addSelectionListener(new SelectionAdapter() {
@@ -124,8 +122,7 @@ public abstract class ModifyDialogTabPage {
 		private final String[] fItems;
 		private final Combo fCombo;
 
-		public ComboPreference(Composite composite, int numColumns,
-				String text, String[] items) {
+		public ComboPreference(Composite composite, int numColumns, String text, String[] items) {
 			if (items == null || text == null)
 				throw new IllegalArgumentException(
 						FormatterMessages.ModifyDialogTabPage_error_msg_values_items_text_unassigned);
@@ -135,9 +132,8 @@ public abstract class ModifyDialogTabPage {
 			fCombo = new Combo(composite, SWT.SINGLE | SWT.READ_ONLY);
 			fCombo.setFont(composite.getFont());
 			fCombo.setItems(items);
-			fCombo.setLayoutData(createGridData(1,
-					GridData.HORIZONTAL_ALIGN_FILL,
-					fCombo.computeSize(SWT.DEFAULT, SWT.DEFAULT).x));
+			fCombo.setLayoutData(
+					createGridData(1, GridData.HORIZONTAL_ALIGN_FILL, fCombo.computeSize(SWT.DEFAULT, SWT.DEFAULT).x));
 
 			fCombo.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
@@ -186,18 +182,14 @@ public abstract class ModifyDialogTabPage {
 		protected int fSelected;
 		protected int fOldSelected;
 
-		public NumberPreference(Composite composite, int numColumns,
-				String text, int minValue, int maxValue) {
+		public NumberPreference(Composite composite, int numColumns, String text, int minValue, int maxValue) {
 
-			createLabel(numColumns - 1, composite, text,
-					GridData.FILL_HORIZONTAL);
+			createLabel(numColumns - 1, composite, text, GridData.FILL_HORIZONTAL);
 
-			fNumberText = new Text(composite, SWT.SINGLE | SWT.BORDER
-					| SWT.RIGHT);
+			fNumberText = new Text(composite, SWT.SINGLE | SWT.BORDER | SWT.RIGHT);
 			fNumberText.setFont(composite.getFont());
 			final int length = Integer.toString(maxValue).length() + 3;
-			fNumberText.setLayoutData(createGridData(1,
-					GridData.HORIZONTAL_ALIGN_END,
+			fNumberText.setLayoutData(createGridData(1, GridData.HORIZONTAL_ALIGN_END,
 					fPixelConverter.convertWidthInCharsToPixels(length)));
 
 			fMinValue = minValue;
@@ -221,14 +213,10 @@ public abstract class ModifyDialogTabPage {
 		}
 
 		private IStatus createErrorStatus() {
-			return new Status(
-					IStatus.ERROR,
-					FormatterUIPlugin.PLUGIN_ID,
-					0,
-					Messages.format(
-							FormatterMessages.ModifyDialogTabPage_NumberPreference_error_invalid_value,
-							new String[] { Integer.toString(fMinValue),
-									Integer.toString(fMaxValue) }), null);
+			return new Status(IStatus.ERROR, FormatterUIPlugin.PLUGIN_ID, 0,
+					Messages.format(FormatterMessages.ModifyDialogTabPage_NumberPreference_error_invalid_value,
+							new String[] { Integer.toString(fMinValue), Integer.toString(fMaxValue) }),
+					null);
 		}
 
 		protected void focusGained() {
@@ -324,8 +312,7 @@ public abstract class ModifyDialogTabPage {
 		protected String fSelected;
 		protected String fOldSelected;
 
-		public StringPreference(Composite composite, int numColumns,
-				String text, IInputValidator inputValidator) {
+		public StringPreference(Composite composite, int numColumns, String text, IInputValidator inputValidator) {
 
 			fInputValidator = inputValidator;
 
@@ -333,15 +320,13 @@ public abstract class ModifyDialogTabPage {
 			fLabel.setFont(composite.getFont());
 			fLabel.setText(text);
 
-			fLabel.setLayoutData(createGridData(numColumns - 1,
-					GridData.HORIZONTAL_ALIGN_BEGINNING, SWT.DEFAULT));
+			fLabel.setLayoutData(createGridData(numColumns - 1, GridData.HORIZONTAL_ALIGN_BEGINNING, SWT.DEFAULT));
 
 			fNumberText = new Text(composite, SWT.SINGLE | SWT.BORDER);
 			fNumberText.setFont(composite.getFont());
 
 			final int length = 30;
-			fNumberText.setLayoutData(createGridData(1,
-					GridData.HORIZONTAL_ALIGN_BEGINNING,
+			fNumberText.setLayoutData(createGridData(1, GridData.HORIZONTAL_ALIGN_BEGINNING,
 					fPixelConverter.convertWidthInCharsToPixels(length)));
 
 			// createLabel(numColumns - 1, composite, text,
@@ -432,16 +417,14 @@ public abstract class ModifyDialogTabPage {
 		}
 
 		private IStatus createErrorStatus(String errorText) {
-			return new Status(IStatus.ERROR, FormatterUIPlugin.PLUGIN_ID, 0,
-					errorText, null);
+			return new Status(IStatus.ERROR, FormatterUIPlugin.PLUGIN_ID, 0, errorText, null);
 
 		}
 
 		protected void focusLost() {
 			updateStatus(null);
 			final String input = fNumberText.getText();
-			if (fInputValidator != null
-					&& fInputValidator.isValid(input) != null)
+			if (fInputValidator != null && fInputValidator.isValid(input) != null)
 				fSelected = fOldSelected;
 			else
 				fSelected = input;
@@ -453,8 +436,7 @@ public abstract class ModifyDialogTabPage {
 
 		protected void fieldModified() {
 			final String text = fNumberText.getText();
-			final String errorText = fInputValidator != null ? fInputValidator
-					.isValid(text) : null;
+			final String errorText = fInputValidator != null ? fInputValidator.isValid(text) : null;
 			if (errorText == null) {
 				updateStatus(null);
 				if (fSelected != text) {
@@ -493,7 +475,7 @@ public abstract class ModifyDialogTabPage {
 	protected final static class DefaultFocusManager extends FocusAdapter {
 
 		private final static String PREF_LAST_FOCUS_INDEX = FormatterUIPlugin.PLUGIN_ID
-				+ "formatter_page.modify_dialog_tab_page.last_focus_index"; //$NON-NLS-1$ 
+				+ "formatter_page.modify_dialog_tab_page.last_focus_index"; //$NON-NLS-1$
 
 		private final IDialogSettings fDialogSettings;
 
@@ -503,16 +485,14 @@ public abstract class ModifyDialogTabPage {
 		private int fIndex;
 
 		public DefaultFocusManager() {
-			fDialogSettings = FormatterUIPlugin.getDefault()
-					.getDialogSettings();
+			fDialogSettings = FormatterUIPlugin.getDefault().getDialogSettings();
 			fItemMap = new HashMap<Control, Integer>();
 			fItemList = new ArrayList<Control>();
 			fIndex = 0;
 		}
 
 		public void focusGained(FocusEvent e) {
-			fDialogSettings.put(PREF_LAST_FOCUS_INDEX, fItemMap.get(e.widget)
-					.intValue());
+			fDialogSettings.put(PREF_LAST_FOCUS_INDEX, fItemMap.get(e.widget).intValue());
 		}
 
 		public void add(Control control) {
@@ -565,8 +545,7 @@ public abstract class ModifyDialogTabPage {
 	/**
 	 * Constant array for boolean selection
 	 */
-	protected static String[] FALSE_TRUE = { CodeFormatterConstants.FALSE,
-			CodeFormatterConstants.TRUE };
+	protected static String[] FALSE_TRUE = { CodeFormatterConstants.FALSE, CodeFormatterConstants.TRUE };
 
 	/**
 	 * A pixel converter for layout calculations
@@ -586,8 +565,7 @@ public abstract class ModifyDialogTabPage {
 	/*
 	 * Create a new <code>ModifyDialogTabPage</code>
 	 */
-	public ModifyDialogTabPage(ModifyDialog modifyDialog,
-			CodeFormatterPreferences preferences) {
+	public ModifyDialogTabPage(ModifyDialog modifyDialog, CodeFormatterPreferences preferences) {
 		this.codeFormatterPreferences = preferences;
 		fModifyDialog = modifyDialog;
 		fDefaultFocusManager = new DefaultFocusManager();
@@ -626,8 +604,7 @@ public abstract class ModifyDialogTabPage {
 		layout.verticalSpacing = 0;
 		scrollContainer.setLayout(layout);
 
-		ScrolledComposite scroll = new ScrolledComposite(scrollContainer,
-				SWT.V_SCROLL | SWT.H_SCROLL);
+		ScrolledComposite scroll = new ScrolledComposite(scrollContainer, SWT.V_SCROLL | SWT.H_SCROLL);
 		scroll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		scroll.setExpandHorizontal(true);
 		scroll.setExpandVertical(true);
@@ -638,27 +615,21 @@ public abstract class ModifyDialogTabPage {
 		scroll.setContent(settingsContainer);
 
 		settingsContainer.setLayout(new PageLayout(scroll, 400, 400));
-		settingsContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				true));
+		settingsContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		Composite settingsPane = new Composite(settingsContainer, SWT.NONE);
-		settingsPane
-				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		settingsPane.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		layout = new GridLayout(numColumns, false);
-		layout.verticalSpacing = (int) (1.5 * fPixelConverter
-				.convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING));
-		layout.horizontalSpacing = fPixelConverter
-				.convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
-		layout.marginHeight = fPixelConverter
-				.convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
-		layout.marginWidth = fPixelConverter
-				.convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
+		layout.verticalSpacing = (int) (1.5
+				* fPixelConverter.convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING));
+		layout.horizontalSpacing = fPixelConverter.convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
+		layout.marginHeight = fPixelConverter.convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
+		layout.marginWidth = fPixelConverter.convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
 		settingsPane.setLayout(layout);
 		doCreatePreferences(settingsPane, numColumns);
 
-		settingsContainer.setSize(settingsContainer.computeSize(SWT.DEFAULT,
-				SWT.DEFAULT));
+		settingsContainer.setSize(settingsContainer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
 		scroll.addControlListener(new ControlListener() {
 
@@ -666,13 +637,11 @@ public abstract class ModifyDialogTabPage {
 			}
 
 			public void controlResized(ControlEvent e) {
-				settingsContainer.setSize(settingsContainer.computeSize(
-						SWT.DEFAULT, SWT.DEFAULT));
+				settingsContainer.setSize(settingsContainer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 			}
 		});
 
-		Label sashHandle = new Label(scrollContainer, SWT.SEPARATOR
-				| SWT.VERTICAL);
+		Label sashHandle = new Label(scrollContainer, SWT.SEPARATOR | SWT.VERTICAL);
 		gridData = new GridData(SWT.RIGHT, SWT.FILL, false, true);
 		sashHandle.setLayoutData(gridData);
 
@@ -704,8 +673,7 @@ public abstract class ModifyDialogTabPage {
 	 * @param numColumns
 	 *            Number of columns to use
 	 */
-	protected abstract void doCreatePreferences(Composite composite,
-			int numColumns);
+	protected abstract void doCreatePreferences(Composite composite, int numColumns);
 
 	/**
 	 * Create the right side of the modify dialog. By default, the preview is
@@ -720,8 +688,7 @@ public abstract class ModifyDialogTabPage {
 	 */
 	protected Composite doCreatePreviewPane(Composite composite, int numColumns) {
 
-		createLabel(numColumns, composite,
-				FormatterMessages.ModifyDialogTabPage_preview_label_text);
+		createLabel(numColumns, composite, FormatterMessages.ModifyDialogTabPage_preview_label_text);
 
 		final PhpPreview preview = doCreatePhpPreview(composite);
 		fDefaultFocusManager.add(preview.getControl());
@@ -803,15 +770,11 @@ public abstract class ModifyDialogTabPage {
 	 */
 	protected GridLayout createGridLayout(int numColumns, boolean margins) {
 		final GridLayout layout = new GridLayout(numColumns, false);
-		layout.verticalSpacing = fPixelConverter
-				.convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
-		layout.horizontalSpacing = fPixelConverter
-				.convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
+		layout.verticalSpacing = fPixelConverter.convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
+		layout.horizontalSpacing = fPixelConverter.convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
 		if (margins) {
-			layout.marginHeight = fPixelConverter
-					.convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
-			layout.marginWidth = fPixelConverter
-					.convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
+			layout.marginHeight = fPixelConverter.convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
+			layout.marginWidth = fPixelConverter.convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
 		} else {
 			layout.marginHeight = 0;
 			layout.marginWidth = 0;
@@ -822,8 +785,7 @@ public abstract class ModifyDialogTabPage {
 	/*
 	 * Convenience method to create a GridData.
 	 */
-	protected static GridData createGridData(int numColumns, int style,
-			int widthHint) {
+	protected static GridData createGridData(int numColumns, int style, int widthHint) {
 		final GridData gd = new GridData(style);
 		gd.horizontalSpan = numColumns;
 		gd.widthHint = widthHint;
@@ -833,21 +795,18 @@ public abstract class ModifyDialogTabPage {
 	/*
 	 * Convenience method to create a label.
 	 */
-	protected static Label createLabel(int numColumns, Composite parent,
-			String text) {
+	protected static Label createLabel(int numColumns, Composite parent, String text) {
 		return createLabel(numColumns, parent, text, GridData.FILL_HORIZONTAL);
 	}
 
 	/*
 	 * Convenience method to create a label
 	 */
-	protected static Label createLabel(int numColumns, Composite parent,
-			String text, int gridDataStyle) {
+	protected static Label createLabel(int numColumns, Composite parent, String text, int gridDataStyle) {
 		final Label label = new Label(parent, SWT.WRAP);
 		label.setFont(parent.getFont());
 		label.setText(text);
-		label.setLayoutData(createGridData(numColumns, gridDataStyle,
-				SWT.DEFAULT));
+		label.setLayoutData(createGridData(numColumns, gridDataStyle, SWT.DEFAULT));
 		return label;
 	}
 
@@ -857,16 +816,12 @@ public abstract class ModifyDialogTabPage {
 	protected Group createGroup(int numColumns, Composite parent, String text) {
 		final Group group = new Group(parent, SWT.NONE);
 		group.setFont(parent.getFont());
-		group.setLayoutData(createGridData(numColumns,
-				GridData.FILL_HORIZONTAL, SWT.DEFAULT));
+		group.setLayoutData(createGridData(numColumns, GridData.FILL_HORIZONTAL, SWT.DEFAULT));
 
 		final GridLayout layout = new GridLayout(numColumns, false);
-		layout.verticalSpacing = fPixelConverter
-				.convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
-		layout.horizontalSpacing = fPixelConverter
-				.convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
-		layout.marginHeight = fPixelConverter
-				.convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
+		layout.verticalSpacing = fPixelConverter.convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
+		layout.horizontalSpacing = fPixelConverter.convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
+		layout.marginHeight = fPixelConverter.convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
 
 		group.setLayout(layout);
 		group.setText(text);
@@ -877,10 +832,9 @@ public abstract class ModifyDialogTabPage {
 	 * Convenience method to create a NumberPreference. The widget is registered
 	 * as a potential focus holder, and the default updater is added.
 	 */
-	protected NumberPreference createNumberPref(Composite composite,
-			int numColumns, String name, int minValue, int maxValue) {
-		final NumberPreference pref = new NumberPreference(composite,
-				numColumns, name, minValue, maxValue);
+	protected NumberPreference createNumberPref(Composite composite, int numColumns, String name, int minValue,
+			int maxValue) {
+		final NumberPreference pref = new NumberPreference(composite, numColumns, name, minValue, maxValue);
 		fDefaultFocusManager.add(pref);
 		pref.addObserver(fUpdater);
 		return pref;
@@ -890,10 +844,8 @@ public abstract class ModifyDialogTabPage {
 	 * Convenience method to create a ComboPreference. The widget is registered
 	 * as a potential focus holder, and the default updater is added.
 	 */
-	protected ComboPreference createComboPref(Composite composite,
-			int numColumns, String name, String[] items) {
-		final ComboPreference pref = new ComboPreference(composite, numColumns,
-				name, items);
+	protected ComboPreference createComboPref(Composite composite, int numColumns, String name, String[] items) {
+		final ComboPreference pref = new ComboPreference(composite, numColumns, name, items);
 		fDefaultFocusManager.add(pref);
 		pref.addObserver(fUpdater);
 		return pref;
@@ -903,10 +855,8 @@ public abstract class ModifyDialogTabPage {
 	 * Convenience method to create a CheckboxPreference. The widget is
 	 * registered as a potential focus holder, and the default updater is added.
 	 */
-	protected CheckboxPreference createCheckboxPref(Composite composite,
-			int numColumns, String name) {
-		final CheckboxPreference pref = new CheckboxPreference(composite,
-				numColumns, name);
+	protected CheckboxPreference createCheckboxPref(Composite composite, int numColumns, String name) {
+		final CheckboxPreference pref = new CheckboxPreference(composite, numColumns, name);
 		fDefaultFocusManager.add(pref);
 		pref.addObserver(fUpdater);
 		return pref;
@@ -918,11 +868,9 @@ public abstract class ModifyDialogTabPage {
 	 * 
 	 * @since 3.6
 	 */
-	protected StringPreference createStringPref(Composite composite,
-			int numColumns, String name, String key,
+	protected StringPreference createStringPref(Composite composite, int numColumns, String name, String key,
 			IInputValidator inputValidator) {
-		StringPreference pref = new StringPreference(composite, numColumns,
-				name, inputValidator);
+		StringPreference pref = new StringPreference(composite, numColumns, name, inputValidator);
 		fDefaultFocusManager.add(pref);
 		pref.addObserver(fUpdater);
 		return pref;
@@ -945,16 +893,14 @@ public abstract class ModifyDialogTabPage {
 		private final int fMinimalWidth;
 		private final int fMinimalHight;
 
-		private PageLayout(ScrolledComposite container, int minimalWidth,
-				int minimalHight) {
+		private PageLayout(ScrolledComposite container, int minimalWidth, int minimalHight) {
 			fContainer = container;
 			fMinimalWidth = minimalWidth;
 			fMinimalHight = minimalHight;
 		}
 
 		@Override
-		public Point computeSize(Composite composite, int wHint, int hHint,
-				boolean force) {
+		public Point computeSize(Composite composite, int wHint, int hHint, boolean force) {
 			if (wHint != SWT.DEFAULT && hHint != SWT.DEFAULT) {
 				return new Point(wHint, hHint);
 			}
@@ -963,8 +909,7 @@ public abstract class ModifyDialogTabPage {
 			int y = fMinimalHight;
 			Control[] children = composite.getChildren();
 			for (int i = 0; i < children.length; i++) {
-				Point size = children[i].computeSize(SWT.DEFAULT, SWT.DEFAULT,
-						force);
+				Point size = children[i].computeSize(SWT.DEFAULT, SWT.DEFAULT, force);
 				x = Math.max(x, size.x);
 				y = Math.max(y, size.y);
 			}

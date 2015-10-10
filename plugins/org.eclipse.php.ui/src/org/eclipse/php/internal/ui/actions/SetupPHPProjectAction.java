@@ -32,8 +32,7 @@ import org.eclipse.wst.jsdt.web.core.internal.Logger;
 /**
  * Not API
  */
-public class SetupPHPProjectAction implements IObjectActionDelegate,
-		IActionDelegate {
+public class SetupPHPProjectAction implements IObjectActionDelegate, IActionDelegate {
 
 	IWorkbenchPart fPart;
 	Object[] fTarget;
@@ -55,15 +54,13 @@ public class SetupPHPProjectAction implements IObjectActionDelegate,
 	private void install(final IProject project) {
 		IProgressService service = null;
 		if (fPart != null) {
-			service = (IProgressService) fPart.getSite().getService(
-					IProgressService.class);
+			service = (IProgressService) fPart.getSite().getService(IProgressService.class);
 		}
 		if (service == null) {
 			doInstall(project, null);
 		} else {
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor)
-						throws InvocationTargetException, InterruptedException {
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					doInstall(project, monitor);
 				}
 			};
@@ -102,8 +99,7 @@ public class SetupPHPProjectAction implements IObjectActionDelegate,
 					break;
 				}
 				IProject project = (IProject) obj;
-				if (!project.isAccessible()
-						|| DLTKLanguageManager.hasScriptNature(project)) {
+				if (!project.isAccessible() || DLTKLanguageManager.hasScriptNature(project)) {
 					enabled = false;
 					break;
 				}

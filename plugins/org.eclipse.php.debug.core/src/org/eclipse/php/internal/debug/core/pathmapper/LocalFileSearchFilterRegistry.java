@@ -32,8 +32,8 @@ public class LocalFileSearchFilterRegistry {
 	/**
 	 * The name of extension point to read filters from
 	 */
-	public static final String EXTENSION_POINT_ID = PHPDebugPlugin.getDefault()
-			.getBundle().getSymbolicName() + ".phpLocalFileSearchFilters"; //$NON-NLS-1$
+	public static final String EXTENSION_POINT_ID = PHPDebugPlugin.getDefault().getBundle().getSymbolicName()
+			+ ".phpLocalFileSearchFilters"; //$NON-NLS-1$
 
 	/**
 	 * The default instance for reading registry.
@@ -47,8 +47,7 @@ public class LocalFileSearchFilterRegistry {
 	 *            the related id
 	 * @return a filter or <code>null</code>
 	 */
-	public static synchronized final ILocalFileSearchFilter getFilter(
-			String id) {
+	public static synchronized final ILocalFileSearchFilter getFilter(String id) {
 		Map<String, ILocalFileSearchFilter> filters = getFilters();
 		return filters.get(id);
 	}
@@ -75,18 +74,16 @@ public class LocalFileSearchFilterRegistry {
 	 */
 	private Map<String, ILocalFileSearchFilter> readFromExtensionPoint() {
 		final Map<String, ILocalFileSearchFilter> entries = new HashMap<String, ILocalFileSearchFilter>();
-		IConfigurationElement[] configurationElements = Platform
-				.getExtensionRegistry()
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(EXTENSION_POINT_ID);
 		for (final IConfigurationElement element : configurationElements) {
 			String id = element.getAttribute(PROP_ID);
 			try {
-				ILocalFileSearchFilter filter = (ILocalFileSearchFilter) createInstance(
-						element, PROP_CLASS, ILocalFileSearchFilter.class);
+				ILocalFileSearchFilter filter = (ILocalFileSearchFilter) createInstance(element, PROP_CLASS,
+						ILocalFileSearchFilter.class);
 				entries.put(id, filter);
 			} catch (CoreException e) {
-				Logger.logException(
-						"Could not instantiate local file search filter from extension point data.", //$NON-NLS-1$
+				Logger.logException("Could not instantiate local file search filter from extension point data.", //$NON-NLS-1$
 						e);
 				continue;
 			}
@@ -95,14 +92,13 @@ public class LocalFileSearchFilterRegistry {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Object createInstance(IConfigurationElement element,
-			String propertyName, Class instanceClass) throws CoreException {
+	private Object createInstance(IConfigurationElement element, String propertyName, Class instanceClass)
+			throws CoreException {
 		final Object object = element.createExecutableExtension(propertyName);
 		if (!instanceClass.isAssignableFrom(object.getClass())) {
 			String message = String.format("Invalid typecast for %s", //$NON-NLS-1$
 					element.getAttribute(propertyName));
-			IStatus status = new Status(IStatus.ERROR,
-					PHPDebugPlugin.getDefault().getBundle().getSymbolicName(),
+			IStatus status = new Status(IStatus.ERROR, PHPDebugPlugin.getDefault().getBundle().getSymbolicName(),
 					message);
 			throw new CoreException(status);
 		}

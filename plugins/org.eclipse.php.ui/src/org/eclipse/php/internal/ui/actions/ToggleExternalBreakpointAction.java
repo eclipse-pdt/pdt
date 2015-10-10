@@ -32,8 +32,7 @@ public class ToggleExternalBreakpointAction extends ToggleBreakpointAction {
 	 * @param editor
 	 * @param rulerInfo
 	 */
-	public ToggleExternalBreakpointAction(ITextEditor editor,
-			IVerticalRulerInfo rulerInfo) {
+	public ToggleExternalBreakpointAction(ITextEditor editor, IVerticalRulerInfo rulerInfo) {
 		super(editor, rulerInfo);
 	}
 
@@ -42,8 +41,7 @@ public class ToggleExternalBreakpointAction extends ToggleBreakpointAction {
 	 * @param rulerInfo
 	 * @param fallbackAction
 	 */
-	public ToggleExternalBreakpointAction(ITextEditor editor,
-			IVerticalRulerInfo rulerInfo, IAction fallbackAction) {
+	public ToggleExternalBreakpointAction(ITextEditor editor, IVerticalRulerInfo rulerInfo, IAction fallbackAction) {
 		super(editor, rulerInfo, fallbackAction);
 	}
 
@@ -54,9 +52,8 @@ public class ToggleExternalBreakpointAction extends ToggleBreakpointAction {
 	 * org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#hasMarkers()
 	 */
 	protected boolean hasMarkers() {
-		return ExternalBreakpointActionHelper.hasMarkers(getTextEditor(),
-				getResource(), getDocument(), getAnnotationModel(),
-				getRulerInfo());
+		return ExternalBreakpointActionHelper.hasMarkers(getTextEditor(), getResource(), getDocument(),
+				getAnnotationModel(), getRulerInfo());
 	}
 
 	/*
@@ -66,8 +63,7 @@ public class ToggleExternalBreakpointAction extends ToggleBreakpointAction {
 	 * org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#getMarkers()
 	 */
 	protected IMarker[] getMarkers() {
-		return ExternalBreakpointActionHelper.getMarkers(getTextEditor(),
-				getResource(), getDocument(), getAnnotationModel(),
-				getRulerInfo());
+		return ExternalBreakpointActionHelper.getMarkers(getTextEditor(), getResource(), getDocument(),
+				getAnnotationModel(), getRulerInfo());
 	}
 }

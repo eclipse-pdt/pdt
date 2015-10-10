@@ -51,9 +51,8 @@ public class SSHTunnelSession {
 	 * @throws JSchException
 	 *             In case a connection could not be established.
 	 */
-	public static SSHTunnelSession getSession(String username, String password,
-			String hostname, int port, IProgressMonitor monitor)
-			throws JSchException {
+	public static SSHTunnelSession getSession(String username, String password, String hostname, int port,
+			IProgressMonitor monitor) throws JSchException {
 		String key = getPoolKey(username, hostname, port);
 
 		try {
@@ -65,18 +64,15 @@ public class SSHTunnelSession {
 
 			if (jschSession == null) {
 				IJSchService service = getJSchService();
-				IJSchLocation jlocation = service.getLocation(username,
-						hostname, port);
+				IJSchLocation jlocation = service.getLocation(username, hostname, port);
 				Session session = null;
 				try {
-					session = createSession(service, jlocation, password,
-							monitor);
+					session = createSession(service, jlocation, password, monitor);
 				} catch (JSchException e) {
 					throw e;
 				}
 				if (session == null) {
-					throw new JSchException(Messages.SSHTunnelSession_0
-							+ hostname);
+					throw new JSchException(Messages.SSHTunnelSession_0 + hostname);
 				}
 				if (session.getTimeout() != DEFAULT_TIMEOUT) {
 					session.setTimeout(DEFAULT_TIMEOUT);
@@ -98,9 +94,8 @@ public class SSHTunnelSession {
 	/*
 	 * Creates a JSch session.
 	 */
-	private static Session createSession(IJSchService service,
-			IJSchLocation location, String password, IProgressMonitor monitor)
-			throws JSchException {
+	private static Session createSession(IJSchService service, IJSchLocation location, String password,
+			IProgressMonitor monitor) throws JSchException {
 		Session session = service.createSession(location, null);
 		session.setTimeout(DEFAULT_TIMEOUT);
 		if (password != null) {
@@ -124,8 +119,7 @@ public class SSHTunnelSession {
 	 */
 	public static void shutdown() {
 		if (getJSch() != null && pool.size() > 0) {
-			for (Enumeration<SSHTunnelSession> e = pool.elements(); e
-					.hasMoreElements();) {
+			for (Enumeration<SSHTunnelSession> e = pool.elements(); e.hasMoreElements();) {
 				SSHTunnelSession session = e.nextElement();
 				try {
 					session.getSession().disconnect();
@@ -163,8 +157,7 @@ public class SSHTunnelSession {
 	 * Dispose the connection (disconnect).
 	 */
 	public void dispose() {
-		pool.remove(getPoolKey(session.getUserName(), session.getHost(),
-				session.getPort()));
+		pool.remove(getPoolKey(session.getUserName(), session.getHost(), session.getPort()));
 		if (session.isConnected()) {
 			session.disconnect();
 		}

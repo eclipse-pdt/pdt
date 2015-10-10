@@ -39,17 +39,15 @@ public class ZendDebuggerServerSettings extends AbstractDebuggerSettings {
 	/**
 	 * See {@link AbstractDebuggerSettings}.
 	 */
-	public ZendDebuggerServerSettings(String ownerId,
-			Map<String, String> attributes) {
+	public ZendDebuggerServerSettings(String ownerId, Map<String, String> attributes) {
 		super(ownerId, attributes);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings#getDebuggerId
-	 * ()
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings#
+	 * getDebuggerId ()
 	 */
 	@Override
 	public String getDebuggerId() {
@@ -81,16 +79,11 @@ public class ZendDebuggerServerSettings extends AbstractDebuggerSettings {
 		// Set up initial attributes
 		Map<String, String> attributes = new HashMap<String, String>();
 		String clientIp = debuggerConf.getAttribute(CLIENT_IP);
-		attributes.put(PROP_CLIENT_IP, clientIp != null ? clientIp
-				: DEFAULT_CLIENT_IP);
+		attributes.put(PROP_CLIENT_IP, clientIp != null ? clientIp : DEFAULT_CLIENT_IP);
 		String clientPort = debuggerConf.getAttribute(ZEND_DEBUG_PORT);
-		attributes.put(PROP_CLIENT_PORT, clientPort != null ? clientPort
-				: DEFAULT_CLIENT_PORT);
-		String responseTimeout = debuggerConf
-				.getAttribute(DEBUG_RESPONSE_TIMEOUT);
-		attributes.put(PROP_RESPONSE_TIMEOUT,
-				responseTimeout != null ? responseTimeout
-						: DEBUG_RESPONSE_TIMEOUT);
+		attributes.put(PROP_CLIENT_PORT, clientPort != null ? clientPort : DEFAULT_CLIENT_PORT);
+		String responseTimeout = debuggerConf.getAttribute(DEBUG_RESPONSE_TIMEOUT);
+		attributes.put(PROP_RESPONSE_TIMEOUT, responseTimeout != null ? responseTimeout : DEBUG_RESPONSE_TIMEOUT);
 		return attributes;
 	}
 

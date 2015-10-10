@@ -51,8 +51,7 @@ public abstract class TextInputWizardPage extends UserInputWizardPage {
 	 * @param initialValue
 	 *            the initial value
 	 */
-	public TextInputWizardPage(String description, boolean isLastUserPage,
-			String initialValue) {
+	public TextInputWizardPage(String description, boolean isLastUserPage, String initialValue) {
 		super(PAGE_NAME);
 		Assert.isNotNull(initialValue);
 		setDescription(description);

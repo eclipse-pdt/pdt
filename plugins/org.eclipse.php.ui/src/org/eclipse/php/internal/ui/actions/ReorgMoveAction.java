@@ -58,29 +58,23 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 		}
 	}
 
-	private SelectionListenerAction createWorkbenchAction(
-			IStructuredSelection selection) {
+	private SelectionListenerAction createWorkbenchAction(IStructuredSelection selection) {
 		List<?> list = selection.toList();
 		SelectionListenerAction action = null;
 		if (fShell == null) {
-			fShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getShell();
+			fShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		}
 
-		if (list.size() == 0
-				|| list.get(0) instanceof IProject
-				|| (list.get(0) instanceof IAdaptable && ((IAdaptable) list
-						.get(0)).getAdapter(IResource.class) instanceof IProject)) {
+		if (list.size() == 0 || list.get(0) instanceof IProject || (list.get(0) instanceof IAdaptable
+				&& ((IAdaptable) list.get(0)).getAdapter(IResource.class) instanceof IProject)) {
 			action = new PHPMoveProjectAction(fShell);
 			action.selectionChanged(selection);
 		} else if (selectedResources != null) {
 			action = new MoveResourceAction(fShell);
 			if (list.size() == 1) {
 				Object object = list.get(0);
-				if (object instanceof ElementImplForPhp
-						&& ((ElementImplForPhp) object).getModelElement() != null) {
-					IResource resource = ((ElementImplForPhp) object)
-							.getModelElement().getResource();
+				if (object instanceof ElementImplForPhp && ((ElementImplForPhp) object).getModelElement() != null) {
+					IResource resource = ((ElementImplForPhp) object).getModelElement().getResource();
 					if (resource != null) {
 						selection = new StructuredSelection(resource);
 					}
@@ -122,17 +116,14 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 		MoveResourcesProcessor processor = new MoveResourcesProcessor(resources);
 		processor.setDestination(target);
 
-		ProcessorBasedRefactoring refactoring = new ProcessorBasedRefactoring(
-				processor);
-		CheckConditionsOperation checkOp = new CheckConditionsOperation(
-				refactoring, CheckConditionsOperation.ALL_CONDITIONS);
-		CreateChangeOperation operation = new CreateChangeOperation(checkOp,
-				RefactoringStatus.WARNING);
+		ProcessorBasedRefactoring refactoring = new ProcessorBasedRefactoring(processor);
+		CheckConditionsOperation checkOp = new CheckConditionsOperation(refactoring,
+				CheckConditionsOperation.ALL_CONDITIONS);
+		CreateChangeOperation operation = new CreateChangeOperation(checkOp, RefactoringStatus.WARNING);
 		PerformChangeOperation perform = new PerformChangeOperation(operation);
 
 		try {
-			ResourcesPlugin.getWorkspace().run(perform,
-					new NullProgressMonitor());
+			ResourcesPlugin.getWorkspace().run(perform, new NullProgressMonitor());
 		} catch (CoreException e) {
 			PHPCorePlugin.log(e.getStatus());
 			return false;
@@ -144,9 +135,7 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 			RefactoringStatus refactoringStatus = checkOp.getStatus();
 
 			if (refactoringStatus != null && !refactoringStatus.isOK()) {
-				MessageDialog
-						.openError(fShell, Messages.ReorgMoveAction_0,
-								Messages.ReorgMoveAction_1);
+				MessageDialog.openError(fShell, Messages.ReorgMoveAction_0, Messages.ReorgMoveAction_1);
 			}
 			return false;
 		}
@@ -160,8 +149,7 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 				init(targetEditor.getSite().getWorkbenchWindow());
 			}
 
-			if (moveActionDelegate != null
-					&& !(moveActionDelegate instanceof ReorgMoveAction)) {
+			if (moveActionDelegate != null && !(moveActionDelegate instanceof ReorgMoveAction)) {
 				moveActionDelegate.setActiveEditor(action, targetEditor);
 			} else {
 				IEditorInput editorInput = targetEditor.getEditorInput();
@@ -207,8 +195,7 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 	public void init(IWorkbenchWindow window) {
 		fShell = window.getShell();
 
-		IPHPActionDelegator action = PHPActionDelegatorRegistry
-				.getActionDelegator(MOVE_ELEMENT_ACTION_ID);
+		IPHPActionDelegator action = PHPActionDelegatorRegistry.getActionDelegator(MOVE_ELEMENT_ACTION_ID);
 
 		if (action instanceof AbstractMoveDelegator) {
 			moveActionDelegate = (AbstractMoveDelegator) action;

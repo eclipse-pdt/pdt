@@ -50,30 +50,24 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		return fRemoteDebugger;
 	}
 
-	public void sessionStarted(String remoteFile, String uri, String query,
-			String options) {
+	public void sessionStarted(String remoteFile, String uri, String query, String options) {
 		super.sessionStarted(remoteFile, uri, query, options);
 		if (isUsingPathMapper()) {
 			/*
 			 * Hack for the case when htdocs is symlinked to the workspace. Zend
 			 * Debugger resolves symbolic links later and it breaks path mapper.
 			 */
-			ILaunchConfiguration launchConfiguration = fDebugTarget.getLaunch()
-					.getLaunchConfiguration();
+			ILaunchConfiguration launchConfiguration = fDebugTarget.getLaunch().getLaunchConfiguration();
 			try {
-				String lcServerName = launchConfiguration
-						.getAttribute(Server.NAME, (String) null);
-				if ((lcServerName == null || lcServerName.isEmpty())
-						&& fDebugTarget.getURL() != null) {
+				String lcServerName = launchConfiguration.getAttribute(Server.NAME, (String) null);
+				if ((lcServerName == null || lcServerName.isEmpty()) && fDebugTarget.getURL() != null) {
 					// Bind server with this configuration, if we can find any.
 					String serverName = null;
-					Server serverLookup = ServersManager
-							.findByURL(fDebugTarget.getURL());
+					Server serverLookup = ServersManager.findByURL(fDebugTarget.getURL());
 					if (serverLookup != null)
 						serverName = serverLookup.getName();
 					if (serverName != null) {
-						ILaunchConfigurationWorkingCopy wc = launchConfiguration
-								.getWorkingCopy();
+						ILaunchConfigurationWorkingCopy wc = launchConfiguration.getWorkingCopy();
 						wc.setAttribute(Server.NAME, serverName);
 						synchronized (launchConfiguration) {
 							wc.doSave();
@@ -102,11 +96,9 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 			if (startLock.isRunStart()) {
 				startLock.setStarted(true);
 				fDebugTarget.started();
-				fStatus = getRemoteDebugger().start(
-						fDebugTarget.getStartResponseHandler());
+				fStatus = getRemoteDebugger().start(fDebugTarget.getStartResponseHandler());
 				if (!fStatus) {
-					Logger.log(Logger.ERROR,
-							"ServerDebugHandler: debugger.start return false"); //$NON-NLS-1$
+					Logger.log(Logger.ERROR, "ServerDebugHandler: debugger.start return false"); //$NON-NLS-1$
 					try {
 						fDebugTarget.disconnect();
 					} catch (DebugException e) {
@@ -128,11 +120,9 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 				startLock.setStarted(true);
 				fDebugTarget.started();
 
-				fStatus = getRemoteDebugger().start(
-						fDebugTarget.getStartResponseHandler());
+				fStatus = getRemoteDebugger().start(fDebugTarget.getStartResponseHandler());
 				if (!fStatus) {
-					Logger.log(Logger.ERROR,
-							"ServerDebugHandler: debugger.start return false"); //$NON-NLS-1$
+					Logger.log(Logger.ERROR, "ServerDebugHandler: debugger.start return false"); //$NON-NLS-1$
 				}
 				fDebugTarget.setLastCommand("start"); //$NON-NLS-1$
 			} else {
@@ -151,22 +141,18 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 		fDebugTarget.setBreakpoints(new IBreakpoint[] {});
 
-		ILaunchConfiguration launchConfiguration = fDebugTarget.getLaunch()
-				.getLaunchConfiguration();
+		ILaunchConfiguration launchConfiguration = fDebugTarget.getLaunch().getLaunchConfiguration();
 		try {
-			fDebugTarget.setExpressionManager(new DefaultExpressionsManager(
-					fRemoteDebugger, launchConfiguration.getAttribute(
-							IDebugParametersKeys.TRANSFER_ENCODING,
-							PHPProjectPreferences.getTransferEncoding(null))));
+			fDebugTarget.setExpressionManager(
+					new DefaultExpressionsManager(fRemoteDebugger, launchConfiguration.getAttribute(
+							IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(null))));
 		} catch (CoreException e) {
 		}
 
 		if (fLastcmd.equals("start")) { //$NON-NLS-1$
-			fDebugTarget.breakpointHit(fDebugTarget.getLastFileName(),
-					lineNumber);
+			fDebugTarget.breakpointHit(fDebugTarget.getLastFileName(), lineNumber);
 		} else if (fLastcmd.equals("resume")) { //$NON-NLS-1$
-			fDebugTarget.breakpointHit(fDebugTarget.getLastFileName(),
-					lineNumber);
+			fDebugTarget.breakpointHit(fDebugTarget.getLastFileName(), lineNumber);
 		} else if (fLastcmd.equals("suspend")) { //$NON-NLS-1$
 			fDebugTarget.suspended(DebugEvent.CLIENT_REQUEST);
 		} else if (fLastcmd.equals("stepReturn")) { //$NON-NLS-1$
@@ -198,7 +184,8 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		super.connectionClosed();
 		fRemoteDebugger.finish();
 		// if (fDebugTarget.isPHPCGI()) {
-		// Logger.debugMSG("ServerDebugHandler: Calling Terminated() for PHP CGI");
+		// Logger.debugMSG("ServerDebugHandler: Calling Terminated() for PHP
+		// CGI");
 		Logger.debugMSG("ServerDebugHandler: Calling Terminated()"); //$NON-NLS-1$
 		fDebugTarget.terminated();
 		// }
@@ -229,17 +216,15 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		super.parsingErrorOccured(debugError);
 
 		// resolve path
-		String localFileName = ((RemoteDebugger) fRemoteDebugger)
-				.convertToLocalFilename(debugError.getFullPathName(), null,
-						null);
+		String localFileName = ((RemoteDebugger) fRemoteDebugger).convertToLocalFilename(debugError.getFullPathName(),
+				null, null);
 		if (localFileName == null) {
 			localFileName = debugError.getFullPathName();
 		}
 		debugError.setFileName(localFileName);
 
 		if (fDebugTarget.getDebugErrors().add(debugError)) {
-			Object[] listeners = fDebugTarget.getConsoleEventListeners()
-					.toArray();
+			Object[] listeners = fDebugTarget.getConsoleEventListeners().toArray();
 			for (Object element : listeners) {
 				((IPHPConsoleEventListener) element).handleEvent(debugError);
 			}
@@ -249,9 +234,8 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.model.SimpleDebugHandler#wrongDebugServer
-	 * ()
+	 * @see org.eclipse.php.internal.debug.core.model.SimpleDebugHandler#
+	 * wrongDebugServer ()
 	 */
 	public void wrongDebugServer() {
 		super.wrongDebugServer();
@@ -273,8 +257,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		this.fDebugTarget = debugTarget;
 		fDebugConnection = fDebugTarget.getDebugConnection();
 		fRemoteDebugger = createRemoteDebugger();
-		fDebugConnection.getCommunicationAdministrator()
-				.connectionEstablished();
+		fDebugConnection.getCommunicationAdministrator().connectionEstablished();
 	}
 
 	public PHPDebugTarget getDebugTarget() {

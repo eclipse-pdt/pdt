@@ -21,8 +21,7 @@ import org.eclipse.swt.graphics.Point;
  * 
  * @author Bartlomiej Laczkowski
  */
-public class PHPDebugUICompositeImageDescriptor extends
-		CompositeImageDescriptor {
+public class PHPDebugUICompositeImageDescriptor extends CompositeImageDescriptor {
 
 	public static final Point SIZE_16x16 = new Point(16, 16);
 	public static final Point SIZE_22x16 = new Point(22, 16);
@@ -44,8 +43,8 @@ public class PHPDebugUICompositeImageDescriptor extends
 	 * @param overlayImage
 	 * @param overlayPlacement
 	 */
-	public PHPDebugUICompositeImageDescriptor(ImageDescriptor baseImage,
-			ImageDescriptor overlayImage, int overlayPlacement) {
+	public PHPDebugUICompositeImageDescriptor(ImageDescriptor baseImage, ImageDescriptor overlayImage,
+			int overlayPlacement) {
 		this(baseImage, overlayImage, overlayPlacement, SIZE_16x16);
 	}
 
@@ -57,8 +56,8 @@ public class PHPDebugUICompositeImageDescriptor extends
 	 * @param overlayPlacement
 	 * @param size
 	 */
-	public PHPDebugUICompositeImageDescriptor(ImageDescriptor baseImage,
-			ImageDescriptor overlayImage, int overlayPlacement, Point size) {
+	public PHPDebugUICompositeImageDescriptor(ImageDescriptor baseImage, ImageDescriptor overlayImage,
+			int overlayPlacement, Point size) {
 		this.baseImage = baseImage;
 		Assert.isNotNull(this.baseImage);
 		this.overlayImage = overlayImage;
@@ -92,19 +91,16 @@ public class PHPDebugUICompositeImageDescriptor extends
 
 	@Override
 	public boolean equals(Object object) {
-		if (object == null
-				|| !PHPDebugUICompositeImageDescriptor.class.equals(object
-						.getClass()))
+		if (object == null || !PHPDebugUICompositeImageDescriptor.class.equals(object.getClass()))
 			return false;
 		PHPDebugUICompositeImageDescriptor other = (PHPDebugUICompositeImageDescriptor) object;
-		return (baseImage.equals(other.baseImage)
-				&& overlayImage.equals(other.overlayImage) && overlayPlacement == other.overlayPlacement);
+		return (baseImage.equals(other.baseImage) && overlayImage.equals(other.overlayImage)
+				&& overlayPlacement == other.overlayPlacement);
 	}
 
 	@Override
 	public int hashCode() {
-		return baseImage.hashCode() | overlayImage.hashCode()
-				| overlayPlacement | size.hashCode();
+		return baseImage.hashCode() | overlayImage.hashCode() | overlayPlacement | size.hashCode();
 	}
 
 	@Override
@@ -154,8 +150,7 @@ public class PHPDebugUICompositeImageDescriptor extends
 		ImageData data = descriptor.getImageData();
 		if (data == null) {
 			data = DEFAULT_IMAGE_DATA;
-			PHPDebugUIPlugin
-					.logErrorMessage("Image data not available: " + descriptor.toString()); //$NON-NLS-1$
+			PHPDebugUIPlugin.logErrorMessage("Image data not available: " + descriptor.toString()); //$NON-NLS-1$
 		}
 		return data;
 	}

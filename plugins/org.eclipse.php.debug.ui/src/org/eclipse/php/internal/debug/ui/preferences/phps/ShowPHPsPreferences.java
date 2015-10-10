@@ -33,14 +33,14 @@ public class ShowPHPsPreferences implements IMarkerResolution {
 	 */
 	public void run(IMarker marker) {
 		IPreferencePage page = new PHPsPreferencePage();
-		showPreferencePage(PHPsPreferencePage.ID, page); 
+		showPreferencePage(PHPsPreferencePage.ID, page);
 	}
 
 	/**
 	 * @see org.eclipse.ui.IMarkerResolution#getLabel()
 	 */
 	public String getLabel() {
-		return PHPDebugUIMessages.ShowPHPsPreferencePageTitle; 
+		return PHPDebugUIMessages.ShowPHPsPreferencePageTitle;
 	}
 
 	protected void showPreferencePage(String id, IPreferencePage page) {
@@ -48,16 +48,14 @@ public class ShowPHPsPreferences implements IMarkerResolution {
 
 		PreferenceManager manager = new PreferenceManager();
 		manager.addToRoot(targetNode);
-		final PreferenceDialog dialog = new PreferenceDialog(PHPDebugUIPlugin
-				.getActiveWorkbenchShell(), manager);
+		final PreferenceDialog dialog = new PreferenceDialog(PHPDebugUIPlugin.getActiveWorkbenchShell(), manager);
 		final boolean[] result = new boolean[] { false };
-		BusyIndicator.showWhile(PHPDebugUIPlugin.getStandardDisplay(),
-				new Runnable() {
-					public void run() {
-						dialog.create();
-						dialog.setMessage(targetNode.getLabelText());
-						result[0] = (dialog.open() == Window.OK);
-					}
-				});
+		BusyIndicator.showWhile(PHPDebugUIPlugin.getStandardDisplay(), new Runnable() {
+			public void run() {
+				dialog.create();
+				dialog.setMessage(targetNode.getLabelText());
+				result[0] = (dialog.open() == Window.OK);
+			}
+		});
 	}
 }

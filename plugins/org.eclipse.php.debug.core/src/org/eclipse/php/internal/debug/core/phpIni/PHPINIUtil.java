@@ -54,18 +54,15 @@ public class PHPINIUtil {
 		}
 	}
 
-	private static void modifyDebuggerExtensionPath(File phpIniFile,
-			String extensionPath) {
+	private static void modifyDebuggerExtensionPath(File phpIniFile, String extensionPath) {
 		try {
 			INIFileModifier m = new INIFileModifier(phpIniFile);
 			if (Platform.OS_WIN32.equals(Platform.getOS())) {
-				if (m.removeAllEntries(ZEND_EXTENSION_TS,
-						".*\\.\\\\ZendDebugger\\.dll.*")) { //$NON-NLS-1$
+				if (m.removeAllEntries(ZEND_EXTENSION_TS, ".*\\.\\\\ZendDebugger\\.dll.*")) { //$NON-NLS-1$
 					m.addEntry(ZEND_EXTENSION_TS, extensionPath);
 				}
 			} else {
-				if (m.removeAllEntries(ZEND_EXTENSION,
-						".*\\./ZendDebugger\\.so.*")) { //$NON-NLS-1$
+				if (m.removeAllEntries(ZEND_EXTENSION, ".*\\./ZendDebugger\\.so.*")) { //$NON-NLS-1$
 					m.addEntry(ZEND_EXTENSION, extensionPath);
 				}
 			}
@@ -104,32 +101,25 @@ public class PHPINIUtil {
 			List<String> includePath = new ArrayList<String>(path.length);
 			for (IncludePath pathObject : path) {
 				if (pathObject.isBuildpath()) {
-					IBuildpathEntry entry = (IBuildpathEntry) pathObject
-							.getEntry();
+					IBuildpathEntry entry = (IBuildpathEntry) pathObject.getEntry();
 					if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-						IPath entryPath = DLTKCore
-								.getResolvedVariablePath(entry.getPath());
+						IPath entryPath = DLTKCore.getResolvedVariablePath(entry.getPath());
 						includePath.add(entryPath.toFile().getAbsolutePath());
 					} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT
 							|| entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE
 							|| entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 						if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
-							IWorkspaceRoot root = ResourcesPlugin
-									.getWorkspace().getRoot();
-							IResource resource = root.findMember(entry
-									.getPath());
-							IModelElement scriptProject = DLTKCore
-									.create(resource);
+							IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+							IResource resource = root.findMember(entry.getPath());
+							IModelElement scriptProject = DLTKCore.create(resource);
 							if (scriptProject instanceof IScriptProject) {
 								try {
 									IProjectFragment[] projectFragments = ((IScriptProject) scriptProject)
 											.getProjectFragments();
 									for (IProjectFragment projectFragment : projectFragments) {
 										if (projectFragment.getResource() instanceof IFolder
-												|| projectFragment
-														.getResource() instanceof IProject)
-											addIncludePath(includePath,
-													projectFragment.getPath());
+												|| projectFragment.getResource() instanceof IProject)
+											addIncludePath(includePath, projectFragment.getPath());
 									}
 
 								} catch (ModelException e) {
@@ -141,19 +131,15 @@ public class PHPINIUtil {
 					} else if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
 						try {
 							// Retries the local paths from the container
-							final IScriptProject scriptProject = DLTKCore
-									.create(project);
+							final IScriptProject scriptProject = DLTKCore.create(project);
 							final IBuildpathContainer buildpathContainer = DLTKCore
-									.getBuildpathContainer(entry.getPath(),
-											scriptProject);
+									.getBuildpathContainer(entry.getPath(), scriptProject);
 							if (buildpathContainer != null) {
-								final IBuildpathEntry[] buildpathEntries = buildpathContainer
-										.getBuildpathEntries();
+								final IBuildpathEntry[] buildpathEntries = buildpathContainer.getBuildpathEntries();
 								if (buildpathEntries != null) {
 									for (IBuildpathEntry iBuildpathEntry : buildpathEntries) {
 										final IPath localPath = EnvironmentPathUtils
-												.getLocalPath(iBuildpathEntry
-														.getPath());
+												.getLocalPath(iBuildpathEntry.getPath());
 										includePath.add(localPath.toOSString());
 									}
 
@@ -172,16 +158,14 @@ public class PHPINIUtil {
 					}
 				}
 			}
-			modifyIncludePath(tempIniFile,
-					includePath.toArray(new String[includePath.size()]));
+			modifyIncludePath(tempIniFile, includePath.toArray(new String[includePath.size()]));
 		}
 		return tempIniFile;
 	}
 
 	private static void addIncludePath(List<String> includePath, IPath path) {
 		IPath entryPath = EnvironmentPathUtils.getLocalPath(path);
-		IResource resource = ResourcesPlugin.getWorkspace().getRoot()
-				.findMember(entryPath);
+		IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(entryPath);
 		if (resource != null) {
 			IPath location = resource.getLocation();
 			if (location != null) {
@@ -207,31 +191,26 @@ public class PHPINIUtil {
 	 *            Current project
 	 * @return created temporary PHP configuration file
 	 */
-	public static File prepareBeforeLaunch(File phpIniFile, String phpExePath,
-			IProject project) {
+	public static File prepareBeforeLaunch(File phpIniFile, String phpExePath, IProject project) {
 		File tempIniFile = createTemporaryPHPINIFile(phpIniFile);
 
 		tempIniFile = createPhpIniByProject(phpIniFile, project);
 
 		// Modify Zend Debugger extension entry:
 		if (phpIniFile != null) {
-			File debuggerFile = new File(
-					phpIniFile.getParentFile(),
+			File debuggerFile = new File(phpIniFile.getParentFile(),
 					Platform.OS_WIN32.equals(Platform.getOS()) ? "ZendDebugger.dll" : "ZendDebugger.so"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (debuggerFile.exists()) {
-				modifyDebuggerExtensionPath(tempIniFile,
-						debuggerFile.getAbsolutePath());
+				modifyDebuggerExtensionPath(tempIniFile, debuggerFile.getAbsolutePath());
 			}
-			modifyExtensionDir(tempIniFile,
-					new File(debuggerFile.getParentFile(), "ext") //$NON-NLS-1$
-							.getAbsolutePath());
+			modifyExtensionDir(tempIniFile, new File(debuggerFile.getParentFile(), "ext") //$NON-NLS-1$
+					.getAbsolutePath());
 		}
 
 		if (PHPDebugPlugin.DEBUG) {
 			System.out.println("\nPHP.ini contents:\n---------------------"); //$NON-NLS-1$
 			try {
-				BufferedReader r = new BufferedReader(new FileReader(
-						tempIniFile));
+				BufferedReader r = new BufferedReader(new FileReader(tempIniFile));
 				String line;
 				while ((line = r.readLine()) != null) {
 					System.out.println(line);
@@ -270,8 +249,7 @@ public class PHPINIUtil {
 		File phpIniFile = null;
 		try {
 			// Create temporary directory:
-			File tempDir = new File(
-					System.getProperty("java.io.tmpdir"), "php-ini"); //$NON-NLS-1$ //$NON-NLS-2$
+			File tempDir = new File(System.getProperty("java.io.tmpdir"), "php-ini"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (!tempDir.exists()) {
 				tempDir.mkdir();
 				tempDir.deleteOnExit();
@@ -287,8 +265,7 @@ public class PHPINIUtil {
 			phpIniFile.deleteOnExit();
 
 			if (originalPHPIniFile != null && originalPHPIniFile.exists()) {
-				new LocalFile(originalPHPIniFile).copy(
-						new LocalFile(phpIniFile), EFS.OVERWRITE,
+				new LocalFile(originalPHPIniFile).copy(new LocalFile(phpIniFile), EFS.OVERWRITE,
 						new NullProgressMonitor());
 			}
 
@@ -299,8 +276,7 @@ public class PHPINIUtil {
 		return phpIniFile;
 	}
 
-	private static void appendDefaultPHPIniContent(File phpIniFile)
-			throws IOException {
+	private static void appendDefaultPHPIniContent(File phpIniFile) throws IOException {
 		try {
 			INIFileModifier m = new INIFileModifier(phpIniFile);
 			if (!m.hasEntry(MEMORY_LIMIT)) {
@@ -332,10 +308,8 @@ public class PHPINIUtil {
 		if (!phpIniFile.exists() || !phpIniFile.canRead()) {
 			// Try to detect via library:
 			try {
-				Process p = Runtime.getRuntime().exec(
-						new String[] { phpExeFile.getAbsolutePath(), "-i" }); //$NON-NLS-1$
-				BufferedReader r = new BufferedReader(new InputStreamReader(
-						p.getInputStream()));
+				Process p = Runtime.getRuntime().exec(new String[] { phpExeFile.getAbsolutePath(), "-i" }); //$NON-NLS-1$
+				BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
 				String l;
 				while ((l = r.readLine()) != null) {
 					int i = l.indexOf(" => "); //$NON-NLS-1$

@@ -35,8 +35,7 @@ public class DBGpContainerValue extends DBGpValue {
 	private static final boolean IS_OBJECT = true;
 	private boolean containerType = IS_ARRAY;
 
-	public DBGpContainerValue(AbstractDBGpBaseVariable owningVariable,
-			Node property) {
+	public DBGpContainerValue(AbstractDBGpBaseVariable owningVariable, Node property) {
 		super(owningVariable);
 		setModifiable(false);
 		if (property != null) {
@@ -124,11 +123,9 @@ public class DBGpContainerValue extends DBGpValue {
 				childVariables = new DBGpVariable[childrenReceived];
 				for (int i = 0; i < childrenReceived; i++) {
 					Node childProperty = childProperties.item(i);
-					childVariables[i] = new DBGpVariable(
-							(DBGpTarget) getDebugTarget(), childProperty,
+					childVariables[i] = new DBGpVariable((DBGpTarget) getDebugTarget(), childProperty,
 							getOwner().getStackLevel(),
-							containerType == IS_OBJECT ? KIND_OBJECT_MEMBER
-									: KIND_ARRAY_MEMBER);
+							containerType == IS_OBJECT ? KIND_OBJECT_MEMBER : KIND_ARRAY_MEMBER);
 				}
 				if (containerType == IS_OBJECT)
 					VariablesUtil.sortObjectMembers(childVariables);
@@ -160,43 +157,34 @@ public class DBGpContainerValue extends DBGpValue {
 				}
 				if (i == page) {
 					// we have data for this page so pass the property info
-					final IVariable var = new DBGpContainerVariable(
-							getDebugTarget(), i, pageSize, numChild, property,
-							getOwner().getStackLevel(), getOwner()
-									.getFullName());
-					IVariable partition = new VirtualPartition(this,
-							new IVariableProvider() {
-								@Override
-								public IVariable[] getVariables()
-										throws DebugException {
-									return var.getValue().getVariables();
-								}
-							}, startIndex, endIndex);
+					final IVariable var = new DBGpContainerVariable(getDebugTarget(), i, pageSize, numChild, property,
+							getOwner().getStackLevel(), getOwner().getFullName());
+					IVariable partition = new VirtualPartition(this, new IVariableProvider() {
+						@Override
+						public IVariable[] getVariables() throws DebugException {
+							return var.getValue().getVariables();
+						}
+					}, startIndex, endIndex);
 					childVariables[i] = partition;
 				} else {
 					/*
 					 * we don't have data for this page so create a container
 					 * with no info, could be fetched later.
 					 */
-					final IVariable var = new DBGpContainerVariable(
-							getDebugTarget(), i, pageSize, numChild, null,
-							getOwner().getStackLevel(), getOwner()
-									.getFullName());
+					final IVariable var = new DBGpContainerVariable(getDebugTarget(), i, pageSize, numChild, null,
+							getOwner().getStackLevel(), getOwner().getFullName());
 					/*
 					 * we copy the address from the original data as we could
 					 * use it if we don't have a fullname from the variable, eg
 					 * if an eval was done.
 					 */
-					((DBGpContainerVariable) var).setAddress(getOwner()
-							.getAddress());
-					IVariable partition = new VirtualPartition(this,
-							new IVariableProvider() {
-								@Override
-								public IVariable[] getVariables()
-										throws DebugException {
-									return var.getValue().getVariables();
-								}
-							}, startIndex, endIndex);
+					((DBGpContainerVariable) var).setAddress(getOwner().getAddress());
+					IVariable partition = new VirtualPartition(this, new IVariableProvider() {
+						@Override
+						public IVariable[] getVariables() throws DebugException {
+							return var.getValue().getVariables();
+						}
+					}, startIndex, endIndex);
 					childVariables[i] = partition;
 				}
 			}
@@ -276,8 +264,7 @@ public class DBGpContainerValue extends DBGpValue {
 			page = ((DBGpContainerVariable) var).getPage();
 		}
 		Node property = null;
-		property = target.getProperty(var.getFullName(), var.getStackLevel(),
-				page);
+		property = target.getProperty(var.getFullName(), var.getStackLevel(), page);
 
 		if (property != null) {
 			parseData(property);

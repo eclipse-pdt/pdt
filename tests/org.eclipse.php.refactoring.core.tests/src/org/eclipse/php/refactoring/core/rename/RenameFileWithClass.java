@@ -42,8 +42,7 @@ public class RenameFileWithClass extends AbstractRenameRefactoringTest {
 
 		file = project1.getFile("RenameFileWithClass1.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php class RenameFileWithClass1{}?>".getBytes());
+		InputStream source = new ByteArrayInputStream("<?php class RenameFileWithClass1{}?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -51,7 +50,6 @@ public class RenameFileWithClass extends AbstractRenameRefactoringTest {
 			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
 
-		
 		file1 = project1.getFile("RenameFileWithClass2.php");
 
 		source = new ByteArrayInputStream("<?php include 'RenameFileWithClass1.php'; ?>".getBytes());
@@ -61,7 +59,6 @@ public class RenameFileWithClass extends AbstractRenameRefactoringTest {
 		} else {
 			file1.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
-
 
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
@@ -73,7 +70,6 @@ public class RenameFileWithClass extends AbstractRenameRefactoringTest {
 
 		assertNotNull(program);
 
-		
 		RenameFileProcessor processor = new RenameFileProcessor(file, program);
 		processor.setNewElementName("RenameFileWithClass3.php");
 		processor.setUpdateRefernces(true);
@@ -83,27 +79,21 @@ public class RenameFileWithClass extends AbstractRenameRefactoringTest {
 		checkInitCondition(processor);
 
 		performChange(processor);
-		
-		
+
 		IFile file = project1.getFile("RenameFileWithClass3.php");
 		assertNotNull(file);
 		assertTrue(file.exists());
-		
+
 		try {
 			String content = FileUtils.getContents(file);
-			assertEquals(
-					"<?php class RenameFileWithClass3{}?>",
-					content);
+			assertEquals("<?php class RenameFileWithClass3{}?>", content);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
+
 		try {
 			String content = FileUtils.getContents(file1);
-			assertEquals(
-					"<?php include 'RenameFileWithClass3.php'; ?>",
-					content);
+			assertEquals("<?php include 'RenameFileWithClass3.php'; ?>", content);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

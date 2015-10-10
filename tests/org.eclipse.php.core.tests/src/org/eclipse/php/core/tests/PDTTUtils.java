@@ -23,8 +23,7 @@ import org.osgi.framework.Bundle;
 
 public class PDTTUtils {
 	public static String[] getPDTTFiles(String testsDirectory) {
-		return getPDTTFiles(testsDirectory, PHPCoreTests.getDefault()
-				.getBundle());
+		return getPDTTFiles(testsDirectory, PHPCoreTests.getDefault().getBundle());
 	}
 
 	public static String[] getPDTTFiles(String testsDirectory, Bundle bundle) {
@@ -32,12 +31,10 @@ public class PDTTUtils {
 	}
 
 	public static String[] getFiles(String testsDirectory, String ext) {
-		return getFiles(testsDirectory, PHPCoreTests.getDefault().getBundle(),
-				ext);
+		return getFiles(testsDirectory, PHPCoreTests.getDefault().getBundle(), ext);
 	}
 
-	public static String[] getFiles(String testsDirectory, Bundle bundle,
-			String ext) {
+	public static String[] getFiles(String testsDirectory, Bundle bundle, String ext) {
 		List<String> files = new LinkedList<String>();
 		Enumeration<String> entryPaths = bundle.getEntryPaths(testsDirectory);
 		if (entryPaths != null) {

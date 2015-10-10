@@ -75,8 +75,7 @@ public class ContainerSelectionGroup extends Composite {
 	 *            Enable the user to type in a new container name instead of
 	 *            just selecting from the existing ones.
 	 */
-	public ContainerSelectionGroup(Composite parent, Listener listener,
-			boolean allowNewContainerName) {
+	public ContainerSelectionGroup(Composite parent, Listener listener, boolean allowNewContainerName) {
 		this(parent, listener, allowNewContainerName, null);
 	}
 
@@ -94,8 +93,7 @@ public class ContainerSelectionGroup extends Composite {
 	 * @param message
 	 *            The text to present to the user.
 	 */
-	public ContainerSelectionGroup(Composite parent, Listener listener,
-			boolean allowNewContainerName, String message) {
+	public ContainerSelectionGroup(Composite parent, Listener listener, boolean allowNewContainerName, String message) {
 		this(parent, listener, allowNewContainerName, message, true);
 	}
 
@@ -115,11 +113,9 @@ public class ContainerSelectionGroup extends Composite {
 	 * @param showClosedProjects
 	 *            Whether or not to show closed projects.
 	 */
-	public ContainerSelectionGroup(Composite parent, Listener listener,
-			boolean allowNewContainerName, String message,
+	public ContainerSelectionGroup(Composite parent, Listener listener, boolean allowNewContainerName, String message,
 			boolean showClosedProjects) {
-		this(parent, listener, allowNewContainerName, message,
-				showClosedProjects, SIZING_SELECTION_PANE_HEIGHT,
+		this(parent, listener, allowNewContainerName, message, showClosedProjects, SIZING_SELECTION_PANE_HEIGHT,
 				SIZING_SELECTION_PANE_WIDTH);
 	}
 
@@ -143,8 +139,7 @@ public class ContainerSelectionGroup extends Composite {
 	 * @param widthHint
 	 *            width hint for the drill down composite
 	 */
-	public ContainerSelectionGroup(Composite parent, Listener listener,
-			boolean allowNewContainerName, String message,
+	public ContainerSelectionGroup(Composite parent, Listener listener, boolean allowNewContainerName, String message,
 			boolean showClosedProjects, int heightHint, int widthHint) {
 		super(parent, SWT.NONE);
 		this.listener = listener;
@@ -194,8 +189,7 @@ public class ContainerSelectionGroup extends Composite {
 	 * @param message
 	 */
 	public void createContents(String message) {
-		createContents(message, SIZING_SELECTION_PANE_HEIGHT,
-				SIZING_SELECTION_PANE_WIDTH);
+		createContents(message, SIZING_SELECTION_PANE_HEIGHT, SIZING_SELECTION_PANE_WIDTH);
 	}
 
 	/**
@@ -251,24 +245,21 @@ public class ContainerSelectionGroup extends Composite {
 		cp = new ContainerContentProvider();
 		cp.showClosedProjects(showClosedProjects);
 		treeViewer.setContentProvider(cp);
-		treeViewer.setLabelProvider(WorkbenchLabelProvider
-				.getDecoratingWorkbenchLabelProvider());
+		treeViewer.setLabelProvider(WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider());
 		treeViewer.setComparator(new ViewerComparator());
 		treeViewer.setUseHashlookup(true);
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) event
-						.getSelection();
-				containerSelectionChanged((IContainer) selection
-						.getFirstElement()); // allow null
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				containerSelectionChanged((IContainer) selection.getFirstElement()); // allow
+																						// null
 			}
 		});
 		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				ISelection selection = event.getSelection();
 				if (selection instanceof IStructuredSelection) {
-					Object item = ((IStructuredSelection) selection)
-							.getFirstElement();
+					Object item = ((IStructuredSelection) selection).getFirstElement();
 					if (item == null) {
 						return;
 					}

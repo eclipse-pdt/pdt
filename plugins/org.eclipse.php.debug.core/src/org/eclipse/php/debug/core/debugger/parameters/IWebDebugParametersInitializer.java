@@ -19,8 +19,7 @@ import org.eclipse.debug.core.ILaunch;
  * This interface allows passing additional data to the debug session, e.g: GET,
  * POST, RAW data, COOKIES, HEADERS
  */
-public interface IWebDebugParametersInitializer extends
-		IDebugParametersInitializer {
+public interface IWebDebugParametersInitializer extends IDebugParametersInitializer {
 
 	public static final String GET_METHOD = "GET"; //$NON-NLS-1$
 	public static final String POST_METHOD = "POST"; //$NON-NLS-1$

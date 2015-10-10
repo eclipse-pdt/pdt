@@ -35,8 +35,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
 @SuppressWarnings("restriction")
-public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
-		IPHPTextHover {
+public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements IPHPTextHover {
 
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		if (textViewer == null || textViewer.getDocument() == null) {
@@ -52,8 +51,8 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 		}
 
 		int offset = hoverRegion.getOffset();
-		IStructuredDocumentRegion flatNode = ((IStructuredDocument) textViewer
-				.getDocument()).getRegionAtCharacterOffset(offset);
+		IStructuredDocumentRegion flatNode = ((IStructuredDocument) textViewer.getDocument())
+				.getRegionAtCharacterOffset(offset);
 		ITextRegion region = null;
 		if (flatNode != null) {
 			region = flatNode.getRegionAtCharacterOffset(offset);
@@ -68,8 +67,7 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 		if (region.getType() == PHPRegionContext.PHP_CONTENT) {
 			phpScriptRegion = (IPhpScriptRegion) region;
 			try {
-				region = phpScriptRegion.getPhpToken(offset
-						- container.getStartOffset() - region.getStart());
+				region = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - region.getStart());
 			} catch (BadLocationException e) {
 				region = null;
 			}
@@ -79,16 +77,13 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 				int varLength = 0;
 
 				String regionType = region.getType();
-				if (regionType == PHPRegionTypes.PHP_VARIABLE
-						|| regionType == PHPRegionTypes.PHP_THIS) {
+				if (regionType == PHPRegionTypes.PHP_VARIABLE || regionType == PHPRegionTypes.PHP_THIS) {
 					varOffset = hoverRegion.getOffset();
 					varLength = hoverRegion.getLength();
 					try {
-						ITextRegion prevPhpToken = phpScriptRegion
-								.getPhpToken(region.getStart() - 1);
+						ITextRegion prevPhpToken = phpScriptRegion.getPhpToken(region.getStart() - 1);
 						if (prevPhpToken.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM) {
-							prevPhpToken = phpScriptRegion
-									.getPhpToken(prevPhpToken.getStart() - 1);
+							prevPhpToken = phpScriptRegion.getPhpToken(prevPhpToken.getStart() - 1);
 							varLength += varOffset - prevPhpToken.getStart();
 							varOffset = prevPhpToken.getStart();
 						}
@@ -97,24 +92,16 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 					}
 				} else if (regionType == PHPRegionTypes.PHP_LABEL) {
 					try {
-						ITextRegion nextRegion = phpScriptRegion
-								.getPhpToken(region.getEnd());
-						ITextRegion prevRegion = phpScriptRegion
-								.getPhpToken(region.getStart() - 1);
+						ITextRegion nextRegion = phpScriptRegion.getPhpToken(region.getEnd());
+						ITextRegion prevRegion = phpScriptRegion.getPhpToken(region.getStart() - 1);
 						if (prevRegion.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR) {
-							prevRegion = phpScriptRegion.getPhpToken(prevRegion
-									.getStart() - 1);
+							prevRegion = phpScriptRegion.getPhpToken(prevRegion.getStart() - 1);
 							if (prevRegion.getType() == PHPRegionTypes.PHP_VARIABLE) {
-								String nextTokenString = textViewer
-										.getDocument()
-										.get(phpScriptRegion.getStart()
-												+ nextRegion.getStart(),
-												nextRegion.getLength());
+								String nextTokenString = textViewer.getDocument().get(
+										phpScriptRegion.getStart() + nextRegion.getStart(), nextRegion.getLength());
 								if (!"(".equals(nextTokenString)) { //$NON-NLS-1$
-									varOffset = phpScriptRegion.getStart()
-											+ prevRegion.getStart();
-									varLength = region.getEnd()
-											- prevRegion.getStart();
+									varOffset = phpScriptRegion.getStart() + prevRegion.getStart();
+									varLength = region.getEnd() - prevRegion.getStart();
 								}
 							}
 						}
@@ -126,10 +113,8 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 				if (varLength > 0) {
 					String variable = null;
 					try {
-						int[] variableRange = getVariableRange(textViewer,
-								varOffset, varLength);
-						variable = textViewer.getDocument().get(
-								variableRange[0], variableRange[1]);
+						int[] variableRange = getVariableRange(textViewer, varOffset, varLength);
+						variable = textViewer.getDocument().get(variableRange[0], variableRange[1]);
 						variable = "<B>" + variable + " = </B>" //$NON-NLS-1$ //$NON-NLS-2$
 								+ getValue(debugTarget, variable);
 					} catch (BadLocationException e) {
@@ -165,13 +150,11 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 	 * @return An array of integers that contains the offset and the length of
 	 *         the evaluation request.
 	 */
-	protected int[] getVariableRange(final ITextViewer textViewer,
-			final int offset, final int length) {
+	protected int[] getVariableRange(final ITextViewer textViewer, final int offset, final int length) {
 		final int[] variableRange = new int[] { offset, length };
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
-				TextSelection selection = (TextSelection) textViewer
-						.getSelectionProvider().getSelection();
+				TextSelection selection = (TextSelection) textViewer.getSelectionProvider().getSelection();
 				if (selection.isEmpty()) {
 					return;
 				}
@@ -179,8 +162,7 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 				int selectionStart = selection.getOffset();
 				int selectionEnd = selectionStart + selection.getLength();
 				int hoverRegionEnd = offset + length;
-				if (offset >= selectionStart && offset < selectionEnd
-						&& hoverRegionEnd <= selectionEnd) {
+				if (offset >= selectionStart && offset < selectionEnd && hoverRegionEnd <= selectionEnd) {
 					variableRange[0] = selection.getOffset();
 					variableRange[1] = selection.getLength();
 				}
@@ -197,8 +179,7 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 	 * @return
 	 */
 	protected String getValue(PHPDebugTarget debugTarget, String variable) {
-		DefaultExpressionsManager expressionManager = debugTarget
-				.getExpressionManager();
+		DefaultExpressionsManager expressionManager = debugTarget.getExpressionManager();
 		Expression expression = expressionManager.buildExpression(variable);
 
 		// Get the value from the debugger
@@ -232,19 +213,15 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 
 				// Check for the file path within the project
 				String fileInDebug = stackFrame.getSourceName();
-				String fileInProject = fi.getFile().getProjectRelativePath()
-						.toString();
+				String fileInProject = fi.getFile().getProjectRelativePath().toString();
 				if (fileInDebug != null
-						&& (fileInDebug.endsWith('/' + fileInProject) || fileInDebug
-								.equals(fileInProject))) {
-					PHPDebugTarget debugTarget = (PHPDebugTarget) stackFrame
-							.getDebugTarget();
+						&& (fileInDebug.endsWith('/' + fileInProject) || fileInDebug.equals(fileInProject))) {
+					PHPDebugTarget debugTarget = (PHPDebugTarget) stackFrame.getDebugTarget();
 					return debugTarget;
 				}
 			} else {
 				// File on the include Path
-				PHPDebugTarget debugTarget = (PHPDebugTarget) stackFrame
-						.getDebugTarget();
+				PHPDebugTarget debugTarget = (PHPDebugTarget) stackFrame.getDebugTarget();
 				return debugTarget;
 			}
 		}

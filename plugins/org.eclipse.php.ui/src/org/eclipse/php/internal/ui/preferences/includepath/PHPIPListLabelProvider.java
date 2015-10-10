@@ -45,13 +45,11 @@ public class PHPIPListLabelProvider extends BPListLabelProvider {
 	protected ImageDescriptor getCPListElementBaseImage(BPListElement cpentry) {
 
 		if (cpentry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
-			return DLTKPluginImages
-					.getDescriptor(DLTKPluginImages.IMG_OBJS_LIBRARY);
+			return DLTKPluginImages.getDescriptor(DLTKPluginImages.IMG_OBJS_LIBRARY);
 		} else if (cpentry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
 			// handling Folder special case - need to decide if it's in the
 			// build path or not.
-			ImageDescriptor folderBaseImage = getFolderBaseImage(cpentry
-					.getResource());
+			ImageDescriptor folderBaseImage = getFolderBaseImage(cpentry.getResource());
 			if (null != folderBaseImage)
 				return folderBaseImage;
 		}
@@ -66,10 +64,8 @@ public class PHPIPListLabelProvider extends BPListLabelProvider {
 			ImageDescriptor imageDescriptor = getCPListElementBaseImage(cpentry);
 			if (imageDescriptor != null) {
 				if (PharUIUtil.isInvalidPharBuildEntry(cpentry)) {
-					imageDescriptor = new ScriptElementImageDescriptor(
-							imageDescriptor,
-							ScriptElementImageDescriptor.ERROR,
-							ScriptElementImageProvider.SMALL_SIZE);
+					imageDescriptor = new ScriptElementImageDescriptor(imageDescriptor,
+							ScriptElementImageDescriptor.ERROR, ScriptElementImageProvider.SMALL_SIZE);
 				}
 				return fRegistry.get(imageDescriptor);
 			}
@@ -79,8 +75,7 @@ public class PHPIPListLabelProvider extends BPListLabelProvider {
 
 	@Override
 	public String getCPListElementText(BPListElement cpentry) {
-		String result = LabelProviderUtil.getVariableName(cpentry.getPath(),
-				cpentry.getEntryKind());
+		String result = LabelProviderUtil.getVariableName(cpentry.getPath(), cpentry.getEntryKind());
 		if (result == null) {
 			result = super.getCPListElementText(cpentry);
 		}
@@ -102,8 +97,7 @@ public class PHPIPListLabelProvider extends BPListLabelProvider {
 					return PHPPluginImages.DESC_OBJS_PHPFOLDER_ROOT;
 			}
 		} else {
-			return PlatformUI.getWorkbench().getSharedImages()
-					.getImageDescriptor(ISharedImages.IMG_OBJ_FOLDER);
+			return PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_FOLDER);
 		}
 		return null;
 	}

@@ -28,22 +28,18 @@ public class PHPRefactorActionGroup extends RefactorActionGroup {
 				.getActionDelegator("org.eclipse.php.ui.actions.RenameElement"); //$NON-NLS-1$
 
 		if (renamePHPElement != null) {
-			fRenameAction = new SelectionDispatchActionDelegate(part.getSite(),
-					renamePHPElement);
+			fRenameAction = new SelectionDispatchActionDelegate(part.getSite(), renamePHPElement);
 			fRenameAction.setText(Messages.PHPRefactorActionGroup_1);
-			fRenameAction
-					.setActionDefinitionId(IScriptEditorActionDefinitionIds.RENAME_ELEMENT);
+			fRenameAction.setActionDefinitionId(IScriptEditorActionDefinitionIds.RENAME_ELEMENT);
 		}
 
 		IPHPActionDelegator movePHPElement = PHPActionDelegatorRegistry
 				.getActionDelegator("org.eclipse.php.ui.actions.Move"); //$NON-NLS-1$
 
 		if (movePHPElement != null) {
-			fMoveAction = new SelectionDispatchActionDelegate(part.getSite(),
-					movePHPElement);
+			fMoveAction = new SelectionDispatchActionDelegate(part.getSite(), movePHPElement);
 			fMoveAction.setText(Messages.PHPRefactorActionGroup_3);
-			fMoveAction
-					.setActionDefinitionId("org.eclipse.php.ui.edit.text.move.element"); //$NON-NLS-1$
+			fMoveAction.setActionDefinitionId("org.eclipse.php.ui.edit.text.move.element"); //$NON-NLS-1$
 		}
 
 	}

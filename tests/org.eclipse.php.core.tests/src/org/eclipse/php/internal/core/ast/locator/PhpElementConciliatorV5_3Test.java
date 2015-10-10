@@ -83,23 +83,22 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME, PhpElementConciliator.concile(selectedNode));
 
 		// select the class declaration
 		start = 26;
 		selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME, PhpElementConciliator.concile(selectedNode));
 	}
 
 	@Test
 	public void concileClassName1() {
 		IFile file = null;
 		try {
-			file = setFileContent("<?php namespace my\name; class TestRenameClass{} class TestExtendedClass extends TestRenameClass{}?>");
+			file = setFileContent(
+					"<?php namespace my\name; class TestRenameClass{} class TestExtendedClass extends TestRenameClass{}?>");
 		} catch (CoreException e) {
 			fail(e.getMessage());
 		}
@@ -115,15 +114,15 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME, PhpElementConciliator.concile(selectedNode));
 	}
 
 	@Test
 	public void concileClassName2() {
 		IFile file = null;
 		try {
-			file = setFileContent("<?php namespace my\name; class A{function foo(){}} $a = new A();$a->foo(); my\\name\\A::foo();?>");
+			file = setFileContent(
+					"<?php namespace my\name; class A{function foo(){}} $a = new A();$a->foo(); my\\name\\A::foo();?>");
 		} catch (CoreException e) {
 			fail(e.getMessage());
 		}
@@ -139,22 +138,21 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME, PhpElementConciliator.concile(selectedNode));
 
 		start = 82;
 		selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME, PhpElementConciliator.concile(selectedNode));
 	}
 
 	@Test
 	public void concileInterface() {
 		IFile file = null;
 		try {
-			file = setFileContent("<?php namespace my\name; interface iTemplate{public function setVariable($name, $var);}?>");
+			file = setFileContent(
+					"<?php namespace my\name; interface iTemplate{public function setVariable($name, $var);}?>");
 		} catch (CoreException e) {
 			fail(e.getMessage());
 		}
@@ -170,16 +168,14 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME, PhpElementConciliator.concile(selectedNode));
 
 		// select the class declaration
 		start = 36;
 		selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME, PhpElementConciliator.concile(selectedNode));
 
 	}
 
@@ -187,7 +183,8 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 	public void concileInterface1() {
 		IFile file = null;
 		try {
-			file = setFileContent("<?php namespace my\name; interface iTemplate{public function setVariable($name, $var);} class Template implements iTemplate{  public function setVariable($name, $var){}}?>");
+			file = setFileContent(
+					"<?php namespace my\name; interface iTemplate{public function setVariable($name, $var);} class Template implements iTemplate{  public function setVariable($name, $var){}}?>");
 		} catch (CoreException e) {
 			fail(e.getMessage());
 		}
@@ -203,16 +200,14 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME, PhpElementConciliator.concile(selectedNode));
 
 		// select the class declaration
 		start = 115;
 		selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASSNAME, PhpElementConciliator.concile(selectedNode));
 
 	}
 
@@ -231,8 +226,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 		assertNotNull(program);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_PROGRAM,
-				PhpElementConciliator.concile(program));
+		assertEquals(PhpElementConciliator.CONCILIATOR_PROGRAM, PhpElementConciliator.concile(program));
 	}
 
 	@Test
@@ -255,24 +249,21 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_GLOBAL_VARIABLE,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_GLOBAL_VARIABLE, PhpElementConciliator.concile(selectedNode));
 
 		// select the 'global $a'
 		start = 60;
 		selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_GLOBAL_VARIABLE,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_GLOBAL_VARIABLE, PhpElementConciliator.concile(selectedNode));
 
 		// select the 'echo $a'
 		start = 69;
 		selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_GLOBAL_VARIABLE,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_GLOBAL_VARIABLE, PhpElementConciliator.concile(selectedNode));
 	}
 
 	@Test
@@ -294,8 +285,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_GLOBAL_VARIABLE,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_GLOBAL_VARIABLE, PhpElementConciliator.concile(selectedNode));
 	}
 
 	@Test
@@ -318,16 +308,14 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_FUNCTION,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_FUNCTION, PhpElementConciliator.concile(selectedNode));
 
 		// selection the function name.
 		start = 44;
 		selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_FUNCTION,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_FUNCTION, PhpElementConciliator.concile(selectedNode));
 	}
 
 	@Test
@@ -350,15 +338,15 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_FUNCTION,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_FUNCTION, PhpElementConciliator.concile(selectedNode));
 	}
 
 	@Test
 	public void concileMethod1() {
 		IFile file = null;
 		try {
-			file = setFileContent("<?class foo {public static function bar(){return 'bar in a class called';}}$strFN2 = foo::bar;echo bar();?>");
+			file = setFileContent(
+					"<?class foo {public static function bar(){return 'bar in a class called';}}$strFN2 = foo::bar;echo bar();?>");
 
 		} catch (CoreException e) {
 			fail(e.getMessage());
@@ -375,15 +363,15 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER, PhpElementConciliator.concile(selectedNode));
 	}
 
 	@Test
 	public void concileMethod2() {
 		IFile file = null;
 		try {
-			file = setFileContent("<? namespace my\name;class foo {public function bar(){return 'bar in a class called';}}$strFN2 = new foo(); $strFN2->bar()?>");
+			file = setFileContent(
+					"<? namespace my\name;class foo {public function bar(){return 'bar in a class called';}}$strFN2 = new foo(); $strFN2->bar()?>");
 
 		} catch (CoreException e) {
 			fail(e.getMessage());
@@ -400,15 +388,15 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER, PhpElementConciliator.concile(selectedNode));
 	}
 
 	@Test
 	public void concileMethod3() {
 		IFile file = null;
 		try {
-			file = setFileContent("<? namespace my\name;class foo {public function bar(){return 'bar in a class called';} public function f(){$this->bar();}}?>");
+			file = setFileContent(
+					"<? namespace my\name;class foo {public function bar(){return 'bar in a class called';} public function f(){$this->bar();}}?>");
 
 		} catch (CoreException e) {
 			fail(e.getMessage());
@@ -425,15 +413,15 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER, PhpElementConciliator.concile(selectedNode));
 	}
 
 	@Test
 	public void concileMethod4() {
 		IFile file = null;
 		try {
-			file = setFileContent("<? namespace my\name;class foo {public function bar(){return 'bar in a class called';} public function f(){$this->bar();}}?>");
+			file = setFileContent(
+					"<? namespace my\name;class foo {public function bar(){return 'bar in a class called';} public function f(){$this->bar();}}?>");
 
 		} catch (CoreException e) {
 			fail(e.getMessage());
@@ -450,8 +438,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER, PhpElementConciliator.concile(selectedNode));
 	}
 
 	@Test
@@ -475,15 +462,13 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER, PhpElementConciliator.concile(selectedNode));
 
 		start = 64;
 		selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER, PhpElementConciliator.concile(selectedNode));
 
 	}
 
@@ -491,7 +476,8 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 	public void concileField2() {
 		IFile file = null;
 		try {
-			file = setFileContent("<? namespace my\name;class foo {var $f; public function f(){$this->$f;}} $cls= new foo(); $cls->f;?>");
+			file = setFileContent(
+					"<? namespace my\name;class foo {var $f; public function f(){$this->$f;}} $cls= new foo(); $cls->f;?>");
 
 		} catch (CoreException e) {
 			fail(e.getMessage());
@@ -508,15 +494,15 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER, PhpElementConciliator.concile(selectedNode));
 	}
 
 	@Test
 	public void concileStaticField1() {
 		IFile file = null;
 		try {
-			file = setFileContent("<? namespace my\name;class foo {public static $my_static = 'foo';} echo Foo::$my_static; echo $foo->my_static?>");
+			file = setFileContent(
+					"<? namespace my\name;class foo {public static $my_static = 'foo';} echo Foo::$my_static; echo $foo->my_static?>");
 
 		} catch (CoreException e) {
 			fail(e.getMessage());
@@ -533,22 +519,19 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER, PhpElementConciliator.concile(selectedNode));
 
 		start = 78;
 		selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER, PhpElementConciliator.concile(selectedNode));
 
 		start = 101;
 		selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER, PhpElementConciliator.concile(selectedNode));
 
 	}
 
@@ -573,23 +556,22 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_LOCAL_VARIABLE,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_LOCAL_VARIABLE, PhpElementConciliator.concile(selectedNode));
 
 		// declaration
 		start = 52;
 		selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_LOCAL_VARIABLE,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_LOCAL_VARIABLE, PhpElementConciliator.concile(selectedNode));
 	}
 
 	@Test
 	public void concileConstant() {
 		IFile file = null;
 		try {
-			file = setFileContent("<?php namespace my\name; define('CONSTANT', 'Hello world.'); echo CONSTANT; echo Constant; ?>");
+			file = setFileContent(
+					"<?php namespace my\name; define('CONSTANT', 'Hello world.'); echo CONSTANT; echo Constant; ?>");
 		} catch (CoreException e) {
 			fail(e.getMessage());
 		}
@@ -605,29 +587,25 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT, PhpElementConciliator.concile(selectedNode));
 
 		start = 34;
 		selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT, PhpElementConciliator.concile(selectedNode));
 
 		start = 67;
 		selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT, PhpElementConciliator.concile(selectedNode));
 
 		start = 82;
 		selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT, PhpElementConciliator.concile(selectedNode));
 
 	}
 
@@ -651,8 +629,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT, PhpElementConciliator.concile(selectedNode));
 	}
 
 	@Test
@@ -675,8 +652,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT, PhpElementConciliator.concile(selectedNode));
 	}
 
 	@Test
@@ -699,29 +675,25 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT, PhpElementConciliator.concile(selectedNode));
 
 		start = 28;
 		selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT, PhpElementConciliator.concile(selectedNode));
 
 		start = 51;
 		selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT, PhpElementConciliator.concile(selectedNode));
 
 		start = 64;
 		selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
-				PhpElementConciliator.concile(selectedNode));
+		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT, PhpElementConciliator.concile(selectedNode));
 	}
 
 }

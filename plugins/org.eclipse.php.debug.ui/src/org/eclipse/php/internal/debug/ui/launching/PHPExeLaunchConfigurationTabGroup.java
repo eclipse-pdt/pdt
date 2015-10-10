@@ -23,8 +23,7 @@ import org.eclipse.debug.ui.*;
  * @author shalom
  * 
  */
-public class PHPExeLaunchConfigurationTabGroup extends
-		AbstractLaunchConfigurationTabGroup {
+public class PHPExeLaunchConfigurationTabGroup extends AbstractLaunchConfigurationTabGroup {
 
 	protected final String CONFIGURATION_TAB_GROUP_ID = "org.eclipse.php.deubg.ui.launching.launchConfigurationTabGroup.phpexe"; //$NON-NLS-1$
 
@@ -60,8 +59,7 @@ public class PHPExeLaunchConfigurationTabGroup extends
 		newTab.setLaunchConfigurationDialog(dialog);
 		list.add(newTab);
 
-		ILaunchConfigurationTab[] allTabs = list
-				.toArray(new ILaunchConfigurationTab[list.size()]);
+		ILaunchConfigurationTab[] allTabs = list.toArray(new ILaunchConfigurationTab[list.size()]);
 		setTabs(allTabs);
 	}
 

@@ -34,8 +34,7 @@ public class PHPEditorPreferencePage extends AbstractPreferencePage {
 		createHeader(parent);
 		createMainComposite(parent);
 		initValues();
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.EDITOR_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.EDITOR_PREFERENCES);
 		return super.createContents(parent);
 	}
 
@@ -48,15 +47,12 @@ public class PHPEditorPreferencePage extends AbstractPreferencePage {
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		useSmartHomeEndCB = new Button(firstComposite, SWT.CHECK | SWT.LEFT);
 		useSmartHomeEndCB.setLayoutData(gd);
-		useSmartHomeEndCB
-				.setText(PHPUIMessages.PHPEditorPreferencePage_smartCaretPositioning);
+		useSmartHomeEndCB.setText(PHPUIMessages.PHPEditorPreferencePage_smartCaretPositioning);
 
 		gd = new GridData(GridData.FILL_HORIZONTAL);
-		useSmartSubWordNavigation = new Button(firstComposite, SWT.CHECK
-				| SWT.LEFT);
+		useSmartSubWordNavigation = new Button(firstComposite, SWT.CHECK | SWT.LEFT);
 		useSmartSubWordNavigation.setLayoutData(gd);
-		useSmartSubWordNavigation
-				.setText(PHPUIMessages.PHPEditorPreferencePage_0); 
+		useSmartSubWordNavigation.setText(PHPUIMessages.PHPEditorPreferencePage_0);
 	}
 
 	protected void performDefaults() {
@@ -67,10 +63,8 @@ public class PHPEditorPreferencePage extends AbstractPreferencePage {
 
 	public boolean performOk() {
 		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
-		store.setValue(PreferenceConstants.USE_SMART_HOME_END,
-				useSmartHomeEndCB.getSelection());
-		store.setValue(PreferenceConstants.USE_SUB_WORD_NAVIGATION,
-				useSmartSubWordNavigation.getSelection());
+		store.setValue(PreferenceConstants.USE_SMART_HOME_END, useSmartHomeEndCB.getSelection());
+		store.setValue(PreferenceConstants.USE_SUB_WORD_NAVIGATION, useSmartSubWordNavigation.getSelection());
 		return super.performOk();
 	}
 
@@ -81,10 +75,8 @@ public class PHPEditorPreferencePage extends AbstractPreferencePage {
 		link.setText(text);
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				PreferencesUtil
-						.createPreferenceDialogOn(
-								shell,
-								"org.eclipse.ui.preferencePages.GeneralTextEditor", null, null); //$NON-NLS-1$
+				PreferencesUtil.createPreferenceDialogOn(shell, "org.eclipse.ui.preferencePages.GeneralTextEditor", //$NON-NLS-1$
+						null, null);
 			}
 		});
 		// TODO replace by link-specific tooltips when
@@ -99,10 +91,8 @@ public class PHPEditorPreferencePage extends AbstractPreferencePage {
 
 	protected void initValues() {
 		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
-		useSmartHomeEndCB.setSelection(store
-				.getBoolean(PreferenceConstants.USE_SMART_HOME_END));
-		useSmartSubWordNavigation.setSelection(store
-				.getBoolean(PreferenceConstants.USE_SUB_WORD_NAVIGATION));
+		useSmartHomeEndCB.setSelection(store.getBoolean(PreferenceConstants.USE_SMART_HOME_END));
+		useSmartSubWordNavigation.setSelection(store.getBoolean(PreferenceConstants.USE_SUB_WORD_NAVIGATION));
 		super.initializeValues();
 	}
 }

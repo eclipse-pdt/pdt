@@ -20,8 +20,7 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 
-public class PHPContextInformationValidator implements
-		IContextInformationValidator, IContextInformationPresenter {
+public class PHPContextInformationValidator implements IContextInformationValidator, IContextInformationPresenter {
 
 	private IContextInformation fInformation;
 	private ITextViewer fViewer;
@@ -32,8 +31,7 @@ public class PHPContextInformationValidator implements
 		fInformation = info;
 		fViewer = viewer;
 		if (info instanceof IContextInformationExtension) {
-			fPosition = ((IContextInformationExtension) info)
-					.getContextInformationPosition();
+			fPosition = ((IContextInformationExtension) info).getContextInformationPosition();
 		} else {
 			fPosition = offset - 1;
 		}
@@ -44,8 +42,7 @@ public class PHPContextInformationValidator implements
 		fCurrentParameter = -1;
 	}
 
-	private int getCommentEnd(IDocument d, int pos, int end)
-			throws BadLocationException {
+	private int getCommentEnd(IDocument d, int pos, int end) throws BadLocationException {
 		while (pos < end) {
 			char curr = d.getChar(pos);
 			pos++;
@@ -58,8 +55,7 @@ public class PHPContextInformationValidator implements
 		return end;
 	}
 
-	private int getStringEnd(IDocument d, int pos, int end, char ch)
-			throws BadLocationException {
+	private int getStringEnd(IDocument d, int pos, int end, char ch) throws BadLocationException {
 		while (pos < end) {
 			char curr = d.getChar(pos);
 			pos++;
@@ -73,12 +69,10 @@ public class PHPContextInformationValidator implements
 		return end;
 	}
 
-	private int getCharCount(IDocument document, int start, int end,
-			String increments, String decrements, boolean considerNesting)
-			throws BadLocationException {
+	private int getCharCount(IDocument document, int start, int end, String increments, String decrements,
+			boolean considerNesting) throws BadLocationException {
 
-		Assert.isTrue((increments.length() != 0 || decrements.length() != 0)
-				&& !increments.equals(decrements));
+		Assert.isTrue((increments.length() != 0 || decrements.length() != 0) && !increments.equals(decrements));
 
 		int nestingLevel = 0;
 		int charCount = 0;
@@ -172,8 +166,7 @@ public class PHPContextInformationValidator implements
 		}
 
 		try {
-			currentParameter = getCharCount(document, parameterStartPosition,
-					offset, ",", "", true); //$NON-NLS-1$//$NON-NLS-2$
+			currentParameter = getCharCount(document, parameterStartPosition, offset, ",", "", true); //$NON-NLS-1$//$NON-NLS-2$
 		} catch (BadLocationException x) {
 			return false;
 		}
@@ -204,8 +197,7 @@ public class PHPContextInformationValidator implements
 		}
 
 		if (occurrences < fCurrentParameter) {
-			presentation.addStyleRange(new StyleRange(0, s.length(), null,
-					null, SWT.NORMAL));
+			presentation.addStyleRange(new StyleRange(0, s.length(), null, null, SWT.NORMAL));
 			return true;
 		}
 
@@ -217,16 +209,13 @@ public class PHPContextInformationValidator implements
 			end = s.length();
 
 		if (start > 0)
-			presentation.addStyleRange(new StyleRange(0, start, null, null,
-					SWT.NORMAL));
+			presentation.addStyleRange(new StyleRange(0, start, null, null, SWT.NORMAL));
 
 		if (end > start)
-			presentation.addStyleRange(new StyleRange(start, end - start, null,
-					null, SWT.BOLD));
+			presentation.addStyleRange(new StyleRange(start, end - start, null, null, SWT.BOLD));
 
 		if (end < s.length())
-			presentation.addStyleRange(new StyleRange(end, s.length() - end,
-					null, null, SWT.NORMAL));
+			presentation.addStyleRange(new StyleRange(end, s.length() - end, null, null, SWT.NORMAL));
 
 		return true;
 	}

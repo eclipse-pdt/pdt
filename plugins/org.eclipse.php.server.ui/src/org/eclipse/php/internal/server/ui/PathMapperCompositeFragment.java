@@ -33,8 +33,7 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 
 	private PathMappingComposite pathMapperComposite;
 
-	public PathMapperCompositeFragment(Composite parent,
-			IControlHandler handler, boolean isForEditing) {
+	public PathMapperCompositeFragment(Composite parent, IControlHandler handler, boolean isForEditing) {
 		super(parent, handler, isForEditing);
 		createDescription();
 		if (isForEditing) {
@@ -47,8 +46,7 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 		controlHandler.setTitle(getTitle());
 		setDescription(Messages.PathMapperCompositeFragment_1);
 		controlHandler.setDescription(getDescription());
-		setImageDescriptor(PHPDebugUIImages.getImageDescriptor(
-				PHPDebugUIImages.IMG_WIZBAN_MAPPING_SERVER));
+		setImageDescriptor(PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_MAPPING_SERVER));
 		controlHandler.setImageDescriptor(getImageDescriptor());
 		setDisplayName(Messages.PathMapperCompositeFragment_2);
 	}
@@ -102,8 +100,7 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 	 */
 	public void setData(Object server) {
 		if (!(server instanceof Server)) {
-			throw new IllegalArgumentException(
-					"The given object is not a Server"); //$NON-NLS-1$
+			throw new IllegalArgumentException("The given object is not a Server"); //$NON-NLS-1$
 		}
 		super.setData(server);
 		init();

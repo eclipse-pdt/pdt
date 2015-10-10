@@ -46,16 +46,15 @@ public class RenameProcessorTestCase0026988 extends AbstractRenameRefactoringTes
 		PHPCoreTests.waitForAutoBuild();
 
 		project1 = FileUtils.createProject("project1");
-		
+
 		IFolder folder = project1.getFolder("src");
-		
-		if(!folder.exists()){
+
+		if (!folder.exists()) {
 			folder.create(true, true, new NullProgressMonitor());
 		}
 		IFile file = folder.getFile("test1.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php class TestRenameClass{}?>".getBytes());
+		InputStream source = new ByteArrayInputStream("<?php class TestRenameClass{}?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
@@ -67,22 +66,19 @@ public class RenameProcessorTestCase0026988 extends AbstractRenameRefactoringTes
 
 		file = project2.getFile("test2.php");
 
-		source = new ByteArrayInputStream("<?php include('src/test1.php'); ?>"
-				.getBytes());
+		source = new ByteArrayInputStream("<?php include('src/test1.php'); ?>".getBytes());
 
 		if (!file.exists()) {
 			file.create(source, true, new NullProgressMonitor());
 		} else {
 			file.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
-		
+
 		IAccessRule[] accesRules = new IAccessRule[0];
 
 		boolean combineAccessRules = false;
-		IBuildpathEntry buildPath = DLTKCore.newProjectEntry(project1
-				.getProject().getFullPath(), accesRules, combineAccessRules,
-				new IBuildpathAttribute[0], false);
-		
+		IBuildpathEntry buildPath = DLTKCore.newProjectEntry(project1.getProject().getFullPath(), accesRules,
+				combineAccessRules, new IBuildpathAttribute[0], false);
 
 		final IScriptProject scriptProject = DLTKCore.create(project2.getProject());
 
@@ -96,38 +92,34 @@ public class RenameProcessorTestCase0026988 extends AbstractRenameRefactoringTes
 			e.printStackTrace();
 		}
 
-		final IBuildpathEntry[] newEntries = new IBuildpathEntry[entriesList
-				.size()];
+		final IBuildpathEntry[] newEntries = new IBuildpathEntry[entriesList.size()];
 
-		scriptProject.setRawBuildpath(null,
-				new NullProgressMonitor());
-		scriptProject.setRawBuildpath(entriesList
-				.toArray(newEntries), new NullProgressMonitor());
-		
+		scriptProject.setRawBuildpath(null, new NullProgressMonitor());
+		scriptProject.setRawBuildpath(entriesList.toArray(newEntries), new NullProgressMonitor());
+
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
 	}
-	
+
 	@Test
-	public void testRename(){
+	public void testRename() {
 		RenameFolderProcessor processor = new RenameFolderProcessor(project1);
 		processor.setNewElementName("project11");
 		processor.setUpdateRefernces(true);
-		
-		
+
 		checkInitCondition(processor);
-		
+
 		performChange(processor);
-		
+
 		final IScriptProject scriptProject = DLTKCore.create(project2.getProject());
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("project11");
-		
+
 		assertTrue(project.exists());
 
-		//26988
-		assertTrue(FileUtils.isInBuildpath(project.getFullPath(), scriptProject,IBuildpathEntry.BPE_PROJECT));
+		// 26988
+		assertTrue(FileUtils.isInBuildpath(project.getFullPath(), scriptProject, IBuildpathEntry.BPE_PROJECT));
 	}
-	
+
 	@After
 	public void tearDown() throws Exception {
 		project1.delete(IResource.FORCE, new NullProgressMonitor());

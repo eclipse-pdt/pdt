@@ -34,8 +34,7 @@ import org.eclipse.wst.xml.core.internal.parser.ContextRegionContainer;
  * 
  */
 
-public class PairCurlyBracketAutoEditStrategy implements
-		IAfterNewLineAutoEditStrategy {
+public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditStrategy {
 	private static final char CURLY_OPEN = '{';
 	private static final char CURLY_CLOSE = '}';
 
@@ -48,8 +47,7 @@ public class PairCurlyBracketAutoEditStrategy implements
 	 * @param offset
 	 * @return
 	 */
-	private ITextRegion getPhpToken(IStructuredDocumentRegion sdRegion,
-			int offset) {
+	private ITextRegion getPhpToken(IStructuredDocumentRegion sdRegion, int offset) {
 		try {
 			// get the ITextRegionContainer region or PhpScriptRegion region
 			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
@@ -74,8 +72,7 @@ public class PairCurlyBracketAutoEditStrategy implements
 		return null;
 	}
 
-	public int autoEditAfterNewLine(IStructuredDocument document,
-			DocumentCommand command, StringBuffer buffer) {
+	public int autoEditAfterNewLine(IStructuredDocument document, DocumentCommand command, StringBuffer buffer) {
 		try {
 
 			boolean isClosingParen = isClosingParen(document, command);
@@ -89,8 +86,7 @@ public class PairCurlyBracketAutoEditStrategy implements
 			boolean addCurlyClose = false;
 			int curlyCloseCounter = 0;
 			int currOffset = offset;
-			IStructuredDocumentRegion sdRegion = document
-					.getRegionAtCharacterOffset(currOffset);
+			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(currOffset);
 
 			int regionStart = sdRegion.getStart();
 			String text = sdRegion.getFullText();
@@ -101,23 +97,17 @@ public class PairCurlyBracketAutoEditStrategy implements
 				char currChar = text.charAt(indexInText);
 				if (currChar == CURLY_CLOSE) {
 					tRegion = getPhpToken(sdRegion, regionStart + indexInText);
-					if (tRegion == null
-							|| tRegion.getType() == PHPRegionTypes.PHP_CURLY_CLOSE) {
+					if (tRegion == null || tRegion.getType() == PHPRegionTypes.PHP_CURLY_CLOSE) {
 						curlyCloseCounter++;
 					}
 				} else if (currChar == CURLY_OPEN) {
 					tRegion = getPhpToken(sdRegion, regionStart + indexInText);
 					boolean found = false;
 					if (tRegion != null) {
-						if (tRegion.getType().equals(
-								PHPRegionTypes.PHP_CURLY_OPEN)) {
+						if (tRegion.getType().equals(PHPRegionTypes.PHP_CURLY_OPEN)) {
 							found = true;
-						} else if (tRegion.getType().equals(
-								PHPRegionTypes.PHP_TOKEN)
-								&& tRegion.getLength() == 2) {
-							ITextRegion reg = sdRegion
-									.getRegionAtCharacterOffset(regionStart
-											+ indexInText);
+						} else if (tRegion.getType().equals(PHPRegionTypes.PHP_TOKEN) && tRegion.getLength() == 2) {
+							ITextRegion reg = sdRegion.getRegionAtCharacterOffset(regionStart + indexInText);
 							int start = reg.getStart() + tRegion.getStart();
 							if (text.substring(start, start + 2).equals("${")) { //$NON-NLS-1$
 								found = true;
@@ -130,8 +120,7 @@ public class PairCurlyBracketAutoEditStrategy implements
 					}
 					curlyCloseCounter--;
 					if (curlyCloseCounter < 0) {
-						if (matcher.match(document, regionStart + indexInText
-								+ 1) == null) {
+						if (matcher.match(document, regionStart + indexInText + 1) == null) {
 							addCurlyClose = true;
 							break;
 						}
@@ -155,8 +144,7 @@ public class PairCurlyBracketAutoEditStrategy implements
 		return -1;
 	}
 
-	private boolean isClosingParen(IStructuredDocument document,
-			DocumentCommand command) throws BadLocationException {
+	private boolean isClosingParen(IStructuredDocument document, DocumentCommand command) throws BadLocationException {
 		// TODO Auto-generated method stub
 		int documentLength = document.getLength();
 		if (command.offset + command.length == documentLength) { // if we're at
@@ -174,10 +162,9 @@ public class PairCurlyBracketAutoEditStrategy implements
 		int whiteSpacesAdded = 0;
 		int lengthToCopyDown = endOffset - offset;
 
-		IStructuredDocumentRegion[] structuredDocumentRegions = document
-				.getStructuredDocumentRegions(offset, lengthToCopyDown);
-		if (structuredDocumentRegions != null
-				&& structuredDocumentRegions.length > 0) {
+		IStructuredDocumentRegion[] structuredDocumentRegions = document.getStructuredDocumentRegions(offset,
+				lengthToCopyDown);
+		if (structuredDocumentRegions != null && structuredDocumentRegions.length > 0) {
 			IStructuredDocumentRegion structuredDocumentRegion = structuredDocumentRegions[0];
 			ITextRegion firstRegion = structuredDocumentRegion.getFirstRegion();
 			ITextRegion lastRegion = structuredDocumentRegion.getLastRegion();
@@ -187,8 +174,7 @@ public class PairCurlyBracketAutoEditStrategy implements
 			// deal with PHP block within HTML tags
 			if (!(firstRegion instanceof ContextRegion)) { // meaning
 															// "not-PHP-Resgion"
-				ITextRegion regionAtCharacterOffset = structuredDocumentRegion
-						.getRegionAtCharacterOffset(offset);
+				ITextRegion regionAtCharacterOffset = structuredDocumentRegion.getRegionAtCharacterOffset(offset);
 				if (regionAtCharacterOffset instanceof ContextRegionContainer) {
 					ContextRegionContainer phpContext = (ContextRegionContainer) regionAtCharacterOffset;
 					lastRegion = phpContext.getLastRegion();
@@ -197,9 +183,7 @@ public class PairCurlyBracketAutoEditStrategy implements
 				}
 
 			}
-			int absolutOffset = lastRegion.getStart()
-					+ structuredDocumentRegion.getStartOffset()
-					+ xmlRelativeOffset;
+			int absolutOffset = lastRegion.getStart() + structuredDocumentRegion.getStartOffset() + xmlRelativeOffset;
 			if (absolutOffset <= endOffset && offset <= absolutOffset) {
 				lengthToCopyDown = absolutOffset - offset;
 				;
@@ -218,8 +202,7 @@ public class PairCurlyBracketAutoEditStrategy implements
 	 * 
 	 * @return The number of characters the caret should be advanced at
 	 */
-	private int copyRestOfLine(IStructuredDocument document,
-			DocumentCommand command, StringBuffer buffer)
+	private int copyRestOfLine(IStructuredDocument document, DocumentCommand command, StringBuffer buffer)
 			throws BadLocationException {
 
 		int documentLength = document.getLength();
@@ -238,10 +221,9 @@ public class PairCurlyBracketAutoEditStrategy implements
 		int whiteSpacesAdded = 0;
 		int lengthToCopyDown = endOffset - offset;
 
-		IStructuredDocumentRegion[] structuredDocumentRegions = document
-				.getStructuredDocumentRegions(offset, lengthToCopyDown);
-		if (structuredDocumentRegions != null
-				&& structuredDocumentRegions.length > 0) {
+		IStructuredDocumentRegion[] structuredDocumentRegions = document.getStructuredDocumentRegions(offset,
+				lengthToCopyDown);
+		if (structuredDocumentRegions != null && structuredDocumentRegions.length > 0) {
 			IStructuredDocumentRegion structuredDocumentRegion = structuredDocumentRegions[0];
 			ITextRegion firstRegion = structuredDocumentRegion.getFirstRegion();
 			ITextRegion lastRegion = structuredDocumentRegion.getLastRegion();
@@ -251,8 +233,7 @@ public class PairCurlyBracketAutoEditStrategy implements
 			// deal with PHP block within HTML tags
 			if (!(firstRegion instanceof ContextRegion)) { // meaning
 															// "not-PHP-Resgion"
-				ITextRegion regionAtCharacterOffset = structuredDocumentRegion
-						.getRegionAtCharacterOffset(offset);
+				ITextRegion regionAtCharacterOffset = structuredDocumentRegion.getRegionAtCharacterOffset(offset);
 				if (regionAtCharacterOffset instanceof ContextRegionContainer) {
 					ContextRegionContainer phpContext = (ContextRegionContainer) regionAtCharacterOffset;
 					lastRegion = phpContext.getLastRegion();
@@ -261,9 +242,7 @@ public class PairCurlyBracketAutoEditStrategy implements
 				}
 
 			}
-			int absolutOffset = lastRegion.getStart()
-					+ structuredDocumentRegion.getStartOffset()
-					+ xmlRelativeOffset;
+			int absolutOffset = lastRegion.getStart() + structuredDocumentRegion.getStartOffset() + xmlRelativeOffset;
 			if (absolutOffset <= endOffset && offset <= absolutOffset) {
 				lengthToCopyDown = absolutOffset - offset;
 				;
@@ -288,18 +267,15 @@ public class PairCurlyBracketAutoEditStrategy implements
 			// if there is a } then there is a problem with
 			// curlyCloseInsertionStrategy calc
 			// and we need to add manually another indentation.
-			int indentationSize = FormatterUtils.getFormatterCommonPrferences()
-					.getIndentationSize(document);
-			char indentationChar = FormatterUtils
-					.getFormatterCommonPrferences()
-					.getIndentationChar(document);
+			int indentationSize = FormatterUtils.getFormatterCommonPrferences().getIndentationSize(document);
+			char indentationChar = FormatterUtils.getFormatterCommonPrferences().getIndentationChar(document);
 			for (int i = 0; i < indentationSize; i++) {
 				buffer.append(indentationChar);
 				whiteSpacesAdded++;
 			}
 			buffer.append(document.getLineDelimiter());
-			IndentationBaseDetector indentationDetector = new IndentationBaseDetector(
-					document, document.getLineOfOffset(offset), offset);
+			IndentationBaseDetector indentationDetector = new IndentationBaseDetector(document,
+					document.getLineOfOffset(offset), offset);
 			int baseline = indentationDetector.getIndentationBaseLine(true);
 			lineInfo = document.getLineInformation(baseline);
 			String blanks = FormatterUtils.getLineBlanks(document, lineInfo);
@@ -325,15 +301,14 @@ public class PairCurlyBracketAutoEditStrategy implements
 
 	private final CurlyCloseIndentationStrategy curlyCloseIndentationStrategy = new CurlyCloseIndentationStrategy();
 
-	private void addCurlyCloseBracket(IStructuredDocument document,
-			DocumentCommand command, StringBuffer buffer) {
+	private void addCurlyCloseBracket(IStructuredDocument document, DocumentCommand command, StringBuffer buffer) {
 
 		buffer.append(document.getLineDelimiter());
 		int lineIndex = document.getLineOfOffset(command.offset);
 		try {
 			IRegion lineInfo = document.getLineInformation(lineIndex);
-			curlyCloseIndentationStrategy.placeMatchingBlanks(document, buffer,
-					lineIndex, lineInfo.getOffset() + lineInfo.getLength());
+			curlyCloseIndentationStrategy.placeMatchingBlanks(document, buffer, lineIndex,
+					lineInfo.getOffset() + lineInfo.getLength());
 		} catch (BadLocationException e) {
 			Logger.logException(e);
 		}

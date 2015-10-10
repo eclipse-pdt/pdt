@@ -26,8 +26,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
 /**
  * @author erez
  */
-public class DebuggerErrorNotification extends DebugMessageNotificationImpl
-		implements IDebugNotificationMessage {
+public class DebuggerErrorNotification extends DebugMessageNotificationImpl implements IDebugNotificationMessage {
 
 	private int errorLevel = 0;
 	private String errorText;

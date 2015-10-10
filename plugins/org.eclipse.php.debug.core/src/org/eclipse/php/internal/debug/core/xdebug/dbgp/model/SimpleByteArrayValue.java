@@ -27,8 +27,7 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 	private int end;
 	private IVariable[] elements;
 
-	public SimpleByteArrayValue(byte[] value, int start, int end,
-			IDebugTarget debugTarget) {
+	public SimpleByteArrayValue(byte[] value, int start, int end, IDebugTarget debugTarget) {
 		super(debugTarget);
 		this.value = value;
 		this.start = start;
@@ -45,8 +44,7 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 
 	public IVariable[] getVariables() throws DebugException {
 		if (elements == null) {
-			elements = createVariables(value, start, end - start + 1, 0,
-					getDebugTarget());
+			elements = createVariables(value, start, end - start + 1, 0, getDebugTarget());
 		}
 		return elements;
 	}
@@ -80,8 +78,8 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 	 *            the bebug target.
 	 * @return the variables to return.
 	 */
-	public static IVariable[] createVariables(byte[] bytes, int bytePos,
-			int byteCount, int startOffset, IDebugTarget debugTarget) {
+	public static IVariable[] createVariables(byte[] bytes, int bytePos, int byteCount, int startOffset,
+			IDebugTarget debugTarget) {
 		final int childLimit = 100;
 		IVariable[] childVariables = null;
 		// determine the number of variables to return
@@ -110,16 +108,13 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 					rangeEnd = rangeStart + split - 1;
 				}
 				if (rangeStart <= rangeEnd) {
-					final IValue value = new SimpleByteArrayValue(bytes,
-							rangeStart, rangeEnd, debugTarget);
-					IVariable partition = new VirtualPartition(debugTarget,
-							new IVariableProvider() {
-								@Override
-								public IVariable[] getVariables()
-										throws DebugException {
-									return value.getVariables();
-								}
-							}, rangeStart, rangeEnd);
+					final IValue value = new SimpleByteArrayValue(bytes, rangeStart, rangeEnd, debugTarget);
+					IVariable partition = new VirtualPartition(debugTarget, new IVariableProvider() {
+						@Override
+						public IVariable[] getVariables() throws DebugException {
+							return value.getVariables();
+						}
+					}, rangeStart, rangeEnd);
 					childVariables[j + startOffset] = partition;
 					rangeStart += split;
 				}
@@ -128,14 +123,12 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 			childVariables = new SimpleVariable[byteCount + startOffset];
 			// don't split out the data.
 			for (int i = 0; i < byteCount; i++) {
-				IValue iv2 = new SimpleByteValue(bytes[bytePos + i],
-						debugTarget);
-				childVariables[i + startOffset] = new SimpleVariable(
-						Integer.toString(bytePos + i), iv2, debugTarget,
+				IValue iv2 = new SimpleByteValue(bytes[bytePos + i], debugTarget);
+				childVariables[i + startOffset] = new SimpleVariable(Integer.toString(bytePos + i), iv2, debugTarget,
 						KIND_ARRAY_MEMBER);
 			}
 		}
 		return childVariables;
 	}
-	
+
 }

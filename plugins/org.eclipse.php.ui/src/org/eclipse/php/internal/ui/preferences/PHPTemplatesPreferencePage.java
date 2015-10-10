@@ -34,8 +34,7 @@ public class PHPTemplatesPreferencePage extends TemplatePreferencePage {
 	public PHPTemplatesPreferencePage() {
 		setPreferenceStore(PreferenceConstants.getPreferenceStore());
 		setTemplateStore(PHPUiPlugin.getDefault().getTemplateStore());
-		setContextTypeRegistry(PHPUiPlugin.getDefault()
-				.getTemplateContextRegistry());
+		setContextTypeRegistry(PHPUiPlugin.getDefault().getTemplateContextRegistry());
 	}
 
 	@Override
@@ -44,10 +43,9 @@ public class PHPTemplatesPreferencePage extends TemplatePreferencePage {
 	}
 
 	@Override
-	protected Template editTemplate(Template template, boolean edit,
-			boolean isNameModifiable) {
-		EditTemplateDialog dialog = new PHPEditTemplateDialog(getShell(),
-				template, edit, isNameModifiable, getContextTypeRegistry());
+	protected Template editTemplate(Template template, boolean edit, boolean isNameModifiable) {
+		EditTemplateDialog dialog = new PHPEditTemplateDialog(getShell(), template, edit, isNameModifiable,
+				getContextTypeRegistry());
 		if (dialog.open() == Window.OK) {
 			return dialog.getTemplate();
 		}
@@ -56,28 +54,23 @@ public class PHPTemplatesPreferencePage extends TemplatePreferencePage {
 
 	protected static class PHPEditTemplateDialog extends EditTemplateDialog {
 
-		public PHPEditTemplateDialog(Shell parent, Template template,
-				boolean edit, boolean isNameModifiable,
+		public PHPEditTemplateDialog(Shell parent, Template template, boolean edit, boolean isNameModifiable,
 				ContextTypeRegistry registry) {
 			super(parent, template, edit, isNameModifiable, registry);
 		}
 
 		@Override
 		protected SourceViewer createViewer(Composite parent) {
-			SourceViewer viewer = new SourceViewer(parent, null, null, false,
-					SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+			SourceViewer viewer = new SourceViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 			SourceViewerConfiguration configuration = new SourceViewerConfiguration() {
-				public IContentAssistant getContentAssistant(
-						ISourceViewer sourceViewer) {
+				public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
 
 					ContentAssistant assistant = new ContentAssistant();
 					assistant.enableAutoActivation(true);
 					assistant.enableAutoInsert(true);
-					assistant.setContentAssistProcessor(getTemplateProcessor(),
-							IDocument.DEFAULT_CONTENT_TYPE);
-					assistant.setProposalSelectorBackground(Display
-							.getCurrent().getSystemColor(
-									SWT.COLOR_INFO_BACKGROUND));
+					assistant.setContentAssistProcessor(getTemplateProcessor(), IDocument.DEFAULT_CONTENT_TYPE);
+					assistant.setProposalSelectorBackground(
+							Display.getCurrent().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 					return assistant;
 				}
 			};
@@ -88,10 +81,7 @@ public class PHPTemplatesPreferencePage extends TemplatePreferencePage {
 
 	@Override
 	public void performHelp() {
-		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(getControl(), IPHPHelpContextIds.TEMPLATES_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.TEMPLATES_PREFERENCES);
 		super.performHelp();
 	}
 }

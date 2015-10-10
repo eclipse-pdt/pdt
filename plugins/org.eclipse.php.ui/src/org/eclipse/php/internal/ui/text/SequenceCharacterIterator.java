@@ -51,8 +51,7 @@ public class SequenceCharacterIterator implements CharacterIterator {
 	 * @throws IllegalArgumentException
 	 *             if the indices are out of bounds
 	 */
-	public SequenceCharacterIterator(CharSequence sequence, int first)
-			throws IllegalArgumentException {
+	public SequenceCharacterIterator(CharSequence sequence, int first) throws IllegalArgumentException {
 		this(sequence, first, sequence.length());
 	}
 
@@ -68,8 +67,7 @@ public class SequenceCharacterIterator implements CharacterIterator {
 	 * @throws IllegalArgumentException
 	 *             if the indices are out of bounds
 	 */
-	public SequenceCharacterIterator(CharSequence sequence, int first, int last)
-			throws IllegalArgumentException {
+	public SequenceCharacterIterator(CharSequence sequence, int first, int last) throws IllegalArgumentException {
 		if (sequence == null)
 			throw new NullPointerException();
 		if (first < 0 || first > last)

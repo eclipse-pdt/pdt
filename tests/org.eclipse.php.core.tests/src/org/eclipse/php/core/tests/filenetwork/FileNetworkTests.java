@@ -62,12 +62,10 @@ public class FileNetworkTests extends AbstractModelTests {
 		super.setUp();
 	}
 
-	protected String getSavedHierarchy(String subfolder) throws CoreException,
-			IOException {
+	protected String getSavedHierarchy(String subfolder) throws CoreException, IOException {
 		IFile file = getFile(getFilePath(subfolder + "/hierarchy"));
 		StringBuilder buf = new StringBuilder();
-		BufferedReader r = new BufferedReader(new InputStreamReader(
-				file.getContents()));
+		BufferedReader r = new BufferedReader(new InputStreamReader(file.getContents()));
 		String l;
 		while ((l = r.readLine()) != null) {
 			buf.append(l).append("\n");
@@ -110,15 +108,13 @@ public class FileNetworkTests extends AbstractModelTests {
 
 	public void testReferencingFiles() throws Exception {
 		ISourceModule sourceModule = getSourceModule(getFilePath("test1/a.php"));
-		ReferenceTree tree = FileNetworkUtility.buildReferencingFilesTree(
-				sourceModule, null);
+		ReferenceTree tree = FileNetworkUtility.buildReferencingFilesTree(sourceModule, null);
 		assertContents(getSavedHierarchy("test1"), tree.toString());
 	}
 
 	public void testReferencedFiles() throws Exception {
 		ISourceModule sourceModule = getSourceModule(getFilePath("test2/a.php"));
-		ReferenceTree tree = FileNetworkUtility.buildReferencedFilesTree(
-				sourceModule, null);
+		ReferenceTree tree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, null);
 		assertContents(getSavedHierarchy("test2"), tree.toString());
 	}
 
@@ -126,29 +122,24 @@ public class FileNetworkTests extends AbstractModelTests {
 		ISourceModule sourceModule = getSourceModule(getFilePath("test2/a.php"));
 		HashMap<ISourceModule, Node> cache = new HashMap<ISourceModule, Node>();
 
-		ReferenceTree tree = FileNetworkUtility.buildReferencedFilesTree(
-				sourceModule, cache, null);
-		tree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, cache,
-				null);
+		ReferenceTree tree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, cache, null);
+		tree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, cache, null);
 		assertContents(getSavedHierarchy("test2"), tree.toString());
 	}
 
 	public void testSearchMethod() throws Exception {
 		ISourceModule sourceModule = getSourceModule(getFilePath("test3/c.php"));
 		IType type = sourceModule.getType("Test3");
-		IMethod[] method = PHPModelUtils.getTypeHierarchyMethod(type, "foo",
-				true, null);
+		IMethod[] method = PHPModelUtils.getTypeHierarchyMethod(type, "foo", true, null);
 
 		assertTrue("Can't find method", method.length > 0);
-		assertEquals("Wrong method was found", "a.php", method[0]
-				.getSourceModule().getElementName());
+		assertEquals("Wrong method was found", "a.php", method[0].getSourceModule().getElementName());
 	}
 
 	public void testSearchMethodBadNetwork() throws Exception {
 		ISourceModule sourceModule = getSourceModule(getFilePath("test4/c.php"));
 		IType type = sourceModule.getType("Test4");
-		IMethod[] method = PHPModelUtils.getTypeHierarchyMethod(type, "foo",
-				true, null);
+		IMethod[] method = PHPModelUtils.getTypeHierarchyMethod(type, "foo", true, null);
 
 		assertTrue("There should be two methods found", method.length == 2);
 	}

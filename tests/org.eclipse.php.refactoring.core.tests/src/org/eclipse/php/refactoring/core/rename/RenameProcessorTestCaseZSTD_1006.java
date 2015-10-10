@@ -29,10 +29,9 @@ import org.eclipse.php.refactoring.core.test.FileUtils;
 import org.junit.After;
 import org.junit.Test;
 
-public class RenameProcessorTestCaseZSTD_1006 extends
-		AbstractRenameRefactoringTest {
+public class RenameProcessorTestCaseZSTD_1006 extends AbstractRenameRefactoringTest {
 	private IProject project1;
-	
+
 	@After
 	public void tearDown() throws Exception {
 		project1.delete(IResource.FORCE, new NullProgressMonitor());
@@ -40,7 +39,7 @@ public class RenameProcessorTestCaseZSTD_1006 extends
 
 	@Test
 	public void testRename1() throws Exception {
-		
+
 		System.setProperty("disableStartupRunner", "true");
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
@@ -52,19 +51,17 @@ public class RenameProcessorTestCaseZSTD_1006 extends
 		if (!folder.exists()) {
 			folder.create(true, true, new NullProgressMonitor());
 		}
-		
+
 		IFile file1 = folder.getFile("testzstd_1006_1.php");
 
-		InputStream source = new ByteArrayInputStream(
-				"<?php class MyClass{} $a=new MyClass();?>"
-						.getBytes());
+		InputStream source = new ByteArrayInputStream("<?php class MyClass{} $a=new MyClass();?>".getBytes());
 
 		if (!file1.exists()) {
 			file1.create(source, true, new NullProgressMonitor());
 		} else {
 			file1.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
-		
+
 		IFile file2 = folder.getFile("testzstd_1006_2.php");
 
 		source = new ByteArrayInputStream(
@@ -77,7 +74,6 @@ public class RenameProcessorTestCaseZSTD_1006 extends
 			file2.setContents(source, IFile.FORCE, new NullProgressMonitor());
 		}
 
-		
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
 
@@ -89,8 +85,7 @@ public class RenameProcessorTestCaseZSTD_1006 extends
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
-		RenameClassProcessor processor = new RenameClassProcessor(file1,
-				selectedNode);
+		RenameClassProcessor processor = new RenameClassProcessor(file1, selectedNode);
 
 		processor.setNewElementName("MyClass1");
 		processor.setUpdateTextualMatches(true);
@@ -101,10 +96,8 @@ public class RenameProcessorTestCaseZSTD_1006 extends
 
 		try {
 			String content = FileUtils.getContents(file1);
-			assertEquals(
-					"<?php class MyClass1{} $a=new MyClass1();?>",
-					content);
-			
+			assertEquals("<?php class MyClass1{} $a=new MyClass1();?>", content);
+
 			content = FileUtils.getContents(file2);
 			assertEquals(
 					"<?php include 'testzstd_1006_1.php'; class NewClass{protected function foo(){$a = new MyClass1();}}?>",

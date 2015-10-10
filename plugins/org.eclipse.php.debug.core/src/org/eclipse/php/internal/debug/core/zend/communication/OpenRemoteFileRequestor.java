@@ -48,8 +48,7 @@ public class OpenRemoteFileRequestor implements IFileContentRequestor {
 	 * 
 	 * @param notification
 	 */
-	public OpenRemoteFileRequestor(
-			DebugSessionStartedNotification notification) {
+	public OpenRemoteFileRequestor(DebugSessionStartedNotification notification) {
 		this.notification = notification;
 	}
 
@@ -59,8 +58,7 @@ public class OpenRemoteFileRequestor implements IFileContentRequestor {
 	 * @see com.zend.php.debug.core.communication.IFileContentRequester#
 	 * fileContentReceived(byte[], java.lang.String, int)
 	 */
-	public void fileContentReceived(final byte[] content, final String fileName,
-			final int lineNumber) {
+	public void fileContentReceived(final byte[] content, final String fileName, final int lineNumber) {
 		final String localFile = getLocalFile(content, fileName);
 		if (localFile == null)
 			return;
@@ -98,8 +96,7 @@ public class OpenRemoteFileRequestor implements IFileContentRequestor {
 			return file.getLocation().toOSString();
 		}
 		// Check for a server address to find a perfect match.
-		String serverAddress = extractParameterFromQuery(
-				notification.getOptions(), OPTION_SERVER_ADDRESS);
+		String serverAddress = extractParameterFromQuery(notification.getOptions(), OPTION_SERVER_ADDRESS);
 		try {
 			String serverURL = "http://" + serverAddress; //$NON-NLS-1$
 			// Try perfect match first
@@ -110,10 +107,10 @@ public class OpenRemoteFileRequestor implements IFileContentRequestor {
 				// If no mapping, try to find one
 				if (entry == null) {
 					LocalFileSearchEngine searchEngine = new LocalFileSearchEngine();
-					LocalFileSearchResult searchResult = searchEngine.find(root,
-							remoteFile, serverMatch.getUniqueId());
+					LocalFileSearchResult searchResult = searchEngine.find(root, remoteFile, serverMatch.getUniqueId());
 					if (searchResult == null) {
-						// Check if file is available locally (outside the workspace)
+						// Check if file is available locally (outside the
+						// workspace)
 						File localFile = new File(remoteFile);
 						if (localFile.exists())
 							return remoteFile;
@@ -151,8 +148,7 @@ public class OpenRemoteFileRequestor implements IFileContentRequestor {
 	private void openEditor(final String localFile, final int lineNumber) {
 		try {
 			EditorUtility.openLocalFile(localFile, lineNumber);
-			final Shell shell = PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow().getShell();
+			final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			if (shell != null) {
 				shell.forceActive();
 			}
@@ -173,8 +169,7 @@ public class OpenRemoteFileRequestor implements IFileContentRequestor {
 	private String extractParameterFromQuery(String query, String parameter) {
 		int queryStartIndex = query.indexOf(parameter + "="); //$NON-NLS-1$
 		if (queryStartIndex > -1) {
-			String value = query
-					.substring(queryStartIndex + parameter.length() + 1);
+			String value = query.substring(queryStartIndex + parameter.length() + 1);
 			int paramSeparatorIndex = value.indexOf('&');
 			if (paramSeparatorIndex > -1) {
 				value = value.substring(0, paramSeparatorIndex);
@@ -188,16 +183,12 @@ public class OpenRemoteFileRequestor implements IFileContentRequestor {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				final Shell shell = PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getShell();
+				final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 				if (shell != null) {
 					shell.forceActive();
 				}
-				MessageDialog.openInformation(shell,
-						Messages.OpenRemoteFileRequestor_Open_remote_file_request,
-						MessageFormat.format(
-								Messages.OpenRemoteFileRequestor_No_match_could_be_found,
-								remoteFile));
+				MessageDialog.openInformation(shell, Messages.OpenRemoteFileRequestor_Open_remote_file_request,
+						MessageFormat.format(Messages.OpenRemoteFileRequestor_No_match_could_be_found, remoteFile));
 			}
 		});
 	}

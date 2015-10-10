@@ -24,27 +24,22 @@ import org.eclipse.swt.widgets.Composite;
  * @author guy.g
  * 
  */
-public class PHPContentAssistFiltersConfigurationBlock extends
-		AbstractPHPContentAssistPreferencePageBlock {
+public class PHPContentAssistFiltersConfigurationBlock extends AbstractPHPContentAssistPreferencePageBlock {
 
 	protected Button caseSensitivityCheckBox;
 	protected Button showStrictOptionsCheckBox;
 
 	public void setCompositeAddon(Composite parent) {
-		Composite composite = createSubsection(parent,
-				PHPUIMessages.CodeAssistPreferencePage_filtersSectionLabel);
-		caseSensitivityCheckBox = addCheckBox(
-				composite,
+		Composite composite = createSubsection(parent, PHPUIMessages.CodeAssistPreferencePage_filtersSectionLabel);
+		caseSensitivityCheckBox = addCheckBox(composite,
 				PHPUIMessages.CodeAssistPreferencePage_caseSensitiveForConstants,
 				PHPCoreConstants.CODEASSIST_CASE_SENSITIVITY, 0);
-		showStrictOptionsCheckBox = addCheckBox(composite,
-				PHPUIMessages.CodeAssistPreferencePage_showStrictOptions,
-				PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, 0); 
+		showStrictOptionsCheckBox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_showStrictOptions,
+				PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, 0);
 	}
 
 	protected IPreferenceStore getPreferenceStore() {
-		return new PreferencesAdapter(PHPCorePlugin.getDefault()
-				.getPluginPreferences());
+		return new PreferencesAdapter(PHPCorePlugin.getDefault().getPluginPreferences());
 	}
 
 	protected void storeValues() {

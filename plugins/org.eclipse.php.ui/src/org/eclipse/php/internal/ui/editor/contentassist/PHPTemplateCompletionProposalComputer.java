@@ -16,15 +16,13 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
 
-public class PHPTemplateCompletionProposalComputer extends
-		PHPCompletionProposalComputer {
+public class PHPTemplateCompletionProposalComputer extends PHPCompletionProposalComputer {
 
 	public PHPTemplateCompletionProposalComputer() {
 	}
 
 	@Override
-	protected List computeScriptCompletionProposals(int offset,
-			ScriptContentAssistInvocationContext context,
+	protected List computeScriptCompletionProposals(int offset, ScriptContentAssistInvocationContext context,
 			IProgressMonitor monitor) {
 
 		return Collections.EMPTY_LIST;

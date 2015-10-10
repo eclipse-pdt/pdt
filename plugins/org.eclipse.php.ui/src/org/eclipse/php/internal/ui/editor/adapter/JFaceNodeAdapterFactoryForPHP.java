@@ -32,8 +32,7 @@ public class JFaceNodeAdapterFactoryForPHP extends JFaceNodeAdapterFactory {
 		this(IJFaceNodeAdapter.class, true);
 	}
 
-	public JFaceNodeAdapterFactoryForPHP(Object adapterKey,
-			boolean registerAdapters) {
+	public JFaceNodeAdapterFactoryForPHP(Object adapterKey, boolean registerAdapters) {
 		super(adapterKey, registerAdapters);
 	}
 
@@ -47,7 +46,6 @@ public class JFaceNodeAdapterFactoryForPHP extends JFaceNodeAdapterFactory {
 	}
 
 	public INodeAdapterFactory copy() {
-		return new JFaceNodeAdapterFactoryForPHP(getAdapterKey(),
-				isShouldRegisterAdapter());
+		return new JFaceNodeAdapterFactoryForPHP(getAdapterKey(), isShouldRegisterAdapter());
 	}
 }

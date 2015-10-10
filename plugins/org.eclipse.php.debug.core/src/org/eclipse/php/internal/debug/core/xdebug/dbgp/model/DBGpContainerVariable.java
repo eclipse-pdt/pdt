@@ -19,16 +19,15 @@ import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 import org.w3c.dom.Node;
 
-public class DBGpContainerVariable extends AbstractDBGpBaseVariable implements
-		IVariable {
+public class DBGpContainerVariable extends AbstractDBGpBaseVariable implements IVariable {
 
 	private int page;
 	private int pageSize;
 	private int numChildren;
 	private DBGpContainerValue value;
 
-	public DBGpContainerVariable(IDebugTarget target, int page, int pageSize,
-			int numChildren, Node property, String stackLevel, String fullName) {
+	public DBGpContainerVariable(IDebugTarget target, int page, int pageSize, int numChildren, Node property,
+			String stackLevel, String fullName) {
 		super(target, stackLevel, fullName, VIRTUAL_PARTITION);
 		this.page = page;
 		this.pageSize = pageSize;

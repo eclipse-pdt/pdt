@@ -64,8 +64,7 @@ public class UseAsLibraryFolderAction extends Action {
 		WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
 			@Override
 			protected void execute(IProgressMonitor monitor)
-					throws CoreException, InvocationTargetException,
-					InterruptedException {
+					throws CoreException, InvocationTargetException, InterruptedException {
 				LibraryFolderManager lfm = LibraryFolderManager.getInstance();
 				lfm.useAsLibraryFolder(fFolders, monitor);
 			}

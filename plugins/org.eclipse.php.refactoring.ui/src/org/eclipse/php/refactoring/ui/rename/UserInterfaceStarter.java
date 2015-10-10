@@ -38,8 +38,8 @@ public class UserInterfaceStarter {
 	/**
 	 * Actually activates the user interface. This default implementation
 	 * assumes that the configuration element passed to <code>initialize
-	 * </code> has an attribute
-	 * wizard denoting the wizard class to be used for the given refactoring.
+	 * </code> has an attribute wizard denoting the wizard class to be used for
+	 * the given refactoring.
 	 * <p>
 	 * Subclasses may override to open a different user interface
 	 * 
@@ -54,9 +54,8 @@ public class UserInterfaceStarter {
 	 * @exception CoreException
 	 *                if the user interface can't be activated
 	 */
-	public boolean activate(Refactoring refactoring, Shell parent,
-			boolean mustSaveEditors) throws CoreException {
-		return new RefactoringStarter().activate(refactoring, fWizard, parent,
-				fWizard.getDefaultPageTitle(), mustSaveEditors);
+	public boolean activate(Refactoring refactoring, Shell parent, boolean mustSaveEditors) throws CoreException {
+		return new RefactoringStarter().activate(refactoring, fWizard, parent, fWizard.getDefaultPageTitle(),
+				mustSaveEditors);
 	}
 }

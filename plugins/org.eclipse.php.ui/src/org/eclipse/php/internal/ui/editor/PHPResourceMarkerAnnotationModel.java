@@ -42,16 +42,14 @@ import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
  * @author yaronm
  * 
  */
-public class PHPResourceMarkerAnnotationModel extends
-		SourceModuleAnnotationModel {
+public class PHPResourceMarkerAnnotationModel extends SourceModuleAnnotationModel {
 
 	public PHPResourceMarkerAnnotationModel(IResource resource) {
 		super(resource);
 		fMarkerResource = resource;
 	}
 
-	public PHPResourceMarkerAnnotationModel(IResource resource,
-			String secondaryID) {
+	public PHPResourceMarkerAnnotationModel(IResource resource, String secondaryID) {
 		super(resource);
 		fMarkerResource = resource;
 		fSecondaryMarkerAttributeValue = secondaryID;
@@ -83,8 +81,7 @@ public class PHPResourceMarkerAnnotationModel extends
 		IPath path = Path.fromPortableString(secondaryId);
 		path = EnvironmentPathUtils.getLocalPath(path);
 
-		boolean isSameFile = Path.fromPortableString(
-				fSecondaryMarkerAttributeValue).equals(path);
+		boolean isSameFile = Path.fromPortableString(fSecondaryMarkerAttributeValue).equals(path);
 
 		return getResource().equals(marker.getResource()) && isSameFile;
 	}
@@ -133,8 +130,7 @@ public class PHPResourceMarkerAnnotationModel extends
 		return pos;
 	}
 
-	public class StructuredMarkerAnnotation extends MarkerAnnotation implements
-			IAnnotationPresentation {
+	public class StructuredMarkerAnnotation extends MarkerAnnotation implements IAnnotationPresentation {
 		// controls if icon should be painted gray
 		private boolean fIsGrayed = false;
 		String fAnnotationType = null;
@@ -156,14 +152,11 @@ public class PHPResourceMarkerAnnotationModel extends
 		protected Image getImage(Display display) {
 			Image image = null;
 			if (fAnnotationType == TemporaryAnnotation.ANNOT_ERROR) {
-				image = PlatformUI.getWorkbench().getSharedImages()
-						.getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
+				image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
 			} else if (fAnnotationType == TemporaryAnnotation.ANNOT_WARNING) {
-				image = PlatformUI.getWorkbench().getSharedImages()
-						.getImage(ISharedImages.IMG_OBJS_WARN_TSK);
+				image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
 			} else if (fAnnotationType == TemporaryAnnotation.ANNOT_INFO) {
-				image = PlatformUI.getWorkbench().getSharedImages()
-						.getImage(ISharedImages.IMG_OBJS_INFO_TSK);
+				image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
 			}
 
 			if (image != null && isGrayed())

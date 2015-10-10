@@ -122,15 +122,13 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 
 			if (fEndPos > -1) {
 				fAnchor = RIGHT;
-				fStartPos = searchForOpeningPeer(fEndPos,
-						fPairs[pairIndex2 - 1], fPairs[pairIndex2], fDocument);
+				fStartPos = searchForOpeningPeer(fEndPos, fPairs[pairIndex2 - 1], fPairs[pairIndex2], fDocument);
 				if (fStartPos > -1)
 					return true;
 				fEndPos = -1;
 			} else if (fStartPos > -1) {
 				fAnchor = LEFT;
-				fEndPos = searchForClosingPeer(fStartPos, fPairs[pairIndex1],
-						fPairs[pairIndex1 + 1], fDocument);
+				fEndPos = searchForClosingPeer(fStartPos, fPairs[pairIndex1], fPairs[pairIndex1 + 1], fDocument);
 				if (fEndPos > -1)
 					return true;
 				fStartPos = -1;
@@ -142,34 +140,29 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 		return false;
 	}
 
-	private int searchForClosingPeer(int offset, char openingPeer,
-			char closingPeer, IDocument document) throws BadLocationException {
+	private int searchForClosingPeer(int offset, char openingPeer, char closingPeer, IDocument document)
+			throws BadLocationException {
 		boolean useGenericsHeuristic = openingPeer == '<';
 		if (useGenericsHeuristic && !fHighlightAngularBrackets)
 			return -1;
-		PHPHeuristicScanner scanner = PHPHeuristicScanner
-				.createHeuristicScanner(document, offset, false);
-		if (useGenericsHeuristic
-				&& !isTypeParameterBracket(offset, document, scanner))
+		PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(document, offset, false);
+		if (useGenericsHeuristic && !isTypeParameterBracket(offset, document, scanner))
 			return -1;
 
 		return scanner.findClosingPeer(offset + 1, openingPeer, closingPeer);
 	}
 
-	private int searchForOpeningPeer(int offset, char openingPeer,
-			char closingPeer, IDocument document) throws BadLocationException {
+	private int searchForOpeningPeer(int offset, char openingPeer, char closingPeer, IDocument document)
+			throws BadLocationException {
 		boolean useGenericsHeuristic = openingPeer == '<';
 		if (useGenericsHeuristic && !fHighlightAngularBrackets)
 			return -1;
 
-		PHPHeuristicScanner scanner = PHPHeuristicScanner
-				.createHeuristicScanner(document, offset, false);
-		int peer = scanner.findOpeningPeer(offset - 1,
-				PHPHeuristicScanner.UNBOUND, openingPeer, closingPeer);
+		PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(document, offset, false);
+		int peer = scanner.findOpeningPeer(offset - 1, PHPHeuristicScanner.UNBOUND, openingPeer, closingPeer);
 		if (peer == PHPHeuristicScanner.NOT_FOUND)
 			return -1;
-		if (useGenericsHeuristic
-				&& !isTypeParameterBracket(peer, document, scanner))
+		if (useGenericsHeuristic && !isTypeParameterBracket(peer, document, scanner))
 			return -1;
 		return peer;
 	}
@@ -188,8 +181,7 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 	 *         <code>false</code> otherwise
 	 * @since 3.1
 	 */
-	private boolean isTypeParameterBracket(int offset, IDocument document,
-			PHPHeuristicScanner scanner) {
+	private boolean isTypeParameterBracket(int offset, IDocument document, PHPHeuristicScanner scanner) {
 		/*
 		 * type parameter come after braces (closing or opening), semicolons, or
 		 * after a Type name (heuristic: starts with capital character, or after
@@ -202,13 +194,11 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 
 			int prevToken = scanner.previousToken(offset - 1, line.getOffset());
 			int prevTokenOffset = scanner.getPosition() + 1;
-			String previous = prevToken == Symbols.TokenEOF ? null : document
-					.get(prevTokenOffset, offset - prevTokenOffset).trim();
+			String previous = prevToken == Symbols.TokenEOF ? null
+					: document.get(prevTokenOffset, offset - prevTokenOffset).trim();
 
-			if (prevToken == Symbols.TokenLBRACE
-					|| prevToken == Symbols.TokenRBRACE
-					|| prevToken == Symbols.TokenSEMICOLON
-					|| prevToken == Symbols.TokenSYNCHRONIZED
+			if (prevToken == Symbols.TokenLBRACE || prevToken == Symbols.TokenRBRACE
+					|| prevToken == Symbols.TokenSEMICOLON || prevToken == Symbols.TokenSYNCHRONIZED
 					|| prevToken == Symbols.TokenSTATIC
 					|| (prevToken == Symbols.TokenIDENT && isTypeParameterIntroducer(previous))
 					|| prevToken == Symbols.TokenEOF)
@@ -234,12 +224,10 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 	 * @since 3.1
 	 */
 	private boolean isTypeParameterIntroducer(String identifier) {
-		return identifier.length() > 0
-				&& (Character.isUpperCase(identifier.charAt(0))
-						|| identifier.startsWith("final") //$NON-NLS-1$
-						|| identifier.startsWith("public") //$NON-NLS-1$
-						|| identifier.startsWith("public") //$NON-NLS-1$
-						|| identifier.startsWith("protected") //$NON-NLS-1$
+		return identifier.length() > 0 && (Character.isUpperCase(identifier.charAt(0)) || identifier.startsWith("final") //$NON-NLS-1$
+				|| identifier.startsWith("public") //$NON-NLS-1$
+				|| identifier.startsWith("public") //$NON-NLS-1$
+				|| identifier.startsWith("protected") //$NON-NLS-1$
 				|| identifier.startsWith("private")); //$NON-NLS-1$
 	}
 }

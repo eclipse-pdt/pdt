@@ -160,16 +160,14 @@ public class ASTNodeLabels {
 	/**
 	 * Qualify all elements
 	 */
-	public final static int ALL_FULLY_QUALIFIED = F_FULLY_QUALIFIED
-			| M_FULLY_QUALIFIED | T_FULLY_QUALIFIED | CU_QUALIFIED
-			| P_QUALIFIED | ROOT_QUALIFIED;
+	public final static int ALL_FULLY_QUALIFIED = F_FULLY_QUALIFIED | M_FULLY_QUALIFIED | T_FULLY_QUALIFIED
+			| CU_QUALIFIED | P_QUALIFIED | ROOT_QUALIFIED;
 
 	/**
 	 * Post qualify all elements
 	 */
-	public final static int ALL_POST_QUALIFIED = F_POST_QUALIFIED
-			| M_POST_QUALIFIED | I_POST_QUALIFIED | T_POST_QUALIFIED
-			| CU_POST_QUALIFIED | P_POST_QUALIFIED | ROOT_POST_QUALIFIED;
+	public final static int ALL_POST_QUALIFIED = F_POST_QUALIFIED | M_POST_QUALIFIED | I_POST_QUALIFIED
+			| T_POST_QUALIFIED | CU_POST_QUALIFIED | P_POST_QUALIFIED | ROOT_POST_QUALIFIED;
 
 	/**
 	 * Default options (M_PARAMETER_TYPES enabled)
@@ -179,15 +177,14 @@ public class ASTNodeLabels {
 	/**
 	 * Default qualify options (All except Root and Folder)
 	 */
-	public final static int DEFAULT_QUALIFIED = F_FULLY_QUALIFIED
-			| M_FULLY_QUALIFIED | T_FULLY_QUALIFIED | CU_QUALIFIED;
+	public final static int DEFAULT_QUALIFIED = F_FULLY_QUALIFIED | M_FULLY_QUALIFIED | T_FULLY_QUALIFIED
+			| CU_QUALIFIED;
 
 	/**
 	 * Default post qualify options (All except Root and Folder)
 	 */
-	public final static int DEFAULT_POST_QUALIFIED = F_POST_QUALIFIED
-			| M_POST_QUALIFIED | I_POST_QUALIFIED | T_POST_QUALIFIED
-			| CU_POST_QUALIFIED;
+	public final static int DEFAULT_POST_QUALIFIED = F_POST_QUALIFIED | M_POST_QUALIFIED | I_POST_QUALIFIED
+			| T_POST_QUALIFIED | CU_POST_QUALIFIED;
 
 	/**
 	 * User-readable string for separating post qualified names (e.g. " - ").
@@ -202,8 +199,8 @@ public class ASTNodeLabels {
 	 */
 	public final static String DECL_STRING = " :"; //$NON-NLS-1$
 	/**
-	 * User-readable string for the default folder name (e.g.
-	 * "(default folder)").
+	 * User-readable string for the default folder name (e.g. "(default folder)"
+	 * ).
 	 */
 	public final static String DEFAULT_FOLDER = "(source)"; //$NON-NLS-1$
 
@@ -219,15 +216,13 @@ public class ASTNodeLabels {
 	/**
 	 * Returns the label for a PHP element. Flags as defined above.
 	 */
-	public static void getElementLabel(Object element, long flags,
-			StringBuffer buf) {
+	public static void getElementLabel(Object element, long flags, StringBuffer buf) {
 		if (element instanceof ASTNode) {
 			printNodeLabel((ASTNode) element, flags, buf);
 		}
 	}
 
-	private static void printNodeLabel(ASTNode node, long flags,
-			StringBuffer buf) {
+	private static void printNodeLabel(ASTNode node, long flags, StringBuffer buf) {
 		final int type = node.getType();
 
 		switch (type) {
@@ -250,26 +245,22 @@ public class ASTNodeLabels {
 		}
 	}
 
-	private static void getFunctionLabel(FunctionDeclaration declaration,
-			long flags, StringBuffer buf) {
+	private static void getFunctionLabel(FunctionDeclaration declaration, long flags, StringBuffer buf) {
 		buf.append(declaration.getFunctionName().getName());
 
 		// parameters
 		if (getFlag(flags, M_PARAMETER_TYPES | M_PARAMETER_NAMES)) {
-			final FormalParameter[] parameters = declaration
-					.getFormalParameters();
+			final FormalParameter[] parameters = declaration.getFormalParameters();
 			buf.append('(');
 
-			int nParams = (parameters != null && getFlag(flags,
-					M_PARAMETER_TYPES)) ? parameters.length : 0;
+			int nParams = (parameters != null && getFlag(flags, M_PARAMETER_TYPES)) ? parameters.length : 0;
 
 			for (int i = 0; i < nParams; i++) {
 				if (i > 0) {
-					buf.append(COMMA_STRING); //$NON-NLS-1$
+					buf.append(COMMA_STRING); // $NON-NLS-1$
 					buf.append(" "); //$NON-NLS-1$
 				}
-				if (getFlag(flags, M_PARAMETER_TYPES)
-						&& parameters[i].getParameterType() != null) {
+				if (getFlag(flags, M_PARAMETER_TYPES) && parameters[i].getParameterType() != null) {
 					String t = parameters[i].getParameterType().toString();
 					if (t == null) {
 						t = ""; //$NON-NLS-1$
@@ -293,17 +284,14 @@ public class ASTNodeLabels {
 		return (flags & flag) != 0;
 	}
 
-	public static void getMethodLabel(MethodDeclaration method, long flags,
-			StringBuffer buf) {
+	public static void getMethodLabel(MethodDeclaration method, long flags, StringBuffer buf) {
 		// qualification
 		if (getFlag(flags, M_FULLY_QUALIFIED)) {
 			final ASTNode parent = method.getParent().getParent();
-			assert parent != null
-					&& (parent.getType() == ASTNode.CLASS_DECLARATION || parent
-							.getType() == ASTNode.INTERFACE_DECLARATION);
+			assert parent != null && (parent.getType() == ASTNode.CLASS_DECLARATION
+					|| parent.getType() == ASTNode.INTERFACE_DECLARATION);
 			TypeDeclaration typeDeclaration = (TypeDeclaration) parent;
-			getTypeLabel(typeDeclaration, T_FULLY_QUALIFIED
-					| (flags & P_COMPRESSED), buf);
+			getTypeLabel(typeDeclaration, T_FULLY_QUALIFIED | (flags & P_COMPRESSED), buf);
 			buf.append('.');
 		}
 
@@ -318,15 +306,13 @@ public class ASTNodeLabels {
 					|| container.getType() == ASTNode.INTERFACE_DECLARATION;
 			TypeDeclaration declaration = (TypeDeclaration) container;
 			if (declaration != null) {
-				getTypeLabel(declaration, T_FULLY_QUALIFIED
-						| (flags & P_COMPRESSED), buf);
+				getTypeLabel(declaration, T_FULLY_QUALIFIED | (flags & P_COMPRESSED), buf);
 			}
 		}
 
 	}
 
-	public static void getTypeLabel(TypeDeclaration type, long flags,
-			StringBuffer buf) {
+	public static void getTypeLabel(TypeDeclaration type, long flags, StringBuffer buf) {
 		if (type == null)
 			return;
 
@@ -334,8 +320,7 @@ public class ASTNodeLabels {
 		buf.append(typeName);
 	}
 
-	public static void getFieldLabel(FieldsDeclaration field, long flags,
-			StringBuffer buf) {
+	public static void getFieldLabel(FieldsDeclaration field, long flags, StringBuffer buf) {
 
 		final Variable[] variableNames = field.getVariableNames();
 		for (int i = 0; i < variableNames.length; i++) {
@@ -354,15 +339,13 @@ public class ASTNodeLabels {
 					|| container.getType() == ASTNode.INTERFACE_DECLARATION;
 			TypeDeclaration declaration = (TypeDeclaration) container;
 			if (declaration != null) {
-				getTypeLabel(declaration, T_FULLY_QUALIFIED
-						| (flags & P_COMPRESSED), buf);
+				getTypeLabel(declaration, T_FULLY_QUALIFIED | (flags & P_COMPRESSED), buf);
 			}
 		}
 
 	}
 
-	public static void getProgramLabel(Program program, long flags,
-			StringBuffer buf) {
+	public static void getProgramLabel(Program program, long flags, StringBuffer buf) {
 		buf.append("Program"); //$NON-NLS-1$
 	}
 
@@ -376,8 +359,7 @@ public class ASTNodeLabels {
 			ASTNode node = (ASTNode) element;
 			switch (node.getType()) {
 			case ASTNode.METHOD_DECLARATION:
-				getMethodTooltipText(
-						((MethodDeclaration) element).getFunction(), buf);
+				getMethodTooltipText(((MethodDeclaration) element).getFunction(), buf);
 				break;
 			case ASTNode.INTERFACE_DECLARATION:
 			case ASTNode.CLASS_DECLARATION:
@@ -396,19 +378,19 @@ public class ASTNodeLabels {
 	// buf.append(classData.getName());
 	//
 	// if (classData.getDocBlock() != null) {
-	//			buf.append("\n" + classData.getDocBlock().getShortDescription()); //$NON-NLS-1$
+	// buf.append("\n" + classData.getDocBlock().getShortDescription());
+	// //$NON-NLS-1$
 	// }
 	// }
 
-	public static void getMethodTooltipText(FunctionDeclaration function,
-			StringBuffer buf) {
+	public static void getMethodTooltipText(FunctionDeclaration function, StringBuffer buf) {
 		buf.append(function.getFunctionName().getName());
 		// parameters
 		buf.append('(');
 		FormalParameter[] parameters = function.getFormalParameters();
 		for (int i = 0; i < parameters.length; i++) {
 			if (i > 0) {
-				buf.append(COMMA_STRING); //$NON-NLS-1$
+				buf.append(COMMA_STRING); // $NON-NLS-1$
 			}
 			buf.append(parameters[i].getParameterType().toString());
 			buf.append(" $" + parameters[i].getParameterNameIdentifier().getName()); //$NON-NLS-1$
@@ -420,8 +402,7 @@ public class ASTNodeLabels {
 		if (obj instanceof ASTNode) {
 			return getElementLabel(obj, flags);
 		} else if (obj instanceof IAdaptable) {
-			IWorkbenchAdapter wbadapter = (IWorkbenchAdapter) ((IAdaptable) obj)
-					.getAdapter(IWorkbenchAdapter.class);
+			IWorkbenchAdapter wbadapter = (IWorkbenchAdapter) ((IAdaptable) obj).getAdapter(IWorkbenchAdapter.class);
 			if (wbadapter != null) {
 				return wbadapter.getLabel(obj);
 			}
@@ -433,8 +414,7 @@ public class ASTNodeLabels {
 		if (obj instanceof ASTNode) {
 			return getElementTooltipText(obj);
 		} else if (obj instanceof IAdaptable) {
-			IWorkbenchAdapter wbadapter = (IWorkbenchAdapter) ((IAdaptable) obj)
-					.getAdapter(IWorkbenchAdapter.class);
+			IWorkbenchAdapter wbadapter = (IWorkbenchAdapter) ((IAdaptable) obj).getAdapter(IWorkbenchAdapter.class);
 			if (wbadapter != null) {
 				return wbadapter.getLabel(obj);
 			}

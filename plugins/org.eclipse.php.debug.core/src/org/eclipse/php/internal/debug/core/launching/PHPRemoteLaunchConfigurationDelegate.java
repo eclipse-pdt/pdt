@@ -27,14 +27,13 @@ import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicat
 import org.eclipse.php.internal.server.core.Server;
 
 /**
- * A launch configuration delegate that is responsible for handling  
- * debug session that were remotely initialized.
+ * A launch configuration delegate that is responsible for handling debug
+ * session that were remotely initialized.
  * 
  * @author Shalom Gibly
  */
 @SuppressWarnings("restriction")
-public class PHPRemoteLaunchConfigurationDelegate
-		implements ILaunchConfigurationDelegate2 {
+public class PHPRemoteLaunchConfigurationDelegate implements ILaunchConfigurationDelegate2 {
 
 	private ILaunch launch;
 
@@ -47,23 +46,20 @@ public class PHPRemoteLaunchConfigurationDelegate
 	 * org.eclipse.debug.core.ILaunch,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public void launch(ILaunchConfiguration configuration, String mode,
-			ILaunch launch, IProgressMonitor monitor) throws CoreException {
-		boolean runWithDebug = configuration
-				.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
+	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
+			throws CoreException {
+		boolean runWithDebug = configuration.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
 		this.launch = launch;
 		if (mode.equals(ILaunchManager.RUN_MODE) && !runWithDebug) {
 			return;
 		}
 		IProject proj = null;
-		String fileName = configuration.getAttribute(Server.FILE_NAME,
-				(String) null);
+		String fileName = configuration.getAttribute(Server.FILE_NAME, (String) null);
 		if (fileName != null) {
 			// Get the project from the file name
 			IPath filePath = new Path(fileName);
 			try {
-				proj = ResourcesPlugin.getWorkspace().getRoot()
-						.getProject(filePath.segment(0));
+				proj = ResourcesPlugin.getWorkspace().getRoot().getProject(filePath.segment(0));
 			} catch (Throwable t) {
 			}
 		}
@@ -75,18 +71,13 @@ public class PHPRemoteLaunchConfigurationDelegate
 		wc.doSave();
 		String URL = configuration.getAttribute(Server.BASE_URL, ""); //$NON-NLS-1$
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebug == true) {
-			boolean isStopAtFirstLine = wc.getAttribute(
-					IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
+			boolean isStopAtFirstLine = wc.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 					PHPProjectPreferences.getStopAtFirstLine(proj));
-			int requestPort = PHPDebugPlugin
-					.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+			int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 			// Fill all debug attributes:
-			launch.setAttribute(IDebugParametersKeys.PORT,
-					Integer.toString(requestPort));
-			launch.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER,
-					Boolean.toString(true));
-			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
-					Boolean.toString(isStopAtFirstLine));
+			launch.setAttribute(IDebugParametersKeys.PORT, Integer.toString(requestPort));
+			launch.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER, Boolean.toString(true));
+			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.toString(isStopAtFirstLine));
 			launch.setAttribute(IDebugParametersKeys.ORIGINAL_URL, URL);
 		}
 	}
@@ -99,8 +90,8 @@ public class PHPRemoteLaunchConfigurationDelegate
 	 * (org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public boolean buildForLaunch(ILaunchConfiguration configuration,
-			String mode, IProgressMonitor monitor) throws CoreException {
+	public boolean buildForLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
+			throws CoreException {
 		return false;
 	}
 
@@ -111,8 +102,8 @@ public class PHPRemoteLaunchConfigurationDelegate
 	 * finalLaunchCheck (org.eclipse.debug.core.ILaunchConfiguration,
 	 * java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public boolean finalLaunchCheck(ILaunchConfiguration configuration,
-			String mode, IProgressMonitor monitor) throws CoreException {
+	public boolean finalLaunchCheck(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
+			throws CoreException {
 		return true;
 	}
 
@@ -123,8 +114,7 @@ public class PHPRemoteLaunchConfigurationDelegate
 	 * org.eclipse.debug.core.model.ILaunchConfigurationDelegate2#getLaunch(
 	 * org.eclipse.debug.core.ILaunchConfiguration, java.lang.String)
 	 */
-	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode)
-			throws CoreException {
+	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
 		return new PHPLaunch(configuration, mode, null);
 	}
 
@@ -136,8 +126,8 @@ public class PHPRemoteLaunchConfigurationDelegate
 	 * (org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public boolean preLaunchCheck(ILaunchConfiguration configuration,
-			String mode, IProgressMonitor monitor) throws CoreException {
+	public boolean preLaunchCheck(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
+			throws CoreException {
 		return true;
 	}
 
@@ -254,12 +244,10 @@ public class PHPRemoteLaunchConfigurationDelegate
 		public void breakpointAdded(IBreakpoint breakpoint) {
 		}
 
-		public void breakpointChanged(IBreakpoint breakpoint,
-				IMarkerDelta delta) {
+		public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
 		}
 
-		public void breakpointRemoved(IBreakpoint breakpoint,
-				IMarkerDelta delta) {
+		public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
 		}
 
 		public boolean canDisconnect() {
@@ -273,8 +261,7 @@ public class PHPRemoteLaunchConfigurationDelegate
 			return false;
 		}
 
-		public IMemoryBlock getMemoryBlock(long startAddress, long length)
-				throws DebugException {
+		public IMemoryBlock getMemoryBlock(long startAddress, long length) throws DebugException {
 			return null;
 		}
 

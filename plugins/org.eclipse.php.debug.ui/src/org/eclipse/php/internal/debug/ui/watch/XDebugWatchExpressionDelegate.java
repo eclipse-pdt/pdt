@@ -37,8 +37,7 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 	 * @see org.eclipse.debug.core.model.IWatchExpressionDelegate#getValue(java.lang.String,
 	 *      org.eclipse.debug.core.model.IDebugElement)
 	 */
-	public void evaluateExpression(String expression, IDebugElement context,
-			IWatchExpressionListener listener) {
+	public void evaluateExpression(String expression, IDebugElement context, IWatchExpressionListener listener) {
 		expressionText = expression;
 		watchListener = listener;
 		IDebugTarget target = context.getDebugTarget();
@@ -80,8 +79,7 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 		}
 	}
 
-	private class XDebugWatchExpressionResult implements
-			IWatchExpressionResult, IWatchExpressionResultExtension {
+	private class XDebugWatchExpressionResult implements IWatchExpressionResult, IWatchExpressionResultExtension {
 		private boolean hasErrors = false;
 		private IValue evalResult;
 
@@ -106,8 +104,7 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 			result = debugTarget.eval(testExp);
 			if (result != null) {
 				result.setUserData("eval-watch", expressionText, null); //$NON-NLS-1$
-				IVariable tempVar = new DBGpVariable(debugTarget, result,
-						stackLevel);
+				IVariable tempVar = new DBGpVariable(debugTarget, result, stackLevel);
 				evalResult = null;
 				try {
 					evalResult = tempVar.getValue();

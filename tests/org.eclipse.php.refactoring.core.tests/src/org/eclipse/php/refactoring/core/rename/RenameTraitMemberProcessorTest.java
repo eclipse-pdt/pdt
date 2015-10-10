@@ -22,25 +22,23 @@ import org.eclipse.php.refactoring.core.test.PdttFileExt;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 @RunWith(PDTTList.class)
 public class RenameTraitMemberProcessorTest extends RenameClassMemberProcessorTest {
 
 	public RenameTraitMemberProcessorTest(String[] fileNames) {
 		super(fileNames);
 	}
-	
+
 	@PDTTList.BeforeList
 	@Override
 	public void setUpSuite() throws Exception {
 		super.setUpSuite();
-		PHPCoreTests.setProjectPhpVersion(project.getProject(),
-				PHPVersion.PHP5_4);
+		PHPCoreTests.setProjectPhpVersion(project.getProject(), PHPVersion.PHP5_4);
 	}
 
 	@PDTTList.Parameters
-	public static String[] dirs = {"/resources/rename/renameTraitMember/"}; //$NON-NLS-1$
-	
+	public static String[] dirs = { "/resources/rename/renameTraitMember/" }; //$NON-NLS-1$
+
 	@Test
 	public void test(String fileName) throws Exception {
 		PdttFileExt testFile = filesMap.get(fileName);

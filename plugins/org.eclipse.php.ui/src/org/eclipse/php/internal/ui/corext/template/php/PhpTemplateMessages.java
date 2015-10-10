@@ -18,8 +18,7 @@ import org.eclipse.osgi.util.NLS;
  */
 final class PhpTemplateMessages extends NLS {
 
-	private static final String BUNDLE_NAME = PhpTemplateMessages.class
-			.getName();
+	private static final String BUNDLE_NAME = PhpTemplateMessages.class.getName();
 
 	private PhpTemplateMessages() {
 		// Do not instantiate

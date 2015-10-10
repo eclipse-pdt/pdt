@@ -39,11 +39,10 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 	 * syntactical element.
 	 */
 
-	private final class SyntaxComponent implements ISelectionChangedListener,
-			ICheckStateListener, IDoubleClickListener {
+	private final class SyntaxComponent
+			implements ISelectionChangedListener, ICheckStateListener, IDoubleClickListener {
 
-		private final String PREF_NODE_KEY = FormatterUIPlugin.PLUGIN_ID
-				+ "formatter_page.white_space_tab_page.node"; //$NON-NLS-1$
+		private final String PREF_NODE_KEY = FormatterUIPlugin.PLUGIN_ID + "formatter_page.white_space_tab_page.node"; //$NON-NLS-1$
 
 		private final List<Node> fIndexedNodeList;
 		private final List<Node> fTree;
@@ -61,15 +60,12 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 
 		public void createContents(final int numColumns, final Composite parent) {
 			fComposite = new Composite(parent, SWT.NONE);
-			fComposite.setLayoutData(createGridData(numColumns,
-					GridData.HORIZONTAL_ALIGN_FILL, SWT.DEFAULT));
+			fComposite.setLayoutData(createGridData(numColumns, GridData.HORIZONTAL_ALIGN_FILL, SWT.DEFAULT));
 			fComposite.setLayout(createGridLayout(numColumns, false));
 
-			createLabel(numColumns, fComposite,
-					FormatterMessages.WhiteSpaceTabPage_insert_space);
+			createLabel(numColumns, fComposite, FormatterMessages.WhiteSpaceTabPage_insert_space);
 
-			fTreeViewer = new ContainerCheckedTreeViewer(fComposite, SWT.SINGLE
-					| SWT.BORDER | SWT.V_SCROLL);
+			fTreeViewer = new ContainerCheckedTreeViewer(fComposite, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
 			fTreeViewer.setContentProvider(new ITreeContentProvider() {
 				public Object[] getElements(Object inputElement) {
 					return ((Collection<?>) inputElement).toArray();
@@ -87,8 +83,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 					return ((Node) element).hasChildren();
 				}
 
-				public void inputChanged(Viewer viewer, Object oldInput,
-						Object newInput) {
+				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 				}
 
 				public void dispose() {
@@ -96,8 +91,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			});
 			fTreeViewer.setLabelProvider(new LabelProvider());
 			fTreeViewer.getControl().setLayoutData(
-					createGridData(numColumns, GridData.FILL_HORIZONTAL
-							| GridData.FILL_VERTICAL, SWT.DEFAULT));
+					createGridData(numColumns, GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL, SWT.DEFAULT));
 			fDefaultFocusManager.add(fTreeViewer.getControl());
 		}
 
@@ -121,8 +115,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		}
 
 		public void selectionChanged(SelectionChangedEvent event) {
-			final IStructuredSelection selection = (IStructuredSelection) event
-					.getSelection();
+			final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 			if (selection.isEmpty())
 				return;
 			final Node node = (Node) selection.getFirstElement();
@@ -154,8 +147,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			final Node node = (Node) fIndexedNodeList.get(index);
 			if (node != null) {
 				fTreeViewer.expandToLevel(node, 0);
-				fTreeViewer.setSelection(new StructuredSelection(
-						new Node[] { node }));
+				fTreeViewer.setSelection(new StructuredSelection(new Node[] { node }));
 				fLastSelected = node;
 			}
 		}
@@ -163,10 +155,8 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		public void doubleClick(DoubleClickEvent event) {
 			final ISelection selection = event.getSelection();
 			if (selection instanceof IStructuredSelection) {
-				final Node node = (Node) ((IStructuredSelection) selection)
-						.getFirstElement();
-				fTreeViewer.setExpandedState(node,
-						!fTreeViewer.getExpandedState(node));
+				final Node node = (Node) ((IStructuredSelection) selection).getFirstElement();
+				fTreeViewer.setExpandedState(node, !fTreeViewer.getExpandedState(node));
 			}
 		}
 
@@ -175,7 +165,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		}
 
 		private void setPreviewText() {
-			String previewText = ""; //$NON-NLS-§$
+			String previewText = ""; // $NON-NLS-§$
 			if (fLastSelected != null) {
 				previewText = "<?php\n"; //$NON-NLS-1$
 				List<String> snippets = fLastSelected.getSnippets();
@@ -188,8 +178,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		}
 	}
 
-	private final class PhpElementComponent implements
-			ISelectionChangedListener, ICheckStateListener {
+	private final class PhpElementComponent implements ISelectionChangedListener, ICheckStateListener {
 
 		private final String PREF_INNER_INDEX = FormatterUIPlugin.PLUGIN_ID
 				+ "formatter_page.white_space.php_view.inner"; //$NON-NLS-1$
@@ -215,20 +204,16 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		public void createContents(int numColumns, Composite parent) {
 
 			fComposite = new Composite(parent, SWT.NONE);
-			fComposite.setLayoutData(createGridData(numColumns,
-					GridData.HORIZONTAL_ALIGN_FILL, SWT.DEFAULT));
+			fComposite.setLayoutData(createGridData(numColumns, GridData.HORIZONTAL_ALIGN_FILL, SWT.DEFAULT));
 			fComposite.setLayout(createGridLayout(numColumns, false));
 
-			createLabel(numColumns, fComposite,
-					FormatterMessages.WhiteSpaceTabPage_insert_space,
+			createLabel(numColumns, fComposite, FormatterMessages.WhiteSpaceTabPage_insert_space,
 					GridData.HORIZONTAL_ALIGN_BEGINNING);
 
 			final SashForm sashForm = new SashForm(fComposite, SWT.VERTICAL);
-			sashForm.setLayoutData(createGridData(numColumns,
-					GridData.FILL_BOTH, SWT.DEFAULT));
+			sashForm.setLayoutData(createGridData(numColumns, GridData.FILL_BOTH, SWT.DEFAULT));
 
-			fInnerViewer = new TreeViewer(sashForm, SWT.SINGLE | SWT.BORDER
-					| SWT.V_SCROLL);
+			fInnerViewer = new TreeViewer(sashForm, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
 
 			fInnerViewer.setContentProvider(new ITreeContentProvider() {
 				public Object[] getElements(Object inputElement) {
@@ -236,11 +221,9 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 				}
 
 				public Object[] getChildren(Object parentElement) {
-					final List<Node> children = ((Node) parentElement)
-							.getChildren();
+					final List<Node> children = ((Node) parentElement).getChildren();
 					final ArrayList<Node> innerChildren = new ArrayList<Node>();
-					for (final Iterator<Node> iter = children.iterator(); iter
-							.hasNext();) {
+					for (final Iterator<Node> iter = children.iterator(); iter.hasNext();) {
 						final Node o = iter.next();
 						if (o instanceof InnerNode)
 							innerChildren.add(o);
@@ -256,15 +239,13 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 
 				public boolean hasChildren(Object element) {
 					final List<Node> children = ((Node) element).getChildren();
-					for (final Iterator<Node> iter = children.iterator(); iter
-							.hasNext();)
+					for (final Iterator<Node> iter = children.iterator(); iter.hasNext();)
 						if (iter.next() instanceof InnerNode)
 							return true;
 					return false;
 				}
 
-				public void inputChanged(Viewer viewer, Object oldInput,
-						Object newInput) {
+				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 				}
 
 				public void dispose() {
@@ -273,23 +254,18 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 
 			fInnerViewer.setLabelProvider(new LabelProvider());
 
-			final GridData innerGd = createGridData(numColumns,
-					GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_VERTICAL,
+			final GridData innerGd = createGridData(numColumns, GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_VERTICAL,
 					SWT.DEFAULT);
-			innerGd.heightHint = fPixelConverter
-					.convertHeightInCharsToPixels(3);
+			innerGd.heightHint = fPixelConverter.convertHeightInCharsToPixels(3);
 			fInnerViewer.getControl().setLayoutData(innerGd);
 
-			fOptionsViewer = CheckboxTableViewer.newCheckList(sashForm,
-					SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL);
+			fOptionsViewer = CheckboxTableViewer.newCheckList(sashForm, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL);
 			fOptionsViewer.setContentProvider(new ArrayContentProvider());
 			fOptionsViewer.setLabelProvider(new LabelProvider());
 
 			final GridData optionsGd = createGridData(numColumns,
-					GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_VERTICAL,
-					SWT.DEFAULT);
-			optionsGd.heightHint = fPixelConverter
-					.convertHeightInCharsToPixels(3);
+					GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_VERTICAL, SWT.DEFAULT);
+			optionsGd.heightHint = fPixelConverter.convertHeightInCharsToPixels(3);
 			fOptionsViewer.getControl().setLayoutData(optionsGd);
 
 			fDefaultFocusManager.add(fInnerViewer.getControl());
@@ -318,16 +294,14 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			node = (Node) fIndexedNodeList.get(innerIndex);
 			if (node instanceof InnerNode) {
 				fInnerViewer.expandToLevel(node, 0);
-				fInnerViewer.setSelection(new StructuredSelection(
-						new Object[] { node }));
+				fInnerViewer.setSelection(new StructuredSelection(new Object[] { node }));
 				fLastSelected = (InnerNode) node;
 			}
 
 			final int optionIndex = getValidatedIndex(PREF_OPTION_INDEX);
 			node = (Node) fIndexedNodeList.get(optionIndex);
 			if (node instanceof OptionNode) {
-				fOptionsViewer.setSelection(new StructuredSelection(
-						new Object[] { node }));
+				fOptionsViewer.setSelection(new StructuredSelection(new Object[] { node }));
 			}
 
 		}
@@ -350,11 +324,9 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		}
 
 		public void selectionChanged(SelectionChangedEvent event) {
-			final IStructuredSelection selection = (IStructuredSelection) event
-					.getSelection();
+			final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 
-			if (selection.isEmpty()
-					|| !(selection.getFirstElement() instanceof Node))
+			if (selection.isEmpty() || !(selection.getFirstElement() instanceof Node))
 				return;
 
 			final Node selected = (Node) selection.getFirstElement();
@@ -362,13 +334,11 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			if (selected == null || selected == fLastSelected)
 				return;
 
-			if (event.getSource() == fInnerViewer
-					&& selected instanceof InnerNode) {
+			if (event.getSource() == fInnerViewer && selected instanceof InnerNode) {
 				fLastSelected = (InnerNode) selected;
 				fDialogSettings.put(PREF_INNER_INDEX, selected.index);
 				innerViewerChanged((InnerNode) selected);
-			} else if (event.getSource() == fOptionsViewer
-					&& selected instanceof OptionNode)
+			} else if (event.getSource() == fOptionsViewer && selected instanceof OptionNode)
 				fDialogSettings.put(PREF_OPTION_INDEX, selected.index);
 		}
 
@@ -377,8 +347,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			final List<Node> children = selectedNode.getChildren();
 
 			final ArrayList<Node> optionsChildren = new ArrayList<Node>();
-			for (final Iterator<Node> iter = children.iterator(); iter
-					.hasNext();) {
+			for (final Iterator<Node> iter = children.iterator(); iter.hasNext();) {
 				final Node o = iter.next();
 				if (o instanceof OptionNode)
 					optionsChildren.add(o);
@@ -386,8 +355,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 
 			fOptionsViewer.setInput(optionsChildren.toArray());
 
-			for (final Iterator<Node> iter = optionsChildren.iterator(); iter
-					.hasNext();) {
+			for (final Iterator<Node> iter = optionsChildren.iterator(); iter.hasNext();) {
 				final OptionNode child = (OptionNode) iter.next();
 				fOptionsViewer.setChecked(child, child.getChecked());
 			}
@@ -418,10 +386,8 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 	 * delegating the appropriate update requests.
 	 */
 	private final class SwitchComponent extends SelectionAdapter {
-		private final String PREF_VIEW_KEY = FormatterUIPlugin.PLUGIN_ID
-				+ "formatter_page.white_space_tab_page.view"; //$NON-NLS-1$
-		private final String[] fItems = new String[] {
-				FormatterMessages.WhiteSpaceTabPage_sort_by_php_element,
+		private final String PREF_VIEW_KEY = FormatterUIPlugin.PLUGIN_ID + "formatter_page.white_space_tab_page.view"; //$NON-NLS-1$
+		private final String[] fItems = new String[] { FormatterMessages.WhiteSpaceTabPage_sort_by_php_element,
 				FormatterMessages.WhiteSpaceTabPage_sort_by_syntax_element };
 
 		private Combo fSwitchCombo;
@@ -450,15 +416,13 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		public void createContents(int numColumns, Composite parent) {
 
 			fPageBook = new PageBook(parent, SWT.NONE);
-			fPageBook.setLayoutData(createGridData(numColumns,
-					GridData.FILL_BOTH, SWT.DEFAULT));
+			fPageBook.setLayoutData(createGridData(numColumns, GridData.FILL_BOTH, SWT.DEFAULT));
 
 			fPhpElementComponent.createContents(numColumns, fPageBook);
 			fSyntaxComponent.createContents(numColumns, fPageBook);
 
 			fSwitchCombo = new Combo(parent, SWT.READ_ONLY);
-			final GridData gd = createGridData(numColumns,
-					GridData.HORIZONTAL_ALIGN_END, SWT.DEFAULT);
+			final GridData gd = createGridData(numColumns, GridData.HORIZONTAL_ALIGN_END, SWT.DEFAULT);
 			fSwitchCombo.setLayoutData(gd);
 			fSwitchCombo.setItems(fItems);
 		}
@@ -471,8 +435,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		}
 
 		private void restoreSelection() {
-			final boolean selectSyntax = fDialogSettings
-					.getBoolean(PREF_VIEW_KEY);
+			final boolean selectSyntax = fDialogSettings.getBoolean(PREF_VIEW_KEY);
 			if (selectSyntax) {
 				fSyntaxComponent.refreshState();
 				fSwitchCombo.setText(fItems[1]);
@@ -500,8 +463,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 	 * @param modifyDialog
 	 * @param workingValues
 	 */
-	public WhiteSpaceTabPage(ModifyDialog modifyDialog,
-			CodeFormatterPreferences codeFormatterPreferences) {
+	public WhiteSpaceTabPage(ModifyDialog modifyDialog, CodeFormatterPreferences codeFormatterPreferences) {
 		super(modifyDialog, codeFormatterPreferences);
 		fworkingValues = codeFormatterPreferences.getMap();
 		fDialogSettings = FormatterUIPlugin.getDefault().getDialogSettings();
@@ -537,334 +499,231 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 	}
 
 	public void setPreferencesValues(Map<String, Object> preferences) {
-		codeFormatterPreferences.insert_space_after_opening_paren_in_while = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_opening_paren_in_while = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_WHILE);
-		codeFormatterPreferences.insert_space_before_opening_paren_in_while = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_opening_paren_in_while = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_WHILE);
-		codeFormatterPreferences.insert_space_before_closing_paren_in_while = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_closing_paren_in_while = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_WHILE);
 
-		codeFormatterPreferences.insert_space_before_opening_paren_in_switch = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_opening_paren_in_switch = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_SWITCH);
-		codeFormatterPreferences.insert_space_after_opening_paren_in_switch = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_opening_paren_in_switch = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_SWITCH);
-		codeFormatterPreferences.insert_space_before_closing_paren_in_switch = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_closing_paren_in_switch = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_SWITCH);
-		codeFormatterPreferences.insert_space_before_opening_brace_in_switch = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_opening_brace_in_switch = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_SWITCH);
-		codeFormatterPreferences.insert_space_after_switch_default = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_switch_default = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_DEFAULT);
-		codeFormatterPreferences.insert_space_after_switch_case_value = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_switch_case_value = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_CASE);
-		codeFormatterPreferences.insert_space_before_opening_brace_in_block = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_opening_brace_in_block = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_BLOCK);
-		codeFormatterPreferences.insert_space_after_closing_brace_in_block = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_closing_brace_in_block = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CLOSING_BRACE_IN_BLOCK);
-		codeFormatterPreferences.insert_space_before_semicolon = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_semicolon = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_SEMICOLON);
 
-		codeFormatterPreferences.insert_space_before_assignment = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_assignment = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ASSIGNMENT_OPERATOR);
-		codeFormatterPreferences.insert_space_after_assignment = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_assignment = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ASSIGNMENT_OPERATOR);
-		codeFormatterPreferences.insert_space_before_binary_operation = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_binary_operation = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_BINARY_OPERATOR);
-		codeFormatterPreferences.insert_space_after_binary_operation = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_binary_operation = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_BINARY_OPERATOR);
-		codeFormatterPreferences.insert_space_before_postfix_expression = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_postfix_expression = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_POSTFIX_OPERATOR);
-		codeFormatterPreferences.insert_space_after_postfix_expression = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_postfix_expression = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_POSTFIX_OPERATOR);
-		codeFormatterPreferences.insert_space_before_prefix_expression = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_prefix_expression = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_PREFIX_OPERATOR);
-		codeFormatterPreferences.insert_space_after_prefix_expression = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_prefix_expression = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_PREFIX_OPERATOR);
-		codeFormatterPreferences.insert_space_before_unary_expression = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_unary_expression = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_UNARY_OPERATOR);
-		codeFormatterPreferences.insert_space_after_unary_expression = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_unary_expression = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_UNARY_OPERATOR);
 
-		codeFormatterPreferences.insert_space_before_cast_type = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_cast_type = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_CAST);
-		codeFormatterPreferences.insert_space_after_cast_type = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_cast_type = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_CAST);
-		codeFormatterPreferences.insert_space_after_cast_expression = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_cast_expression = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CLOSING_PAREN_IN_CAST);
 
-		codeFormatterPreferences.insert_space_after_conditional_colon = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_conditional_colon = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLON_IN_CONDITIONAL);
-		codeFormatterPreferences.insert_space_before_conditional_colon = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_conditional_colon = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_CONDITIONAL);
-		codeFormatterPreferences.insert_space_after_conditional_question_mark = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_conditional_question_mark = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_QUESTION_IN_CONDITIONAL);
-		codeFormatterPreferences.insert_space_before_conditional_question_mark = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_conditional_question_mark = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_QUESTION_IN_CONDITIONAL);
 
-		codeFormatterPreferences.insert_space_before_opening_paren_in_catch = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_opening_paren_in_catch = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_CATCH);
-		codeFormatterPreferences.insert_space_after_opening_paren_in_catch = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_opening_paren_in_catch = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_CATCH);
-		codeFormatterPreferences.insert_space_before_closing_paren_in_catch = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_closing_paren_in_catch = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_CATCH);
 
-		codeFormatterPreferences.insert_space_before_comma_in_implements = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_comma_in_implements = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_SUPERINTERFACES);
-		codeFormatterPreferences.insert_space_after_comma_in_implements = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_comma_in_implements = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_SUPERINTERFACES);
-		codeFormatterPreferences.insert_space_before_opening_brace_in_class = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_opening_brace_in_class = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_TYPE_DECLARATION);
 
-		codeFormatterPreferences.insert_space_before_opening_paren_in_function = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_opening_paren_in_function = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_METHOD_INVOCATION);
-		codeFormatterPreferences.insert_space_after_opening_paren_in_function = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_opening_paren_in_function = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_METHOD_INVOCATION);
-		codeFormatterPreferences.insert_space_before_comma_in_function = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_comma_in_function = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_METHOD_INVOCATION_ARGUMENTS);
-		codeFormatterPreferences.insert_space_after_comma_in_function = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_comma_in_function = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_INVOCATION_ARGUMENTS);
-		codeFormatterPreferences.insert_space_before_closing_paren_in_function = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_closing_paren_in_function = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_METHOD_INVOCATION);
-		codeFormatterPreferences.insert_space_between_empty_paren_in_function = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_between_empty_paren_in_function = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_PARENS_IN_METHOD_INVOCATION);
-		codeFormatterPreferences.insert_space_before_arrow_in_method_invocation = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_arrow_in_method_invocation = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_METHOD_INVOCATION);
-		codeFormatterPreferences.insert_space_after_arrow_in_method_invocation = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_arrow_in_method_invocation = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_METHOD_INVOCATION);
-		codeFormatterPreferences.insert_space_before_coloncolon_in_method_invocation = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_coloncolon_in_method_invocation = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLONCOLON_IN_METHOD_INVOCATION);
-		codeFormatterPreferences.insert_space_after_coloncolon_in_method_invocation = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_coloncolon_in_method_invocation = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLONCOLON_IN_METHOD_INVOCATION);
 
-		codeFormatterPreferences.insert_space_before_arrow_in_field_access = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_arrow_in_field_access = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_FIELD_ACCESS);
-		codeFormatterPreferences.insert_space_after_arrow_in_field_access = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_arrow_in_field_access = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_FIELD_ACCESS);
-		codeFormatterPreferences.insert_space_before_coloncolon_in_field_access = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_coloncolon_in_field_access = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLONCOLON_IN_FIELD_ACCESS);
-		codeFormatterPreferences.insert_space_after_coloncolon_in_field_access = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_coloncolon_in_field_access = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLONCOLON_IN_FIELD_ACCESS);
 
-		codeFormatterPreferences.insert_space_before_open_paren_in_for = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_open_paren_in_for = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_FOR);
-		codeFormatterPreferences.insert_space_after_open_paren_in_for = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_open_paren_in_for = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_FOR);
-		codeFormatterPreferences.insert_space_before_close_paren_in_for = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_close_paren_in_for = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_FOR);
-		codeFormatterPreferences.insert_space_before_comma_in_for = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_comma_in_for = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_FOR);
-		codeFormatterPreferences.insert_space_after_comma_in_for = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_comma_in_for = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_FOR);
-		codeFormatterPreferences.insert_space_before_semicolon_in_for = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_semicolon_in_for = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_SEMICOLON_IN_FOR);
-		codeFormatterPreferences.insert_space_after_semicolon_in_for = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_semicolon_in_for = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_SEMICOLON_IN_FOR);
 
-		codeFormatterPreferences.insert_space_before_open_paren_in_foreach = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_open_paren_in_foreach = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_FOREACH);
-		codeFormatterPreferences.insert_space_after_open_paren_in_foreach = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_open_paren_in_foreach = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_FOREACH);
-		codeFormatterPreferences.insert_space_before_close_paren_in_foreach = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_close_paren_in_foreach = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_FOREACH);
-		codeFormatterPreferences.insert_space_before_arrow_in_foreach = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_arrow_in_foreach = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_FOREACH);
-		codeFormatterPreferences.insert_space_after_arrow_in_foreach = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_arrow_in_foreach = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_FOREACH);
 
-		codeFormatterPreferences.insert_space_before_arrow_in_yield = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_arrow_in_yield = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_YIELD);
-		codeFormatterPreferences.insert_space_after_arrow_in_yield = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_arrow_in_yield = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_YIELD);
 
-		codeFormatterPreferences.insert_space_before_comma_in_class_variable = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_comma_in_class_variable = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MULTIPLE_FIELD_DECLARATIONS);
-		codeFormatterPreferences.insert_space_after_comma_in_class_variable = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_comma_in_class_variable = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MULTIPLE_FIELD_DECLARATIONS);
-		codeFormatterPreferences.insert_space_before_comma_in_class_constant = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_comma_in_class_constant = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MULTIPLE_CONSTANT_DECLARATIONS);
-		codeFormatterPreferences.insert_space_after_comma_in_class_constant = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_comma_in_class_constant = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MULTIPLE_CONSTANT_DECLARATIONS);
 
-		codeFormatterPreferences.insert_space_before_opening_bracket_in_array = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_opening_bracket_in_array = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACKET_IN_ARRAY_REFERENCE);
-		codeFormatterPreferences.insert_space_after_opening_bracket_in_array = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_opening_bracket_in_array = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_BRACKET_IN_ARRAY_REFERENCE);
-		codeFormatterPreferences.insert_space_before_closing_bracket_in_array = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_closing_bracket_in_array = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_BRACKET_IN_ARRAY_REFERENCE);
-		codeFormatterPreferences.insert_space_between_empty_brackets = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_between_empty_brackets = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_BRACKETS_IN_ARRAY_TYPE_REFERENCE);
 
-		codeFormatterPreferences.insert_space_before_opening_paren_in_array = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_opening_paren_in_array = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_ARRAY_CREATION);
-		codeFormatterPreferences.insert_space_after_opening_paren_in_array = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_opening_paren_in_array = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_ARRAY_CREATION);
-		codeFormatterPreferences.insert_space_before_closing_paren_in_array = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_closing_paren_in_array = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_ARRAY_CREATION);
-		codeFormatterPreferences.insert_space_before_list_comma_in_array = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_list_comma_in_array = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ARRAY_CREATION);
-		codeFormatterPreferences.insert_space_after_list_comma_in_array = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_list_comma_in_array = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ARRAY_CREATION);
-		codeFormatterPreferences.insert_space_before_arrow_in_array = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_arrow_in_array = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_ARRAY_CREATION);
-		codeFormatterPreferences.insert_space_after_arrow_in_array = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_arrow_in_array = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_ARRAY_CREATION);
 
-		codeFormatterPreferences.insert_space_before_opening_paren_in_list = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_opening_paren_in_list = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_LIST);
-		codeFormatterPreferences.insert_space_after_opening_paren_in_list = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_opening_paren_in_list = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_LIST);
-		codeFormatterPreferences.insert_space_before_closing_paren_in_list = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_closing_paren_in_list = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_LIST);
-		codeFormatterPreferences.insert_space_before_comma_in_list = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_comma_in_list = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_LIST);
-		codeFormatterPreferences.insert_space_after_comma_in_list = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_comma_in_list = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_LIST);
 
 		codeFormatterPreferences.insert_space_before_opening_paren_in_function_declaration = getBooleanValue(
-				preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_METHOD_DECLARATION);
-		codeFormatterPreferences.insert_space_after_opening_paren_in_function_declaration = getBooleanValue(
-				preferences,
+				preferences, CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_METHOD_DECLARATION);
+		codeFormatterPreferences.insert_space_after_opening_paren_in_function_declaration = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_METHOD_DECLARATION);
-		codeFormatterPreferences.insert_space_between_empty_paren_in_function_declaration = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_between_empty_paren_in_function_declaration = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_PARENS_IN_METHOD_DECLARATION);
 		codeFormatterPreferences.insert_space_before_closing_paren_in_function_declaration = getBooleanValue(
-				preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_METHOD_DECLARATION);
-		codeFormatterPreferences.insert_space_before_comma_in_function_declaration = getBooleanValue(
-				preferences,
+				preferences, CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_METHOD_DECLARATION);
+		codeFormatterPreferences.insert_space_before_comma_in_function_declaration = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_METHOD_DECLARATION_PARAMETERS);
-		codeFormatterPreferences.insert_space_after_comma_in_function_declaration = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_comma_in_function_declaration = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_DECLARATION_PARAMETERS);
-		codeFormatterPreferences.insert_space_before_opening_brace_in_function = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_opening_brace_in_function = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_METHOD_DECLARATION);
 
-		codeFormatterPreferences.insert_space_before_opening_paren_in_if = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_opening_paren_in_if = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_IF);
-		codeFormatterPreferences.insert_space_after_opening_paren_in_if = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_opening_paren_in_if = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_IF);
-		codeFormatterPreferences.insert_space_before_closing_paren_in_if = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_closing_paren_in_if = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_IF);
 
-		codeFormatterPreferences.insert_space_before_opening_paren_in_declare = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_opening_paren_in_declare = getBooleanValue(preferences,
 				"codeFormatterPreferences.insert_space_before_opening_paren_in_declare");
-		codeFormatterPreferences.insert_space_after_opening_paren_in_declare = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_opening_paren_in_declare = getBooleanValue(preferences,
 				"codeFormatterPreferences.insert_space_after_opening_paren_in_declare");
-		codeFormatterPreferences.insert_space_before_closing_paren_in_declare = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_closing_paren_in_declare = getBooleanValue(preferences,
 				"codeFormatterPreferences.insert_space_before_closing_paren_in_declare");
 
-		codeFormatterPreferences.insert_space_before_comma_in_static = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_comma_in_static = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_STATIC);
-		codeFormatterPreferences.insert_space_after_comma_in_static = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_comma_in_static = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_STATIC);
-		codeFormatterPreferences.insert_space_before_comma_in_global = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_comma_in_global = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_GLOBAL);
-		codeFormatterPreferences.insert_space_after_comma_in_global = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_comma_in_global = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_GLOBAL);
-		codeFormatterPreferences.insert_space_before_comma_in_echo = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_before_comma_in_echo = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ECHO);
-		codeFormatterPreferences.insert_space_after_comma_in_echo = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_comma_in_echo = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ECHO);
 
-		codeFormatterPreferences.insert_space_after_open_paren_in_parenthesis_expression = getBooleanValue(
-				preferences,
+		codeFormatterPreferences.insert_space_after_open_paren_in_parenthesis_expression = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_PARENTHESIZED_EXPRESSION);
 		codeFormatterPreferences.insert_space_before_close_paren_in_parenthesis_expression = getBooleanValue(
 				preferences,

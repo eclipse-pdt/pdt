@@ -46,8 +46,7 @@ public interface Debugger {
 	 * Asynchronic addBreakpoint Returns true if successed sending the request,
 	 * false otherwise.
 	 */
-	public boolean addBreakpoint(Breakpoint bp,
-			BreakpointAddedResponseHandler responseHandler);
+	public boolean addBreakpoint(Breakpoint bp, BreakpointAddedResponseHandler responseHandler);
 
 	/**
 	 * Synchronic addBreakpoint Returns true if successed adding the Breakpoint.
@@ -58,8 +57,7 @@ public interface Debugger {
 	 * Asynchronic removeBreakpoint Returns true if successed sending the
 	 * request, false otherwise.
 	 */
-	public boolean removeBreakpoint(int id,
-			BreakpointRemovedResponseHandler responseHandler);
+	public boolean removeBreakpoint(int id, BreakpointRemovedResponseHandler responseHandler);
 
 	/**
 	 * Synchronic removeBreakpoint Returns true if successed removing the
@@ -71,8 +69,7 @@ public interface Debugger {
 	 * Asynchronic removeBreakpoint Returns true if successed sending the
 	 * request, false otherwise.
 	 */
-	public boolean removeBreakpoint(Breakpoint breakpoint,
-			BreakpointRemovedResponseHandler responseHandler);
+	public boolean removeBreakpoint(Breakpoint breakpoint, BreakpointRemovedResponseHandler responseHandler);
 
 	/**
 	 * Synchronic removeBreakpoint Returns true if successed removing the
@@ -84,8 +81,7 @@ public interface Debugger {
 	 * Asynchronic removeAllBreakpoints Returns true if successed sending the
 	 * request, false otherwise.
 	 */
-	public boolean removeAllBreakpoints(
-			AllBreakpointRemovedResponseHandler responseHandler);
+	public boolean removeAllBreakpoints(AllBreakpointRemovedResponseHandler responseHandler);
 
 	/**
 	 * Synchronic removeAllBreakpoints Returns true if successed removing all
@@ -154,8 +150,7 @@ public interface Debugger {
 	 * Asynchronic eval Returns true if successed sending the request, false
 	 * otherwise.
 	 */
-	public boolean eval(String commandString,
-			EvalResponseHandler responseHandler);
+	public boolean eval(String commandString, EvalResponseHandler responseHandler);
 
 	/**
 	 * Synchronic eval Returns the evaled commandString.
@@ -166,14 +161,13 @@ public interface Debugger {
 	 * Asynchronic assign value Returns true if successed sending the request,
 	 * false otherwise.
 	 */
-	public boolean assignValue(String var, String value, int depth,
-			String[] path, AssignValueResponseHandler responseHandler);
+	public boolean assignValue(String var, String value, int depth, String[] path,
+			AssignValueResponseHandler responseHandler);
 
 	/**
 	 * Synchronic assign value Returns true if successed assigning the value.
 	 */
-	public boolean assignValue(String var, String value, int depth,
-			String[] path);
+	public boolean assignValue(String var, String value, int depth, String[] path);
 
 	/**
 	 * Asynchronic getVariableValue Returns true if successed sending the
@@ -202,22 +196,19 @@ public interface Debugger {
 	 * Asynchronic getStackVariableValue Returns true if successed sending the
 	 * request, false otherwise.
 	 */
-	public boolean getStackVariableValue(int stackDepth, String value,
-			int depth, String[] path,
+	public boolean getStackVariableValue(int stackDepth, String value, int depth, String[] path,
 			GetStackVariableValueResponseHandler responseHandler);
 
 	/**
 	 * Synchronic getStackVariableValue Returns the variable value.
 	 */
-	public byte[] getStackVariableValue(int stackDepth, String value,
-			int depth, String[] path);
+	public byte[] getStackVariableValue(int stackDepth, String value, int depth, String[] path);
 
 	/**
 	 * Asynchronous addFiles Returns true if succeeded sending the request,
 	 * false otherwise.
 	 */
-	public boolean addFiles(String[] paths,
-			AddFilesResponseHandler responseHandler);
+	public boolean addFiles(String[] paths, AddFilesResponseHandler responseHandler);
 
 	/**
 	 * Synchronous addFiles Returns true if succeeded adding the Breakpoint.
@@ -246,8 +237,7 @@ public interface Debugger {
 	// Interface for an breakpoint added response handler.
 	public static interface BreakpointAddedResponseHandler {
 
-		public void breakpointAdded(String fileName, int lineNumber, int id,
-				boolean success);
+		public void breakpointAdded(String fileName, int lineNumber, int id, boolean success);
 
 	}
 
@@ -310,16 +300,14 @@ public interface Debugger {
 	// Interface for assignValue response handler.
 	public static interface AssignValueResponseHandler {
 
-		public void valueAssigned(String var, String value, int depth,
-				String[] path, boolean success);
+		public void valueAssigned(String var, String value, int depth, String[] path, boolean success);
 
 	}
 
 	// Interface for getVariableValue response handler.
 	public static interface VariableValueResponseHandler {
 
-		public void variableValue(String value, int depth, String[] path,
-				String reslut, boolean success);
+		public void variableValue(String value, int depth, String[] path, String reslut, boolean success);
 
 	}
 
@@ -333,8 +321,8 @@ public interface Debugger {
 	// Interface for getStackVariableValue response handler.
 	public static interface GetStackVariableValueResponseHandler {
 
-		public void stackVariableValue(int stackDepth, String value, int depth,
-				String[] path, String reslut, boolean success);
+		public void stackVariableValue(int stackDepth, String value, int depth, String[] path, String reslut,
+				boolean success);
 
 	}
 
@@ -348,13 +336,10 @@ public interface Debugger {
 	// ---------------------------------------------------------------------------
 
 	// An interface for all the respones handler.
-	public interface DebugResponseHandler extends
-			BreakpointAddedResponseHandler, BreakpointRemovedResponseHandler,
-			AllBreakpointRemovedResponseHandler, StartResponseHandler,
-			EvalResponseHandler, StepIntoResponseHandler,
-			StepOverResponseHandler, StepOutResponseHandler, GoResponseHandler,
-			PauseResponseHandler, AssignValueResponseHandler,
-			VariableValueResponseHandler, GetCallStackResponseHandler,
+	public interface DebugResponseHandler extends BreakpointAddedResponseHandler, BreakpointRemovedResponseHandler,
+			AllBreakpointRemovedResponseHandler, StartResponseHandler, EvalResponseHandler, StepIntoResponseHandler,
+			StepOverResponseHandler, StepOutResponseHandler, GoResponseHandler, PauseResponseHandler,
+			AssignValueResponseHandler, VariableValueResponseHandler, GetCallStackResponseHandler,
 			GetStackVariableValueResponseHandler, AddFilesResponseHandler {
 
 	}
@@ -362,11 +347,9 @@ public interface Debugger {
 	// ---------------------------------------------------------------------------
 
 	// Adapter for DebugResponseHandler.
-	static public class DefaultDebugResponseHandler implements
-			DebugResponseHandler {
+	static public class DefaultDebugResponseHandler implements DebugResponseHandler {
 
-		public void breakpointAdded(String fileName, int lineNumber, int id,
-				boolean success) {
+		public void breakpointAdded(String fileName, int lineNumber, int id, boolean success) {
 			// System.out.println("breakpointAdded: " + success + " " + fileName
 			// + " " + lineNumber);
 		}
@@ -408,14 +391,12 @@ public interface Debugger {
 			// System.out.println("pause: " + success);
 		}
 
-		public void valueAssigned(String var, String value, int depth,
-				String[] path, boolean success) {
+		public void valueAssigned(String var, String value, int depth, String[] path, boolean success) {
 			// System.out.println("valueAssigned: " + value + " " + depth + " "
 			// + success);
 		}
 
-		public void variableValue(String value, int depth, String[] path,
-				String reslut, boolean success) {
+		public void variableValue(String value, int depth, String[] path, String reslut, boolean success) {
 			// System.out.println("variableValue: " + value + " " + reslut + " "
 			// + success);
 		}
@@ -424,8 +405,8 @@ public interface Debugger {
 			// System.out.println("callStack: " + pstack + " " + success);
 		}
 
-		public void stackVariableValue(int stackDepth, String value, int depth,
-				String[] path, String reslut, boolean success) {
+		public void stackVariableValue(int stackDepth, String value, int depth, String[] path, String reslut,
+				boolean success) {
 			// System.out.println("stackVariableValue: " + value + " " + reslut
 			// + " " + success);
 		}

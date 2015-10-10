@@ -38,8 +38,7 @@ public abstract class DelegatingLabelProviderWithTooltip extends ColumnLabelProv
 	/**
 	 * @param decorator
 	 */
-	DelegatingLabelProviderWithTooltip(ILabelProvider wrappedLabelProvider,
-			ILabelDecorator decorator) {
+	DelegatingLabelProviderWithTooltip(ILabelProvider wrappedLabelProvider, ILabelDecorator decorator) {
 		this.wrappedLabelProvider = wrappedLabelProvider;
 		this.decorator = decorator;
 		wrappedLabelProvider.addListener(new ILabelProviderListener() {

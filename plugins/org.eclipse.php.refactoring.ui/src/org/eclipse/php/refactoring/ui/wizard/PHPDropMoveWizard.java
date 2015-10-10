@@ -24,10 +24,8 @@ import org.eclipse.php.refactoring.ui.PHPRefactoringUIMessages;
 public class PHPDropMoveWizard extends RefactoringWizard {
 
 	public PHPDropMoveWizard(Refactoring refactoring) {
-		super(refactoring, DIALOG_BASED_USER_INTERFACE
-				| PREVIEW_EXPAND_FIRST_NODE);
-		setDefaultPageTitle(PHPRefactoringUIMessages
-				.getString("PHPMoveWizard.0")); //$NON-NLS-1$
+		super(refactoring, DIALOG_BASED_USER_INTERFACE | PREVIEW_EXPAND_FIRST_NODE);
+		setDefaultPageTitle(PHPRefactoringUIMessages.getString("PHPMoveWizard.0")); //$NON-NLS-1$
 	}
 
 	protected void addUserInputPages() {

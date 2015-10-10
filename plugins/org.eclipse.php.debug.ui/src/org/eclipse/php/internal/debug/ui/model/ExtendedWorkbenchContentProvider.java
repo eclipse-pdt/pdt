@@ -24,8 +24,7 @@ import org.eclipse.ui.model.BaseWorkbenchContentProvider;
  * 
  * @author shalom
  */
-public class ExtendedWorkbenchContentProvider extends
-		BaseWorkbenchContentProvider {
+public class ExtendedWorkbenchContentProvider extends BaseWorkbenchContentProvider {
 
 	private boolean isProvidingExternals;
 

@@ -12,18 +12,17 @@ public class NonPHPProjectsFilter extends ViewerFilter {
 	 * @see ViewerFilter
 	 */
 	public boolean select(Viewer viewer, Object parent, Object element) {
-		if (element instanceof IScriptProject){
-			IScriptProject sp = (IScriptProject)element;
-			if(DLTKLanguageManager.getLanguageToolkit(sp) instanceof
-					PHPLanguageToolkit){
+		if (element instanceof IScriptProject) {
+			IScriptProject sp = (IScriptProject) element;
+			if (DLTKLanguageManager.getLanguageToolkit(sp) instanceof PHPLanguageToolkit) {
 				return true;
-			}else{
+			} else {
 				return false;
 			}
-				
-		} else if (element instanceof IProject)
-			return !((IProject)element).isOpen();
 
-		return true; 
+		} else if (element instanceof IProject)
+			return !((IProject) element).isOpen();
+
+		return true;
 	}
 }

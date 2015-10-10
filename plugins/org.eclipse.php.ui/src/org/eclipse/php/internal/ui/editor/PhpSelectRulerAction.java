@@ -28,10 +28,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class PhpSelectRulerAction extends AbstractRulerActionDelegate {
 
-	protected IAction createAction(ITextEditor editor,
-			IVerticalRulerInfo rulerInfo) {
-		return new PhpSelectAnnotationRulerAction(PHPUIMessages
-				.getResourceBundle(),
-				"PhpSelectAnnotationRulerAction.", editor, rulerInfo); //$NON-NLS-1$
+	protected IAction createAction(ITextEditor editor, IVerticalRulerInfo rulerInfo) {
+		return new PhpSelectAnnotationRulerAction(PHPUIMessages.getResourceBundle(), "PhpSelectAnnotationRulerAction.", //$NON-NLS-1$
+				editor, rulerInfo);
 	}
 }

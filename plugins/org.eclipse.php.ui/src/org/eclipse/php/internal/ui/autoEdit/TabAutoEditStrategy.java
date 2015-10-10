@@ -38,8 +38,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 	private DocumentCommand command;
 	private IndentLineAutoEditStrategy autoIndentLineStrategy = new IndentLineAutoEditStrategy();
 
-	public void customizeDocumentCommand(IDocument document,
-			DocumentCommand command) {
+	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		if ((command.text != null) && command.text.equals("\t")) { //$NON-NLS-1$
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=464605
 			// Workaround for bug 464605:
@@ -55,8 +54,8 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 			// XXX: in same way, we should probably disable
 			// IndentLineAutoEditStrategy when inside a JavaScript partition,
 			// and let JavaAutoIndentStrategy do all the job...
-			String partitionType = FormatterUtils.getPartitionType(
-					(IStructuredDocument) document, command.offset, true);
+			String partitionType = FormatterUtils.getPartitionType((IStructuredDocument) document, command.offset,
+					true);
 			if (FormatterUtils.PARTITION_JS_SCRIPT.equals(partitionType)
 					|| IHTMLPartitions.HTML_DEFAULT.equals(partitionType)
 					|| IHTMLPartitions.SCRIPT.equals(partitionType)) {
@@ -69,8 +68,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 			this.command = command;
 			this.document = (IStructuredDocument) document;
 
-			boolean isAutoIndent = PHPUiPlugin.getDefault()
-					.getPreferenceStore()
+			boolean isAutoIndent = PHPUiPlugin.getDefault().getPreferenceStore()
 					.getBoolean(PreferenceConstants.EDITOR_SMART_TAB);
 			if (!isAutoIndent) {
 				applyTabRule();
@@ -89,8 +87,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 
 			// get original line information
 			final int lineNumber = document.getLineOfOffset(command.offset);
-			final IRegion originalLineInfo = document
-					.getLineInformation(lineNumber);
+			final IRegion originalLineInfo = document.getLineInformation(lineNumber);
 			final int originalLineStart = document.getLineOffset(lineNumber);
 			int originalIndentSize = 0;
 			int autoIndentSize = 0;
@@ -103,8 +100,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 			// - there's no alphabetical text before it
 			if (caretInBegining || !hasTextBeforeCaret(originalLineInfo)) {
 				// the current "visual" indentation size (Tab = 4 x space)
-				originalIndentSize = calculateOriginalIndentSize(lineNumber,
-						originalLineInfo);
+				originalIndentSize = calculateOriginalIndentSize(lineNumber, originalLineInfo);
 				// the automatic needed total "visual" indentation size (Tab = 4
 				// x space)
 				autoIndentSize = calculateAutoIndentSize(lineNumber);
@@ -116,16 +112,14 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 					return;
 				}
 				// checks whether caret is before a space OR Tab character
-				boolean emptyCharAfterOldCaretPos = hasEmptyCharAfterCaret(
-						lineNumber, originalLineStart);
+				boolean emptyCharAfterOldCaretPos = hasEmptyCharAfterCaret(lineNumber, originalLineStart);
 				if (autoIndentSize >= originalIndentSize) {
 					applyIndent(lineNumber, originalLineStart);
 
 					// if the caret "Visual" position did not change and it is
 					// exactly in the begining
 					// of an alphabetical text
-					if ((autoIndentSize == originalIndentSize)
-							&& !emptyCharAfterOldCaretPos) {
+					if ((autoIndentSize == originalIndentSize) && !emptyCharAfterOldCaretPos) {
 						applyTabRule();
 					}
 				}
@@ -155,8 +149,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 
 	// This method check if there's an alphabetical text before the caret's
 	// location
-	private boolean hasTextBeforeCaret(IRegion originalLineInfo)
-			throws BadLocationException {
+	private boolean hasTextBeforeCaret(IRegion originalLineInfo) throws BadLocationException {
 		int length = originalLineInfo.getLength();
 		int lineOffset = originalLineInfo.getOffset();
 		String lineText = document.get(lineOffset, length);
@@ -170,8 +163,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 	}
 
 	// This method checks if there's an empty character (' ' OR '\t')
-	private boolean hasEmptyCharAfterCaret(int lineNumber, int originalLineStart)
-			throws BadLocationException {
+	private boolean hasEmptyCharAfterCaret(int lineNumber, int originalLineStart) throws BadLocationException {
 		boolean result = false;
 		IRegion lineInfo = document.getLineInformation(lineNumber);
 		int length = lineInfo.getLength();
@@ -193,8 +185,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 
 	// This method calculates the current indentation size of the given line
 	// Note : it considers Tab as 4 spaces
-	private int calculateOriginalIndentSize(int lineNumber, IRegion lineInfo)
-			throws BadLocationException {
+	private int calculateOriginalIndentSize(int lineNumber, IRegion lineInfo) throws BadLocationException {
 
 		int startOffset = lineInfo.getOffset();
 		int length = lineInfo.getLength();
@@ -218,8 +209,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 	}
 
 	// This method applies the appropriate indentation on the given line
-	private void applyIndent(int lineNumber, int offset)
-			throws BadLocationException {
+	private void applyIndent(int lineNumber, int offset) throws BadLocationException {
 		command.offset = offset;
 		command.length = getCurrentIndentLength(lineNumber);
 		command.text = helpBuffer.toString();
@@ -227,8 +217,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 
 	// This method returns the length of the line's indentation.
 	// Note : Tab in this case is considered as 1 character.
-	private int getCurrentIndentLength(int lineNumber)
-			throws BadLocationException {
+	private int getCurrentIndentLength(int lineNumber) throws BadLocationException {
 		IRegion lineInfo = document.getLineInformation(lineNumber);
 
 		int startOffset = lineInfo.getOffset();
@@ -238,8 +227,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 
 		// find the first non blank char of the element.
 		int i;
-		for (i = 0; i < length
-				&& (lineText.charAt(i) == ' ' || lineText.charAt(i) == '\t'); i++)
+		for (i = 0; i < length && (lineText.charAt(i) == ' ' || lineText.charAt(i) == '\t'); i++)
 			;
 		return i;
 	}
@@ -249,8 +237,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 	private int calculateAutoIndentSize(int lineNumber) {
 		helpBuffer.setLength(0);
 		try {
-			autoIndentLineStrategy.placeMatchingBlanks(document, helpBuffer,
-					lineNumber, command);
+			autoIndentLineStrategy.placeMatchingBlanks(document, helpBuffer, lineNumber, command);
 		} catch (Exception e) {
 			Logger.logException(e);
 			return -1;
@@ -272,24 +259,20 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 
 	// This method applies the standard Tab rule and will perform a regular tab
 	private void applyTabRule() {
-		IFormatterCommonPrferences formatterCommonPrferences = FormatterUtils
-				.getFormatterCommonPrferences();
-		char indentChar = formatterCommonPrferences
-				.getIndentationChar(document);
+		IFormatterCommonPrferences formatterCommonPrferences = FormatterUtils.getFormatterCommonPrferences();
+		char indentChar = formatterCommonPrferences.getIndentationChar(document);
 
 		if (indentChar == ' ') {
 			// determine where in line this command begins
 			int lineOffset = -1;
 			try {
-				IRegion lineInfo = document
-						.getLineInformationOfOffset(command.offset);
+				IRegion lineInfo = document.getLineInformationOfOffset(command.offset);
 				lineOffset = command.offset - lineInfo.getOffset();
 			} catch (BadLocationException e) {
 				Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 			}
 
-			int indentSize = formatterCommonPrferences
-					.getIndentationSize(document);
+			int indentSize = formatterCommonPrferences.getIndentationSize(document);
 
 			if (lineOffset > 0) {
 				lineOffset %= indentSize;
@@ -297,8 +280,7 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 			}
 
 			if (indentSize == 0) {
-				indentSize = formatterCommonPrferences
-						.getIndentationSize(document);
+				indentSize = formatterCommonPrferences.getIndentationSize(document);
 			}
 
 			command.text += getIndentationString(indentSize);

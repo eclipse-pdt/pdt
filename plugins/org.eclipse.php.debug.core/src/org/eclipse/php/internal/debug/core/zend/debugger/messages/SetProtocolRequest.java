@@ -18,8 +18,7 @@ import java.io.IOException;
 
 import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 
-public class SetProtocolRequest extends DebugMessageRequestImpl implements
-		IDebugRequestMessage {
+public class SetProtocolRequest extends DebugMessageRequestImpl implements IDebugRequestMessage {
 
 	private int fProtocolID;
 
@@ -45,9 +44,8 @@ public class SetProtocolRequest extends DebugMessageRequestImpl implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.messages.IDebugMessage#getType
-	 * ()
+	 * @see org.eclipse.php.internal.debug.core.debugger.messages.IDebugMessage#
+	 * getType ()
 	 */
 	public int getType() {
 		return 10000;
@@ -56,9 +54,8 @@ public class SetProtocolRequest extends DebugMessageRequestImpl implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.messages.IDebugMessage#serialize
-	 * (java.io.DataOutputStream)
+	 * @see org.eclipse.php.internal.debug.core.debugger.messages.IDebugMessage#
+	 * serialize (java.io.DataOutputStream)
 	 */
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());

@@ -55,8 +55,7 @@ public class NodeDeletionTests {
 		String expected = "<?php ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				List<? extends ASTNode> allOfType = getAllOfType(program,
-						ExpressionStatement.class);
+				List<? extends ASTNode> allOfType = getAllOfType(program, ExpressionStatement.class);
 				for (ASTNode node : allOfType) {
 					node.delete();
 				}
@@ -70,10 +69,8 @@ public class NodeDeletionTests {
 		String expected = "<?php $foo('s<>&', 12, true, __CLASS__); ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				ExpressionStatement statement = (ExpressionStatement) program
-						.statements().get(0);
-				FunctionInvocation functionInvocation = (FunctionInvocation) statement
-						.getExpression();
+				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
+				FunctionInvocation functionInvocation = (FunctionInvocation) statement.getExpression();
 				functionInvocation.parameters().remove(0);
 			}
 		});
@@ -85,10 +82,8 @@ public class NodeDeletionTests {
 		String expected = "<?php $foo($a, 's<>&', 12, true); ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				ExpressionStatement statement = (ExpressionStatement) program
-						.statements().get(0);
-				FunctionInvocation functionInvocation = (FunctionInvocation) statement
-						.getExpression();
+				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
+				FunctionInvocation functionInvocation = (FunctionInvocation) statement.getExpression();
 				functionInvocation.parameters().remove(4);
 			}
 		});
@@ -100,10 +95,8 @@ public class NodeDeletionTests {
 		String expected = "<?php $foo($a, 's<>&', true, __CLASS__); ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				ExpressionStatement statement = (ExpressionStatement) program
-						.statements().get(0);
-				FunctionInvocation functionInvocation = (FunctionInvocation) statement
-						.getExpression();
+				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
+				FunctionInvocation functionInvocation = (FunctionInvocation) statement.getExpression();
 				functionInvocation.parameters().remove(2);
 			}
 		});
@@ -139,12 +132,9 @@ public class NodeDeletionTests {
 		String expected = "<?php array (1, 2, 3) ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				ExpressionStatement statement = (ExpressionStatement) program
-						.statements().get(0);
-				ArrayCreation expression = (ArrayCreation) statement
-						.getExpression();
-				/* ArrayElement arrayElement = */expression.elements()
-						.remove(0);
+				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
+				ArrayCreation expression = (ArrayCreation) statement.getExpression();
+				/* ArrayElement arrayElement = */expression.elements().remove(0);
 			}
 		});
 	}
@@ -155,12 +145,9 @@ public class NodeDeletionTests {
 		String expected = "<?php array (0, 1, 2) ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				ExpressionStatement statement = (ExpressionStatement) program
-						.statements().get(0);
-				ArrayCreation expression = (ArrayCreation) statement
-						.getExpression();
-				/* ArrayElement arrayElement = */expression.elements()
-						.remove(3);
+				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
+				ArrayCreation expression = (ArrayCreation) statement.getExpression();
+				/* ArrayElement arrayElement = */expression.elements().remove(3);
 			}
 		});
 	}
@@ -171,12 +158,9 @@ public class NodeDeletionTests {
 		String expected = "<?php array (0, 1, 3) ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				ExpressionStatement statement = (ExpressionStatement) program
-						.statements().get(0);
-				ArrayCreation expression = (ArrayCreation) statement
-						.getExpression();
-				/* ArrayElement arrayElement = */expression.elements()
-						.remove(2);
+				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
+				ArrayCreation expression = (ArrayCreation) statement.getExpression();
+				/* ArrayElement arrayElement = */expression.elements().remove(2);
 			}
 		});
 	}
@@ -187,12 +171,9 @@ public class NodeDeletionTests {
 		String expected = "<?php array('Dafna'=>'Dodidu');?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				ExpressionStatement statement = (ExpressionStatement) program
-						.statements().get(0);
-				ArrayCreation expression = (ArrayCreation) statement
-						.getExpression();
-				/* ArrayElement arrayElement = */expression.elements()
-						.remove(0);
+				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
+				ArrayCreation expression = (ArrayCreation) statement.getExpression();
+				/* ArrayElement arrayElement = */expression.elements().remove(0);
 			}
 		});
 	}
@@ -203,8 +184,7 @@ public class NodeDeletionTests {
 		String expected = "<?php list($b, $c, $d) = array () ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				ExpressionStatement statement = (ExpressionStatement) program
-						.statements().get(0);
+				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
 				Assignment expression = (Assignment) statement.getExpression();
 				ListVariable list = (ListVariable) expression.getLeftHandSide();
 				list.variables().remove(0);
@@ -218,8 +198,7 @@ public class NodeDeletionTests {
 		String expected = "<?php list($a, $b, $d)  = array ()  ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				ExpressionStatement statement = (ExpressionStatement) program
-						.statements().get(0);
+				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
 				Assignment expression = (Assignment) statement.getExpression();
 				ListVariable list = (ListVariable) expression.getLeftHandSide();
 				list.variables().remove(2);
@@ -233,8 +212,7 @@ public class NodeDeletionTests {
 		String expected = "<?php list ($a, $b, $c)  = array ()  ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				ExpressionStatement statement = (ExpressionStatement) program
-						.statements().get(0);
+				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
 				Assignment expression = (Assignment) statement.getExpression();
 				ListVariable list = (ListVariable) expression.getLeftHandSide();
 				list.variables().remove(3);
@@ -248,8 +226,7 @@ public class NodeDeletionTests {
 		String expected = "<?php break;?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				BreakStatement statement = (BreakStatement) program
-						.statements().get(0);
+				BreakStatement statement = (BreakStatement) program.statements().get(0);
 				statement.getExpression().delete();
 			}
 		});
@@ -261,8 +238,7 @@ public class NodeDeletionTests {
 		String expected = "<?php continue;?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				ContinueStatement statement = (ContinueStatement) program
-						.statements().get(0);
+				ContinueStatement statement = (ContinueStatement) program.statements().get(0);
 				statement.getExpression().delete();
 			}
 		});
@@ -274,8 +250,7 @@ public class NodeDeletionTests {
 		String expected = "<?php return;?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				ReturnStatement statement = (ReturnStatement) program
-						.statements().get(0);
+				ReturnStatement statement = (ReturnStatement) program.statements().get(0);
 				statement.getExpression().delete();
 			}
 		});
@@ -287,8 +262,7 @@ public class NodeDeletionTests {
 		String expected = "<?php echo $b , $c; ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				EchoStatement statement = (EchoStatement) program.statements()
-						.get(0);
+				EchoStatement statement = (EchoStatement) program.statements().get(0);
 				statement.expressions().remove(0);
 			}
 		});
@@ -300,8 +274,7 @@ public class NodeDeletionTests {
 		String expected = "<?php echo $a, $b; ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				EchoStatement statement = (EchoStatement) program.statements()
-						.get(0);
+				EchoStatement statement = (EchoStatement) program.statements().get(0);
 				statement.expressions().remove(2);
 			}
 		});
@@ -313,8 +286,7 @@ public class NodeDeletionTests {
 		String expected = "<?php echo $a, $c; ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				EchoStatement statement = (EchoStatement) program.statements()
-						.get(0);
+				EchoStatement statement = (EchoStatement) program.statements().get(0);
 				statement.expressions().remove(1);
 			}
 		});
@@ -326,8 +298,7 @@ public class NodeDeletionTests {
 		String expected = "<?php switch ($i) { case 0:    echo 'i equals 0';    break; default:    echo 'i not equals 0,1';  }  ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				SwitchStatement statement = (SwitchStatement) program
-						.statements().get(0);
+				SwitchStatement statement = (SwitchStatement) program.statements().get(0);
 				statement.getBody().statements().remove(1);
 			}
 		});
@@ -339,8 +310,7 @@ public class NodeDeletionTests {
 		String expected = "<?php if ($a) { $b = 4; $c = 4; }  ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				IfStatement statement = (IfStatement) program.statements().get(
-						0);
+				IfStatement statement = (IfStatement) program.statements().get(0);
 				Block block = (Block) statement.getTrueStatement();
 				block.statements().remove(0);
 			}
@@ -353,8 +323,7 @@ public class NodeDeletionTests {
 		String expected = "<?php if ($a) { $a = 5; }  ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				IfStatement statement = (IfStatement) program.statements().get(
-						0);
+				IfStatement statement = (IfStatement) program.statements().get(0);
 				Block block = (Block) statement.getTrueStatement();
 				block.statements().remove(1);
 			}
@@ -367,8 +336,7 @@ public class NodeDeletionTests {
 		String expected = "<?php if ($a) { $a = 5; $b = 4;}  ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				IfStatement statement = (IfStatement) program.statements().get(
-						0);
+				IfStatement statement = (IfStatement) program.statements().get(0);
 				Block block = (Block) statement.getTrueStatement();
 				block.statements().remove(2);
 			}
@@ -381,8 +349,7 @@ public class NodeDeletionTests {
 		String expected = "<?php for (;;) {  echo $i; } ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				ForStatement statement = (ForStatement) program.statements()
-						.get(0);
+				ForStatement statement = (ForStatement) program.statements().get(0);
 				statement.initializers().remove(0);
 				statement.conditions().remove(0);
 				statement.updaters().remove(0);
@@ -411,8 +378,7 @@ public class NodeDeletionTests {
 		String expected = "<?php function foo($b, $c = 5) { $a= 5; $b = 6; $c = 7; } ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				FunctionDeclaration statement = (FunctionDeclaration) program
-						.statements().get(0);
+				FunctionDeclaration statement = (FunctionDeclaration) program.statements().get(0);
 				statement.formalParameters().remove(0);
 			}
 		});
@@ -424,8 +390,7 @@ public class NodeDeletionTests {
 		String expected = "<?php function foo($a, $b) { $a= 5; $b = 6; $c = 7; } ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				FunctionDeclaration statement = (FunctionDeclaration) program
-						.statements().get(0);
+				FunctionDeclaration statement = (FunctionDeclaration) program.statements().get(0);
 				statement.formalParameters().remove(2);
 			}
 		});
@@ -437,8 +402,7 @@ public class NodeDeletionTests {
 		String expected = "<?php function foo($a, $c = 5) { $a= 5; $b = 6; $c = 7; } ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				FunctionDeclaration statement = (FunctionDeclaration) program
-						.statements().get(0);
+				FunctionDeclaration statement = (FunctionDeclaration) program.statements().get(0);
 				statement.formalParameters().remove(1);
 			}
 		});
@@ -450,8 +414,7 @@ public class NodeDeletionTests {
 		String expected = "<?php function foo() { $b = 6; $c = 7; } ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				FunctionDeclaration statement = (FunctionDeclaration) program
-						.statements().get(0);
+				FunctionDeclaration statement = (FunctionDeclaration) program.statements().get(0);
 				statement.getBody().statements().remove(0);
 			}
 		});
@@ -463,8 +426,7 @@ public class NodeDeletionTests {
 		String expected = "<?php function foo() { $a= 5; $b = 6; } ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				FunctionDeclaration statement = (FunctionDeclaration) program
-						.statements().get(0);
+				FunctionDeclaration statement = (FunctionDeclaration) program.statements().get(0);
 				statement.getBody().statements().remove(2);
 			}
 		});
@@ -476,8 +438,7 @@ public class NodeDeletionTests {
 		String expected = "<?php function foo() { $a= 5; $c = 7; } ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				FunctionDeclaration statement = (FunctionDeclaration) program
-						.statements().get(0);
+				FunctionDeclaration statement = (FunctionDeclaration) program.statements().get(0);
 				statement.getBody().statements().remove(1);
 			}
 		});
@@ -489,8 +450,7 @@ public class NodeDeletionTests {
 		String expected = "<?php final class MyClass extends SuperClass {  } ?>";
 		parseAndCompare(str, expected, new ICodeManiplator() {
 			public void manipulate(Program program) {
-				ClassDeclaration statement = (ClassDeclaration) program
-						.statements().get(0);
+				ClassDeclaration statement = (ClassDeclaration) program.statements().get(0);
 				statement.interfaces().remove(1);
 				statement.interfaces().remove(0);
 				statement.getBody().statements().remove(3);
@@ -508,8 +468,7 @@ public class NodeDeletionTests {
 	 * @param str
 	 * @throws Exception
 	 */
-	public void parseAndCompare(String string, String expected,
-			ICodeManiplator manipulator) throws Exception {
+	public void parseAndCompare(String string, String expected, ICodeManiplator manipulator) throws Exception {
 		IDocument document = new Document(string);
 		Program program = initialize(document);
 
@@ -517,8 +476,7 @@ public class NodeDeletionTests {
 		rewrite(program, document);
 
 		String actual = document.get();
-		String diff = PHPCoreTests.compareContentsIgnoreWhitespace(expected,
-				actual);
+		String diff = PHPCoreTests.compareContentsIgnoreWhitespace(expected, actual);
 		if (diff != null) {
 			fail(diff);
 		}
@@ -529,8 +487,7 @@ public class NodeDeletionTests {
 	 * and the ast.
 	 */
 	private Program initialize(IDocument document) throws Exception {
-		ASTParser parser = ASTParser.newParser(getPHPVersion(),
-				ProjectOptions.useShortTags((IProject) null));
+		ASTParser parser = ASTParser.newParser(getPHPVersion(), ProjectOptions.useShortTags((IProject) null));
 		parser.setSource(document.get().toCharArray());
 		Program program = parser.createAST(new NullProgressMonitor());
 
@@ -547,8 +504,7 @@ public class NodeDeletionTests {
 		edits.apply(document);
 	}
 
-	public <T extends ASTNode> List<T> getAllOfType(Program program,
-			final Class<T> nodeClass) {
+	public <T extends ASTNode> List<T> getAllOfType(Program program, final Class<T> nodeClass) {
 		final List<T> list = new ArrayList<T>();
 		program.accept(new ApplyAll() {
 			@SuppressWarnings("unchecked")

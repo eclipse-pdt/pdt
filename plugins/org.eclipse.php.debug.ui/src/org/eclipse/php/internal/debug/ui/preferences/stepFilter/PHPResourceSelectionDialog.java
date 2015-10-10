@@ -53,8 +53,7 @@ public class PHPResourceSelectionDialog extends SelectionDialog {
 	// show closed projects by default
 	private boolean showClosedProjects = true;
 
-	public PHPResourceSelectionDialog(Shell parentShell,
-			IContainer initialRoot, boolean allowNewContainerName,
+	public PHPResourceSelectionDialog(Shell parentShell, IContainer initialRoot, boolean allowNewContainerName,
 			String message) {
 		super(parentShell);
 		setTitle(PHPDebugUIMessages.PHPResourceSelectionDialog_selectResource);
@@ -71,8 +70,7 @@ public class PHPResourceSelectionDialog extends SelectionDialog {
 	 */
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(shell,
-				IIDEHelpContextIds.CONTAINER_SELECTION_DIALOG);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(shell, IIDEHelpContextIds.CONTAINER_SELECTION_DIALOG);
 	}
 
 	/*
@@ -85,8 +83,7 @@ public class PHPResourceSelectionDialog extends SelectionDialog {
 		Listener listener = new Listener() {
 			public void handleEvent(Event event) {
 				if (statusMessage != null && validator != null) {
-					String errorMsg = validator.isValid(group
-							.getPathForSelectedResource());
+					String errorMsg = validator.isValid(group.getPathForSelectedResource());
 					if (errorMsg == null || errorMsg.equals(EMPTY_STRING)) {
 						statusMessage.setText(EMPTY_STRING);
 						getOkButton().setEnabled(true);
@@ -100,8 +97,7 @@ public class PHPResourceSelectionDialog extends SelectionDialog {
 		};
 
 		// container selection group
-		group = new PHPResourceSelectionGroup(area, listener,
-				allowNewContainerName, getMessage(), showClosedProjects);
+		group = new PHPResourceSelectionGroup(area, listener, allowNewContainerName, getMessage(), showClosedProjects);
 		if (initialSelection != null) {
 			group.setSelectedResource(initialSelection);
 		}
@@ -122,8 +118,7 @@ public class PHPResourceSelectionDialog extends SelectionDialog {
 	protected void okPressed() {
 
 		List<Object> chosenResourcesList = new ArrayList<Object>();
-		Object selection = ((TreeSelection) group.treeViewer.getSelection())
-				.getFirstElement();
+		Object selection = ((TreeSelection) group.treeViewer.getSelection()).getFirstElement();
 		if (selection != null) {
 			chosenResourcesList.add(selection);
 		}

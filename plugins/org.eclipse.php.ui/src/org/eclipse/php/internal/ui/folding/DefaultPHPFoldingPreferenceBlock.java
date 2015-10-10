@@ -37,8 +37,7 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.Overla
  * 
  * @since 3.0
  */
-public class DefaultPHPFoldingPreferenceBlock implements
-		IPHPFoldingPreferenceBlock {
+public class DefaultPHPFoldingPreferenceBlock implements IPHPFoldingPreferenceBlock {
 
 	private IPreferenceStore fStore;
 	private OverlayPreferenceStore fOverlayStore;
@@ -50,8 +49,7 @@ public class DefaultPHPFoldingPreferenceBlock implements
 
 		public void widgetSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
-			fOverlayStore.setValue((String) fCheckBoxes.get(button),
-					button.getSelection());
+			fOverlayStore.setValue((String) fCheckBoxes.get(button), button.getSelection());
 		}
 	};
 
@@ -64,24 +62,19 @@ public class DefaultPHPFoldingPreferenceBlock implements
 	private OverlayKey[] createKeys() {
 		ArrayList overlayKeys = new ArrayList();
 
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.BOOLEAN,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
 				PreferenceConstants.EDITOR_FOLDING_PHPDOC));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.BOOLEAN,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
 				PreferenceConstants.EDITOR_FOLDING_CLASSES));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.BOOLEAN,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
 				PreferenceConstants.EDITOR_FOLDING_FUNCTIONS));
 		// overlayKeys.add(new
 		// OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
 		// PreferenceConstants.EDITOR_FOLDING_INCLUDES));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.BOOLEAN,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
 				PreferenceConstants.EDITOR_FOLDING_HEADER_COMMENTS));
 
-		return (OverlayKey[]) overlayKeys.toArray(new OverlayKey[overlayKeys
-				.size()]);
+		return (OverlayKey[]) overlayKeys.toArray(new OverlayKey[overlayKeys.size()]);
 	}
 
 	/**
@@ -102,27 +95,22 @@ public class DefaultPHPFoldingPreferenceBlock implements
 		Label label = new Label(inner, SWT.LEFT);
 		label.setText(PHPUIMessages.DefaultPHPFoldingPreferenceBlock_title);
 
-		addCheckBox(inner,
-				PHPUIMessages.DefaultPHPFoldingPreferenceBlock_classes,
+		addCheckBox(inner, PHPUIMessages.DefaultPHPFoldingPreferenceBlock_classes,
 				PreferenceConstants.EDITOR_FOLDING_CLASSES, 0);
 		// addCheckBox(inner,
 		// PHPUIMessages.getString("DefaultPHPFoldingPreferenceBlock_includes"),
 		// PreferenceConstants.EDITOR_FOLDING_INCLUDES, 0);
-		addCheckBox(inner,
-				PHPUIMessages.DefaultPHPFoldingPreferenceBlock_functions,
+		addCheckBox(inner, PHPUIMessages.DefaultPHPFoldingPreferenceBlock_functions,
 				PreferenceConstants.EDITOR_FOLDING_FUNCTIONS, 0);
-		addCheckBox(inner,
-				PHPUIMessages.DefaultPHPFoldingPreferenceBlock_PHPdoc,
+		addCheckBox(inner, PHPUIMessages.DefaultPHPFoldingPreferenceBlock_PHPdoc,
 				PreferenceConstants.EDITOR_FOLDING_PHPDOC, 0);
-		addCheckBox(inner,
-				PHPUIMessages.DefaultPHPFoldingPreferenceBlock_header_comments,
+		addCheckBox(inner, PHPUIMessages.DefaultPHPFoldingPreferenceBlock_header_comments,
 				PreferenceConstants.EDITOR_FOLDING_HEADER_COMMENTS, 0);
 
 		return inner;
 	}
 
-	private Button addCheckBox(Composite parent, String label, String key,
-			int indentation) {
+	private Button addCheckBox(Composite parent, String label, String key, int indentation) {
 		Button checkBox = new Button(parent, SWT.CHECK);
 		checkBox.setText(label);
 

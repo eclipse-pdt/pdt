@@ -21,9 +21,8 @@ import org.junit.runner.RunWith;
 public class PHP7ErrorReportingTests extends AbstractErrorReportingTests {
 
 	@Parameters
-	public static final String[] TEST_DIRS = { "/workspace/errors/php54",
-			"/workspace/errors/php55", "/workspace/errors/php56",
-			"/workspace/errors/php7" };
+	public static final String[] TEST_DIRS = { "/workspace/errors/php54", "/workspace/errors/php55",
+			"/workspace/errors/php56", "/workspace/errors/php7" };
 
 	public PHP7ErrorReportingTests(String[] fileNames) {
 		super(fileNames);

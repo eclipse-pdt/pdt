@@ -35,8 +35,7 @@ public class DaemonsRegistry {
 		String id;
 		String overridenDaemonId;
 
-		public Entry(IConfigurationElement element, String id,
-				String overridenDaemonId) {
+		public Entry(IConfigurationElement element, String id, String overridenDaemonId) {
 			this.element = element;
 			this.id = id;
 			this.overridenDaemonId = overridenDaemonId;
@@ -51,8 +50,7 @@ public class DaemonsRegistry {
 	/**
 	 * The name of extension point to read daemons from
 	 */
-	public static final String EXTENSION_POINT_ID = DaemonPlugin.getDefault()
-			.getBundle().getSymbolicName()
+	public static final String EXTENSION_POINT_ID = DaemonPlugin.getDefault().getBundle().getSymbolicName()
 			+ ".debugCommunicationDaemon"; //$NON-NLS-1$
 
 	/**
@@ -101,9 +99,8 @@ public class DaemonsRegistry {
 	 */
 	protected Map<String, ICommunicationDaemon> readFromExtensionPoint() {
 		final List<Entry> entries = new ArrayList<Entry>();
-		IConfigurationElement[] configurationElements = Platform
-				.getExtensionRegistry().getConfigurationElementsFor(
-						EXTENSION_POINT_ID);
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(EXTENSION_POINT_ID);
 		for (final IConfigurationElement element : configurationElements) {
 			String id = element.getAttribute(PROP_ID);
 			String overridenProviderId = element.getAttribute(PROP_OVERRIDES);
@@ -113,14 +110,13 @@ public class DaemonsRegistry {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected Object createInstance(IConfigurationElement element,
-			String propertyName, Class instanceClass) throws CoreException {
+	protected Object createInstance(IConfigurationElement element, String propertyName, Class instanceClass)
+			throws CoreException {
 		final Object object = element.createExecutableExtension(propertyName);
 		if (!instanceClass.isAssignableFrom(object.getClass())) {
-			String message = String
-					.format("Invalid typecast for %s", element.getAttribute(propertyName)); //$NON-NLS-1$
-			IStatus status = new Status(IStatus.ERROR, DaemonPlugin
-					.getDefault().getBundle().getSymbolicName(), message);
+			String message = String.format("Invalid typecast for %s", element.getAttribute(propertyName)); //$NON-NLS-1$
+			IStatus status = new Status(IStatus.ERROR, DaemonPlugin.getDefault().getBundle().getSymbolicName(),
+					message);
 			throw new CoreException(status);
 		}
 		return object;
@@ -143,11 +139,9 @@ public class DaemonsRegistry {
 		for (Entry entry : topHierarchyEntries) {
 			ICommunicationDaemon daemon;
 			try {
-				daemon = (ICommunicationDaemon) createInstance(entry.element,
-						PROP_CLASS, ICommunicationDaemon.class);
+				daemon = (ICommunicationDaemon) createInstance(entry.element, PROP_CLASS, ICommunicationDaemon.class);
 			} catch (CoreException e) {
-				Logger.logException(
-						"Could not instantiate communication daemon from extension point data.", e); //$NON-NLS-1$
+				Logger.logException("Could not instantiate communication daemon from extension point data.", e); //$NON-NLS-1$
 				continue;
 			}
 			daemons.put(entry.id, daemon);

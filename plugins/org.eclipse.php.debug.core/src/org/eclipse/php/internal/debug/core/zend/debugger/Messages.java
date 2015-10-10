@@ -10,6 +10,7 @@ public class Messages extends NLS {
 	public static String OldDebuggerWarningDialog_4;
 	public static String OldDebuggerWarningDialog_6;
 	public static String OldDebuggerWarningDialog_9;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

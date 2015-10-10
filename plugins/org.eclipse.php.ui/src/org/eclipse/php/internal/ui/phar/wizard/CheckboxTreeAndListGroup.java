@@ -18,8 +18,7 @@ import org.eclipse.swt.widgets.Tree;
  * Combines a CheckboxTreeViewer and CheckboxListViewer. All viewer
  * selection-driven interactions are handled within this viewer
  */
-public class CheckboxTreeAndListGroup implements ICheckStateListener,
-		ISelectionChangedListener, ITreeViewerListener {
+public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelectionChangedListener, ITreeViewerListener {
 
 	private Object fRoot;
 	private Object fCurrentTreeSelection;
@@ -55,10 +54,8 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 	 * @param height
 	 *            the height
 	 */
-	public CheckboxTreeAndListGroup(Composite parent, Object rootObject,
-			ITreeContentProvider treeContentProvider,
-			ILabelProvider treeLabelProvider,
-			IStructuredContentProvider listContentProvider,
+	public CheckboxTreeAndListGroup(Composite parent, Object rootObject, ITreeContentProvider treeContentProvider,
+			ILabelProvider treeLabelProvider, IStructuredContentProvider listContentProvider,
 			ILabelProvider listLabelProvider, int style, int width, int height) {
 		fRoot = rootObject;
 		fTreeContentProvider = treeContentProvider;
@@ -159,8 +156,7 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 			Object currentElement = elements[i];
 			boolean checked = fCheckedStateStore.containsKey(currentElement);
 			fTreeViewer.setChecked(currentElement, checked);
-			fTreeViewer.setGrayed(currentElement, checked
-					&& !fWhiteCheckedTreeItems.contains(currentElement));
+			fTreeViewer.setGrayed(currentElement, checked && !fWhiteCheckedTreeItems.contains(currentElement));
 		}
 	}
 
@@ -174,19 +170,16 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 	public void checkStateChanged(final CheckStateChangedEvent event) {
 
 		// Potentially long operation - show a busy cursor
-		BusyIndicator.showWhile(fTreeViewer.getControl().getDisplay(),
-				new Runnable() {
-					public void run() {
-						if (event.getCheckable().equals(fTreeViewer))
-							treeItemChecked(event.getElement(),
-									event.getChecked());
-						else
-							listItemChecked(event.getElement(),
-									event.getChecked(), true);
+		BusyIndicator.showWhile(fTreeViewer.getControl().getDisplay(), new Runnable() {
+			public void run() {
+				if (event.getCheckable().equals(fTreeViewer))
+					treeItemChecked(event.getElement(), event.getChecked());
+				else
+					listItemChecked(event.getElement(), event.getChecked(), true);
 
-						notifyCheckStateChangeListeners(event);
-					}
-				});
+				notifyCheckStateChangeListeners(event);
+			}
+		});
 	}
 
 	/**
@@ -200,8 +193,7 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 	 *            int
 	 * @param style
 	 */
-	protected void createContents(Composite parent, int width, int height,
-			int style) {
+	protected void createContents(Composite parent, int width, int height, int style) {
 		// group pane
 		Composite composite = new Composite(parent, style);
 		GridLayout layout = new GridLayout();
@@ -307,8 +299,7 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 	 *            java.lang.Object
 	 */
 	protected boolean determineShouldBeWhiteChecked(Object treeElement) {
-		return areAllChildrenWhiteChecked(treeElement)
-				&& areAllElementsChecked(treeElement);
+		return areAllChildrenWhiteChecked(treeElement) && areAllElementsChecked(treeElement);
 	}
 
 	/**
@@ -498,18 +489,15 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 	 * @param state
 	 * @param updatingFromSelection
 	 */
-	protected void listItemChecked(Object listElement, boolean state,
-			boolean updatingFromSelection) {
-		List checkedListItems = (List) fCheckedStateStore
-				.get(fCurrentTreeSelection);
+	protected void listItemChecked(Object listElement, boolean state, boolean updatingFromSelection) {
+		List checkedListItems = (List) fCheckedStateStore.get(fCurrentTreeSelection);
 
 		if (state) {
 			if (checkedListItems == null) {
 				// since the associated tree item has gone from 0 -> 1 checked
 				// list items, tree checking may need to be updated
 				grayCheckHierarchy(fCurrentTreeSelection);
-				checkedListItems = (List) fCheckedStateStore
-						.get(fCurrentTreeSelection);
+				checkedListItems = (List) fCheckedStateStore.get(fCurrentTreeSelection);
 			}
 			checkedListItems.add(listElement);
 		} else {
@@ -534,8 +522,7 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 	protected void notifyCheckStateChangeListeners(CheckStateChangedEvent event) {
 		Iterator listenersEnum = fListeners.iterator();
 		while (listenersEnum.hasNext())
-			((ICheckStateListener) listenersEnum.next())
-					.checkStateChanged(event);
+			((ICheckStateListener) listenersEnum.next()).checkStateChanged(event);
 	}
 
 	/**
@@ -577,20 +564,18 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 	 *            ISelection
 	 */
 	public void selectionChanged(final SelectionChangedEvent event) {
-		BusyIndicator.showWhile(getTable().getShell().getDisplay(),
-				new Runnable() {
-					public void run() {
-						IStructuredSelection selection = (IStructuredSelection) event
-								.getSelection();
-						Object selectedElement = selection.getFirstElement();
-						if (selectedElement == null) {
-							fCurrentTreeSelection = null;
-							fListViewer.setInput(fCurrentTreeSelection);
-							return;
-						}
-						populateListViewer(selectedElement);
-					}
-				});
+		BusyIndicator.showWhile(getTable().getShell().getDisplay(), new Runnable() {
+			public void run() {
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				Object selectedElement = selection.getFirstElement();
+				if (selectedElement == null) {
+					fCurrentTreeSelection = null;
+					fListViewer.setInput(fCurrentTreeSelection);
+					return;
+				}
+				populateListViewer(selectedElement);
+			}
+		});
 	}
 
 	/**
@@ -603,13 +588,12 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 	public void setAllSelections(final boolean selection) {
 
 		// Potentially long operation - show a busy cursor
-		BusyIndicator.showWhile(fTreeViewer.getControl().getDisplay(),
-				new Runnable() {
-					public void run() {
-						setTreeChecked(fRoot, selection);
-						fListViewer.setAllChecked(selection);
-					}
-				});
+		BusyIndicator.showWhile(fTreeViewer.getControl().getDisplay(), new Runnable() {
+			public void run() {
+				setTreeChecked(fRoot, selection);
+				fListViewer.setAllChecked(selection);
+			}
+		});
 	}
 
 	/**
@@ -620,8 +604,7 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 	 * @param labelProvider
 	 *            ILabelProvider
 	 */
-	public void setListProviders(IStructuredContentProvider contentProvider,
-			ILabelProvider labelProvider) {
+	public void setListProviders(IStructuredContentProvider contentProvider, ILabelProvider labelProvider) {
 		fListViewer.setContentProvider(contentProvider);
 		fListViewer.setLabelProvider(labelProvider);
 	}
@@ -688,8 +671,7 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 	 * @param labelProvider
 	 *            ILabelProvider
 	 */
-	public void setTreeProviders(ITreeContentProvider contentProvider,
-			ILabelProvider labelProvider) {
+	public void setTreeProviders(ITreeContentProvider contentProvider, ILabelProvider labelProvider) {
 		fTreeViewer.setContentProvider(contentProvider);
 		fTreeViewer.setLabelProvider(labelProvider);
 	}
@@ -796,8 +778,7 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 		boolean whiteChecked = determineShouldBeWhiteChecked(treeElement);
 		boolean shouldBeAtLeastGray = determineShouldBeAtLeastGrayChecked(treeElement);
 
-		fTreeViewer
-				.setChecked(treeElement, whiteChecked || shouldBeAtLeastGray);
+		fTreeViewer.setChecked(treeElement, whiteChecked || shouldBeAtLeastGray);
 		setWhiteChecked(treeElement, whiteChecked);
 		if (whiteChecked)
 			fTreeViewer.setGrayed(treeElement, false);
@@ -822,12 +803,11 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 	public void updateSelections(final Map items) {
 
 		// Potentially long operation - show a busy cursor
-		BusyIndicator.showWhile(fTreeViewer.getControl().getDisplay(),
-				new Runnable() {
-					public void run() {
-						handleUpdateSelection(items);
-					}
-				});
+		BusyIndicator.showWhile(fTreeViewer.getControl().getDisplay(), new Runnable() {
+			public void run() {
+				handleUpdateSelection(items);
+			}
+		});
 	}
 
 	/**
@@ -858,13 +838,11 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 	}
 
 	private Object[] getTreeChildren(Object element) {
-		return filter(fTreeViewer.getFilters(),
-				fTreeContentProvider.getChildren(element));
+		return filter(fTreeViewer.getFilters(), fTreeContentProvider.getChildren(element));
 	}
 
 	private Object[] getListElements(Object element) {
-		return filter(fListViewer.getFilters(),
-				fListContentProvider.getElements(element));
+		return filter(fListViewer.getFilters(), fListContentProvider.getElements(element));
 	}
 
 	public Set getWhiteCheckedTreeItems() {
@@ -902,11 +880,9 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener,
 			Entry entry = iterator.next();
 			Object key = entry.getKey();
 			updateHierarchy(key);
-			if (fCurrentTreeSelection != null
-					&& fCurrentTreeSelection.equals(key)) {
+			if (fCurrentTreeSelection != null && fCurrentTreeSelection.equals(key)) {
 				fListViewer.setAllChecked(false);
-				fListViewer.setCheckedElements(((List) entry.getValue())
-						.toArray());
+				fListViewer.setCheckedElements(((List) entry.getValue()).toArray());
 			}
 		}
 	}

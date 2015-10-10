@@ -80,7 +80,7 @@ public class ProblemHoverProcessor extends AnnotationHoverProcessor {
 	private String formatMessages(List messages) {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(PARAGRAPH_START);
-		buffer.append(SSEUIMessages.Multiple_errors); //$NON-NLS-1$
+		buffer.append(SSEUIMessages.Multiple_errors); // $NON-NLS-1$
 		buffer.append(LIST_BEGIN);
 
 		Iterator e = messages.iterator();
@@ -104,8 +104,7 @@ public class ProblemHoverProcessor extends AnnotationHoverProcessor {
 
 		if (annotation.isMarkedDeleted())
 			return null;
-		return EditorsUI.getAnnotationPreferenceLookup()
-				.getAnnotationPreference(annotation);
+		return EditorsUI.getAnnotationPreferenceLookup().getAnnotationPreference(annotation);
 	}
 
 	public String getHoverInfo(ITextViewer viewer, IRegion hoverRegion) {
@@ -124,8 +123,7 @@ public class ProblemHoverProcessor extends AnnotationHoverProcessor {
 
 				// check if this is an annotation in the region we are
 				// concerned with
-				if (position.overlapsWith(hoverRegion.getOffset(),
-						hoverRegion.getLength())) {
+				if (position.overlapsWith(hoverRegion.getOffset(), hoverRegion.getLength())) {
 					String msg = a.getText();
 					if ((msg != null) && msg.trim().length() > 0) {
 						// now we only consider ProblemAnnotation,and sometime
@@ -160,11 +158,9 @@ public class ProblemHoverProcessor extends AnnotationHoverProcessor {
 	 */
 	private IPreferenceStore getPreferenceStore() {
 		if (fPreferenceStore == null) {
-			IPreferenceStore sseEditorPrefs = SSEUIPlugin.getDefault()
-					.getPreferenceStore();
+			IPreferenceStore sseEditorPrefs = SSEUIPlugin.getDefault().getPreferenceStore();
 			IPreferenceStore baseEditorPrefs = EditorsUI.getPreferenceStore();
-			fPreferenceStore = new ChainedPreferenceStore(
-					new IPreferenceStore[] { sseEditorPrefs, baseEditorPrefs });
+			fPreferenceStore = new ChainedPreferenceStore(new IPreferenceStore[] { sseEditorPrefs, baseEditorPrefs });
 		}
 		return fPreferenceStore;
 	}
@@ -175,10 +171,8 @@ public class ProblemHoverProcessor extends AnnotationHoverProcessor {
 			return false;
 		String textPreferenceKey = preference.getTextPreferenceKey();
 		String highlightPreferenceKey = preference.getHighlightPreferenceKey();
-		if (textPreferenceKey == null
-				|| !(getPreferenceStore().getBoolean(textPreferenceKey))
-				|| highlightPreferenceKey == null
-				|| getPreferenceStore().getBoolean(highlightPreferenceKey))
+		if (textPreferenceKey == null || !(getPreferenceStore().getBoolean(textPreferenceKey))
+				|| highlightPreferenceKey == null || getPreferenceStore().getBoolean(highlightPreferenceKey))
 			return false;
 		return true;
 	}
