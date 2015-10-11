@@ -116,26 +116,6 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		phpsComboBlock = new NewPHPsComboBlock();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.debug.ui.AbstractLaunchConfigurationTab#activated(org.eclipse
-	 * .debug.core.ILaunchConfigurationWorkingCopy)
-	 */
-	public void activated(final ILaunchConfigurationWorkingCopy workingCopy) {
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchConfigurationTab#deactivated(org.eclipse.
-	 * debug.core.ILaunchConfigurationWorkingCopy)
-	 */
-	public void deactivated(final ILaunchConfigurationWorkingCopy workingCopy) {
-	}
-
 	public void createControl(final Composite parent) {
 		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(parent, SWT.V_SCROLL | SWT.H_SCROLL);
 		final Composite mainComposite = new Composite(scrolledCompositeImpl, SWT.NONE);
@@ -540,9 +520,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		}
 		try {
 			String path = config.getAttribute(PHPRuntime.PHP_CONTAINER, (String) null);
-			if (path != null) {
-				phpsComboBlock.setPath(Path.fromPortableString(path));
-			}
+			phpsComboBlock.setPath(path != null ? Path.fromPortableString(path) : null);
 		} catch (CoreException e) {
 		}
 	}

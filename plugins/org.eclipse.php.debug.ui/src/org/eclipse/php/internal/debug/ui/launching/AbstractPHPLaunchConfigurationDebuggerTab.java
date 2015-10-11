@@ -350,10 +350,13 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab extends Abstract
 		debuggerName.setText(PHPDebuggersRegistry.getDebuggerName(debuggerId));
 		try {
 			// Update debugger type in original configuration
-			ILaunchConfigurationWorkingCopy wc = getOriginalConfiguration().getWorkingCopy();
-			wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerId);
-			wc.doSave();
-			// Update in working copy as well
+			if (getOriginalConfiguration().contentsEqual(getConfiguration())) {
+				// Only debugger might have been changed, update original configuration
+				ILaunchConfigurationWorkingCopy wc = getOriginalConfiguration().getWorkingCopy();
+				wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerId);
+				wc.doSave();
+			}
+			// Update in working copy
 			if (getConfiguration() instanceof ILaunchConfigurationWorkingCopy) {
 				((ILaunchConfigurationWorkingCopy) getConfiguration())
 						.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerId);
