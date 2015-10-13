@@ -18,8 +18,10 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.debug.ui.IDebugServerConnectionTest;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
@@ -171,6 +173,14 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab extends Abstract
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		super.setDefaults(configuration);
+		try {
+			if (!configuration.hasAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT)) {
+				configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
+						PHPDebugPlugin.getStopAtFirstLine());
+			}
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
 		getSection().setDefaults(configuration);
 	}
 
@@ -356,11 +366,11 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab extends Abstract
 				wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerId);
 				wc.doSave();
 			}
-			// Update in working copy
-			if (getConfiguration() instanceof ILaunchConfigurationWorkingCopy) {
-				((ILaunchConfigurationWorkingCopy) getConfiguration())
-						.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerId);
-			}
+		// Update in working copy
+		if (getConfiguration() instanceof ILaunchConfigurationWorkingCopy) {
+			((ILaunchConfigurationWorkingCopy) getConfiguration())
+					.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerId);
+		}
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}

@@ -130,8 +130,7 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 				if (resource != null) {
 					project = resource.getProject();
 				} else {
-					String projectName = configuration.getAttribute(IPHPDebugConstants.ATTR_PROJECT_NAME,
-							(String) null);
+					String projectName = configuration.getAttribute(IPHPDebugConstants.PHP_Project, (String) null);
 					if (projectName != null) {
 						IProject resolved = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 						if (resolved != null && resolved.isAccessible()) {
