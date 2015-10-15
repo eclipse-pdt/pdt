@@ -1708,14 +1708,6 @@
 	    <viewerContribution
 	          id="org.eclipse.php.refactoring.ui.editorPopupContribution"
 	          targetID="org.eclipse.php.core.phpsource.source.EditorContext">
-	       <menu
-	             id="refactorPopupMenuId"
-	             label="%Refactoring.menu.label"
-	             path="Edit">
-	          <separator
-	                name="refactoringGroup">
-	          </separator>
-	       </menu>
 	       <action
 	             class="org.eclipse.php.internal.ui.actions.RenameAction"
 	             definitionId="org.eclipse.dltk.ui.edit.text.script.rename.element"
