@@ -12,9 +12,11 @@
 package org.eclipse.php.internal.debug.ui.launching;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.debug.ui.model.ExtendedWorkbenchContentProvider;
 import org.eclipse.swt.SWT;
@@ -28,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
+import org.osgi.service.prefs.BackingStoreException;
 
 //import com.ibm.mrclean.project.FlexibleProjectUtils;
 
@@ -132,15 +135,10 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 
 		// Set the current state as saved in the preferences.
 		String shouldShowExternals = Platform.getPreferencesService().getString(PHPDebugUIPlugin.ID,
-				SHOW_EXTERNAL_FILES, null, null);
-		if (shouldShowExternals.length() == 0) {
-			fExternalFilesBt.setSelection(true);
-			updateView(true);
-		} else {
-			boolean show = Boolean.valueOf(shouldShowExternals).booleanValue();
-			fExternalFilesBt.setSelection(show);
-			updateView(show);
-		}
+				SHOW_EXTERNAL_FILES, Boolean.toString(false), null);
+		boolean show = Boolean.valueOf(shouldShowExternals).booleanValue();
+		fExternalFilesBt.setSelection(show);
+		updateView(show);
 
 		return composite;
 	}
@@ -153,8 +151,13 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 	protected void okPressed() {
 		// Save the external files visibility state into the preferences.
 		if (fExternalFilesBt != null) {
-			PHPDebugPlugin.getInstancePreferences().put(SHOW_EXTERNAL_FILES,
-					Boolean.toString(fExternalFilesBt.getSelection()));
+			IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(PHPDebugUIPlugin.ID);
+			preferences.put(SHOW_EXTERNAL_FILES, Boolean.toString(fExternalFilesBt.getSelection()));
+			try {
+				preferences.flush();
+			} catch (BackingStoreException e) {
+				Logger.logException(e);
+			}
 		}
 		super.okPressed();
 	}
