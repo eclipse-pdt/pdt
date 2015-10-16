@@ -38,11 +38,9 @@ public class DocumentUtils {
 			return super.visit(n);
 		}
 
-		public NamespaceDeclaration getNamespaceDeclarationFor(
-				UseStatement statement) {
+		public NamespaceDeclaration getNamespaceDeclarationFor(UseStatement statement) {
 			for (NamespaceDeclaration n : declarations) {
-				if (n.sourceStart() <= statement.sourceStart()
-						&& n.sourceEnd() >= statement.sourceEnd()) {
+				if (n.sourceStart() <= statement.sourceStart() && n.sourceEnd() >= statement.sourceEnd()) {
 					return n;
 				}
 			}
@@ -55,8 +53,7 @@ public class DocumentUtils {
 		public int start, end;
 		public String indent;
 
-		public ReplaceAction(List<UseStatement> statements, int start, int end,
-				String indent) {
+		public ReplaceAction(List<UseStatement> statements, int start, int end, String indent) {
 			this.statements = statements;
 			this.start = start;
 			this.end = end;
@@ -72,8 +69,7 @@ public class DocumentUtils {
 				Vector<UsePart> parts = new Vector<UsePart>();
 				parts.add(part);
 
-				total.add(new UseStatement(statement.start(), statement.end(),
-						parts));
+				total.add(new UseStatement(statement.start(), statement.end(), parts));
 			}
 		}
 
@@ -85,29 +81,24 @@ public class DocumentUtils {
 	 */
 	public static boolean containsUseStatement(UsePart part, String contents) {
 		String className = null != part.getAlias() ? part.getAlias().toString()
-				: (part.getNamespace() != null ? part.getNamespace().toString()
-						: "");
+				: (part.getNamespace() != null ? part.getNamespace().toString() : "");
 
-		return contents
-				.matches("(?s).*\\b" + Pattern.quote(className) + "\\b.*");
+		return contents.matches("(?i:(?s).*\\b" + Pattern.quote(className) + "\\b.*)");
 	}
 
-	public static String stripUseStatements(UseStatement[] statements,
-			IDocument old_doc) {
+	public static String stripUseStatements(UseStatement[] statements, IDocument old_doc) {
 		return stripUseStatements(statements, old_doc, 0, old_doc.getLength());
 	}
 
 	/**
 	 * Remove all the given use statements from a document
 	 */
-	public static String stripUseStatements(UseStatement[] statements,
-			IDocument old_doc, int start, int end) {
+	public static String stripUseStatements(UseStatement[] statements, IDocument old_doc, int start, int end) {
 		int offset = 0;
 		IDocument doc = new Document(old_doc.get());
 
 		for (UseStatement statement : statements) {
-			if (statement.sourceStart() < start
-					|| statement.sourceEnd() > end) {
+			if (statement.sourceStart() < start || statement.sourceEnd() > end) {
 				continue;
 			}
 			int length = statement.sourceEnd() - statement.sourceStart();
@@ -130,8 +121,7 @@ public class DocumentUtils {
 	/**
 	 * Create a string from the given UseStatements
 	 */
-	public static String createStringFromUseStatement(
-			List<UseStatement> statements, String indent) {
+	public static String createStringFromUseStatement(List<UseStatement> statements, String indent) {
 		StringBuilder total = new StringBuilder();
 
 		for (UseStatement statement : statements) {
@@ -148,8 +138,7 @@ public class DocumentUtils {
 	/**
 	 * Create a string from the given UseStatement
 	 */
-	public static String createStringFromUseStatement(UseStatement statement,
-			String indent) {
+	public static String createStringFromUseStatement(UseStatement statement, String indent) {
 		String use = indent + "use ";
 		boolean first = true;
 
@@ -170,8 +159,8 @@ public class DocumentUtils {
 	/**
 	 * Filter and sort a list of Use statements from a document
 	 */
-	public static List<UseStatement> filterAndSort(UseStatement[] statements,
-			IDocument doc, ModuleDeclaration moduleDeclaration) {
+	public static List<UseStatement> filterAndSort(UseStatement[] statements, IDocument doc,
+			ModuleDeclaration moduleDeclaration) {
 		Vector<UseStatement> total = new Vector<UseStatement>();
 
 		NamespaceFinder visitor = new DocumentUtils.NamespaceFinder();
@@ -182,11 +171,9 @@ public class DocumentUtils {
 
 		for (UseStatement statement : statements) {
 			String contents;
-			NamespaceDeclaration currentNamespace = visitor
-					.getNamespaceDeclarationFor(statement);
+			NamespaceDeclaration currentNamespace = visitor.getNamespaceDeclarationFor(statement);
 			if (currentNamespace != null && currentNamespace.isBracketed()) {
-				contents = DocumentUtils.stripUseStatements(statements, doc,
-						currentNamespace.sourceStart(),
+				contents = DocumentUtils.stripUseStatements(statements, doc, currentNamespace.sourceStart(),
 						currentNamespace.sourceEnd());
 			} else {
 				contents = stripUseStatements(statements, doc);
@@ -200,22 +187,17 @@ public class DocumentUtils {
 			}
 
 			if (parts.size() > 0) {
-				total.add(new UseStatement(statement.start(), statement.end(),
-						parts));
+				total.add(new UseStatement(statement.start(), statement.end(), parts));
 			}
 		}
 
 		Collections.sort(total, new Comparator<UseStatement>() {
 			@Override
 			public int compare(UseStatement a, UseStatement b) {
-				String partA = DocumentUtils.createStringFromUseStatement(a)
-						.trim().toLowerCase();
-				String partB = DocumentUtils.createStringFromUseStatement(b)
-						.trim().toLowerCase();
-				String[] partsA = partA.substring(4, partA.length() - 1)
-						.split("\\\\");
-				String[] partsB = partB.substring(4, partB.length() - 1)
-						.split("\\\\");
+				String partA = DocumentUtils.createStringFromUseStatement(a).trim().toLowerCase();
+				String partB = DocumentUtils.createStringFromUseStatement(b).trim().toLowerCase();
+				String[] partsA = partA.substring(4, partA.length() - 1).split("\\\\");
+				String[] partsB = partB.substring(4, partB.length() - 1).split("\\\\");
 
 				int checkLength = Math.min(partsA.length, partsB.length);
 				for (int i = 0; i < checkLength; i++) {
@@ -236,10 +218,8 @@ public class DocumentUtils {
 	/**
 	 * Sort the blocks of use statements from a document
 	 */
-	public static void sortUseStatements(ModuleDeclaration moduleDeclaration,
-			IDocument doc) {
-		UseStatement[] statements = ASTUtils.getUseStatements(moduleDeclaration,
-				doc.getLength());
+	public static void sortUseStatements(ModuleDeclaration moduleDeclaration, IDocument doc) {
+		UseStatement[] statements = ASTUtils.getUseStatements(moduleDeclaration, doc.getLength());
 
 		int start = 0;
 		Vector<ReplaceAction> queue = new Vector<ReplaceAction>();
@@ -249,9 +229,8 @@ public class DocumentUtils {
 
 			for (int i = start; i < statements.length - 1; i++) {
 				try {
-					if (doc.getLineOfOffset(statements[i + 1]
-							.sourceStart()) > doc.getLineOfOffset(
-									statements[i].sourceStart()) + 1) {
+					if (doc.getLineOfOffset(
+							statements[i + 1].sourceStart()) > doc.getLineOfOffset(statements[i].sourceStart()) + 1) {
 						last_item = i;
 						break;
 					}
@@ -263,23 +242,17 @@ public class DocumentUtils {
 
 			String indent = "";
 			try {
-				int lineOffset = doc.getLineOffset(
-						doc.getLineOfOffset(statements[start].sourceStart()));
+				int lineOffset = doc.getLineOffset(doc.getLineOfOffset(statements[start].sourceStart()));
 
-				indent = doc.get(lineOffset,
-						statements[start].sourceStart() - lineOffset);
+				indent = doc.get(lineOffset, statements[start].sourceStart() - lineOffset);
 			} catch (BadLocationException e1) {
 				e1.printStackTrace();
 			}
 
-			queue.add(
-					new ReplaceAction(
-							DocumentUtils.filterAndSort(
-									Arrays.copyOfRange(statements, start,
-											last_item + 1),
-									doc, moduleDeclaration),
-					statements[start].sourceStart(),
-					statements[last_item].sourceEnd(), indent));
+			queue.add(new ReplaceAction(
+					DocumentUtils.filterAndSort(Arrays.copyOfRange(statements, start, last_item + 1), doc,
+							moduleDeclaration),
+					statements[start].sourceStart(), statements[last_item].sourceEnd(), indent));
 
 			start = last_item + 1; // start at the next one
 		}
@@ -289,8 +262,7 @@ public class DocumentUtils {
 			List<UseStatement> sorted = item.statements;
 			int length = item.end - item.start;
 
-			String newNamespaces = DocumentUtils
-					.createStringFromUseStatement(sorted, item.indent);
+			String newNamespaces = DocumentUtils.createStringFromUseStatement(sorted, item.indent);
 			try {
 				doc.replace(item.start - offset, length, newNamespaces);
 			} catch (BadLocationException e) {
